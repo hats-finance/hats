@@ -1,0 +1,56 @@
+@import "./constants.scss";
+
+header {
+  width: 100%;
+  padding: 50px;
+  padding-left: $sidebar-width + 100;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  background-color: $drak-blue;
+  box-sizing: border-box;
+  align-items: center;
+  z-index: 1;
+  .page-title {
+    font-size: $large;
+    color: $white;
+  }
+  .wallet-wrapper {
+    display: flex;
+    align-items: center;
+    .wallet-details {
+      display: flex;
+      margin-right: 15px;
+      align-items: center;
+      .hats-btn {
+        border: 1px solid $turquoise;
+        background-color: transparent;
+        color: $white;
+        margin-right: 20px;
+      }
+      .current-address {
+        border-left: 1px solid;
+        border-right: 1px solid;
+        padding: 0px 10px;
+        margin: 0px 10px;
+      }
+    }
+    .wallet-btn {
+      border: 1px solid;
+      color: $white;
+      background-color: transparent;
+      &.disconnected {
+        border-color: $red;
+      }
+      &.connected {
+        border-color: $turquoise;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  header {
+    padding: 10px;
+  }
+}

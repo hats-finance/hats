@@ -1,0 +1,17 @@
+@import "./constants.scss";
+
+.honeypots-wrapper {
+  position: relative;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    //table-layout: fixed;
+    tr {
+      text-align: center;
+    }
+    th {
+      background-color: $blue;
+      padding: 20px;
+    }
+  }
+}

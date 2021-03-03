@@ -1,0 +1,51 @@
+@import "./constants.scss";
+
+.vaults-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+html {
+  background-color: $drak-blue;
+  color: $turquoise;
+}
+
+button {
+  font-family: RobotoMono;
+  border: none;
+  padding: 10px;
+  margin: 5px;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:disabled {
+    pointer-events: none;
+  }
+  &:focus {
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+a {
+  color: $white;
+  text-decoration: none;
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+/* This is used to a content div (not header and not sidebar), e.g. Honeypots, Gov, ... */
+.content {
+  padding-top: $header-hight * 2 + 100;
+  margin-left: $sidebar-width + 50;
+  margin-right: 50px;
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .content {
+    padding: $header-hight $element-padding;
+    margin-left: unset;
+  }
+}

@@ -1,0 +1,35 @@
+@import "./constants.scss";
+
+.sidebar-wrapper {
+  position: fixed;
+  width: $sidebar-width;
+  height: 100%;
+  z-index: 2;
+  overflow-x: hidden;
+  padding-top: $header-hight;
+  display: flex;
+  flex-direction: column;
+  background-color: $drak-blue;
+  .logo {
+    align-self: center;
+    margin-bottom: 100px;
+  }
+  .sidebar-link {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 15px;
+    border-left: 4px solid transparent;
+    margin: 20px 0px;
+    &.selected {
+      border-left-color: $turquoise;
+      color: $turquoise;
+      background-color: $blue;
+    }
+  }
+  .social-wrapper {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    margin-bottom: $header-hight * 2;
+  }
+}

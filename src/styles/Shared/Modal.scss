@@ -1,0 +1,55 @@
+@import "../constants.scss";
+
+.modal-wrapper {
+  position: fixed;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $transparent-black;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: fadeIn .2s;
+  .modal-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    background-color: $field-blue;
+    box-shadow: $black-shadow;
+    overflow-x: scroll;
+    position: relative;
+    height: 50%;
+    width: 50%;
+    .modal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $blue;
+      padding: $element-padding 30px;
+      font-size: $medium;
+      color: $white;
+      .close {
+        background-color: transparent;
+        color: $white;
+        padding: 0;
+        margin: 0;
+        font-size: $medium;
+      }
+    }
+    .modal-content {
+      padding: 30px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .modal-wrapper {
+    .modal-content-wrapper {
+      height: 100%;
+      width: 100%;
+    }
+  }
+}
