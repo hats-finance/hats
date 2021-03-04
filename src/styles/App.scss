@@ -6,7 +6,7 @@
 }
 
 html {
-  background-color: $drak-blue;
+  background-color: $dark-blue;
   color: $turquoise;
 }
 
@@ -21,6 +21,7 @@ button {
   }
   &:disabled {
     pointer-events: none;
+    opacity: 0.5;
   }
   &:focus {
     outline: none;

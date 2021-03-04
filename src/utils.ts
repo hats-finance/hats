@@ -83,3 +83,11 @@ export const getEtherBalance = async (network: Networks, selectedAddress: string
 export const fromWei = (wei: BigNumber | string): string => {
   return ethers.utils.formatEther(wei);
 }
+
+/**
+ * Checks whether the value includes digits only [dot (.) allowed]
+ * @param {string} value
+ */
+export const isDigitsOnly = (value: string): boolean => {
+  return /^-?\d*[.,]?\d{0,2}$/.test(value);
+}

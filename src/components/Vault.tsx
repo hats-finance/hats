@@ -19,7 +19,7 @@ export default function Vault(props: IProps) {
   const provider = useSelector(state => (state as any).web3Reducer.provider);
   //const { name, honeypot, vulnerabilities, funds, apy, submitted, complexity } = props.data;
   const { name, totalStaking, rewardRate } = props.data;
-  console.log(fromWei(rewardRate));
+  //console.log(fromWei(rewardRate));
   return (
     <React.Fragment>
       <tr className="inner-row">
@@ -33,7 +33,7 @@ export default function Vault(props: IProps) {
         <td>{`${millify(Number(fromWei(rewardRate)))}%`}</td>
         <td>
           <button
-            className={!provider ? "action-btn disabled" : "action-btn"}
+            className="action-btn"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data.name) }}
             disabled={!provider}>
             DEPOSITE / WITHDRAW
@@ -43,8 +43,7 @@ export default function Vault(props: IProps) {
       {
         toggleRow &&
         <tr>
-          <td className="sub-cell" colSpan={3}>{`Vulnerabilities Submitted: `}</td>
-          <td className="sub-cell" colSpan={4}>{`Complexity: *`}</td>
+          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: `}</td>
         </tr>
       }
     </React.Fragment>

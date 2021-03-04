@@ -1,0 +1,100 @@
+@import "./constants.scss";
+
+.deposit-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+  > div {
+    padding: 0px $modal-element-padding;
+  }
+  .balance-wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    margin-bottom: 10px;
+  }
+  .amount-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: $black;
+    border: 1px solid $field-blue;
+    .top {
+      display: flex;
+      justify-content: space-between;
+    }
+    .input-wrapper {
+      display: flex;
+      justify-content: space-between;
+      font-size: $medium;
+      color: $white;
+      input {
+        background-color: transparent;
+        border: none;
+        color: inherit;
+        text-align: right;
+        font-weight: bold;
+        font-size: inherit;
+        width: 200px;
+      }
+    }
+    .insufficient-funds {
+      align-self: flex-end;
+      color: $red;
+      font-size: $xsmall;
+    }
+  }
+  .percentage-btn {
+    background-color: $black;
+    border: 1px solid $field-blue;
+    color: $white;
+    width: 70px;
+    &:first-child {
+      margin-left: 0px;
+    }
+  }
+  .staked-wrapper {
+    display: flex;
+    justify-content: space-between;
+    font-size: $medium;
+    color: $white;
+    margin: 25px 0;
+  }
+  .earnings-wrapper {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid $field-blue;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+    color: $white;
+    span:nth-child(1) {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .action-btn-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0px;
+    .action-btn {
+      background-color: transparent;
+      width: 100%;
+      margin: 0;
+    }
+  }
+  .alt-actions-wrapper {
+    display: flex;
+    justify-content: center;
+    background-color: $field-blue;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    .alt-action-btn {
+      background-color: $purple-blue;
+      color: $dark-turquoise;
+      width: 100%;
+    }
+  }
+}

@@ -14,13 +14,15 @@ export default function Sidebar() {
       <Link to="/" className="logo"><Logo /></Link>
       <NavLink to="/honeypots" className="sidebar-link" activeClassName="selected">Honeypots</NavLink>
       <NavLink to="/gov" className="sidebar-link" activeClassName="selected">Gov</NavLink>
-      <NavLink to="/vulnerabilities" className="sidebar-link" activeClassName="selected">Submit Vulnerabilities</NavLink>
-      <div className="social-wrapper">
-        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TelegramIcon /></a>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><MediumIcon /></a>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><DiscordIcon /></a>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TwitterIcon /></a>
-        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><GitHubIcon /></a>
+      <div className="bottom-wrapper">
+        <div className="social-wrapper">
+          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TelegramIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><MediumIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><DiscordIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TwitterIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><GitHubIcon /></a>
+        </div>
+        <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">Terms of service</a>
       </div>
     </div>
   )

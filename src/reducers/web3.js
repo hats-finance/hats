@@ -1,7 +1,8 @@
-import { CONNECT, UPDATE_SELECTED_ADDRESS } from "../constants/action-types";
+import { CONNECT, UPDATE_SELECTED_ADDRESS, UPDATE_WALLET_BALANCE } from "../constants/action-types";
 
 const initialState = {
-  provider: null
+  provider: null,
+  balance: null
 };
 
 export const web3Reducer = (state = initialState, action) => {
@@ -19,6 +20,12 @@ export const web3Reducer = (state = initialState, action) => {
           ...state.provider,
           selectedAddress: action.selectedAddress
         }
+      }
+    }
+    case UPDATE_WALLET_BALANCE: {
+      return {
+        ...state,
+        balance: action.balance
       }
     }
     default:

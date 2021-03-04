@@ -1,6 +1,45 @@
+@import "./constants.scss";
+
 .hats-breakdown-wrapper {
-  display: grid;
-  grid-gap: 40px;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  align-content: space-evenly;
+  justify-content: space-between;
+  // display: grid;
+  // grid-gap: 40px;
+  // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   // grid-template-columns: 1fr 1fr 1fr;
+  .data-top {
+    display: flex;
+    justify-content: space-between;
+    padding: $modal-element-padding;
+    .data-square {
+      display: flex;
+      flex-direction: column;
+      span:nth-child(1) {
+        color: $white;
+      }
+      span:nth-child(2) {
+        font-size: $large;
+        font-weight: bold;
+      }
+    }
+  }
+  .data-bottom {
+    display: flex;
+    flex-direction: column;
+    background-color: $field-blue;
+    padding: $modal-element-padding;
+    .data-long {
+      display: flex;
+      justify-content: space-between;
+      &:first-child {
+        margin-bottom: 30px;
+      }
+      span:nth-child(2) {
+        color: $white;
+      }
+    }
+  }
 }

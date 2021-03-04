@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function Logo() {
   return <svg width="81" height="54" viewBox="0 0 81 54" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="0.603533" y="41.149" width="11.4516" height="11.4516" fill="white" stroke="#121212" strokeWidth="1.04105" />

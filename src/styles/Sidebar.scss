@@ -9,14 +9,14 @@
   padding-top: $header-hight;
   display: flex;
   flex-direction: column;
-  background-color: $drak-blue;
+  background-color: $dark-blue;
   .logo {
     align-self: center;
     margin-bottom: 100px;
   }
   .sidebar-link {
-    height: 30px;
-    line-height: 30px;
+    height: 50px;
+    line-height: 50px;
     padding-left: 15px;
     border-left: 4px solid transparent;
     margin: 20px 0px;
@@ -26,10 +26,11 @@
       background-color: $blue;
     }
   }
-  .social-wrapper {
+  .bottom-wrapper {
     margin: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin-bottom: $header-hight * 2;
   }
 }

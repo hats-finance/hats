@@ -3,7 +3,7 @@
 td {
   padding: 20px;
   background-color: $field-blue;
-  border-bottom: 1px solid $drak-blue;
+  border-bottom: 1px solid $dark-blue;
   &.sub-cell {
     background-color: transparent;
     text-align: left;
@@ -27,11 +27,8 @@ td {
   border: 1px solid;
   color: $turquoise;
   background-color: transparent;
-  &:active {
-    color: $white;
-    background-color: $turquoise;
-  }
-  &.disabled {
-    opacity: 0.5;
-  }
+  // &:active {
+  //   color: $white;
+  //   background-color: $turquoise;
+  // }
 }

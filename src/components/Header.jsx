@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
-import { connect } from "../actions/index";
+import { connect, updateWalletBalance } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { truncatedAddress, getNetworkNameByChainId, getMainPath, getEtherBalance } from "../utils";
 import "../styles/Header.scss";
@@ -32,11 +32,11 @@ function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
 }
 
 export default function Header() {
-  const [walletBalance, setWalletBalance] = useState(null);
   const location = useLocation();
   const dispatch = useDispatch();
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
   const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const walletBalance = useSelector(state => state.web3Reducer.balance);
   const screenSize = useSelector(state => state.layoutReducer.screenSize);
   const [showModal, setShowModal] = useState(false);
   const chainId = useSelector(state => state.web3Reducer.provider?.chainId) ?? "";
@@ -48,11 +48,11 @@ export default function Header() {
 
   React.useEffect(() => {
     const getWalletBalance = async () => {
-      setWalletBalance(null);
-      setWalletBalance(await getEtherBalance(network, selectedAddress));
+      dispatch(updateWalletBalance(null));
+      dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress)));
     }
     getWalletBalance();
-  }, [selectedAddress, network]);
+  }, [selectedAddress, network, dispatch]);
 
   return (
     <header>
@@ -71,7 +71,7 @@ export default function Header() {
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
       {showModal &&
-        <Modal title="Your Hats Breakdown" setShowModal={setShowModal}>
+        <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal}>
           <HatsBreakdown />
         </Modal>}
     </header>

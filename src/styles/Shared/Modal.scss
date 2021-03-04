@@ -15,22 +15,29 @@
   backdrop-filter: blur(3px);
   animation: fadeIn .2s;
   .modal-content-wrapper {
+    z-index: 4;
+    position: relative;
     display: flex;
     flex-direction: column;
-    background-color: $field-blue;
+    background-color: $blue;
     box-shadow: $black-shadow;
     overflow-x: scroll;
     position: relative;
-    height: 50%;
+    height: fit-content;
     width: 50%;
+    max-width: 700px;
+    max-height: 700px;
     .modal-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background-color: $blue;
+      background-color: $light-blue;
       padding: $element-padding 30px;
       font-size: $medium;
       color: $white;
+      position: sticky;
+      top: 0;
+      z-index: 1;
       .close {
         background-color: transparent;
         color: $white;
@@ -40,7 +47,8 @@
       }
     }
     .modal-content {
-      padding: 30px;
+      position: relative;
+      height: 100%;
     }
   }
 }
@@ -48,6 +56,8 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .modal-wrapper {
     .modal-content-wrapper {
+      max-height: unset;
+      max-width: unset;
       height: 100%;
       width: 100%;
     }

@@ -10,6 +10,11 @@ export const updateSelectedAddress = selectedAddress => ({
   selectedAddress
 })
 
+export const updateWalletBalance = balance => ({
+  type: types.UPDATE_WALLET_BALANCE,
+  balance
+})
+
 export const changeScreenSize = screenSize => ({
   type: types.CHANGE_SCREEN_SIZE,
   screenSize

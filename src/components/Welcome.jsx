@@ -4,6 +4,13 @@ import "../styles/Welcome.scss";
 
 export default function Welcome(props) {
 
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "initial";
+    }
+  }, []);
+
   const seenWelcomePage = () => {
     localStorage.setItem("hasSeenWelcomePage", "1");
     props.setHasSeenWelcomePage("1");

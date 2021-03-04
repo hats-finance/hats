@@ -2,21 +2,28 @@
 $header-hight: 50px;
 $sidebar-width: 250px;
 $element-padding: 10px;
+$modal-element-padding: 40px;
 
 /* colors */
 $white: #FFFFFF;
-$drak-blue: #000723;
+$black: #000206;
+$dark-blue: #000723;
 $blue: #000C3B;
 $field-blue: #0C1436;
-$light-blue: #1F2748;
+$light-blue: #041558;
+$purple-blue: #1F2748;
 $turquoise: #8AFCFD;
+$dark-turquoise: #9BC8CA;
 $red: #A6465A;
 $transparent-black: rgba(0,0,0,0.2); // for modal
 
 /* font sizes */
-$xl: 48px;
+$xlarge: 48px;
 $large: 35px;
 $medium: 24px;
+$moderate: 18px;
+$small: 16px;
+$xsmall: 14px;
 
 /* others */
 $mobile-breakpoint: 770px;

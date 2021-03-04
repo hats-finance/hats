@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/react-hooks";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault";
+import Deposite from "./Deposit";
 import "../styles/Honeypots.scss";
 
 export default function Honeypots() {
@@ -34,14 +35,14 @@ export default function Honeypots() {
             <th>Vulnerabilities found</th>
             <th>Funds given</th>
             <th>APY</th>
-            <th></th>
+            <th><button>Submit Vulnerabilities</button></th>
           </tr>
           {vaults}
         </tbody>
       </table>}
       {showModal &&
         <Modal title={modalData} setShowModal={setShowModal} >
-          <div>{modalData}</div>
+          <Deposite />
         </Modal>}
     </div>
   )
