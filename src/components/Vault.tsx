@@ -28,13 +28,13 @@ export default function Vault(props: IProps) {
         </td>
         <td>{name}</td>
         <td>{millify(Number(fromWei(totalStaking)))}</td>
-        <td>vulnerabilities</td>
-        <td>funds</td>
+        <td>???</td>
+        <td>???</td>
         <td>{`${millify(Number(fromWei(rewardRate)))}%`}</td>
         <td>
           <button
             className="action-btn"
-            onClick={() => { props.setShowModal(true); props.setModalData(props.data.name) }}
+            onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
             disabled={!provider}>
             DEPOSITE / WITHDRAW
           </button>
@@ -43,7 +43,7 @@ export default function Vault(props: IProps) {
       {
         toggleRow &&
         <tr>
-          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: `}</td>
+          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ???`}</td>
         </tr>
       }
     </React.Fragment>

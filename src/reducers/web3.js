@@ -2,7 +2,8 @@ import { CONNECT, UPDATE_SELECTED_ADDRESS, UPDATE_WALLET_BALANCE } from "../cons
 
 const initialState = {
   provider: null,
-  balance: null
+  ethBalance: null,
+  hatsBalance: null
 };
 
 export const web3Reducer = (state = initialState, action) => {
@@ -25,7 +26,8 @@ export const web3Reducer = (state = initialState, action) => {
     case UPDATE_WALLET_BALANCE: {
       return {
         ...state,
-        balance: action.balance
+        ethBalance: action.ethBalance,
+        hatsBalance: action.hatsBalance
       }
     }
     default:

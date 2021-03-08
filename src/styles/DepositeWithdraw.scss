@@ -1,6 +1,7 @@
 @import "./constants.scss";
 
 .deposit-wrapper {
+  position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -8,11 +9,24 @@
   > div {
     padding: 0px $modal-element-padding;
   }
+  .tabs-wrapper {
+    display: flex;
+    margin-top: 15px;
+    .tab {
+      width: 100%;
+      background-color: transparent;
+      color: $white;
+      font-size: $medium;
+      &.selected {
+        font-weight: bold;
+      }
+    }
+  }
   .balance-wrapper {
     position: relative;
     display: flex;
     justify-content: space-between;
-    margin-top: 50px;
+    margin-top: 30px;
     margin-bottom: 10px;
   }
   .amount-wrapper {
@@ -40,10 +54,14 @@
         width: 200px;
       }
     }
-    .insufficient-funds {
+    .input-error {
       align-self: flex-end;
       color: $red;
       font-size: $xsmall;
+    }
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
     }
   }
   .percentage-btn {
@@ -80,6 +98,7 @@
     justify-content: center;
     margin: 40px 0px;
     .action-btn {
+      position: relative;
       background-color: transparent;
       width: 100%;
       margin: 0;
@@ -96,5 +115,10 @@
       color: $dark-turquoise;
       width: 100%;
     }
+  }
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    animation: disabledFade .4s;
   }
 }

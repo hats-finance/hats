@@ -85,6 +85,14 @@ export const fromWei = (wei: BigNumber | string): string => {
 }
 
 /**
+ * Given amount in string returns (ethers) BigNumber
+ * @param {string} value
+ */
+export const toWei = (value: string): BigNumber => {
+  return ethers.utils.parseEther(value);
+}
+
+/**
  * Checks whether the value includes digits only [dot (.) allowed]
  * @param {string} value
  */

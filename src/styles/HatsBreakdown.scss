@@ -17,6 +17,7 @@
     .data-square {
       display: flex;
       flex-direction: column;
+      position: relative;
       span:nth-child(1) {
         color: $white;
       }

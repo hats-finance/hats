@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { GET_VAULTS } from "../graphql/subgraph";
-//import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/react-hooks";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault";
-import Deposite from "./Deposit";
+import DepositeWithdraw from "./DepositeWithdraw";
 import "../styles/Honeypots.scss";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  //const showModal = useSelector(state => state.layoutReducer.showModal);
-  const { loading, error, data } = useQuery(GET_VAULTS);
+  const { loading, error, data, refetch } = useQuery(GET_VAULTS);
 
   React.useEffect(() => {
     if (!loading && !error && data && data.vaults) {
@@ -35,14 +33,14 @@ export default function Honeypots() {
             <th>Vulnerabilities found</th>
             <th>Funds given</th>
             <th>APY</th>
-            <th><button>Submit Vulnerabilities</button></th>
+            <th><button className="vulnerabilities-btn">Submit Vulnerabilities</button></th>
           </tr>
           {vaults}
         </tbody>
       </table>}
       {showModal &&
-        <Modal title={modalData} setShowModal={setShowModal} >
-          <Deposite />
+        <Modal title={modalData.name} setShowModal={setShowModal} >
+          <DepositeWithdraw data={modalData} updateVualts={refetch} />
         </Modal>}
     </div>
   )

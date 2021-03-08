@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
 import { connect, updateWalletBalance } from "../actions/index";
+import { getTokenBalance } from "../actions/contractsActions";
 import { useDispatch, useSelector } from "react-redux";
 import { truncatedAddress, getNetworkNameByChainId, getMainPath, getEtherBalance } from "../utils";
 import "../styles/Header.scss";
@@ -11,6 +12,7 @@ import { Pages } from "../constants/constants";
 import Lodaing from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import HatsBreakdown from "./HatsBreakdown";
+import { HATS_TOKEN } from "../constants/constants";
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -36,7 +38,7 @@ export default function Header() {
   const dispatch = useDispatch();
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
   const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const walletBalance = useSelector(state => state.web3Reducer.balance);
+  const { ethBalance, hatsBalance } = useSelector(state => state.web3Reducer);
   const screenSize = useSelector(state => state.layoutReducer.screenSize);
   const [showModal, setShowModal] = useState(false);
   const chainId = useSelector(state => state.web3Reducer.provider?.chainId) ?? "";
@@ -48,10 +50,12 @@ export default function Header() {
 
   React.useEffect(() => {
     const getWalletBalance = async () => {
-      dispatch(updateWalletBalance(null));
-      dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress)));
+      dispatch(updateWalletBalance(null, null));
+      dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(HATS_TOKEN, selectedAddress)));
     }
-    getWalletBalance();
+    if (selectedAddress) {
+      getWalletBalance();
+    }
   }, [selectedAddress, network, dispatch]);
 
   return (
@@ -63,7 +67,7 @@ export default function Header() {
           <div className="wallet-details">
             <button className="hats-btn" onClick={() => setShowModal(true)}>Hats</button>
             <div style={{ position: "relative", minWidth: "50px" }}>
-              {!walletBalance ? <Lodaing /> : <span>{`${Number(walletBalance).toFixed(2)} ETH`}</span>}
+              {!ethBalance ? <Lodaing /> : <span>{`${Number(ethBalance).toFixed(2)} ETH | ${Number(hatsBalance).toFixed(2)} HATS`}</span>}
             </div>
             <span className="current-address">{truncatedAddress(selectedAddress)}</span>
             <span>{`(${network})`}</span>

@@ -7,7 +7,8 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 // You can get a key for free at https://infura.io/register
 const INFURA_ID = "INVALID_INFURA_KEY";
 
-const NETWORK_NAME = "mainnet";
+//const NETWORK_NAME = "mainnet";
+const NETWORK_NAME = "rinkeby";
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
@@ -28,6 +29,13 @@ function useWeb3Modal(config = {}) {
           },
         },
       },
+      theme: {
+        background: "rgb(39, 49, 56)",
+        main: "rgb(199, 199, 199)",
+        secondary: "rgb(136, 136, 136)",
+        border: "rgba(195, 195, 195, 0.14)",
+        hover: "rgb(16, 26, 32)"
+      }
     });
   }, [NETWORK, infuraId])
 
