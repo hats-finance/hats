@@ -50,10 +50,20 @@ export const getStakerByAddress = (stakerAddress: string) => {
   `;
 }
 
-export const getStakerByVaultID = (vaultID: string, stakerAddress: string) => {
+export const getStakerAmountByVaultID = (vaultID: string, stakerAddress: string) => {
   return gql`
     {
       stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
+        amount
+      }
+    }
+  `;
+}
+
+export const getStakerAmounts = (stakerAddress: string) => {
+  return gql`
+    {
+      stakers (where: { address: "${stakerAddress}" }) {
         amount
       }
     }

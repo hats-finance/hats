@@ -1,17 +1,17 @@
 import React, { useState, useMemo } from "react";
-import { useSelector } from "react-redux"; // useDispatch
+import { useSelector } from "react-redux";
 import { fromWei, isDigitsOnly } from "../utils";
 import Loading from "./Shared/Loading";
-//import Logo from "../assets/icons/logo.icon";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositeWithdraw.scss";
 import * as contractsActions from "../actions/contractsActions";
 import { IVault } from "../types/types";
-import { getStakerByVaultID } from "../graphql/subgraph";
+import { getStakerAmountByVaultID } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import millify from "millify";
 import { BigNumber } from "@ethersproject/bignumber";
-//import { updateWalletBalance } from "../actions";
+import { useWalletBalance } from "../hooks/utils";
+//import Logo from "../assets/icons/logo.icon";
 
 interface IProps {
   data: IVault,
@@ -19,7 +19,7 @@ interface IProps {
 }
 
 export default function DepositeWithdraw(props: IProps) {
-  //const dispatch = useDispatch();
+  const updateWalletBalance = useWalletBalance();
   const { address, stakingToken, id } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
@@ -29,11 +29,11 @@ export default function DepositeWithdraw(props: IProps) {
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const selectedAddress = useSelector(state => (state as any).web3Reducer.provider?.selectedAddress) ?? "";
-  const { loading, error, data, refetch } = useQuery(getStakerByVaultID(id, selectedAddress));
+  const { loading, error, data, refetch } = useQuery(getStakerAmountByVaultID(id, selectedAddress));
 
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
-      return data.stakers[0]?.amount ?? BigNumber.from(0);
+      return data.stakers[0]?.amount;
     }
     return BigNumber.from(0);
   }, [loading, error, data])
@@ -64,29 +64,25 @@ export default function DepositeWithdraw(props: IProps) {
 
   const deposit = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.deposit(address, userInput), async () => { refetch(); props.updateVualts(); }, () => { });
+    await contractsActions.createTransaction(async () => contractsActions.deposit(address, userInput), async () => { refetch(); props.updateVualts(); setUserInput("0"); }, () => { });
     setInTransaction(false);
   }
 
   const withdraw = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.withdraw(address, userInput), async () => { refetch(); props.updateVualts(); }, () => { });
+    await contractsActions.createTransaction(async () => contractsActions.withdraw(address, userInput), async () => { refetch(); props.updateVualts(); setUserInput("0"); }, () => { });
     setInTransaction(false);
   }
 
   const claim = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.claim(address), async () => { refetch(); props.updateVualts(); }, () => { });
+    await contractsActions.createTransaction(async () => contractsActions.claim(address), async () => { refetch(); props.updateVualts(); setUserInput("0"); updateWalletBalance(); }, () => { });
     setInTransaction(false);
   }
 
   const exit = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.exit(address), async () => { refetch(); props.updateVualts();
-        //dispatch(updateWalletBalance(null, null));
-        //dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(HATS_TOKEN, selectedAddress)));
-      },
-      () => { });
+    await contractsActions.createTransaction(async () => contractsActions.exit(address), async () => { refetch(); props.updateVualts(); setUserInput("0"); updateWalletBalance(); }, () => { });
     setInTransaction(false);
   }
 
@@ -97,7 +93,7 @@ export default function DepositeWithdraw(props: IProps) {
     </div>
     <div className="balance-wrapper">
       <span>Amount</span>
-      {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${Number(tokenBalance).toFixed(2)}`}</span>}
+      {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
     </div>
     <div>
       <div className={!isApproved ? "amount-wrapper disabled" : "amount-wrapper"}>

@@ -99,17 +99,3 @@ export const toWei = (value: string): BigNumber => {
 export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
 }
-
-// Maybe need to create a custom hook to update the wallet balance
-// export const useWalletBalance = () => {
-//   const dispatch = useDispatch();
-//   const selectedAddress: string = useSelector(state => (state as any).web3Reducer.provider?.selectedAddress) ?? "";
-//   const chainId = useSelector(state => (state as any).web3Reducer.provider?.chainId) ?? "";
-//   const network: Networks = getNetworkNameByChainId(chainId);
-
-//   return async () => {
-//     dispatch(updateWalletBalance(null as any, null as any));
-//     dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(HATS_TOKEN, selectedAddress)));
-//   }
-// }
-// USAGE: //const updateWalletBalance = useWalletBalance();
