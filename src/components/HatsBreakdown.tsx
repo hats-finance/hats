@@ -18,7 +18,7 @@ export default function HatsBreakdown() {
   // TODO: need to refetch when necessary
   const totalStaked: BigNumber = React.useMemo(() => {
     if (!loading && !error && data && data.stakers) {
-      return data.stakers.map((staker: IStaker) => BigNumber.from(staker.amount)).reduce((a: BigNumber, b: BigNumber) => a.add(b), BigNumber.from(0));
+      return data.stakers.map((staker: IStaker) => BigNumber.from(staker.amount)).reduce((a: BigNumber, b: BigNumber) => a.add(b), BigNumber.from(0)) ?? BigNumber.from(0);
     }
     return BigNumber.from(0);
   }, [loading, error, data])

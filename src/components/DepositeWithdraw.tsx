@@ -33,7 +33,7 @@ export default function DepositeWithdraw(props: IProps) {
 
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
-      return data.stakers[0]?.amount;
+      return data.stakers[0]?.amount ?? BigNumber.from(0);
     }
     return BigNumber.from(0);
   }, [loading, error, data])
