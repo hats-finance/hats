@@ -1,11 +1,17 @@
 import { toWei, fromWei } from "../utils";
-import { ethers, BigNumber, Contract } from "ethers";
+import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import { TransactionStatus } from "../constants/constants";
+import { Web3Provider } from "@ethersproject/providers";
 
-const provider = new ethers.providers.Web3Provider((window as any).ethereum);
-const signer = provider.getSigner();
+let provider: Web3Provider;
+let signer: Signer;
+
+if (window.ethereum) {
+  provider = new ethers.providers.Web3Provider((window as any).ethereum);
+  signer = provider.getSigner();
+}
 
 /**
  * Given token address returns it's symbol
@@ -56,7 +62,7 @@ export const approveToken = async (tokenAddress: string, tokenSpender: string) =
  */
 export const deposit = async (address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.stakeForLpToken(toWei(amount));
+  return await contract.stake(toWei(amount));
 }
 
 /**
@@ -66,9 +72,17 @@ export const deposit = async (address: string, amount: string) => {
  */
  export const withdraw = async (address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.withdrawWithLpToken(toWei(amount));
+  return await contract.withdraw(toWei(amount));
 }
 
+/**
+ * Claim
+ * @param {stirng} address
+ */
+export const claim = async (address: string) => {
+  const contract = new Contract(address, vaultAbi, signer);
+  return await contract.getReward();
+}
 
 /**
  * Exit
@@ -76,7 +90,7 @@ export const deposit = async (address: string, amount: string) => {
  */
 export const exit = async (address: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.exitWithLpToken();
+  return await contract.exit();
 }
 
 /**

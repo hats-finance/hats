@@ -4,10 +4,13 @@ import "../../styles/Shared/Modal.scss";
 interface IProps {
   title: string,
   children: React.ReactNode,
-  setShowModal: (show: boolean) => any
+  setShowModal: (show: boolean) => any,
+  height?: string // can be any valid css height value
 }
 
 export default function Modal(props: IProps) {
+  document.documentElement.style.setProperty("--height", props.height ?? "100vh");
+
   const escapeHandler = useCallback((event) => {
     if (event.keyCode === 27) {
       props.setShowModal(false);

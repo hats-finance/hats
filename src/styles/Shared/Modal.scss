@@ -23,7 +23,7 @@
     box-shadow: $black-shadow;
     overflow-x: scroll;
     position: relative;
-    height: fit-content;
+    height: var(--height);
     width: 50%;
     max-width: 700px;
     max-height: 700px;

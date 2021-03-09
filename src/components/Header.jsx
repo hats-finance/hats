@@ -75,7 +75,7 @@ export default function Header() {
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
       {showModal &&
-        <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal}>
+        <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal} height="fit-content">
           <HatsBreakdown />
         </Modal>}
     </header>

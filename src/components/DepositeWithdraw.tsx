@@ -74,12 +74,15 @@ export default function DepositeWithdraw(props: IProps) {
     setInTransaction(false);
   }
 
+  const claim = async () => {
+    setInTransaction(true);
+    await contractsActions.createTransaction(async () => contractsActions.claim(address), async () => { refetch(); props.updateVualts(); }, () => { });
+    setInTransaction(false);
+  }
+
   const exit = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.exit(address),
-      async () => {
-        refetch();
-        props.updateVualts();
+    await contractsActions.createTransaction(async () => contractsActions.exit(address), async () => { refetch(); props.updateVualts();
         //dispatch(updateWalletBalance(null, null));
         //dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(HATS_TOKEN, selectedAddress)));
       },
@@ -144,7 +147,7 @@ export default function DepositeWithdraw(props: IProps) {
         onClick={async () => await withdraw()}>WITHDRAW</button>}
     </div>
     <div className="alt-actions-wrapper">
-      <button disabled={!isApproved} className="alt-action-btn">CLAIM</button>
+      <button onClick={async () => await claim()} disabled={!isApproved} className="alt-action-btn">CLAIM</button>
       <button onClick={async () => await exit()} disabled={!isApproved} className="alt-action-btn">EXIT</button>
     </div>
     {inTransaction && <Loading />}
