@@ -1,0 +1,43 @@
+@import "../constants.scss";
+
+.notification-wrapper {
+  position: fixed;
+  z-index: 5;
+  bottom: 15px;
+  display: flex;
+  align-items: center;
+  border-left: 10px solid;
+  background-color: $white;
+  color: $black;
+  padding: 15px;
+  box-shadow: $black-shadow;
+  max-width: 50%;
+  &.SUCCESS {
+    border-left-color: $green;
+  }
+  &.ERROR{
+    border-left-color: $red;
+  }
+  &.INFO {
+    border-left-color: $dark-turquoise;
+  }
+  .type {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+  .text {
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  .dismiss-btn {
+    font-size: $medium;
+    padding: 0;
+    margin: 0 10px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .notification-wrapper {
+    max-width: unset;
+  }
+}

@@ -3,14 +3,17 @@ import React, { useState } from "react";
 //import { getDefaultProvider } from "@ethersproject/providers";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { changeScreenSize, updateSelectedAddress } from './actions/index';
+import { changeScreenSize, updateSelectedAddress, toggleNotification } from './actions/index';
+import { getNetworkNameByChainId } from "./utils";
+import { NETWORK } from "./settings";
 //import logo from "./ethereumLogo.png";
 //import { addresses, abis } from "@project/contracts";
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
+import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 
 // async function readOnChainData() {
@@ -29,8 +32,16 @@ import "./styles/App.scss";
 function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector(state => state.layoutReducer.screenSize);
-  //const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const showNotification = useSelector(state => state.layoutReducer.notification.show);
+  const provider = useSelector(state => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
+
+  React.useEffect(() => {
+    const network = getNetworkNameByChainId(provider.chainId);
+    if (provider && network !== NETWORK) {
+      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`));
+    }
+  }, [dispatch, provider])
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", screenSize => {
@@ -66,6 +77,7 @@ function App() {
           <div>GOV</div>
         </Route>
       </Switch>
+      {showNotification && <Notification />}
     </React.Fragment>
   );
 }

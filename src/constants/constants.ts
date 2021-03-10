@@ -31,3 +31,9 @@ export const SMALL_SCREEN_BREAKPOINT = "770px";
  * This is used to fetch the HATS balance.
  */
 export const HATS_TOKEN = "0xed40948654f6fa2c63fe47d547ab33b0e8a84f8a";
+
+export enum NotificationType {
+  Success = "SUCCESS",
+  Error = "ERROR",
+  Info = "INFO"
+}

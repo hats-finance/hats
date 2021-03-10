@@ -4,8 +4,9 @@ import { IVault } from "../types/types";
 import { useSelector } from "react-redux"; // useDispatch
 //import moment from "moment";
 import millify from "millify";
-import { fromWei } from "../utils"; // numberWithCommas
+import { fromWei, getNetworkNameByChainId } from "../utils"; // numberWithCommas
 import ArrowIcon from "../assets/icons/arrow.icon";
+import { NETWORK } from "../settings";
 
 interface IProps {
   data: IVault,
@@ -15,9 +16,9 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
-  //const dispatch = useDispatch();
   const provider = useSelector(state => (state as any).web3Reducer.provider);
-  //const { name, honeypot, vulnerabilities, funds, apy, submitted, complexity } = props.data;
+  const chainId = useSelector(state => (state as any).web3Reducer.provider?.chainId) ?? "";
+  const network = getNetworkNameByChainId(chainId);
   const { name, totalStaking, rewardRate } = props.data;
   //console.log(fromWei(rewardRate));
   return (
@@ -35,7 +36,7 @@ export default function Vault(props: IProps) {
           <button
             className="action-btn"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
-            disabled={!provider}>
+            disabled={!provider || network !== NETWORK}>
             DEPOSITE / WITHDRAW
           </button>
         </td>

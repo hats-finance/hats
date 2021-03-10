@@ -2,8 +2,10 @@ import { toWei, fromWei } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-import { TransactionStatus } from "../constants/constants";
+import { NotificationType, TransactionStatus } from "../constants/constants";
 import { Web3Provider } from "@ethersproject/providers";
+import { Dispatch } from "redux";
+import { toggleNotification } from "./index";
 
 let provider: Web3Provider;
 let signer: Signer;
@@ -29,7 +31,7 @@ export const getTokenSymbol = async (tokenAddress: string): Promise<string> => {
  */
 export const getTokenBalance = async (tokenAddress: string, selectedAddress: string): Promise<string> => {
   const contract = new Contract(tokenAddress, erc20Abi, provider);
-  const balance:BigNumber = await contract.balanceOf(selectedAddress);
+  const balance: BigNumber = await contract.balanceOf(selectedAddress);
   return fromWei(balance);
 }
 
@@ -39,9 +41,9 @@ export const getTokenBalance = async (tokenAddress: string, selectedAddress: str
  * @param {string} selectedAddress
  * @param {string} tokenSpender
  */
- export const isApproved = async (tokenAddress: string, selectedAddress: string, tokenSpender: string): Promise<boolean> => {
+export const isApproved = async (tokenAddress: string, selectedAddress: string, tokenSpender: string): Promise<boolean> => {
   const contract = new Contract(tokenAddress, erc20Abi, provider);
-  const allowance:BigNumber = await contract.allowance(selectedAddress, tokenSpender);
+  const allowance: BigNumber = await contract.allowance(selectedAddress, tokenSpender);
   return allowance.gt(0);
 }
 
@@ -70,7 +72,7 @@ export const deposit = async (address: string, amount: string) => {
  * @param {string} address
  * @param {string} amount
  */
- export const withdraw = async (address: string, amount: string) => {
+export const withdraw = async (address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.withdraw(toWei(amount));
 }
@@ -95,22 +97,25 @@ export const exit = async (address: string) => {
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain
- * NEED TO ADD NOTIFICATION DISPATHCING
  * @param {Function} tx The function that creates the transaction on the blockchain
  * @param {Function} onSuccess Function to call on success
  * @param {Function} onFail Function to call on fail
+ * @param {Dispatch} dispatch The Redux dispath function to dispatch the notification
+ * @param {string} successText Optional extra text to show on success
  */
-export const createTransaction = async (tx: Function, onSuccess: Function, onFail: Function) => {
+export const createTransaction = async (tx: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string) => {
   try {
     const transaction = await tx();
     const receipt = await transaction.wait();
     if (receipt.status === TransactionStatus.Success) {
       await onSuccess();
+      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction successed"));
     } else {
-      throw receipt;
+      throw new Error();
     }
   } catch (error) {
-    console.error(error);
+    console.log(error);
     await onFail();
+    dispatch(toggleNotification(true, NotificationType.Error, error.message ?? "Something went wrong :("));
   }
 }

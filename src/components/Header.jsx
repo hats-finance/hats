@@ -13,6 +13,7 @@ import Lodaing from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import HatsBreakdown from "./HatsBreakdown";
 import millify from "millify";
+import { NETWORK } from "../settings";
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -53,7 +54,9 @@ export default function Header() {
     const getWalletBalance = async () => {
       await updateWalletBalance();
     }
-    getWalletBalance();
+    if (network === NETWORK) {
+      getWalletBalance();
+    }
   }, [selectedAddress, network]);
 
   return (
@@ -63,10 +66,10 @@ export default function Header() {
       <div className="wallet-wrapper">
         {provider &&
           <div className="wallet-details">
-            <button className="hats-btn" onClick={() => setShowModal(true)}>Hats</button>
-            <div style={{ position: "relative", minWidth: "50px" }}>
+            <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}>Hats</button>
+            {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>
               {!ethBalance ? <Lodaing /> : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
-            </div>
+            </div>}
             <span className="current-address">{truncatedAddress(selectedAddress)}</span>
             <span>{`(${network})`}</span>
           </div>}

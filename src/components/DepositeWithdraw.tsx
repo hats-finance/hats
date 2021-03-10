@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fromWei, isDigitsOnly } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
@@ -19,6 +19,7 @@ interface IProps {
 }
 
 export default function DepositeWithdraw(props: IProps) {
+  const dispatch = useDispatch();
   const updateWalletBalance = useWalletBalance();
   const { address, stakingToken, id } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
@@ -58,31 +59,62 @@ export default function DepositeWithdraw(props: IProps) {
 
   const approveToken = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.approveToken(stakingToken, address), async () => { setIsApproved(true); }, () => { });
+    await contractsActions.createTransaction(
+      async () => contractsActions.approveToken(stakingToken, address),
+      async () => {
+        setIsApproved(true);
+      },
+      () => { }, dispatch, `Spending ${tokenSymbol} approved`);
     setInTransaction(false);
   }
 
   const deposit = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.deposit(address, userInput), async () => { refetch(); props.updateVualts(); setUserInput("0"); }, () => { });
+    await contractsActions.createTransaction(
+      async () => contractsActions.deposit(address, userInput),
+      async () => {
+        refetch();
+        props.updateVualts();
+        setUserInput("0");
+      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol}`);
     setInTransaction(false);
   }
 
   const withdraw = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.withdraw(address, userInput), async () => { refetch(); props.updateVualts(); setUserInput("0"); }, () => { });
+    await contractsActions.createTransaction(
+      async () => contractsActions.withdraw(address, userInput),
+      async () => {
+        refetch();
+        props.updateVualts();
+        setUserInput("0");
+      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol}`);
     setInTransaction(false);
   }
 
   const claim = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.claim(address), async () => { refetch(); props.updateVualts(); setUserInput("0"); updateWalletBalance(); }, () => { });
+    await contractsActions.createTransaction(
+      async () => contractsActions.claim(address),
+      async () => {
+        refetch();
+        props.updateVualts();
+        setUserInput("0");
+        updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
+      }, () => { }, dispatch);
     setInTransaction(false);
   }
 
   const exit = async () => {
     setInTransaction(true);
-    await contractsActions.createTransaction(async () => contractsActions.exit(address), async () => { refetch(); props.updateVualts(); setUserInput("0"); updateWalletBalance(); }, () => { });
+    await contractsActions.createTransaction(
+      async () => contractsActions.exit(address),
+      async () => {
+        refetch();
+        props.updateVualts();
+        setUserInput("0");
+        updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
+      }, () => { }, dispatch);
     setInTransaction(false);
   }
 
