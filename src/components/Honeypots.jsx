@@ -12,11 +12,11 @@ export default function Honeypots() {
   const [modalData, setModalData] = useState(null);
   const { loading, error, data, refetch } = useQuery(GET_VAULTS);
 
-  // React.useEffect(() => {
-  //   if (!loading && !error && data && data.vaults) {
-  //     console.log({ vaults: data.vaults });
-  //   }
-  // }, [loading, error, data]);
+  React.useEffect(() => {
+    if (!loading && !error && data && data.vaults) {
+      console.log({ vaults: data.vaults });
+    }
+  }, [loading, error, data]);
 
   const vaults = data?.vaults.map((vault, index) => {
     return <Vault key={index} data={vault} setShowModal={setShowModal} setModalData={setModalData} />

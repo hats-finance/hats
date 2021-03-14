@@ -62,9 +62,9 @@ export const approveToken = async (tokenAddress: string, tokenSpender: string) =
  * @param {string} address
  * @param {string} amount
  */
-export const deposit = async (address: string, amount: string) => {
+export const deposit = async (pid: string, address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.stake(toWei(amount));
+  return await contract.deposit(pid, toWei(amount));
 }
 
 /**
@@ -72,31 +72,32 @@ export const deposit = async (address: string, amount: string) => {
  * @param {string} address
  * @param {string} amount
  */
-export const withdraw = async (address: string, amount: string) => {
+export const withdraw = async (pid: string, address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.withdraw(toWei(amount));
+  return await contract.withdraw(pid, toWei(amount));
 }
 
 /**
  * Claim
  * @param {stirng} address
  */
-export const claim = async (address: string) => {
+export const claim = async (pid: string, address: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.getReward();
+  return await contract.claimReward(pid);
 }
 
-/**
- * Exit
- * @param {string} address
- */
-export const exit = async (address: string) => {
-  const contract = new Contract(address, vaultAbi, signer);
-  return await contract.exit();
-}
+// /**
+//  * Exit
+//  * @param {string} address
+//  */
+// export const exit = async (pid: string, address: string) => {
+//   const contract = new Contract(address, vaultAbi, signer);
+//   return await contract.claimReward(pid);
+// }
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain
+ * Dispatches automatically a notification on success or on error.
  * @param {Function} tx The function that creates the transaction on the blockchain
  * @param {Function} onSuccess Function to call on success
  * @param {Function} onFail Function to call on fail
@@ -114,8 +115,8 @@ export const createTransaction = async (tx: Function, onSuccess: Function, onFai
       throw new Error();
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error.message ?? "Something went wrong :("));
+    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? "Something went wrong :("));
   }
 }

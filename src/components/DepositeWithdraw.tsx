@@ -11,6 +11,7 @@ import { useQuery } from "@apollo/react-hooks";
 import millify from "millify";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useWalletBalance } from "../hooks/utils";
+import { RootState } from "../reducers";
 //import Logo from "../assets/icons/logo.icon";
 
 interface IProps {
@@ -21,7 +22,7 @@ interface IProps {
 export default function DepositeWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const updateWalletBalance = useWalletBalance();
-  const { address, stakingToken, id } = props.data;
+  const { id, pid, master, stakingToken } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -29,7 +30,7 @@ export default function DepositeWithdraw(props: IProps) {
   const [tokenBalance, setTokenBalance] = useState("0");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
-  const selectedAddress = useSelector(state => (state as any).web3Reducer.provider?.selectedAddress) ?? "";
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const { loading, error, data, refetch } = useQuery(getStakerAmountByVaultID(id, selectedAddress));
 
   const stakedAmount: BigNumber = useMemo(() => {
@@ -44,10 +45,10 @@ export default function DepositeWithdraw(props: IProps) {
 
   React.useEffect(() => {
     const checkIsApproved = async () => {
-      setIsApproved(await contractsActions.isApproved(stakingToken, selectedAddress, address));
+      setIsApproved(await contractsActions.isApproved(stakingToken, selectedAddress, master.address));
     }
     checkIsApproved();
-  }, [stakingToken, selectedAddress, address]);
+  }, [stakingToken, selectedAddress, master.address]);
 
   React.useEffect(() => {
     const getTokenData = async () => {
@@ -60,7 +61,7 @@ export default function DepositeWithdraw(props: IProps) {
   const approveToken = async () => {
     setInTransaction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.approveToken(stakingToken, address),
+      async () => contractsActions.approveToken(stakingToken, master.address),
       async () => {
         setIsApproved(true);
       },
@@ -71,7 +72,7 @@ export default function DepositeWithdraw(props: IProps) {
   const deposit = async () => {
     setInTransaction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.deposit(address, userInput),
+      async () => contractsActions.deposit(pid, master.address, userInput),
       async () => {
         refetch();
         props.updateVualts();
@@ -83,7 +84,7 @@ export default function DepositeWithdraw(props: IProps) {
   const withdraw = async () => {
     setInTransaction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.withdraw(address, userInput),
+      async () => contractsActions.withdraw(pid, master.address, userInput),
       async () => {
         refetch();
         props.updateVualts();
@@ -95,7 +96,7 @@ export default function DepositeWithdraw(props: IProps) {
   const claim = async () => {
     setInTransaction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.claim(address),
+      async () => contractsActions.claim(pid, master.address),
       async () => {
         refetch();
         props.updateVualts();
@@ -105,18 +106,18 @@ export default function DepositeWithdraw(props: IProps) {
     setInTransaction(false);
   }
 
-  const exit = async () => {
-    setInTransaction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.exit(address),
-      async () => {
-        refetch();
-        props.updateVualts();
-        setUserInput("0");
-        updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
-      }, () => { }, dispatch);
-    setInTransaction(false);
-  }
+  // const exit = async () => {
+  //   setInTransaction(true);
+  //   await contractsActions.createTransaction(
+  //     async () => contractsActions.exit(pid, master.address),
+  //     async () => {
+  //       refetch();
+  //       props.updateVualts();
+  //       setUserInput("0");
+  //       updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
+  //     }, () => { }, dispatch);
+  //   setInTransaction(false);
+  // }
 
   return <div className={inTransaction ? "deposit-wrapper disabled" : "deposit-wrapper"}>
     <div className="tabs-wrapper">
@@ -176,7 +177,7 @@ export default function DepositeWithdraw(props: IProps) {
     </div>
     <div className="alt-actions-wrapper">
       <button onClick={async () => await claim()} disabled={!isApproved} className="alt-action-btn">CLAIM</button>
-      <button onClick={async () => await exit()} disabled={!isApproved} className="alt-action-btn">EXIT</button>
+      {/* <button onClick={async () => await exit()} disabled={!isApproved} className="alt-action-btn">EXIT</button> */}
     </div>
     {inTransaction && <Loading />}
   </div>

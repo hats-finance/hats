@@ -7,6 +7,7 @@ import millify from "millify";
 import { fromWei, getNetworkNameByChainId } from "../utils"; // numberWithCommas
 import ArrowIcon from "../assets/icons/arrow.icon";
 import { NETWORK } from "../settings";
+import { RootState } from "../reducers";
 
 interface IProps {
   data: IVault,
@@ -16,10 +17,10 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
-  const provider = useSelector(state => (state as any).web3Reducer.provider);
-  const chainId = useSelector(state => (state as any).web3Reducer.provider?.chainId) ?? "";
+  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
+  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
-  const { name, totalStaking, rewardRate } = props.data;
+  const { name, totalStaking } = props.data;
   //console.log(fromWei(rewardRate));
   return (
     <React.Fragment>
@@ -31,7 +32,7 @@ export default function Vault(props: IProps) {
         <td>{millify(Number(fromWei(totalStaking)))}</td>
         <td>???</td>
         <td>???</td>
-        <td>{`${millify(Number(fromWei(rewardRate)))}%`}</td>
+        <td>{`???%`}</td>
         <td>
           <button
             className="action-btn"

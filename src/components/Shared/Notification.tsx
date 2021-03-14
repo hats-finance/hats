@@ -1,12 +1,12 @@
 import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { toggleNotification } from "../../actions/index";
-import { NotificationType } from "../../constants/constants";
+import { RootState } from "../../reducers";
 import "../../styles/Shared/Notification.scss";
 
 export default function Notification() {
   const dispatch = useDispatch();
-  const { type, text }: { type: NotificationType, text: string } = useSelector(state => (state as any).layoutReducer.notification);
+  const { type, text } = useSelector((state: RootState) => state.layoutReducer.notification);
 
   const dismiss = useCallback(() => {
     dispatch(toggleNotification(false, undefined, ""));
@@ -20,8 +20,8 @@ export default function Notification() {
   }, [dispatch, dismiss])
 
   return <div className={`notification-wrapper ${type}`}>
+    <button className="dismiss-btn" onClick={dismiss}>&times;</button>
     <div className="type">{type}</div>
     <div className="text">{text}</div>
-    <button className="dismiss-btn" onClick={dismiss}>&times;</button>
   </div>
 }

@@ -9,10 +9,11 @@ import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { fromWei } from "../utils";
 import { IStaker } from "../types/types";
+import { RootState } from "../reducers";
 
 export default function HatsBreakdown() {
-  const hatsBalance = useSelector(state => (state as any).web3Reducer.hatsBalance);
-  const selectedAddress = useSelector(state => (state as any).web3Reducer.provider?.selectedAddress) ?? "";
+  const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress));
 
   // TODO: need to refetch when necessary

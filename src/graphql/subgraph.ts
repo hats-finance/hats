@@ -4,17 +4,17 @@ export const GET_VAULTS = gql`
   {
     vaults {
       id
-      address
+      pid
       name
       stakingToken
-      rewardsToken
-      governance
-      owner
       totalStaking
       totalReward
-      rewardRate
-      rewardsDuration
-      periodFinish
+      totalRewardPaid
+      approvers
+      allocPoint
+      master {
+        address
+      }
     }
   }
 `;
@@ -23,6 +23,7 @@ export const GET_STAKERS = gql`
   {
     stakers {
       id
+      pid
       createdAt
       address
       amount
