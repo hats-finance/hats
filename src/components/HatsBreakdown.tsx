@@ -14,9 +14,9 @@ import { RootState } from "../reducers";
 export default function HatsBreakdown() {
   const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress));
+  const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
 
-  // TODO: need to refetch when necessary
+  // TODO: need to sum each stake after converting it to USD
   const totalStaked: BigNumber = React.useMemo(() => {
     if (!loading && !error && data && data.stakers) {
       return data.stakers.map((staker: IStaker) => BigNumber.from(staker.amount)).reduce((a: BigNumber, b: BigNumber) => a.add(b), BigNumber.from(0)) ?? BigNumber.from(0);

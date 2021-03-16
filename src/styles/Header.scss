@@ -27,6 +27,11 @@ header {
         background-color: transparent;
         color: $white;
         margin-right: 20px;
+        display: flex;
+        align-items: center;
+        span {
+          margin-left: 10px;
+        }
       }
       .current-address {
         border-left: 1px solid;

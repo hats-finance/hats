@@ -44,6 +44,13 @@
       justify-content: space-between;
       font-size: $medium;
       color: $white;
+      .pool-token {
+        display: flex;
+        align-items: center;
+      }
+      span {
+        margin-left: 10px;
+      }
       input {
         background-color: transparent;
         border: none;

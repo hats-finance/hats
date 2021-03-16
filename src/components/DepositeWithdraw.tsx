@@ -12,7 +12,7 @@ import millify from "millify";
 import { BigNumber } from "@ethersproject/bignumber";
 import { useWalletBalance } from "../hooks/utils";
 import { RootState } from "../reducers";
-//import Logo from "../assets/icons/logo.icon";
+import Logo from "../assets/icons/logo.icon";
 
 interface IProps {
   data: IVault,
@@ -58,6 +58,15 @@ export default function DepositeWithdraw(props: IProps) {
     getTokenData();
   }, [stakingToken, selectedAddress, inTransaction]);
 
+  const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
+
+  React.useEffect(() => {
+    const getPendingReward = async () => {
+      setPendingReward(await contractsActions.getPendingReward(master.address, pid, selectedAddress));
+    }
+    getPendingReward();
+  }, [master.address, selectedAddress, pid, inTransaction])
+
   const approveToken = async () => {
     setInTransaction(true);
     await contractsActions.createTransaction(
@@ -102,22 +111,9 @@ export default function DepositeWithdraw(props: IProps) {
         props.updateVualts();
         setUserInput("0");
         updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
-      }, () => { }, dispatch);
+      }, () => { }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     setInTransaction(false);
   }
-
-  // const exit = async () => {
-  //   setInTransaction(true);
-  //   await contractsActions.createTransaction(
-  //     async () => contractsActions.exit(pid, master.address),
-  //     async () => {
-  //       refetch();
-  //       props.updateVualts();
-  //       setUserInput("0");
-  //       updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
-  //     }, () => { }, dispatch);
-  //   setInTransaction(false);
-  // }
 
   return <div className={inTransaction ? "deposit-wrapper disabled" : "deposit-wrapper"}>
     <div className="tabs-wrapper">
@@ -135,7 +131,7 @@ export default function DepositeWithdraw(props: IProps) {
           <span>&#8776; $0.00</span>
         </div>
         <div className="input-wrapper">
-          <span>HATS</span>
+          <div className="pool-token"><Logo width="30" /> <span>HATS</span></div>
           <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
         </div>
         {isDeposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -176,8 +172,7 @@ export default function DepositeWithdraw(props: IProps) {
         onClick={async () => await withdraw()}>WITHDRAW</button>}
     </div>
     <div className="alt-actions-wrapper">
-      <button onClick={async () => await claim()} disabled={!isApproved} className="alt-action-btn">CLAIM</button>
-      {/* <button onClick={async () => await exit()} disabled={!isApproved} className="alt-action-btn">EXIT</button> */}
+      <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${millify(Number(fromWei(pendingReward)))} HATS`}</button>
     </div>
     {inTransaction && <Loading />}
   </div>

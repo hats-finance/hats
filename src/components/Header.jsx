@@ -14,6 +14,8 @@ import Modal from "./Shared/Modal";
 import HatsBreakdown from "./HatsBreakdown";
 import millify from "millify";
 import { NETWORK } from "../settings";
+import MenuIcon from "../assets/icons/hamburger.icon";
+import Logo from "../assets/icons/logo.icon";
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -61,12 +63,13 @@ export default function Header() {
 
   return (
     <header>
-      {screenSize === ScreenSize.Small && <div>MENU</div>}
+      {screenSize === ScreenSize.Small && <MenuIcon />}
+      {screenSize === ScreenSize.Small && <Logo />}
       <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
       <div className="wallet-wrapper">
-        {provider &&
+        {screenSize !== ScreenSize.Small && provider &&
           <div className="wallet-details">
-            <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}>Hats</button>
+            <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo fill="#8AFCFD" width="30" height="30" /><span>Hats</span></button>
             {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>
               {!ethBalance ? <Lodaing /> : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
             </div>}

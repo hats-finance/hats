@@ -86,14 +86,16 @@ export const claim = async (pid: string, address: string) => {
   return await contract.claimReward(pid);
 }
 
-// /**
-//  * Exit
-//  * @param {string} address
-//  */
-// export const exit = async (pid: string, address: string) => {
-//   const contract = new Contract(address, vaultAbi, signer);
-//   return await contract.claimReward(pid);
-// }
+/**
+ * Returns the HATS reward for a user
+ * @param {string} address
+ * @param {stirng} pid
+ * @param {string} selectedAddress
+ */
+export const getPendingReward = async (address: string, pid: string, selectedAddress: string) => {
+  const contract = new Contract(address, vaultAbi, signer);
+  return await contract.pendingReward(pid, selectedAddress);
+}
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain
