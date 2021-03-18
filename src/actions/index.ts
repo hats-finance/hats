@@ -1,5 +1,6 @@
 import * as types from "../constants/action-types";
 import { ScreenSize, NotificationType } from "../constants/constants";
+import { IVault } from "../types/types";
 
 export const connect = ({ provider }) => ({
   type: types.CONNECT,
@@ -32,4 +33,9 @@ export const toggleNotification = (show: boolean, notificationType: Notification
   show,
   notificationType,
   text
+})
+
+export const updateVaults = (vaults: Array<IVault>) => ({
+  type: types.UPDATE_VAULTS,
+  vaults
 })

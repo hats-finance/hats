@@ -14,6 +14,7 @@ export default function Sidebar() {
       <Link to="/" className="logo"><Logo /></Link>
       <NavLink to="/honeypots" className="sidebar-link" activeClassName="selected">Honeypots</NavLink>
       <NavLink to="/gov" className="sidebar-link" activeClassName="selected">Gov</NavLink>
+      <NavLink to="/vulnerability" className="sidebar-link vulnerability" activeClassName="selected">Submit Vulnerability</NavLink>
       <div className="bottom-wrapper">
         <div className="social-wrapper">
           <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TelegramIcon /></a>

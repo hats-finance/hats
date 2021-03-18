@@ -18,8 +18,15 @@
     height: 50px;
     line-height: 50px;
     padding-left: 15px;
-    border-left: 4px solid transparent;
+    border-left: 6px solid transparent;
     margin: 20px 0px;
+    &.vulnerability {
+      color: $red;
+      &.selected {
+        border-color: $red;
+        color: $red;
+      }
+    }
     &.selected {
       border-left-color: $turquoise;
       color: $turquoise;

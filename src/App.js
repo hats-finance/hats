@@ -1,33 +1,19 @@
 import React, { useState } from "react";
-//import { Contract } from "@ethersproject/contracts";
-//import { getDefaultProvider } from "@ethersproject/providers";
 import { Route, Switch, Redirect } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
-import { changeScreenSize, updateSelectedAddress, toggleNotification } from './actions/index';
+import { useDispatch, useSelector } from "react-redux";
+import { GET_VAULTS } from "./graphql/subgraph";
+import { useQuery } from "@apollo/react-hooks";
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults } from './actions/index';
 import { getNetworkNameByChainId } from "./utils";
 import { NETWORK } from "./settings";
-//import logo from "./ethereumLogo.png";
-//import { addresses, abis } from "@project/contracts";
 import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
+import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
-
-// async function readOnChainData() {
-//   // Should replace with the end-user wallet, e.g. Metamask
-//   const defaultProvider = getDefaultProvider();
-//   // Create an instance of an ethers.js Contract
-//   // Read more about ethers.js on https://docs.ethers.io/v5/api/contract/contract/
-//   const ceaErc20 = new Contract(addresses.ceaErc20, abis.erc20, defaultProvider);
-//   // A pre-defined address that owns some CEAERC20 tokens
-//   const tokenBalance = await ceaErc20.balanceOf("0x3f8CB69d9c0ED01923F11c829BaE4D9a4CB6c82C");
-//   console.log({ tokenBalance: tokenBalance.toString() });
-// }
-
-// <button onClick={() => readOnChainData()}>Read On-Chain Balance</button>
 
 function App() {
   const dispatch = useDispatch();
@@ -61,6 +47,15 @@ function App() {
     });
   }
 
+  const { loading, error, data, refetch } = useQuery(GET_VAULTS);
+
+  React.useEffect(() => {
+    if (!loading && !error && data && data.vaults) {
+      console.log({ vaults: data.vaults });
+      dispatch(updateVaults(data.vaults));
+    }
+  }, [loading, error, data, dispatch]);
+
   return (
     <React.Fragment>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
@@ -71,10 +66,13 @@ function App() {
           <Redirect to="/honeypots" />
         </Route>
         <Route path="/honeypots">
-          <Honeypots />
+          <Honeypots refetchVaults={refetch} />
         </Route>
         <Route path="/gov">
           <div>GOV</div>
+        </Route>
+        <Route path="/vulnerability">
+          <VulnerabilityAccordion />
         </Route>
       </Switch>
       {showNotification && <Notification />}
@@ -83,3 +81,16 @@ function App() {
 }
 
 export default App;
+
+// async function readOnChainData() {
+//   // Should replace with the end-user wallet, e.g. Metamask
+//   const defaultProvider = getDefaultProvider();
+//   // Create an instance of an ethers.js Contract
+//   // Read more about ethers.js on https://docs.ethers.io/v5/api/contract/contract/
+//   const ceaErc20 = new Contract(addresses.ceaErc20, abis.erc20, defaultProvider);
+//   // A pre-defined address that owns some CEAERC20 tokens
+//   const tokenBalance = await ceaErc20.balanceOf("0x3f8CB69d9c0ED01923F11c829BaE4D9a4CB6c82C");
+//   console.log({ tokenBalance: tokenBalance.toString() });
+// }
+
+// <button onClick={() => readOnChainData()}>Read On-Chain Balance</button>
