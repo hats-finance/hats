@@ -99,11 +99,3 @@ export const toWei = (value: string): BigNumber => {
 export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
 }
-
-/**
- * 
- * @param obj
- */
-export const isEmptyObject = (obj: any): boolean => {
-  return obj && Object.keys(obj).length === 0 && obj.constructor === Object;
-}
