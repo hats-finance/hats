@@ -2271,6 +2271,11 @@
   dependencies:
     "@types/node" "*"
 
+"@types/downloadjs@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@types/downloadjs/-/downloadjs-1.4.2.tgz#6734e60840cd8df3f0f8937c80e67efe7de6f886"
+  integrity sha512-9UWO+nrRhwyKcFe45SFc98sWI8RGwpVwtZiZzi0W/dWdrp1SiUWFNANLlAXZb5QCMFDbeRiAQEhRn5btLd4a4w==
+
 "@types/eslint@^7.2.6":
   version "7.2.6"
   resolved "https://registry.yarnpkg.com/@types/eslint/-/eslint-7.2.6.tgz#5e9aff555a975596c03a98b59ecd103decc70c3c"
@@ -2465,6 +2470,11 @@
   integrity sha512-+ZjSA8ELlOp8SlKi0YLB2tz9d5iPNEmOBd+8Rz21wTMdaXQIa9b6TEnD6l5qKOCypE7FSyPyck12qZJxSDNoog==
   dependencies:
     "@types/node" "*"
+
+"@types/showdown@^1.9.3":
+  version "1.9.3"
+  resolved "https://registry.yarnpkg.com/@types/showdown/-/showdown-1.9.3.tgz#eaa881b03a32d3720184731754d3025fc450b970"
+  integrity sha512-akvzSmrvY4J5d3tHzUUiQr0xpjd4Nb3uzWW6dtwzYJ+qW/KdWw5F8NLatnor5q/1LURHnzDA1ReEwCVqcatRnw==
 
 "@types/source-list-map@*":
   version "0.1.2"
@@ -5377,6 +5387,11 @@ dotenv@8.2.0:
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.2.0.tgz#97e619259ada750eea3e4ea3e26bceea5424b16a"
   integrity sha512-8sJ78ElpbDJBHNeBzUbUVLsqKdccaa/BXF1uPTw3GrvQTBgrQrtObr2mUrE38vzYd8cEv+m/JBfDLioYcfXoaw==
+
+downloadjs@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/downloadjs/-/downloadjs-1.4.7.tgz#f69f96f940e0d0553dac291139865a3cd0101e3c"
+  integrity sha1-9p+W+UDg0FU9rCkROYZaPNAQHjw=
 
 duplexer@^0.1.1:
   version "0.1.2"
