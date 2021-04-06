@@ -1,7 +1,8 @@
-import { UPDATE_VAULTS } from '../constants/action-types';
+import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN } from '../constants/action-types';
 
 const initialState = {
-  vaults: []
+  vaults: [],
+  rewardsToken: ""
 };
 
 export const dataReducer = (state = initialState, action) => {
@@ -10,6 +11,12 @@ export const dataReducer = (state = initialState, action) => {
       return {
         ...state,
         vaults: action.vaults
+      }
+    }
+    case UPDATE_REWARDS_TOKEN: {
+      return {
+        ...state,
+        rewardsToken: action.rewardsToken
       }
     }
     default: return state;

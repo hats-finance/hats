@@ -27,15 +27,13 @@ export enum TransactionStatus {
 
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
-/**
- * HATS token address (rinkeby)
- * We assume that this is not going to be changed.
- * This is used to fetch the HATS balance.
- */
-export const HATS_TOKEN = "0x23cC400d14FC3EA7DE7551306107961d88e61537";
-
 export enum NotificationType {
   Success = "SUCCESS",
   Error = "ERROR",
   Info = "INFO"
+}
+
+export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
+  border: "none",
+  minHeight: "unset"
 }

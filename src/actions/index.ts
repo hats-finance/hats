@@ -12,7 +12,7 @@ export const updateSelectedAddress = (selectedAddress: string) => ({
   selectedAddress
 })
 
-export const updateWalletBalance = (ethBalance: string, hatsBalance: string) => ({
+export const updateWalletBalance = (ethBalance: any, hatsBalance: any) => ({
   type: types.UPDATE_WALLET_BALANCE,
   ethBalance,
   hatsBalance
@@ -38,4 +38,9 @@ export const toggleNotification = (show: boolean, notificationType: Notification
 export const updateVaults = (vaults: Array<IVault>) => ({
   type: types.UPDATE_VAULTS,
   vaults
+})
+
+export const updateRewardsToken = (rewardsToken: string) => ({
+  type: types.UPDATE_REWARDS_TOKEN,
+  rewardsToken
 })

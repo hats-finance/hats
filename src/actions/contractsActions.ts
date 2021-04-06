@@ -98,6 +98,16 @@ export const getPendingReward = async (address: string, pid: string, selectedAdd
 }
 
 /**
+ * Submits the hash of the vulnerability description
+ * @param {string} address
+ * @param {string} descriptionHash the sha256 of the vulnerability description
+ */
+export const submitVulnerability = async (address: string, descriptionHash: string) => {
+  const contract = new Contract(address, vaultAbi, signer);
+  return await contract.claim(descriptionHash);
+}
+
+/**
  * This is a generic function that wraps a call that interacts with the blockchain
  * Dispatches automatically a notification on success or on error.
  * @param {Function} tx The function that creates the transaction on the blockchain

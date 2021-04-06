@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
-import { useWalletBalance } from "../hooks/utils";
 import { connect } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
-import { truncatedAddress, getNetworkNameByChainId, getMainPath } from "../utils";
+import { truncatedAddress, getNetworkNameByChainId, getMainPath, fetchWalletBalance } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
 import { ScreenSize } from "../constants/constants";
@@ -40,13 +39,13 @@ export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
-  const updateWalletBalance = useWalletBalance();
   const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
   const { ethBalance, hatsBalance } = useSelector(state => state.web3Reducer);
   const screenSize = useSelector(state => state.layoutReducer.screenSize);
   const [showModal, setShowModal] = useState(false);
   const chainId = useSelector(state => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
+  const rewardsToken = useSelector(state => state.dataReducer.rewardsToken);
 
   React.useEffect(() => {
     dispatch(connect(provider || {}));
@@ -54,12 +53,12 @@ export default function Header() {
 
   React.useEffect(() => {
     const getWalletBalance = async () => {
-      await updateWalletBalance();
+      fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
     }
-    if (network === NETWORK) {
+    if (network === NETWORK && selectedAddress && rewardsToken) {
       getWalletBalance();
     }
-  }, [selectedAddress, network]);
+  }, [selectedAddress, network, rewardsToken, dispatch]);
 
   return (
     <header>

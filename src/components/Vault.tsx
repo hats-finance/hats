@@ -38,7 +38,7 @@ export default function Vault(props: IProps) {
             className="action-btn"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
             disabled={!provider || network !== NETWORK}>
-            DEPOSITE / WITHDRAW
+            DEPOSIT / WITHDRAW
           </button>
         </td>
       </tr>

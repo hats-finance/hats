@@ -1,4 +1,5 @@
 @import "./constants.scss";
+@import "rc-tooltip/assets/bootstrap_white.css";
 
 .deposit-wrapper {
   position: relative;
@@ -6,26 +7,30 @@
   flex-direction: column;
   height: 100%;
   justify-content: space-between;
+  background-color: $blue;
   > div {
     padding: 0px $modal-element-padding;
   }
   .tabs-wrapper {
     display: flex;
-    margin-top: 15px;
+    padding: 0;
     .tab {
       width: 100%;
-      background-color: transparent;
       color: $white;
       font-size: $medium;
-      &.selected {
-        font-weight: bold;
+      margin: 0;
+      &.deposit {
+        background-color: $blue;
+      }
+      &.withdraw {
+        background-color: $light-blue;
       }
     }
   }
   .balance-wrapper {
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-top: 30px;
     margin-bottom: 10px;
   }
@@ -127,5 +132,8 @@
     opacity: 0.5;
     pointer-events: none;
     animation: disabledFade .4s;
+  }
+  &.in-withdraw {
+    background-color: $light-blue;
   }
 }

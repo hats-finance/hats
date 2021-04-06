@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault";
-import DepositeWithdraw from "./DepositeWithdraw";
+import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 
@@ -33,7 +33,7 @@ export default function Honeypots(props) {
       </table>}
       {showModal &&
         <Modal title={modalData.name} setShowModal={setShowModal} >
-          <DepositeWithdraw data={modalData} updateVualts={props.refetchVaults} />
+          <DepositWithdraw data={modalData} updateVualts={props.refetchVaults} />
         </Modal>}
     </div>
   )

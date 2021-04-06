@@ -2,6 +2,9 @@ import { Networks } from "./constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
+import { Dispatch } from "redux";
+import { updateWalletBalance } from "./actions";
+import { getTokenBalance } from "./actions/contractsActions";
 
 /**
  * Adds commas to a given number
@@ -98,4 +101,17 @@ export const toWei = (value: string): BigNumber => {
  */
 export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
+}
+
+/**
+ * Updats the ETH and HATS wallet balance
+ * TODO: Not necessary when we will use WebSocket to fetch the balance
+ * @param {Dispatch} dispatch 
+ * @param {Networks} network 
+ * @param {string} selectedAddress 
+ * @param {string} rewardsToken 
+ */
+export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string) => {
+  dispatch(updateWalletBalance(null, null));
+  dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress)));
 }

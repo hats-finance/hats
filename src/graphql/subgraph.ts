@@ -35,6 +35,14 @@ export const GET_STAKERS = gql`
   }
 `;
 
+export const GET_REWARDS_TOKEN = gql`
+  {
+    masters {
+      rewardsToken
+    }
+  }
+`
+
 export const getStakerByAddress = (stakerAddress: string) => {
   return gql`
     {

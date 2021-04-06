@@ -1,28 +1,29 @@
 import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fromWei, isDigitsOnly } from "../utils";
+import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
-import "../styles/DepositeWithdraw.scss";
+import "../styles/DepositWithdraw.scss";
 import * as contractsActions from "../actions/contractsActions";
 import { IVault } from "../types/types";
 import { getStakerAmountByVaultID } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import millify from "millify";
 import { BigNumber } from "@ethersproject/bignumber";
-import { useWalletBalance } from "../hooks/utils";
 import { RootState } from "../reducers";
 import Logo from "../assets/icons/logo.icon";
+import Tooltip from "rc-tooltip";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import millify from "millify";
+import classNames from "classnames";
 
 interface IProps {
   data: IVault,
   updateVualts: Function
 }
 
-export default function DepositeWithdraw(props: IProps) {
+export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const updateWalletBalance = useWalletBalance();
-  const { id, pid, master, stakingToken } = props.data;
+  const { id, pid, master, stakingToken, name } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -31,6 +32,9 @@ export default function DepositeWithdraw(props: IProps) {
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
+  const network = getNetworkNameByChainId(chainId);
   const { loading, error, data, refetch } = useQuery(getStakerAmountByVaultID(id, selectedAddress));
 
   const stakedAmount: BigNumber = useMemo(() => {
@@ -98,6 +102,7 @@ export default function DepositeWithdraw(props: IProps) {
         refetch();
         props.updateVualts();
         setUserInput("0");
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol}`);
     setInTransaction(false);
   }
@@ -110,19 +115,24 @@ export default function DepositeWithdraw(props: IProps) {
         refetch();
         props.updateVualts();
         setUserInput("0");
-        updateWalletBalance(); // TODO: Not necessary when we will use WebSocket to fetch the balance
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     setInTransaction(false);
   }
 
-  return <div className={inTransaction ? "deposit-wrapper disabled" : "deposit-wrapper"}>
+  const depositWithdrawWrapperClass = classNames({
+    "deposit-wrapper": true,
+    "in-withdraw": !isDeposit,
+    "disabled": inTransaction
+  })
+
+  return <div className={depositWithdrawWrapperClass}>
     <div className="tabs-wrapper">
-      <button className={isDeposit ? "tab selected" : "tab"} onClick={() => { setIsDeposit(true); setUserInput("0"); }}>DEPOSIT</button>
-      <button className={isDeposit ? "tab" : "tab selected"} onClick={() => { setIsDeposit(false); setUserInput("0"); }}>WITHDRAW</button>
+      <button className="tab deposit" onClick={() => { setIsDeposit(true); setUserInput("0"); }}>DEPOSIT</button>
+      <button className="tab withdraw" onClick={() => { setIsDeposit(false); setUserInput("0"); }}>WITHDRAW</button>
     </div>
     <div className="balance-wrapper">
-      <span>Amount</span>
-      {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
+      {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${numberWithCommas(Number(tokenBalance))}`}</span>}
     </div>
     <div>
       <div className={!isApproved ? "amount-wrapper disabled" : "amount-wrapper"}>
@@ -131,7 +141,7 @@ export default function DepositeWithdraw(props: IProps) {
           <span>&#8776; $0.00</span>
         </div>
         <div className="input-wrapper">
-          <div className="pool-token"><Logo width="30" /> <span>HATS</span></div>
+          <div className="pool-token"><Logo width="30" /> <span>{name}</span></div>
           <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
         </div>
         {isDeposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -146,15 +156,31 @@ export default function DepositeWithdraw(props: IProps) {
     </div>
     <div className="staked-wrapper">
       <span>You staked</span>
-      <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{millify(Number(fromWei(stakedAmount)))}</span>}</div>
+      <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
     </div>
     <div className="earnings-wrapper">
-      <span>Monthly earnings &nbsp; <InfoIcon /></span>
+      <span>Monthly earnings &nbsp;
+        <Tooltip
+          overlay="Estimated monthly earnings based on total staked amount and rate reward"
+          overlayClassName="tooltip"
+          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+          placement="top">
+          <span><InfoIcon /></span>
+        </Tooltip>
+      </span>
       <span>0 Hats</span>
       <span>$???</span>
     </div>
     <div className="earnings-wrapper">
-      <span>Yearly earnings &nbsp; <InfoIcon /></span>
+      <span>Yearly earnings &nbsp;
+        <Tooltip
+          overlay="Estimated yearly earnings based on total staked amount and rate reward"
+          overlayClassName="tooltip"
+          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+          placement="top">
+          <span><InfoIcon /></span>
+        </Tooltip>
+      </span>
       <span>0 Hats</span>
       <span>$???</span>
     </div>
@@ -169,7 +195,7 @@ export default function DepositeWithdraw(props: IProps) {
       {isApproved && !isDeposit && <button
         disabled={!canWithdraw || !userInput || userInput === "0"}
         className="action-btn"
-        onClick={async () => await withdraw()}>WITHDRAW</button>}
+        onClick={async () => await withdraw()}>WITHDRAW AND CLAIM</button>}
     </div>
     <div className="alt-actions-wrapper">
       <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${millify(Number(fromWei(pendingReward)))} HATS`}</button>

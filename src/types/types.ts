@@ -33,5 +33,6 @@ export interface IMaster {
   startBlock: string,
   vaults: Array<IVault>,
   totalAllocPoints: string,
-  createdAt: string
+  createdAt: string,
+  rewardsToken: string
 }

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_VAULTS } from "./graphql/subgraph";
+import { GET_VAULTS, GET_REWARDS_TOKEN } from "./graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults } from './actions/index';
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken } from './actions/index';
 import { getNetworkNameByChainId } from "./utils";
 import { NETWORK } from "./settings";
 import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
@@ -51,10 +51,18 @@ function App() {
 
   React.useEffect(() => {
     if (!loading && !error && data && data.vaults) {
-      console.log({ vaults: data.vaults });
+      //console.log({ vaults: data.vaults });
       dispatch(updateVaults(data.vaults));
     }
   }, [loading, error, data, dispatch]);
+
+  const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_REWARDS_TOKEN);
+
+  React.useEffect(() => {
+    if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
+      dispatch(updateRewardsToken(dataRewardsToken.masters[0].rewardsToken));
+    }
+  }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
 
   return (
     <React.Fragment>

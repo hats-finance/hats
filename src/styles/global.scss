@@ -55,3 +55,8 @@ button:focus {
 		opacity: 0.5;
 	}
 }
+
+/* additional className added to popup overlay (rc-tooltip) */
+.tooltip {
+  opacity: 1 !important;
+}
