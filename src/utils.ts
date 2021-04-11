@@ -105,7 +105,6 @@ export const isDigitsOnly = (value: string): boolean => {
 
 /**
  * Updats the ETH and HATS wallet balance
- * TODO: Not necessary when we will use WebSocket to fetch the balance
  * @param {Dispatch} dispatch 
  * @param {Networks} network 
  * @param {string} selectedAddress 

@@ -1,4 +1,6 @@
 import React, { useCallback } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers";
 import "../../styles/Shared/Modal.scss";
 
 interface IProps {
@@ -10,12 +12,13 @@ interface IProps {
 
 export default function Modal(props: IProps) {
   document.documentElement.style.setProperty("--height", props.height ?? "100vh");
+  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
 
   const escapeHandler = useCallback((event) => {
-    if (event.keyCode === 27) {
+    if (event.keyCode === 27 && !inTransaction) {
       props.setShowModal(false);
     }
-  }, [props]);
+  }, [props, inTransaction]);
 
   React.useEffect(() => {
     window.addEventListener("keydown", escapeHandler);
@@ -27,7 +30,7 @@ export default function Modal(props: IProps) {
   }, [escapeHandler]);
 
   const onBackdropClick = (event) => {
-    if (event.target.className === "modal-wrapper") {
+    if (event.target.className === "modal-wrapper" && !inTransaction) {
       props.setShowModal(false);
     }
   }

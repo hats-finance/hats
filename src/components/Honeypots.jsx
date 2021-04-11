@@ -33,7 +33,7 @@ export default function Honeypots(props) {
       </table>}
       {showModal &&
         <Modal title={modalData.name} setShowModal={setShowModal} >
-          <DepositWithdraw data={modalData} updateVualts={props.refetchVaults} />
+          <DepositWithdraw data={modalData} />
         </Modal>}
     </div>
   )

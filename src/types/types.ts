@@ -18,7 +18,8 @@ export interface IStaker {
   createdAt: string,
   address: string,
   vault: IVault,
-  amount: string
+  amount: string,
+  rewardPaid: string
 }
 
 export interface IMaster {

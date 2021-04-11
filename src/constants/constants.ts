@@ -13,7 +13,7 @@ export enum Networks {
 export enum Pages {
   honeypots = "Honeypots",
   gov = "Gov",
-  vulnerability = "Submit vulnerability",
+  vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools"
 }
 

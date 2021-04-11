@@ -5,7 +5,7 @@ import { GET_VAULTS, GET_REWARDS_TOKEN } from "./graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken } from './actions/index';
 import { getNetworkNameByChainId } from "./utils";
-import { NETWORK } from "./settings";
+import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Header from "./components/Header";
@@ -47,7 +47,7 @@ function App() {
     });
   }
 
-  const { loading, error, data, refetch } = useQuery(GET_VAULTS);
+  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
   React.useEffect(() => {
     if (!loading && !error && data && data.vaults) {
@@ -74,7 +74,7 @@ function App() {
           <Redirect to="/honeypots" />
         </Route>
         <Route path="/honeypots">
-          <Honeypots refetchVaults={refetch} />
+          <Honeypots />
         </Route>
         <Route path="/gov">
           <div>GOV</div>

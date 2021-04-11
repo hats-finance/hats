@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN_SIZE, TOGGLE_MENU, TOGGLE_NOTIFICATION } from '../constants/action-types';
+import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION } from '../constants/action-types';
 import { getScreenSize } from '../utils';
 
 const initialState = {
@@ -8,7 +8,8 @@ const initialState = {
     show: false,
     type: undefined,
     text: ""
-  }
+  },
+  inTransaction: false
 };
 
 export const layoutReducer = (state = initialState, action) => {
@@ -32,6 +33,11 @@ export const layoutReducer = (state = initialState, action) => {
           type: action.notificationType,
           text: action.text
         }
+      }
+    case TOGGLE_IN_TRANSACTION:
+      return {
+        ...state,
+        inTransaction: action.inTransaction
       }
     default: return state;
   }

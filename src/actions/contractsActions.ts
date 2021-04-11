@@ -3,16 +3,19 @@ import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import { NotificationType, TransactionStatus } from "../constants/constants";
-import { Web3Provider } from "@ethersproject/providers";
+import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
 import { toggleNotification } from "./index";
+import { NETWORK } from "../settings";
 
 let provider: Web3Provider;
 let signer: Signer;
+let infuraProvider: InfuraWebSocketProvider;
 
 if (window.ethereum) {
   provider = new ethers.providers.Web3Provider((window as any).ethereum);
   signer = provider.getSigner();
+  infuraProvider = InfuraProvider.getWebSocketProvider(NETWORK);
 }
 
 /**
@@ -30,7 +33,7 @@ export const getTokenSymbol = async (tokenAddress: string): Promise<string> => {
  * @param {string} selectedAddress
  */
 export const getTokenBalance = async (tokenAddress: string, selectedAddress: string): Promise<string> => {
-  const contract = new Contract(tokenAddress, erc20Abi, provider);
+  const contract = new Contract(tokenAddress, erc20Abi, infuraProvider); // provider
   const balance: BigNumber = await contract.balanceOf(selectedAddress);
   return fromWei(balance);
 }
@@ -68,11 +71,11 @@ export const deposit = async (pid: string, address: string, amount: string) => {
 }
 
 /**
- * Withdraw
+ * Withdraw and claim (if acceptable)
  * @param {string} address
  * @param {string} amount
  */
-export const withdraw = async (pid: string, address: string, amount: string) => {
+export const withdrawAndClaim = async (pid: string, address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.withdraw(pid, toWei(amount));
 }

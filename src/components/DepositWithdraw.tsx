@@ -15,10 +15,11 @@ import Tooltip from "rc-tooltip";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
+import { DATA_POLLING_INTERVAL } from "../settings";
+import { toggleInTransaction } from "../actions";
 
 interface IProps {
-  data: IVault,
-  updateVualts: Function
+  data: IVault
 }
 
 export default function DepositWithdraw(props: IProps) {
@@ -27,7 +28,7 @@ export default function DepositWithdraw(props: IProps) {
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
-  const [inTransaction, setInTransaction] = useState(false);
+  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const [tokenBalance, setTokenBalance] = useState("0");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
@@ -35,7 +36,7 @@ export default function DepositWithdraw(props: IProps) {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
-  const { loading, error, data, refetch } = useQuery(getStakerAmountByVaultID(id, selectedAddress));
+  const { loading, error, data } = useQuery(getStakerAmountByVaultID(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
 
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
@@ -72,52 +73,46 @@ export default function DepositWithdraw(props: IProps) {
   }, [master.address, selectedAddress, pid, inTransaction])
 
   const approveToken = async () => {
-    setInTransaction(true);
+    dispatch(toggleInTransaction(true));
     await contractsActions.createTransaction(
       async () => contractsActions.approveToken(stakingToken, master.address),
       async () => {
         setIsApproved(true);
       },
       () => { }, dispatch, `Spending ${tokenSymbol} approved`);
-    setInTransaction(false);
+    dispatch(toggleInTransaction(false));
   }
 
   const deposit = async () => {
-    setInTransaction(true);
+    dispatch(toggleInTransaction(true));
     await contractsActions.createTransaction(
       async () => contractsActions.deposit(pid, master.address, userInput),
       async () => {
-        refetch();
-        props.updateVualts();
         setUserInput("0");
       }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol}`);
-    setInTransaction(false);
+    dispatch(toggleInTransaction(false));
   }
 
-  const withdraw = async () => {
-    setInTransaction(true);
+  const withdrawAndClaim = async () => {
+    dispatch(toggleInTransaction(true));
     await contractsActions.createTransaction(
-      async () => contractsActions.withdraw(pid, master.address, userInput),
+      async () => contractsActions.withdrawAndClaim(pid, master.address, userInput),
       async () => {
-        refetch();
-        props.updateVualts();
         setUserInput("0");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol}`);
-    setInTransaction(false);
+      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+    dispatch(toggleInTransaction(false));
   }
 
   const claim = async () => {
-    setInTransaction(true);
+    dispatch(toggleInTransaction(true));
     await contractsActions.createTransaction(
       async () => contractsActions.claim(pid, master.address),
       async () => {
-        refetch();
-        props.updateVualts();
         setUserInput("0");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
-    setInTransaction(false);
+    dispatch(toggleInTransaction(false));
   }
 
   const depositWithdrawWrapperClass = classNames({
@@ -195,7 +190,7 @@ export default function DepositWithdraw(props: IProps) {
       {isApproved && !isDeposit && <button
         disabled={!canWithdraw || !userInput || userInput === "0"}
         className="action-btn"
-        onClick={async () => await withdraw()}>WITHDRAW AND CLAIM</button>}
+        onClick={async () => await withdrawAndClaim()}>WITHDRAW AND CLAIM</button>}
     </div>
     <div className="alt-actions-wrapper">
       <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${millify(Number(fromWei(pendingReward)))} HATS`}</button>

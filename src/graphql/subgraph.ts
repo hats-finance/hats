@@ -35,6 +35,7 @@ export const GET_STAKERS = gql`
   }
 `;
 
+// This is the HAT token
 export const GET_REWARDS_TOKEN = gql`
   {
     masters {
