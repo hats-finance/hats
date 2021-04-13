@@ -10,11 +10,15 @@ export const GET_VAULTS = gql`
       totalStaking
       totalReward
       totalRewardPaid
-      approvers
+      committee
       allocPoint
       master {
         address
+        numberOfSubmittedClaims
       }
+      numberOfApprovedClaims
+      rewardsLevels
+      rewardsSplit
     }
   }
 `;

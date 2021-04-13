@@ -104,7 +104,7 @@ export const isDigitsOnly = (value: string): boolean => {
 }
 
 /**
- * Updats the ETH and HATS wallet balance
+ * Updates the ETH and HATS wallet balance
  * @param {Dispatch} dispatch 
  * @param {Networks} network 
  * @param {string} selectedAddress 

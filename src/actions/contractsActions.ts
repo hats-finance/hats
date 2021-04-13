@@ -61,11 +61,11 @@ export const approveToken = async (tokenAddress: string, tokenSpender: string) =
 }
 
 /**
- * Deposit
+ * Deposit and claim (if acceptable)
  * @param {string} address
  * @param {string} amount
  */
-export const deposit = async (pid: string, address: string, amount: string) => {
+export const depositAndClaim = async (pid: string, address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.deposit(pid, toWei(amount));
 }

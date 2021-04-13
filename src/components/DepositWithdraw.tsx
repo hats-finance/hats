@@ -83,13 +83,14 @@ export default function DepositWithdraw(props: IProps) {
     dispatch(toggleInTransaction(false));
   }
 
-  const deposit = async () => {
+  const depositAndClaim = async () => {
     dispatch(toggleInTransaction(true));
     await contractsActions.createTransaction(
-      async () => contractsActions.deposit(pid, master.address, userInput),
+      async () => contractsActions.depositAndClaim(pid, master.address, userInput),
       async () => {
         setUserInput("0");
-      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol}`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol} and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -186,7 +187,7 @@ export default function DepositWithdraw(props: IProps) {
       {isApproved && isDeposit && <button
         disabled={notEnoughBalance || !userInput || userInput === "0"}
         className="action-btn"
-        onClick={async () => await deposit()}>DEPOSIT</button>}
+        onClick={async () => await depositAndClaim()}>DEPOSIT AND CLAIM</button>}
       {isApproved && !isDeposit && <button
         disabled={!canWithdraw || !userInput || userInput === "0"}
         className="action-btn"

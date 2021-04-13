@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import "../styles/Vault.scss";
 import { IVault } from "../types/types";
 import { useSelector } from "react-redux";
-//import moment from "moment";
 import millify from "millify";
-import { fromWei, getNetworkNameByChainId } from "../utils";
+import { fromWei, getNetworkNameByChainId, numberWithCommas } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
 import { NETWORK } from "../settings";
 import { RootState } from "../reducers";
@@ -20,7 +19,7 @@ export default function Vault(props: IProps) {
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
-  const { name, totalStaking } = props.data;
+  const { name, totalStaking, numberOfApprovedClaims, master } = props.data;
 
   return (
     <React.Fragment>
@@ -30,7 +29,7 @@ export default function Vault(props: IProps) {
         </td>
         <td style={{ textAlign: "left" }}>{name}</td>
         <td>{millify(Number(fromWei(totalStaking)))}</td>
-        <td>???</td>
+        <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
         <td>???</td>
         <td>{`???%`}</td>
         <td>
@@ -45,7 +44,7 @@ export default function Vault(props: IProps) {
       {
         toggleRow &&
         <tr>
-          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ???`}</td>
+          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
         </tr>
       }
     </React.Fragment>
