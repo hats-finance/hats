@@ -1,7 +1,5 @@
 .loading-wrapper {
   position: absolute;
-  top: var(--top);
-  right: 50%;
   transform: translate(50%, -50%);
   &.fixed {
     position: fixed;

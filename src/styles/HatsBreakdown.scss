@@ -35,6 +35,7 @@
     .data-long {
       display: flex;
       justify-content: space-between;
+      position: relative;
       &:first-child {
         margin-bottom: 30px;
       }

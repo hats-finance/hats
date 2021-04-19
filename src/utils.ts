@@ -5,6 +5,8 @@ import { BigNumber, ethers } from "ethers";
 import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
+import axios from "axios";
+import { IVault } from "./types/types";
 
 /**
  * Adds commas to a given number
@@ -113,4 +115,43 @@ export const isDigitsOnly = (value: string): boolean => {
 export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string) => {
   dispatch(updateWalletBalance(null, null));
   dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress)));
+}
+
+// TODO: merge getTokenPrice and getTokenMarketCap to one function
+
+/**
+ * Gets token price in USD using CoinGecko API
+ * @param {string} tokenAddress
+ */
+export const getTokenPrice = async (tokenAddress: string) => {
+  try {
+    const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd`);
+    return data.data[Object.keys(data.data)[0]].usd;
+
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/**
+ * Gets token market cap in USD using CoinGecko API
+ * @param {string} tokenAddress
+ */
+export const getTokenMarketCap = async (tokenAddress: string) => {
+  try {
+    const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`)
+    return data.data[Object.keys(data.data)[0]].usd_market_cap;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+/**
+ * Calculates the APY for a given vault
+ * @param {IVault} vault
+ * @param {number} hatsPrice
+ */
+export const calculateApy = async (vault: IVault, hatsPrice: number) => {
+  // TODO: Should be staking token - e.g. vault.stakingToken
+  return Number(fromWei(vault.totalRewardPaid)) * hatsPrice / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
 }

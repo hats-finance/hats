@@ -3,8 +3,8 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_REWARDS_TOKEN } from "./graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken } from './actions/index';
-import { getNetworkNameByChainId } from "./utils";
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice } from './actions/index';
+import { getNetworkNameByChainId, getTokenPrice, calculateApy } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
+import LiquidityPools from "./components/LiquidityPools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 
@@ -47,15 +48,6 @@ function App() {
     });
   }
 
-  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
-
-  React.useEffect(() => {
-    if (!loading && !error && data && data.vaults) {
-      //console.log({ vaults: data.vaults });
-      dispatch(updateVaults(data.vaults));
-    }
-  }, [loading, error, data, dispatch]);
-
   const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_REWARDS_TOKEN);
 
   React.useEffect(() => {
@@ -63,6 +55,37 @@ function App() {
       dispatch(updateRewardsToken(dataRewardsToken.masters[0].rewardsToken));
     }
   }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
+
+  React.useEffect(() => {
+    const getHatsPrice = async () => {
+      // TODO: Should be HATS token - e.g. rewards token
+      dispatch(updateHatsPrice(await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")));
+    }
+    getHatsPrice();
+  }, [dispatch])
+
+  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
+
+  React.useEffect(() => {
+    if (!loading && !error && data && data.vaults) {
+      dispatch(updateVaults(data.vaults));
+    }
+  }, [loading, error, data, dispatch]);
+
+  const vaults = useSelector(state => state.dataReducer.vaults);
+  const hatsPrice = useSelector(state => state.dataReducer.hatsPrice);
+
+  React.useEffect(() => {
+    const calculateVaultsApy = async () => {
+      for (const vault of vaults) {
+        vault.apy = await calculateApy(vault, hatsPrice);
+      }
+      dispatch(updateVaults(vaults));
+    }
+    if (hatsPrice && vaults) {
+      calculateVaultsApy();
+    }
+  }, [dispatch, hatsPrice, vaults])
 
   return (
     <React.Fragment>
@@ -81,6 +104,9 @@ function App() {
         </Route>
         <Route path="/vulnerability">
           <VulnerabilityAccordion />
+        </Route>
+        <Route path="/pools">
+          <LiquidityPools />
         </Route>
       </Switch>
       {showNotification && <Notification />}

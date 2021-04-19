@@ -79,6 +79,9 @@ export const getStakerAmounts = (stakerAddress: string) => {
     {
       stakers (where: { address: "${stakerAddress}" }) {
         amount
+        vault {
+          stakingToken
+        }
       }
     }
   `;

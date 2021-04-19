@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import Logo from "../assets/icons/logo.icon";
 import TelegramIcon from "../assets/icons/social/telegram.icon";

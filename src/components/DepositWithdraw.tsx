@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
+import { fetchWalletBalance, fromWei, getNetworkNameByChainId, getTokenPrice, isDigitsOnly, numberWithCommas } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
@@ -24,7 +24,7 @@ interface IProps {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name } = props.data;
+  const { id, pid, master, stakingToken, name, apy } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -34,6 +34,7 @@ export default function DepositWithdraw(props: IProps) {
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerAmountByVaultID(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
@@ -71,6 +72,23 @@ export default function DepositWithdraw(props: IProps) {
     }
     getPendingReward();
   }, [master.address, selectedAddress, pid, inTransaction])
+
+  const [poolToken, setPoolToken] = useState(0);
+
+  React.useEffect(() => {
+    const getPoolToken = async () => {
+      // TODO: Should be staking token - e.g. vault.stakingToken
+      setPoolToken(await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"));
+    }
+    getPoolToken();
+  }, []);
+
+  const yearlyEarnings = React.useMemo(() => {
+    if (apy && poolToken && hatsPrice) {
+      return apy * Number(fromWei(stakedAmount)) * poolToken;
+    }
+    return 0;
+  }, [apy, poolToken, hatsPrice, stakedAmount])
 
   const approveToken = async () => {
     dispatch(toggleInTransaction(true));
@@ -134,7 +152,7 @@ export default function DepositWithdraw(props: IProps) {
       <div className={!isApproved ? "amount-wrapper disabled" : "amount-wrapper"}>
         <div className="top">
           <span>Pool token</span>
-          <span>&#8776; $0.00</span>
+          <span>&#8776; {!poolToken ? "-" : `$${millify(poolToken)}`}</span>
         </div>
         <div className="input-wrapper">
           <div className="pool-token"><Logo width="30" /> <span>{name}</span></div>
@@ -164,8 +182,8 @@ export default function DepositWithdraw(props: IProps) {
           <span><InfoIcon /></span>
         </Tooltip>
       </span>
-      <span>0 Hats</span>
-      <span>$???</span>
+      <span>{`${millify(yearlyEarnings / 12)}`} Hats</span>
+      <span>&#8776; {`$${millify((yearlyEarnings / 12) * hatsPrice)}`}</span>
     </div>
     <div className="earnings-wrapper">
       <span>Yearly earnings &nbsp;
@@ -177,8 +195,8 @@ export default function DepositWithdraw(props: IProps) {
           <span><InfoIcon /></span>
         </Tooltip>
       </span>
-      <span>0 Hats</span>
-      <span>$???</span>
+      <span>{`${millify(yearlyEarnings)}`} Hats</span>
+      <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
     </div>
     <div className="action-btn-wrapper">
       {!isApproved && <button

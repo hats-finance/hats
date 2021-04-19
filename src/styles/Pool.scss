@@ -1,0 +1,28 @@
+@import "./constants.scss";
+
+.pool-wrapper {
+  color: $white;
+  .title-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: $blue;
+    font-size: $medium;
+    font-weight: bold;
+    padding: 30px;
+    .title {
+      margin-left: 20px;
+    }
+  }
+  .info {
+    background-color: $field-blue;
+    font-size: $moderate;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 80px;
+  }
+  &:hover {
+    cursor: pointer;
+    opacity: 0.9;
+  }
+}

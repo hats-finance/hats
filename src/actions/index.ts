@@ -49,3 +49,8 @@ export const toggleInTransaction = (inTransaction: boolean) => ({
   type: types.TOGGLE_IN_TRANSACTION,
   inTransaction
 })
+
+export const updateHatsPrice = (hatsPrice: number) => ({
+  type: types.UPDATE_HATS_PRICE,
+  hatsPrice
+})

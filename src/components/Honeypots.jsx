@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault";
@@ -6,7 +6,7 @@ import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 
-export default function Honeypots(props) {
+export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const vaultsData = useSelector(state => state.dataReducer.vaults);

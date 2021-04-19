@@ -15,6 +15,7 @@ export interface IVault {
   rewardsLevels: Array<string>
   rewardsSplit: Array<string>
   descriptionHash: string
+  apy: number
 }
 
 export interface IStaker {

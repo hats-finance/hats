@@ -19,7 +19,7 @@ export default function Vault(props: IProps) {
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
-  const { name, totalStaking, numberOfApprovedClaims, master } = props.data;
+  const { name, totalStaking, numberOfApprovedClaims, master, apy } = props.data;
 
   return (
     <React.Fragment>
@@ -31,7 +31,7 @@ export default function Vault(props: IProps) {
         <td>{millify(Number(fromWei(totalStaking)))}</td>
         <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
         <td>???</td>
-        <td>{`???%`}</td>
+        <td>{!apy ? "-" : `${millify(apy)}%`}</td>
         <td>
           <button
             className="action-btn"
