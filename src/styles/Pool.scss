@@ -22,8 +22,10 @@
     flex-direction: column;
     padding: 20px 80px;
   }
-  &:hover {
-    cursor: pointer;
-    opacity: 0.9;
-  }
+  .open-pool {
+    border: 1px solid;
+    color: $turquoise;
+    background-color: transparent;
+    margin-top: 20px;
+  }  
 }

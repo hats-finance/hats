@@ -7,6 +7,22 @@ import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IVault } from "./types/types";
+import { NETWORK } from "./settings";
+
+/**
+ * Returns true if there is a valid provider and connected to the right network, otherwise returns false
+ * @param {any} proivder
+ * @returns {boolean}
+ */
+export const isProviderAndNetwork = (proivder: any) => {
+  if (proivder && proivder.chainId) {
+    const network = getNetworkNameByChainId(proivder.chainId);
+    if (network === NETWORK) {
+      return true;
+    }
+  }
+  return false;
+}
 
 /**
  * Adds commas to a given number
