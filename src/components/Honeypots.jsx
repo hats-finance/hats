@@ -5,6 +5,7 @@ import Vault from "./Vault";
 import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
+import { POOL_PREFIX } from "../constants/constants";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
@@ -12,7 +13,10 @@ export default function Honeypots() {
   const vaultsData = useSelector(state => state.dataReducer.vaults);
 
   const vaults = vaultsData.map((vault, index) => {
-    return <Vault key={index} data={vault} setShowModal={setShowModal} setModalData={setModalData} />
+    if (!vault.name.startsWith(POOL_PREFIX)) {
+      return <Vault key={index} data={vault} setShowModal={setShowModal} setModalData={setModalData} />
+    }
+    return null;
   });
 
   return (

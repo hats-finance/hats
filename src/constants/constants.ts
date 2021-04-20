@@ -37,3 +37,8 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",
   minHeight: "unset"
 }
+
+/**
+ * A Liquidity Pool project name starts with this prefix
+ */
+export const POOL_PREFIX = "Uniswap V2_";
