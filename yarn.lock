@@ -3346,7 +3346,7 @@ asap@~2.0.6:
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
 
-asn1.js@^5.2.0:
+asn1.js@^5.0.0, asn1.js@^5.2.0:
   version "5.4.1"
   resolved "https://registry.yarnpkg.com/asn1.js/-/asn1.js-5.4.1.tgz#11a980b84ebb91781ce35b0fdc2ee294e3783f07"
   integrity sha512-+I//4cYPccV8LdmBLiX8CYvf9Sp3vQsrqu2QNXRcrbiWvcx/UdlFiqUJJzxRQxgsZmvhXhn4cSKeSmoFjVdupA==
@@ -9805,6 +9805,13 @@ open@^7.0.2:
   dependencies:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
+
+openpgp@^5.0.0-1:
+  version "5.0.0-1"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.0.0-1.tgz#28456d930895483770f099e373045e3ce9dbf9f9"
+  integrity sha512-yfmRStdmOQPZbNbvwyQrqjLOTGW4QO0/aok/Vt08Zhf4UB9w0tGA5c6zBxDefxq+SmXlqEsmdNu+AtYx5G8D6A==
+  dependencies:
+    asn1.js "^5.0.0"
 
 opn@^5.5.0:
   version "5.5.0"

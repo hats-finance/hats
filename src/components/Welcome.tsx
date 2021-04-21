@@ -2,7 +2,11 @@ import React from "react";
 import Logo from "../assets/icons/logo.icon";
 import "../styles/Welcome.scss";
 
-export default function Welcome(props) {
+interface IProps {
+  setHasSeenWelcomePage: Function
+}
+
+export default function Welcome(props: IProps) {
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";

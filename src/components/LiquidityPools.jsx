@@ -5,14 +5,13 @@ import Pool from "./Pool";
 import DepositWithdraw from "./DepositWithdraw";
 import Loading from "./Shared/Loading";
 import "../styles/LiquidityPools.scss";
-import { POOL_PREFIX } from "../constants/constants";
 
 export default function LiquidityPools() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const poolsData = useSelector(state => state.dataReducer.vaults);
   const pools = poolsData.map((pool, index) => {
-    if (pool.name.startsWith(POOL_PREFIX)) {
+    if (pool.liquidityPool) {
       return <Pool key={index} data={pool} setShowModal={setShowModal} setModalData={setModalData} />
     }
     return null;

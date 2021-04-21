@@ -58,7 +58,7 @@ export default function HatsBreakdown() {
       </div>
       <div className="data-square">
         <span>Total Staked</span>
-        {!totalStaked ? <Loading top="60%" /> : <span>{`$${millify(totalStaked)}`}</span>}
+        {loading ? <Loading top="60%" /> : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
       </div>
       <div className="data-square">
         <span>Staking APY</span>

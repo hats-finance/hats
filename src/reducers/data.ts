@@ -6,7 +6,7 @@ const initialState = {
   hatsPrice: ""
 };
 
-export const dataReducer = (state = initialState, action) => {
+export const dataReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case UPDATE_VAULTS: {
       return {

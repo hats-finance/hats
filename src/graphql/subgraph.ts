@@ -19,6 +19,8 @@ export const GET_VAULTS = gql`
       numberOfApprovedClaims
       rewardsLevels
       rewardsSplit
+      totalRewardAmount
+      liquidityPool
     }
   }
 `;

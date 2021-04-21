@@ -16,8 +16,8 @@ interface IProps {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const { name, totalStaking, numberOfApprovedClaims, master, apy } = props.data;
-
+  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount } = props.data;
+  // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
   return (
     <React.Fragment>
       <tr className="inner-row">
@@ -27,7 +27,7 @@ export default function Vault(props: IProps) {
         <td style={{ textAlign: "left" }}>{name}</td>
         <td>{millify(Number(fromWei(totalStaking)))}</td>
         <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
-        <td>???</td>
+        <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
         <td>{!apy ? "-" : `${millify(apy)}%`}</td>
         <td>
           <button
@@ -41,7 +41,10 @@ export default function Vault(props: IProps) {
       {
         toggleRow &&
         <tr>
-          <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
+          <td className="sub-row" colSpan={7}>
+            <div>Committee</div>
+            <div>Contracts</div>
+          </td>
         </tr>
       }
     </React.Fragment>

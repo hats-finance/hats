@@ -4,9 +4,8 @@ td {
   padding: 20px;
   background-color: $field-blue;
   border-bottom: 1px solid $dark-blue;
-  &.sub-cell {
+  &.sub-row {
     background-color: transparent;
-    text-align: left;
   }
 }
 

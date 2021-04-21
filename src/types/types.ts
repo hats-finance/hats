@@ -16,6 +16,8 @@ export interface IVault {
   rewardsSplit: Array<string>
   descriptionHash: string
   apy: number
+  totalRewardAmount: string
+  liquidityPool: boolean
 }
 
 export interface IStaker {

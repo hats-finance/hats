@@ -15,12 +15,13 @@ import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAcco
 import LiquidityPools from "./components/LiquidityPools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
+import { RootState } from "./reducers";
 
 function App() {
   const dispatch = useDispatch();
-  const currentScreenSize = useSelector(state => state.layoutReducer.screenSize);
-  const showNotification = useSelector(state => state.layoutReducer.notification.show);
-  const provider = useSelector(state => state.web3Reducer.provider) ?? "";
+  const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
+  const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
 
   React.useEffect(() => {
@@ -72,8 +73,8 @@ function App() {
     }
   }, [loading, error, data, dispatch]);
 
-  const vaults = useSelector(state => state.dataReducer.vaults);
-  const hatsPrice = useSelector(state => state.dataReducer.hatsPrice);
+  const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
+  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
   React.useEffect(() => {
     const calculateVaultsApy = async () => {
@@ -115,16 +116,3 @@ function App() {
 }
 
 export default App;
-
-// async function readOnChainData() {
-//   // Should replace with the end-user wallet, e.g. Metamask
-//   const defaultProvider = getDefaultProvider();
-//   // Create an instance of an ethers.js Contract
-//   // Read more about ethers.js on https://docs.ethers.io/v5/api/contract/contract/
-//   const ceaErc20 = new Contract(addresses.ceaErc20, abis.erc20, defaultProvider);
-//   // A pre-defined address that owns some CEAERC20 tokens
-//   const tokenBalance = await ceaErc20.balanceOf("0x3f8CB69d9c0ED01923F11c829BaE4D9a4CB6c82C");
-//   console.log({ tokenBalance: tokenBalance.toString() });
-// }
-
-// <button onClick={() => readOnChainData()}>Read On-Chain Balance</button>

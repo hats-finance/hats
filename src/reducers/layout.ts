@@ -12,7 +12,7 @@ const initialState = {
   inTransaction: false
 };
 
-export const layoutReducer = (state = initialState, action) => {
+export const layoutReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case CHANGE_SCREEN_SIZE: {
       return {
