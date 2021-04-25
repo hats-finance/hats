@@ -14,7 +14,7 @@ export enum Pages {
   honeypots = "Honeypots",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
-  pools = "Liquidity Pools"
+  pools = "Liquidity Pool"
 }
 
 /**
@@ -37,3 +37,5 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",
   minHeight: "unset"
 }
+
+export const DEFAULT_ERROR_MESSAGE = "Something went wrong :(";

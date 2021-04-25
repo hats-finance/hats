@@ -145,7 +145,7 @@ export const getTokenPrice = async (tokenAddress: string) => {
     return data.data[Object.keys(data.data)[0]].usd;
 
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 
@@ -158,7 +158,7 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
     const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`)
     return data.data[Object.keys(data.data)[0]].usd_market_cap;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 }
 

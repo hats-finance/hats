@@ -2,7 +2,7 @@
 
 header {
   width: 100%;
-  padding: 50px;
+  padding: 30px;
   padding-left: $sidebar-width + 100;
   display: flex;
   justify-content: space-between;
@@ -12,7 +12,7 @@ header {
   align-items: center;
   z-index: 1;
   .page-title {
-    font-size: $large;
+    font-size: $medium;
     color: $white;
   }
   .wallet-wrapper {

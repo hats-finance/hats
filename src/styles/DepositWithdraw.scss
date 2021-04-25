@@ -8,6 +8,22 @@
   height: 100%;
   justify-content: space-between;
   background-color: $blue;
+  .pool-wrapper {
+    display: flex;
+    align-items: center;
+    background-color: $blue;
+    font-size: $moderate;
+    font-weight: bold;
+    padding: 30px;
+    justify-content: space-between;
+    .pool-title-wrapper {
+      display: flex;
+      align-items: center;
+      .pool-name {
+        margin-left: 20px;
+      }
+    }
+  }
   > div {
     padding: 0px $modal-element-padding;
   }
@@ -17,7 +33,7 @@
     .tab {
       width: 100%;
       color: $white;
-      font-size: $medium;
+      font-size: $moderate;
       margin: 0;
       &.deposit {
         background-color: $blue;
@@ -47,7 +63,7 @@
     .input-wrapper {
       display: flex;
       justify-content: space-between;
-      font-size: $medium;
+      font-size: $moderate;
       color: $white;
       .pool-token {
         display: flex;
@@ -88,7 +104,7 @@
   .staked-wrapper {
     display: flex;
     justify-content: space-between;
-    font-size: $medium;
+    font-size: $moderate;
     color: $white;
     margin: 25px 0;
   }

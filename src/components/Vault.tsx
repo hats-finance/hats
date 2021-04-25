@@ -19,7 +19,7 @@ export default function Vault(props: IProps) {
   const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount } = props.data;
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
   return (
-    <React.Fragment>
+    <>
       <tr className="inner-row">
         <td>
           <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>
@@ -42,11 +42,26 @@ export default function Vault(props: IProps) {
         toggleRow &&
         <tr>
           <td className="sub-row" colSpan={7}>
-            <div>Committee</div>
-            <div>Contracts</div>
+            <div className="vault-expanded">
+              <div className="committee-wrapper">
+                <div className="sub-title">Committee</div>
+                <div className="committee-content">
+                  <div>Members: ???</div>
+                  <div>Multi sig: ???</div>
+                </div>
+              </div>
+              <div className="severity-prizes-wrapper">
+                <div className="sub-title">Severity prizes</div>
+                <div className="severity-prizes-content">
+                  <div className="severity-title">LOW</div>
+                  
+                  <div className="severity-title">MEDIUM</div>
+                </div>
+              </div>
+            </div>
           </td>
         </tr>
       }
-    </React.Fragment>
+    </>
   )
 }

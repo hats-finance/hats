@@ -2,7 +2,7 @@ import { toWei, fromWei } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-import { NotificationType, TransactionStatus } from "../constants/constants";
+import { DEFAULT_ERROR_MESSAGE, NotificationType, TransactionStatus } from "../constants/constants";
 import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
 import { toggleNotification } from "./index";
@@ -125,13 +125,13 @@ export const createTransaction = async (tx: Function, onSuccess: Function, onFai
     const receipt = await transaction.wait();
     if (receipt.status === TransactionStatus.Success) {
       await onSuccess();
-      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction successed"));
+      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded"));
     } else {
       throw new Error();
     }
   } catch (error) {
     console.error(error);
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? "Something went wrong :("));
+    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE));
   }
 }

@@ -20,6 +20,7 @@ import { toggleInTransaction } from "../actions";
 
 interface IProps {
   data: IVault
+  isPool?: boolean
 }
 
 export default function DepositWithdraw(props: IProps) {
@@ -141,6 +142,17 @@ export default function DepositWithdraw(props: IProps) {
   })
 
   return <div className={depositWithdrawWrapperClass}>
+    {props.isPool &&
+      <div className="pool-wrapper">
+        <div className="pool-title-wrapper">
+          <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="30px" />
+          <span className="pool-name">{name.split(' ')[0]}</span>
+        </div>
+        <div>
+          <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" />
+          <img src={require("../assets/icons/vaults/etherum.svg").default} alt="etherum logo" />
+        </div>
+      </div>}
     <div className="tabs-wrapper">
       <button className="tab deposit" onClick={() => { setIsDeposit(true); setUserInput("0"); }}>DEPOSIT</button>
       <button className="tab withdraw" onClick={() => { setIsDeposit(false); setUserInput("0"); }}>WITHDRAW</button>

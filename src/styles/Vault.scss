@@ -6,16 +6,50 @@ td {
   border-bottom: 1px solid $dark-blue;
   &.sub-row {
     background-color: transparent;
+    padding: 0px;
+  }
+  .vault-expanded {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    .sub-title {
+      font-weight: bold;
+      background-color: $blue;
+      padding: 10px 30px;
+    }
+    .committee-wrapper {
+      .committee-content {
+        display: flex;
+        justify-content: space-between;
+        > div {
+          padding: 20px 30px;
+          border: 1px solid $purple-blue;
+          width: 50%;
+        }
+      }
+    }
+    .severity-prizes-wrapper {
+      .severity-prizes-content {
+        display: flex;
+        flex-direction: column;
+        .severity-title {
+          background-color: $purple-blue;
+          padding: 10px 30px;
+          color: $dark-turquoise;
+          font-weight: bold;
+        }
+      }
+    }
   }
 }
 
 .arrow {
   cursor: pointer;
   transform: rotate(0deg);
-  transition: transform .1s linear;
+  transition: transform 0.1s linear;
   &.open {
     transform: rotate(90deg);
-    transition: transform .1s linear;
+    transition: transform 0.1s linear;
   }
   :hover {
     opacity: 0.8;

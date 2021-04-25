@@ -25,15 +25,15 @@
     position: relative;
     height: var(--height);
     width: 50%;
-    max-width: 700px;
-    max-height: 800px;
+    max-width: 600px;
+    max-height: 600px;
     .modal-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       background-color: $light-blue;
       padding: $element-padding 30px;
-      font-size: $medium;
+      font-size: $moderate;
       color: $white;
       position: sticky;
       top: 0;
@@ -43,7 +43,7 @@
         color: $white;
         padding: 0;
         margin: 0;
-        font-size: $medium;
+        font-size: $moderate;
       }
     }
     .modal-content {
