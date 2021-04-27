@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "../styles/Vault.scss";
 import { IVault } from "../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, isProviderAndNetwork, numberWithCommas } from "../utils";
+import { fromWei, isProviderAndNetwork, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
 import { RootState } from "../reducers";
 
@@ -13,11 +13,107 @@ interface IProps {
   setModalData: (data: any) => any
 }
 
+// TODO: until the IPFS data will be updated in the subgraph for each vault
+const tempIPFSData = {
+  "communication-channel": {
+    "committee-bot": "https://170.29.30.40/comchan",
+    "pgp-pk": "-----BEGIN PGP PUBLIC KEY BLOCK-----Comment: Alice's OpenPGP certificatemDMEXEcE6RYJKwYBBAHaRw8BAQdArjWwk3FAqyiFbFBKT4TzXcVBqPTB3gmzlC/Ub7O1u120JkFsaWNlIExvdmVsYWNlIDxhbGljZUBvcGVucGdwLmV4YW1wbGU+iJAE"
+  },
+  "committee": {
+    "multisig-address": "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+    "members": [{
+      "name": "andre",
+      "address": "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "twitter-link": "https://twitter.com/andre"
+    },
+    {
+      "name": "loren",
+      "address": "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "twitter-link": "https://twitter.com/loren"
+    }
+    ]
+  },
+  "severities": [{
+    "name": "low",
+    "contracts-covered": [
+      "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "0xD11Eb5Db7cFbB9ECae4B62E71Ec0A461F6baF669",
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    ],
+    "nft-link": "https://opensea.io/assets/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178",
+    "reward-for": "lorem ipsum low"
+  },
+  {
+    "name": "medium",
+    "contracts-covered": [
+      "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "0xD11Eb5Db7cFbB9ECae4B62E71Ec0A461F6baF669",
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    ],
+    "nft-link": "https://opensea.io/assets/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178",
+    "reward-for": "lorem ipsum medium"
+  },
+  {
+    "name": "high",
+    "contracts-covered": [
+      "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "0xD11Eb5Db7cFbB9ECae4B62E71Ec0A461F6baF669",
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    ],
+    "nft-link": "https://opensea.io/assets/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178",
+    "reward-for": "lorem ipsum high"
+  },
+  {
+    "name": "critical",
+    "contracts-covered": [
+      "0x536835937de4340f73d98ac94a6be3da98f51fe3",
+      "0xD11Eb5Db7cFbB9ECae4B62E71Ec0A461F6baF669",
+      "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
+    ],
+    "nft-link": "https://opensea.io/assets/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178",
+    "reward-for": "lorem ipsum critical"
+  }
+  ]
+}
+
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount } = props.data;
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
+
+
+  // TODO: add types for the tempIPFSData
+  const members = tempIPFSData.committee.members.map((member: any) => {
+    return <a className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
+  })
+
+  const severities = tempIPFSData.severities.map((severity: any) => {
+    return (
+      <div className="severity-wrapper">
+        <div className="severity-title">{severity.name.toUpperCase()}</div>
+        <div className="severity-data">
+          <div className="severity-data-item">
+            <span className="severity-data-title">Contracts Covered:</span>
+            {severity["contracts-covered"].map((contract: any) => {
+              return <span className="severity-data-contract">{`Contract name ${truncatedAddress(contract)}`}</span>
+            })}
+            <span className="view-all">View all</span>
+          </div>
+          <div className="severity-data-item">
+            <span className="severity-data-title">Prize:</span>
+            <span>{severity["reward-for"]}</span>
+          </div>
+          {severity["nft-link"] &&
+            <div className="severity-data-item">
+              <span className="severity-data-title">NFT:</span>
+              <img src={severity["nft-link"]} alt="NFT" className="nft-image" />
+            </div>}
+        </div>
+      </div>
+    )
+  })
+
   return (
     <>
       <tr className="inner-row">
@@ -46,16 +142,17 @@ export default function Vault(props: IProps) {
               <div className="committee-wrapper">
                 <div className="sub-title">Committee</div>
                 <div className="committee-content">
-                  <div>Members: ???</div>
-                  <div>Multi sig: ???</div>
+                  <div>Members: {members}</div>
+                  <div>Multi sig: <span className="multi-sig-address">{truncatedAddress(tempIPFSData.committee["multisig-address"])}</span></div>
                 </div>
               </div>
               <div className="severity-prizes-wrapper">
                 <div className="sub-title">Severity prizes</div>
                 <div className="severity-prizes-content">
-                  <div className="severity-title">LOW</div>
-                  
-                  <div className="severity-title">MEDIUM</div>
+                  {severities}
+                  <div className="severity-wrapper">
+                    <div className="severity-title audit-request">AUDIT REQUEST</div>
+                  </div>
                 </div>
               </div>
             </div>

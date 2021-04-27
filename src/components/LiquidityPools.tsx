@@ -5,6 +5,7 @@ import "../styles/LiquidityPools.scss";
 import { IVault } from "../types/types";
 import { RootState } from "../reducers";
 import { isProviderAndNetwork } from "../utils";
+import { NETWORK } from "../settings";
 
 export default function LiquidityPools() {
   const poolsData = useSelector((state: RootState) => state.dataReducer.vaults);
@@ -14,7 +15,7 @@ export default function LiquidityPools() {
 
   return (
     <div className="content liquidity-pools-wrapper">
-      {!isProviderAndNetwork(provider) ? <span>Please connect a wallet</span> : poolsData.length === 0 ? <Loading fixed /> : <DepositWithdraw data={pool} isPool={true} />}
+      {!isProviderAndNetwork(provider) ? <span>{`Please connect the wallet to ${NETWORK}`}</span> : poolsData.length === 0 ? <Loading fixed /> : <DepositWithdraw data={pool} isPool={true} />}
     </div>
   )
 }

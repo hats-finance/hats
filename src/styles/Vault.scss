@@ -21,6 +21,13 @@ td {
       .committee-content {
         display: flex;
         justify-content: space-between;
+        .member-link {
+          margin-right: 5px;
+        }
+        .multi-sig-address {
+          font-style: italic;
+          font-weight: bold;
+        }
         > div {
           padding: 20px 30px;
           border: 1px solid $purple-blue;
@@ -32,11 +39,52 @@ td {
       .severity-prizes-content {
         display: flex;
         flex-direction: column;
-        .severity-title {
-          background-color: $purple-blue;
-          padding: 10px 30px;
-          color: $dark-turquoise;
-          font-weight: bold;
+        .severity-wrapper {
+          display: flex;
+          flex-direction: column;
+          .severity-title {
+            background-color: $purple-blue;
+            padding: 10px 30px;
+            color: $dark-turquoise;
+            font-weight: bold;
+            &.audit-request {
+              background-color: $orange;
+              color: $white;
+            }
+          }
+          .severity-data {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 30px;
+            .severity-data-item {
+              display: flex;
+              flex-direction: column;
+              flex: auto;
+              margin-right: 10px;
+              border-right: 1px solid $purple-blue;
+              padding-right: 10px;
+              .severity-data-title {
+                font-style: italic;
+                color: $dark-turquoise;
+                margin-bottom: 10px;
+              }
+              .view-all {
+                margin-left: auto;
+                font-style: italic;
+                font-weight: bold;
+              }
+              .severity-data-contract {
+                color: $white;
+              }
+              .nft-image {
+                margin-left: 50%;
+              }
+            }
+            .severity-data-item:last-child {
+              border-right: unset;
+              margin-right: unset;
+            }
+          }
         }
       }
     }
