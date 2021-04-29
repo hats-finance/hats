@@ -118,11 +118,12 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
  * @param {Function} onFail Function to call on fail
  * @param {Dispatch} dispatch The Redux dispath function to dispatch the notification
  * @param {string} successText Optional extra text to show on success
+ * @param {number} confirmations The number of confirmations on the blockchain to wait until we consider the transaction has succeeded. Default is 1 confirmation.
  */
-export const createTransaction = async (tx: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string) => {
+export const createTransaction = async (tx: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1) => {
   try {
     const transaction = await tx();
-    const receipt = await transaction.wait();
+    const receipt = await transaction.wait(confirmations);
     if (receipt.status === TransactionStatus.Success) {
       await onSuccess();
       dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded"));

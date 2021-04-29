@@ -95,7 +95,7 @@ export default function Vault(props: IProps) {
         <div className="severity-data">
           <div className="severity-data-item">
             <span className="severity-data-title">Contracts Covered:</span>
-            {severity["contracts-covered"].map((contract: any) => {
+            {severity["contracts-covered"].map((contract: any, index: number) => {
               return <span key={index} className="severity-data-contract">{`Contract name ${truncatedAddress(contract)}`}</span>
             })}
             <span className="view-all">View all</span>
