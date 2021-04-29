@@ -171,3 +171,9 @@ export const calculateApy = async (vault: IVault, hatsPrice: number) => {
   // TODO: Should be staking token - e.g. vault.stakingToken
   return Number(fromWei(vault.totalRewardPaid)) * hatsPrice / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
 }
+
+/**
+ * Wait milliseconds - usage with 'await'
+ * @param {number} ms
+ */
+export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));

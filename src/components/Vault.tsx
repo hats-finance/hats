@@ -84,19 +84,19 @@ export default function Vault(props: IProps) {
 
 
   // TODO: add types for the tempIPFSData
-  const members = tempIPFSData.committee.members.map((member: any) => {
-    return <a className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
+  const members = tempIPFSData.committee.members.map((member: any, index: number) => {
+    return <a key={index} className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
   })
 
-  const severities = tempIPFSData.severities.map((severity: any) => {
+  const severities = tempIPFSData.severities.map((severity: any, index: number) => {
     return (
-      <div className="severity-wrapper">
+      <div className="severity-wrapper" key={index}>
         <div className="severity-title">{severity.name.toUpperCase()}</div>
         <div className="severity-data">
           <div className="severity-data-item">
             <span className="severity-data-title">Contracts Covered:</span>
             {severity["contracts-covered"].map((contract: any) => {
-              return <span className="severity-data-contract">{`Contract name ${truncatedAddress(contract)}`}</span>
+              return <span key={index} className="severity-data-contract">{`Contract name ${truncatedAddress(contract)}`}</span>
             })}
             <span className="view-all">View all</span>
           </div>
@@ -150,9 +150,6 @@ export default function Vault(props: IProps) {
                 <div className="sub-title">Severity prizes</div>
                 <div className="severity-prizes-content">
                   {severities}
-                  <div className="severity-wrapper">
-                    <div className="severity-title audit-request">AUDIT REQUEST</div>
-                  </div>
                 </div>
               </div>
             </div>
