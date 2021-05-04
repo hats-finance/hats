@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../styles/Vault.scss";
 import { IVault } from "../types/types";
 import { useSelector } from "react-redux";
@@ -6,6 +6,8 @@ import millify from "millify";
 import { fromWei, isProviderAndNetwork, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
 import { RootState } from "../reducers";
+import Modal from "./Shared/Modal";
+import NFTPrize from "./NFTPrize";
 
 interface IProps {
   data: IVault,
@@ -80,6 +82,8 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount } = props.data;
+  const [showModal, setShowModal] = useState(false);
+  const [modalData, setModalData] = useState(null);
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
 
 
@@ -107,7 +111,7 @@ export default function Vault(props: IProps) {
           {severity["nft-link"] &&
             <div className="severity-data-item">
               <span className="severity-data-title">NFT:</span>
-              <img src={severity["nft-link"]} alt="NFT" className="nft-image" />
+              <img src={severity["nft-link"]} alt="NFT" className="nft-image" onClick={() => { setShowModal(true); setModalData(severity); }} />
             </div>}
         </div>
       </div>
@@ -156,6 +160,10 @@ export default function Vault(props: IProps) {
           </td>
         </tr>
       }
+      {showModal &&
+        <Modal title="NFT PRIZE" setShowModal={setShowModal} >
+          <NFTPrize data={modalData} />
+        </Modal>}
     </>
   )
 }

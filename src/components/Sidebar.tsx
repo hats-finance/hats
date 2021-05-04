@@ -17,7 +17,7 @@ export default function Sidebar() {
       <NavLink to="/pools" className="sidebar-link" activeClassName="selected">Liquidity Pool</NavLink>
       <div className="bottom-wrapper">
         <div className="social-wrapper">
-          <a target="_blank" rel="noopener noreferrer" href="https://www.google.com"><TelegramIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href="https://t.me/joinchat/QKP3HcdosVhjOTY0"><TelegramIcon /></a>
           <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@HatsFinance"><MediumIcon /></a>
           <a target="_blank" rel="noopener noreferrer" href="https://discord.gg/3kHJFDUs"><DiscordIcon /></a>
           <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/HatsFinance"><TwitterIcon /></a>

@@ -78,6 +78,10 @@ td {
               }
               .nft-image {
                 margin-left: 50%;
+                cursor: pointer;
+              }
+              .nft-image:hover {
+                opacity: 0.9;
               }
             }
             .severity-data-item:last-child {

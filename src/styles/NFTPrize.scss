@@ -1,0 +1,21 @@
+@import "./constants.scss";
+
+.nft-prize-wrapper {
+  display: flex;
+  padding: $modal-element-padding;
+  .nft-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .subtitle {
+      font-style: italic;
+      color: $dark-turquoise;
+      margin-bottom: 5px;
+    }
+    .data {
+      color: $dark-turquoise;
+      font-size: $xsmall;
+      margin-bottom: 50px;
+    }
+  }
+}
