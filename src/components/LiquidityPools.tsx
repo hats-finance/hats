@@ -13,9 +13,10 @@ export default function LiquidityPools() {
   const pool = poolsData.find((element: IVault) => element.liquidityPool);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
 
+  // TODO: if no liquidity pool should show "no pools" instead of inifinite spinner
   return (
     <div className="content liquidity-pools-wrapper">
-      {!isProviderAndNetwork(provider) ? <span>{`Please connect the wallet to ${NETWORK}`}</span> : poolsData.length === 0 ? <Loading fixed /> : <DepositWithdraw data={pool} isPool={true} />}
+      {!isProviderAndNetwork(provider) ? <span>{`Please connect the wallet to ${NETWORK}`}</span> : pool === undefined ? <Loading fixed /> : <DepositWithdraw data={pool} isPool={true} />}
     </div>
   )
 }

@@ -1,8 +1,9 @@
 
 import "../styles/NFTPrize.scss";
+import { ISeverity } from "../types/types";
 
 interface IProps {
-  data: any // TODO: should be serveiry type.
+  data: ISeverity
 }
 
 export default function NFTPrize(props: IProps) {

@@ -21,6 +21,7 @@ export const GET_VAULTS = gql`
       rewardsSplit
       totalRewardAmount
       liquidityPool
+      description
     }
   }
 `;

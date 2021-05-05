@@ -15,9 +15,36 @@ export interface IVault {
   rewardsLevels: Array<string>
   rewardsSplit: Array<string>
   descriptionHash: string
+  description: IVaultDescription
   apy: number
   totalRewardAmount: string
   liquidityPool: boolean
+}
+
+export interface IVaultDescription {
+  "communication-channel": {
+    "committee-bot": string
+    "pgp-pk": string
+  }
+  "committee": {
+    "multisig-address": string
+    "members": Array<ICommitteeMember>
+  }
+  "severities": Array<ISeverity>
+}
+
+export interface ICommitteeMember {
+  "name": string
+  "address": string
+  "twitter-link": string
+}
+
+export interface ISeverity {
+  "name": string
+  "index": number
+  "contracts-covered": Array<string>
+  "nft-link": string
+  "reward-for": string
 }
 
 export interface IStaker {
