@@ -48,7 +48,7 @@ export default function Vault(props: IProps) {
           {severity["nft-link"] &&
             <div className="severity-data-item">
               <span className="severity-data-title">NFT:</span>
-              <img src={severity["nft-link"]} alt="NFT" className="nft-image" onClick={() => { setShowModal(true); setModalData(severity as any); }} />
+              <span className="open-nft-data" onClick={() => { setShowModal(true); setModalData(severity as any); }}>Show NFT</span>
             </div>}
         </div>
       </div>
@@ -98,7 +98,7 @@ export default function Vault(props: IProps) {
         </tr>
       }
       {showModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowModal} >
+        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="800px" width="60%" >
           <NFTPrize data={modalData as any} />
         </Modal>}
     </>

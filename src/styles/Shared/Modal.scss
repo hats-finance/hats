@@ -23,9 +23,9 @@
     box-shadow: $black-shadow;
     overflow-x: scroll;
     position: relative;
-    height: var(--height);
-    width: 50%;
-    max-width: 600px;
+    height: var(--modal-height);
+    width: var(--modal-width);
+    max-width: var(--modal-max-width);
     max-height: 600px;
     .modal-top {
       display: flex;

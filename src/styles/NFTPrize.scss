@@ -4,9 +4,12 @@
   display: flex;
   padding: $modal-element-padding;
   .nft-info {
-    width: 100%;
+    margin-right: 50px;
     display: flex;
     flex-direction: column;
+    .nft-name {
+      margin-bottom: 50px;
+    }
     .subtitle {
       font-style: italic;
       color: $dark-turquoise;

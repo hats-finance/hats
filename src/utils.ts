@@ -155,7 +155,7 @@ export const getTokenPrice = async (tokenAddress: string) => {
  */
 export const getTokenMarketCap = async (tokenAddress: string) => {
   try {
-    const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`)
+    const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`);
     return data.data[Object.keys(data.data)[0]].usd_market_cap;
   } catch (err) {
     console.error(err);
@@ -169,7 +169,8 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  */
 export const calculateApy = async (vault: IVault, hatsPrice: number) => {
   // TODO: Should be staking token - e.g. vault.stakingToken
-  return Number(fromWei(vault.totalRewardPaid)) * hatsPrice / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+  // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
+  return Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice) / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
 }
 
 /**
@@ -177,3 +178,13 @@ export const calculateApy = async (vault: IVault, hatsPrice: number) => {
  * @param {number} ms
  */
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
+
+
+export const getNFTData = async () => {
+  try {
+    const data = await axios.get("https://api.opensea.io/api/v1/asset/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178");
+    return data.data;
+  } catch (err) {
+    console.error(err)
+  }
+}

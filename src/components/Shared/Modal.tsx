@@ -8,10 +8,15 @@ interface IProps {
   children: React.ReactNode,
   setShowModal: (show: boolean) => any,
   height?: string // can be any valid css height value
+  width?: string // can be any valid css width value
+  maxWidth?: string // can be any valid css max-width value
 }
 
 export default function Modal(props: IProps) {
-  document.documentElement.style.setProperty("--height", props.height ?? "100vh");
+  document.documentElement.style.setProperty("--modal-height", props.height ?? "100vh");
+  document.documentElement.style.setProperty("--modal-width", props.width ?? "50%");
+  document.documentElement.style.setProperty("--modal-max-width", props.maxWidth ?? "600px");
+
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
 
   const escapeHandler = useCallback((event) => {
