@@ -18,7 +18,6 @@ export default function NFTPrize(props: IProps) {
     fetchNFTData();
   }, []);
 
-  console.log(nftData);
   const severity = props.data;
 
   return !nftData ? <Loading /> :

@@ -188,3 +188,11 @@ export const getNFTData = async () => {
     console.error(err)
   }
 }
+
+/**
+ * Gets the webapp version from the package.json
+ */
+export const getAppVersion = (): string => {
+  const packageJson = require("../package.json");
+  return packageJson.version;
+}
