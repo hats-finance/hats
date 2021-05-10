@@ -6,11 +6,12 @@ import { useQuery } from "@apollo/react-hooks";
 import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice } from './actions/index';
 import { getNetworkNameByChainId, getTokenPrice, calculateApy } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
-import { NotificationType, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
+import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools";
 import Notification from "./components/Shared/Notification";
@@ -95,18 +96,18 @@ function App() {
       {currentScreenSize === ScreenSize.Large && <Sidebar />}
       <Switch>
         <Route path="/" exact>
-          <Redirect to="/honeypots" />
+          <Redirect to={RoutePaths.honeypots} />
         </Route>
-        <Route path="/honeypots">
+        <Route path={RoutePaths.honeypots}>
           <Honeypots />
         </Route>
-        <Route path="/gov">
-          <div>GOV</div>
+        <Route path={RoutePaths.gov}>
+          <Gov />
         </Route>
-        <Route path="/vulnerability">
+        <Route path={RoutePaths.vulnerability}>
           <VulnerabilityAccordion />
         </Route>
-        <Route path="/pools">
+        <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
       </Switch>

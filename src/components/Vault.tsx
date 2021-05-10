@@ -3,11 +3,13 @@ import "../styles/Vault.scss";
 import { ICommitteeMember, ISeverity, IVault } from "../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, isProviderAndNetwork, numberWithCommas, truncatedAddress } from "../utils";
+import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
 import { RootState } from "../reducers";
 import Modal from "./Shared/Modal";
+import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
+import { NETWORK } from "../settings";
 
 interface IProps {
   data: IVault,
@@ -28,7 +30,7 @@ export default function Vault(props: IProps) {
   const members = description.committee.members.map((member: ICommitteeMember, index: number) => {
     return <a key={index} className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
   })
-  
+
   const severities = description.severities.map((severity: ISeverity, index: number) => {
     return (
       <div className="severity-wrapper" key={index}>
@@ -37,7 +39,11 @@ export default function Vault(props: IProps) {
           <div className="severity-data-item">
             <span className="severity-data-title">Contracts Covered:</span>
             {severity["contracts-covered"].map((contract: string, index: number) => {
-              return <span key={index} className="severity-data-contract">{`Contract name ${truncatedAddress(contract)}`}</span>
+              return (
+                <span key={index} className="severity-data-contract">
+                  <a target="_blank" rel="noopener noreferrer" href={linkToEtherscan(contract, NETWORK)}>{`Contract Name ${truncatedAddress(contract)}`}</a>
+                </span>
+              )
             })}
             <span className="view-all">View all</span>
           </div>
@@ -84,7 +90,18 @@ export default function Vault(props: IProps) {
                 <div className="sub-title">Committee</div>
                 <div className="committee-content">
                   <div>Members: {members}</div>
-                  <div>Multi sig: <span className="multi-sig-address">{truncatedAddress(description.committee["multisig-address"])}</span></div>
+                  <div className="multi-sig-wrapper">
+                    <span>
+                      Multi sig:
+                      <a target="_blank"
+                        rel="noopener noreferrer"
+                        href={linkToEtherscan(description.committee["multisig-address"], NETWORK)}
+                        className="multi-sig-address">
+                        {truncatedAddress(description.committee["multisig-address"])}
+                      </a>
+                    </span>
+                    <CopyToClipboard value={description.committee["multisig-address"]} />
+                  </div>
                 </div>
               </div>
               <div className="severity-prizes-wrapper">
@@ -97,10 +114,12 @@ export default function Vault(props: IProps) {
           </td>
         </tr>
       }
-      {showModal &&
+      {
+        showModal &&
         <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="800px" width="60%" >
           <NFTPrize data={modalData as any} />
-        </Modal>}
+        </Modal>
+      }
     </>
   )
 }

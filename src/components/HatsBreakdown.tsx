@@ -53,7 +53,7 @@ export default function HatsBreakdown() {
     </div>
     <div className="data-top">
       <div className="data-square">
-        <span>Balance</span>
+        <span>Balance (HATS)</span>
         {!hatsBalance ? <Loading top="60%" /> : <span>{millify(hatsBalance)}</span>}
       </div>
       <div className="data-square">

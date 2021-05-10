@@ -6,15 +6,16 @@ import DiscordIcon from "../assets/icons/social/discord.icon";
 import TwitterIcon from "../assets/icons/social/twitter.icon";
 import GitHubIcon from "../assets/icons/social/github.icon";
 import "../styles/Sidebar.scss";
+import { RoutePaths } from "../constants/constants";
 
 export default function Sidebar() {
   return (
     <div className="sidebar-wrapper">
       <Link to="/" className="logo"><Logo /></Link>
-      <NavLink to="/honeypots" className="sidebar-link" activeClassName="selected">Honeypots</NavLink>
-      <NavLink to="/gov" className="sidebar-link" activeClassName="selected">Gov</NavLink>
-      <NavLink to="/vulnerability" className="sidebar-link vulnerability" activeClassName="selected">Submit Vulnerability</NavLink>
-      <NavLink to="/pools" className="sidebar-link" activeClassName="selected">Liquidity Pool</NavLink>
+      <NavLink to={RoutePaths.honeypots} className="sidebar-link" activeClassName="selected">Honeypots</NavLink>
+      <NavLink to={RoutePaths.gov} className="sidebar-link" activeClassName="selected">Gov</NavLink>
+      <NavLink to={RoutePaths.vulnerability} className="sidebar-link vulnerability" activeClassName="selected">Submit Vulnerability</NavLink>
+      <NavLink to={RoutePaths.pools} className="sidebar-link" activeClassName="selected">Liquidity Pool</NavLink>
       <div className="bottom-wrapper">
         <div className="social-wrapper">
           <a target="_blank" rel="noopener noreferrer" href="https://t.me/joinchat/QKP3HcdosVhjOTY0"><TelegramIcon /></a>

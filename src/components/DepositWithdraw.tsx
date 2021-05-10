@@ -66,6 +66,7 @@ export default function DepositWithdraw(props: IProps) {
   }, [stakingToken, selectedAddress, inTransaction]);
 
   const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
+  const amountToClaim = millify(Number(fromWei(pendingReward)));
 
   React.useEffect(() => {
     const getPendingReward = async () => {
@@ -211,20 +212,20 @@ export default function DepositWithdraw(props: IProps) {
       <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
     </div>
     <div className="action-btn-wrapper">
-      {!isApproved && <button
+      {!isApproved && isDeposit && <button
         className="action-btn"
         onClick={async () => await approveToken()}>{`ENABLE SPENDING ${tokenSymbol}`}</button>}
       {isApproved && isDeposit && <button
         disabled={notEnoughBalance || !userInput || userInput === "0"}
         className="action-btn"
-        onClick={async () => await depositAndClaim()}>DEPOSIT AND CLAIM</button>}
-      {isApproved && !isDeposit && <button
+        onClick={async () => await depositAndClaim()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}</button>}
+      {!isDeposit && <button
         disabled={!canWithdraw || !userInput || userInput === "0"}
         className="action-btn"
-        onClick={async () => await withdrawAndClaim()}>WITHDRAW AND CLAIM</button>}
+        onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}</button>}
     </div>
     <div className="alt-actions-wrapper">
-      <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${millify(Number(fromWei(pendingReward)))} HATS`}</button>
+      <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${amountToClaim} HATS`}</button>
     </div>
     {inTransaction && <Loading />}
   </div>

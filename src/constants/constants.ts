@@ -3,6 +3,13 @@ export enum ScreenSize {
   Large = "LARGE"
 }
 
+export enum RoutePaths {
+  honeypots = "/honeypots",
+  gov = "/gov",
+  vulnerability = "/vulnerability",
+  pools = "/pools"
+}
+
 export enum Networks {
   main = "mainnet",
   xdai = "xdai",

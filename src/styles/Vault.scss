@@ -24,9 +24,16 @@ td {
         .member-link {
           margin-right: 5px;
         }
-        .multi-sig-address {
-          font-style: italic;
-          font-weight: bold;
+        .multi-sig-wrapper {
+          display: flex;
+          align-items: center;
+          .multi-sig-address {
+            font-style: italic;
+            font-weight: bold;
+            color: $turquoise;
+            margin-left: 50px;
+            margin-right: 10px;
+          }
         }
         > div {
           padding: 20px 30px;
@@ -72,6 +79,10 @@ td {
                 margin-left: auto;
                 font-style: italic;
                 font-weight: bold;
+                cursor: pointer;
+                &:hover {
+                  opacity: 0.9;
+                }
               }
               .severity-data-contract {
                 color: $white;

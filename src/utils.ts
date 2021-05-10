@@ -196,3 +196,26 @@ export const getAppVersion = (): string => {
   const packageJson = require("../package.json");
   return packageJson.version;
 }
+
+/**
+ * Copies a given string to the clipboard
+ * @param {string} value
+ */
+export const copyToClipboard = (value: string) => {
+  const tempInputElement = document.createElement("textarea");
+  tempInputElement.value = value;
+  document.body.appendChild(tempInputElement);
+  tempInputElement.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInputElement);
+}
+
+/**
+ * Given address and network returns the Etherscan link
+ * @param {string} address
+ * @param {Networks} network 
+ */
+export const linkToEtherscan = (address: string, network: Networks): string => {
+  const prefix = network !== Networks.main ? `${network}.` : "";
+  return `https://${prefix}etherscan.io/address/${address}`;
+}
