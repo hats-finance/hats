@@ -110,7 +110,7 @@ export default function DepositWithdraw(props: IProps) {
       async () => {
         setUserInput("0");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol} and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -121,7 +121,7 @@ export default function DepositWithdraw(props: IProps) {
       async () => {
         setUserInput("0");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 

@@ -84,8 +84,12 @@ td {
                   opacity: 0.9;
                 }
               }
-              .severity-data-contract {
-                color: $white;
+              .contract-wrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                .contract-name {
+                  color: $dark-turquoise;
+                }
               }
               .open-nft-data {
                 margin-left: 50%;
@@ -116,6 +120,15 @@ td {
   }
   :hover {
     opacity: 0.8;
+  }
+}
+
+.project-name-wrapper {
+  display: flex;
+  align-items: center;
+  img {
+    width: 50px;
+    margin-right: 15px;
   }
 }
 

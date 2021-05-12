@@ -22,6 +22,10 @@ export interface IVault {
 }
 
 export interface IVaultDescription {
+  "Project-metadata": {
+    icon: string
+    website: string
+  }
   "communication-channel": {
     "committee-bot": string
     "pgp-pk": string

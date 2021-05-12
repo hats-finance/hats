@@ -27,11 +27,11 @@ export default function Vault(props: IProps) {
 
   const description = JSON.parse(props.data.description as any);
 
-  const members = description.committee.members.map((member: ICommitteeMember, index: number) => {
+  const members = description?.committee.members.map((member: ICommitteeMember, index: number) => {
     return <a key={index} className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
   })
 
-  const severities = description.severities.map((severity: ISeverity, index: number) => {
+  const severities = description?.severities.map((severity: ISeverity, index: number) => {
     return (
       <div className="severity-wrapper" key={index}>
         <div className="severity-title">{severity.name.toUpperCase()}</div>
@@ -39,10 +39,12 @@ export default function Vault(props: IProps) {
           <div className="severity-data-item">
             <span className="severity-data-title">Contracts Covered:</span>
             {severity["contracts-covered"].map((contract: string, index: number) => {
+              const contractName = Object.keys(contract)[0];
               return (
-                <span key={index} className="severity-data-contract">
-                  <a target="_blank" rel="noopener noreferrer" href={linkToEtherscan(contract, NETWORK)}>{`Contract Name ${truncatedAddress(contract)}`}</a>
-                </span>
+                <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={linkToEtherscan(contract[contractName], NETWORK)}>
+                  <span className="contract-name">{contractName}</span>
+                  <span>{truncatedAddress(contract[contractName])}</span>
+                </a>
               )
             })}
             <span className="view-all">View all</span>
@@ -67,7 +69,12 @@ export default function Vault(props: IProps) {
         <td>
           <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>
         </td>
-        <td style={{ textAlign: "left" }}>{name}</td>
+        <td>
+          <div className="project-name-wrapper">
+            <img src={description["Project-metadata"].icon} alt="project logo" />
+            {name}
+          </div>
+        </td>
         <td>{millify(Number(fromWei(totalStaking)))}</td>
         <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
         <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
@@ -95,12 +102,12 @@ export default function Vault(props: IProps) {
                       Multi sig:
                       <a target="_blank"
                         rel="noopener noreferrer"
-                        href={linkToEtherscan(description.committee["multisig-address"], NETWORK)}
+                        href={linkToEtherscan(description?.committee["multisig-address"], NETWORK)}
                         className="multi-sig-address">
-                        {truncatedAddress(description.committee["multisig-address"])}
+                        {truncatedAddress(description?.committee["multisig-address"])}
                       </a>
                     </span>
-                    <CopyToClipboard value={description.committee["multisig-address"]} />
+                    <CopyToClipboard value={description?.committee["multisig-address"]} />
                   </div>
                 </div>
               </div>

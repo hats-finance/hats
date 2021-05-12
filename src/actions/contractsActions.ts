@@ -22,9 +22,13 @@ if (window.ethereum) {
  * Given token address returns it's symbol
  * @param {string} tokenAddress
  */
-export const getTokenSymbol = async (tokenAddress: string): Promise<string> => {
-  const contract = new Contract(tokenAddress, erc20Abi, provider);
-  return await contract.symbol();
+export const getTokenSymbol = async (tokenAddress: string) => {
+  try {
+    const contract = new Contract(tokenAddress, erc20Abi, provider);
+    return await contract.symbol();
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -32,10 +36,15 @@ export const getTokenSymbol = async (tokenAddress: string): Promise<string> => {
  * @param {string} tokenAddress
  * @param {string} selectedAddress
  */
-export const getTokenBalance = async (tokenAddress: string, selectedAddress: string): Promise<string> => {
-  const contract = new Contract(tokenAddress, erc20Abi, infuraProvider); // provider
-  const balance: BigNumber = await contract.balanceOf(selectedAddress);
-  return fromWei(balance);
+export const getTokenBalance = async (tokenAddress: string, selectedAddress: string) => {
+  try {
+    const contract = new Contract(tokenAddress, erc20Abi, infuraProvider);
+    const balance: BigNumber = await contract.balanceOf(selectedAddress);
+    return fromWei(balance);
+  } catch (error) {
+    console.error (error);
+    return "-";
+  }
 }
 
 /**
@@ -44,10 +53,15 @@ export const getTokenBalance = async (tokenAddress: string, selectedAddress: str
  * @param {string} selectedAddress
  * @param {string} tokenSpender
  */
-export const isApproved = async (tokenAddress: string, selectedAddress: string, tokenSpender: string): Promise<boolean> => {
-  const contract = new Contract(tokenAddress, erc20Abi, provider);
-  const allowance: BigNumber = await contract.allowance(selectedAddress, tokenSpender);
-  return allowance.gt(0);
+export const isApproved = async (tokenAddress: string, selectedAddress: string, tokenSpender: string) => {
+  try {
+    const contract = new Contract(tokenAddress, erc20Abi, provider);
+    const allowance: BigNumber = await contract.allowance(selectedAddress, tokenSpender);
+    return allowance.gt(0);
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
 /**
@@ -56,8 +70,12 @@ export const isApproved = async (tokenAddress: string, selectedAddress: string, 
  * @param {string} tokenSpender
  */
 export const approveToken = async (tokenAddress: string, tokenSpender: string) => {
-  const contract = new Contract(tokenAddress, erc20Abi, signer);
-  return await contract.approve(tokenSpender, ethers.BigNumber.from(2).pow(255));
+  try {
+    const contract = new Contract(tokenAddress, erc20Abi, signer);
+    return await contract.approve(tokenSpender, ethers.BigNumber.from(2).pow(255));
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
@@ -96,8 +114,13 @@ export const claim = async (pid: string, address: string) => {
  * @param {string} selectedAddress
  */
 export const getPendingReward = async (address: string, pid: string, selectedAddress: string) => {
-  const contract = new Contract(address, vaultAbi, signer);
-  return await contract.pendingReward(pid, selectedAddress);
+  try {
+    const contract = new Contract(address, vaultAbi, signer);
+    return await contract.pendingReward(pid, selectedAddress);
+  } catch (error) {
+    console.error(error);
+    return BigNumber.from(0);
+  }
 }
 
 /**
