@@ -62,11 +62,11 @@ export default function Header() {
 
   return (
     <header>
-      {screenSize === ScreenSize.Small && <MenuIcon />}
-      {screenSize === ScreenSize.Small && <Logo />}
+      {screenSize === ScreenSize.Mobile && <MenuIcon />}
+      {screenSize === ScreenSize.Mobile && <Logo />}
       <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
       <div className="wallet-wrapper">
-        {screenSize !== ScreenSize.Small && provider &&
+        {screenSize !== ScreenSize.Mobile && provider &&
           <div className="wallet-details">
             <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo fill="#8AFCFD" width="30" height="30" /><span>Hats</span></button>
             {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>

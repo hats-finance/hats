@@ -34,7 +34,7 @@ function App() {
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", screenSize => {
-    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Large : ScreenSize.Small));
+    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
   if (window.ethereum) {
@@ -81,6 +81,8 @@ function App() {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
         vault.apy = await calculateApy(vault, hatsPrice);
+        // TODO: Should be staking token - e.g. vault.stakingToken
+        vault.tokenPrice = await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
       }
       dispatch(updateVaults(vaults));
     }
@@ -90,10 +92,10 @@ function App() {
   }, [dispatch, hatsPrice, vaults])
 
   return (
-    <React.Fragment>
+    <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
       <Header />
-      {currentScreenSize === ScreenSize.Large && <Sidebar />}
+      {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       <Switch>
         <Route path="/" exact>
           <Redirect to={RoutePaths.honeypots} />
@@ -112,7 +114,7 @@ function App() {
         </Route>
       </Switch>
       {showNotification && <Notification />}
-    </React.Fragment>
+    </>
   );
 }
 

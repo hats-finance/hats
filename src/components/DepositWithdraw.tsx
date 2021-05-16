@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWalletBalance, fromWei, getNetworkNameByChainId, getTokenPrice, isDigitsOnly, numberWithCommas } from "../utils";
+import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
@@ -25,7 +25,7 @@ interface IProps {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name, apy } = props.data;
+  const { id, pid, master, stakingToken, name, apy, tokenPrice } = props.data;
   const [isDeposit, setIsDeposit] = useState(true);
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -75,22 +75,12 @@ export default function DepositWithdraw(props: IProps) {
     getPendingReward();
   }, [master.address, selectedAddress, pid, inTransaction])
 
-  const [poolToken, setPoolToken] = useState(0);
-
-  React.useEffect(() => {
-    const getPoolToken = async () => {
-      // TODO: Should be staking token - e.g. vault.stakingToken
-      setPoolToken(await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"));
-    }
-    getPoolToken();
-  }, []);
-
   const yearlyEarnings = React.useMemo(() => {
-    if (apy && poolToken && hatsPrice) {
-      return apy * Number(fromWei(stakedAmount)) * poolToken;
+    if (apy && tokenPrice && hatsPrice) {
+      return apy * Number(fromWei(stakedAmount)) * tokenPrice;
     }
     return 0;
-  }, [apy, poolToken, hatsPrice, stakedAmount])
+  }, [apy, tokenPrice, hatsPrice, stakedAmount])
 
   const approveToken = async () => {
     dispatch(toggleInTransaction(true));
@@ -165,7 +155,7 @@ export default function DepositWithdraw(props: IProps) {
       <div className={!isApproved ? "amount-wrapper disabled" : "amount-wrapper"}>
         <div className="top">
           <span>Pool token</span>
-          <span>&#8776; {!poolToken ? "-" : `$${millify(poolToken)}`}</span>
+          <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
         </div>
         <div className="input-wrapper">
           <div className="pool-token"><Logo width="30" /> <span>{name}</span></div>

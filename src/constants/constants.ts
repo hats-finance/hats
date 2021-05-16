@@ -1,6 +1,6 @@
 export enum ScreenSize {
-  Small = "SMALL",
-  Large = "LARGE"
+  Mobile = "MOBILE",
+  Desktop = "DESKTOP"
 }
 
 export enum RoutePaths {

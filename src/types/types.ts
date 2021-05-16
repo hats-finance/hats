@@ -19,6 +19,7 @@ export interface IVault {
   apy: number
   totalRewardAmount: string
   liquidityPool: boolean
+  tokenPrice: number
 }
 
 export interface IVaultDescription {

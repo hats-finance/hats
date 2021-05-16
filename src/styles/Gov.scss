@@ -1,4 +1,11 @@
+@import "./constants.scss";
 
 .gov-wrapper {
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  a {
+    display: flex;
+    align-items: center;
+    color: $turquoise;
+  }
 }

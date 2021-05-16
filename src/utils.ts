@@ -71,7 +71,7 @@ export const getNetworkNameByChainId = (chainId: string): Networks | string => {
  * @returns {ScreenSize}
  */
 export const getScreenSize = () => {
-  return window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`).matches ? ScreenSize.Large : ScreenSize.Small;
+  return window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`).matches ? ScreenSize.Desktop : ScreenSize.Mobile;
 };
 
 /**
@@ -125,7 +125,7 @@ export const isDigitsOnly = (value: string): boolean => {
  * Updates the ETH and HATS wallet balance
  * @param {Dispatch} dispatch 
  * @param {Networks} network 
- * @param {string} selectedAddress 
+ * @param {string} selectedAddress
  * @param {string} rewardsToken 
  */
 export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string) => {

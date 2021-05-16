@@ -10,6 +10,8 @@
   align-items: center;
   justify-content: center;
   .welcome-content {
+    width: 50%;
+    max-width: 500px;
     .title {
       font-size: $xlarge;
       color: $white;

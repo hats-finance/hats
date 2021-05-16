@@ -25,7 +25,9 @@ export default function Welcome(props: IProps) {
       <div className="welcome-content">
         <Logo />
         <div className="title">Hatters</div>
-        <div className="description">hero is not the opposite of poor</div>
+        <div className="description">
+          We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.
+        </div>
         <button className="enter-btn" onClick={seenWelcomePage}>ENTER</button>
       </div>
     </div>

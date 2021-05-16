@@ -20,7 +20,7 @@ interface IProps {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount } = props.data;
+  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount, rewardsLevels, tokenPrice } = props.data;
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
@@ -31,7 +31,13 @@ export default function Vault(props: IProps) {
     return <a key={index} className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
   })
 
-  const severities = description?.severities.map((severity: ISeverity, index: number) => {
+  const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
+    let rewardPrice = "-";
+    const rewardPercentage = Number(rewardsLevels[index]) / 10000;
+    if (tokenPrice) {
+      rewardPrice = millify(Number(fromWei(totalStaking)) * rewardPercentage * tokenPrice);
+    }
+
     return (
       <div className="severity-wrapper" key={index}>
         <div className="severity-title">{severity.name.toUpperCase()}</div>
@@ -51,7 +57,7 @@ export default function Vault(props: IProps) {
           </div>
           <div className="severity-data-item">
             <span className="severity-data-title">Prize:</span>
-            <span>{severity["reward-for"]}</span>
+            <span>{`${rewardPercentage}% of Honeypot`} &#8776; {`$${rewardPrice}`}</span>
           </div>
           {severity["nft-link"] &&
             <div className="severity-data-item">
@@ -61,7 +67,7 @@ export default function Vault(props: IProps) {
         </div>
       </div>
     )
-  })
+  }), [tokenPrice])
 
   return (
     <>
