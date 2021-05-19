@@ -20,20 +20,21 @@ export default function Honeypots() {
 
   return (
     <div className="content honeypots-wrapper">
-      {vaultsData.length === 0 ? <Loading fixed /> : <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>Project</th>
-            <th>Honeypot</th>
-            <th>#Vulnerabilities</th>
-            <th>Funds given</th>
-            <th>APY</th>
-            <th></th>
-          </tr>
-          {vaults}
-        </tbody>
-      </table>}
+      {vaultsData.length === 0 ? <Loading fixed /> :
+        <table>
+          <tbody>
+            <tr>
+              <th></th>
+              <th>PROJECT NAME</th>
+              <th>HONEYPOT</th>
+              <th>#VULNERABILITIES</th>
+              <th>FUNDS GIVEN</th>
+              <th>APY</th>
+              <th></th>
+            </tr>
+            {vaults}
+          </tbody>
+        </table>}
       {showModal &&
         <Modal title={modalData.name} setShowModal={setShowModal} >
           <DepositWithdraw data={modalData} />

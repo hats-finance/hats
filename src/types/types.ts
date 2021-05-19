@@ -20,6 +20,7 @@ export interface IVault {
   totalRewardAmount: string
   liquidityPool: boolean
   tokenPrice: number
+  honeyPotBalance: string
 }
 
 export interface IVaultDescription {

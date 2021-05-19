@@ -6,10 +6,12 @@
   height: 100%;
   z-index: 2;
   overflow-x: hidden;
-  padding-top: $header-hight;
+  padding-top: 42px;
   display: flex;
   flex-direction: column;
   background-color: $dark-blue;
+  border-right: 1px solid $blue;
+  box-shadow: 0px 4px 38px -1px $sidebar-shadow;
   .logo {
     align-self: center;
     margin-bottom: 50px;
@@ -20,17 +22,21 @@
     padding-left: 15px;
     border-left: 4px solid transparent;
     margin: 10px 0px;
+    color: $dirty-turquoise;
+    font-size: $xsmall;
     &.vulnerability {
       color: $red;
       &.selected {
-        border-color: $red;
-        color: $red;
+        border-color: $strong-red;
+        color: $strong-red;
+        font-weight: bold;
       }
     }
     &.selected {
       border-left-color: $turquoise;
       color: $turquoise;
       background-color: $blue;
+      font-weight: bold;
     }
   }
   .bottom-wrapper {
@@ -39,5 +45,10 @@
     flex-direction: column;
     align-items: center;
     margin-bottom: $header-hight * 2;
+    .social-wrapper {
+      > a {
+        margin: 0 8px;
+      }
+    }
   }
 }

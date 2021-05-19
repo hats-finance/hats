@@ -22,6 +22,7 @@ export const GET_VAULTS = gql`
       totalRewardAmount
       liquidityPool
       description
+      honeyPotBalance
     }
   }
 `;
