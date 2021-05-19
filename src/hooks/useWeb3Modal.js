@@ -2,10 +2,18 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import Fortmatic from "fortmatic";
+import Torus from "@toruslabs/torus-embed";
+import Authereum from "authereum";
+import Portis from "@portis/web3";
+import MewConnect from "@myetherwallet/mewconnect-web-client"
 
 // Enter a valid infura key here to avoid being rate limited
 // You can get a key for free at https://infura.io/register
-const INFURA_ID = "INVALID_INFURA_KEY";
+const INFURA_ID = "472979e3dd4744859d63fe6421283f47";
+
+// 
+const FORMATIC_ID = "pk_test_7F2F878BC34EF901";
 
 //const NETWORK_NAME = "mainnet";
 const NETWORK_NAME = "rinkeby";
@@ -28,6 +36,35 @@ function useWeb3Modal(config = {}) {
             infuraId,
           },
         },
+        formatic: { // has an issue
+          package: Fortmatic,
+          options: {
+            key: FORMATIC_ID,
+          },
+        },
+        torus: {
+          package: Torus,
+          options: {
+            config: {
+              buildEnv: "development"
+            },
+          },
+        },
+        authereum: {
+          package: Authereum,
+        },
+        portis: {
+          package: Portis,
+          options: {
+            id: "ded972c3-b6cf-466a-92c6-fd6ada36a878",
+          },
+        },
+        mewconnect: {
+          package: MewConnect,
+          options: {
+            infuraId: infuraId
+          }
+        }
       },
       theme: {
         background: "rgb(39, 49, 56)",
