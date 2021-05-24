@@ -6,7 +6,7 @@ import "../styles/HatsBreakdown.scss";
 import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import { fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
+import { fromWei, getTokenMarketCap, getTokenPrice, calculateApy } from "../utils";
 import { IStaker } from "../types/types";
 import { RootState } from "../reducers";
 
@@ -14,13 +14,14 @@ export default function HatsBreakdown() {
   const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  //const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
+  const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
 
   const stakerAmounts = React.useMemo(() => {
     if (!loading && !error && data && data.stakers) {
       return data.stakers;
     }
+    console.log(vaults)
     return [];
   }, [loading, error, data])
 
