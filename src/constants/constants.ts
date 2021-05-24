@@ -4,7 +4,7 @@ export enum ScreenSize {
 }
 
 export enum RoutePaths {
-  honeypots = "/honeypots",
+  vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools"
@@ -18,7 +18,7 @@ export enum Networks {
 }
 
 export enum Pages {
-  honeypots = "Honeypots",
+  vaults = "Vaults",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pool"

@@ -10,7 +10,6 @@ import { getStakerAmountByVaultID } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
-import Logo from "../assets/icons/logo.icon";
 import Tooltip from "rc-tooltip";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import millify from "millify";
@@ -23,10 +22,12 @@ interface IProps {
   isPool?: boolean
 }
 
+type Tab = "deposit" | "withdraw";
+
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const { id, pid, master, stakingToken, name, apy, tokenPrice } = props.data;
-  const [isDeposit, setIsDeposit] = useState(true);
+  const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
@@ -39,6 +40,7 @@ export default function DepositWithdraw(props: IProps) {
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerAmountByVaultID(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
+  const description = props.isPool ? null : JSON.parse(props.data?.description as any);
 
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
@@ -48,7 +50,7 @@ export default function DepositWithdraw(props: IProps) {
   }, [loading, error, data])
 
   const canWithdraw = stakedAmount && Number(fromWei(stakedAmount)) >= Number(userInput);
-  const percentageValue = isDeposit ? tokenBalance : fromWei(stakedAmount);
+  const percentageValue = tab === "deposit" ? tokenBalance : fromWei(stakedAmount);
 
   React.useEffect(() => {
     const checkIsApproved = async () => {
@@ -128,7 +130,6 @@ export default function DepositWithdraw(props: IProps) {
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,
-    "in-withdraw": !isDeposit,
     "disabled": inTransaction
   })
 
@@ -145,8 +146,8 @@ export default function DepositWithdraw(props: IProps) {
         </div>
       </div>}
     <div className="tabs-wrapper">
-      <button className="tab deposit" onClick={() => { setIsDeposit(true); setUserInput("0"); }}>DEPOSIT</button>
-      <button className="tab withdraw" onClick={() => { setIsDeposit(false); setUserInput("0"); }}>WITHDRAW</button>
+      <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput("0"); }}>DEPOSIT</button>
+      <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput("0"); }}>WITHDRAW</button>
     </div>
     <div className="balance-wrapper">
       {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${numberWithCommas(Number(tokenBalance))}`}</span>}
@@ -158,11 +159,11 @@ export default function DepositWithdraw(props: IProps) {
           <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
         </div>
         <div className="input-wrapper">
-          <div className="pool-token"><Logo width="30" /> <span>{name}</span></div>
+          <div className="pool-token">{props.isPool ? null :<img width="30px" src={description["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
           <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
         </div>
-        {isDeposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-        {!isDeposit && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
+        {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
+        {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
       </div>
     </div>
     <div>
@@ -202,20 +203,18 @@ export default function DepositWithdraw(props: IProps) {
       <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
     </div>
     <div className="action-btn-wrapper">
-      {!isApproved && isDeposit && <button
+      {!isApproved && tab === "deposit" && <button
         className="action-btn"
         onClick={async () => await approveToken()}>{`ENABLE SPENDING ${tokenSymbol}`}</button>}
-      {isApproved && isDeposit && <button
+      {isApproved && tab === "deposit" && <button
         disabled={notEnoughBalance || !userInput || userInput === "0"}
         className="action-btn"
         onClick={async () => await depositAndClaim()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}</button>}
-      {!isDeposit && <button
+      {tab === "withdraw" && <button
         disabled={!canWithdraw || !userInput || userInput === "0"}
         className="action-btn"
         onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}</button>}
-    </div>
-    <div className="alt-actions-wrapper">
-      <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="alt-action-btn">{`CLAIM ${amountToClaim} HATS`}</button>
+      <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>
     </div>
     {inTransaction && <Loading />}
   </div>

@@ -57,7 +57,7 @@ export default function Vault(props: IProps) {
           </div>
           <div className="severity-data-item">
             <span className="severity-data-title">Prize:</span>
-            <span>{`${rewardPercentage}% of Honeypot`} &#8776; {`$${rewardPrice}`}</span>
+            <span>{`${rewardPercentage}% of Vault`} &#8776; {`$${rewardPrice}`}</span>
           </div>
           {severity["nft-link"] &&
             <div className="severity-data-item">

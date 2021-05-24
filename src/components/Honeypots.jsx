@@ -26,7 +26,7 @@ export default function Honeypots() {
             <tr>
               <th></th>
               <th>PROJECT NAME</th>
-              <th>HONEYPOT</th>
+              <th>TOTAL STACKED</th>
               <th>#VULNERABILITIES</th>
               <th>FUNDS GIVEN</th>
               <th>APY</th>
@@ -36,7 +36,7 @@ export default function Honeypots() {
           </tbody>
         </table>}
       {showModal &&
-        <Modal title={modalData.name} setShowModal={setShowModal} >
+        <Modal title="" setShowModal={setShowModal} >
           <DepositWithdraw data={modalData} />
         </Modal>}
     </div>
