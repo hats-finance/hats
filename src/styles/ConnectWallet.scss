@@ -1,0 +1,44 @@
+@import "./constants.scss";
+
+.connect-wallet-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    .terms-area {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        justify-content: center;
+        padding: 15px;
+        .terms-checkbox {
+            margin-right: 10px;
+        }
+    }
+    .choose-wallet-area {
+        display: flex;
+        padding: 10px;
+        .wallet-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-content: space-between;
+            width: 100%;
+            .wallet-button {
+                height: 50px;
+                width: 150px;
+                background-color: $purple-blue;
+                color: $white;
+            }
+        }
+        
+    }
+    .show-more-area {
+        display: flex;
+        justify-content: center;
+    }
+    .show-more-btn {
+        width: 150px;
+        background: none;
+        color: $white;
+    }
+}
