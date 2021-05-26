@@ -98,9 +98,9 @@ function App() {
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       <Switch>
         <Route path="/" exact>
-          <Redirect to={RoutePaths.honeypots} />
+          <Redirect to={RoutePaths.vaults} />
         </Route>
-        <Route path={RoutePaths.honeypots}>
+        <Route path={RoutePaths.vaults}>
           <Honeypots />
         </Route>
         <Route path={RoutePaths.gov}>

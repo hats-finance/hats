@@ -2,8 +2,8 @@
 
 header {
   width: 100%;
-  padding: 30px;
-  padding-left: $sidebar-width + 100;
+  padding: 42px;
+  padding-left: $sidebar-width + 50;
   display: flex;
   justify-content: space-between;
   position: fixed;
@@ -12,7 +12,7 @@ header {
   align-items: center;
   z-index: 1;
   .page-title {
-    font-size: $medium;
+    font-size: $large;
     color: $white;
   }
   .wallet-wrapper {
@@ -23,14 +23,19 @@ header {
       margin-right: 15px;
       align-items: center;
       .hats-btn {
-        border: 1px solid $turquoise;
-        background-color: transparent;
+        border: 1px solid $dark-turquoise;
+        background-color: $blue;
         color: $white;
         margin-right: 20px;
         display: flex;
         align-items: center;
+        min-height: $header-button-hight;
         span {
           margin-left: 10px;
+        }
+        &:active {
+          background-color: $light-blue;
+          opacity: 1;
         }
       }
       .current-address {
@@ -43,13 +48,26 @@ header {
     .wallet-btn {
       border: 1px solid;
       color: $white;
-      background-color: transparent;
+      background-color: $blue;
+      min-height: $header-button-hight;
       &.disconnected {
         border-color: $red;
       }
       &.connected {
-        border-color: $turquoise;
+        border-color: $dark-turquoise;
       }
+      &:active {
+        background-color: $light-blue;
+        opacity: 1;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $small-screen-breakpoint) {
+  header {
+    .page-title {
+      font-size: $medium;
     }
   }
 }

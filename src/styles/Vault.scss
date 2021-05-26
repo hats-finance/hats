@@ -3,7 +3,7 @@
 td {
   padding: 20px;
   background-color: $field-blue;
-  border-bottom: 1px solid $dark-blue;
+  border-bottom: 2px solid $dark-blue;
   &.sub-row {
     background-color: transparent;
     padding: 0px;
@@ -127,7 +127,7 @@ td {
   display: flex;
   align-items: center;
   img {
-    width: 50px;
+    width: 45px;
     margin-right: 15px;
   }
 }
@@ -136,4 +136,9 @@ td {
   border: 1px solid;
   color: $turquoise;
   background-color: transparent;
+  &.deposit-withdraw:active {
+    color: $white;
+    background-color: $dirty-turquoise;
+    opacity: 1;
+  }
 }

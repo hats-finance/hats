@@ -20,7 +20,7 @@ interface IProps {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount, rewardsLevels, tokenPrice } = props.data;
+  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance } = props.data;
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
@@ -33,9 +33,9 @@ export default function Vault(props: IProps) {
 
   const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
     let rewardPrice = "-";
-    const rewardPercentage = Number(rewardsLevels[index]) / 10000;
+    const rewardPercentage = Number(rewardsLevels[severity.index]) / 10000;
     if (tokenPrice) {
-      rewardPrice = millify(Number(fromWei(totalStaking)) * rewardPercentage * tokenPrice);
+      rewardPrice = millify(Number(fromWei(honeyPotBalance)) * rewardPercentage * tokenPrice);
     }
 
     return (
@@ -57,7 +57,7 @@ export default function Vault(props: IProps) {
           </div>
           <div className="severity-data-item">
             <span className="severity-data-title">Prize:</span>
-            <span>{`${rewardPercentage}% of Honeypot`} &#8776; {`$${rewardPrice}`}</span>
+            <span>{`${rewardPercentage}% of Vault`} &#8776; {`$${rewardPrice}`}</span>
           </div>
           {severity["nft-link"] &&
             <div className="severity-data-item">
@@ -87,7 +87,7 @@ export default function Vault(props: IProps) {
         <td>{!apy ? "-" : `${millify(apy)}%`}</td>
         <td>
           <button
-            className="action-btn"
+            className="action-btn deposit-withdraw"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
             disabled={!isProviderAndNetwork(provider)}>
             DEPOSIT / WITHDRAW

@@ -2,15 +2,22 @@
 
 .honeypots-wrapper {
   position: relative;
+  display: flex;
+  justify-content: center;
   table {
     width: 100%;
     border-collapse: collapse;
+    max-width: $table-max-width;
     tr {
       text-align: center;
     }
     th {
       background-color: $blue;
       padding: 20px;
+      color: $white;
+      &:nth-child(2) {
+        text-align: left;
+      }
     }
   }
 }

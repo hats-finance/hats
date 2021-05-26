@@ -1,8 +1,10 @@
 /*  */
 $header-hight: 30px;
-$sidebar-width: 250px;
+$sidebar-width: 265px;
 $element-padding: 10px;
 $modal-element-padding: 40px;
+$table-max-width: 1220px;
+$header-button-hight: 56px;
 
 /* colors */
 $white: #FFFFFF;
@@ -14,20 +16,23 @@ $light-blue: #041558;
 $purple-blue: #1F2748;
 $turquoise: #8AFCFD;
 $dark-turquoise: #9BC8CA;
-$red: #A6465A;
+$dirty-turquoise: #64C1C5;
+$red: #EB889D;
+$strong-red: #E66480;
 $green: green;
 $orange: #D1891D;
 $transparent-black: rgba(0,0,0,0.2); // for modal
 
 /* font sizes */
 $xlarge: 48px;
-$large: 35px;
+$large: 36px;
 $medium: 24px;
 $moderate: 18px;
 $small: 16px;
 $xsmall: 14px;
-$default: 12px;
 
 /* others */
 $mobile-breakpoint: 770px;
+$small-screen-breakpoint: 1440px;
 $black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal
+$sidebar-shadow: rgba(0, 0, 0, 0.25);

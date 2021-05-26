@@ -1,6 +1,6 @@
 {
   "name": "hats.fe-2",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "private": true,
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",

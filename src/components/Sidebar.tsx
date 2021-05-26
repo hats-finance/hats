@@ -11,11 +11,11 @@ import { RoutePaths } from "../constants/constants";
 export default function Sidebar() {
   return (
     <div className="sidebar-wrapper">
-      <Link to="/" className="logo"><Logo /></Link>
-      <NavLink to={RoutePaths.honeypots} className="sidebar-link" activeClassName="selected">Honeypots</NavLink>
+      <Link to="/" className="logo"><Logo width="50px" /></Link>
+      <NavLink to={RoutePaths.vaults} className="sidebar-link" activeClassName="selected">Vaults</NavLink>
+      <NavLink to={RoutePaths.pools} className="sidebar-link" activeClassName="selected">Liquidity Pool</NavLink>
       <NavLink to={RoutePaths.gov} className="sidebar-link" activeClassName="selected">Gov</NavLink>
       <NavLink to={RoutePaths.vulnerability} className="sidebar-link vulnerability" activeClassName="selected">Submit Vulnerability</NavLink>
-      <NavLink to={RoutePaths.pools} className="sidebar-link" activeClassName="selected">Liquidity Pool</NavLink>
       <div className="bottom-wrapper">
         <div className="social-wrapper">
           <a target="_blank" rel="noopener noreferrer" href="https://t.me/joinchat/QKP3HcdosVhjOTY0"><TelegramIcon /></a>

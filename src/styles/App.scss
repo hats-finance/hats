@@ -8,12 +8,12 @@
 html {
   background-color: $dark-blue;
   color: $turquoise;
-  font-size: $default;
+  font-size: $small;
 }
 
 button {
   font-family: RobotoMono;
-  font-size: $default;
+  font-size: $small;
   border: none;
   padding: 10px;
   margin: 5px;
@@ -44,6 +44,16 @@ a {
   padding-top: $header-hight * 2 + 100;
   margin-left: $sidebar-width + 50;
   margin-right: 50px;
+}
+
+@media only screen and (max-width: $small-screen-breakpoint) {
+  html {
+    font-size: $xsmall;
+  }
+
+  button {
+    font-size: $xsmall;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

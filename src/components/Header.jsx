@@ -68,12 +68,12 @@ export default function Header() {
       <div className="wallet-wrapper">
         {screenSize !== ScreenSize.Mobile && provider &&
           <div className="wallet-details">
-            <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo fill="#8AFCFD" width="30" height="30" /><span>Hats</span></button>
+            <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo width="30" height="30" /><span>Hats</span></button>
             {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>
               {!ethBalance ? <Lodaing /> : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
             </div>}
             <span className="current-address">{truncatedAddress(selectedAddress)}</span>
-            <span>{`(${network})`}</span>
+            <span>{`${network}`}</span>
           </div>}
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
