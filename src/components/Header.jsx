@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useWeb3Modal from "../hooks/useWeb3Modal";
+// import useWeb3Modal from "../hooks/useWeb3Modal";
 import web3Connect from "../hooks/web3Connect";
 import { connect } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,26 +18,26 @@ import { NETWORK } from "../settings";
 import MenuIcon from "../assets/icons/hamburger.icon";
 import Logo from "../assets/icons/logo.icon";
 
-function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
-  return (
-    <button
-      className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
-      onClick={() => {
-        if (!provider) {
-          loadWeb3Modal();
-          // loadWeb3();
-        } else {
-          logoutOfWeb3Modal();
-          // logoutOfWeb3();
-        }
-      }}
-    >
-      <div>
-        <span className={!provider ? "dot disconnected" : "dot connected"} style={{ marginRight: "5px" }} />{!provider ? "Connect a Wallet" : "Disconnect Wallet"}
-      </div>
-    </button>
-  );
-}
+// function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
+//   return (
+//     <button
+//       className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
+//       onClick={() => {
+//         if (!provider) {
+//           loadWeb3Modal();
+//           // loadWeb3();
+//         } else {
+//           logoutOfWeb3Modal();
+//           // logoutOfWeb3();
+//         }
+//       }}
+//     >
+//       <div>
+//         <span className={!provider ? "dot disconnected" : "dot connected"} style={{ marginRight: "5px" }} />{!provider ? "Connect a Wallet" : "Disconnect Wallet"}
+//       </div>
+//     </button>
+//   );
+// }
 
 function TestWalletButton({ provider, showModal }) {
   return (

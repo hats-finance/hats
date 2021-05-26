@@ -25,13 +25,24 @@
             width: 100%;
             .wallet-button {
                 height: 50px;
-                width: 150px;
+                width: 100%;
                 background-color: $purple-blue;
                 color: $white;
+                .wallet-button-content {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-items: center;
+                    justify-content: space-evenly;
+                }
+                .wallet-logo {
+                    height: 35px;
+                    width: 35px;
+                }
             }
         }
-        
     }
+    
     .show-more-area {
         display: flex;
         justify-content: center;
