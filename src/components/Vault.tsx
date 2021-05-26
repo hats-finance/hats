@@ -33,7 +33,7 @@ export default function Vault(props: IProps) {
 
   const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
     let rewardPrice = "-";
-    const rewardPercentage = Number(rewardsLevels[index]) / 10000;
+    const rewardPercentage = Number(rewardsLevels[severity.index]) / 10000;
     if (tokenPrice) {
       rewardPrice = millify(Number(fromWei(honeyPotBalance)) * rewardPercentage * tokenPrice);
     }
