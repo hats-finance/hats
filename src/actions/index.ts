@@ -54,3 +54,8 @@ export const updateHatsPrice = (hatsPrice: number) => ({
   type: types.UPDATE_HATS_PRICE,
   hatsPrice
 })
+
+export const updateLiquidityPool = (liquidityPoolID: string) => ({
+  type: types.UPDATE_LIQUIDITY_POOL,
+  liquidityPoolID
+})
