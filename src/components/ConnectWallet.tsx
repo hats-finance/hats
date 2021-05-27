@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/ConnectWallet.scss";
-import web3Connect from "../hooks/web3Connect";
+// import web3Connect from "../hooks/web3Connect";
+import { connect, useDispatch } from "react-redux";
 
 import MetaMaskLogo from "../assets/icons/wallets/metamask.svg";
 import WalletConnectLogo from "../assets/icons/wallets/walletconnect-circle.svg";
@@ -17,9 +18,10 @@ interface IProps {
 }
 
 export default function ConnectWallet(props: IProps) {
+    const dispatch = useDispatch();
     const [showMore, setShowMore] = useState(false);
 
-    const [provider, useWalletConnect] = web3Connect();
+    // const [provider, useWalletConnect] = web3Connect();
 
     return <div className="connect-wallet-wrapper">
         <div className="terms-area">

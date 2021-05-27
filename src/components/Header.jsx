@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-// import useWeb3Modal from "../hooks/useWeb3Modal";
-import web3Connect from "../hooks/web3Connect";
+import useWeb3Modal from "../hooks/useWeb3Modal";
+// import web3Connect from "../hooks/web3Connect";
 import { connect } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { truncatedAddress, getNetworkNameByChainId, getMainPath, fetchWalletBalance } from "../utils";
@@ -18,51 +18,49 @@ import { NETWORK } from "../settings";
 import MenuIcon from "../assets/icons/hamburger.icon";
 import Logo from "../assets/icons/logo.icon";
 
-// function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
-//   return (
-//     <button
-//       className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
-//       onClick={() => {
-//         if (!provider) {
-//           loadWeb3Modal();
-//           // loadWeb3();
-//         } else {
-//           logoutOfWeb3Modal();
-//           // logoutOfWeb3();
-//         }
-//       }}
-//     >
-//       <div>
-//         <span className={!provider ? "dot disconnected" : "dot connected"} style={{ marginRight: "5px" }} />{!provider ? "Connect a Wallet" : "Disconnect Wallet"}
-//       </div>
-//     </button>
-//   );
-// }
-
-function TestWalletButton({ provider, showModal }) {
+function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
     <button
-    className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
-    onClick={() => {
-      if (!provider) {
-        showModal(true)
-      } else {
-        // logout of provider
-      }
-    }}
+      className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
+      onClick={() => {
+        if (!provider) {
+          loadWeb3Modal();
+        } else {
+          logoutOfWeb3Modal();
+        }
+      }}
     >
       <div>
         <span className={!provider ? "dot disconnected" : "dot connected"} style={{ marginRight: "5px" }} />{!provider ? "Connect a Wallet" : "Disconnect Wallet"}
       </div>
     </button>
-  )
+  );
 }
+
+// function TestWalletButton({ provider, showModal }) {
+//   return (
+//     <button
+//     className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
+//     onClick={() => {
+//       if (!provider) {
+//         showModal(true)
+//       } else {
+//         // logout of provider
+//       }
+//     }}
+//     >
+//       <div>
+//         <span className={!provider ? "dot disconnected" : "dot connected"} style={{ marginRight: "5px" }} />{!provider ? "Connect a Wallet" : "Disconnect Wallet"}
+//       </div>
+//     </button>
+//   )
+// }
 
 export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
-  // const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
-  const [provider] = web3Connect();
+  const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
+  // const [provider] = web3Connect();
   const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
   const { ethBalance, hatsBalance } = useSelector(state => state.web3Reducer);
   const screenSize = useSelector(state => state.layoutReducer.screenSize);
@@ -100,8 +98,8 @@ export default function Header() {
             <span className="current-address">{truncatedAddress(selectedAddress)}</span>
             <span>{`(${network})`}</span>
           </div>}
-        {/* <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} /> */}
-        <TestWalletButton provider={provider} showModal={setShowWalletModal} />
+        <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
+        {/* <TestWalletButton provider={provider} showModal={setShowWalletModal} /> */}
       </div>
       {showModal &&
         <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal} height="fit-content">
