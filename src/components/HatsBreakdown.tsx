@@ -36,9 +36,7 @@ export default function HatsBreakdown() {
       setTotalStaked(totalStaked as any);
       const sumOfStaked = stakerAmounts.forEach(async (v, i) => {
         const userDepositAmount = Number(fromWei(v.amount))
-        console.log(Number(fromWei(v.amount)))
         const tokenValue = await getTokenPrice(v.vault.stakingToken)
-        console.log(v.vault.stakingToken)
         let apy = 0;
         vaults.forEach((vault) => {
           if (vault.stakingToken === v.vault.stakingToken) {
