@@ -85,8 +85,6 @@ export const getStakerAmounts = (stakerAddress: string) => {
         amount
         vault {
           stakingToken
-          apy
-          tokenPrice
         }
       }
     }
