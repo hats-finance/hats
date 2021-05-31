@@ -5,15 +5,17 @@ import Vault from "./Vault";
 import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
+import { RootState } from "../reducers";
+import { IVault } from "../types/types";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const vaultsData = useSelector(state => state.dataReducer.vaults);
+  const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
 
-  const vaults = vaultsData.map((vault, index) => {
-    if (!vault.liquidityPool) {
-      return <Vault key={index} data={vault} setShowModal={setShowModal} setModalData={setModalData} />
+  const vaults = vaultsData.map((vault: IVault) => {
+    if (!vault.liquidityPool && vault.registered) {
+      return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />
     }
     return null;
   });
@@ -37,7 +39,7 @@ export default function Honeypots() {
         </table>}
       {showModal &&
         <Modal title="" setShowModal={setShowModal} >
-          <DepositWithdraw data={modalData} />
+          <DepositWithdraw data={modalData as any} />
         </Modal>}
     </div>
   )

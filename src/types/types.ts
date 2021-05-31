@@ -21,6 +21,7 @@ export interface IVault {
   liquidityPool: boolean
   tokenPrice: number
   honeyPotBalance: string
+  registered: boolean
 }
 
 export interface IVaultDescription {

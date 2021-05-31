@@ -23,6 +23,7 @@ export const GET_VAULTS = gql`
       liquidityPool
       description
       honeyPotBalance
+      registered
     }
   }
 `;

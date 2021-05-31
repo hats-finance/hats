@@ -15,6 +15,7 @@ import millify from "millify";
 import { NETWORK } from "../settings";
 import MenuIcon from "../assets/icons/hamburger.icon";
 import Logo from "../assets/icons/logo.icon";
+import { RootState } from "../reducers";
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
@@ -39,13 +40,13 @@ export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
   const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
-  const selectedAddress = useSelector(state => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { ethBalance, hatsBalance } = useSelector(state => state.web3Reducer);
-  const screenSize = useSelector(state => state.layoutReducer.screenSize);
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const { ethBalance, hatsBalance } = useSelector((state: RootState) => state.web3Reducer);
+  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const [showModal, setShowModal] = useState(false);
-  const chainId = useSelector(state => state.web3Reducer.provider?.chainId) ?? "";
+  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
-  const rewardsToken = useSelector(state => state.dataReducer.rewardsToken);
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
 
   React.useEffect(() => {
     dispatch(connect(provider || {}));

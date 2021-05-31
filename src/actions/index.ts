@@ -2,7 +2,7 @@ import * as types from "../constants/action-types";
 import { ScreenSize, NotificationType } from "../constants/constants";
 import { IVault } from "../types/types";
 
-export const connect = ({ provider }) => ({
+export const connect = ({ provider }: any) => ({
   type: types.CONNECT,
   provider
 })
