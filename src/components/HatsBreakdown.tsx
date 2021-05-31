@@ -34,18 +34,20 @@ export default function HatsBreakdown() {
       // TODO: should be staking token, e.g. staker.vault.stakingToken
       const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")))).reduce((a: any, b: any) => a + b, 0);
       setTotalStaked(totalStaked as any);
-      const sumOfStaked = stakerAmounts.forEach(async (v, i) => {
-        const userDepositAmount = Number(fromWei(v.amount))
-        const tokenValue = await getTokenPrice(v.vault.stakingToken)
-        let apy = 0;
-        vaults.forEach((vault) => {
-          if (vault.stakingToken === v.vault.stakingToken) {
-            apy = vault.apy
+      const sumOfStaked = stakerAmounts.forEach(async (v) => {
+        let stakedAPY = 0, projectsStaked = 0;
+        vaults.forEach(vault => {
+          if (v.vault.stakingToken === vault.stakingToken) {
+            stakedAPY = stakedAPY + vault.apy
+            projectsStaked += 1
           }
         });
-        return userDepositAmount * tokenValue * apy;
-      }).reduce((a: any, b: any) => a + b, 0);
-      setStakingAPY(sumOfStaked / vaults.length)
+        console.log(stakedAPY)
+        setStakingAPY(stakedAPY / projectsStaked)
+      });
+      
+      console.log(sumOfStaked)
+      // setStakingAPY(sumOfStaked / vaults.length)
     }
     if (stakerAmounts.length > 0) {
       getTotalStaked();
@@ -79,7 +81,7 @@ export default function HatsBreakdown() {
       </div>
       <div className="data-square">
         <span>Staking APY</span>
-        <span>???%</span> {/* should be stakingAPY when that can be verified it is working */}
+        {loading ? <Loading top="60%" /> : <span>{millify(stakingAPY)}%</span>}
       </div>
     </div>
     <div className="data-bottom">
