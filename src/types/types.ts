@@ -49,8 +49,16 @@ export interface ISeverity {
   "name": string
   "index": number
   "contracts-covered": Array<string>
-  "nft-link": string
+  "nft-metadata": INFTMetaData
   "reward-for": string
+}
+
+export interface INFTMetaData {
+  name: string
+  description: string
+  animation_url: string
+  image: string
+  external_url: string
 }
 
 export interface IStaker {

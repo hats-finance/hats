@@ -24,7 +24,7 @@ header {
       align-items: center;
       .hats-btn {
         border: 1px solid $dark-turquoise;
-        background-color: $blue;
+        background-color: transparent;
         color: $white;
         margin-right: 20px;
         display: flex;
@@ -50,12 +50,13 @@ header {
       color: $white;
       background-color: $blue;
       min-height: $header-button-hight;
-      &.disconnected {
-        border-color: $red;
-      }
-      &.connected {
-        border-color: $dark-turquoise;
-      }
+      border: none;
+      // &.disconnected {
+      //   border-color: $red;
+      // }
+      // &.connected {
+      //   border-color: $dark-turquoise;
+      // }
       &:active {
         background-color: $light-blue;
         opacity: 1;

@@ -179,16 +179,6 @@ export const calculateApy = async (vault: IVault, hatsPrice: number) => {
  */
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-
-export const getNFTData = async () => {
-  try {
-    const data = await axios.get("https://api.opensea.io/api/v1/asset/0xd07dc4262bcdbf85190c01c996b4c06a461d2430/124178");
-    return data.data;
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 /**
  * Gets the webapp version from the package.json
  */

@@ -1,7 +1,7 @@
 @import "./constants.scss";
 
 td {
-  padding: 20px;
+  padding: 15px;
   background-color: $field-blue;
   border-bottom: 2px solid $dark-blue;
   &.sub-row {
@@ -54,8 +54,20 @@ td {
             padding: 10px 30px;
             color: $dark-turquoise;
             font-weight: bold;
+            &.low {
+              background-color: $severity-low;
+            }
+            &.medium {
+              background-color: $severity-medium;
+            }
+            &.high {
+              background-color: $severity-high;
+            }
+            &.critical {
+              background-color: $severity-critical;
+            }
             &.audit-request {
-              background-color: $orange;
+              background-color: $severity-audit-request;
               color: $white;
             }
           }
@@ -70,13 +82,9 @@ td {
               margin-right: 10px;
               border-right: 1px solid $purple-blue;
               padding-right: 10px;
-              .severity-data-title {
-                font-style: italic;
-                color: $dark-turquoise;
-                margin-bottom: 10px;
-              }
               .view-all {
                 margin-left: auto;
+                margin-top: auto;
                 font-style: italic;
                 font-weight: bold;
                 cursor: pointer;
@@ -91,11 +99,22 @@ td {
                   color: $dark-turquoise;
                 }
               }
-              .open-nft-data {
-                margin-left: 50%;
+              .nft-image-wrapper {
+                position: relative;
                 cursor: pointer;
+                display: flex;
+                justify-content: center;
+                .zoom-icon {
+                  position: absolute;
+                  top: 0;
+                  right: 0;
+                }
+                .nft-image {
+                  width: 100px;
+                  height: 100px;
+                }
               }
-              .open-nft-data:hover {
+              .nft-image-wrapper:hover {
                 opacity: 0.9;
               }
             }
@@ -106,6 +125,11 @@ td {
           }
         }
       }
+    }
+    .vault-expanded-subtitle {
+      font-style: italic;
+      color: $dark-turquoise;
+      margin-bottom: 10px;
     }
   }
 }
@@ -135,7 +159,7 @@ td {
 .action-btn {
   border: 1px solid;
   color: $turquoise;
-  background-color: transparent;
+  background-color: $light-blue;
   &.deposit-withdraw:active {
     color: $white;
     background-color: $dirty-turquoise;

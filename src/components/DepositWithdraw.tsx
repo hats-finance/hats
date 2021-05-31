@@ -50,7 +50,7 @@ export default function DepositWithdraw(props: IProps) {
   }, [loading, error, data])
 
   const canWithdraw = stakedAmount && Number(fromWei(stakedAmount)) >= Number(userInput);
-  const percentageValue = tab === "deposit" ? tokenBalance : fromWei(stakedAmount);
+  //const percentageValue = tab === "deposit" ? tokenBalance : fromWei(stakedAmount);
 
   React.useEffect(() => {
     const checkIsApproved = async () => {
@@ -150,6 +150,7 @@ export default function DepositWithdraw(props: IProps) {
       <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput("0"); }}>WITHDRAW</button>
     </div>
     <div className="balance-wrapper">
+      <span style={{ color: "white" }}>Amount</span>
       {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${numberWithCommas(Number(tokenBalance))}`}</span>}
     </div>
     <div>
@@ -166,12 +167,12 @@ export default function DepositWithdraw(props: IProps) {
         {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
       </div>
     </div>
-    <div>
+    {/* <div>
       <button disabled={!isApproved} className="percentage-btn" onClick={() => setUserInput(String((25 / 100) * parseInt(percentageValue)))}>25%</button>
       <button disabled={!isApproved} className="percentage-btn" onClick={() => setUserInput(String((50 / 100) * parseInt(percentageValue)))}>50%</button>
       <button disabled={!isApproved} className="percentage-btn" onClick={() => setUserInput(String((75 / 100) * parseInt(percentageValue)))}>75%</button>
       <button disabled={!isApproved} className="percentage-btn" onClick={() => setUserInput(percentageValue)}>100%</button>
-    </div>
+    </div> */}
     <div className="staked-wrapper">
       <span>You staked</span>
       <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>

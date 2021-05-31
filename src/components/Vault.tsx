@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import millify from "millify";
 import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
+import ZoomIcon from "../assets/icons/zoom.icon";
 import { RootState } from "../reducers";
 import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
@@ -33,17 +34,17 @@ export default function Vault(props: IProps) {
 
   const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
     let rewardPrice = "-";
-    const rewardPercentage = Number(rewardsLevels[severity.index]) / 10000;
+    const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
     if (tokenPrice) {
       rewardPrice = millify(Number(fromWei(honeyPotBalance)) * rewardPercentage * tokenPrice);
     }
 
     return (
       <div className="severity-wrapper" key={index}>
-        <div className="severity-title">{severity.name.toUpperCase()}</div>
+        <div className={`severity-title ${severity.name.toLocaleLowerCase()}`}>{severity.name.toUpperCase()}</div>
         <div className="severity-data">
           <div className="severity-data-item">
-            <span className="severity-data-title">Contracts Covered:</span>
+            <span className="vault-expanded-subtitle">Contracts Covered:</span>
             {severity["contracts-covered"].map((contract: string, index: number) => {
               const contractName = Object.keys(contract)[0];
               return (
@@ -56,13 +57,19 @@ export default function Vault(props: IProps) {
             <span className="view-all">View all</span>
           </div>
           <div className="severity-data-item">
-            <span className="severity-data-title">Prize:</span>
-            <span>{`${rewardPercentage}% of Vault`} &#8776; {`$${rewardPrice}`}</span>
+            <span className="vault-expanded-subtitle">Prize:</span>
+            <span><b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span style={{ color: "white" }}> of Vault</span> &#8776; {`$${rewardPrice}`}</span>
           </div>
-          {severity["nft-link"] &&
+          {severity["nft-metadata"] &&
             <div className="severity-data-item">
-              <span className="severity-data-title">NFT:</span>
-              <span className="open-nft-data" onClick={() => { setShowModal(true); setModalData(severity as any); }}>Show NFT</span>
+              <span className="vault-expanded-subtitle">NFT:</span>
+              <div className="nft-image-wrapper" onClick={() => { setShowModal(true); setModalData(severity as any); }}>
+                <div className="zoom-icon"><ZoomIcon /></div>
+                <img
+                  className="nft-image"
+                  src={`https://ipfs.io/ipfs/${severity["nft-metadata"].image.substring(12)}`}
+                  alt="NFt" />
+              </div>
             </div>}
         </div>
       </div>
@@ -102,17 +109,17 @@ export default function Vault(props: IProps) {
               <div className="committee-wrapper">
                 <div className="sub-title">Committee</div>
                 <div className="committee-content">
-                  <div>Members: {members}</div>
+                  <div className="vault-expanded-subtitle">Members: {members}</div>
                   <div className="multi-sig-wrapper">
-                    <span>
-                      Multi sig:
+                    <div>
+                      <span className="vault-expanded-subtitle">Multi sig:</span>
                       <a target="_blank"
                         rel="noopener noreferrer"
                         href={linkToEtherscan(description?.committee["multisig-address"], NETWORK)}
                         className="multi-sig-address">
                         {truncatedAddress(description?.committee["multisig-address"])}
                       </a>
-                    </span>
+                    </div>
                     <CopyToClipboard value={description?.committee["multisig-address"]} />
                   </div>
                 </div>
@@ -129,7 +136,7 @@ export default function Vault(props: IProps) {
       }
       {
         showModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="800px" width="60%" >
+        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="800px" width="60%" height="fit-content">
           <NFTPrize data={modalData as any} />
         </Modal>
       }
