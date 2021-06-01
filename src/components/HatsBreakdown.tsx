@@ -7,7 +7,7 @@ import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import { fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
-import { IStaker } from "../types/types";
+import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
 
 export default function HatsBreakdown() {
@@ -16,8 +16,6 @@ export default function HatsBreakdown() {
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
-  // sum(user deposit size * token value * vault APY)/number of vaults in sum
-  // forEachVault(stakerAmounts[x].amount * getTokenPrice(stakerAmounts[x].vault.stakingToken) * ...) / stakerAmounts.length
 
   const stakerAmounts = React.useMemo(() => {
     if (!loading && !error && data && data.stakers) {
@@ -34,26 +32,20 @@ export default function HatsBreakdown() {
       // TODO: should be staking token, e.g. staker.vault.stakingToken
       const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")))).reduce((a: any, b: any) => a + b, 0);
       setTotalStaked(totalStaked as any);
-      const sumOfStaked = stakerAmounts.forEach(async (v) => {
+      stakerAmounts.forEach(async (staked: IStaker) => {
         let stakedAPY = 0, projectsStaked = 0;
-        vaults.forEach(vault => {
-          if (v.vault.stakingToken === vault.stakingToken) {
+        vaults.forEach((vault: IVault) => {
+          if (staked.vault.stakingToken === vault.stakingToken) {
             stakedAPY = stakedAPY + vault.apy
             projectsStaked += 1
           }
         });
-        console.log(stakedAPY)
         setStakingAPY(stakedAPY / projectsStaked)
       });
-      
-      console.log(sumOfStaked)
-      // setStakingAPY(sumOfStaked / vaults.length)
     }
     if (stakerAmounts.length > 0) {
       getTotalStaked();
     }
-    console.log(stakerAmounts)
-    console.log(vaults)
   }, [stakerAmounts])
 
   const [hatsMarketCap, setHatsMarketCap] = useState(0);
