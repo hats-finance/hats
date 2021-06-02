@@ -137,12 +137,12 @@ export default function DepositWithdraw(props: IProps) {
     {props.isPool &&
       <div className="pool-wrapper">
         <div className="pool-title-wrapper">
-          <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="30px" />
+          <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="40px" />
           <span className="pool-name">{name.split(' ')[0]}</span>
         </div>
         <div>
-          <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" />
-          <img src={require("../assets/icons/vaults/etherum.svg").default} alt="etherum logo" />
+          <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" width="40px" />
+          <img src={require("../assets/icons/vaults/etherum.svg").default} alt="etherum logo" width="40px" />
         </div>
       </div>}
     <div className="tabs-wrapper">

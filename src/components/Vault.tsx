@@ -58,7 +58,7 @@ export default function Vault(props: IProps) {
           </div>
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Prize:</span>
-            <span><b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span style={{ color: "white" }}> of Vault</span> &#8776; {`$${rewardPrice}`}</span>
+            <span className="vault-prize"><b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span style={{ color: "white" }}> of Vault</span> &#8776; {`$${rewardPrice}`}</span>
           </div>
           {severity["nft-metadata"] &&
             <div className="severity-data-item">
@@ -136,7 +136,7 @@ export default function Vault(props: IProps) {
       }
       {
         showModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="800px" width="60%" height="fit-content">
+        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="600px" width="60%" height="fit-content">
           <NFTPrize data={modalData as any} />
         </Modal>
       }

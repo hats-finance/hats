@@ -38,7 +38,7 @@ export default function Honeypots() {
           </tbody>
         </table>}
       {showModal &&
-        <Modal title="" setShowModal={setShowModal} >
+        <Modal title="" setShowModal={setShowModal} height="fit-content" >
           <DepositWithdraw data={modalData as any} />
         </Modal>}
     </div>

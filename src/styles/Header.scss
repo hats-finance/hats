@@ -51,12 +51,7 @@ header {
       background-color: $blue;
       min-height: $header-button-hight;
       border: none;
-      // &.disconnected {
-      //   border-color: $red;
-      // }
-      // &.connected {
-      //   border-color: $dark-turquoise;
-      // }
+      padding: 15px;
       &:active {
         background-color: $light-blue;
         opacity: 1;

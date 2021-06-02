@@ -21,7 +21,7 @@
     flex-direction: column;
     background-color: $blue;
     box-shadow: $black-shadow;
-    overflow-x: scroll;
+    overflow-x: hidden;
     position: relative;
     height: var(--modal-height);
     width: var(--modal-width);

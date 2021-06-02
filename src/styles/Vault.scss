@@ -1,9 +1,11 @@
 @import "./constants.scss";
 
+tr {
+  border-bottom: 2px solid $dark-blue;
+}
 td {
   padding: 15px;
   background-color: $field-blue;
-  border-bottom: 2px solid $dark-blue;
   &.sub-row {
     background-color: transparent;
     padding: 0px;
@@ -30,7 +32,6 @@ td {
           .multi-sig-address {
             font-style: italic;
             font-weight: bold;
-            color: $turquoise;
             margin-left: 50px;
             margin-right: 10px;
           }
@@ -129,6 +130,10 @@ td {
     .vault-expanded-subtitle {
       font-style: italic;
       color: $dark-turquoise;
+      padding-bottom: 15px;
+    }
+    .vault-prize {
+      margin: auto;
     }
   }
 }
@@ -150,7 +155,7 @@ td {
   display: flex;
   align-items: center;
   img {
-    width: 45px;
+    width: 40px;
     margin-right: 15px;
   }
 }

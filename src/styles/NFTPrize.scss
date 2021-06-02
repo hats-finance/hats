@@ -3,13 +3,22 @@
 .nft-prize-wrapper {
   display: flex;
   padding: $modal-element-padding;
+  flex-direction: column;
+  align-items: center;
+  .nft-name {
+    margin-bottom: 50px;
+    color: $white;
+    font-weight: bold;
+    margin-right: auto;
+  }
+  .nft-image {
+    width: 300px;
+  }
   .nft-info {
     margin-right: 50px;
     display: flex;
     flex-direction: column;
-    .nft-name {
-      margin-bottom: 50px;
-    }
+    color: $white;
     .subtitle {
       font-style: italic;
       color: $dark-turquoise;
@@ -19,8 +28,5 @@
       font-size: $xsmall;
       margin-bottom: 50px;
     }
-  }
-  .nft-image {
-    width: 300px;
   }
 }
