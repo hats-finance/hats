@@ -11,9 +11,6 @@ import MewConnect from "@myetherwallet/mewconnect-web-client"
 // You can get a key for free at https://infura.io/register
 const INFURA_ID = "472979e3dd4744859d63fe6421283f47";
 
-// 
-const FORMATIC_ID = "pk_test_7F2F878BC34EF901";
-
 //const NETWORK_NAME = "mainnet";
 const NETWORK_NAME = "rinkeby";
 
