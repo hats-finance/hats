@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Fortmatic from "fortmatic";
 import Torus from "@toruslabs/torus-embed";
 import Authereum from "authereum";
 import Portis from "@portis/web3";
@@ -34,12 +33,6 @@ function useWeb3Modal(config = {}) {
           package: WalletConnectProvider,
           options: {
             infuraId,
-          },
-        },
-        formatic: { // has an issue
-          package: Fortmatic,
-          options: {
-            key: FORMATIC_ID,
           },
         },
         torus: {
