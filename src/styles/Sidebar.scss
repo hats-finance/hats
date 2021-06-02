@@ -16,6 +16,41 @@
     align-self: center;
     margin-bottom: 50px;
   }
+  .pools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .arrow {
+      cursor: pointer;
+      transform: rotate(0deg);
+      transition: transform 0.1s linear;
+      margin: 15px;
+      &.open {
+        transform: rotate(90deg);
+        transition: transform 0.1s linear;
+      }
+    }
+    &.selected {
+      background-color: $blue;
+    }
+  }
+  .pools-links-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding-left: 25px;
+    .pool-link-wrapper {
+      display: flex;
+      cursor: pointer;
+      color: $white;
+      margin: 10px;
+      &:hover {
+        opacity: 0.9;
+      }
+      .selected {
+        font-weight: bold;
+      }
+    }
+  }
   .sidebar-link {
     height: 50px;
     line-height: 50px;
@@ -46,6 +81,7 @@
     align-items: center;
     margin-bottom: $header-hight * 2;
     .social-wrapper {
+      margin-bottom: 10px;
       > a {
         margin: 0 8px;
       }

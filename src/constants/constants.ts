@@ -21,7 +21,7 @@ export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
-  pools = "Liquidity Pool"
+  pools = "Liquidity Pools"
 }
 
 /**

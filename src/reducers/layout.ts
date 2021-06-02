@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION } from '../constants/action-types';
+import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION, UPDATE_LIQUIDITY_POOL } from '../constants/action-types';
 import { getScreenSize } from '../utils';
 
 const initialState = {
@@ -9,7 +9,8 @@ const initialState = {
     type: undefined,
     text: ""
   },
-  inTransaction: false
+  inTransaction: false,
+  liquidityPoolID: "" 
 };
 
 export const layoutReducer = (state = initialState, action: any) => {
@@ -38,6 +39,11 @@ export const layoutReducer = (state = initialState, action: any) => {
       return {
         ...state,
         inTransaction: action.inTransaction
+      }
+    case UPDATE_LIQUIDITY_POOL:
+      return {
+        ...state,
+        liquidityPoolID: action.liquidityPoolID
       }
     default: return state;
   }

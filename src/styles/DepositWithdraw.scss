@@ -44,7 +44,7 @@
   .balance-wrapper {
     position: relative;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 20px;
     margin-bottom: 10px;
   }
@@ -124,7 +124,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin: 20px 0px;
+    margin: 40px 0px;
     align-items: center;
     .action-btn {
       width: 80%;
