@@ -44,6 +44,7 @@ export interface ICommitteeMember {
   "name": string
   "address": string
   "twitter-link": string
+  "image-ipfs-link"?: string
 }
 
 export interface ISeverity {

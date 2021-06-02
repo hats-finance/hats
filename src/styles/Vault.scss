@@ -23,17 +23,29 @@ td {
       .committee-content {
         display: flex;
         justify-content: space-between;
-        .member-link {
-          margin-right: 5px;
+        .member-link-wrapper {
+          display: flex;
+          flex-direction: column;
+          margin: 0px 15px;
+          align-items: center;
+          .twitter-avatar {
+            border-radius: 50%;
+            width: 40px;
+          }
+          .member-username {
+            margin-top: 5px;
+          }
         }
         .multi-sig-wrapper {
-          display: flex;
-          align-items: center;
-          .multi-sig-address {
-            font-style: italic;
-            font-weight: bold;
-            margin-left: 50px;
-            margin-right: 10px;
+          .multi-sig-address-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .multi-sig-address {
+              font-style: italic;
+              font-weight: bold;
+              margin-right: 10px;
+            }
           }
         }
         > div {
@@ -131,6 +143,12 @@ td {
       font-style: italic;
       color: $dark-turquoise;
       padding-bottom: 15px;
+      display: flex;
+      .twitter-avatars-wrapper {
+        display: flex;
+        margin: 0 20px;
+        overflow-x: scroll;
+      }
     }
     .vault-prize {
       margin: auto;

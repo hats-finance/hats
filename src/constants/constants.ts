@@ -46,3 +46,5 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 }
 
 export const DEFAULT_ERROR_MESSAGE = "Something went wrong :(";
+
+export const IPFS_PREFIX = "https://ipfs.io/ipfs/";

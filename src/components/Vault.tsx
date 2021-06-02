@@ -6,11 +6,13 @@ import millify from "millify";
 import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
 import ZoomIcon from "../assets/icons/zoom.icon";
+import TwitterImageIcon from "../assets/icons/twitterImage.icon";
 import { RootState } from "../reducers";
 import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
+import { IPFS_PREFIX } from "../constants/constants";
 
 interface IProps {
   data: IVault,
@@ -29,7 +31,12 @@ export default function Vault(props: IProps) {
   const description = JSON.parse(props.data.description as any);
 
   const members = description?.committee.members.map((member: ICommitteeMember, index: number) => {
-    return <a key={index} className="member-link" href={member["twitter-link"]} target="_blank" rel="noreferrer">{member.name}</a>
+    return (
+      <a className="member-link-wrapper" key={index} href={member["twitter-link"]} target="_blank" rel="noreferrer">
+        {member["image-ipfs-link"] ? <img src={`${IPFS_PREFIX}${member["image-ipfs-link"]}`} alt="twitter avatar" className="twitter-avatar" /> : <TwitterImageIcon />}
+        <span className="member-username">{member.name}</span>
+      </a>
+    )
   })
 
   const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
@@ -67,7 +74,7 @@ export default function Vault(props: IProps) {
                 <div className="zoom-icon"><ZoomIcon /></div>
                 <img
                   className="nft-image"
-                  src={`https://ipfs.io/ipfs/${severity["nft-metadata"].image.substring(12)}`}
+                  src={`${IPFS_PREFIX}${severity["nft-metadata"].image.substring(12)}`}
                   alt="NFt" />
               </div>
             </div>}
@@ -109,18 +116,21 @@ export default function Vault(props: IProps) {
               <div className="committee-wrapper">
                 <div className="sub-title">Committee</div>
                 <div className="committee-content">
-                  <div className="vault-expanded-subtitle">Members: {members}</div>
+                  <div className="vault-expanded-subtitle">
+                    Members:
+                    <div className="twitter-avatars-wrapper">{members}</div>
+                  </div>
                   <div className="multi-sig-wrapper">
-                    <div>
-                      <span className="vault-expanded-subtitle">Multi sig:</span>
+                    <span className="vault-expanded-subtitle">Multi sig:</span>
+                    <div className="multi-sig-address-wrapper">
                       <a target="_blank"
                         rel="noopener noreferrer"
                         href={linkToEtherscan(description?.committee["multisig-address"], NETWORK)}
                         className="multi-sig-address">
                         {truncatedAddress(description?.committee["multisig-address"])}
                       </a>
+                      <CopyToClipboard value={description?.committee["multisig-address"]} />
                     </div>
-                    <CopyToClipboard value={description?.committee["multisig-address"]} />
                   </div>
                 </div>
               </div>
