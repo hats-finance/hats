@@ -32,15 +32,18 @@ export default function HatsBreakdown() {
       // TODO: should be staking token, e.g. staker.vault.stakingToken
       const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")))).reduce((a: any, b: any) => a + b, 0);
       setTotalStaked(totalStaked as any);
+      let amountToSum = 0;
       stakerAmounts.forEach(async (staked: IStaker) => {
-        let stakedAPY = 0, projectsStaked = 0;
+        const userDepositSize = Number(fromWei(staked.amount));
+        const tokenValue: number = (staked.vault.stakingToken === "0x6975129cc95233f2822dcf409a33a8805c1742e3") ? await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf") : await getTokenPrice(staked.vault.stakingToken);
+        let vaultAPY = 0;
         vaults.forEach((vault: IVault) => {
           if (staked.vault.stakingToken === vault.stakingToken) {
-            stakedAPY = stakedAPY + vault.apy
-            projectsStaked += 1
+            vaultAPY = vault.apy
           }
         });
-        setStakingAPY(stakedAPY / projectsStaked)
+        amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);
+        setStakingAPY(amountToSum / stakerAmounts.length)
       });
     }
     if (stakerAmounts.length > 0) {
