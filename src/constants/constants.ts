@@ -48,3 +48,8 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 export const DEFAULT_ERROR_MESSAGE = "Something went wrong :(";
 
 export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
+
+/** This is used when we need to set colors via the JavaScript */
+export enum Colors {
+  white = "#FFFFFF",
+}

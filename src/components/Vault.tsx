@@ -12,7 +12,9 @@ import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { IPFS_PREFIX } from "../constants/constants";
+import { IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "../assets/icons/info.icon";
 
 interface IProps {
   data: IVault,
@@ -20,12 +22,34 @@ interface IProps {
   setModalData: (data: any) => any
 }
 
+interface IContractsCoveredProps {
+  contracts: Array<string>
+}
+
+const ContractsCovered = (props: IContractsCoveredProps) => {
+  return (
+    <>
+      {props.contracts.map((contract: string, index: number) => {
+        const contractName = Object.keys(contract)[0];
+        return (
+          <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={linkToEtherscan(contract[contractName], NETWORK)}>
+            <span className="contract-name">{contractName}</span>
+            <span>{truncatedAddress(contract[contractName])}</span>
+          </a>
+        )
+      })}
+    </>
+  )
+}
+
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance } = props.data;
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null);
+  const [showNFTModal, setShowNFTModal] = useState(false);
+  const [modalNFTData, setModalNFTData] = useState(null);
+  const [showContractsModal, setShowContractsModal] = useState(false);
+  const [modalContractsData, setModalContractsData] = useState(null);
   // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
 
   const description = JSON.parse(props.data.description as any);
@@ -52,25 +76,28 @@ export default function Vault(props: IProps) {
         <div className="severity-data">
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Contracts Covered:</span>
-            {severity["contracts-covered"].map((contract: string, index: number) => {
-              const contractName = Object.keys(contract)[0];
-              return (
-                <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={linkToEtherscan(contract[contractName], NETWORK)}>
-                  <span className="contract-name">{contractName}</span>
-                  <span>{truncatedAddress(contract[contractName])}</span>
-                </a>
-              )
-            })}
-            <span className="view-all">View all</span>
+            <ContractsCovered contracts={severity["contracts-covered"]} />
+            <span className="view-all" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>View all</span>
           </div>
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Prize:</span>
-            <span className="vault-prize"><b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span style={{ color: "white" }}> of Vault</span> &#8776; {`$${rewardPrice}`}</span>
+            <span className="vault-prize">
+              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b>
+              <span style={{ color: "white" }}>&nbsp; of Vault
+              <Tooltip
+                  overlay="???"
+                  overlayClassName="tooltip"
+                  overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+                  placement="top">
+                  <span><InfoIcon width="10" /></span>
+                </Tooltip>
+              </span> &#8776; {`$${rewardPrice}`}
+            </span>
           </div>
           {severity["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
-              <div className="nft-image-wrapper" onClick={() => { setShowModal(true); setModalData(severity as any); }}>
+              <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 <div className="zoom-icon"><ZoomIcon /></div>
                 <img
                   className="nft-image"
@@ -145,9 +172,15 @@ export default function Vault(props: IProps) {
         </tr>
       }
       {
-        showModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowModal} maxWidth="600px" width="60%" height="fit-content">
-          <NFTPrize data={modalData as any} />
+        showNFTModal &&
+        <Modal title="NFT PRIZE" setShowModal={setShowNFTModal} maxWidth="600px" width="60%" height="fit-content">
+          <NFTPrize data={modalNFTData as any} />
+        </Modal>
+      }
+      {
+        showContractsModal &&
+        <Modal title="CONTRACTS COVERED" setShowModal={setShowContractsModal} height="fit-content">
+          <div className="contracts-covered-modal-wrapper"><ContractsCovered contracts={modalContractsData as any} /></div>
         </Modal>
       }
     </>

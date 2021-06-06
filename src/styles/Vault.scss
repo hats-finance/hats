@@ -105,13 +105,6 @@ td {
                   opacity: 0.9;
                 }
               }
-              .contract-wrapper {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                .contract-name {
-                  color: $dark-turquoise;
-                }
-              }
               .nft-image-wrapper {
                 position: relative;
                 cursor: pointer;
@@ -186,5 +179,25 @@ td {
     color: $white;
     background-color: $dirty-turquoise;
     opacity: 1;
+  }
+}
+
+.contract-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .contract-name {
+    color: $dark-turquoise;
+  }
+}
+
+.contracts-covered-modal-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 50px 0;
+  > a {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
   }
 }
