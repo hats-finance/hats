@@ -7,14 +7,14 @@ import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import { fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
-import { IStaker } from "../types/types";
+import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
 
 export default function HatsBreakdown() {
   const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  //const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
+  const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
 
   const stakerAmounts = React.useMemo(() => {
@@ -25,12 +25,27 @@ export default function HatsBreakdown() {
   }, [loading, error, data])
 
   const [totalStaked, setTotalStaked] = useState(0);
+  const [stakingAPY, setStakingAPY] = useState(0);
 
   React.useEffect(() => {
     const getTotalStaked = async () => {
       // TODO: should be staking token, e.g. staker.vault.stakingToken
       const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")))).reduce((a: any, b: any) => a + b, 0);
       setTotalStaked(totalStaked as any);
+      let amountToSum = 0;
+      stakerAmounts.forEach(async (staked: IStaker) => {
+        const userDepositSize = Number(fromWei(staked.amount));
+        // TODO: should be staking token, e.g. staked.vault.stakingToken
+        const tokenValue: number = await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")
+        let vaultAPY = 0;
+        vaults.forEach((vault: IVault) => {
+          if (staked.vault.stakingToken === vault.stakingToken) {
+            vaultAPY = vault.apy
+          }
+        });
+        amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);
+        setStakingAPY(amountToSum / stakerAmounts.length)
+      });
     }
     if (stakerAmounts.length > 0) {
       getTotalStaked();
@@ -62,7 +77,7 @@ export default function HatsBreakdown() {
       </div>
       <div className="data-square">
         <span>Staking APY</span>
-        <span>???%</span>
+        {loading ? <Loading top="60%" /> : <span>{millify(stakingAPY)}%</span>}
       </div>
     </div>
     <div className="data-bottom">
