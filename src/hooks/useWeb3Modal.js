@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import Torus from "@toruslabs/torus-embed";
-import Authereum from "authereum";
-import Portis from "@portis/web3";
-import MewConnect from "@myetherwallet/mewconnect-web-client"
+// import Torus from "@toruslabs/torus-embed";
+// import Authereum from "authereum";
+// import Portis from "@portis/web3";
+// import MewConnect from "@myetherwallet/mewconnect-web-client"
 
 // Enter a valid infura key here to avoid being rate limited
 // You can get a key for free at https://infura.io/register
@@ -32,29 +32,29 @@ function useWeb3Modal(config = {}) {
             infuraId,
           },
         },
-        torus: {
-          package: Torus,
-          options: {
-            config: {
-              buildEnv: "development"
-            },
-          },
-        },
-        authereum: {
-          package: Authereum,
-        },
-        portis: {
-          package: Portis,
-          options: {
-            id: "ded972c3-b6cf-466a-92c6-fd6ada36a878",
-          },
-        },
-        mewconnect: {
-          package: MewConnect,
-          options: {
-            infuraId: infuraId
-          }
-        }
+        // torus: {
+        //   package: Torus,
+        //   options: {
+        //     config: {
+        //       buildEnv: "development"
+        //     },
+        //   },
+        // },
+        // authereum: {
+        //   package: Authereum,
+        // },
+        // portis: {
+        //   package: Portis,
+        //   options: {
+        //     id: "ded972c3-b6cf-466a-92c6-fd6ada36a878",
+        //   },
+        // },
+        // mewconnect: {
+        //   package: MewConnect,
+        //   options: {
+        //     infuraId: infuraId
+        //   }
+        // }
       },
       theme: {
         background: "rgb(39, 49, 56)",

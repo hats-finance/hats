@@ -83,7 +83,7 @@ export default function Vault(props: IProps) {
             <span className="vault-expanded-subtitle">Prize:</span>
             <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b>
-              <span style={{ color: "white" }}>&nbsp; of Vault
+              <span style={{ color: "white" }}>&nbsp;of Vault
               <Tooltip
                   overlay="???"
                   overlayClassName="tooltip"

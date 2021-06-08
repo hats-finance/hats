@@ -1,0 +1,23 @@
+@import "./constants.scss";
+
+.withdraw-countdown-wrapper {
+  display: flex;
+  .time-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $turquoise;
+    color: $field-blue;
+    margin: 0 8px;
+    padding: 6px;
+    width: 85px;
+    height: 130px;
+    .value {
+      font-size: $xlarge;
+    }
+    .type {
+      font-size: $xsmall;
+    }
+  }
+}

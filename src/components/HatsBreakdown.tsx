@@ -50,7 +50,7 @@ export default function HatsBreakdown() {
     if (stakerAmounts.length > 0) {
       getTotalStaked();
     }
-  }, [stakerAmounts])
+  }, [stakerAmounts, vaults])
 
   const [hatsMarketCap, setHatsMarketCap] = useState(0);
 
