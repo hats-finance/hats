@@ -55,6 +55,11 @@ export default function WithdrawCountdown(props: IProps) {
     }
   };
 
+  // Run once at mounting to avoid 1000ms delay of the interval
+  useEffect(() => {
+    setNewTime();
+  }, [])
+
   useEffect(() => {
     const interval = setInterval(() => setNewTime(), 1000);
     return () => {

@@ -8254,6 +8254,11 @@ human-signals@^1.1.1:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
   integrity sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
 
+humanize-duration@^3.27.0:
+  version "3.27.0"
+  resolved "https://registry.yarnpkg.com/humanize-duration/-/humanize-duration-3.27.0.tgz#3f781b7cf8022ad587f76b9839b60bc2b29636b2"
+  integrity sha512-qLo/08cNc3Tb0uD7jK0jAcU5cnqCM0n568918E7R2XhMr/+7F37p4EY062W/stg7tmzvknNn9b/1+UhVRzsYrQ==
+
 iconv-lite@0.4.24, iconv-lite@^0.4.4:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
@@ -11284,10 +11289,10 @@ open@^7.0.2:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-openpgp@^5.0.0-1:
-  version "5.0.0-3"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.0.0-3.tgz#08bbd878edc7c8e3c8443d8ace2c3b2236e3150c"
-  integrity sha512-5Yzd7hjoCtR0m27yrM6+Li1RcuUPIyVJXKMfR82HJotfst5NEEQHxCyUJvDWc8SqKS53zFyTl0SlPaZ08C2PxA==
+openpgp@5.0.0-1:
+  version "5.0.0-1"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.0.0-1.tgz#28456d930895483770f099e373045e3ce9dbf9f9"
+  integrity sha512-yfmRStdmOQPZbNbvwyQrqjLOTGW4QO0/aok/Vt08Zhf4UB9w0tGA5c6zBxDefxq+SmXlqEsmdNu+AtYx5G8D6A==
   dependencies:
     asn1.js "^5.0.0"
 

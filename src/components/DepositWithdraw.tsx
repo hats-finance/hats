@@ -18,6 +18,7 @@ import { DATA_POLLING_INTERVAL } from "../settings";
 import { toggleInTransaction } from "../actions";
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
+import humanizeDuration from "humanize-duration";
 
 interface IProps {
   data: IVault
@@ -41,23 +42,26 @@ const WithdrawTimer = (props: IWithdrawTimerProps) => {
 
 interface IPendingWithdrawProps {
   withdrawEnableTime: string
+  withdrawRequestEnablePeriod: string
   setIsPendingWithdraw: Function
   setIsWithdrawable: Function
 }
 
+//{humanizeDuration(withdrawRequestEnablePeriod, { units: ["d", "h", "m"] })}
 const PendingWithdraw = (props: IPendingWithdrawProps) => {
+  const { withdrawEnableTime, withdrawRequestEnablePeriod, setIsPendingWithdraw, setIsWithdrawable } = props;
   return (
     <div className="pending-withdraw-timer-wrapper">
       <span>
-        WITHDRAWAL REQUEST HASE BEEN SENT.
-        YOU WILL BE ABLE TO MAKE A WITHDRAWAL WITHIN ??? DAYS AND FOR ??? DAYS PERIOD.
+        WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
+        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR ??? PERIOD.<br /><br />
         WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <WithdrawCountdown
-        endDate={props.withdrawEnableTime}
+        endDate={withdrawEnableTime}
         onEnd={() => {
-          props.setIsPendingWithdraw(false);
-          props.setIsWithdrawable(true);
+          setIsPendingWithdraw(false);
+          setIsWithdrawable(true);
         }} />
     </div>
   )
@@ -96,8 +100,6 @@ export default function DepositWithdraw(props: IProps) {
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
 
-  //console.log("withdrawSafetyPeriod " + withdrawSafetyPeriod);
-
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
       return data.stakers[0]?.amount ?? BigNumber.from(0);
@@ -107,7 +109,6 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.vaults) {
-      console.log(dataWithdrawRequests.vaults[0]?.withdrawRequests[0]);
       const withdrawRequest: IPoolWithdrawRequest = dataWithdrawRequests.vaults[0]?.withdrawRequests[0];
       setWithdrawRequests(withdrawRequest);
       setIsWithdrawable(checkIfWithdrawable(withdrawRequest?.withdrawEnableTime, withdrawRequest?.expiryTime));
@@ -235,56 +236,64 @@ export default function DepositWithdraw(props: IProps) {
       <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput("0"); }}>DEPOSIT</button>
       <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput("0"); }}>WITHDRAW</button>
     </div>
-    {tab === "withdraw" && isPendingWithdraw && <PendingWithdraw withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""} setIsPendingWithdraw={setIsPendingWithdraw} setIsWithdrawable={setIsWithdrawable} />}
-    <div className="balance-wrapper">
-      <span style={{ color: "white" }}>Amount</span>
-      {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
-    </div>
-    <div>
-      <div className={amountWrapperClass}>
-        <div className="top">
-          <span>Pool token</span>
-          <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
+    {tab === "withdraw" && isPendingWithdraw &&
+      <PendingWithdraw
+        withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
+        setIsPendingWithdraw={setIsPendingWithdraw}
+        setIsWithdrawable={setIsWithdrawable}
+        withdrawRequestEnablePeriod={master.withdrawRequestEnablePeriod}
+      />}
+    <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
+      <div className="balance-wrapper">
+        <span style={{ color: "white" }}>Amount</span>
+        {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
+      </div>
+      <div>
+        <div className={amountWrapperClass}>
+          <div className="top">
+            <span>Pool token</span>
+            <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
+          </div>
+          <div className="input-wrapper">
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
+            <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
+          </div>
+          {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
+          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
         </div>
-        <div className="input-wrapper">
-          <div className="pool-token">{props.isPool ? null : <img width="30px" src={description["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
-          <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
-        </div>
-        {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-        {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
+      </div>
+      <div className="staked-wrapper">
+        <span>You staked</span>
+        <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
+      </div>
+      <div className="earnings-wrapper">
+        <span>Monthly earnings &nbsp;
+        <Tooltip
+            overlay="Estimated monthly earnings based on total staked amount and rate reward"
+            overlayClassName="tooltip"
+            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+            placement="top">
+            <span><InfoIcon /></span>
+          </Tooltip>
+        </span>
+        <span>{`${millify(yearlyEarnings / 12)}`} Hats</span>
+        <span>&#8776; {`$${millify((yearlyEarnings / 12) * hatsPrice)}`}</span>
+      </div>
+      <div className="earnings-wrapper">
+        <span>Yearly earnings &nbsp;
+        <Tooltip
+            overlay="Estimated yearly earnings based on total staked amount and rate reward"
+            overlayClassName="tooltip"
+            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+            placement="top">
+            <span><InfoIcon /></span>
+          </Tooltip>
+        </span>
+        <span>{`${millify(yearlyEarnings)}`} Hats</span>
+        <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
       </div>
     </div>
-    <div className="staked-wrapper">
-      <span>You staked</span>
-      <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
-    </div>
-    <div className="earnings-wrapper">
-      <span>Monthly earnings &nbsp;
-        <Tooltip
-          overlay="Estimated monthly earnings based on total staked amount and rate reward"
-          overlayClassName="tooltip"
-          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-          placement="top">
-          <span><InfoIcon /></span>
-        </Tooltip>
-      </span>
-      <span>{`${millify(yearlyEarnings / 12)}`} Hats</span>
-      <span>&#8776; {`$${millify((yearlyEarnings / 12) * hatsPrice)}`}</span>
-    </div>
-    <div className="earnings-wrapper">
-      <span>Yearly earnings &nbsp;
-        <Tooltip
-          overlay="Estimated yearly earnings based on total staked amount and rate reward"
-          overlayClassName="tooltip"
-          overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-          placement="top">
-          <span><InfoIcon /></span>
-        </Tooltip>
-      </span>
-      <span>{`${millify(yearlyEarnings)}`} Hats</span>
-      <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
-    </div>
-    {tab === "withdraw" && isWithdrawable && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} />}
+    {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} />}
     <div className="action-btn-wrapper">
       {!isApproved && tab === "deposit" &&
         <button
@@ -297,13 +306,13 @@ export default function DepositWithdraw(props: IProps) {
           className="action-btn"
           onClick={async () => await depositAndClaim()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}
-      {tab === "withdraw" && withdrawRequests && isWithdrawable &&
+      {tab === "withdraw" && withdrawRequests && isWithdrawable && !isPendingWithdraw &&
         <button
           disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod}
           className="action-btn"
           onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}
-      {tab === "withdraw" && withdrawSafetyPeriod && <span>Please wait until withdrawSafetyPeriod finish</span>}
+      {tab === "withdraw" && withdrawSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="safety-period-info">Please wait until withdrawSafetyPeriod finishes</span>}
       {tab === "withdraw" && (!withdrawRequests) &&
         <button
           disabled={!isApproved || !canWithdraw}
