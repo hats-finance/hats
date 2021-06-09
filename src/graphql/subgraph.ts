@@ -15,6 +15,10 @@ export const GET_VAULTS = gql`
       master {
         address
         numberOfSubmittedClaims
+        withdrawPeriod
+        safetyPeriod
+        withdrawRequestEnablePeriod
+        withdrawRequestPendingPeriod
       }
       numberOfApprovedClaims
       rewardsLevels
@@ -24,6 +28,13 @@ export const GET_VAULTS = gql`
       description
       honeyPotBalance
       registered
+      withdrawRequests {
+        id
+        beneficiary
+        withdrawEnableTime
+        createdAt
+        expiryTime
+      }
     }
   }
 `;
@@ -69,7 +80,7 @@ export const getStakerByAddress = (stakerAddress: string) => {
   `;
 }
 
-export const getStakerAmountByVaultID = (vaultID: string, stakerAddress: string) => {
+export const getStakerData = (vaultID: string, stakerAddress: string) => {
   return gql`
     {
       stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
@@ -86,6 +97,22 @@ export const getStakerAmounts = (stakerAddress: string) => {
         amount
         vault {
           stakingToken
+        }
+      }
+    }
+  `;
+}
+
+export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
+  return gql`
+    {
+      vaults (where: { pid: "${pid}" }) {
+        withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
+          id
+          beneficiary
+          withdrawEnableTime
+          createdAt
+          expiryTime
         }
       }
     }

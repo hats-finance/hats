@@ -4,12 +4,14 @@ import "../styles/WithdrawCountdown.scss";
 import moment from 'moment';
 
 interface IProps {
-  endDate: moment.Moment
+  endDate: string
+  compactView?: boolean
+  onEnd?: Function
 }
 
 export default function WithdrawCountdown(props: IProps) {
-  const { endDate } = props;
-  const countdownDate = endDate.utc().valueOf();
+  const { endDate, compactView, onEnd } = props;
+  const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [state, setState] = useState({
     days: 0,
     hours: 0,
@@ -31,6 +33,12 @@ export default function WithdrawCountdown(props: IProps) {
         (distanceToDate % (1000 * 60 * 60)) / (1000 * 60),
       );
       let seconds = Math.floor((distanceToDate % (1000 * 60)) / 1000);
+
+      if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
+        if (onEnd) {
+          onEnd();
+        }
+      }
 
       const numbersToAddZeroTo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -55,7 +63,7 @@ export default function WithdrawCountdown(props: IProps) {
   }, []);
 
   return (
-    <div className="withdraw-countdown-wrapper">
+    <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`}>
       {state.days > 0 && <div className="time-element">
         <span className="value">{state.days || '00'}</span>
         <span className="type">{String(state.days) === "1" ? "DAY" : "DAYS"}</span>

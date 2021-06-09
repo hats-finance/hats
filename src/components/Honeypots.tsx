@@ -28,7 +28,7 @@ export default function Honeypots() {
             <tr>
               <th></th>
               <th>PROJECT NAME</th>
-              <th>TOTAL STACKED</th>
+              <th>TOTAL STAKED</th>
               <th>#VULNERABILITIES</th>
               <th>FUNDS GIVEN</th>
               <th>APY</th>

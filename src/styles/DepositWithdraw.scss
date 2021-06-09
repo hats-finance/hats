@@ -39,6 +39,15 @@
       }
     }
   }
+  .pending-withdraw-timer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: $white;
+    > span {
+      margin: 30px 0;
+    }
+  }
   .balance-wrapper {
     position: relative;
     display: flex;
@@ -117,6 +126,13 @@
       display: flex;
       align-items: center;
     }
+  }
+  .withdraw-timer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    color: $white;
+    padding-top: 20px;
+    margin-top: 20px;
   }
   .action-btn-wrapper {
     display: flex;

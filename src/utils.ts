@@ -4,7 +4,7 @@ import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
-import { getTokenBalance } from "./actions/contractsActions";
+import { getBlockNumber, getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IVault } from "./types/types";
 import { NETWORK } from "./settings";
@@ -208,4 +208,17 @@ export const copyToClipboard = (value: string) => {
 export const linkToEtherscan = (address: string, network: Networks): string => {
   const prefix = network !== Networks.main ? `${network}.` : "";
   return `https://${prefix}etherscan.io/address/${address}`;
+}
+
+/**
+ * Given withdrawPeriod and safetyPeriod returns true if withdraw is disabled, otherwise returns false.
+ * @param {string} withdrawPeriod
+ * @param {string} safetyPeriod
+ */
+export const isWithdrawSafetyPeriod = async (withdrawPeriod: string, safetyPeriod: string) => {
+  const currentBlockNumber = await getBlockNumber();
+  if (currentBlockNumber) {
+    return currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod)) >= Number(withdrawPeriod);
+  }
+  return true; 
 }

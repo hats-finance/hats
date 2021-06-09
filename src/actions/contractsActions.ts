@@ -19,6 +19,17 @@ if (window.ethereum) {
 }
 
 /**
+ * Returns the current block number
+ */
+export const getBlockNumber = async () => {
+  try {
+    return await provider.getBlockNumber();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Given token address returns it's symbol
  * @param {string} tokenAddress
  */
@@ -73,6 +84,20 @@ export const approveToken = async (tokenAddress: string, tokenSpender: string) =
   try {
     const contract = new Contract(tokenAddress, erc20Abi, signer);
     return await contract.approve(tokenSpender, ethers.BigNumber.from(2).pow(255));
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Withdraw Request
+ * @param {string} pid
+ * @param {string} address
+ */
+export const withdrawRequest = async (pid: string, address: string) => {
+  try {
+    const contract = new Contract(address, vaultAbi, signer);
+    return await contract.withdrawRequest(pid);
   } catch (error) {
     console.error(error);
   }

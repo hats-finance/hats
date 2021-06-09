@@ -22,6 +22,7 @@ export interface IVault {
   tokenPrice: number
   honeyPotBalance: string
   registered: boolean
+  withdrawRequests: Array<IPoolWithdrawRequest>
 }
 
 export interface IVaultDescription {
@@ -88,6 +89,10 @@ export interface IMaster {
   rewardsToken: string
   numberOfSubmittedClaims: string
   submittedClaim: Array<ISubmittedClaim>
+  withdrawPeriod: string
+  safetyPeriod: string
+  withdrawRequestEnablePeriod: string
+  withdrawRequestPendingPeriod: string
 }
 
 export interface ISubmittedClaim {
@@ -109,4 +114,13 @@ export interface IApprovedClaims {
   swapAndBurn: string
   hackerHatReward: string
   createdAt: string
+}
+
+export interface IPoolWithdrawRequest {
+  id: string
+  beneficiary: string
+  vault: IVault
+  withdrawEnableTime: string
+  createdAt: string
+  expiryTime: string
 }

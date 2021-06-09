@@ -9,6 +9,11 @@ html {
   background-color: $dark-blue;
   color: $turquoise;
   font-size: $small;
+  -webkit-scrollbar {
+    display: none;
+  }
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 button {

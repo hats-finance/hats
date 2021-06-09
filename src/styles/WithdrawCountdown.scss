@@ -7,8 +7,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: $turquoise;
-    color: $field-blue;
+    background-color: $light-blue;
+    color: $turquoise;
+    font-weight: bold;
     margin: 0 8px;
     padding: 6px;
     width: 85px;
@@ -18,6 +19,24 @@
     }
     .type {
       font-size: $xsmall;
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  &.compact-view {
+    .time-element {
+      width: 50px;
+      height: 55px;
+      .value {
+        font-size: $moderate;
+      }
+      .type {
+        font-size: $xxsmall;
+      }
     }
   }
 }

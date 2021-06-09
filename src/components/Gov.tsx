@@ -1,7 +1,5 @@
 import DiscordIcon from "../assets/icons/social/discord.icon";
 import "../styles/Gov.scss";
-//import moment from "moment";
-//import WithdrawCountdown from "./WithdrawCountdown";
 
 export default function Gov() {
   return (
@@ -10,7 +8,6 @@ export default function Gov() {
         Forum in Discord
         <DiscordIcon />
       </a>
-      {/* <WithdrawCountdown endDate={moment(new Date()).add(3,'hours')} /> */}
     </div>
   )
 }
