@@ -18,7 +18,6 @@ import { DATA_POLLING_INTERVAL } from "../settings";
 import { toggleInTransaction } from "../actions";
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
-import humanizeDuration from "humanize-duration";
 
 interface IProps {
   data: IVault
