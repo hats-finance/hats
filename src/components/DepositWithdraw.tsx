@@ -216,7 +216,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const amountWrapperClass = classNames({
     "amount-wrapper": true,
-    "disabled": !isApproved || (tab === "withdraw" && (!withdrawRequests || isPendingWithdraw || withdrawSafetyPeriod))
+    "disabled": !isApproved || (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
   })
 
   return <div className={depositWithdrawWrapperClass}>
@@ -312,7 +312,7 @@ export default function DepositWithdraw(props: IProps) {
           onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}
       {tab === "withdraw" && withdrawSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="safety-period-info">Please wait until withdrawSafetyPeriod finishes</span>}
-      {tab === "withdraw" && (!withdrawRequests) &&
+      {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
         <button
           disabled={!isApproved || !canWithdraw}
           className="action-btn"
