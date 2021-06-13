@@ -2,13 +2,13 @@
 
 .withdraw-countdown-wrapper {
   display: flex;
+  color: $turquoise;
   .time-element {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: $light-blue;
-    color: $turquoise;
     font-weight: bold;
     margin: 0 8px;
     padding: 6px;

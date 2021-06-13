@@ -52,4 +52,6 @@ export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",
+  red = "#E66480",
+  turquoise = "#8AFCFD"
 }

@@ -11,13 +11,14 @@ import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
 import Tooltip from "rc-tooltip";
-import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../settings";
 import { toggleInTransaction } from "../actions";
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
+import humanizeDuration from "humanize-duration";
 
 interface IProps {
   data: IVault
@@ -46,14 +47,13 @@ interface IPendingWithdrawProps {
   setIsWithdrawable: Function
 }
 
-//{humanizeDuration(withdrawRequestEnablePeriod, { units: ["d", "h", "m"] })}
 const PendingWithdraw = (props: IPendingWithdrawProps) => {
   const { withdrawEnableTime, withdrawRequestEnablePeriod, setIsPendingWithdraw, setIsWithdrawable } = props;
   return (
     <div className="pending-withdraw-timer-wrapper">
       <span>
         WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
-        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR ??? PERIOD.<br /><br />
+        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(withdrawRequestEnablePeriod) * 1000)} PERIOD</span><br /><br />
         WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <WithdrawCountdown
@@ -61,7 +61,8 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
         onEnd={() => {
           setIsPendingWithdraw(false);
           setIsWithdrawable(true);
-        }} />
+        }}
+        textColor={Colors.red} />
     </div>
   )
 }
@@ -98,6 +99,7 @@ export default function DepositWithdraw(props: IProps) {
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
+  const [termsOfUse, setTermsOfUse] = useState(false);
 
   const stakedAmount: BigNumber = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
@@ -140,7 +142,7 @@ export default function DepositWithdraw(props: IProps) {
   }, [stakingToken, selectedAddress, inTransaction]);
 
   const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
-  const amountToClaim = millify(Number(fromWei(pendingReward)));
+  const amountToClaim = millify(Number(fromWei(pendingReward)), { precision: 3 });
 
   useEffect(() => {
     const getPendingReward = async () => {
@@ -267,7 +269,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="earnings-wrapper">
         <span>Monthly earnings &nbsp;
-        <Tooltip
+          <Tooltip
             overlay="Estimated monthly earnings based on total staked amount and rate reward"
             overlayClassName="tooltip"
             overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
@@ -280,7 +282,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="earnings-wrapper">
         <span>Yearly earnings &nbsp;
-        <Tooltip
+          <Tooltip
             overlay="Estimated yearly earnings based on total staked amount and rate reward"
             overlayClassName="tooltip"
             overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
@@ -292,7 +294,14 @@ export default function DepositWithdraw(props: IProps) {
         <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
       </div>
     </div>
+    {<div className="seperator-wrapper"><div className="seperator" /></div>}
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} />}
+    {tab === "deposit" && isApproved && (
+      <div className="terms-of-use-wrapper">
+        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} />
+        <label>I UNDERSTAND AND AGREE TO THE <u>TERMS OF USE</u></label>
+      </div>
+    )}
     <div className="action-btn-wrapper">
       {!isApproved && tab === "deposit" &&
         <button
@@ -301,7 +310,7 @@ export default function DepositWithdraw(props: IProps) {
         </button>}
       {isApproved && tab === "deposit" &&
         <button
-          disabled={notEnoughBalance || !userInput || userInput === "0"}
+          disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse}
           className="action-btn"
           onClick={async () => await depositAndClaim()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}

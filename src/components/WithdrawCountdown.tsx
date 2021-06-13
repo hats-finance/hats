@@ -2,11 +2,13 @@
 import React, { useState, useEffect } from "react";
 import "../styles/WithdrawCountdown.scss";
 import moment from 'moment';
+import { Colors } from "../constants/constants";
 
 interface IProps {
   endDate: string
   compactView?: boolean
   onEnd?: Function
+  textColor?: Colors
 }
 
 export default function WithdrawCountdown(props: IProps) {
@@ -68,7 +70,7 @@ export default function WithdrawCountdown(props: IProps) {
   }, []);
 
   return (
-    <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`}>
+    <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`} style={{ color: `${props.textColor}` }}>
       {state.days > 0 && <div className="time-element">
         <span className="value">{state.days || '00'}</span>
         <span className="type">{String(state.days) === "1" ? "DAY" : "DAYS"}</span>

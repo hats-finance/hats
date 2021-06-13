@@ -46,6 +46,7 @@
     color: $white;
     > span {
       margin: 30px 0;
+      text-transform: uppercase;
     }
   }
   .balance-wrapper {
@@ -134,6 +135,19 @@
     padding-top: 20px;
     margin-top: 20px;
   }
+  .terms-of-use-wrapper {
+    color: $white;
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    input {
+      width: 20px;
+      height: 20px;
+    }
+    label {
+      margin-left: 10px;
+    }
+  }
   .action-btn-wrapper {
     display: flex;
     flex-direction: column;
@@ -160,5 +174,14 @@
     opacity: 0.5;
     pointer-events: none;
     animation: disabledFade 0.4s;
+  }
+}
+
+.seperator-wrapper {
+  height: 1px;
+  margin-top: 30px;
+  .seperator {
+    height: 1px;
+    background-color: $dark-turquoise;
   }
 }
