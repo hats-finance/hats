@@ -8,6 +8,7 @@ import { getNetworkNameByChainId, getTokenPrice, calculateApy } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
+import Cookies from "./components/Cookies";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
@@ -25,6 +26,7 @@ function App() {
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
+  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
 
   React.useEffect(() => {
     const network = getNetworkNameByChainId(provider.chainId);
@@ -98,6 +100,7 @@ function App() {
   return (
     <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
+      {acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       <Switch>

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../styles/WithdrawCountdown.scss";
 import moment from 'moment';
 import { Colors } from "../constants/constants";
@@ -21,7 +21,7 @@ export default function WithdrawCountdown(props: IProps) {
     seconds: 0,
   });
 
-  const setNewTime = () => {
+  const setNewTime = useCallback(() => {
     if (countdownDate) {
       const currentTime = new Date().getTime();
 
@@ -55,19 +55,19 @@ export default function WithdrawCountdown(props: IProps) {
 
       setState({ days: days, hours: hours, minutes, seconds });
     }
-  };
+  }, [countdownDate, onEnd]);
 
   // Run once at mounting to avoid 1000ms delay of the interval
   useEffect(() => {
     setNewTime();
-  }, [])
+  }, [setNewTime])
 
   useEffect(() => {
     const interval = setInterval(() => setNewTime(), 1000);
     return () => {
       clearInterval(interval);
     }
-  }, []);
+  }, [setNewTime]);
 
   return (
     <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`} style={{ color: `${props.textColor}` }}>

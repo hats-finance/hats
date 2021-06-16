@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "../styles/Vault.scss";
 import { ICommitteeMember, ISeverity, IVault } from "../types/types";
 import { useSelector } from "react-redux";
@@ -45,12 +45,21 @@ const ContractsCovered = (props: IContractsCoveredProps) => {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const { name, totalStaking, numberOfApprovedClaims, apy, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance } = props.data;
+  const { name, totalStaking, numberOfApprovedClaims, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance } = props.data;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
-  // <td className="sub-cell" colSpan={7}>{`Vulnerabilities Submitted: ${numberWithCommas(Number(master.numberOfSubmittedClaims))}`}</td>
+  const [vaultAPY, setVaultAPY] = useState("-");
+
+  // temporary fix to https://github.com/hats-finance/hats/issues/29
+  useEffect(() => {
+    setTimeout(() => {
+      if (props.data.apy) {
+        setVaultAPY(`${millify(props.data.apy)}%`);
+      }
+    }, 1000);
+  }, [setVaultAPY, props.data.apy])
 
   const description = JSON.parse(props.data.description as any);
 
@@ -63,7 +72,7 @@ export default function Vault(props: IProps) {
     )
   })
 
-  const severities = React.useCallback(description?.severities.map((severity: ISeverity, index: number) => {
+  const severities = useMemo(() => description?.severities.map((severity: ISeverity, index: number) => {
     let rewardPrice = "-";
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
     if (tokenPrice) {
@@ -108,7 +117,7 @@ export default function Vault(props: IProps) {
         </div>
       </div>
     )
-  }), [tokenPrice])
+  }), [tokenPrice, description?.severities, honeyPotBalance, rewardsLevels])
 
   return (
     <>
@@ -125,7 +134,7 @@ export default function Vault(props: IProps) {
         <td>{millify(Number(fromWei(totalStaking)))}</td>
         <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
         <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
-        <td>{!apy ? "-" : `${millify(apy)}%`}</td>
+        <td>{vaultAPY}</td>
         <td>
           <button
             className="action-btn deposit-withdraw"
@@ -164,7 +173,7 @@ export default function Vault(props: IProps) {
               <div className="severity-prizes-wrapper">
                 <div className="sub-title">Severity prizes</div>
                 <div className="severity-prizes-content">
-                  {severities}
+                  {severities as any}
                 </div>
               </div>
             </div>
