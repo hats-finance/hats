@@ -26,7 +26,7 @@ export default function Honeypots() {
         <table>
           <tbody>
             <tr>
-              <th></th>
+              <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>
               <th>TOTAL STAKED</th>
               <th>#VULNERABILITIES</th>

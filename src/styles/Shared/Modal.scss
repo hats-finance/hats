@@ -28,6 +28,7 @@
     max-width: var(--modal-max-width);
     max-height: 90%;
     .modal-top {
+      height: 50px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -38,6 +39,7 @@
       position: sticky;
       top: 0;
       z-index: 1;
+      background-color: $field-blue;
       .close {
         background-color: transparent;
         color: $turquoise;

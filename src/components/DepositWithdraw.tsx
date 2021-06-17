@@ -302,6 +302,8 @@ export default function DepositWithdraw(props: IProps) {
         <label>I UNDERSTAND AND AGREE TO THE <u>TERMS OF USE</u></label>
       </div>
     )}
+    {tab === "withdraw" && withdrawSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+    {(isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT/CLAIM WILL CANCEL THE WITHDRAWAL REQUEST</span>}
     <div className="action-btn-wrapper">
       {!isApproved && tab === "deposit" &&
         <button
@@ -320,7 +322,6 @@ export default function DepositWithdraw(props: IProps) {
           className="action-btn"
           onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}
-      {tab === "withdraw" && withdrawSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="safety-period-info">Please wait until withdrawSafetyPeriod finishes</span>}
       {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
         <button
           disabled={!isApproved || !canWithdraw}

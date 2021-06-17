@@ -5,16 +5,15 @@ import { useSelector } from "react-redux";
 import millify from "millify";
 import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
 import ArrowIcon from "../assets/icons/arrow.icon";
-import ZoomIcon from "../assets/icons/zoom.icon";
 import TwitterImageIcon from "../assets/icons/twitterImage.icon";
 import { RootState } from "../reducers";
 import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
-import Tooltip from "rc-tooltip";
-import InfoIcon from "../assets/icons/info.icon";
+import { IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+//import Tooltip from "rc-tooltip";
+//import InfoIcon from "../assets/icons/info.icon";
 
 interface IProps {
   data: IVault,
@@ -81,39 +80,35 @@ export default function Vault(props: IProps) {
 
     return (
       <div className="severity-wrapper" key={index}>
-        <div className={`severity-title ${severity.name.toLocaleLowerCase()}`}>{severity.name.toUpperCase()}</div>
+        <div className={`severity-title ${severity.name.toLocaleLowerCase()}`}>{`${severity.name.toUpperCase()} VULNERABILITIES`}</div>
         <div className="severity-data">
-          <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Contracts Covered:</span>
-            <ContractsCovered contracts={severity["contracts-covered"]} />
-            <span className="view-all" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>View all</span>
-          </div>
-          <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Prize:</span>
-            <span className="vault-prize">
-              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b>
-              <span style={{ color: "white" }}>&nbsp;of Vault
-              <Tooltip
-                  overlay="???"
-                  overlayClassName="tooltip"
-                  overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-                  placement="top">
-                  <span><InfoIcon width="10" /></span>
-                </Tooltip>
-              </span> &#8776; {`$${rewardPrice}`}
-            </span>
-          </div>
           {severity["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
-              <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                <div className="zoom-icon"><ZoomIcon /></div>
+              <div className="nft-image-wrapper">
                 <img
                   className="nft-image"
                   src={`${IPFS_PREFIX}${severity["nft-metadata"].image.substring(12)}`}
                   alt="NFt" />
               </div>
+              <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>View NFT INFO</span>
             </div>}
+          <div className="severity-data-item">
+            <span className="vault-expanded-subtitle">Prize:</span>
+            <span className="vault-prize">
+              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b>
+              <span style={{ color: "white" }}>
+                {/* <Tooltip
+                  overlay="???"
+                  overlayClassName="tooltip"
+                  overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+                  placement="top">
+                  <span><InfoIcon width="10" /></span>
+                </Tooltip> */}
+              </span> &#8776; {`$${rewardPrice}`}
+            </span>
+            <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>View Contracts Covered</span>
+          </div>
         </div>
       </div>
     )
@@ -150,7 +145,7 @@ export default function Vault(props: IProps) {
           <td className="sub-row" colSpan={7}>
             <div className="vault-expanded">
               <div className="committee-wrapper">
-                <div className="sub-title">Committee</div>
+                <div className="sub-title">COMMITTEE</div>
                 <div className="committee-content">
                   <div className="vault-expanded-subtitle">
                     Members:
@@ -171,7 +166,7 @@ export default function Vault(props: IProps) {
                 </div>
               </div>
               <div className="severity-prizes-wrapper">
-                <div className="sub-title">Severity prizes</div>
+                <div className="sub-title">VULNERABILITIES PRIZES</div>
                 <div className="severity-prizes-content">
                   {severities as any}
                 </div>

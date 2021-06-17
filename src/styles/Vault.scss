@@ -18,6 +18,10 @@ td {
       font-weight: bold;
       background-color: $blue;
       padding: 10px 30px;
+      color: $white;
+      height: 50px;
+      line-height: 50px;
+      font-size: $small;
     }
     .committee-wrapper {
       .committee-content {
@@ -34,13 +38,13 @@ td {
           }
           .member-username {
             margin-top: 5px;
+            text-transform: capitalize;
           }
         }
         .multi-sig-wrapper {
           .multi-sig-address-wrapper {
             display: flex;
             justify-content: center;
-            align-items: center;
             .multi-sig-address {
               font-style: italic;
               font-weight: bold;
@@ -65,8 +69,9 @@ td {
           .severity-title {
             background-color: $purple-blue;
             padding: 10px 30px;
-            color: $dark-turquoise;
+            color: $white;
             font-weight: bold;
+            font-size: $xsmall;
             &.low {
               background-color: $severity-low;
             }
@@ -95,12 +100,11 @@ td {
               margin-right: 10px;
               border-right: 1px solid $purple-blue;
               padding-right: 10px;
-              .view-all {
-                margin-left: auto;
-                margin-top: auto;
+              flex: 1 1 0px;
+              .view-more {
                 font-style: italic;
-                font-weight: bold;
                 cursor: pointer;
+                text-decoration: underline;
                 &:hover {
                   opacity: 0.9;
                 }
@@ -110,11 +114,6 @@ td {
                 cursor: pointer;
                 display: flex;
                 justify-content: center;
-                .zoom-icon {
-                  position: absolute;
-                  top: 0;
-                  right: 0;
-                }
                 .nft-image {
                   width: 100px;
                   height: 100px;
@@ -145,6 +144,8 @@ td {
     }
     .vault-prize {
       margin: auto;
+      font-size: $medium;
+      font-weight: bold;
     }
   }
 }
