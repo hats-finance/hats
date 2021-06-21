@@ -111,16 +111,12 @@ td {
               }
               .nft-image-wrapper {
                 position: relative;
-                cursor: pointer;
                 display: flex;
                 justify-content: center;
                 .nft-image {
                   width: 100px;
                   height: 100px;
                 }
-              }
-              .nft-image-wrapper:hover {
-                opacity: 0.9;
               }
             }
             .severity-data-item:last-child {

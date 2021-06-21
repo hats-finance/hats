@@ -91,7 +91,9 @@ export default function Vault(props: IProps) {
                   src={`${IPFS_PREFIX}${severity["nft-metadata"].image.substring(12)}`}
                   alt="NFt" />
               </div>
-              <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>View NFT INFO</span>
+              <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
+                View NFT INFO
+              </span>
             </div>}
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Prize:</span>
@@ -107,7 +109,9 @@ export default function Vault(props: IProps) {
                 </Tooltip> */}
               </span> &#8776; {`$${rewardPrice}`}
             </span>
-            <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>View Contracts Covered</span>
+            <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>
+              View Contracts Covered
+            </span>
           </div>
         </div>
       </div>

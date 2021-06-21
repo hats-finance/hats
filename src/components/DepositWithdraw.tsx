@@ -294,7 +294,7 @@ export default function DepositWithdraw(props: IProps) {
         <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
       </div>
     </div>
-    {<div className="seperator-wrapper"><div className="seperator" /></div>}
+    <div className="seperator" />
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} />}
     {tab === "deposit" && isApproved && (
       <div className="terms-of-use-wrapper">
