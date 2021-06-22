@@ -8,6 +8,8 @@ import { Dispatch } from "redux";
 import { toggleNotification } from "./index";
 import { NETWORK } from "../settings";
 
+const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
+
 let provider: Web3Provider;
 let signer: Signer;
 let infuraProvider: InfuraWebSocketProvider;
@@ -83,7 +85,7 @@ export const isApproved = async (tokenAddress: string, selectedAddress: string, 
 export const approveToken = async (tokenAddress: string, tokenSpender: string) => {
   try {
     const contract = new Contract(tokenAddress, erc20Abi, signer);
-    return await contract.approve(tokenSpender, ethers.BigNumber.from(2).pow(255));
+    return await contract.approve(tokenSpender, MAX_SPENDING);
   } catch (error) {
     console.error(error);
   }

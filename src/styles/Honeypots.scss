@@ -19,5 +19,12 @@
         text-align: left;
       }
     }
+    .safe-period {
+      padding: 10px;
+      &.on {
+        background-color: $strong-red;
+        color: $dark-blue;
+      }
+    }
   }
 }

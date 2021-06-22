@@ -1,9 +1,10 @@
-import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE } from '../constants/action-types';
+import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD } from '../constants/action-types';
 
 const initialState = {
   vaults: [],
   rewardsToken: "",
-  hatsPrice: ""
+  hatsPrice: "",
+  withdrawSafetyPeriod: {}
 };
 
 export const dataReducer = (state = initialState, action: any) => {
@@ -24,6 +25,12 @@ export const dataReducer = (state = initialState, action: any) => {
       return {
         ...state,
         hatsPrice: action.hatsPrice
+      }
+    }
+    case UPDATE_WITHDRAW_SAFETY_PERIOD: {
+      return {
+        ...state,
+        withdrawSafetyPeriod: action.withdrawSafetyPeriod
       }
     }
     default: return state;

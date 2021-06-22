@@ -124,3 +124,8 @@ export interface IPoolWithdrawRequest {
   createdAt: string
   expiryTime: string
 }
+
+export interface IWithdrawSafetyPeriod {
+  isSafetyPeriod: boolean
+  timeLeftForSaftety: number
+}

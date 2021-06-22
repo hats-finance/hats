@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_VAULTS, GET_REWARDS_TOKEN } from "./graphql/subgraph";
+import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateLiquidityPool } from './actions/index';
-import { getNetworkNameByChainId, getTokenPrice, calculateApy } from "./utils";
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateLiquidityPool, updateWithdrawSafetyPeriod } from './actions/index';
+import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
@@ -28,7 +28,7 @@ function App() {
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
   //const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
 
-  React.useEffect(() => {
+  useEffect(() => {
     const network = getNetworkNameByChainId(provider.chainId);
     if (provider && network !== NETWORK) {
       dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`));
@@ -53,15 +53,20 @@ function App() {
     });
   }
 
-  const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_REWARDS_TOKEN);
+  const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_MASTER_DATA);
 
-  React.useEffect(() => {
-    if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
-      dispatch(updateRewardsToken(dataRewardsToken.masters[0].rewardsToken));
+  useEffect(() => {
+    const getWithdrawSafetyPeriodData = async () => {
+      if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
+        const { rewardsToken, withdrawPeriod, safetyPeriod } = dataRewardsToken.masters[0];
+        dispatch(updateRewardsToken(rewardsToken));
+        dispatch(updateWithdrawSafetyPeriod(await getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
+      }
     }
+    getWithdrawSafetyPeriodData();
   }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getHatsPrice = async () => {
       // TODO: Should be HATS token - e.g. rewards token
       dispatch(updateHatsPrice(await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")));
@@ -71,7 +76,7 @@ function App() {
 
   const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!loading && !error && data && data.vaults) {
       dispatch(updateVaults(data.vaults));
       // update first Liquidity Pool we find
@@ -83,7 +88,7 @@ function App() {
   const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
         vault.apy = await calculateApy(vault, hatsPrice);

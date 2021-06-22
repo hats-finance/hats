@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
 import { getBlockNumber, getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
-import { IVault } from "./types/types";
+import { IVault, IWithdrawSafetyPeriod } from "./types/types";
 import { NETWORK } from "./settings";
 
 /**
@@ -170,7 +170,7 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
 export const calculateApy = async (vault: IVault, hatsPrice: number) => {
   // TODO: Should be staking token - e.g. vault.stakingToken
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
-  if (Number(fromWei(vault.totalStaking)) === 0 ) {
+  if (Number(fromWei(vault.totalStaking)) === 0) {
     return 0;
   }
   return Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice) / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
@@ -214,14 +214,21 @@ export const linkToEtherscan = (address: string, network: Networks): string => {
 }
 
 /**
- * Given withdrawPeriod and safetyPeriod returns true if withdraw is disabled, otherwise returns false.
+ * Given withdrawPeriod and safetyPeriod returns wheter 
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
  */
-export const isWithdrawSafetyPeriod = async (withdrawPeriod: string, safetyPeriod: string) => {
+export const getWithdrawSafetyPeriod = async (withdrawPeriod: string, safetyPeriod: string) => {
+  const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
+    isSafetyPeriod: true,
+    timeLeftForSaftety: 0
+  }
   const currentBlockNumber = await getBlockNumber();
   if (currentBlockNumber) {
-    return currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod)) >= Number(withdrawPeriod);
+    const blocksLeftForSafety = (currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod))) + (Number(safetyPeriod) - Number((withdrawPeriod)));
+    withdrawSafetyPeriod.isSafetyPeriod = currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod)) >= Number(withdrawPeriod);
+    withdrawSafetyPeriod.timeLeftForSaftety = blocksLeftForSafety * 15;
+    return withdrawSafetyPeriod;
   }
-  return true;
+  return withdrawSafetyPeriod;
 }

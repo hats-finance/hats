@@ -1,6 +1,6 @@
 import * as types from "../constants/action-types";
 import { ScreenSize, NotificationType } from "../constants/constants";
-import { IVault } from "../types/types";
+import { IVault, IWithdrawSafetyPeriod } from "../types/types";
 
 export const connect = ({ provider }: any) => ({
   type: types.CONNECT,
@@ -58,4 +58,9 @@ export const updateHatsPrice = (hatsPrice: number) => ({
 export const updateLiquidityPool = (liquidityPoolID: string) => ({
   type: types.UPDATE_LIQUIDITY_POOL,
   liquidityPoolID
+})
+
+export const updateWithdrawSafetyPeriod = (withdrawSafetyPeriod: IWithdrawSafetyPeriod) => ({
+  type: types.UPDATE_WITHDRAW_SAFETY_PERIOD,
+  withdrawSafetyPeriod
 })
