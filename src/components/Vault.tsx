@@ -55,7 +55,7 @@ export default function Vault(props: IProps) {
   useEffect(() => {
     setTimeout(() => {
       if (props.data.apy) {
-        setVaultAPY(`${millify(props.data.apy)}%`);
+        setVaultAPY(`${millify(props.data.apy, { precision: 3 })}%`);
       }
     }, 1000);
   }, [setVaultAPY, props.data.apy])

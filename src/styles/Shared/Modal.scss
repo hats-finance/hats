@@ -26,7 +26,7 @@
     height: var(--modal-height);
     width: var(--modal-width);
     max-width: var(--modal-max-width);
-    max-height: 90%;
+    max-height: var(--modal-max-height);
     .modal-top {
       display: flex;
       justify-content: space-between;

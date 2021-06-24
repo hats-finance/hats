@@ -14,6 +14,11 @@ html {
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
+
+  ::-webkit-scrollbar {
+    width: 0; /* Remove scrollbar space */
+    background: transparent; /* Optional: just make scrollbar invisible */
+  }
 }
 
 button {
@@ -53,8 +58,7 @@ a {
 
 .seperator {
   height: 1px;
-  width: 100%;
-  margin: 30px 0;
+  margin: 20px 0;
   background-color: $dark-turquoise;
 }
 

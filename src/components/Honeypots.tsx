@@ -28,11 +28,11 @@ export default function Honeypots() {
       {vaultsData.length === 0 ? <Loading fixed /> :
         <table>
           <tbody>
-            <tr>
+            {withdrawSafetyPeriodData.timeLeftForSaftety !== 0 && <tr>
               <th colSpan={7} className={`safe-period ${withdrawSafetyPeriodData.isSafetyPeriod && "on"}`}>
                 {withdrawSafetyPeriodData.isSafetyPeriod ? <span>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</span> : <span>{`WITHDRAWAL SAFE PERIOD WILL BEGIN AT ${safetyPeriodDate}`}</span>}
               </th>
-            </tr>
+            </tr>}
             <tr>
               <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>

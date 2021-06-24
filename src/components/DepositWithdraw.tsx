@@ -29,31 +29,40 @@ type Tab = "deposit" | "withdraw";
 
 interface IWithdrawTimerProps {
   expiryTime: string
+  setIsWithdrawable: Function
 }
 
 const WithdrawTimer = (props: IWithdrawTimerProps) => {
   return (
     <div className="withdraw-timer-wrapper">
       <span>WITHDRAWAL AVAILABLE FOR:</span>
-      <WithdrawCountdown endDate={props.expiryTime} compactView={true} />
+      <WithdrawCountdown
+        endDate={props.expiryTime}
+        compactView={true}
+        onEnd={() => {
+          props.setIsWithdrawable(false);
+        }} />
     </div>
   )
 }
 
 interface IPendingWithdrawProps {
   withdrawEnableTime: string
-  withdrawRequestEnablePeriod: string
+  createdAt: string
+  expiryTime: string
   setIsPendingWithdraw: Function
   setIsWithdrawable: Function
+  
 }
 
 const PendingWithdraw = (props: IPendingWithdrawProps) => {
-  const { withdrawEnableTime, withdrawRequestEnablePeriod, setIsPendingWithdraw, setIsWithdrawable } = props;
+  const { withdrawEnableTime, createdAt, expiryTime, setIsPendingWithdraw, setIsWithdrawable } = props;
+  const diff = moment.unix(Number(expiryTime)).diff(moment.unix(Number(createdAt)), "milliseconds");
   return (
     <div className="pending-withdraw-timer-wrapper">
       <span>
         WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
-        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(withdrawRequestEnablePeriod) * 1000)} PERIOD</span><br /><br />
+        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff))} PERIOD</span><br /><br />
         WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <WithdrawCountdown
@@ -233,24 +242,25 @@ export default function DepositWithdraw(props: IProps) {
     {tab === "withdraw" && isPendingWithdraw &&
       <PendingWithdraw
         withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
+        createdAt={withdrawRequests?.createdAt || ""}
+        expiryTime={withdrawRequests?.expiryTime || ""}
         setIsPendingWithdraw={setIsPendingWithdraw}
         setIsWithdrawable={setIsWithdrawable}
-        withdrawRequestEnablePeriod={master.withdrawRequestEnablePeriod}
       />}
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
-        <span style={{ color: "white" }}>Amount</span>
+      <span style={{ color: "white" }}>You stake</span>
         {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
       </div>
       <div>
         <div className={amountWrapperClass}>
           <div className="top">
-            <span>Pool token</span>
+            <span>Vault token</span>
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
           </div>
           <div className="input-wrapper">
             <div className="pool-token">{props.isPool ? null : <img width="30px" src={description["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
-            <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" />
+            <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
           {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
@@ -288,15 +298,15 @@ export default function DepositWithdraw(props: IProps) {
       </div>
     </div>
     <div className="seperator" />
-    {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} />}
+    {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
     {tab === "deposit" && isApproved && (
       <div className="terms-of-use-wrapper">
-        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} />
+        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} autoFocus disabled={!userInput || userInput === "0"} />
         <label>I UNDERSTAND AND AGREE TO THE <u>TERMS OF USE</u></label>
       </div>
     )}
     {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
-    {(isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT/CLAIM WILL CANCEL THE WITHDRAWAL REQUEST</span>}
+    {tab === "deposit" && (isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
     <div className="action-btn-wrapper">
       {!isApproved && tab === "deposit" &&
         <button

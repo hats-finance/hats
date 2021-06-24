@@ -112,10 +112,10 @@ td {
               .nft-image-wrapper {
                 position: relative;
                 display: flex;
-                justify-content: center;
+                justify-content: flex-end;
                 .nft-image {
-                  width: 100px;
-                  height: 100px;
+                  width: 250px;
+                  height: 250px;
                 }
               }
             }
