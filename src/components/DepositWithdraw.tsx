@@ -52,7 +52,6 @@ interface IPendingWithdrawProps {
   expiryTime: string
   setIsPendingWithdraw: Function
   setIsWithdrawable: Function
-  
 }
 
 const PendingWithdraw = (props: IPendingWithdrawProps) => {
@@ -74,16 +73,6 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
         textColor={Colors.red} />
     </div>
   )
-}
-
-const checkIfWithdrawable = (withdrawEnableTime: string, expiryTime: string) => {
-  const currentTime = moment().unix();
-  return (currentTime >= Number(withdrawEnableTime) && currentTime < Number(expiryTime));
-}
-
-const checkIfPendingWithdraw = (withdrawEnableTime: string) => {
-  const currentTime = moment().unix();
-  return currentTime < Number(withdrawEnableTime);
 }
 
 export default function DepositWithdraw(props: IProps) {
@@ -121,8 +110,8 @@ export default function DepositWithdraw(props: IProps) {
     if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.vaults) {
       const withdrawRequest: IPoolWithdrawRequest = dataWithdrawRequests.vaults[0]?.withdrawRequests[0];
       setWithdrawRequests(withdrawRequest);
-      setIsWithdrawable(checkIfWithdrawable(withdrawRequest?.withdrawEnableTime, withdrawRequest?.expiryTime));
-      setIsPendingWithdraw(checkIfPendingWithdraw(withdrawRequest?.withdrawEnableTime));
+      setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest?.withdrawEnableTime)), moment.unix(Number(withdrawRequest?.expiryTime))));
+      setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest?.withdrawEnableTime))));
     }
   }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
 

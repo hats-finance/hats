@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../styles/Vault.scss";
-import { ICommitteeMember, ISeverity, IVault } from "../types/types";
+import { ICommitteeMember, IPoolWithdrawRequest, ISeverity, IVault } from "../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
 import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
@@ -11,7 +11,9 @@ import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+import { Colors, IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+import moment from "moment";
+import WithdrawCountdown from "./WithdrawCountdown";
 //import Tooltip from "rc-tooltip";
 //import InfoIcon from "../assets/icons/info.icon";
 
@@ -44,12 +46,23 @@ const ContractsCovered = (props: IContractsCoveredProps) => {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const { name, totalStaking, numberOfApprovedClaims, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance } = props.data;
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const { name, numberOfApprovedClaims, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests } = props.data;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
   const [vaultAPY, setVaultAPY] = useState("-");
+  const [isWithdrawable, setIsWithdrawable] = useState(false);
+  const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
+  const withdrawRequest = withdrawRequests.filter((request: IPoolWithdrawRequest) => request.beneficiary === selectedAddress);
+
+  useEffect(() => {
+    if (selectedAddress) {
+      setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime)), moment.unix(Number(withdrawRequest[0]?.expiryTime))));
+      setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime))));
+    }
+  }, [selectedAddress, withdrawRequest])
 
   // temporary fix to https://github.com/hats-finance/hats/issues/29
   useEffect(() => {
@@ -89,7 +102,7 @@ export default function Vault(props: IProps) {
                 <img
                   className="nft-image"
                   src={`${IPFS_PREFIX}${severity["nft-metadata"].image.substring(12)}`}
-                  alt="NFt" />
+                  alt="NFT" />
               </div>
               <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 View NFT INFO
@@ -130,17 +143,46 @@ export default function Vault(props: IProps) {
             {name}
           </div>
         </td>
-        <td>{millify(Number(fromWei(totalStaking)))}</td>
+        <td>{millify(Number(fromWei(honeyPotBalance)))}</td>
         <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
         <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
         <td>{vaultAPY}</td>
-        <td>
+        <td className="action-wrapper">
           <button
             className="action-btn deposit-withdraw"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
             disabled={!isProviderAndNetwork(provider)}>
             DEPOSIT / WITHDRAW
           </button>
+          {selectedAddress && isPendingWithdraw && selectedAddress &&
+            <>
+              <div className="countdown-wrapper">
+                <WithdrawCountdown
+                  endDate={withdrawRequest[0]?.withdrawEnableTime}
+                  compactView
+                  onEnd={() => {
+                    setIsPendingWithdraw(false);
+                    setIsWithdrawable(true);
+                  }}
+                  textColor={Colors.red} />
+              </div>
+              <span>WITHDRAWAL REQUEST PENDING</span>
+            </>
+          }
+          {selectedAddress && isWithdrawable && !isPendingWithdraw &&
+            <>
+              <div className="countdown-wrapper">
+                <WithdrawCountdown
+                  endDate={withdrawRequest[0]?.expiryTime}
+                  compactView
+                  onEnd={() => {
+                    setIsWithdrawable(false);
+                  }}
+                />
+              </div>
+              <span>WITHDRAWAL AVAILABLE</span>
+            </>
+          }
         </td>
       </tr>
       {

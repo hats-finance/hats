@@ -36,7 +36,7 @@ export default function Honeypots() {
             <tr>
               <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>
-              <th>TOTAL STAKED</th>
+              <th>TOTAL VAULT</th>
               <th>#VULNERABILITIES</th>
               <th>FUNDS GIVEN</th>
               <th>APY</th>
