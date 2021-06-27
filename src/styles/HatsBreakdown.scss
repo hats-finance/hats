@@ -10,6 +10,10 @@
   // grid-gap: 40px;
   // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   // grid-template-columns: 1fr 1fr 1fr;
+  .logo-wrapper {
+    padding: 0px 40px;
+    border-top: 1px solid $dark-turquoise;
+  }
   .data-top {
     display: flex;
     justify-content: space-between;
@@ -32,6 +36,7 @@
     flex-direction: column;
     background-color: $field-blue;
     padding: $modal-element-padding;
+    border-top: 1px solid $dark-turquoise;
     .data-long {
       display: flex;
       justify-content: space-between;

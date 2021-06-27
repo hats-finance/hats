@@ -61,7 +61,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
     <div className="pending-withdraw-timer-wrapper">
       <span>
         WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
-        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff))} PERIOD</span><br /><br />
+        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff), { units: ["d", "h", "m"] })} PERIOD</span><br /><br />
         WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <WithdrawCountdown

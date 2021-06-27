@@ -142,6 +142,10 @@ td {
       margin: auto;
       font-size: $medium;
       font-weight: bold;
+      .of-vault-text {
+        color: $white;
+        font-size: $xsmall;
+      }
     }
   }
 }
@@ -203,7 +207,8 @@ td {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 50px 0;
+  padding: 50px 0;
+  border-top: 1px solid $dark-turquoise;
   > a {
     width: 60%;
     display: flex;

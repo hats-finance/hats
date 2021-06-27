@@ -5,6 +5,7 @@
   padding: $modal-element-padding;
   flex-direction: column;
   align-items: center;
+  border-top: 1px solid $dark-turquoise;
   .nft-name {
     margin-bottom: 50px;
     color: $white;
@@ -13,6 +14,7 @@
   }
   .nft-image {
     width: 300px;
+    margin-bottom: 20px;
   }
   .nft-info {
     margin-right: 50px;
@@ -26,7 +28,7 @@
     }
     .data {
       font-size: $xsmall;
-      margin-bottom: 50px;
+      margin-bottom: 30px;
     }
   }
 }

@@ -11,11 +11,11 @@ import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { Colors, IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+import { Colors, IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
-//import Tooltip from "rc-tooltip";
-//import InfoIcon from "../assets/icons/info.icon";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "../assets/icons/info.icon";
 
 interface IProps {
   data: IVault,
@@ -105,22 +105,19 @@ export default function Vault(props: IProps) {
                   alt="NFT" />
               </div>
               <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                View NFT INFO
+                View NFT info
               </span>
             </div>}
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Prize:</span>
             <span className="vault-prize">
-              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b>
-              <span style={{ color: "white" }}>
-                {/* <Tooltip
-                  overlay="???"
-                  overlayClassName="tooltip"
-                  overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-                  placement="top">
-                  <span><InfoIcon width="10" /></span>
-                </Tooltip> */}
-              </span> &#8776; {`$${rewardPrice}`}
+              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
+              <Tooltip
+                overlay="???"
+                overlayClassName="tooltip"
+                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
+                <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
+              </Tooltip>
             </span>
             <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered

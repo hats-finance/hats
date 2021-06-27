@@ -63,8 +63,8 @@ export default function HatsBreakdown() {
   }, [])
 
   return <div className="hats-breakdown-wrapper">
-    <div style={{ padding: "40px" }}>
-      <Logo />
+    <div className="logo-wrapper">
+      <Logo height="100px" />
     </div>
     <div className="data-top">
       <div className="data-square">
