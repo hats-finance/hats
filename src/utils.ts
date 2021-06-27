@@ -214,20 +214,22 @@ export const linkToEtherscan = (address: string, network: Networks): string => {
 }
 
 /**
- * Given withdrawPeriod and safetyPeriod returns wheter 
+ * Given withdrawPeriod and safetyPeriod returns the if safty period is in progress and the amount of seconds until we switch.
+ * Negative number of seconds means when safty period starts, and positive number means when it ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
+ * @returns {IWithdrawSafetyPeriod} object
  */
 export const getWithdrawSafetyPeriod = async (withdrawPeriod: string, safetyPeriod: string) => {
   const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
     isSafetyPeriod: true,
-    timeLeftForSaftety: 0
+    timeLeftForSafety: 0
   }
   const currentBlockNumber = await getBlockNumber();
   if (currentBlockNumber) {
     const blocksLeftForSafety = (currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod))) + (Number(safetyPeriod) - Number((withdrawPeriod)));
     withdrawSafetyPeriod.isSafetyPeriod = currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod)) >= Number(withdrawPeriod);
-    withdrawSafetyPeriod.timeLeftForSaftety = blocksLeftForSafety * 15;
+    withdrawSafetyPeriod.timeLeftForSafety = blocksLeftForSafety * 15;
     return withdrawSafetyPeriod;
   }
   return withdrawSafetyPeriod;

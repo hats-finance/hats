@@ -127,5 +127,5 @@ export interface IPoolWithdrawRequest {
 
 export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean
-  timeLeftForSaftety: number
+  timeLeftForSafety: number
 }

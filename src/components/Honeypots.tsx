@@ -8,13 +8,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { IVault, IWithdrawSafetyPeriod } from "../types/types";
 import moment from "moment";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "../assets/icons/info.icon";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
   const withdrawSafetyPeriodData: IWithdrawSafetyPeriod = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
-  const safetyPeriodDate = moment().add(Math.abs(withdrawSafetyPeriodData.timeLeftForSaftety), "seconds").local().format('DD-MM-YYYY HH:mm');
+  const safetyPeriodDate = moment().add(Math.abs(withdrawSafetyPeriodData.timeLeftForSafety), "seconds").local().format('DD-MM-YYYY HH:mm');
 
   const vaults = vaultsData.map((vault: IVault) => {
     if (!vault.liquidityPool && vault.registered) {
@@ -28,11 +31,20 @@ export default function Honeypots() {
       {vaultsData.length === 0 ? <Loading fixed /> :
         <table>
           <tbody>
-            {withdrawSafetyPeriodData.timeLeftForSaftety !== 0 && <tr>
-              <th colSpan={7} className={`safe-period ${withdrawSafetyPeriodData.isSafetyPeriod && "on"}`}>
-                {withdrawSafetyPeriodData.isSafetyPeriod ? <span>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</span> : <span>{`WITHDRAWAL SAFE PERIOD WILL BEGIN AT ${safetyPeriodDate}`}</span>}
-              </th>
-            </tr>}
+            {withdrawSafetyPeriodData.timeLeftForSafety !== 0 &&
+              <tr>
+                <th colSpan={7} className={`safe-period ${withdrawSafetyPeriodData.isSafetyPeriod && "on"}`}>
+                  <div className="text-wrapper">
+                    {withdrawSafetyPeriodData.isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`WITHDRAWAL SAFE PERIOD WILL BEGIN AT ${safetyPeriodDate}`}</div>}
+                    <Tooltip
+                      overlayClassName="tooltip"
+                      overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+                      overlay="Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled">
+                      <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon fill={withdrawSafetyPeriodData.isSafetyPeriod ? Colors.darkBlue : Colors.turquoise} /></div>
+                    </Tooltip>
+                  </div>
+                </th>
+              </tr>}
             <tr>
               <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>
