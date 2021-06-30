@@ -11,7 +11,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
 import Tooltip from "rc-tooltip";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, RoutePaths } from "../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../settings";
@@ -248,7 +248,7 @@ export default function DepositWithdraw(props: IProps) {
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
             <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -291,7 +291,7 @@ export default function DepositWithdraw(props: IProps) {
     {tab === "deposit" && isApproved && (
       <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
         <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-        <label>I UNDERSTAND AND AGREE TO THE <u>TERMS OF USE</u></label>
+        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={RoutePaths.terms_of_service}>TERMS OF USE</a></u></label>
       </div>
     )}
     {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}

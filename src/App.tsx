@@ -15,6 +15,7 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools";
+import TermsOfService from "./components/TermsOfService";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -44,7 +45,7 @@ function App() {
     window.ethereum.on("accountsChanged", (accounts) => {
       dispatch(updateSelectedAddress(accounts[0]));
     });
-  
+
     window.ethereum.on("chainChanged", (chainId) => {
       // Handle the new chain.
       // Correctly handling chain changes can be complicated.
@@ -123,6 +124,9 @@ function App() {
         </Route>
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
+        </Route>
+        <Route path={RoutePaths.terms_of_service}>
+          <TermsOfService />
         </Route>
       </Switch>
       {showNotification && <Notification />}

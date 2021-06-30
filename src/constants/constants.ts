@@ -7,7 +7,8 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools"
+  pools = "/pools",
+  terms_of_service = "/terms_of_service"
 }
 
 export enum Networks {
@@ -21,7 +22,8 @@ export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
-  pools = "Liquidity Pools"
+  pools = "Liquidity Pools",
+  terms_of_service = "Terms of Service"
 }
 
 /**

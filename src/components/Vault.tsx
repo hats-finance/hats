@@ -73,12 +73,12 @@ export default function Vault(props: IProps) {
     }, 1000);
   }, [setVaultAPY, props.data.apy])
 
-  const description = JSON.parse(props.data.description as any);
+  const description = JSON.parse(props.data?.description as any);
 
   const members = description?.committee.members.map((member: ICommitteeMember, index: number) => {
     return (
-      <a className="member-link-wrapper" key={index} href={member["twitter-link"]} target="_blank" rel="noreferrer">
-        {member["image-ipfs-link"] ? <img src={`${IPFS_PREFIX}${member["image-ipfs-link"]}`} alt="twitter avatar" className="twitter-avatar" /> : <TwitterImageIcon />}
+      <a className="member-link-wrapper" key={index} href={member?.["twitter-link"]} target="_blank" rel="noreferrer">
+        {member?.["image-ipfs-link"] ? <img src={`${IPFS_PREFIX}${member?.["image-ipfs-link"]}`} alt="twitter avatar" className="twitter-avatar" /> : <TwitterImageIcon />}
         <span className="member-username">{member.name}</span>
       </a>
     )
@@ -93,15 +93,15 @@ export default function Vault(props: IProps) {
 
     return (
       <div className="severity-wrapper" key={index}>
-        <div className={`severity-title ${severity.name.toLocaleLowerCase()}`}>{`${severity.name.toUpperCase()} VULNERABILITIES`}</div>
+        <div className={`severity-title ${severity?.name.toLocaleLowerCase()}`}>{`${severity?.name.toUpperCase()} VULNERABILITIES`}</div>
         <div className="severity-data">
-          {severity["nft-metadata"] &&
+          {severity?.["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper">
                 <img
                   className="nft-image"
-                  src={`${IPFS_PREFIX}${severity["nft-metadata"].image.substring(12)}`}
+                  src={`${IPFS_PREFIX}${severity?.["nft-metadata"].image.substring(12)}`}
                   alt="NFT" />
               </div>
               <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
@@ -119,7 +119,7 @@ export default function Vault(props: IProps) {
                 <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
               </Tooltip> */}
             </span>
-            <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>
+            <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
             </span>
           </div>
@@ -136,7 +136,7 @@ export default function Vault(props: IProps) {
         </td>
         <td>
           <div className="project-name-wrapper">
-            <img src={description["Project-metadata"].icon} alt="project logo" />
+            <img src={description?.["Project-metadata"].icon} alt="project logo" />
             {name}
           </div>
         </td>
@@ -199,11 +199,11 @@ export default function Vault(props: IProps) {
                     <div className="multi-sig-address-wrapper">
                       <a target="_blank"
                         rel="noopener noreferrer"
-                        href={linkToEtherscan(description?.committee["multisig-address"], NETWORK)}
+                        href={linkToEtherscan(description?.committee?.["multisig-address"], NETWORK)}
                         className="multi-sig-address">
-                        {truncatedAddress(description?.committee["multisig-address"])}
+                        {truncatedAddress(description?.committee?.["multisig-address"])}
                       </a>
-                      <CopyToClipboard value={description?.committee["multisig-address"]} />
+                      <CopyToClipboard value={description?.committee?.["multisig-address"]} />
                     </div>
                   </div>
                 </div>
