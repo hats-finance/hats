@@ -35,7 +35,7 @@ export default function Honeypots() {
               <tr>
                 <th colSpan={7} className={`safe-period ${withdrawSafetyPeriodData.isSafetyPeriod && "on"}`}>
                   <div className="text-wrapper">
-                    {withdrawSafetyPeriodData.isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`WITHDRAWAL SAFE PERIOD WILL BEGIN AT ${safetyPeriodDate}`}</div>}
+                    {withdrawSafetyPeriodData.isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`THE NEXT SAFE PERIOD WILL START AT ${safetyPeriodDate}`}</div>}
                     <Tooltip
                       overlayClassName="tooltip"
                       overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
@@ -49,7 +49,7 @@ export default function Honeypots() {
               <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>
               <th>TOTAL VAULT</th>
-              <th>#VULNERABILITIES</th>
+              {/* <th>#VULNERABILITIES</th> */}
               <th>FUNDS GIVEN</th>
               <th>APY</th>
               <th></th>

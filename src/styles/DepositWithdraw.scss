@@ -147,11 +147,14 @@
     label {
       margin-left: 10px;
     }
+    &.disabled {
+      opacity: 0.4;
+    }
   }
   .extra-info-wrapper {
     color: $dark-blue;
     margin: 20px 0;
-    background-color: $strong-red;
+    background-color: $yellow;
     height: 32px;
     text-align: center;
     line-height: 32px;

@@ -3,7 +3,7 @@ import "../styles/Vault.scss";
 import { ICommitteeMember, IPoolWithdrawRequest, ISeverity, IVault } from "../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, isProviderAndNetwork, linkToEtherscan, numberWithCommas, truncatedAddress } from "../utils";
+import { fromWei, isProviderAndNetwork, linkToEtherscan, truncatedAddress } from "../utils"; // numberWithCommas
 import ArrowIcon from "../assets/icons/arrow.icon";
 import TwitterImageIcon from "../assets/icons/twitterImage.icon";
 import { RootState } from "../reducers";
@@ -11,11 +11,11 @@ import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { Colors, IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import { Colors, IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
-import Tooltip from "rc-tooltip";
-import InfoIcon from "../assets/icons/info.icon";
+//import Tooltip from "rc-tooltip";
+//import InfoIcon from "../assets/icons/info.icon";
 
 interface IProps {
   data: IVault,
@@ -47,7 +47,7 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { name, numberOfApprovedClaims, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests } = props.data;
+  const { name, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests } = props.data; // numberOfApprovedClaims
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
@@ -112,12 +112,12 @@ export default function Vault(props: IProps) {
             <span className="vault-expanded-subtitle">Prize:</span>
             <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
-              <Tooltip
+              {/* <Tooltip
                 overlay="???"
                 overlayClassName="tooltip"
                 overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
                 <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
-              </Tooltip>
+              </Tooltip> */}
             </span>
             <span className="view-more" onClick={() => { setModalContractsData(severity["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
@@ -141,7 +141,7 @@ export default function Vault(props: IProps) {
           </div>
         </td>
         <td>{millify(Number(fromWei(honeyPotBalance)))}</td>
-        <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td>
+        {/* <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td> */}
         <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">
@@ -161,7 +161,7 @@ export default function Vault(props: IProps) {
                     setIsPendingWithdraw(false);
                     setIsWithdrawable(true);
                   }}
-                  textColor={Colors.red} />
+                  textColor={Colors.yellow} />
               </div>
               <span>WITHDRAWAL REQUEST PENDING</span>
             </>

@@ -3,28 +3,28 @@
 .notification-wrapper {
   position: fixed;
   z-index: 5;
-  top: 15px;
-  right: 0;
+  top: 0px;
+  right: 50%;
+  transform: translateX(50%);
   display: flex;
   align-items: center;
-  border-right: 10px solid;
-  background-color: $white;
   color: $black;
-  padding: 15px;
+  padding: 10px;
   box-shadow: $black-shadow;
-  max-width: 50%;
+  width: 50%;
   &.SUCCESS {
-    border-right-color: $green;
+    background-color: $turquoise;
   }
   &.ERROR{
-    border-right-color: $red;
+    background-color: $strong-red;
   }
   &.INFO {
-    border-right-color: $dark-turquoise;
+    background-color: $white;
   }
   .type {
     font-weight: bold;
     margin-right: 10px;
+    margin-left: auto;
   }
   .text {
     text-overflow: ellipsis;
@@ -35,9 +35,8 @@
     padding: 0;
     margin: 0;
     background-color: transparent;
-    border-right: 1px solid $transparent-black;
-    padding-right: 10px;
-    margin-right: 10px;
+    padding-left: 10px;
+    margin-left: auto;
   }
 }
 

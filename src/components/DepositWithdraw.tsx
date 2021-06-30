@@ -70,7 +70,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
           setIsPendingWithdraw(false);
           setIsWithdrawable(true);
         }}
-        textColor={Colors.red} />
+        textColor={Colors.yellow} />
     </div>
   )
 }
@@ -289,8 +289,8 @@ export default function DepositWithdraw(props: IProps) {
     <div className="seperator" />
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
     {tab === "deposit" && isApproved && (
-      <div className="terms-of-use-wrapper">
-        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} autoFocus disabled={!userInput || userInput === "0"} />
+      <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
+        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
         <label>I UNDERSTAND AND AGREE TO THE <u>TERMS OF USE</u></label>
       </div>
     )}

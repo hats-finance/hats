@@ -45,7 +45,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   minHeight: "unset"
 }
 
-export const DEFAULT_ERROR_MESSAGE = "Something went wrong :(";
+export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
 export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 
@@ -54,5 +54,6 @@ export enum Colors {
   white = "#FFFFFF",
   red = "#E66480",
   turquoise = "#8AFCFD",
-  darkBlue = "#000723"
+  darkBlue = "#000723",
+  yellow = "#F2C94C"
 }
