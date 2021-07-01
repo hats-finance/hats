@@ -108,7 +108,7 @@ export default function Vault(props: IProps) {
               <div className="nft-image-wrapper">
                 <img
                   className="nft-image"
-                  src={`${IPFS_PREFIX}${severity?.["nft-metadata"]?.image.substring(12)}`}
+                  src={`${IPFS_PREFIX}${severity?.["nft-metadata"]?.image?.substring(12)}`}
                   alt="NFT" />
               </div>
               <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
