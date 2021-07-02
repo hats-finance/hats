@@ -1,20 +1,33 @@
 import "../../styles/Shared/Loading.scss";
-import LoadingIcon from "../../assets/icons/loading.svg";
+import classNames from "classnames";
+import ReactDOM from "react-dom";
 
 interface IProps {
   fixed?: boolean;
   top?: string; // can be any valid css top value
   right?: string // can be any valid css right value
+  hatLoader?: boolean
+  extraText?: string
 }
 
 export default function Loading(props: IProps) {
+  const { fixed, top, right, hatLoader, extraText } = props;
+
   const styles = {
-    "top": props.top ?? "50%",
-    "right": props.right ?? "50%"
+    "top": top ?? "50%",
+    "right": right ?? "50%"
   }
-  return (
-    <div className={props.fixed ? "loading-wrapper fixed" : "loading-wrapper"} style={styles}>
-      <img width='40px' src={LoadingIcon} alt='loader' />
-    </div>
+
+  const loadingClass = classNames({
+    "loading-wrapper": true,
+    "fixed": fixed,
+    "hatLoader": hatLoader
+  })
+
+  return ReactDOM.createPortal(
+    <div className={loadingClass} style={styles}>
+      <div className={!hatLoader ? "spinner" : "hat-loader"} />
+      {extraText && <span className="extra-text">{extraText}</span>}
+    </div>, document.body
   )
 }

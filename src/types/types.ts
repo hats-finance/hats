@@ -54,6 +54,7 @@ export interface ISeverity {
   "contracts-covered": Array<string>
   "nft-metadata": INFTMetaData
   "reward-for": string
+  "description": string
 }
 
 export interface INFTMetaData {

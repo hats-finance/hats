@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
 import Loading from "./Shared/Loading";
-import InfoIcon from "../assets/icons/info.icon";
+//import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
 import * as contractsActions from "../actions/contractsActions";
 import { IPoolWithdrawRequest, IVault } from "../types/types";
@@ -10,8 +10,8 @@ import { getBeneficiaryWithdrawRequests, getStakerData } from "../graphql/subgra
 import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
-import Tooltip from "rc-tooltip";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, RoutePaths } from "../constants/constants";
+//import Tooltip from "rc-tooltip";
+import { Colors, RoutePaths } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../settings";
@@ -77,7 +77,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name, apy, tokenPrice } = props.data;
+  const { id, pid, master, stakingToken, name, tokenPrice } = props.data; // apy
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -87,7 +87,7 @@ export default function DepositWithdraw(props: IProps) {
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
+  //const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
@@ -142,12 +142,12 @@ export default function DepositWithdraw(props: IProps) {
     getPendingReward();
   }, [master.address, selectedAddress, pid, inTransaction])
 
-  const yearlyEarnings = React.useMemo(() => {
-    if (apy && tokenPrice && hatsPrice) {
-      return apy * Number(fromWei(stakedAmount)) * tokenPrice;
-    }
-    return 0;
-  }, [apy, tokenPrice, hatsPrice, stakedAmount])
+  // const  yearlyEarnings= React.useMemo(() => {
+  //   if (apy && tokenPrice && hatsPrice) {
+  //     return apy * Number(fromWei(stakedAmount)) * tokenPrice;
+  //   }
+  //   return 0;
+  // }, [apy, tokenPrice, hatsPrice, stakedAmount])
 
   const approveToken = async () => {
     dispatch(toggleInTransaction(true));
@@ -239,7 +239,7 @@ export default function DepositWithdraw(props: IProps) {
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
       <span style={{ color: "white" }}>You stake</span>
-        {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}><Loading /></div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
+        {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}>-</div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
       </div>
       <div>
         <div className={amountWrapperClass}>
@@ -257,9 +257,9 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="staked-wrapper">
         <span>You staked</span>
-        <div style={{ position: "relative" }}>{loading ? <Loading /> : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
+        <div style={{ position: "relative" }}>{loading ? "-" : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
       </div>
-      <div className="earnings-wrapper">
+      {/* <div className="earnings-wrapper">
         <span>Monthly earnings &nbsp;
           <Tooltip
             overlay="Estimated monthly earnings based on total staked amount and rate reward"
@@ -271,8 +271,8 @@ export default function DepositWithdraw(props: IProps) {
         </span>
         <span>{`${millify(yearlyEarnings / 12)}`} Hats</span>
         <span>&#8776; {`$${millify((yearlyEarnings / 12) * hatsPrice)}`}</span>
-      </div>
-      <div className="earnings-wrapper">
+      </div> */}
+      {/* <div className="earnings-wrapper">
         <span>Yearly earnings &nbsp;
           <Tooltip
             overlay="Estimated yearly earnings based on total staked amount and rate reward"
@@ -284,7 +284,7 @@ export default function DepositWithdraw(props: IProps) {
         </span>
         <span>{`${millify(yearlyEarnings)}`} Hats</span>
         <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
-      </div>
+      </div> */}
     </div>
     <div className="seperator" />
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}

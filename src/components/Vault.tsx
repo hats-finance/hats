@@ -11,11 +11,11 @@ import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
 import { NETWORK } from "../settings";
-import { Colors, IPFS_PREFIX } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+import { Colors, IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import moment from "moment";
 import WithdrawCountdown from "./WithdrawCountdown";
-//import Tooltip from "rc-tooltip";
-//import InfoIcon from "../assets/icons/info.icon";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "../assets/icons/info.icon";
 
 interface IProps {
   data: IVault,
@@ -100,8 +100,13 @@ export default function Vault(props: IProps) {
 
     return (
       <div className="severity-wrapper" key={index}>
-        <div className={`severity-title ${severity?.name.toLocaleLowerCase()}`}>{`${severity?.name.toUpperCase()} VULNERABILITIES`}</div>
+        <div className={`severity-title ${severity?.name.toLocaleLowerCase()}`}>{`${severity?.name.toUpperCase()} SEVERITY`}</div>
         <div className="severity-data">
+          {severity?.description &&
+            <div className="severity-data-item">
+              <span className="vault-expanded-subtitle">Severity description:</span>
+              <span style={{ color: "white" }}>{severity.description}</span>
+            </div>}
           {severity?.["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
@@ -119,12 +124,12 @@ export default function Vault(props: IProps) {
             <span className="vault-expanded-subtitle">Prize:</span>
             <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
-              {/* <Tooltip
-                overlay="???"
+              <Tooltip
+                overlay="Prizes are in correlation to the funds in the vault and may change at any time"
                 overlayClassName="tooltip"
                 overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
                 <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
-              </Tooltip> */}
+              </Tooltip>
             </span>
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
@@ -216,7 +221,7 @@ export default function Vault(props: IProps) {
                 </div>
               </div>
               <div className="severity-prizes-wrapper">
-                <div className="sub-title">VULNERABILITIES PRIZES</div>
+                <div className="sub-title">SEVERITY PRIZES</div>
                 <div className="severity-prizes-content">
                   {severities as any}
                 </div>

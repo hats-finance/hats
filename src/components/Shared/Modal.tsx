@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import "../../styles/Shared/Modal.scss";
+import ReactDOM from "react-dom";
 
 interface IProps {
   title: string,
@@ -42,7 +43,7 @@ export default function Modal(props: IProps) {
     }
   }
 
-  return (
+  return ReactDOM.createPortal(
     <div className="modal-wrapper" onClick={onBackdropClick}>
       <div className="modal-content-wrapper">
         <div className="modal-top">
@@ -55,6 +56,5 @@ export default function Modal(props: IProps) {
           {props.children}
         </div>
       </div>
-    </div>
-  )
+    </div>, document.body)
 }

@@ -8,7 +8,6 @@ import "../styles/global.scss";
 import { ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
-import Lodaing from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import HatsBreakdown from "./HatsBreakdown";
 import millify from "millify";
@@ -71,7 +70,7 @@ export default function Header() {
           <div className="wallet-details">
             <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo width="30" height="30" /><span>Hats</span></button>
             {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>
-              {!ethBalance ? <Lodaing /> : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
+              {!ethBalance ? null : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
             </div>}
             <span className="current-address">{truncatedAddress(selectedAddress)}</span>
             <span>{`${network}`}</span>

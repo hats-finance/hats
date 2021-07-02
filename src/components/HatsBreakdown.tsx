@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Logo from "../assets/icons/logo.icon";
-import Loading from "./Shared/Loading";
 import "../styles/HatsBreakdown.scss";
 import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
@@ -69,25 +68,25 @@ export default function HatsBreakdown() {
     <div className="data-top">
       <div className="data-square">
         <span>Balance (HATS)</span>
-        {!hatsBalance ? <Loading top="60%" /> : <span>{millify(hatsBalance)}</span>}
+        {!hatsBalance ? "-" : <span>{millify(hatsBalance)}</span>}
       </div>
       <div className="data-square">
         <span>Total Staked</span>
-        {loading ? <Loading top="60%" /> : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
+        {loading ? "-" : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
       </div>
       <div className="data-square">
         <span>Staking APY</span>
-        {loading ? <Loading top="60%" /> : <span>{millify(stakingAPY)}%</span>}
+        {loading ? "-" : <span>{millify(stakingAPY)}%</span>}
       </div>
     </div>
     <div className="data-bottom">
       <div className="data-long">
         <span>HATS price</span>
-        {!hatsPrice ? <Loading right="0px" /> : <span>&#8776; {`$${millify(hatsPrice)}`}</span>}
+        {!hatsPrice ? "-" : <span>&#8776; {`$${millify(hatsPrice)}`}</span>}
       </div>
       <div className="data-long">
         <span>Total supply</span>
-        {!hatsMarketCap ? <Loading right="0px" /> : <span>&#8776; {`$${millify(hatsMarketCap)}`}</span>}
+        {!hatsMarketCap ? "-" : <span>&#8776; {`$${millify(hatsMarketCap)}`}</span>}
       </div>
     </div>
   </div>
