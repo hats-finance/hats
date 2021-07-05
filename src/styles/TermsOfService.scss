@@ -1,4 +1,6 @@
+@import "./constants.scss";
 
 .terms-of-service-wrapper {
-  
+  max-width: $table-max-width;
+  color: $white;
 }
