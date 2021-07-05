@@ -149,7 +149,7 @@ export default function Vault(props: IProps) {
         <td>
           <div className="project-name-wrapper">
             <img src={description?.["Project-metadata"].icon} alt="project logo" />
-            {name}
+            {description?.["Project-metadata"].name}
           </div>
         </td>
         <td>{millify(Number(fromWei(honeyPotBalance)))}</td>
