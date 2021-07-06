@@ -29,6 +29,7 @@ export interface IVaultDescription {
   "Project-metadata": {
     icon: string
     website: string
+    name: string
   }
   "communication-channel": {
     "committee-bot": string

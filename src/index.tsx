@@ -8,7 +8,6 @@ import "./index.css";
 import App from "./App";
 import { SUBGRAPH_URI } from "./settings";
 
-// You should replace this url with your own and put it into a .env file
 const client = new ApolloClient({
   uri: SUBGRAPH_URI
 });

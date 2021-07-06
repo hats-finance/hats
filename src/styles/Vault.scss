@@ -115,9 +115,11 @@ td {
                 position: relative;
                 display: flex;
                 justify-content: flex-end;
+                margin: auto;
+                margin-top: 20px;
+                margin-bottom: 30px;
                 .nft-image {
                   width: 250px;
-                  height: 250px;
                 }
               }
             }
