@@ -26,6 +26,7 @@
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
     "classnames": "^2.2.6",
+    "dotenv": "^10.0.0",
     "downloadjs": "^1.4.7",
     "eslint": "^7.11.0",
     "eslint-plugin-flowtype": "^4.6.0",
