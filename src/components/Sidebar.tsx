@@ -51,7 +51,6 @@ export default function Sidebar() {
           <a target="_blank" rel="noopener noreferrer" href="https://github.com/hats-finance"><GitHubIcon /></a>
         </div>
         <Link to={RoutePaths.terms_of_service}>Terms of Service</Link>
-        {/* <a target="_blank" rel="noopener noreferrer" href="https://www.google.com">Terms of service</a> */}
       </div>
     </div>
   )

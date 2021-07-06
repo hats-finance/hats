@@ -8,7 +8,8 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  terms_of_service = "/terms_of_service"
+  terms_of_service = "/terms_of_service",
+  privacy_policy = "/privacy_policy"
 }
 
 export enum Networks {
@@ -23,7 +24,8 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  terms_of_service = "Terms of Service"
+  terms_of_service = "Terms of Service",
+  privacy_policy = "Privacy and Cookies Policy"
 }
 
 /**

@@ -1,8 +1,26 @@
+@import "./constants.scss";
 
 .cookies-wrapper {
   position: fixed;
   bottom: 0;
   z-index: 5;
-  left: 50%;
-  transform: translateX(-50%);
+  background-color: $strong-blue;
+  width: 100%;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  color: $white;
+  justify-content: space-between;
+  padding: 15px;
+  box-sizing: border-box;
+  .policy-link {
+    color: $turquoise;
+    margin-right: 35px;
+    text-decoration: underline;
+  }
+  .accept-button {
+    background-color: $turquoise;
+    color: $dark-blue;
+    width: 120px;
+  }
 }

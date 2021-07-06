@@ -8,7 +8,7 @@ import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafety
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
-//import Cookies from "./components/Cookies";
+import Cookies from "./components/Cookies";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
@@ -16,6 +16,7 @@ import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools";
 import TermsOfService from "./components/TermsOfService";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -27,7 +28,7 @@ function App() {
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
-  //const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
+  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
 
   useEffect(() => {
     const network = getNetworkNameByChainId(provider.chainId);
@@ -108,7 +109,7 @@ function App() {
   return (
     <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
-      {/* {acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />} */}
+      {hasSeenWelcomePage && acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       <Switch>
@@ -130,8 +131,11 @@ function App() {
         <Route path={RoutePaths.terms_of_service}>
           <TermsOfService />
         </Route>
+        <Route path={RoutePaths.privacy_policy}>
+          <PrivacyPolicy />
+        </Route>
       </Switch>
-      {showNotification && <Notification />}
+      {showNotification && hasSeenWelcomePage && <Notification />}
     </>
   );
 }

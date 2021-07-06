@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { RoutePaths } from "../constants/constants";
 import "../styles/Cookies.scss";
 
 interface IProps {
@@ -14,8 +16,11 @@ export default function Cookies(props: IProps) {
 
   return (
     <div className="cookies-wrapper">
-      accept cookies
-      <button onClick={acceptedCookies}>Accept</button>
+      <span>This website uses cookies to ensure you the best experience on our website</span>
+      <div>
+        <Link className="policy-link" to={RoutePaths.privacy_policy}>Privacy and cookies policy</Link>
+        <button className="accept-button" onClick={acceptedCookies}>ACCEPT</button>
+      </div>
     </div>
   )
 }
