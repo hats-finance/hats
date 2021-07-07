@@ -200,7 +200,15 @@ export default function Vault(props: IProps) {
           <td className="sub-row" colSpan={7}>
             <div className="vault-expanded">
               <div className="committee-wrapper">
-                <div className="sub-title">COMMITTEE</div>
+                <div className="sub-title">
+                  COMMITTEE
+                  {/* <Tooltip
+                    overlay="A Committee is project specific and composed of researchers, project core developers, and white hat hackers. The committee is responsible to approve or deny vulnerabilities disclosed to the project, and in the case of approval, a subsequent release of funds to the hacker in accordance with the allocation specified in the vault"
+                    overlayClassName="tooltip"
+                    overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
+                    <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
+                  </Tooltip> */}
+                </div>
                 <div className="committee-content">
                   <div className="vault-expanded-subtitle">
                     Members:

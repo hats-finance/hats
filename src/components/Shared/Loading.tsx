@@ -6,12 +6,12 @@ interface IProps {
   fixed?: boolean;
   top?: string; // can be any valid css top value
   right?: string // can be any valid css right value
-  hatLoader?: boolean
+  spinner?: boolean
   extraText?: string
 }
 
 export default function Loading(props: IProps) {
-  const { fixed, top, right, hatLoader, extraText } = props;
+  const { fixed, top, right, spinner, extraText } = props;
 
   const styles = {
     "top": top ?? "50%",
@@ -21,12 +21,12 @@ export default function Loading(props: IProps) {
   const loadingClass = classNames({
     "loading-wrapper": true,
     "fixed": fixed,
-    "hatLoader": hatLoader
+    "hatLoader": !spinner
   })
 
   return ReactDOM.createPortal(
     <div className={loadingClass} style={styles}>
-      <div className={!hatLoader ? "spinner" : "hat-loader"} />
+      <div className={spinner ? "spinner" : "hat-loader"} />
       {extraText && <span className="extra-text">{extraText}</span>}
     </div>, document.body
   )

@@ -22,6 +22,7 @@ import humanizeDuration from "humanize-duration";
 
 interface IProps {
   data: IVault
+  setShowModal?: Function
   isPool?: boolean
 }
 
@@ -166,6 +167,9 @@ export default function DepositWithdraw(props: IProps) {
       async () => contractsActions.depositAndClaim(pid, master.address, userInput),
       async () => {
         setUserInput("0");
+        if (props.setShowModal) {
+          props.setShowModal(false);
+        }
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
@@ -197,6 +201,9 @@ export default function DepositWithdraw(props: IProps) {
       async () => contractsActions.claim(pid, master.address),
       async () => {
         setUserInput("0");
+        if (props.setShowModal) {
+          props.setShowModal(false);
+        }
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     dispatch(toggleInTransaction(false));

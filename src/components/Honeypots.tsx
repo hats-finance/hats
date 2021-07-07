@@ -64,7 +64,7 @@ export default function Honeypots() {
         </table>}
       {showModal &&
         <Modal title="" setShowModal={setShowModal} height="fit-content" >
-          <DepositWithdraw data={modalData as any} />
+          <DepositWithdraw data={modalData as any} setShowModal={setShowModal} />
         </Modal>}
     </div>
   )
