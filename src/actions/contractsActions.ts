@@ -5,7 +5,7 @@ import erc20Abi from "../data/abis/erc20.json";
 import { DEFAULT_ERROR_MESSAGE, NotificationType, TransactionStatus } from "../constants/constants";
 import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
-import { toggleNotification } from "./index";
+import { toggleInTransaction, toggleNotification } from "./index";
 import { NETWORK } from "../settings";
 
 const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
@@ -165,14 +165,17 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
  * Dispatches automatically a notification on success or on error.
  * @param {Function} tx The function that creates the transaction on the blockchain
  * @param {Function} onSuccess Function to call on success
+ * @param {Function} onWalletAction Function to call while a transaction is being processed
  * @param {Function} onFail Function to call on fail
  * @param {Dispatch} dispatch The Redux dispath function to dispatch the notification
  * @param {string} successText Optional extra text to show on success
  * @param {number} confirmations The number of confirmations on the blockchain to wait until we consider the transaction has succeeded. Default is 1 confirmation.
  */
-export const createTransaction = async (tx: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1) => {
+export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1) => {
   try {
     const transaction = await tx();
+    await onWalletAction();
+    dispatch(toggleInTransaction(true));
     const receipt = await transaction.wait(confirmations);
     if (receipt.status === TransactionStatus.Success) {
       await onSuccess();
@@ -182,6 +185,7 @@ export const createTransaction = async (tx: Function, onSuccess: Function, onFai
     }
   } catch (error) {
     console.error(error);
+    //await onWalletAction();
     await onFail();
     dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE));
   }

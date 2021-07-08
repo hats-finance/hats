@@ -12,12 +12,12 @@ export default function Notification() {
     dispatch(toggleNotification(false, undefined, ""));
   }, [dispatch])
 
-  // React.useEffect(() => {
-  //   const timer = setTimeout(dismiss, 5000);
-  //   return () => {
-  //     clearTimeout(timer);
-  //   }
-  // }, [dispatch, dismiss])
+  React.useEffect(() => {
+    const timer = setTimeout(dismiss, 15000);
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [dispatch, dismiss])
 
   return (
     <div className={`notification-wrapper ${type}`}>

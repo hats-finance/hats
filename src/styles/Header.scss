@@ -38,11 +38,35 @@ header {
           opacity: 1;
         }
       }
-      .current-address {
-        border-left: 1px solid;
+      .pending-transaction {
+        height: 50px;
+        line-height: 50px;
+        padding: 0 20px;
+        background: linear-gradient(90deg, $blue, $dark-turquoise, $blue);
+        animation: gradient 10s ease infinite;
+        background-size: 600px;
+        color: $white;
+      }
+      @keyframes gradient {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+      .wallet-balance {
         border-right: 1px solid;
-        padding: 0px 10px;
-        margin: 0px 10px;
+        padding-right: 10px;
+        margin-right: 10px;
+      }
+      .network-name {
+        padding-left: 10px;
+        border-left: 1px solid;
+        margin-left: 10px;
       }
     }
     .wallet-btn {

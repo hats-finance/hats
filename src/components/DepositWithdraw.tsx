@@ -83,6 +83,7 @@ export default function DepositWithdraw(props: IProps) {
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
+  const [pendingWalletAction, setPendingWalletAction] = useState(false);
   const [tokenBalance, setTokenBalance] = useState("0");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
@@ -151,67 +152,70 @@ export default function DepositWithdraw(props: IProps) {
   // }, [apy, tokenPrice, hatsPrice, stakedAmount])
 
   const approveToken = async () => {
-    dispatch(toggleInTransaction(true));
+    setPendingWalletAction(true);
     await contractsActions.createTransaction(
       async () => contractsActions.approveToken(stakingToken, master.address),
+      () => { },
       async () => {
         setIsApproved(true);
+        setPendingWalletAction(false);
       },
-      () => { }, dispatch, `Spending ${tokenSymbol} approved`);
+      () => { setPendingWalletAction(false); }, dispatch, `Spending ${tokenSymbol} approved`);
     dispatch(toggleInTransaction(false));
   }
 
   const depositAndClaim = async () => {
-    dispatch(toggleInTransaction(true));
+    setPendingWalletAction(true);
     await contractsActions.createTransaction(
       async () => contractsActions.depositAndClaim(pid, master.address, userInput),
+      () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        if (props.setShowModal) {
-          props.setShowModal(false);
-        }
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
   const withdrawAndClaim = async () => {
-    dispatch(toggleInTransaction(true));
+    setPendingWalletAction(true);
     await contractsActions.createTransaction(
       async () => contractsActions.withdrawAndClaim(pid, master.address, userInput),
+      () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setWithdrawRequests(undefined);
         setUserInput("0");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
   const withdrawRequest = async () => {
-    dispatch(toggleInTransaction(true));
+    setPendingWalletAction(true);
     await contractsActions.createTransaction(
       async () => contractsActions.withdrawRequest(pid, master.address),
-      async () => { }, () => { }, dispatch, "Withdrawal Request succeeded");
+      () => { },
+      async () => { setPendingWalletAction(false); },
+      () => { setPendingWalletAction(false); },
+      dispatch,
+      "Withdrawal Request succeeded");
     dispatch(toggleInTransaction(false));
   }
 
   const claim = async () => {
-    dispatch(toggleInTransaction(true));
+    setPendingWalletAction(true);
     await contractsActions.createTransaction(
       async () => contractsActions.claim(pid, master.address),
+      () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        if (props.setShowModal) {
-          props.setShowModal(false);
-        }
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     dispatch(toggleInTransaction(false));
   }
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,
-    "disabled": inTransaction
+    "disabled": pendingWalletAction
   })
 
   const amountWrapperClass = classNames({
@@ -245,7 +249,7 @@ export default function DepositWithdraw(props: IProps) {
       />}
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
-      <span style={{ color: "white" }}>You stake</span>
+        <span style={{ color: "white" }}>You stake</span>
         {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}>-</div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
       </div>
       <div>
@@ -328,6 +332,6 @@ export default function DepositWithdraw(props: IProps) {
           onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
       <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>
     </div>
-    {inTransaction && <Loading />}
+    {pendingWalletAction && <Loading />}
   </div>
 }

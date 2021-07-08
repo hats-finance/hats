@@ -46,6 +46,7 @@ export default function Header() {
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
 
   React.useEffect(() => {
     dispatch(connect(provider || {}));
@@ -69,11 +70,12 @@ export default function Header() {
         {screenSize !== ScreenSize.Mobile && provider &&
           <div className="wallet-details">
             <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo width="30" height="30" /><span>Hats</span></button>
-            {network === NETWORK && <div style={{ position: "relative", minWidth: "50px" }}>
-              {!ethBalance ? null : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
-            </div>}
-            <span className="current-address">{truncatedAddress(selectedAddress)}</span>
-            <span>{`${network}`}</span>
+            {network === NETWORK &&
+              <div className="wallet-balance">
+                {!ethBalance ? null : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
+              </div>}
+            {inTransaction ? <div className="pending-transaction">Pending Transaction</div> : <span>{truncatedAddress(selectedAddress)}</span>}
+            <span className="network-name">{`${network}`}</span>
           </div>}
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
