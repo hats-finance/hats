@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
 import { connect } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
-import { truncatedAddress, getNetworkNameByChainId, getMainPath, fetchWalletBalance } from "../utils";
+import { truncatedAddress, getNetworkNameByChainId, getMainPath, fetchWalletBalance, linkToEtherscan } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
 import { ScreenSize } from "../constants/constants";
@@ -47,6 +47,7 @@ export default function Header() {
   const network = getNetworkNameByChainId(chainId);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
+  const transactionHash = useSelector((state: RootState) => state.layoutReducer.transactionHash);
 
   React.useEffect(() => {
     dispatch(connect(provider || {}));
@@ -74,7 +75,7 @@ export default function Header() {
               <div className="wallet-balance">
                 {!ethBalance ? null : <span>{`${millify(ethBalance)} ETH | ${millify(hatsBalance)} HATS`}</span>}
               </div>}
-            {inTransaction ? <div className="pending-transaction">Pending Transaction</div> : <span>{truncatedAddress(selectedAddress)}</span>}
+            {inTransaction ? <div onClick={() => window.open(linkToEtherscan(transactionHash, NETWORK, true))} className="pending-transaction">Pending Transaction</div> : <span>{truncatedAddress(selectedAddress)}</span>}
             <span className="network-name">{`${network}`}</span>
           </div>}
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />

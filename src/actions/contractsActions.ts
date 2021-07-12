@@ -170,23 +170,23 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
  * @param {Dispatch} dispatch The Redux dispath function to dispatch the notification
  * @param {string} successText Optional extra text to show on success
  * @param {number} confirmations The number of confirmations on the blockchain to wait until we consider the transaction has succeeded. Default is 1 confirmation.
+ * @param {boolean} disableAutoHide Disable auto-hide of the notifications
  */
-export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1) => {
+export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1, disableAutoHide?: boolean) => {
   try {
     const transaction = await tx();
     await onWalletAction();
-    dispatch(toggleInTransaction(true));
+    dispatch(toggleInTransaction(true, transaction.hash));
     const receipt = await transaction.wait(confirmations);
     if (receipt.status === TransactionStatus.Success) {
       await onSuccess();
-      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded"));
+      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
     } else {
       throw new Error();
     }
   } catch (error) {
     console.error(error);
-    //await onWalletAction();
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE));
+    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
   }
 }

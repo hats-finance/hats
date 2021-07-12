@@ -28,11 +28,12 @@ export const toggleMenu = (showMenu: boolean) => ({
   showMenu
 })
 
-export const toggleNotification = (show: boolean, notificationType: NotificationType | undefined, text: string) => ({
+export const toggleNotification = (show: boolean, notificationType: NotificationType | undefined, text: string, disableAutoHide?: boolean) => ({
   type: types.TOGGLE_NOTIFICATION,
   show,
   notificationType,
-  text
+  text,
+  disableAutoHide
 })
 
 export const updateVaults = (vaults: Array<IVault>) => ({
@@ -45,9 +46,10 @@ export const updateRewardsToken = (rewardsToken: string) => ({
   rewardsToken
 })
 
-export const toggleInTransaction = (inTransaction: boolean) => ({
+export const toggleInTransaction = (inTransaction: boolean, transactionHash?: string) => ({
   type: types.TOGGLE_IN_TRANSACTION,
-  inTransaction
+  inTransaction,
+  transactionHash
 })
 
 export const updateHatsPrice = (hatsPrice: number) => ({

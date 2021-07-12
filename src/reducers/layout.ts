@@ -7,9 +7,11 @@ const initialState = {
   notification: {
     show: false,
     type: undefined,
-    text: ""
+    text: "",
+    disableAutoHide: undefined
   },
   inTransaction: false,
+  transactionHash: "",
   liquidityPoolID: "" 
 };
 
@@ -32,13 +34,15 @@ export const layoutReducer = (state = initialState, action: any) => {
         notification: {
           show: action.show,
           type: action.notificationType,
-          text: action.text
+          text: action.text,
+          disableAutoHide: action.disableAutoHide
         }
       }
     case TOGGLE_IN_TRANSACTION:
       return {
         ...state,
-        inTransaction: action.inTransaction
+        inTransaction: action.inTransaction,
+        transactionHash: action.transactionHash
       }
     case UPDATE_LIQUIDITY_POOL:
       return {

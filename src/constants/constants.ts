@@ -38,6 +38,8 @@ export enum TransactionStatus {
 
 export const SMALL_SCREEN_BREAKPOINT = "770px";
 
+export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
+
 export enum NotificationType {
   Success = "SUCCESS",
   Error = "ERROR",

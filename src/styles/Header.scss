@@ -46,6 +46,10 @@ header {
         animation: gradient 10s ease infinite;
         background-size: 600px;
         color: $white;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
       }
       @keyframes gradient {
         0% {

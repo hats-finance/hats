@@ -204,13 +204,14 @@ export const copyToClipboard = (value: string) => {
 }
 
 /**
- * Given address and network returns the Etherscan link
- * @param {string} address
- * @param {Networks} network 
+ * Given a value of address or transaction and network returns the Etherscan link
+ * @param {string} value
+ * @param {Networks} network
+ * @param {boolean} isTransaction
  */
-export const linkToEtherscan = (address: string, network: Networks): string => {
+export const linkToEtherscan = (value: string, network: Networks, isTransaction?: boolean): string => {
   const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/address/${address}`;
+  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
 }
 
 /**
