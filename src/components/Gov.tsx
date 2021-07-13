@@ -5,8 +5,7 @@ export default function Gov() {
   return (
     <div className="content gov-wrapper">
       <a target="_blank" rel="noopener noreferrer" href="https://discord.gg/xDphwRGyW7">
-        Forum in Discord
-        <DiscordIcon />
+        Forum in Discord&nbsp; <DiscordIcon />
       </a>
     </div>
   )

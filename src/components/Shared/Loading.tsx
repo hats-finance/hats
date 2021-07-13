@@ -8,10 +8,11 @@ interface IProps {
   right?: string // can be any valid css right value
   spinner?: boolean
   extraText?: string
+  domElement?: HTMLElement // any valid HTML DOM element
 }
 
 export default function Loading(props: IProps) {
-  const { fixed, top, right, spinner, extraText } = props;
+  const { fixed, top, right, spinner, extraText, domElement } = props;
 
   const styles = {
     "top": top ?? "50%",
@@ -28,6 +29,6 @@ export default function Loading(props: IProps) {
     <div className={loadingClass} style={styles}>
       <div className={spinner ? "spinner" : "hat-loader"} />
       {extraText && <span className="extra-text">{extraText}</span>}
-    </div>, document.body
+    </div>, domElement ? domElement : document.body
   )
 }

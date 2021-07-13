@@ -270,32 +270,10 @@ export default function DepositWithdraw(props: IProps) {
         <span>You staked</span>
         <div style={{ position: "relative" }}>{loading ? "-" : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
       </div>
-      {/* <div className="earnings-wrapper">
-        <span>Monthly earnings &nbsp;
-          <Tooltip
-            overlay="Estimated monthly earnings based on total staked amount and rate reward"
-            overlayClassName="tooltip"
-            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-            placement="top">
-            <span><InfoIcon /></span>
-          </Tooltip>
-        </span>
-        <span>{`${millify(yearlyEarnings / 12)}`} Hats</span>
-        <span>&#8776; {`$${millify((yearlyEarnings / 12) * hatsPrice)}`}</span>
-      </div> */}
-      {/* <div className="earnings-wrapper">
-        <span>Yearly earnings &nbsp;
-          <Tooltip
-            overlay="Estimated yearly earnings based on total staked amount and rate reward"
-            overlayClassName="tooltip"
-            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-            placement="top">
-            <span><InfoIcon /></span>
-          </Tooltip>
-        </span>
-        <span>{`${millify(yearlyEarnings)}`} Hats</span>
-        <span>&#8776; {`$${millify(yearlyEarnings * hatsPrice)}`}</span>
-      </div> */}
+      <div className="apy-wrapper">
+        <span>APY</span>
+        <span>{`${millify(props.data.apy, { precision: 3 })}%`}</span>
+      </div>
     </div>
     <div className="seperator" />
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
