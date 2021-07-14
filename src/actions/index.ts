@@ -66,3 +66,8 @@ export const updateWithdrawSafetyPeriod = (withdrawSafetyPeriod: IWithdrawSafety
   type: types.UPDATE_WITHDRAW_SAFETY_PERIOD,
   withdrawSafetyPeriod
 })
+
+export const toggleSubmittingVulnerability = (submittingVulnerability: boolean) => ({
+  type: types.TOGGLE_SUBMITTING_VULNERABILITY,
+  submittingVulnerability
+})

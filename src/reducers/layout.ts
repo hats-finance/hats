@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION, UPDATE_LIQUIDITY_POOL } from '../constants/action-types';
+import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION, TOGGLE_SUBMITTING_VULNERABILITY, UPDATE_LIQUIDITY_POOL } from '../constants/action-types';
 import { getScreenSize } from '../utils';
 
 const initialState = {
@@ -12,7 +12,8 @@ const initialState = {
   },
   inTransaction: false,
   transactionHash: "",
-  liquidityPoolID: "" 
+  liquidityPoolID: "",
+  submittingVulnerability: false
 };
 
 export const layoutReducer = (state = initialState, action: any) => {
@@ -48,6 +49,11 @@ export const layoutReducer = (state = initialState, action: any) => {
       return {
         ...state,
         liquidityPoolID: action.liquidityPoolID
+      }
+    case TOGGLE_SUBMITTING_VULNERABILITY:
+      return {
+        ...state,
+        submittingVulnerability: action.submittingVulnerability
       }
     default: return state;
   }
