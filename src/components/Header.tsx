@@ -55,7 +55,7 @@ export default function Header() {
 
   React.useEffect(() => {
     const getWalletBalance = async () => {
-      fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+      fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, "18");
     }
     if (network === NETWORK && selectedAddress && rewardsToken) {
       getWalletBalance();

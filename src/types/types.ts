@@ -23,6 +23,7 @@ export interface IVault {
   honeyPotBalance: string
   registered: boolean
   withdrawRequests: Array<IPoolWithdrawRequest>
+  stakingTokenDecimals: string
 }
 
 export interface IVaultDescription {

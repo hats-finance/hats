@@ -47,6 +47,9 @@ header {
         background-size: 600px;
         color: $white;
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         &:hover {
           opacity: 0.9;
         }

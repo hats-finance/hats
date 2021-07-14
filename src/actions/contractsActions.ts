@@ -49,11 +49,11 @@ export const getTokenSymbol = async (tokenAddress: string) => {
  * @param {string} tokenAddress
  * @param {string} selectedAddress
  */
-export const getTokenBalance = async (tokenAddress: string, selectedAddress: string) => {
+export const getTokenBalance = async (tokenAddress: string, selectedAddress: string, decimals: string) => {
   try {
     const contract = new Contract(tokenAddress, erc20Abi, infuraProvider);
     const balance: BigNumber = await contract.balanceOf(selectedAddress);
-    return fromWei(balance);
+    return fromWei(balance, decimals);
   } catch (error) {
     console.error (error);
     return "-";
@@ -110,9 +110,9 @@ export const withdrawRequest = async (pid: string, address: string) => {
  * @param {string} address
  * @param {string} amount
  */
-export const depositAndClaim = async (pid: string, address: string, amount: string) => {
+export const depositAndClaim = async (pid: string, address: string, amount: string, decimals: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.deposit(pid, toWei(amount));
+  return await contract.deposit(pid, toWei(amount, decimals));
 }
 
 /**
@@ -120,9 +120,9 @@ export const depositAndClaim = async (pid: string, address: string, amount: stri
  * @param {string} address
  * @param {string} amount
  */
-export const withdrawAndClaim = async (pid: string, address: string, amount: string) => {
+export const withdrawAndClaim = async (pid: string, address: string, amount: string, decimals) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.withdraw(pid, toWei(amount));
+  return await contract.withdraw(pid, toWei(amount, decimals));
 }
 
 /**

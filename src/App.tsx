@@ -26,6 +26,7 @@ function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
@@ -70,11 +71,10 @@ function App() {
 
   useEffect(() => {
     const getHatsPrice = async () => {
-      // TODO: Should be HATS token - e.g. rewards token
-      dispatch(updateHatsPrice(await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")));
+      dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
     }
     getHatsPrice();
-  }, [dispatch])
+  }, [dispatch, rewardsToken])
 
   const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
@@ -89,15 +89,13 @@ function App() {
     }
   }, [loading, error, data, dispatch]);
 
-  const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
+  const vaults: Array<IVault> = useSelector((state: RootState) => state.dataReducer.vaults);
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
   useEffect(() => {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
         vault.apy = await calculateApy(vault, hatsPrice);
-        // TODO: Should be staking token - e.g. vault.stakingToken
-        vault.tokenPrice = await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
       }
       dispatch(updateVaults(vaults));
     }
@@ -105,6 +103,18 @@ function App() {
       calculateVaultsApy();
     }
   }, [dispatch, hatsPrice, vaults])
+
+  useEffect(() => {
+    const calculatetokenPrices = async () => {
+      for (const vault of vaults) {
+        vault.tokenPrice = await getTokenPrice(vault.stakingToken);
+      }
+      dispatch(updateVaults(vaults));
+    }
+    if (vaults) {
+      calculatetokenPrices();
+    }
+  }, [dispatch, vaults])
 
   return (
     <>

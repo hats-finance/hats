@@ -47,7 +47,7 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { name, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests } = props.data; // numberOfApprovedClaims
+  const { name, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
@@ -67,11 +67,11 @@ export default function Vault(props: IProps) {
   // temporary fix to https://github.com/hats-finance/hats/issues/29
   useEffect(() => {
     setTimeout(() => {
-      if (props.data.apy) {
-        setVaultAPY(`${millify(props.data.apy, { precision: 3 })}%`);
+      if (apy) {
+        setVaultAPY(`${millify(apy, { precision: 3 })}%`);
       }
     }, 1000);
-  }, [setVaultAPY, props.data.apy])
+  }, [setVaultAPY, apy])
 
   let description;
   try {
@@ -94,7 +94,7 @@ export default function Vault(props: IProps) {
     let rewardPrice = "-";
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
     if (tokenPrice) {
-      rewardPrice = millify(Number(fromWei(honeyPotBalance)) * rewardPercentage * tokenPrice);
+      rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * rewardPercentage * tokenPrice);
     }
 
 
@@ -138,7 +138,7 @@ export default function Vault(props: IProps) {
         </div>
       </div>
     )
-  }), [tokenPrice, description?.severities, honeyPotBalance, rewardsLevels])
+  }), [tokenPrice, description?.severities, honeyPotBalance, rewardsLevels, stakingTokenDecimals])
 
   return (
     <>
@@ -152,9 +152,8 @@ export default function Vault(props: IProps) {
             {description?.["Project-metadata"]?.name ?? name}
           </div>
         </td>
-        <td>{millify(Number(fromWei(honeyPotBalance)))}</td>
-        {/* <td>{numberWithCommas(Number(numberOfApprovedClaims))}</td> */}
-        <td>{millify(Number(fromWei(totalRewardAmount)))}</td>
+        <td>{millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)))}</td>
+        <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">
           <button

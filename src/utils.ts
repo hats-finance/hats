@@ -100,17 +100,19 @@ export const getEtherBalance = async (network: Networks, selectedAddress: string
 /**
  * Given amount in WEI returns the formatted amount
  * @param {BigNumber | string} wei
+ * @param {string} decimals
  */
-export const fromWei = (wei: BigNumber | string): string => {
-  return ethers.utils.formatEther(wei);
+export const fromWei = (wei: BigNumber | string, decimals = "18"): string => {
+  return ethers.utils.formatUnits(wei, decimals);
 }
 
 /**
  * Given amount in string returns (ethers) BigNumber
  * @param {string} value
+ * @param {string} decimals
  */
-export const toWei = (value: string): BigNumber => {
-  return ethers.utils.parseEther(value);
+export const toWei = (value: string, decimals = "18"): BigNumber => {
+  return ethers.utils.parseUnits(value, decimals);
 }
 
 /**
@@ -128,9 +130,9 @@ export const isDigitsOnly = (value: string): boolean => {
  * @param {string} selectedAddress
  * @param {string} rewardsToken 
  */
-export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string) => {
+export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string, decimals: string) => {
   dispatch(updateWalletBalance(null, null));
-  dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress)));
+  dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress, decimals)));
 }
 
 // TODO: merge getTokenPrice and getTokenMarketCap to one function
@@ -142,7 +144,7 @@ export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selec
 export const getTokenPrice = async (tokenAddress: string) => {
   try {
     const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd`);
-    return data.data[Object.keys(data.data)[0]].usd;
+    return data.data[Object.keys(data.data)[0]]?.usd;
 
   } catch (err) {
     console.error(err);
@@ -156,7 +158,7 @@ export const getTokenPrice = async (tokenAddress: string) => {
 export const getTokenMarketCap = async (tokenAddress: string) => {
   try {
     const data = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/ethereum?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`);
-    return data.data[Object.keys(data.data)[0]].usd_market_cap;
+    return data.data[Object.keys(data.data)[0]]?.usd_market_cap;
   } catch (err) {
     console.error(err);
   }
@@ -168,12 +170,11 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {number} hatsPrice
  */
 export const calculateApy = async (vault: IVault, hatsPrice: number) => {
-  // TODO: Should be staking token - e.g. vault.stakingToken
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
   if (Number(fromWei(vault.totalStaking)) === 0) {
     return 0;
   }
-  return Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice) / Number(fromWei(vault.totalStaking)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf");
+  return Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice) / Number(fromWei(vault.totalStaking)) * await getTokenPrice(vault.stakingToken);
 }
 
 /**

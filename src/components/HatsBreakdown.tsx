@@ -15,6 +15,7 @@ export default function HatsBreakdown() {
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
 
   const stakerAmounts = React.useMemo(() => {
     if (!loading && !error && data && data.stakers) {
@@ -28,22 +29,24 @@ export default function HatsBreakdown() {
 
   React.useEffect(() => {
     const getTotalStaked = async () => {
-      // TODO: should be staking token, e.g. staker.vault.stakingToken
-      const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")))).reduce((a: any, b: any) => a + b, 0);
-      setTotalStaked(totalStaked as any);
+      const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.amount)) * await getTokenPrice(staker.vault.stakingToken)))).reduce((a: any, b: any) => a + b, 0);
+      if (!isNaN(Number(totalStaked))) {
+        setTotalStaked(Number(totalStaked));
+      }
       let amountToSum = 0;
       stakerAmounts.forEach(async (staked: IStaker) => {
         const userDepositSize = Number(fromWei(staked.amount));
-        // TODO: should be staking token, e.g. staked.vault.stakingToken
-        const tokenValue: number = await getTokenPrice("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf")
+        const tokenValue: number = await getTokenPrice(staked.vault.stakingToken)
         let vaultAPY = 0;
-        vaults.forEach((vault: IVault) => {
-          if (staked.vault.stakingToken === vault.stakingToken) {
-            vaultAPY = vault.apy
-          }
-        });
-        amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);
-        setStakingAPY(amountToSum / stakerAmounts.length)
+        if (tokenValue) {
+          vaults.forEach((vault: IVault) => {
+            if (staked.vault.stakingToken === vault.stakingToken) {
+              vaultAPY = vault.apy
+            }
+          });
+          amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);
+          setStakingAPY(amountToSum / stakerAmounts.length);
+        }
       });
     }
     if (stakerAmounts.length > 0) {
@@ -55,11 +58,10 @@ export default function HatsBreakdown() {
 
   React.useEffect(() => {
     const getHatsMarketCap = async () => {
-      // TODO: Should be HATS token - e.g. rewards token
-      setHatsMarketCap(await getTokenMarketCap("0x543Ff227F64Aa17eA132Bf9886cAb5DB55DCAddf"));
+      setHatsMarketCap(await getTokenMarketCap(rewardsToken));
     }
     getHatsMarketCap();
-  }, [])
+  }, [rewardsToken])
 
   return <div className="hats-breakdown-wrapper">
     <div className="logo-wrapper">
@@ -72,11 +74,11 @@ export default function HatsBreakdown() {
       </div>
       <div className="data-square">
         <span>Total Staked</span>
-        {loading ? "-" : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
+        {!totalStaked ? "-" : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
       </div>
       <div className="data-square">
         <span>Staking APY</span>
-        {loading ? "-" : <span>{millify(stakingAPY)}%</span>}
+        {!stakingAPY ? "-" : <span>{millify(stakingAPY)}%</span>}
       </div>
     </div>
     <div className="data-bottom">

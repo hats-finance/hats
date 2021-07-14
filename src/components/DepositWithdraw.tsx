@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
 import Loading from "./Shared/Loading";
-//import InfoIcon from "../assets/icons/info.icon";
+import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
 import * as contractsActions from "../actions/contractsActions";
 import { IPoolWithdrawRequest, IVault } from "../types/types";
@@ -10,8 +10,8 @@ import { getBeneficiaryWithdrawRequests, getStakerData } from "../graphql/subgra
 import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
-//import Tooltip from "rc-tooltip";
-import { Colors, RoutePaths } from "../constants/constants"; // RC_TOOLTIP_OVERLAY_INNER_STYLE
+import Tooltip from "rc-tooltip";
+import { Colors, RoutePaths, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../settings";
@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name, tokenPrice } = props.data; // apy
+  const { id, pid, master, stakingToken, name, tokenPrice, apy, stakingTokenDecimals } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -117,7 +117,7 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
 
-  const canWithdraw = stakedAmount && Number(fromWei(stakedAmount)) >= Number(userInput);
+  const canWithdraw = stakedAmount && Number(fromWei(stakedAmount, stakingTokenDecimals)) >= Number(userInput);
 
   useEffect(() => {
     const checkIsApproved = async () => {
@@ -128,14 +128,14 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     const getTokenData = async () => {
-      setTokenBalance(await contractsActions.getTokenBalance(stakingToken, selectedAddress));
+      setTokenBalance(await contractsActions.getTokenBalance(stakingToken, selectedAddress, stakingTokenDecimals));
       setTokenSymbol(await contractsActions.getTokenSymbol(stakingToken));
     }
     getTokenData();
-  }, [stakingToken, selectedAddress, inTransaction]);
+  }, [stakingToken, selectedAddress, inTransaction, stakingTokenDecimals]);
 
   const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
-  const amountToClaim = millify(Number(fromWei(pendingReward)), { precision: 3 });
+  const amountToClaim = millify(Number(fromWei(pendingReward, stakingTokenDecimals)), { precision: 3 });
 
   useEffect(() => {
     const getPendingReward = async () => {
@@ -143,13 +143,6 @@ export default function DepositWithdraw(props: IProps) {
     }
     getPendingReward();
   }, [master.address, selectedAddress, pid, inTransaction])
-
-  // const  yearlyEarnings= React.useMemo(() => {
-  //   if (apy && tokenPrice && hatsPrice) {
-  //     return apy * Number(fromWei(stakedAmount)) * tokenPrice;
-  //   }
-  //   return 0;
-  // }, [apy, tokenPrice, hatsPrice, stakedAmount])
 
   const approveToken = async () => {
     setPendingWalletAction(true);
@@ -167,25 +160,25 @@ export default function DepositWithdraw(props: IProps) {
   const depositAndClaim = async () => {
     setPendingWalletAction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.depositAndClaim(pid, master.address, userInput),
+      async () => contractsActions.depositAndClaim(pid, master.address, userInput, stakingTokenDecimals),
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
   const withdrawAndClaim = async () => {
     setPendingWalletAction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.withdrawAndClaim(pid, master.address, userInput),
+      async () => contractsActions.withdrawAndClaim(pid, master.address, userInput, stakingTokenDecimals),
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setWithdrawRequests(undefined);
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -208,8 +201,8 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -268,11 +261,19 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="staked-wrapper">
         <span>You staked</span>
-        <div style={{ position: "relative" }}>{loading ? "-" : <span>{numberWithCommas(Number(fromWei(stakedAmount)))}</span>}</div>
+        <div style={{ position: "relative" }}>{loading ? "-" : <span>{numberWithCommas(Number(fromWei(stakedAmount, stakingTokenDecimals)))}</span>}</div>
       </div>
       <div className="apy-wrapper">
-        <span>APY</span>
-        <span>{`${millify(props.data.apy, { precision: 3 })}%`}</span>
+        <span>
+          APY
+          <Tooltip
+            overlayClassName="tooltip"
+            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+            overlay="Estimated yearly earnings based on total staked amount and rate reward">
+            <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon /></div>
+          </Tooltip>
+        </span>
+        <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
       </div>
     </div>
     <div className="seperator" />

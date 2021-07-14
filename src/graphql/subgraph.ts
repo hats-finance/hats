@@ -35,6 +35,7 @@ export const GET_VAULTS = gql`
         createdAt
         expiryTime
       }
+      stakingTokenDecimals
     }
   }
 `;
