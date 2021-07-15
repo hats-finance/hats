@@ -4,10 +4,11 @@ import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
-import { getBlockNumber, getTokenBalance } from "./actions/contractsActions";
+import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IVault, IWithdrawSafetyPeriod } from "./types/types";
 import { NETWORK } from "./settings";
+import moment from "moment";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -217,23 +218,19 @@ export const linkToEtherscan = (value: string, network: Networks, isTransaction?
 
 /**
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and the amount of seconds until we switch.
- * Negative number of seconds means when safty period starts, and positive number means when it ends.
+ * Positive number of seconds means when safty period starts, and negetive number means when it ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
  * @returns {IWithdrawSafetyPeriod}
  */
-export const getWithdrawSafetyPeriod = async (withdrawPeriod: string, safetyPeriod: string) => {
+export const getWithdrawSafetyPeriod = (withdrawPeriod: string, safetyPeriod: string) => {
   const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
-    isSafetyPeriod: true,
+    isSafetyPeriod: false,
     timeLeftForSafety: 0
   }
-  const currentBlockNumber = await getBlockNumber();
-  if (currentBlockNumber) {
-    const blocksLeftForSafety = (currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod))) + (Number(safetyPeriod) - Number((withdrawPeriod)));
-    withdrawSafetyPeriod.isSafetyPeriod = currentBlockNumber % (Number(withdrawPeriod) + Number(safetyPeriod)) >= Number(withdrawPeriod);
-    withdrawSafetyPeriod.timeLeftForSafety = blocksLeftForSafety * 15;
-    return withdrawSafetyPeriod;
-  }
+  const currentTimestamp = moment().unix();
+  withdrawSafetyPeriod.isSafetyPeriod = (currentTimestamp % (Number(withdrawPeriod) + Number(safetyPeriod))) >= Number(withdrawPeriod);
+  withdrawSafetyPeriod.timeLeftForSafety = Number(withdrawPeriod) - (currentTimestamp % (Number(withdrawPeriod) + Number(safetyPeriod)));
   return withdrawSafetyPeriod;
 }
 

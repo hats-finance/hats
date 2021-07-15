@@ -63,7 +63,7 @@ function App() {
       if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
         const { rewardsToken, withdrawPeriod, safetyPeriod } = dataRewardsToken.masters[0];
         dispatch(updateRewardsToken(rewardsToken));
-        dispatch(updateWithdrawSafetyPeriod(await getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
+        dispatch(updateWithdrawSafetyPeriod(getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
       }
     }
     getWithdrawSafetyPeriodData();
