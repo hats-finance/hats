@@ -55,7 +55,7 @@ export const getTokenBalance = async (tokenAddress: string, selectedAddress: str
     const balance: BigNumber = await contract.balanceOf(selectedAddress);
     return fromWei(balance, decimals);
   } catch (error) {
-    console.error (error);
+    console.error(error);
     return "-";
   }
 }
@@ -176,13 +176,17 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   try {
     const transaction = await tx();
     await onWalletAction();
-    dispatch(toggleInTransaction(true, transaction.hash));
-    const receipt = await transaction.wait(confirmations);
-    if (receipt.status === TransactionStatus.Success) {
-      await onSuccess();
-      dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
+    if (transaction) {
+      dispatch(toggleInTransaction(true, transaction.hash));
+      const receipt = await transaction.wait(confirmations);
+      if (receipt.status === TransactionStatus.Success) {
+        await onSuccess();
+        dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
+      } else {
+        throw new Error(DEFAULT_ERROR_MESSAGE);
+      }
     } else {
-      throw new Error();
+      throw new Error(DEFAULT_ERROR_MESSAGE);
     }
   } catch (error) {
     console.error(error);

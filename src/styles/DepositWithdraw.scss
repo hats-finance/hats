@@ -53,7 +53,7 @@
   .balance-wrapper {
     position: relative;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-top: 20px;
     margin-bottom: 10px;
   }
@@ -79,6 +79,7 @@
       }
       span {
         margin-left: 10px;
+        white-space: nowrap;
       }
       input {
         background-color: transparent;

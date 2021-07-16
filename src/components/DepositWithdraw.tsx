@@ -242,8 +242,7 @@ export default function DepositWithdraw(props: IProps) {
       />}
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
-        <span style={{ color: "white" }}>You stake</span>
-        {!tokenBalance ? <div style={{ position: "relative", minWidth: "50px" }}>-</div> : <span>{`${tokenSymbol} Balance: ${millify(Number(tokenBalance))}`}</span>}
+        {`${tokenSymbol} Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))}`}
       </div>
       <div>
         <div className={amountWrapperClass}>
