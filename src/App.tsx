@@ -32,8 +32,8 @@ function App() {
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
 
   useEffect(() => {
-    const network = getNetworkNameByChainId(provider.chainId);
-    if (provider && network !== NETWORK) {
+    const network = getNetworkNameByChainId(provider?.chainId);
+    if (provider && provider?.chainId && network !== NETWORK) {
       dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`));
     }
   }, [dispatch, provider])
