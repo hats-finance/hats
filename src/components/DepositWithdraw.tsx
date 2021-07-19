@@ -1,6 +1,6 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, numberWithCommas } from "../utils";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name, tokenPrice, apy, stakingTokenDecimals } = props.data;
+  const { id, pid, master, stakingToken, name, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -89,7 +89,6 @@ export default function DepositWithdraw(props: IProps) {
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  //const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
@@ -101,12 +100,19 @@ export default function DepositWithdraw(props: IProps) {
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const [termsOfUse, setTermsOfUse] = useState(false);
 
-  const stakedAmount: BigNumber = useMemo(() => {
+  const [deposited, setDeposited] = useState(BigNumber.from(0));
+  const [availableToWithdraw, setAvailableToWithdraw] = useState(BigNumber.from(0));
+  const [withdrawAmount, setWithdrawAmount] = useState(BigNumber.from(0));
+  const [userShares, setUserShares] = useState(BigNumber.from(0));
+
+  useEffect(() => {
     if (!loading && !error && data && data.stakers) {
-      return data.stakers[0]?.amount ?? BigNumber.from(0);
+      setDeposited(data.stakers[0]?.depositAmount);
+      setAvailableToWithdraw(calculateAmountAvailableToWithdraw(data.stakers[0]?.shares, honeyPotBalance, totalUsersShares));
+      setWithdrawAmount(data.stakers[0]?.withdrawAmount);
+      setUserShares(BigNumber.from(data.stakers[0]?.shares));
     }
-    return BigNumber.from(0);
-  }, [loading, error, data])
+  }, [loading, error, data, honeyPotBalance, totalUsersShares])
 
   useEffect(() => {
     if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.vaults) {
@@ -117,7 +123,7 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
 
-  const canWithdraw = stakedAmount && Number(fromWei(stakedAmount, stakingTokenDecimals)) >= Number(userInput);
+  const canWithdraw = availableToWithdraw && Number(fromWei(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
   useEffect(() => {
     const checkIsApproved = async () => {
@@ -135,7 +141,7 @@ export default function DepositWithdraw(props: IProps) {
   }, [stakingToken, selectedAddress, inTransaction, stakingTokenDecimals]);
 
   const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
-  const amountToClaim = millify(Number(fromWei(pendingReward, stakingTokenDecimals)), { precision: 3 });
+  const amountToClaim = millify(Number(fromWei(pendingReward)), { precision: 3 });
 
   useEffect(() => {
     const getPendingReward = async () => {
@@ -164,21 +170,21 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`}`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
   const withdrawAndClaim = async () => {
     setPendingWalletAction(true);
     await contractsActions.createTransaction(
-      async () => contractsActions.withdrawAndClaim(pid, master.address, userInput, stakingTokenDecimals),
+      async () => contractsActions.withdrawAndClaim(pid, master.address, calculateActualWithdrawValue(availableToWithdraw, userInput, userShares, stakingTokenDecimals)),
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setWithdrawRequests(undefined);
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`}`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -201,8 +207,8 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("0");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken, stakingTokenDecimals);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward, stakingTokenDecimals)))} HATS`);
+        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     dispatch(toggleInTransaction(false));
   }
 
@@ -255,12 +261,22 @@ export default function DepositWithdraw(props: IProps) {
             <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than staked</span>}
+          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
       <div className="staked-wrapper">
-        <span>You staked</span>
-        <div style={{ position: "relative" }}>{loading ? "-" : <span>{numberWithCommas(Number(fromWei(stakedAmount, stakingTokenDecimals)))}</span>}</div>
+        <div>
+          <span>Your deposited</span>
+          <span>{fromWei(deposited, stakingTokenDecimals)}</span>
+        </div>
+        <div>
+          <span>You withdrawn</span>
+          <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
+        </div>
+        <div>
+          <span>Available to withdraw</span>
+          <span>{fromWei(availableToWithdraw, stakingTokenDecimals)}</span>
+        </div>
       </div>
       <div className="apy-wrapper">
         <span>

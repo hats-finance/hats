@@ -112,10 +112,15 @@
   }
   .staked-wrapper {
     display: flex;
-    justify-content: space-between;
     font-size: $moderate;
     color: $white;
     margin: 20px 0;
+    flex-direction: column;
+    > div {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0px;
+    }
   }
   .apy-wrapper {
     display: flex;

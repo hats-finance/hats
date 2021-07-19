@@ -36,6 +36,7 @@ export const GET_VAULTS = gql`
         expiryTime
       }
       stakingTokenDecimals
+      totalUsersShares
     }
   }
 `;
@@ -73,7 +74,6 @@ export const getStakerByAddress = (stakerAddress: string) => {
       stakers (where: { address: "${stakerAddress}" }) {
         id
         createdAt
-        amount
         rewardPaid
         vault {
           id
@@ -87,7 +87,9 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
   return gql`
     {
       stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
-        amount
+        shares
+        depositAmount
+        withdrawAmount
       }
     }
   `;
@@ -97,7 +99,9 @@ export const getStakerAmounts = (stakerAddress: string) => {
   return gql`
     {
       stakers (where: { address: "${stakerAddress}" }) {
-        amount
+        shares
+        depositAmount
+        withdrawAmount
         vault {
           stakingToken
         }

@@ -24,6 +24,7 @@ export interface IVault {
   registered: boolean
   withdrawRequests: Array<IPoolWithdrawRequest>
   stakingTokenDecimals: string
+  totalUsersShares: string
 }
 
 export interface IVaultDescription {
@@ -73,8 +74,10 @@ export interface IStaker {
   createdAt: string
   address: string
   vault: IVault
-  amount: string
   rewardPaid: string
+  shares: string
+  depositAmount: string
+  withdrawAmount: string
 }
 
 export interface IMaster {

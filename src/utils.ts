@@ -131,9 +131,9 @@ export const isDigitsOnly = (value: string): boolean => {
  * @param {string} selectedAddress
  * @param {string} rewardsToken 
  */
-export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string, decimals: string) => {
+export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selectedAddress: string, rewardsToken: string) => {
   dispatch(updateWalletBalance(null, null));
-  dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress, decimals)));
+  dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress)));
 }
 
 // TODO: merge getTokenPrice and getTokenMarketCap to one function
@@ -249,3 +249,24 @@ export const isMobile = (): boolean => {
     )
   );
 };
+
+/**
+ * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares
+ * @param {string} userShares
+ * @param {string} poolBalance
+ * @param {string} totalUsersShares
+ */
+export const calculateAmountAvailableToWithdraw = (userShares: string, poolBalance: string, totalUsersShares: string) => {
+  return BigNumber.from(userShares).mul(BigNumber.from(poolBalance)).div(BigNumber.from(totalUsersShares));
+}
+
+/**
+ * Calculates the value we send to the contract when a user wants to withdraw
+ * @param {BigNumber} amountAvailableToWithdraw
+ * @param {string} userInput The actual number the user insterted
+ * @param {BigNumber} userShares
+ * @param {string} decimals
+ */
+export const calculateActualWithdrawValue = (amountAvailableToWithdraw: BigNumber, userInput: string, userShares: BigNumber, decimals: string) => {
+  return toWei(userInput, decimals).mul(userShares).div(amountAvailableToWithdraw).toString();
+}

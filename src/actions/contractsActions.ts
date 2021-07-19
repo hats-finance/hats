@@ -49,7 +49,7 @@ export const getTokenSymbol = async (tokenAddress: string) => {
  * @param {string} tokenAddress
  * @param {string} selectedAddress
  */
-export const getTokenBalance = async (tokenAddress: string, selectedAddress: string, decimals: string) => {
+export const getTokenBalance = async (tokenAddress: string, selectedAddress: string, decimals = "18") => {
   try {
     const contract = new Contract(tokenAddress, erc20Abi, infuraProvider);
     const balance: BigNumber = await contract.balanceOf(selectedAddress);
@@ -117,12 +117,13 @@ export const depositAndClaim = async (pid: string, address: string, amount: stri
 
 /**
  * Withdraw and claim (if acceptable)
+ * @param {string} pid
  * @param {string} address
  * @param {string} amount
  */
-export const withdrawAndClaim = async (pid: string, address: string, amount: string, decimals) => {
+export const withdrawAndClaim = async (pid: string, address: string, amount: string) => {
   const contract = new Contract(address, vaultAbi, signer);
-  return await contract.withdraw(pid, toWei(amount, decimals));
+  return await contract.withdraw(pid, amount);
 }
 
 /**
