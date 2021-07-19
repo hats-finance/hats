@@ -106,7 +106,7 @@ export default function DepositWithdraw(props: IProps) {
   const [userShares, setUserShares] = useState(BigNumber.from(0));
 
   useEffect(() => {
-    if (!loading && !error && data && data.stakers) {
+    if (!loading && !error && data && data.stakers && data.stakers.length > 0) {
       setDeposited(data.stakers[0]?.depositAmount);
       setAvailableToWithdraw(calculateAmountAvailableToWithdraw(data.stakers[0]?.shares, honeyPotBalance, totalUsersShares));
       setWithdrawAmount(data.stakers[0]?.withdrawAmount);
@@ -266,7 +266,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="staked-wrapper">
         <div>
-          <span>Your deposited</span>
+          <span>You deposited</span>
           <span>{fromWei(deposited, stakingTokenDecimals)}</span>
         </div>
         <div>
