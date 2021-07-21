@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: column;
   background-color: $field-blue;
+  height: 750px;
   .pool-wrapper {
     display: flex;
     align-items: center;
@@ -53,9 +54,9 @@
   .balance-wrapper {
     position: relative;
     display: flex;
-    justify-content: flex-end;
     margin-top: 20px;
     margin-bottom: 10px;
+    color: $white;
   }
   .amount-wrapper {
     display: flex;
@@ -170,7 +171,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: auto;
     margin-bottom: 40px;
     align-items: center;
     .action-btn {

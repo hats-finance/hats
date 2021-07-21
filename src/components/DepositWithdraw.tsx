@@ -257,7 +257,7 @@ export default function DepositWithdraw(props: IProps) {
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.icon} alt="project logo" />}<span>{description?.["Project-metadata"]?.name}</span></div>
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.icon} alt="project logo" />}<span>{tokenSymbol}</span></div>
             <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -266,7 +266,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="staked-wrapper">
         <div>
-          <span>Deposited</span>
+          <span>Staked</span>
           <span>{fromWei(deposited, stakingTokenDecimals)}</span>
         </div>
         <div>

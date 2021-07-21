@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault";
@@ -6,7 +6,7 @@ import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { IVault, IWithdrawSafetyPeriod } from "../types/types";
+import { IVault, IVaultDescription, IWithdrawSafetyPeriod } from "../types/types";
 import moment from "moment";
 import Tooltip from "rc-tooltip";
 import InfoIcon from "../assets/icons/info.icon";
@@ -18,6 +18,20 @@ export default function Honeypots() {
   const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
   const withdrawSafetyPeriodData: IWithdrawSafetyPeriod = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
   const safetyPeriodDate = moment().add(Math.abs(withdrawSafetyPeriodData.timeLeftForSafety), "seconds").local().format('DD-MM-YYYY HH:mm');
+  const [selectedVault, setSelectedVault] = useState("");
+  const [vaultIcon, setVaultIcon] = useState("");
+
+  useEffect(() => {
+    if (modalData) {
+      try {
+        const description: IVaultDescription = JSON.parse((modalData as any).description);
+        setSelectedVault(description?.["Project-metadata"]?.name);
+        setVaultIcon(description?.["Project-metadata"]?.icon);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }, [modalData])
 
   const vaults = vaultsData.map((vault: IVault) => {
     if (!vault.liquidityPool && vault.registered) {
@@ -54,7 +68,6 @@ export default function Honeypots() {
               <th style={{ width: "30px" }}></th>
               <th>PROJECT NAME</th>
               <th>TOTAL VAULT</th>
-              {/* <th>#VULNERABILITIES</th> */}
               <th>FUNDS GIVEN</th>
               <th>APY</th>
               <th></th>
@@ -63,7 +76,7 @@ export default function Honeypots() {
           </tbody>
         </table>}
       {showModal &&
-        <Modal title="" setShowModal={setShowModal} height="fit-content" >
+        <Modal title={selectedVault} setShowModal={setShowModal} height="fit-content" maxHeight="100vh" icon={vaultIcon}>
           <DepositWithdraw data={modalData as any} setShowModal={setShowModal} />
         </Modal>}
     </div>

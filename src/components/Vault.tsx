@@ -156,7 +156,7 @@ export default function Vault(props: IProps) {
             {description?.["Project-metadata"]?.name}
           </div>
         </td>
-        <td>{millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)))}</td>
+        <td>{millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
         <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">

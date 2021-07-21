@@ -38,6 +38,13 @@
       top: 0;
       z-index: 1;
       background-color: $field-blue;
+      .name-icon-wrapper {
+        display: flex;
+        align-items: center;
+        img {
+          margin-right: 13px;
+        }
+      }
       .close {
         background-color: transparent;
         color: $turquoise;

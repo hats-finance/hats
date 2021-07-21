@@ -11,14 +11,15 @@ interface IProps {
   height?: string // can be any valid css height value
   width?: string // can be any valid css width value
   maxWidth?: string // can be any valid css max-width value
-  minHeight?: string // can be any valid css max-height value
+  maxHeight?: string // can be any valid css min-height value
+  icon?: string // link to an icon/symbol
 }
 
 export default function Modal(props: IProps) {
   document.documentElement.style.setProperty("--modal-height", props.height ?? "100vh");
   document.documentElement.style.setProperty("--modal-width", props.width ?? "50%");
   document.documentElement.style.setProperty("--modal-max-width", props.maxWidth ?? "600px");
-  document.documentElement.style.setProperty("--modal-max-height", props.minHeight ?? "fit-content");
+  document.documentElement.style.setProperty("--modal-max-height", props.maxHeight ?? "100vh");
 
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
 
@@ -47,7 +48,10 @@ export default function Modal(props: IProps) {
     <div className="modal-wrapper" onClick={onBackdropClick}>
       <div className="modal-content-wrapper">
         <div className="modal-top">
-          <div>{props.title}</div>
+          <div className="name-icon-wrapper">
+            {props.icon && <img src={props.icon} alt="icon" />}
+            {props.title}
+          </div>
           <button
             className="close"
             onClick={() => props.setShowModal(false)}>&times;</button>
