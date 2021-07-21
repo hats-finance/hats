@@ -24,11 +24,17 @@ export default function Sidebar() {
   const pools = poolsData.filter((element: IVault) => element.liquidityPool);
 
   const poolsLinks = pools.map((pool: IVault) => {
-    return (
-      <div key={pool.id} className="pool-link-wrapper">
-        <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {pool.name.split(' ', 1)[0]}</span>
-      </div>
-    )
+    try {
+      const description = JSON.parse(pool?.description as any);
+      return (
+        <div key={pool.id} className="pool-link-wrapper">
+          <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {description?.["Project-metadata"]?.name}</span>
+        </div>
+      )
+    } catch (error) {
+      console.error(error);
+    }
+    return undefined;
   })
 
   return (

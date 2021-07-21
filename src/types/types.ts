@@ -1,7 +1,6 @@
 export interface IVault {
   id: string
   pid: string
-  name: string
   stakingToken: string
   stakers: Array<IStaker>
   totalStaking: string

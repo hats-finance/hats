@@ -47,7 +47,7 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { name, totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data;
+  const { totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
@@ -57,12 +57,16 @@ export default function Vault(props: IProps) {
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const withdrawRequest = withdrawRequests.filter((request: IPoolWithdrawRequest) => request.beneficiary === selectedAddress);
 
+  // TODO: This is a temp fix to the issue when the countdown gets to minus value once it reaches 0.
+  const [timerChanged, setTimerChanged] = useState(false);
+
   useEffect(() => {
     if (selectedAddress) {
       setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime)), moment.unix(Number(withdrawRequest[0]?.expiryTime))));
       setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime))));
     }
   }, [selectedAddress, withdrawRequest])
+
 
   // temporary fix to https://github.com/hats-finance/hats/issues/29
   useEffect(() => {
@@ -148,8 +152,8 @@ export default function Vault(props: IProps) {
         </td>
         <td>
           <div className="project-name-wrapper">
-            <img src={description?.["Project-metadata"].icon} alt="project logo" />
-            {description?.["Project-metadata"]?.name ?? name}
+            <img src={description?.["Project-metadata"]?.icon} alt="project logo" />
+            {description?.["Project-metadata"]?.name}
           </div>
         </td>
         <td>{millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)))}</td>
@@ -158,17 +162,18 @@ export default function Vault(props: IProps) {
         <td className="action-wrapper">
           <button
             className="action-btn deposit-withdraw"
-            onClick={() => { props.setShowModal(true); props.setModalData(props.data) }}
+            onClick={() => { props.setShowModal(true); props.setModalData(props.data); }}
             disabled={!isProviderAndNetwork(provider)}>
             DEPOSIT / WITHDRAW
           </button>
-          {selectedAddress && isPendingWithdraw && selectedAddress &&
+          {selectedAddress && isPendingWithdraw && !isWithdrawable &&
             <>
               <div className="countdown-wrapper">
                 <WithdrawCountdown
                   endDate={withdrawRequest[0]?.withdrawEnableTime}
                   compactView
                   onEnd={() => {
+                    setTimerChanged(!timerChanged);
                     setIsPendingWithdraw(false);
                     setIsWithdrawable(true);
                   }}
@@ -184,6 +189,7 @@ export default function Vault(props: IProps) {
                   endDate={withdrawRequest[0]?.expiryTime}
                   compactView
                   onEnd={() => {
+                    setTimerChanged(!timerChanged);
                     setIsWithdrawable(false);
                   }}
                 />

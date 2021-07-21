@@ -5,7 +5,6 @@ export const GET_VAULTS = gql`
     vaults {
       id
       pid
-      name
       stakingToken
       totalStaking
       totalReward

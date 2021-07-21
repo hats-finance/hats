@@ -14,7 +14,7 @@ interface IProps {
 export default function WithdrawCountdown(props: IProps) {
   const { endDate, compactView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
-  const [state, setState] = useState({
+  const [timer, setTimer] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
@@ -53,7 +53,7 @@ export default function WithdrawCountdown(props: IProps) {
         (seconds as any) = `0${seconds}`;
       }
 
-      setState({ days: days, hours: hours, minutes, seconds });
+      setTimer({ days: days, hours: hours, minutes: minutes, seconds: seconds });
     }
   }, [countdownDate, onEnd]);
 
@@ -71,22 +71,22 @@ export default function WithdrawCountdown(props: IProps) {
 
   return (
     <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`} style={{ color: `${props.textColor}` }}>
-      {state.days > 0 && <div className="time-element">
-        <span className="value">{state.days || '00'}</span>
-        <span className="type">{String(state.days) === "1" ? "DAY" : "DAYS"}</span>
+      {timer.days > 0 && <div className="time-element">
+        <span className="value">{timer.days || '00'}</span>
+        <span className="type">{String(timer.days) === "1" ? "DAY" : "DAYS"}</span>
       </div>}
       <div className="time-element">
-        <span className="value">{state.hours || '00'}</span>
-        <span className="type">{String(state.hours) === "01" ? "HOUR" : "HOURS"}</span>
+        <span className="value">{timer.hours || '00'}</span>
+        <span className="type">{String(timer.hours) === "01" ? "HOUR" : "HOURS"}</span>
       </div>
       <div className="time-element">
-        <span className="value">{state.minutes || '00'}</span>
-        <span className="type">{String(state.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>
+        <span className="value">{timer.minutes || '00'}</span>
+        <span className="type">{String(timer.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>
       </div>
-      {String(state.days) === "0" && (
+      {String(timer.days) === "0" && (
         <div className="time-element">
-          <span className="value">{state.seconds || '00'}</span>
-          <span className="type">{String(state.seconds) === "01" ? "SECOND" : "SECONDS"}</span>
+          <span className="value">{timer.seconds || '00'}</span>
+          <span className="type">{String(timer.seconds) === "01" ? "SECOND" : "SECONDS"}</span>
         </div>
       )}
     </div>

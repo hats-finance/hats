@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, name, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data;
+  const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("0");
   const [isApproved, setIsApproved] = useState(false);
@@ -227,7 +227,7 @@ export default function DepositWithdraw(props: IProps) {
       <div className="pool-wrapper">
         <div className="pool-title-wrapper">
           <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="40px" />
-          <span className="pool-name">{name.split(' ')[0]}</span>
+          <span className="pool-name">{description?.["Project-metadata"]?.name}</span> 
         </div>
         <div>
           <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" width="40px" />
@@ -254,10 +254,10 @@ export default function DepositWithdraw(props: IProps) {
         <div className={amountWrapperClass}>
           <div className="top">
             <span>Vault token</span>
-            <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice)}`}</span>
+            <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"].icon} alt="project logo" />}<span>{name}</span></div>
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.icon} alt="project logo" />}<span>{description?.["Project-metadata"]?.name}</span></div>
             <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -266,11 +266,11 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       <div className="staked-wrapper">
         <div>
-          <span>You deposited</span>
+          <span>Deposited</span>
           <span>{fromWei(deposited, stakingTokenDecimals)}</span>
         </div>
         <div>
-          <span>You withdrawn</span>
+          <span>Withdrawn</span>
           <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
         </div>
         <div>

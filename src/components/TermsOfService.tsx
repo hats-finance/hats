@@ -4,7 +4,7 @@ import "../styles/TermsOfService.scss";
 export default function TermsOfService() {
   return (
     <div className="content terms-of-service-wrapper" >
-      <p ><span >Last Revised: July 5, 2021</span></p>
+      <p ><span >Last Revised: July 11, 2021</span></p>
       <p ><span ></span></p>
       <p ><span >Incentive Alignment Ltd., a company incorporated in the British Virgin Islands
         (&ldquo;</span><span >IA</span><span >&rdquo;, &ldquo;</span><span >we</span><span
@@ -14,7 +14,7 @@ export default function TermsOfService() {
             &ldquo;</span><span >Site</span><span >&rdquo;), a website that provides information and hosts
               a user interface (the &ldquo;</span><span >Interface</span><span >&rdquo;) to a decentralized
                 protocol on the Ethereum blockchain that intend to incentivise white hat hackers/auditors with funds that are
-                being collected from projects and their token holders(the &ldquo;</span><span >Protocol</span><span
+                being collected from projects and their token holders (the &ldquo;</span><span >Protocol</span><span
                 >&rdquo;). Each User may use the Site and/or Interface in accordance with, and subject to, the terms
           and conditions hereunder.&nbsp;</span></p>
       <b>Acceptance of the Terms</b>
@@ -73,12 +73,15 @@ export default function TermsOfService() {
           any third party, nor are we liable, or will we be held liable, for any damage that you may suffer as a result of
           interacting with or using any of the mentioned or unmentioned third parties.</span></p>
       <p id="h.gjdgxs"><span >Staking; Risk Disclosures Relating to the Protocol. </span><span
-      >By staking crypto-assets within the Protocol, you will </span><span >be eligible to
+      >By staking crypto-assets within the Protocol, you might be eligible to
         receive certain rewards, as determined by the Protocol. However, by staking crypto-assets in the Protocol you also
         assume the risk that a security vulnerability will be detected in the smart contract associated with the
         applicable pool into which you have staked your crypto-assets, in which case all or part of your crypto-assets
         will be released to the detector of such security vulnerability. By staking any crypto-assets within the protocol,
         you knowingly and voluntarily assume such risk.</span></p>
+      <p>
+        Payments to Detectors of Vulnerabilities. The Interface enables detectors of vulnerabilities in projects that use the Protocol, to submit the vulnerabilities that they have detected. The vault associated with each project using the Protocol is managed by a committee. The committee will determine the award, if any, to which a detector of a vulnerability may be entitled. The committee is not under any obligation or commitment to provide any award, or any minimal amount of award. Neither the members of the committee nor the Interface will have any liability of any nature towards the detector of a vulnerability, in the event that the committee does not determine an award in respect of a particular detected vulnerability, or does not award in an amount of which the detector is satisfied. The committee members shall be third party beneficiaries of the disclaimers and liability limitation in this paragraph.
+      </p>
       <p ><span >Risk Disclosures Relating to Blockchain</span><span >. By utilizing the
         Interface, you represent that you understand the inherent risks associated with cryptographic systems; and warrant
         that you have an understanding of the usage and intricacies of cryptographic tokens, digital assets, blockchains
@@ -347,6 +350,8 @@ export default function TermsOfService() {
       <p ><span >Notwithstanding the foregoing, IA may seek injunctive relief in any court of
         competent jurisdiction.</span></p>
       <p ><span ></span></p>
+      <b>Taxes</b>
+      <p>You agree that you are responsible for consulting your own tax advisor as to the tax consequences associated with the use of the Interface, any vault and the Protocol, staking activities, or the receipt of any tokens, awards or payments. The tax rules governing such matters are complex, change frequently and depend on the individual taxpayer’s situation. By using or participating in the Protocol, any staking activities, the Interface or any vault, you acknowledge that any tax liability or other adverse tax consequences to you resulting from such usage or participation will be the responsibility of, and will be borne entirely by, you. YOU ARE THEREFORE ENCOURAGED TO CONSULT YOUR OWN TAX ADVISOR BEFORE USING OR PARTICIPATING IN THE PROTOCOL, ANY STAKING ACTIVITIES, ANY VAULT OR THE INTERFACE. THE PROTOCOL IS UNHOSTED AND THEREFORE NEITHER THE PROTOCOL NOR THE INTERFACE WITHHOLD ANY TAXES. YOU ARE RESPONSIBLE FOR REPORTING ANY INCOME TO YOUR APPLICABLE TAX AUTHORITIES.</p>
       <b>General</b>
       <p style={{ marginBottom: "150px" }}><span >&nbsp;(a) These Terms constitute the entire terms and conditions between you and IA
         relating to the subject matter herein and supersedes any and all prior or contemporaneous written or oral
