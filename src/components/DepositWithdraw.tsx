@@ -227,7 +227,7 @@ export default function DepositWithdraw(props: IProps) {
       <div className="pool-wrapper">
         <div className="pool-title-wrapper">
           <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="40px" />
-          <span className="pool-name">{description?.["Project-metadata"]?.name}</span> 
+          <span className="pool-name">{description?.["Project-metadata"]?.name}</span>
         </div>
         <div>
           <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" width="40px" />
@@ -248,7 +248,11 @@ export default function DepositWithdraw(props: IProps) {
       />}
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
-        {`${tokenSymbol} Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))}`}
+        {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${tokenSymbol}`}
+        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw)))} ${tokenSymbol}`}
+        <button
+          className="max-button"
+          onClick={() => setUserInput(tab === "deposit" ? tokenBalance : availableToWithdraw.toString())}>(Max)</button>
       </div>
       <div>
         <div className={amountWrapperClass}>
@@ -257,7 +261,7 @@ export default function DepositWithdraw(props: IProps) {
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.icon} alt="project logo" />}<span>{tokenSymbol}</span></div>
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.tokenIcon} alt="project logo" />}<span>{tokenSymbol}</span></div>
             <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
@@ -291,7 +295,6 @@ export default function DepositWithdraw(props: IProps) {
         <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
       </div>
     </div>
-    <div className="seperator" />
     {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
     {tab === "deposit" && isApproved && (
       <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
@@ -321,7 +324,7 @@ export default function DepositWithdraw(props: IProps) {
         </button>}
       {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
         <button
-          disabled={!isApproved || !canWithdraw}
+          disabled={!isApproved || !canWithdraw || availableToWithdraw.eq(0)}
           className="action-btn"
           onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
       <button onClick={async () => await claim()} disabled={!isApproved || pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>

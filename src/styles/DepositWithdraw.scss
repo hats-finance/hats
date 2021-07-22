@@ -57,6 +57,14 @@
     margin-top: 20px;
     margin-bottom: 10px;
     color: $white;
+    display: flex;
+    align-items: center;
+    .max-button {
+      color: $turquoise;
+      background: none;
+      height: fit-content;
+      padding: 0;
+    }
   }
   .amount-wrapper {
     display: flex;
@@ -131,6 +139,9 @@
     padding-bottom: 10px;
     align-items: center;
     color: $white;
+    padding-bottom: 25px;
+    border-bottom: 1px solid $turquoise;
+    margin-bottom: 25px;
     span:nth-child(1) {
       display: flex;
       align-items: center;
