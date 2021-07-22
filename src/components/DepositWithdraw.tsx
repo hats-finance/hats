@@ -249,10 +249,10 @@ export default function DepositWithdraw(props: IProps) {
     <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
       <div className="balance-wrapper">
         {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${tokenSymbol}`}
-        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw)))} ${tokenSymbol}`}
+        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw, stakingTokenDecimals)))} ${tokenSymbol}`}
         <button
           className="max-button"
-          onClick={() => setUserInput(tab === "deposit" ? tokenBalance : availableToWithdraw.toString())}>(Max)</button>
+          onClick={() => setUserInput(tab === "deposit" ? tokenBalance : fromWei(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
       </div>
       <div>
         <div className={amountWrapperClass}>
@@ -277,10 +277,10 @@ export default function DepositWithdraw(props: IProps) {
           <span>Withdrawn</span>
           <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
         </div>
-        <div>
+        {/* <div>
           <span>Available to withdraw</span>
           <span>{fromWei(availableToWithdraw, stakingTokenDecimals)}</span>
-        </div>
+        </div> */}
       </div>
       <div className="apy-wrapper">
         <span>
