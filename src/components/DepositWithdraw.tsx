@@ -80,7 +80,7 @@ export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
-  const [userInput, setUserInput] = useState("0");
+  const [userInput, setUserInput] = useState("");
   const [isApproved, setIsApproved] = useState(false);
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const [pendingWalletAction, setPendingWalletAction] = useState(false);
@@ -169,7 +169,7 @@ export default function DepositWithdraw(props: IProps) {
       async () => contractsActions.depositAndClaim(pid, master.address, userInput, stakingTokenDecimals),
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
-        setUserInput("0");
+        setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
@@ -182,7 +182,7 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setWithdrawRequests(undefined);
-        setUserInput("0");
+        setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${tokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
     dispatch(toggleInTransaction(false));
@@ -206,7 +206,7 @@ export default function DepositWithdraw(props: IProps) {
       async () => contractsActions.claim(pid, master.address),
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
-        setUserInput("0");
+        setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
     dispatch(toggleInTransaction(false));
@@ -235,8 +235,8 @@ export default function DepositWithdraw(props: IProps) {
         </div>
       </div>}
     <div className="tabs-wrapper">
-      <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput("0"); }}>DEPOSIT</button>
-      <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput("0"); }}>WITHDRAW</button>
+      <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
+      <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>
     </div>
     {tab === "withdraw" && isPendingWithdraw &&
       <PendingWithdraw
@@ -262,7 +262,7 @@ export default function DepositWithdraw(props: IProps) {
           </div>
           <div className="input-wrapper">
             <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.tokenIcon} alt="project logo" />}<span>{tokenSymbol}</span></div>
-            <input type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
+            <input placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
           {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
