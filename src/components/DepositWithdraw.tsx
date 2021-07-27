@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly } from "../utils";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, toWei } from "../utils";
 import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
@@ -32,6 +32,8 @@ interface IWithdrawTimerProps {
   expiryTime: string
   setIsWithdrawable: Function
 }
+
+const MINIMUM_DEPOSIT = 1000000; // in wei
 
 const WithdrawTimer = (props: IWithdrawTimerProps) => {
   return (
@@ -87,6 +89,7 @@ export default function DepositWithdraw(props: IProps) {
   const [tokenBalance, setTokenBalance] = useState("0");
   const [tokenSymbol, setTokenSymbol] = useState("");
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
+  const isAboveMinimumDeposit = !userInput ? false : toWei(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
@@ -264,6 +267,7 @@ export default function DepositWithdraw(props: IProps) {
             <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.tokenIcon} alt="project logo" />}<span>{tokenSymbol}</span></div>
             <input placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
+          {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${MINIMUM_DEPOSIT} wei`}</span>}
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
           {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
@@ -277,10 +281,6 @@ export default function DepositWithdraw(props: IProps) {
           <span>Withdrawn</span>
           <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
         </div>
-        {/* <div>
-          <span>Available to withdraw</span>
-          <span>{fromWei(availableToWithdraw, stakingTokenDecimals)}</span>
-        </div> */}
       </div>
       <div className="apy-wrapper">
         <span>
@@ -312,7 +312,7 @@ export default function DepositWithdraw(props: IProps) {
         </button>}
       {isApproved && tab === "deposit" &&
         <button
-          disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse}
+          disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit}
           className="action-btn"
           onClick={async () => await depositAndClaim()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
         </button>}
