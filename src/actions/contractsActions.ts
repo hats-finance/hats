@@ -2,13 +2,11 @@ import { toWei, fromWei } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-import { DEFAULT_ERROR_MESSAGE, NotificationType, TransactionStatus } from "../constants/constants";
+import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants";
 import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
 import { NETWORK } from "../settings";
-
-const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
 
 let provider: Web3Provider;
 let signer: Signer;

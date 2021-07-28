@@ -10,6 +10,7 @@ import { RootState } from "../reducers";
 import Modal from "./Shared/Modal";
 import CopyToClipboard from "./Shared/CopyToClipboard";
 import NFTPrize from "./NFTPrize";
+import NFTMedia from "./NFTMedia";
 import { NETWORK } from "../settings";
 import { Colors, IPFS_PREFIX, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import moment from "moment";
@@ -115,10 +116,7 @@ export default function Vault(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper">
-                <img
-                  className="nft-image"
-                  src={`${IPFS_PREFIX}${severity?.["nft-metadata"]?.image?.substring(12)}`}
-                  alt="NFT" />
+                <NFTMedia link={severity?.["nft-metadata"]?.image} />
               </div>
               <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 View NFT info

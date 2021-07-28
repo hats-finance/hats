@@ -40,22 +40,6 @@ export const GET_VAULTS = gql`
   }
 `;
 
-export const GET_STAKERS = gql`
-  {
-    stakers {
-      id
-      pid
-      createdAt
-      address
-      amount
-      rewardPaid
-      vault {
-        id
-      }
-    }
-  }
-`;
-
 // rewardsToken is the HAT token
 export const GET_MASTER_DATA = gql`
   {
@@ -66,21 +50,6 @@ export const GET_MASTER_DATA = gql`
     }
   }
 `
-
-export const getStakerByAddress = (stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { address: "${stakerAddress}" }) {
-        id
-        createdAt
-        rewardPaid
-        vault {
-          id
-        }
-      }
-    }
-  `;
-}
 
 export const getStakerData = (vaultID: string, stakerAddress: string) => {
   return gql`

@@ -136,8 +136,6 @@ export const fetchWalletBalance = async (dispatch: Dispatch, network: any, selec
   dispatch(updateWalletBalance(await getEtherBalance(network, selectedAddress), await getTokenBalance(rewardsToken, selectedAddress)));
 }
 
-// TODO: merge getTokenPrice and getTokenMarketCap to one function
-
 /**
  * Gets token price in USD using CoinGecko API
  * @param {string} tokenAddress
@@ -269,4 +267,13 @@ export const calculateAmountAvailableToWithdraw = (userShares: string, poolBalan
  */
 export const calculateActualWithdrawValue = (amountAvailableToWithdraw: BigNumber, userInput: string, userShares: BigNumber, decimals: string) => {
   return toWei(userInput, decimals).mul(userShares).div(amountAvailableToWithdraw).toString();
+}
+
+/**
+ * Given a link string returns it's extension
+ * @param {string} link
+ */
+export const getLinkExtension = (link: string): string => {
+  const reg = /(?:\.([^.]+))?$/;
+  return reg.exec(link)?.[1] ?? "";
 }

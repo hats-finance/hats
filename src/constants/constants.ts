@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers";
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP"
@@ -40,6 +42,12 @@ export const SMALL_SCREEN_BREAKPOINT = "770px";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 
+/** The maximum amount to allow spending from the user wallet in BigNumber */
+export const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
+
+/** The minimum amount to deposit in WEI units */
+export const MINIMUM_DEPOSIT = 1000000;
+
 export enum NotificationType {
   Success = "SUCCESS",
   Error = "ERROR",
@@ -63,3 +71,7 @@ export enum Colors {
   darkBlue = "#000723",
   yellow = "#F2C94C"
 }
+
+/** Supported images and videos extensions for NFTs media */
+export const IMAGES_EXTENTIONS = ["png"];
+export const VIDEOS_EXTENTIONS = ["mp4"];

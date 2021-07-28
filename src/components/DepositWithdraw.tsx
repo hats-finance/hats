@@ -11,7 +11,7 @@ import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../reducers";
 import Tooltip from "rc-tooltip";
-import { Colors, RoutePaths, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import { Colors, RoutePaths, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT } from "../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../settings";
@@ -32,8 +32,6 @@ interface IWithdrawTimerProps {
   expiryTime: string
   setIsWithdrawable: Function
 }
-
-const MINIMUM_DEPOSIT = 1000000; // in wei
 
 const WithdrawTimer = (props: IWithdrawTimerProps) => {
   return (
