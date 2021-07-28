@@ -13,7 +13,7 @@
   background-color: $transparent-black;
   -webkit-backdrop-filter: blur(3px);
   backdrop-filter: blur(3px);
-  animation: fadeIn .2s;
+  animation: fadeIn 0.2s;
   .modal-content-wrapper {
     z-index: 4;
     position: relative;
@@ -43,6 +43,8 @@
         align-items: center;
         img {
           margin-right: 13px;
+          border-radius: 100px;
+          max-width: 50px;
         }
       }
       .close {

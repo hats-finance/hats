@@ -85,6 +85,9 @@
       .pool-token {
         display: flex;
         align-items: center;
+        img {
+          border-radius: 100px;
+        }
       }
       span {
         margin-left: 10px;
