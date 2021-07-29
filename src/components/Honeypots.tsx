@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
-import Vault from "./Vault";
+import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { IVault, IVaultDescription, IWithdrawSafetyPeriod } from "../types/types";
-import moment from "moment";
-import Tooltip from "rc-tooltip";
-import InfoIcon from "../assets/icons/info.icon";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
+import { IVault, IVaultDescription } from "../types/types";
+import SafePeriodBar from "./SafePeriodBar";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
   const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
-  const withdrawSafetyPeriodData: IWithdrawSafetyPeriod = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
-  const safetyPeriodDate = moment().add(Math.abs(withdrawSafetyPeriodData.timeLeftForSafety), "seconds").local().format('DD-MM-YYYY HH:mm');
   const [selectedVault, setSelectedVault] = useState("");
   const [vaultIcon, setVaultIcon] = useState("");
+  const [userSearch, setUserSearch] = useState("");
 
   useEffect(() => {
     if (modalData) {
@@ -33,11 +29,15 @@ export default function Honeypots() {
     }
   }, [modalData])
 
+
   const vaults = vaultsData.map((vault: IVault) => {
-    if (!vault.liquidityPool && vault.registered) {
+    // TODO: temp hack to not show paraswap
+    if (!vault.liquidityPool && vault.registered && vault.pid !== "3") {
       try {
-        JSON.parse(vault.description as any);
-        return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />
+        const description: IVaultDescription = JSON.parse(vault.description as any);
+        if (description["Project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
+          return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
+        }
       } catch (err) {
         console.error(err);
       }
@@ -50,29 +50,28 @@ export default function Honeypots() {
       {vaultsData.length === 0 ? <Loading fixed /> :
         <table>
           <tbody>
-            {withdrawSafetyPeriodData.timeLeftForSafety !== 0 &&
-              <tr>
-                <th colSpan={7} className={`safe-period ${withdrawSafetyPeriodData.isSafetyPeriod && "on"}`}>
-                  <div className="text-wrapper">
-                    {withdrawSafetyPeriodData.isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`THE NEXT SAFE PERIOD WILL START AT ${safetyPeriodDate}`}</div>}
-                    <Tooltip
-                      overlayClassName="tooltip"
-                      overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-                      overlay="Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled">
-                      <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon fill={withdrawSafetyPeriodData.isSafetyPeriod ? Colors.darkBlue : Colors.turquoise} /></div>
-                    </Tooltip>
-                  </div>
-                </th>
-              </tr>}
+            <SafePeriodBar />
             <tr>
-              <th style={{ width: "30px" }}></th>
-              <th>PROJECT NAME</th>
+              <th colSpan={2} className="search-wrapper">
+                <input
+                  type="text"
+                  value={userSearch}
+                  onChange={(e) => setUserSearch(e.target.value)}
+                  className="search-input"
+                  placeholder="Search vault..." />
+              </th>
               <th>TOTAL VAULT</th>
-              <th>FUNDS GIVEN</th>
+              <th>PRIZE GIVEN</th>
               <th>APY</th>
               <th></th>
             </tr>
+            <tr className="transparent-row">
+              <td colSpan={7}>Hats Native vaults</td>
+            </tr>
             {vaults}
+            <tr className="transparent-row">
+              <td colSpan={7}>Hats Guest bounties</td>
+            </tr>
           </tbody>
         </table>}
       {showModal &&

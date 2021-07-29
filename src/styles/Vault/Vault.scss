@@ -1,11 +1,11 @@
-@import "./constants.scss";
+@import "../constants.scss";
 
 tr {
   border-bottom: 2px solid $dark-blue;
 }
 td {
   padding: 15px;
-  background-color: $field-blue;
+  background-color: $strong-blue;
   &.sub-row {
     background-color: transparent;
     padding: 0px;
@@ -155,6 +155,7 @@ td {
   cursor: pointer;
   transform: rotate(0deg);
   transition: transform 0.1s linear;
+  margin-left: 20px;
   &.open {
     transform: rotate(90deg);
     transition: transform 0.1s linear;

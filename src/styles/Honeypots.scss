@@ -4,6 +4,15 @@
   position: relative;
   display: flex;
   justify-content: center;
+  .search-wrapper {
+    background-color: $purple-blue;
+    .search-input {
+      background-color: transparent;
+      border: none;
+      color: $white;
+      width: 100%;
+    }
+  }
   table {
     width: 100%;
     border-collapse: collapse;
@@ -19,16 +28,12 @@
         text-align: left;
       }
     }
-    .safe-period {
-      padding: 10px;
-      .text-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      &.on {
-        background-color: $yellow;
-        color: $dark-blue;
+    .transparent-row {
+      color: $white;
+      td {
+        background-color: transparent;
+        text-align: left;
+        padding-left: 0;
       }
     }
   }

@@ -24,6 +24,17 @@ export interface IVault {
   withdrawRequests: Array<IPoolWithdrawRequest>
   stakingTokenDecimals: string
   totalUsersShares: string
+  guests: Array<IGuestVault>
+}
+
+export interface IGuestVault {
+  id: string
+  pid: string
+  name: string
+  descriptionHash: string
+  description: string
+  bounty: string
+  vault: IVault
 }
 
 export interface IVaultDescription {

@@ -60,11 +60,11 @@
     color: $dirty-turquoise;
     font-size: $xsmall;
     &.vulnerability {
-      color: $red;
+      color: $bright-green;
       &.selected {
-        border-color: $strong-red;
-        color: $strong-red;
+        border-color: $bright-green;
         font-weight: bold;
+        color: $bright-green;
       }
     }
     &.selected {

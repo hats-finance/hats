@@ -36,6 +36,14 @@ export const GET_VAULTS = gql`
       }
       stakingTokenDecimals
       totalUsersShares
+      guests {
+        id
+        pid
+        name
+        descriptionHash
+        description
+        bounty
+      }
     }
   }
 `;
