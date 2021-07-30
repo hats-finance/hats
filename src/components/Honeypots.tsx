@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { IVault, IVaultDescription } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
+import { parseJSONToObject } from "../utils";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
@@ -19,27 +20,23 @@ export default function Honeypots() {
 
   useEffect(() => {
     if (modalData) {
-      try {
-        const description: IVaultDescription = JSON.parse((modalData as any).description);
-        setSelectedVault(description?.["Project-metadata"]?.name);
-        setVaultIcon(description?.["Project-metadata"]?.icon);
-      } catch (error) {
-        console.error(error);
-      }
+      const description: IVaultDescription = parseJSONToObject((modalData as any).description);
+      setSelectedVault(description?.["Project-metadata"]?.name);
+      setVaultIcon(description?.["Project-metadata"]?.icon);
     }
   }, [modalData])
 
-
+  let guestVaults: Array<JSX.Element> = [];
   const vaults = vaultsData.map((vault: IVault) => {
     // TODO: temp hack to not show paraswap
     if (!vault.liquidityPool && vault.registered && vault.pid !== "3") {
-      try {
-        const description: IVaultDescription = JSON.parse(vault.description as any);
-        if (description["Project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
+      const description: IVaultDescription = parseJSONToObject(vault.description as string);
+      if (description["Project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
+        if (vault.guests.length === 0) {
           return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
+        } else {
+          guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />)
         }
-      } catch (err) {
-        console.error(err);
       }
     }
     return null;
@@ -72,6 +69,7 @@ export default function Honeypots() {
             <tr className="transparent-row">
               <td colSpan={7}>Hats Guest bounties</td>
             </tr>
+            {guestVaults}
           </tbody>
         </table>}
       {showModal &&

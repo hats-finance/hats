@@ -84,7 +84,7 @@ function App() {
       // update first Liquidity Pool we find
       const liquidityPool: IVault = data.vaults.find((element: IVault) => element.liquidityPool);
       if (liquidityPool !== undefined) {
-          dispatch(updateLiquidityPool(liquidityPool.id));
+        dispatch(updateLiquidityPool(liquidityPool.id));
       }
     }
   }, [loading, error, data, dispatch]);

@@ -14,7 +14,7 @@ export interface IVault {
   rewardsLevels: Array<string>
   rewardsSplit: Array<string>
   descriptionHash: string
-  description: IVaultDescription
+  description: IVaultDescription | string
   apy: number
   totalRewardAmount: string
   liquidityPool: boolean

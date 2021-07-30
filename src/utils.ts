@@ -277,3 +277,16 @@ export const getLinkExtension = (link: string): string => {
   const reg = /(?:\.([^.]+))?$/;
   return reg.exec(link)?.[1] ?? "";
 }
+
+/**
+ * Converts a JavaScript Object Notation (JSON) string into an object
+ * @param {string} dataString
+ */
+export const parseJSONToObject = (dataString: string) => {
+  try {
+    return JSON.parse(dataString);
+  } catch (error) {
+    // In case the given string is an invalid JSON.
+    console.error(error);
+  }
+}

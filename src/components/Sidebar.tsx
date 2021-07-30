@@ -12,7 +12,7 @@ import { IVault } from "../types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import ArrowIcon from "../assets/icons/arrow.icon";
-import { getMainPath } from "../utils";
+import { getMainPath, parseJSONToObject } from "../utils";
 import { updateLiquidityPool } from "../actions";
 
 export default function Sidebar() {
@@ -24,17 +24,12 @@ export default function Sidebar() {
   const pools = poolsData.filter((element: IVault) => element.liquidityPool);
 
   const poolsLinks = pools.map((pool: IVault) => {
-    try {
-      const description = JSON.parse(pool?.description as any);
-      return (
-        <div key={pool.id} className="pool-link-wrapper">
-          <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {description?.["Project-metadata"]?.name}</span>
-        </div>
-      )
-    } catch (error) {
-      console.error(error);
-    }
-    return undefined;
+    const description = parseJSONToObject(pool?.description as string);
+    return (
+      <div key={pool.id} className="pool-link-wrapper">
+        <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {description?.["Project-metadata"]?.name}</span>
+      </div>
+    )
   })
 
   return (

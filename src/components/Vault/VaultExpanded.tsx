@@ -21,13 +21,13 @@ export default function VaultExpanded(props: IProps) {
     <tr>
       <td className="sub-row" colSpan={7}>
         <div className="vault-expanded">
-          <div className="committee-wrapper">
+          <div className="vault-details-wrapper">
             <div className="sub-title">
-              COMMITTEE
+              VAULT DETAILS
             </div>
-            <div className="committee-content">
+            <div className="vault-details-content">
               <div className="vault-expanded-subtitle">
-                Members:
+                Committee Members:
                 <div className="twitter-avatars-wrapper">
                   <Members members={description?.committee.members} />
                 </div>

@@ -3,7 +3,7 @@ import "../../styles/Vault/Vault.scss";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, isProviderAndNetwork } from "../../utils";
+import { fromWei, isProviderAndNetwork, parseJSONToObject } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { Colors } from "../../constants/constants";
@@ -47,12 +47,7 @@ export default function Vault(props: IProps) {
     }, 1000);
   }, [setVaultAPY, apy])
 
-  let description;
-  try {
-    description = JSON.parse(props.data?.description as any);
-  } catch (err) {
-    console.error(err);
-  }
+  const description = parseJSONToObject(props.data?.description as string);
 
   return (
     <>
