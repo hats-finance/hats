@@ -21,7 +21,7 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data;
+  const { totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy, id } = props.data;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
@@ -110,7 +110,8 @@ export default function Vault(props: IProps) {
           rewardsLevels={rewardsLevels}
           tokenPrice={tokenPrice}
           honeyPotBalance={honeyPotBalance}
-          stakingTokenDecimals={stakingTokenDecimals} />}
+          stakingTokenDecimals={stakingTokenDecimals}
+          projectId={id} />}
     </>
   )
 }

@@ -9,6 +9,8 @@ import axios from "axios";
 import { IVault, IWithdrawSafetyPeriod } from "./types/types";
 import { NETWORK } from "./settings";
 import moment from "moment";
+import millify from "millify";
+import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -289,4 +291,34 @@ export const parseJSONToObject = (dataString: string) => {
     // In case the given string is an invalid JSON.
     console.error(error);
   }
+}
+
+/**
+ * Calculates the reward price in USD for given vault and it's rewardPercentage
+ * @param {number} rewardPercentage
+ * @param {number} tokenPrice
+ * @param {string} honeyPotBalance
+ * @param {string} stakingTokenDecimals
+ */
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
+  let rewardPrice = "-";
+  if (tokenPrice) {
+    rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * rewardPercentage * tokenPrice);
+  }
+  return rewardPrice;
+}
+
+export const setVulnerabilityProject = (projectName: string, projectId: string) => {
+  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem("submitVulnerabilityData") || JSON.stringify(VULNERABILITY_INIT_DATA));
+
+  if (cachedData.version !== getAppVersion()) {
+    cachedData = VULNERABILITY_INIT_DATA;
+  }
+
+  cachedData[1].verified = true;
+  cachedData[1].data = {
+    projectName: projectName,
+    projectId: projectId
+  }
+  localStorage.setItem("submitVulnerabilityData", JSON.stringify(cachedData));
 }

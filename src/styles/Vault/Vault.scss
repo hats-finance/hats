@@ -27,6 +27,12 @@ td {
       .vault-details-content {
         display: flex;
         justify-content: space-between;
+
+        > div {
+          padding: 20px 30px;
+          border: 1px solid $purple-blue;
+          width: 50%;
+        }
         .member-link-wrapper {
           display: flex;
           flex-direction: column;
@@ -42,6 +48,7 @@ td {
           }
         }
         .multi-sig-wrapper {
+          margin-bottom: 20px;
           .multi-sig-address-wrapper {
             display: flex;
             justify-content: center;
@@ -52,10 +59,16 @@ td {
             }
           }
         }
-        > div {
-          padding: 20px 30px;
-          border: 1px solid $purple-blue;
-          width: 50%;
+        .submit-bulnerability-button-wrapper {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          button {
+            background: transparent;
+            color: $drak-green;
+            border: 1px solid $drak-green;
+            width: 350px;
+          }
         }
       }
     }
@@ -131,13 +144,15 @@ td {
     .vault-expanded-subtitle {
       font-style: italic;
       color: $dark-turquoise;
-      padding-bottom: 15px;
+      padding-bottom: 20px;
       display: flex;
-      .twitter-avatars-wrapper {
-        display: flex;
-        margin: 0 20px;
-        overflow-x: scroll;
-      }
+    }
+    .twitter-avatars-wrapper {
+      display: flex;
+      margin: 0 20px;
+      overflow-x: scroll;
+      justify-content: center;
+      margin-bottom: 20px;
     }
     .vault-prize {
       margin: auto;

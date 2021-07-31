@@ -1,10 +1,11 @@
-import React from "react";
 import { NETWORK } from "../../settings";
 import { IVaultDescription } from "../../types/types";
-import { linkToEtherscan, truncatedAddress } from "../../utils";
+import { linkToEtherscan, setVulnerabilityProject, truncatedAddress } from "../../utils";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import Members from "./Members";
 import Severities from "./Severities";
+import { useHistory } from "react-router-dom";
+import { RoutePaths } from "../../constants/constants";
 
 interface IProps {
   description: IVaultDescription
@@ -12,10 +13,12 @@ interface IProps {
   tokenPrice: number
   honeyPotBalance: string
   stakingTokenDecimals: string
+  projectId: string
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { description, rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals } = props;
+  const { description, rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, projectId } = props;
+  const history = useHistory();
 
   return (
     <tr>
@@ -26,23 +29,26 @@ export default function VaultExpanded(props: IProps) {
               VAULT DETAILS
             </div>
             <div className="vault-details-content">
-              <div className="vault-expanded-subtitle">
-                Committee Members:
+              <div>
+                <span className="vault-expanded-subtitle">Committee Members:</span>
                 <div className="twitter-avatars-wrapper">
                   <Members members={description?.committee.members} />
                 </div>
-              </div>
-              <div className="multi-sig-wrapper">
-                <span className="vault-expanded-subtitle">Multi sig:</span>
-                <div className="multi-sig-address-wrapper">
-                  <a target="_blank"
-                    rel="noopener noreferrer"
-                    href={linkToEtherscan(description?.committee?.["multisig-address"], NETWORK)}
-                    className="multi-sig-address">
-                    {truncatedAddress(description?.committee?.["multisig-address"] ?? "")}
-                  </a>
-                  <CopyToClipboard value={description?.committee?.["multisig-address"]} />
+                <div className="multi-sig-wrapper">
+                  <span className="vault-expanded-subtitle">Multi sig:</span>
+                  <div className="multi-sig-address-wrapper">
+                    <a target="_blank"
+                      rel="noopener noreferrer"
+                      href={linkToEtherscan(description?.committee?.["multisig-address"], NETWORK)}
+                      className="multi-sig-address">
+                      {truncatedAddress(description?.committee?.["multisig-address"] ?? "")}
+                    </a>
+                    <CopyToClipboard value={description?.committee?.["multisig-address"]} />
+                  </div>
                 </div>
+              </div>
+              <div className="submit-bulnerability-button-wrapper">
+                <button onClick={() => { setVulnerabilityProject(description["Project-metadata"].name, projectId); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
               </div>
             </div>
           </div>

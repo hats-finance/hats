@@ -1,10 +1,9 @@
-import millify from "millify";
 import Tooltip from "rc-tooltip";
-import React, { useState } from "react";
+import { useState } from "react";
 import InfoIcon from "../../assets/icons/info.icon";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
 import { ISeverity } from "../../types/types";
-import { fromWei } from "../../utils";
+import { calculateRewardPrice } from "../../utils";
 import NFTMedia from "../NFTMedia";
 import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
@@ -27,11 +26,8 @@ export default function Severities(props: IProps) {
   const [modalContractsData, setModalContractsData] = useState(null);
 
   const severities = props.severities.map((severity: ISeverity, index: number) => {
-    let rewardPrice = "-";
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
-    if (tokenPrice) {
-      rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * rewardPercentage * tokenPrice);
-    }
+    const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
     return (
       <div className="severity-wrapper" key={index}>
