@@ -217,8 +217,7 @@ export const linkToEtherscan = (value: string, network: Networks, isTransaction?
 }
 
 /**
- * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and the amount of seconds until we switch.
- * Positive number of seconds means when safty period starts, and negetive number means when it ends.
+ * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
  * @returns {IWithdrawSafetyPeriod}
@@ -226,11 +225,14 @@ export const linkToEtherscan = (value: string, network: Networks, isTransaction?
 export const getWithdrawSafetyPeriod = (withdrawPeriod: string, safetyPeriod: string) => {
   const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
     isSafetyPeriod: false,
-    timeLeftForSafety: 0
+    saftyEndsAt: 0,
+    saftyStartsAt: 0,
   }
   const currentTimestamp = moment().unix();
-  withdrawSafetyPeriod.isSafetyPeriod = (currentTimestamp % (Number(withdrawPeriod) + Number(safetyPeriod))) >= Number(withdrawPeriod);
-  withdrawSafetyPeriod.timeLeftForSafety = Number(withdrawPeriod) - (currentTimestamp % (Number(withdrawPeriod) + Number(safetyPeriod)));
+  const sum = Number(withdrawPeriod) + Number(safetyPeriod);
+  withdrawSafetyPeriod.saftyEndsAt = (sum * Math.floor(currentTimestamp / sum)) + sum;
+  withdrawSafetyPeriod.saftyStartsAt = (sum * Math.floor(currentTimestamp / sum)) + Number(withdrawPeriod);
+  withdrawSafetyPeriod.isSafetyPeriod = (currentTimestamp >= withdrawSafetyPeriod.saftyStartsAt);
   return withdrawSafetyPeriod;
 }
 

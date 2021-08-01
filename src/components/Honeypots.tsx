@@ -28,8 +28,7 @@ export default function Honeypots() {
 
   let guestVaults: Array<JSX.Element> = [];
   const vaults = vaultsData.map((vault: IVault) => {
-    // TODO: temp hack to not show paraswap
-    if (!vault.liquidityPool && vault.registered && vault.pid !== "3") {
+    if (!vault.liquidityPool && vault.registered) {
       const description: IVaultDescription = parseJSONToObject(vault.description as string);
       if (description["Project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.guests.length === 0) {
