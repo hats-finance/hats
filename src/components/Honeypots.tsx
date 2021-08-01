@@ -30,7 +30,7 @@ export default function Honeypots() {
   const vaults = vaultsData.map((vault: IVault) => {
     if (!vault.liquidityPool && vault.registered) {
       const description: IVaultDescription = parseJSONToObject(vault.description as string);
-      if (description["Project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
+      if (description?.["Project-metadata"]?.name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.guests.length === 0) {
           return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
         } else {
