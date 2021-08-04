@@ -22,15 +22,16 @@ export default function Honeypots() {
   useEffect(() => {
     if (modalData) {
       const description: IVaultDescription = parseJSONToObject((modalData as any).description);
-      setSelectedVault(description?.["Project-metadata"]?.name);
-      setVaultIcon(description?.["Project-metadata"]?.icon);
+      setSelectedVault(description?.["project-metadata"]?.name);
+      setVaultIcon(description?.["project-metadata"]?.icon);
     }
   }, [modalData])
 
   const guestVaults: Array<JSX.Element> = [];
 
   const vaults = vaultsData.map((vault: IVault) => {
-    if (!vault.parentVault.liquidityPool && vault.parentVault.registered) {
+    // TODO: temp to not show guest vaults
+    if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.isGuest) {
           guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);

@@ -38,7 +38,7 @@ export interface IVault {
 }
 
 export interface IVaultDescription {
-  "Project-metadata": {
+  "project-metadata": {
     icon: string
     website: string
     name: string
@@ -53,6 +53,10 @@ export interface IVaultDescription {
     "members": Array<ICommitteeMember>
   }
   "severities": Array<ISeverity>
+  "source": {
+    name: string
+    url: string
+  }
 }
 
 export interface ICommitteeMember {

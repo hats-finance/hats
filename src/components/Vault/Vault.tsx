@@ -58,11 +58,14 @@ export default function Vault(props: IProps) {
         </td>
         <td>
           <div className="project-name-wrapper">
-            <img src={description?.["Project-metadata"]?.icon} alt="project logo" />
-            {name}
+            <img src={description?.["project-metadata"]?.icon} alt="project logo" />
+            <div className="name-source-wrapper">
+              <div className="project-name">{name}</div>
+              {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}
+            </div>
           </div>
         </td>
-        <td>{isGuest && `${millify(Number(bounty))} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
+        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
         <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">

@@ -194,6 +194,18 @@ tr {
     margin-right: 15px;
     border-radius: 100px;
   }
+  .name-source-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    .project-name {
+      font-weight: bold;
+    }
+    .source-name {
+      margin-top: 10px;
+      color: $dirty-turquoise;
+    }
+  }
 }
 
 .action-wrapper {
