@@ -6,7 +6,7 @@ import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
-import { IVault, IWithdrawSafetyPeriod } from "./types/types";
+import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { NETWORK } from "./settings";
 import moment from "moment";
 import millify from "millify";
@@ -170,7 +170,7 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {IVault} vault
  * @param {number} hatsPrice
  */
-export const calculateApy = async (vault: IVault, hatsPrice: number) => {
+export const calculateApy = async (vault: IParentVault, hatsPrice: number) => {
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
   if (Number(fromWei(vault.totalStaking)) === 0) {
     return 0;
@@ -310,6 +310,11 @@ export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: numbe
   return rewardPrice;
 }
 
+/**
+ * Used to set the current project which the user selects from the vaults lists to submit a vulnerability
+ * @param {string} projectName
+ * @param {string} projectId
+ */
 export const setVulnerabilityProject = (projectName: string, projectId: string) => {
   let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem("submitVulnerabilityData") || JSON.stringify(VULNERABILITY_INIT_DATA));
 

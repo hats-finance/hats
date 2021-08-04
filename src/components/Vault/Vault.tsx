@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../styles/Vault/Vault.scss";
-import { IPoolWithdrawRequest, IVault } from "../../types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
 import { fromWei, isProviderAndNetwork, parseJSONToObject } from "../../utils";
@@ -21,7 +21,8 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { totalRewardAmount, rewardsLevels, tokenPrice, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy, id } = props.data;
+  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data.parentVault;
+  const { name, isGuest, bounty } = props.data;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
@@ -47,21 +48,21 @@ export default function Vault(props: IProps) {
     }, 1000);
   }, [setVaultAPY, apy])
 
-  const description = parseJSONToObject(props.data?.description as string);
+  const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
   return (
     <>
-      <tr>
+      <tr className={isGuest ? "guest" : ""}>
         <td>
           <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>
         </td>
         <td>
           <div className="project-name-wrapper">
             <img src={description?.["Project-metadata"]?.icon} alt="project logo" />
-            {description?.["Project-metadata"]?.name}
+            {name}
           </div>
         </td>
-        <td>{millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
+        <td>{isGuest && `${millify(Number(bounty))} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
         <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">
@@ -105,13 +106,7 @@ export default function Vault(props: IProps) {
         </td>
       </tr>
       {toggleRow &&
-        <VaultExpanded
-          description={description}
-          rewardsLevels={rewardsLevels}
-          tokenPrice={tokenPrice}
-          honeyPotBalance={honeyPotBalance}
-          stakingTokenDecimals={stakingTokenDecimals}
-          projectId={id} />}
+        <VaultExpanded data={props.data} />}
     </>
   )
 }

@@ -1,5 +1,6 @@
 import { NETWORK } from "../../settings";
 import { linkToEtherscan, truncatedAddress } from "../../utils";
+import { isAddress } from "ethers/lib/utils";
 
 interface IProps {
   contracts: Array<string>
@@ -10,10 +11,13 @@ export default function ContractsCovered(props: IProps) {
     <>
       {props.contracts.map((contract: string, index: number) => {
         const contractName = Object.keys(contract)[0];
+        const contractVaule = contract?.[contractName];
+        const isLink = isAddress(contractVaule) ? false : true;
+
         return (
-          <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={linkToEtherscan(contract?.[contractName], NETWORK)}>
+          <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={isLink ? contractVaule : linkToEtherscan(contractVaule, NETWORK)}>
             <span className="contract-name">{contractName}</span>
-            <span>{truncatedAddress(contract?.[contractName])}</span>
+            <span className="contract-value">{isLink ? contractVaule : truncatedAddress(contractVaule)}</span>
           </a>
         )
       })}

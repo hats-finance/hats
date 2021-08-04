@@ -5,7 +5,7 @@ import Loading from "./Shared/Loading";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/DepositWithdraw.scss";
 import * as contractsActions from "../actions/contractsActions";
-import { IPoolWithdrawRequest, IVault } from "../types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -49,15 +49,14 @@ const WithdrawTimer = (props: IWithdrawTimerProps) => {
 
 interface IPendingWithdrawProps {
   withdrawEnableTime: string
-  createdAt: string
   expiryTime: string
   setIsPendingWithdraw: Function
   setIsWithdrawable: Function
 }
 
 const PendingWithdraw = (props: IPendingWithdrawProps) => {
-  const { withdrawEnableTime, createdAt, expiryTime, setIsPendingWithdraw, setIsWithdrawable } = props;
-  const diff = moment.unix(Number(expiryTime)).diff(moment.unix(Number(createdAt)), "milliseconds");
+  const { withdrawEnableTime, expiryTime, setIsPendingWithdraw, setIsWithdrawable } = props;
+  const diff = moment.unix(Number(expiryTime)).diff(moment.unix(Number(withdrawEnableTime)), "milliseconds");
   return (
     <div className="pending-withdraw-timer-wrapper">
       <span>
@@ -78,7 +77,8 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
-  const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data;
+  const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares } = props.data.parentVault;
+  const { name, parentDescription, isGuest } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [isApproved, setIsApproved] = useState(false);
@@ -94,7 +94,8 @@ export default function DepositWithdraw(props: IProps) {
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
-  const description = props.isPool ? null : parseJSONToObject(props.data?.description as string);
+  const description: IVaultDescription = props.isPool ? null : parseJSONToObject(props.data?.description as string);
+  const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
   const withdrawSafetyPeriodData = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
@@ -116,8 +117,8 @@ export default function DepositWithdraw(props: IProps) {
   }, [loading, error, data, honeyPotBalance, totalUsersShares])
 
   useEffect(() => {
-    if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.vaults) {
-      const withdrawRequest: IPoolWithdrawRequest = dataWithdrawRequests.vaults[0]?.withdrawRequests[0];
+    if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.parentVaults) {
+      const withdrawRequest: IPoolWithdrawRequest = dataWithdrawRequests.parentVaults[0]?.withdrawRequests[0];
       setWithdrawRequests(withdrawRequest);
       setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest?.withdrawEnableTime)), moment.unix(Number(withdrawRequest?.expiryTime))));
       setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest?.withdrawEnableTime))));
@@ -228,7 +229,7 @@ export default function DepositWithdraw(props: IProps) {
       <div className="pool-wrapper">
         <div className="pool-title-wrapper">
           <img src={require("../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="40px" />
-          <span className="pool-name">{description?.["Project-metadata"]?.name}</span>
+          <span className="pool-name">{name}</span>
         </div>
         <div>
           <img src={require("../assets/icons/vaults/hats.svg").default} alt="hats logo" width="40px" />
@@ -242,7 +243,6 @@ export default function DepositWithdraw(props: IProps) {
     {tab === "withdraw" && isPendingWithdraw &&
       <PendingWithdraw
         withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
-        createdAt={withdrawRequests?.createdAt || ""}
         expiryTime={withdrawRequests?.expiryTime || ""}
         setIsPendingWithdraw={setIsPendingWithdraw}
         setIsWithdrawable={setIsWithdrawable}
@@ -262,7 +262,7 @@ export default function DepositWithdraw(props: IProps) {
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["Project-metadata"]?.tokenIcon} alt="project logo" />}<span>{tokenSymbol}</span></div>
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["Project-metadata"]?.tokenIcon : description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{tokenSymbol}</span></div>
             <input placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
           </div>
           {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${MINIMUM_DEPOSIT} wei`}</span>}

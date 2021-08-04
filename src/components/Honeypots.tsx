@@ -9,6 +9,7 @@ import { RootState } from "../reducers";
 import { IVault, IVaultDescription } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import { parseJSONToObject } from "../utils";
+import SearchIcon from "../assets/icons/search.icon";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
@@ -26,16 +27,16 @@ export default function Honeypots() {
     }
   }, [modalData])
 
-  let guestVaults: Array<JSX.Element> = [];
+  const guestVaults: Array<JSX.Element> = [];
+
   const vaults = vaultsData.map((vault: IVault) => {
-    if (!vault.liquidityPool && vault.registered) {
-      const description: IVaultDescription = parseJSONToObject(vault.description as string);
-      if (description?.["Project-metadata"]?.name.toLowerCase().includes(userSearch.toLowerCase())) {
-        if (vault.guests.length === 0) {
-          return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
-        } else {
-          guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />)
+    if (!vault.parentVault.liquidityPool && vault.parentVault.registered) {
+      if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
+        if (vault.isGuest) {
+          guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
+          return null;
         }
+        return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
       }
     }
     return null;
@@ -48,13 +49,16 @@ export default function Honeypots() {
           <tbody>
             <SafePeriodBar />
             <tr>
-              <th colSpan={2} className="search-wrapper">
-                <input
-                  type="text"
-                  value={userSearch}
-                  onChange={(e) => setUserSearch(e.target.value)}
-                  className="search-input"
-                  placeholder="Search vault..." />
+              <th colSpan={2} className="search-cell" >
+                <div className="search-wrapper">
+                  <SearchIcon />
+                  <input
+                    type="text"
+                    value={userSearch}
+                    onChange={(e) => setUserSearch(e.target.value)}
+                    className="search-input"
+                    placeholder="Search vault..." />
+                </div>
               </th>
               <th>TOTAL VAULT</th>
               <th>PRIZE GIVEN</th>

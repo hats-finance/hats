@@ -82,7 +82,7 @@ function App() {
     if (!loading && !error && data && data.vaults) {
       dispatch(updateVaults(data.vaults));
       // update first Liquidity Pool we find
-      const liquidityPool: IVault = data.vaults.find((element: IVault) => element.liquidityPool);
+      const liquidityPool: IVault = data.vaults.find((element: IVault) => element.parentVault.liquidityPool);
       if (liquidityPool !== undefined) {
         dispatch(updateLiquidityPool(liquidityPool.id));
       }
@@ -95,7 +95,7 @@ function App() {
   useEffect(() => {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
-        vault.apy = await calculateApy(vault, hatsPrice);
+        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
       }
       dispatch(updateVaults(vaults));
     }
@@ -107,7 +107,7 @@ function App() {
   useEffect(() => {
     const calculatetokenPrices = async () => {
       for (const vault of vaults) {
-        vault.tokenPrice = await getTokenPrice(vault.stakingToken);
+        vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
       }
       dispatch(updateVaults(vaults));
     }

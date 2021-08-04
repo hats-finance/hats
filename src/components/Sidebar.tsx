@@ -12,7 +12,7 @@ import { IVault } from "../types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import ArrowIcon from "../assets/icons/arrow.icon";
-import { getMainPath, parseJSONToObject } from "../utils";
+import { getMainPath } from "../utils";
 import { updateLiquidityPool } from "../actions";
 
 export default function Sidebar() {
@@ -21,13 +21,12 @@ export default function Sidebar() {
   const [showPools, setShowPools] = useState(`/${getMainPath(location.pathname)}` === RoutePaths.pools ? true : false);
   const currentPoolID = useSelector((state: RootState) => state.layoutReducer.liquidityPoolID);
   const poolsData = useSelector((state: RootState) => state.dataReducer.vaults);
-  const pools = poolsData.filter((element: IVault) => element.liquidityPool);
+  const pools = poolsData.filter((element: IVault) => element.parentVault.liquidityPool);
 
   const poolsLinks = pools.map((pool: IVault) => {
-    const description = parseJSONToObject(pool?.description as string);
     return (
       <div key={pool.id} className="pool-link-wrapper">
-        <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {description?.["Project-metadata"]?.name}</span>
+        <span className={currentPoolID === pool.id ? "selected" : ""} onClick={() => dispatch(updateLiquidityPool(pool.id))}>- {pool.name}</span>
       </div>
     )
   })

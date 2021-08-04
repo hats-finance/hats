@@ -2,165 +2,171 @@
 
 tr {
   border-bottom: 2px solid $dark-blue;
-}
-td {
-  padding: 15px;
-  background-color: $strong-blue;
-  &.sub-row {
-    background-color: transparent;
-    padding: 0px;
-  }
-  .vault-expanded {
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-    .sub-title {
-      font-weight: bold;
-      background-color: $blue;
-      padding: 10px 30px;
-      color: $white;
-      height: 50px;
-      line-height: 50px;
-      font-size: $small;
+  &.guest {
+    td {
+      background-color: $field-blue !important;
     }
-    .vault-details-wrapper {
-      .vault-details-content {
-        display: flex;
-        justify-content: space-between;
+  }
 
-        > div {
-          padding: 20px 30px;
-          border: 1px solid $purple-blue;
-          width: 50%;
-        }
-        .member-link-wrapper {
+  td {
+    padding: 15px;
+    background-color: $strong-blue;
+    &.sub-row {
+      background-color: transparent;
+      padding: 0px;
+    }
+    .vault-expanded {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      .sub-title {
+        font-weight: bold;
+        background-color: $blue;
+        padding: 10px 30px;
+        color: $white;
+        height: 50px;
+        line-height: 50px;
+        font-size: $small;
+      }
+      .vault-details-wrapper {
+        .vault-details-content {
           display: flex;
-          flex-direction: column;
-          margin: 0px 15px;
-          align-items: center;
-          .twitter-avatar {
-            border-radius: 50%;
-            width: 40px;
+          justify-content: space-between;
+
+          > div {
+            padding: 20px 30px;
+            border: 1px solid $purple-blue;
+            width: 50%;
           }
-          .member-username {
-            margin-top: 5px;
-            text-transform: capitalize;
-          }
-        }
-        .multi-sig-wrapper {
-          margin-bottom: 20px;
-          .multi-sig-address-wrapper {
+          .member-link-wrapper {
             display: flex;
-            justify-content: center;
-            .multi-sig-address {
-              font-style: italic;
-              font-weight: bold;
-              margin-right: 10px;
+            flex-direction: column;
+            margin: 0px 15px;
+            align-items: center;
+            .twitter-avatar {
+              border-radius: 50%;
+              width: 40px;
+            }
+            .member-username {
+              margin-top: 5px;
+              text-transform: capitalize;
             }
           }
-        }
-        .submit-bulnerability-button-wrapper {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          button {
-            background: transparent;
-            color: $drak-green;
-            border: 1px solid $drak-green;
-            width: 350px;
+          .multi-sig-wrapper {
+            margin-bottom: 20px;
+            .multi-sig-address-wrapper {
+              display: flex;
+              justify-content: center;
+              .multi-sig-address {
+                font-style: italic;
+                font-weight: bold;
+                margin-right: 10px;
+              }
+            }
+          }
+          .submit-bulnerability-button-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            button {
+              background: transparent;
+              color: $drak-green;
+              border: 1px solid $drak-green;
+              width: 350px;
+            }
           }
         }
       }
-    }
-    .severity-prizes-wrapper {
-      .severity-prizes-content {
-        display: flex;
-        flex-direction: column;
-        .severity-wrapper {
+      .severity-prizes-wrapper {
+        .severity-prizes-content {
           display: flex;
           flex-direction: column;
-          .severity-title {
-            background-color: $purple-blue;
-            padding: 10px 30px;
-            color: $white;
-            font-weight: bold;
-            font-size: $xsmall;
-            &.low {
-              background-color: $severity-low;
-            }
-            &.medium {
-              background-color: $severity-medium;
-            }
-            &.high {
-              background-color: $severity-high;
-            }
-            &.critical {
-              background-color: $severity-critical;
-            }
-            &.audit-request {
-              background-color: $severity-audit-request;
-              color: $white;
-            }
-          }
-          .severity-data {
+          .severity-wrapper {
             display: flex;
-            justify-content: space-between;
-            padding: 10px 30px;
-            border-right: 1px solid $purple-blue;
-            border-left: 1px solid $purple-blue;
-            .severity-data-item {
+            flex-direction: column;
+            .severity-title {
+              background-color: $purple-blue;
+              padding: 10px 30px;
+              color: $white;
+              font-weight: bold;
+              font-size: $xsmall;
+              &.low {
+                background-color: $severity-low;
+              }
+              &.medium {
+                background-color: $severity-medium;
+              }
+              &.high {
+                background-color: $severity-high;
+              }
+              &.critical {
+                background-color: $severity-critical;
+              }
+              &.audit-request {
+                background-color: $severity-audit-request;
+                color: $white;
+              }
+            }
+            .severity-data {
               display: flex;
-              flex-direction: column;
-              flex: auto;
-              margin-right: 10px;
+              justify-content: space-between;
+              padding: 10px 30px;
               border-right: 1px solid $purple-blue;
-              padding-right: 10px;
-              flex: 1 1 0px;
-              .view-more {
-                font-style: italic;
-                cursor: pointer;
-                text-decoration: underline;
-                &:hover {
-                  opacity: 0.9;
+              border-left: 1px solid $purple-blue;
+              .severity-data-item {
+                display: flex;
+                flex-direction: column;
+                flex: auto;
+                margin-right: 10px;
+                border-right: 1px solid $purple-blue;
+                padding-right: 10px;
+                flex: 1 1 0px;
+                .view-more {
+                  font-style: italic;
+                  cursor: pointer;
+                  text-decoration: underline;
+                  &:hover {
+                    opacity: 0.9;
+                  }
+                }
+                .nft-image-wrapper {
+                  position: relative;
+                  display: flex;
+                  justify-content: flex-end;
+                  margin: auto;
+                  margin-top: 20px;
+                  margin-bottom: 30px;
                 }
               }
-              .nft-image-wrapper {
-                position: relative;
-                display: flex;
-                justify-content: flex-end;
-                margin: auto;
-                margin-top: 20px;
-                margin-bottom: 30px;
+              .severity-data-item:last-child {
+                border-right: unset;
+                margin-right: unset;
               }
-            }
-            .severity-data-item:last-child {
-              border-right: unset;
-              margin-right: unset;
             }
           }
         }
       }
-    }
-    .vault-expanded-subtitle {
-      font-style: italic;
-      color: $dark-turquoise;
-      padding-bottom: 20px;
-      display: flex;
-    }
-    .twitter-avatars-wrapper {
-      display: flex;
-      margin: 0 20px;
-      overflow-x: scroll;
-      justify-content: center;
-      margin-bottom: 20px;
-    }
-    .vault-prize {
-      margin: auto;
-      font-size: $medium;
-      font-weight: bold;
-      .of-vault-text {
-        color: $white;
-        font-size: $xsmall;
+      .vault-expanded-subtitle {
+        font-style: italic;
+        color: $dark-turquoise;
+        padding-bottom: 20px;
+        display: flex;
+      }
+      .twitter-avatars-wrapper {
+        display: flex;
+        margin: 0 20px;
+        overflow-x: scroll;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+      .vault-prize {
+        margin: auto;
+        font-size: $medium;
+        font-weight: bold;
+        .of-vault-text {
+          color: $white;
+          font-size: $xsmall;
+        }
       }
     }
   }
@@ -218,6 +224,12 @@ td {
   grid-template-columns: 1fr 1fr;
   .contract-name {
     color: $dark-turquoise;
+  }
+  .contract-value {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 

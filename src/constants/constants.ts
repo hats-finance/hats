@@ -63,6 +63,8 @@ export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
 export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 
+export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
+
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",

@@ -1,24 +1,22 @@
-import { NETWORK } from "../../settings";
-import { IVaultDescription } from "../../types/types";
-import { linkToEtherscan, setVulnerabilityProject, truncatedAddress } from "../../utils";
-import CopyToClipboard from "../Shared/CopyToClipboard";
+import { IVault, IVaultDescription } from "../../types/types";
+import { parseJSONToObject, setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
+import Multisig from "./Multisig";
 import Severities from "./Severities";
 import { useHistory } from "react-router-dom";
 import { RoutePaths } from "../../constants/constants";
 
 interface IProps {
-  description: IVaultDescription
-  rewardsLevels: Array<string>
-  tokenPrice: number
-  honeyPotBalance: string
-  stakingTokenDecimals: string
-  projectId: string
+  data: IVault
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { description, rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, projectId } = props;
+  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, id } = props.data.parentVault;
+  const { name, isGuest, parentDescription } = props.data;
   const history = useHistory();
+
+  const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
+  const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
 
   return (
     <tr>
@@ -32,23 +30,15 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">Committee Members:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={description?.committee.members} />
+                  <Members members={isGuest ? descriptionParent?.committee?.members : description?.committee?.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">Multi sig:</span>
-                  <div className="multi-sig-address-wrapper">
-                    <a target="_blank"
-                      rel="noopener noreferrer"
-                      href={linkToEtherscan(description?.committee?.["multisig-address"], NETWORK)}
-                      className="multi-sig-address">
-                      {truncatedAddress(description?.committee?.["multisig-address"] ?? "")}
-                    </a>
-                    <CopyToClipboard value={description?.committee?.["multisig-address"]} />
-                  </div>
+                  <Multisig multisigAddress={isGuest ? descriptionParent?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
                 </div>
               </div>
               <div className="submit-bulnerability-button-wrapper">
-                <button onClick={() => { setVulnerabilityProject(description["Project-metadata"].name, projectId); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+                <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
               </div>
             </div>
           </div>

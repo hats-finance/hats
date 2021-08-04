@@ -25,7 +25,7 @@ export default function Severities(props: IProps) {
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
 
-  const severities = props.severities.map((severity: ISeverity, index: number) => {
+  const severities = props.severities?.map((severity: ISeverity, index: number) => {
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
     const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
@@ -70,7 +70,7 @@ export default function Severities(props: IProps) {
 
   return (
     <>
-      {severities.reverse()}
+      {severities?.reverse()}
       {
         showNFTModal &&
         <Modal title="NFT PRIZE" setShowModal={setShowNFTModal} maxWidth="600px" width="60%" height="fit-content">

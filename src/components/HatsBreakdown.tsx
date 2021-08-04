@@ -29,19 +29,19 @@ export default function HatsBreakdown() {
 
   React.useEffect(() => {
     const getTotalStaked = async () => {
-      const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.depositAmount)) * await getTokenPrice(staker.vault.stakingToken)))).reduce((a: any, b: any) => a + b, 0);
+      const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.depositAmount)) * await getTokenPrice(staker.parentVault.stakingToken)))).reduce((a: any, b: any) => a + b, 0);
       if (!isNaN(Number(totalStaked))) {
         setTotalStaked(Number(totalStaked));
       }
       let amountToSum = 0;
       stakerAmounts.forEach(async (staked: IStaker) => {
         const userDepositSize = Number(fromWei(staked.depositAmount));
-        const tokenValue: number = await getTokenPrice(staked.vault.stakingToken);
+        const tokenValue: number = await getTokenPrice(staked.parentVault.stakingToken);
         let vaultAPY = 0;
         if (tokenValue) {
           vaults.forEach((vault: IVault) => {
-            if (staked.vault.stakingToken === vault.stakingToken) {
-              vaultAPY = vault.apy
+            if (staked.parentVault.stakingToken === vault.parentVault.stakingToken) {
+              vaultAPY = vault.parentVault.apy
             }
           });
           amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);

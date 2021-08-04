@@ -1,9 +1,11 @@
-export interface IVault {
+export interface IParentVault {
   id: string
   pid: string
   stakingToken: string
+  stakingTokenDecimals: string
   stakers: Array<IStaker>
   totalStaking: string
+  honeyPotBalance: string
   totalReward: string
   totalRewardPaid: string
   committee: Array<string>
@@ -13,28 +15,26 @@ export interface IVault {
   approvedClaims: Array<IApprovedClaims>
   rewardsLevels: Array<string>
   rewardsSplit: Array<string>
-  descriptionHash: string
-  description: IVaultDescription | string
-  apy: number
   totalRewardAmount: string
   liquidityPool: boolean
-  tokenPrice: number
-  honeyPotBalance: string
   registered: boolean
   withdrawRequests: Array<IPoolWithdrawRequest>
-  stakingTokenDecimals: string
   totalUsersShares: string
-  guests: Array<IGuestVault>
+  descriptionHash: string
+  guests: Array<IVault>
+  apy: number // calculated on the UI - no via subgraph
+  tokenPrice: number // calculated on the UI - no via subgraph
 }
 
-export interface IGuestVault {
+export interface IVault {
   id: string
-  pid: string
   name: string
   descriptionHash: string
-  description: string
+  description: IVaultDescription | string
   bounty: string
-  vault: IVault
+  isGuest: boolean
+  parentDescription: IVaultDescription | string
+  parentVault: IParentVault;
 }
 
 export interface IVaultDescription {
@@ -84,7 +84,7 @@ export interface IStaker {
   pid: string
   createdAt: string
   address: string
-  vault: IVault
+  parentVault: IParentVault
   rewardPaid: string
   shares: string
   depositAmount: string
@@ -100,7 +100,7 @@ export interface IMaster {
   totalRewardPaid: string
   rewardPerBlock: string
   startBlock: string
-  vaults: Array<IVault>
+  parentVaults: Array<IParentVault>
   totalAllocPoints: string
   createdAt: string
   rewardsToken: string
@@ -123,7 +123,7 @@ export interface ISubmittedClaim {
 export interface IApprovedClaims {
   id: string
   approver: string
-  vault: IVault
+  parentVault: IParentVault
   beneficiary: string
   sevirity: string
   hackerReward: string
