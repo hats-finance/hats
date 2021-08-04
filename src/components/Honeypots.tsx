@@ -30,8 +30,7 @@ export default function Honeypots() {
   const guestVaults: Array<JSX.Element> = [];
 
   const vaults = vaultsData.map((vault: IVault) => {
-    // TODO: temp to not show guest vaults
-    if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
+    if (!vault.parentVault.liquidityPool && vault.parentVault.registered) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.isGuest) {
           guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
