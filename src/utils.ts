@@ -305,7 +305,7 @@ export const parseJSONToObject = (dataString: string) => {
 export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
   let rewardPrice = "-";
   if (tokenPrice) {
-    rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * rewardPercentage * tokenPrice);
+    rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
   return rewardPrice;
 }

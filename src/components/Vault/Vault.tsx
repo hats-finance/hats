@@ -58,7 +58,8 @@ export default function Vault(props: IProps) {
         </td>
         <td>
           <div className="project-name-wrapper">
-            <img src={description?.["project-metadata"]?.icon} alt="project logo" />
+                        {/* TODO: handle project-metadata and Project-metadata */}
+            <img src={description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{name}</div>
               {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}
