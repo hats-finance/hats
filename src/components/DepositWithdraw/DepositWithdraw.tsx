@@ -264,8 +264,9 @@ export default function DepositWithdraw(props: IProps) {
             <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon} alt="token logo" />}<span>{tokenSymbol}</span></div>
-            <input placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus />
+            {/* TODO: handle project-metadata and Project-metadata */}
+            <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{tokenSymbol}</span></div>
+            <input placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus onClick={(e) => (e.target as HTMLInputElement).select()} />
           </div>
           {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${fromWei(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
           {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}

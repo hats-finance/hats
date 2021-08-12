@@ -176,6 +176,7 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
  */
 export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1, disableAutoHide?: boolean) => {
   try {
+    dispatch(toggleNotification(false, undefined, ""));
     const transaction = await tx();
     await onWalletAction();
     if (transaction) {
