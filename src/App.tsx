@@ -34,7 +34,7 @@ function App() {
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
     if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`));
+      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
     }
   }, [dispatch, provider])
 
