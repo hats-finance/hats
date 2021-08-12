@@ -21,6 +21,7 @@ export default function ApproveToken(props: IProps) {
         <LockIcon />
         <span className="title">APPROVE TOKEN</span>
         <span>Before you can proceed, you need to <br /> approve your token spending amount.</span>
+        <span className="sub-text yellow">For the first time only, you will have to sign two transactions, one for approve unlimited spend and one for deposit.</span>
         <button className="unlimited-approval-button" onClick={async () => {
           setShowUnlimitedMessage(false);
           await approveToken();

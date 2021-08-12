@@ -23,6 +23,7 @@
     box-shadow: 0px 4px 4px $black-shadow;
     position: relative;
     color: $white;
+    max-width: 450px;
     .close {
       position: absolute;
       top: 20px;
@@ -43,10 +44,15 @@
       background-color: $turquoise;
       color: $field-blue;
       font-weight: bold;
-      margin: 35px 0;
+      margin: 25px 0;
     }
     .sub-text {
       font-size: $xxsmall;
+      text-align: center;
+      margin: 15px 0;
+      &.yellow {
+        color: $yellow;
+      }
     }
     .limited-approval-button {
       background: transparent;

@@ -193,6 +193,6 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   } catch (error) {
     console.error(error);
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
+    dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
   }
 }
