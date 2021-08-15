@@ -62,6 +62,11 @@ a {
   background-color: $dark-turquoise;
 }
 
+/* Default input border color when not valid */
+.inputError {
+  border-color: $strong-red !important;
+}
+
 @media only screen and (max-width: $small-screen-breakpoint) {
   html {
     font-size: $xsmall;
