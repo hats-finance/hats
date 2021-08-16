@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import DepositWithdraw from "./DepositWithdraw";
+import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import "../styles/LiquidityPools.scss";
 import { IVault } from "../types/types";
 import { RootState } from "../reducers";

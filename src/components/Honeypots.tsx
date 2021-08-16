@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
-import DepositWithdraw from "./DepositWithdraw";
+import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";

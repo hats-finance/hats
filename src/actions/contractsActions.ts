@@ -59,16 +59,18 @@ export const getTokenBalance = async (tokenAddress: string, selectedAddress: str
 }
 
 /**
- * Checks whether a given account address and a spender can spend a given token
+ * Checks whether a given account address and a spender can spend amount of a given token
  * @param {string} tokenAddress
  * @param {string} selectedAddress
  * @param {string} tokenSpender
+ * @param {stirng} amount
+ * @param {string} stakingTokenDecimals
  */
-export const isApproved = async (tokenAddress: string, selectedAddress: string, tokenSpender: string) => {
+export const hasAllowance = async (tokenAddress: string, selectedAddress: string, tokenSpender: string, amount: string, stakingTokenDecimals: string) => {
   try {
     const contract = new Contract(tokenAddress, erc20Abi, provider);
     const allowance: BigNumber = await contract.allowance(selectedAddress, tokenSpender);
-    return allowance.gt(0);
+    return allowance.gte(BigNumber.from(toWei(amount, stakingTokenDecimals)));
   } catch (error) {
     console.error(error);
     return false;
@@ -76,14 +78,15 @@ export const isApproved = async (tokenAddress: string, selectedAddress: string, 
 }
 
 /**
- * Approves a spender to spend a given token
+ * Approves a spender to spend amount of a given token. If no amount given, spending the MAX_SPENDING by default. 
  * @param {string} tokenAddress
  * @param {string} tokenSpender
+ * @param {BigNumber} amountToSpend
  */
-export const approveToken = async (tokenAddress: string, tokenSpender: string) => {
+export const approveToken = async (tokenAddress: string, tokenSpender: string, amountToSpend?: BigNumber) => {
   try {
     const contract = new Contract(tokenAddress, erc20Abi, signer);
-    return await contract.approve(tokenSpender, MAX_SPENDING);
+    return await contract.approve(tokenSpender, amountToSpend ?? MAX_SPENDING);
   } catch (error) {
     console.error(error);
   }
@@ -191,6 +194,6 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   } catch (error) {
     console.error(error);
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
+    dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
   }
 }
