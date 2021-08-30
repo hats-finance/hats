@@ -51,7 +51,7 @@ export default function Vault(props: IProps) {
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
   // TODO: temp
-  const isKleros = props.data.id === "0xe03d5c99da383c434168be5327175212386fb92d531a65125ddd6a5c84cc8621";
+  const isKleros = false; //props.data.id === "0xe03d5c99da383c434168be5327175212386fb92d531a65125ddd6a5c84cc8621";
 
   return (
     <>
