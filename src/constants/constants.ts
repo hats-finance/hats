@@ -65,6 +65,8 @@ export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
+export const HATS_WEBSITE = "https://hats-website.herokuapp.com/";
+
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",
