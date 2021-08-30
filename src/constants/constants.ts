@@ -26,7 +26,7 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  terms_of_service = "Terms of Service",
+  terms_of_service = "Terms of Use",
   privacy_policy = "Privacy and Cookies Policy"
 }
 
@@ -65,7 +65,7 @@ export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
-export const HATS_WEBSITE = "https://hats-website.herokuapp.com/";
+export const HATS_WEBSITE = "https://hats.finance";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

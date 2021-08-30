@@ -50,7 +50,7 @@ export default function Sidebar() {
           <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/HatsFinance"><TwitterIcon /></a>
           <a target="_blank" rel="noopener noreferrer" href="https://github.com/hats-finance"><GitHubIcon /></a>
         </div>
-        <Link to={RoutePaths.terms_of_service}>Terms of Service</Link>
+        <Link to={RoutePaths.terms_of_service}>Terms of Use</Link>
         <Link to={RoutePaths.privacy_policy}>Privacy Policy</Link>
       </div>
     </div>

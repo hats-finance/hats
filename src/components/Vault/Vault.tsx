@@ -50,6 +50,9 @@ export default function Vault(props: IProps) {
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
+  // TODO: temp
+  const isKleros = props.data.id === "0xe03d5c99da383c434168be5327175212386fb92d531a65125ddd6a5c84cc8621";
+
   return (
     <>
       <tr className={isGuest ? "guest" : ""}>
@@ -73,7 +76,7 @@ export default function Vault(props: IProps) {
           <button
             className="action-btn deposit-withdraw"
             onClick={() => { props.setShowModal(true); props.setModalData(props.data); }}
-            disabled={!isProviderAndNetwork(provider)}>
+            disabled={!isProviderAndNetwork(provider) || isKleros}>
             DEPOSIT / WITHDRAW
           </button>
           {selectedAddress && isPendingWithdraw && !isWithdrawable &&
