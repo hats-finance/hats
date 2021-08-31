@@ -300,7 +300,7 @@ export default function DepositWithdraw(props: IProps) {
     {tab === "deposit" && (
       <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
         <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={RoutePaths.terms_of_service}>TERMS OF USE</a></u></label>
+        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={RoutePaths.terms_of_use}>TERMS OF USE</a></u></label>
       </div>
     )}
     {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
