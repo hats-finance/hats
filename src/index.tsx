@@ -9,6 +9,7 @@ import App from "./App";
 import MobileNotification from "./components/MobileNotification";
 import { SUBGRAPH_URI } from "./settings";
 import { isMobile } from "./utils";
+import HttpsRedirect from "react-https-redirect";
 
 const client = new ApolloClient({
   uri: SUBGRAPH_URI
@@ -17,9 +18,11 @@ const client = new ApolloClient({
 ReactDOM.render(
   <Provider store={store}>
     <ApolloProvider client={client}>
-      <Router>
-        {isMobile() ? <MobileNotification /> : <App />}
-      </Router>
+      <HttpsRedirect>
+        <Router>
+          {isMobile() ? <MobileNotification /> : <App />}
+        </Router>
+      </HttpsRedirect>
     </ApolloProvider>
   </Provider>,
   document.getElementById("root"),

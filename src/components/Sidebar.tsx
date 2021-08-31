@@ -7,7 +7,7 @@ import DiscordIcon from "../assets/icons/social/discord.icon";
 import TwitterIcon from "../assets/icons/social/twitter.icon";
 import GitHubIcon from "../assets/icons/social/github.icon";
 import "../styles/Sidebar.scss";
-import { RoutePaths } from "../constants/constants";
+import { COOKIES_POLICY, PRIVACY_POLICY, RoutePaths, SocialLinks } from "../constants/constants";
 import { IVault } from "../types/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../reducers";
@@ -44,14 +44,15 @@ export default function Sidebar() {
       <NavLink to={RoutePaths.vulnerability} className="sidebar-link vulnerability" activeClassName="selected" onClick={() => setShowPools(false)}>Submit Vulnerability</NavLink>
       <div className="bottom-wrapper">
         <div className="social-wrapper">
-          <a target="_blank" rel="noopener noreferrer" href="https://t.me/joinchat/QKP3HcdosVhjOTY0"><TelegramIcon /></a>
-          <a target="_blank" rel="noopener noreferrer" href="https://medium.com/@HatsFinance"><MediumIcon /></a>
-          <a target="_blank" rel="noopener noreferrer" href="https://discord.gg/xDphwRGyW7"><DiscordIcon /></a>
-          <a target="_blank" rel="noopener noreferrer" href="https://twitter.com/HatsFinance"><TwitterIcon /></a>
-          <a target="_blank" rel="noopener noreferrer" href="https://github.com/hats-finance"><GitHubIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Telegram}><TelegramIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Medium}><MediumIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Discord}><DiscordIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Twitter}><TwitterIcon /></a>
+          <a target="_blank" rel="noopener noreferrer" href={SocialLinks.GitHub}><GitHubIcon /></a>
         </div>
-        <Link to={RoutePaths.terms_of_service}>Terms of Service</Link>
-        <Link to={RoutePaths.privacy_policy}>Privacy Policy</Link>
+        <Link to={RoutePaths.terms_of_use}>Terms of Use</Link>
+        <a target="_blank" rel="noopener noreferrer" href={COOKIES_POLICY}>Cookies Policy</a>
+        <a target="_blank" rel="noopener noreferrer" href={PRIVACY_POLICY}>Privacy Policy</a>
       </div>
     </div>
   )

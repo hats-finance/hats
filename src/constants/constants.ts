@@ -10,7 +10,7 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  terms_of_service = "/terms_of_service",
+  terms_of_use = "/terms_of_use",
   privacy_policy = "/privacy_policy"
 }
 
@@ -26,8 +26,7 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  terms_of_service = "Terms of Service",
-  privacy_policy = "Privacy and Cookies Policy"
+  terms_of_use = "Terms of Use"
 }
 
 /**
@@ -65,6 +64,12 @@ export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
+export const HATS_WEBSITE = "https://hats.finance";
+
+export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
+
+export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
+
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",
@@ -77,3 +82,11 @@ export enum Colors {
 /** Supported images and videos extensions for NFTs media */
 export const IMAGES_EXTENTIONS = ["png"];
 export const VIDEOS_EXTENTIONS = ["mp4"];
+
+export enum SocialLinks {
+  Discord = "https://discord.gg/xDphwRGyW7",
+  Twitter = "https://twitter.com/HatsFinance",
+  GitHub = "https://github.com/hats-finance",
+  Medium = "https://medium.com/@HatsFinance",
+  Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
+}

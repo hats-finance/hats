@@ -16,7 +16,6 @@ import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools";
 import TermsOfService from "./components/TermsOfService";
-import PrivacyPolicy from "./components/PrivacyPolicy";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -34,7 +33,7 @@ function App() {
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
     if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`));
+      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
     }
   }, [dispatch, provider])
 
@@ -138,11 +137,8 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        <Route path={RoutePaths.terms_of_service}>
+        <Route path={RoutePaths.terms_of_use}>
           <TermsOfService />
-        </Route>
-        <Route path={RoutePaths.privacy_policy}>
-          <PrivacyPolicy />
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}

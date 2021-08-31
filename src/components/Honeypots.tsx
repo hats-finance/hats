@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
-import DepositWithdraw from "./DepositWithdraw";
+import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
@@ -69,9 +69,10 @@ export default function Honeypots() {
               <td colSpan={7}>Hats Native vaults</td>
             </tr>
             {vaults}
-            <tr className="transparent-row">
-              <td colSpan={7}>Hats Guest bounties</td>
-            </tr>
+            {guestVaults.length > 0 &&
+              <tr className="transparent-row">
+                <td colSpan={7}>Hats Guest bounties</td>
+              </tr>}
             {guestVaults}
           </tbody>
         </table>}

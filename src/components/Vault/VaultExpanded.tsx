@@ -33,7 +33,7 @@ export default function VaultExpanded(props: IProps) {
                   <Members members={isGuest ? descriptionParent?.committee?.members : description?.committee?.members} />
                 </div>
                 <div className="multi-sig-wrapper">
-                  <span className="vault-expanded-subtitle">Multi sig:</span>
+                  <span className="vault-expanded-subtitle">Committee Address:</span>
                   <Multisig multisigAddress={isGuest ? descriptionParent?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
                 </div>
               </div>
