@@ -1,13 +1,12 @@
-import Tooltip from "rc-tooltip";
 import { useState } from "react";
-import InfoIcon from "../../assets/icons/info.icon";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
 import { ISeverity } from "../../types/types";
 import { calculateRewardPrice } from "../../utils";
 import NFTMedia from "../NFTMedia";
 import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
 import ContractsCovered from "./ContractsCovered";
+import { PieChart } from 'react-minimal-pie-chart';
+import { PieChartColors } from "../../constants/constants";
 
 
 interface IProps {
@@ -24,6 +23,17 @@ export default function Severities(props: IProps) {
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
+
+  const pieChartData = [
+    { title: 'Vested YFI', value: 60, color: PieChartColors.vestedYFI },
+    { title: 'YFI', value: 20, color: PieChartColors.yfi },
+    { title: 'Committee', value: 5, color: PieChartColors.committee },
+    { title: 'Vested Hats', value: 5, color: PieChartColors.vestedHats },
+    { title: 'Governance', value: 9, color: PieChartColors.governance },
+    { title: 'Swap and Burn', value: 1, color: PieChartColors.swapAndBurn },
+  ];
+
+  const [pieLabel, setPieLabel] = useState(`${pieChartData[0].value}% ${pieChartData[0].title}`);
 
   const severities = props.severities?.map((severity: ISeverity, index: number) => {
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
@@ -49,16 +59,31 @@ export default function Severities(props: IProps) {
               </span>
             </div>}
           <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Prize:</span>
-            <span className="vault-prize">
+            <span className="vault-expanded-subtitle">Max Prize and content division:</span>
+
+            {/* <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
-              <Tooltip
-                overlay="Prizes are in correlation to the funds in the vault and may change at any time"
-                overlayClassName="tooltip"
-                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
-                <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
-              </Tooltip>
-            </span>
+            </span> */}
+
+            <div className="pie-chart-wrapper">
+              <PieChart
+                label={() => `${rewardPercentage}% $${rewardPrice}`}
+                labelStyle={{
+                  fontSize: '10px',
+                  fontFamily: 'sans-serif',
+                  fill: '#E38627',
+                }}
+                labelPosition={0}
+                center={[100, 50]}
+                viewBoxSize={[200, 100]}
+                onMouseOver={(e, segmentIndex) => setPieLabel(`${pieChartData[segmentIndex].value}% ${pieChartData[segmentIndex].title}`)}
+                lineWidth={15}
+                data={pieChartData}
+              />
+              <span>{pieLabel}</span>
+            </div>
+
+
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
             </span>

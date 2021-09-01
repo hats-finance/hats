@@ -156,11 +156,21 @@ tr {
         display: flex;
         margin: 0 20px;
         overflow-x: scroll;
-        //justify-content: center;
         margin-bottom: 20px;
       }
+
+      .pie-chart-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto 0;
+        span {
+          color: $white;
+          margin-top: 10px;
+        }
+      }
+
       .vault-prize {
-        margin: auto;
         font-size: $medium;
         font-weight: bold;
         .of-vault-text {

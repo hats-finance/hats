@@ -79,6 +79,15 @@ export enum Colors {
   yellow = "#F2C94C"
 }
 
+export enum PieChartColors {
+  vestedYFI = "#15686B",
+  yfi = "#2BC4CA",
+  committee = "#DCFDFF",
+  vestedHats = "#88FFF3",
+  governance = "#38CFD4",
+  swapAndBurn = "#035B5F"
+}
+
 /** Supported images and videos extensions for NFTs media */
 export const IMAGES_EXTENTIONS = ["png"];
 export const VIDEOS_EXTENTIONS = ["mp4"];
