@@ -1,6 +1,14 @@
 import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD } from '../constants/action-types';
+import { IVault } from '../types/types';
 
-const initialState = {
+interface IDataReducer {
+  vaults: Array<IVault>
+  rewardsToken: string
+  hatsPrice: string
+  withdrawSafetyPeriod: Object
+}
+
+const initialState: IDataReducer = {
   vaults: [],
   rewardsToken: "",
   hatsPrice: "",
@@ -12,7 +20,7 @@ export const dataReducer = (state = initialState, action: any) => {
     case UPDATE_VAULTS: {
       return {
         ...state,
-        vaults: action.vaults
+        vaults: action.vaults as IVault[]
       }
     }
     case UPDATE_REWARDS_TOKEN: {
