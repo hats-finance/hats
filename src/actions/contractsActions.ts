@@ -3,20 +3,16 @@ import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants";
-//import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
-//import { NETWORK } from "../settings";
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
-//let infuraProvider: InfuraWebSocketProvider;
 
 if (window.ethereum) {
   provider = new ethers.providers.Web3Provider((window as any).ethereum);
   signer = provider.getSigner();
-  //infuraProvider = InfuraProvider.getWebSocketProvider(NETWORK);
 }
 
 /**
