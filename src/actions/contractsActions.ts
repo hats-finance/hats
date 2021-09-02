@@ -3,19 +3,16 @@ import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants";
-import { InfuraProvider, InfuraWebSocketProvider, Web3Provider } from "@ethersproject/providers";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
-import { NETWORK } from "../settings";
+import { Logger } from "ethers/lib/utils";
 
-let provider: Web3Provider;
+let provider: ethers.providers.Web3Provider;
 let signer: Signer;
-let infuraProvider: InfuraWebSocketProvider;
 
 if (window.ethereum) {
   provider = new ethers.providers.Web3Provider((window as any).ethereum);
   signer = provider.getSigner();
-  infuraProvider = InfuraProvider.getWebSocketProvider(NETWORK);
 }
 
 /**
@@ -49,7 +46,7 @@ export const getTokenSymbol = async (tokenAddress: string) => {
  */
 export const getTokenBalance = async (tokenAddress: string, selectedAddress: string, decimals = "18") => {
   try {
-    const contract = new Contract(tokenAddress, erc20Abi, infuraProvider);
+    const contract = new Contract(tokenAddress, erc20Abi, provider);
     const balance: BigNumber = await contract.balanceOf(selectedAddress);
     return fromWei(balance, decimals);
   } catch (error) {
@@ -181,10 +178,13 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     await onWalletAction();
     if (transaction) {
       dispatch(toggleInTransaction(true, transaction.hash));
-      const receipt = await transaction.wait(confirmations);
-      if (receipt.status === TransactionStatus.Success) {
+      const transactionStatus = await transactionWait(transaction, confirmations);
+      if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();
         dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
+      } else if (transactionStatus === TransactionStatus.Cancelled) {
+        await onFail();
+        dispatch(toggleNotification(true, NotificationType.Error, "Transaction was cancelled", disableAutoHide));
       } else {
         throw new Error(DEFAULT_ERROR_MESSAGE);
       }
@@ -196,4 +196,22 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     await onFail();
     dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
   }
+}
+
+const transactionWait = async (tx, confirmations = 1) => {
+  try {
+    const receipt = await tx.wait(confirmations);
+    if (receipt.status === TransactionStatus.Success) {
+      return TransactionStatus.Success;
+    }
+  } catch (error) {
+    if (error.code === Logger.errors.TRANSACTION_REPLACED) {
+      if (error.cancelled) {
+        return TransactionStatus.Cancelled;
+      } else {
+        return await transactionWait(error.replacement, confirmations);
+      }
+    }
+  }
+  return TransactionStatus.Fail;
 }
