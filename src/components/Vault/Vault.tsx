@@ -21,12 +21,15 @@ export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals, apy } = props.data.parentVault;
-  const { name, isGuest, bounty } = props.data;
+  const { name, isGuest, bounty, id } = props.data;
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.tokenPrice);
+  const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.apy);
+  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const withdrawRequest = withdrawRequests.filter((request: IPoolWithdrawRequest) => request.beneficiary === selectedAddress);
+  const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
 
   // TODO: This is a temp fix to the issue when the countdown gets to minus value once it reaches 0.
   const [timerChanged, setTimerChanged] = useState(false);
@@ -38,15 +41,22 @@ export default function Vault(props: IProps) {
     }
   }, [selectedAddress, withdrawRequest])
 
+  useEffect(() => {
+    setVaultAPY(apy ? `${millify(apy, { precision: 3 })}%` : "-");
+  }, [setVaultAPY, apy])
 
   // temporary fix to https://github.com/hats-finance/hats/issues/29
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     if (apy) {
+  //       setVaultAPY(`${millify(apy, { precision: 3 })}%`);
+  //     }
+  //   }, 1000);
+  // }, [setVaultAPY, apy])
+
   useEffect(() => {
-    setTimeout(() => {
-      if (apy) {
-        setVaultAPY(`${millify(apy, { precision: 3 })}%`);
-      }
-    }, 1000);
-  }, [setVaultAPY, apy])
+    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "");
+  }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
@@ -58,7 +68,7 @@ export default function Vault(props: IProps) {
         </td>
         <td>
           <div className="project-name-wrapper">
-                        {/* TODO: handle project-metadata and Project-metadata */}
+            {/* TODO: handle project-metadata and Project-metadata */}
             <img src={description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{name}</div>
@@ -66,7 +76,7 @@ export default function Vault(props: IProps) {
             </div>
           </div>
         </td>
-        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}</td>
+        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
         <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">

@@ -34,7 +34,8 @@ export enum Pages {
  */
 export enum TransactionStatus {
   Fail = 0,
-  Success = 1
+  Success = 1,
+  Cancelled = 2
 }
 
 export const SMALL_SCREEN_BREAKPOINT = "770px";
