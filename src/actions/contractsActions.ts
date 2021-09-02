@@ -186,7 +186,7 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
       if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();
         dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
-      } if (transactionStatus === TransactionStatus.Cancelled) {
+      } else if (transactionStatus === TransactionStatus.Cancelled) {
         await onFail();
         dispatch(toggleNotification(true, NotificationType.Error, "Transaction was cancelled", disableAutoHide));
       } else {
@@ -196,25 +196,6 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
       throw new Error(DEFAULT_ERROR_MESSAGE);
     }
   } catch (error) {
-    // if (error.code === Logger.errors.TRANSACTION_REPLACED) {
-    //   if (error.cancelled) {
-    //     await onFail();
-    //     dispatch(toggleNotification(true, NotificationType.Error, "Transaction was cancelled", disableAutoHide));
-    //   } else {
-    //     //console.log(error.replacement.hash);
-    //     dispatch(toggleInTransaction(true, error.replacement.hash));
-    //     const receipt = await error.replacement.wait(confirmations);
-    //     if (receipt.status === TransactionStatus.Success) {
-    //       await onSuccess();
-    //       dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
-    //     } else {
-    //       throw new Error(DEFAULT_ERROR_MESSAGE);
-    //     }
-    //   }
-    // } else {
-
-    // }
-
     console.error(error);
     await onFail();
     dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
@@ -232,8 +213,9 @@ const transactionWait = async (tx, confirmations = 1) => {
       if (error.cancelled) {
         return TransactionStatus.Cancelled;
       } else {
-        await transactionWait(error.replacement, confirmations);
+        return await transactionWait(error.replacement, confirmations);
       }
     }
   }
+  return TransactionStatus.Fail;
 }
