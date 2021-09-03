@@ -21,6 +21,12 @@ export interface IParentVault {
   totalUsersShares: string
   descriptionHash: string
   guests: Array<IVault>
+  hackerVestedRewardSplit: string
+  hackerRewardSplit: string
+  committeeRewardSplit: string
+  swapAndBurnSplit: string
+  governanceHatRewardSplit: string
+  hackerHatRewardSplit: string
   apy: number // calculated on the UI - no via subgraph
   tokenPrice: number // calculated on the UI - no via subgraph
 }

@@ -44,6 +44,12 @@ export const GET_VAULTS = gql`
         }
         totalUsersShares
         descriptionHash
+        hackerVestedRewardSplit
+        hackerRewardSplit
+        committeeRewardSplit
+        swapAndBurnSplit
+        governanceHatRewardSplit
+        hackerHatRewardSplit
       }
     }
   }

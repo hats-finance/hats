@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, id } = props.data.parentVault;
+  const { id } = props.data.parentVault;
   const { name, isGuest, parentDescription } = props.data;
   const history = useHistory();
 
@@ -47,10 +47,7 @@ export default function VaultExpanded(props: IProps) {
             <div className="severity-prizes-content">
               <Severities
                 severities={description?.severities}
-                rewardsLevels={rewardsLevels}
-                tokenPrice={tokenPrice}
-                honeyPotBalance={honeyPotBalance}
-                stakingTokenDecimals={stakingTokenDecimals} />
+                parentVault={props.data.parentVault} />
             </div>
           </div>
         </div>

@@ -1,36 +1,34 @@
 import { useState } from "react";
-import { ISeverity } from "../../types/types";
+import { IParentVault, ISeverity } from "../../types/types";
 import { calculateRewardPrice } from "../../utils";
 import NFTMedia from "../NFTMedia";
 import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
 import ContractsCovered from "./ContractsCovered";
-import { PieChart } from 'react-minimal-pie-chart';
+import { PieChart } from "react-minimal-pie-chart";
 import { PieChartColors } from "../../constants/constants";
 
 
 interface IProps {
   severities: Array<ISeverity>
-  rewardsLevels: Array<string>
-  tokenPrice: number
-  honeyPotBalance: string
-  stakingTokenDecimals: string
+  parentVault: IParentVault
 }
 
 export default function Severities(props: IProps) {
-  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals } = props;
+  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit,
+    hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit } = props.parentVault;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
 
   const pieChartData = [
-    { title: 'Vested YFI', value: 60, color: PieChartColors.vestedYFI },
-    { title: 'YFI', value: 20, color: PieChartColors.yfi },
-    { title: 'Committee', value: 5, color: PieChartColors.committee },
-    { title: 'Vested Hats', value: 5, color: PieChartColors.vestedHats },
-    { title: 'Governance', value: 9, color: PieChartColors.governance },
-    { title: 'Swap and Burn', value: 1, color: PieChartColors.swapAndBurn },
+    { title: 'Vested YFI', value: Number(hackerVestedRewardSplit) / 10000, color: PieChartColors.vestedYFI },
+    { title: 'YFI', value: Number(hackerRewardSplit) / 10000, color: PieChartColors.yfi },
+    { title: 'Committee', value: Number(committeeRewardSplit) / 10000, color: PieChartColors.committee },
+    { title: 'Vested Hats', value: Number(hackerHatRewardSplit) / 10000, color: PieChartColors.vestedHats },
+    { title: 'Governance', value: Number(governanceHatRewardSplit) / 10000, color: PieChartColors.governance },
+    { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 10000, color: PieChartColors.swapAndBurn },
   ];
 
   const [pieLabel, setPieLabel] = useState(`${pieChartData[0].value}% ${pieChartData[0].title}`);
