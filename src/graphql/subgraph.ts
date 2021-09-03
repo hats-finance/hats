@@ -32,7 +32,6 @@ export const GET_VAULTS = gql`
         numberOfApprovedClaims
         approvedClaims
         rewardsLevels
-        rewardsSplit
         totalRewardAmount
         liquidityPool
         registered

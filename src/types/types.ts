@@ -14,7 +14,6 @@ export interface IParentVault {
   numberOfApprovedClaims: string
   approvedClaims: Array<IApprovedClaims>
   rewardsLevels: Array<string>
-  rewardsSplit: Array<string>
   totalRewardAmount: string
   liquidityPool: boolean
   registered: boolean
