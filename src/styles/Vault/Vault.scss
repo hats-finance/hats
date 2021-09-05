@@ -64,10 +64,11 @@ tr {
               }
             }
           }
-          .submit-bulnerability-button-wrapper {
+          .submit-vulnerability-button-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 50px;
             button {
               background: transparent;
               color: $drak-green;
@@ -132,10 +133,10 @@ tr {
                 .nft-image-wrapper {
                   position: relative;
                   display: flex;
+                  flex-direction: column;
                   justify-content: flex-end;
                   margin: auto;
-                  margin-top: 20px;
-                  margin-bottom: 30px;
+                  cursor: pointer;
                 }
               }
               .severity-data-item:last-child {
@@ -158,21 +159,66 @@ tr {
         overflow-x: scroll;
         margin-bottom: 20px;
       }
-
-      .pie-chart-wrapper {
+      .severity-prize-division-wrapper {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        margin: auto 0;
-        span {
-          color: $white;
-          margin-top: 10px;
+        color: $white;
+        margin-bottom: auto;
+        .division {
+          border-left: 10px solid;
+          padding: 10px 0 10px 15px;
+          &.vested-yfi {
+            border-left-color: $vested-yfi;
+          }
+          &.yfi {
+            border-left-color: $yfi;
+          }
+          &.committee {
+            border-left-color: $committee;
+          }
+          &.vested-hats {
+            border-left-color: $vested-hats;
+          }
+          &.governance {
+            border-left-color: $governance;
+          }
+          &.swap-and-burn {
+            border-left-color: $swap-and-burn;
+          }
+        }
+      }
+
+      .prize-division-wrapper {
+        display: flex;
+        flex-direction: column;
+        .pie-chart-wrapper {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          svg {
+            max-width: 150px;
+            cursor: pointer;
+          }
+          span {
+            color: $white;
+          }
+          .label-wrapper {
+            margin-left: 50px;
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            border-left: 7px solid;
+            .value {
+              font-weight: bold;
+            }
+          }
         }
       }
 
       .vault-prize {
         font-size: $medium;
         font-weight: bold;
+        margin-bottom: 20px;
         .of-vault-text {
           color: $white;
           font-size: $xsmall;

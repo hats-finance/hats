@@ -5,9 +5,6 @@ import NFTMedia from "../NFTMedia";
 import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
 import ContractsCovered from "./ContractsCovered";
-import { PieChart } from "react-minimal-pie-chart";
-import { PieChartColors } from "../../constants/constants";
-
 
 interface IProps {
   severities: Array<ISeverity>
@@ -15,23 +12,11 @@ interface IProps {
 }
 
 export default function Severities(props: IProps) {
-  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit,
-    hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit } = props.parentVault;
+  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit } = props.parentVault;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
-
-  const pieChartData = [
-    { title: 'Vested YFI', value: Number(hackerVestedRewardSplit) / 10000, color: PieChartColors.vestedYFI },
-    { title: 'YFI', value: Number(hackerRewardSplit) / 10000, color: PieChartColors.yfi },
-    { title: 'Committee', value: Number(committeeRewardSplit) / 10000, color: PieChartColors.committee },
-    { title: 'Vested Hats', value: Number(hackerHatRewardSplit) / 10000, color: PieChartColors.vestedHats },
-    { title: 'Governance', value: Number(governanceHatRewardSplit) / 10000, color: PieChartColors.governance },
-    { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 10000, color: PieChartColors.swapAndBurn },
-  ];
-
-  const [pieLabel, setPieLabel] = useState(`${pieChartData[0].value}% ${pieChartData[0].title}`);
 
   const severities = props.severities?.map((severity: ISeverity, index: number) => {
     const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
@@ -49,39 +34,28 @@ export default function Severities(props: IProps) {
           {severity?.["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
-              <div className="nft-image-wrapper">
+              <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 <NFTMedia link={severity?.["nft-metadata"]?.image} />
+                <span className="view-more">
+                  View NFT info
+                </span>
               </div>
-              <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                View NFT info
-              </span>
             </div>}
           <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Max Prize and content division:</span>
-
-            {/* <span className="vault-prize">
+            <span className="vault-expanded-subtitle">Max Prize:</span>
+            <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
-            </span> */}
-
-            <div className="pie-chart-wrapper">
-              <PieChart
-                label={() => `${rewardPercentage}% $${rewardPrice}`}
-                labelStyle={{
-                  fontSize: '10px',
-                  fontFamily: 'sans-serif',
-                  fill: '#E38627',
-                }}
-                labelPosition={0}
-                center={[100, 50]}
-                viewBoxSize={[200, 100]}
-                onMouseOver={(e, segmentIndex) => setPieLabel(`${pieChartData[segmentIndex].value}% ${pieChartData[segmentIndex].title}`)}
-                lineWidth={15}
-                data={pieChartData}
-              />
-              <span>{pieLabel}</span>
+            </span>
+            <span className="vault-expanded-subtitle">Prize Content division:</span>
+            <div className="severity-prize-division-wrapper">
+              {/* {rewardPrice && <span>&#8776; {percentage(Number(hackerVestedRewardSplit) / 100, rewardPrice)}</span>} */}
+              <span className="division vested-yfi">{`${Number(hackerVestedRewardSplit) / 100}% Vested YFI`}</span>
+              <span className="division yfi">{`${Number(hackerRewardSplit) / 100}% YFI`}</span>
+              <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee`}</span>
+              <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats`}</span>
+              <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance`}</span>
+              {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn`}</span>}
             </div>
-
-
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
             </span>

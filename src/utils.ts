@@ -329,3 +329,12 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
   }
   localStorage.setItem("submitVulnerabilityData", JSON.stringify(cachedData));
 }
+
+/**
+ * Calculates percantage of partialValue from totalValue
+ * @param {string | number} partialValue 
+ * @param {string | number} totalValue 
+ */
+export const percentage = (partialValue: string | number, totalValue: string | number) => {
+  return (100 * Number(partialValue)) / Number(totalValue);
+}
