@@ -1,3 +1,4 @@
+import millify from "millify";
 import { useState } from "react";
 import { IParentVault, ISeverity } from "../../types/types";
 import { calculateRewardPrice } from "../../utils";
@@ -44,17 +45,16 @@ export default function Severities(props: IProps) {
           <div className="severity-data-item">
             <span className="vault-expanded-subtitle">Max Prize:</span>
             <span className="vault-prize">
-              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
+              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice < 0 ? "-" : millify(rewardPrice)}`}&nbsp;
             </span>
             <span className="vault-expanded-subtitle">Prize Content division:</span>
             <div className="severity-prize-division-wrapper">
-              {/* {rewardPrice && <span>&#8776; {percentage(Number(hackerVestedRewardSplit) / 100, rewardPrice)}</span>} */}
-              <span className="division vested-yfi">{`${Number(hackerVestedRewardSplit) / 100}% Vested YFI`}</span>
-              <span className="division yfi">{`${Number(hackerRewardSplit) / 100}% YFI`}</span>
-              <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee`}</span>
-              <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats`}</span>
-              <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance`}</span>
-              {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn`}</span>}
+              <span className="division vested-yfi">{`${Number(hackerVestedRewardSplit) / 100}% Vested YFI ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division yfi">{`${Number(hackerRewardSplit) / 100}% YFI ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${rewardPrice < 0 ? "-" : millify((Number(committeeRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance ≈ $${rewardPrice < 0 ? "-" : millify((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+              {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${rewardPrice < 0 ? "-" : millify((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>}
             </div>
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
