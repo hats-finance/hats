@@ -28,6 +28,8 @@ export const GET_VAULTS = gql`
           safetyPeriod
           withdrawRequestEnablePeriod
           withdrawRequestPendingPeriod
+          vestingHatDuration
+          vestingHatPeriods
         }
         numberOfApprovedClaims
         approvedClaims
@@ -50,6 +52,8 @@ export const GET_VAULTS = gql`
         swapAndBurnSplit
         governanceHatRewardSplit
         hackerHatRewardSplit
+        vestingDuration
+        vestingPeriods
       }
     }
   }

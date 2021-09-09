@@ -27,6 +27,8 @@ export interface IParentVault {
   swapAndBurnSplit: string
   governanceHatRewardSplit: string
   hackerHatRewardSplit: string
+  vestingDuration: string
+  vestingPeriods: string
   apy: number // calculated on the UI - no via subgraph
   tokenPrice: number // calculated on the UI - no via subgraph
 }
@@ -119,6 +121,8 @@ export interface IMaster {
   safetyPeriod: string
   withdrawRequestEnablePeriod: string
   withdrawRequestPendingPeriod: string
+  vestingHatDuration: string
+  vestingHatPeriods: string
 }
 
 export interface ISubmittedClaim {

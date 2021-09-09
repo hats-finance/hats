@@ -126,6 +126,7 @@ tr {
                   font-style: italic;
                   cursor: pointer;
                   text-decoration: underline;
+                  margin-top: 20px;
                   &:hover {
                     opacity: 0.9;
                   }
@@ -167,11 +168,11 @@ tr {
         .division {
           border-left: 10px solid;
           padding: 10px 0 10px 15px;
-          &.vested-yfi {
-            border-left-color: $vested-yfi;
+          &.vested-token {
+            border-left-color: $vested-token;
           }
-          &.yfi {
-            border-left-color: $yfi;
+          &.token {
+            border-left-color: $token;
           }
           &.committee {
             border-left-color: $committee;
