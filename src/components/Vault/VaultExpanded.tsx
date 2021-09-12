@@ -72,9 +72,16 @@ export default function VaultExpanded(props: IProps) {
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="pie-chart-wrapper">
                   <PieChart
-                    onMouseOver={(e, segmentIndex) => setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color })}
+                    onMouseOver={(e, segmentIndex) => { 
+                      setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color });
+                      (e.target as SVGAElement).setAttribute("stroke-width", "20")
+                    }}
+                    onMouseOut={(e) => {
+                      (e.target as SVGAElement).setAttribute("stroke-width", "15")
+                    }}
                     lineWidth={30}
                     data={pieChartData}
+                    radius={40}
                   />
                   <div className="label-wrapper" style={{ borderLeftColor: currentPieData.color }}>
                     <span className="value">{`${currentPieData.vaule}%`}</span>
