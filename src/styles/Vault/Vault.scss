@@ -41,8 +41,9 @@ tr {
           .member-link-wrapper {
             display: flex;
             flex-direction: column;
-            margin: 0px 15px;
+            margin: 10px;
             align-items: center;
+            text-align: center;
             .twitter-avatar {
               border-radius: 50%;
               width: 40px;
@@ -50,6 +51,7 @@ tr {
             .member-username {
               margin-top: 5px;
               text-transform: capitalize;
+              width: 100px;
             }
           }
           .multi-sig-wrapper {
@@ -156,9 +158,9 @@ tr {
       }
       .twitter-avatars-wrapper {
         display: flex;
-        margin: 0 20px;
-        overflow-x: scroll;
-        margin-bottom: 20px;
+        flex-wrap: wrap;
+        max-height: 250px;
+        overflow: scroll;
       }
       .severity-prize-division-wrapper {
         display: flex;

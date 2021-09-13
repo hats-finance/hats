@@ -3,7 +3,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/react-hooks";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateLiquidityPool, updateWithdrawSafetyPeriod } from './actions/index';
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
 import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
@@ -81,10 +81,10 @@ function App() {
     if (!loading && !error && data && data.vaults) {
       dispatch(updateVaults(data.vaults));
       // update first Liquidity Pool we find
-      const liquidityPool: IVault = data.vaults.find((element: IVault) => element.parentVault.liquidityPool);
-      if (liquidityPool !== undefined) {
-        dispatch(updateLiquidityPool(liquidityPool.id));
-      }
+      // const liquidityPool: IVault = data.vaults.find((element: IVault) => element.parentVault.liquidityPool);
+      // if (liquidityPool !== undefined) {
+      //   dispatch(updateLiquidityPool(liquidityPool.id));
+      // }
     }
   }, [loading, error, data, dispatch]);
 
