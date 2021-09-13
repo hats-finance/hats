@@ -64,10 +64,11 @@ tr {
               }
             }
           }
-          .submit-bulnerability-button-wrapper {
+          .submit-vulnerability-button-wrapper {
             display: flex;
             align-items: center;
             justify-content: center;
+            margin-top: 50px;
             button {
               background: transparent;
               color: $drak-green;
@@ -125,6 +126,7 @@ tr {
                   font-style: italic;
                   cursor: pointer;
                   text-decoration: underline;
+                  margin-top: 20px;
                   &:hover {
                     opacity: 0.9;
                   }
@@ -132,10 +134,10 @@ tr {
                 .nft-image-wrapper {
                   position: relative;
                   display: flex;
+                  flex-direction: column;
                   justify-content: flex-end;
                   margin: auto;
-                  margin-top: 20px;
-                  margin-bottom: 30px;
+                  cursor: pointer;
                 }
               }
               .severity-data-item:last-child {
@@ -156,13 +158,68 @@ tr {
         display: flex;
         margin: 0 20px;
         overflow-x: scroll;
-        //justify-content: center;
         margin-bottom: 20px;
       }
+      .severity-prize-division-wrapper {
+        display: flex;
+        flex-direction: column;
+        color: $white;
+        margin-bottom: auto;
+        .division {
+          border-left: 10px solid;
+          padding: 10px 0 10px 15px;
+          &.vested-token {
+            border-left-color: $vested-token;
+          }
+          &.token {
+            border-left-color: $token;
+          }
+          &.committee {
+            border-left-color: $committee;
+          }
+          &.vested-hats {
+            border-left-color: $vested-hats;
+          }
+          &.governance {
+            border-left-color: $governance;
+          }
+          &.swap-and-burn {
+            border-left-color: $swap-and-burn;
+          }
+        }
+      }
+
+      .prize-division-wrapper {
+        display: flex;
+        flex-direction: column;
+        .pie-chart-wrapper {
+          display: flex;
+          align-items: center;
+          height: 100%;
+          svg {
+            max-width: 150px;
+            cursor: pointer;
+          }
+          span {
+            color: $white;
+          }
+          .label-wrapper {
+            margin-left: 50px;
+            padding-left: 10px;
+            display: flex;
+            flex-direction: column;
+            border-left: 7px solid;
+            .value {
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
       .vault-prize {
-        margin: auto;
         font-size: $medium;
         font-weight: bold;
+        margin-bottom: 20px;
         .of-vault-text {
           color: $white;
           font-size: $xsmall;

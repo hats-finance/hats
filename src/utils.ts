@@ -9,7 +9,6 @@ import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { NETWORK } from "./settings";
 import moment from "moment";
-import millify from "millify";
 import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 
 /**
@@ -303,11 +302,10 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} stakingTokenDecimals
  */
 export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
-  let rewardPrice = "-";
   if (tokenPrice) {
-    rewardPrice = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
+    return Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice;
   }
-  return rewardPrice;
+  return -1;
 }
 
 /**

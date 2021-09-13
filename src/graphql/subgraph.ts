@@ -15,6 +15,7 @@ export const GET_VAULTS = gql`
         pid
         stakingToken
         stakingTokenDecimals
+        stakingTokenSymbol
         totalStaking
         honeyPotBalance
         totalReward
@@ -28,6 +29,8 @@ export const GET_VAULTS = gql`
           safetyPeriod
           withdrawRequestEnablePeriod
           withdrawRequestPendingPeriod
+          vestingHatDuration
+          vestingHatPeriods
         }
         numberOfApprovedClaims
         approvedClaims
@@ -44,6 +47,14 @@ export const GET_VAULTS = gql`
         }
         totalUsersShares
         descriptionHash
+        hackerVestedRewardSplit
+        hackerRewardSplit
+        committeeRewardSplit
+        swapAndBurnSplit
+        governanceHatRewardSplit
+        hackerHatRewardSplit
+        vestingDuration
+        vestingPeriods
       }
     }
   }

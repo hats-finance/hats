@@ -61,7 +61,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
-export const IPFS_PREFIX = "https://ipfs.io/ipfs/";
+export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs/"
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
@@ -78,6 +78,15 @@ export enum Colors {
   turquoise = "#8AFCFD",
   darkBlue = "#000723",
   yellow = "#F2C94C"
+}
+
+export enum PieChartColors {
+  vestedToken = "#15686B",
+  token = "#2BC4CA",
+  committee = "#DCFDFF",
+  vestedHats = "#88FFF3",
+  governance = "#38CFD4",
+  swapAndBurn = "#035B5F"
 }
 
 /** Supported images and videos extensions for NFTs media */

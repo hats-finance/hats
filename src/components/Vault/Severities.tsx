@@ -1,25 +1,20 @@
-import Tooltip from "rc-tooltip";
+import millify from "millify";
 import { useState } from "react";
-import InfoIcon from "../../assets/icons/info.icon";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
-import { ISeverity } from "../../types/types";
+import { IParentVault, ISeverity } from "../../types/types";
 import { calculateRewardPrice } from "../../utils";
 import NFTMedia from "../NFTMedia";
 import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
 import ContractsCovered from "./ContractsCovered";
-
+import humanizeDuration from "humanize-duration";
 
 interface IProps {
   severities: Array<ISeverity>
-  rewardsLevels: Array<string>
-  tokenPrice: number
-  honeyPotBalance: string
-  stakingTokenDecimals: string
+  parentVault: IParentVault
 }
 
 export default function Severities(props: IProps) {
-  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals } = props;
+  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.parentVault;
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
@@ -41,24 +36,27 @@ export default function Severities(props: IProps) {
           {severity?.["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
-              <div className="nft-image-wrapper">
+              <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 <NFTMedia link={severity?.["nft-metadata"]?.image} />
+                <span className="view-more">
+                  View NFT info
+                </span>
               </div>
-              <span className="view-more" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                View NFT info
-              </span>
             </div>}
           <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Prize:</span>
+            <span className="vault-expanded-subtitle">Max Prize:</span>
             <span className="vault-prize">
-              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice}`}&nbsp;
-              <Tooltip
-                overlay="Prizes are in correlation to the funds in the vault and may change at any time"
-                overlayClassName="tooltip"
-                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}>
-                <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
-              </Tooltip>
+              <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice < 0 ? "-" : millify(rewardPrice)}`}&nbsp;
             </span>
+            <span className="vault-expanded-subtitle">Prize Content division:</span>
+            <div className="severity-prize-division-wrapper">
+              <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100}% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division token">{`${Number(hackerRewardSplit) / 100}% ${stakingTokenSymbol} ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${rewardPrice < 0 ? "-" : millify((Number(committeeRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats for ${humanizeDuration(Number(props.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+              <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance ≈ $${rewardPrice < 0 ? "-" : millify((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+              {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${rewardPrice < 0 ? "-" : millify((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>}
+            </div>
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
               View Contracts Covered
             </span>
@@ -86,5 +84,3 @@ export default function Severities(props: IProps) {
     </>
   )
 }
-
-

@@ -4,19 +4,37 @@ import Members from "./Members";
 import Multisig from "./Multisig";
 import Severities from "./Severities";
 import { useHistory } from "react-router-dom";
-import { RoutePaths } from "../../constants/constants";
+import { PieChartColors, RoutePaths } from "../../constants/constants";
+import { PieChart } from "react-minimal-pie-chart";
+import { useState } from "react";
+import humanizeDuration from "humanize-duration";
 
 interface IProps {
   data: IVault
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, id } = props.data.parentVault;
+  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, isGuest, parentDescription } = props.data;
   const history = useHistory();
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
   const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
+
+  const pieChartData = [
+    { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
+    { title: `${stakingTokenSymbol}`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
+    { title: 'Committee', value: Number(committeeRewardSplit) / 100, color: PieChartColors.committee },
+    { title: `Vested Hats for ${humanizeDuration(Number(props.data.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
+    { title: 'Governance', value: Number(governanceHatRewardSplit) / 100, color: PieChartColors.governance },
+    { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
+  ];
+
+  const [currentPieData, setCurrentPieData] = useState({
+    vaule: pieChartData[0].value,
+    title: pieChartData[0].title,
+    color: PieChartColors.vestedToken
+  });
 
   return (
     <tr>
@@ -36,9 +54,31 @@ export default function VaultExpanded(props: IProps) {
                   <span className="vault-expanded-subtitle">Committee Address:</span>
                   <Multisig multisigAddress={isGuest ? descriptionParent?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
                 </div>
+                <div className="submit-vulnerability-button-wrapper">
+                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+                </div>
               </div>
-              <div className="submit-bulnerability-button-wrapper">
-                <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+              <div className="prize-division-wrapper">
+                <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                <div className="pie-chart-wrapper">
+                  <PieChart
+                    onMouseOver={(e, segmentIndex) => { 
+                      setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color });
+                      //(e.target as SVGAElement).setAttribute("stroke-width", "20");
+                    }}
+                    // onMouseOut={(e) => {
+                    //   (e.target as SVGAElement).setAttribute("stroke-width", "15")
+                    // }}
+                    lineWidth={30}
+                    data={pieChartData}
+                    //radius={40}
+                  />
+                  <div className="label-wrapper" style={{ borderLeftColor: currentPieData.color }}>
+                    <span className="value">{`${currentPieData.vaule}%`}</span>
+                    <span>{currentPieData.title}</span>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
@@ -47,10 +87,7 @@ export default function VaultExpanded(props: IProps) {
             <div className="severity-prizes-content">
               <Severities
                 severities={description?.severities}
-                rewardsLevels={rewardsLevels}
-                tokenPrice={tokenPrice}
-                honeyPotBalance={honeyPotBalance}
-                stakingTokenDecimals={stakingTokenDecimals} />
+                parentVault={props.data.parentVault} />
             </div>
           </div>
         </div>

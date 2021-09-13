@@ -3,6 +3,7 @@ export interface IParentVault {
   pid: string
   stakingToken: string
   stakingTokenDecimals: string
+  stakingTokenSymbol: string
   stakers: Array<IStaker>
   totalStaking: string
   honeyPotBalance: string
@@ -21,6 +22,14 @@ export interface IParentVault {
   totalUsersShares: string
   descriptionHash: string
   guests: Array<IVault>
+  hackerVestedRewardSplit: string
+  hackerRewardSplit: string
+  committeeRewardSplit: string
+  swapAndBurnSplit: string
+  governanceHatRewardSplit: string
+  hackerHatRewardSplit: string
+  vestingDuration: string
+  vestingPeriods: string
   apy: number // calculated on the UI - no via subgraph
   tokenPrice: number // calculated on the UI - no via subgraph
 }
@@ -113,6 +122,8 @@ export interface IMaster {
   safetyPeriod: string
   withdrawRequestEnablePeriod: string
   withdrawRequestPendingPeriod: string
+  vestingHatDuration: string
+  vestingHatPeriods: string
 }
 
 export interface ISubmittedClaim {
