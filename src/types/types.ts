@@ -3,6 +3,7 @@ export interface IParentVault {
   pid: string
   stakingToken: string
   stakingTokenDecimals: string
+  stakingTokenSymbol: string
   stakers: Array<IStaker>
   totalStaking: string
   honeyPotBalance: string

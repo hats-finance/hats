@@ -6,34 +6,24 @@ import Severities from "./Severities";
 import { useHistory } from "react-router-dom";
 import { PieChartColors, RoutePaths } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import humanizeDuration from "humanize-duration";
-import { getTokenSymbol } from "../../actions/contractsActions";
 
 interface IProps {
   data: IVault
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingToken } = props.data.parentVault;
+  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, isGuest, parentDescription } = props.data;
   const history = useHistory();
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
   const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
 
-  const [tokenSymbol, setTokenSymbol] = useState("");
-
-  useEffect(() => {
-    const getTokenData = async () => {
-      setTokenSymbol(await getTokenSymbol(stakingToken));
-    }
-    getTokenData();
-  }, [stakingToken]);
-
   const pieChartData = [
-    { title: `Vested ${tokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
-    { title: `${tokenSymbol}`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
+    { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
+    { title: `${stakingTokenSymbol}`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
     { title: 'Committee', value: Number(committeeRewardSplit) / 100, color: PieChartColors.committee },
     { title: `Vested Hats for ${humanizeDuration(Number(props.data.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
     { title: 'Governance', value: Number(governanceHatRewardSplit) / 100, color: PieChartColors.governance },
@@ -74,14 +64,14 @@ export default function VaultExpanded(props: IProps) {
                   <PieChart
                     onMouseOver={(e, segmentIndex) => { 
                       setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color });
-                      (e.target as SVGAElement).setAttribute("stroke-width", "20")
+                      //(e.target as SVGAElement).setAttribute("stroke-width", "20");
                     }}
-                    onMouseOut={(e) => {
-                      (e.target as SVGAElement).setAttribute("stroke-width", "15")
-                    }}
+                    // onMouseOut={(e) => {
+                    //   (e.target as SVGAElement).setAttribute("stroke-width", "15")
+                    // }}
                     lineWidth={30}
                     data={pieChartData}
-                    radius={40}
+                    //radius={40}
                   />
                   <div className="label-wrapper" style={{ borderLeftColor: currentPieData.color }}>
                     <span className="value">{`${currentPieData.vaule}%`}</span>

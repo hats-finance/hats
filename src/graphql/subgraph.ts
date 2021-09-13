@@ -15,6 +15,7 @@ export const GET_VAULTS = gql`
         pid
         stakingToken
         stakingTokenDecimals
+        stakingTokenSymbol
         totalStaking
         honeyPotBalance
         totalReward
