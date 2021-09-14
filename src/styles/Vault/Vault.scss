@@ -300,9 +300,13 @@ tr {
   grid-template-columns: 1fr 1fr;
   .contract-name {
     color: $dark-turquoise;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-right: 10px;
   }
   .contract-value {
-    max-width: 200px;
+    max-width: 150px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

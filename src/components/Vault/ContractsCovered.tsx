@@ -16,8 +16,8 @@ export default function ContractsCovered(props: IProps) {
 
         return (
           <a key={index} target="_blank" rel="noopener noreferrer" className="contract-wrapper" href={isLink ? contractVaule : linkToEtherscan(contractVaule, NETWORK)}>
-            <span className="contract-name">{contractName}</span>
-            <span className="contract-value">{isLink ? contractVaule : truncatedAddress(contractVaule)}</span>
+            <span title={contractName} className="contract-name">{contractName}</span>
+            <span title={contractVaule} className="contract-value">{isLink ? contractVaule : truncatedAddress(contractVaule)}</span>
           </a>
         )
       })}

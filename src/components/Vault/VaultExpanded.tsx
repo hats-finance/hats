@@ -22,10 +22,10 @@ export default function VaultExpanded(props: IProps) {
   const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
 
   const pieChartData = [
-    { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
-    { title: `${stakingTokenSymbol}`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
+    { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
+    { title: `${stakingTokenSymbol} (Hacker reward)`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
     { title: 'Committee', value: Number(committeeRewardSplit) / 100, color: PieChartColors.committee },
-    { title: `Vested Hats for ${humanizeDuration(Number(props.data.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })}`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
+    { title: `Vested Hats for ${humanizeDuration(Number(props.data.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
     { title: 'Governance', value: Number(governanceHatRewardSplit) / 100, color: PieChartColors.governance },
     { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
   ];
