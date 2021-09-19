@@ -55,6 +55,8 @@ export const GET_VAULTS = gql`
         hackerHatRewardSplit
         vestingDuration
         vestingPeriods
+        depositPause
+        committeeCheckedIn
       }
     }
   }
