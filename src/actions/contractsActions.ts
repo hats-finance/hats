@@ -1,4 +1,4 @@
-import { toWei, fromWei } from "../utils";
+import { toWei, fromWei, checkMasterAddress } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
@@ -109,6 +109,7 @@ export const withdrawRequest = async (pid: string, address: string) => {
  * @param {string} amount
  */
 export const depositAndClaim = async (pid: string, address: string, amount: string, decimals: string) => {
+  checkMasterAddress(address);
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.deposit(pid, toWei(amount, decimals));
 }
@@ -120,6 +121,7 @@ export const depositAndClaim = async (pid: string, address: string, amount: stri
  * @param {string} amount
  */
 export const withdrawAndClaim = async (pid: string, address: string, amount: string) => {
+  checkMasterAddress(address);
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.withdraw(pid, amount);
 }
@@ -129,6 +131,7 @@ export const withdrawAndClaim = async (pid: string, address: string, amount: str
  * @param {stirng} address
  */
 export const claim = async (pid: string, address: string) => {
+  checkMasterAddress(address);
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.claimReward(pid);
 }
@@ -155,6 +158,7 @@ export const getPendingReward = async (address: string, pid: string, selectedAdd
  * @param {string} descriptionHash the sha256 of the vulnerability description
  */
 export const submitVulnerability = async (address: string, descriptionHash: string) => {
+  checkMasterAddress(address);
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.claim(descriptionHash);
 }
@@ -198,7 +202,7 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   }
 }
 
-const transactionWait = async (tx, confirmations = 1) => {
+const transactionWait = async (tx: any, confirmations = 1) => {
   try {
     const receipt = await tx.wait(confirmations);
     if (receipt.status === TransactionStatus.Success) {
