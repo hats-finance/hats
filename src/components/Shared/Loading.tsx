@@ -9,14 +9,16 @@ interface IProps {
   spinner?: boolean
   extraText?: string
   domElement?: HTMLElement // any valid HTML DOM element
+  zIndex?: number
 }
 
 export default function Loading(props: IProps) {
-  const { fixed, top, right, spinner, extraText, domElement } = props;
+  const { fixed, top, right, spinner, extraText, domElement, zIndex } = props;
 
   const styles = {
     "top": top ?? "50%",
-    "right": right ?? "50%"
+    "right": right ?? "50%",
+    "z-index": zIndex ?? 5
   }
 
   const loadingClass = classNames({
