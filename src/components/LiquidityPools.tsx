@@ -1,20 +1,18 @@
+import { useQuery } from "@apollo/client";
+import { LIQUIDITY_POOL_APOLLO_CONTEXT } from "../constants/constants";
+import { GET_INCENTIVES } from "../graphql/subgraph";
+import { DATA_POLLING_INTERVAL } from "../settings";
 import "../styles/LiquidityPools.scss";
-// import { useSelector } from "react-redux";
-// import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
-// import { IVault } from "../types/types";
-// import { RootState } from "../reducers";
-// import { isProviderAndNetwork } from "../utils";
-// import { NETWORK } from "../settings";
 
 export default function LiquidityPools() {
-  // const poolsData = useSelector((state: RootState) => state.dataReducer.vaults);
-  // const currentPool = useSelector((state: RootState) => state.layoutReducer.liquidityPoolID);
-  // const pool = poolsData.find((element: IVault) => element?.id === currentPool);
-  // const provider = useSelector((state: RootState) => state.web3Reducer.provider);
+  const { loading, error, data } =   useQuery(GET_INCENTIVES, { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LIQUIDITY_POOL_APOLLO_CONTEXT } });
+
+  if (!loading && !error && data && data.incentives) {
+    console.log(data);
+  }
 
   return (
     <div className="content liquidity-pools-wrapper">
-      {/* {!isProviderAndNetwork(provider) ? <span>{`Please connect the wallet to ${NETWORK}`}</span> : !pool ? <span>No Pools</span> : <DepositWithdraw data={pool} isPool={true} />} */}
       <span>Coming soon...</span>
     </div>
   )

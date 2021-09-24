@@ -57,11 +57,6 @@ export const updateHatsPrice = (hatsPrice: number) => ({
   hatsPrice
 })
 
-export const updateLiquidityPool = (liquidityPoolID: string) => ({
-  type: types.UPDATE_LIQUIDITY_POOL,
-  liquidityPoolID
-})
-
 export const updateWithdrawSafetyPeriod = (withdrawSafetyPeriod: IWithdrawSafetyPeriod) => ({
   type: types.UPDATE_WITHDRAW_SAFETY_PERIOD,
   withdrawSafetyPeriod

@@ -7,7 +7,7 @@ import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 import * as contractsActions from "../../actions/contractsActions";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../../reducers";
 import Tooltip from "rc-tooltip";

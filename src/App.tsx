@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
 import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
@@ -76,44 +76,34 @@ function App() {
   }, [dispatch, rewardsToken])
 
   const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
-
-  useEffect(() => {
-    if (!loading && !error && data && data.vaults) {
-      dispatch(updateVaults(data.vaults));
-      // update first Liquidity Pool we find
-      // const liquidityPool: IVault = data.vaults.find((element: IVault) => element.parentVault.liquidityPool);
-      // if (liquidityPool !== undefined) {
-      //   dispatch(updateLiquidityPool(liquidityPool.id));
-      // }
-    }
-  }, [loading, error, data, dispatch]);
-
-  const vaults: Array<IVault> = useSelector((state: RootState) => state.dataReducer.vaults);
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
   useEffect(() => {
-    const calculateVaultsApy = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
-      }
-      dispatch(updateVaults(vaults));
-    }
-    if (hatsPrice && vaults) {
-      calculateVaultsApy();
-    }
-  }, [dispatch, hatsPrice, vaults])
+    if (!loading && !error && data && data.vaults) {
+      let extensibleVaults: IVault[] = [];
 
-  useEffect(() => {
-    const calculatetokenPrices = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
+      /**
+       * The new ApolloClient InMemoryCache policy makes the retrieved data frozen/sealed,
+       * meaning it's not extensible and no new fields can be added to the object.
+       * Here we're deep-cloning the retrieved data so it'll be extensible.
+       */
+      for (const vault of data.vaults) {
+        extensibleVaults.push(JSON.parse(JSON.stringify(vault)));
       }
-      dispatch(updateVaults(vaults));
+
+      const calculateTokenPricesAndApy = async () => {
+        for (const vault of extensibleVaults) {
+          vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
+          if (hatsPrice) {
+            vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
+          }
+        }
+      }
+
+      calculateTokenPricesAndApy();
+      dispatch(updateVaults(extensibleVaults));
     }
-    if (vaults) {
-      calculatetokenPrices();
-    }
-  }, [dispatch, vaults])
+  }, [loading, error, data, dispatch, hatsPrice]);
 
   return (
     <>

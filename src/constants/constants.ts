@@ -29,6 +29,13 @@ export enum Pages {
   terms_of_use = "Terms of Use"
 }
 
+export enum LiquidityPoolsURIs {
+  main = "???",
+  rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
+}
+
+export const LIQUIDITY_POOL_APOLLO_CONTEXT = "liquidity_pools"
+
 /**
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
  */

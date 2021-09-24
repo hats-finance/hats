@@ -18,7 +18,7 @@ export default function Loading(props: IProps) {
   const styles = {
     "top": top ?? "50%",
     "right": right ?? "50%",
-    "z-index": zIndex ?? 5
+    "zIndex": zIndex ?? 5
   }
 
   const loadingClass = classNames({

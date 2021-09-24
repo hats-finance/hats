@@ -4,7 +4,7 @@ import Logo from "../assets/icons/logo.icon";
 import "../styles/HatsBreakdown.scss";
 import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
-import { useQuery } from "@apollo/react-hooks";
+import { useQuery } from "@apollo/client";
 import { fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
 import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
