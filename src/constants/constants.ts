@@ -29,12 +29,12 @@ export enum Pages {
   terms_of_use = "Terms of Use"
 }
 
-export enum LiquidityPoolsURIs {
+export enum LPUniswapURIs {
   main = "???",
   rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
 }
 
-export const LIQUIDITY_POOL_APOLLO_CONTEXT = "liquidity_pools"
+export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
 
 /**
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
@@ -77,6 +77,8 @@ export const HATS_WEBSITE = "https://hats.finance";
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
+
+export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

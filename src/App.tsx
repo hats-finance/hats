@@ -14,7 +14,7 @@ import Sidebar from "./components/Sidebar";
 import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
-import LiquidityPools from "./components/LiquidityPools";
+import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 import TermsOfService from "./components/TermsOfService";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";

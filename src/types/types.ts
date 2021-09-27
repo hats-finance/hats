@@ -163,3 +163,24 @@ export interface IWithdrawSafetyPeriod {
   saftyStartsAt: number
   saftyEndsAt: number
 }
+
+export interface IIncentive {
+  id: string
+  rewardToken: string
+  pool: string
+  startTime: string
+  endTime: string
+  refundee: string
+  reward: string
+  ended: boolean
+}
+
+export interface IPosition {
+  id: string
+  tokenId: string
+  owner: string
+  staked: boolean
+  oldOwner: string
+  liquidity: string
+  approved: string
+}

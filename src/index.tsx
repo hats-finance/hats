@@ -6,20 +6,20 @@ import store from "./store/index";
 import "./index.css";
 import App from "./App";
 import MobileNotification from "./components/MobileNotification";
-import { LIQUIDITY_POOLS_URI, SUBGRAPH_URI } from "./settings";
+import { LP_UNISWAP_URI, SUBGRAPH_URI } from "./settings";
 import { isMobile } from "./utils";
 import HttpsRedirect from "react-https-redirect";
-import { LIQUIDITY_POOL_APOLLO_CONTEXT } from "./constants/constants";
+import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 
-const hats_subgraph = new HttpLink({
+const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
 });
 
-const liquidity_pools = new HttpLink({
-  uri: LIQUIDITY_POOLS_URI
+const lp_uniswap_subgraph = new HttpLink({
+  uri: LP_UNISWAP_URI
 });
 
-const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LIQUIDITY_POOL_APOLLO_CONTEXT, liquidity_pools, hats_subgraph );
+const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, lp_uniswap_subgraph, main_subgraph );
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),

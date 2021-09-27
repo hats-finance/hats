@@ -116,10 +116,34 @@ export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string)
   `;
 }
 
-export const GET_INCENTIVES = gql`
-  query getIncentives {
-    incentives {
-      startTime
+export const getIncentives = (rewardToken: string, ended: boolean) => {
+  return gql`
+    query getIncentives {
+      incentives (where: { rewardToken: "${rewardToken}", ended: ${ended} }) {
+        id
+        startTime
+        pool
+        startTime
+        endTime
+        refundee
+        reward
+      }
     }
-  }
-`
+  `;
+}
+
+export const getPositions = (owner: string) => {
+  return gql`
+    query getPositions {
+      positions (where: { owner: "${owner}" }) {
+        id
+        tokenId
+        owner
+        staked
+        oldOwner
+        liquidity
+        approved
+      }
+    }
+  `;
+}
