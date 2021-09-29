@@ -2,7 +2,8 @@ import { toWei, fromWei } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants";
+//import NFTManagerABI from "../data/abis/ NonfungiblePositionManager.json";
+import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants"; //UNISWAP_V3_STAKER_ADDRESS
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
@@ -158,6 +159,18 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
   const contract = new Contract(address, vaultAbi, signer);
   return await contract.claim(descriptionHash);
 }
+
+// /**
+//  * 
+//  * @param from
+//  * @param tokenID
+//  * @param data
+//  */
+// export const uniswapStake = async (from: string, tokenID: string, data: any) => {
+//   const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, NFTManagerABI, signer);
+//   //const encodedData = ethers.utils.defaultAbiCoder.encode(INCENTIVE_KEY_ABI, incentiveResultToStakeAdapter(createIncentiveResult))
+//   return await contract.safeTransferFrom(from, UNISWAP_V3_STAKER_ADDRESS, tokenID, data);
+// }
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain

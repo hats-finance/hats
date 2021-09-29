@@ -18,7 +18,7 @@ export default function LiquidityPools() {
 
   return (
     <div className="content liquidity-pools-wrapper">
-      {loading ? <Loading fixed /> : <LiquidityPool />}
+      {loading ? <Loading fixed /> : <LiquidityPool incentive={data.incentives[0]} />}
     </div>
   )
 }

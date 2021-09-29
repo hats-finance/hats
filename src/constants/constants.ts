@@ -80,6 +80,10 @@ export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
 
 export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
+export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
+
+//export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
+
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",
