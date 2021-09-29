@@ -21,6 +21,11 @@ export enum Networks {
   kovan = "kovan"
 }
 
+export enum MasterAddresses {
+  main = "0x571f39d351513146248acafa9d0509319a327c4d",
+  rinkeby = "0x7626d5d4d3a3cd2f9bc36e160dd9f8fba39fdad2"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",

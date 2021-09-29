@@ -7,7 +7,7 @@ import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
-import { NETWORK } from "./settings";
+import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
 import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 
@@ -326,4 +326,14 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
     projectId: projectId
   }
   localStorage.setItem("submitVulnerabilityData", JSON.stringify(cachedData));
+}
+
+/**
+ * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally. 
+ * @param {string} masterAddress
+ */
+export const checkMasterAddress = (masterAddress: string) => {
+  if (masterAddress !== MASTER_ADDRESS) {
+    throw new Error("Master address does not match!")
+  }
 }
