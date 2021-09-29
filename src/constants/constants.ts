@@ -112,22 +112,18 @@ export const DEFAULT_VULNERABILITY_STRUCTURE = `
 
 ### Description
 
-<!-- --> A clear and concise description of the problem...
+<!-- A clear and concise description of the problem... --> 
 
 
 ##  Minimal Reproduction
 
-<!--
-Please let us know how we can reproduce this issue. Include the exact method you used to do it. 
--->
+<!--Please let us know how we can reproduce this issue. Include the exact method you used to do it.-->
 
 ##  Error
 
-<pre><code>
+
 <!-- If the issue is accompanied by an error, please share the error logs with us below. If you have a lot of logs, place make a paste bin with your logs and share the link with us here: -->
 <!-- -->
-
-</code></pre>
 
 
 ##   Your Environment
