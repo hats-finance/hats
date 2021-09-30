@@ -110,7 +110,7 @@ export enum SocialLinks {
 export const DEFAULT_VULNERABILITY_STRUCTURE = `
 #  Vulnerability Report
 
-### Description
+## Description
 
 <!-- A clear and concise description of the problem... --> 
 
