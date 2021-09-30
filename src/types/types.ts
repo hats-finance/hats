@@ -67,6 +67,7 @@ export interface IVaultDescription {
     name: string
     url: string
   }
+  message: string
 }
 
 export interface ICommitteeMember {

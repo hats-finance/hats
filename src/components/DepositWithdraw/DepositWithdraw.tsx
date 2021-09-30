@@ -101,6 +101,7 @@ export default function DepositWithdraw(props: IProps) {
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const [termsOfUse, setTermsOfUse] = useState(false);
+  const [showUniqueMessage, setShowUniqueMessage] = useState(true);
 
   const [deposited, setDeposited] = useState(BigNumber.from(0));
   const [availableToWithdraw, setAvailableToWithdraw] = useState(BigNumber.from(0));
@@ -236,6 +237,11 @@ export default function DepositWithdraw(props: IProps) {
           <img src={require("../../assets/icons/vaults/etherum.svg").default} alt="etherum logo" width="40px" />
         </div>
       </div>}
+    {description?.message && showUniqueMessage && (
+      <div className="unique-message-wrapper">
+        <span>{description?.message}</span>
+        <span className="close" onClick={() => setShowUniqueMessage(false)}>&times;</span>
+      </div>)}
     <div className="tabs-wrapper">
       <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
       <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>

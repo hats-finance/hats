@@ -182,6 +182,23 @@
     line-height: 32px;
     font-size: $xxsmall;
   }
+  .unique-message-wrapper {
+    color: $dark-blue;
+    background-color: $yellow;
+    font-size: $xxsmall;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .close {
+      margin: 0 10px;
+      font-size: $small;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
   .action-btn-wrapper {
     display: flex;
     flex-direction: column;
