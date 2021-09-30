@@ -23,6 +23,44 @@
         font-weight: bold;
         background-color: $black;
         padding: 10px 20px;
+        margin-left: 10px;
+      }
+    }
+
+    .lp-incentive,
+    .your-incentive {
+      display: flex;
+      flex-direction: column;
+      margin: 30px 0;
+      .sub-title {
+        color: $white;
+        font-weight: bold;
+      }
+      .data-container {
+        display: flex;
+        .data-element {
+          display: flex;
+          flex-direction: column;
+          margin: 20px;
+          &:first-child {
+            margin-left: unset;
+          }
+          .element-value {
+            color: $white;
+            font-weight: bold;
+            font-size: $medium;
+            margin-bottom: 10px;
+          }
+          input {
+            background-color: $black;
+            border: none;
+            color: $white;
+            font-size: $medium;
+            padding: 10px 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+        }
       }
     }
 
@@ -39,8 +77,14 @@
         &.claim {
           background-color: $turquoise;
           color: $dark-blue;
+          margin-left: 50px;
         }
       }
+    }
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      animation: disabledFade 0.4s;
     }
   }
 }

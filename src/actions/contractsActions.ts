@@ -2,11 +2,14 @@ import { toWei, fromWei, checkMasterAddress } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-//import NFTManagerABI from "../data/abis/ NonfungiblePositionManager.json";
-import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, NotificationType, TransactionStatus } from "../constants/constants"; //UNISWAP_V3_STAKER_ADDRESS
+import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
+import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
+import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
+import { NETWORK } from "../settings";
+import { IIncentive } from "../types/types";
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -164,17 +167,49 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
   return await contract.claim(descriptionHash);
 }
 
-// /**
-//  * 
-//  * @param from
-//  * @param tokenID
-//  * @param data
-//  */
-// export const uniswapStake = async (from: string, tokenID: string, data: any) => {
-//   const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, NFTManagerABI, signer);
-//   //const encodedData = ethers.utils.defaultAbiCoder.encode(INCENTIVE_KEY_ABI, incentiveResultToStakeAdapter(createIncentiveResult))
-//   return await contract.safeTransferFrom(from, UNISWAP_V3_STAKER_ADDRESS, tokenID, data);
-// }
+/**
+ * Stakes in Uniswap V3 Liquidity Pool
+ * @param {string} from 
+ * @param {string} tokenID 
+ * @param {IIncentive} incentive 
+ */
+export const uniswapStake = async (from: string, tokenID: string, incentive: IIncentive) => {
+  const contract = new Contract(NFTMangerAddress[NETWORK], NFTManagerABI, signer);
+  const encodedData = ethers.utils.defaultAbiCoder.encode([INCENTIVE_KEY_ABI], [{
+    pool: incentive.pool,
+    startTime: incentive.startTime,
+    endTime: incentive.endTime,
+    rewardToken: incentive.rewardToken,
+    refundee: incentive.refundee
+  }]);
+  return await contract.safeTransferFrom(from, UNISWAP_V3_STAKER_ADDRESS, Number(tokenID), encodedData);
+}
+
+/**
+ * Unstakes in Uniswap V3 Liquidity Pool
+ * @param {string} tokenID 
+ * @param {IIncentive} incentive 
+ */
+export const uniswapUnstake = async (tokenID: string, incentive: IIncentive) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.unstakeToken({
+    pool: incentive.pool,
+    startTime: incentive.startTime,
+    endTime: incentive.endTime,
+    rewardToken: incentive.rewardToken,
+    refundee: incentive.refundee
+  }, Number(tokenID));
+}
+
+/**
+ * Claims in Uniswap V3 Liquidity Pool
+ * @param {string} rewardToken
+ * @param {string} from
+ */
+export const uniswapClaimReward = async (rewardToken: string, from: string) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.claimReward(rewardToken, from, 0); // zero means claiming anything available
+}
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain
@@ -199,9 +234,11 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
       if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();
         dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
+        dispatch(toggleInTransaction(false));
       } else if (transactionStatus === TransactionStatus.Cancelled) {
         await onFail();
-        dispatch(toggleNotification(true, NotificationType.Error, "Transaction was cancelled", disableAutoHide));
+        dispatch(toggleNotification(true, NotificationType.Info, "Transaction was cancelled", disableAutoHide));
+        dispatch(toggleInTransaction(false));
       } else {
         throw new Error(DEFAULT_ERROR_MESSAGE);
       }
@@ -212,6 +249,7 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     console.error(error);
     await onFail();
     dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
+    dispatch(toggleInTransaction(false));
   }
 }
 

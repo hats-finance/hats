@@ -1,17 +1,28 @@
 import { useQuery } from "@apollo/client";
+import classNames from "classnames";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { createTransaction, uniswapStake, uniswapUnstake } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, UNISWAP_V3_APP } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
 import { DATA_POLLING_INTERVAL } from "../../settings";
-import { IPosition } from "../../types/types";
+import { IIncentive, IPosition } from "../../types/types";
+import Loading from "../Shared/Loading";
 import "./Positions.scss";
 
-export default function Positions() {
+interface IProps {
+  incentive: IIncentive
+  setShowModal: Function
+}
+
+export default function Positions(props: IProps) {
+  const dispatch = useDispatch();
+  const { incentive, setShowModal } = props;
   const [selectedPosition, setSelectedPosition] = useState<IPosition>();
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   let { loading, error, data } = useQuery(getPositions(selectedAddress), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
+  const [pendingWalletAction, setPendingWalletAction] = useState(false);
 
   let positions = [];
 
@@ -28,9 +39,37 @@ export default function Positions() {
     })
   }
 
+  const stake = async (tokenId: string) => {
+    setPendingWalletAction(true);
+    await createTransaction(
+      async () => uniswapStake(selectedAddress, tokenId, incentive),
+      () => { setShowModal(false); },
+      () => { setPendingWalletAction(false); },
+      () => { setPendingWalletAction(false); },
+      dispatch,
+      "Staking Success!"
+    )
+  }
+
+  const unstake = async (tokenId: string) => {
+    setPendingWalletAction(true);
+    await createTransaction(
+      async () => uniswapUnstake(tokenId, incentive),
+      () => { setShowModal(false); },
+      () => { setPendingWalletAction(false); },
+      () => { setPendingWalletAction(false); },
+      dispatch,
+      "Unstaking Success!"
+    )
+  }
+  
+  const positionsWrapperClass = classNames({
+    "positions-wrapper": true,
+    "disabled": pendingWalletAction
+  })
 
   return (
-    <div className="positions-wrapper">
+    <div className={positionsWrapperClass}>
       <div>Uniswap V3 uses NFT tokens to represent LP positions. Your Uniswap V3 LP tokens eligible for Hats rewards are listed below.</div>
 
       {loading ? <span className="loading">loading...</span> : (
@@ -41,8 +80,9 @@ export default function Positions() {
         </>
       )}
 
-      {selectedPosition && <button>{selectedPosition.staked ? "UNSTAKE" : "STAKE"}</button>}
+      {selectedPosition && <button onClick={async () => { selectedPosition.staked ? await unstake(selectedPosition.tokenId) : await stake(selectedPosition.tokenId) }}>{selectedPosition.staked ? "UNSTAKE" : "STAKE"}</button>}
 
+      {pendingWalletAction && <Loading />}
     </div>
   )
 }

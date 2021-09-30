@@ -26,6 +26,11 @@ export enum MasterAddresses {
   rinkeby = "0x7626d5d4d3a3cd2f9bc36e160dd9f8fba39fdad2"
 }
 
+export enum NFTMangerAddress {
+  main = "???",
+  rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
@@ -87,7 +92,8 @@ export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
 
-//export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
+/** Used for the Uniswap V3 Liquidity Pool staking */
+export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

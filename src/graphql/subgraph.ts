@@ -127,6 +127,7 @@ export const getIncentives = (rewardToken: string, ended: boolean) => {
         endTime
         refundee
         reward
+        rewardToken
       }
     }
   `;
@@ -143,6 +144,8 @@ export const getPositions = (owner: string) => {
         oldOwner
         liquidity
         approved
+        token1
+        token2
       }
     }
   `;

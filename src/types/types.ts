@@ -183,4 +183,6 @@ export interface IPosition {
   oldOwner: string
   liquidity: string
   approved: string
+  token1: string
+  token2: string
 }

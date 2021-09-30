@@ -15,7 +15,6 @@ import { Colors, RoutePaths, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT } f
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../../settings";
-import { toggleInTransaction } from "../../actions";
 import moment from "moment";
 import WithdrawCountdown from "../WithdrawCountdown";
 import humanizeDuration from "humanize-duration";
@@ -153,7 +152,6 @@ export default function DepositWithdraw(props: IProps) {
         setPendingWalletAction(false);
       },
       () => { setPendingWalletAction(false); }, dispatch, `Spending ${stakingTokenSymbol} approved`);
-    dispatch(toggleInTransaction(false));
   }
 
   const tryDeposit = async () => {
@@ -174,7 +172,6 @@ export default function DepositWithdraw(props: IProps) {
         setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
-    dispatch(toggleInTransaction(false));
   }
 
   const withdrawAndClaim = async () => {
@@ -187,7 +184,6 @@ export default function DepositWithdraw(props: IProps) {
         setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
-    dispatch(toggleInTransaction(false));
   }
 
   const withdrawRequest = async () => {
@@ -199,7 +195,6 @@ export default function DepositWithdraw(props: IProps) {
       () => { setPendingWalletAction(false); },
       dispatch,
       "Withdrawal Request succeeded");
-    dispatch(toggleInTransaction(false));
   }
 
   const claim = async () => {
@@ -211,7 +206,6 @@ export default function DepositWithdraw(props: IProps) {
         setUserInput("");
         fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
-    dispatch(toggleInTransaction(false));
   }
 
   const depositWithdrawWrapperClass = classNames({
