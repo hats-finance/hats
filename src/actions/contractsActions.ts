@@ -212,8 +212,19 @@ export const uniswapClaimReward = async (rewardToken: string, from: string) => {
 }
 
 /**
- * This is a generic function that wraps a call that interacts with the blockchain
+ * Withdraws Token in Uniswap V3 Liquidity Pool
+ * @param {string} tokenID
+ * @param {string} to
+ */
+export const uniswapWithdrawToken = async (tokenID: string, to: string) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.withdrawToken(tokenID, to, "0x");
+}
+
+/**
+ * This is a generic function that wraps a call that interacts with the blockchain.
  * Dispatches automatically a notification on success or on error.
+ * Uses the transactionWait function to wait for a transaction status.
  * @param {Function} tx The function that creates the transaction on the blockchain
  * @param {Function} onSuccess Function to call on success
  * @param {Function} onWalletAction Function to call while a transaction is being processed
@@ -245,7 +256,7 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     } else {
       throw new Error(DEFAULT_ERROR_MESSAGE);
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     await onFail();
     dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
@@ -253,13 +264,21 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   }
 }
 
-const transactionWait = async (tx: any, confirmations = 1) => {
+/**
+ * Wait for a transaction result.
+ * If the transaction is failed and it's not a user cancellation (e.g. tx speed-up) 
+ * so we call recursively to transactionWait to get the new tx hash and wait again for a result.
+ * @param {any} tx
+ * @param {number} confirmations
+ * @returns {TransactionStatus}
+ */
+const transactionWait = async (tx: any, confirmations = 1): Promise<TransactionStatus> => {
   try {
     const receipt = await tx.wait(confirmations);
     if (receipt.status === TransactionStatus.Success) {
       return TransactionStatus.Success;
     }
-  } catch (error) {
+  } catch (error: any) {
     if (error.code === Logger.errors.TRANSACTION_REPLACED) {
       if (error.cancelled) {
         return TransactionStatus.Cancelled;

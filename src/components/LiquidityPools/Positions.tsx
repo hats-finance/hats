@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTransaction, uniswapStake, uniswapUnstake } from "../../actions/contractsActions";
+import { createTransaction, uniswapStake, uniswapUnstake, uniswapWithdrawToken } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, UNISWAP_V3_APP } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
@@ -34,6 +34,7 @@ export default function Positions(props: IProps) {
         <div key={position.id} className={positionClassname} onClick={() => setSelectedPosition(position)}>
           <div className="nft-label">NFT</div>
           {position.tokenId}
+          {position.canWithdraw && <span className="withdrawable-label">(withdrawable)</span>}
         </div>
       )
     })
@@ -62,7 +63,19 @@ export default function Positions(props: IProps) {
       "Unstaking Success!"
     )
   }
-  
+
+  const withdraw = async (tokenId: string) => {
+    setPendingWalletAction(true);
+    await createTransaction(
+      async () => uniswapWithdrawToken(tokenId, selectedAddress),
+      () => { setShowModal(false); },
+      () => { setPendingWalletAction(false); },
+      () => { setPendingWalletAction(false); },
+      dispatch,
+      "Withdraw Token Success!"
+    )
+  }
+
   const positionsWrapperClass = classNames({
     "positions-wrapper": true,
     "disabled": pendingWalletAction
@@ -80,7 +93,10 @@ export default function Positions(props: IProps) {
         </>
       )}
 
-      {selectedPosition && <button onClick={async () => { selectedPosition.staked ? await unstake(selectedPosition.tokenId) : await stake(selectedPosition.tokenId) }}>{selectedPosition.staked ? "UNSTAKE" : "STAKE"}</button>}
+      <div className="position-actions-wrapper">
+        {selectedPosition && <button onClick={async () => { selectedPosition.staked ? await unstake(selectedPosition.tokenId) : await stake(selectedPosition.tokenId) }}>{selectedPosition.staked ? "UNSTAKE" : "STAKE"}</button>}
+        {selectedPosition?.canWithdraw && <button className="lp-action-btn withdraw" onClick={async () => await withdraw(selectedPosition.tokenId)}>WITHDRAW TOKEN</button>}
+      </div>
 
       {pendingWalletAction && <Loading />}
     </div>

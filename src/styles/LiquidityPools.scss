@@ -70,11 +70,13 @@
       .lp-action-btn {
         border: 1px solid $turquoise;
         background: transparent;
-        width: 50%;
         &.stake {
           color: $turquoise;
+          width: 40%;
         }
+        &.withdraw,
         &.claim {
+          width: 25%;
           background-color: $turquoise;
           color: $dark-blue;
           margin-left: 50px;

@@ -1,4 +1,5 @@
 import { gql } from "@apollo/client";
+import moment from "moment";
 
 export const GET_VAULTS = gql`
   query getVaults {
@@ -119,9 +120,8 @@ export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string)
 export const getIncentives = (rewardToken: string, ended: boolean) => {
   return gql`
     query getIncentives {
-      incentives (where: { rewardToken: "${rewardToken}", ended: ${ended} }) {
+      incentives (where: { rewardToken: "${rewardToken}", ended: ${ended}, startTime_lte: ${moment().unix()}, endTime_gte: ${moment().unix()} }) {
         id
-        startTime
         pool
         startTime
         endTime
@@ -146,6 +146,7 @@ export const getPositions = (owner: string) => {
         approved
         token1
         token2
+        canWithdraw
       }
     }
   `;

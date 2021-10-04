@@ -6,7 +6,7 @@ import { createTransaction, uniswapClaimReward } from "../../actions/contractsAc
 import { RootState } from "../../reducers";
 import "../../styles/LiquidityPools.scss";
 import { IIncentive } from "../../types/types";
-import { fetchWalletBalance, getNetworkNameByChainId, isDigitsOnly, isProviderAndNetwork } from "../../utils";
+import { fetchWalletBalance, fromWei, getNetworkNameByChainId, isProviderAndNetwork } from "../../utils";
 import Loading from "../Shared/Loading";
 import Modal from "../Shared/Modal";
 import Positions from "./Positions";
@@ -23,7 +23,6 @@ export default function LiquidityPool(props: IProps) {
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const { incentive } = props;
   const [showModal, setShowModal] = useState(false);
-  const [userIncentive, setUserIncentive] = useState("");
   const startTime = moment.unix(Number(incentive?.startTime)).local().format('DD-MM-YYYY HH:mm');
   const endTime = moment.unix(Number(incentive?.endTime)).local().format('DD-MM-YYYY HH:mm');
   const [pendingWalletAction, setPendingWalletAction] = useState(false);
@@ -58,7 +57,7 @@ export default function LiquidityPool(props: IProps) {
         <div className="sub-title">Pool Incentive:</div>
         <div className="data-container">
           <div className="data-element">
-            <span className="element-value">??? HAT</span>
+            <span className="element-value">{`${!incentive ? "-" : fromWei(incentive?.reward)} HAT`}</span>
             <span>Total Rewared</span>
           </div>
           <div className="data-element">
@@ -71,7 +70,7 @@ export default function LiquidityPool(props: IProps) {
         <div className="sub-title">Your Incentive:</div>
         <div className="data-container">
           <div className="data-element">
-            <input value={userIncentive} placeholder="0.0" type="number" min="0" autoFocus onChange={(e) => { isDigitsOnly(e.target.value) && setUserIncentive(e.target.value) }} />
+            <span className="element-value">???</span>
             <span>Staked Uniswap V3 NFTs</span>
           </div>
           <div className="data-element">
@@ -87,6 +86,7 @@ export default function LiquidityPool(props: IProps) {
       <div className="lp-actions">
         <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>STAKE &#38; UNSTAKE LP TOKENS</button>
         <button className="lp-action-btn claim" onClick={async () => await claim()} disabled={!isProviderAndNetwork(provider)}>CLAIM ACCRUED REWARDS</button>
+        <button className="lp-action-btn withdraw" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>WITHDRAW TOKEN</button>
       </div>
 
       {pendingWalletAction && <Loading />}

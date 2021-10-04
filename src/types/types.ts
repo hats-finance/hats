@@ -185,4 +185,5 @@ export interface IPosition {
   approved: string
   token1: string
   token2: string
+  canWithdraw: boolean
 }

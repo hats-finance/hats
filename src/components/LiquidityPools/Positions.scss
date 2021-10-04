@@ -29,6 +29,9 @@
         letter-spacing: -3px;
         font-weight: bold;
       }
+      .withdrawable-label {
+        margin-left: auto;
+      }
       display: flex;
       align-items: center;
       height: 20px;
@@ -45,6 +48,11 @@
       }
     }
   }
+  .position-actions-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
   a {
     color: $turquoise;
     text-decoration: underline;
@@ -54,7 +62,6 @@
     background: transparent;
     color: $turquoise;
     border: 1px solid;
-    margin-left: auto;
   }
   &.disabled {
     opacity: 0.5;
