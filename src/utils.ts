@@ -10,6 +10,7 @@ import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
 import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
+import millify from "millify";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -115,6 +116,16 @@ export const fromWei = (wei: BigNumber | string, decimals = "18"): string => {
  */
 export const toWei = (value: string, decimals = "18"): BigNumber => {
   return ethers.utils.parseUnits(value, decimals);
+}
+
+/**
+ * Formats a WEI value.
+ * If the value is null returns "-"
+ * @param {string} value 
+ * @param {number} precision 
+ */
+export const formatWei = (value: string, precision?: number): string => {
+  return !value ? "-" : millify(Number(fromWei(value)), { precision: precision });
 }
 
 /**

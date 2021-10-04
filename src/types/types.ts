@@ -173,6 +173,7 @@ export interface IIncentive {
   refundee: string
   reward: string
   ended: boolean
+  totalRewardUnclaimed: string
 }
 
 export interface IPosition {

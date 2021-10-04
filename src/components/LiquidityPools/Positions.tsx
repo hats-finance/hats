@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import classNames from "classnames";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTransaction, uniswapStake, uniswapUnstake, uniswapWithdrawToken } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, UNISWAP_V3_APP } from "../../constants/constants";
@@ -23,22 +23,24 @@ export default function Positions(props: IProps) {
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   let { loading, error, data } = useQuery(getPositions(selectedAddress), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
   const [pendingWalletAction, setPendingWalletAction] = useState(false);
+  const [positions, setPositions] = useState([]);
 
-  let positions = [];
-
-  if (!loading && !error && data && data.positions) {
-    console.log(data);
-    positions = data.positions.map((position: IPosition) => {
-      const positionClassname = selectedPosition?.id === position.id ? "position selected" : "position";
-      return (
-        <div key={position.id} className={positionClassname} onClick={() => setSelectedPosition(position)}>
-          <div className="nft-label">NFT</div>
-          {position.tokenId}
-          {position.canWithdraw && <span className="withdrawable-label">(withdrawable)</span>}
-        </div>
-      )
-    })
-  }
+  useEffect(() => {
+    if (!loading && !error && data && data.positions) {
+      console.log(data);
+      const positions = data.positions.map((position: IPosition) => {
+        const positionClassname = selectedPosition?.id === position.id ? "position selected" : "position";
+        return (
+          <div key={position.id} className={positionClassname} onClick={() => setSelectedPosition(position)}>
+            <div className="nft-label">NFT</div>
+            {position.tokenId}
+            {position.canWithdraw && <span className="withdrawable-label">(withdrawable)</span>}
+          </div>
+        )
+      })
+      setPositions(positions);
+    }
+  }, [loading, error, data, selectedPosition?.id])
 
   const stake = async (tokenId: string) => {
     setPendingWalletAction(true);

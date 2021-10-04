@@ -128,6 +128,7 @@ export const getIncentives = (rewardToken: string, ended: boolean) => {
         refundee
         reward
         rewardToken
+        totalRewardUnclaimed
       }
     }
   `;

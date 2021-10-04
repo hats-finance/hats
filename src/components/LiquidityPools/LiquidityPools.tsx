@@ -8,19 +8,24 @@ import LiquidityPool from "./LiquidityPool";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import { IIncentive } from "../../types/types";
+import { useEffect, useState } from "react";
 
 export default function LiquidityPools() {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { loading, error, data } = useQuery(getIncentives(rewardsToken, false), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
+  const [incentives, setIncentives] = useState([]);
 
-  if (!loading && !error && data && data.incentives) {
-    console.log(data);
-  }
+  useEffect(() => {
+    if (!loading && !error && data && data.incentives) {
+      console.log(data);
+      setIncentives(data.incentives);
+    }
+  }, [loading, error, data])
 
   // TODO: temporary - show only this incentive
   return (
     <div className="content liquidity-pools-wrapper">
-      {loading ? <Loading fixed /> : <LiquidityPool incentive={data.incentives.filter((incentive: IIncentive)=> incentive.id === "0x96c4ed92424f1682883fef9ed9e6e7dc0bc1c1f939b946ea800d689961b6bc3f")[0]} />}
+      {incentives.length === 0 ? <Loading fixed /> : <LiquidityPool incentive={incentives.filter((incentive: IIncentive)=> incentive.id === "0x96c4ed92424f1682883fef9ed9e6e7dc0bc1c1f939b946ea800d689961b6bc3f")[0]} />}
     </div>
   )
 }

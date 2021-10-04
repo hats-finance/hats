@@ -222,6 +222,16 @@ export const uniswapWithdrawToken = async (tokenID: string, to: string) => {
 }
 
 /**
+ * Gets the accrued rewards in Uniswap V3 Liquidity Pool
+ * @param {string} rewardToken 
+ * @param {string} userAddress
+ */
+export const uniswapRewards = async (rewardToken: string, userAddress: string) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.rewards(rewardToken, userAddress);
+}
+
+/**
  * This is a generic function that wraps a call that interacts with the blockchain.
  * Dispatches automatically a notification on success or on error.
  * Uses the transactionWait function to wait for a transaction status.
