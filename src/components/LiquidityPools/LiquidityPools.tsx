@@ -17,7 +17,6 @@ export default function LiquidityPools() {
 
   useEffect(() => {
     if (!loading && !error && data && data.incentives) {
-      console.log(data);
       setIncentives(data.incentives);
     }
   }, [loading, error, data])

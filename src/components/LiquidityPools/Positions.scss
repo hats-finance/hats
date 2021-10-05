@@ -4,10 +4,6 @@
   display: flex;
   flex-direction: column;
   padding: $modal-element-padding;
-  .loading {
-    text-align: center;
-    margin: 30px;
-  }
   .sub-title {
     color: $white;
     font-weight: bold;

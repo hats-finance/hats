@@ -197,9 +197,15 @@ export const uniswapSafeTransferFrom = async (from: string, tokenID: string, inc
  * @param {string} tokenID 
  * @param {string} incentiveID 
  */
-export const uniswapStake = async (tokenID: string, incentiveID: string) => {
+export const uniswapStake = async (tokenID: string, incentive: IIncentive) => {
   const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-  return await contract.stakeToken(tokenID, incentiveID);
+  return await contract.stakeToken({
+    pool: incentive.pool,
+    startTime: incentive.startTime,
+    endTime: incentive.endTime,
+    rewardToken: incentive.rewardToken,
+    refundee: incentive.refundee
+  }, Number(tokenID));
 }
 
 /**
@@ -249,13 +255,19 @@ export const uniswapRewards = async (rewardToken: string, userAddress: string) =
 }
 
 /**
- * 
+ * Gets reward info for a position in Uniswap V3 Liquidity Pool
  * @param {string} tokenID
  * @param {string} incentiveID
  */
-export const uniswapGetRewardInfo = async(tokenID: string, incentiveID: string) => {
+export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentive) => {
   const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-  return await contract.getRewardInfo();
+  return await contract.getRewardInfo({
+    pool: incentive.pool,
+    startTime: incentive.startTime,
+    endTime: incentive.endTime,
+    rewardToken: incentive.rewardToken,
+    refundee: incentive.refundee
+  }, Number(tokenID));
 }
 
 /** Uniswap V3 Liquidity Pool contract actions - END */
