@@ -89,15 +89,14 @@ export default function LiquidityPool(props: IProps) {
             <span>Pending Rewards</span>
           </div>
           <div className="data-element">
-            <span className="element-value">{`${formatWei(accruedRewards.toString(), 4)} HAT`}</span>
+            <span className="element-value">{`${formatWei(accruedRewards, 4)} HAT`}</span>
             <span>Accrued Rewards</span>
           </div>
         </div>
       </div>
       <div className="lp-actions">
-        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>STAKE &#38; UNSTAKE LP TOKENS</button>
+        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>STAKE / UNSTAKE / WITHDRAW LP TOKENS</button>
         <button className="lp-action-btn claim" onClick={async () => await claim()} disabled={!isProviderAndNetwork(provider) || accruedRewards.eq(0)}>CLAIM ACCRUED REWARDS</button>
-        <button className="lp-action-btn withdraw" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>WITHDRAW TOKEN</button>
       </div>
 
       {pendingWalletAction && <Loading />}

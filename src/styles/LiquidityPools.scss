@@ -72,11 +72,10 @@
         background: transparent;
         &.stake {
           color: $turquoise;
-          width: 40%;
+          width: 50%;
         }
-        &.withdraw,
         &.claim {
-          width: 25%;
+          width: 50%;
           background-color: $turquoise;
           color: $dark-blue;
           margin-left: 50px;

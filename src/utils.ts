@@ -120,12 +120,44 @@ export const toWei = (value: string, decimals = "18"): BigNumber => {
 
 /**
  * Formats a WEI value.
- * If the value is null returns "-"
- * @param {string} value 
+ * If the value is null/undefined, the function returns "-"
+ * If the value is too small to be represented by the given precision, the function returns "+0".
+ * @param {string | number | BigNumber} value 
  * @param {number} precision 
+ * @param {string} decimals
  */
-export const formatWei = (value: string, precision?: number): string => {
-  return !value ? "-" : millify(Number(fromWei(value)), { precision: precision });
+export const formatWei = (value: string | number | BigNumber, precision = 1, decimals = "18"): string => {
+  if (!value) {
+    return "-";
+  }
+
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+
+  const formattedValue = millify(Number(fromWei(String(value), decimals)), { precision: precision });
+
+  if (typeof value === "string") {
+    if (value !== "0" && formattedValue === "0") {
+      return "+0";
+    }
+  } else { // value is BigNumber
+    if (value.gt(0) && formattedValue === "0") {
+      return "+0";
+    }
+  }
+
+  return formattedValue;
+}
+
+/**
+ * Formats a number value
+ * If the value is null/undefined, the function returns "-"
+ * @param {string | number} value 
+ * @param {number} precision
+ */
+export const formatNumber = (value: string | number, precision = 1): string => {
+  return !value ? "-" : millify(Number(value), { precision: precision });
 }
 
 /**

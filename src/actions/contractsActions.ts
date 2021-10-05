@@ -167,13 +167,19 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
   return await contract.claim(descriptionHash);
 }
 
+
+
+
+/** Uniswap V3 Liquidity Pool contract actions - START */
+
 /**
- * Stakes in Uniswap V3 Liquidity Pool
+ * SafeTransferFrom in Uniswap V3 Liquidity Pool
+ * Used when canWithdraw is false - meaning the token is not in the contract
  * @param {string} from 
  * @param {string} tokenID 
  * @param {IIncentive} incentive 
  */
-export const uniswapStake = async (from: string, tokenID: string, incentive: IIncentive) => {
+export const uniswapSafeTransferFrom = async (from: string, tokenID: string, incentive: IIncentive) => {
   const contract = new Contract(NFTMangerAddress[NETWORK], NFTManagerABI, signer);
   const encodedData = ethers.utils.defaultAbiCoder.encode([INCENTIVE_KEY_ABI], [{
     pool: incentive.pool,
@@ -183,6 +189,17 @@ export const uniswapStake = async (from: string, tokenID: string, incentive: IIn
     refundee: incentive.refundee
   }]);
   return await contract.safeTransferFrom(from, UNISWAP_V3_STAKER_ADDRESS, Number(tokenID), encodedData);
+}
+
+/**
+ * Stakes in Uniswap V3 Liquidity Pool
+ * Used when canWithdraw is true - meaning the token is still in the contract
+ * @param {string} tokenID 
+ * @param {string} incentiveID 
+ */
+export const uniswapStake = async (tokenID: string, incentiveID: string) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.stakeToken(tokenID, incentiveID);
 }
 
 /**
@@ -230,6 +247,21 @@ export const uniswapRewards = async (rewardToken: string, userAddress: string) =
   const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
   return await contract.rewards(rewardToken, userAddress);
 }
+
+/**
+ * 
+ * @param {string} tokenID
+ * @param {string} incentiveID
+ */
+export const uniswapGetRewardInfo = async(tokenID: string, incentiveID: string) => {
+  const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
+  return await contract.getRewardInfo();
+}
+
+/** Uniswap V3 Liquidity Pool contract actions - END */
+
+
+
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain.

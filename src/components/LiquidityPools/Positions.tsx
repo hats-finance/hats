@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import classNames from "classnames";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTransaction, uniswapStake, uniswapUnstake, uniswapWithdrawToken } from "../../actions/contractsActions";
+import { createTransaction, uniswapSafeTransferFrom, uniswapStake, uniswapUnstake, uniswapWithdrawToken } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, UNISWAP_V3_APP } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
@@ -45,7 +45,9 @@ export default function Positions(props: IProps) {
   const stake = async (tokenId: string) => {
     setPendingWalletAction(true);
     await createTransaction(
-      async () => uniswapStake(selectedAddress, tokenId, incentive),
+      selectedPosition?.canWithdraw ? 
+      async () => uniswapStake(tokenId, incentive.id) :
+      async () => uniswapSafeTransferFrom(selectedAddress, tokenId, incentive),
       () => { setShowModal(false); },
       () => { setPendingWalletAction(false); },
       () => { setPendingWalletAction(false); },
@@ -91,7 +93,7 @@ export default function Positions(props: IProps) {
         <>
           <span className="sub-title">{positions.length === 0 ? "You do not have any HAT-ETH LP NFTs." : "Your HAT-ETH LP NFTs"}</span>
           <div className="positions-list">{positions}</div>
-          {positions.length === 0 ? <span>Go to <a target="_blank" rel="noopener noreferrer" href={UNISWAP_V3_APP}>Uniswap</a> to create a position.</span> : "Select NFT to stake"}
+          {positions.length === 0 ? <span>Go to <a target="_blank" rel="noopener noreferrer" href={UNISWAP_V3_APP}>Uniswap</a> to create a position.</span> : "Select NFT"}
         </>
       )}
 
