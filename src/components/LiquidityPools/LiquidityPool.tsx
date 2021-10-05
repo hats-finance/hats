@@ -4,7 +4,7 @@ import classNames from "classnames";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTransaction, uniswapClaimReward, uniswapRewards } from "../../actions/contractsActions";
+import { createTransaction, uniswapClaimReward, uniswapGetRewardInfo, uniswapRewards } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
@@ -35,6 +35,7 @@ export default function LiquidityPool(props: IProps) {
   const { loading, error, data } = useQuery(getPositions(selectedAddress), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
   const [positions, setPositions] = useState<IPosition[]>([]);
   const [numberOfStakes, setNumberOfStakes] = useState("-");
+  const [pendingReward, setPendingReward] = useState();
 
   useEffect(() => {
     if (!loading && !error && data && data.positions) {
@@ -67,6 +68,16 @@ export default function LiquidityPool(props: IProps) {
     })();
   }, [incentive, selectedAddress])
 
+  useEffect(() => {
+    (async () => {
+      if (positions.length > 0) {
+        const stakedPositions = positions.filter((position: IPosition) => position.staked);
+        const pendingReward = await (await Promise.all(stakedPositions.map(async (position: IPosition) => (await uniswapGetRewardInfo(position.tokenId, incentive)).reward))).reduce((a: BigNumber, b: BigNumber) => a.add(b), BigNumber.from(0));
+        setPendingReward(pendingReward);
+      }
+    })();
+  }, [positions, incentive])
+
   const lpWrapperClass = classNames({
     "lp-wrapper": true,
     "disabled": pendingWalletAction
@@ -82,11 +93,11 @@ export default function LiquidityPool(props: IProps) {
         <div className="sub-title">Pool Incentive:</div>
         <div className="data-container">
           <div className="data-element">
-            <span className="element-value">{`${formatWei(incentive?.reward, 4)} HAT`}</span>
+            <span className="element-value">{`${formatWei(incentive?.reward, 3)} HAT`}</span>
             <span>Total Rewared</span>
           </div>
           <div className="data-element">
-            <span className="element-value">{`${formatWei(incentive?.totalRewardUnclaimed, 4)} HAT`}</span>
+            <span className="element-value">{`${formatWei(incentive?.totalRewardUnclaimed, 3)} HAT`}</span>
             <span>Total Available</span>
           </div>
         </div>
@@ -99,11 +110,11 @@ export default function LiquidityPool(props: IProps) {
             <span>Staked Uniswap V3 NFTs</span>
           </div>
           <div className="data-element">
-            <span className="element-value">??? HAT</span>
+            <span className="element-value">{`${formatWei(pendingReward, 3)} HAT`}</span>
             <span>Pending Rewards</span>
           </div>
           <div className="data-element">
-            <span className="element-value">{`${formatWei(accruedRewards, 4)} HAT`}</span>
+            <span className="element-value">{`${formatWei(accruedRewards, 3)} HAT`}</span>
             <span>Accrued Rewards</span>
           </div>
         </div>

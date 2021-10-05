@@ -122,11 +122,11 @@ export const toWei = (value: string, decimals = "18"): BigNumber => {
  * Formats a WEI value.
  * If the value is null/undefined, the function returns "-"
  * If the value is too small to be represented by the given precision, the function returns "+0".
- * @param {string | number | BigNumber} value 
+ * @param {string | number | BigNumber | undefined} value 
  * @param {number} precision 
  * @param {string} decimals
  */
-export const formatWei = (value: string | number | BigNumber, precision = 1, decimals = "18"): string => {
+export const formatWei = (value: string | number | BigNumber | undefined, precision = 1, decimals = "18"): string => {
   if (!value) {
     return "-";
   }
