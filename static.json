@@ -1,5 +1,7 @@
-"headers": {
-  "/**": {
-    "X-Frame-Options": "DENY"
-  }
+{
+ "headers": {
+   "/**": {
+     "X-Frame-Options": "DENY"
+   }
+ }
 }
