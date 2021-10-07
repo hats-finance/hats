@@ -27,6 +27,10 @@
       }
     }
 
+    .lp-incentive {
+      border-bottom: 1px solid $dark-blue;
+    }
+
     .lp-incentive,
     .your-incentive {
       display: flex;
@@ -72,13 +76,19 @@
         background: transparent;
         &.stake {
           color: $turquoise;
-          width: 50%;
+          width: 45%;
         }
         &.claim {
-          width: 50%;
+          width: 25%;
           background-color: $turquoise;
           color: $dark-blue;
           margin-left: 50px;
+        }
+        &.withdraw {
+          width: 25%;
+          color: $dark-blue;
+          background-color: $yellow;
+          border: none;
         }
       }
     }

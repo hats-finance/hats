@@ -86,7 +86,7 @@ export default function LiquidityPool(props: IProps) {
   return (
     <div className={lpWrapperClass}>
       <div className="lp-top">
-        <div className="lp-title">Uniswap V3 HAT-ETH</div>
+        <div className="lp-title">Uniswap V3 HAT-ETH 1%</div>
         <div className="lp-active">{`Active ${startTime} to ${endTime}`}</div>
       </div>
       <div className="lp-incentive">
@@ -120,8 +120,9 @@ export default function LiquidityPool(props: IProps) {
         </div>
       </div>
       <div className="lp-actions">
-        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider) || loading}>STAKE / UNSTAKE / WITHDRAW LP TOKENS</button>
+        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider) || loading}>STAKE &#38; UNSTAKE LP TOKENS</button>
         <button className="lp-action-btn claim" onClick={async () => await claim()} disabled={!isProviderAndNetwork(provider) || accruedRewards.eq(0)}>CLAIM ACCRUED REWARDS</button>
+        <button className="lp-action-btn withdraw" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>WITHDRAW</button>
       </div>
 
       {pendingWalletAction && <Loading />}

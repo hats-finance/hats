@@ -27,7 +27,7 @@ export enum MasterAddresses {
 }
 
 export enum NFTMangerAddress {
-  main = "???",
+  main = "0xc36442b4a4522e871399cd717abdd847ab11fe88",
   rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
@@ -40,7 +40,7 @@ export enum Pages {
 }
 
 export enum LPUniswapURIs {
-  main = "???",
+  main = "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
   rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
 }
 

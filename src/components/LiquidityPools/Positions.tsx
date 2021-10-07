@@ -77,11 +77,9 @@ export default function Positions(props: IProps) {
 
   return (
     <div className={positionsWrapperClass}>
-      <div>Uniswap V3 uses NFT tokens to represent LP positions. Your Uniswap V3 LP tokens eligible for Hats rewards are listed below.</div>
-
-      <span className="sub-title">{positionsElements.length === 0 ? "You do not have any HAT-ETH LP NFTs." : "Your HAT-ETH LP NFTs"}</span>
+      <span className="sub-title">{positionsElements.length === 0 ? "It seems you do not have any HAT-ETH 1% LP NFTs" : "Your HAT-ETH LP NFTs"}</span>
       <div className="positions-list">{positionsElements}</div>
-      {positionsElements.length === 0 ? <span>Go to <a target="_blank" rel="noopener noreferrer" href={UNISWAP_V3_APP}>Uniswap</a> to create a position.</span> : "Select NFT"}
+      {positionsElements.length === 0 ? <span>Uniswap V3 uses NFT tokens to represent LP positions, If you would like to participate in this inventive pool, first go to <a target="_blank" rel="noopener noreferrer" href={UNISWAP_V3_APP}>Uniswap</a> and create a position.</span> : "Select NFT:"}
 
       <div className="position-actions-wrapper">
         {selectedPosition && <button onClick={async () => { selectedPosition.staked ? await unstake(selectedPosition.tokenId) : await stake(selectedPosition.tokenId) }}>{selectedPosition.staked ? "UNSTAKE" : "STAKE"}</button>}
