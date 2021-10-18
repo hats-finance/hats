@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
-import { connect } from "../actions/index";
+import { connect, toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { truncatedAddress, getNetworkNameByChainId, getMainPath, fetchWalletBalance, linkToEtherscan } from "../utils";
 import "../styles/Header.scss";
@@ -48,12 +48,13 @@ export default function Header() {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const transactionHash = useSelector((state: RootState) => state.layoutReducer.transactionHash);
+  const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(connect(provider || {}));
   }, [provider, dispatch]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const getWalletBalance = async () => {
       fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
     }
@@ -64,9 +65,8 @@ export default function Header() {
 
   return (
     <header>
-      {screenSize === ScreenSize.Mobile && <MenuIcon />}
       {screenSize === ScreenSize.Mobile && <Logo />}
-      <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
+      {screenSize === ScreenSize.Desktop && <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>}
       <div className="wallet-wrapper">
         {screenSize !== ScreenSize.Mobile && provider &&
           <div className="wallet-details">
@@ -80,6 +80,7 @@ export default function Header() {
           </div>}
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
+      {screenSize === ScreenSize.Mobile && <div onClick={() => dispatch(toggleMenu(!showMenu))}><MenuIcon /></div>}
       {showModal &&
         <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal} height="fit-content">
           <HatsBreakdown />

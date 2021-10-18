@@ -10,7 +10,8 @@ import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } fro
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Navigation/Sidebar";
+import Menu from "./components/Navigation/Menu";
 import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
@@ -24,6 +25,7 @@ import { IVault } from "./types/types";
 function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
@@ -80,11 +82,6 @@ function App() {
   useEffect(() => {
     if (!loading && !error && data && data.vaults) {
       dispatch(updateVaults(data.vaults));
-      // update first Liquidity Pool we find
-      // const liquidityPool: IVault = data.vaults.find((element: IVault) => element.parentVault.liquidityPool);
-      // if (liquidityPool !== undefined) {
-      //   dispatch(updateLiquidityPool(liquidityPool.id));
-      // }
     }
   }, [loading, error, data, dispatch]);
 
@@ -121,6 +118,7 @@ function App() {
       {hasSeenWelcomePage && acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
+      {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
       <Switch>
         <Route path="/" exact>
           <Redirect to={RoutePaths.vaults} />

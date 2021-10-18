@@ -6,9 +6,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
-import MobileNotification from "./components/MobileNotification";
 import { SUBGRAPH_URI } from "./settings";
-import { isMobile } from "./utils";
 import HttpsRedirect from "react-https-redirect";
 
 const client = new ApolloClient({
@@ -20,7 +18,7 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <HttpsRedirect>
         <Router>
-          {isMobile() ? <MobileNotification /> : <App />}
+          <App />
         </Router>
       </HttpsRedirect>
     </ApolloProvider>

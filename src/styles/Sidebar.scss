@@ -51,29 +51,6 @@
       }
     }
   }
-  .sidebar-link {
-    height: 50px;
-    line-height: 50px;
-    padding-left: 15px;
-    border-left: 4px solid transparent;
-    margin: 10px 0px;
-    color: $dirty-turquoise;
-    font-size: $xsmall;
-    &.vulnerability {
-      color: $bright-green;
-      &.selected {
-        border-color: $bright-green;
-        font-weight: bold;
-        color: $bright-green;
-      }
-    }
-    &.selected {
-      border-left-color: $turquoise;
-      color: $turquoise;
-      background-color: $blue;
-      font-weight: bold;
-    }
-  }
   .bottom-wrapper {
     margin: auto;
     display: flex;

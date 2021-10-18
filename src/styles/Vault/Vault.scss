@@ -272,29 +272,6 @@ tr {
   font-weight: bold;
 }
 
-.action-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  > span {
-    font-size: $xxsmall;
-  }
-  .countdown-wrapper {
-    margin: 10px 0;
-  }
-}
-
-.action-btn {
-  border: 1px solid;
-  color: $turquoise;
-  background-color: $light-blue;
-  &.deposit-withdraw:active {
-    color: $white;
-    background-color: $dirty-turquoise;
-    opacity: 1;
-  }
-}
-
 .contract-wrapper {
   display: grid;
   grid-template-columns: 1fr 1fr;
