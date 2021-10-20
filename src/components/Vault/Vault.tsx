@@ -62,16 +62,19 @@ export default function Vault(props: IProps) {
           </div>
         </td>
         <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
-        <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
-        <td>{vaultAPY}</td>
         {screenSize === ScreenSize.Desktop && (
-          <td>
-            <VaultAction
-              data={props.data}
-              withdrawRequests={withdrawRequests}
-              setShowModal={props.setShowModal}
-              setModalData={props.setModalData} />
-          </td>)}
+          <>
+            <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
+            <td>{vaultAPY}</td>
+            <td>
+              <VaultAction
+                data={props.data}
+                withdrawRequests={withdrawRequests}
+                setShowModal={props.setShowModal}
+                setModalData={props.setModalData} />
+            </td>
+          </>
+        )}
       </tr>
       {toggleRow &&
         <VaultExpanded data={props.data} />}

@@ -302,3 +302,21 @@ tr {
     justify-content: space-between;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .vault-details-content {
+    flex-direction: column;
+  }
+
+  .severity-data {
+    flex-direction: column;
+    border-left: unset;
+    border-right: unset;
+    padding: 10px 20px;
+    .severity-data-item {
+      margin-right: unset;
+      border-right: unset;
+      padding-right: unset;
+    }
+  }
+}
