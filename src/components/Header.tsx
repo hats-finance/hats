@@ -13,6 +13,7 @@ import HatsBreakdown from "./HatsBreakdown";
 import millify from "millify";
 import { NETWORK } from "../settings";
 import MenuIcon from "../assets/icons/hamburger.icon";
+import CloseIcon from "../assets/icons/close.icon";
 import Logo from "../assets/icons/logo.icon";
 import { RootState } from "../reducers";
 
@@ -80,7 +81,7 @@ export default function Header() {
           </div>}
         <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
       </div>
-      {screenSize === ScreenSize.Mobile && <div onClick={() => dispatch(toggleMenu(!showMenu))}><MenuIcon /></div>}
+      {screenSize === ScreenSize.Mobile && <div onClick={() => dispatch(toggleMenu(!showMenu))}>{showMenu ? <CloseIcon /> : <MenuIcon />}</div>}
       {showModal &&
         <Modal title="YOUR HATS BREAKDOWN" setShowModal={setShowModal} height="fit-content">
           <HatsBreakdown />

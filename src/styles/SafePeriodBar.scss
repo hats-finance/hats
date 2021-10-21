@@ -12,3 +12,11 @@
     color: $dark-blue;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .safe-period {
+    .text-wrapper {
+      font-size: $xxsmall;
+    }
+  }
+}
