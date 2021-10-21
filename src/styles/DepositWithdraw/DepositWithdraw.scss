@@ -194,6 +194,8 @@
       margin: 0;
       position: relative;
       background-color: transparent;
+      border: 1px solid;
+      color: $turquoise;
       &.claim-btn {
         background-color: $turquoise;
         color: $field-blue;

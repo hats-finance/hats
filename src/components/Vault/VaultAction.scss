@@ -11,11 +11,11 @@
     margin: 10px 0;
   }
 
-  .action-btn {
+  .deposit-withdraw {
     border: 1px solid;
     color: $turquoise;
     background-color: $light-blue;
-    &.deposit-withdraw:active {
+    &:active {
       color: $white;
       background-color: $dirty-turquoise;
       opacity: 1;

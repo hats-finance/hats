@@ -35,7 +35,7 @@ export default function VaultAction(props: IProps) {
   return (
     <div className="vault-action-wrapper">
       <button
-        className="action-btn deposit-withdraw"
+        className="deposit-withdraw"
         onClick={() => { props.setShowModal(true); props.setModalData(props.data); }}
         disabled={!isProviderAndNetwork(provider)}>
         DEPOSIT / WITHDRAW

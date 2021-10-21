@@ -15,79 +15,31 @@ header {
   .page-title {
     font-size: $large;
     color: $white;
+    margin-right: 20px;
   }
-  .wallet-wrapper {
+  .hats-btn {
+    border: 1px solid $dark-turquoise;
+    background-color: transparent;
+    color: $white;
     display: flex;
     align-items: center;
-    .wallet-details {
-      display: flex;
-      margin-right: 15px;
-      align-items: center;
-      .hats-btn {
-        border: 1px solid $dark-turquoise;
-        background-color: transparent;
-        color: $white;
-        margin-right: 20px;
-        display: flex;
-        align-items: center;
-        min-height: $header-button-hight;
-        span {
-          margin-left: 10px;
-        }
-        &:active {
-          background-color: $light-blue;
-          opacity: 1;
-        }
-      }
-      .pending-transaction {
-        height: 50px;
-        line-height: 50px;
-        padding: 0 20px;
-        background: linear-gradient(90deg, $blue, $dark-turquoise, $blue);
-        animation: gradient 10s ease infinite;
-        background-size: 600px;
-        color: $white;
-        cursor: pointer;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        &:hover {
-          opacity: 0.9;
-        }
-      }
-      @keyframes gradient {
-        0% {
-          background-position: 0% 50%;
-        }
-        50% {
-          background-position: 100% 50%;
-        }
-        100% {
-          background-position: 0% 50%;
-        }
-      }
-      .wallet-balance {
-        border-right: 1px solid;
-        padding-right: 10px;
-        margin-right: 10px;
-      }
-      .network-name {
-        padding-left: 10px;
-        border-left: 1px solid;
-        margin-left: 10px;
-      }
+    min-height: $header-button-hight;
+    margin-left: auto;
+    margin-right: 20px;
+    span {
+      margin-left: 10px;
     }
-    .wallet-btn {
-      border: 1px solid;
-      color: $white;
-      background-color: $blue;
-      min-height: $header-button-hight;
-      border: none;
-      padding: 15px;
-      &:active {
-        background-color: $light-blue;
-        opacity: 1;
-      }
+  }
+  .wallet-btn {
+    border: 1px solid;
+    color: $white;
+    background-color: $blue;
+    min-height: $header-button-hight;
+    border: none;
+    padding: 15px;
+    &:active {
+      background-color: $light-blue;
+      opacity: 1;
     }
   }
 }
