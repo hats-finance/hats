@@ -1,0 +1,18 @@
+@import "../../styles/constants.scss";
+
+.member-link-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  align-items: center;
+  text-align: center;
+  .twitter-avatar {
+    border-radius: 50%;
+    width: 40px;
+  }
+  .member-username {
+    margin-top: 5px;
+    text-transform: capitalize;
+    width: 100px;
+  }
+}

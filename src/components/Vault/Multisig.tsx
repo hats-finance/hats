@@ -1,7 +1,7 @@
 import { NETWORK } from "../../settings";
 import { linkToEtherscan, truncatedAddress } from "../../utils";
 import CopyToClipboard from "../Shared/CopyToClipboard";
-
+import "./Multisig.scss";
 
 interface IProps {
   multisigAddress: string

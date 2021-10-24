@@ -8,6 +8,7 @@ import { PieChartColors, RoutePaths } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
 import humanizeDuration from "humanize-duration";
+import "./VaultExpanded.scss";
 
 interface IProps {
   data: IVault

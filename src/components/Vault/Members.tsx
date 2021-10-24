@@ -1,6 +1,7 @@
 import TwitterImageIcon from "../../assets/icons/twitterImage.icon";
 import { IPFS_PREFIX } from "../../constants/constants";
 import { ICommitteeMember } from "../../types/types";
+import "./Members.scss";
 
 interface IProps {
   members: Array<ICommitteeMember>

@@ -7,6 +7,7 @@ import NFTPrize from "../NFTPrize";
 import Modal from "../Shared/Modal";
 import ContractsCovered from "./ContractsCovered";
 import humanizeDuration from "humanize-duration";
+import "./Severities.scss";
 
 interface IProps {
   severities: Array<ISeverity>
