@@ -20,7 +20,7 @@ export default function NFTMedia(props: IProps) {
           alt="NFT"
           width={width} /> :
         VIDEOS_EXTENTIONS.includes(extension) ?
-          <video loop autoPlay muted width={width}>
+          <video loop autoPlay muted width={width} playsInline>
             <source src={`${IPFS_PREFIX}${link.substring(12)}`} type="video/mp4" />
           </video> :
           <span>Unsupported media</span>}
