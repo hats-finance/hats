@@ -41,7 +41,7 @@ export default function LiquidityPools() {
           <LiquidityPool incentive={incentives[0]} />
         </>
       )} */}
-      Coming soon...
+      <div style={{ textAlign: "center" }}>Coming soon...</div>
     </div>
   )
 }
