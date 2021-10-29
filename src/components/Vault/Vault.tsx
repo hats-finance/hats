@@ -3,7 +3,7 @@ import "../../styles/Vault/Vault.scss";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, isProviderAndNetwork, parseJSONToObject } from "../../utils";
+import { formatWei, fromWei, isProviderAndNetwork, parseJSONToObject } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { Colors } from "../../constants/constants";
@@ -76,8 +76,8 @@ export default function Vault(props: IProps) {
             </div>
           </div>
         </td>
-        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
-        <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
+        <td>{isGuest && `${bounty} bounty + `} {formatWei(honeyPotBalance, 3, stakingTokenDecimals)} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
+        <td>{formatWei(totalRewardAmount, undefined, stakingTokenDecimals)}</td>
         <td>{vaultAPY}</td>
         <td className="action-wrapper">
           <button
