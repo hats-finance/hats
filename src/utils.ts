@@ -10,6 +10,7 @@ import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
 import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
+import millify from "millify";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -115,6 +116,48 @@ export const fromWei = (wei: BigNumber | string, decimals = "18"): string => {
  */
 export const toWei = (value: string, decimals = "18"): BigNumber => {
   return ethers.utils.parseUnits(value, decimals);
+}
+
+/**
+ * Formats a WEI value.
+ * If the value is null/undefined, the function returns "-"
+ * If the value is too small to be represented by the given precision, the function returns "+0".
+ * @param {string | number | BigNumber | undefined} value 
+ * @param {number} precision 
+ * @param {string} decimals
+ */
+export const formatWei = (value: string | number | BigNumber | undefined, precision = 1, decimals = "18"): string => {
+  if (!value) {
+    return "-";
+  }
+
+  if (typeof value === "number") {
+    value = value.toString();
+  }
+
+  const formattedValue = millify(Number(fromWei(String(value), decimals)), { precision: precision });
+
+  if (typeof value === "string") {
+    if (value !== "0" && formattedValue === "0") {
+      return "+0";
+    }
+  } else { // value is BigNumber
+    if (value.gt(0) && formattedValue === "0") {
+      return "+0";
+    }
+  }
+
+  return formattedValue;
+}
+
+/**
+ * Formats a number value
+ * If the value is null/undefined, the function returns "-"
+ * @param {string | number} value 
+ * @param {number} precision
+ */
+export const formatNumber = (value: string | number, precision = 1): string => {
+  return !value ? "-" : millify(Number(value), { precision: precision });
 }
 
 /**

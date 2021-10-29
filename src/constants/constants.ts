@@ -26,6 +26,11 @@ export enum MasterAddresses {
   rinkeby = "0x7626d5d4d3a3cd2f9bc36e160dd9f8fba39fdad2"
 }
 
+export enum NFTMangerAddress {
+  main = "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
@@ -33,6 +38,13 @@ export enum Pages {
   pools = "Liquidity Pools",
   terms_of_use = "Terms of Use"
 }
+
+export enum LPUniswapURIs {
+  main = "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
+  rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
+}
+
+export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
 
 /**
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
@@ -75,6 +87,13 @@ export const HATS_WEBSITE = "https://hats.finance";
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
+
+export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
+
+export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
+
+/** Used for the Uniswap V3 Liquidity Pool staking */
+export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

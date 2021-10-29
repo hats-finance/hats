@@ -6,4 +6,96 @@
   justify-content: center;
   flex-direction: column;
   align-items: center;
+  .lp-wrapper {
+    background-color: $strong-blue;
+    max-width: 1000px;
+    width: 60%;
+    padding: $modal-element-padding;
+    .lp-top {
+      display: flex;
+      justify-content: space-between;
+      .lp-title {
+        font-size: $medium;
+        color: $white;
+        font-weight: bold;
+      }
+      .lp-active {
+        font-weight: bold;
+        background-color: $black;
+        padding: 10px 20px;
+        margin-left: 10px;
+      }
+    }
+
+    .lp-incentive {
+      border-bottom: 1px solid $dark-blue;
+    }
+
+    .lp-incentive,
+    .your-incentive {
+      display: flex;
+      flex-direction: column;
+      margin: 30px 0;
+      .sub-title {
+        color: $white;
+        font-weight: bold;
+      }
+      .data-container {
+        display: flex;
+        .data-element {
+          display: flex;
+          flex-direction: column;
+          margin: 20px;
+          &:first-child {
+            margin-left: unset;
+          }
+          .element-value {
+            color: $white;
+            font-weight: bold;
+            font-size: $medium;
+            margin-bottom: 10px;
+          }
+          input {
+            background-color: $black;
+            border: none;
+            color: $white;
+            font-size: $medium;
+            padding: 10px 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+
+    .lp-actions {
+      display: flex;
+      justify-content: space-between;
+      .lp-action-btn {
+        border: 1px solid $turquoise;
+        background: transparent;
+        &.stake {
+          color: $turquoise;
+          width: 45%;
+        }
+        &.claim {
+          width: 25%;
+          background-color: $turquoise;
+          color: $dark-blue;
+          margin-left: 50px;
+        }
+        &.withdraw {
+          width: 25%;
+          color: $dark-blue;
+          background-color: $yellow;
+          border: none;
+        }
+      }
+    }
+    &.disabled {
+      opacity: 0.5;
+      pointer-events: none;
+      animation: disabledFade 0.4s;
+    }
+  }
 }

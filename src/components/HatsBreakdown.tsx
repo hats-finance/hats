@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import Logo from "../assets/icons/logo.icon";
 import "../styles/HatsBreakdown.scss";
-import millify from "millify";
 import { getStakerAmounts } from "../graphql/subgraph";
-import { useQuery } from "@apollo/react-hooks";
-import { fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
+import { useQuery } from "@apollo/client";
+import { formatNumber, fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
 import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
 
@@ -70,25 +69,25 @@ export default function HatsBreakdown() {
     <div className="data-top">
       <div className="data-square">
         <span>Balance (HATS)</span>
-        {!hatsBalance ? "-" : <span>{millify(hatsBalance)}</span>}
+        <span>{formatNumber(hatsBalance)}</span>
       </div>
       <div className="data-square">
         <span>Total Staked</span>
-        {!totalStaked ? "-" : <span>&#8776; {`$${millify(totalStaked)}`}</span>}
+        <span>&#8776; {`$${formatNumber(totalStaked)}`}</span>
       </div>
       <div className="data-square">
         <span>Staking APY</span>
-        {!stakingAPY ? "-" : <span>{millify(stakingAPY)}%</span>}
+        <span>{`${formatNumber(stakingAPY)}%`}</span>
       </div>
     </div>
     <div className="data-bottom">
       <div className="data-long">
         <span>HATS price</span>
-        {!hatsPrice ? "-" : <span>&#8776; {`$${millify(hatsPrice)}`}</span>}
+        <span>&#8776; {`$${formatNumber(hatsPrice)}`}</span>
       </div>
       <div className="data-long">
         <span>Total supply</span>
-        {!hatsMarketCap ? "-" : <span>&#8776; {`$${millify(hatsMarketCap)}`}</span>}
+        <span>&#8776; {`$${formatNumber(hatsMarketCap)}`}</span>
       </div>
     </div>
   </div>
