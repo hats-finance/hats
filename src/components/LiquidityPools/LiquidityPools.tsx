@@ -11,6 +11,11 @@
 // import { IIncentive } from "../../types/types";
 // import { useEffect, useState } from "react";
 
+
+/**
+ * TODO: Temporary disable LP and show "Coming soon..."
+ */
+
 export default function LiquidityPools() {
   // const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   // const { loading, error, data } = useQuery(getIncentives(rewardsToken, false), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
