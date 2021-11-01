@@ -29,3 +29,11 @@
     }
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .welcome-wrapper {
+    .welcome-content {
+      width: 80%;
+    }
+  }
+}

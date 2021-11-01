@@ -9,9 +9,7 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools",
-  terms_of_use = "/terms_of_use",
-  privacy_policy = "/privacy_policy"
+  pools = "/pools"
 }
 
 export enum Networks {
@@ -84,9 +82,13 @@ export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/
 
 export const HATS_WEBSITE = "https://hats.finance";
 
-export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
+export const DOCS = "https://docs.hats.finance/";
 
-export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
+export const TERMS_OF_USE = "https://docs.hats.finance/terms-of-use-1";
+
+export const RISK_FACTOR = "https://docs.hats.finance/risk-factor";
+
+export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 

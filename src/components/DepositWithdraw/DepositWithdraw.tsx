@@ -11,7 +11,7 @@ import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
 import { RootState } from "../../reducers";
 import Tooltip from "rc-tooltip";
-import { Colors, RoutePaths, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT } from "../../constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE } from "../../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../../settings";
@@ -293,7 +293,7 @@ export default function DepositWithdraw(props: IProps) {
     {tab === "deposit" && (
       <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
         <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={RoutePaths.terms_of_use}>TERMS OF USE</a></u></label>
+        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
       </div>
     )}
     {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}

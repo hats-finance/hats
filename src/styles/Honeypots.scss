@@ -41,3 +41,15 @@
     }
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .honeypots-wrapper {
+    table {
+      .transparent-row {
+        td {
+          padding-left: 20px;
+        }
+      }
+    }
+  }
+}

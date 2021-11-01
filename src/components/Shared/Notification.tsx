@@ -24,8 +24,10 @@ export default function Notification() {
 
   return (
     <div className={`notification-wrapper ${type}`}>
-      <div className="type">{type}</div>
-      <div className="text">{text}</div>
+      <div className="notification-text-wrapper">
+        <div className="type">{type}</div>
+        <div className="text">{text}</div>
+      </div>
       <button className="dismiss-btn" onClick={dismiss}>&times;</button>
     </div>
   )

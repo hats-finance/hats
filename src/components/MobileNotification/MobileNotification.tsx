@@ -1,7 +1,7 @@
 import React from "react";
-import "../styles/MobileNotification.scss";
-import Logo from "../assets/icons/logo.icon";
-import { HATS_WEBSITE } from "../constants/constants";
+import "./MobileNotification.scss";
+import Logo from "../../assets/icons/logo.icon";
+import { HATS_WEBSITE } from "../../constants/constants";
 
 export default function MobileNotification() {
   return (

@@ -12,6 +12,7 @@
   padding: 10px;
   box-shadow: $black-shadow;
   width: 50%;
+  box-sizing: border-box;
   &.SUCCESS {
     background-color: $turquoise;
   }
@@ -21,14 +22,16 @@
   &.INFO {
     background-color: $white;
   }
-  .type {
-    font-weight: bold;
-    margin-right: 10px;
-    margin-left: auto;
-  }
-  .text {
-    text-overflow: ellipsis;
-    overflow: hidden;
+  .notification-text-wrapper {
+    .type {
+      font-weight: bold;
+      margin-right: 10px;
+      margin-left: auto;
+    }
+    .text {
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
   }
   .dismiss-btn {
     font-size: $medium;
@@ -42,6 +45,6 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .notification-wrapper {
-    max-width: unset;
+    width: 100%;
   }
 }

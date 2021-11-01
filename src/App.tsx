@@ -10,12 +10,12 @@ import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } fro
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
+import Sidebar from "./components/Navigation/Sidebar";
+import Menu from "./components/Navigation/Menu";
 import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
-import TermsOfService from "./components/TermsOfService";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -24,6 +24,7 @@ import { IVault } from "./types/types";
 function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
@@ -75,13 +76,13 @@ function App() {
     getHatsPrice();
   }, [dispatch, rewardsToken])
 
-  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
+  
+  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
   useEffect(() => {
     if (!loading && !error && data && data.vaults) {
       let extensibleVaults: IVault[] = [];
-
       /**
        * The new ApolloClient InMemoryCache policy makes the retrieved data frozen/sealed,
        * meaning it's not extensible and no new fields can be added to the object.
@@ -105,12 +106,39 @@ function App() {
     }
   }, [loading, error, data, dispatch, hatsPrice]);
 
+  const vaults: Array<IVault> = useSelector((state: RootState) => state.dataReducer.vaults);
+
+  useEffect(() => {
+    const calculateVaultsApy = async () => {
+      for (const vault of vaults) {
+        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
+      }
+      dispatch(updateVaults(vaults));
+    }
+    if (hatsPrice && vaults) {
+      calculateVaultsApy();
+    }
+  }, [dispatch, hatsPrice, vaults])
+
+  useEffect(() => {
+    const calculatetokenPrices = async () => {
+      for (const vault of vaults) {
+        vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
+      }
+      dispatch(updateVaults(vaults));
+    }
+    if (vaults) {
+      calculatetokenPrices();
+    }
+  }, [dispatch, vaults])
+
   return (
     <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
       {hasSeenWelcomePage && acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
+      {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
       <Switch>
         <Route path="/" exact>
           <Redirect to={RoutePaths.vaults} />
@@ -126,9 +154,6 @@ function App() {
         </Route>
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
-        </Route>
-        <Route path={RoutePaths.terms_of_use}>
-          <TermsOfService />
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}

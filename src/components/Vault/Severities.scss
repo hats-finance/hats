@@ -1,0 +1,82 @@
+@import "../../styles/constants.scss";
+
+.severity-wrapper {
+  display: flex;
+  flex-direction: column;
+  .severity-title {
+    background-color: $purple-blue;
+    padding: 10px 30px;
+    color: $white;
+    font-weight: bold;
+    font-size: $xsmall;
+    &.low {
+      background-color: $severity-low;
+    }
+    &.medium {
+      background-color: $severity-medium;
+    }
+    &.high {
+      background-color: $severity-high;
+    }
+    &.critical {
+      background-color: $severity-critical;
+    }
+    &.audit-request {
+      background-color: $severity-audit-request;
+      color: $white;
+    }
+  }
+  .severity-data {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 30px;
+    border-right: 1px solid $purple-blue;
+    border-left: 1px solid $purple-blue;
+    .severity-data-item {
+      display: flex;
+      flex-direction: column;
+      flex: auto;
+      margin-right: 10px;
+      border-right: 1px solid $purple-blue;
+      padding-right: 10px;
+      flex: 1 1 0px;
+      .view-more {
+        font-style: italic;
+        cursor: pointer;
+        text-decoration: underline;
+        margin-top: 20px;
+        &:hover {
+          opacity: 0.9;
+        }
+      }
+      .nft-image-wrapper {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin: auto;
+        cursor: pointer;
+      }
+    }
+    .severity-data-item:last-child {
+      border-right: unset;
+      margin-right: unset;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .severity-wrapper {
+    .severity-data {
+      flex-direction: column;
+      border-left: unset;
+      border-right: unset;
+      padding: 10px 20px;
+      .severity-data-item {
+        margin-right: unset;
+        border-right: unset;
+        padding-right: unset;
+      }
+    }
+  }
+}
