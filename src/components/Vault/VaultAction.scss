@@ -22,3 +22,12 @@
     }
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .vault-action-wrapper {
+    padding: 20px;
+    .deposit-withdraw {
+      width: 100%;
+    }
+  }
+}

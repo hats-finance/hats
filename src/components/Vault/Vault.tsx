@@ -45,12 +45,12 @@ export default function Vault(props: IProps) {
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
+  const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+
   return (
     <>
       <tr className={isGuest ? "guest" : ""}>
-        <td>
-          <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>
-        </td>
+        {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
             {/* TODO: handle project-metadata and Project-metadata */}
@@ -61,7 +61,20 @@ export default function Vault(props: IProps) {
             </div>
           </div>
         </td>
-        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
+        <td className="rewards-cell">
+          {isGuest && `${bounty} bounty + `}
+
+          <span className="max-rewards-wrapper">
+            {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}
+            {screenSize === ScreenSize.Mobile && <span className="sub-label">Max rewards</span>}
+          </span>
+
+          {honeyPotBalanceValue && (
+            <span className="honeypot-balance-value">
+              &#8776; {`$${honeyPotBalanceValue}`}
+            </span>
+          )}
+        </td>
         {screenSize === ScreenSize.Desktop && (
           <>
             <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
@@ -75,9 +88,14 @@ export default function Vault(props: IProps) {
             </td>
           </>
         )}
+        {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
       {toggleRow &&
-        <VaultExpanded data={props.data} />}
+        <VaultExpanded
+        data={props.data}
+        withdrawRequests={withdrawRequests}
+        setShowModal={props.setShowModal}
+        setModalData={props.setModalData} />}
     </>
   )
 }

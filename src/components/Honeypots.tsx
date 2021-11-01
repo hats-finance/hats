@@ -52,7 +52,7 @@ export default function Honeypots() {
           <tbody>
             <SafePeriodBar />
             <tr>
-              <th colSpan={2} className="search-cell" >
+              <th colSpan={screenSize === ScreenSize.Desktop ? 2 : 3} className="search-cell" >
                 <div className="search-wrapper">
                   <SearchIcon />
                   <input

@@ -130,11 +130,16 @@
     .vault-details-wrapper {
       .vault-details-content {
         flex-direction: column;
+        padding: 20px;
         > div {
           width: 100%;
-          padding: 20px 0px;
+          padding: unset;
+          border: unset;
         }
       }
+    }
+    .vault-expanded-subtitle {
+      margin-top: 20px;
     }
   }
 }
