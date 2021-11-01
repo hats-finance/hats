@@ -1,6 +1,5 @@
 import "./SoicalAndLegal.scss"
-import { COOKIES_POLICY, PRIVACY_POLICY, RoutePaths, SocialLinks } from "../../constants/constants";
-import { Link } from "react-router-dom";
+import { DOCS, RISK_FACTOR, SocialLinks, TERMS_OF_USE } from "../../constants/constants";
 import TelegramIcon from "../../assets/icons/social/telegram.icon";
 import MediumIcon from "../../assets/icons/social/medium.icon";
 import DiscordIcon from "../../assets/icons/social/discord.icon";
@@ -17,9 +16,9 @@ export default function SoicalAndLegal() {
         <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Twitter}><TwitterIcon /></a>
         <a target="_blank" rel="noopener noreferrer" href={SocialLinks.GitHub}><GitHubIcon /></a>
       </div>
-      <Link to={RoutePaths.terms_of_use}>Terms of Use</Link>
-      <a target="_blank" rel="noopener noreferrer" href={COOKIES_POLICY}>Cookies Policy</a>
-      <a target="_blank" rel="noopener noreferrer" href={PRIVACY_POLICY}>Privacy Policy</a>
+      <a target="_blank" rel="noopener noreferrer" href={DOCS}>Docs</a>
+      <a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>Terms of Use</a>
+      <a target="_blank" rel="noopener noreferrer" href={RISK_FACTOR}>Risk Factor</a>
     </div>
   )
 }
