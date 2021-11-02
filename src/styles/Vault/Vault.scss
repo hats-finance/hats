@@ -107,4 +107,10 @@ tr {
   .rewards-cell {
     width: 100%;
   }
+  .contracts-covered-modal-wrapper {
+    padding: 40px 20px;
+    > a {
+      width: 100%;
+    }
+  }
 }

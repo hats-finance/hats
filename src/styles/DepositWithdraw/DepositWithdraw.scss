@@ -209,3 +209,16 @@
     animation: disabledFade 0.4s;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .deposit-wrapper {
+    > div {
+      padding: 0px $modal-element-padding-mobile;
+    }
+    .action-btn-wrapper {
+      .action-btn {
+        width: 100%;
+      }
+    }
+  }
+}

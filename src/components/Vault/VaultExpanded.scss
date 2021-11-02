@@ -136,6 +136,11 @@
           padding: unset;
           border: unset;
         }
+        .submit-vulnerability-button-wrapper {
+          button {
+            width: 100%;
+          }
+        }
       }
     }
     .vault-expanded-subtitle {
