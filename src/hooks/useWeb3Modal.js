@@ -5,7 +5,6 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 // import Torus from "@toruslabs/torus-embed";
 // import Authereum from "authereum";
 // import Portis from "@portis/web3";
-// import MewConnect from "@myetherwallet/mewconnect-web-client"
 
 // Enter a valid infura key here to avoid being rate limited
 // You can get a key for free at https://infura.io/register

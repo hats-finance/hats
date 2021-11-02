@@ -66,7 +66,7 @@ export default function Vault(props: IProps) {
 
           <span className="max-rewards-wrapper">
             {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })}
-            {screenSize === ScreenSize.Mobile && <span className="sub-label">Max rewards</span>}
+            {screenSize === ScreenSize.Mobile && <span className="sub-label">Total vault</span>}
           </span>
 
           {honeyPotBalanceValue && (
