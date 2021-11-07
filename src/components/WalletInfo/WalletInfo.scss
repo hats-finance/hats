@@ -4,22 +4,6 @@
   display: flex;
   margin-right: 15px;
   align-items: center;
-  .pending-transaction {
-    height: 50px;
-    line-height: 50px;
-    padding: 0 20px;
-    background: linear-gradient(90deg, $blue, $dark-turquoise, $blue);
-    animation: gradient 10s ease infinite;
-    background-size: 600px;
-    color: $white;
-    cursor: pointer;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    &:hover {
-      opacity: 0.9;
-    }
-  }
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
@@ -36,15 +20,16 @@
     padding-right: 10px;
     margin-right: 10px;
     display: flex;
-    .eth-balance {
-      padding-right: 10px;
-      border-right: 1px solid;
-      margin-right: 10px;
-    }
   }
   .network-name {
     padding-left: 10px;
     border-left: 1px solid;
     margin-left: 10px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .wallet-info-wrapper {
+    margin-right: auto;
   }
 }

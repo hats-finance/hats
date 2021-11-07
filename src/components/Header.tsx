@@ -16,10 +16,11 @@ import CloseIcon from "../assets/icons/close.icon";
 import Logo from "../assets/icons/logo.icon";
 import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
+import millify from "millify";
 
 function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
   return (
-  <button
+    <button
       className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
       onClick={() => {
         if (!provider) {
@@ -47,6 +48,8 @@ export default function Header() {
   const network = getNetworkNameByChainId(chainId);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
+  const { hatsBalance } = useSelector((state: RootState) => state.web3Reducer);
+  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
 
   useEffect(() => {
     dispatch(connect(provider || {}));
@@ -63,16 +66,12 @@ export default function Header() {
 
   return (
     <header>
-      {screenSize === ScreenSize.Mobile && <Logo />}
-      {screenSize === ScreenSize.Desktop && (
-        <>
-          <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
-          <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo width="30" height="30" /><span>Hats</span></button>
-        </>
-      )}
+      {/* {screenSize === ScreenSize.Mobile && <Logo />} */}
+      {screenSize === ScreenSize.Desktop && <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>}
+      <button disabled={network !== NETWORK} className="hats-btn" onClick={() => setShowModal(true)}><Logo width="30" height="30" /><span>{hatsBalance ? `${millify(hatsBalance)}` : "-"}</span></button>
 
-      {screenSize !== ScreenSize.Mobile && provider && <WalletInfo />}
-      <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />
+      {provider && <WalletInfo />}
+      {(screenSize === ScreenSize.Desktop || (screenSize === ScreenSize.Mobile && !inTransaction)) && <WalletButton provider={provider} loadWeb3Modal={loadWeb3Modal} logoutOfWeb3Modal={logoutOfWeb3Modal} />}
 
       {screenSize === ScreenSize.Mobile && <div onClick={() => dispatch(toggleMenu(!showMenu))}>{showMenu ? <CloseIcon /> : <MenuIcon />}</div>}
       {showModal &&

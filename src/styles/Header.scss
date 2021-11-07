@@ -23,7 +23,6 @@ header {
     color: $white;
     display: flex;
     align-items: center;
-    min-height: $header-button-hight;
     margin-left: auto;
     margin-right: 20px;
     span {
@@ -55,5 +54,11 @@ header {
 @media only screen and (max-width: $mobile-breakpoint) {
   header {
     padding: 10px;
+    .hats-btn {
+      margin-left: unset;
+    }
+    .wallet-btn {
+      padding: 0 15px;
+    }
   }
 }
