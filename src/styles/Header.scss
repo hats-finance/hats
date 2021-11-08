@@ -29,18 +29,6 @@ header {
       margin-left: 10px;
     }
   }
-  .wallet-btn {
-    border: 1px solid;
-    color: $white;
-    background-color: $blue;
-    min-height: $header-button-hight;
-    border: none;
-    padding: 15px;
-    &:active {
-      background-color: $light-blue;
-      opacity: 1;
-    }
-  }
 }
 
 @media only screen and (max-width: $small-screen-breakpoint) {
@@ -56,9 +44,7 @@ header {
     padding: 10px;
     .hats-btn {
       margin-left: unset;
-    }
-    .wallet-btn {
-      padding: 0 15px;
+      margin-right: unset;
     }
   }
 }

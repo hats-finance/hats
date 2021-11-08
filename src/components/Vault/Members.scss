@@ -16,3 +16,9 @@
     width: 100px;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .member-link-wrapper {
+    margin: 0;
+  }
+}

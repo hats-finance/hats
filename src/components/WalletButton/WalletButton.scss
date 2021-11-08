@@ -1,0 +1,20 @@
+@import "../../styles/constants.scss";
+
+.wallet-btn {
+  border: 1px solid;
+  color: $white;
+  background-color: $blue;
+  min-height: $header-button-hight;
+  border: none;
+  padding: 15px;
+  &:active {
+    background-color: $light-blue;
+    opacity: 1;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .wallet-btn {
+    padding: 0 10px;
+  }
+}

@@ -146,5 +146,25 @@
     .vault-expanded-subtitle {
       margin-top: 20px;
     }
+    .twitter-avatars-wrapper {
+      flex-wrap: unset;
+      min-height: unset;
+      overflow: auto;
+      white-space: nowrap;
+      width: 90vw;
+    }
+    .prize-division-wrapper {
+      .pie-chart-wrapper {
+        flex-direction: column;
+        svg {
+          max-width: 200px;
+        }
+        .label-wrapper {
+          margin-top: 20px;
+          margin-left: unset;
+          width: 100%;
+        }
+      }
+    }
   }
 }

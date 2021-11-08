@@ -11,7 +11,7 @@
   // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   // grid-template-columns: 1fr 1fr 1fr;
   .logo-wrapper {
-    padding: 0px 40px;
+    padding: 0px $modal-element-padding;
     border-top: 1px solid $dark-turquoise;
   }
   .data-top {
@@ -53,9 +53,16 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .hats-breakdown-wrapper {
+    .logo-wrapper {
+      padding: 0px $modal-element-padding-mobile;
+    }
     .data-top {
       flex-direction: column;
       height: 100%;
+      padding: $modal-element-padding-mobile;
+    }
+    .data-bottom {
+      padding: $modal-element-padding-mobile;
     }
   }
 }
