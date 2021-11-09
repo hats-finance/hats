@@ -58,10 +58,10 @@ tr {
   display: flex;
   flex-direction: column;
   text-align: left;
-  .sub-label {
-    font-size: $tiny;
-    color: $gray;
-  }
+}
+.sub-label {
+  font-size: $tiny;
+  color: $gray;
 }
 
 .honeypot-balance-value {
@@ -112,5 +112,8 @@ tr {
     > a {
       width: 100%;
     }
+  }
+  .max-rewards-wrapper {
+    flex-direction: row;
   }
 }
