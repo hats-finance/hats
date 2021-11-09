@@ -70,6 +70,9 @@
       max-width: unset;
       height: 100%;
       width: 100%;
+      .modal-top {
+        padding: $element-padding $modal-element-padding-mobile;
+      }
     }
   }
 }

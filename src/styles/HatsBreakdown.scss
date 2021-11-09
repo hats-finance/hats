@@ -60,6 +60,10 @@
       flex-direction: column;
       height: 100%;
       padding: $modal-element-padding-mobile;
+      justify-content: unset;
+      .data-square {
+        margin-bottom: 50px;
+      }
     }
     .data-bottom {
       padding: $modal-element-padding-mobile;

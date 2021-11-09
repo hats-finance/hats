@@ -28,6 +28,24 @@
   }
 }
 
+.disconnect-prompt-wrapper {
+  display: flex;
+  height: 100%;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding: $modal-element-padding-mobile;
+  box-sizing: border-box;
+  button {
+    color: $turquoise;
+    background: transparent;
+    border: 1px solid $turquoise;
+    &.disconnect {
+      background-color: $turquoise;
+      color: $blue;
+    }
+  }
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   .wallet-info-wrapper {
     margin-right: auto;
