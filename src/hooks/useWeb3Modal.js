@@ -2,27 +2,19 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-// import Torus from "@toruslabs/torus-embed";
-// import Authereum from "authereum";
-// import Portis from "@portis/web3";
-
-// Enter a valid infura key here to avoid being rate limited
-// You can get a key for free at https://infura.io/register
-const INFURA_ID = "472979e3dd4744859d63fe6421283f47";
-
-//const NETWORK_NAME = "mainnet";
-const NETWORK_NAME = "rinkeby";
+import { INFURA_ID } from "../constants/constants";
+import { NETWORK } from "../settings";
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
   const [autoLoaded, setAutoLoaded] = useState(false);
-  const { autoLoad = true, infuraId = INFURA_ID, NETWORK = NETWORK_NAME } = config;
+  const { autoLoad = true, infuraId = INFURA_ID, network = NETWORK } = config;
 
   // Web3Modal also supports many other wallets.
   // You can see other options at https://github.com/Web3Modal/web3modal
   const web3Modal = useMemo(() => {
     return new Web3Modal({
-      network: NETWORK,
+      network: network,
       cacheProvider: true,
       providerOptions: {
         walletconnect: {
@@ -31,29 +23,6 @@ function useWeb3Modal(config = {}) {
             infuraId,
           },
         },
-        // torus: {
-        //   package: Torus,
-        //   options: {
-        //     config: {
-        //       buildEnv: "development"
-        //     },
-        //   },
-        // },
-        // authereum: {
-        //   package: Authereum,
-        // },
-        // portis: {
-        //   package: Portis,
-        //   options: {
-        //     id: "ded972c3-b6cf-466a-92c6-fd6ada36a878",
-        //   },
-        // },
-        // mewconnect: {
-        //   package: MewConnect,
-        //   options: {
-        //     infuraId: infuraId
-        //   }
-        // }
       },
       theme: {
         background: "rgb(39, 49, 56)",
@@ -63,7 +32,7 @@ function useWeb3Modal(config = {}) {
         hover: "rgb(16, 26, 32)"
       }
     });
-  }, [NETWORK, infuraId])
+  }, [network, infuraId])
 
   // Open wallet selection modal.
   const loadWeb3Modal = useCallback(async () => {
