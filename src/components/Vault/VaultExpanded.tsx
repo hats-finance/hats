@@ -2,7 +2,7 @@ import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/typ
 import { parseJSONToObject, setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
-import Severities from "./Severities";
+import Severities from "./Severities/Severities";
 import { useHistory } from "react-router-dom";
 import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
