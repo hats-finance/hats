@@ -1,14 +1,13 @@
-@import "../../styles/constants.scss";
+@import "../../../styles/constants.scss";
 
 .severity-wrapper {
   display: flex;
   flex-direction: column;
-  .severity-title {
-    background-color: $purple-blue;
+  .severity-top-wrapper {
+    display: flex;
+    justify-content: space-between;
     padding: 10px 30px;
-    color: $white;
-    font-weight: bold;
-    font-size: $xsmall;
+    cursor: pointer;
     &.low {
       background-color: $severity-low;
     }
@@ -25,7 +24,25 @@
       background-color: $severity-audit-request;
       color: $white;
     }
+    .severity-title {
+      color: $white;
+      font-weight: bold;
+      font-size: $xsmall;
+    }
+    .arrow {
+      transform: rotate(0deg);
+      transition: transform 0.1s linear;
+      margin-left: 20px;
+      &.open {
+        transform: rotate(90deg);
+        transition: transform 0.1s linear;
+      }
+    }
+    &:hover {
+      opacity: 0.9;
+    }
   }
+
   .severity-data {
     display: flex;
     justify-content: space-between;
@@ -45,6 +62,7 @@
         cursor: pointer;
         text-decoration: underline;
         margin-top: 20px;
+        width: 100%;
         &:hover {
           opacity: 0.9;
         }
@@ -56,6 +74,8 @@
         justify-content: flex-end;
         margin: auto;
         cursor: pointer;
+        width: 100%;
+        align-items: center;
       }
     }
     .severity-data-item:last-child {
@@ -76,6 +96,9 @@
         margin-right: unset;
         border-right: unset;
         padding-right: unset;
+        .view-more {
+          margin-bottom: 20px;
+        }
       }
     }
   }

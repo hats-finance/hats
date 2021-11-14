@@ -3,7 +3,7 @@ import "../../styles/Vault/Vault.scss";
 import { IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, parseJSONToObject } from "../../utils";
+import { formatWei, fromWei, parseJSONToObject } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -45,12 +45,22 @@ export default function Vault(props: IProps) {
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
 
+  const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+
+  const maxRewards = (
+    <>
+      <div className="max-rewards-wrapper">
+        {formatWei(honeyPotBalance, 3, stakingTokenDecimals)}
+        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
+      </div>
+      {screenSize === ScreenSize.Mobile && <span className="sub-label">Total vault</span>}
+    </>
+  )
+
   return (
     <>
       <tr className={isGuest ? "guest" : ""}>
-        <td>
-          <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>
-        </td>
+        {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
             {/* TODO: handle project-metadata and Project-metadata */}
@@ -58,12 +68,17 @@ export default function Vault(props: IProps) {
             <div className="name-source-wrapper">
               <div className="project-name">{name}</div>
               {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}
+              {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>
         </td>
-        <td>{isGuest && `${bounty} bounty + `} {millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)), { precision: 3 })} {honeyPotBalanceValue && <span className="honeypot-balance-value">&#8776; {`$${honeyPotBalanceValue}`}</span>}</td>
+
         {screenSize === ScreenSize.Desktop && (
           <>
+            <td className="rewards-cell">
+              {isGuest && `${bounty} bounty + `}
+              {maxRewards}
+            </td>
             <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
             <td>{vaultAPY}</td>
             <td>
@@ -75,9 +90,14 @@ export default function Vault(props: IProps) {
             </td>
           </>
         )}
+        {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
       {toggleRow &&
-        <VaultExpanded data={props.data} />}
+        <VaultExpanded
+          data={props.data}
+          withdrawRequests={withdrawRequests}
+          setShowModal={props.setShowModal}
+          setModalData={props.setModalData} />}
     </>
   )
 }

@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol, committeeCheckedIn, depositPause } = props.data.parentVault;
-  const { name, parentDescription, isGuest } = props.data;
+  const { parentDescription, isGuest } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
@@ -218,115 +218,106 @@ export default function DepositWithdraw(props: IProps) {
     "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriodData.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
   })
 
-  return <div className={depositWithdrawWrapperClass}>
-    {props.isPool &&
-      <div className="pool-wrapper">
-        <div className="pool-title-wrapper">
-          <img src={require("../../assets/icons/vaults/uniswap.svg").default} alt="uniswap logo" width="40px" />
-          <span className="pool-name">{name}</span>
+  return (
+    <div className={depositWithdrawWrapperClass}>
+      <div className="tabs-wrapper">
+        <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
+        <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>
+      </div>
+      {tab === "withdraw" && isPendingWithdraw &&
+        <PendingWithdraw
+          withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
+          expiryTime={withdrawRequests?.expiryTime || ""}
+          setIsPendingWithdraw={setIsPendingWithdraw}
+          setIsWithdrawable={setIsWithdrawable}
+        />}
+      <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
+        <div className="balance-wrapper">
+          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${stakingTokenSymbol}`}
+          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
+          <button
+            className="max-button"
+            disabled={!committeeCheckedIn}
+            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : fromWei(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
         </div>
         <div>
-          <img src={require("../../assets/icons/vaults/hats.svg").default} alt="hats logo" width="40px" />
-          <img src={require("../../assets/icons/vaults/etherum.svg").default} alt="etherum logo" width="40px" />
-        </div>
-      </div>}
-    <div className="tabs-wrapper">
-      <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
-      <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>
-    </div>
-    {tab === "withdraw" && isPendingWithdraw &&
-      <PendingWithdraw
-        withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
-        expiryTime={withdrawRequests?.expiryTime || ""}
-        setIsPendingWithdraw={setIsPendingWithdraw}
-        setIsWithdrawable={setIsWithdrawable}
-      />}
-    <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
-      <div className="balance-wrapper">
-        {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${stakingTokenSymbol}`}
-        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
-        <button
-          className="max-button"
-          disabled={!committeeCheckedIn}
-          onClick={() => setUserInput(tab === "deposit" ? tokenBalance : fromWei(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
-      </div>
-      <div>
-        <div className={amountWrapperClass}>
-          <div className="top">
-            <span>Vault token</span>
-            <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
+          <div className={amountWrapperClass}>
+            <div className="top">
+              <span>Vault token</span>
+              <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
+            </div>
+            <div className="input-wrapper">
+              {/* TODO: handle project-metadata and Project-metadata */}
+              <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
+              <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
+            </div>
+            {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${fromWei(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
+            {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
+            {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
-          <div className="input-wrapper">
-            {/* TODO: handle project-metadata and Project-metadata */}
-            <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
-            <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" autoFocus onClick={(e) => (e.target as HTMLInputElement).select()} />
+        </div>
+        <div className="staked-wrapper">
+          <div>
+            <span>Staked</span>
+            <span>{fromWei(deposited, stakingTokenDecimals)}</span>
           </div>
-          {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${fromWei(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
-          {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
+          <div>
+            <span>Withdrawn</span>
+            <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
+          </div>
+        </div>
+        <div className="apy-wrapper">
+          <span>
+            APY
+            <Tooltip
+              overlayClassName="tooltip"
+              overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+              overlay="Estimated yearly earnings based on total staked amount and rate reward">
+              <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon /></div>
+            </Tooltip>
+          </span>
+          <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
         </div>
       </div>
-      <div className="staked-wrapper">
-        <div>
-          <span>Staked</span>
-          <span>{fromWei(deposited, stakingTokenDecimals)}</span>
+      {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
+      {tab === "deposit" && (
+        <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
+          <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
+          <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
         </div>
-        <div>
-          <span>Withdrawn</span>
-          <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
-        </div>
+      )}
+      {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
+      {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
+      {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+      {tab === "deposit" && (isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
+      <div className="action-btn-wrapper">
+        {tab === "deposit" && showUnlimitedMessage &&
+          <ApproveToken
+            approveToken={approveToken}
+            depositAndClaim={depositAndClaim}
+            userInput={userInput}
+            setShowUnlimitedMessage={setShowUnlimitedMessage}
+            stakingTokenDecimals={stakingTokenDecimals} />}
+        {tab === "deposit" &&
+          <button
+            disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause}
+            className="action-btn"
+            onClick={async () => await tryDeposit()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
+          </button>}
+        {tab === "withdraw" && withdrawRequests && isWithdrawable && !isPendingWithdraw &&
+          <button
+            disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriodData.isSafetyPeriod || !committeeCheckedIn}
+            className="action-btn"
+            onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
+          </button>}
+        {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
+          <button
+            disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
+            className="action-btn"
+            onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
+        <button onClick={async () => await claim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
-      <div className="apy-wrapper">
-        <span>
-          APY
-          <Tooltip
-            overlayClassName="tooltip"
-            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-            overlay="Estimated yearly earnings based on total staked amount and rate reward">
-            <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon /></div>
-          </Tooltip>
-        </span>
-        <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
-      </div>
+      {pendingWalletAction && <Loading />}
     </div>
-    {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
-    {tab === "deposit" && (
-      <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
-        <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-        <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
-      </div>
-    )}
-    {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
-    {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-    {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
-    {tab === "deposit" && (isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
-    <div className="action-btn-wrapper">
-      {tab === "deposit" && showUnlimitedMessage &&
-        <ApproveToken
-          approveToken={approveToken}
-          depositAndClaim={depositAndClaim}
-          userInput={userInput}
-          setShowUnlimitedMessage={setShowUnlimitedMessage}
-          stakingTokenDecimals={stakingTokenDecimals} />}
-      {tab === "deposit" &&
-        <button
-          disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause}
-          className="action-btn"
-          onClick={async () => await tryDeposit()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
-        </button>}
-      {tab === "withdraw" && withdrawRequests && isWithdrawable && !isPendingWithdraw &&
-        <button
-          disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriodData.isSafetyPeriod || !committeeCheckedIn}
-          className="action-btn"
-          onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
-        </button>}
-      {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
-        <button
-          disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
-          className="action-btn"
-          onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
-      <button onClick={async () => await claim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>
-    </div>
-    {pendingWalletAction && <Loading />}
-  </div>
+  )
 }

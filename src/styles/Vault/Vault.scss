@@ -54,6 +54,16 @@ tr {
   }
 }
 
+.max-rewards-wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+.sub-label {
+  font-size: $tiny;
+  color: $gray;
+}
+
 .honeypot-balance-value {
   color: $white;
   font-weight: bold;
@@ -91,5 +101,19 @@ tr {
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-
+  .arrow {
+    margin-left: unset;
+  }
+  .rewards-cell {
+    width: 100%;
+  }
+  .contracts-covered-modal-wrapper {
+    padding: 40px 20px;
+    > a {
+      width: 100%;
+    }
+  }
+  .max-rewards-wrapper {
+    flex-direction: row;
+  }
 }

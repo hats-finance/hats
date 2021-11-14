@@ -126,3 +126,5 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
+
+export const INFURA_ID = "472979e3dd4744859d63fe6421283f47";

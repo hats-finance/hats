@@ -130,9 +130,39 @@
     .vault-details-wrapper {
       .vault-details-content {
         flex-direction: column;
+        padding: 20px;
         > div {
           width: 100%;
-          padding: 20px 0px;
+          padding: unset;
+          border: unset;
+        }
+        .submit-vulnerability-button-wrapper {
+          button {
+            width: 100%;
+          }
+        }
+      }
+    }
+    .vault-expanded-subtitle {
+      margin-top: 20px;
+    }
+    .twitter-avatars-wrapper {
+      flex-wrap: unset;
+      min-height: unset;
+      overflow: auto;
+      white-space: nowrap;
+      width: 90vw;
+    }
+    .prize-division-wrapper {
+      .pie-chart-wrapper {
+        flex-direction: column;
+        svg {
+          max-width: 200px;
+        }
+        .label-wrapper {
+          margin-top: 20px;
+          margin-left: unset;
+          width: 100%;
         }
       }
     }

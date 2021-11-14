@@ -23,23 +23,11 @@ header {
     color: $white;
     display: flex;
     align-items: center;
-    min-height: $header-button-hight;
     margin-left: auto;
     margin-right: 20px;
     span {
       margin-left: 10px;
-    }
-  }
-  .wallet-btn {
-    border: 1px solid;
-    color: $white;
-    background-color: $blue;
-    min-height: $header-button-hight;
-    border: none;
-    padding: 15px;
-    &:active {
-      background-color: $light-blue;
-      opacity: 1;
+      font-weight: bold;
     }
   }
 }
@@ -55,5 +43,9 @@ header {
 @media only screen and (max-width: $mobile-breakpoint) {
   header {
     padding: 10px;
+    .hats-btn {
+      margin-left: unset;
+      margin-right: unset;
+    }
   }
 }
