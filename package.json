@@ -18,6 +18,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/showdown": "^1.9.3",
     "@walletconnect/web3-provider": "^1.6.6",
+    "@web3-react/walletconnect-connector": "^6.2.8",
     "authereum": "^0.1.14",
     "axios": "^0.21.1",
     "chalk": "^4.1.0",
