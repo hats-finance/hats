@@ -1,27 +1,9 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
-//import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { INFURA_ID } from "../constants/constants";
 import { NETWORK } from "../settings";
-//import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
-
-// const supportedChainIds = [
-//   1, // mainnet
-//   4, // rinkeby
-// ];
-// const RPC = {
-//   "mainnet": 'https://eth-mainnet.alchemyapi.io/v2/q1gSNoSMEzJms47Qn93f9-9Xg5clkmEC',
-//   "rinkeby": 'https://eth-rinkeby.alchemyapi.io/v2/XVLwDlhGP6ApBXFz_lfv0aZ6VmurWhYD',
-// }
-// export const walletconnect = new WalletConnectConnector({
-//   rpc: RPC,
-//   bridge: 'https://bridge.walletconnect.org',
-//   qrcode: true,
-//   supportedChainIds,
-//   // pollingInterval: 15000,
-// })
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
