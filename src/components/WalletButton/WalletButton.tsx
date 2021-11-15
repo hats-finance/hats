@@ -17,11 +17,11 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
     if (!provider) {
       loadWeb3Modal();
       /** 
-       * Warn the user in case no window.ethereum is detected on mobile. Should be solved in more mobile browsers
-       * in updated versions of WalletConnect.
+       * Warn the user in case no window.ethereum is detected on mobile.
+       * Should be solved in more mobile browsers in future updates of WalletConnect.
        */
       if (window.ethereum === undefined && isMobile()) {
-        console.warn("No window.ethereum detected. We recommend to use the built-in browser of MetaMask to interact with the blockchain.");
+        console.warn("No window.ethereum detected. We recommend to use the built-in browser of your wallet to interact with the blockchain.");
         setShowNoEthereumPrompt(true);
       }
     } else if (screenSize === ScreenSize.Desktop) {
@@ -54,7 +54,7 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
       {showNoEthereumPrompt && (
         <Modal title="No window.ethereum detected" setShowModal={setShowNoEthereumPrompt}>
           <div className="no-ethereum-prompt-wrapper">
-            <span>We recommend to use the built-in browser of MetaMask to interact with the blockchain.</span>
+            <span>We recommend to use the built-in browser of your wallet to interact with the blockchain.</span>
             <button onClick={() => setShowNoEthereumPrompt(false)}>Got it</button>
           </div>
         </Modal>
