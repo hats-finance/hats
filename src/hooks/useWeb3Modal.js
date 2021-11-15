@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
-import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
+//import WalletConnectQRCodeModal from "@walletconnect/qrcode-modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { INFURA_ID } from "../constants/constants";
 import { NETWORK } from "../settings";
@@ -36,7 +36,7 @@ function useWeb3Modal(config = {}) {
       cacheProvider: true,
       providerOptions: {
         walletconnect: {
-          package: WalletConnectQRCodeModal,
+          package: WalletConnectProvider,
           options: {
             infuraId,
           },

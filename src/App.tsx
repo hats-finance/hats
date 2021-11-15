@@ -43,18 +43,38 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
+  function handleEthereum() {
+    const { ethereum } = window;
+    if (ethereum && ethereum.isMetaMask) {
+      console.log('Ethereum successfully detected!');
+
+      // Access the decentralized web!
+    } else {
+      console.log('Please install MetaMask!');
+    }
+  }
+
   if (window.ethereum) {
+    handleEthereum();
     window.ethereum.on("accountsChanged", (accounts) => {
       dispatch(updateSelectedAddress(accounts[0]));
     });
-
     window.ethereum.on("chainChanged", (chainId) => {
       // Handle the new chain.
       // Correctly handling chain changes can be complicated.
       // We recommend reloading the page unless you have good reason not to.
       window.location.reload();
     });
+  } else {
+    window.addEventListener('ethereum#initialized', handleEthereum, {
+      once: true,
+    });
+  
+    // If the event is not dispatched by the end of the timeout,
+    // the user probably doesn't have MetaMask installed.
+    setTimeout(handleEthereum, 3000); // 3 seconds
   }
+
 
   const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_MASTER_DATA);
 
