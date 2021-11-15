@@ -55,7 +55,7 @@ export const getTokenBalance = async (tokenAddress: string, selectedAddress: str
     return fromWei(balance, decimals);
   } catch (error) {
     console.error(error);
-    return "-";
+    return "0";
   }
 }
 
