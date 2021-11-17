@@ -14,6 +14,7 @@ import { RootState } from "../../reducers";
 import VaultAction from "./VaultAction";
 import { isMobile } from "web3modal";
 import ArrowIcon from "../../assets/icons/arrow.icon";
+import LeftArrowIcon from "../../assets/icons/arrow-left.icon";
 
 interface IProps {
   data: IVault
@@ -94,7 +95,7 @@ export default function VaultExpanded(props: IProps) {
                 <div className="pie-chart-wrapper">
 
                   <div className="pie-chart-container">
-                    {isMobile() && <button onClick={nextSegement}><ArrowIcon width="20" height="20" rotate={180} /></button>}
+                    {isMobile() && <button onClick={nextSegement}><LeftArrowIcon width="20" height="20" /></button>}
                     <PieChart
                       onMouseOver={(e, segmentIndex) => {
                         setSelectedSegmentIndex(segmentIndex);

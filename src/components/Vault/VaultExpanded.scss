@@ -95,12 +95,6 @@
       align-items: center;
       height: 100%;
       .pie-chart-container {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-        button {
-          background: none;
-        }
         svg {
           max-width: 150px;
           cursor: pointer;
@@ -164,8 +158,16 @@
     .prize-division-wrapper {
       .pie-chart-wrapper {
         flex-direction: column;
-        svg {
-          max-width: 200px;
+        .pie-chart-container {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          svg {
+            max-width: 200px;
+          }
+          button {
+            background: none;
+          }
         }
         .label-wrapper {
           margin-top: 20px;
