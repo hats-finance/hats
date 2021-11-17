@@ -18,6 +18,7 @@ interface IProps {
   parentVault: IParentVault
   severityIndex: number
   expanded: boolean
+  expandedSeverityIndex: number | undefined
   setExpandedSeverityIndex: Function
 }
 
@@ -27,7 +28,7 @@ export default function Severity(props: IProps) {
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
   const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.parentVault;
-  const { severityIndex, severity, expanded } = props;
+  const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardPercentage = (Number(rewardsLevels[severityIndex]) / 10000) * 100;
   const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
@@ -37,7 +38,7 @@ export default function Severity(props: IProps) {
       <div className="severity-wrapper" key={severityIndex}>
         <div
           className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase()}`}
-          onClick={() => props.setExpandedSeverityIndex(severityIndex)}>
+          onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
           <div className="severity-title">{`${severity?.name.toUpperCase()} SEVERITY`}</div>
           <div className={expanded ? "arrow open" : "arrow"}><ArrowIcon /></div>
         </div>

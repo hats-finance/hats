@@ -12,6 +12,8 @@ import "./VaultExpanded.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import VaultAction from "./VaultAction";
+import { isMobile } from "web3modal";
+import ArrowIcon from "../../assets/icons/arrow.icon";
 
 interface IProps {
   data: IVault
@@ -38,11 +40,24 @@ export default function VaultExpanded(props: IProps) {
     { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
   ];
 
-  const [currentPieData, setCurrentPieData] = useState({
-    vaule: pieChartData[0].value,
-    title: pieChartData[0].title,
-    color: PieChartColors.vestedToken
-  });
+  const pieChartNonZeroVaules = pieChartData.filter((obj) => obj.value !== 0);
+  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+
+  const nextSegement = () => {
+    if (selectedSegmentIndex + 1 === pieChartNonZeroVaules.length) {
+      setSelectedSegmentIndex(0);
+    } else {
+      setSelectedSegmentIndex(selectedSegmentIndex + 1);
+    }
+  } 
+
+  const prevSegement = () => {
+    if (selectedSegmentIndex - 1 === -1) {
+      setSelectedSegmentIndex(pieChartNonZeroVaules.length - 1);
+    } else {
+      setSelectedSegmentIndex(selectedSegmentIndex -1);
+    }
+  }
 
   return (
     <tr>
@@ -77,15 +92,21 @@ export default function VaultExpanded(props: IProps) {
               <div className="prize-division-wrapper">
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="pie-chart-wrapper">
-                  <PieChart
-                    onMouseOver={(e, segmentIndex) => {
-                      setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color });
-                    }}
-                    lineWidth={30}
-                    data={pieChartData} />
-                  <div className="label-wrapper" style={{ borderLeftColor: currentPieData.color }}>
-                    <span className="value">{`${currentPieData.vaule}%`}</span>
-                    <span>{currentPieData.title}</span>
+
+                  <div className="pie-chart-container">
+                    {isMobile() && <button onClick={nextSegement}><ArrowIcon width="20" height="20" rotate={180} /></button>}
+                    <PieChart
+                      onMouseOver={(e, segmentIndex) => {
+                        setSelectedSegmentIndex(segmentIndex);
+                      }}
+                      lineWidth={30}
+                      data={pieChartNonZeroVaules} />
+                    {isMobile() && <button onClick={prevSegement}><ArrowIcon width="20" height="20" /></button>}
+                  </div>
+
+                  <div className="label-wrapper" style={{ borderLeftColor: pieChartNonZeroVaules[selectedSegmentIndex].color }}>
+                    <span className="value">{`${pieChartNonZeroVaules[selectedSegmentIndex].value}%`}</span>
+                    <span>{pieChartNonZeroVaules[selectedSegmentIndex].title}</span>
                   </div>
                 </div>
               </div>
@@ -101,6 +122,6 @@ export default function VaultExpanded(props: IProps) {
           </div>
         </div>
       </td>
-    </tr>
+    </tr >
   )
 }

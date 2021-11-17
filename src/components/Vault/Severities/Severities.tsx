@@ -19,6 +19,7 @@ export default function Severities(props: IProps) {
         parentVault={props.parentVault}
         severityIndex={index}
         expanded={expandedSeverityIndex === index}
+        expandedSeverityIndex={expandedSeverityIndex}
         setExpandedSeverityIndex={setExpandedSeverityIndex} />
     )
   })
