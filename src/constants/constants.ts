@@ -21,7 +21,7 @@ export enum Networks {
 
 export enum MasterAddresses {
   main = "0x571f39d351513146248acafa9d0509319a327c4d",
-  rinkeby = "0x7626d5d4d3a3cd2f9bc36e160dd9f8fba39fdad2"
+  rinkeby = "0xccaadc293faaea229e0ca4a22b0330b65634b483"
 }
 
 export enum NFTMangerAddress {

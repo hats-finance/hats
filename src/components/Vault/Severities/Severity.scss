@@ -8,6 +8,8 @@
     justify-content: space-between;
     padding: 10px 30px;
     cursor: pointer;
+    height: 25px;
+    align-items: center;
     &.low {
       background-color: $severity-low;
     }
