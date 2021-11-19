@@ -62,7 +62,7 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">Max Prize:</span>
               <span className="vault-prize">
-                <b style={{ color: "white" }}>{`${rewardPercentage}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice < 0 ? "-" : millify(rewardPrice)}`}&nbsp;
+                <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice < 0 ? "-" : millify(rewardPrice)}`}&nbsp;
               </span>
               {
                 screenSize === ScreenSize.Desktop && (
