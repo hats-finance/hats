@@ -30,7 +30,7 @@ export default function Severity(props: IProps) {
   const { rewardsLevels, tokenPrice, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.parentVault;
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const rewardPercentage = (Number(rewardsLevels[severityIndex]) / 10000) * 100;
+  const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
   const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
   return (
