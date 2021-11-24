@@ -9,22 +9,33 @@ import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import CloseIcon from "../../assets/icons/close.icon";
 import Redeem from "./Redeem";
+import { ethers } from "ethers";
+const { MerkleTree } = require('merkletreejs');
+const keccak256 = require('keccak256');
 
 const IPFS_ELIGIBLE_TOKENS = "QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD";
+
+const hashToken = (tokenId: string, account: string) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
+}
+
+type EligibleTokens = {
+  [key: string]: string
+}
 
 export default function NFTAirdrop() {
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const [loading, setLoading] = useState(true);
   const [userInput, setUserInput] = useState("");
-  const [eligibleTokens, setEligibleTokens] = useState<String[]>([]);
+  const [eligibleTokens, setEligibleTokens] = useState<EligibleTokens>({});
   const [isEligible, setIsEligible] = useState(false);
   const notEligible = userInput !== "" && isAddress(userInput) && !isEligible;
-
+  const [merkleTree, setMerkleTree] = useState<any>();
 
   const handleChange = (input: string) => {
     setUserInput(input);
     if (isAddress(input)) {
-      if (eligibleTokens.includes(input)) {
+      if (Object.values(eligibleTokens).includes(input)) {
         setIsEligible(true);
       } else {
         setIsEligible(false);
@@ -38,7 +49,8 @@ export default function NFTAirdrop() {
     (async () => {
       try {
         const tokens = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
-        setEligibleTokens(Object.values(tokens.data));
+        setEligibleTokens(tokens.data);
+        setMerkleTree(new MerkleTree(Object.entries(tokens.data as EligibleTokens).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
         setLoading(false);
       } catch (error) {
         setLoading(false);
@@ -46,6 +58,16 @@ export default function NFTAirdrop() {
       }
     })();
   }, [])
+
+  useEffect(() => {
+    if (merkleTree && isEligible) {
+      const key = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === userInput);
+      const proof = merkleTree.getHexProof(hashToken(key ?? "", userInput));
+      console.log(proof);
+      // TODO: need new ABI for the redeem function.
+      // await expect(this.registry.redeem(account, tokenId, proof))
+    }
+  }, [merkleTree, isEligible, eligibleTokens, userInput])
 
 
   const addressInputClass = classNames({

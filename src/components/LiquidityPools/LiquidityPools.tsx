@@ -10,15 +10,15 @@
 // import { RootState } from "../../reducers";
 // import { IIncentive } from "../../types/types";
 
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { IPFS_PREFIX } from "../../constants/constants";
+// import { ethers } from "ethers";
+// import { useEffect, useState } from "react";
+// import axios from "axios";
+// import { IPFS_PREFIX } from "../../constants/constants";
 
 
 // import { useEffect, useState } from "react";
-const { MerkleTree } = require('merkletreejs');
-const keccak256 = require('keccak256');
+//const { MerkleTree } = require('merkletreejs');
+//const keccak256 = require('keccak256');
 
 
 
@@ -38,30 +38,30 @@ export default function LiquidityPools() {
   //   }
   // }, [loading, error, data])
 
-  const [merkleTree, setMerkleTree] = useState<any>();
+  // const [merkleTree, setMerkleTree] = useState<any>();
 
-  function hashToken(tokenId, account) {
-    return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
-  }
+  // function hashToken(tokenId, account) {
+  //   return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
+  // }
   
-  useEffect(() => {
-    (async () => {
-      const link = `${IPFS_PREFIX}QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD`;
-      const tokens = await axios.get(link);
-      // check if it exsit in tokens
-      setMerkleTree(new MerkleTree(Object.entries(tokens.data).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
-    })();
-  }, [])
+  // useEffect(() => {
+  //   (async () => {
+  //     const link = `${IPFS_PREFIX}QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD`;
+  //     const tokens = await axios.get(link);
+  //     // check if it exsit in tokens
+  //     setMerkleTree(new MerkleTree(Object.entries(tokens.data).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
+  //   })();
+  // }, [])
 
-  if (merkleTree) {
-    console.log(typeof merkleTree)
-    console.log(merkleTree);
+  // if (merkleTree) {
+  //   console.log(typeof merkleTree)
+  //   console.log(merkleTree);
 
-    const proof = merkleTree.getHexProof(hashToken("QmdLqVM2Z9bh5v44nH3Z7BEnkFx746es94YMia3vW7BRVs", "0x853D2d862E2a2c76ef8a4F6Ef2b8A9fB3dA1f604"));
-    console.log(proof);
-    // need new ABI for the redeem function.
-    // await expect(this.registry.redeem(account, tokenId, proof))
-  }
+  //   const proof = merkleTree.getHexProof(hashToken("QmdLqVM2Z9bh5v44nH3Z7BEnkFx746es94YMia3vW7BRVs", "0x853D2d862E2a2c76ef8a4F6Ef2b8A9fB3dA1f604"));
+  //   console.log(proof);
+  //   // need new ABI for the redeem function.
+  //   // await expect(this.registry.redeem(account, tokenId, proof))
+  // }
 
   // TODO: note we assume for now we get one incentive that matches our query so we take the first in position [0]
   return (
