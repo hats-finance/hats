@@ -16,6 +16,7 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
+import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -154,6 +155,9 @@ function App() {
         </Route>
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
+        </Route>
+        <Route path={RoutePaths.nft_airdrop}>
+          <NFTAirdrop />
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}

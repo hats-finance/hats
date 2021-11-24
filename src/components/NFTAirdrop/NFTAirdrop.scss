@@ -1,0 +1,41 @@
+@import "../../styles/constants.scss";
+
+.nft-airdrop-wrapper {
+  display: flex;
+  .nft-airdrop-search {
+    margin-right: 80px;
+    .input-container {
+      border: 1px solid $turquoise;
+      margin: 30px 0px 5px 0;
+      display: flex;
+      .address-input {
+        border: none;
+        background: none;
+        color: $white;
+        height: 50px;
+        text-indent: 10px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .clear-input {
+        background: none;
+      }
+    }
+
+    .error-label {
+      color: $red;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .nft-airdrop-wrapper {
+    padding: $element-padding;
+    flex-direction: column;
+    .nft-airdrop-search {
+      margin-right: unset;
+      margin-bottom: 30px;
+    }
+  }
+}

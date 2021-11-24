@@ -9,7 +9,8 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools"
+  pools = "/pools",
+  nft_airdrop = "/nft_airdrop"
 }
 
 export enum Networks {
@@ -34,7 +35,7 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  terms_of_use = "Terms of Use"
+  nft_airdrop = "NFT Airdrop"
 }
 
 export enum LPUniswapURIs {
@@ -103,7 +104,8 @@ export enum Colors {
   red = "#E66480",
   turquoise = "#8AFCFD",
   darkBlue = "#000723",
-  yellow = "#F2C94C"
+  yellow = "#F2C94C",
+  gray = "#C5C5C5"
 }
 
 export enum PieChartColors {

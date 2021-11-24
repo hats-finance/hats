@@ -1,0 +1,11 @@
+@import "../../styles/constants.scss";
+
+.redeem-wrapper {
+  display: flex;
+  flex-direction: column;
+  .redeem-btn {
+    background-color: $turquoise;
+    color: $blue;
+    margin-top: 20px;
+  }
+}
