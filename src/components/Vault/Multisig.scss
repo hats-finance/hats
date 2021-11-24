@@ -1,0 +1,11 @@
+@import "../../styles/constants.scss";
+
+.multi-sig-address-wrapper {
+  display: flex;
+  justify-content: center;
+  .multi-sig-address {
+    font-style: italic;
+    font-weight: bold;
+    margin-right: 10px;
+  }
+}

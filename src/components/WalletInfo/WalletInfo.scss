@@ -1,0 +1,67 @@
+@import "../../styles/constants.scss";
+
+.wallet-info-wrapper {
+  display: flex;
+  margin-right: 15px;
+  align-items: center;
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  .wallet-balance {
+    border-right: 1px solid;
+    padding-right: 10px;
+    margin-right: 10px;
+    display: flex;
+  }
+  .network-name {
+    padding-left: 10px;
+    border-left: 1px solid;
+    margin-left: 10px;
+  }
+}
+
+.disconnect-prompt-wrapper {
+  display: flex;
+  height: 100%;
+  justify-content: flex-end;
+  flex-direction: column;
+  padding: $modal-element-padding-mobile;
+  box-sizing: border-box;
+  button {
+    color: $turquoise;
+    background: transparent;
+    border: 1px solid $turquoise;
+    &.disconnect {
+      background-color: $turquoise;
+      color: $blue;
+    }
+  }
+}
+
+.no-ethereum-prompt-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: $modal-element-padding-mobile;
+  box-sizing: border-box;
+  button {
+    color: $blue;
+    background-color: $turquoise;
+    border: 1px solid $turquoise;
+    margin-top: auto;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .wallet-info-wrapper {
+    margin: auto;
+  }
+}

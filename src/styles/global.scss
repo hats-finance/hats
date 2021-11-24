@@ -60,3 +60,20 @@ button:focus {
 .tooltip {
   opacity: 1 !important;
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  /* Prevent auto-zooming when focusing on an input element */
+  input,
+  textarea {
+    font-size: $small;
+  }
+}
+
+/* Disable hover effects globally when using a touch device */
+@media (hover: none) {
+  * {
+    :hover {
+      opacity: unset !important;
+    }
+  }
+}

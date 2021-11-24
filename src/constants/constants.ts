@@ -9,9 +9,7 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools",
-  terms_of_use = "/terms_of_use",
-  privacy_policy = "/privacy_policy"
+  pools = "/pools"
 }
 
 export enum Networks {
@@ -23,7 +21,12 @@ export enum Networks {
 
 export enum MasterAddresses {
   main = "0x571f39d351513146248acafa9d0509319a327c4d",
-  rinkeby = "0x7626d5d4d3a3cd2f9bc36e160dd9f8fba39fdad2"
+  rinkeby = "0xccaadc293faaea229e0ca4a22b0330b65634b483"
+}
+
+export enum NFTMangerAddress {
+  main = "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
 export enum Pages {
@@ -33,6 +36,13 @@ export enum Pages {
   pools = "Liquidity Pools",
   terms_of_use = "Terms of Use"
 }
+
+export enum LPUniswapURIs {
+  main = "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
+  rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
+}
+
+export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
 
 /**
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
@@ -72,9 +82,20 @@ export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/
 
 export const HATS_WEBSITE = "https://hats.finance";
 
+export const DOCS = "https://docs.hats.finance/";
+
+export const TERMS_OF_USE = "https://docs.hats.finance/terms-of-use-1";
+
+export const RISK_FACTOR = "https://docs.hats.finance/risk-factor";
+
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
-export const PRIVACY_POLICY = "https://docs.hats.finance/privacy-policy";
+export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
+
+export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
+
+/** Used for the Uniswap V3 Liquidity Pool staking */
+export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
@@ -138,3 +159,4 @@ Operating System:
 
 Anything else relevant ?
 `
+export const INFURA_ID = "472979e3dd4744859d63fe6421283f47";

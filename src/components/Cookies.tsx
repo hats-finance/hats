@@ -15,7 +15,7 @@ export default function Cookies(props: IProps) {
   return (
     <div className="cookies-wrapper">
       <span>This website uses cookies to ensure you the best experience on our website</span>
-      <div>
+      <div className="cookies-links-wrapper">
         <a className="policy-link" target="_blank" rel="noopener noreferrer" href={COOKIES_POLICY}>Cookies Policy</a>
         <button className="accept-button" onClick={acceptedCookies}>ACCEPT</button>
       </div>

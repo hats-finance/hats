@@ -10,6 +10,7 @@ import { IVault, IVaultDescription } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import { parseJSONToObject } from "../utils";
 import SearchIcon from "../assets/icons/search.icon";
+import { ScreenSize } from "../constants/constants";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,7 @@ export default function Honeypots() {
   const [selectedVault, setSelectedVault] = useState("");
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
+  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   useEffect(() => {
     if (modalData) {
@@ -50,7 +52,7 @@ export default function Honeypots() {
           <tbody>
             <SafePeriodBar />
             <tr>
-              <th colSpan={2} className="search-cell" >
+              <th colSpan={screenSize === ScreenSize.Desktop ? 2 : 3} className="search-cell" >
                 <div className="search-wrapper">
                   <SearchIcon />
                   <input
@@ -61,10 +63,14 @@ export default function Honeypots() {
                     placeholder="Search vault..." />
                 </div>
               </th>
-              <th>TOTAL VAULT</th>
-              <th>PRIZE GIVEN</th>
-              <th>APY</th>
-              <th></th>
+              {screenSize === ScreenSize.Desktop && (
+                <>
+                  <th>TOTAL VAULT</th>
+                  <th>PRIZE GIVEN</th>
+                  <th>APY</th>
+                  <th></th>
+                </>
+              )}
             </tr>
             <tr className="transparent-row">
               <td colSpan={7}>Hats Native vaults</td>

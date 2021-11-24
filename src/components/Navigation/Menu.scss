@@ -1,0 +1,14 @@
+@import "../../styles/constants.scss";
+
+.menu-wrapper {
+  position: fixed;
+  width: 100%;
+  z-index: 5;
+  background-color: $dark-blue;
+  top: $header-hight;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 2px solid $turquoise;
+  height: 100%;
+  overflow-x: scroll;
+}

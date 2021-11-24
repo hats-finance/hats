@@ -1,22 +1,32 @@
-import { IVault, IVaultDescription } from "../../types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { parseJSONToObject, setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
-import Severities from "./Severities";
+import Severities from "./Severities/Severities";
 import { useHistory } from "react-router-dom";
-import { PieChartColors, RoutePaths } from "../../constants/constants";
+import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
 import humanizeDuration from "humanize-duration";
+import "./VaultExpanded.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../reducers";
+import VaultAction from "./VaultAction";
+import { isMobile } from "web3modal";
+import ArrowIcon from "../../assets/icons/arrow.icon";
 
 interface IProps {
   data: IVault
+  withdrawRequests: IPoolWithdrawRequest[]
+  setShowModal: Function
+  setModalData: Function
 }
 
 export default function VaultExpanded(props: IProps) {
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, isGuest, parentDescription } = props.data;
   const history = useHistory();
+  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
   const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
@@ -30,16 +40,37 @@ export default function VaultExpanded(props: IProps) {
     { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
   ];
 
-  const [currentPieData, setCurrentPieData] = useState({
-    vaule: pieChartData[0].value,
-    title: pieChartData[0].title,
-    color: PieChartColors.vestedToken
-  });
+  const pieChartNonZeroVaules = pieChartData.filter((obj) => obj.value !== 0);
+  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+
+  const nextSegement = () => {
+    if (selectedSegmentIndex + 1 === pieChartNonZeroVaules.length) {
+      setSelectedSegmentIndex(0);
+    } else {
+      setSelectedSegmentIndex(selectedSegmentIndex + 1);
+    }
+  }
+
+  const prevSegement = () => {
+    if (selectedSegmentIndex - 1 === -1) {
+      setSelectedSegmentIndex(pieChartNonZeroVaules.length - 1);
+    } else {
+      setSelectedSegmentIndex(selectedSegmentIndex - 1);
+    }
+  }
 
   return (
     <tr>
       <td className="sub-row" colSpan={7}>
         <div className="vault-expanded">
+          {screenSize === ScreenSize.Mobile && (
+            <div >
+              <VaultAction data={props.data}
+                withdrawRequests={props.withdrawRequests}
+                setShowModal={props.setShowModal}
+                setModalData={props.setModalData} />
+            </div>
+          )}
           <div className="vault-details-wrapper">
             <div className="sub-title">
               VAULT DETAILS
@@ -61,23 +92,22 @@ export default function VaultExpanded(props: IProps) {
               <div className="prize-division-wrapper">
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="pie-chart-wrapper">
-                  <PieChart
-                    onMouseOver={(e, segmentIndex) => { 
-                      setCurrentPieData({ vaule: pieChartData[segmentIndex].value, title: pieChartData[segmentIndex].title, color: pieChartData[segmentIndex].color });
-                      //(e.target as SVGAElement).setAttribute("stroke-width", "20");
-                    }}
-                    // onMouseOut={(e) => {
-                    //   (e.target as SVGAElement).setAttribute("stroke-width", "15")
-                    // }}
-                    lineWidth={30}
-                    data={pieChartData}
-                    //radius={40}
-                  />
-                  <div className="label-wrapper" style={{ borderLeftColor: currentPieData.color }}>
-                    <span className="value">{`${currentPieData.vaule}%`}</span>
-                    <span>{currentPieData.title}</span>
+
+                  <div className="pie-chart-container">
+                    {isMobile() && <button style={{ transform: "rotate(180deg)" }} onClick={nextSegement}><ArrowIcon width="20" height="20" /></button>}
+                    <PieChart
+                      onMouseOver={(e, segmentIndex) => {
+                        setSelectedSegmentIndex(segmentIndex);
+                      }}
+                      lineWidth={30}
+                      data={pieChartNonZeroVaules} />
+                    {isMobile() && <button onClick={prevSegement}><ArrowIcon width="20" height="20" /></button>}
                   </div>
 
+                  <div className="label-wrapper" style={{ borderLeftColor: pieChartNonZeroVaules[selectedSegmentIndex].color }}>
+                    <span className="value">{`${pieChartNonZeroVaules[selectedSegmentIndex].value}%`}</span>
+                    <span>{pieChartNonZeroVaules[selectedSegmentIndex].title}</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -92,6 +122,6 @@ export default function VaultExpanded(props: IProps) {
           </div>
         </div>
       </td>
-    </tr>
+    </tr >
   )
 }
