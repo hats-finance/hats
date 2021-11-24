@@ -48,6 +48,7 @@ export default function LiquidityPools() {
     (async () => {
       const link = `${IPFS_PREFIX}QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD`;
       const tokens = await axios.get(link);
+      // check if it exsit in tokens
       setMerkleTree(new MerkleTree(Object.entries(tokens.data).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
     })();
   }, [])
@@ -58,6 +59,7 @@ export default function LiquidityPools() {
 
     const proof = merkleTree.getHexProof(hashToken("QmdLqVM2Z9bh5v44nH3Z7BEnkFx746es94YMia3vW7BRVs", "0x853D2d862E2a2c76ef8a4F6Ef2b8A9fB3dA1f604"));
     console.log(proof);
+    // need new ABI for the redeem function.
     // await expect(this.registry.redeem(account, tokenId, proof))
   }
 
