@@ -2,9 +2,9 @@
 
 .nft-airdrop-wrapper {
   display: flex;
-  justify-content: center;
   .nft-airdrop-search {
     margin-right: 80px;
+    max-width: 500px;
     .input-container {
       border: 1px solid $turquoise;
       margin: 30px 0px 5px 0;

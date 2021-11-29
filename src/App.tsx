@@ -3,10 +3,10 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod, updateAirdropEligibleTokens } from './actions/index';
 import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
-import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import { IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX, LocalStorage, NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
@@ -20,17 +20,21 @@ import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
-import { IVault } from "./types/types";
+import { EligibleTokens, IVault } from "./types/types";
+import axios from "axios";
+import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
 
 function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
-  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
-  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
+  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
+  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
+  const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
 
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
@@ -78,7 +82,7 @@ function App() {
   }, [dispatch, rewardsToken])
 
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  
+
   const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
   useEffect(() => {
@@ -133,6 +137,26 @@ function App() {
     }
   }, [dispatch, vaults])
 
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+        dispatch(updateAirdropEligibleTokens(data.data));
+
+        const normalizedValues = Object.values(data.data as EligibleTokens).map((value: string) => {
+          return value.toLowerCase();
+        })
+        
+        if (normalizedValues.includes(selectedAddress) && localStorage.getItem(LocalStorage.NFTAirdrop) !== "1") {
+          setShowNFTAirdropNotification(true);
+        }
+      } catch (error) {
+        console.error(error);
+        // TODO: show error
+      }
+    })();
+  }, [dispatch, selectedAddress])
+
   return (
     <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
@@ -161,6 +185,7 @@ function App() {
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
+      {showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>
   );
 }

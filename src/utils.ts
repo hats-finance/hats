@@ -1,4 +1,4 @@
-import { Networks } from "./constants/constants";
+import { LocalStorage, Networks } from "./constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
@@ -357,7 +357,7 @@ export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: numbe
  * @param {string} projectId
  */
 export const setVulnerabilityProject = (projectName: string, projectId: string) => {
-  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem("submitVulnerabilityData") || JSON.stringify(VULNERABILITY_INIT_DATA));
+  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
     cachedData = VULNERABILITY_INIT_DATA;
@@ -368,7 +368,7 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
     projectName: projectName,
     projectId: projectId
   }
-  localStorage.setItem("submitVulnerabilityData", JSON.stringify(cachedData));
+  localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 }
 
 /**

@@ -1,5 +1,12 @@
 import { BigNumber } from "ethers";
 
+export enum LocalStorage {
+  Cookies = "HATS_ACCEPTED_COOKIES",
+  WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
+  SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
+  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED"
+}
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP"
@@ -130,3 +137,5 @@ export enum SocialLinks {
 }
 
 export const INFURA_ID = "472979e3dd4744859d63fe6421283f47";
+
+export const IPFS_ELIGIBLE_TOKENS = "QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD";

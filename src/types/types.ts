@@ -188,3 +188,8 @@ export interface IPosition {
   token2: string
   canWithdraw: boolean
 }
+
+/** NFTAirdrop */
+export type EligibleTokens = {
+  [key: string]: string
+}
