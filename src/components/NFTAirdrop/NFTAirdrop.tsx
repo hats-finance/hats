@@ -8,14 +8,10 @@ import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import CloseIcon from "../../assets/icons/close.icon";
 import Redeem from "./Redeem";
-import { ethers } from "ethers";
 import { EligibleTokens } from "../../types/types";
+import { hashToken } from "../../utils";
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
-
-const hashToken = (tokenId: string, account: string) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
-}
 
 export default function NFTAirdrop() {
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
@@ -44,20 +40,21 @@ export default function NFTAirdrop() {
       try {
         setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
       } catch (error) {
+        console.error(error);
         // TODO: show error
       }
     })();
   }, [eligibleTokens])
 
-  useEffect(() => {
-    if (merkleTree && isEligible) {
-      const key = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === userInput);
-      const proof = merkleTree.getHexProof(hashToken(key ?? "", userInput));
-      console.log(proof);
-      // TODO: need new ABI for the redeem function.
-      // await expect(this.registry.redeem(account, tokenId, proof))
-    }
-  }, [merkleTree, isEligible, eligibleTokens, userInput])
+  // useEffect(() => {
+  //   if (merkleTree && isEligible) {
+  //     const key = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === userInput);
+  //     const proof = merkleTree.getHexProof(hashToken(key ?? "", userInput));
+  //     console.log(proof);
+  //     // TODO: need new ABI for the redeem function.
+  //     // await expect(this.registry.redeem(account, tokenId, proof))
+  //   }
+  // }, [merkleTree, isEligible, eligibleTokens, userInput])
 
 
   const inputContainerClass = classNames({
@@ -80,7 +77,7 @@ export default function NFTAirdrop() {
         {userInput !== "" && !isAddress(userInput) && <span className="error-label">Please enter a valid address</span>}
         {notEligible && <span>This address is not part of the airdrop. Please check  the eligibility requirements here.</span>}
       </div>
-      {isEligible && <Redeem />}
+      {isEligible && <Redeem merkleTree={merkleTree} walletAddress={userInput} />}
     </div>
   )
 }

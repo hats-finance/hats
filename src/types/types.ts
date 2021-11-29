@@ -32,8 +32,8 @@ export interface IParentVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
-  apy: number // calculated on the UI - no via subgraph
-  tokenPrice: number // calculated on the UI - no via subgraph
+  apy: number // calculated on the UI - not via subgraph
+  tokenPrice: number // calculated on the UI - not via subgraph
 }
 
 export interface IVault {
@@ -189,7 +189,7 @@ export interface IPosition {
   canWithdraw: boolean
 }
 
-/** NFTAirdrop */
+/** NFTAirdrop Eligible Tokens */
 export type EligibleTokens = {
   [key: string]: string
 }

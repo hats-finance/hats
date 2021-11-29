@@ -4,6 +4,7 @@ import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
+import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
@@ -273,6 +274,15 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 /** Uniswap V3 Liquidity Pool contract actions - END */
 
 
+
+/** NFT Airdrop contract actions - START */
+
+export const nftAirdropRedeem = async (account: string, tokenId: string, proof: any) => {
+  const contract = new Contract("", NFTAirdrop, signer);
+  return await contract.redeem(account, tokenId, proof);
+}
+
+/** NFT Airdrop contract actions - END */
 
 
 /**

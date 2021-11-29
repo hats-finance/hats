@@ -380,3 +380,12 @@ export const checkMasterAddress = (masterAddress: string) => {
     throw new Error("Master address does not match!")
   }
 }
+
+/**
+ * Used to hashToken in NFTAirdrop
+ * @param {string} tokenId
+ * @param {string} account 
+ */
+export const hashToken = (tokenId: string, account: string) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
+}
