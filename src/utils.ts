@@ -2,6 +2,7 @@ import { LocalStorage, Networks } from "./constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
+import { isAddress, getAddress } from "ethers/lib/utils";
 import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
@@ -388,4 +389,14 @@ export const checkMasterAddress = (masterAddress: string) => {
  */
 export const hashToken = (tokenId: string, account: string) => {
   return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
+}
+
+/**
+ * Normalize any supported address-format to a checksum address.
+ * @param {string} address
+ */
+export const normalizeAddress = (address: string) => {
+  if (isAddress(address)) {
+    return getAddress(address);
+  }
 }

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod, updateAirdropEligibleTokens } from './actions/index';
-import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
+import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod, normalizeAddress } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import { IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX, LocalStorage, NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
@@ -144,10 +144,10 @@ function App() {
         dispatch(updateAirdropEligibleTokens(data.data));
 
         const normalizedValues = Object.values(data.data as EligibleTokens).map((value: string) => {
-          return value.toLowerCase();
+          return normalizeAddress(value);
         })
         
-        if (normalizedValues.includes(selectedAddress) && localStorage.getItem(LocalStorage.NFTAirdrop) !== "1") {
+        if (normalizedValues.includes(normalizeAddress(selectedAddress)) && localStorage.getItem(LocalStorage.NFTAirdrop) !== "1") {
           setShowNFTAirdropNotification(true);
         }
       } catch (error) {
@@ -185,7 +185,7 @@ function App() {
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
-      {showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
+      {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>
   );
 }

@@ -1,6 +1,8 @@
 import { useEffect } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LocalStorage, RoutePaths } from "../../constants/constants";
+import { RootState } from "../../reducers";
 import Modal from "../Shared/Modal";
 import "./NFTAirdropNotification.scss";
 
@@ -9,6 +11,7 @@ interface IProps {
 }
 
 export default function NFTAirdropNotification({ setShowNFTAirdropNotification }: IProps) {
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
 
   const handleClick = () => {
     setShowNFTAirdropNotification(false);
@@ -23,7 +26,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
       <div className="nft-airdrop-notification-wrapper">
         <span>Your current connected wallet is eligible for NFT Airdrop!</span>
         <span className="question-mark">?</span>
-        <Link to={RoutePaths.nft_airdrop} onClick={handleClick}>More Details</Link>
+        <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="more-details">More Details</Link>
       </div>
     </Modal>
   )

@@ -4,13 +4,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 300px;
   .nft-image-container {
     margin-top: 20px;
     font-size: 48px;
     font-weight: bold;
     text-align: center;
     border: 1px solid $turquoise;
-    width: 300px;
+    width: 100%;
     height: 300px;
     line-height: 300px;
     background-repeat: no-repeat;
@@ -21,8 +22,8 @@
     }
   }
   .action-btn {
-    margin-top: 20px;
     width: 100%;
+    margin: 20px 0px 0px 0px;
   }
   .redeem-btn {
     background-color: $turquoise;

@@ -32,6 +32,18 @@ export const getBlockNumber = async () => {
 }
 
 /**
+ * Given an hexadecimal address returns it's ENS
+ * @param {string} address
+ */
+export const resolveENS = async (address: string) => {
+  try {
+    return await provider.lookupAddress(address);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Given token address returns it's symbol
  * @param {string} tokenAddress
  */

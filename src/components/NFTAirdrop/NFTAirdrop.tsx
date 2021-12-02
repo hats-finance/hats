@@ -1,31 +1,35 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Colors } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import "./NFTAirdrop.scss";
 import { isAddress } from "ethers/lib/utils";
-import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import CloseIcon from "../../assets/icons/close.icon";
 import Redeem from "./Redeem";
 import { EligibleTokens } from "../../types/types";
-import { hashToken } from "../../utils";
+import { hashToken, normalizeAddress } from "../../utils";
+import { useLocation } from "react-router-dom";
+
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 export default function NFTAirdrop() {
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const [loading, setLoading] = useState(false);
+  const location = useLocation();
   const [userInput, setUserInput] = useState("");
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
   const [isEligible, setIsEligible] = useState(false);
   const notEligible = userInput !== "" && isAddress(userInput) && !isEligible;
   const [merkleTree, setMerkleTree] = useState<any>();
 
-  const handleChange = (input: string) => {
+  const handleChange = useCallback((input: string) => {
     setUserInput(input);
     if (isAddress(input)) {
-      if (Object.values(eligibleTokens).includes(input)) {
+      const normalizedValues = Object.values(eligibleTokens as EligibleTokens).map((value: string) => {
+        return normalizeAddress(value);
+      })
+
+      if (Object.values(normalizedValues).includes(normalizeAddress(input))) {
         setIsEligible(true);
       } else {
         setIsEligible(false);
@@ -33,7 +37,7 @@ export default function NFTAirdrop() {
     } else {
       setIsEligible(false);
     }
-  }
+  }, [eligibleTokens]);
 
   useEffect(() => {
     (async () => {
@@ -45,6 +49,14 @@ export default function NFTAirdrop() {
       }
     })();
   }, [eligibleTokens])
+
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (params.walletAddress) {
+      handleChange(normalizeAddress(params.walletAddress) ?? "");
+    }
+  }, [location.search, handleChange])
 
   // useEffect(() => {
   //   if (merkleTree && isEligible) {
@@ -64,8 +76,6 @@ export default function NFTAirdrop() {
 
   return (
     <div className="content nft-airdrop-wrapper">
-      {loading && <Loading />}
-
       <div className="nft-airdrop-search">
         <h2>{isEligible ? "Congrats!" : notEligible ? "Ho no!" : "Hello"}</h2>
         <span>{`Please connect to wallet or enter wallet address to check your eligibility for the NFT airdrop "The crow clan"`}</span>

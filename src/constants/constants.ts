@@ -17,7 +17,7 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  nft_airdrop = "/nft_airdrop"
+  nft_airdrop = "/nft_airdrop/"
 }
 
 export enum Networks {
