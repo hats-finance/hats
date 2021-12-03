@@ -15,7 +15,6 @@ interface IProps {
 }
 
 export default function Redeem({ merkleTree, walletAddress }: IProps) {
-  //const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const dispatch = useDispatch();
   const [revealed, setRevealed] = useState(false);
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;

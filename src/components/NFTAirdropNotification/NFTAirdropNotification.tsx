@@ -3,7 +3,9 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LocalStorage, RoutePaths } from "../../constants/constants";
 import { RootState } from "../../reducers";
+import { truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
+import NFTIcon from "../../assets/icons/nft.svg";
 import "./NFTAirdropNotification.scss";
 
 interface IProps {
@@ -22,11 +24,16 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
   }, [])
 
   return (
-    <Modal title="Congratulations!" setShowModal={setShowNFTAirdropNotification} height="fit-content">
+    <Modal title="Congrats!" setShowModal={setShowNFTAirdropNotification} height="fit-content" icon={NFTIcon}>
       <div className="nft-airdrop-notification-wrapper">
-        <span>Your current connected wallet is eligible for NFT Airdrop!</span>
-        <span className="question-mark">?</span>
-        <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="more-details">More Details</Link>
+        <span>You are eligible to Hats first NFT airdrop “The crow clan” collection.</span>
+        <div className="wallet-address-container">
+          <span>Eligible wallet address:</span>
+          <span className="wallet-address">{`${truncatedAddress(selectedAddress)}`}</span>
+        </div>
+        <span>Reveal your NFT and find out more on the crow clan collection.</span>
+        <div className="question-mark">?</div>
+        <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="more-details">REVEAL</Link>
       </div>
     </Modal>
   )

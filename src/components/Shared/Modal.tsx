@@ -49,7 +49,7 @@ export default function Modal(props: IProps) {
       <div className="modal-content-wrapper">
         <div className="modal-top">
           <div className="name-icon-wrapper">
-            {props.icon && <img src={props.icon} alt="icon" />}
+            {props.icon && typeof(props.icon) === "string" ? <img src={props.icon} alt="icon" /> : props.icon}
             {props.title}
           </div>
           <button

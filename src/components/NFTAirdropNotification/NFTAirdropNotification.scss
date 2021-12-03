@@ -5,6 +5,19 @@
   flex-direction: column;
   padding: 20px;
   align-items: center;
+  color: $white;
+  span {
+    align-self: flex-start;
+  }
+  .wallet-address-container {
+    display: flex;
+    margin: 30px 0;
+    width: 100%;
+    .wallet-address {
+      color: $turquoise;
+      margin-left: 10px;
+    }
+  }
   .question-mark {
     font-size: 48px;
     font-weight: bold;

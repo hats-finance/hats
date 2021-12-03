@@ -11,7 +11,7 @@
     font-weight: bold;
     text-align: center;
     border: 1px solid $turquoise;
-    width: 100%;
+    width: 300px;
     height: 300px;
     line-height: 300px;
     background-repeat: no-repeat;
@@ -33,5 +33,11 @@
     background-color: transparent;
     color: $turquoise;
     border: 1px solid $turquoise;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .redeem-wrapper {
+    width: 100%;
   }
 }
