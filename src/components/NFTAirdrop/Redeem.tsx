@@ -24,11 +24,18 @@ export default function Redeem({ merkleTree, walletAddress }: IProps) {
     const proof = merkleTree.getHexProof(hashToken(key ?? "", walletAddress));
     await createTransaction(
       async () => nftAirdropRedeem(walletAddress, bs58.decode(IPFS_ELIGIBLE_TOKENS), proof),
-      () => {},
-      () => {},
-      () => {},
+      () => { },
+      () => { },
+      () => { },
       dispatch
     )
+    /**
+     * TODO: on success need to remove the address from the local storage
+     * const index = array.indexOf(address);
+        if (index > -1) {
+          array.splice(index, 1);
+        }
+     */
   }
 
   const handleClick = () => {

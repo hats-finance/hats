@@ -20,8 +20,10 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
   }
 
   useEffect(() => {
-    localStorage.setItem(LocalStorage.NFTAirdrop, "1");
-  }, [])
+    const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+    savedItems.push(selectedAddress);
+    localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
+  }, [selectedAddress])
 
   return (
     <Modal title="Congrats!" setShowModal={setShowNFTAirdropNotification} height="fit-content" icon={NFTIcon}>

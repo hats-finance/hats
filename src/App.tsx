@@ -147,8 +147,11 @@ function App() {
           return normalizeAddress(value);
         })
         
-        if (normalizedValues.includes(normalizeAddress(selectedAddress)) && localStorage.getItem(LocalStorage.NFTAirdrop) !== "1") {
-          setShowNFTAirdropNotification(true);
+        if (normalizedValues.includes(normalizeAddress(selectedAddress))) {
+          const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+          if (!savedItems.includes(selectedAddress)) {
+            setShowNFTAirdropNotification(true);
+          }
         }
       } catch (error) {
         console.error(error);
