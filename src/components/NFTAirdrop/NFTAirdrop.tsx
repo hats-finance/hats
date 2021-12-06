@@ -10,6 +10,7 @@ import Redeem from "./Redeem";
 import { EligibleTokens } from "../../types/types";
 import { hashToken, normalizeAddress } from "../../utils";
 import { useLocation } from "react-router-dom";
+import Loading from "../Shared/Loading";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -17,6 +18,7 @@ const keccak256 = require('keccak256');
 export default function NFTAirdrop() {
   const location = useLocation();
   const [userInput, setUserInput] = useState("");
+  const [pendingWalletAction, setPendingWalletAction] = useState(false);
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
   const [isEligible, setIsEligible] = useState(false);
   const notEligible = userInput !== "" && isAddress(userInput) && !isEligible;
@@ -58,24 +60,20 @@ export default function NFTAirdrop() {
     }
   }, [location.search, handleChange])
 
-  // useEffect(() => {
-  //   if (merkleTree && isEligible) {
-  //     const key = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === userInput);
-  //     const proof = merkleTree.getHexProof(hashToken(key ?? "", userInput));
-  //     console.log(proof);
-  //     // TODO: need new ABI for the redeem function.
-  //     // await expect(this.registry.redeem(account, tokenId, proof))
-  //   }
-  // }, [merkleTree, isEligible, eligibleTokens, userInput])
-
 
   const inputContainerClass = classNames({
     "input-container": true,
     "inputError": userInput !== "" && !isAddress(userInput)
   })
 
+  const nftAirdropWrapperClass = classNames({
+    "content": true,
+    "nft-airdrop-wrapper": true,
+    "disabled": pendingWalletAction
+  })
+
   return (
-    <div className="content nft-airdrop-wrapper">
+    <div className={nftAirdropWrapperClass}>
       <div className="nft-airdrop-search">
         <h2>{isEligible ? "Congrats!" : notEligible ? "Ho no!" : "Hello"}</h2>
         <span>{`Please connect to wallet or enter wallet address to check your eligibility for the NFT airdrop "The crow clan"`}</span>
@@ -87,7 +85,8 @@ export default function NFTAirdrop() {
         {userInput !== "" && !isAddress(userInput) && <span className="error-label">Please enter a valid address</span>}
         {notEligible && <span>This address is not part of the airdrop. Please check  the eligibility requirements here.</span>}
       </div>
-      {isEligible && <Redeem merkleTree={merkleTree} walletAddress={userInput} />}
+      {isEligible && <Redeem merkleTree={merkleTree} walletAddress={userInput} setPendingWalletAction={setPendingWalletAction} />}
+      {pendingWalletAction && <Loading />}
     </div>
   )
 }

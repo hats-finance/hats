@@ -102,6 +102,9 @@ export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
 
+// TODO: remove this. Just for testing - 0xa6DA2D33A45C0d3b8daac73e77dA5D1004F1C48A - old that redeemed already
+export const NFT_AIRDROP_ADDRESS = "0xfC2Ff16d820bA91Ce3aa27609e1ea72aD776066B";
+
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
 
@@ -138,4 +141,4 @@ export enum SocialLinks {
 
 export const INFURA_ID = "472979e3dd4744859d63fe6421283f47";
 
-export const IPFS_ELIGIBLE_TOKENS = "QmeSeXF3k1sA2UNCNSXesVdFpzg3UfcAiV5N4ymMbSZurD";
+export const IPFS_ELIGIBLE_TOKENS = "QmYi1LqaUbaxWyLFC1wokFwraDUZo3mRpeWA38Z8osJUdK";

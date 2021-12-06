@@ -149,7 +149,7 @@ function App() {
         
         if (normalizedValues.includes(normalizeAddress(selectedAddress))) {
           const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-          if (!savedItems.includes(selectedAddress)) {
+          if (!savedItems.includes(normalizeAddress(selectedAddress))) {
             setShowNFTAirdropNotification(true);
           }
         }

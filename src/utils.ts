@@ -12,6 +12,7 @@ import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
 import { ICardData, VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
+const bs58 = require('bs58');
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -388,7 +389,8 @@ export const checkMasterAddress = (masterAddress: string) => {
  * @param {string} account 
  */
 export const hashToken = (tokenId: string, account: string) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['string', 'address'], [tokenId, account]).slice(2), 'hex');
+  const decodedKey = bs58.decode(tokenId).slice(2);
+  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [decodedKey, account]).slice(2), 'hex');
 }
 
 /**
