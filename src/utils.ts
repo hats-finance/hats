@@ -385,12 +385,12 @@ export const checkMasterAddress = (masterAddress: string) => {
 
 /**
  * Used to hashToken in NFTAirdrop
- * @param {string} tokenId
+ * @param {string} tokenID
  * @param {string} account 
  */
-export const hashToken = (tokenId: string, account: string) => {
-  const decodedKey = bs58.decode(tokenId).slice(2);
-  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [decodedKey, account]).slice(2), 'hex');
+export const hashToken = (tokenID: string, account: string) => {
+  const decodedTokenID = bs58.decode(tokenID).slice(2);
+  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [decodedTokenID, account]).slice(2), 'hex');
 }
 
 /**
@@ -401,4 +401,5 @@ export const normalizeAddress = (address: string) => {
   if (isAddress(address)) {
     return getAddress(address);
   }
+  return "";
 }

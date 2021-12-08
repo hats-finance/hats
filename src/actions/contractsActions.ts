@@ -1,4 +1,4 @@
-import { toWei, fromWei, checkMasterAddress } from "../utils";
+import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
@@ -11,6 +11,7 @@ import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
 import { NETWORK } from "../settings";
 import { IIncentive } from "../types/types";
+const bs58 = require('bs58');
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -289,9 +290,30 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 
 /** NFT Airdrop contract actions - START */
 
-export const nftAirdropRedeem = async (account: string, tokenId: string, proof: any) => {
+/**
+ * Redeem NFT
+ * @param {string} account 
+ * @param {string} tokenID 
+ * @param {any} proof 
+ */
+export const nftAirdropRedeem = async (account: string, tokenID: string, proof: any) => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  return await contract.redeem(account, tokenId, proof);
+  return await contract.redeem(account, tokenID, proof);
+}
+
+/**
+ * Check if a tokenID has already been redeemed by a given address.
+ * @param {string} tokenID 
+ * @param {string} address  
+ */
+export const isRedeemed = async (tokenID: string, address: string) => {
+  const decodedTokenID = bs58.decode(tokenID).slice(2);
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  try {
+    return normalizeAddress(await contract.ownerOf(decodedTokenID)) === address;
+  } catch (error) {
+    return false;
+  }
 }
 
 /** NFT Airdrop contract actions - END */

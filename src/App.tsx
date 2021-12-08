@@ -23,6 +23,7 @@ import { RootState } from "./reducers";
 import { EligibleTokens, IVault } from "./types/types";
 import axios from "axios";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+import { isRedeemed } from "./actions/contractsActions";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,6 +43,13 @@ function App() {
       dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
     }
   }, [dispatch, provider])
+
+  /** Update to the normalized wallet address */
+  useEffect(() => {
+    if (provider?.selectedAddress) {
+      dispatch(updateSelectedAddress(normalizeAddress(provider.selectedAddress)))
+    }
+  }, [dispatch, provider?.selectedAddress])
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", screenSize => {
@@ -141,15 +149,18 @@ function App() {
     (async () => {
       try {
         const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+
+        for (const key in data.data) {
+          data.data[key] = normalizeAddress(data.data[key]);
+        }
+
         dispatch(updateAirdropEligibleTokens(data.data));
 
-        const normalizedValues = Object.values(data.data as EligibleTokens).map((value: string) => {
-          return normalizeAddress(value);
-        })
-        
-        if (normalizedValues.includes(normalizeAddress(selectedAddress))) {
+        if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
           const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-          if (!savedItems.includes(normalizeAddress(selectedAddress))) {
+          const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+
+          if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
             setShowNFTAirdropNotification(true);
           }
         }

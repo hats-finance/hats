@@ -5,9 +5,12 @@
   .nft-airdrop-search {
     margin-right: 80px;
     max-width: 500px;
+    h2 {
+      margin-top: 0;
+    }
     .input-container {
       border: 1px solid $turquoise;
-      margin: 30px 0px 5px 0;
+      margin: 40px 0px 5px 0px;
       display: flex;
       .address-input {
         border: none;
@@ -27,20 +30,23 @@
     .error-label {
       color: $red;
     }
+    .info-label {
+      margin-top: 30px;
+    }
   }
   &.disabled {
-    opacity: 0.5;
+    opacity: 0.5 !important;
     pointer-events: none;
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .nft-airdrop-wrapper {
-    padding: $element-padding;
     flex-direction: column;
     .nft-airdrop-search {
       margin-right: unset;
       margin-bottom: 30px;
+      padding: $modal-element-padding-mobile;
     }
   }
 }
