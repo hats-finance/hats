@@ -2,8 +2,7 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { INFURA_ID } from "../constants/constants";
-import { NETWORK } from "../settings";
+import { NETWORK, INFURA_ID } from "../settings";
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
