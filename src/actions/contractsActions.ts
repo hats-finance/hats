@@ -11,7 +11,6 @@ import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
 import { NETWORK } from "../settings";
 import { IIncentive } from "../types/types";
-const bs58 = require('bs58');
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -307,10 +306,9 @@ export const nftAirdropRedeem = async (account: string, tokenID: string, proof: 
  * @param {string} address  
  */
 export const isRedeemed = async (tokenID: string, address: string) => {
-  const decodedTokenID = bs58.decode(tokenID).slice(2);
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
   try {
-    return normalizeAddress(await contract.ownerOf(decodedTokenID)) === address;
+    return normalizeAddress(await contract.ownerOf(tokenID)) === address;
   } catch (error) {
     return false;
   }

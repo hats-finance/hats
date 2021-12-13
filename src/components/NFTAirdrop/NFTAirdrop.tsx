@@ -92,10 +92,16 @@ export default function NFTAirdrop() {
 
         {userInput !== "" && !isAddress(userInput) && <span className="error-label">Please enter a valid address</span>}
         {eligibilityStatus === EligibilityStatus.NOT_ELIGIBLE && <div className="info-label">This address is not part of the airdrop. Please check  the eligibility requirements here.</div>}
-        {eligibilityStatus === EligibilityStatus.ELIGIBLE  && <div className="info-label">You are part of the hats first airdrop “The crow clan”. Reedeem your NFT and join the clan.</div>}
-        {eligibilityStatus === EligibilityStatus.REDEEMED  && <span>Already Redeemed!</span>}
+        {eligibilityStatus === EligibilityStatus.ELIGIBLE && <div className="info-label">You are part of the hats first airdrop “The crow clan”. Reedeem your NFT and join the clan.</div>}
+        {eligibilityStatus === EligibilityStatus.REDEEMED && <span>Already Redeemed!</span>}
       </div>
-      {eligibilityStatus === EligibilityStatus.ELIGIBLE  && <Redeem merkleTree={merkleTree} walletAddress={userInput} setPendingWalletAction={setPendingWalletAction} />}
+      {eligibilityStatus === EligibilityStatus.ELIGIBLE && (
+        <Redeem
+          merkleTree={merkleTree}
+          walletAddress={userInput}
+          setPendingWalletAction={setPendingWalletAction}
+          clearInput={() => handleChange("")} />
+      )}
       {pendingWalletAction && <Loading />}
     </div>
   )

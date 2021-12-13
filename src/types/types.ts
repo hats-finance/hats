@@ -193,3 +193,11 @@ export interface IPosition {
 export type EligibleTokens = {
   [key: string]: string
 }
+
+export interface IAirdropElement {
+  description: string
+  external_url: string
+  image: string
+  name: string
+  attributes: Array<any>
+}
