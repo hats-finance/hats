@@ -9,18 +9,9 @@
 // import { useSelector } from "react-redux";
 // import { RootState } from "../../reducers";
 // import { IIncentive } from "../../types/types";
-
-// import { ethers } from "ethers";
 // import { useEffect, useState } from "react";
 // import axios from "axios";
 // import { IPFS_PREFIX } from "../../constants/constants";
-
-
-// import { useEffect, useState } from "react";
-//const { MerkleTree } = require('merkletreejs');
-//const keccak256 = require('keccak256');
-
-
 
 /**
  * TODO: Temporary disable LP and show "Coming soon..."

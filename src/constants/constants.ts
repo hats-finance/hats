@@ -102,8 +102,6 @@ export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
 
-// NEW: 0xfC2Ff16d820bA91Ce3aa27609e1ea72aD776066B = not redeemed yet
-// TODO: remove this. Just for testing - 0xa6DA2D33A45C0d3b8daac73e77dA5D1004F1C48A - old that redeemed already
 export const NFT_AIRDROP_ADDRESS = "0xDc500d309d99deF4Bf57d5Ef6cD21f61EdF7710D";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
