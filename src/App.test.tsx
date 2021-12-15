@@ -2,8 +2,8 @@ import React from "react";
 import {
   renderConnected,
   within,
-  cleanup,
-  fireEvent
+  fireEvent,
+  cleanup
 } from "../test/@testing-library/react";
 import { setLocalStorage } from "../test/testHelpers";
 
