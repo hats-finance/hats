@@ -1,12 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
-import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
+import {
+  changeScreenSize,
+  updateSelectedAddress,
+  toggleNotification,
+  updateVaults,
+  updateRewardsToken,
+  updateHatsPrice,
+  updateWithdrawSafetyPeriod,
+} from "./actions/index";
+import {
+  getNetworkNameByChainId,
+  getTokenPrice,
+  calculateApy,
+  getWithdrawSafetyPeriod,
+} from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
-import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import {
+  NotificationType,
+  RoutePaths,
+  ScreenSize,
+  SMALL_SCREEN_BREAKPOINT,
+} from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
@@ -21,26 +39,55 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 
+// import i18n (needs to be bundled ;))
+import "./i18n.ts";
+
 function App() {
   const dispatch = useDispatch();
-  const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
-  const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
-  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
-  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
-  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
+  const currentScreenSize = useSelector(
+    (state: RootState) => state.layoutReducer.screenSize
+  );
+  const showMenu = useSelector(
+    (state: RootState) => state.layoutReducer.showMenu
+  );
+  const showNotification = useSelector(
+    (state: RootState) => state.layoutReducer.notification.show
+  );
+  const rewardsToken = useSelector(
+    (state: RootState) => state.dataReducer.rewardsToken
+  );
+  const provider =
+    useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
+  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(
+    localStorage.getItem("hasSeenWelcomePage")
+  );
+  const [acceptedCookies, setAcceptedCookies] = useState(
+    localStorage.getItem("acceptedCookies")
+  );
 
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
     if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
+      dispatch(
+        toggleNotification(
+          true,
+          NotificationType.Error,
+          `Please change network to ${NETWORK}`,
+          true
+        )
+      );
     }
-  }, [dispatch, provider])
+  }, [dispatch, provider]);
 
-  const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
-  screenSize.addEventListener("change", screenSize => {
-    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
+  const screenSize = window.matchMedia(
+    `(min-width: ${SMALL_SCREEN_BREAKPOINT})`
+  );
+  screenSize.addEventListener("change", (screenSize) => {
+    dispatch(
+      changeScreenSize(
+        screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile
+      )
+    );
   });
 
   if (window.ethereum) {
@@ -56,29 +103,47 @@ function App() {
     });
   }
 
-  const { loading: loadingRewardsToken, error: errorRewardsToken, data: dataRewardsToken } = useQuery(GET_MASTER_DATA);
+  const {
+    loading: loadingRewardsToken,
+    error: errorRewardsToken,
+    data: dataRewardsToken,
+  } = useQuery(GET_MASTER_DATA);
 
   useEffect(() => {
     const getWithdrawSafetyPeriodData = async () => {
-      if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
-        const { rewardsToken, withdrawPeriod, safetyPeriod } = dataRewardsToken.masters[0];
+      if (
+        !loadingRewardsToken &&
+        !errorRewardsToken &&
+        dataRewardsToken &&
+        dataRewardsToken.masters
+      ) {
+        const { rewardsToken, withdrawPeriod, safetyPeriod } =
+          dataRewardsToken.masters[0];
         dispatch(updateRewardsToken(rewardsToken));
-        dispatch(updateWithdrawSafetyPeriod(getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
+        dispatch(
+          updateWithdrawSafetyPeriod(
+            getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)
+          )
+        );
       }
-    }
+    };
     getWithdrawSafetyPeriodData();
   }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
 
   useEffect(() => {
     const getHatsPrice = async () => {
       dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
-    }
+    };
     getHatsPrice();
-  }, [dispatch, rewardsToken])
+  }, [dispatch, rewardsToken]);
 
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  
-  const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
+  const hatsPrice = useSelector(
+    (state: RootState) => state.dataReducer.hatsPrice
+  );
+
+  const { loading, error, data } = useQuery(GET_VAULTS, {
+    pollInterval: DATA_POLLING_INTERVAL,
+  });
 
   useEffect(() => {
     if (!loading && !error && data && data.vaults) {
@@ -94,48 +159,64 @@ function App() {
 
       const calculateTokenPricesAndApy = async () => {
         for (const vault of extensibleVaults) {
-          vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
+          vault.parentVault.tokenPrice = await getTokenPrice(
+            vault.parentVault.stakingToken
+          );
           if (hatsPrice) {
-            vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
+            vault.parentVault.apy = await calculateApy(
+              vault.parentVault,
+              hatsPrice
+            );
           }
         }
-      }
+      };
 
       calculateTokenPricesAndApy();
       dispatch(updateVaults(extensibleVaults));
     }
   }, [loading, error, data, dispatch, hatsPrice]);
 
-  const vaults: Array<IVault> = useSelector((state: RootState) => state.dataReducer.vaults);
+  const vaults: Array<IVault> = useSelector(
+    (state: RootState) => state.dataReducer.vaults
+  );
 
   useEffect(() => {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
-        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice);
+        vault.parentVault.apy = await calculateApy(
+          vault.parentVault,
+          hatsPrice
+        );
       }
       dispatch(updateVaults(vaults));
-    }
+    };
     if (hatsPrice && vaults) {
       calculateVaultsApy();
     }
-  }, [dispatch, hatsPrice, vaults])
+  }, [dispatch, hatsPrice, vaults]);
 
   useEffect(() => {
     const calculatetokenPrices = async () => {
       for (const vault of vaults) {
-        vault.parentVault.tokenPrice = await getTokenPrice(vault.parentVault.stakingToken);
+        vault.parentVault.tokenPrice = await getTokenPrice(
+          vault.parentVault.stakingToken
+        );
       }
       dispatch(updateVaults(vaults));
-    }
+    };
     if (vaults) {
       calculatetokenPrices();
     }
-  }, [dispatch, vaults])
+  }, [dispatch, vaults]);
 
   return (
     <>
-      {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
-      {hasSeenWelcomePage && acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
+      {hasSeenWelcomePage !== "1" && (
+        <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />
+      )}
+      {hasSeenWelcomePage && acceptedCookies !== "1" && (
+        <Cookies setAcceptedCookies={setAcceptedCookies} />
+      )}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
