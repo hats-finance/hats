@@ -1,4 +1,4 @@
-import { rest } from "./server";
+import { rest } from "msw";
 
 const coingecko = [
   rest.get(
