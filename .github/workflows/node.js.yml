@@ -28,4 +28,4 @@ jobs:
       - name: Install dependencies
         run: yarn
       - name: Test - Run coverage
-        run: yarn coverage:ci
+        run: yarn coverage

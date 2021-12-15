@@ -15,7 +15,7 @@ module.exports = {
   },
   verbose: true,
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ["./test/jest.setup.js"],
+  setupFilesAfterEnv: ["./test/jest.setup.ts"],
   coverageDirectory: "coverage",
   coverageReporters: ["json", "lcov", "text-summary"],
   coverageThreshold: {

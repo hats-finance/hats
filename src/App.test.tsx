@@ -5,7 +5,6 @@ import { createMockServer } from "../test/msw/server";
 import App from "./App";
 
 const defaultProps = {};
-const defaultReduxState = {};
 
 let server;
 beforeAll(() => {
@@ -22,11 +21,7 @@ beforeAll(() => {
 });
 
 test("Loads the App to the Welcome screen", () => {
-  const { getByTestId } = renderConnected(
-    <App {...defaultProps} />,
-    defaultReduxState,
-    false
-  );
+  const { getByTestId } = renderConnected(<App {...defaultProps} />);
 
   const welcome = getByTestId("Welcome");
   expect(within(welcome).getByText("Hats")).toBeInTheDocument();

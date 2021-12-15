@@ -11,7 +11,7 @@ import createSagaMiddleware from "redux-saga";
 import rootSaga from "../../src/sagas/index";
 import reducers from "../../src/reducers";
 
-const renderConnected = (component, state = {}) => {
+const renderConnected = (component) => {
   const sagaMiddleware = createSagaMiddleware();
   const composeEnhancer = compose;
   const store = createStore(
