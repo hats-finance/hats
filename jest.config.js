@@ -3,15 +3,15 @@ module.exports = {
   moduleNameMapper: {
     ".+\\.(css|styl|less|sass|scss)$": "identity-obj-proxy",
     ".+\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$":
-      "<rootDir>/test/__mocks__/fileMock.js",
+      "<rootDir>/test/__mocks__/fileMock.js"
   },
   preset: "ts-jest",
   transform: {
     "^.+\\.(ts|tsx)?$": "ts-jest",
-    "^.+\\.(js|jsx)$": "babel-jest",
+    "^.+\\.(js|jsx)$": "babel-jest"
   },
   globals: {
-    NODE_ENV: "test",
+    NODE_ENV: "test"
   },
   verbose: true,
   testEnvironment: "jsdom",
@@ -23,7 +23,7 @@ module.exports = {
       statements: 41,
       branches: 10,
       functions: 16,
-      lines: 46,
-    },
-  },
+      lines: 46
+    }
+  }
 };
