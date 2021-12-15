@@ -7,6 +7,7 @@ import { IPFS_BASE_URI, IPFS_PREFIX, LocalStorage } from "../../constants/consta
 import { RootState } from "../../reducers";
 import { EligibleTokens, IAirdropElement } from "../../types/types";
 import { hashToken } from "../../utils";
+import { EligibilityStatus } from "./NFTAirdrop";
 import "./Redeem.scss";
 
 interface IProps {
@@ -14,6 +15,8 @@ interface IProps {
   walletAddress: string
   setPendingWalletAction: Function
   clearInput: Function
+  eligibilityStatus: EligibilityStatus
+  reveal: boolean
 }
 
 const removeAddressFromLocalStorage = (address: string) => {
@@ -25,9 +28,9 @@ const removeAddressFromLocalStorage = (address: string) => {
   localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
 }
 
-export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, clearInput }: IProps) {
+export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, clearInput, eligibilityStatus, reveal }: IProps) {
   const dispatch = useDispatch();
-  const [revealed, setRevealed] = useState(false);
+  const [revealed, setRevealed] = useState((eligibilityStatus === EligibilityStatus.REDEEMED || reveal) ? true : false);
   const [nftData, setNftData] = useState<IAirdropElement>();
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
   const nftIndex = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === walletAddress);
@@ -76,7 +79,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
       <div className="nft-image-container">
         {!revealed ? <span>?</span> : <img src={nftData?.image} width="300px" height="300px" alt="nft" />}
       </div>
-      <button onClick={handleClick} className={redeemButtonClass}>{`${!revealed ? "REVEAL" : "REDEEM"}`}</button>
+      {eligibilityStatus !== EligibilityStatus.REDEEMED && <button onClick={handleClick} className={redeemButtonClass}>{`${!revealed ? "REVEAL" : "REDEEM"}`}</button>}
     </div>
   )
 }

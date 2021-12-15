@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Colors } from "../../constants/constants";
+import { Colors, NFT_AIRDROP_ADDRESS } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import "./NFTAirdrop.scss";
 import { isAddress } from "ethers/lib/utils";
@@ -8,15 +8,16 @@ import classNames from "classnames";
 import CloseIcon from "../../assets/icons/close.icon";
 import Redeem from "./Redeem";
 import { EligibleTokens } from "../../types/types";
-import { hashToken, normalizeAddress } from "../../utils";
+import { hashToken, linkToTokenEtherscan, normalizeAddress } from "../../utils";
 import { useLocation } from "react-router-dom";
 import Loading from "../Shared/Loading";
 import { isRedeemed } from "../../actions/contractsActions";
+import OpenInIcon from "../../assets/icons/openIn.icon";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
-enum EligibilityStatus {
+export enum EligibilityStatus {
   ELIGIBLE = 0,
   NOT_ELIGIBLE = 1,
   REDEEMED = 2,
@@ -30,13 +31,16 @@ export default function NFTAirdrop() {
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
   const [eligibilityStatus, setEligibilityStatus] = useState<EligibilityStatus>(EligibilityStatus.PENDING);
   const [merkleTree, setMerkleTree] = useState<any>();
+  const [currentTokenID, setCurrentTokenID] = useState("");
+  const [reveal, setReveal] = useState(false);
 
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
     if (isAddress(input)) {
       if (Object.values(eligibleTokens).includes(normalizeAddress(input))) {
-        const ipfsLink = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === input);
-        if (await isRedeemed(ipfsLink ?? "", input)) {
+        const tokenID = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === input);
+        setCurrentTokenID(tokenID ?? "");
+        if (await isRedeemed(tokenID ?? "", input)) {
           setEligibilityStatus(EligibilityStatus.REDEEMED);
         } else {
           setEligibilityStatus(EligibilityStatus.ELIGIBLE);
@@ -65,6 +69,7 @@ export default function NFTAirdrop() {
     const params = Object.fromEntries(urlSearchParams.entries());
     if (params.walletAddress) {
       handleChange(params.walletAddress ?? "");
+      setReveal(true);
     }
   }, [location.search, handleChange])
 
@@ -93,14 +98,23 @@ export default function NFTAirdrop() {
         {userInput !== "" && !isAddress(userInput) && <span className="error-label">Please enter a valid address</span>}
         {eligibilityStatus === EligibilityStatus.NOT_ELIGIBLE && <div className="info-label">This address is not part of the airdrop. Please check  the eligibility requirements here.</div>}
         {eligibilityStatus === EligibilityStatus.ELIGIBLE && <div className="info-label">You are part of the hats first airdrop “The crow clan”. Reedeem your NFT and join the clan.</div>}
-        {eligibilityStatus === EligibilityStatus.REDEEMED && <span>Already Redeemed!</span>}
+        {eligibilityStatus === EligibilityStatus.REDEEMED && (
+          <span className="open-in-etherscan-wrapper">
+            <span>Already Redeemed! View on Etherscan</span>
+            <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, currentTokenID))}>
+              <OpenInIcon />
+            </span>
+          </span>
+        )}
       </div>
-      {eligibilityStatus === EligibilityStatus.ELIGIBLE && (
+      {(eligibilityStatus === EligibilityStatus.ELIGIBLE || eligibilityStatus === EligibilityStatus.REDEEMED) && (
         <Redeem
           merkleTree={merkleTree}
           walletAddress={userInput}
           setPendingWalletAction={setPendingWalletAction}
-          clearInput={() => handleChange("")} />
+          clearInput={() => handleChange("")}
+          eligibilityStatus={eligibilityStatus}
+          reveal={reveal} />
       )}
       {pendingWalletAction && <Loading />}
     </div>

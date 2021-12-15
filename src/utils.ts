@@ -260,6 +260,17 @@ export const linkToEtherscan = (value: string, network: Networks, isTransaction?
 }
 
 /**
+ * Given an address and a tokenID returns the Etherscan link
+ * @param {string} address
+ * @param {string} tokenID
+ * @param {Networks} network
+ */
+export const linkToTokenEtherscan = (address: string, tokenID: string, network = NETWORK): string => {
+  const prefix = network !== Networks.main ? `${network}.` : "";
+  return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
+}
+
+/**
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
