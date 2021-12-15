@@ -1,8 +1,10 @@
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
+import { useTranslation } from "react-i18next";
+
 import {
   changeScreenSize,
   updateSelectedAddress,
@@ -39,8 +41,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 
-// import i18n (needs to be bundled ;))
-import "./i18n.ts";
+import "./i18n.ts"; // Initialise i18n
 
 function App() {
   const dispatch = useDispatch();
@@ -64,6 +65,12 @@ function App() {
   const [acceptedCookies, setAcceptedCookies] = useState(
     localStorage.getItem("acceptedCookies")
   );
+
+  const { i18n } = useTranslation();
+  useEffect(() => {
+    const language = window.localStorage.getItem("i18nextLng");
+    if (language && language !== i18n.language) i18n.changeLanguage(language);
+  }, [i18n]);
 
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);

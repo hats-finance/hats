@@ -1,12 +1,27 @@
 import React from "react";
-import { renderConnected, within } from "../test/@testing-library/react";
+import {
+  renderConnected,
+  within,
+  cleanup,
+} from "../test/@testing-library/react";
+import { setLocalStorage } from "../test/testHelpers";
 
 import App from "./App";
 
-const defaultProps = {};
+const defaultLocalStorage = { i18nextLng: "en" };
+
+beforeEach(() => {
+  jest.resetModules();
+  setLocalStorage(defaultLocalStorage);
+});
+
+afterEach(() => {
+  cleanup();
+  jest.restoreAllMocks();
+});
 
 test("Loads the App to the Welcome screen", () => {
-  const { getByTestId } = renderConnected(<App {...defaultProps} />);
+  const { getByTestId } = renderConnected(<App />);
 
   const welcome = getByTestId("Welcome");
   expect(within(welcome).getByText("Hats")).toBeInTheDocument();
@@ -16,4 +31,13 @@ test("Loads the App to the Welcome screen", () => {
     )
   ).toBeInTheDocument();
   expect(within(welcome).getByText("ENTER")).toBeInTheDocument();
+});
+
+test("Loads the App to the Welcome screen with localized text", () => {
+  setLocalStorage({ ...defaultLocalStorage, i18nextLng: "jp" });
+  const { getByTestId } = renderConnected(<App />);
+
+  const welcome = getByTestId("Welcome");
+  expect(within(welcome).getByText("Hats")).toBeInTheDocument();
+  expect(within(welcome).getByText("エンター")).toBeInTheDocument();
 });
