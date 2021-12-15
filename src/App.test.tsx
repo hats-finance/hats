@@ -2,8 +2,7 @@ import React from "react";
 import {
   renderConnected,
   within,
-  fireEvent,
-  waitFor
+  fireEvent
 } from "../test/@testing-library/react";
 
 import App from "./App";
