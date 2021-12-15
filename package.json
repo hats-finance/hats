@@ -59,7 +59,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest --watch --verbose --maxWorkers=25%",
-    "coverage": "jest --coverage --runInBand",
+    "coverage:ci": "jest --coverage --runInBand",
+    "coverage:local": "jest --coverage --maxWorkers=50%",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
