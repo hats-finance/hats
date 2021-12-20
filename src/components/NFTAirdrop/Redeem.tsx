@@ -6,7 +6,7 @@ import { createTransaction, nftAirdropRedeem } from "../../actions/contractsActi
 import { IPFS_BASE_URI, IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { EligibleTokens, IAirdropElement } from "../../types/types";
-import { hashToken } from "../../utils";
+import { hashToken, isProviderAndNetwork } from "../../utils";
 import { EligibilityStatus } from "./NFTAirdrop";
 import "./Redeem.scss";
 
@@ -30,6 +30,7 @@ const removeAddressFromLocalStorage = (address: string) => {
 
 export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, onSuccess, eligibilityStatus, reveal }: IProps) {
   const dispatch = useDispatch();
+  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const [revealed, setRevealed] = useState((eligibilityStatus === EligibilityStatus.REDEEMED || reveal) ? true : false);
   const [nftData, setNftData] = useState<IAirdropElement>();
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
@@ -79,7 +80,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
       <div className="nft-image-container">
         {!revealed ? <span>?</span> : <img src={nftData?.image} width="300px" height="300px" alt="nft" />}
       </div>
-      {eligibilityStatus !== EligibilityStatus.REDEEMED && <button onClick={handleClick} className={redeemButtonClass}>{`${!revealed ? "REVEAL" : "REDEEM"}`}</button>}
+      {eligibilityStatus !== EligibilityStatus.REDEEMED && <button disabled={!isProviderAndNetwork(provider)} onClick={handleClick} className={redeemButtonClass}>{`${!revealed ? "REVEAL" : "REDEEM"}`}</button>}
     </div>
   )
 }
