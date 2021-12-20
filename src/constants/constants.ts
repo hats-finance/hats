@@ -66,7 +66,9 @@ export const SMALL_SCREEN_BREAKPOINT = "770px";
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 
 /** The maximum amount to allow spending from the user wallet in BigNumber */
-export const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
+export const MAX_SPENDING = BigNumber.from(2)
+  .pow(BigNumber.from(96))
+  .sub(BigNumber.from(1));
 
 /** The minimum amount to deposit in WEI units */
 export const MINIMUM_DEPOSIT = 1000000;
@@ -80,13 +82,14 @@ export enum NotificationType {
 export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",
   minHeight: "unset"
-}
+};
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
-export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs/"
+export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs/";
 
-export const DEFAULT_RINKEBY_SUBGRAPH_URI = "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
+export const DEFAULT_RINKEBY_SUBGRAPH_URI =
+  "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
 export const HATS_WEBSITE = "https://hats.finance";
 
@@ -100,12 +103,17 @@ export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
-export const UNISWAP_V3_STAKER_ADDRESS = "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
+export const UNISWAP_V3_STAKER_ADDRESS =
+  "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
+
+export const COIN_GECKO_ETHEREUM =
+  "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
 export const NFT_AIRDROP_ADDRESS = "0xDc500d309d99deF4Bf57d5Ef6cD21f61EdF7710D";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
-export const INCENTIVE_KEY_ABI = "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
+export const INCENTIVE_KEY_ABI =
+  "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

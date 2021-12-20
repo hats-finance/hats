@@ -4,16 +4,15 @@ import { LocalStorage } from "../constants/constants";
 import "../styles/Welcome.scss";
 
 interface IProps {
-  setHasSeenWelcomePage: Function
+  setHasSeenWelcomePage: Function;
 }
 
 export default function Welcome(props: IProps) {
-
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "initial";
-    }
+    };
   }, []);
 
   const seenWelcomePage = () => {
@@ -22,15 +21,19 @@ export default function Welcome(props: IProps) {
   };
 
   return (
-    <div className="welcome-wrapper">
+    <div className="welcome-wrapper" data-testid="Welcome">
       <div className="welcome-content">
         <Logo />
         <div className="title">Hats</div>
         <div className="description">
-          We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.
+          We are changing the way security works to fit the culture, nature, and
+          de-facto development processes of Ethereum by incentivizing black hat
+          to become white hat hackers.
         </div>
-        <button className="enter-btn" onClick={seenWelcomePage}>ENTER</button>
+        <button className="enter-btn" onClick={seenWelcomePage}>
+          ENTER
+        </button>
       </div>
     </div>
-  )
+  );
 }
