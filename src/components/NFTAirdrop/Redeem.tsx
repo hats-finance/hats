@@ -14,7 +14,7 @@ interface IProps {
   merkleTree: any
   walletAddress: string
   setPendingWalletAction: Function
-  clearInput: Function
+  onSuccess: Function
   eligibilityStatus: EligibilityStatus
   reveal: boolean
 }
@@ -28,7 +28,7 @@ const removeAddressFromLocalStorage = (address: string) => {
   localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
 }
 
-export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, clearInput, eligibilityStatus, reveal }: IProps) {
+export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, onSuccess, eligibilityStatus, reveal }: IProps) {
   const dispatch = useDispatch();
   const [revealed, setRevealed] = useState((eligibilityStatus === EligibilityStatus.REDEEMED || reveal) ? true : false);
   const [nftData, setNftData] = useState<IAirdropElement>();
@@ -53,7 +53,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
     await createTransaction(
       async () => nftAirdropRedeem(walletAddress, nftIndex ?? "", proof),
       () => { },
-      () => { removeAddressFromLocalStorage(walletAddress); setPendingWalletAction(false); clearInput(); },
+      () => { removeAddressFromLocalStorage(walletAddress); setPendingWalletAction(false); onSuccess(); },
       () => { setPendingWalletAction(false); },
       dispatch,
       "NFT Airdrop redeemed successfully"

@@ -100,7 +100,7 @@ export default function NFTAirdrop() {
         {eligibilityStatus === EligibilityStatus.ELIGIBLE && <div className="info-label">You are part of the hats first airdrop “The crow clan”. Reedeem your NFT and join the clan.</div>}
         {eligibilityStatus === EligibilityStatus.REDEEMED && (
           <span className="open-in-etherscan-wrapper">
-            <span>Already Redeemed! View on Etherscan</span>
+            <span>Redeemed - View on Etherscan</span>
             <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, currentTokenID))}>
               <OpenInIcon />
             </span>
@@ -112,7 +112,7 @@ export default function NFTAirdrop() {
           merkleTree={merkleTree}
           walletAddress={userInput}
           setPendingWalletAction={setPendingWalletAction}
-          clearInput={() => handleChange("")}
+          onSuccess={() => setEligibilityStatus(EligibilityStatus.REDEEMED)}
           eligibilityStatus={eligibilityStatus}
           reveal={reveal} />
       )}
