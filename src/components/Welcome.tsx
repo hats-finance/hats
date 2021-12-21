@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import Logo from "../assets/icons/logo.icon";
+import { LocalStorage } from "../constants/constants";
 import "../styles/Welcome.scss";
 
 interface IProps {
@@ -19,7 +20,7 @@ export default function Welcome(props: IProps) {
   }, []);
 
   const seenWelcomePage = () => {
-    localStorage.setItem("hasSeenWelcomePage", "1");
+    localStorage.setItem(LocalStorage.WelcomePage, "1");
     props.setHasSeenWelcomePage("1");
   };
 

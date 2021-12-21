@@ -20,6 +20,8 @@ export default function NavLinks() {
       <NavLink to={RoutePaths.vaults} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>Vaults</NavLink>
       <NavLink to={RoutePaths.pools} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>Liquidity Pools</NavLink>
       <NavLink to={RoutePaths.gov} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>Gov</NavLink>
+      {/* NFT Airdrop - Temporary disabled */}
+      {/* <NavLink to={RoutePaths.nft_airdrop} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>NFT Airdrop</NavLink> */}
       <NavLink to={RoutePaths.vulnerability} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Submit Vulnerability</NavLink>
     </>
   )

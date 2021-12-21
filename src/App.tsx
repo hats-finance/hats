@@ -40,6 +40,16 @@ import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
+import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+
+// NFT Airdrop - Temporary disabled
+// import { isRedeemed } from "./actions/contractsActions";
+// import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+// EligibleTokens
+// import axios from "axios";
+// IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX
+// updateAirdropEligibleTokens
+// const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
 
 import "./i18n.ts"; // Initialise i18n
 
@@ -85,6 +95,8 @@ function App() {
       );
     }
   }, [dispatch, provider]);
+
+  const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
 
   const screenSize = window.matchMedia(
     `(min-width: ${SMALL_SCREEN_BREAKPOINT})`
@@ -216,6 +228,33 @@ function App() {
     }
   }, [dispatch, vaults]);
 
+  //* NFT Airdrop - Temporary disabled */
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+
+  //       for (const key in data.data) {
+  //         data.data[key] = normalizeAddress(data.data[key]);
+  //       }
+
+  //       dispatch(updateAirdropEligibleTokens(data.data));
+
+  //       if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
+  //         const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+  //         const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+
+  //         if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+  //           setShowNFTAirdropNotification(true);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       // TODO: show error
+  //     }
+  //   })();
+  // }, [dispatch, selectedAddress])
+
   return (
     <>
       {hasSeenWelcomePage !== "1" && (
@@ -243,8 +282,13 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
+        {/* NFT Airdrop - Temporary disabled */}
+        {/* <Route path={RoutePaths.nft_airdrop}>
+          <NFTAirdrop />
+        </Route> */}
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
+      {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>
   );
 }

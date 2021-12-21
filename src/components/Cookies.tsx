@@ -1,4 +1,4 @@
-import { COOKIES_POLICY } from "../constants/constants";
+import { COOKIES_POLICY, LocalStorage } from "../constants/constants";
 import "../styles/Cookies.scss";
 
 interface IProps {
@@ -7,7 +7,7 @@ interface IProps {
 
 export default function Cookies(props: IProps) {
   const acceptedCookies = () => {
-    localStorage.setItem("acceptedCookies", "1");
+    localStorage.setItem(LocalStorage.Cookies, "1");
     props.setAcceptedCookies("1");
   };
 

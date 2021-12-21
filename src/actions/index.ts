@@ -1,6 +1,6 @@
 import * as types from "../constants/action-types";
 import { ScreenSize, NotificationType } from "../constants/constants";
-import { IVault, IWithdrawSafetyPeriod } from "../types/types";
+import { EligibleTokens, IVault, IWithdrawSafetyPeriod } from "../types/types";
 
 export const connect = ({ provider }: any) => ({
   type: types.CONNECT,
@@ -65,4 +65,9 @@ export const updateWithdrawSafetyPeriod = (withdrawSafetyPeriod: IWithdrawSafety
 export const toggleSubmittingVulnerability = (submittingVulnerability: boolean) => ({
   type: types.TOGGLE_SUBMITTING_VULNERABILITY,
   submittingVulnerability
+})
+
+export const updateAirdropEligibleTokens = (airdropEligibleTokens: EligibleTokens) => ({
+  type: types.NFT_AIRDROP_ELIGIBLE_TOKENS,
+  airdropEligibleTokens
 })
