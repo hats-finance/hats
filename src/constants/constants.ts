@@ -1,5 +1,12 @@
 import { BigNumber } from "ethers";
 
+export enum LocalStorage {
+  Cookies = "HATS_ACCEPTED_COOKIES",
+  WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
+  SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
+  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED"
+}
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP"
@@ -9,7 +16,8 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools"
+  pools = "/pools",
+  nft_airdrop = "/nft_airdrop/"
 }
 
 export enum Networks {
@@ -34,7 +42,7 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  terms_of_use = "Terms of Use"
+  nft_airdrop = "NFT Airdrop"
 }
 
 export enum LPUniswapURIs {
@@ -101,6 +109,8 @@ export const UNISWAP_V3_STAKER_ADDRESS =
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
+export const NFT_AIRDROP_ADDRESS = "0xDc500d309d99deF4Bf57d5Ef6cD21f61EdF7710D";
+
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI =
   "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
@@ -111,7 +121,8 @@ export enum Colors {
   red = "#E66480",
   turquoise = "#8AFCFD",
   darkBlue = "#000723",
-  yellow = "#F2C94C"
+  yellow = "#F2C94C",
+  gray = "#C5C5C5"
 }
 
 export enum PieChartColors {
@@ -134,3 +145,7 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
+
+/** Used for NFT Airdrop */
+export const IPFS_ELIGIBLE_TOKENS = "QmSUXfYsk9HgrMBa7tgp3MBm8FGwDF9hnVaR9C1PMoFdS3";
+export const IPFS_BASE_URI = "QmezvK7gNLhUzb9xBWYNAzJs8xLLuBvWSyvtFmusb9fMBW";

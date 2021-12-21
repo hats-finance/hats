@@ -1,4 +1,5 @@
 import { CONNECT, UPDATE_SELECTED_ADDRESS, UPDATE_WALLET_BALANCE } from "../constants/action-types";
+import { normalizeAddress } from "../utils";
 
 const initialState = {
   provider: null,
@@ -19,7 +20,7 @@ export const web3Reducer = (state = initialState, action) => {
         ...state,
         provider: {
           ...state.provider,
-          selectedAddress: action.selectedAddress
+          selectedAddress: normalizeAddress(action.selectedAddress)
         }
       }
     }

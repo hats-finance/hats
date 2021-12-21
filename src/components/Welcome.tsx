@@ -1,5 +1,8 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
+
 import Logo from "../assets/icons/logo.icon";
+import { LocalStorage } from "../constants/constants";
 import "../styles/Welcome.scss";
 
 interface IProps {
@@ -7,6 +10,8 @@ interface IProps {
 }
 
 export default function Welcome(props: IProps) {
+  const { t } = useTranslation();
+
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -15,7 +20,7 @@ export default function Welcome(props: IProps) {
   }, []);
 
   const seenWelcomePage = () => {
-    localStorage.setItem("hasSeenWelcomePage", "1");
+    localStorage.setItem(LocalStorage.WelcomePage, "1");
     props.setHasSeenWelcomePage("1");
   };
 
@@ -23,14 +28,10 @@ export default function Welcome(props: IProps) {
     <div className="welcome-wrapper" data-testid="Welcome">
       <div className="welcome-content">
         <Logo />
-        <div className="title">Hats</div>
-        <div className="description">
-          We are changing the way security works to fit the culture, nature, and
-          de-facto development processes of Ethereum by incentivizing black hat
-          to become white hat hackers.
-        </div>
+        <div className="title">{t("Welcome.title")}</div>
+        <div className="description">{t("Welcome.description")}</div>
         <button className="enter-btn" onClick={seenWelcomePage}>
-          ENTER
+          {t("Welcome.button")}
         </button>
       </div>
     </div>

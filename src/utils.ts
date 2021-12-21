@@ -1,4 +1,4 @@
-import { Networks } from "./constants/constants";
+import { LocalStorage, Networks } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -6,6 +6,7 @@ import {
 } from "./constants/constants";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
+import { isAddress, getAddress } from "ethers/lib/utils";
 import { Dispatch } from "redux";
 import { updateWalletBalance } from "./actions";
 import { getTokenBalance } from "./actions/contractsActions";
@@ -301,6 +302,17 @@ export const linkToEtherscan = (
 };
 
 /**
+ * Given an address and a tokenID returns the Etherscan link
+ * @param {string} address
+ * @param {string} tokenID
+ * @param {Networks} network
+ */
+export const linkToTokenEtherscan = (address: string, tokenID: string, network = NETWORK): string => {
+  const prefix = network !== Networks.main ? `${network}.` : "";
+  return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
+}
+
+/**
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
@@ -430,14 +442,8 @@ export const calculateRewardPrice = (
  * @param {string} projectName
  * @param {string} projectId
  */
-export const setVulnerabilityProject = (
-  projectName: string,
-  projectId: string
-) => {
-  let cachedData: { version: string; [id: number]: ICardData } = JSON.parse(
-    localStorage.getItem("submitVulnerabilityData") ||
-      JSON.stringify(VULNERABILITY_INIT_DATA)
-  );
+export const setVulnerabilityProject = (projectName: string, projectId: string) => {
+  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
     cachedData = VULNERABILITY_INIT_DATA;
@@ -447,9 +453,9 @@ export const setVulnerabilityProject = (
   cachedData[1].data = {
     projectName: projectName,
     projectId: projectId
-  };
-  localStorage.setItem("submitVulnerabilityData", JSON.stringify(cachedData));
-};
+  }
+  localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
+}
 
 /**
  * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally.
@@ -459,4 +465,24 @@ export const checkMasterAddress = (masterAddress: string) => {
   if (masterAddress !== MASTER_ADDRESS) {
     throw new Error("Master address does not match!");
   }
-};
+}
+
+/**
+ * Used to hashToken in NFTAirdrop
+ * @param {string} tokenID
+ * @param {string} account 
+ */
+export const hashToken = (tokenID: string, account: string) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [tokenID, account]).slice(2), 'hex');
+}
+
+/**
+ * Normalize any supported address-format to a checksum address.
+ * @param {string} address
+ */
+export const normalizeAddress = (address: string) => {
+  if (isAddress(address)) {
+    return getAddress(address);
+  }
+  return "";
+}

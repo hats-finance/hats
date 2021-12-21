@@ -1,10 +1,11 @@
-import { toWei, fromWei, checkMasterAddress } from "../utils";
+import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
 import { ethers, BigNumber, Contract, Signer } from "ethers";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
-import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
+import NFTAirdrop from "../data/abis/NFTAirdrop.json";
+import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NFT_AIRDROP_ADDRESS, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification } from "./index";
 import { Logger } from "ethers/lib/utils";
@@ -25,6 +26,18 @@ if (window.ethereum) {
 export const getBlockNumber = async () => {
   try {
     return await provider.getBlockNumber();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Given an hexadecimal address returns it's ENS
+ * @param {string} address
+ */
+export const resolveENS = async (address: string) => {
+  try {
+    return await provider.lookupAddress(address);
   } catch (error) {
     console.error(error);
   }
@@ -273,6 +286,35 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 /** Uniswap V3 Liquidity Pool contract actions - END */
 
 
+
+/** NFT Airdrop contract actions - START */
+
+/**
+ * Redeem NFT
+ * @param {string} account 
+ * @param {string} tokenID 
+ * @param {any} proof 
+ */
+export const nftAirdropRedeem = async (account: string, tokenID: string, proof: any) => {
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  return await contract.redeem(account, tokenID, proof);
+}
+
+/**
+ * Check if a tokenID has already been redeemed by a given address.
+ * @param {string} tokenID 
+ * @param {string} address  
+ */
+export const isRedeemed = async (tokenID: string, address: string) => {
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  try {
+    return normalizeAddress(await contract.ownerOf(tokenID)) === address;
+  } catch (error) {
+    return false;
+  }
+}
+
+/** NFT Airdrop contract actions - END */
 
 
 /**
