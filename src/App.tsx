@@ -3,10 +3,10 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
-import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod, updateAirdropEligibleTokens } from './actions/index';
+import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
 import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod, normalizeAddress } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
-import { IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX, LocalStorage, NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import { LocalStorage, NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
@@ -16,19 +16,24 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
-//import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop"; // NFT Airdrop - Temporary disabled
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
-import { EligibleTokens, IVault } from "./types/types";
-import axios from "axios";
+import { IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
-import { isRedeemed } from "./actions/contractsActions";
+
+// NFT Airdrop - Temporary disabled
+// import { isRedeemed } from "./actions/contractsActions";
+// import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+// EligibleTokens
+// import axios from "axios";
+// IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX
+// updateAirdropEligibleTokens
+// const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
 
 function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
@@ -145,32 +150,32 @@ function App() {
     }
   }, [dispatch, vaults])
 
-  useEffect(() => {
-    (async () => {
-      try {
-        const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+  //* NFT Airdrop - Temporary disabled */
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
 
-        for (const key in data.data) {
-          data.data[key] = normalizeAddress(data.data[key]);
-        }
+  //       for (const key in data.data) {
+  //         data.data[key] = normalizeAddress(data.data[key]);
+  //       }
 
-        dispatch(updateAirdropEligibleTokens(data.data));
+  //       dispatch(updateAirdropEligibleTokens(data.data));
 
-        if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
-          const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-          const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+  //       if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
+  //         const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+  //         const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
 
-          if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
-            //* NFT Airdrop - Temporary disabled */
-            //setShowNFTAirdropNotification(true);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        // TODO: show error
-      }
-    })();
-  }, [dispatch, selectedAddress])
+  //         if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+  //           setShowNFTAirdropNotification(true);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       // TODO: show error
+  //     }
+  //   })();
+  // }, [dispatch, selectedAddress])
 
   return (
     <>
