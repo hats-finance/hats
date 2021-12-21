@@ -16,7 +16,7 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
-import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+//import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop"; // NFT Airdrop - Temporary disabled
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -161,7 +161,8 @@ function App() {
           const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
 
           if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
-            setShowNFTAirdropNotification(true);
+            //* NFT Airdrop - Temporary disabled */
+            //setShowNFTAirdropNotification(true);
           }
         }
       } catch (error) {
@@ -194,9 +195,10 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        <Route path={RoutePaths.nft_airdrop}>
+        {/* NFT Airdrop - Temporary disabled */}
+        {/* <Route path={RoutePaths.nft_airdrop}>
           <NFTAirdrop />
-        </Route>
+        </Route> */}
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
       {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
