@@ -1,6 +1,6 @@
 {
   "name": "hats.fe-2",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.4.13",
@@ -30,6 +30,8 @@
     "graphql": "^14.7.0",
     "humanize-duration": "^3.27.0",
     "ipfs-http-client": "^45.0.0",
+    "keccak256": "^1.0.3",
+    "merkletreejs": "^0.2.24",
     "millify": "^3.5.0",
     "moment": "^2.29.1",
     "msw": "^0.36.3",

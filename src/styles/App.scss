@@ -51,7 +51,7 @@ a {
 
 /* This is used to a content div (not header and not sidebar), e.g. Honeypots, Gov, ... */
 .content {
-  padding-top: $header-hight + 100;
+  padding-top: $header-height + 100;
   margin-left: $sidebar-width + 50;
   margin-right: 50px;
 }
@@ -79,7 +79,7 @@ a {
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .content {
-    padding-top: $header-hight + 50;
+    padding-top: $header-height + 50;
     margin-left: unset;
     margin-right: unset;
   }

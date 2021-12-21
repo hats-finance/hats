@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { changeScreenSize, updateSelectedAddress, toggleNotification, updateVaults, updateRewardsToken, updateHatsPrice, updateWithdrawSafetyPeriod } from './actions/index';
-import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod } from "./utils";
+import { getNetworkNameByChainId, getTokenPrice, calculateApy, getWithdrawSafetyPeriod, normalizeAddress } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
-import { NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
+import { LocalStorage, NotificationType, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "./constants/constants";
 import Welcome from "./components/Welcome";
 import Cookies from "./components/Cookies";
 import Header from "./components/Header";
@@ -20,6 +20,16 @@ import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
+import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+
+// NFT Airdrop - Temporary disabled
+// import { isRedeemed } from "./actions/contractsActions";
+// import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+// EligibleTokens
+// import axios from "axios";
+// IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX
+// updateAirdropEligibleTokens
+// const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
 
 function App() {
   const dispatch = useDispatch();
@@ -28,8 +38,9 @@ function App() {
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
-  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem("hasSeenWelcomePage"));
-  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem("acceptedCookies"));
+  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
+  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
+  const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
 
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
@@ -37,6 +48,13 @@ function App() {
       dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
     }
   }, [dispatch, provider])
+
+  /** Update to the normalized wallet address */
+  useEffect(() => {
+    if (provider?.selectedAddress) {
+      dispatch(updateSelectedAddress(normalizeAddress(provider.selectedAddress)))
+    }
+  }, [dispatch, provider?.selectedAddress])
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", screenSize => {
@@ -77,7 +95,7 @@ function App() {
   }, [dispatch, rewardsToken])
 
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  
+
   const { loading, error, data } = useQuery(GET_VAULTS, { pollInterval: DATA_POLLING_INTERVAL });
 
   useEffect(() => {
@@ -132,6 +150,33 @@ function App() {
     }
   }, [dispatch, vaults])
 
+  //* NFT Airdrop - Temporary disabled */
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+
+  //       for (const key in data.data) {
+  //         data.data[key] = normalizeAddress(data.data[key]);
+  //       }
+
+  //       dispatch(updateAirdropEligibleTokens(data.data));
+
+  //       if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
+  //         const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+  //         const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+
+  //         if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+  //           setShowNFTAirdropNotification(true);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error(error);
+  //       // TODO: show error
+  //     }
+  //   })();
+  // }, [dispatch, selectedAddress])
+
   return (
     <>
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
@@ -155,8 +200,13 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
+        {/* NFT Airdrop - Temporary disabled */}
+        {/* <Route path={RoutePaths.nft_airdrop}>
+          <NFTAirdrop />
+        </Route> */}
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
+      {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>
   );
 }
