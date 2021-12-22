@@ -22,6 +22,7 @@ import {
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
+  LocalStorage,
   NotificationType,
   RoutePaths,
   ScreenSize,
@@ -70,10 +71,10 @@ function App() {
   const provider =
     useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(
-    localStorage.getItem("hasSeenWelcomePage")
+    localStorage.getItem(LocalStorage.WelcomePage)
   );
   const [acceptedCookies, setAcceptedCookies] = useState(
-    localStorage.getItem("acceptedCookies")
+    localStorage.getItem(LocalStorage.Cookies)
   );
 
   const { i18n } = useTranslation();
