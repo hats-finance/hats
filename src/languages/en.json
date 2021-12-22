@@ -4,6 +4,11 @@
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
+    },
+    "SubmitVulnerability": {
+      "pre-submission": "Before submitting vulnerability please read the steps and process that your request will go through.",
+      "submission-sub-title": "Submission",
+      "submission": "Your submission will be sent via a bot that is being run by the committee (i) who will process your submission.\nThe committee of the vault will respond <strong>within 12 hours<strong> to acknowledge the receipt of submission via the telegram user you provided."
     }
   }
 }
