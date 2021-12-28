@@ -13,7 +13,8 @@
         "fix-sub-title": "Fix/Remedy",
         "fix": "Committee members check your submission and will get back in contact through  the telegram contact you shared with one or more of the following: ",
         "awards-sub-title": "Awards",
-        "awards": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks of the deployment of the vault committee's solution.",
+        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks of the deployment of the vault committee's solution.",
+        "awards-text-2": "Rewards are being set at the fund release time and not the submission time.",
         "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
       }
     }

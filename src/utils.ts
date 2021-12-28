@@ -176,7 +176,7 @@ export const formatWei = (
  * @param {string | number} value
  * @param {number} precision
  */
-export const formatNumber = (value: string | number, precision = 1): string => {
+export const formatNumber = (value: string | number | undefined, precision = 1): string => {
   return !value ? "-" : millify(Number(value), { precision: precision });
 };
 
@@ -296,9 +296,7 @@ export const linkToEtherscan = (
   isTransaction?: boolean
 ): string => {
   const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/${
-    isTransaction ? "tx" : "address"
-  }/${value}`;
+  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
 };
 
 /**
@@ -421,20 +419,11 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} honeyPotBalance
  * @param {string} stakingTokenDecimals
  */
-export const calculateRewardPrice = (
-  rewardPercentage: number,
-  tokenPrice: number,
-  honeyPotBalance: string,
-  stakingTokenDecimals: string
-) => {
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
   if (tokenPrice) {
-    return (
-      Number(fromWei(honeyPotBalance, stakingTokenDecimals)) *
-      (rewardPercentage / 100) *
-      tokenPrice
-    );
+    return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
-  return -1;
+  return undefined;
 };
 
 /**
