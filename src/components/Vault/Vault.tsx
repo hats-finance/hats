@@ -40,7 +40,7 @@ export default function Vault(props: IProps) {
   // }, [setVaultAPY, apy])
 
   useEffect(() => {
-    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "");
+    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
   }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
 
   const description: IVaultDescription = parseJSONToObject(props.data?.description as string);

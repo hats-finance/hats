@@ -109,7 +109,7 @@ export const UNISWAP_V3_STAKER_ADDRESS =
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
-export const NFT_AIRDROP_ADDRESS = "0xDc500d309d99deF4Bf57d5Ef6cD21f61EdF7710D";
+export const NFT_AIRDROP_ADDRESS = "0x728654Bb8E69b9978E79657332a0843606d64FF4";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI =
