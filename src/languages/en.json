@@ -12,10 +12,19 @@
         "submission": "Your submission will be sent via a bot that is being run by the committee (i) who will process your submission.\n\nThe committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the telegram user you provided.",
         "fix-sub-title": "Fix/Remedy",
         "fix": "Committee members check your submission and will get back in contact through  the telegram contact you shared with one or more of the following: ",
+        "fix-question": "Questions to help clarify your submission",
+        "fix-error": "Errors that they have identified in your submission",
+        "fix-text-1": "Confirmation of the accuracy of your submission and details regarding the solution including:",
+        "fix-timeline": "Timeline of the solution  implementation",
+        "fix-bugs": "Severity level of the vulnerability",
+        "fix-rewards": "Level of reward", 
         "awards-sub-title": "Awards",
         "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks of the deployment of the vault committee's solution.",
         "awards-text-2": "Rewards are being set at the fund release time and not the submission time.",
         "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
+      },
+      "Submit": {
+        "review-notice": "Please review your request before submitting:"
       }
     }
   }
