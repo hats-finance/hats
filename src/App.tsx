@@ -13,15 +13,18 @@ import {
   updateRewardsToken,
   updateHatsPrice,
   updateWithdrawSafetyPeriod,
+  updateAirdropEligibleTokens,
 } from "./actions/index";
 import {
   getNetworkNameByChainId,
   getTokenPrice,
   calculateApy,
   getWithdrawSafetyPeriod,
+  normalizeAddress,
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
+  IPFS_PREFIX,
   LocalStorage,
   NotificationType,
   RoutePaths,
@@ -40,22 +43,17 @@ import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
-import { IVault } from "./types/types";
+import { EligibleTokens, IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
-
-// NFT Airdrop - Temporary disabled
-// import { isRedeemed } from "./actions/contractsActions";
-// import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
-// EligibleTokens
-// import axios from "axios";
-// IPFS_ELIGIBLE_TOKENS, IPFS_PREFIX
-// updateAirdropEligibleTokens
-// const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
+import { getMerkleTree, isRedeemed } from "./actions/contractsActions";
+import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+import axios from "axios";
 
 import "./i18n.ts"; // Initialise i18n
 
 function App() {
   const dispatch = useDispatch();
+  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
   const currentScreenSize = useSelector(
     (state: RootState) => state.layoutReducer.screenSize
   );
@@ -229,32 +227,32 @@ function App() {
     }
   }, [dispatch, vaults]);
 
-  //* NFT Airdrop - Temporary disabled */
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       const data = await axios.get(`${IPFS_PREFIX}${IPFS_ELIGIBLE_TOKENS}`);
+  useEffect(() => {
+    (async () => {
+      try {
+        const ipfsEligibleTokens = await getMerkleTree();
+        const data = await axios.get(`${IPFS_PREFIX}${ipfsEligibleTokens}`);
 
-  //       for (const key in data.data) {
-  //         data.data[key] = normalizeAddress(data.data[key]);
-  //       }
+        for (const key in data.data) {
+          data.data[key] = normalizeAddress(data.data[key]);
+        }
 
-  //       dispatch(updateAirdropEligibleTokens(data.data));
+        dispatch(updateAirdropEligibleTokens(data.data));
 
-  //       if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
-  //         const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-  //         const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+        if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
+          const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+          const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
 
-  //         if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
-  //           setShowNFTAirdropNotification(true);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error(error);
-  //       // TODO: show error
-  //     }
-  //   })();
-  // }, [dispatch, selectedAddress])
+          if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+            setShowNFTAirdropNotification(true);
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        // TODO: show error
+      }
+    })();
+  }, [dispatch, selectedAddress])
 
   return (
     <>
@@ -283,10 +281,9 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        {/* NFT Airdrop - Temporary disabled */}
-        {/* <Route path={RoutePaths.nft_airdrop}>
+        <Route path={RoutePaths.nft_airdrop}>
           <NFTAirdrop />
-        </Route> */}
+        </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
       {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}

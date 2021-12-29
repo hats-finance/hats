@@ -147,5 +147,4 @@ export enum SocialLinks {
 }
 
 /** Used for NFT Airdrop */
-export const IPFS_ELIGIBLE_TOKENS = "QmSUXfYsk9HgrMBa7tgp3MBm8FGwDF9hnVaR9C1PMoFdS3";
 export const IPFS_BASE_URI = "QmezvK7gNLhUzb9xBWYNAzJs8xLLuBvWSyvtFmusb9fMBW";

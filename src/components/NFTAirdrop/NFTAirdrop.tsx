@@ -18,10 +18,10 @@ const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 export enum EligibilityStatus {
-  ELIGIBLE = 0,
-  NOT_ELIGIBLE = 1,
-  REDEEMED = 2,
-  PENDING = 3
+  ELIGIBLE,
+  NOT_ELIGIBLE,
+  REDEEMED,
+  PENDING
 }
 
 export default function NFTAirdrop() {
