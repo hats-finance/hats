@@ -291,11 +291,20 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 
 /**
  * Get the merkle tree ref (eligible tokens)
- * @returns {string} 
+ * @returns {string}
  */
 export const getMerkleTree = async () => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
   return await contract._merkleTreeIPFSRef();
+}
+
+/**
+ * Get the NFT Airdrop deadline
+ * @returns {string} in unix time
+ */
+export const getDeadline = async () => {
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  return await contract._deadline();
 }
 
 /**

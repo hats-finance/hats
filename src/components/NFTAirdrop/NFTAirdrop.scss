@@ -5,6 +5,11 @@
   .nft-airdrop-search {
     margin-right: 80px;
     max-width: 500px;
+    .deadline-label {
+      color: $red;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
     h2 {
       margin-top: 0;
     }
