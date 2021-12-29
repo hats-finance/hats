@@ -24,7 +24,16 @@
         "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
       },
       "Submit": {
-        "review-notice": "Please review your request before submitting:"
+        "review-notice": "Please review your request before submitting:",
+        "submit-thanks": "Hello new hatter, thank you for your submission!",
+        "on-chain-transaction-success": "On-chain transaction submitted successfully",
+        "on-chain-transaction": "Transaction on-chain confirmation",
+        "bot-confirmation": "Bot confirmation (30 seconds)",
+        "status": "Status",
+        "success": "Success",
+        "fail": "Fail",
+        "pending": "Pending",
+        "bot-resend": "RESEND TO BOT"
       }
     }
   }
