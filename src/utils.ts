@@ -14,11 +14,9 @@ import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
-import {
-  ICardData,
-  VULNERABILITY_INIT_DATA
-} from "./components/Vulnerability/VulnerabilityAccordion";
+import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
+import { IVulnerabilityData } from "./components/Vulnerability/types";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -432,14 +430,14 @@ export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: numbe
  * @param {string} projectId
  */
 export const setVulnerabilityProject = (projectName: string, projectId: string) => {
-  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
+  let cachedData: IVulnerabilityData = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
     cachedData = VULNERABILITY_INIT_DATA;
   }
 
-  cachedData[1].verified = true;
-  cachedData[1].data = {
+  cachedData.project = {
+    verified: true,
     projectName: projectName,
     projectId: projectId
   }
