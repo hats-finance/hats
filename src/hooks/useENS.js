@@ -1,6 +1,5 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { INFURA_ID } from "../settings";
 
 const useENS = (address) => {
   const [ensName, setENSName] = useState();
