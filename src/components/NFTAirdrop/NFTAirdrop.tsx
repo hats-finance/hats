@@ -11,9 +11,8 @@ import { EligibleTokens } from "../../types/types";
 import { hashToken, linkToTokenEtherscan, normalizeAddress } from "../../utils";
 import { useLocation } from "react-router-dom";
 import Loading from "../Shared/Loading";
-import { getDeadline, isRedeemed } from "../../actions/contractsActions";
+import { isRedeemed } from "../../actions/contractsActions";
 import OpenInIcon from "../../assets/icons/openIn.icon";
-import moment from "moment";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -34,13 +33,6 @@ export default function NFTAirdrop() {
   const [merkleTree, setMerkleTree] = useState<any>();
   const [currentTokenID, setCurrentTokenID] = useState("");
   const [reveal, setReveal] = useState(false);
-  const [deadline, setDeadline] = useState<number>();
-
-  useEffect(() => {
-    (async () => {
-      setDeadline(await getDeadline())
-    })();
-  }, [])
 
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
@@ -96,7 +88,6 @@ export default function NFTAirdrop() {
   return (
     <div className={nftAirdropWrapperClass}>
       <div className="nft-airdrop-search">
-        {deadline && <div className="deadline-label">Minting deadline: {moment.unix(deadline).local().format('DD-MM-YYYY HH:mm')}</div>}
         <h2>{eligibilityStatus === EligibilityStatus.ELIGIBLE ? "Congrats!" : eligibilityStatus === EligibilityStatus.NOT_ELIGIBLE ? "Ho no!" : "Hello"}</h2>
         <span>{`Please connect to wallet or enter wallet address to check your eligibility for the NFT airdrop "The crow clan"`}</span>
         <div className={inputContainerClass}>

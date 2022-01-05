@@ -486,3 +486,11 @@ export const normalizeAddress = (address: string) => {
   }
   return "";
 }
+
+/**
+ * Checks whether a given date (in unix time) has passed.
+ * @param {number | string} value
+ */
+export const isDateBefore = (value: number | string): boolean => {
+  return moment().isBefore(moment.unix(Number(value)));
+}

@@ -15,6 +15,21 @@
     height: 300px;
     line-height: 300px;
   }
+  .redeem-wrapper__countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+    .redeem-text {
+      margin-bottom: 30px;
+      align-self: baseline;
+    }
+    .redeem-passed-text {
+      align-self: baseline;
+      color: $red;
+    }
+  }
   .action-btn {
     width: 100%;
     margin: 20px 0px;

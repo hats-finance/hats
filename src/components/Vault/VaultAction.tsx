@@ -5,7 +5,7 @@ import { Colors } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { isProviderAndNetwork } from "../../utils";
-import WithdrawCountdown from "../WithdrawCountdown";
+import Countdown from "../Shared/Countdown/Countdown";
 import "./VaultAction.scss";
 
 interface IProps {
@@ -43,7 +43,7 @@ export default function VaultAction(props: IProps) {
       {selectedAddress && isPendingWithdraw && !isWithdrawable &&
         <>
           <div className="countdown-wrapper">
-            <WithdrawCountdown
+            <Countdown
               endDate={withdrawRequest[0]?.withdrawEnableTime}
               compactView
               onEnd={() => {
@@ -59,7 +59,7 @@ export default function VaultAction(props: IProps) {
       {selectedAddress && isWithdrawable && !isPendingWithdraw &&
         <>
           <div className="countdown-wrapper">
-            <WithdrawCountdown
+            <Countdown
               endDate={withdrawRequest[0]?.expiryTime}
               compactView
               onEnd={() => {
