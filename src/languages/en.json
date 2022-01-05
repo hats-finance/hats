@@ -19,8 +19,8 @@
         "fix-bugs": "Severity level of the vulnerability",
         "fix-rewards": "Level of reward", 
         "awards-sub-title": "Awards",
-        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.",
-        "awards-text-2": "The size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
+        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.\n\n",
+        "awards-text-2": "\n\nThe size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
         "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
       },
       "Submit": {
