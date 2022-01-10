@@ -5,20 +5,6 @@ iframe {
   display: none !important;
 }
 
-.dot {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 5px;
-  &.connected {
-    background-color: $turquoise;
-  }
-  &.disconnected {
-    background-color: $red;
-  }
-}
-
 input {
   font-family: RobotoMono;
 }

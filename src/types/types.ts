@@ -56,7 +56,8 @@ export interface IVaultDescription {
   }
   "communication-channel": {
     "committee-bot": string
-    "pgp-pk": string
+    "pgp-pk": string,
+    "router-pgp-pk": string
   }
   "committee": {
     "multisig-address": string
