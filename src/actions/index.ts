@@ -46,9 +46,13 @@ export const updateRewardsToken = (rewardsToken: string) => ({
   rewardsToken
 })
 
-export const toggleInTransaction = (inTransaction: boolean, transactionHash?: string) => ({
+export const toggleInTransaction = (inTransaction: boolean) => ({
   type: types.TOGGLE_IN_TRANSACTION,
-  inTransaction,
+  inTransaction
+})
+
+export const updateTransactionHash = (transactionHash: string) => ({
+  type: types.UPDATE_TRANSACTION_HASH,
   transactionHash
 })
 

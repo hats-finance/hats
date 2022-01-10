@@ -97,15 +97,9 @@ function App() {
 
   const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
 
-  const screenSize = window.matchMedia(
-    `(min-width: ${SMALL_SCREEN_BREAKPOINT})`
-  );
+  const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
-    dispatch(
-      changeScreenSize(
-        screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile
-      )
-    );
+    dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
   if (window.ethereum) {

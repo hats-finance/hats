@@ -14,11 +14,9 @@ import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
-import {
-  ICardData,
-  VULNERABILITY_INIT_DATA
-} from "./components/Vulnerability/VulnerabilityAccordion";
+import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
+import { IVulnerabilityData } from "./components/Vulnerability/types";
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -176,7 +174,7 @@ export const formatWei = (
  * @param {string | number} value
  * @param {number} precision
  */
-export const formatNumber = (value: string | number, precision = 1): string => {
+export const formatNumber = (value: string | number | undefined, precision = 1): string => {
   return !value ? "-" : millify(Number(value), { precision: precision });
 };
 
@@ -296,9 +294,7 @@ export const linkToEtherscan = (
   isTransaction?: boolean
 ): string => {
   const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/${
-    isTransaction ? "tx" : "address"
-  }/${value}`;
+  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
 };
 
 /**
@@ -421,20 +417,11 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} honeyPotBalance
  * @param {string} stakingTokenDecimals
  */
-export const calculateRewardPrice = (
-  rewardPercentage: number,
-  tokenPrice: number,
-  honeyPotBalance: string,
-  stakingTokenDecimals: string
-) => {
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
   if (tokenPrice) {
-    return (
-      Number(fromWei(honeyPotBalance, stakingTokenDecimals)) *
-      (rewardPercentage / 100) *
-      tokenPrice
-    );
+    return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
-  return -1;
+  return undefined;
 };
 
 /**
@@ -443,14 +430,14 @@ export const calculateRewardPrice = (
  * @param {string} projectId
  */
 export const setVulnerabilityProject = (projectName: string, projectId: string) => {
-  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
+  let cachedData: IVulnerabilityData = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
     cachedData = VULNERABILITY_INIT_DATA;
   }
 
-  cachedData[1].verified = true;
-  cachedData[1].data = {
+  cachedData.project = {
+    verified: true,
     projectName: projectName,
     projectId: projectId
   }

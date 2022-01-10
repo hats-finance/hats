@@ -1,4 +1,4 @@
-import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION, TOGGLE_SUBMITTING_VULNERABILITY } from '../constants/action-types';
+import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_NOTIFICATION, TOGGLE_SUBMITTING_VULNERABILITY, UPDATE_TRANSACTION_HASH } from '../constants/action-types';
 import { getScreenSize } from '../utils';
 
 const initialState = {
@@ -43,6 +43,10 @@ export const layoutReducer = (state = initialState, action: any) => {
       return {
         ...state,
         inTransaction: action.inTransaction,
+      }
+    case UPDATE_TRANSACTION_HASH:
+      return {
+        ...state,
         transactionHash: action.transactionHash
       }
     case TOGGLE_SUBMITTING_VULNERABILITY:

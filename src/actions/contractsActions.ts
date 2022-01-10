@@ -7,7 +7,7 @@ import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NFT_AIRDROP_ADDRESS, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
-import { toggleInTransaction, toggleNotification } from "./index";
+import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
 import { NETWORK } from "../settings";
 import { IIncentive } from "../types/types";
@@ -354,7 +354,8 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     const transaction = await tx();
     await onWalletAction();
     if (transaction) {
-      dispatch(toggleInTransaction(true, transaction.hash));
+      dispatch(toggleInTransaction(true));
+      dispatch(updateTransactionHash(transaction.hash));
       const transactionStatus = await transactionWait(transaction, confirmations);
       if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();

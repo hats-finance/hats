@@ -1,4 +1,3 @@
-import millify from "millify";
 import { useSelector } from "react-redux";
 import { ScreenSize } from "../../../constants/constants";
 import { RootState } from "../../../reducers";
@@ -9,7 +8,7 @@ import { useState } from "react";
 import Modal from "../../Shared/Modal";
 import NFTPrize from "../../NFTPrize";
 import ContractsCovered from "../ContractsCovered";
-import { calculateRewardPrice } from "../../../utils";
+import { calculateRewardPrice, formatNumber } from "../../../utils";
 import "./Severity.scss";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 
@@ -62,19 +61,25 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">Max Prize:</span>
               <span className="vault-prize">
-                <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b><span className="of-vault-text">&nbsp;of vault&nbsp;</span>&#8776; {`$${rewardPrice < 0 ? "-" : millify(rewardPrice)}`}&nbsp;
+                <b style={{ color: "white" }}>
+                  {`${rewardPercentage.toFixed(2)}%`}
+                </b>
+                <span className="of-vault-text">
+                  &nbsp;of vault&nbsp;
+                </span>
+                &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
               </span>
               {
-                screenSize === ScreenSize.Desktop && (
+                screenSize === ScreenSize.Desktop && rewardPrice &&  (
                   <>
                     <span className="vault-expanded-subtitle">Prize Content Division:</span>
                     <div className="severity-prize-division-wrapper">
-                      {(Number(hackerVestedRewardSplit) / 100) > 0 && <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100}% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                      {(Number(hackerRewardSplit) / 100) > 0 && <span className="division token">{`${Number(hackerRewardSplit) / 100}% ${stakingTokenSymbol} (Hacker reward) ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                      {(Number(committeeRewardSplit) / 100) > 0 && <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${rewardPrice < 0 ? "-" : millify((Number(committeeRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                      {(Number(hackerHatRewardSplit) / 100) > 0 && <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats for ${humanizeDuration(Number(props.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${rewardPrice < 0 ? "-" : millify((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                      {(Number(governanceHatRewardSplit) / 100) > 0 && <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance ≈ $${rewardPrice < 0 ? "-" : millify((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                      {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${rewardPrice < 0 ? "-" : millify((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(hackerVestedRewardSplit) / 100) > 0 && <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100}% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(hackerRewardSplit) / 100) > 0 && <span className="division token">{`${Number(hackerRewardSplit) / 100}% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(committeeRewardSplit) / 100) > 0 && <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber((Number(committeeRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(hackerHatRewardSplit) / 100) > 0 && <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats for ${humanizeDuration(Number(props.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${formatNumber((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(governanceHatRewardSplit) / 100) > 0 && <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                      {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${formatNumber((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>}
                     </div>
                   </>
                 )

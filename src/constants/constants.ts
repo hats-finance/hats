@@ -61,7 +61,7 @@ export enum TransactionStatus {
   Cancelled = 2
 }
 
-export const SMALL_SCREEN_BREAKPOINT = "770px";
+export const SMALL_SCREEN_BREAKPOINT = "1000px";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 

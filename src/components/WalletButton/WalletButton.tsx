@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { isMobile } from "web3modal";
-import { ScreenSize } from "../../constants/constants";
+import { Colors, ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
+import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
 
 export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
@@ -37,9 +38,7 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
         className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
         onClick={handleClick}>
         <div>
-          <span
-            className={!provider ? "dot disconnected" : "dot connected"}
-            style={{ marginRight: "5px" }} />
+          <Dot color={!provider ? Colors.red : Colors.turquoise} />
           {!provider ? "Connect a Wallet" : screenSize === ScreenSize.Desktop ? "Disconnect Wallet" : `${truncatedAddress(selectedAddress)}`}
         </div>
       </button>
