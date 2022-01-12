@@ -22,6 +22,7 @@ export default function KeysSidebar({ keys }: IProps) {
             )
         }
         <NavLink
+            exact
             className="nav-link"
             activeClassName="selected"
             to={`${RoutePaths.committee_tools}`}>new</NavLink>

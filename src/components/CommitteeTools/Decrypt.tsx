@@ -1,5 +1,5 @@
 import { decrypt, PrivateKey, readMessage } from "openpgp";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { IStoredKey } from "../../types/types";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import Modal from "../Shared/Modal";

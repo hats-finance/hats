@@ -15,7 +15,7 @@ export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any
         const passphrase = passphraseRef.current?.value
         const name = nameRef.current?.value
         const email = emailRef.current?.value
-        const { privateKey, publicKey } = await generateKey({
+        const { privateKey } = await generateKey({
             type: 'rsa', // Type of the key, defaults to ECC
             rsaBits: 2048,
             //curve: 'curve25519', // ECC curve name, defaults to curve25519
