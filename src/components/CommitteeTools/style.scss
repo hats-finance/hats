@@ -3,6 +3,93 @@
 .committee-tools-wrapper {
     display: flex;
     flex-direction: row;
+
+    p {
+        font-family: RobotoMono;
+        font-weight: bold;
+        font-size: 16px;
+        color: $white
+    }
+    
+    input {
+        width: 406px;
+        height: 18px;
+        border-color: $turquoise;
+        border-width: 1px;
+        background-color: $dark-blue;
+        padding: 12px 20px 11px 11px;
+        color: $dirty-turquoise;
+    }
+    
+    button {
+        background-color: $turquoise;
+        font-family: RobotoMono;
+        font-weight: normal;
+        font-size: 18px;
+        color: $dark-blue;
+        text-transform: uppercase;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+    
+    ::placeholder {
+        color: $dirty-turquoise;
+    }
+    
+    :-ms-input-placeholder {
+        color: $dirty-turquoise;
+    }
+    
+    ::-ms-input-placeholder {
+        color: $dirty-turquoise;
+    }
+    
+    .subtitle {
+        margin-top: 27px;
+    }
+    
+    .alias {
+        margin-top: 36px;
+    }
+    
+    .details {
+        margin-top: 48px;
+        display: flex;
+    
+        .details-name {
+            input {
+                width: 155px;
+                padding: 12px 43px 11px 11px;
+            }
+        }
+    
+        .details-email {
+            margin-left: 72px;
+        }
+    }
+    
+    .passphrase {
+        margin-top: 57px;
+    
+        .description {
+            font-weight: normal;
+            font-size: 14px;
+        }
+    
+        .hint {
+            font-size: 14px;
+            color: $dirty-turquoise;
+        }
+    }
+    
+    .submit {
+        margin-top: 160px;
+    
+        button {
+            width: 361px;
+            height: 40px;
+        }
+    }
 }
 
 

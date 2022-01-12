@@ -27,22 +27,34 @@ export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any
     }
 
     return <div>
-        <p>Hello committee member</p>
-        <p>Please generate private and public PGP keys by creating an alias and a passphrase.</p>
-        <p>Alias</p>
-        <input ref={aliasRef} type="text" />
-        <p>Passphrase</p>
-        <p>Please notice,your passphrase isn’t saved to local storage! please save it as you see fit.</p>
-        <input ref={passphraseRef} type="text" />
-
-
-        <p>Name</p>
-        <input ref={nameRef} type="text" />
-        <p>Name</p>
-        <input ref={emailRef} type="text" />
-
-        <p>Min 6 chars</p>
-        <button onClick={_handleClick}>Generate key pair </button>
-
+        <div className="title">
+            <p>Hello committee member</p>
+        </div>
+        <div className="subtitle">
+            <p>Please generate private and public PGP keys by creating an alias and a passphrase.</p>
+        </div>
+        <div className="alias">
+            <p>Alias</p>
+            <input ref={aliasRef} type="text" placeholder="Enter new alias" />
+        </div>
+        <div className="details">
+            <div className="details-name">
+                <p>Name</p>
+                <input ref={nameRef} type="text" placeholder="Enter your name" />
+            </div>
+            <div className="details-email">
+                <p>Email</p>
+                <input ref={emailRef} type="text" placeholder="Enter your email" />
+            </div>
+        </div>
+        <div className="passphrase">
+            <p>Passphrase</p>
+            <p className="description">Please notice,your passphrase isn’t saved to local storage! please save it as you see fit.</p>
+            <input ref={passphraseRef} type="text" placeholder="Enter new passphrase" />
+            <p className="hint">Min 6 chars</p>
+        </div>
+        <div className="submit">
+            <button onClick={_handleClick}>Generate key pair </button>
+        </div>
     </div>
 }
