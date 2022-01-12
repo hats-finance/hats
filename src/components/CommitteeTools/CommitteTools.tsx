@@ -21,19 +21,8 @@ export default function CommitteeTools() {
     let { alias } = useParams<{ alias?: string }>()
 
     const addKey = (newKey: IStoredKey) => {
-        console.log('adding key')
         setVault(prev => [...prev!, newKey])
     }
-
-    // const unlockKey = async (alias: string, passphrase: string) => {
-    //     console.log('unlockkey')
-    //     const keypair = keystore.find(key => key.alias === alias)
-    //     const privateKey = await readPrivateKey({ armoredKey: keypair!.privateKey })
-    //     const unlockedKey = await decryptKey({ privateKey, passphrase })
-    //     const  setUnlockedKeys((prevState: IUnlockedKey[]) => [...prevState, { alias, privateKey: unlockedKey }])
-    //     console.log('unlockkey finish')
-
-    // }
 
     const committeeToolsWrapper = classNames({
         'committee-tools-wrapper': true,
@@ -47,24 +36,18 @@ export default function CommitteeTools() {
     useEffect(() => {
         // vault must be created
         if (!localStorage.getItem(LocalStorage.PGPKeystore)) {
-            console.log("show create")
             setShowCreateVault(true)
         } else {
-            console.log("show unlock")
             setShowUnlockVault(true)
         }
 
     }, [])
 
     useEffect(() => {
-        console.log('vault updated', { password, vault });
         (async () => {
             if (password && vault) {
-                console.log('password', password, 'vault', vault);
-
                 const encrypted = await encryptor.encrypt(password, vault)
                 localStorage.setItem(LocalStorage.PGPKeystore, encrypted)
-                console.log('updated local storage', vault);
             }
         })()
     }, [vault, password])
