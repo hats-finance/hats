@@ -40,11 +40,13 @@ export default function CommitteeTools() {
         'content': true
     })
 
-    useEffect(() => {
-        const pgpKeystore = localStorage.getItem(LocalStorage.PGPKeystore)
+    const loadFromStorage = () => {
 
+    }
+
+    useEffect(() => {
         // vault must be created
-        if (!pgpKeystore) {
+        if (!localStorage.getItem(LocalStorage.PGPKeystore)) {
             console.log("show create")
             setShowCreateVault(true)
         } else {
@@ -55,15 +57,17 @@ export default function CommitteeTools() {
     }, [])
 
     useEffect(() => {
-        console.log('vault updated');
+        console.log('vault updated', { password, vault });
         (async () => {
             if (password && vault) {
+                console.log('password', password, 'vault', vault);
+
                 const encrypted = await encryptor.encrypt(password, vault)
                 localStorage.setItem(LocalStorage.PGPKeystore, encrypted)
                 console.log('updated local storage', vault);
             }
         })()
-    }, [vault])
+    }, [vault, password])
 
     const createVault = (password: string) => {
         setPassword(password)
@@ -72,7 +76,9 @@ export default function CommitteeTools() {
     }
 
     const unlockVault = async (password: string) => {
+        // this will throw an exception if fails so user gets error message in dialog
         const decrypted = await encryptor.decrypt(password, localStorage.getItem(LocalStorage.PGPKeystore))
+        setPassword(password)
         setVault(decrypted)
         setShowUnlockVault(false)
     }
