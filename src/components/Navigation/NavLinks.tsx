@@ -8,7 +8,7 @@ import "./NavLinks.scss";
 export default function NavLinks() {
   const dispatch = useDispatch();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  
+
   const handleClick = () => {
     if (screenSize === ScreenSize.Mobile) {
       dispatch(toggleMenu(false));
@@ -23,6 +23,7 @@ export default function NavLinks() {
       {/* NFT Airdrop - Temporary disabled */}
       {/* <NavLink to={RoutePaths.nft_airdrop} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>NFT Airdrop</NavLink> */}
       <NavLink to={RoutePaths.vulnerability} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Submit Vulnerability</NavLink>
+      <NavLink to={RoutePaths.committee_tools} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Committee Tools</NavLink>
     </>
   )
 }
