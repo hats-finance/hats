@@ -1,4 +1,4 @@
-import { decrypt, PrivateKey, readMessage } from "openpgp";
+import { createMessage, decrypt, encrypt, PrivateKey, readMessage } from "openpgp";
 import { useCallback, useRef, useState } from "react";
 import { IStoredKey } from "../../types/types";
 import CopyToClipboard from "../Shared/CopyToClipboard";
@@ -7,14 +7,34 @@ import { usePrivateKey } from "./util";
 
 export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
     const privateKey = usePrivateKey(storedKey)
+    const [error, setError] = useState<string>()
     const [showKeyDetails, setShowKeyDetails] = useState(false)
     const encryptedMessageRef = useRef<HTMLTextAreaElement>(null)
     const decryptedMessageRef = useRef<HTMLTextAreaElement>(null)
 
     const _decrypt = useCallback(async () => {
-        const message = await readMessage({ armoredMessage: encryptedMessageRef.current!.value })
-        const { data: decrypted } = await decrypt({ message, decryptionKeys: privateKey })
-        decryptedMessageRef.current!.value = decrypted
+        try {
+            const armoredMessage = encryptedMessageRef.current!.value
+            console.log({ armoredMessage, privateKey: privateKey?.armor() })
+            const message = await readMessage({ armoredMessage })
+            const { data: decrypted } = await decrypt({ message, decryptionKeys: privateKey })
+            decryptedMessageRef.current!.value = decrypted
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message)
+            }
+        }
+    }, [privateKey])
+
+    const _encrypt = useCallback(async () => {
+        try {
+            const message = await createMessage({ text: decryptedMessageRef.current!.value })
+            encryptedMessageRef.current!.value = await encrypt({ message, encryptionKeys: privateKey?.toPublic() })
+        } catch (error) {
+            if (error instanceof Error) {
+                setError(error.message)
+            }
+        }
     }, [privateKey])
 
     if (!privateKey) return <></>
@@ -22,6 +42,7 @@ export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
     return <div>
         <div>
             <button onClick={() => setShowKeyDetails(true)}>show key details</button>
+            {error && <p>{error}</p>}
             {showKeyDetails && <Modal
                 title="Key Details"
                 setShowModal={setShowKeyDetails}
@@ -34,6 +55,7 @@ export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
             <div><button onClick={_decrypt}>Decrypt</button></div>
             <p>Decrypted message</p>
             <textarea ref={decryptedMessageRef} cols={80} rows={15} />
+            <div><button onClick={_encrypt}>Encrypt</button></div>
         </div>
     </div>
 }
