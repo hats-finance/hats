@@ -1,5 +1,5 @@
 import { IStoredKey } from "../../types/types";
-import { decrypt, decryptKey, PrivateKey, readMessage, readPrivateKey } from "openpgp";
+import { decryptKey, PrivateKey, readPrivateKey } from "openpgp";
 import { useEffect, useState } from "react";
 
 

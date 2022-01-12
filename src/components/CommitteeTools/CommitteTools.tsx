@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-
 import { LocalStorage } from "../../constants/constants";
 import * as encryptor from 'browser-passworder';
 import KeysNavbar from "./KeysNavBar";
-import { useParams, useRouteMatch } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import NewKey from "./NewKey";
 import { IStoredKey } from "../../types/types";
 import Decrypt from "./Decrypt";
@@ -17,7 +16,6 @@ export default function CommitteeTools() {
     const [showUnlockVault, setShowUnlockVault] = useState(false)
     const [password, setPassword] = useState<string>()
 
-    let { path, url } = useRouteMatch();
     let { alias } = useParams<{ alias?: string }>()
 
     const addKey = (newKey: IStoredKey) => {
@@ -28,10 +26,6 @@ export default function CommitteeTools() {
         'committee-tools-wrapper': true,
         'content': true
     })
-
-    const loadFromStorage = () => {
-
-    }
 
     useEffect(() => {
         // vault must be created
@@ -104,7 +98,7 @@ function CreateVaultModal({ onCreateVault, setShowModal }:
     const [error, setError] = useState<string>()
 
     const createVault = () => {
-        if (passwordRef.current!.value != passwordConfirmRef.current!.value) {
+        if (passwordRef.current!.value !== passwordConfirmRef.current!.value) {
             setError("Passwords mismatch")
             return
         }
