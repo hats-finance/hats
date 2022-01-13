@@ -11,7 +11,7 @@
         "submission-sub-title": "Submission",
         "submission": "Your submission will be sent via a bot that is being run by the committee (i) who will process your submission.\n\nThe committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the telegram user you provided.",
         "fix-sub-title": "Fix/Remedy",
-        "fix": "Committee members check your submission and will get back in contact through  the telegram contact you shared with one or more of the following: ",
+        "fix": "Committee members will check your submission and then reach out to you through the telegram contact you shared with us. They will likely ask for one or both of the following:",
         "fix-question": "Questions to help clarify your submission",
         "fix-error": "Errors that they have identified in your submission",
         "fix-text-1": "Confirmation of the accuracy of your submission and details regarding the solution including:",
@@ -19,8 +19,8 @@
         "fix-bugs": "Severity level of the vulnerability",
         "fix-rewards": "Level of reward", 
         "awards-sub-title": "Awards",
-        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks of the deployment of the vault committee's solution.",
-        "awards-text-2": "Rewards are being set at the fund release time and not the submission time.",
+        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.\n\n",
+        "awards-text-2": "\n\nThe size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
         "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
       },
       "Submit": {
