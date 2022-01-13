@@ -39,23 +39,26 @@ export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
 
     if (!privateKey) return <></>
 
-    return <div>
-        <div>
-            <button onClick={() => setShowKeyDetails(true)}>show key details</button>
-            {error && <p>{error}</p>}
-            {showKeyDetails && <Modal
-                title="Key Details"
-                setShowModal={setShowKeyDetails}
-            >
-                <KeyDetails storedKey={storedKey} privateKey={privateKey} />
-            </Modal>}
+    return <div className="decrypt-message">
+        <div className="show-key-details">
+            <button onClick={() => setShowKeyDetails(true)}>Show key details</button>
+        </div>
+        {error && <p>{error}</p>}
+        {showKeyDetails && <Modal
+            title="Key Details"
+            setShowModal={setShowKeyDetails}
+        >
+            <KeyDetails storedKey={storedKey} privateKey={privateKey} />
+        </Modal>}
+        <div className="encrypted-message">
             <p>Encrypted message</p>
             <textarea ref={encryptedMessageRef} cols={80} rows={15} />
-
-            <div><button onClick={_decrypt}>Decrypt</button></div>
+            <button onClick={_decrypt}>Decrypt</button>
+        </div>
+        <div className="decrypted-message">
             <p>Decrypted message</p>
             <textarea ref={decryptedMessageRef} cols={80} rows={15} />
-            <div><button onClick={_encrypt}>Encrypt</button></div>
+            <button onClick={_encrypt}>Encrypt</button>
         </div>
     </div>
 }

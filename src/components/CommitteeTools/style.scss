@@ -4,47 +4,59 @@
     display: flex;
     flex-direction: row;
 
+    p {
+        font-family: RobotoMono;
+        font-weight: bold;
+        font-size: $small;
+        color: $white
+    }
+
+    input {
+        width: 406px;
+        height: 18px;
+        border-color: $turquoise;
+        border-width: 1px;
+        background-color: $dark-blue;
+        padding: 12px 20px 11px 11px;
+        color: $dirty-turquoise;
+    }
+
+    textarea {
+        width: 100%;
+        max-width: 920px;
+        border-color: $turquoise;
+        border-width: 1px;
+        background-color: $dark-blue;
+        padding: 12px 20px 11px 11px;
+        color: $dirty-turquoise;
+        resize: none;
+        box-sizing: border-box;
+    }
+
+    ::placeholder {
+        color: $dirty-turquoise;
+    }
+
+    :-ms-input-placeholder {
+        color: $dirty-turquoise;
+    }
+
+    ::-ms-input-placeholder {
+        color: $dirty-turquoise;
+    }
+
+    button {
+        background-color: $turquoise;
+        font-family: RobotoMono;
+        font-weight: normal;
+        font-size: $moderate;
+        color: $dark-blue;
+        text-transform: uppercase;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
     .new-key {
-        p {
-            font-family: RobotoMono;
-            font-weight: bold;
-            font-size: $small;
-            color: $white
-        }
-        
-        input {
-            width: 406px;
-            height: 18px;
-            border-color: $turquoise;
-            border-width: 1px;
-            background-color: $dark-blue;
-            padding: 12px 20px 11px 11px;
-            color: $dirty-turquoise;
-        }
-        
-        button {
-            background-color: $turquoise;
-            font-family: RobotoMono;
-            font-weight: normal;
-            font-size: $moderate;
-            color: $dark-blue;
-            text-transform: uppercase;
-            padding-top: 8px;
-            padding-bottom: 8px;
-        }
-        
-        ::placeholder {
-            color: $dirty-turquoise;
-        }
-        
-        :-ms-input-placeholder {
-            color: $dirty-turquoise;
-        }
-        
-        ::-ms-input-placeholder {
-            color: $dirty-turquoise;
-        }
-        
         .subtitle {
             margin-top: 27px;
         }
@@ -90,6 +102,39 @@
                 width: 361px;
                 height: 40px;
             }
+        }
+    }
+
+    .decrypt-message {
+        p {
+            color: $turquoise;
+            margin-top: 0px;
+            margin-bottom: 12px;
+        }
+
+        button {
+            margin-top: 57px;
+            padding-left: 27px;
+            padding-right: 26px;
+        }
+
+        .show-key-details {
+            button {
+                width: 403px;
+                height: 56px;
+                margin: 0px;
+                background-color: transparent;
+                font-weight: bold;
+                font-size: $small;
+                color: $white;
+                text-align: start;
+                text-transform: inherit;
+                padding: 0px;
+            }
+        }
+
+        .decrypted-message {
+            margin-top: 33px;
         }
     }
 }
