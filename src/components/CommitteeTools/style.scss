@@ -94,7 +94,43 @@
 
 
 .keys-navbar {
-    min-width: 180px;
+    min-width: 189px;
     display: flex;
     flex-direction: column;
+    margin-right: 58px;
+
+    p {
+        font-family: RobotoMono;
+        font-weight: bold;
+        font-size: $xsmall;
+        color: $turquoise
+    }
+
+    .keys-navbar-header {
+        height: 53px;
+        background-color: $blue;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        padding-left: 39px;
+
+        p {
+            padding-left: 21px;
+            padding-right: 15px;
+        }
+    }
+
+    .nav-link {
+        height: 53px;
+        display: flex;
+        align-items: center;
+        margin: 3px 0 0 0;
+        padding-left: 33px;
+
+        p {
+            font-weight: normal;
+            padding-left: 26px;
+            padding-right: 15px;
+        }
+    }
 }
