@@ -26,7 +26,7 @@ export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any
         addKey({ alias, privateKey, passphrase })
     }
 
-    return <div>
+    return <div className="new-key">
         <div className="title">
             <p>Hello committee member</p>
         </div>
