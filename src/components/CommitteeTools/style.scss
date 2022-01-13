@@ -181,3 +181,30 @@
         }
     }
 }
+
+
+.key-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 55px;
+
+    .row {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            font-family: RobotoMono;
+            font-weight: normal;
+            font-size: $small;
+            color: $turquoise;
+            padding-top: 6px;
+            padding-right: 12px;
+        }
+    }
+
+    .private-key {
+        margin-left: 130px;
+    }
+}

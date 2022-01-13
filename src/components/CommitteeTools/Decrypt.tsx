@@ -4,6 +4,7 @@ import { IStoredKey } from "../../types/types";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import Modal from "../Shared/Modal";
 import { usePrivateKey } from "./util";
+import LockIcon from '../../assets//icons/lock.icon'
 
 export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
     const privateKey = usePrivateKey(storedKey)
@@ -45,9 +46,9 @@ export default function Decrypt({ storedKey }: { storedKey: IStoredKey }) {
         </div>
         {error && <p>{error}</p>}
         {showKeyDetails && <Modal
-            title="Key Details"
+            title={storedKey.alias}
             setShowModal={setShowKeyDetails}
-        >
+            height="243px">
             <KeyDetails storedKey={storedKey} privateKey={privateKey} />
         </Modal>}
         <div className="encrypted-message">
@@ -68,9 +69,19 @@ function KeyDetails({ storedKey, privateKey }: {
     storedKey: IStoredKey
     privateKey: PrivateKey
 }) {
-    return <div>
-        <p>Private Key<CopyToClipboard value={privateKey.armor()} /></p>
-        <p>Public Key<CopyToClipboard value={privateKey.toPublic().armor()} /></p>
-        {storedKey.passphrase && <p>Passphrase<CopyToClipboard value={storedKey.passphrase} /></p>}
+    return <div className="key-details">
+        <div className="row">
+            <div className="row public-key">
+                <p>Public Key</p>
+                <CopyToClipboard value={privateKey.toPublic().armor()} />
+            </div>
+            <div className="row private-key">
+                <p>Private Key</p>
+                <CopyToClipboard value={privateKey.armor()} />
+            </div>
+        </div>
+        {storedKey.passphrase && <div className="row">
+            <p>Passphrase</p><CopyToClipboard value={storedKey.passphrase} />
+        </div>}
     </div>
 }
