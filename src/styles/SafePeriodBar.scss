@@ -1,0 +1,22 @@
+@import "./constants.scss";
+
+.safe-period {
+  padding: 10px;
+  .text-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &.on {
+    background-color: $yellow;
+    color: $dark-blue;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .safe-period {
+    .text-wrapper {
+      font-size: $xxsmall;
+    }
+  }
+}

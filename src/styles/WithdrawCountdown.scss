@@ -1,0 +1,42 @@
+@import "./constants.scss";
+
+.withdraw-countdown-wrapper {
+  display: flex;
+  color: $turquoise;
+  .time-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $light-blue;
+    font-weight: bold;
+    margin: 0 8px;
+    padding: 6px;
+    width: 85px;
+    height: 130px;
+    .value {
+      font-size: $xlarge;
+    }
+    .type {
+      font-size: $xsmall;
+    }
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  &.compact-view {
+    .time-element {
+      width: 50px;
+      height: 55px;
+      .value {
+        font-size: $moderate;
+      }
+      .type {
+        font-size: $tiny;
+      }
+    }
+  }
+}

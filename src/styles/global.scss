@@ -1,0 +1,70 @@
+@import "./constants.scss";
+
+// TODO: until figuring out the issue with an iframe that appears on top of everything.
+iframe {
+  display: none !important;
+}
+
+input {
+  font-family: RobotoMono;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Remove inputs border highlight */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+    outline: none;
+}
+
+@keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes disabledFade {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0.5;
+	}
+}
+
+/* additional className added to popup overlay (rc-tooltip) */
+.tooltip {
+  opacity: 1 !important;
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  /* Prevent auto-zooming when focusing on an input element */
+  input,
+  textarea {
+    font-size: $small;
+  }
+}
+
+/* Disable hover effects globally when using a touch device */
+@media (hover: none) {
+  * {
+    :hover {
+      opacity: unset !important;
+    }
+  }
+}

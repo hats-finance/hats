@@ -1,0 +1,42 @@
+{
+  "translation": {
+    "Welcome": {
+      "title": "Hats",
+      "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
+      "button": "ENTER"
+    },
+    "SubmitVulnerability": {
+      "TermsAndProcess": {
+        "pre-submission": "Before submitting vulnerability please read the steps and process that your request will go through.",
+        "submission-sub-title": "Submission",
+        "submission": "Your submission will be sent via a bot that is being run by the committee (i) who will process your submission.\n\nThe committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the telegram user you provided.",
+        "fix-sub-title": "Fix/Remedy",
+        "fix": "Committee members will check your submission and then reach out to you through the telegram contact you shared with us. They will likely ask for one or both of the following:",
+        "fix-question": "Questions to help clarify your submission",
+        "fix-error": "Errors that they have identified in your submission",
+        "fix-text-1": "Confirmation of the accuracy of your submission and details regarding the solution including:",
+        "fix-timeline": "Timeline of the solution  implementation",
+        "fix-bugs": "Severity level of the vulnerability",
+        "fix-rewards": "Level of reward", 
+        "awards-sub-title": "Awards",
+        "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.\n\n",
+        "awards-text-2": "\n\nThe size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
+        "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
+      },
+      "Submit": {
+        "review-notice": "Please review your request before submitting:",
+        "submit-thanks": "Hello new hatter, thank you for your submission!",
+        "on-chain-transaction-success": "On-chain transaction submitted successfully",
+        "on-chain-transaction": "Transaction on-chain confirmation",
+        "bot-confirmation": "Bot confirmation (30 seconds)",
+        "status": "Status",
+        "success": "Success",
+        "fail": "Fail",
+        "pending": "Pending",
+        "bot-resend": "RESEND TO BOT",
+        "submit-complete-text": "While waiting, become an active member of our community and let us know what you think.",
+        "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
+      }
+    }
+  }
+}

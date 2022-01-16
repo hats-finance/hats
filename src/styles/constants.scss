@@ -1,0 +1,60 @@
+/*  */
+$header-height: 85px;
+$sidebar-width: 265px;
+$element-padding: 10px;
+$modal-element-padding: 40px;
+$modal-element-padding-mobile: 20px;
+$table-max-width: 1220px;
+$header-button-hight: 56px;
+
+/* colors */
+$white: #FFFFFF;
+$black: #000206;
+$dark-blue: #000723;
+$strong-blue: #001571;
+$blue: #000C3B;
+$field-blue: #0C1436;
+$light-blue: #041558;
+$purple-blue: #1F2748;
+$turquoise: #8AFCFD;
+$dark-turquoise: #9BC8CA;
+$dirty-turquoise: #64C1C5;
+$red: #EB889D;
+$strong-red: #E66480;
+$green: green;
+$bright-green: #05FF00;
+$drak-green: #34D058;
+$orange: #D1891D;
+$yellow: #F2C94C;
+$transparent-black: rgba(0,0,0,0.2); // for modal
+$gray: #C6C6C6;
+
+/* pie chart colors */
+$vested-token: #15686B;
+$token: #2BC4CA;
+$committee: #DCFDFF;
+$vested-hats: #88FFF3;
+$governance: #38CFD4;
+$swap-and-burn: #035B5F;
+
+$severity-low: #141F50;
+$severity-medium: #19265F;
+$severity-high: #213173;
+$severity-critical: #122777;
+$severity-audit-request: #D1891D;
+
+/* font sizes */
+$xlarge: 48px;
+$large: 36px;
+$medium: 24px;
+$moderate: 18px;
+$small: 16px;
+$xsmall: 14px;
+$xxsmall: 12px;
+$tiny: 10px;
+
+/* others */
+$mobile-breakpoint: 1000px;
+$small-screen-breakpoint: 1440px;
+$black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal
+$sidebar-shadow: rgba(0, 0, 0, 0.25);

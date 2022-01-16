@@ -1,0 +1,51 @@
+@import "./constants.scss";
+
+header {
+  width: 100%;
+  padding: 42px;
+  padding-left: $sidebar-width + 50;
+  display: flex;
+  justify-content: space-between;
+  position: fixed;
+  background-color: $dark-blue;
+  box-sizing: border-box;
+  align-items: center;
+  z-index: 1;
+
+  .page-title {
+    font-size: $large;
+    color: $white;
+    margin-right: 20px;
+  }
+  .hats-btn {
+    border: 1px solid $dark-turquoise;
+    background-color: transparent;
+    color: $white;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 20px;
+    span {
+      margin-left: 10px;
+      font-weight: bold;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-screen-breakpoint) {
+  header {
+    .page-title {
+      font-size: $medium;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  header {
+    padding: 10px;
+    .hats-btn {
+      margin-left: unset;
+      margin-right: unset;
+    }
+  }
+}
