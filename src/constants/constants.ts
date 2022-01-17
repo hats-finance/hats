@@ -109,7 +109,7 @@ export const UNISWAP_V3_STAKER_ADDRESS =
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
-export const NFT_AIRDROP_ADDRESS = "0x8124C29f19fE63223F74c70782B7AC94a6831b49";
+export const NFT_AIRDROP_ADDRESS = "0xEd98678755D597F5937f907F4f4f7F5aA61bdb6D";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI =
@@ -145,6 +145,3 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
-
-/** Used for NFT Airdrop */
-export const IPFS_BASE_URI = "QmezvK7gNLhUzb9xBWYNAzJs8xLLuBvWSyvtFmusb9fMBW";

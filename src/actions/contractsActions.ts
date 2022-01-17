@@ -299,6 +299,14 @@ export const getMerkleTree = async () => {
 }
 
 /**
+ * Get the base URI
+ */
+export const getBaseURI = async (): Promise<string> => {
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  return await contract._baseTokenURI();
+}
+
+/**
  * Get the NFT Airdrop deadline
  * @returns {string} in unix time
  */

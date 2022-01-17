@@ -1,8 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTransaction, getDeadline, nftAirdropRedeem } from "../../actions/contractsActions";
-import { IPFS_BASE_URI, IPFS_PREFIX, LocalStorage } from "../../constants/constants";
+import { createTransaction, getDeadline, getBaseURI, nftAirdropRedeem } from "../../actions/contractsActions";
+import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { EligibleTokens, IAirdropElement } from "../../types/types";
 import { hashToken, isDateBefore, isProviderAndNetwork } from "../../utils";
@@ -49,7 +49,8 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
   useEffect(() => {
     (async () => {
       try {
-        const data = await axios.get(`${IPFS_PREFIX}${IPFS_BASE_URI}/${nftIndex}.json`);
+        const tokenBaseURI = (await getBaseURI()).substring(7);
+        const data = await axios.get(`${IPFS_PREFIX}${tokenBaseURI}${nftIndex}.json`);
         setNftData(data.data);
       } catch (error) {
         console.error(error);
@@ -74,7 +75,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
   return (
     <div className="redeem-wrapper">
       <div className="nft-image-container">
-        {!revealed ? <span>?</span> : <img src={nftData?.image} width="300px" height="300px" alt="nft" />}
+        {!revealed ? <span>?</span> : <img src={`${IPFS_PREFIX}${nftData?.image.substring(7)}`} width="300px" height="300px" alt="nft" />}
       </div>
       {revealed && deadline && eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <div className="redeem-wrapper__countdown-container">
