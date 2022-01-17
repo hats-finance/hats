@@ -21,6 +21,13 @@
     margin-right: 10px;
     display: flex;
   }
+  .wallet-user {
+    display: flex;
+    align-items: center;
+    .davatar {
+      margin-right: 8px;
+    }
+  }
   .network-name {
     padding-left: 10px;
     border-left: 1px solid;
