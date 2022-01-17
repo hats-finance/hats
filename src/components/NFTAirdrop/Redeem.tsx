@@ -76,7 +76,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
       <div className="nft-image-container">
         {!revealed ? <span>?</span> : <img src={nftData?.image} width="300px" height="300px" alt="nft" />}
       </div>
-      {revealed && deadline && (
+      {revealed && deadline && eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <div className="redeem-wrapper__countdown-container">
           {redeemable ? <span className="redeem-text">Redeem is available for:</span> : <span className="redeem-passed-text">Redeem period has passed</span>}
           {redeemable && <Countdown endDate={deadline} compactView />}
