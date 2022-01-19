@@ -233,11 +233,11 @@ function App() {
 
         dispatch(updateAirdropEligibleTokens(data.data));
 
-        if (Object.values(data.data as EligibleTokens).includes(selectedAddress)) {
+        if (Object.values(data.data as EligibleTokens).includes(normalizeAddress(selectedAddress))) {
           const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
           const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
 
-          if (!savedItems.includes(selectedAddress) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+          if (!savedItems.includes(normalizeAddress(selectedAddress)) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
             setShowNFTAirdropNotification(true);
           }
         }

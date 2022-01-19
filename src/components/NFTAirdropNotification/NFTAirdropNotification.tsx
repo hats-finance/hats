@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LocalStorage, RoutePaths } from "../../constants/constants";
 import { RootState } from "../../reducers";
-import { truncatedAddress } from "../../utils";
+import { normalizeAddress, truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
 import NFTIcon from "../../assets/icons/nft.svg";
 import "./NFTAirdropNotification.scss";
@@ -21,7 +21,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
 
   useEffect(() => {
     const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-    savedItems.push(selectedAddress);
+    savedItems.push(normalizeAddress(selectedAddress));
     localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
   }, [selectedAddress])
 
