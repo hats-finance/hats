@@ -42,6 +42,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+import { PROTECTED_TOKENS } from "./data/vaults";
 
 // NFT Airdrop - Temporary disabled
 // import { isRedeemed } from "./actions/contractsActions";
@@ -173,9 +174,9 @@ function App() {
 
       const calculateTokenPricesAndApy = async () => {
         for (const vault of extensibleVaults) {
-          vault.parentVault.tokenPrice = await getTokenPrice(
-            vault.parentVault.stakingToken
-          );
+          // TODO: Temporary
+          const tokenAddress = PROTECTED_TOKENS.hasOwnProperty(vault.id) ? PROTECTED_TOKENS[vault.id] : vault.parentVault.stakingToken;
+          vault.parentVault.tokenPrice = await getTokenPrice(tokenAddress);
           if (hatsPrice) {
             vault.parentVault.apy = await calculateApy(
               vault.parentVault,
