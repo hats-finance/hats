@@ -117,7 +117,9 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
+      if (rewardsToken && rewardsToken !== "") {
+        dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
+      }
     })();
   }, [dispatch, rewardsToken]);
 
