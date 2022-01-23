@@ -1,5 +1,5 @@
-import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
-import { parseJSONToObject, setVulnerabilityProject } from "../../utils";
+import { IPoolWithdrawRequest, IVault } from "../../types/types";
+import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
 import Severities from "./Severities/Severities";
@@ -8,12 +8,12 @@ import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constant
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
 import humanizeDuration from "humanize-duration";
-import "./VaultExpanded.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import VaultAction from "./VaultAction";
 import { isMobile } from "web3modal";
 import ArrowIcon from "../../assets/icons/arrow.icon";
+import "./VaultExpanded.scss";
 
 interface IProps {
   data: IVault
@@ -24,12 +24,9 @@ interface IProps {
 
 export default function VaultExpanded(props: IProps) {
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
-  const { name, isGuest, parentDescription } = props.data;
+  const { name, isGuest, parentDescription, description } = props.data;
   const history = useHistory();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-
-  const description: IVaultDescription = parseJSONToObject(props.data?.description as string);
-  const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
 
   const pieChartData = [
     { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
@@ -79,11 +76,11 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">Committee Members:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? descriptionParent?.committee?.members : description?.committee?.members} />
+                  <Members members={isGuest ? parentDescription?.committee?.members : description?.committee?.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">Committee Address:</span>
-                  <Multisig multisigAddress={isGuest ? descriptionParent?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
+                  <Multisig multisigAddress={isGuest ? parentDescription?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
                   <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
