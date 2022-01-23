@@ -20,6 +20,7 @@ import {
   calculateApy,
   getWithdrawSafetyPeriod,
   getTokensPrices,
+  parseJSONToObject,
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
@@ -154,6 +155,8 @@ function App() {
           if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
             vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
           }
+          vault.description = parseJSONToObject(vault.description as any)
+          vault.parentDescription = parseJSONToObject(vault.parentDescription as any);
         }
       };
 
