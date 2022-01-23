@@ -48,8 +48,8 @@ import { EligibleTokens, IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
 import { getMerkleTree, isRedeemed } from "./actions/contractsActions";
 import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+import { PROTECTED_TOKENS } from "./data/vaults";
 import axios from "axios";
-
 import "./i18n.ts"; // Initialise i18n
 
 function App() {
@@ -138,6 +138,10 @@ function App() {
 
       const calculateTokenPrices = async () => {
         const stakingTokens = (data.vaults as IVault[]).map((vault) => {
+          // TODO: Temporay until the protected token will be manifested in the subgraph.
+          if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
+            vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
+          }
           return vault.parentVault.stakingToken;
         })
 
