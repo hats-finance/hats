@@ -94,7 +94,7 @@ export const getStakerAmounts = (stakerAddress: string) => {
         depositAmount
         withdrawAmount
         parentVault {
-          stakingToken
+          id
         }
       }
     }
