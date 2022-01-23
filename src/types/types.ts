@@ -42,10 +42,10 @@ export interface IVault {
   id: string
   name: string
   descriptionHash: string
-  description: IVaultDescription | string
+  description: IVaultDescription
   bounty: string
   isGuest: boolean
-  parentDescription: IVaultDescription | string
+  parentDescription: IVaultDescription
   parentVault: IParentVault;
 }
 

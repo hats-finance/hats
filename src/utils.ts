@@ -214,10 +214,22 @@ export const fetchWalletBalance = async (
  */
 export const getTokenPrice = async (tokenAddress: string) => {
   try {
-    const data = await axios.get(
-      `${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`
-    );
+    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`);
     return data.data[Object.keys(data.data)[0]]?.usd;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * Gets tokens prices in USD using CoinGecko API
+ * @param {string[]} tokensAddresses
+ * @returns the prices for each given token
+ */
+export const getTokensPrices = async (tokensAddresses: string[]) => {
+  try {
+    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
+    return data.data;
   } catch (err) {
     console.error(err);
   }
@@ -243,16 +255,12 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {IVault} vault
  * @param {number} hatsPrice
  */
-export const calculateApy = async (vault: IParentVault, hatsPrice: number) => {
+export const calculateApy = async (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
-  if (Number(fromWei(vault.totalStaking)) === 0) {
+  if (Number(fromWei(vault.totalStaking)) === 0 || !tokenPrice) {
     return 0;
   }
-  return (
-    ((Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice)) /
-      Number(fromWei(vault.totalStaking))) *
-    (await getTokenPrice(vault.stakingToken))
-  );
+  return (((Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice)) / Number(fromWei(vault.totalStaking))) * tokenPrice);
 };
 
 /**

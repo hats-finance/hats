@@ -6,9 +6,8 @@ import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { IVault, IVaultDescription } from "../types/types";
+import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
-import { parseJSONToObject } from "../utils";
 import SearchIcon from "../assets/icons/search.icon";
 import { ScreenSize } from "../constants/constants";
 
@@ -23,7 +22,7 @@ export default function Honeypots() {
 
   useEffect(() => {
     if (modalData) {
-      const description: IVaultDescription = parseJSONToObject((modalData as any).description);
+      const description = (modalData as any).description;
       setSelectedVault(description?.["project-metadata"]?.name);
       setVaultIcon(description?.["project-metadata"]?.icon);
     }

@@ -19,6 +19,8 @@ import {
   getTokenPrice,
   calculateApy,
   getWithdrawSafetyPeriod,
+  getTokensPrices,
+  parseJSONToObject,
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
@@ -43,6 +45,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+import { PROTECTED_TOKENS } from "./data/vaults";
 
 // NFT Airdrop - Temporary disabled
 // import { isRedeemed } from "./actions/contractsActions";
@@ -57,26 +60,13 @@ import "./i18n.ts"; // Initialise i18n
 
 function App() {
   const dispatch = useDispatch();
-  const currentScreenSize = useSelector(
-    (state: RootState) => state.layoutReducer.screenSize
-  );
-  const showMenu = useSelector(
-    (state: RootState) => state.layoutReducer.showMenu
-  );
-  const showNotification = useSelector(
-    (state: RootState) => state.layoutReducer.notification.show
-  );
-  const rewardsToken = useSelector(
-    (state: RootState) => state.dataReducer.rewardsToken
-  );
-  const provider =
-    useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
-  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(
-    localStorage.getItem(LocalStorage.WelcomePage)
-  );
-  const [acceptedCookies, setAcceptedCookies] = useState(
-    localStorage.getItem(LocalStorage.Cookies)
-  );
+  const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
+  const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
+  const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
+  const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
 
   const { i18n } = useTranslation();
   useEffect(() => {
@@ -87,14 +77,7 @@ function App() {
   useEffect(() => {
     const network = getNetworkNameByChainId(provider?.chainId);
     if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(
-        toggleNotification(
-          true,
-          NotificationType.Error,
-          `Please change network to ${NETWORK}`,
-          true
-        )
-      );
+      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
     }
   }, [dispatch, provider]);
 
@@ -126,70 +109,62 @@ function App() {
 
   useEffect(() => {
     const getWithdrawSafetyPeriodData = async () => {
-      if (
-        !loadingRewardsToken &&
-        !errorRewardsToken &&
-        dataRewardsToken &&
-        dataRewardsToken.masters
-      ) {
-        const { rewardsToken, withdrawPeriod, safetyPeriod } =
-          dataRewardsToken.masters[0];
+      if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
+        const { rewardsToken, withdrawPeriod, safetyPeriod } = dataRewardsToken.masters[0];
         dispatch(updateRewardsToken(rewardsToken));
-        dispatch(
-          updateWithdrawSafetyPeriod(
-            getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)
-          )
-        );
+        dispatch(updateWithdrawSafetyPeriod(getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
       }
     };
     getWithdrawSafetyPeriodData();
   }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
 
   useEffect(() => {
-    const getHatsPrice = async () => {
-      dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
-    };
-    getHatsPrice();
+    (async () => {
+      if (rewardsToken && rewardsToken !== "") {
+        dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
+      }
+    })();
   }, [dispatch, rewardsToken]);
 
-  const hatsPrice = useSelector(
-    (state: RootState) => state.dataReducer.hatsPrice
-  );
+  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
+  /**
+    * The new ApolloClient InMemoryCache policy makes the retrieved data frozen/sealed,
+    * meaning it's not extensible and no new fields can be added to the object.
+    * Here we use "no-cache" fetch policy to get the data not frozen.
+   */
   const { loading, error, data } = useQuery(GET_VAULTS, {
     pollInterval: DATA_POLLING_INTERVAL,
+    fetchPolicy: "no-cache"
   });
 
   useEffect(() => {
     if (!loading && !error && data && data.vaults) {
-      let extensibleVaults: IVault[] = [];
-      /**
-       * The new ApolloClient InMemoryCache policy makes the retrieved data frozen/sealed,
-       * meaning it's not extensible and no new fields can be added to the object.
-       * Here we're deep-cloning the retrieved data so it'll be extensible.
-       */
-      for (const vault of data.vaults) {
-        extensibleVaults.push(JSON.parse(JSON.stringify(vault)));
-      }
 
-      const calculateTokenPricesAndApy = async () => {
-        for (const vault of extensibleVaults) {
-          vault.parentVault.tokenPrice = await getTokenPrice(
-            vault.parentVault.stakingToken
-          );
-          if (hatsPrice) {
-            vault.parentVault.apy = await calculateApy(
-              vault.parentVault,
-              hatsPrice
-            );
+      const calculateTokenPrices = async () => {
+        const stakingTokens = (data.vaults as IVault[]).map((vault) => {
+          // TODO: Temporay until the protected token will be manifested in the subgraph.
+          if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
+            vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
           }
+          return vault.parentVault.stakingToken;
+        })
+
+        const tokensPrices = await getTokensPrices(stakingTokens);
+
+        for (const vault of data.vaults as IVault[]) {
+          if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
+            vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
+          }
+          vault.description = parseJSONToObject(vault.description as any)
+          vault.parentDescription = parseJSONToObject(vault.parentDescription as any);
         }
       };
 
-      calculateTokenPricesAndApy();
-      dispatch(updateVaults(extensibleVaults));
+      calculateTokenPrices();
+      dispatch(updateVaults(data.vaults));
     }
-  }, [loading, error, data, dispatch, hatsPrice]);
+  }, [loading, error, data, dispatch]);
 
   const vaults: Array<IVault> = useSelector(
     (state: RootState) => state.dataReducer.vaults
@@ -198,31 +173,15 @@ function App() {
   useEffect(() => {
     const calculateVaultsApy = async () => {
       for (const vault of vaults) {
-        vault.parentVault.apy = await calculateApy(
-          vault.parentVault,
-          hatsPrice
-        );
+        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
       }
       dispatch(updateVaults(vaults));
     };
+
     if (hatsPrice && vaults) {
       calculateVaultsApy();
     }
   }, [dispatch, hatsPrice, vaults]);
-
-  useEffect(() => {
-    const calculatetokenPrices = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.tokenPrice = await getTokenPrice(
-          vault.parentVault.stakingToken
-        );
-      }
-      dispatch(updateVaults(vaults));
-    };
-    if (vaults) {
-      calculatetokenPrices();
-    }
-  }, [dispatch, vaults]);
 
   //* NFT Airdrop - Temporary disabled */
   // useEffect(() => {
