@@ -43,6 +43,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+import { PROTECTED_TOKENS } from "./data/vaults";
 
 // NFT Airdrop - Temporary disabled
 // import { isRedeemed } from "./actions/contractsActions";
@@ -140,6 +141,10 @@ function App() {
 
       const calculateTokenPrices = async () => {
         const stakingTokens = (data.vaults as IVault[]).map((vault) => {
+          // TODO: Temporay until the protected token will be manifested in the subgraph.
+          if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
+            vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
+          }
           return vault.parentVault.stakingToken;
         })
 
