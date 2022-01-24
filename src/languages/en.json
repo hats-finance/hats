@@ -37,6 +37,15 @@
         "submit-complete-text": "While waiting, become an active member of our community and let us know what you think.",
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
       }
+    },
+    "CommitteeTools": {
+      "enter-password": "Enter password",
+      "Decrypt": {
+        "encrypted-message": "Encrypted message"
+      },
+      "NewKey": {
+        "hello": "Hello committee member"
+      }
     }
   }
 }
