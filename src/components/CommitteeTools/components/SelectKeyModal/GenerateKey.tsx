@@ -5,7 +5,6 @@ import { VaultContext } from "../../store";
 import { IStoredKey } from "../../../../types/types";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 import CopyToClipboard from "../../../Shared/CopyToClipboard";
-import { NavLink } from "react-router-dom";
 
 export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
   const aliasRef = useRef<HTMLInputElement>(null);
@@ -68,9 +67,6 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
         <label htmlFor="didSharePublic">I have sent <a href="https://t.me/Hatsofir">@hatsofir</a> the public key.</label>
       </div>
       <button disabled={!sentPublicChecked} onClick={onAdded}>Done</button>
-
-
-
     </div>)
   } else return (
     <div>
