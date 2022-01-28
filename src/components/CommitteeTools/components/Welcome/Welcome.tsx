@@ -15,9 +15,9 @@ const Welcome = () => {
         <h1>{t("CommitteeTools.Welcome.title")}</h1>
         <p>{t("CommitteeTools.Welcome.content")}</p>
         {vault.isCreated ?
-            <button
+            <><button
                 onClick={() => setShowUnlockVault(true)}>Unlock Vault
-            </button> :
+            </button><button>Delete Vault</button></> :
             <button onClick={() => setShowCreateVault(true)}>Create Vault</button>}
         {showCreateVault && <CreateVaultModal setShowModal={setShowCreateVault} />}
         {showUnlockVault && <UnlockVaultModal setShowModal={setShowUnlockVault} />}

@@ -4,7 +4,7 @@ import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 
 
-const ExportKey = ({ onAdded }: { onAdded: (added: IStoredKey) => any }) => {
+export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) => any }) {
     const vaultContext = useContext(VaultContext)
     const aliasRef = useRef<HTMLInputElement>(null)
     const passphraseRef = useRef<HTMLInputElement>(null)
@@ -19,24 +19,30 @@ const ExportKey = ({ onAdded }: { onAdded: (added: IStoredKey) => any }) => {
         const toAdd: IStoredKey = { alias, privateKey, passphrase }
         try {
             const attempt = await readPrivateKeyFromStoredKey(toAdd)
+            vaultContext.addKey!(toAdd)
+            vaultContext.setSelectedAlias!(toAdd.alias)
+            onAdded(toAdd)
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message)
             }
             return
         }
-        vaultContext.addKey!(toAdd)
     }
 
     return <div>
         <h1>Import keypair</h1>
-        <input ref={aliasRef} type="text" placeholder="alias" />
-        <input ref={passphraseRef} type="text" placeholder="alias" />
+        <div>
+            <label>alias</label>
+            <input ref={aliasRef} type="text" placeholder="alias" />
+        </div>
+        <div>
+            <label>passphrase</label>
+            <input ref={passphraseRef} type="text" placeholder="passphrase" />
+        </div>
         <textarea ref={privateKeyRef} cols={80} rows={8} />
         {error && error !== "" && <p>{error}</p>}
         <button onClick={addKey}>Import</button>
     </div>
 
 }
-
-export default ExportKey

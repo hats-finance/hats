@@ -28,6 +28,7 @@ export default function Decrypt() {
 
   const _decrypt = useCallback(async () => {
     try {
+      setError("")
       if (!vaultContext.selectedKey) {
         setShowSelectKeyModal(true)
         return
@@ -46,6 +47,7 @@ export default function Decrypt() {
 
   const _encrypt = useCallback(async () => {
     try {
+      setError("")
       if (!vaultContext.selectedKey) {
         setShowSelectKeyModal(true)
         return
@@ -62,7 +64,6 @@ export default function Decrypt() {
 
   return (
     <div>
-      {error && <p>{error}</p>}
       <p>selected Keypair</p>
       {vaultContext.selectedKey ? <p>{vaultContext.selectedKey.alias}</p> : <p>none</p>}
       <button onClick={() => {
@@ -70,15 +71,13 @@ export default function Decrypt() {
       }}>select keypair</button>
       <p>{t("CommitteeTools.Decrypt.encrypted-message")}</p>
       <textarea ref={encryptedMessageRef} cols={80} rows={15} />
+      {error && <p>{error}</p>}
       <div><button onClick={_decrypt}>Decrypt</button></div>
       <p>Decrypted message</p>
       <textarea ref={decryptedMessageRef} cols={80} rows={15} />
       <div><button onClick={_encrypt}>Encrypt</button></div>
       {showSelectKeyModal && <SelectKeyModal
-
         onSelectKey={() => {
-          console.log('hiding select key modal')
-          setShowSelectKeyModal(false)
         }}
         setShowModal={setShowSelectKeyModal} />}
     </div>

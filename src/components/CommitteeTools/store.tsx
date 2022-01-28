@@ -30,8 +30,18 @@ export function VaultProvider({ children }) {
     const [password, setPassword] = useState<string>();
 
     const addKey = (newKey: IStoredKey) => {
+        // check for empty alias
+        if (!newKey.alias || newKey.alias == "") {
+            throw new Error('Alias cannot be empty')
+        }
+
+        // first check if alias already exists
+        if (vault?.storedKeys.find(key => key.alias === newKey.alias)) {
+            throw new Error(`Key with alias ${newKey.alias} already exists`)
+        }
+
         setVault(prev => ({ ...prev!, storedKeys: [...prev!.storedKeys, newKey] }))
-    };
+    }
 
     const removeKey = (key: IStoredKey) => {
         setVault(prev => ({
