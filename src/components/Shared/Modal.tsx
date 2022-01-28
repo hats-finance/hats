@@ -12,6 +12,7 @@ interface IProps {
   width?: string // can be any valid css width value
   maxWidth?: string // can be any valid css max-width value
   maxHeight?: string // can be any valid css min-height value
+  hideClose?: boolean
   icon?: string // link to an icon/symbol
 }
 
@@ -52,9 +53,11 @@ export default function Modal(props: IProps) {
             {props.icon && typeof (props.icon) === "string" ? <img src={props.icon} alt="icon" /> : props.icon}
             {props.title}
           </div>
-          <button
-            className="close"
-            onClick={() => props.setShowModal(false)}>&times;</button>
+          {!props.hideClose &&
+            <button
+              className="close"
+              onClick={() => props.setShowModal(false)}>&times;</button>
+          }
         </div>
         <div className="modal-content">
           {props.children}

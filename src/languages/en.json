@@ -17,7 +17,7 @@
         "fix-text-1": "Confirmation of the accuracy of your submission and details regarding the solution including:",
         "fix-timeline": "Timeline of the solution  implementation",
         "fix-bugs": "Severity level of the vulnerability",
-        "fix-rewards": "Level of reward", 
+        "fix-rewards": "Level of reward",
         "awards-sub-title": "Awards",
         "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.\n\n",
         "awards-text-2": "\n\nThe size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
@@ -39,6 +39,10 @@
       }
     },
     "CommitteeTools": {
+      "Welcome": {
+        "title": "Welcome to the committee tools",
+        "content": "We provide you with these tools to allow you to easily decrypt messages received by attackers. You have to createa your vault using a password which will be used to encrypt the storage."
+      },
       "enter-password": "Enter password",
       "Decrypt": {
         "encrypted-message": "Encrypted message"

@@ -1,18 +1,20 @@
-import { useRef } from "react";
-import { IStoredKey } from "../../../../types/types";
+import { useContext, useRef } from "react";
 import { generateKey } from 'openpgp';
 import { useTranslation } from "react-i18next";
 import "./index.scss";
+import { VaultContext } from "../../store";
+import { IStoredKey } from "../../../../types/types";
 
-export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any }) {
+export default function NewKey({ onAdded }: { onAdded: (added: IStoredKey) => void }) {
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
-
+  const vaultContext = useContext(VaultContext)
 
   async function _handleClick() {
+
     const alias = aliasRef.current!.value;
     const passphrase = passphraseRef.current?.value;
     const name = nameRef.current?.value;
@@ -25,7 +27,9 @@ export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any
       passphrase: passphrase, // protects the private key
       format: 'armored' // output key format, defaults to 'armored' (other options: 'binary' or 'object')
     });
-    addKey({ alias, privateKey, passphrase });
+    const toAdd = { alias, privateKey, passphrase }
+    vaultContext.addKey!(toAdd);
+    onAdded(toAdd)
   }
 
   return (
@@ -41,7 +45,7 @@ export default function NewKey({ addKey }: { addKey: (newKey: IStoredKey) => any
 
       <p>Name</p>
       <input ref={nameRef} type="text" />
-      <p>Name</p>
+      <p>Email</p>
       <input ref={emailRef} type="text" />
 
       <p>Min 6 chars</p>

@@ -241,7 +241,7 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        <Route path={`${RoutePaths.committee_tools}/:alias?`}>
+        <Route path={`${RoutePaths.committee_tools}`}>
           <CommitteeTools />
         </Route>
         {/* NFT Airdrop - Temporary disabled */}
