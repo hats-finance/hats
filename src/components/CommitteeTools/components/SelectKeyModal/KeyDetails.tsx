@@ -14,15 +14,15 @@ function KeyDetails({ storedKey }: {
             setPrivateKey(await readPrivateKeyFromStoredKey(storedKey));
         })()
     })
-
-
-    return (
-        <div>
+    if (privateKey) {
+        return (<div>
             <p>Private Key<CopyToClipboard value={privateKey?.armor()} /></p>
             <p>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></p>
             {storedKey.passphrase && <p>Passphrase<CopyToClipboard value={storedKey.passphrase} /></p>}
-        </div>
-    );
+        </div>)
+    } else {
+        return (<></>)
+    }
 }
 
 
