@@ -1,14 +1,12 @@
-import { createMessage, decrypt, encrypt, PrivateKey, readMessage } from "openpgp";
+import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { IStoredKey } from "../../../../types/types";
-import CopyToClipboard from "../../../Shared/CopyToClipboard";
-import Modal from "../../../Shared/Modal";
 import { useTranslation } from "react-i18next";
 import "./index.scss";
 import { VaultContext } from "../../store";
 import { decryptKey, readPrivateKey } from "openpgp";
 import SelectKeyModal from "../SelectKeyModal/SelectKeyModal";
-
+import { useLocation } from "react-router-dom";
 
 export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }: IStoredKey) {
   return passphrase ? await decryptKey({
@@ -26,8 +24,25 @@ export default function Decrypt() {
   const decryptedMessageRef = useRef<HTMLTextAreaElement>(null);
   const { t } = useTranslation();
 
+
+  const location = useLocation()
+
   useEffect(() => {
-    console.log("vaultContext", vaultContext)
+    const urlSearchParams = new URLSearchParams(location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (params.ipfsjson) {
+      (async () => {
+        const response = await fetch(params.ipfsjson)
+        const json = await response.json()
+        encryptedMessageRef.current!.value = json.message
+
+      })()
+
+    }
+
+  }, [location.search])
+
+  useEffect(() => {
     // if vault has no keys, show modal to add one  
     if (vaultContext.vault?.storedKeys.length === 0) {
       setShowSelectKeyModal(true)
@@ -41,8 +56,14 @@ export default function Decrypt() {
         setShowSelectKeyModal(true)
         return
       }
-      const privateKey = await readPrivateKeyFromStoredKey(vaultContext.selectedKey)
+
       const armoredMessage = encryptedMessageRef.current!.value
+
+      if (!armoredMessage || armoredMessage === "") {
+        throw new Error("No message to decrypt")
+      }
+
+      const privateKey = await readPrivateKeyFromStoredKey(vaultContext.selectedKey)
       const message = await readMessage({ armoredMessage })
       const { data: decrypted } = await decrypt({ message, decryptionKeys: privateKey })
       decryptedMessageRef.current!.value = decrypted
