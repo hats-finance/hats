@@ -18,7 +18,7 @@ const SelectKeyModal = ({ setShowModal }
     const [showDeleteKey, setShowDeleteKey] = useState<IStoredKey>()
     const vault = vaultContext.vault!
 
-    const onKeyAdded = (key: IStoredKey) => {
+    const onKeyAdded = () => {
         setShowCreate(false)
         setShowImport(false)
     }
@@ -45,7 +45,7 @@ const SelectKeyModal = ({ setShowModal }
                             <NavLink className="keypair-name" to="#" onClick={() => {
                                 vaultContext?.setSelectedAlias!(key.alias)
                                 setShowModal(false)
-                            }} >{key.alias}</NavLink>
+                            }} >{key.alias}{key.alias === vaultContext.selectedKey?.alias && "(Selected)"}</NavLink>
                             <div>
                                 <NavLink to="#" onClick={() => {
                                     setShowDisplayKey(key)

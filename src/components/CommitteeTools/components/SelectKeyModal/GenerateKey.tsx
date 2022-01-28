@@ -1,10 +1,13 @@
-import { useContext, useRef, useState } from "react";
-import { generateKey } from 'openpgp';
+import { useContext, useEffect, useRef, useState } from "react";
+import { generateKey, PrivateKey } from 'openpgp';
 import { useTranslation } from "react-i18next";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "../../../../types/types";
+import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
+import CopyToClipboard from "../../../Shared/CopyToClipboard";
+import { NavLink } from "react-router-dom";
 
-export default function GenerateKey({ onAdded }: { onAdded: (added: IStoredKey) => void }) {
+export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -13,6 +16,8 @@ export default function GenerateKey({ onAdded }: { onAdded: (added: IStoredKey) 
   const vaultContext = useContext(VaultContext)
   const [error, setError] = useState<string>()
   const [addedKey, setAddedKey] = useState<IStoredKey>()
+  const [privateKey, setPrivateKey] = useState<PrivateKey>();
+  const [sentPublicChecked, setSentPublicChecked] = useState<boolean>()
 
   async function _handleClick() {
 
@@ -41,8 +46,30 @@ export default function GenerateKey({ onAdded }: { onAdded: (added: IStoredKey) 
     }
   }
 
-  if (addedKey) {
+  useEffect(() => {
+    (async () => {
+      if (addedKey) {
+        setPrivateKey(await readPrivateKeyFromStoredKey(addedKey));
+      }
+    })()
+
+  }, [addedKey])
+
+
+  if (addedKey && privateKey) {
     return (<div>
+      <h1>Keypair generated sucessfuly!</h1>
+      <div>Private Key<CopyToClipboard value={privateKey.armor()} /></div>
+      {addedKey.passphrase && <div>Passphrase<CopyToClipboard value={addedKey.passphrase} /></div>}
+      <h2>Share Public Key</h2>
+      <div>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
+      <div>
+        <input type="checkbox" name="didSharePublic" onChange={e => setSentPublicChecked(e.currentTarget.checked)} />
+        <label htmlFor="didSharePublic">I have sent <NavLink to="https://t.me/Hatsofir">@hatsofir</NavLink> the public key.</label>
+      </div>
+      <button disabled={!sentPublicChecked} onClick={onAdded}>Done</button>
+
+
 
     </div>)
   } else return (
