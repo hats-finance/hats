@@ -2,8 +2,8 @@ import { useContext } from "react";
 import Decrypt from "./components/Decrypt/Decrypt";
 import classNames from "classnames";
 import "./index.scss";
-import Welcome from "./components/Welcome/Welcome";
 import { VaultProvider, VaultContext } from "./store";
+import Welcome from "./components/Welcome/Welcome";
 
 
 export default function CommitteeTools() {
