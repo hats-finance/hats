@@ -65,7 +65,7 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
       <div>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
       <div>
         <input type="checkbox" name="didSharePublic" onChange={e => setSentPublicChecked(e.currentTarget.checked)} />
-        <label htmlFor="didSharePublic">I have sent <NavLink to="https://t.me/Hatsofir">@hatsofir</NavLink> the public key.</label>
+        <label htmlFor="didSharePublic">I have sent <a href="https://t.me/Hatsofir">@hatsofir</a> the public key.</label>
       </div>
       <button disabled={!sentPublicChecked} onClick={onAdded}>Done</button>
 
