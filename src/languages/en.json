@@ -41,15 +41,39 @@
     "CommitteeTools": {
       "Welcome": {
         "title": "Welcome to the committee tools",
-        "content": "We provide you with these tools to allow you to easily decrypt messages received by attackers. You have to createa your vault using a password which will be used to encrypt the storage."
+        "content": "We provide you with these tools to allow you to easily decrypt messages received by attackers. You have to createa your vault using a password which will be used to encrypt the storage.",
+        "create-title": "Create a Vault",
+        "unlock-title": "Unlock Vault",
+        "unlock-vault": "Unlock Vault",
+        "delete-vault": "Delete Vault",
+        "create-vault": "Create Vault",
+        "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
+        "delete-yes": "yes",
+        "password": "Password",
+        "passwords-mismatch": "Passwords do not match",
+        "confirm": "Confirm"
+      },
+      "keymodal": {
+        "title": "Keypairs",
+        "create-keypair": "Create Keypair",
+        "import-keypair": "Import Keypair",
+        "selected": "(Selected)",
+        "alias": "Alias",
+        "passphrase": "Passphrase",
+        "private-key": "Private Key",
+        "public-key": "Public Key",
+        "name": "Name",
+        "email": "E-mail",
+        "generate-message": "Please generate private and public PGP keys by creating an alias and a passphrase(optional).",
+        "hello": "Hello committee member",
+        "share-public": "Please share your public key with the committee members",
+        "generated-success": "Keypair generated successfully!"
       },
       "enter-password": "Enter password",
       "Decrypt": {
         "encrypted-message": "Encrypted message"
       },
-      "NewKey": {
-        "hello": "Hello committee member"
-      }
+      "NewKey": {}
     }
   }
 }

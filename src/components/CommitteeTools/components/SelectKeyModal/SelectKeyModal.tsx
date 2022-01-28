@@ -7,6 +7,7 @@ import GenerateKey from "./GenerateKey"
 import ImportKey from "./ImportKey"
 import DeleteKey from "./DeleteKey"
 import { NavLink } from "react-router-dom"
+import { t } from "i18next"
 
 
 const SelectKeyModal = ({ setShowModal }
@@ -27,15 +28,15 @@ const SelectKeyModal = ({ setShowModal }
         setShowDeleteKey(undefined)
     }
 
-    return <Modal title="keys" height="fit-content" width="fit-content" setShowModal={setShowModal}>
+    return <Modal title={t("CommitteeTools.keymodal.title")} height="fit-content" width="fit-content" setShowModal={setShowModal}>
         {(showCreate || showImport || showDisplayKey || showDeleteKey) ? <>
             {showCreate && <GenerateKey onAdded={onKeyAdded} />}
             {showImport && <ImportKey onAdded={onKeyAdded} />}
             {showDisplayKey && <KeyDetails storedKey={showDisplayKey} onBack={() => setShowDisplayKey(undefined)} />}
             {showDeleteKey && <DeleteKey keyToDelete={showDeleteKey} onCompleted={deleteCompleted} />}
         </> : <>
-            <button onClick={() => setShowCreate(true)}>create keypair</button>
-            <button onClick={() => setShowImport(true)}>import keypair</button>
+            <button onClick={() => setShowCreate(true)}>{t("CommitteeTools.keymodal.create-keypair")}</button>
+            <button onClick={() => setShowImport(true)}>{t("CommitteeTools.keymodal.import-keypair")}</button>
 
 
             {vault.storedKeys &&
@@ -45,7 +46,7 @@ const SelectKeyModal = ({ setShowModal }
                             <NavLink className="keypair-name" to="#" onClick={() => {
                                 vaultContext?.setSelectedAlias!(key.alias)
                                 setShowModal(false)
-                            }} >{key.alias}{key.alias === vaultContext.selectedKey?.alias && "(Selected)"}</NavLink>
+                            }} >{key.alias}{key.alias === vaultContext.selectedKey?.alias && t("CommitteeTools.keymodal.selected")}</NavLink>
                             <div>
                                 <NavLink to="#" onClick={() => {
                                     setShowDisplayKey(key)

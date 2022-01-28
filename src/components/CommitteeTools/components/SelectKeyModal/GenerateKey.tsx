@@ -57,11 +57,11 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
 
   if (addedKey && privateKey) {
     return (<div>
-      <h1>Keypair generated sucessfuly!</h1>
-      <div>Private Key<CopyToClipboard value={privateKey.armor()} /></div>
-      {addedKey.passphrase && <div>Passphrase<CopyToClipboard value={addedKey.passphrase} /></div>}
-      <h2>Share Public Key</h2>
-      <div>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
+      <h1>{t("CommitteeTools.keymodal.generated-success")}</h1>
+      <div>{t("CommitteeTools.keymodal.private-key")}<CopyToClipboard value={privateKey.armor()} /></div>
+      {addedKey.passphrase && <div>{t("CommitteeTools.keymodal.passphrase")}<CopyToClipboard value={addedKey.passphrase} /></div>}
+      <p>{t("CommitteeTools.keymodal.share-public")}</p>
+      <div>{t("CommitteeTools.keymodal.public-key")}<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
       <div>
         <input type="checkbox" name="didSharePublic" onChange={e => setSentPublicChecked(e.currentTarget.checked)} />
         <label htmlFor="didSharePublic">I have sent <a href="https://t.me/Hatsofir">@hatsofir</a> the public key.</label>
@@ -70,18 +70,17 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
     </div>)
   } else return (
     <div>
-      <p>{t("CommitteeTools.NewKey.hello")}</p>
-      <p>Please generate private and public PGP keys by creating an alias and a passphrase.</p>
-      <p>Alias</p>
+      <h2>{t("CommitteeTools.keymodal.hello")}</h2>
+      <p>{t("CommitteeTools.keymodal.generate-message")}</p>
+      <p>{t("CommitteeTools.keymodal.alias")}</p>
       <input ref={aliasRef} type="text" />
-      <p>Passphrase</p>
-      <p>Please notice,your passphrase isn’t saved to local storage! please save it as you see fit.</p>
+      <p>{t("CommitteeTools.keymodal.passphrase")}</p>
       <input ref={passphraseRef} type="text" />
 
 
-      <p>Name</p>
+      <p>{t("CommitteeTools.keymodal.name")}</p>
       <input ref={nameRef} type="text" />
-      <p>Email</p>
+      <p>{t("CommitteeTools.keymodal.email")}</p>
       <input ref={emailRef} type="text" />
 
       <button onClick={_handleClick}>Generate key pair </button>

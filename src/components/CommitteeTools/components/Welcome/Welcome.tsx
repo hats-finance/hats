@@ -14,14 +14,15 @@ const Welcome = () => {
         <h1>{t("CommitteeTools.Welcome.title")}</h1>
         <p>{t("CommitteeTools.Welcome.content")}</p>
         {vaultContext.isCreated ?
-            <><button
-                onClick={() => setShowUnlockVault(true)}>Unlock Vault
-            </button><button onClick={() => {
-                if (prompt("are You Sure? Type 'yes' to delete the vault") === "yes") {
-                    vaultContext.deleteVault!()
-                }
-            }}>Delete Vault</button></> :
-            <button onClick={() => setShowCreateVault(true)}>Create Vault</button>}
+            <>
+                <button
+                    onClick={() => setShowUnlockVault(true)}>{t("CommitteeTools.Welcome.unlock-vault")}</button>
+                <button onClick={() => {
+                    if (prompt(t("CommitteeTools.Welcome.delete-confirmation")) === t("CommitteeTools.Welcome.delete-yes")) {
+                        vaultContext.deleteVault!()
+                    }
+                }}>{t("CommitteeTools.Welcome.delete-vault")}</button></> :
+            <button onClick={() => setShowCreateVault(true)}>{t("CommitteeTools.Welcome.create-vault")}</button>}
         {showCreateVault && <CreateVaultModal setShowModal={setShowCreateVault} />}
         {showUnlockVault && <UnlockVaultModal setShowModal={setShowUnlockVault} />}
     </div>
@@ -38,19 +39,19 @@ function CreateVaultModal({ setShowModal }: { setShowModal: (show: boolean) => a
 
     const createVault = () => {
         if (passwordRef.current!.value !== passwordConfirmRef.current!.value) {
-            setError("Passwords mismatch")
+            setError(t("CommitteeTools.Welcome.passwords-mismatch"))
             return
         }
         vault.createVault!(passwordRef.current!.value)
     }
 
     return (
-        <Modal title="Create Vault" setShowModal={setShowModal} height="fit-content" >
-            <p>{t("CommitteeTools.enter-password")}</p>
+        <Modal title={t("CommitteeTools.Welcome.create-title")} setShowModal={setShowModal} height="fit-content" >
+            <p>{t("CommitteeTools.Welcome.password")}</p>
             <input type="password" ref={passwordRef} />
-            <p>Confirm</p>
+            <p>{t("CommitteeTools.Welcome.confirm")}</p>
             <input type="password" ref={passwordConfirmRef} />
-            <button onClick={createVault}></button>
+            <button onClick={createVault}>{t("CommitteeTools.Welcome.create-vault")}</button>
             {error && <div>{error}</div>}
         </Modal >
     )
@@ -74,8 +75,8 @@ function UnlockVaultModal({ setShowModal }: { setShowModal: (show: boolean) => a
     }
 
     return (
-        <Modal title="Unlock Vault" setShowModal={setShowModal} height="fit-content" hideClose={true}>
-            <label >{t("CommitteeTools.enter-password")}</label>
+        <Modal title={t("CommitteeTools.Welcome.unlock-title")} setShowModal={setShowModal} height="fit-content" hideClose={true}>
+            <label >{t("CommitteeTools.Welcome.password")}</label>
             <input type="password" ref={passwordRef} />
             <button onClick={unlockVault}>Unlock</button>
             {error && <div>{error}</div>}
