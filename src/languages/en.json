@@ -64,6 +64,7 @@
         "public-key": "Public Key",
         "name": "Name",
         "email": "E-mail",
+        "done": "Done",
         "generate-message": "Please generate private and public PGP keys by creating an alias and a passphrase(optional).",
         "hello": "Hello committee member",
         "share-public": "Please share your public key with the committee members",
