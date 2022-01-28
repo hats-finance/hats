@@ -1,7 +1,6 @@
 import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "../../../Shared/Modal";
-import Vault from "../../../Vault/Vault";
 import { VaultContext } from "../../store";
 
 const Welcome = () => {

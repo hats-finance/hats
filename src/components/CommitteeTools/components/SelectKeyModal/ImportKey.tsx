@@ -18,7 +18,7 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
 
         const toAdd: IStoredKey = { alias, privateKey, passphrase }
         try {
-            const attempt = await readPrivateKeyFromStoredKey(toAdd)
+            await readPrivateKeyFromStoredKey(toAdd)
             vaultContext.addKey!(toAdd)
             vaultContext.setSelectedAlias!(toAdd.alias)
             onAdded(toAdd)

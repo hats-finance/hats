@@ -12,6 +12,7 @@ export default function GenerateKey({ onAdded }: { onAdded: (added: IStoredKey) 
   const { t } = useTranslation();
   const vaultContext = useContext(VaultContext)
   const [error, setError] = useState<string>()
+  const [addedKey, setAddedKey] = useState<IStoredKey>()
 
   async function _handleClick() {
 
@@ -30,17 +31,21 @@ export default function GenerateKey({ onAdded }: { onAdded: (added: IStoredKey) 
       });
       const toAdd = { alias, privateKey, passphrase }
       vaultContext.addKey!(toAdd);
-      vaultContext.setSelectedAlias!(alias);
-      onAdded(toAdd)
+      if (vaultContext.selectedKey === undefined)
+        vaultContext.setSelectedAlias!(alias);
+      setAddedKey(toAdd)
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
       }
-      return
     }
   }
 
-  return (
+  if (addedKey) {
+    return (<div>
+
+    </div>)
+  } else return (
     <div>
       <p>{t("CommitteeTools.NewKey.hello")}</p>
       <p>Please generate private and public PGP keys by creating an alias and a passphrase.</p>

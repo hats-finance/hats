@@ -1,7 +1,6 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
-import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 
 function DeleteKey({ keyToDelete, onCompleted }: {
     keyToDelete: IStoredKey

@@ -19,12 +19,12 @@ const SelectKeyModal = ({ setShowModal }
     const vault = vaultContext.vault!
 
     const onKeyAdded = (key: IStoredKey) => {
-        setShowModal(false)
+        setShowCreate(false)
+        setShowImport(false)
     }
 
     const deleteCompleted = () => {
         setShowDeleteKey(undefined)
-
     }
 
     return <Modal title="keys" height="fit-content" width="fit-content" setShowModal={setShowModal}>

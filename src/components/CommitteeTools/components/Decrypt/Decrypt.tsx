@@ -43,9 +43,7 @@ export default function Decrypt() {
   }, [location.search])
 
   useEffect(() => {
-    // if vault has no keys, show modal to add one  
-    console.log("vaultContext", vaultContext)
-    if (vaultContext.vault?.storedKeys.length === 0 || !vaultContext.selectedKey == undefined) {
+    if (vaultContext.vault?.storedKeys.length === 0 || !vaultContext.selectedKey === undefined) {
       setShowSelectKeyModal(true)
     }
   }, [vaultContext.vault, vaultContext.selectedKey])

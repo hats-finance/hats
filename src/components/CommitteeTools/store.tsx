@@ -33,7 +33,7 @@ export function VaultProvider({ children }) {
 
     const addKey = (newKey: IStoredKey) => {
         // check for empty alias
-        if (!newKey.alias || newKey.alias == "") {
+        if (!newKey.alias || newKey.alias === "") {
             throw new Error('Alias cannot be empty')
         }
 
@@ -78,7 +78,7 @@ export function VaultProvider({ children }) {
             const withoutDeleted = prev!.storedKeys.filter(key => key.alias !== alias)
             return {
                 ...prev,
-                selectedAlias: withoutDeleted.filter(key => key.alias == prev!.selectedAlias).length > 0 ? prev!.selectedAlias : undefined,
+                selectedAlias: withoutDeleted.filter(key => key.alias === prev!.selectedAlias).length > 0 ? prev!.selectedAlias : undefined,
                 storedKeys: withoutDeleted
             }
         })
