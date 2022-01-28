@@ -6,7 +6,7 @@ import { VaultContext } from "../../store";
 
 const Welcome = () => {
     const { t } = useTranslation();
-    const vault = useContext(VaultContext);
+    const vaultContext = useContext(VaultContext);
     const [showCreateVault, setShowCreateVault] = useState(false);
     const [showUnlockVault, setShowUnlockVault] = useState(false);
 
@@ -14,10 +14,14 @@ const Welcome = () => {
     return <div>
         <h1>{t("CommitteeTools.Welcome.title")}</h1>
         <p>{t("CommitteeTools.Welcome.content")}</p>
-        {vault.isCreated ?
+        {vaultContext.isCreated ?
             <><button
                 onClick={() => setShowUnlockVault(true)}>Unlock Vault
-            </button><button>Delete Vault</button></> :
+            </button><button onClick={() => {
+                if (prompt("are You Sure? Type 'yes' to delete the vault") === "yes") {
+                    vaultContext.deleteVault!()
+                }
+            }}>Delete Vault</button></> :
             <button onClick={() => setShowCreateVault(true)}>Create Vault</button>}
         {showCreateVault && <CreateVaultModal setShowModal={setShowCreateVault} />}
         {showUnlockVault && <UnlockVaultModal setShowModal={setShowUnlockVault} />}
@@ -42,7 +46,7 @@ function CreateVaultModal({ setShowModal }: { setShowModal: (show: boolean) => a
     }
 
     return (
-        <Modal title="Create Vault" setShowModal={setShowModal} height="283px" >
+        <Modal title="Create Vault" setShowModal={setShowModal} height="fit-content" >
             <p>{t("CommitteeTools.enter-password")}</p>
             <input type="password" ref={passwordRef} />
             <p>Confirm</p>

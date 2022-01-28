@@ -18,6 +18,7 @@ interface IVaultContext {
     createVault?: (password: string) => void
     unlockVault?: (password: string) => void
     setSelectedAlias?: (alias: string) => void
+    deleteVault?: () => void
 }
 
 export const VaultContext = React.createContext<IVaultContext>({
@@ -66,6 +67,11 @@ export function VaultProvider({ children }) {
         setVault(decrypted);
     };
 
+    const deleteVault = () => {
+        localStorage.removeItem(LocalStorage.PGPKeystore);
+        setVault(undefined);
+    }
+
     useEffect(() => {
         (async () => {
             if (password && vault) {
@@ -75,9 +81,11 @@ export function VaultProvider({ children }) {
         })()
     }, [vault, password])
 
+
+
     return <VaultContext.Provider value={{
         vault, addKey, removeKey, createVault, unlockVault, setSelectedAlias,
-        selectedKey,
+        selectedKey, deleteVault,
         isLocked: password === undefined,
         isCreated: localStorage.getItem(LocalStorage.PGPKeystore) !== null
     }}>

@@ -1,5 +1,5 @@
 import { createMessage, decrypt, encrypt, PrivateKey, readMessage } from "openpgp";
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { IStoredKey } from "../../../../types/types";
 import CopyToClipboard from "../../../Shared/CopyToClipboard";
 import Modal from "../../../Shared/Modal";
@@ -25,6 +25,14 @@ export default function Decrypt() {
   const encryptedMessageRef = useRef<HTMLTextAreaElement>(null);
   const decryptedMessageRef = useRef<HTMLTextAreaElement>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    console.log("vaultContext", vaultContext)
+    // if vault has no keys, show modal to add one  
+    if (vaultContext.vault?.storedKeys.length === 0) {
+      setShowSelectKeyModal(true)
+    }
+  }, [vaultContext.vault])
 
   const _decrypt = useCallback(async () => {
     try {
