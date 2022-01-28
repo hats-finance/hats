@@ -1,4 +1,5 @@
 import { useContext, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
@@ -10,6 +11,7 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
     const passphraseRef = useRef<HTMLInputElement>(null)
     const privateKeyRef = useRef<HTMLTextAreaElement>(null)
     const [error, setError] = useState<string>()
+    const { t } = useTranslation();
 
     const addKey = async () => {
         const alias = aliasRef.current!.value
@@ -31,18 +33,18 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
     }
 
     return <div>
-        <h1>Import keypair</h1>
+        <h1>{t("CommitteeTools.keymodal.")}</h1>
         <div>
-            <label>alias</label>
-            <input ref={aliasRef} type="text" placeholder="alias" />
+            <label>{t("CommitteeTools.keymodal.alias")}</label>
+            <input ref={aliasRef} type="text" placeholder={t("CommitteeTools.keymodal.alias")} />
         </div>
         <div>
-            <label>passphrase</label>
-            <input ref={passphraseRef} type="text" placeholder="passphrase" />
+            <label>{t("CommitteeTools.keymodal.passphrase")}</label>
+            <input ref={passphraseRef} type="text" placeholder={t("CommitteeTools.keymodal.passphrase")} />
         </div>
         <textarea ref={privateKeyRef} cols={80} rows={8} />
         {error && error !== "" && <p>{error}</p>}
-        <button onClick={addKey}>Import</button>
+        <button onClick={addKey}>{t("CommitteeTools.keymodal.import-button")}</button>
     </div>
 
 }

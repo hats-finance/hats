@@ -92,16 +92,14 @@ export default function Decrypt() {
 
   return (
     <div>
-      <p>selected Keypair</p>
-      {vaultContext.selectedKey ? <p>{vaultContext.selectedKey.alias}</p> : <p>none</p>}
       <button onClick={() => {
         setShowSelectKeyModal(true)
-      }}>select keypair</button>
+      }}>{t("CommitteeTools.Decrypt.select-keypair")}</button>
       <p>{t("CommitteeTools.Decrypt.encrypted-message")}</p>
       <textarea ref={encryptedMessageRef} cols={80} rows={15} />
       {error && <p>{error}</p>}
       <div><button onClick={_decrypt}>Decrypt</button></div>
-      <p>Decrypted message</p>
+      <p>{t("CommitteeTools.Decrypt.decrypted-message")}</p>
       <textarea ref={decryptedMessageRef} cols={80} rows={15} />
       <div><button onClick={_encrypt}>Encrypt</button></div>
       {showSelectKeyModal && <SelectKeyModal

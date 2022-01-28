@@ -67,11 +67,16 @@
         "generate-message": "Please generate private and public PGP keys by creating an alias and a passphrase(optional).",
         "hello": "Hello committee member",
         "share-public": "Please share your public key with the committee members",
-        "generated-success": "Keypair generated successfully!"
+        "generated-success": "Keypair generated successfully!",
+        "import-button": "Import key-pair",
+        "generate-button": "Generate key-pair"
       },
-      "enter-password": "Enter password",
       "Decrypt": {
-        "encrypted-message": "Encrypted message"
+        "select-keypair": "Select key-pair",
+        "encrypted-message": "Encrypted message",
+        "decrypted-message": "Decrypted message",
+        "decrypt-button": "Decrypt message",
+        "encrypt-button": "Encrypt message"
       },
       "NewKey": {}
     }

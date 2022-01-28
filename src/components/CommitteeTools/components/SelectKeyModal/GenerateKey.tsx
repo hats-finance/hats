@@ -83,7 +83,7 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
       <p>{t("CommitteeTools.keymodal.email")}</p>
       <input ref={emailRef} type="text" />
 
-      <button onClick={_handleClick}>Generate key pair </button>
+      <button onClick={_handleClick}>{t("CommitteeTools.keymodal.generate-button")}</button>
       {error && <p>{error}</p>}
 
     </div>
