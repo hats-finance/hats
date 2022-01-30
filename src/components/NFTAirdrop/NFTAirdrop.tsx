@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Colors, NFT_AIRDROP_ADDRESS } from "../../constants/constants";
+import { Colors } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import "./NFTAirdrop.scss";
 import { isAddress } from "ethers/lib/utils";
@@ -13,6 +13,7 @@ import { useLocation } from "react-router-dom";
 import Loading from "../Shared/Loading";
 import { isRedeemed } from "../../actions/contractsActions";
 import OpenInIcon from "../../assets/icons/openIn.icon";
+import { NFT_AIRDROP_ADDRESS } from "../../settings";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');

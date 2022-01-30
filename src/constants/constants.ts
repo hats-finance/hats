@@ -37,6 +37,11 @@ export enum NFTMangerAddress {
   rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
+export enum NFTAirdropAddress {
+  main = "",
+  rinkeby = "0x0D8E86D428B79Bf13cab80428C67C92B480BC9b3"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
@@ -108,8 +113,6 @@ export const UNISWAP_V3_STAKER_ADDRESS =
 
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
-
-export const NFT_AIRDROP_ADDRESS = "0x8844ECC3A4D3b83b9c1532041B7e7cB9647423a8";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI =

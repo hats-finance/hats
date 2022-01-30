@@ -5,11 +5,11 @@ import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
-import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NFT_AIRDROP_ADDRESS, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
+import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
-import { NETWORK } from "../settings";
+import { NETWORK, NFT_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
 
 let provider: ethers.providers.Web3Provider;
@@ -295,7 +295,9 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
  */
 export const getMerkleTree = async () => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  return await contract._merkleTreeIPFSRef();
+  const data = contract.filters.MerkleTreeChanged();
+  const filter = await contract.queryFilter(data, 0);
+  return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
 }
 
 /**
@@ -303,7 +305,7 @@ export const getMerkleTree = async () => {
  */
 export const getBaseURI = async (): Promise<string> => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  return await contract._baseTokenURI();
+  return await contract.baseTokenURI();
 }
 
 /**
@@ -312,7 +314,7 @@ export const getBaseURI = async (): Promise<string> => {
  */
 export const getDeadline = async () => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  return await contract._deadline();
+  return await contract.deadline();
 }
 
 /**
