@@ -62,14 +62,15 @@ export function SelectKeyModal({ setShowModal }:
                 </div>}
         </>)
 
-    const keyRow = (key: IStoredKey) =>
-        <li key={key.alias}>
-            <NavLink className="keypair-name" to="#" onClick={() => {
+    const keyRow = (key: IStoredKey) => {
+        const selected = key.alias === vaultContext.selectedKey?.alias
+        return <li className={selected ? "selected" : ""} key={key.alias}>
+            <NavLink to="#" onClick={() => {
                 vaultContext?.setSelectedAlias!(key.alias)
                 setShowModal(false)
-            }} >{key.alias}{key.alias === vaultContext.selectedKey?.alias &&
+            }}>{key.alias}{selected && " " +
                 t("CommitteeTools.keymodal.selected")}</NavLink>
-            <div>
+            <div className="actions">
                 <NavLink to="#" onClick={() => {
                     setAction({ type: ActionType.Display, key: key })
                 }}>show</NavLink>
@@ -78,8 +79,7 @@ export function SelectKeyModal({ setShowModal }:
                 }}>delete</NavLink>
             </div>
         </li>
-
-
+    }
 
     const byAction = (action: IAction) => {
         switch (action.type) {
@@ -105,7 +105,7 @@ export function SelectKeyModal({ setShowModal }:
             case ActionType.Delete:
                 return t("CommitteeTools.keymodal.delete-keypair")
             case ActionType.Display:
-                return t("CommitteeTools.keymodal.keypair-details")
+                return t("CommitteeTools.KeyDetails.title")
             case ActionType.None:
                 return t("CommitteeTools.keymodal.title")
         }

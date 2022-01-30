@@ -56,6 +56,15 @@
         "passwords-mismatch": "Passwords do not match",
         "confirm": "Confirm"
       },
+      "ImportKey": {
+        "no-key-error": "No private key have been given, please paste your private key"
+      },
+      "KeyDetails": {
+        "title": "Key Details",
+        "private-key": "Private Key",
+        "public-key": "Public Key",
+        "passphrase": "Passphrase"
+      },
       "keymodal": {
         "intro-text": "Please generate a key pair or import a key if you are already holding one",
         "title": "Keypairs",

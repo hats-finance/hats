@@ -70,27 +70,16 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
     </div>)
   } else return (
     <div>
-      <h2>{t("CommitteeTools.keymodal.hello")}</h2>
       <p>{t("CommitteeTools.keymodal.generate-message")}</p>
-      <div>
-        <label>{t("CommitteeTools.keymodal.alias")}</label>
-        <input ref={aliasRef} type="text" />
-      </div>
-      <div>
-        <label>{t("CommitteeTools.keymodal.passphrase")}</label>
-        <input ref={passphraseRef} type="text" />
-      </div>
-      <div>
-        <label>{t("CommitteeTools.keymodal.name")}</label>
-        <input ref={nameRef} type="text" />
-      </div>
-      <div>
-        <label>{t("CommitteeTools.keymodal.email")}</label>
-        <input ref={emailRef} type="text" />
-      </div>
-      q      <div>
-        <button onClick={() => onFinish()}>
-          {t("CommitteeTools.keymodal.cancel")}</button>
+      <label>{t("CommitteeTools.keymodal.alias")}</label>
+      <input ref={aliasRef} type="text" />
+      <label>{t("CommitteeTools.keymodal.passphrase")}</label>
+      <input ref={passphraseRef} type="text" />
+      <label>{t("CommitteeTools.keymodal.name")}</label>
+      <input ref={nameRef} type="text" />
+      <label>{t("CommitteeTools.keymodal.email")}</label>
+      <input ref={emailRef} type="text" />
+      <div className="buttons-with-cancel">
         <button onClick={_handleClick}>
           {t("CommitteeTools.keymodal.generate-button")}</button>
       </div>
