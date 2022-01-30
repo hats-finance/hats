@@ -17,9 +17,9 @@ function KeyDetails({ storedKey, onFinish }: {
     })
     if (privateKey) {
         return (<div>
-            <div>Private Key<CopyToClipboard value={privateKey?.armor()} /></div>
+            <div>Private Key<CopyToClipboard value={privateKey!.armor()} /></div>
             {storedKey.passphrase && <div>Passphrase<CopyToClipboard value={storedKey.passphrase} /></div>}
-            <div>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
+            <div>Public Key<CopyToClipboard value={privateKey!.toPublic().armor()} /></div>
             <button onClick={onFinish}>Back</button>
         </div>)
     } else {
