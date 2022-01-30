@@ -4,6 +4,7 @@ import classNames from "classnames";
 import "./index.scss";
 import { VaultProvider, VaultContext } from "./store";
 import Welcome from "./components/Welcome/Welcome";
+import UnlockVaultModal from "./components/UnlockVaultModal/UnlockVaultModal";
 
 
 export default function CommitteeTools() {
@@ -24,7 +25,8 @@ function Content() {
 
   return (
     <div className={committeeToolsWrapper}>
-      {vault.isLocked ? <Welcome /> : <Decrypt />}
+      {(vault.isCreated && vault.isLocked) && <UnlockVaultModal />}
+      {vault.isCreated ? <Decrypt /> : <Welcome />}
     </div>
   )
 }

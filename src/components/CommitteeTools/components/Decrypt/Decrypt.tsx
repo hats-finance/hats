@@ -18,6 +18,7 @@ export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }: IS
 
 export default function Decrypt() {
   const vaultContext = useContext(VaultContext)
+  const [showUnlockVault, setShowUnlockVault] = useState(false);
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false)
   const [error, setError] = useState<string>();
   const encryptedMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -106,6 +107,7 @@ export default function Decrypt() {
         onSelectKey={() => {
         }}
         setShowModal={setShowSelectKeyModal} />}
+
     </div>
   )
 }

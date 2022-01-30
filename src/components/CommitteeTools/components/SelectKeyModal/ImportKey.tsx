@@ -5,7 +5,7 @@ import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 
 
-export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) => any }) {
+export default function ImportKey({ onFinish }: { onFinish: () => any }) {
     const vaultContext = useContext(VaultContext)
     const aliasRef = useRef<HTMLInputElement>(null)
     const passphraseRef = useRef<HTMLInputElement>(null)
@@ -23,7 +23,7 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
             await readPrivateKeyFromStoredKey(toAdd)
             vaultContext.addKey!(toAdd)
             vaultContext.setSelectedAlias!(toAdd.alias)
-            onAdded(toAdd)
+            onFinish()
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message)
@@ -33,7 +33,7 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
     }
 
     return <div>
-        <h1>{t("CommitteeTools.keymodal.")}</h1>
+        <p>{t("CommitteeTools.keymodal.import-text")}</p>
         <div>
             <label>{t("CommitteeTools.keymodal.alias")}</label>
             <input ref={aliasRef} type="text" placeholder={t("CommitteeTools.keymodal.alias")} />
@@ -44,7 +44,10 @@ export default function ImportKey({ onAdded }: { onAdded: (added: IStoredKey) =>
         </div>
         <textarea ref={privateKeyRef} cols={80} rows={8} />
         {error && error !== "" && <p>{error}</p>}
-        <button onClick={addKey}>{t("CommitteeTools.keymodal.import-button")}</button>
+        <button onClick={() => onFinish()}>
+            {t("CommitteeTools.keymodal.cancel")}</button>
+        <button onClick={addKey}>
+            {t("CommitteeTools.keymodal.import-button")}</button>
     </div>
 
 }

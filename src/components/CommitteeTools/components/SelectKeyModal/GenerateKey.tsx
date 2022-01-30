@@ -6,7 +6,7 @@ import { IStoredKey } from "../../../../types/types";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 import CopyToClipboard from "../../../Shared/CopyToClipboard";
 
-export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
+export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -66,24 +66,34 @@ export default function GenerateKey({ onAdded }: { onAdded: () => void }) {
         <input type="checkbox" name="didSharePublic" onChange={e => setSentPublicChecked(e.currentTarget.checked)} />
         <label htmlFor="didSharePublic">I have sent <a href="https://t.me/Hatsofir">@hatsofir</a> the public key.</label>
       </div>
-      <button disabled={!sentPublicChecked} onClick={onAdded}>{t("CommitteeTools.keymodal.done")}</button>
+      <button disabled={!sentPublicChecked} onClick={onFinish}>{t("CommitteeTools.keymodal.done")}</button>
     </div>)
   } else return (
     <div>
       <h2>{t("CommitteeTools.keymodal.hello")}</h2>
       <p>{t("CommitteeTools.keymodal.generate-message")}</p>
-      <p>{t("CommitteeTools.keymodal.alias")}</p>
-      <input ref={aliasRef} type="text" />
-      <p>{t("CommitteeTools.keymodal.passphrase")}</p>
-      <input ref={passphraseRef} type="text" />
-
-
-      <p>{t("CommitteeTools.keymodal.name")}</p>
-      <input ref={nameRef} type="text" />
-      <p>{t("CommitteeTools.keymodal.email")}</p>
-      <input ref={emailRef} type="text" />
-
-      <button onClick={_handleClick}>{t("CommitteeTools.keymodal.generate-button")}</button>
+      <div>
+        <label>{t("CommitteeTools.keymodal.alias")}</label>
+        <input ref={aliasRef} type="text" />
+      </div>
+      <div>
+        <label>{t("CommitteeTools.keymodal.passphrase")}</label>
+        <input ref={passphraseRef} type="text" />
+      </div>
+      <div>
+        <label>{t("CommitteeTools.keymodal.name")}</label>
+        <input ref={nameRef} type="text" />
+      </div>
+      <div>
+        <label>{t("CommitteeTools.keymodal.email")}</label>
+        <input ref={emailRef} type="text" />
+      </div>
+      q      <div>
+        <button onClick={() => onFinish()}>
+          {t("CommitteeTools.keymodal.cancel")}</button>
+        <button onClick={_handleClick}>
+          {t("CommitteeTools.keymodal.generate-button")}</button>
+      </div>
       {error && <p>{error}</p>}
 
     </div>

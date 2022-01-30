@@ -4,9 +4,9 @@ import { IStoredKey } from "../../../../types/types";
 import CopyToClipboard from "../../../Shared/CopyToClipboard";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 
-function KeyDetails({ storedKey, onBack }: {
+function KeyDetails({ storedKey, onFinish }: {
     storedKey: IStoredKey
-    onBack: () => any
+    onFinish: () => any
 }) {
     const [privateKey, setPrivateKey] = useState<PrivateKey>();
 
@@ -19,9 +19,8 @@ function KeyDetails({ storedKey, onBack }: {
         return (<div>
             <div>Private Key<CopyToClipboard value={privateKey?.armor()} /></div>
             {storedKey.passphrase && <div>Passphrase<CopyToClipboard value={storedKey.passphrase} /></div>}
-            <br></br>
             <div>Public Key<CopyToClipboard value={privateKey?.toPublic().armor()} /></div>
-            <button onClick={onBack}>Back</button>
+            <button onClick={onFinish}>Back</button>
         </div>)
     } else {
         return (<></>)

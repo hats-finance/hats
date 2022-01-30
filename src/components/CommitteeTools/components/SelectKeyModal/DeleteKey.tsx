@@ -2,9 +2,9 @@ import { useContext } from "react";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
 
-function DeleteKey({ keyToDelete, onCompleted }: {
+function DeleteKey({ keyToDelete, onFinish }: {
     keyToDelete: IStoredKey
-    onCompleted: () => any
+    onFinish: () => any
 }) {
     const vaultContext = useContext(VaultContext);
 
@@ -12,10 +12,10 @@ function DeleteKey({ keyToDelete, onCompleted }: {
         <h1>are you sure?</h1>
         <button onClick={() => {
             vaultContext!.deleteKey!(keyToDelete)
-            onCompleted()
+            onFinish()
         }}>Yes</button>
         <button onClick={() => {
-            onCompleted()
+            onFinish()
         }}>Cancel</button>
 
     </div>)
