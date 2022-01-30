@@ -36,10 +36,14 @@ $committee-blue: #C0F2F2;
     background-color: $field-blue;
     color: $white;
     border: 1px solid $dirty-turquoise;
-    padding: 15px;
     &::placeholder {
       color: #64C1C5;
     }
+  }
+
+  label { 
+    display: block;
+    margin-bottom: 10px;
   }
   
   button {
@@ -47,6 +51,25 @@ $committee-blue: #C0F2F2;
     font-family: "Roboto Mono", monospace;
     text-transform: capitalize;
     margin: 0px;
+  }
+
+  .keypair-list {
+      li {
+        a {
+          flex:1
+        }
+        display:flex;
+        flex-direction: row;
+        .actions {
+          align-self: flex-end;
+          :not(:first-child) {
+            margin-left: 5px;
+          }
+        }
+        &.selected {
+          color: $white;
+        }
+      }
   }
 
   .special-container {
@@ -77,6 +100,3 @@ $committee-blue: #C0F2F2;
     margin-bottom: 1em;
   }
 }
-
-
-
