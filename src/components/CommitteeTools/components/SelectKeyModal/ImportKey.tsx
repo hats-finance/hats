@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
-import PastableContent from "../PastableContent/PastableContent";
+import EditableContent from "../EditableContent/EditableContent";
 
 
 export default function ImportKey({ onFinish }: { onFinish: () => any }) {
@@ -43,7 +43,7 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         <label>{t("CommitteeTools.keymodal.passphrase")}</label>
         <input ref={passphraseRef} type="text" placeholder={t("CommitteeTools.keymodal.passphrase")} />
         <label>{t("CommitteeTools.keymodal.private-key")}</label>
-        <PastableContent ref={privateKeyRef} placeholder={t("Comitteee")} />
+        <EditableContent pastable ref={privateKeyRef} placeholder={t("Comitteee")} />
         {error && error !== "" && <p>{error}</p>}
         <button onClick={addKey}>
             {t("CommitteeTools.keymodal.import-button")}</button>

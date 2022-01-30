@@ -7,6 +7,7 @@ import { VaultContext } from "../../store";
 import { decryptKey, readPrivateKey } from "openpgp";
 import SelectKeyModal from "../SelectKeyModal/SelectKeyModal";
 import { useLocation } from "react-router-dom";
+import EditableContent from "../EditableContent/EditableContent";
 
 export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }: IStoredKey) {
   return passphrase ? await decryptKey({
@@ -20,8 +21,8 @@ export default function Decrypt() {
   const vaultContext = useContext(VaultContext)
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false)
   const [error, setError] = useState<string>();
-  const encryptedMessageRef = useRef<HTMLTextAreaElement>(null);
-  const decryptedMessageRef = useRef<HTMLTextAreaElement>(null);
+  const encryptedMessageRef = useRef<HTMLDivElement>(null);
+  const decryptedMessageRef = useRef<HTMLDivElement>(null);
   const { t } = useTranslation();
 
 
@@ -34,7 +35,7 @@ export default function Decrypt() {
       (async () => {
         const response = await fetch(params.ipfsjson)
         const json = await response.json()
-        encryptedMessageRef.current!.value = json.message
+        encryptedMessageRef.current!.textContent = json.message
 
       })()
 
@@ -50,25 +51,27 @@ export default function Decrypt() {
 
   const _decrypt = useCallback(async () => {
     try {
-      setError("")
       if (!vaultContext.selectedKey) {
         setShowSelectKeyModal(true)
         return
       }
 
-      const armoredMessage = encryptedMessageRef.current!.value
+      const armoredMessage = encryptedMessageRef.current!.textContent
 
       if (!armoredMessage || armoredMessage === "") {
         throw new Error("No message to decrypt")
       }
 
+
       const privateKey = await readPrivateKeyFromStoredKey(vaultContext.selectedKey)
       const message = await readMessage({ armoredMessage })
       const { data: decrypted } = await decrypt({ message, decryptionKeys: privateKey })
-      decryptedMessageRef.current!.value = decrypted
+      decryptedMessageRef.current!.textContent = decrypted
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
+      } else {
+        console.log(error)
       }
     }
   }, [vaultContext.selectedKey])
@@ -81,8 +84,8 @@ export default function Decrypt() {
         return
       }
       const privateKey = await readPrivateKeyFromStoredKey(vaultContext.selectedKey)
-      const message = await createMessage({ text: decryptedMessageRef.current!.value })
-      encryptedMessageRef.current!.value = await encrypt({ message, encryptionKeys: privateKey?.toPublic() })
+      const message = await createMessage({ text: decryptedMessageRef.current!.textContent! })
+      encryptedMessageRef.current!.textContent = await encrypt({ message, encryptionKeys: privateKey?.toPublic() })
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message)
@@ -96,11 +99,11 @@ export default function Decrypt() {
         setShowSelectKeyModal(true)
       }}>{t("CommitteeTools.Decrypt.select-keypair")}</button>
       <p>{t("CommitteeTools.Decrypt.encrypted-message")}</p>
-      <textarea ref={encryptedMessageRef} cols={80} rows={15} />
+      <EditableContent pastable ref={encryptedMessageRef} />
       {error && <p>{error}</p>}
       <div><button onClick={_decrypt}>Decrypt</button></div>
       <p>{t("CommitteeTools.Decrypt.decrypted-message")}</p>
-      <textarea ref={decryptedMessageRef} cols={80} rows={15} />
+      <EditableContent ref={decryptedMessageRef} />
       <div><button onClick={_encrypt}>Encrypt</button></div>
       {showSelectKeyModal && <SelectKeyModal
         onSelectKey={() => {

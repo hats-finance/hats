@@ -1,0 +1,31 @@
+.pastable-content {
+    height:13em;
+    width: 30em;
+    border: 1px solid #8AFCFD;
+    margin-bottom: 1em;
+    position: relative;
+    overflow: hidden;
+
+    .content-wrapper {
+        overflow: auto;
+        div[contenteditable] {
+            margin: .8em;
+            color: #8AFCFD;
+            &[placeholder]:empty:before {
+                content: attr(placeholder);
+                margin: 2px;
+            }
+        }
+    }       
+    .extra-icons {
+        position: absolute;
+        right:0;
+        bottom:0;
+        img {
+            margin-right: 3px;
+            margin-bottom: 3px;
+            cursor: pointer;
+        }    
+    }
+  }
+  
