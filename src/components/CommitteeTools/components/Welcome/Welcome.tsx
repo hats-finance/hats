@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultContext } from "../../store"
 import CreateVaultModal from "../CreateVaultModal/CreateVaultModal";

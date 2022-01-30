@@ -56,7 +56,7 @@ export function SelectKeyModal({ setShowModal }:
                     text={t("CommitteeTools.keymodal.import-text")}
                     onClick={() => setAction({ type: ActionType.Import })} />
             </div>
-            {vault.storedKeys.length != 0 &&
+            {vault.storedKeys.length !== 0 &&
                 <div className="keypair-list">
                     {vault.storedKeys.map(key => keyRow(key))}
                 </div>}
