@@ -103,7 +103,7 @@ export default function Decrypt() {
       {error && <p>{error}</p>}
       <div><button onClick={_decrypt}>Decrypt</button></div>
       <p>{t("CommitteeTools.Decrypt.decrypted-message")}</p>
-      <EditableContent ref={decryptedMessageRef} />
+      <EditableContent copyable ref={decryptedMessageRef} />
       <div><button onClick={_encrypt}>Encrypt</button></div>
       {showSelectKeyModal && <SelectKeyModal
         onSelectKey={() => {

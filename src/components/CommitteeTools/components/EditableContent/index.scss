@@ -5,8 +5,12 @@
     margin-bottom: 1em;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
 
     .content-wrapper {
+        flex:1;
         overflow: auto;
         div[contenteditable] {
             margin: .8em;
@@ -18,9 +22,7 @@
         }
     }       
     .extra-icons {
-        position: absolute;
-        right:0;
-        bottom:0;
+        align-self: flex-end;
         img {
             margin-right: 3px;
             margin-bottom: 3px;

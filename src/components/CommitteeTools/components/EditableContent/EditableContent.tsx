@@ -2,7 +2,13 @@ import './index.scss'
 import PasteIcon from '../../../../assets/icons/paste.icon.svg'
 import CopyIcon from '../../../../assets/icons/copy.icon.svg'
 import { forwardRef } from 'react'
-function EditableContent({ pastable, copyable, ...props }, ref) {
+function EditableContent({ pastable, copyable, ...props }:
+    {
+        pastable?: boolean
+        copyable?: boolean
+        placeholder?: string
+    }, ref) {
+    const extraIcons = pastable || copyable
     return (
         <div className="pastable-content">
             <div className='content-wrapper'>
@@ -12,7 +18,7 @@ function EditableContent({ pastable, copyable, ...props }, ref) {
                     contentEditable >
                 </div>
             </div>
-            {(pastable || copyable) &&
+            {extraIcons &&
                 <div className="extra-icons">
                     {pastable && <img
                         alt="paste"
