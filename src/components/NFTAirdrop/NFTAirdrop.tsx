@@ -111,7 +111,7 @@ export default function NFTAirdrop() {
       {(eligibilityStatus === EligibilityStatus.ELIGIBLE || eligibilityStatus === EligibilityStatus.REDEEMED) && (
         <Redeem
           merkleTree={merkleTree}
-          walletAddress={userInput}
+          walletAddress={normalizeAddress(userInput)}
           setPendingWalletAction={setPendingWalletAction}
           onSuccess={() => setEligibilityStatus(EligibilityStatus.REDEEMED)}
           eligibilityStatus={eligibilityStatus}
