@@ -30,6 +30,9 @@ export function SelectKeyModal({ setShowModal }:
     const vault = vaultContext.vault!
 
     const onFinish = () => {
+        if (action.type === ActionType.Generate || action.type === ActionType.Import) {
+            setShowModal(false)
+        }
         setAction({ type: ActionType.None })
     }
 
