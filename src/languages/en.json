@@ -94,7 +94,8 @@
         "encrypted-message": "Encrypted message",
         "decrypted-message": "Decrypted message",
         "decrypt-button": "Decrypt message",
-        "encrypt-button": "Encrypt message"
+        "encrypt-button": "Encrypt message",
+        "no-key-selected": "No key-pair selected"
       },
       "NewKey": {}
     }
