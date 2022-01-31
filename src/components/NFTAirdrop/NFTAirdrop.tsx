@@ -39,9 +39,9 @@ export default function NFTAirdrop() {
     setUserInput(input);
     if (isAddress(input)) {
       if (Object.values(eligibleTokens).includes(normalizeAddress(input))) {
-        const tokenID = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === input);
+        const tokenID = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === normalizeAddress(input));
         setCurrentTokenID(tokenID ?? "");
-        if (await isRedeemed(tokenID ?? "", input)) {
+        if (await isRedeemed(tokenID ?? "", normalizeAddress(input))) {
           setEligibilityStatus(EligibilityStatus.REDEEMED);
         } else {
           setEligibilityStatus(EligibilityStatus.ELIGIBLE);
