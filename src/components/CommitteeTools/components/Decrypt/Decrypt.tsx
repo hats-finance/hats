@@ -9,7 +9,7 @@ import { useLocation } from "react-router-dom";
 import EditableContent from "../EditableContent/EditableContent";
 import CopyIcon from '../../../../assets/icons/copy.icon.svg'
 
-export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }) {
+export async function readPrivateKeyFromStoredKey(privateKey: string, passphrase: string | undefined) {
   return passphrase ? await decryptKey({
     privateKey: await readPrivateKey({ armoredKey: privateKey }),
     passphrase
@@ -63,10 +63,10 @@ export default function Decrypt() {
         throw new Error("No message to decrypt")
       }
 
-      const privateKey = await readPrivateKeyFromStoredKey({
-        privateKey: vaultContext.selectedKey.privateKey,
-        passphrase: vaultContext.selectedKey.passphrase
-      })
+      const privateKey = await readPrivateKeyFromStoredKey(
+        vaultContext.selectedKey.privateKey,
+        vaultContext.selectedKey.passphrase
+      )
       const message = await readMessage({ armoredMessage })
       const { data: decrypted } = await decrypt({ message, decryptionKeys: privateKey })
       decryptedMessageRef.current!.textContent = decrypted
@@ -86,10 +86,10 @@ export default function Decrypt() {
         setShowSelectKeyModal(true)
         return
       }
-      const privateKey = await readPrivateKeyFromStoredKey({
-        privateKey: vaultContext.selectedKey.privateKey,
-        passphrase: vaultContext.selectedKey.passphrase
-      })
+      const privateKey = await readPrivateKeyFromStoredKey(
+        vaultContext.selectedKey.privateKey,
+        vaultContext.selectedKey.passphrase
+      )
       const message = await createMessage({ text: decryptedMessageRef.current!.textContent! })
       encryptedMessageRef.current!.textContent = await encrypt({ message, encryptionKeys: privateKey?.toPublic() })
     } catch (error) {

@@ -22,7 +22,7 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
 
             if (privateKey === "")
                 throw new Error(t("CommitteeTools.ImportKey.no-key-error"))
-            const readKey = await readPrivateKeyFromStoredKey({ privateKey, passphrase })
+            const readKey = await readPrivateKeyFromStoredKey(privateKey, passphrase)
             if (!readKey.isDecrypted()) {
                 throw new Error(t("CommitteeTools.ImportKey.no-passphrase-error"))
             }
