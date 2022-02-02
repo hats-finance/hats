@@ -15,16 +15,18 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
     const { t } = useTranslation();
 
     const addKey = async () => {
-        const alias = aliasRef.current!.value
-        const privateKey = privateKeyRef.current!.textContent!
-        console.log("privatekey", privateKey)
-        const passphrase = passphraseRef.current!.value
-
-        const toAdd: IStoredKey = { alias, privateKey, passphrase }
         try {
-            if (toAdd.privateKey === "")
+            const alias = aliasRef.current!.value
+            const privateKey = privateKeyRef.current!.textContent!
+            const passphrase = passphraseRef.current!.value
+
+            if (privateKey === "")
                 throw new Error(t("CommitteeTools.ImportKey.no-key-error"))
-            await readPrivateKeyFromStoredKey(toAdd)
+            const readKey = await readPrivateKeyFromStoredKey({ privateKey, passphrase })
+            if (!readKey.isDecrypted()) {
+                throw new Error(t("CommitteeTools.ImportKey.no-passphrase-error"))
+            }
+            const toAdd: IStoredKey = { alias, privateKey, passphrase, publicKey: readKey.toPublic().armor() }
             vaultContext.addKey!(toAdd)
             vaultContext.setSelectedAlias!(toAdd.alias)
             onFinish()

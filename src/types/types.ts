@@ -208,5 +208,6 @@ export interface IAirdropElement {
 export interface IStoredKey {
   alias: string
   privateKey: string
-  passphrase: string | undefined | null
+  passphrase?: string | undefined
+  publicKey: string
 }
