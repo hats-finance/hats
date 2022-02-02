@@ -14,6 +14,7 @@ import Loading from "../Shared/Loading";
 import { isRedeemed } from "../../actions/contractsActions";
 import OpenInIcon from "../../assets/icons/openIn.icon";
 import { NFT_AIRDROP_ADDRESS } from "../../settings";
+import { useTranslation } from "react-i18next";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -34,6 +35,7 @@ export default function NFTAirdrop() {
   const [merkleTree, setMerkleTree] = useState<any>();
   const [currentTokenID, setCurrentTokenID] = useState("");
   const [reveal, setReveal] = useState(false);
+  const { t } = useTranslation();
 
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
@@ -98,7 +100,7 @@ export default function NFTAirdrop() {
 
         {userInput !== "" && !isAddress(userInput) && <span className="error-label">Please enter a valid address</span>}
         {eligibilityStatus === EligibilityStatus.NOT_ELIGIBLE && <div className="info-label">This address is not part of the airdrop. Please check  the eligibility requirements here.</div>}
-        {eligibilityStatus === EligibilityStatus.ELIGIBLE && <div className="info-label">You are part of the hats first airdrop “The crow clan”. Reedeem your NFT and join the clan.</div>}
+        {eligibilityStatus === EligibilityStatus.ELIGIBLE && <div className="info-label">{t("NFTAirdop.eligible-text")}</div>}
         {eligibilityStatus === EligibilityStatus.REDEEMED && (
           <span className="open-in-etherscan-wrapper">
             <span>Redeemed - View on Etherscan</span>

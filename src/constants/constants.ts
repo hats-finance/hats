@@ -39,7 +39,7 @@ export enum NFTMangerAddress {
 
 export enum NFTAirdropAddress {
   main = "",
-  rinkeby = "0x0D8E86D428B79Bf13cab80428C67C92B480BC9b3"
+  rinkeby = "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
 }
 
 export enum Pages {

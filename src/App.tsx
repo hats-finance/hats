@@ -85,7 +85,7 @@ function App() {
 
   if (window.ethereum) {
     window.ethereum.on("accountsChanged", (accounts) => {
-      dispatch(updateSelectedAddress(accounts[0]));
+      dispatch(updateSelectedAddress(normalizeAddress(accounts[0])));
     });
 
     window.ethereum.on("chainChanged", (chainId) => {
@@ -204,9 +204,9 @@ function App() {
 
         if (Object.values(data.data as EligibleTokens).includes(normalizeAddress(selectedAddress))) {
           const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-          const tokenID = Object.keys(data.data).find(key => data.data[key] === selectedAddress);
+          const tokenID = Object.keys(data.data).find(key => data.data[key] === normalizeAddress(selectedAddress));
 
-          if (!savedItems.includes(normalizeAddress(selectedAddress)) && !(await isRedeemed(tokenID ?? "", selectedAddress))) {
+          if (!savedItems.includes(normalizeAddress(selectedAddress)) && await isRedeemed(tokenID ?? "", normalizeAddress(selectedAddress)) === false) {
             setShowNFTAirdropNotification(true);
           }
         }
