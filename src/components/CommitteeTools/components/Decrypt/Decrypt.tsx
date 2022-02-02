@@ -9,9 +9,6 @@ import SelectKeyModal from "../SelectKeyModal/SelectKeyModal";
 import { useLocation } from "react-router-dom";
 import EditableContent from "../EditableContent/EditableContent";
 import CopyIcon from '../../../../assets/icons/copy.icon.svg'
-import KeyDetails from "../SelectKeyModal/KeyDetails";
-import Modal from "../../../Shared/Modal";
-
 
 export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }: IStoredKey) {
   return passphrase ? await decryptKey({
@@ -24,7 +21,7 @@ export async function readPrivateKeyFromStoredKey({ passphrase, privateKey }: IS
 export default function Decrypt() {
   const vaultContext = useContext(VaultContext)
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false)
-  const [showKeyDetails, setShowKeyDetails] = useState(false)
+  const [showSelectedKeyDetails, setShowSelectedKeyDetails] = useState(false)
   const [error, setError] = useState<string>();
   const encryptedMessageRef = useRef<HTMLDivElement>(null);
   const decryptedMessageRef = useRef<HTMLDivElement>(null);
@@ -96,24 +93,29 @@ export default function Decrypt() {
       }
     }
   }, [vaultContext.selectedKey])
-  console.log("vaultContext", vaultContext)
+
+  const SelectedKeypair = () => (
+    vaultContext &&
+    <div className="selected-key">
+      <div className="box-with-copy">
+        <span>{vaultContext.selectedKey ?
+          vaultContext.selectedKey.alias :
+          t("CommitteeTools.Decrypt.no-key-selected")}
+        </span>
+        {vaultContext.selectedKey &&
+          <img alt="copy" src={CopyIcon} onClick={() => {
+            setShowSelectedKeyDetails(true)
+          }} />}
+      </div>
+      <button onClick={() => {
+        setShowSelectKeyModal(true)
+      }}>{t("CommitteeTools.Decrypt.select-keypair")}</button>
+    </div>)
 
 
   return (
     <div>
-      {vaultContext &&
-        <div className="selected-key">
-          <div>
-            <p>{vaultContext.selectedKey ? vaultContext.selectedKey : t("CommitteeTools.Decrypt.no-key-selected")}</p>
-            <img src={CopyIcon} onClick={() => {
-              setShowKeyDetails(true)
-            }} />
-          </div>
-          <button onClick={() => {
-            setShowSelectKeyModal(true)
-          }}>{t("CommitteeTools.Decrypt.select-keypair")}</button>
-        </div>
-      }
+      <SelectedKeypair />
       <p>{t("CommitteeTools.Decrypt.encrypted-message")}</p>
       <EditableContent pastable ref={encryptedMessageRef} />
       {error && <p>{error}</p>}
@@ -121,17 +123,14 @@ export default function Decrypt() {
       <p>{t("CommitteeTools.Decrypt.decrypted-message")}</p>
       <EditableContent copyable ref={decryptedMessageRef} />
       <div><button onClick={_encrypt}>Encrypt</button></div>
-      {showSelectKeyModal && <SelectKeyModal
-        onSelectKey={() => {
-        }}
-        setShowModal={setShowSelectKeyModal} />}
-      {showKeyDetails && <Modal
-        title={t("CommitteeTools.KeyDetails.title")}
-        setShowModal={setShowKeyDetails} >
-        <KeyDetails
-          onFinish={() => { setShowKeyDetails(false) }}
-          storedKey={vaultContext.selectedKey!} />
-      </Modal>}
+      {(showSelectKeyModal || showSelectedKeyDetails) && <SelectKeyModal
+        showKey={showSelectedKeyDetails ? vaultContext.selectedKey! : undefined}
+        setShowModal={() => {
+          if (showSelectedKeyDetails)
+            setShowSelectedKeyDetails(false)
+          if (showSelectKeyModal)
+            setShowSelectKeyModal(false)
+        }} />}
     </div>
   )
 }

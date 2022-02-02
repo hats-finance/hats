@@ -1,28 +1,41 @@
 @import "../../../../styles/constants.scss";
 
-.keypair-list {
+// .keypair-list {
 
-    border: 1px solid $turquoise;
-    padding: 0px 1em;
+//     border: 1px solid $turquoise;
+//     padding: 0px 1em;
+//     img {
+//         cursor:pointer;
+//     }
+//     li {
+//         margin: 0.5em 0;
+//         &:hover {
+//             background-color: black;
+//         }
+//         .keypair-name {
+//             min-width: 12em;
+//         }
 
-    li {
-        margin: 0.5em 0;
-        &:hover {
-            background-color: black;
-        }
-        .keypair-name {
-            min-width: 12em;
-        }
-
-        display: flex;
-        flex-direction: row;
-        min-width: 12em;
-        list-style-type:none;
-    }
-}
-
-
+//         display: flex;
+//         flex-direction: row;
+//         min-width: 12em;
+//         list-style-type:none;
+//     }
+// }
 
 .selected-key {
-    
+    display: flex;
+    flex-direction: row;
+    .box-with-copy {
+        align-items: center;
+        margin-right: 5px;
+        display: flex;
+        flex-direction: row;
+        padding: 3px;
+        flex:1;
+        border: 1px solid #8AFCFD;       
+        span {
+            flex:1;
+        }
+    }
 }

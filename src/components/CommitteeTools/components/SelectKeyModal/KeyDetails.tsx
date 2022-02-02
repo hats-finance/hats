@@ -17,17 +17,16 @@ function KeyDetails({ storedKey, onFinish }: {
             setPrivateKey(await readPrivateKeyFromStoredKey(storedKey));
         })()
     })
-    if (privateKey) {
-        return (<div>
-            <div>{t("CommitteeTools.KeyDetails.private-key")}<CopyToClipboard value={privateKey!.armor()} /></div>
-            {storedKey.passphrase && <div>{t("CommitteeTools.KeyDetails.passphrase")}<CopyToClipboard value={storedKey.passphrase} /></div>}
-            <div>{t("CommitteeTools.KeyDetails.public-key")}<CopyToClipboard value={privateKey!.toPublic().armor()} /></div>
-            <button onClick={onFinish}>Back</button>
-        </div>)
-    } else {
-        return (<></>)
-    }
+    if (!privateKey) return null;
+    return (<div className="key-details-container">
+        <div className="key-element">
+            {t("CommitteeTools.KeyDetails.private-key")}<CopyToClipboard value={privateKey!.armor()} />
+            {storedKey.passphrase && <div className="key-element">{t("CommitteeTools.KeyDetails.passphrase")}
+                <CopyToClipboard value={storedKey.passphrase} /></div>}
+            <div className="key-element">{t("CommitteeTools.KeyDetails.public-key")}<CopyToClipboard value={privateKey!.toPublic().armor()} /></div>
+        </div>
+        <button onClick={onFinish}>Back</button>
+    </div>)
 }
-
 
 export default KeyDetails

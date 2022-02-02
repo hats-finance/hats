@@ -10,6 +10,10 @@ import { NavLink } from "react-router-dom"
 import { t } from "i18next"
 import GenerateKeypairIcon from "../../../../assets/icons/create-keypair.svg"
 import ImportKeyapirIcon from "../../../../assets/icons/import-keypair.svg"
+import DeleteIcon from "../../../../assets/icons/delete.icon.svg"
+import CopyIcon from "../../../../assets/icons/copy.icon.svg"
+
+import classNames from "classnames"
 
 enum ActionType {
     Generate,
@@ -23,10 +27,15 @@ interface IAction {
     key?: IStoredKey
 }
 
-export function SelectKeyModal({ setShowModal }:
-    { onSelectKey: () => any, setShowModal: (show: boolean) => any }) {
+export function SelectKeyModal({ setShowModal, showKey }:
+    {
+        showKey?: IStoredKey // used to show key details
+        setShowModal: (show: boolean) => any
+    }) {
+    console.log({ showKey })
     const vaultContext = useContext(VaultContext)
-    const [action, setAction] = useState<IAction>({ type: ActionType.None })
+    const [action, setAction] = useState<IAction>(
+        showKey ? { type: ActionType.Display, key: showKey } : { type: ActionType.None })
     const vault = vaultContext.vault!
 
     const onFinish = () => {
@@ -67,20 +76,18 @@ export function SelectKeyModal({ setShowModal }:
 
     const keyRow = (key: IStoredKey) => {
         const selected = key.alias === vaultContext.selectedKey?.alias
-        return <li className={selected ? "selected" : ""} key={key.alias}>
-            <NavLink to="#" onClick={() => {
+        return <li key={key.alias}>
+            <div className={classNames({ "fish-eye": true, selected })} />
+            <NavLink to="#" className="title" onClick={() => {
                 vaultContext?.setSelectedAlias!(key.alias)
                 setShowModal(false)
-            }}>{key.alias}{selected && " " +
-                t("CommitteeTools.keymodal.selected")}</NavLink>
-            <div className="actions">
-                <NavLink to="#" onClick={() => {
-                    setAction({ type: ActionType.Display, key: key })
-                }}>show</NavLink>
-                <NavLink to="#" onClick={() => {
-                    setAction({ type: ActionType.Delete, key: key })
-                }}>delete</NavLink>
-            </div>
+            }}>{key.alias}</NavLink>
+            <NavLink to="#" onClick={() => {
+                setAction({ type: ActionType.Display, key: key })
+            }}><img src={CopyIcon} alt="display" /></NavLink>
+            <NavLink to="#" onClick={() => {
+                setAction({ type: ActionType.Delete, key: key })
+            }}><img src={DeleteIcon} alt="delete" /></NavLink>
         </li>
     }
 
