@@ -8,6 +8,7 @@ import { EligibleTokens, IAirdropElement } from "../../types/types";
 import { hashToken, isDateBefore, isProviderAndNetwork } from "../../utils";
 import Countdown from "../Shared/Countdown/Countdown";
 import { EligibilityStatus } from "./NFTAirdrop";
+import QuestionIcon from "../../assets/icons/big-question-icon.svg";
 import "./Redeem.scss";
 
 interface IProps {
@@ -75,7 +76,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
   return (
     <div className="redeem-wrapper">
       <div className="nft-image-container">
-        {!revealed ? <span>?</span> : <img src={`${IPFS_PREFIX}${nftData?.image.substring(7)}`} width="300px" height="300px" alt="nft" />}
+        {!revealed ? <img src={QuestionIcon} width="200px" height="200px" alt="question mark" /> : <img src={`${IPFS_PREFIX}${nftData?.image.substring(7)}`} width="300px" height="300px" alt="nft" />}
       </div>
       {revealed && deadline && eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <div className="redeem-wrapper__countdown-container">

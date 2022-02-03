@@ -6,6 +6,7 @@ import { RootState } from "../../reducers";
 import { normalizeAddress, truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
 import NFTIcon from "../../assets/icons/nft.svg";
+import QuestionIcon from "../../assets/icons/big-question-icon.svg";
 import "./NFTAirdropNotification.scss";
 
 interface IProps {
@@ -35,7 +36,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
           <span className="wallet-address">{`${truncatedAddress(selectedAddress)}`}</span>
         </div>
         <span>Reveal your NFT and find out more on the crow clan collection.</span>
-        <div className="question-mark">?</div>
+        <img className="question-mark" src={QuestionIcon} width="200px" height="200px" alt="question mark" />
         <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="reveal-link">REVEAL</Link>
       </div>
     </Modal>
