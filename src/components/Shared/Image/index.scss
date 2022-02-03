@@ -1,0 +1,23 @@
+@import "../../../styles/constants.scss";
+
+.async-image-spinner {
+  display: none;
+  &.show {
+    display: block;
+    margin: auto;
+    width: 50px;
+    height: 50px;
+  }
+}
+
+.async-image {
+  display: none;
+  &.show {
+    display: block;
+  }
+}
+
+.async-image-error {
+  color: $red;
+  font-size: $xxsmall;
+}
