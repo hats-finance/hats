@@ -1,4 +1,37 @@
-@import "../../../../styles/constants.scss";
+@import "styles/constants.scss";
+
+.decrypt-wrapper {
+  width: 100%;
+  margin-bottom: $spacing-4;
+
+  &__textbox {
+    &-container {
+      margin-bottom: $spacing-3;
+    }
+    &-title {
+      margin-bottom: $spacing-3;
+    }
+  }
+}
+
+.selected-key {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: $spacing-3;
+
+  .box-with-copy {
+    align-items: center;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: row;
+    padding: 3px;
+    flex: 1;
+    border: 1px solid #8afcfd;
+    span {
+      flex: 1;
+    }
+  }
+}
 
 // .keypair-list {
 //     border: 1px solid $turquoise;
@@ -21,20 +54,3 @@
 //         list-style-type:none;
 //     }
 // }
-
-.selected-key {
-    display: flex;
-    flex-direction: row;
-    .box-with-copy {
-        align-items: center;
-        margin-right: 5px;
-        display: flex;
-        flex-direction: row;
-        padding: 3px;
-        flex:1;
-        border: 1px solid #8AFCFD;       
-        span {
-            flex:1;
-        }
-    }
-}
