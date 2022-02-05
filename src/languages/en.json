@@ -41,13 +41,23 @@
     "CommitteeTools": {
       "Welcome": {
         "title": "Welcome to the committee tools",
+        "content-1": "The committe tools allow you to easily decrypt vulnerabilities messages submitted by hackers.",
+        "content-2": "In order to decrypt a message you will need to:",
+        "step-1": "Step 1",
+        "step-1-content": "Create a vault using a password. your password will be used to encrypt the storage.",
+        "step-2": "Step 2",
+        "step-2-content": "Generate/import keys.",
+        "step-3": "What are keys?",
+        "step-3-content": "The encryption works with a private and public keys, where the public key is visible to all people and is used to encrypt messages,the private key should be available only to committee members and allows them to decrypt and read the messages.",
         "content": "We provide you with these tools to allow you to easily decrypt messages received by attackers. You have to createa your vault using a password which will be used to encrypt the storage.",
         "create-title": "Create a Vault",
+        "create-description": "Please create a password for your vault",
+        "create-addenum": "Make sure to save your password in a secure place. Your password can reveal all your private keys, if you lose it, the vault becomes unreadable and may only be deleted.",
         "unlock-title": "Unlock Vault",
         "unlock-vault": "Unlock Vault",
+        "unlock-vault-description": "Please eneter your vault password",
         "delete-vault": "Delete Vault",
         "create-vault": "Create Vault",
-        "create-addenum": "Make sure to save your password in a secure place. Your password can reveal all your private keys, if you lose it, the vault becomes unreadable and may only be deleted.",
         "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
         "delete-yes": "yes",
         "password": "Password",
@@ -90,12 +100,15 @@
         "generate-button": "Generate key-pair"
       },
       "Decrypt": {
+        "decrypt": "Decrypt",
+        "encrypt": "Encrypt",
         "select-keypair": "Select key-pair",
         "encrypted-message": "Encrypted message",
         "decrypted-message": "Decrypted message",
         "decrypt-button": "Decrypt message",
         "encrypt-button": "Encrypt message",
-        "no-key-selected": "No key-pair selected"
+        "no-key-selected": "No key-pair selected",
+        "no-message-decrypt": "No message to decrypt"
       },
       "NewKey": {}
     }

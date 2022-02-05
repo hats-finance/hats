@@ -63,7 +63,7 @@ export default function Decrypt() {
       const armoredMessage = encryptedMessageRef.current!.value;
 
       if (!armoredMessage || armoredMessage === "") {
-        throw new Error("No message to decrypt");
+        throw new Error(t("CommitteeTools.Decrypt.no-message-decrypt"));
       }
 
       const privateKey = await readPrivateKeyFromStoredKey(
@@ -83,6 +83,7 @@ export default function Decrypt() {
         console.log(error);
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultContext.selectedKey]);
 
   const _encrypt = useCallback(async () => {
@@ -149,7 +150,9 @@ export default function Decrypt() {
         </p>
         <EditableContent pastable ref={encryptedMessageRef} />
         {error && <p>{error}</p>}
-        <button onClick={_decrypt}>Decrypt</button>
+        <button onClick={_decrypt}>
+          {t("CommitteeTools.Decrypt.decrypt")}
+        </button>
       </div>
 
       <div className="decrypt-wrapper__textbox-container">
@@ -157,7 +160,9 @@ export default function Decrypt() {
           {t("CommitteeTools.Decrypt.decrypted-message")}
         </p>
         <EditableContent copyable ref={decryptedMessageRef} />
-        <button onClick={_encrypt}>Encrypt</button>
+        <button onClick={_encrypt}>
+          {t("CommitteeTools.Decrypt.encrypt")}
+        </button>
       </div>
 
       {(showSelectKeyModal || showSelectedKeyDetails) && (
