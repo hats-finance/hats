@@ -4,7 +4,7 @@
   &__intro {
     margin-bottom: 36px;
   }
-  
+
   &__keypair-list {
     border: 1px solid $turquoise;
     padding: 0.3em;
@@ -79,5 +79,56 @@
       }
     }
     margin-bottom: 1em;
+  }
+}
+
+.keymodal-generate {
+  &__intro {
+    margin-bottom: 32px;
+  }
+  &__input {
+    margin-bottom: 20px;
+  }
+  &__button-container {
+    padding-top: 30px;
+    button {
+      width: 100%;
+    }
+  }
+  &__result {
+    &-copy {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    &-label {
+      width: 150px;
+    }
+  }
+  &__confirm {
+    display: flex;
+    border: 1px solid $red;
+    box-sizing: border-box;
+    padding: 24px 15px;
+    align-items: center;
+    margin-top: 15px;
+    margin-bottom: 30px;
+
+    input {
+      margin: 0 15px 0 0;
+    }
+    label {
+      margin: 0 !important;
+    }
+  }
+  &__hatsofir {
+    color: $dark-turquoise;
+    text-decoration: underline;
+  }
+  &__button-done {
+    text-align: right;
+    button {
+      width: 200px;
+    }
   }
 }
