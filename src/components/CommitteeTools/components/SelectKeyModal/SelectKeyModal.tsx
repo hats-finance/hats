@@ -66,7 +66,7 @@ export function SelectKeyModal({
       <p className="keymodal-main__intro">
         {t("CommitteeTools.keymodal.intro-text")}
       </p>
-      <div className="special-container">
+      <div className="keymodal-main__special-container">
         <SpecialButton
           src={GenerateKeypairIcon}
           title={t("CommitteeTools.keymodal.create-keypair")}
@@ -81,7 +81,7 @@ export function SelectKeyModal({
         />
       </div>
       {vault.storedKeys.length !== 0 && (
-        <div className="keypair-list">
+        <div className="keymodal-main__keypair-list">
           {vault.storedKeys.map((key) => keyRow(key))}
         </div>
       )}

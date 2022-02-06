@@ -4,4 +4,80 @@
   &__intro {
     margin-bottom: 36px;
   }
+  
+  &__keypair-list {
+    border: 1px solid $turquoise;
+    padding: 0.3em;
+    li {
+      color: $turquoise;
+      margin-bottom: 0.3em;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      .fish-eye {
+        width: 0.7em;
+        height: 0.7em;
+        border-radius: 50%;
+        background-color: $dark-turquoise;
+        margin: 3px;
+        &.selected {
+          background-color: $turquoise;
+          // &:before {
+          //   content: "";
+          //   border: 1px solid #8AFCFD;
+          //   width: 1em;
+          //   height: 1em;
+          //   border-radius: 50%;
+          //   background-color: green;
+          // }
+        }
+      }
+      a {
+        color: $turquoise;
+      }
+      .title {
+        flex: 1;
+        margin-left: 0.5em;
+      }
+      .actions {
+        align-self: flex-end;
+        :not(:first-child) {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  &__special-container {
+    margin: 0 auto 0;
+    flex-direction: row;
+    display: flex;
+    max-width: 600px;
+
+    button {
+      flex: 1;
+      border: 1px solid $turquoise;
+      display: inline-block;
+      background-color: transparent !important;
+      color: $turquoise;
+      &:not(:first-child) {
+        margin-left: 24px;
+      }
+      img {
+        min-height: 5em;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+      }
+      title {
+        display: block;
+        color: $turquoise;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+      }
+      p {
+        color: $dark-turquoise;
+      }
+    }
+    margin-bottom: 1em;
+  }
 }
