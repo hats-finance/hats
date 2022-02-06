@@ -80,13 +80,15 @@ export function SelectKeyModal({
           onClick={() => setAction({ type: ActionType.Import })}
         />
       </div>
-      <p className="keymodal-main__list-title">
-        {t("CommitteeTools.keymodal.your-keys")}
-      </p>
       {vault.storedKeys.length !== 0 && (
-        <div className="keymodal-main__keypair-list">
-          {vault.storedKeys.map((key) => keyRow(key))}
-        </div>
+        <>
+          <p className="keymodal-main__list-title">
+            {t("CommitteeTools.keymodal.your-keys")}
+          </p>
+          <div className="keymodal-main__keypair-list">
+            {vault.storedKeys.map((key) => keyRow(key))}
+          </div>
+        </>
       )}
     </>
   );
