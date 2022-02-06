@@ -7,12 +7,12 @@ import classNames from "classnames";
 import CloseIcon from "../../assets/icons/close.icon";
 import Redeem from "./Redeem";
 import { EligibleTokens } from "../../types/types";
-import { hashToken, isProviderAndNetwork, linkToTokenEtherscan, normalizeAddress } from "../../utils";
+import { hashToken, isEthereumProvider, linkToTokenEtherscan, normalizeAddress } from "../../utils";
 import { useLocation } from "react-router-dom";
 import Loading from "../Shared/Loading";
 import { isRedeemed } from "../../actions/contractsActions";
 import OpenInIcon from "../../assets/icons/openIn.icon";
-import { NETWORK, NFT_AIRDROP_ADDRESS } from "../../settings";
+import { NFT_AIRDROP_ADDRESS } from "../../settings";
 import { useTranslation } from "react-i18next";
 import "./NFTAirdrop.scss";
 
@@ -35,7 +35,6 @@ export default function NFTAirdrop() {
   const [merkleTree, setMerkleTree] = useState<any>();
   const [currentTokenID, setCurrentTokenID] = useState("");
   const [reveal, setReveal] = useState(false);
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const { t } = useTranslation();
 
   const handleChange = useCallback(async (input: string) => {
@@ -91,7 +90,7 @@ export default function NFTAirdrop() {
 
   return (
     <div className={nftAirdropWrapperClass}>
-      {isProviderAndNetwork(provider) ? (
+      {isEthereumProvider() ? (
         <div className="nft-airdrop-search">
           <h2>{eligibilityStatus === EligibilityStatus.ELIGIBLE ? "Congrats!" : eligibilityStatus === EligibilityStatus.NOT_ELIGIBLE ? "Ho no!" : "Hello"}</h2>
           <span>{`Please connect to wallet or enter wallet address to check your eligibility for the NFT airdrop "The crow clan"`}</span>
@@ -112,7 +111,7 @@ export default function NFTAirdrop() {
             </span>
           )}
         </div>
-      ) : <span>{`Please connect your wallet to ${NETWORK}`}</span>}
+      ) : <span className="no-ethereum-proiver-notice">{"No Ethereum provider detected. Please install one or try a different browser"}</span>}
       {
         (eligibilityStatus === EligibilityStatus.ELIGIBLE || eligibilityStatus === EligibilityStatus.REDEEMED) && (
           <Redeem

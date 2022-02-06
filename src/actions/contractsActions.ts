@@ -294,18 +294,26 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
  * @returns {string}
  */
 export const getMerkleTree = async () => {
-  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  const data = contract.filters.MerkleTreeChanged();
-  const filter = await contract.queryFilter(data, 0);
-  return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+  try {
+    const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+    const data = contract.filters.MerkleTreeChanged();
+    const filter = await contract.queryFilter(data, 0);
+    return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 /**
  * Get the base URI
  */
-export const getBaseURI = async (): Promise<string> => {
-  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-  return await contract.baseTokenURI();
+export const getBaseURI = async () => {
+  try {
+    const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, provider);
+    return await contract.baseTokenURI();
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 /**

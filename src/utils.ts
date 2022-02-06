@@ -19,6 +19,17 @@ import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
 
 /**
+ * Returns true if an Ethereum Provider is detected, otherwise returns false.
+ * @returns {boolean}
+ */
+export const isEthereumProvider = () => {
+  if (window.ethereum === undefined) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
  * @param {any} proivder
  * @returns {boolean}

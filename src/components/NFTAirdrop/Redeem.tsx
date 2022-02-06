@@ -51,8 +51,8 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
   useEffect(() => {
     (async () => {
       try {
-        const tokenBaseURI = (await getBaseURI()).substring(7);
-        const data = await axios.get(`${IPFS_PREFIX}${tokenBaseURI}${nftIndex}`);
+        const tokenBaseURI = await getBaseURI();
+        const data = await axios.get(`${IPFS_PREFIX}${tokenBaseURI.substring(7)}${nftIndex}`);
         setNftData(data.data);
       } catch (error) {
         console.error(error);
