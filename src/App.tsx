@@ -22,6 +22,7 @@ import {
   getWithdrawSafetyPeriod,
   normalizeAddress,
   getTokensPrices,
+  parseJSONToObject,
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
@@ -134,29 +135,35 @@ function App() {
   });
 
   useEffect(() => {
-    if (!loading && !error && data && data.vaults) {
+    (async () => {
+      if (!loading && !error && data && data.vaults) {
 
-      const calculateTokenPrices = async () => {
-        const stakingTokens = (data.vaults as IVault[]).map((vault) => {
-          // TODO: Temporay until the protected token will be manifested in the subgraph.
-          if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
-            vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
+        const calculateTokenPrices = async () => {
+          const stakingTokens = (data.vaults as IVault[]).map((vault) => {
+            // TODO: Temporay until the protected token will be manifested in the subgraph.
+            if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
+              vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
+            }
+            return vault.parentVault.stakingToken;
+          })
+
+          const tokensPrices = await getTokensPrices(stakingTokens);
+
+          for (const vault of data.vaults as IVault[]) {
+            if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
+              vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
+            }
+            vault.description = parseJSONToObject(vault.description as any);
+            if (vault.parentDescription) {
+              vault.parentDescription = parseJSONToObject(vault.parentDescription as any);
+            }
           }
-          return vault.parentVault.stakingToken;
-        })
+        };
 
-        const tokensPrices = await getTokensPrices(stakingTokens);
-
-        for (const vault of data.vaults as IVault[]) {
-          if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
-            vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
-          }
-        }
-      };
-
-      calculateTokenPrices();
-      dispatch(updateVaults(data.vaults));
-    }
+        await calculateTokenPrices();
+        dispatch(updateVaults(data.vaults));
+      }
+    })();
   }, [loading, error, data, dispatch]);
 
   const vaults: Array<IVault> = useSelector(

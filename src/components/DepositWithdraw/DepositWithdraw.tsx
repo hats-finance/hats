@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, parseJSONToObject, toWei } from "../../utils";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, toWei } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 import * as contractsActions from "../../actions/contractsActions";
-import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
+import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -62,7 +62,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
       <span>
         WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
         YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff), { units: ["d", "h", "m"] })} PERIOD</span><br /><br />
-        WITHDRAWAL AVAILABLE WITHIN:
+      WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <Countdown
         endDate={withdrawEnableTime}
@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol, committeeCheckedIn, depositPause } = props.data.parentVault;
-  const { parentDescription, isGuest } = props.data;
+  const { parentDescription, isGuest, description } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
@@ -93,8 +93,6 @@ export default function DepositWithdraw(props: IProps) {
   const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
-  const description: IVaultDescription = props.isPool ? null : parseJSONToObject(props.data?.description as string);
-  const descriptionParent: IVaultDescription = parentDescription && parseJSONToObject(parentDescription as string);
   const withdrawSafetyPeriodData = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
@@ -248,7 +246,7 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <div className="input-wrapper">
               {/* TODO: handle project-metadata and Project-metadata */}
-              <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? descriptionParent?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
+              <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? parentDescription?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
             {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${fromWei(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
