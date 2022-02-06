@@ -63,6 +63,7 @@
         "password": "Password",
         "create-password-placeholder": "Enter new password here, min 6 char",
         "create-retype-placeholder": "Retype new password here",
+        "enter-password-placeholder": "Enter password here",
         "passwords-mismatch": "Passwords do not match",
         "confirm": "Confirm"
       },
@@ -77,7 +78,7 @@
       },
       "keymodal": {
         "intro-text": "Please generate a key pair or import a key if you are already holding one",
-        "title": "Keypairs",
+        "title": "Generate/import key-Pairs",
         "create-keypair": "Create Keypair",
         "create-text": "Create new key and a passphrase",
         "import-text": "Import a key using your private key & passphrase",

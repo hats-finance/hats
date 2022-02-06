@@ -37,6 +37,7 @@ export default function UnlockVaultModal() {
         className="unlock-vault__input"
         type="password"
         ref={passwordRef}
+        placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")}
       />
       <button onClick={unlockVault}>Unlock</button>
       {error && <div>{error}</div>}

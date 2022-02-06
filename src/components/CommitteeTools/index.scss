@@ -1,4 +1,4 @@
-@import "../../styles/constants.scss";
+@import "styles/constants.scss";
 
 $committee-blue: #c0f2f2;
 
@@ -21,8 +21,17 @@ $committee-blue: #c0f2f2;
   }
 }
 
+.modal-content-wrapper {
+  background-color: $field-blue !important;
+}
+
+.modal-top {
+  padding: 25px 40px !important;
+  background-color: $blue !important;
+}
+
 .modal-content {
-  margin: 25px 50px;
+  margin: 25px 40px;
   display: flex;
   flex-direction: column;
   color: $white;
@@ -101,6 +110,7 @@ $committee-blue: #c0f2f2;
     flex-direction: row;
     display: flex;
     max-width: 600px;
+
     button {
       flex: 1;
       border: 1px solid $turquoise;
@@ -108,9 +118,8 @@ $committee-blue: #c0f2f2;
       background-color: transparent;
       color: $turquoise;
       &:not(:first-child) {
-        margin-left: 10px;
+        margin-left: 24px;
       }
-
       img {
         min-height: 5em;
         margin-top: 1em;
@@ -120,6 +129,7 @@ $committee-blue: #c0f2f2;
         display: block;
         color: $turquoise;
         text-transform: uppercase;
+        margin-bottom: 20px;
       }
       p {
         color: $dark-turquoise;
