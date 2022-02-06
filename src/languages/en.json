@@ -72,6 +72,7 @@
       },
       "KeyDetails": {
         "title": "Key Details",
+        "description": "Your private key should be shared with your committee members only via secure chat.",
         "private-key": "Private Key",
         "public-key": "Public Key",
         "passphrase": "Passphrase"
@@ -84,6 +85,7 @@
         "import-text": "Import a key using your private key & passphrase",
         "import-keypair": "Import Keypair",
         "delete-keypair": "Delete Keypair",
+        "delete-text": "Are you sure you want to delete key-pair?",
         "selected": "(Selected)",
         "alias": "Alias",
         "passphrase": "Passphrase",
@@ -110,7 +112,8 @@
         "generated-notice-7": " the public key",
         "hatsOfir": "@hatsOfir",
         "import-button": "Import key-pair",
-        "generate-button": "Generate key-pair"
+        "generate-button": "Generate key-pair",
+        "your-keys": "Your Keys"
       },
       "Decrypt": {
         "decrypt": "Decrypt",

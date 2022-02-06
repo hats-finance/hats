@@ -14,7 +14,8 @@ $committee-blue: #c0f2f2;
   }
 
   button {
-    background-color: $committee-blue;
+    border: 1px solid $committee-blue;
+    background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
     text-transform: capitalize;
     margin: 0px;
@@ -51,19 +52,10 @@ $committee-blue: #c0f2f2;
   }
 
   button {
-    background-color: $committee-blue;
+    border: 1px solid $committee-blue;
+    background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
     text-transform: capitalize;
     margin: 0px;
-  }
-}
-
-.key-details-container {
-  .key-element {
-    display: flex;
-    flex-direction: row;
-  }
-  button {
-    margin-top: 1em;
   }
 }

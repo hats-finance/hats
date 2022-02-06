@@ -1,22 +1,47 @@
 import { useTranslation } from "react-i18next";
-import { IStoredKey } from "../../../../types/types";
-import CopyToClipboard from "../../../Shared/CopyToClipboard";
+import { IStoredKey } from "types/types";
+import CopyToClipboard from "components/Shared/CopyToClipboard";
+import "./index.scss";
 
-function KeyDetails({ storedKey, onFinish }: {
-    storedKey: IStoredKey
-    onFinish: () => any
+function KeyDetails({
+  storedKey,
+  onFinish
+}: {
+  storedKey: IStoredKey;
+  onFinish: () => any;
 }) {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
 
-    return (<div className="key-details-container">
-        <div className="key-element">
-            {t("CommitteeTools.KeyDetails.private-key")}<CopyToClipboard value={storedKey.privateKey} />
-            {storedKey.passphrase && <div className="key-element">{t("CommitteeTools.KeyDetails.passphrase")}
-                <CopyToClipboard value={storedKey.passphrase} /></div>}
-            <div className="key-element">{t("CommitteeTools.KeyDetails.public-key")}<CopyToClipboard value={storedKey.publicKey} /></div>
+  return (
+    <div className="keymodal-keydetails">
+      <p className="keymodal-keydetails__description">
+        {t("CommitteeTools.KeyDetails.description")}
+      </p>
+      <div className="keymodal-keydetails__result-copy">
+        <span className="keymodal-keydetails__result-label">
+          {t("CommitteeTools.KeyDetails.private-key")}
+        </span>
+        <CopyToClipboard value={storedKey.privateKey} />
+      </div>
+      {storedKey.passphrase && (
+        <div className="keymodal-keydetails__result-copy">
+          <span className="keymodal-keydetails__result-label">
+            {t("CommitteeTools.KeyDetails.passphrase")}
+          </span>
+          <CopyToClipboard value={storedKey.passphrase} />
         </div>
+      )}
+      <div className="keymodal-keydetails__result-copy">
+        <span className="keymodal-keydetails__result-label">
+          {t("CommitteeTools.KeyDetails.public-key")}
+        </span>
+        <CopyToClipboard value={storedKey.publicKey} />
+      </div>
+      <div className="keymodal-keydetails__button-container">
         <button onClick={onFinish}>Back</button>
-    </div>)
+      </div>
+    </div>
+  );
 }
 
-export default KeyDetails
+export default KeyDetails;

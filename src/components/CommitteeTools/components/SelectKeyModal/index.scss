@@ -5,15 +5,19 @@
     margin-bottom: 36px;
   }
 
+  &__list-title {
+    color: $turquoise;
+  }
+
   &__keypair-list {
     border: 1px solid $turquoise;
-    padding: 0.3em;
+    padding: 8px 8px;
     li {
-      color: $turquoise;
-      margin-bottom: 0.3em;
       display: flex;
       flex-direction: row;
       align-items: center;
+      color: $turquoise;
+      padding: 8px;
       .fish-eye {
         width: 0.7em;
         height: 0.7em;
@@ -38,6 +42,9 @@
       .title {
         flex: 1;
         margin-left: 0.5em;
+      }
+      .copy {
+        margin-right: 15px;
       }
       .actions {
         align-self: flex-end;
@@ -130,5 +137,42 @@
     button {
       width: 200px;
     }
+  }
+}
+
+.keymodal-keydetails {
+  &__description {
+    margin-bottom: 30px;
+  }
+  &__result {
+    &-copy {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    &-label {
+      width: 150px;
+    }
+  }
+  &__button-container {
+    padding-top: 20px;
+  }
+}
+
+.keymodal-delete {
+  &__description {
+    margin-bottom: 50px;
+  }
+  &__button-container {
+    display: flex;
+    justify-content: space-between;
+    button {
+      width: 40%;
+    }
+  }
+  &__button-cancel {
+    background-color: transparent !important;
+    border: 1px solid $turquoise;
+    color: $turquoise;
   }
 }

@@ -12,45 +12,26 @@
       margin-bottom: $spacing-3;
     }
   }
-}
-
-.selected-key {
-  display: flex;
-  flex-direction: row;
-  margin-bottom: $spacing-3;
-
-  .box-with-copy {
-    align-items: center;
-    margin-right: 5px;
+  &__selected-key {
     display: flex;
     flex-direction: row;
-    padding: 3px;
-    flex: 1;
-    border: 1px solid $turquoise;
-    span {
-      flex: 1;
+    justify-content: space-between;
+    margin-bottom: $spacing-3;
+
+    .box-with-copy {
+      width: 60%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-right: 5px;
+      padding: 8px 8px 8px 16px;
+      border: 1px solid $turquoise;
+      span {
+        flex: 1;
+      }
+    }
+    .open-key-list {
+      width: 30%;
     }
   }
 }
-
-// .keypair-list {
-//     border: 1px solid $turquoise;
-//     padding: 0px 1em;
-//     img {
-//         cursor:pointer;
-//     }
-//     li {
-//         margin: 0.5em 0;
-//         &:hover {
-//             background-color: black;
-//         }
-//         .keypair-name {
-//             min-width: 12em;
-//         }
-
-//         display: flex;
-//         flex-direction: row;
-//         min-width: 12em;
-//         list-style-type:none;
-//     }
-// }

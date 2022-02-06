@@ -113,7 +113,7 @@ export default function Decrypt() {
 
   const SelectedKeypair = () =>
     vaultContext && (
-      <div className="selected-key">
+      <div className="decrypt-wrapper__selected-key">
         <div className="box-with-copy">
           <span>
             {vaultContext.selectedKey
@@ -131,6 +131,7 @@ export default function Decrypt() {
           )}
         </div>
         <button
+          className="open-key-list"
           onClick={() => {
             setShowSelectKeyModal(true);
           }}
