@@ -10,6 +10,7 @@ import Countdown from "../Shared/Countdown/Countdown";
 import { EligibilityStatus } from "./NFTAirdrop";
 import QuestionIcon from "../../assets/icons/big-question-icon.svg";
 import Image from "../Shared/Image/Image";
+import { t } from "i18next";
 import "./Redeem.scss";
 
 interface IProps {
@@ -92,14 +93,15 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
       </div>
       {revealed && deadline && eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <div className="redeem-wrapper__countdown-container">
-          {redeemable ? <span className="redeem-text">Redeem is available for:</span> : <span className="redeem-passed-text">Redeem period has passed</span>}
+          {redeemable ? <span className="redeem-text">{t("NFTAirdop.Redeem.redeem-available")}:</span> : <span className="redeem-passed-text">{t("NFTAirdop.Redeem.redeem-passed")}</span>}
           {redeemable && <Countdown endDate={deadline} compactView />}
         </div>
       )}
+      {eligibilityStatus === EligibilityStatus.REDEEMED && <span className="redeem-wrapper__already-redeemed-label">{t("NFTAirdop.Redeem.already-redeemed")}</span>}
       {eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <>
-          {revealed && <button disabled={!isProviderAndNetwork(provider) || !redeemable} className="action-btn redeem-btn" onClick={redeem}>REDEEM</button>}
-          {!revealed && <button className="action-btn reveal-btn" onClick={() => setRevealed(true)}>REVEAL</button>}
+          {revealed && <button disabled={!isProviderAndNetwork(provider) || !redeemable} className="action-btn redeem-btn" onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>}
+          {!revealed && <button className="action-btn reveal-btn" onClick={() => setRevealed(true)}>{t("NFTAirdop.Redeem.reveal")}</button>}
         </>
       )}
     </div>

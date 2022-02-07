@@ -112,8 +112,9 @@ export default function NFTAirdrop() {
           )}
         </div>
       ) : <span className="no-ethereum-proiver-notice">{"No Ethereum provider detected. Please install one or try a different browser"}</span>}
-      {
-        (eligibilityStatus === EligibilityStatus.ELIGIBLE || eligibilityStatus === EligibilityStatus.REDEEMED) && (
+
+      <div className="redeem-container">
+        {(eligibilityStatus === EligibilityStatus.ELIGIBLE || eligibilityStatus === EligibilityStatus.REDEEMED) && (
           <Redeem
             merkleTree={merkleTree}
             walletAddress={normalizeAddress(userInput)}
@@ -121,8 +122,9 @@ export default function NFTAirdrop() {
             onSuccess={() => setEligibilityStatus(EligibilityStatus.REDEEMED)}
             eligibilityStatus={eligibilityStatus}
             reveal={reveal} />
-        )
-      }
+        )}
+      </div>
+
       {pendingWalletAction && <Loading />}
     </div >
   )
