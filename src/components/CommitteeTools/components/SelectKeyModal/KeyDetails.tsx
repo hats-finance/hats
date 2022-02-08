@@ -3,13 +3,7 @@ import { IStoredKey } from "types/types";
 import CopyToClipboard from "components/Shared/CopyToClipboard";
 import "./index.scss";
 
-function KeyDetails({
-  storedKey,
-  onFinish
-}: {
-  storedKey: IStoredKey;
-  onFinish: () => any;
-}) {
+function KeyDetails({ storedKey }: { storedKey: IStoredKey }) {
   const { t } = useTranslation();
 
   return (
@@ -36,9 +30,6 @@ function KeyDetails({
           {t("CommitteeTools.KeyDetails.public-key")}
         </span>
         <CopyToClipboard value={storedKey.publicKey} />
-      </div>
-      <div className="keymodal-keydetails__button-container">
-        <button onClick={onFinish}>Back</button>
       </div>
     </div>
   );

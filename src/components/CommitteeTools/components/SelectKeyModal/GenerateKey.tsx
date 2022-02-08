@@ -76,6 +76,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           {t("CommitteeTools.keymodal.generated-notice-4")}{" "}
           <a
             className="keymodal-generate__hatsofir"
+            target="_blank"
+            rel="noreferrer"
             href="https://t.me/Hatsofir"
           >
             {t("CommitteeTools.keymodal.hatsOfir")}
@@ -92,6 +94,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
             {t("CommitteeTools.keymodal.generated-notice-6")}{" "}
             <a
               className="keymodal-generate__hatsofir"
+              target="_blank"
+              rel="noreferrer"
               href="https://t.me/Hatsofir"
             >
               {t("CommitteeTools.keymodal.hatsOfir")}

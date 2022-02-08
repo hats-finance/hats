@@ -139,7 +139,7 @@ export function SelectKeyModal({
       case ActionType.Delete:
         return <DeleteKey keyToDelete={action.key!} onFinish={onFinish} />;
       case ActionType.Display:
-        return <KeyDetails storedKey={action.key!} onFinish={onFinish} />;
+        return <KeyDetails storedKey={action.key!} />;
       case ActionType.None:
         return mainView();
     }
