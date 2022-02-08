@@ -39,6 +39,23 @@
     color: $red;
     margin: 15px 0;
   }
+  .redeem-wrapper__redeem-btn-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    .checkbox-container {
+      display: flex;
+      a {
+        color: $turquoise;
+      }
+      input[type="checkbox"] {
+        margin-right: 10px;
+        width: 50px;
+        height: 30px;
+        cursor: pointer;
+      }
+    }
+  }
   .action-btn {
     width: 100%;
     margin: 20px 0px;

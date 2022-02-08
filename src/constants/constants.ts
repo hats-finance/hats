@@ -106,6 +106,8 @@ export const RISK_FACTOR = "https://docs.hats.finance/risk-factor";
 
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
+export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
+
 export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 export const UNISWAP_V3_STAKER_ADDRESS =

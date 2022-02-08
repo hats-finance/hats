@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createTransaction, getDeadline, getBaseURI, nftAirdropRedeem } from "../../actions/contractsActions";
-import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
+import { IPFS_PREFIX, LocalStorage, TERMS_OF_SALE_OF_NFTS } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { EligibleTokens, IAirdropElement } from "../../types/types";
 import { hashToken, isDateBefore, isProviderAndNetwork } from "../../utils";
@@ -40,6 +40,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
   const nftIndex = Object.keys(eligibleTokens).find(key => eligibleTokens[key] === walletAddress);
   const [deadline, setDeadline] = useState<string>();
   const [redeemable, setRedeemable] = useState(false);
+  const [acceptedTermsOfSale, setAcceptedTermsOfSale] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -100,7 +101,15 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
       {eligibilityStatus === EligibilityStatus.REDEEMED && <span className="redeem-wrapper__already-redeemed-label">{t("NFTAirdop.Redeem.already-redeemed")}</span>}
       {eligibilityStatus !== EligibilityStatus.REDEEMED && (
         <>
-          {revealed && <button disabled={!isProviderAndNetwork(provider) || !redeemable} className="action-btn redeem-btn" onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>}
+          {revealed && (
+            <div className="redeem-wrapper__redeem-btn-container">
+              <div className="checkbox-container">
+                <input type="checkbox" checked={acceptedTermsOfSale} onChange={() => setAcceptedTermsOfSale(!acceptedTermsOfSale)} />
+                <label>By redeeming, I agree to the <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_SALE_OF_NFTS}>TERMS OF SALE OF NFTs</a></u></label>
+              </div>
+              <button disabled={!isProviderAndNetwork(provider) || !redeemable || !acceptedTermsOfSale} className="action-btn redeem-btn" onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+            </div>
+          )}
           {!revealed && <button className="action-btn reveal-btn" onClick={() => setRevealed(true)}>{t("NFTAirdop.Redeem.reveal")}</button>}
         </>
       )}
