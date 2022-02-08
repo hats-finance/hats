@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
 import CopyToClipboard from "components/Shared/CopyToClipboard";
+import CheckboxIcon from "assets/icons/checkbox.svg";
+import classNames from "classnames";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const aliasRef = useRef<HTMLInputElement>(null);
@@ -84,23 +86,35 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           </a>
           {t("CommitteeTools.keymodal.generated-notice-5")}
         </p>
-        <div className="keymodal-generate__confirm">
-          <input
-            type="checkbox"
-            name="didSharePublic"
-            onChange={(e) => setSentPublicChecked(e.currentTarget.checked)}
-          />
-          <label htmlFor="didSharePublic">
-            {t("CommitteeTools.keymodal.generated-notice-6")}{" "}
-            <a
-              className="keymodal-generate__hatsofir"
-              target="_blank"
-              rel="noreferrer"
-              href="https://t.me/Hatsofir"
-            >
-              {t("CommitteeTools.keymodal.hatsOfir")}
-            </a>
-            {t("CommitteeTools.keymodal.generated-notice-7")}
+        <div
+          className={classNames("keymodal-generate__confirm", {
+            "keymodal-generate__confirm--checked": sentPublicChecked
+          })}
+        >
+          <label
+            htmlFor="didSharePublic"
+            className="keymodal-generate__confirm-icon"
+          >
+            <input
+              type="checkbox"
+              id="didSharePublic"
+              onChange={(e) => setSentPublicChecked(e.currentTarget.checked)}
+            />
+            <span>
+              <img src={CheckboxIcon} alt="" />
+            </span>
+            <p>
+              {t("CommitteeTools.keymodal.generated-notice-6")}{" "}
+              <a
+                className="keymodal-generate__hatsofir"
+                target="_blank"
+                rel="noreferrer"
+                href="https://t.me/Hatsofir"
+              >
+                {t("CommitteeTools.keymodal.hatsOfir")}
+              </a>
+              {t("CommitteeTools.keymodal.generated-notice-7")}
+            </p>
           </label>
         </div>
         <div className="keymodal-generate__button-done">

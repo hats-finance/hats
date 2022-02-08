@@ -76,7 +76,7 @@
         color: $turquoise;
         text-transform: uppercase;
         margin-bottom: 15px;
-        
+
         @media only screen and (max-width: $mobile-breakpoint) {
           height: 35px;
           margin-bottom: 0;
@@ -114,19 +114,51 @@
     }
   }
   &__confirm {
-    display: flex;
     border: 1px solid $red;
     box-sizing: border-box;
     padding: 24px 15px;
-    align-items: center;
     margin-top: 15px;
     margin-bottom: 30px;
 
-    input {
-      margin: 0 15px 0 0;
+    &--checked {
+      border-color: $turquoise;
     }
-    label {
+
+    &-icon {
+      display: flex !important;
+      align-items: center;
+      position: relative;
       margin: 0 !important;
+      cursor: pointer;
+
+      input {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        opacity: 0;
+        height: 1px;
+        width: 1px;
+        cursor: pointer;
+      }
+      span {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        border: 1px solid $turquoise;
+      }
+      img {
+        opacity: 0;
+      }
+      input:checked ~ span {
+        img {
+          opacity: 1;
+        }
+      }
+      p {
+        margin: 0 !important;
+        padding-left: 30px;
+      }
     }
   }
   &__hatsofir {
