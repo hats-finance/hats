@@ -43,17 +43,8 @@
     display: flex;
     flex-direction: column;
     margin-top: 50px;
-    .checkbox-container {
-      display: flex;
-      a {
-        color: $turquoise;
-      }
-      input[type="checkbox"] {
-        margin-right: 10px;
-        width: 50px;
-        height: 30px;
-        cursor: pointer;
-      }
+    a {
+      color: $turquoise;
     }
   }
   .action-btn {
