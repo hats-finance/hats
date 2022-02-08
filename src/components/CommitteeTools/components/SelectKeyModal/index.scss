@@ -83,6 +83,8 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
+      text-transform: none !important;
+      font-size: $xsmall !important;
       &:not(:first-child) {
         margin-left: 24px;
       }

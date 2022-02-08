@@ -15,7 +15,8 @@
     border: 1px solid $committee-blue;
     background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: $small;
     margin: 0px;
   }
 }
@@ -27,6 +28,7 @@
 .modal-top {
   padding: 25px 40px !important;
   background-color: $blue !important;
+  text-transform: uppercase;
 }
 
 .modal-content {
@@ -53,7 +55,8 @@
     border: 1px solid $committee-blue;
     background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: $small;
     margin: 0px;
   }
 }
