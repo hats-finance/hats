@@ -97,7 +97,6 @@ export function SelectKeyModal({
     const selected = key.alias === vaultContext.selectedKey?.alias;
     return (
       <li key={key.alias}>
-        <div className={classNames({ "fish-eye": true, selected })} />
         <NavLink
           to="#"
           className="title"
@@ -106,7 +105,8 @@ export function SelectKeyModal({
             setShowModal(false);
           }}
         >
-          {key.alias}
+          <div className={classNames({ "fish-eye": true, selected })} />
+          <span>{key.alias}</span>
         </NavLink>
         <NavLink
           to="#"
