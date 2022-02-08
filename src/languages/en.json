@@ -84,6 +84,7 @@
         "create-text": "Create new key and a passphrase",
         "import-text": "Import a key using your private key & passphrase",
         "import-keypair": "Import Keypair",
+        "paste-private-key": "Paste your private key here",
         "delete-keypair": "Delete Keypair",
         "delete-text": "Are you sure you want to delete key-pair?",
         "selected": "(Selected)",

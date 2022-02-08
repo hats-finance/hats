@@ -210,6 +210,18 @@
   }
 }
 
+.keymodal-importkey {
+  &__description {
+    margin-bottom: 30px;
+  }
+  &__input {
+    margin-bottom: 20px;
+  }
+  &__nokey {
+    width: 450px;
+  }
+}
+
 .keymodal-delete {
   &__description {
     margin-bottom: 50px;

@@ -15,6 +15,11 @@
     color: $turquoise;
     resize: none;
     border: 1px solid $turquoise;
+
+    &::placeholder {
+      color: $dirty-turquoise;
+      font-family: RobotoMono;
+    }
   }
 
   &__extra-icons {
