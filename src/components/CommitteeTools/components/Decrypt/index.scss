@@ -26,8 +26,34 @@
       margin-right: 5px;
       padding: 8px 8px 8px 16px;
       border: 1px solid $turquoise;
-      span {
+      .selected-key {
         flex: 1;
+        display: flex;
+        align-items: center;
+        span {
+          margin-left: 0.5em;
+        }
+
+        &__fish-eye {
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          position: relative;
+          background-color: $turquoise;
+          margin: 3px;
+
+          &:after {
+            content: "";
+            border: 1px solid $turquoise;
+            border-radius: 50%;
+            width: 23px;
+            height: 23px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
       }
     }
     .open-key-list {

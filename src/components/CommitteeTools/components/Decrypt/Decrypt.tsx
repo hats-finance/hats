@@ -115,11 +115,14 @@ export default function Decrypt() {
     vaultContext && (
       <div className="decrypt-wrapper__selected-key">
         <div className="box-with-copy">
-          <span>
-            {vaultContext.selectedKey
-              ? vaultContext.selectedKey.alias
-              : t("CommitteeTools.Decrypt.no-key-selected")}
-          </span>
+          <div className="selected-key">
+            <div className="selected-key__fish-eye" />
+            <span>
+              {vaultContext.selectedKey
+                ? vaultContext.selectedKey.alias
+                : t("CommitteeTools.Decrypt.no-key-selected")}
+            </span>
+          </div>
           {vaultContext.selectedKey && (
             <img
               alt="copy"

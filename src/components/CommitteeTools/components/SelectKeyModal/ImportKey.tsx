@@ -9,14 +9,14 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
   const vaultContext = useContext(VaultContext);
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);
-  const privateKeyRef = useRef<HTMLDivElement>(null);
+  const privateKeyRef = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string>();
   const { t } = useTranslation();
 
   const addKey = async () => {
     try {
       const alias = aliasRef.current!.value;
-      const privateKey = privateKeyRef.current!.textContent!;
+      const privateKey = privateKeyRef.current!.value!;
       const passphrase = passphraseRef.current!.value;
 
       if (privateKey === "")
