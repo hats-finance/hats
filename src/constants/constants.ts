@@ -4,7 +4,8 @@ export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED"
+  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED",
+  PGPKeystore = "HATS_PGP_KEYSTORE"
 }
 
 export enum ScreenSize {
@@ -17,7 +18,8 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  nft_airdrop = "/nft_airdrop/"
+  nft_airdrop = "/nft_airdrop/",
+  committee_tools = "/committee-tools"
 }
 
 export enum Networks {

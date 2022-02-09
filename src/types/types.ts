@@ -1,3 +1,5 @@
+import { PrivateKey } from "openpgp";
+
 export interface IParentVault {
   id: string
   pid: string
@@ -201,4 +203,11 @@ export interface IAirdropElement {
   image: string
   name: string
   attributes: Array<any>
+}
+
+export interface IStoredKey {
+  alias: string
+  privateKey: string
+  passphrase?: string | undefined
+  publicKey: string
 }
