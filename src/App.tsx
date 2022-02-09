@@ -39,7 +39,7 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
-import CommitteeTools from "./components/CommitteeTools/CommitteTools";
+//import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -241,9 +241,9 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        <Route path={`${RoutePaths.committee_tools}`}>
+        {/* <Route path={RoutePaths.committee_tools}>
           <CommitteeTools />
-        </Route>
+        </Route> */}
         {/* NFT Airdrop - Temporary disabled */}
         {/* <Route path={RoutePaths.nft_airdrop}>
           <NFTAirdrop />
