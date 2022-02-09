@@ -1,0 +1,10 @@
+@import "styles/constants.scss";
+
+.unlock-vault {
+  &__label {
+    margin-bottom: 16px !important;
+  }
+  &__input {
+    margin-bottom: 30px;
+  }
+}

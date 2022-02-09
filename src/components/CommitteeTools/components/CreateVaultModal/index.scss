@@ -1,0 +1,17 @@
+@import "styles/constants.scss";
+
+.create-vault {
+  &__description {
+    color: $white;
+  }
+  &__addenum {
+    color: $dark-turquoise;
+  }
+  &__button-container {
+    padding-top: 30px;
+
+    button {
+      width: 100%;
+    }
+  }
+}
