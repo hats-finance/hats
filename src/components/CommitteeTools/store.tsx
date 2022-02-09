@@ -30,6 +30,7 @@ export function VaultProvider({ children }) {
     const [vault, setVault] = useState<IVaultStore | undefined>(undefined);
     const selectedKey = vault?.selectedAlias ? vault.storedKeys.find(key => key.alias === vault.selectedAlias) : undefined;
     const [password, setPassword] = useState<string>();
+    const [isCreated, setIsCreated] = useState<boolean>(false);
 
     const addKey = (newKey: IStoredKey) => {
         // check for empty alias
@@ -89,17 +90,20 @@ export function VaultProvider({ children }) {
             if (password && vault) {
                 const encrypted = await encryptor.encrypt(password, vault);
                 localStorage.setItem(LocalStorage.PGPKeystore, encrypted);
+                setIsCreated(true);
             }
         })()
     }, [vault, password])
 
-
+    useEffect(() => {
+        if (localStorage.getItem(LocalStorage.PGPKeystore)) setIsCreated(true);
+    }, []);
 
     return <VaultContext.Provider value={{
         vault, addKey, removeKey, createVault, unlockVault, setSelectedAlias,
         selectedKey, deleteVault, deleteKey,
         isLocked: password === undefined,
-        isCreated: localStorage.getItem(LocalStorage.PGPKeystore) !== null
+        isCreated,
     }}>
         {children}
     </VaultContext.Provider>

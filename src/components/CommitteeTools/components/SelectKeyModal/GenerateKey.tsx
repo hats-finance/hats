@@ -17,9 +17,11 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const [error, setError] = useState<string>();
   const [addedKey, setAddedKey] = useState<IStoredKey>();
   const [sentPublicChecked, setSentPublicChecked] = useState<boolean>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   async function _handleClick() {
     try {
+      setLoading(true);
       const alias = aliasRef.current!.value;
       const passphrase = passphraseRef.current?.value;
       const name = nameRef.current!.value;
@@ -38,10 +40,12 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
       if (vaultContext.selectedKey === undefined)
         vaultContext.setSelectedAlias!(alias);
       setAddedKey(toAdd);
+      setLoading(false);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }
+      setLoading(false);
     }
   }
 
@@ -161,7 +165,11 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           placeholder={t("CommitteeTools.keymodal.enter-email-placeholder")}
         />
         <div className="keymodal-generate__button-container">
-          <button onClick={_handleClick}>
+          <button
+            onClick={_handleClick}
+            disabled={loading}
+            className={classNames({ loading: loading })}
+          >
             {t("CommitteeTools.keymodal.generate-button")}
           </button>
         </div>
