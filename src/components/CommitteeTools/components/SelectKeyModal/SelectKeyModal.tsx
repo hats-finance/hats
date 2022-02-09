@@ -156,7 +156,9 @@ export function SelectKeyModal({
       case ActionType.Display:
         return t("CommitteeTools.KeyDetails.title");
       case ActionType.None:
-        return t("CommitteeTools.keymodal.title");
+        if (vault.storedKeys.length !== 0)
+          return t("CommitteeTools.keymodal.list-keypair");
+        else return t("CommitteeTools.keymodal.title");
     }
   };
 
