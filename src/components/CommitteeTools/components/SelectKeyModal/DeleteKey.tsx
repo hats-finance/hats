@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import { t } from "i18next";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
+import { t } from "i18next";
 
 function DeleteKey({
   keyToDelete,
@@ -19,6 +19,7 @@ function DeleteKey({
       </p>
       <div className="keymodal-delete__button-container">
         <button
+          className="fill"
           onClick={() => {
             vaultContext!.deleteKey!(keyToDelete);
             onFinish();

@@ -34,7 +34,6 @@ export function SelectKeyModal({
   showKey?: IStoredKey; // used to show key details
   setShowModal: (show: boolean) => any;
 }) {
-  console.log({ showKey });
   const vaultContext = useContext(VaultContext);
   const [action, setAction] = useState<IAction>(
     showKey

@@ -1,13 +1,13 @@
 import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import "./index.scss";
 import { VaultContext } from "../../store";
 import { decryptKey, readPrivateKey } from "openpgp";
 import SelectKeyModal from "../SelectKeyModal/SelectKeyModal";
 import { useLocation } from "react-router-dom";
 import EditableContent from "../EditableContent/EditableContent";
 import CopyIcon from "assets/icons/copy.icon.svg";
+import "./index.scss";
 
 export async function readPrivateKeyFromStoredKey(
   privateKey: string,
@@ -134,7 +134,7 @@ export default function Decrypt() {
           )}
         </div>
         <button
-          className="open-key-list"
+          className="open-key-list fill"
           onClick={() => {
             setShowSelectKeyModal(true);
           }}
@@ -153,8 +153,8 @@ export default function Decrypt() {
           {t("CommitteeTools.Decrypt.encrypted-message")}
         </p>
         <EditableContent pastable ref={encryptedMessageRef} />
-        {error && <p>{error}</p>}
-        <button onClick={_decrypt}>
+        {error && <div className="error-label">{error}</div>}
+        <button onClick={_decrypt} className="fill">
           {t("CommitteeTools.Decrypt.decrypt")}
         </button>
       </div>
@@ -164,7 +164,7 @@ export default function Decrypt() {
           {t("CommitteeTools.Decrypt.decrypted-message")}
         </p>
         <EditableContent copyable ref={decryptedMessageRef} />
-        <button onClick={_encrypt}>
+        <button onClick={_encrypt} className="fill">
           {t("CommitteeTools.Decrypt.encrypt")}
         </button>
       </div>

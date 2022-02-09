@@ -35,7 +35,7 @@ export default function UnlockVaultModal() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")} />
-        {error && <span className="error-label">{error}</span>}
+        {error && <div className="error-label">{error}</div>}
         <button disabled={!password} onClick={unlockVault}>{t("CommitteeTools.Welcome.unlock")}</button>
       </div>
     </Modal>

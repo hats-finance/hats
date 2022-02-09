@@ -41,7 +41,7 @@ export default function CreateVaultModal({ setShowModal }: { setShowModal: (show
           onChange={(e) => setPasswordConfirmRef(e.target.value)}
           placeholder={t("CommitteeTools.Welcome.create-retype-placeholder")}
         />
-        {error && <span className="error-label">{error}</span>}
+        {error && <div className="error-label">{error}</div>}
         <button disabled={!password || !passwordConfirm} onClick={createVault}>
           {t("CommitteeTools.Welcome.create-vault")}
         </button>

@@ -1,6 +1,16 @@
 @import "styles/constants.scss";
 
 .committee-tools-wrapper {
-  display: flex;
-  flex-direction: row;
+  max-width: $table-max-width !important;
+  margin: auto !important;
+  .error-label {
+    color: $red;
+    margin: 5px 0px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .committee-tools-wrapper {
+    padding: $element-padding-mobile;
+  }
 }

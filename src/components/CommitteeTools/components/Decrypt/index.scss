@@ -61,11 +61,18 @@
     }
     .open-key-list {
       width: 30%;
+      margin: unset;
     }
   }
 
   @media only screen and (max-width: $mobile-breakpoint) {
-    margin-left: 10px;
-    margin-right: 10px;
+    .decrypt-wrapper {
+      &__textbox-container {
+        button {
+          width: 100%;
+          margin: unset;
+        }
+      }
+    }
   }
 }

@@ -1,18 +1,17 @@
 import { useContext, useRef, useState } from "react";
 import { generateKey } from "openpgp";
-import { useTranslation } from "react-i18next";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
 import CopyToClipboard from "components/Shared/CopyToClipboard";
 import CheckboxIcon from "assets/icons/checkbox.svg";
 import classNames from "classnames";
+import { t } from "i18next";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
-  const aliasRef = useRef<HTMLInputElement>(null);
+  const [alias, setAlias] = useState("");
   const passphraseRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
   const [error, setError] = useState<string>();
   const [addedKey, setAddedKey] = useState<IStoredKey>();
@@ -22,7 +21,6 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   async function _handleClick() {
     try {
       setLoading(true);
-      const alias = aliasRef.current!.value;
       const passphrase = passphraseRef.current?.value;
       const name = nameRef.current!.value;
       const email = emailRef.current!.value;
@@ -75,11 +73,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           </span>
           <CopyToClipboard value={addedKey.publicKey} />
         </div>
-        <p>{t("CommitteeTools.keymodal.generated-notice-1")}</p>
-        <p>{t("CommitteeTools.keymodal.generated-notice-2")}</p>
-        <p>{t("CommitteeTools.keymodal.generated-notice-3")}</p>
         <p>
-          {t("CommitteeTools.keymodal.generated-notice-4")}{" "}
+          {t("CommitteeTools.keymodal.generated-notice-1")}
           <a
             className="keymodal-generate__hatsofir"
             target="_blank"
@@ -88,7 +83,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           >
             {t("CommitteeTools.keymodal.hatsOfir")}
           </a>
-          {t("CommitteeTools.keymodal.generated-notice-5")}
+          {t("CommitteeTools.keymodal.generated-notice-2")}
         </p>
         <div
           className={classNames("keymodal-generate__confirm", {
@@ -121,11 +116,9 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
             </p>
           </label>
         </div>
-        <div className="keymodal-generate__button-done">
-          <button disabled={!sentPublicChecked} onClick={onFinish}>
-            {t("CommitteeTools.keymodal.done")}
-          </button>
-        </div>
+        <button disabled={!sentPublicChecked} onClick={onFinish}>
+          {t("CommitteeTools.keymodal.done")}
+        </button>
       </>
     );
   } else {
@@ -137,7 +130,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <label>{t("CommitteeTools.keymodal.alias")}</label>
         <input
           className="keymodal-generate__input"
-          ref={aliasRef}
+          value={alias}
+          onChange={(e) => setAlias(e.target.value)}
           type="text"
           placeholder={t("CommitteeTools.keymodal.enter-alias-placeholder")}
         />
@@ -164,16 +158,13 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           type="text"
           placeholder={t("CommitteeTools.keymodal.enter-email-placeholder")}
         />
-        <div className="keymodal-generate__button-container">
-          <button
-            onClick={_handleClick}
-            disabled={loading}
-            className={classNames({ loading: loading })}
-          >
-            {t("CommitteeTools.keymodal.generate-button")}
-          </button>
-        </div>
-        {error && <p>{error}</p>}
+        <button
+          onClick={_handleClick}
+          disabled={loading || !alias}
+          className={classNames({ loading: loading })}>
+          {t("CommitteeTools.keymodal.generate-button")}
+        </button>
+        {error && <div className="error-label">{error}</div>}
       </>
     );
   }

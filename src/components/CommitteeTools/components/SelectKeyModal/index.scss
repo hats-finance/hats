@@ -2,6 +2,19 @@
 
 .select-key-modal-wrapper {
   padding: $modal-element-padding;
+  display: flex;
+  flex-direction: column;
+  white-space: pre-line;
+  .error-label {
+    color: $red;
+    margin: 5px 0px;
+  }
+  input {
+    height: 50px;
+  }
+  label {
+    margin-bottom: 5px;
+  }
   .keymodal-main {
     &__intro {
       margin-bottom: 36px;
@@ -214,9 +227,6 @@
     &__input {
       margin-bottom: 20px;
     }
-    &__nokey {
-      width: 450px;
-    }
   }
 
   .keymodal-delete {
@@ -236,20 +246,28 @@
       color: $turquoise;
     }
   }
+  button {
+    margin-top: 40px;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .select-key-modal-wrapper {
     padding: $modal-element-padding-mobile;
+    height: 100%;
+    box-sizing: border-box;
     .keymodal-main {
       &__special-container {
         flex-direction: column;
         button {
           &:not(:first-child) {
-            margin-left: unset;
+            margin-left: 5px;
           }
         }
       }
+    }
+    button {
+      margin-top: auto;
     }
   }
 }

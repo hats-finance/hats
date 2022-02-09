@@ -12,11 +12,15 @@
       margin-bottom: 10px;
     }
   }
-  .error-label {
-    color: $red;
+  input {
+    height: 50px;
   }
   button {
     margin-top: 50px;
+  }
+  .error-label {
+    color: $red;
+    margin: 5px 0px;
   }
 }
 

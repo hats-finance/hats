@@ -69,7 +69,7 @@
         "unlock": "Unlock"
       },
       "ImportKey": {
-        "no-key-error": "No private key have been given, please paste your private key"
+        "no-key-error": "Please paste your private key"
       },
       "KeyDetails": {
         "title": "Key Details",
@@ -106,22 +106,18 @@
         "hello": "Hello committee member",
         "share-public": "Please share your public key with the committee members",
         "generated-success": "Your keypair were generated successfully!",
-        "generated-notice-1": "Please notice!",
-        "generated-notice-2": "your private key should be shared with your committee members only via secure chat.",
-        "generated-notice-3": "The public key is used by Hats to encrypt messages from white hat attackers.",
-        "generated-notice-4": "Please take a minute and send the the public key to ",
-        "generated-notice-5": " to be added to Hats json file",
-        "generated-notice-6": "I have send ",
+        "generated-notice-1": "Please notice! \n\n your private key should be shared with your committee members only via secure chat. \n\n The public key is used by Hats to encrypt messages from white hat attackers. \n\n Please take a minute and send the the public key to ",
+        "generated-notice-2": " to be added to Hats json file",
+        "generated-notice-6": "I have sent ",
         "generated-notice-7": " the public key",
         "hatsOfir": "@hatsOfir",
-        "import-button": "Import key-pair",
         "generate-button": "Generate key-pair",
         "your-keys": "Your Keys"
       },
       "Decrypt": {
         "decrypt": "Decrypt",
         "encrypt": "Encrypt",
-        "select-keypair": "Select key-pair",
+        "select-keypair": "SELECT KEY-PAIR",
         "encrypted-message": "Encrypted message",
         "decrypted-message": "Decrypted message",
         "decrypt-button": "Decrypt message",
