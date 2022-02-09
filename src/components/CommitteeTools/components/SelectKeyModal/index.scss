@@ -1,0 +1,242 @@
+@import "styles/constants.scss";
+
+.keymodal-main {
+  &__intro {
+    margin-bottom: 36px;
+  }
+
+  &__list-title {
+    color: $turquoise;
+  }
+
+  &__keypair-list {
+    border: 1px solid $turquoise;
+    padding: 8px 8px;
+
+    li {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      color: $turquoise;
+      padding: 8px;
+
+      .fish-eye {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background-color: $dark-turquoise;
+        margin: 3px;
+
+        &.selected {
+          position: relative;
+          background-color: $turquoise;
+
+          &:after {
+            content: "";
+            border: 1px solid $turquoise;
+            border-radius: 50%;
+            width: 23px;
+            height: 23px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
+        }
+      }
+      a {
+        color: $turquoise;
+      }
+      .title {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        span {
+          margin-left: 0.5em;
+        }
+      }
+      .copy {
+        margin-right: 15px;
+      }
+      .actions {
+        align-self: flex-end;
+        :not(:first-child) {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+
+  &__special-container {
+    margin: 0 auto 0;
+    flex-direction: row;
+    display: flex;
+    max-width: 600px;
+
+    button {
+      flex: 1;
+      border: 1px solid $turquoise;
+      display: inline-block;
+      background-color: transparent !important;
+      color: $turquoise;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      text-transform: none !important;
+      font-size: $xsmall !important;
+      &:not(:first-child) {
+        margin-left: 24px;
+      }
+      img {
+        min-height: 5em;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+      }
+      title {
+        display: block;
+        color: $turquoise;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+
+        @media only screen and (max-width: $mobile-breakpoint) {
+          height: 35px;
+          margin-bottom: 0;
+        }
+      }
+      p {
+        color: $dark-turquoise;
+      }
+    }
+    margin-bottom: 1em;
+  }
+}
+
+.keymodal-generate {
+  &__intro {
+    margin-bottom: 32px;
+  }
+  &__input {
+    margin-bottom: 20px;
+  }
+  &__button-container {
+    padding-top: 30px;
+    button {
+      width: 100%;
+    }
+  }
+  &__result {
+    &-copy {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    &-label {
+      width: 150px;
+    }
+  }
+  &__confirm {
+    border: 1px solid $red;
+    box-sizing: border-box;
+    padding: 24px 15px;
+    margin-top: 15px;
+    margin-bottom: 30px;
+
+    &--checked {
+      border-color: $turquoise;
+    }
+
+    &-icon {
+      display: flex !important;
+      align-items: center;
+      position: relative;
+      margin: 0 !important;
+      cursor: pointer;
+
+      input {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        opacity: 0;
+        height: 1px;
+        width: 1px;
+        cursor: pointer;
+      }
+      span {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        border: 1px solid $turquoise;
+      }
+      img {
+        opacity: 0;
+      }
+      input:checked ~ span {
+        img {
+          opacity: 1;
+        }
+      }
+      p {
+        margin: 0 !important;
+        padding-left: 30px;
+      }
+    }
+  }
+  &__hatsofir {
+    color: $dark-turquoise;
+    text-decoration: underline;
+  }
+  &__button-done {
+    text-align: right;
+    button {
+      width: 200px;
+    }
+  }
+}
+
+.keymodal-keydetails {
+  &__description {
+    margin-bottom: 30px;
+  }
+  &__result {
+    &-copy {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    &-label {
+      width: 150px;
+    }
+  }
+}
+
+.keymodal-importkey {
+  &__description {
+    margin-bottom: 30px;
+  }
+  &__input {
+    margin-bottom: 20px;
+  }
+  &__nokey {
+    width: 450px;
+  }
+}
+
+.keymodal-delete {
+  &__description {
+    margin-bottom: 50px;
+  }
+  &__button-container {
+    display: flex;
+    justify-content: space-between;
+    button {
+      width: 40%;
+    }
+  }
+  &__button-cancel {
+    background-color: transparent !important;
+    border: 1px solid $turquoise;
+    color: $turquoise;
+  }
+}

@@ -1,0 +1,36 @@
+@import "styles/constants.scss";
+
+.pastable-content {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: $spacing-3;
+
+  &__textarea {
+    margin: 0;
+    width: 100%;
+    height: $spacing-25;
+    padding: $spacing-2;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: $turquoise;
+    resize: none;
+    border: 1px solid $turquoise;
+
+    &::placeholder {
+      color: $dirty-turquoise;
+      font-family: RobotoMono;
+    }
+  }
+
+  &__extra-icons {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    img {
+      cursor: pointer;
+      margin-right: $spacing-half;
+      margin-bottom: $spacing-half;
+    }
+  }
+}

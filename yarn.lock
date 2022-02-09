@@ -4350,6 +4350,13 @@ brorand@^1.0.1, brorand@^1.1.0:
   resolved "https://registry.yarnpkg.com/brorand/-/brorand-1.1.0.tgz#12c25efe40a45e3c323eb8675a0a0ce57b22371f"
   integrity sha1-EsJe/kCkXjwyPrhnWgoM5XsiNx8=
 
+browser-passworder@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/browser-passworder/-/browser-passworder-2.0.3.tgz#6fdd2082e516a176edbcb3dcee0b7f9fce4f7917"
+  integrity sha1-b90gguUWoXbtvLPc7gt/n85PeRc=
+  dependencies:
+    browserify-unibabel "^3.0.0"
+
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/browser-process-hrtime/-/browser-process-hrtime-1.0.0.tgz#3c9b4b7d782c8121e56f10106d84c0d0ffc94626"
@@ -4413,6 +4420,11 @@ browserify-sign@^4.0.0:
     parse-asn1 "^5.1.5"
     readable-stream "^3.6.0"
     safe-buffer "^5.2.0"
+
+browserify-unibabel@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/browserify-unibabel/-/browserify-unibabel-3.0.0.tgz#5a6b8f0f704ce388d3927df47337e25830f71dda"
+  integrity sha1-WmuPD3BM44jTkn30czfiWDD3Hdo=
 
 browserify-zlib@^0.2.0:
   version "0.2.0"
@@ -11041,10 +11053,10 @@ open@^7.0.2:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
-openpgp@5.0.0-3:
-  version "5.0.0-3"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.0.0-3.tgz#08bbd878edc7c8e3c8443d8ace2c3b2236e3150c"
-  integrity sha512-5Yzd7hjoCtR0m27yrM6+Li1RcuUPIyVJXKMfR82HJotfst5NEEQHxCyUJvDWc8SqKS53zFyTl0SlPaZ08C2PxA==
+openpgp@5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.0.1.tgz#fe355dcdc2074e505d5c22ee51e880a8296bd0ab"
+  integrity sha512-J9HGIcXumwczJwX3JvgshWYtkhsOJHm5ZPd1ipJ1BqrZL06NgqV/EfJyF3ThOlNV2rY0MGWdS8L8/kKyeo3sXg==
   dependencies:
     asn1.js "^5.0.0"
 
