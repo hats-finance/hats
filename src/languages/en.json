@@ -80,6 +80,7 @@
       "keymodal": {
         "intro-text": "Please generate a key pair or import a key if you are already holding one",
         "title": "Generate/import key-Pairs",
+        "list-keypair": "key-Pairs manager",
         "create-keypair": "Generate Key-Pair",
         "create-text": "Create new key and a passphrase",
         "import-text": "Import a key using your private key & passphrase",
