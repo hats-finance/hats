@@ -1,18 +1,17 @@
-import { useContext, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useContext, useState } from "react";
 import Modal from "components/Shared/Modal";
 import { VaultContext } from "../../store";
+import { t } from "i18next";
 import "./index.scss";
 
 export default function UnlockVaultModal() {
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
-  const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
 
   const unlockVault = async () => {
     try {
-      await vaultContext.unlockVault!(passwordRef.current!.value);
+      await vaultContext.unlockVault!(password);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -23,24 +22,22 @@ export default function UnlockVaultModal() {
   return (
     <Modal
       title={t("CommitteeTools.Welcome.unlock-title")}
-      setShowModal={() => {}}
+      setShowModal={() => { }}
       height="fit-content"
-      hideClose={true}
-    >
-      <label className="unlock-vault__label">
-        {t("CommitteeTools.Welcome.unlock-vault-description")}
-      </label>
-      <label className="unlock-vault__label">
-        {t("CommitteeTools.Welcome.password")}
-      </label>
-      <input
-        className="unlock-vault__input"
-        type="password"
-        ref={passwordRef}
-        placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")}
-      />
-      <button onClick={unlockVault}>Unlock</button>
-      {error && <div>{error}</div>}
+      hideClose={true}>
+      <div className="unlock-vault-modal-wrapper">
+        <label className="unlock-vault__label">
+          {t("CommitteeTools.Welcome.unlock-vault-description")}
+        </label>
+        <input
+          className="unlock-vault__input"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")} />
+        {error && <span className="error-label">{error}</span>}
+        <button disabled={!password} onClick={unlockVault}>{t("CommitteeTools.Welcome.unlock")}</button>
+      </div>
     </Modal>
   );
 }

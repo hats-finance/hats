@@ -1,10 +1,32 @@
 @import "styles/constants.scss";
 
-.unlock-vault {
-  &__label {
-    margin-bottom: 16px !important;
+.unlock-vault-modal-wrapper {
+  padding: $modal-element-padding;
+  display: flex;
+  flex-direction: column;
+  .unlock-vault {
+    &__label {
+      margin-bottom: 16px !important;
+    }
+    &__input {
+      margin-bottom: 10px;
+    }
   }
-  &__input {
-    margin-bottom: 30px;
+  .error-label {
+    color: $red;
+  }
+  button {
+    margin-top: 50px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .unlock-vault-modal-wrapper {
+    padding: $modal-element-padding-mobile;
+    height: 100%;
+    box-sizing: border-box;
+    button {
+      margin-top: auto;
+    }
   }
 }

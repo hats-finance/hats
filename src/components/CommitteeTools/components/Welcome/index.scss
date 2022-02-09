@@ -1,4 +1,4 @@
-@import "styles/constants.scss";
+@import "../../../../styles/constants.scss";
 
 .committee-welcome {
   margin: 0 auto;
@@ -30,8 +30,18 @@
     color: $dark-turquoise;
   }
   &__button-container {
-    padding-top: 80px;
-    padding-bottom: 70px;
     text-align: right;
+    margin-top: 50px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .committee-welcome {
+    padding: $element-padding-mobile;
+    &__button-container {
+      button {
+        width: 100%;
+      }
+    }
   }
 }

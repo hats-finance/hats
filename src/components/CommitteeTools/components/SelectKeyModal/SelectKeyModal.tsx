@@ -167,9 +167,10 @@ export function SelectKeyModal({
       title={titleByAction()}
       height="fit-content"
       width="fit-content"
-      setShowModal={setShowModal}
-    >
-      {byAction(action)}
+      setShowModal={setShowModal}>
+      <div className="select-key-modal-wrapper">
+        {byAction(action)}
+      </div>
     </Modal>
   );
 }

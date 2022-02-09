@@ -61,11 +61,12 @@
         "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
         "delete-yes": "yes",
         "password": "Password",
-        "create-password-placeholder": "Enter new password here, min 6 char",
+        "create-password-placeholder": "Enter new password here",
         "create-retype-placeholder": "Retype new password here",
         "enter-password-placeholder": "Enter password here",
         "passwords-mismatch": "Passwords do not match",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "unlock": "Unlock"
       },
       "ImportKey": {
         "no-key-error": "No private key have been given, please paste your private key"
@@ -95,7 +96,7 @@
         "public-key": "Public Key",
         "name": "Name",
         "email": "E-mail",
-        "enter-alias-placeholder": "Enter new password here, min 6 char",
+        "enter-alias-placeholder": "Enter new password here",
         "enter-passphrase-placeholder": "Enter a passphrase, passphrase is optional",
         "enter-name-placeholder": "Enter your name here",
         "enter-email-placeholder": "Enter your e-mail here ",
@@ -127,8 +128,7 @@
         "encrypt-button": "Encrypt message",
         "no-key-selected": "No key-pair selected",
         "no-message-decrypt": "No message to decrypt"
-      },
-      "NewKey": {}
+      }
     }
   }
 }

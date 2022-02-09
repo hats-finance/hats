@@ -1,17 +1,44 @@
 @import "styles/constants.scss";
 
-.create-vault {
-  &__description {
+.create-vault-modal-wrapper {
+  padding: $modal-element-padding;
+  display: flex;
+  flex-direction: column;
+  .create-vault {
+    &__description {
+      color: $white;
+    }
+    &__addenum {
+      color: $dark-turquoise;
+    }
+  }
+  .error-label {
+    color: $red;
+    margin-top: 10px;
+  }
+  button {
+    margin-top: 50px;
+  }
+  input {
+    max-width: 200px;
+    background-color: $purple-blue;
+    border: 1px solid $purple-blue;
     color: $white;
+    height: 50px;
+    padding: 0px 20px;
   }
-  &__addenum {
-    color: $dark-turquoise;
-  }
-  &__button-container {
-    padding-top: 30px;
+}
 
+@media only screen and (max-width: $mobile-breakpoint) {
+  .create-vault-modal-wrapper {
+    padding: $modal-element-padding-mobile;
+    height: 100%;
+    box-sizing: border-box;
     button {
-      width: 100%;
+      margin-top: auto;
+    }
+    input {
+      max-width: unset;
     }
   }
 }

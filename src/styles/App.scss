@@ -28,6 +28,11 @@ button {
   padding: 10px;
   margin: 5px;
   cursor: pointer;
+  background-color: transparent;
+  border: 1px solid $turquoise;
+  color: $turquoise;
+  font-family: RobotoMono;
+  cursor: pointer;
   &:hover {
     opacity: 0.8;
   }
@@ -38,6 +43,10 @@ button {
   &:focus {
     outline: none;
     box-shadow: none;
+  }
+  &.fill {
+    background-color: $turquoise;
+    color: $dark-blue;
   }
 }
 

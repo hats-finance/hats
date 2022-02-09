@@ -34,6 +34,7 @@
       color: $white;
       font-size: $moderate;
       background: transparent;
+      border: none;
       &.selected {
         border-bottom: 2px solid $turquoise;
         font-weight: bold;
@@ -64,6 +65,7 @@
       background: none;
       height: fit-content;
       padding: 0;
+      border: none;
     }
   }
   .amount-wrapper {
@@ -193,12 +195,7 @@
       width: 80%;
       margin: 0;
       position: relative;
-      background-color: transparent;
-      border: 1px solid;
-      color: $turquoise;
       &.claim-btn {
-        background-color: $turquoise;
-        color: $field-blue;
         margin-top: 20px;
       }
     }
