@@ -1,11 +1,8 @@
-@import "../../styles/constants.scss";
-
-$committee-blue: #C0F2F2;
+@import "styles/constants.scss";
 
 .committee-tools-wrapper {
   display: flex;
   flex-direction: row;
-
 
   input {
     background-color: $field-blue;
@@ -13,129 +10,53 @@ $committee-blue: #C0F2F2;
     border: 1px solid $field-blue;
     padding: 15px;
   }
-  
+
   button {
-    background-color: $committee-blue;
+    border: 1px solid $committee-blue;
+    background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: $small;
     margin: 0px;
   }
 }
 
+.modal-content-wrapper {
+  background-color: $field-blue !important;
+}
+
+.modal-top {
+  padding: 25px 40px !important;
+  background-color: $blue !important;
+  text-transform: uppercase;
+}
+
 .modal-content {
-  margin: 25px 50px;
+  margin: 25px 40px;
   display: flex;
   flex-direction: column;
-  color: $white;  
-
-  .addenum {
-    color: #9BC8CA;
-  }
+  color: $white;
 
   input {
     background-color: $field-blue;
     color: $white;
     border: 1px solid $dirty-turquoise;
     &::placeholder {
-      color: #64C1C5;
+      color: $dirty-turquoise;
     }
   }
 
-  label { 
+  label {
     display: block;
     margin-bottom: 10px;
   }
-  
+
   button {
-    background-color: #C0F2F2;
+    border: 1px solid $committee-blue;
+    background-color: $turquoise;
     font-family: "Roboto Mono", monospace;
-    text-transform: capitalize;
+    text-transform: uppercase;
+    font-size: $small;
     margin: 0px;
-  }
-
-  .keypair-list {
-    border: 1px solid #8AFCFD;
-    padding: .3em;
-      li {
-        color: #8AFCFD;
-        margin-bottom: .3em;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        .fish-eye {
-          width: .7em;
-          height: .7em;
-          border-radius: 50%;
-          background-color: #9BC8CA;
-          margin:3px;
-          &.selected {
-            background-color: #8AFCFD;
-            // &:before {
-            //   content: "";
-            //   border: 1px solid #8AFCFD;
-            //   width: 1em;
-            //   height: 1em;
-            //   border-radius: 50%;
-            //   background-color: green;
-            // }
-          }
-        }
-        a {
-          color: #8AFCFD 
-        }
-        .title {
-          flex:1;
-          margin-left: .5em;
-        }
-
-        .actions {
-          align-self: flex-end;
-          :not(:first-child) {
-            margin-left: 5px;
-          }
-        }
-      }
-  }
-
-  .special-container {
-    margin: 0 auto 0;
-    flex-direction: row;
-    display: flex;
-    max-width: 600px;
-    button {
-      flex:1;
-      border: 1px solid #8AFCFD;
-      display: inline-block;
-      background-color: transparent;
-      color: #8AFCFD;
-      &:not(:first-child) {
-        margin-left: 10px;
-      }
-      
-      img {
-        min-height:5em;
-        margin-top: 1em;
-        margin-bottom: .3em;
-      }
-      title {
-        display: block;
-        color: #8AFCFD;
-        text-transform:uppercase;
-      }
-      p {
-        color: #9BC8CA;
-      }
-    }    
-    margin-bottom: 1em;
-  }
-}
-
-.key-details-container {
-  .key-element {
-    display: flex;
-    flex-direction: row;
-  }
-  button {
-    margin-top: 1em;
   }
 }

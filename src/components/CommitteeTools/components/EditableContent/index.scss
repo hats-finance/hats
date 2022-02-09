@@ -1,33 +1,36 @@
-.pastable-content {
-    height:13em;
-    width: 30em;
-    border: 1px solid #8AFCFD;
-    margin-bottom: 1em;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
+@import "styles/constants.scss";
 
-    .content-wrapper {
-        flex:1;
-        overflow: auto;
-        div[contenteditable] {
-            margin: .8em;
-            color: #8AFCFD;
-            &[placeholder]:empty:before {
-                content: attr(placeholder);
-                margin: 2px;
-            }
-        }
-    }       
-    .extra-icons {
-        align-self: flex-end;
-        img {
-            margin-right: 3px;
-            margin-bottom: 3px;
-            cursor: pointer;
-        }    
+.pastable-content {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: $spacing-3;
+
+  &__textarea {
+    margin: 0;
+    width: 100%;
+    height: $spacing-25;
+    padding: $spacing-2;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: $turquoise;
+    resize: none;
+    border: 1px solid $turquoise;
+
+    &::placeholder {
+      color: $dirty-turquoise;
+      font-family: RobotoMono;
     }
   }
-  
+
+  &__extra-icons {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    img {
+      cursor: pointer;
+      margin-right: $spacing-half;
+      margin-bottom: $spacing-half;
+    }
+  }
+}

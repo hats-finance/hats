@@ -1,0 +1,37 @@
+@import "styles/constants.scss";
+
+.committee-welcome {
+  margin: 0 auto;
+  max-width: 540px;
+
+  &__title {
+    font-size: $large;
+    color: $white;
+  }
+  &__content-1 {
+    font-size: $small;
+    margin-bottom: 30px;
+    color: $white;
+  }
+  &__content-2 {
+    font-size: $small;
+    margin-bottom: 20px;
+    color: $white;
+  }
+  &__step-title {
+    font-size: $small;
+    color: $white;
+    margin-bottom: 5px;
+  }
+  &__step-content {
+    font-size: $small;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: $dark-turquoise;
+  }
+  &__button-container {
+    padding-top: 80px;
+    padding-bottom: 70px;
+    text-align: right;
+  }
+}
