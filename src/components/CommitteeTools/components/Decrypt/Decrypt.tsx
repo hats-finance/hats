@@ -15,9 +15,9 @@ export async function readPrivateKeyFromStoredKey(
 ) {
   return passphrase
     ? await decryptKey({
-        privateKey: await readPrivateKey({ armoredKey: privateKey }),
-        passphrase
-      })
+      privateKey: await readPrivateKey({ armoredKey: privateKey }),
+      passphrase
+    })
     : await readPrivateKey({ armoredKey: privateKey });
 }
 
@@ -35,11 +35,11 @@ export default function Decrypt() {
   useEffect(() => {
     const urlSearchParams = new URLSearchParams(location.search);
     const params = Object.fromEntries(urlSearchParams.entries());
-    if (params.ipfsjson) {
+    if (params.ipfs) {
       (async () => {
-        const response = await fetch(params.ipfsjson);
-        const json = await response.json();
-        encryptedMessageRef.current!.value = json.message;
+        const response = await fetch(params.ipfs)
+        const message = await response.text()
+        encryptedMessageRef.current!.value = message
       })();
     }
   }, [location.search]);
