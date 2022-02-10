@@ -1,8 +1,8 @@
 
-import React, { useState, useEffect, useCallback } from "react";
-import "../styles/WithdrawCountdown.scss";
+import { useState, useEffect, useCallback } from "react";
+import "./index.scss";
 import moment from 'moment';
-import { Colors } from "../constants/constants";
+import { Colors } from "../../../constants/constants";
 
 interface IProps {
   endDate: string
@@ -11,7 +11,7 @@ interface IProps {
   textColor?: Colors
 }
 
-export default function WithdrawCountdown(props: IProps) {
+export default function Countdown(props: IProps) {
   const { endDate, compactView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [timer, setTimer] = useState({
