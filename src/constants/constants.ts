@@ -35,7 +35,7 @@ export enum MasterAddresses {
 }
 
 export enum NFTMangerAddress {
-  main = "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
+  main = "0xc36442b4a4522e871399cd717abdd847ab11fe88",
   rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
