@@ -15,21 +15,18 @@ interface IProps {
  */
 export default function Image({ source, alt, className }: IProps) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
 
   return (
     <>
       <img
-        className={classNames("async-image-spinner", { "show": loading && !error })}
+        className={classNames("async-image-spinner", { "show": loading })}
         src={Spinner}
         alt="spinner" />
       <img
         className={classNames("async-image", { "show": !loading }, className)}
         src={source}
-        onLoad={() => { setLoading(false); setError(false); }}
-        onError={() => setError(true)}
+        onLoad={() => setLoading(false)}
         alt={alt} />
-      {error && <span className="async-image-error">Error while loading the image</span>}
     </>
   )
 }
