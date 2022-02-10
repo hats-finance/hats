@@ -16,7 +16,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../../settings";
 import moment from "moment";
-import WithdrawCountdown from "../WithdrawCountdown";
+import Countdown from "../Shared/Countdown/Countdown";
 import humanizeDuration from "humanize-duration";
 import ApproveToken from "./ApproveToken";
 
@@ -37,7 +37,7 @@ const WithdrawTimer = (props: IWithdrawTimerProps) => {
   return (
     <div className="withdraw-timer-wrapper">
       <span>WITHDRAWAL AVAILABLE FOR:</span>
-      <WithdrawCountdown
+      <Countdown
         endDate={props.expiryTime}
         compactView={true}
         onEnd={() => {
@@ -64,7 +64,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
         YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff), { units: ["d", "h", "m"] })} PERIOD</span><br /><br />
       WITHDRAWAL AVAILABLE WITHIN:
       </span>
-      <WithdrawCountdown
+      <Countdown
         endDate={withdrawEnableTime}
         onEnd={() => {
           setIsPendingWithdraw(false);

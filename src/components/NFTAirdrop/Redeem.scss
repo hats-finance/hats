@@ -6,14 +6,46 @@
   align-items: center;
   width: 300px;
   .nft-image-container {
+    display: flex;
     margin-top: 20px;
-    font-size: 48px;
-    font-weight: bold;
-    text-align: center;
     border: 1px solid $turquoise;
     width: 300px;
     height: 300px;
-    line-height: 300px;
+    .question-mark {
+      margin: auto;
+    }
+    .nft-image {
+      width: 300px;
+      height: 300px;
+      margin: auto;
+    }
+  }
+  .redeem-wrapper__countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-top: 30px;
+    .redeem-text {
+      margin-bottom: 30px;
+      align-self: baseline;
+    }
+    .redeem-passed-text {
+      align-self: baseline;
+      color: $red;
+    }
+  }
+  .redeem-wrapper__already-redeemed-label {
+    color: $red;
+    margin: 15px 0;
+  }
+  .redeem-wrapper__redeem-btn-container {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    a {
+      color: $turquoise;
+    }
   }
   .action-btn {
     width: 100%;
