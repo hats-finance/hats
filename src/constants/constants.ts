@@ -39,6 +39,11 @@ export enum NFTMangerAddress {
   rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
+export enum NFTAirdropAddress {
+  main = "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
+  rinkeby = "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
@@ -103,6 +108,8 @@ export const RISK_FACTOR = "https://docs.hats.finance/risk-factor";
 
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
+export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
+
 export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
 
 export const UNISWAP_V3_STAKER_ADDRESS =
@@ -110,8 +117,6 @@ export const UNISWAP_V3_STAKER_ADDRESS =
 
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
-
-export const NFT_AIRDROP_ADDRESS = "0x728654Bb8E69b9978E79657332a0843606d64FF4";
 
 /** Used for the Uniswap V3 Liquidity Pool staking */
 export const INCENTIVE_KEY_ABI =
@@ -147,7 +152,3 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
-
-/** Used for NFT Airdrop */
-export const IPFS_ELIGIBLE_TOKENS = "QmSUXfYsk9HgrMBa7tgp3MBm8FGwDF9hnVaR9C1PMoFdS3";
-export const IPFS_BASE_URI = "QmezvK7gNLhUzb9xBWYNAzJs8xLLuBvWSyvtFmusb9fMBW";

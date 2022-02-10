@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { LocalStorage, RoutePaths } from "../../constants/constants";
 import { RootState } from "../../reducers";
-import { truncatedAddress } from "../../utils";
+import { normalizeAddress, truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
 import NFTIcon from "../../assets/icons/nft.svg";
+import QuestionIcon from "../../assets/icons/big-question-icon.svg";
 import "./NFTAirdropNotification.scss";
 
 interface IProps {
@@ -21,7 +22,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
 
   useEffect(() => {
     const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-    savedItems.push(selectedAddress);
+    savedItems.push(normalizeAddress(selectedAddress));
     localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
   }, [selectedAddress])
 
@@ -35,7 +36,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
           <span className="wallet-address">{`${truncatedAddress(selectedAddress)}`}</span>
         </div>
         <span>Reveal your NFT and find out more on the crow clan collection.</span>
-        <div className="question-mark">?</div>
+        <img className="question-mark" src={QuestionIcon} width="200px" height="200px" alt="question mark" />
         <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="reveal-link">REVEAL</Link>
       </div>
     </Modal>
