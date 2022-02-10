@@ -18,8 +18,10 @@ function Content() {
 
   return (
     <div className="content committee-tools-wrapper">
-      {vault.isCreated && vault.isLocked && <UnlockVaultModal />}
-      {vault.isCreated ? <Decrypt /> : <Welcome />}
+      <div className="committee-tools-content">
+        {vault.isCreated && vault.isLocked && <UnlockVaultModal />}
+        {vault.isCreated ? <Decrypt /> : <Welcome />}
+      </div>
     </div>
   );
 }

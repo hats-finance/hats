@@ -1,8 +1,13 @@
 @import "styles/constants.scss";
 
 .committee-tools-wrapper {
-  max-width: $table-max-width !important;
-  margin: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .committee-tools-content {
+    max-width: $table-max-width;
+    width: 100%;
+  }
   .error-label {
     color: $red;
     margin: 5px 0px;
