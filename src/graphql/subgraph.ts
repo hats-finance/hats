@@ -34,7 +34,6 @@ export const GET_VAULTS = gql`
           vestingHatPeriods
         }
         numberOfApprovedClaims
-        approvedClaims
         rewardsLevels
         totalRewardAmount
         liquidityPool
