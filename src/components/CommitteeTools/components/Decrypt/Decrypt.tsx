@@ -79,8 +79,6 @@ export default function Decrypt() {
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
-      } else {
-        console.log(error);
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

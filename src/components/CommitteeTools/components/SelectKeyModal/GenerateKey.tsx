@@ -4,6 +4,7 @@ import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
 import CopyToClipboard from "components/Shared/CopyToClipboard";
 import CheckboxIcon from "assets/icons/checkbox.svg";
+import Loading from 'assets/icons/loading.svg';
 import classNames from "classnames";
 import { t } from "i18next";
 
@@ -33,7 +34,6 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         format: "armored" // output key format, defaults to 'armored' (other options: 'binary' or 'object')
       });
       const toAdd = { alias, privateKey, passphrase, publicKey };
-      console.log({ toAdd });
       vaultContext.addKey!(toAdd);
       if (vaultContext.selectedKey === undefined)
         vaultContext.setSelectedAlias!(alias);
@@ -164,6 +164,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           className={classNames({ loading: loading })}>
           {t("CommitteeTools.keymodal.generate-button")}
         </button>
+        {loading && <div className="loading-icon"><img src={Loading} alt="loading" /></div>}
         {error && <div className="error-label">{error}</div>}
       </>
     );
