@@ -2,11 +2,10 @@ import { useContext, useRef, useState } from "react";
 import { generateKey } from "openpgp";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
-import CopyToClipboard from "components/Shared/CopyToClipboard";
-import CheckboxIcon from "assets/icons/checkbox.svg";
 import Loading from 'assets/icons/loading.svg';
 import classNames from "classnames";
 import { t } from "i18next";
+import { KeyGenerated } from "./KeyGenerated";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const [alias, setAlias] = useState("");
@@ -16,7 +15,6 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const vaultContext = useContext(VaultContext);
   const [error, setError] = useState<string>();
   const [addedKey, setAddedKey] = useState<IStoredKey>();
-  const [sentPublicChecked, setSentPublicChecked] = useState<boolean>();
   const [loading, setLoading] = useState<boolean>(false);
 
   async function _handleClick() {
@@ -48,79 +46,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   }
 
   if (addedKey) {
-    return (
-      <>
-        <p className="keymodal-generate__intro">
-          {t("CommitteeTools.keymodal.generated-success")}
-        </p>
-        <div className="keymodal-generate__result-copy">
-          <span className="keymodal-generate__result-label">
-            {t("CommitteeTools.keymodal.private-key")}
-          </span>
-          <CopyToClipboard value={addedKey.privateKey} />
-        </div>
-        {addedKey.passphrase && (
-          <div className="keymodal-generate__result-copy">
-            <span className="keymodal-generate__result-label">
-              {t("CommitteeTools.keymodal.passphrase")}
-            </span>
-            <CopyToClipboard value={addedKey.passphrase} />
-          </div>
-        )}
-        <div className="keymodal-generate__result-copy">
-          <span className="keymodal-generate__result-label">
-            {t("CommitteeTools.keymodal.public-key")}
-          </span>
-          <CopyToClipboard value={addedKey.publicKey} />
-        </div>
-        <p>
-          {t("CommitteeTools.keymodal.generated-notice-1")}
-          <a
-            className="keymodal-generate__hatsofir"
-            target="_blank"
-            rel="noreferrer"
-            href="https://t.me/Hatsofir"
-          >
-            {t("CommitteeTools.keymodal.hatsOfir")}
-          </a>
-          {t("CommitteeTools.keymodal.generated-notice-2")}
-        </p>
-        <div
-          className={classNames("keymodal-generate__confirm", {
-            "keymodal-generate__confirm--checked": sentPublicChecked
-          })}
-        >
-          <label
-            htmlFor="didSharePublic"
-            className="keymodal-generate__confirm-icon"
-          >
-            <input
-              type="checkbox"
-              id="didSharePublic"
-              onChange={(e) => setSentPublicChecked(e.currentTarget.checked)}
-            />
-            <span>
-              <img src={CheckboxIcon} alt="" />
-            </span>
-            <p>
-              {t("CommitteeTools.keymodal.generated-notice-6")}{" "}
-              <a
-                className="keymodal-generate__hatsofir"
-                target="_blank"
-                rel="noreferrer"
-                href="https://t.me/Hatsofir"
-              >
-                {t("CommitteeTools.keymodal.hatsOfir")}
-              </a>
-              {t("CommitteeTools.keymodal.generated-notice-7")}
-            </p>
-          </label>
-        </div>
-        <button disabled={!sentPublicChecked} onClick={onFinish}>
-          {t("CommitteeTools.keymodal.done")}
-        </button>
-      </>
-    );
+    return <KeyGenerated addedKey={addedKey} onFinish={onFinish} />
   } else {
     return (
       <>
