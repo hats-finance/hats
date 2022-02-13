@@ -32,9 +32,9 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         format: "armored" // output key format, defaults to 'armored' (other options: 'binary' or 'object')
       });
       const toAdd = { alias, privateKey, passphrase, publicKey };
-      vaultContext.addKey!(toAdd);
+      vaultContext.addKey(toAdd);
       if (vaultContext.selectedKey === undefined)
-        vaultContext.setSelectedAlias!(alias);
+        vaultContext.setSelectedAlias(alias);
       setAddedKey(toAdd);
       setLoading(false);
     } catch (error) {

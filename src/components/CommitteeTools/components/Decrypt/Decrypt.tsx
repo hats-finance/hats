@@ -170,7 +170,7 @@ export default function Decrypt() {
       {(showSelectKeyModal || showSelectedKeyDetails) && (
         <SelectKeyModal
           showKey={
-            showSelectedKeyDetails ? vaultContext.selectedKey! : undefined
+            showSelectedKeyDetails ? vaultContext.selectedKey : undefined
           }
           setShowModal={() => {
             if (showSelectedKeyDetails) setShowSelectedKeyDetails(false);

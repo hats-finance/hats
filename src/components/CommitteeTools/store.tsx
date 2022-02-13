@@ -10,21 +10,19 @@ interface IVaultStore {
 
 interface IVaultContext {
     vault: IVaultStore | undefined
-    isLocked?: boolean
-    isCreated?: boolean
-    selectedKey?: IStoredKey | undefined
-    addKey?: (key: IStoredKey) => void
-    removeKey?: (key: IStoredKey) => void
-    createVault?: (password: string) => void
-    unlockVault?: (password: string) => void
-    setSelectedAlias?: (alias: string) => void
-    deleteVault?: () => void
-    deleteKey?: (key: IStoredKey) => void
+    isLocked: boolean
+    isCreated: boolean
+    selectedKey: IStoredKey | undefined
+    addKey: (key: IStoredKey) => void
+    removeKey: (key: IStoredKey) => void
+    createVault: (password: string) => void
+    unlockVault: (password: string) => void
+    setSelectedAlias: (alias: string) => void
+    deleteVault: () => void
+    deleteKey: (key: IStoredKey) => void
 }
 
-export const VaultContext = React.createContext<IVaultContext>({
-    vault: undefined,
-})
+export const VaultContext = React.createContext<IVaultContext>(undefined as any);
 
 export function VaultProvider({ children }) {
     const [vault, setVault] = useState<IVaultStore | undefined>(undefined);

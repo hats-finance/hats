@@ -21,7 +21,7 @@ function DeleteKey({
         <button
           className="fill"
           onClick={() => {
-            vaultContext!.deleteKey!(keyToDelete);
+            vaultContext.deleteKey(keyToDelete);
             onFinish();
           }}
         >

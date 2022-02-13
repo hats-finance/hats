@@ -15,7 +15,7 @@ export default function CreateVaultModal({ setShowModal }: { setShowModal: (show
       setError(t("CommitteeTools.Welcome.passwords-mismatch"));
       return;
     }
-    vaultContext.createVault!(password);
+    vaultContext.createVault(password);
   };
 
   return (

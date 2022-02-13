@@ -30,8 +30,8 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         passphrase,
         publicKey: readKey.toPublic().armor()
       };
-      vaultContext.addKey!(toAdd);
-      vaultContext.setSelectedAlias!(toAdd.alias);
+      vaultContext.addKey(toAdd);
+      vaultContext.setSelectedAlias(toAdd.alias);
       onFinish();
     } catch (error) {
       if (error instanceof Error) {

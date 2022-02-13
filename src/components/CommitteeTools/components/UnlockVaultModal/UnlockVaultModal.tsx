@@ -11,7 +11,7 @@ export default function UnlockVaultModal() {
 
   const unlockVault = async () => {
     try {
-      await vaultContext.unlockVault!(password);
+      await vaultContext.unlockVault(password);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
