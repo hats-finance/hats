@@ -25,7 +25,7 @@ function DeleteKey({
             onFinish();
           }}
         >
-          Yes
+          {t("Shared.yes")}
         </button>
         <button
           className="keymodal-delete__button-cancel"
@@ -33,7 +33,7 @@ function DeleteKey({
             onFinish();
           }}
         >
-          Cancel
+          {t("Shared.cancel")}
         </button>
       </div>
     </>

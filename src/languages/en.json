@@ -1,5 +1,9 @@
 {
   "translation": {
+    "Shared": {
+      "yes": "YES",
+      "cancel": "CANCEL"
+    },
     "Welcome": {
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",

@@ -291,6 +291,11 @@
         }
       }
     }
+    .keymodal-delete {
+      &__button-container {
+        margin-top: auto;
+      }
+    }
     button {
       margin-top: auto;
     }
