@@ -22,9 +22,10 @@ export default function UnlockVaultModal() {
   return (
     <Modal
       title={t("CommitteeTools.Welcome.unlock-title")}
-      setShowModal={() => { }}
+      setShowModal={() => {}}
       height="fit-content"
-      hideClose={true}>
+      hideClose={true}
+    >
       <div className="unlock-vault-modal-wrapper">
         <label className="unlock-vault__label">
           {t("CommitteeTools.Welcome.unlock-vault-description")}
@@ -34,9 +35,12 @@ export default function UnlockVaultModal() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")} />
+          placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")}
+        />
         {error && <div className="error-label">{error}</div>}
-        <button disabled={!password} onClick={unlockVault}>{t("CommitteeTools.Welcome.unlock")}</button>
+        <button disabled={!password} onClick={unlockVault}>
+          {t("CommitteeTools.Welcome.unlock")}
+        </button>
       </div>
     </Modal>
   );

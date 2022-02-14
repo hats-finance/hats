@@ -2,7 +2,6 @@ import { useContext, useRef, useState } from "react";
 import { generateKey } from "openpgp";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
-import Loading from 'assets/icons/loading.svg';
 import classNames from "classnames";
 import { t } from "i18next";
 import { KeyGenerated } from "./KeyGenerated";
@@ -87,10 +86,9 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <button
           onClick={_handleClick}
           disabled={loading || !alias}
-          className={classNames({ loading: loading })}>
+          className={classNames("keymodal-generate__button", { loading: loading })}>
           {t("CommitteeTools.keymodal.generate-button")}
         </button>
-        {loading && <div className="loading-icon"><img src={Loading} alt="loading" /></div>}
         {error && <div className="error-label">{error}</div>}
       </>
     );
