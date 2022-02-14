@@ -116,6 +116,9 @@
         }
         p {
           color: $dark-turquoise;
+          @media only screen and (max-width: $mobile-breakpoint) {
+            height: 40px;
+          }
         }
       }
       margin-bottom: 1em;
@@ -284,7 +287,8 @@
         flex-direction: column;
         button {
           &:not(:first-child) {
-            margin-left: 5px;
+            margin-left: 0px;
+            margin-top: 10px;
           }
         }
       }
