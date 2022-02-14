@@ -65,7 +65,7 @@
         "create-addenum": "Make sure to save your password in a secure place. Your password can reveal all your private keys, if you lose it, the vault becomes unreadable and may only be deleted.",
         "unlock-title": "Unlock Vault",
         "unlock-vault": "Unlock Vault",
-        "unlock-vault-description": "Please eneter your vault password",
+        "unlock-vault-description": "Please enter your vault password",
         "delete-vault": "Delete Vault",
         "create-vault": "Create Vault",
         "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
