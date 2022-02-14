@@ -107,7 +107,7 @@
         "name": "Name",
         "email": "E-mail",
         "enter-alias-placeholder": "Enter new password here",
-        "enter-passphrase-placeholder": "Enter a passphrase, passphrase is optional",
+        "enter-passphrase-placeholder": "Enter passphrase",
         "enter-name-placeholder": "Enter your name here",
         "enter-email-placeholder": "Enter your e-mail here ",
         "done": "Done",
