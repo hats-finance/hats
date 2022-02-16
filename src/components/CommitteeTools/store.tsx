@@ -41,6 +41,11 @@ export function VaultProvider({ children }) {
             throw new Error(`Key with alias ${newKey.alias} already exists`)
         }
 
+        // check that key does not already exist
+        if (vault?.storedKeys.find(key => key.privateKey === newKey.privateKey)) {
+            throw new Error(`Key is already present in your keystore`)
+        }
+
         setVault(prev => ({ ...prev!, storedKeys: [...prev!.storedKeys, newKey] }))
     }
 
