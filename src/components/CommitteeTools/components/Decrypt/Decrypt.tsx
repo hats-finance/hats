@@ -55,6 +55,7 @@ export default function Decrypt() {
 
   const _decrypt = useCallback(async () => {
     try {
+      setError(undefined)
       if (!vaultContext.selectedKey) {
         setShowSelectKeyModal(true);
         return;
