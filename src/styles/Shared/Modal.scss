@@ -31,7 +31,7 @@
       justify-content: space-between;
       align-items: center;
       background-color: $light-blue;
-      padding: $element-padding 30px;
+      padding: 10px 30px;
       font-size: $moderate;
       color: $white;
       position: sticky;
@@ -71,7 +71,7 @@
       height: 100%;
       width: 100%;
       .modal-top {
-        padding: $element-padding $modal-element-padding-mobile;
+        padding: 10px $modal-element-padding-mobile;
       }
     }
   }

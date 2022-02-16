@@ -313,7 +313,7 @@ export default function DepositWithdraw(props: IProps) {
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
-        <button onClick={async () => await claim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn">{`CLAIM ${amountToClaim} HATS`}</button>
+        <button onClick={async () => await claim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
       {pendingWalletAction && <Loading />}
     </div>
