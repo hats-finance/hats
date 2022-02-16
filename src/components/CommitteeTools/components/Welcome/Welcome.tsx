@@ -46,7 +46,7 @@ const Welcome = () => {
                 prompt(t("CommitteeTools.Welcome.delete-confirmation")) ===
                 t("CommitteeTools.Welcome.delete-yes")
               ) {
-                vaultContext.deleteVault!();
+                vaultContext.deleteVault();
               }
             }}
           >
