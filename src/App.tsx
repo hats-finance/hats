@@ -43,6 +43,7 @@ import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 //import CommitteeTools from "./components/CommitteeTools/CommitteTools";
+import VaultEditor from "./components/VaultEditor/VaultEditor"
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -255,6 +256,9 @@ function App() {
         {/* <Route path={RoutePaths.committee_tools}>
           <CommitteeTools />
         </Route> */}
+        <Route path={RoutePaths.vault_editor}>
+          <VaultEditor />
+        </Route>
         <Route path={RoutePaths.nft_airdrop}>
           <NFTAirdrop />
         </Route>

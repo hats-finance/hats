@@ -139,6 +139,25 @@
         "no-message-decrypt": "No message to decrypt"
       },
       "NewKey": {}
+    },
+    "VaultEditor": {
+      "title": "Vault Editor",
+      "vault-details": {
+        "name": "Name",
+        "icon": "Icon",
+        "token-icon": "Token Icon",
+        "website": "Website"
+      },
+      "committee": "Committee",
+      "pgp-key": "PGP Key",
+      "committee-bot": "Committee Bot",
+      "multisig-address": "Multisig Address",
+      "committee-members": "Committee Members",
+      "member-name": "Name",
+      "member-address": "Address",
+      "member-twitter": "Twitter",
+      "member-image": "Image",
+      "add-member": "Add Member"
     }
   }
 }

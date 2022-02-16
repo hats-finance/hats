@@ -19,7 +19,8 @@ export enum RoutePaths {
   vulnerability = "/vulnerability",
   pools = "/pools",
   nft_airdrop = "/nft_airdrop/",
-  committee_tools = "/committee-tools"
+  committee_tools = "/committee-tools",
+  vault_editor = "/vault-editor"
 }
 
 export enum Networks {

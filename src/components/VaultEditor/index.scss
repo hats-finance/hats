@@ -1,0 +1,13 @@
+@import "../../styles/constants.scss";
+
+.vault-editor {
+    .vault-details {
+        display: flex;
+        flex-wrap: wrap;
+        .field {
+            width:50%
+
+        }
+    }
+
+}
