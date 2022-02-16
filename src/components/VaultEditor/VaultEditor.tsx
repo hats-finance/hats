@@ -182,7 +182,6 @@ export default function VaultEditor() {
                         {t("VaultEditor.add-member")}
                     </button>
                 </div>
-                <div
             </div>
         </div>
     </div>)
