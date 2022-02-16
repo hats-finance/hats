@@ -14,11 +14,20 @@ import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
 import moment from "moment";
-import {
-  ICardData,
-  VULNERABILITY_INIT_DATA
-} from "./components/Vulnerability/VulnerabilityAccordion";
+import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
+import { IVulnerabilityData } from "./components/Vulnerability/types";
+
+/**
+ * Returns true if an Ethereum Provider is detected, otherwise returns false.
+ * @returns {boolean}
+ */
+export const isEthereumProvider = () => {
+  if (window.ethereum === undefined) {
+    return false;
+  }
+  return true;
+}
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
@@ -176,7 +185,7 @@ export const formatWei = (
  * @param {string | number} value
  * @param {number} precision
  */
-export const formatNumber = (value: string | number, precision = 1): string => {
+export const formatNumber = (value: string | number | undefined, precision = 1): string => {
   return !value ? "-" : millify(Number(value), { precision: precision });
 };
 
@@ -216,10 +225,22 @@ export const fetchWalletBalance = async (
  */
 export const getTokenPrice = async (tokenAddress: string) => {
   try {
-    const data = await axios.get(
-      `${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`
-    );
+    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`);
     return data.data[Object.keys(data.data)[0]]?.usd;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+/**
+ * Gets tokens prices in USD using CoinGecko API
+ * @param {string[]} tokensAddresses
+ * @returns the prices for each given token
+ */
+export const getTokensPrices = async (tokensAddresses: string[]) => {
+  try {
+    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
+    return data.data;
   } catch (err) {
     console.error(err);
   }
@@ -245,16 +266,12 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {IVault} vault
  * @param {number} hatsPrice
  */
-export const calculateApy = async (vault: IParentVault, hatsPrice: number) => {
+export const calculateApy = async (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
-  if (Number(fromWei(vault.totalStaking)) === 0) {
+  if (Number(fromWei(vault.totalStaking)) === 0 || !tokenPrice) {
     return 0;
   }
-  return (
-    ((Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice)) /
-      Number(fromWei(vault.totalStaking))) *
-    (await getTokenPrice(vault.stakingToken))
-  );
+  return (((Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice)) / Number(fromWei(vault.totalStaking))) * tokenPrice);
 };
 
 /**
@@ -296,9 +313,7 @@ export const linkToEtherscan = (
   isTransaction?: boolean
 ): string => {
   const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/${
-    isTransaction ? "tx" : "address"
-  }/${value}`;
+  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
 };
 
 /**
@@ -421,20 +436,11 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} honeyPotBalance
  * @param {string} stakingTokenDecimals
  */
-export const calculateRewardPrice = (
-  rewardPercentage: number,
-  tokenPrice: number,
-  honeyPotBalance: string,
-  stakingTokenDecimals: string
-) => {
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
   if (tokenPrice) {
-    return (
-      Number(fromWei(honeyPotBalance, stakingTokenDecimals)) *
-      (rewardPercentage / 100) *
-      tokenPrice
-    );
+    return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
-  return -1;
+  return undefined;
 };
 
 /**
@@ -443,14 +449,14 @@ export const calculateRewardPrice = (
  * @param {string} projectId
  */
 export const setVulnerabilityProject = (projectName: string, projectId: string) => {
-  let cachedData: { version: string, [id: number]: ICardData } = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
+  let cachedData: IVulnerabilityData = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
     cachedData = VULNERABILITY_INIT_DATA;
   }
 
-  cachedData[1].verified = true;
-  cachedData[1].data = {
+  cachedData.project = {
+    verified: true,
     projectName: projectName,
     projectId: projectId
   }
@@ -485,4 +491,12 @@ export const normalizeAddress = (address: string) => {
     return getAddress(address);
   }
   return "";
+}
+
+/**
+ * Checks whether a given date (in unix time) has passed.
+ * @param {number | string} value
+ */
+export const isDateBefore = (value: number | string): boolean => {
+  return moment().isBefore(moment.unix(Number(value)));
 }

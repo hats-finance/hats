@@ -2,9 +2,16 @@
 
 .nft-airdrop-wrapper {
   display: flex;
+  justify-content: center;
   .nft-airdrop-search {
+    color: $white;
     margin-right: 80px;
     max-width: 500px;
+    .deadline-label {
+      color: $red;
+      margin-bottom: 15px;
+      font-weight: bold;
+    }
     h2 {
       margin-top: 0;
     }
@@ -51,6 +58,13 @@
     opacity: 0.5 !important;
     pointer-events: none;
   }
+  .no-ethereum-proiver-notice {
+    text-align: center;
+    margin: 0 20px;
+  }
+  .redeem-container {
+    width: 300px;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
@@ -60,6 +74,9 @@
       margin-right: unset;
       margin-bottom: 30px;
       padding: $modal-element-padding-mobile;
+    }
+    .redeem-container {
+      width: 100%;
     }
   }
 }

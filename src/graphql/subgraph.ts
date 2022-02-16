@@ -34,7 +34,6 @@ export const GET_VAULTS = gql`
           vestingHatPeriods
         }
         numberOfApprovedClaims
-        approvedClaims
         rewardsLevels
         totalRewardAmount
         liquidityPool
@@ -94,7 +93,7 @@ export const getStakerAmounts = (stakerAddress: string) => {
         depositAmount
         withdrawAmount
         parentVault {
-          stakingToken
+          id
         }
       }
     }

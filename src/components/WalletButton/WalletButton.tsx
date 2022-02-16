@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { isMobile } from "web3modal";
-import { ScreenSize } from "../../constants/constants";
+import { Colors, ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
-import { truncatedAddress } from "../../utils";
+import { isEthereumProvider, truncatedAddress } from "../../utils";
 import Modal from "../Shared/Modal";
+import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
 
 export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
@@ -20,8 +21,8 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
        * Warn the user in case no window.ethereum is detected on mobile.
        * Should be solved in more mobile browsers in future updates of WalletConnect.
        */
-      if (window.ethereum === undefined && isMobile()) {
-        console.warn("No window.ethereum detected. We recommend to use the built-in browser of your wallet to interact with the blockchain.");
+      if (!isEthereumProvider() && isMobile()) {
+        console.warn("No Ethereum provider detected. We recommend to use the built-in browser of your wallet to interact with the blockchain.");
         setShowNoEthereumPrompt(true);
       }
     } else if (screenSize === ScreenSize.Desktop) {
@@ -37,9 +38,7 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
         className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
         onClick={handleClick}>
         <div>
-          <span
-            className={!provider ? "dot disconnected" : "dot connected"}
-            style={{ marginRight: "5px" }} />
+          <Dot color={!provider ? Colors.red : Colors.turquoise} />
           {!provider ? "Connect a Wallet" : screenSize === ScreenSize.Desktop ? "Disconnect Wallet" : `${truncatedAddress(selectedAddress)}`}
         </div>
       </button>
@@ -52,7 +51,7 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
         </Modal>
       )}
       {showNoEthereumPrompt && (
-        <Modal title="No window.ethereum detected" setShowModal={setShowNoEthereumPrompt}>
+        <Modal title="No Ethereum provider detected" setShowModal={setShowNoEthereumPrompt}>
           <div className="no-ethereum-prompt-wrapper">
             <span>We recommend to use the built-in browser of your wallet to interact with the blockchain.</span>
             <button onClick={() => setShowNoEthereumPrompt(false)}>Got it</button>

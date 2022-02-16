@@ -1,3 +1,5 @@
+import { PrivateKey } from "openpgp";
+
 export interface IParentVault {
   id: string
   pid: string
@@ -40,10 +42,10 @@ export interface IVault {
   id: string
   name: string
   descriptionHash: string
-  description: IVaultDescription | string
+  description: IVaultDescription
   bounty: string
   isGuest: boolean
-  parentDescription: IVaultDescription | string
+  parentDescription: IVaultDescription
   parentVault: IParentVault;
 }
 
@@ -56,7 +58,8 @@ export interface IVaultDescription {
   }
   "communication-channel": {
     "committee-bot": string
-    "pgp-pk": string
+    "pgp-pk": string,
+    "router-pgp-pk": string
   }
   "committee": {
     "multisig-address": string
@@ -200,4 +203,11 @@ export interface IAirdropElement {
   image: string
   name: string
   attributes: Array<any>
+}
+
+export interface IStoredKey {
+  alias: string
+  privateKey: string
+  passphrase?: string | undefined
+  publicKey: string
 }

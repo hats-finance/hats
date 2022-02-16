@@ -43,6 +43,8 @@ $severity-high: #213173;
 $severity-critical: #122777;
 $severity-audit-request: #D1891D;
 
+$committee-blue: #c0f2f2;
+
 /* font sizes */
 $xlarge: 48px;
 $large: 36px;
@@ -53,8 +55,31 @@ $xsmall: 14px;
 $xxsmall: 12px;
 $tiny: 10px;
 
+/* spacing */
+$spacing-quarter: 2px;
+$spacing-half: 4px;
+$spacing-1: 8px;
+$spacing-2: 16px;
+$spacing-3: 24px;
+$spacing-4: 32px;
+$spacing-5: 40px;
+$spacing-6: 48px;
+$spacing-7: 56px;
+$spacing-8: 64px;
+$spacing-9: 72px;
+$spacing-10: 80px;
+$spacing-11: 88px;
+$spacing-12: 96px;
+$spacing-13: 104px;
+$spacing-14: 112px;
+$spacing-15: 120px;
+$spacing-16: 128px;
+$spacing-18: 144px;
+$spacing-20: 160px;
+$spacing-25: 200px;
+
 /* others */
-$mobile-breakpoint: 770px;
+$mobile-breakpoint: 1000px;
 $small-screen-breakpoint: 1440px;
 $black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal
 $sidebar-shadow: rgba(0, 0, 0, 0.25);

@@ -1,8 +1,6 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-
-//import Logo from "../assets/icons/logo.icon";
-import LogoChristmas from "../assets/icons/logo-christmas.svg";
+import Logo from "../assets/icons/logo.icon";
 import { LocalStorage } from "../constants/constants";
 import "../styles/Welcome.scss";
 
@@ -28,7 +26,7 @@ export default function Welcome(props: IProps) {
   return (
     <div className="welcome-wrapper" data-testid="Welcome">
       <div className="welcome-content">
-        <img src={LogoChristmas} alt="christams logo" />
+        <Logo />
         <div className="title">{t("Welcome.title")}</div>
         <div className="description">{t("Welcome.description")}</div>
         <button className="enter-btn" onClick={seenWelcomePage}>

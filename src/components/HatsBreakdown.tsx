@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import Logo from "../assets/icons/logo.icon";
-import "../styles/HatsBreakdown.scss";
 import { getStakerAmounts } from "../graphql/subgraph";
 import { useQuery } from "@apollo/client";
-import { formatNumber, fromWei, getTokenMarketCap, getTokenPrice } from "../utils";
+import { formatNumber, fromWei, getTokenMarketCap } from "../utils";
 import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
+import "../styles/HatsBreakdown.scss";
 
 export default function HatsBreakdown() {
   const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
@@ -16,7 +16,7 @@ export default function HatsBreakdown() {
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
 
-  const stakerAmounts = React.useMemo(() => {
+  const stakerAmounts = useMemo(() => {
     if (!loading && !error && data && data.stakers) {
       return data.stakers;
     }
@@ -26,16 +26,25 @@ export default function HatsBreakdown() {
   const [totalStaked, setTotalStaked] = useState(0);
   const [stakingAPY, setStakingAPY] = useState(0);
 
-  React.useEffect(() => {
-    const getTotalStaked = async () => {
-      const totalStaked = await (await Promise.all(stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.depositAmount)) * await getTokenPrice(staker.parentVault.stakingToken)))).reduce((a: any, b: any) => a + b, 0);
+  const findTokenPrice = useCallback((parentVaultID: string) => {
+    for (const vault of vaults) {
+      if (vault.parentVault.id === parentVaultID) {
+        return vault.parentVault.tokenPrice;
+      }
+    }
+    return 0;
+  }, [vaults])
+
+  useEffect(() => {
+    const getTotalStaked = () => {
+      const totalStaked = stakerAmounts.map(async (staker: IStaker) => Number(fromWei(staker.depositAmount)) * findTokenPrice(staker.parentVault.id)).reduce((a: any, b: any) => a + b, 0);
       if (!isNaN(Number(totalStaked))) {
         setTotalStaked(Number(totalStaked));
       }
       let amountToSum = 0;
-      stakerAmounts.forEach(async (staked: IStaker) => {
+      stakerAmounts.forEach((staked: IStaker) => {
         const userDepositSize = Number(fromWei(staked.depositAmount));
-        const tokenValue: number = await getTokenPrice(staked.parentVault.stakingToken);
+        const tokenValue: number = findTokenPrice(staked.parentVault.id);
         let vaultAPY = 0;
         if (tokenValue) {
           vaults.forEach((vault: IVault) => {
@@ -51,15 +60,16 @@ export default function HatsBreakdown() {
     if (stakerAmounts.length > 0) {
       getTotalStaked();
     }
-  }, [stakerAmounts, vaults])
+  }, [stakerAmounts, vaults, findTokenPrice])
 
   const [hatsMarketCap, setHatsMarketCap] = useState(0);
 
-  React.useEffect(() => {
-    const getHatsMarketCap = async () => {
-      setHatsMarketCap(await getTokenMarketCap(rewardsToken));
-    }
-    getHatsMarketCap();
+  useEffect(() => {
+    (async () => {
+      if (rewardsToken && rewardsToken !== "") {
+        setHatsMarketCap(await getTokenMarketCap(rewardsToken));
+      }
+    })();
   }, [rewardsToken])
 
   return <div className="hats-breakdown-wrapper">

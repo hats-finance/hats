@@ -1,23 +1,26 @@
 import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, NFT_AIRDROP_ELIGIBLE_TOKENS } from '../constants/action-types';
-import { EligibleTokens, IVault } from '../types/types';
+import { EligibleTokens, IStoredKey, IVault, IWithdrawSafetyPeriod } from '../types/types';
 
 interface IDataReducer {
   vaults: Array<IVault>
   rewardsToken: string
-  hatsPrice: string
-  withdrawSafetyPeriod: Object
+  hatsPrice: number
+  withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
   airdropEligibleTokens: EligibleTokens
+  pgpKeystore: IStoredKey[]
 }
 
 const initialState: IDataReducer = {
   vaults: [],
   rewardsToken: "",
-  hatsPrice: "",
-  withdrawSafetyPeriod: {},
-  airdropEligibleTokens: {}
+  hatsPrice: 0,
+  withdrawSafetyPeriod: {
+  },
+  airdropEligibleTokens: {},
+  pgpKeystore: []
 };
 
-export const dataReducer = (state = initialState, action: any) => {
+export const dataReducer = (state: IDataReducer = initialState, action: any): IDataReducer => {
   switch (action.type) {
     case UPDATE_VAULTS: {
       return {

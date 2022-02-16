@@ -5,11 +5,11 @@ import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
-import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NFT_AIRDROP_ADDRESS, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
+import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
-import { toggleInTransaction, toggleNotification } from "./index";
+import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
-import { NETWORK } from "../settings";
+import { NETWORK, NFT_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
 
 let provider: ethers.providers.Web3Provider;
@@ -290,6 +290,42 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 /** NFT Airdrop contract actions - START */
 
 /**
+ * Get the merkle tree ref (eligible tokens)
+ * @returns {string}
+ */
+export const getMerkleTree = async () => {
+  try {
+    const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+    const data = contract.filters.MerkleTreeChanged();
+    const filter = await contract.queryFilter(data, 0);
+    return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Get the base URI
+ */
+export const getBaseURI = async () => {
+  try {
+    const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, provider);
+    return await contract.baseTokenURI();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+/**
+ * Get the NFT Airdrop deadline
+ * @returns {string} in unix time
+ */
+export const getDeadline = async () => {
+  const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+  return await contract.deadline();
+}
+
+/**
  * Redeem NFT
  * @param {string} account 
  * @param {string} tokenID 
@@ -336,7 +372,8 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
     const transaction = await tx();
     await onWalletAction();
     if (transaction) {
-      dispatch(toggleInTransaction(true, transaction.hash));
+      dispatch(toggleInTransaction(true));
+      dispatch(updateTransactionHash(transaction.hash));
       const transactionStatus = await transactionWait(transaction, confirmations);
       if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();

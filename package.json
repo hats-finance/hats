@@ -1,6 +1,6 @@
 {
   "name": "hats.fe-2",
-  "version": "0.2.1",
+  "version": "0.2.6",
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.5.6",
@@ -11,12 +11,18 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@toruslabs/torus-embed": "^1.18.7",
+    "@davatar/react": "^1.8.1",
+    "@ethersproject/contracts": "^5.0.5",
+    "@portis/web3": "^4.0.0",
     "@types/downloadjs": "^1.4.2",
     "@types/react": "^17.0.38",
     "@types/react-router-dom": "^5.1.7",
     "@types/showdown": "^1.9.3",
-    "@walletconnect/web3-provider": "^1.7.0",
     "axios": "^0.24.0",
+    "@walletconnect/web3-provider": "^1.6.6",
+    "authereum": "^0.1.14",
+    "browser-passworder": "^2.0.3",
+    "chalk": "^4.1.0",
     "classnames": "^2.2.6",
     "dotenv": "^10.0.0",
     "downloadjs": "^1.4.7",
@@ -29,6 +35,7 @@
     "merkletreejs": "^0.2.24",
     "millify": "^4.0.0",
     "moment": "^2.29.1",
+    "msw": "^0.36.3",
     "openpgp": "5.0.1",
     "rc-tooltip": "^5.1.0",
     "react": "^17.0.2",
@@ -55,7 +62,6 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest --watch --verbose --maxWorkers=25%",
-    "coverage": "jest --coverage --runInBand",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
