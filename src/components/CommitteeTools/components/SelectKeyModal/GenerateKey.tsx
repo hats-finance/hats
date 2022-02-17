@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
@@ -8,9 +8,9 @@ import { KeyGenerated } from "./KeyGenerated";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const [alias, setAlias] = useState("");
-  const passphraseRef = useRef<HTMLInputElement>(null);
-  const nameRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const [passphrase, setPassphrase] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const vaultContext = useContext(VaultContext);
   const [error, setError] = useState<string>();
   const [addedKey, setAddedKey] = useState<IStoredKey>();
@@ -19,10 +19,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   async function _handleClick() {
     try {
       setLoading(true);
-      console.log('true')
-      const passphrase = passphraseRef.current?.value;
-      const name = nameRef.current!.value;
-      const email = emailRef.current!.value;
+      if (!name) throw(new Error('Name is required'))
+      if (!email) throw(new Error('Email is required'))
       const { privateKey, publicKey } = await generateKey({
         type: "rsa", // Type of the key, defaults to ECC
         rsaBits: 2048,
@@ -64,7 +62,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <label>{t("CommitteeTools.keymodal.passphrase")}</label>
         <input
           className="keymodal-generate__input"
-          ref={passphraseRef}
+          value={passphrase}
+          onChange={(e) => setPassphrase(e.target.value)}
           type="text"
           placeholder={t(
             "CommitteeTools.keymodal.enter-passphrase-placeholder"
@@ -73,14 +72,16 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <label>{t("CommitteeTools.keymodal.name")}</label>
         <input
           className="keymodal-generate__input"
-          ref={nameRef}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           type="text"
           placeholder={t("CommitteeTools.keymodal.enter-name-placeholder")}
         />
         <label>{t("CommitteeTools.keymodal.email")}</label>
         <input
           className="keymodal-generate__input"
-          ref={emailRef}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           type="text"
           placeholder={t("CommitteeTools.keymodal.enter-email-placeholder")}
         />
