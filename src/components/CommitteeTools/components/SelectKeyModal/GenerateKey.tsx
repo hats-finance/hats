@@ -2,9 +2,9 @@ import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
-import classNames from "classnames";
 import { t } from "i18next";
 import { KeyGenerated } from "./KeyGenerated";
+import Loading from "assets/icons/loading.svg";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const [alias, setAlias] = useState("");
@@ -19,8 +19,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   async function _handleClick() {
     try {
       setLoading(true);
-      if (!name) throw(new Error('Name is required'))
-      if (!email) throw(new Error('Email is required'))
+      if (!name) throw new Error("Name is required");
+      if (!email) throw new Error("Email is required");
       const { privateKey, publicKey } = await generateKey({
         type: "rsa", // Type of the key, defaults to ECC
         rsaBits: 2048,
@@ -44,7 +44,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   }
 
   if (addedKey) {
-    return <KeyGenerated addedKey={addedKey} onFinish={onFinish} />
+    return <KeyGenerated addedKey={addedKey} onFinish={onFinish} />;
   } else {
     return (
       <>
@@ -88,8 +88,10 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <button
           onClick={_handleClick}
           disabled={loading || !alias}
-          className={classNames("keymodal-generate__button", { loading: loading })}>
+          className={"keymodal-generate__button"}
+        >
           {t("CommitteeTools.keymodal.generate-button")}
+          {loading && <img className="loading-icon" src={Loading} alt="loading" />}
         </button>
         {error && <div className="error-label">{error}</div>}
       </>
