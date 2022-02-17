@@ -19,30 +19,11 @@ interface IProps {
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
   const { name, isGuest, bounty, id, description } = props.data;
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.tokenPrice);
-  const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.apy);
-  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
-  const [vaultAPY, setVaultAPY] = useState("-");
-  const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
+  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals, tokenPrice, apy } = props.data.parentVault;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
-  useEffect(() => {
-    setVaultAPY(apy ? `${millify(apy, { precision: 3 })}%` : "-");
-  }, [setVaultAPY, apy])
-
-  // temporary fix to https://github.com/hats-finance/hats/issues/29
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (apy) {
-  //       setVaultAPY(`${millify(apy, { precision: 3 })}%`);
-  //     }
-  //   }, 1000);
-  // }, [setVaultAPY, apy])
-
-  useEffect(() => {
-    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
-  }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
-
+  const vaultAPY = apy ? `${millify(apy, { precision: 3 })}%` : "-"
+  const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice);
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
 
   const maxRewards = (

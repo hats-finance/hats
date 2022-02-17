@@ -266,7 +266,7 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {IVault} vault
  * @param {number} hatsPrice
  */
-export const calculateApy = async (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
+export const calculateApy = (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
   if (Number(fromWei(vault.totalStaking)) === 0 || !tokenPrice) {
     return 0;

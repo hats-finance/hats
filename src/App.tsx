@@ -148,11 +148,13 @@ function App() {
             return vault.parentVault.stakingToken;
           })
 
-          const tokensPrices = await getTokensPrices(stakingTokens);
+          let uniqueStakingTokens = Array.from(new Set(stakingTokens));
+          const tokensPrices = await getTokensPrices(uniqueStakingTokens);
 
           for (const vault of data.vaults as IVault[]) {
             if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
               vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
+              vault.parentVault.apy = calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
             }
             vault.description = parseJSONToObject(vault.description as any);
             if (vault.parentDescription) {
@@ -165,38 +167,7 @@ function App() {
         dispatch(updateVaults(data.vaults));
       }
     })();
-  }, [loading, error, data, dispatch]);
-
-  const vaults: Array<IVault> = useSelector(
-    (state: RootState) => state.dataReducer.vaults
-  );
-
-  useEffect(() => {
-    const calculateVaultsApy = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
-      }
-      dispatch(updateVaults(vaults));
-    };
-
-    if (hatsPrice && vaults) {
-      calculateVaultsApy();
-    }
-  }, [dispatch, hatsPrice, vaults]);
-
-  useEffect(() => {
-    const calculatetokenPrices = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.tokenPrice = await getTokenPrice(
-          vault.parentVault.stakingToken
-        );
-      }
-      dispatch(updateVaults(vaults));
-    };
-    if (vaults) {
-      calculatetokenPrices();
-    }
-  }, [dispatch, vaults]);
+  }, [loading, error, data, dispatch, hatsPrice]);
 
   useEffect(() => {
     (async () => {
