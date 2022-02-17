@@ -1,5 +1,9 @@
 {
   "translation": {
+    "Shared": {
+      "yes": "YES",
+      "cancel": "CANCEL"
+    },
     "Welcome": {
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
@@ -65,20 +69,21 @@
         "create-addenum": "Make sure to save your password in a secure place. Your password can reveal all your private keys, if you lose it, the vault becomes unreadable and may only be deleted.",
         "unlock-title": "Unlock Vault",
         "unlock-vault": "Unlock Vault",
-        "unlock-vault-description": "Please eneter your vault password",
+        "unlock-vault-description": "Please enter your vault password",
         "delete-vault": "Delete Vault",
         "create-vault": "Create Vault",
         "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
         "delete-yes": "yes",
         "password": "Password",
-        "create-password-placeholder": "Enter new password here, min 6 char",
+        "create-password-placeholder": "Enter new password here",
         "create-retype-placeholder": "Retype new password here",
         "enter-password-placeholder": "Enter password here",
         "passwords-mismatch": "Passwords do not match",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "unlock": "Unlock"
       },
       "ImportKey": {
-        "no-key-error": "No private key have been given, please paste your private key"
+        "no-key-error": "Please paste your private key"
       },
       "KeyDetails": {
         "title": "Key Details",
@@ -105,8 +110,8 @@
         "public-key": "Public Key",
         "name": "Name",
         "email": "E-mail",
-        "enter-alias-placeholder": "Enter new password here, min 6 char",
-        "enter-passphrase-placeholder": "Enter a passphrase, passphrase is optional",
+        "enter-alias-placeholder": "Enter new password here",
+        "enter-passphrase-placeholder": "Enter passphrase",
         "enter-name-placeholder": "Enter your name here",
         "enter-email-placeholder": "Enter your e-mail here ",
         "done": "Done",
@@ -115,30 +120,25 @@
         "hello": "Hello committee member",
         "share-public": "Please share your public key with the committee members",
         "generated-success": "Your keypair were generated successfully!",
-        "generated-notice-1": "Please notice!",
-        "generated-notice-2": "your private key should be shared with your committee members only via secure chat.",
-        "generated-notice-3": "The public key is used by Hats to encrypt messages from white hat attackers.",
-        "generated-notice-4": "Please take a minute and send the the public key to ",
-        "generated-notice-5": " to be added to Hats json file",
-        "generated-notice-6": "I have send ",
+        "generated-notice-1": "Please notice! \n\n your private key should be shared with your committee members only via secure chat. \n\n The public key is used by Hats to encrypt messages from white hat attackers. \n\n Please take a minute and send the the public key to ",
+        "generated-notice-2": " to be added to Hats json file",
+        "generated-notice-6": "I have sent ",
         "generated-notice-7": " the public key",
         "hatsOfir": "@hatsOfir",
-        "import-button": "Import key-pair",
         "generate-button": "Generate key-pair",
         "your-keys": "Your Keys"
       },
       "Decrypt": {
         "decrypt": "Decrypt",
         "encrypt": "Encrypt",
-        "select-keypair": "Select key-pair",
+        "select-keypair": "SELECT KEY-PAIR",
         "encrypted-message": "Encrypted message",
         "decrypted-message": "Decrypted message",
         "decrypt-button": "Decrypt message",
         "encrypt-button": "Encrypt message",
         "no-key-selected": "No key-pair selected",
         "no-message-decrypt": "No message to decrypt"
-      },
-      "NewKey": {}
+      }
     }
   }
 }

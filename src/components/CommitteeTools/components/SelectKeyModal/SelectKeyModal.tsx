@@ -34,14 +34,13 @@ export function SelectKeyModal({
   showKey?: IStoredKey; // used to show key details
   setShowModal: (show: boolean) => any;
 }) {
-  console.log({ showKey });
   const vaultContext = useContext(VaultContext);
   const [action, setAction] = useState<IAction>(
     showKey
       ? { type: ActionType.Display, key: showKey }
       : { type: ActionType.None }
   );
-  const vault = vaultContext.vault!;
+  const vault = vaultContext.vault;
 
   const onFinish = () => {
     if (
@@ -80,13 +79,13 @@ export function SelectKeyModal({
           onClick={() => setAction({ type: ActionType.Import })}
         />
       </div>
-      {vault.storedKeys.length !== 0 && (
+      {vault?.storedKeys.length !== 0 && (
         <>
           <p className="keymodal-main__list-title">
             {t("CommitteeTools.keymodal.your-keys")}
           </p>
           <div className="keymodal-main__keypair-list">
-            {vault.storedKeys.map((key) => keyRow(key))}
+            {vault?.storedKeys.map((key) => keyRow(key))}
           </div>
         </>
       )}
@@ -101,7 +100,7 @@ export function SelectKeyModal({
           to="#"
           className="title"
           onClick={() => {
-            vaultContext?.setSelectedAlias!(key.alias);
+            vaultContext.setSelectedAlias(key.alias);
             setShowModal(false);
           }}
         >
@@ -156,7 +155,7 @@ export function SelectKeyModal({
       case ActionType.Display:
         return t("CommitteeTools.KeyDetails.title");
       case ActionType.None:
-        if (vault.storedKeys.length !== 0)
+        if (vault?.storedKeys.length !== 0)
           return t("CommitteeTools.keymodal.list-keypair");
         else return t("CommitteeTools.keymodal.title");
     }
@@ -167,9 +166,10 @@ export function SelectKeyModal({
       title={titleByAction()}
       height="fit-content"
       width="fit-content"
-      setShowModal={setShowModal}
-    >
-      {byAction(action)}
+      setShowModal={setShowModal}>
+      <div className="select-key-modal-wrapper">
+        {byAction(action)}
+      </div>
     </Modal>
   );
 }
