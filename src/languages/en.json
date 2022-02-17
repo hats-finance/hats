@@ -129,6 +129,9 @@
         "your-keys": "Your Keys"
       },
       "Decrypt": {
+        "decrypt-tool": "Decrypt tool",
+        "decrypt-description": "Hello @committee member, Generate or import key-pair in order to decrypt",
+        "selected-key-label": "Signed Alias",
         "decrypt": "Decrypt",
         "encrypt": "Encrypt",
         "select-keypair": "SELECT KEY-PAIR",
