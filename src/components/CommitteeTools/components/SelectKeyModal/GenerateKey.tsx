@@ -4,7 +4,7 @@ import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
 import { t } from "i18next";
 import { KeyGenerated } from "./KeyGenerated";
-import Loading from "assets/icons/loading.svg";
+import Loading from "components/Shared/Loading";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const [alias, setAlias] = useState("");
@@ -19,8 +19,6 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   async function _handleClick() {
     try {
       setLoading(true);
-      if (!name) throw new Error("Name is required");
-      if (!email) throw new Error("Email is required");
       const { privateKey, publicKey } = await generateKey({
         type: "rsa", // Type of the key, defaults to ECC
         rsaBits: 2048,
@@ -91,8 +89,8 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           className={"keymodal-generate__button"}
         >
           {t("CommitteeTools.keymodal.generate-button")}
-          {loading && <img className="loading-icon" src={Loading} alt="loading" />}
         </button>
+        {loading && <Loading spinner />}
         {error && <div className="error-label">{error}</div>}
       </>
     );
