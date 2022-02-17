@@ -19,6 +19,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   async function _handleClick() {
     try {
       setLoading(true);
+      console.log('true')
       const passphrase = passphraseRef.current?.value;
       const name = nameRef.current!.value;
       const email = emailRef.current!.value;
