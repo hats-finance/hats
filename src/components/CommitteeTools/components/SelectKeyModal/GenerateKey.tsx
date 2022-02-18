@@ -18,7 +18,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
 
   async function _handleClick() {
     try {
-      // setLoading(true);
+      setLoading(true);
       const { privateKey, publicKey } = await generateKey({
         type: "rsa", // Type of the key, defaults to ECC
         rsaBits: 2048,
@@ -84,10 +84,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           placeholder={t("CommitteeTools.keymodal.enter-email-placeholder")}
         />
         <button
-          onClick={() => {
-            setLoading(true);
-            _handleClick();
-          }}
+          onClick={_handleClick}
           disabled={loading || !alias}
           className={"keymodal-generate__button"}
         >
