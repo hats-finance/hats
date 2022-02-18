@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import "../../styles/Vault/Vault.scss";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
@@ -18,7 +18,7 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
-  const { name, isGuest, bounty, id, description } = props.data;
+  const { name, isGuest, bounty, description } = props.data;
   const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals, tokenPrice, apy } = props.data.parentVault;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 

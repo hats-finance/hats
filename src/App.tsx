@@ -53,6 +53,8 @@ import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
 import axios from "axios";
 import "./i18n.ts"; // Initialise i18n
+import { fromWei } from "utils";
+
 
 function App() {
   const dispatch = useDispatch();
@@ -164,7 +166,20 @@ function App() {
         };
 
         await calculateTokenPrices();
-        dispatch(updateVaults(data.vaults));
+        // store sorted vaults in redux
+
+        const getVaultValue = (vaultWithData) =>
+          (Number(fromWei(vaultWithData.honeyPotBalance, vaultWithData.stakingTokenDecimals)) * vaultWithData.tokenPrice)
+        const sortedVaults = data.vaults.map((vault) => {
+          const { honeyPotBalance, stakingTokenDecimals, tokenPrice, apy } = vault.parentVault
+          if (tokenPrice !== undefined && apy !== undefined) {
+            return { vault, honeyPotBalance, stakingTokenDecimals, tokenPrice, apy }
+          }
+          return null
+        }).filter(vaultWithData => vaultWithData) // only keep vaults with data
+          .sort((a, b) => getVaultValue(b) - getVaultValue(a))
+          .map(vaultWithData => vaultWithData!.vault)
+        dispatch(updateVaults(sortedVaults));
       }
     })();
   }, [loading, error, data, dispatch, hatsPrice]);

@@ -6,11 +6,9 @@ import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { ScreenSize } from "../constants/constants";
-import { fromWei } from "utils";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
@@ -20,7 +18,6 @@ export default function Honeypots() {
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const [sortedVaults, setSortedVaults] = useState<any>([]);
 
   useEffect(() => {
     if (modalData) {
@@ -32,28 +29,7 @@ export default function Honeypots() {
 
   const guestVaults: Array<JSX.Element> = [];
 
-  useEffect(() => {
-    console.log("vaultsData", vaultsData);
-
-    const vaults = vaultsData.map((vault) => {
-      const { honeyPotBalance, stakingTokenDecimals, tokenPrice, apy } = vault.parentVault
-      console.log({ honeyPotBalance, stakingTokenDecimals, tokenPrice, apy })
-      if (tokenPrice !== undefined && apy !== undefined) {
-        return { vault, honeyPotBalance, stakingTokenDecimals, tokenPrice, apy }
-      }
-      return null
-    }).filter(vaultWithData => vaultWithData)
-      .sort((a, b) => {
-        return (b ? Number(fromWei(b.honeyPotBalance, b.stakingTokenDecimals)) * b.tokenPrice : 0) - (a ? Number(fromWei(a.honeyPotBalance, a.stakingTokenDecimals)) * a.tokenPrice : 0)
-      }).map(vaultWithData => vaultWithData!.vault)
-    setSortedVaults(vaults)
-  }, [vaultsData])
-
-  useEffect(() => {
-    console.log({ sortedVaults })
-  }, [sortedVaults])
-
-  const vaults = sortedVaults.map(vault => {
+  const vaults = vaultsData.map(vault => {
     if (vault && !vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.isGuest) {
