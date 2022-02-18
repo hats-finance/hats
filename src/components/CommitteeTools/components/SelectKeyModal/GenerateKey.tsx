@@ -18,7 +18,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
 
   async function _handleClick() {
     try {
-      setLoading(true);
+      setLoading(oldstate => !oldstate);
       const { privateKey, publicKey } = await generateKey({
         type: "rsa", // Type of the key, defaults to ECC
         rsaBits: 2048,
