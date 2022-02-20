@@ -2,6 +2,7 @@ import { forwardRef, useRef } from "react";
 import "./index.scss";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
+import classNames from "classnames";
 
 function EditableContent(
   {
@@ -10,12 +11,14 @@ function EditableContent(
     copyable,
     textInput,
     name,
+    value,
     ...props
   }: {
     onChange?: (value: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
     pastable?: boolean;
     copyable?: boolean;
     name?: string
+    value?: string
     textInput?: boolean
     placeholder?: string;
   },
@@ -28,6 +31,7 @@ function EditableContent(
       {textInput ? (<input
         type="text"
         name={name}
+        value={value}
         onChange={e => {
           if (onChange) {
             onChange(e)
@@ -41,7 +45,9 @@ function EditableContent(
             }
           }} ref={ref || localRef} {...props} className="pastable-content__textarea" />)}
       {extraIcons && (
-        <div className="pastable-content__extra-icons">
+        <div className={classNames("pastable-content__extra-icons", {
+          "pastable-content__extra-icons--input": textInput
+        })}>
           {pastable && (
             <img
               alt="paste"

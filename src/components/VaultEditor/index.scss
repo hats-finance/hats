@@ -1,13 +1,184 @@
 @import "../../styles/constants.scss";
 
 .vault-editor {
+    &__title {
+        font-size: $large;
+        line-height: 47px;
+        margin-bottom: 30px;
+        color: $white;
+    }
+    &__description {
+        color: $white;
+        font-size: $small;
+        line-height: 21px;
+        color: $white;
+        margin-bottom: 80px;
+    }
+    &__last-saved-time {
+        padding-bottom: 20px;
+        margin-bottom: 42px;
+        border-bottom: 1px solid $vault-editor-border;
+    }
+    &__section {
+        &-title {
+            color: $white;
+            text-transform: uppercase;
+            font-size: $small;
+            margin: 0;
+            padding: 0 0 16px;
+        }
+        &-content {
+            border: 1px solid #212842;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        &-description {
+            color: $white;
+        }
+        label {
+            display: inline-block;
+            color: $white;
+            padding-bottom: 4px;
+        }
+    }
+    &__button-container {
+        text-align: right;
+        padding-bottom: 40px;
+        button {
+            margin: 0;
+            width: 280px;
+            text-transform: uppercase;
+        }
+    }
+    &__divider {
+        border-bottom: 1px solid $vault-editor-border;
+        margin-bottom: 40px;
+    }
+    
     .vault-details {
         display: flex;
         flex-wrap: wrap;
         .field {
-            width:50%
+            width: 50%;
+            .pastable-content:last-child {
+                margin-bottom: 0;
+            }
+        }
+        .icon-inputs {
+            display: flex;
+            justify-content: end;
 
+            > div + div {
+                margin-left: 30px;
+            }
         }
     }
 
+    .committee-members {
+        &__member {
+            display: flex;
+            align-items: flex-start;
+            label {
+                height: 20px;
+            }
+            &-number {
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-top: 24px;
+                margin-right: 14px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                flex: 1 0 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            &-inputs {
+                width: 60%;
+            }
+            &-icon {
+                flex: 1 0;
+                width: 35%;
+            }
+        }
+        button {
+            margin: 0;
+            margin-left: 54px;
+            margin-bottom: 30px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    }
+
+    .contracts-covered {
+        &__contract {
+            display: flex;
+            align-items: flex-start;
+            label {
+                height: 20px;
+            }
+            &-number {
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-top: 24px;
+                margin-right: 14px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                width: 65%;
+            }
+        }
+        button {
+            margin: 0;
+            margin-left: 54px;
+            margin-bottom: 30px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    }
+
+    @media only screen and (max-width: $mobile-breakpoint) {
+        margin-left: 10px !important;
+        margin-right: 10px !important;
+
+        &__section {
+            &-content {
+                border: 1px solid #212842;
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+        }
+
+        .vault-details {
+            .field {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .icon-inputs {
+                justify-content: space-between;
+            }
+        }
+
+        .committee-members {
+            &__member {
+                &-inputs {
+                    width: 100%;
+                }
+                &-icons {
+                    margin-bottom: 30px;
+                }
+            }
+        }
+    }
 }
