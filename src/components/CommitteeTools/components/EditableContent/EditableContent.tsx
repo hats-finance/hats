@@ -2,6 +2,7 @@ import { forwardRef, useRef } from "react";
 import "./index.scss";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
+import RemoveIcon from "assets/icons/delete.icon.svg";
 import classNames from "classnames";
 
 function EditableContent(
@@ -9,6 +10,7 @@ function EditableContent(
     onChange,
     pastable,
     copyable,
+    removable,
     textInput,
     name,
     value,
@@ -17,6 +19,7 @@ function EditableContent(
     onChange?: (value: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
     pastable?: boolean;
     copyable?: boolean;
+    removable?: boolean;
     name?: string
     value?: string
     textInput?: boolean
@@ -25,7 +28,7 @@ function EditableContent(
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
-  const extraIcons = pastable || copyable;
+  const extraIcons = pastable || copyable || removable;
   return (
     <div className="pastable-content">
       {textInput ? (<input
@@ -68,6 +71,16 @@ function EditableContent(
               src={CopyIcon}
               onClick={() => {
                 navigator.clipboard.writeText(ref ? ref.current!.value : localRef.current!.value);
+              }}
+            />
+          )}
+          {removable && (
+            <img
+              alt="remove"
+              src={RemoveIcon}
+              onClick={() => {
+                if (ref) ref.current!.value = ''
+                else localRef.current!.value = ''
               }}
             />
           )}
