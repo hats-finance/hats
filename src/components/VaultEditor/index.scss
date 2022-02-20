@@ -215,5 +215,13 @@
                 }
             }
         }
+
+        .contracts-covered {
+            &__contract {
+                &-content {
+                    width: 100%;
+                }
+            }
+        }
     }
 }
