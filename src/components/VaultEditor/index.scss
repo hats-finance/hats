@@ -28,7 +28,7 @@
             padding: 0 0 16px;
         }
         &-content {
-            border: 1px solid #212842;
+            border: 1px solid $vault-editor-border-2;
             padding: 40px;
             margin-bottom: 40px;
         }
@@ -148,15 +148,50 @@
         }
     }
 
+    .signees {
+        border: 1px solid $turquoise;
+        padding: 20px;
+        &__signee {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            &-number {
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-right: 24px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                flex: 1 0;
+                color: $white;
+                word-break: break-all;
+            }
+        }
+        > div + div {
+            margin-bottom: 0;
+        }
+    }
+
     @media only screen and (max-width: $mobile-breakpoint) {
         margin-left: 10px !important;
         margin-right: 10px !important;
 
         &__section {
             &-content {
-                border: 1px solid #212842;
+                border: 1px solid $vault-editor-border-2;
                 padding: 20px;
                 margin-bottom: 20px;
+            }
+        }
+
+        &__button-container {
+            button {
+                width: 100%;
             }
         }
 

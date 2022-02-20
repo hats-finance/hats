@@ -385,14 +385,30 @@ export default function VaultEditor() {
                     <p className="vault-editor__section-description">
                         {t("VaultEditor.review-vault.description-3")}
                     </p>
-                    <label>{t("VaultEditor.contract-address")}</label>
+                    <label>{t("VaultEditor.sign-message")}</label>
                     <EditableContent
                         removable
-                        name="address"
-                        value={newMemberDetails.address}
-                        onChange={onNewMemberDetailsChange}
-                        placeholder={t("VaultEditor.contract-address-placeholder")}
+                        name="sign_message"
                     />
+                    <label>{t("VaultEditor.signees")}</label>
+                    <div className="signees">
+                        <div className="signees__signee">
+                            <div className="signees__signee-number">
+                                1
+                            </div>
+                            <div className="signees__signee-content">
+                                2345fhgf345678909087654kjghfdssdfg
+                            </div>
+                        </div>
+                        <div className="signees__signee">
+                            <div className="signees__signee-number">
+                                2
+                            </div>
+                            <div className="signees__signee-content">
+                                2345fhgf345678909087654kjghfdssdfg
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

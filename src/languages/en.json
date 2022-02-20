@@ -177,6 +177,8 @@
       "contract-address-placeholder": "Contract Address",
       "add-member": "+ Add",
       "remove-member": "Remove",
+      "sign-message": "SIGN MESSAGE",
+      "signees": "SIGNEES",
       "save-button": "Save",
       "sign-submit": "Sign and submit",
       "contracts-covered": "Contracts-Covered",
