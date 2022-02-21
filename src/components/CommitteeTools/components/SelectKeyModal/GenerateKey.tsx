@@ -86,7 +86,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         <button
           onClick={_handleClick}
           disabled={loading || !alias}
-          className={"keymodal-generate__button"}
+          className="keymodal-generate__button"
         >
           {t("CommitteeTools.keymodal.generate-button")}
         </button>
