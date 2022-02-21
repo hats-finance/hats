@@ -1,9 +1,14 @@
 import "./index.scss";
 
-export default function TokenAirdrop() {
+interface IProps {
+  tokenAmount: number
+}
+
+export default function TokenAirdrop({ tokenAmount }: IProps) {
   return (
     <div className="token-airdrop-wrapper">
-      
+      TOKEN AIRDROP COMPONENT
+      {tokenAmount}
     </div>
   )
 }

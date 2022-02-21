@@ -5,11 +5,12 @@ import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
+import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
-import { NETWORK, NFT_AIRDROP_ADDRESS } from "../settings";
+import { NETWORK, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
 
 let provider: ethers.providers.Web3Provider;
@@ -287,7 +288,7 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 
 
 
-/** NFT Airdrop contract actions - START */
+/** Airdrop contract actions - START */
 
 /**
  * Get the merkle tree ref (eligible tokens)
@@ -350,7 +351,20 @@ export const isRedeemed = async (tokenID: string, address: string) => {
   }
 }
 
-/** NFT Airdrop contract actions - END */
+/**
+ * 
+ * @param address
+ */
+export const hasClaimed = async (address: string) => {
+  const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  try {
+    return await contract.hasClaimed(address);
+  } catch (error) {
+    return false;
+  }
+}
+
+/** Airdrop contract actions - END */
 
 
 /**

@@ -46,7 +46,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
-import Airdrop from "./components/Airdrop/components/Airdrop/Airdop";
+import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
 import "./i18n.ts"; // Initialise i18n
 import { fetchAirdropData } from "./components/Airdrop/utils";
