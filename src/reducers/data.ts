@@ -1,12 +1,12 @@
-import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, NFT_AIRDROP_ELIGIBLE_TOKENS } from '../constants/action-types';
-import { EligibleTokens, IStoredKey, IVault, IWithdrawSafetyPeriod } from '../types/types';
+import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, UPDATE_AIRDROP_DATA } from '../constants/action-types';
+import { IStoredKey, IVault, IWithdrawSafetyPeriod, IAirdropData } from '../types/types';
 
 interface IDataReducer {
   vaults: Array<IVault>
   rewardsToken: string
   hatsPrice: number
   withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
-  airdropEligibleTokens: EligibleTokens
+  airdrop: null | IAirdropData
   pgpKeystore: IStoredKey[]
 }
 
@@ -14,9 +14,8 @@ const initialState: IDataReducer = {
   vaults: [],
   rewardsToken: "",
   hatsPrice: 0,
-  withdrawSafetyPeriod: {
-  },
-  airdropEligibleTokens: {},
+  withdrawSafetyPeriod: {},
+  airdrop: null,
   pgpKeystore: []
 };
 
@@ -46,10 +45,10 @@ export const dataReducer = (state: IDataReducer = initialState, action: any): ID
         withdrawSafetyPeriod: action.withdrawSafetyPeriod
       }
     }
-    case NFT_AIRDROP_ELIGIBLE_TOKENS: {
+    case UPDATE_AIRDROP_DATA: {
       return {
         ...state,
-        airdropEligibleTokens: action.airdropEligibleTokens
+        airdrop: action.airdrop
       }
     }
     default: return state;

@@ -4,7 +4,7 @@ export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED",
+  Airdrop = "HATS_AIRDROP_USER_NOTIFIED",
   PGPKeystore = "HATS_PGP_KEYSTORE"
 }
 
@@ -18,7 +18,7 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  nft_airdrop = "/nft_airdrop/",
+  airdrop = "/airdrop",
   committee_tools = "/committee-tools"
 }
 
@@ -39,17 +39,12 @@ export enum NFTMangerAddress {
   rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
-export enum NFTAirdropAddress {
-  main = "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
-  rinkeby = "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
-}
-
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  nft_airdrop = "NFT Airdrop"
+  airdrop = "Airdrop"
 }
 
 export enum LPUniswapURIs {

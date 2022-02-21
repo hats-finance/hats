@@ -21,9 +21,9 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
   }
 
   useEffect(() => {
-    const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
+    const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
     savedItems.push(normalizeAddress(selectedAddress));
-    localStorage.setItem(LocalStorage.NFTAirdrop, JSON.stringify(savedItems));
+    localStorage.setItem(LocalStorage.Airdrop, JSON.stringify(savedItems));
   }, [selectedAddress])
 
   return (
@@ -37,7 +37,7 @@ export default function NFTAirdropNotification({ setShowNFTAirdropNotification }
         </div>
         <span>Reveal your NFT and find out more on the crow clan collection.</span>
         <img className="question-mark" src={QuestionIcon} width="200px" height="200px" alt="question mark" />
-        <Link to={{ pathname: RoutePaths.nft_airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="reveal-link">REVEAL</Link>
+        <Link to={{ pathname: RoutePaths.airdrop, search: `walletAddress=${selectedAddress}` }} onClick={handleClick} className="reveal-link">REVEAL</Link>
       </div>
     </Modal>
   )
