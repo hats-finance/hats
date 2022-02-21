@@ -5,6 +5,9 @@ import './index.scss'
 import IconInput from "./IconEditor"
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import RemoveIcon from "assets/icons/remove-member.svg";
+import Tooltip from "rc-tooltip";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
+import InfoIcon from "assets/icons/info.icon";
 
 const newVaultDescription: IVaultDescription = {
     "project-metadata": {
@@ -165,22 +168,6 @@ export default function VaultEditor() {
                     </div>
                 </div>
             </div>
-
-            {/* <div>
-                <label>{t("VaultEditor.pgp-key")}</label>
-                <EditableContent
-                    name="communication-channel.pgp-pk"
-                    pastable
-                    onChange={onVaultDescriptionChange} />
-            </div>
-            <div>
-                <label>{t("VaultEditor.committee-bot")}</label>
-                <EditableContent
-                    textInput
-                    name="communication-channel.committee-bot"
-                    value={vaultDescription?.["communication-channel"]["committee-bot"]}
-                    onChange={onVaultDescriptionChange} />
-            </div> */}
 
             <div className="vault-editor__section">
                 <p className="vault-editor__section-title">
@@ -366,6 +353,52 @@ export default function VaultEditor() {
                 </div>
             </div>
 
+            <div className="vault-editor__section">
+                <p className="vault-editor__section-title">
+                    5. {t("VaultEditor.pgp-key")}
+                </p>
+                <div className="vault-editor__section-content">
+                    <div className="pgp-key">
+                        <div className="pgp-key__hint">
+                            {t("VaultEditor.pgp-key-hint-1")}
+                            <Tooltip
+                                placement="top"
+                                overlayClassName="tooltip"
+                                overlayInnerStyle={{ ...RC_TOOLTIP_OVERLAY_INNER_STYLE, maxWidth: 500 }}
+                                overlay={t("VaultEditor.pgp-key-hint-tooltip")}
+                            >
+                                <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
+                            </Tooltip>
+                            {t("VaultEditor.pgp-key-hint-2")}
+                        </div>
+                        <p className="vault-editor__section-description">
+                            {t("VaultEditor.pgp-key-description")}
+                            <br></br>
+                            <br></br>
+                        </p>
+                        <button>
+                            {t("VaultEditor.go-to-tool")}
+                        </button>
+                        <div>
+                            <label>{t("VaultEditor.pgp-key")}</label>
+                            <EditableContent
+                                name="communication-channel.pgp-pk"
+                                pastable
+                                onChange={onVaultDescriptionChange}
+                                placeholder={t("VaultEditor.pgp-key-placeholder")} />
+                        </div>
+                        <div>
+                            <label>{t("VaultEditor.committee-bot")}</label>
+                            <EditableContent
+                                textInput
+                                name="communication-channel.committee-bot"
+                                value={vaultDescription?.["communication-channel"]["committee-bot"]}
+                                onChange={onVaultDescriptionChange} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div className="vault-editor__button-container">
                 <button>{t("VaultEditor.save-button")}</button>
             </div>
@@ -374,7 +407,7 @@ export default function VaultEditor() {
 
             <div className="vault-editor__section">
                 <p className="vault-editor__section-title">
-                    5. {t("VaultEditor.review-vault.title")}
+                    6. {t("VaultEditor.review-vault.title")}
                 </p>
                 <div className="vault-editor__section-content">
                     <p className="vault-editor__section-description">

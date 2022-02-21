@@ -150,6 +150,19 @@
         }
     }
 
+    .pgp-key {
+        &__hint {
+            margin: 0 -20px 30px;
+            padding: 20px;
+            border: 1px solid $red;
+            color: $white;
+        }
+        button {
+            margin: 0;
+            margin-bottom: 40px;
+        }
+    }
+
     .signees {
         border: 1px solid $turquoise;
         padding: 20px;
