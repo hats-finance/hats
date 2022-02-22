@@ -140,6 +140,16 @@
             &-content {
                 width: 65%;
             }
+            &-subcontent {
+                display: flex;
+                justify-content: space-between;
+            }
+            &-name {
+                width: 60%;
+            }
+            &-severities {
+                width: 35%;
+            }
         }
         button {
             margin: 0;
@@ -235,6 +245,15 @@
         .contracts-covered {
             &__contract {
                 &-content {
+                    width: 100%;
+                }
+                &-subcontent {
+                    display: block;
+                }
+                &-name {
+                    width: 100%;
+                }
+                &-severities {
                     width: 100%;
                 }
             }

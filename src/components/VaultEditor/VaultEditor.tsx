@@ -8,6 +8,7 @@ import RemoveIcon from "assets/icons/remove-member.svg";
 import Tooltip from "rc-tooltip";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
 import InfoIcon from "assets/icons/info.icon";
+import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 
 const newVaultDescription: IVaultDescription = {
     "project-metadata": {
@@ -45,6 +46,13 @@ export default function VaultEditor() {
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [newMemberDetails, setNewMemberDetails] = useState<ICommitteeMember>(newMember)
     const [memberIndex, setMemberIndex] = useState<number | undefined>(undefined)
+
+    // Will replace with real severities options
+    const severitiesOptions = [
+        { label: 'Thing 1', value: 1},
+        { label: 'Thing 2', value: 2},
+        { label: 'Thing 3', value: 3},
+    ];
 
     useEffect(() => {
         console.log(vaultDescription)
@@ -327,14 +335,22 @@ export default function VaultEditor() {
                                 {(vaultDescription?.committee?.members || []).length + 1}
                             </div>
                             <div className="contracts-covered__contract-content">
-                                <label>{t("VaultEditor.contract-name")}</label>
-                                <EditableContent
-                                    textInput
-                                    name="name"
-                                    value={newMemberDetails.name}
-                                    onChange={onNewMemberDetailsChange}
-                                    placeholder={t("VaultEditor.contract-name-placeholder")}
-                                />
+                                <div className="contracts-covered__contract-subcontent">
+                                    <div className="contracts-covered__contract-name">
+                                        <label>{t("VaultEditor.contract-name")}</label>
+                                        <EditableContent
+                                            textInput
+                                            name="name"
+                                            value={newMemberDetails.name}
+                                            onChange={onNewMemberDetailsChange}
+                                            placeholder={t("VaultEditor.contract-name-placeholder")}
+                                        />
+                                    </div>
+                                    <div className="contracts-covered__contract-severities">
+                                        <label>{t("VaultEditor.contract-severities")}</label>
+                                        <MultiSelect options={severitiesOptions} />
+                                    </div>
+                                </div>
                                 <label>{t("VaultEditor.contract-address")}</label>
                                 <EditableContent
                                     textInput
