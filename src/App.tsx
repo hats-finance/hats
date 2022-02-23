@@ -45,7 +45,7 @@ import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
 import { IVault } from "./types/types";
-import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
+import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
 import "./i18n.ts"; // Initialise i18n
@@ -75,7 +75,7 @@ function App() {
     }
   }, [dispatch, provider]);
 
-  const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
+  const [showAirdropPrompt, setShowAirdropPrompt] = useState(false);
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
@@ -197,7 +197,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      await fetchAirdropData(selectedAddress, () => setShowNFTAirdropNotification(true), dispatch);
+      await fetchAirdropData(normalizeAddress(selectedAddress), () => setShowAirdropPrompt(true), dispatch);
     })();
   }, [dispatch, selectedAddress])
 
@@ -236,7 +236,10 @@ function App() {
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
-      {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
+      {hasSeenWelcomePage === "1" && showAirdropPrompt && (
+        <AirdropPrompt
+          address={normalizeAddress(selectedAddress)}
+          closePrompt={() => setShowAirdropPrompt(false)} />)}
     </>
   );
 }

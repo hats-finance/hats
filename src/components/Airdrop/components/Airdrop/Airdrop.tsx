@@ -6,7 +6,7 @@ import Loading from "components/Shared/Loading";
 import { Colors } from "constants/constants";
 import { isAddress } from "ethers/lib/utils";
 import { t } from "i18next";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { isEthereumProvider, normalizeAddress } from "../../../../utils";
@@ -57,6 +57,13 @@ export default function Airdrop() {
     }
   }, [nftET, tokenET]);
 
+  useEffect(() => {
+    const urlSearchParams = new URLSearchParams(window.location.search);
+    const params = Object.fromEntries(urlSearchParams.entries());
+    if (params.walletAddress) {
+      handleChange(params.walletAddress);
+    }
+  }, [handleChange])
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {

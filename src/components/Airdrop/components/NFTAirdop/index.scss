@@ -6,6 +6,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    margin-top: 5px;
     .nft-image {
       width: 300px;
       height: 300px;
@@ -31,6 +32,9 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .nft-airdrop-wrapper {
     &__nft-container {
+      .nft-image {
+        width: 100%;
+      }
       .redeem-btn {
         width: 100%;
       }

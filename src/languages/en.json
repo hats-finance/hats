@@ -54,6 +54,7 @@
         "claim-amount": "Total available to claim"
       },
       "NFTAirdrop": {
+        "your-nft": "Your Crow Clan NFT",
         "redeem-success": "NFT redeemed successfully"
       }
       

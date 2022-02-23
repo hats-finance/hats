@@ -299,7 +299,7 @@ export const getMerkleTree = async () => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     const data = contract.filters.MerkleTreeChanged();
     const filter = await contract.queryFilter(data, 0);
-    return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+    return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
   } catch (error) {
     console.error(error);
   }
@@ -332,7 +332,7 @@ export const getDeadline = async () => {
  * @param {string} tokenID 
  * @param {any} proof 
  */
-export const nftAirdropRedeem = async (account: string, tokenID: string, proof: any) => {
+export const redeemNFT = async (account: string, tokenID: string, proof: any) => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
   return await contract.redeem(account, tokenID, proof);
 }
@@ -352,8 +352,8 @@ export const isRedeemed = async (tokenID: string, address: string) => {
 }
 
 /**
- * 
- * @param address
+ * Checks if a given address has claimed the token reward.
+ * @param {string} address
  */
 export const hasClaimed = async (address: string) => {
   const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
@@ -361,6 +361,15 @@ export const hasClaimed = async (address: string) => {
     return await contract.hasClaimed(address);
   } catch (error) {
     return false;
+  }
+}
+
+export const claimToken = async (address: string, amount: number, proof: any) => {
+  const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  try {
+    return await contract.claim(address, amount, proof);
+  } catch (error) {
+    console.error(error);
   }
 }
 

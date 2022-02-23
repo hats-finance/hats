@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { t } from "i18next";
-import { createTransaction, getBaseURI, getDeadline, nftAirdropRedeem } from "actions/contractsActions";
+import { createTransaction, getBaseURI, getDeadline, redeemNFT } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
 import { hashToken, isDateBefore, isProviderAndNetwork, linkToTokenEtherscan } from "utils";
@@ -66,7 +66,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     const proof = (merkleTree as any).getHexProof(hashToken(tokenId, walletAddress));
     //setPendingWalletAction(true);
     await createTransaction(
-      async () => nftAirdropRedeem(walletAddress, tokenId, proof),
+      async () => redeemNFT(walletAddress, tokenId, proof),
       () => { },
       () => { },
       () => { },
@@ -77,7 +77,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
 
   return (
     <div className="nft-airdrop-wrapper">
-
+      <span>{t("Airdrop.NFTAirdrop.your-nft")}</span>
       <div className="nft-airdrop-wrapper__nft-container">
         <Image
           source={`${IPFS_PREFIX}${nftData?.image.substring(7)}`}
@@ -96,13 +96,11 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
             {redeemable && <Countdown endDate={deadline!} compactView />}
             <button
               disabled={!isProviderAndNetwork(provider) || !redeemable}
-              className="action-btn redeem-btn"
+              className="action-btn redeem-btn fill"
               onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
           </>
         )}
-
       </div>
-
     </div>
   )
 }

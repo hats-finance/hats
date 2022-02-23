@@ -5,6 +5,8 @@
   flex-direction: column;
   margin: 50px 0;
   &__amount-container {
+    display: flex;
+    align-items: center;
     border: 1px solid $turquoise;
     color: $white;
     font-size: $medium;
@@ -21,6 +23,7 @@
   .token-airdrop-wrapper {
     &__amount-container {
       width: 100%;
+      font-size: $moderate;
     }
   }
 }

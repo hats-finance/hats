@@ -1,6 +1,6 @@
-@import "../../styles/constants.scss";
+@import "../../../../styles/constants.scss";
 
-.nft-airdrop-notification-wrapper {
+.airdrop-prompt-wrapper {
   display: flex;
   flex-direction: column;
   padding: 30px 50px;
@@ -22,11 +22,6 @@
       margin-left: 10px;
     }
   }
-  .question-mark {
-    border: 1px solid $turquoise;
-    margin: 30px 0px;
-    padding: 50px;
-  }
   .reveal-link {
     background-color: $turquoise;
     color: $blue;
@@ -38,7 +33,7 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .nft-airdrop-notification-wrapper {
+  .airdrop-prompt-wrapper {
     padding: 20px;
   }
 }

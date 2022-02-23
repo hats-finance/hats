@@ -1,4 +1,5 @@
 import { t } from "i18next";
+import Logo from "assets/icons/logo.icon";
 import "./index.scss";
 
 interface IProps {
@@ -10,7 +11,7 @@ export default function TokenAirdrop({ tokenAmount }: IProps) {
     <div className="token-airdrop-wrapper">
       <span>{t("Airdrop.TokenAirdrop.claim-amount")}</span>
       <div className="token-airdrop-wrapper__amount-container">
-        {tokenAmount} HATS
+        <Logo /> {tokenAmount} HATS
       </div>
     </div>
   )
