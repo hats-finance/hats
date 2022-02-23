@@ -190,12 +190,15 @@ export interface IPosition {
   canWithdraw: boolean
 }
 
-export type IAirdropData = {
-  nft: { [key: string]: string },
-  token: { [key: string]: number }
+export type NFTAirdropET = { [key: string]: string };
+export type TokenAirdropET = { [key: string]: number };
+
+export interface IAirdropData {
+  nft: NFTAirdropET,
+  token: TokenAirdropET
 }
 
-export interface IAirdropElement {
+export interface INFTAirdropElement {
   description: string
   external_url: string
   image: string

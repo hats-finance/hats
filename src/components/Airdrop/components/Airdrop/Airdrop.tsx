@@ -73,12 +73,16 @@ export default function Airdrop() {
 
   const renderNFTAirdrop = (nftEligibilityStatus: EligibilityStatus) => {
     switch (nftEligibilityStatus) {
+      case EligibilityStatus.REDEEMED:
       case EligibilityStatus.ELIGIBLE:
-        return <NFTAirdrop tokenId={tokenId!} />;
+        return (
+          <NFTAirdrop
+            tokenId={tokenId!}
+            eligibleTokens={nftET!}
+            walletAddress={normalizeAddress(userInput)}
+            eligibilityStatus={nftEligibilityStatus} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return "NFT NOT_ELIGIBLE";
-      case EligibilityStatus.REDEEMED:
-        return "NFT REDEEMED";
       case EligibilityStatus.UNKNOWN:
         return "NFT UNKNOWN";
     }
