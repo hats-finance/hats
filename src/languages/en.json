@@ -44,8 +44,12 @@
       }
     },
     "Airdrop": {
+      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
       "search-placeholder": "Enter wallet address",
       "search-error": "Please enter a valid address",
+      "not-eligible-nft": "This address is not eligible to NFT airdrop",
+      "not-eligible-token": "This address is not eligible to token airdrop",
+      "redeemed-link": "Redeemed - View on Etherscan",
       "TokenAirdrop": {
         "claim-amount": "Total available to claim"
       },

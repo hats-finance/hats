@@ -85,7 +85,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
           className="nft-image" />
         {eligibilityStatus === EligibilityStatus.REDEEMED && (
           <span className="redeemed-info-wrapper">
-            <span>Redeemed - View on Etherscan</span>
+            <span>{t("Airdrop.redeemed-link")}</span>
             <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, tokenId))}>
               <OpenInIcon />
             </span>

@@ -63,11 +63,9 @@ export default function Airdrop() {
       case EligibilityStatus.ELIGIBLE:
         return <TokenAirdrop tokenAmount={tokenAmount!} />;
       case EligibilityStatus.NOT_ELIGIBLE:
-        return "TOKEN NOT_ELIGIBLE";
+        return <span className="error-label">{t("Airdrop.not-eligible-token")}</span>;
       case EligibilityStatus.REDEEMED:
         return "TOKEN REDEEMED";
-      case EligibilityStatus.UNKNOWN:
-        return "TOKEN UNKNOWN";
     }
   }
 
@@ -82,9 +80,7 @@ export default function Airdrop() {
             walletAddress={normalizeAddress(userInput)}
             eligibilityStatus={nftEligibilityStatus} />);
       case EligibilityStatus.NOT_ELIGIBLE:
-        return "NFT NOT_ELIGIBLE";
-      case EligibilityStatus.UNKNOWN:
-        return "NFT UNKNOWN";
+        return <span className="error-label">{t("Airdrop.not-eligible-nft")}</span>;
     }
   }
 
@@ -92,6 +88,7 @@ export default function Airdrop() {
     <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": pendingWalletAction || !nftET || !tokenET })}>
       {isEthereumProvider() ? (
         <div className="search-wrapper">
+          <span>{t("Airdrop.enter-address")}</span>
           <div className={classNames({ "input-container": true, "input-error": userInput !== "" && !isAddress(userInput) })}>
             <input className="address-input" type="text" value={userInput} placeholder={t("Airdrop.search-placeholder")} onChange={(e) => handleChange(e.target.value)} />
             <button className="clear-input" onClick={() => handleChange("")}><CloseIcon width="10" height="10" fill={Colors.gray} /></button>
@@ -99,7 +96,6 @@ export default function Airdrop() {
           {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
 
           {renderTokenAirdrop(tokenEligibilityStatus)}
-
           {renderNFTAirdrop(nftEligibilityStatus)}
 
           {(pendingWalletAction || !nftET || !tokenET) && <Loading />}
