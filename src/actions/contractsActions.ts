@@ -12,6 +12,7 @@ import { toggleInTransaction, toggleNotification, updateTransactionHash } from "
 import { Logger } from "ethers/lib/utils";
 import { NETWORK, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
+import { buildDataDelegation } from "components/Airdrop/utils";
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -22,11 +23,22 @@ if (window.ethereum) {
 }
 
 /**
- * Returns the current block number
+ * @returns The current block number
  */
 export const getBlockNumber = async () => {
   try {
     return await provider.getBlockNumber();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * @returns The current block timestamp 
+ */
+export const getCurrentBlockTimestamp = async () => {
+  try {
+    return (await provider.getBlock(await provider.getBlockNumber())).timestamp;
   } catch (error) {
     console.error(error);
   }
@@ -364,10 +376,33 @@ export const hasClaimed = async (address: string) => {
   }
 }
 
+/**
+ * Claim Hats token
+ * @param {string} address 
+ * @param {number} amount 
+ * @param {any} proof 
+ */
 export const claimToken = async (address: string, amount: number, proof: any) => {
-  const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  const ethSigUtil = require('eth-sig-util');
+  const { fromRpcSig } = require('ethereumjs-util');
+  const ethereumWallet = require('ethereumjs-wallet').default;
+  const wallet = ethereumWallet.generate();
   try {
-    return await contract.claim(address, amount, proof);
+    const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+    const nonce = 0;
+    const delegatee = address;
+    const currentBlockTimestamp = (await getCurrentBlockTimestamp());
+    const expiry = currentBlockTimestamp! + (7 * 24 * 3600);
+    const data = buildDataDelegation(
+      (provider as any).chainId,
+      "", // TODO: need to get: this.hat.address
+      '',
+      nonce,
+      expiry,
+    );
+    const signature = ethSigUtil.signTypedMessage(wallet.getPrivateKey(), { data });
+    const { v, r, s } = fromRpcSig(signature);
+    return await contract.delegateAndClaim(address, amount, proof, delegatee, nonce, expiry, v, r, s);
   } catch (error) {
     console.error(error);
   }

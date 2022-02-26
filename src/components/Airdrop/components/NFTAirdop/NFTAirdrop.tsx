@@ -5,7 +5,7 @@ import { t } from "i18next";
 import { createTransaction, getBaseURI, getDeadline, redeemNFT } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
-import { hashToken, isDateBefore, isProviderAndNetwork, linkToTokenEtherscan } from "utils";
+import { isDateBefore, isProviderAndNetwork, linkToTokenEtherscan } from "utils";
 import Image from "../../../Shared/Image/Image";
 import Countdown from "components/Shared/Countdown/Countdown";
 import { RootState } from "reducers";
@@ -13,6 +13,7 @@ import { EligibilityStatus } from "components/Airdrop/constants";
 import { NFT_AIRDROP_ADDRESS } from "settings";
 import OpenInIcon from "assets/icons/openIn.icon";
 import "./index.scss";
+import { hashToken } from "components/Airdrop/utils";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');

@@ -68,7 +68,11 @@ export default function Airdrop() {
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {
       case EligibilityStatus.ELIGIBLE:
-        return <TokenAirdrop tokenAmount={tokenAmount!} />;
+        return (
+          <TokenAirdrop
+            address={normalizeAddress(userInput)}
+            tokenAmount={tokenAmount!}
+            eligibleTokens={tokenET!} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return <span className="error-label">{t("Airdrop.not-eligible-token")}</span>;
       case EligibilityStatus.REDEEMED:

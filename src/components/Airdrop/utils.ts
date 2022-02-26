@@ -1,10 +1,24 @@
 import axios from "axios";
+import { ethers } from "ethers";
 import { Dispatch } from "redux";
 import { updateAirdropData } from "../../actions";
 import { getMerkleTree, hasClaimed, isRedeemed } from "../../actions/contractsActions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
 import { TOKEN_AIRDROP_IPFS_CID } from "./constants";
+
+const EIP712Domain = [
+  { "name": "name", "type": "string" },
+  { "name": "version", "type": "string" },
+  { "name": "chainId", "type": "uint256" },
+  { "name": "verifyingContract", "type": "address" }
+]
+
+const Delegation = [
+  { name: 'delegatee', type: 'address' },
+  { name: 'nonce', type: 'uint256' },
+  { name: 'expiry', type: 'uint256' },
+];
 
 /**
  * Function to fetch airdrop data
@@ -46,3 +60,27 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
     console.error(error);
   }
 }
+
+/**
+ * hashToken
+ * @param {string} key
+ * @param {string} value 
+ */
+ export const hashToken = (key: string, value: string | number) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [key, value]).slice(2), 'hex');
+}
+
+/**
+ * Builds delegation data used in claiming token
+ * @param chainId 
+ * @param verifyingContract 
+ * @param delegatee 
+ * @param nonce 
+ * @param expiry 
+ */
+export const buildDataDelegation = (chainId, verifyingContract, delegatee, nonce, expiry) => ({
+  types: { EIP712Domain, Delegation },
+  primaryType: 'Delegation',
+  domain: { name: "hats.finance", chainId, verifyingContract },
+  message: { delegatee, nonce, expiry },
+});
