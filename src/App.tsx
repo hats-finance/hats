@@ -141,6 +141,8 @@ function App() {
     (async () => {
       if (!loading && !error && data && data.vaults) {
 
+        console.log('asdfsdf')
+
         const calculateTokenPrices = async () => {
           const stakingTokens = (data.vaults as IVault[]).map((vault) => {
             // TODO: Temporay until the protected token will be manifested in the subgraph.
@@ -158,8 +160,10 @@ function App() {
               vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
               vault.parentVault.apy = calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
             }
-            vault.description = parseJSONToObject(vault.description as any);
-            if (vault.parentDescription) {
+            if (typeof vault.description === 'string') {
+              vault.description = parseJSONToObject(vault.description as any);
+            }
+            if (vault.parentDescription && typeof vault.parentDescription === 'string') {
               vault.parentDescription = parseJSONToObject(vault.parentDescription as any);
             }
           }
