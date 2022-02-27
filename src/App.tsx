@@ -141,8 +141,6 @@ function App() {
     (async () => {
       if (!loading && !error && data && data.vaults) {
 
-        console.log('asdfsdf')
-
         const calculateTokenPrices = async () => {
           const stakingTokens = (data.vaults as IVault[]).map((vault) => {
             // TODO: Temporay until the protected token will be manifested in the subgraph.
