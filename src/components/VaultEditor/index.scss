@@ -316,6 +316,25 @@
                 padding: 20px;
                 border: 1px solid $red;
                 color: $white;
+
+                &-question {
+                    cursor: pointer;
+                    margin-top: 20px;
+                    img {
+                        margin-left: 10px;
+                    }
+                }
+                &-tooltip {
+                    margin-top: 8px;
+                    display: none;
+
+                    &--show {
+                        display: block;
+                    }
+                }
+                &-desk-tooltip {
+                    display: none;
+                }
             }
             button {
                 width: 100%;

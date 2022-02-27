@@ -8,6 +8,8 @@ import RemoveIcon from "assets/icons/remove-member.svg";
 import Tooltip from "rc-tooltip";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../constants/constants";
 import InfoIcon from "assets/icons/info.icon";
+import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
+import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
 import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import classNames from "classnames";
 
@@ -48,6 +50,7 @@ export default function VaultEditor() {
     const [newMemberDetails, setNewMemberDetails] = useState<ICommitteeMember>(newMember)
     const [memberIndex, setMemberIndex] = useState<number | undefined>(undefined)
     const [pageNumber, setPageNumber] = useState<number>(1)
+    const [showMobileHint, setShowMobileHint] = useState<boolean>(false);
 
     // Will replace with real severities options
     const severitiesOptions = [
@@ -425,9 +428,30 @@ export default function VaultEditor() {
                                     overlayInnerStyle={{ ...RC_TOOLTIP_OVERLAY_INNER_STYLE, maxWidth: 500 }}
                                     overlay={t("VaultEditor.pgp-key-hint-tooltip")}
                                 >
-                                    <span><InfoIcon width="15" height="15" fill={Colors.white} /></span>
+                                    <span className="pgp-key__hint-desk-tooltip"><InfoIcon width="15" height="15" fill={Colors.white} /></span>
                                 </Tooltip>
                                 {t("VaultEditor.pgp-key-hint-2")}
+
+                                <div className="mobile-only">
+                                    <div
+                                        className="pgp-key__hint-question"
+                                        onClick={() => setShowMobileHint(old => !old)}
+                                    >
+                                        {t("VaultEditor.pgp-key-hint-question")}
+                                        {showMobileHint && (
+                                            <img src={DownArrowIcon} alt="down arrow" width={12} height={12} />
+                                        )}
+                                        {!showMobileHint && (
+                                            <img src={UpArrowIcon} alt="up arrow" width={12} height={12} />
+                                        )}
+                                    </div>
+
+                                    <div className={classNames("pgp-key__hint-tooltip", {
+                                        "pgp-key__hint-tooltip--show": showMobileHint
+                                    })}>
+                                        {t("VaultEditor.pgp-key-hint-tooltip")}
+                                    </div>
+                                </div>
                             </div>
                             <p className="vault-editor__section-description">
                                 {t("VaultEditor.pgp-key-description")}
