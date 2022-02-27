@@ -188,6 +188,8 @@
       "signees": "SIGNEES",
       "save-button": "Save",
       "sign-submit": "Sign and submit",
+      "next": "Next",
+      "previous": "Previous",
       "contracts-covered": "Contracts-Covered",
       "review-vault": {
         "title": "Review Vault",

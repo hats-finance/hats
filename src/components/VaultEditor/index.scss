@@ -54,6 +54,9 @@
         border-bottom: 1px solid $vault-editor-border;
         margin-bottom: 40px;
     }
+    &__next-preview {
+        display: none;
+    }
     
     .vault-details {
         display: flex;
@@ -66,7 +69,7 @@
         }
         .icon-inputs {
             display: flex;
-            justify-content: end;
+            justify-content: flex-end;
 
             > div + div {
                 margin-left: 30px;
@@ -88,6 +91,7 @@
                 height: 40px;
                 margin-top: 24px;
                 margin-right: 14px;
+                margin-bottom: 24px;
                 border: 1px solid $turquoise;
                 display: flex;
                 justify-content: center;
@@ -102,10 +106,6 @@
             }
             &-inputs {
                 width: 60%;
-            }
-            &-icon {
-                flex: 1 0;
-                width: 35%;
             }
         }
         button {
@@ -131,6 +131,7 @@
                 height: 40px;
                 margin-top: 24px;
                 margin-right: 14px;
+                margin-bottom: 24px;
                 border: 1px solid $turquoise;
                 display: flex;
                 justify-content: center;
@@ -203,19 +204,27 @@
         }
     }
 
+    .mobile-only {
+        display: none;
+    }
+    .desktop-only {
+        display: block;
+    }
+
     @media only screen and (max-width: $mobile-breakpoint) {
-        margin-left: 10px !important;
-        margin-right: 10px !important;
+        margin-left: 20px !important;
+        margin-right: 20px !important;
 
         &__section {
             &-content {
-                border: 1px solid $vault-editor-border-2;
-                padding: 20px;
+                border: none;
+                padding: 0;
                 margin-bottom: 20px;
             }
         }
 
         &__button-container {
+            padding-bottom: 0;
             button {
                 width: 100%;
             }
@@ -227,23 +236,62 @@
                 margin-bottom: 20px;
             }
             .icon-inputs {
-                justify-content: space-between;
+                display: block;
+
+                > div + div {
+                    margin-left: 0;
+                    margin-top: 24px;
+                }
+
+                .icon-input {
+                    > label {
+                        width: 100% !important;
+                    }
+                    img {
+                        object-fit: contain;
+                    }
+                }
             }
         }
 
         .committee-members {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
             &__member {
+                display: block;
+                width: 100%;
                 &-inputs {
                     width: 100%;
                 }
                 &-icons {
+                    width: 100%;
                     margin-bottom: 30px;
+
+                    .icon-input {
+                        > label {
+                            width: 100% !important;
+                        }
+                        img {
+                            object-fit: contain;
+                        }
+                    }
                 }
+            }
+            button {
+                margin-left: 0;
             }
         }
 
         .contracts-covered {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
             &__contract {
+                display: block;
+                width: 100%;
                 &-content {
                     width: 100%;
                 }
@@ -257,6 +305,39 @@
                     width: 100%;
                 }
             }
+            button {
+                margin-left: 0;
+            }
+        }
+
+        .pgp-key {
+            &__hint {
+                margin: 0 0 30px;
+                padding: 20px;
+                border: 1px solid $red;
+                color: $white;
+            }
+            button {
+                width: 100%;
+            }
+        }
+        
+        &__next-preview {
+            display: block;
+            button {
+                display: block;
+                width: 100%;
+                margin: 0;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .mobile-only {
+            display: block;
+        }
+        .desktop-only {
+            display: none;
         }
     }
 }

@@ -5,48 +5,38 @@ import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
 import classNames from "classnames";
 
+type Props = {
+  pastable?: boolean;
+  copyable?: boolean;
+  removable?: boolean;
+  textInput?: boolean
+} & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+& React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>
+
 function EditableContent(
   {
-    onChange,
     pastable,
     copyable,
     removable,
     textInput,
-    name,
-    value,
     ...props
-  }: {
-    onChange?: (value: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-    pastable?: boolean;
-    copyable?: boolean;
-    removable?: boolean;
-    name?: string
-    value?: string
-    textInput?: boolean
-    placeholder?: string;
-  },
+  }: Props,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable;
   return (
     <div className="pastable-content">
-      {textInput ? (<input
-        type="text"
-        name={name}
-        value={value}
-        onChange={e => {
-          if (onChange) {
-            onChange(e)
-          }
-        }} ref={ref || localRef} {...props} className="pastable-content__input" />) : (
+      {textInput ? (
+        <input
+          type="text"
+          ref={ref || localRef} {...props} className="pastable-content__input"
+        />
+        ) : (
         <textarea
-          name={name}
-          onChange={e => {
-            if (onChange) {
-              onChange(e)
-            }
-          }} ref={ref || localRef} {...props} className="pastable-content__textarea" />)}
+          ref={ref || localRef} {...props} className="pastable-content__textarea"
+        />
+      )}
       {extraIcons && (
         <div className={classNames("pastable-content__extra-icons", {
           "pastable-content__extra-icons--input": textInput
