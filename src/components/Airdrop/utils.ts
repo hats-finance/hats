@@ -7,6 +7,8 @@ import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
 import { TOKEN_AIRDROP_IPFS_CID } from "./constants";
 
+export const DELEGATION_EXPIRY = 10e9;
+
 const EIP712Domain = [
   { "name": "name", "type": "string" },
   { "name": "version", "type": "string" },
@@ -72,15 +74,15 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
 
 /**
  * Builds delegation data used in claiming token
- * @param chainId 
- * @param verifyingContract 
- * @param delegatee 
- * @param nonce 
- * @param expiry 
+ * @param {string} chainId 
+ * @param {string} verifyingContract 
+ * @param {string} delegatee 
+ * @param {number} nonce 
+ * @param {number} expiry 
  */
-export const buildDataDelegation = (chainId, verifyingContract, delegatee, nonce, expiry) => ({
+export const buildDataDelegation = (chainId: string, verifyingContract: string, delegatee: string, nonce: number, expiry: number) => ({
   types: { EIP712Domain, Delegation },
   primaryType: 'Delegation',
-  domain: { name: "hats.finance", chainId, verifyingContract },
+  domain: { name: "hats.finance", version: '1', chainId, verifyingContract },
   message: { delegatee, nonce, expiry },
 });
