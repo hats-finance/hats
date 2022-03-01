@@ -6,6 +6,7 @@ import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import TokenAirdrop from "../data/abis/TokenAirdrop.json";
+import HatsToken from "../data/abis/HatsToken.json";
 import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
@@ -374,10 +375,12 @@ export const hasClaimed = async (address: string) => {
  * @param {string} chainId
  */
 export const claimToken = async (delegatee: string, amount: number, proof: any, rewardsToken: string, chainId: string) => {
-  const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  const tokenAirdropContract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  const hatsContract = new Contract(rewardsToken, HatsToken, signer);
 
   try {
-    const nonce = 0;
+    const address = await signer.getAddress();
+    const nonce = (await hatsContract.nonces(address) as BigNumber).toNumber();
     const data = buildDataDelegation(
       chainId,
       rewardsToken,
@@ -387,7 +390,7 @@ export const claimToken = async (delegatee: string, amount: number, proof: any, 
     );
 
     const signature = await (signer as any).provider.send("eth_signTypedData_v4", [
-      await signer.getAddress(),
+      address,
       JSON.stringify(data)
     ]);
 
@@ -395,7 +398,8 @@ export const claimToken = async (delegatee: string, amount: number, proof: any, 
     const s = '0x' + signature.substring(2).substring(64, 128);
     const v = '0x' + signature.substring(2).substring(128, 130);
 
-    return await contract.delegateAndClaim(delegatee, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
+    return await tokenAirdropContract.delegateAndClaim(address, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
+    //return await hatsContract.delegateBySig(delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
   } catch (error) {
     console.error(error);
   }

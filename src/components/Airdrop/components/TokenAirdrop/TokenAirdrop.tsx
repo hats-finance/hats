@@ -37,9 +37,12 @@ export default function TokenAirdrop({ address, tokenAmount, eligibleTokens }: I
     const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
     //setPendingWalletAction(true);
 
-    /** TODO: the first param should be delegatee(!) not address - this is temporary until choosing the delegatee in the UI will be implemented */
+    /** 
+     * TODO: the first param should be delegatee(!) not address - this is temporary until choosing the delegatee in the UI will be implemented
+     * TODO: 0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A is temporary until we fetch it from the subgraph
+     */
     await createTransaction(
-      async () => claimToken(address, tokenAmount, proof, rewardsToken, chainId),
+      async () => claimToken(address, tokenAmount, proof, "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", chainId),
       () => { },
       () => { },
       () => { },
