@@ -51,8 +51,12 @@
       "not-eligible-token": "This address is not eligible to token airdrop",
       "redeemed-link": "Redeemed - View on Etherscan",
       "TokenAirdrop": {
-        "claim-amount": "Total available to claim",
-        "claim-success": "Hats token claimed successfully"
+        "CheckEligibility": {
+          "claim-amount": "Total available to claim"
+        },
+        "Claim": {
+          "claim-success": "Hats token claimed successfully"
+        }
       },
       "NFTAirdrop": {
         "your-nft": "Your Crow Clan NFT",

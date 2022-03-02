@@ -23,9 +23,11 @@ interface IProps {
   eligibleTokens: NFTAirdropET
   walletAddress: string
   eligibilityStatus: EligibilityStatus
+  setEligibilityStatus: (value: EligibilityStatus) => void
+  pendingWallet: (value: boolean) => void
 }
 
-export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus }: IProps) {
+export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus, pendingWallet }: IProps) {
   const dispatch = useDispatch();
   const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const [merkleTree, setMerkleTree] = useState();
@@ -42,13 +44,11 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
   }, [])
 
   useEffect(() => {
-    (async () => {
-      try {
-        setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
-      } catch (error) {
-        console.error(error);
-      }
-    })();
+    try {
+      setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
+    } catch (error) {
+      console.error(error);
+    }
   }, [eligibleTokens])
 
   useEffect(() => {
@@ -65,12 +65,12 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
 
   const redeem = async () => {
     const proof = (merkleTree as any).getHexProof(hashToken(tokenId, walletAddress));
-    //setPendingWalletAction(true);
+    pendingWallet(true);
     await createTransaction(
       async () => redeemNFT(walletAddress, tokenId, proof),
-      () => { },
-      () => { },
-      () => { },
+      () => { setEligibilityStatus(EligibilityStatus.REDEEMED); pendingWallet(false); },
+      () => { pendingWallet(false); },
+      () => { pendingWallet(false); },
       dispatch,
       t("Airdrop.NFTAirdrop.redeem-success")
     );

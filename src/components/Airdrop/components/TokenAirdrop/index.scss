@@ -1,29 +1,10 @@
 @import "../../../../styles/constants.scss";
 
 .token-airdrop-wrapper {
-  display: flex;
-  flex-direction: column;
-  margin: 50px 0;
-  &__amount-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid $turquoise;
-    color: $white;
-    font-size: $medium;
-    font-family: RobotoMono;
-    font-weight: bold;
-    width: 500px;
-    text-indent: 20px;
-    padding: 10px 0;
-    margin-top: 5px;
-  }
+
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .token-airdrop-wrapper {
-    &__amount-container {
-      width: 100%;
-      font-size: $moderate;
-    }
   }
 }

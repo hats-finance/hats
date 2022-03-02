@@ -67,7 +67,7 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
  * @param {string} key
  * @param {string} value 
  */
- export const hashToken = (key: string, value: string | number) => {
+ export const hashToken = (key: string, value: string | number | unknown) => {
   return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [key, value]).slice(2), 'hex');
 }
 

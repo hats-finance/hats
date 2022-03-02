@@ -16,7 +16,7 @@ import "./index.scss";
 
 export default function Airdrop() {
   const [userInput, setUserInput] = useState("");
-  const [pendingWalletAction, setPendingWalletAction] = useState(false);
+  const [pendingWallet, setPendingWallet] = useState(false);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
   const tokenET = useSelector((state: RootState) => state.dataReducer.airdrop?.token);
   const [nftEligibilityStatus, setNFTEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
@@ -89,14 +89,16 @@ export default function Airdrop() {
             tokenId={tokenId!}
             eligibleTokens={nftET!}
             walletAddress={normalizeAddress(userInput)}
-            eligibilityStatus={nftEligibilityStatus} />);
+            eligibilityStatus={nftEligibilityStatus}
+            setEligibilityStatus={setNFTEligibilityStatus}
+            pendingWallet={setPendingWallet} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return <span className="error-label">{t("Airdrop.not-eligible-nft")}</span>;
     }
   }
 
   return (
-    <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": pendingWalletAction || !nftET || !tokenET })}>
+    <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": pendingWallet || !nftET || !tokenET })}>
       {isEthereumProvider() ? (
         <div className="search-wrapper">
           <span>{t("Airdrop.enter-address")}</span>
@@ -109,7 +111,7 @@ export default function Airdrop() {
           {renderTokenAirdrop(tokenEligibilityStatus)}
           {renderNFTAirdrop(nftEligibilityStatus)}
 
-          {(pendingWalletAction || !nftET || !tokenET) && <Loading />}
+          {(pendingWallet || !nftET || !tokenET) && <Loading />}
         </div>
 
       ) : <span>{t("Shared.no-ethereum")}</span>}
