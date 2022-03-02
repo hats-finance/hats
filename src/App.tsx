@@ -256,7 +256,7 @@ function App() {
         </Route>
         <Route path={RoutePaths.committee_tools}>
           <CommitteeTools />
-        </Route > * /}
+        </Route >
         < Route path={RoutePaths.vault_editor} >
           <VaultEditor />
         </Route >
