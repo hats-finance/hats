@@ -11,7 +11,6 @@ export const DELEGATION_EXPIRY = 10e9;
 
 const EIP712Domain = [
   { "name": "name", "type": "string" },
-  { "name": "version", "type": "string" },
   { "name": "chainId", "type": "uint256" },
   { "name": "verifyingContract", "type": "address" }
 ]
@@ -80,9 +79,9 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
  * @param {number} nonce 
  * @param {number} expiry 
  */
-export const buildDataDelegation = (chainId: string, verifyingContract: string, delegatee: string, nonce: number, expiry: number) => ({
+export const buildDataDelegation = (chainId: number, verifyingContract: string, delegatee: string, nonce: number, expiry: number) => ({
   types: { EIP712Domain, Delegation },
   primaryType: 'Delegation',
-  domain: { name: "hats.finance", version: '1', chainId, verifyingContract },
+  domain: { name: "hats.finance", chainId, verifyingContract },
   message: { delegatee, nonce, expiry },
 });

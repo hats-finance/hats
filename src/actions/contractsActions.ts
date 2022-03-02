@@ -382,14 +382,14 @@ export const claimToken = async (delegatee: string, amount: number, proof: any, 
     const address = await signer.getAddress();
     const nonce = (await hatsContract.nonces(address) as BigNumber).toNumber();
     const data = buildDataDelegation(
-      chainId,
+      parseInt(chainId.replace('0x', '')),
       rewardsToken,
       delegatee,
       nonce,
       DELEGATION_EXPIRY,
     );
 
-    const signature = await (signer as any).provider.send("eth_signTypedData_v4", [
+    const signature = await (signer as any).provider.send("eth_signTypedData_v3", [
       address,
       JSON.stringify(data)
     ]);
@@ -399,7 +399,7 @@ export const claimToken = async (delegatee: string, amount: number, proof: any, 
     const v = '0x' + signature.substring(2).substring(128, 130);
 
     return await tokenAirdropContract.delegateAndClaim(address, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
-    //return await hatsContract.delegateBySig(delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
+    // return await hatsContract.delegateBySig(delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
   } catch (error) {
     console.error(error);
   }
