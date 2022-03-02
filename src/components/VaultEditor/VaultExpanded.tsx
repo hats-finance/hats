@@ -1,10 +1,8 @@
-import { IPoolWithdrawRequest, IVault } from "../../types/types";
-import { setVulnerabilityProject } from "../../utils";
+import { IVault } from "../../types/types";
+import { t } from "i18next";
 import Members from "./Members";
-import Multisig from "./Multisig";
-import Severities from "./Severities/Severities";
-import { useHistory } from "react-router-dom";
-import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
+import Multisig from "../Vault/Multisig";
+import { PieChartColors, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
 import humanizeDuration from "humanize-duration";
@@ -17,15 +15,11 @@ import "./VaultExpanded.scss";
 
 interface IProps {
   data: IVault
-  withdrawRequests: IPoolWithdrawRequest[]
-  setShowModal: Function
-  setModalData: Function
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
-  const { name, isGuest, parentDescription, description } = props.data;
-  const history = useHistory();
+  const { hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
+  const { description } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const pieChartData = [
@@ -62,32 +56,29 @@ export default function VaultExpanded(props: IProps) {
         <div className="vault-expanded">
           {screenSize === ScreenSize.Mobile && (
             <div >
-              <VaultAction data={props.data}
-                withdrawRequests={props.withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData} />
+              <VaultAction />
             </div>
           )}
           <div className="vault-details-wrapper">
             <div className="sub-title">
-              VAULT DETAILS
+              {t("VaultEditor.vault-details.title")}
             </div>
             <div className="vault-details-content">
               <div>
-                <span className="vault-expanded-subtitle">Committee Members:</span>
+                <span className="vault-expanded-subtitle">{t("VaultEditor.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
+                  <Members members={description.committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
-                  <span className="vault-expanded-subtitle">Committee Address:</span>
-                  <Multisig multisigAddress={isGuest ? parentDescription?.committee["multisig-address"] || "" : description.committee["multisig-address"]} />
+                  <span className="vault-expanded-subtitle">{t("VaultEditor.review-vault.committee-address")}:</span>
+                  <Multisig multisigAddress={description.committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+                  <button disabled>{t("VaultEditor.review-vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
-                <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                <span className="vault-expanded-subtitle">{t("VaultEditor.review-vault.prize-division")}:</span>
                 <div className="pie-chart-wrapper">
 
                   <div className="pie-chart-container">
@@ -107,14 +98,6 @@ export default function VaultExpanded(props: IProps) {
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-          <div className="severity-prizes-wrapper">
-            <div className="sub-title">SEVERITY PRIZES</div>
-            <div className="severity-prizes-content">
-              <Severities
-                severities={description?.severities}
-                parentVault={props.data.parentVault} />
             </div>
           </div>
         </div>

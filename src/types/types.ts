@@ -45,7 +45,7 @@ export interface IVault {
   description: IVaultDescription
   bounty: string
   isGuest: boolean
-  parentDescription: IVaultDescription
+  parentDescription?: IVaultDescription
   parentVault: IParentVault;
 }
 

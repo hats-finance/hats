@@ -1,0 +1,29 @@
+@import "../../styles/constants.scss";
+
+.member-link-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  align-items: center;
+  text-align: center;
+  .twitter-avatar {
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .member-username {
+    margin-top: 5px;
+    text-transform: capitalize;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .member-link-wrapper {
+    margin: 0;
+  }
+}

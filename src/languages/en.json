@@ -186,6 +186,7 @@
       "add-member": "+ Add",
       "remove-member": "Remove",
       "sign-message": "SIGN MESSAGE",
+      "preview-vault": "PREVIEW VAULT",
       "signees": "SIGNEES",
       "save-button": "Save",
       "sign-submit": "Sign and submit",
@@ -196,7 +197,12 @@
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
         "description-2": "Complete the transaction by authorized signer/s",
-        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir"
+        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir",
+        "committee-address": "Committee Address",
+        "submit-vulnerability": "SUBMIT VULNERABILITY",
+        "prize-division": "Prize Content Division",
+        "deposit-withdraw": "DEPOSIT / WITHDRAW",
+        "total-vault": "Total vault"
       },
       "img-placeholder": "SVG/PNG"
     }
