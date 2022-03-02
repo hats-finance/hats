@@ -13,6 +13,7 @@
     .add-icon {
         cursor: pointer;
         border: 1px solid $turquoise;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -31,6 +32,7 @@
         width: 124px !important;
         height: 124px !important;
         img {
+            box-sizing: border-box;
             border: 1px solid $turquoise;
             width: 100%;
             height: 100%;

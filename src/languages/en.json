@@ -145,8 +145,7 @@
       "title": "Vault Editor",
       "hatsOfir": "@hatsOfir",
       "create-vault": "Create a vault",
-      "create-vault-description-1": "Please fill the form and sign.",
-      "create-vault-description-2": "For questions you can send @hatsofir",
+      "create-vault-description": "Please fill the form and sign. Any questions you can refer to @hatsofir.",
       "last-saved-time": "Last updated on",
       "local-time": "local time",
       "vault-details": {

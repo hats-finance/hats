@@ -150,9 +150,7 @@ export default function VaultEditor() {
 
             <section className={classNames({ 'desktop-only': pageNumber !== 1 })}>
                 <p className="vault-editor__description">
-                    {t("VaultEditor.create-vault-description-1")}
-                    <br></br>
-                    {t("VaultEditor.create-vault-description-2")}
+                    {t("VaultEditor.create-vault-description")}
                 </p>
                 <div className="vault-editor__last-saved-time">
                     {`${t("VaultEditor.last-saved-time")} `}
@@ -268,7 +266,7 @@ export default function VaultEditor() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button>
+                                        <button className="fill">
                                             <img src={RemoveIcon} height={12} alt="remove-member" />
                                             {` ${t("VaultEditor.remove-member")}`}
                                         </button>
@@ -317,7 +315,7 @@ export default function VaultEditor() {
                                     </div>
                                 </div>
                             </div>
-                            <button onClick={() => updateMembers(newMemberDetails, memberIndex)}>
+                            <button className="fill" onClick={() => updateMembers(newMemberDetails, memberIndex)}>
                                 {t("VaultEditor.add-member")}
                             </button>
                         </div>
@@ -365,7 +363,7 @@ export default function VaultEditor() {
                                                 />
                                             </div>
                                         </div>
-                                        <button>
+                                        <button className="fill">
                                             <img src={RemoveIcon} height={12} alt="remove-member" />
                                             {` ${t("VaultEditor.remove-member")}`}
                                         </button>
@@ -405,7 +403,7 @@ export default function VaultEditor() {
                                     />
                                 </div>
                             </div>
-                            <button onClick={() => updateMembers(newMemberDetails, memberIndex)}>
+                            <button className="fill" onClick={() => updateMembers(newMemberDetails, memberIndex)}>
                                 {t("VaultEditor.add-member")}
                             </button>
                         </div>
@@ -458,7 +456,7 @@ export default function VaultEditor() {
                                 <br></br>
                                 <br></br>
                             </p>
-                            <button>
+                            <button className="fill">
                                 {t("VaultEditor.go-to-tool")}
                             </button>
                             <div>
@@ -482,7 +480,7 @@ export default function VaultEditor() {
                 </div>
 
                 <div className="vault-editor__button-container">
-                    <button>{t("VaultEditor.save-button")}</button>
+                    <button className="fill">{t("VaultEditor.save-button")}</button>
                 </div>
             </section>
 
@@ -530,14 +528,14 @@ export default function VaultEditor() {
                 </div>
 
                 <div className="vault-editor__button-container">
-                    <button>{t("VaultEditor.sign-submit")}</button>
+                    <button className="fill">{t("VaultEditor.sign-submit")}</button>
                 </div>
             </section>
 
             <div className="vault-editor__next-preview">
                 {pageNumber < 5 && (
                     <div>
-                        <button onClick={nextPage}>{t("VaultEditor.next")}</button>
+                        <button className="fill" onClick={nextPage}>{t("VaultEditor.next")}</button>
                     </div>
                 )}
                 {pageNumber > 1 && (

@@ -211,6 +211,13 @@
         display: block;
     }
 
+    .pastable-content {
+        margin-bottom: 24px;
+        input {
+            text-indent: 0px;
+        }
+    }
+
     @media only screen and (max-width: $mobile-breakpoint) {
         margin-left: 20px !important;
         margin-right: 20px !important;
