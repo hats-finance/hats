@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ICommitteeMember, IVaultDescription } from "types/types"
+import { ICommitteeMember, IVault, IVaultDescription } from "types/types"
 import { useTranslation } from "react-i18next";
 import './index.scss'
 import IconInput from "./IconEditor"
@@ -14,71 +14,6 @@ import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import classNames from "classnames";
 import PreviewVault from "./PreviewVault";
 
-const iVault = {
-    id: "",
-    name: "",
-    descriptionHash: "",
-    bounty: "",
-    isGuest: false,
-    parentVault: {
-        id: "",
-        pid: "",
-        stakingToken: "",
-        stakingTokenDecimals: "18",
-        stakingTokenSymbol: "",
-        totalStaking: "",
-        honeyPotBalance: "",
-        totalReward: "0",
-        totalRewardPaid: "0",
-        committee: [""],
-        allocPoint: "0",
-        master: {
-            address: "",
-            numberOfSubmittedClaims: "",
-            withdrawPeriod: "",
-            safetyPeriod: "",
-            withdrawRequestEnablePeriod: "",
-            withdrawRequestPendingPeriod: "",
-            vestingHatDuration: "",
-            vestingHatPeriods: "",
-            id: "",
-            governance: "",
-            totalStaking: "",
-            totalReward: "",
-            totalRewardPaid: "",
-            rewardPerBlock: "",
-            startBlock: "",
-            parentVaults: [],
-            totalAllocPoints: "",
-            createdAt: "",
-            rewardsToken: "",
-            submittedClaim: [],
-        },
-        numberOfApprovedClaims: "0",
-        rewardsLevels: ["100","125","156","195","243","303","378","500","590","737","921","1151","1438","1797","2000","2500","3125","4000","5000","6000","8000"],
-        totalRewardAmount: "0",
-        liquidityPool: false,
-        registered: true,
-        withdrawRequests: [],
-        totalUsersShares: "",
-        descriptionHash: "",
-        hackerVestedRewardSplit: "6000",
-        hackerRewardSplit: "2000",
-        committeeRewardSplit: "500",
-        swapAndBurnSplit: "0",
-        governanceHatRewardSplit: "1000",
-        hackerHatRewardSplit: "500",
-        vestingDuration: "3600",
-        vestingPeriods: "3600",
-        depositPause: false,
-        committeeCheckedIn: true,
-        approvedClaims: [],
-        stakers: [],
-        guests: [],
-        apy: 0,
-        tokenPrice: 0,
-    },
-}
 
 const newVaultDescription: IVaultDescription = {
     "project-metadata": {
@@ -121,9 +56,9 @@ export default function VaultEditor() {
 
     // Will replace with real severities options
     const severitiesOptions = [
-        { label: 'Thing 1', value: 1},
-        { label: 'Thing 2', value: 2},
-        { label: 'Thing 3', value: 3},
+        { label: 'Thing 1', value: 1 },
+        { label: 'Thing 2', value: 2 },
+        { label: 'Thing 3', value: 3 },
     ];
 
     useEffect(() => {
@@ -141,6 +76,75 @@ export default function VaultEditor() {
             obj = obj[path[i]];
 
         obj[path[i]] = value;
+    }
+
+    function getVault(description: IVaultDescription): IVault {
+        return {
+            id: "",
+            name: "",
+            description: description,
+            descriptionHash: "",
+            bounty: "",
+            isGuest: false,
+            parentVault: {
+                id: "",
+                pid: "",
+                stakingToken: "",
+                stakingTokenDecimals: "18",
+                stakingTokenSymbol: "",
+                totalStaking: "",
+                honeyPotBalance: "",
+                totalReward: "0",
+                totalRewardPaid: "0",
+                committee: [""],
+                allocPoint: "0",
+                master: {
+                    address: "",
+                    numberOfSubmittedClaims: "",
+                    withdrawPeriod: "",
+                    safetyPeriod: "",
+                    withdrawRequestEnablePeriod: "",
+                    withdrawRequestPendingPeriod: "",
+                    vestingHatDuration: "",
+                    vestingHatPeriods: "",
+                    id: "",
+                    governance: "",
+                    totalStaking: "",
+                    totalReward: "",
+                    totalRewardPaid: "",
+                    rewardPerBlock: "",
+                    startBlock: "",
+                    parentVaults: [],
+                    totalAllocPoints: "",
+                    createdAt: "",
+                    rewardsToken: "",
+                    submittedClaim: [],
+                },
+                numberOfApprovedClaims: "0",
+                rewardsLevels: ["100", "125", "156", "195", "243", "303", "378", "500", "590", "737", "921", "1151", "1438", "1797", "2000", "2500", "3125", "4000", "5000", "6000", "8000"],
+                totalRewardAmount: "0",
+                liquidityPool: false,
+                registered: true,
+                withdrawRequests: [],
+                totalUsersShares: "",
+                descriptionHash: "",
+                hackerVestedRewardSplit: "6000",
+                hackerRewardSplit: "2000",
+                committeeRewardSplit: "500",
+                swapAndBurnSplit: "0",
+                governanceHatRewardSplit: "1000",
+                hackerHatRewardSplit: "500",
+                vestingDuration: "3600",
+                vestingPeriods: "3600",
+                depositPause: false,
+                committeeCheckedIn: true,
+                approvedClaims: [],
+                stakers: [],
+                guests: [],
+                apy: 0,
+                tokenPrice: 0,
+            },
+        }
     }
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, setState: (value: any) => void) {
@@ -193,8 +197,8 @@ export default function VaultEditor() {
         if (pageNumber >= 5) return
         setPageNumber(pageNumber + 1)
         window.scroll({
-            top: 0, 
-            left: 0, 
+            top: 0,
+            left: 0,
             behavior: 'smooth'
         });
     }
@@ -203,8 +207,8 @@ export default function VaultEditor() {
         if (pageNumber <= 1) return
         setPageNumber(oldPage => oldPage - 1)
         window.scroll({
-            top: 0, 
-            left: 0, 
+            top: 0,
+            left: 0,
             behavior: 'smooth'
         });
     }
@@ -568,7 +572,7 @@ export default function VaultEditor() {
                             {t("VaultEditor.review-vault.description-3")}
                         </p>
                         <label>{t("VaultEditor.preview-vault")}</label>
-                        <PreviewVault data={{...iVault, description: newVaultDescription}} />
+                        <PreviewVault data={getVault(vaultDescription)} />
                         <label>{t("VaultEditor.sign-message")}</label>
                         <EditableContent
                             removable
