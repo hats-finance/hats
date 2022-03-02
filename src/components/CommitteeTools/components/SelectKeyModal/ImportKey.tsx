@@ -1,9 +1,9 @@
 import { useContext, useRef, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { IStoredKey } from "types/types";
 import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 import EditableContent from "../EditableContent/EditableContent";
+import { t } from "i18next";
 
 export default function ImportKey({ onFinish }: { onFinish: () => any }) {
   const vaultContext = useContext(VaultContext);
@@ -11,7 +11,6 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
   const passphraseRef = useRef<HTMLInputElement>(null);
   const privateKeyRef = useRef<HTMLTextAreaElement>(null);
   const [error, setError] = useState<string>();
-  const { t } = useTranslation();
 
   const addKey = async () => {
     try {
@@ -31,8 +30,8 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         passphrase,
         publicKey: readKey.toPublic().armor()
       };
-      vaultContext.addKey!(toAdd);
-      vaultContext.setSelectedAlias!(toAdd.alias);
+      vaultContext.addKey(toAdd);
+      vaultContext.setSelectedAlias(toAdd.alias);
       onFinish();
     } catch (error) {
       if (error instanceof Error) {
@@ -68,10 +67,10 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         placeholder={t("CommitteeTools.keymodal.paste-private-key")}
       />
       {error && error !== "" && (
-        <p className="keymodal-importkey__nokey">{error}</p>
+        <div className="error-label">{error}</div>
       )}
       <button onClick={addKey}>
-        {t("CommitteeTools.keymodal.import-button")}
+        {t("CommitteeTools.keymodal.import-keypair")}
       </button>
     </>
   );

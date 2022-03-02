@@ -24,7 +24,7 @@ export default function NavLinks() {
       <NavLink to={RoutePaths.vulnerability} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Submit Vulnerability</NavLink>
       <Switch>
         <Route path={`${RoutePaths.committee_tools}`}>
-          <NavLink to={RoutePaths.committee_tools} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Committee Tools</NavLink>
+          <NavLink to={RoutePaths.committee_tools} className="nav-link" activeClassName="selected" onClick={() => handleClick()}>Committee Tools</NavLink>
         </Route>
         <Route path={`${RoutePaths.vault_editor}`}>
           <NavLink to={RoutePaths.vault_editor} className="nav-link vulnerability" activeClassName="selected" onClick={() => handleClick()}>Vault Editor</NavLink>

@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import Decrypt from "./components/Decrypt/Decrypt";
-import classNames from "classnames";
-import "./index.scss";
 import { VaultProvider, VaultContext } from "./store";
 import Welcome from "./components/Welcome/Welcome";
 import UnlockVaultModal from "./components/UnlockVaultModal/UnlockVaultModal";
+import "./index.scss";
 
 export default function CommitteeTools() {
   return (
@@ -17,15 +16,12 @@ export default function CommitteeTools() {
 function Content() {
   const vault = useContext(VaultContext);
 
-  const committeeToolsWrapper = classNames({
-    "committee-tools-wrapper": true,
-    content: true
-  });
-
   return (
-    <div className={committeeToolsWrapper}>
-      {vault.isCreated && vault.isLocked && <UnlockVaultModal />}
-      {vault.isCreated ? <Decrypt /> : <Welcome />}
+    <div className="content committee-tools-wrapper">
+      <div className="committee-tools-content">
+        {vault.isCreated && vault.isLocked && <UnlockVaultModal />}
+        {vault.isCreated ? <Decrypt /> : <Welcome />}
+      </div>
     </div>
   );
 }

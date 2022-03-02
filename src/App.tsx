@@ -44,6 +44,7 @@ import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAcco
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 //import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import VaultEditor from "./components/VaultEditor/VaultEditor"
+import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
@@ -253,17 +254,18 @@ function App() {
         <Route path={RoutePaths.pools}>
           <LiquidityPools />
         </Route>
-        {/* <Route path={RoutePaths.committee_tools}>
+        <Route path={RoutePaths.committee_tools}>
           <CommitteeTools />
-        </Route> */}
-        <Route path={RoutePaths.vault_editor}>
+        </Route >
+        < Route path={RoutePaths.vault_editor} >
           <VaultEditor />
-        </Route>
+        </Route >
         <Route path={RoutePaths.nft_airdrop}>
           <NFTAirdrop />
         </Route>
-      </Switch>
-      {showNotification && hasSeenWelcomePage && <Notification />}
+      </Switch >
+      {showNotification && hasSeenWelcomePage && <Notification />
+      }
       {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>
   );
