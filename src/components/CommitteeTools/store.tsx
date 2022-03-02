@@ -10,21 +10,19 @@ interface IVaultStore {
 
 interface IVaultContext {
     vault: IVaultStore | undefined
-    isLocked?: boolean
-    isCreated?: boolean
-    selectedKey?: IStoredKey | undefined
-    addKey?: (key: IStoredKey) => void
-    removeKey?: (key: IStoredKey) => void
-    createVault?: (password: string) => void
-    unlockVault?: (password: string) => void
-    setSelectedAlias?: (alias: string) => void
-    deleteVault?: () => void
-    deleteKey?: (key: IStoredKey) => void
+    isLocked: boolean
+    isCreated: boolean
+    selectedKey: IStoredKey | undefined
+    addKey: (key: IStoredKey) => void
+    removeKey: (key: IStoredKey) => void
+    createVault: (password: string) => void
+    unlockVault: (password: string) => void
+    setSelectedAlias: (alias: string) => void
+    deleteVault: () => void
+    deleteKey: (key: IStoredKey) => void
 }
 
-export const VaultContext = React.createContext<IVaultContext>({
-    vault: undefined,
-})
+export const VaultContext = React.createContext<IVaultContext>(undefined as any);
 
 export function VaultProvider({ children }) {
     const [vault, setVault] = useState<IVaultStore | undefined>(undefined);
@@ -41,6 +39,11 @@ export function VaultProvider({ children }) {
         // first check if alias already exists
         if (vault?.storedKeys.find(key => key.alias === newKey.alias)) {
             throw new Error(`Key with alias ${newKey.alias} already exists`)
+        }
+
+        // check that key does not already exist
+        if (vault?.storedKeys.find(key => key.privateKey === newKey.privateKey)) {
+            throw new Error(`Key is already present in your keystore`)
         }
 
         setVault(prev => ({ ...prev!, storedKeys: [...prev!.storedKeys, newKey] }))

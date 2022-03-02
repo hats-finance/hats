@@ -7,6 +7,9 @@
   &__textbox {
     &-container {
       margin-bottom: $spacing-3;
+      button {
+        margin: 20px 0 0;
+      }
     }
     &-title {
       margin-bottom: $spacing-3;
@@ -61,11 +64,18 @@
     }
     .open-key-list {
       width: 30%;
+      margin: unset;
     }
   }
 
   @media only screen and (max-width: $mobile-breakpoint) {
-    margin-left: 10px;
-    margin-right: 10px;
+    .decrypt-wrapper {
+      &__textbox-container {
+        button {
+          width: 100%;
+          margin: 20px 0 0;
+        }
+      }
+    }
   }
 }
