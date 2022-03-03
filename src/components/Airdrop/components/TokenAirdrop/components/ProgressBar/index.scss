@@ -3,6 +3,7 @@
 .progress-bar-wrapper {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 50px;
   .stage-element {
     display: flex;
     align-items: center;
@@ -26,5 +27,6 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .progress-bar-wrapper {
     flex-direction: column;
+    margin-bottom: 30px;
   }
 }

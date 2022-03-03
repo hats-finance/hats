@@ -399,7 +399,6 @@ export const claimToken = async (delegatee: string, amount: number, proof: any, 
     const v = '0x' + signature.substring(2).substring(128, 130);
 
     return await tokenAirdropContract.delegateAndClaim(address, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
-    // return await hatsContract.delegateBySig(delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
   } catch (error) {
     console.error(error);
   }

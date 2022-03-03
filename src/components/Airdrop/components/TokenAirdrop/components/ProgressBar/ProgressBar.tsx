@@ -1,8 +1,8 @@
 import { t } from "i18next";
 import CheckmarkIcon from "assets/icons/checkmark.icon";
 import { Colors } from "constants/constants";
-import "./index.scss";
 import classNames from "classnames";
+import "./index.scss";
 
 interface IProps {
   stage: number

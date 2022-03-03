@@ -1,6 +1,7 @@
 
 import { t } from "i18next";
 import { useContext } from "react";
+import { truncatedAddress } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import { DATA } from "./data";
 import "./index.scss";
@@ -19,7 +20,7 @@ const DelegateeElement = ({ address, setDelegatee }: IDelegateeElementProps) => 
 
   return (
     <div className="delegatee-element" onClick={() => { setDelegatee(address); setStage(Stage.Claim); }}>
-      {address}
+      {truncatedAddress(address)}
     </div>
   )
 }
@@ -37,7 +38,9 @@ export default function ChooseDelegatee({ setDelegatee }: IProps) {
       <p>{t("Airdrop.TokenAirdrop.ChooseDelegatee.section-1")}</p>
 
       <span>{t("Airdrop.TokenAirdrop.ChooseDelegatee.choose-delegatee")}</span>
-      {delegateesElements}
+      <div className="delegatees-container">
+        {delegateesElements}
+      </div>
       <div className="actions-wrapper">
         <button className="back-btn" onClick={() => setStage(Stage.Protocol)}>BACK</button>
       </div>

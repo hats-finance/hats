@@ -68,8 +68,8 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     pendingWallet(true);
     await createTransaction(
       async () => redeemNFT(walletAddress, tokenId, proof),
+      () => { },
       () => { setEligibilityStatus(EligibilityStatus.REDEEMED); pendingWallet(false); },
-      () => { pendingWallet(false); },
       () => { pendingWallet(false); },
       dispatch,
       t("Airdrop.NFTAirdrop.redeem-success")

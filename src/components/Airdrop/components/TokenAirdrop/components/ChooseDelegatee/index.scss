@@ -2,19 +2,23 @@
 
 .choose-delegatee-wrapper {
   color: $white;
-  .delegatee-element {
-    border: 1px solid;
-    padding: 10px;
-    cursor: pointer;
-    &:hover {
-      opacity: 0.9;
+  .delegatees-container {
+    margin-top: 10px;
+    .delegatee-element {
+      border: 1px solid;
+      padding: 10px;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
+      }
     }
   }
   .actions-wrapper {
     display: flex;
     justify-content: space-between;
+    margin-top: 30px;
     .back-btn {
-      width: 100px;
+      width: 150px;
       margin-right: auto;
     }
   }
@@ -23,7 +27,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .choose-delegatee-wrapper {
     .actions-wrapper {
-      button {
+      .back-btn {
         width: 100%;
       }
     }
