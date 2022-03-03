@@ -17,6 +17,10 @@
     padding: 10px 0;
     margin-top: 5px;
   }
+  .continue-btn {
+    width: 100px;
+    margin: 20px 0 20px auto;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
@@ -24,6 +28,9 @@
     .amount-container {
       width: 100%;
       font-size: $moderate;
+    }
+    .continue-btn {
+      width: 100%;
     }
   }
 }

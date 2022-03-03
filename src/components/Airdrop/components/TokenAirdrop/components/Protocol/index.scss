@@ -1,7 +1,7 @@
 @import "../../../../../../styles/constants.scss";
 
-.claim-wrapper {
-
+.protocol-wrapper {
+  color: $white;
   .actions-wrapper {
     display: flex;
     justify-content: space-between;
@@ -12,7 +12,7 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .claim-wrapper {
+  .protocol-wrapper {
     .actions-wrapper {
       button {
         width: 50%;

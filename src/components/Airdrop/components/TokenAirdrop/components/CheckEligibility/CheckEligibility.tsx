@@ -5,10 +5,11 @@ import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
 interface IProps {
+  setInTokenAirdrop: (value: boolean) => void
   tokenAmount: number
 }
 
-export default function CheckEligibility({ tokenAmount }: IProps) {
+export default function CheckEligibility({ setInTokenAirdrop, tokenAmount }: IProps) {
   const { setStage } = useContext(TokenAirdropContext);
 
   return (
@@ -17,7 +18,7 @@ export default function CheckEligibility({ tokenAmount }: IProps) {
       <div className="amount-container">
         <Logo /> {tokenAmount} HATS
       </div>
-      <button onClick={() => setStage(Stage.Terms)}>Continue</button>
+      <button className="continue-btn fill" onClick={() => { setStage(Stage.Protocol); setInTokenAirdrop(true); }}>CONTINUE</button>
     </div>
   )
 }

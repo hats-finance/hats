@@ -51,8 +51,26 @@
       "not-eligible-token": "This address is not eligible to token airdrop",
       "redeemed-link": "Redeemed - View on Etherscan",
       "TokenAirdrop": {
+        "ProgressBar": {
+          "protocol": "Understand the protocol",
+          "delegatee": "Choose a Delegatee",
+          "claim": "Claim your hats"
+        },
         "CheckEligibility": {
           "claim-amount": "Total available to claim"
+        },
+        "Protocol": {
+          "section-1-title": "WHAT IS THE HATS PROTOCOL?",
+          "section-1": "Hats.finance is a decentralized cybersecurity protocol that allows everyone to add liquidity to bug bounties while farming $HATS.  Hackers can responsibly disclose vulnerabilities without KYC & be rewarded with the highest prize & NFTs for their work.",
+          "section-2-title": "WHERE DOES THE PRIZE COME FROM?",
+          "section-2": "When a hack is happening 100% of your holding is at risk. While a responsible disclosure occurs only % from the % of your stacking is in risk, and you will stay with $HATs tokens. No Token or TVL downside a win-win for everyone involved.",
+          "section-3-title": "WHAT IS MY BENEFIT OF USING HATS",
+          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
+        },
+        "ChooseDelegatee": {
+          "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",
+          "section-1": "Delegation is a shifting of authority and responsibility, e.g. on Hats DAO, voting power from one person to another. The delegatee you choose will represent you on hats future DAO decision. You may choose a delegatee from our list of auditors, dao specialists, security experts or represent yourself",
+          "choose-delegatee": "Choose your delegatee:"
         },
         "Claim": {
           "claim-success": "Hats token claimed successfully"

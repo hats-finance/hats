@@ -1,12 +1,15 @@
 import { claimToken, createTransaction } from "actions/contractsActions";
 import { hashToken } from "components/Airdrop/utils";
 import { t } from "i18next";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { TokenAirdropET } from "types/types";
+import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
+import "./index.scss";
 
 interface IProps {
+  delegatee: string
   address: string
   tokenAmount: number
   eligibleTokens: TokenAirdropET
@@ -15,8 +18,9 @@ interface IProps {
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
-export default function Claim({ address, tokenAmount, eligibleTokens }: IProps) {
+export default function Claim({ delegatee, address, tokenAmount, eligibleTokens }: IProps) {
   const dispatch = useDispatch();
+  const { setStage } = useContext(TokenAirdropContext);
   //const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const [merkleTree, setMerkleTree] = useState();
@@ -34,11 +38,10 @@ export default function Claim({ address, tokenAmount, eligibleTokens }: IProps) 
     //setPendingWalletAction(true);
 
     /** 
-     * TODO: the first param should be delegatee(!) not address - this is temporary until choosing the delegatee in the UI will be implemented
      * TODO: 0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A is temporary until we fetch it from the subgraph
      */
     await createTransaction(
-      async () => claimToken(address, tokenAmount, proof, "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", chainId),
+      async () => claimToken(delegatee, tokenAmount, proof, "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", chainId),
       () => { },
       () => { },
       () => { },
@@ -49,7 +52,11 @@ export default function Claim({ address, tokenAmount, eligibleTokens }: IProps) 
 
   return (
     <div className="claim-wrapper">
-      Claim
+      <span>You choose {delegatee} as your delegatee</span>
+      <div className="actions-wrapper">
+        <button onClick={() => setStage(Stage.ChooseDelegatee)}>BACK</button>
+        <button className="fill" onClick={claim}>CLAIM</button>
+      </div>
     </div>
   )
 }

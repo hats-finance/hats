@@ -23,6 +23,7 @@ export default function Airdrop() {
   const [tokenId, setTokenId] = useState<string>();
   const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
   const [tokenAmount, setTokenAmount] = useState<number>();
+  const [inTokenAirdop, setInTokenAirdrop] = useState(false);
 
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
@@ -72,7 +73,8 @@ export default function Airdrop() {
           <TokenAirdrop
             address={normalizeAddress(userInput)}
             tokenAmount={tokenAmount!}
-            eligibleTokens={tokenET!} />);
+            eligibleTokens={tokenET!}
+            setInTokenAirdrop={setInTokenAirdrop} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return <span className="error-label">{t("Airdrop.not-eligible-token")}</span>;
       case EligibilityStatus.REDEEMED:
@@ -100,19 +102,23 @@ export default function Airdrop() {
   return (
     <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": pendingWallet || !nftET || !tokenET })}>
       {isEthereumProvider() ? (
-        <div className="search-wrapper">
-          <span>{t("Airdrop.enter-address")}</span>
-          <div className={classNames({ "input-container": true, "input-error": userInput !== "" && !isAddress(userInput) })}>
-            <input className="address-input" type="text" value={userInput} placeholder={t("Airdrop.search-placeholder")} onChange={(e) => handleChange(e.target.value)} />
-            <button className="clear-input" onClick={() => handleChange("")}><CloseIcon width="10" height="10" fill={Colors.gray} /></button>
-          </div>
-          {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
-
+        <div className="airdorp-content">
+          {!inTokenAirdop && (
+            <div className="search-wrapper">
+              <span>{t("Airdrop.enter-address")}</span>
+              <div className={classNames({ "input-container": true, "input-error": userInput !== "" && !isAddress(userInput) })}>
+                <input className="address-input" type="text" value={userInput} placeholder={t("Airdrop.search-placeholder")} onChange={(e) => handleChange(e.target.value)} />
+                <button className="clear-input" onClick={() => handleChange("")}><CloseIcon width="10" height="10" fill={Colors.gray} /></button>
+              </div>
+              {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
+            </div>
+          )}
           {renderTokenAirdrop(tokenEligibilityStatus)}
-          {renderNFTAirdrop(nftEligibilityStatus)}
+          {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
           {(pendingWallet || !nftET || !tokenET) && <Loading />}
         </div>
+
 
       ) : <span>{t("Shared.no-ethereum")}</span>}
     </div>

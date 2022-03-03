@@ -1,2 +1,31 @@
 @import "../../../../../../styles/constants.scss";
 
+.choose-delegatee-wrapper {
+  color: $white;
+  .delegatee-element {
+    border: 1px solid;
+    padding: 10px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    .back-btn {
+      width: 100px;
+      margin-right: auto;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .choose-delegatee-wrapper {
+    .actions-wrapper {
+      button {
+        width: 100%;
+      }
+    }
+  }
+}
