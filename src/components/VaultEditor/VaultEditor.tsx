@@ -192,6 +192,14 @@ export default function VaultEditor() {
         setMemberIndex(undefined)
         setNewMemberDetails(newMember)
     }
+    
+    function removeMember(index: number) {
+        setVaultDescription(prev => {
+            let newVaultDescription = { ...prev }
+            newVaultDescription.committee.members.splice(index, 1)
+            return newVaultDescription
+        })
+    }
 
     function nextPage() {
         if (pageNumber >= 5) return
@@ -337,7 +345,7 @@ export default function VaultEditor() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <button className="fill">
+                                        <button className="fill" onClick={() => removeMember(index)}>
                                             <img src={RemoveIcon} height={12} alt="remove-member" />
                                             {` ${t("VaultEditor.remove-member")}`}
                                         </button>
