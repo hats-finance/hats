@@ -94,16 +94,21 @@
       align-items: center;
       height: 100%;
       .pie-chart-container {
-        svg {
-          max-width: 150px;
+        flex-shrink: 0;
+        > svg {
+          max-width: 120px;
           cursor: pointer;
+          overflow: visible;
+        }
+        button {
+          border: none;
         }
       }
       span {
         color: $white;
       }
       .label-wrapper {
-        margin-left: 50px;
+        margin-left: 40px;
         padding-left: 10px;
         display: flex;
         flex-direction: column;
