@@ -99,7 +99,7 @@ export default function VaultExpanded(props: IProps) {
                         setSelectedSegmentIndex(segmentIndex);
                       }}
                       onMouseOut={() => setChartMouseOver(false)}
-                      segmentsShift={(index) => (index === selectedSegmentIndex && chartMouseOver ? 7 : 0)}
+                      segmentsShift={(index) => (index === selectedSegmentIndex && (chartMouseOver || screenSize === ScreenSize.Mobile) ? 7 : 0)}
                       lineWidth={45}
                       data={pieChartNonZeroVaules} />
                     {isMobile() && <button onClick={prevSegement}><ArrowIcon width="20" height="20" /></button>}
