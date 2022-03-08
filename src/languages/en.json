@@ -57,7 +57,8 @@
           "claim": "Claim your hats"
         },
         "CheckEligibility": {
-          "claim-amount": "Total available to claim"
+          "claim-amount": "Total available to claim",
+          "token-claim-continue": "START CLAIMING PROCESS"
         },
         "Protocol": {
           "section-1-title": "WHAT IS THE HATS PROTOCOL?",
@@ -70,14 +71,20 @@
         "ChooseDelegatee": {
           "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",
           "section-1": "Delegation is a shifting of authority and responsibility, e.g. on Hats DAO, voting power from one person to another. The delegatee you choose will represent you on hats future DAO decision. You may choose a delegatee from our list of auditors, dao specialists, security experts or represent yourself",
-          "choose-delegatee": "Choose your delegatee:"
+          "choose-delegatee": "Choose your delegatee:",
+          "self-delegatee": "I choose myself as a delegatee"
         },
         "Claim": {
-          "claim-success": "Hats token claimed successfully"
+          "claim-success": "Hats token claimed successfully",
+          "review": "REVIEW YOUR CLAIM",
+          "claim-amount": "Total available to claim",
+          "chosen-delegatee": "Your chosen delegatee",
+          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions.  One time for your delegatee choice and the second for claim transaction."
         }
       },
       "NFTAirdrop": {
         "your-nft": "Your Crow Clan NFT",
+        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
         "redeem-success": "NFT redeemed successfully"
       }
       

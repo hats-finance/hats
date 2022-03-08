@@ -79,28 +79,31 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
   return (
     <div className="nft-airdrop-wrapper">
       <span>{t("Airdrop.NFTAirdrop.your-nft")}</span>
-      <div className="nft-airdrop-wrapper__nft-container">
-        <Image
-          source={`${IPFS_PREFIX}${nftData?.image.substring(7)}`}
-          alt="nft"
-          className="nft-image" />
-        {eligibilityStatus === EligibilityStatus.REDEEMED && (
-          <span className="redeemed-info-wrapper">
-            <span>{t("Airdrop.redeemed-link")}</span>
-            <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, tokenId))}>
-              <OpenInIcon />
+      <div className="nft-container-wrapper">
+        <span className="nft-text">{t("Airdrop.NFTAirdrop.nft-text")}</span>
+        <div className="nft-container">
+          <Image
+            source={`${IPFS_PREFIX}${nftData?.image.substring(7)}`}
+            alt="nft"
+            className="nft-image" />
+          {eligibilityStatus === EligibilityStatus.REDEEMED && (
+            <span className="redeemed-info-wrapper">
+              <span>{t("Airdrop.redeemed-link")}</span>
+              <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, tokenId))}>
+                <OpenInIcon />
+              </span>
             </span>
-          </span>
-        )}
-        {eligibilityStatus !== EligibilityStatus.REDEEMED && (
-          <>
-            {redeemable && <Countdown endDate={deadline!} compactView />}
-            <button
-              disabled={!isProviderAndNetwork(provider) || !redeemable}
-              className="action-btn redeem-btn fill"
-              onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
-          </>
-        )}
+          )}
+          {eligibilityStatus !== EligibilityStatus.REDEEMED && (
+            <>
+              {redeemable && <Countdown endDate={deadline!} compactView />}
+              <button
+                disabled={!isProviderAndNetwork(provider) || !redeemable}
+                className="action-btn redeem-btn fill"
+                onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

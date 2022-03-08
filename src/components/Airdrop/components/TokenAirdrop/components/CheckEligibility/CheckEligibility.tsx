@@ -18,7 +18,7 @@ export default function CheckEligibility({ setInTokenAirdrop, tokenAmount }: IPr
       <div className="amount-container">
         <Logo /> {tokenAmount} HATS
       </div>
-      <button className="continue-btn fill" onClick={() => { setStage(Stage.Protocol); setInTokenAirdrop(true); }}>CONTINUE</button>
+      <button className="continue-btn fill" onClick={() => { setStage(Stage.Protocol); setInTokenAirdrop(true); }}>{t("Airdrop.TokenAirdrop.CheckEligibility.token-claim-continue")}</button>
     </div>
   )
 }

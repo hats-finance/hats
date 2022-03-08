@@ -2,18 +2,51 @@
 
 .claim-wrapper {
   color: $white;
-  .amount-container {
+  .claim-review-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    border: 1px solid $turquoise;
-    color: $white;
-    font-size: $medium;
-    font-family: RobotoMono;
-    font-weight: bold;
-    width: 500px;
-    text-indent: 20px;
-    padding: 10px 0;
-    margin-top: 5px;
+    .review-amount {
+      margin-bottom: 50px;
+      .amount-container {
+        display: flex;
+        align-items: center;
+        border: 1px solid $turquoise;
+        color: $white;
+        font-size: $medium;
+        font-family: RobotoMono;
+        font-weight: bold;
+        width: 500px;
+        text-indent: 20px;
+        padding: 10px 0;
+        margin-top: 5px;
+      }
+    }
+    .review-delegatee {
+      margin-bottom: 50px;
+      .delegatee-info {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid $turquoise;
+        background-color: $field-blue;
+        padding: 10px;
+        width: 500px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        .delegatee-name {
+          font-size: $moderate;
+        }
+        .delegatee-address {
+          color: $dirty-turquoise;
+          font-size: $xsmall;
+        }
+        .delegatee-votes {
+          color: $dark-turquoise;
+          font-size: $xxsmall;
+          margin-top: 20px;
+        }
+      }
+    }
   }
   .actions-wrapper {
     display: flex;
@@ -32,13 +65,25 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .claim-wrapper {
-    .amount-container {
-      width: 100%;
-      font-size: $moderate;
+    .claim-review-container {
+      align-items: unset;
+      .review-amount {
+        .amount-container {
+          width: 100%;
+          font-size: $moderate;
+        }
+      }
+      .review-delegatee {
+        .delegatee-info {
+          width: 100%;
+        }
+      }
     }
     .actions-wrapper {
+      flex-direction: column-reverse;
       button {
-        width: 50%;
+        width: 100%;
+        margin: 10px 0;
       }
     }
   }

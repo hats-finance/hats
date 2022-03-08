@@ -4,31 +4,70 @@
   color: $white;
   .delegatees-container {
     margin-top: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 20px;
     .delegatee-element {
-      border: 1px solid;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid $turquoise;
+      background-color: $field-blue;
       padding: 10px;
       cursor: pointer;
       &:hover {
         opacity: 0.9;
       }
+      .delegatee-name {
+        font-size: $moderate;
+      }
+      .delegatee-address {
+        color: $dirty-turquoise;
+        font-size: $xsmall;
+      }
+      .delegatee-votes {
+        color: $dark-turquoise;
+        font-size: $xxsmall;
+        margin-top: 20px;
+      }
+      &.selected {
+        outline: 4px solid $turquoise;
+      }
+    }
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+  .self-delegatee-checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    input {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
     }
   }
   .actions-wrapper {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
-    .back-btn {
+    button {
       width: 150px;
-      margin-right: auto;
     }
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .choose-delegatee-wrapper {
+    .delegatees-container {
+      grid-template-columns: 1fr;
+    }
     .actions-wrapper {
-      .back-btn {
+      flex-direction: column-reverse;
+      button {
         width: 100%;
+        margin: 10px 0;
       }
     }
   }

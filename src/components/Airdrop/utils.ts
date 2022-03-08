@@ -9,6 +9,14 @@ import { TOKEN_AIRDROP_IPFS_CID } from "./constants";
 
 export const DELEGATION_EXPIRY = 10e9;
 
+export interface IDelegateeData {
+  address: string
+  name: string
+  description: string
+  votes?: number
+  self?: boolean
+}
+
 const EIP712Domain = [
   { "name": "name", "type": "string" },
   { "name": "chainId", "type": "uint256" },

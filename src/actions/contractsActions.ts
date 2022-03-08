@@ -367,6 +367,20 @@ export const hasClaimed = async (address: string) => {
 }
 
 /**
+ * 
+ * @param address 
+ * @param rewardsToken 
+ */
+export const getCurrentVotes = async (address: string, rewardsToken: string) => {
+  try {
+    const contract = new Contract(rewardsToken, HatsToken, signer);
+    return (await contract.getCurrentVotes(address) as BigNumber).toNumber();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
  * Claim Hats token
  * @param {string} delegatee 
  * @param {number} amount 
