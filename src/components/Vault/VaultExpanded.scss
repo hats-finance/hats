@@ -22,6 +22,8 @@
         padding: 20px 30px;
         border: 1px solid $purple-blue;
         width: 50%;
+        flex: 0 0 auto;
+        box-sizing: border-box;
       }
       .multi-sig-wrapper {
         margin-bottom: 20px;
