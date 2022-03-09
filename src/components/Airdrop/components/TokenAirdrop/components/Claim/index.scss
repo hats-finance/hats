@@ -36,14 +36,14 @@
         .delegatee-name {
           font-size: $moderate;
         }
-        .delegatee-address {
+        .delegatee-role {
           color: $dirty-turquoise;
           font-size: $xsmall;
         }
-        .delegatee-votes {
+        .delegatee-username-votes {
           color: $dark-turquoise;
           font-size: $xxsmall;
-          margin-top: 20px;
+          margin-bottom: 10px;
         }
       }
     }

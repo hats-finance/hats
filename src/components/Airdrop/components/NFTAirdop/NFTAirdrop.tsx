@@ -13,7 +13,7 @@ import { EligibilityStatus } from "components/Airdrop/constants";
 import { NFT_AIRDROP_ADDRESS } from "settings";
 import OpenInIcon from "assets/icons/openIn.icon";
 import "./index.scss";
-import { hashToken } from "components/Airdrop/utils";
+import { hashNFT } from "components/Airdrop/utils";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -45,7 +45,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
 
   useEffect(() => {
     try {
-      setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashToken(...token)), keccak256, { sortPairs: true }));
+      setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashNFT(...token)), keccak256, { sortPairs: true }));
     } catch (error) {
       console.error(error);
     }
@@ -64,7 +64,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
   }, [tokenId])
 
   const redeem = async () => {
-    const proof = (merkleTree as any).getHexProof(hashToken(tokenId, walletAddress));
+    const proof = (merkleTree as any).getHexProof(hashNFT(tokenId, walletAddress));
     pendingWallet(true);
     await createTransaction(
       async () => redeemNFT(walletAddress, tokenId, proof),

@@ -1,10 +1,10 @@
 
 import { getCurrentVotes } from "actions/contractsActions";
 import classNames from "classnames";
-import { IDelegateeData } from "components/Airdrop/utils";
+import { AIRDROP_TOKEN_AIRDROP_ADDRESS, IDelegateeData } from "components/Airdrop/constants";
+import Modal from "components/Shared/Modal";
 import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
-import { truncatedAddress } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import { DATA } from "./data";
 import "./index.scss";
@@ -23,18 +23,27 @@ interface IDelegateeElementProps {
 
 const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementProps) => {
   const [votes, setVotes] = useState<number | undefined>();
+  const [showDescription, setShowDescription] = useState(false);
 
   useEffect(() => {
     (async () => {
-      setVotes(await getCurrentVotes(data.address, "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A"));
+      setVotes(await getCurrentVotes(data.address, AIRDROP_TOKEN_AIRDROP_ADDRESS));
     })();
   }, [data.address])
 
   return (
-    <div className={classNames("delegatee-element", { "selected": selected })} onClick={() => setDelegatee({ ...data, votes: votes })}>
+    <div className={classNames("delegatee-element", { "selected": selected })}>
       <div className="delegatee-name">{data.name}</div>
-      <div className="delegatee-address">{truncatedAddress(data.address)}</div>
-      {votes && <div className="delegatee-votes">{`${votes} Votes`}</div>}
+      <div className="delegatee-username-votes">{`${data.username} · ${votes} Votes`}</div>
+      <div className="delegatee-role">{data.role}</div>
+      <div className="delegatee-actions-container">
+        <div className="read-more" onClick={() => setShowDescription(true)}>Read More</div>
+        <div className="choose" onClick={() => setDelegatee({ ...data, votes: votes })}>Choose</div>
+      </div>
+      {showDescription && (
+        <Modal title={data.name} setShowModal={setShowDescription} height="fit-content">
+          {data.description}
+        </Modal>)}
     </div>
   )
 }

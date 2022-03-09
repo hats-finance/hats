@@ -5,8 +5,8 @@ import ProgressBar from "./components/ProgressBar/ProgressBar";
 import Protocol from "./components/Protocol/Protocol";
 import ChooseDelegatee from "./components/ChooseDelegatee/ChooseDelegatee";
 import Claim from "./components/Claim/Claim";
+import { IDelegateeData } from "components/Airdrop/constants";
 import "./index.scss";
-import { IDelegateeData } from "components/Airdrop/utils";
 
 interface IProps {
   address: string

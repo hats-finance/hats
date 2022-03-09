@@ -5,29 +5,7 @@ import { updateAirdropData } from "../../actions";
 import { getMerkleTree, hasClaimed, isRedeemed } from "../../actions/contractsActions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
-import { TOKEN_AIRDROP_IPFS_CID } from "./constants";
-
-export const DELEGATION_EXPIRY = 10e9;
-
-export interface IDelegateeData {
-  address: string
-  name: string
-  description: string
-  votes?: number
-  self?: boolean
-}
-
-const EIP712Domain = [
-  { "name": "name", "type": "string" },
-  { "name": "chainId", "type": "uint256" },
-  { "name": "verifyingContract", "type": "address" }
-]
-
-const Delegation = [
-  { name: 'delegatee', type: 'address' },
-  { name: 'nonce', type: 'uint256' },
-  { name: 'expiry', type: 'uint256' },
-];
+import { Delegation, EIP712Domain, TOKEN_AIRDROP_IPFS_CID } from "./constants";
 
 /**
  * Function to fetch airdrop data
@@ -71,12 +49,21 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
 }
 
 /**
- * hashToken
- * @param {string} key
- * @param {string} value 
+ * hashNFT
+ * @param {string} tokenId
+ * @param {string} address 
  */
- export const hashToken = (key: string, value: string | number | unknown) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [key, value]).slice(2), 'hex');
+export const hashNFT = (tokenId: string, address: string | unknown) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [tokenId, address]).slice(2), 'hex');
+}
+
+/**
+ * hashToken
+ * @param {string} account
+ * @param {number} amount
+ */
+export const hashToken = (account: string, amount: number | unknown) => {
+  return Buffer.from(ethers.utils.solidityKeccak256(['address', 'uint256'], [account, amount]).slice(2), 'hex');
 }
 
 /**

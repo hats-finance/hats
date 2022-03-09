@@ -13,7 +13,8 @@ import { toggleInTransaction, toggleNotification, updateTransactionHash } from "
 import { Logger } from "ethers/lib/utils";
 import { NETWORK, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
-import { buildDataDelegation, DELEGATION_EXPIRY } from "components/Airdrop/utils";
+import { buildDataDelegation } from "components/Airdrop/utils";
+import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -367,9 +368,9 @@ export const hasClaimed = async (address: string) => {
 }
 
 /**
- * 
- * @param address 
- * @param rewardsToken 
+ * get current votes for a given account
+ * @param {string} address 
+ * @param {string} rewardsToken 
  */
 export const getCurrentVotes = async (address: string, rewardsToken: string) => {
   try {

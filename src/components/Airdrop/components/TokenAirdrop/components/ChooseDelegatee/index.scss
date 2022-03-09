@@ -13,21 +13,32 @@
       border: 1px solid $turquoise;
       background-color: $field-blue;
       padding: 10px;
-      cursor: pointer;
-      &:hover {
-        opacity: 0.9;
-      }
       .delegatee-name {
         font-size: $moderate;
       }
-      .delegatee-address {
+      .delegatee-role {
         color: $dirty-turquoise;
         font-size: $xsmall;
+        margin-bottom: 10px;
       }
-      .delegatee-votes {
+      .delegatee-username-votes {
         color: $dark-turquoise;
         font-size: $xxsmall;
-        margin-top: 20px;
+        margin-bottom: 10px;
+      }
+      .delegatee-actions-container {
+        display: flex;
+        color: $dirty-turquoise;
+        font-size: $xsmall;
+        .choose,
+        .read-more {
+          cursor: pointer;
+          margin-right: 10px;
+          text-decoration: underline;
+          &:hover {
+            opacity: 0.9;
+          }
+        }
       }
       &.selected {
         outline: 4px solid $turquoise;

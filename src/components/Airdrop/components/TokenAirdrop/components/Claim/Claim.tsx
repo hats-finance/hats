@@ -1,14 +1,14 @@
 import { claimToken, createTransaction } from "actions/contractsActions";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
-import { hashToken, IDelegateeData } from "components/Airdrop/utils";
+import { AIRDROP_TOKEN_AIRDROP_ADDRESS, IDelegateeData } from "components/Airdrop/constants";
+import { hashToken } from "components/Airdrop/utils";
 import Loading from "components/Shared/Loading";
 import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { TokenAirdropET } from "types/types";
-import { truncatedAddress } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -42,11 +42,8 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
     const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
     setPendingWallet(true);
 
-    /** 
-     * TODO: 0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A is temporary until we fetch it from the subgraph
-     */
     await createTransaction(
-      async () => claimToken(delegateeData.address, tokenAmount, proof, "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", chainId),
+      async () => claimToken(delegateeData.address, tokenAmount, proof, AIRDROP_TOKEN_AIRDROP_ADDRESS, chainId),
       () => { },
       () => { setPendingWallet(false); }, // TODO: change to success stage
       () => { setPendingWallet(false); },
@@ -71,8 +68,12 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
           <span>{t("Airdrop.TokenAirdrop.Claim.chosen-delegatee")}</span>
           <div className="delegatee-info">
             <div className="delegatee-name">{delegateeData?.self ? "Yourself" : delegateeData.name}</div>
-            <div className="delegatee-address">{truncatedAddress(delegateeData.address)}</div>
-            {delegateeData.votes && <div className="delegatee-votes">{`${delegateeData.votes} Votes`}</div>}
+            {!delegateeData.self && (
+              <>
+                <div className="delegatee-username-votes">{`${delegateeData.username} · ${delegateeData.votes} Votes`}</div>
+                <div className="delegatee-role">{delegateeData.role}</div>
+              </>
+            )}
           </div>
         </div>
 
