@@ -6,6 +6,7 @@ import Protocol from "./components/Protocol/Protocol";
 import ChooseDelegatee from "./components/ChooseDelegatee/ChooseDelegatee";
 import Claim from "./components/Claim/Claim";
 import { IDelegateeData } from "components/Airdrop/constants";
+import ClaimSuccess from "./components/ClaimSuccess/ClaimSuccess";
 import "./index.scss";
 
 interface IProps {
@@ -19,7 +20,8 @@ export const enum Stage {
   CheckEligibility,
   Protocol,
   ChooseDelegatee,
-  Claim
+  Claim,
+  Success
 }
 
 export const TokenAirdropContext = createContext({ setStage: (value: Stage) => { } });
@@ -38,12 +40,14 @@ export default function TokenAirdrop({ address, tokenAmount, eligibleTokens, set
         return <ChooseDelegatee address={address} selectedDelegatee={delegatee} setDelegatee={setDelegatee} />;
       case Stage.Claim:
         return <Claim delegateeData={delegatee!} address={address} tokenAmount={tokenAmount} eligibleTokens={eligibleTokens} />;
+      case Stage.Success:
+        return <ClaimSuccess tokenAmount={tokenAmount} />
     }
   }
 
   return (
     <div className="token-airdrop-wrapper">
-      {stage !== Stage.CheckEligibility && <ProgressBar stage={stage} />}
+      {stage !== Stage.CheckEligibility && stage !== Stage.Success && <ProgressBar stage={stage} />}
       <TokenAirdropContext.Provider value={{ setStage: setStage }}>
         {renderStage(stage)}
       </TokenAirdropContext.Provider>

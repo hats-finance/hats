@@ -45,7 +45,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
     await createTransaction(
       async () => claimToken(delegateeData.address, tokenAmount, proof, AIRDROP_TOKEN_AIRDROP_ADDRESS, chainId),
       () => { },
-      () => { setPendingWallet(false); }, // TODO: change to success stage
+      () => { setPendingWallet(false); setStage(Stage.Success); },
       () => { setPendingWallet(false); },
       dispatch,
       t("Airdrop.TokenAirdrop.Claim.claim-success")

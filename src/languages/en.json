@@ -79,7 +79,14 @@
           "review": "REVIEW YOUR CLAIM",
           "claim-amount": "Total available to claim",
           "chosen-delegatee": "Your chosen delegatee",
-          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions.  One time for your delegatee choice and the second for claim transaction."
+          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions. One time for your delegatee choice and the second for claim transaction."
+        },
+        "Success": {
+          "title": "CLAIM SUCCESSFUL!",
+          "section-1": "Congratulation on claiming your ",
+          "section-2": "Welcome to the Hats! \n\n We encourage you to share on Twitter and join Hats community on Discord to get involved in the governance.",
+          "twitter-share": "Share on twitter",
+          "join-discord": "Join Discord"
         }
       },
       "NFTAirdrop": {
@@ -87,7 +94,6 @@
         "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
         "redeem-success": "NFT redeemed successfully"
       }
-      
     },
     "NFTAirdop": {
       "eligible-text": "Congratulations on being part of the first Hats NFT airdrop “The Crow’s Clan” Redeem your NFT and join the clan. \n\n The crows clan is a one of its kind NFT collection, highlighting the importance of crypto security in a space of constant innovation and change. We chose the crow as the main character of the collection because in many ways crows hold the same values as Hats Finance. \n\n The crow is an animal associated with mysteries and magic, often in a negative connotation. However, they also serve an important role in the ecosystem, helping the world get rid of bacteria and restore the forests. The same can be said about Hackers, who are often seen as negative characters, yet they are essential in the crypto ecosystem. \n\n Like our early supporters, crows are clever, intelligent, adaptable, with excellent teamwork and reciprocity - exactly what we see in the Hat's community.",

@@ -1,0 +1,41 @@
+@import "../../../../../../styles/constants.scss";
+
+.claim-success-wrapper {
+  color: $white;
+  .actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 20px;
+    a {
+      width: 500px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin-right: 10px;
+        font-weight: bold;
+        font-size: $moderate;
+      }
+    }
+    .twitter-link {
+      background-color: $azure;
+      margin-bottom: 30px;
+    }
+    .discord-link {
+      background-color: $purple;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .claim-success-wrapper {
+    .actions-wrapper {
+      a {
+        width: 100%;
+      }
+    }
+  }
+}
