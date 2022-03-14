@@ -5,12 +5,13 @@ import ProgressBar from "./components/ProgressBar/ProgressBar";
 import Protocol from "./components/Protocol/Protocol";
 import ChooseDelegatee from "./components/ChooseDelegatee/ChooseDelegatee";
 import Claim from "./components/Claim/Claim";
-import { IDelegateeData } from "components/Airdrop/constants";
+import { EligibilityStatus, IDelegateeData } from "components/Airdrop/constants";
 import ClaimSuccess from "./components/ClaimSuccess/ClaimSuccess";
 import "./index.scss";
 
 interface IProps {
   address: string
+  eligibilityStatus: EligibilityStatus
   tokenAmount: number
   eligibleTokens: TokenAirdropET
   setInTokenAirdrop: (value: boolean) => void
@@ -26,14 +27,14 @@ export const enum Stage {
 
 export const TokenAirdropContext = createContext({ setStage: (value: Stage) => { } });
 
-export default function TokenAirdrop({ address, tokenAmount, eligibleTokens, setInTokenAirdrop }: IProps) {
+export default function TokenAirdrop({ address, eligibilityStatus, tokenAmount, eligibleTokens, setInTokenAirdrop }: IProps) {
   const [stage, setStage] = useState(Stage.CheckEligibility);
   const [delegatee, setDelegatee] = useState<IDelegateeData | undefined>();
 
   const renderStage = (stage: Stage) => {
     switch (stage) {
       case Stage.CheckEligibility:
-        return <CheckEligibility setInTokenAirdrop={setInTokenAirdrop} tokenAmount={tokenAmount} />
+        return <CheckEligibility eligibilityStatus={eligibilityStatus} setInTokenAirdrop={setInTokenAirdrop} tokenAmount={tokenAmount} />
       case Stage.Protocol:
         return <Protocol setInTokenAirdrop={setInTokenAirdrop} />
       case Stage.ChooseDelegatee:

@@ -70,7 +70,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
             <div className="delegatee-name">{delegateeData?.self ? "Yourself" : delegateeData.name}</div>
             {!delegateeData.self && (
               <>
-                <div className="delegatee-username-votes">{`${delegateeData.username} · ${delegateeData.votes} Votes`}</div>
+                <div className="delegatee-username-votes">{`${delegateeData.tweeter_username} · ${delegateeData.votes} Votes`}</div>
                 <div className="delegatee-role">{delegateeData.role}</div>
               </>
             )}

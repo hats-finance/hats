@@ -69,6 +69,10 @@
   }
 }
 
+.delegatee-description-container {
+  padding: $element-padding-mobile;
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   .choose-delegatee-wrapper {
     .delegatees-container {

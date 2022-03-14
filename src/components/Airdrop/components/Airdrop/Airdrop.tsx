@@ -68,17 +68,17 @@ export default function Airdrop() {
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {
+      case EligibilityStatus.REDEEMED:
       case EligibilityStatus.ELIGIBLE:
         return (
           <TokenAirdrop
             address={normalizeAddress(userInput)}
+            eligibilityStatus={tokenEligibilityStatus}
             tokenAmount={tokenAmount!}
             eligibleTokens={tokenET!}
             setInTokenAirdrop={setInTokenAirdrop} />);
       case EligibilityStatus.NOT_ELIGIBLE:
-        return <span className="error-label">{t("Airdrop.not-eligible-token")}</span>;
-      case EligibilityStatus.REDEEMED:
-        return "TOKEN REDEEMED";
+        return <div className="error-label">{t("Airdrop.not-eligible-token")}</div>;
     }
   }
 
@@ -95,7 +95,7 @@ export default function Airdrop() {
             setEligibilityStatus={setNFTEligibilityStatus}
             pendingWallet={setPendingWallet} />);
       case EligibilityStatus.NOT_ELIGIBLE:
-        return <span className="error-label">{t("Airdrop.not-eligible-nft")}</span>;
+        return <div className="error-label">{t("Airdrop.not-eligible-nft")}</div>;
     }
   }
 

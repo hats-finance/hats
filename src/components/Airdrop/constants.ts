@@ -1,9 +1,11 @@
 export const TOKEN_AIRDROP_IPFS_CID = "QmcLrUzm7Hs14V5dN6Hgzns7joGwJxNrmSDVjsrmQhQAMt";
 
 /** 
- * TODO: 0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A is temporary until we fetch it from the subgraph
+ * TODO: temporary until we fetch it from the subgraph
  */
 export const AIRDROP_TOKEN_AIRDROP_ADDRESS = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
+
+export const DELEGATEES_IPFS = "QmX9Pmb4Hz6ydMrLmWf4iP2kMddfmL4cPvWTdFTJz2kiPp";
 
 export const DELEGATION_EXPIRY = 10e9;
 
@@ -28,7 +30,7 @@ export interface IDelegateeData {
   address: string
   image: string
   name: string
-  username: string
+  tweeter_username: string
   role: string
   description: string
   votes?: number

@@ -1,15 +1,17 @@
 import Logo from "assets/icons/logo.icon";
+import { EligibilityStatus } from "components/Airdrop/constants";
 import { t } from "i18next";
 import { useContext } from "react";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
 interface IProps {
+  eligibilityStatus: EligibilityStatus
   setInTokenAirdrop: (value: boolean) => void
   tokenAmount: number
 }
 
-export default function CheckEligibility({ setInTokenAirdrop, tokenAmount }: IProps) {
+export default function CheckEligibility({ eligibilityStatus, setInTokenAirdrop, tokenAmount }: IProps) {
   const { setStage } = useContext(TokenAirdropContext);
 
   return (
@@ -18,7 +20,8 @@ export default function CheckEligibility({ setInTokenAirdrop, tokenAmount }: IPr
       <div className="amount-container">
         <Logo /> {tokenAmount} HATS
       </div>
-      <button className="continue-btn fill" onClick={() => { setStage(Stage.Protocol); setInTokenAirdrop(true); }}>{t("Airdrop.TokenAirdrop.CheckEligibility.token-claim-continue")}</button>
+      {eligibilityStatus === EligibilityStatus.REDEEMED && <div className="redeemed-info-wrapper">Redeemed</div>}
+      {eligibilityStatus !== EligibilityStatus.REDEEMED && <button className="continue-btn fill" onClick={() => { setStage(Stage.Protocol); setInTokenAirdrop(true); }}>{t("Airdrop.TokenAirdrop.CheckEligibility.token-claim-continue")}</button>}
     </div>
   )
 }
