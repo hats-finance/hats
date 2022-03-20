@@ -16,14 +16,14 @@ import { Delegation, EIP712Domain, TOKEN_AIRDROP_IPFS_CID } from "./constants";
 export const fetchAirdropData = async (selectedAddress: string, showAirdropPrompt: () => void, dispatch: Dispatch) => {
   try {
 
-    const tokenData = (await axios.get(`${IPFS_PREFIX}${TOKEN_AIRDROP_IPFS_CID}`)).data;
+    const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
     for (let key in tokenData) {
       key = normalizeAddress(key);
     }
 
     const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
-    const nftData = (await axios.get(`${IPFS_PREFIX}${NFT_AIRDRPOP_IPFS_CID}`)).data;
+    const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
 
     for (const key in nftData) {
       nftData[key] = normalizeAddress(nftData[key]);

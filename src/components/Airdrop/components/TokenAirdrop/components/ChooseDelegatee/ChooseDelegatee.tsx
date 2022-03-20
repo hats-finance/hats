@@ -35,13 +35,17 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 
   return (
     <div className={classNames("delegatee-element", { "selected": selected })}>
-      <div className="delegatee-name">{data.name}</div>
-      <div className="delegatee-username-votes">{`${data.tweeter_username} · ${votes} Votes`}</div>
-      <div className="delegatee-role">{data.role}</div>
-      <div className="delegatee-actions-container">
-        <div className="read-more" onClick={() => setShowDescription(true)}>Read More</div>
-        <div className="choose" onClick={() => setDelegatee({ ...data, votes: votes })}>Choose</div>
+      <img src={`${data.image.replace("ipfs://", `${IPFS_PREFIX}/`)}`} alt="delegatee avatar" />
+      <div className="delegatee-info">
+        <div className="delegatee-name">{data.name}</div>
+        <div className="delegatee-username-votes">{`${data.tweeter_username} · ${votes} Votes`}</div>
+        <div className="delegatee-role">{data.role}</div>
+        <div className="delegatee-actions-container">
+          <div className="read-more" onClick={() => setShowDescription(true)}>Read More</div>
+          <div className="choose" onClick={() => setDelegatee({ ...data, votes: votes })}>Choose</div>
+        </div>
       </div>
+
       {showDescription && (
         <Modal title={data.name} setShowModal={setShowDescription} height="fit-content">
           <div className="delegatee-description-container">
@@ -61,8 +65,9 @@ export default function ChooseDelegatee({ address, selectedDelegatee, setDelegat
   useEffect(() => {
     (async () => {
       try {
-        const delegateesData = (await axios.get(`${IPFS_PREFIX}${DELEGATEES_IPFS}/delegate1.json`)).data;
-        setDelegatees([delegateesData]);
+        const delegateesData = (await axios.get(`${IPFS_PREFIX}/${DELEGATEES_IPFS}`));
+        setDelegatees(delegateesData.data.delegates);
+        console.log(delegateesData.data.delegates);
       } catch (error) {
         console.error(error);
         // TODO: show error to the user - maybe have the option of self delegatee only?

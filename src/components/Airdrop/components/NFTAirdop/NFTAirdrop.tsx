@@ -55,7 +55,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     (async () => {
       try {
         const tokenBaseURI = await getBaseURI();
-        const data = await axios.get(`${IPFS_PREFIX}${tokenBaseURI.substring(7)}${tokenId}`);
+        const data = await axios.get(`${IPFS_PREFIX}/${tokenBaseURI.substring(7)}${tokenId}`);
         setNftData(data.data);
       } catch (error) {
         console.error(error);
@@ -83,7 +83,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
         <span className="nft-text">{t("Airdrop.NFTAirdrop.nft-text")}</span>
         <div className="nft-container">
           <Image
-            source={`${IPFS_PREFIX}${nftData?.image.substring(7)}`}
+            source={`${IPFS_PREFIX}/${nftData?.image.substring(7)}`}
             alt="nft"
             className="nft-image" />
           {eligibilityStatus === EligibilityStatus.REDEEMED && (

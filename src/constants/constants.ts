@@ -88,7 +88,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
-export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs/";
+export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs";
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI =
   "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
