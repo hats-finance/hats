@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { ICommitteeMember, IVaultDescription } from "types/types"
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -10,6 +10,9 @@ import PgpKey from "./PgpKey";
 import VaultReview from "./VaultReview";
 import VaultSign from "./VaultSign";
 import './index.scss'
+import { uploadVaultDescription } from "./uploadVaultDescription";
+import { getPath, setPath } from "./objectUtils";
+import { useLocation } from "react-router-dom";
 
 const newMember: ICommitteeMember = {
     name: "",
@@ -31,7 +34,7 @@ const newVaultDescription: IVaultDescription = {
     },
     committee: {
         "multisig-address": "",
-        members: [{...newMember}]
+        members: [{ ...newMember }]
     },
     severities: [],
     source: {
@@ -50,17 +53,21 @@ export default function VaultEditor() {
     const { t } = useTranslation();
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [pageNumber, setPageNumber] = useState<number>(1)
-    const [contracts, setContracts] = useState({ contracts: [{...newContract}]})
+    const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
 
-    // eslint-disable-next-line no-useless-escape
-    const splitChars = /[\.\[\]\'\"]/
-    const setPath = (object, path, value) => path
-        .split(splitChars)
-        .reduce((o, p, i) => o[p] = path.split(splitChars).length === ++i ? value : o[p] || {}, object)
+    const location = useLocation();
 
-    const getPath = (object, path) => path
-        .split(splitChars)
-        .reduce((o, p) => o && o[p], object)
+    useEffect(() => {
+        const urlSearchParams = new URLSearchParams(location.search);
+        const params = Object.fromEntries(urlSearchParams.entries());
+        if (params.ipfs) {
+            (async () => {
+                const response = await fetch(params.ipfs)
+                setVaultDescription(await response.json())
+            })();
+        }
+    }, [location.search]);
+
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         let value
@@ -85,7 +92,7 @@ export default function VaultEditor() {
     function removeFromArray(object, path: string, index: number, newItem: object) {
         let newArray = getPath(object, path)
         newArray.splice(index, 1)
-        if (newArray.length < 1) newArray = [{...(newItem || {})}]
+        if (newArray.length < 1) newArray = [{ ...(newItem || {}) }]
         let newObject = { ...object }
         setPath(newObject, path, newArray)
         return newObject
@@ -94,7 +101,7 @@ export default function VaultEditor() {
     function addMember() {
         setVaultDescription(prev => {
             let newObject = { ...prev }
-            setPath(newObject, "committee.members", [...prev.committee.members, {...newMember}])
+            setPath(newObject, "committee.members", [...prev.committee.members, { ...newMember }])
             return newObject
         })
     }
@@ -107,7 +114,7 @@ export default function VaultEditor() {
     function addContract() {
         setContracts(prev => {
             let newObject = { ...prev }
-            setPath(newObject, "contracts", [...prev.contracts, {...newContract}])
+            setPath(newObject, "contracts", [...prev.contracts, { ...newContract }])
             return newObject
         })
     }
@@ -253,7 +260,9 @@ export default function VaultEditor() {
                 </div>
 
                 <div className="vault-editor__button-container">
-                    <button className="fill">{t("VaultEditor.save-button")}</button>
+                    <button onClick={() => {
+                        uploadVaultDescription(vaultDescription)
+                    }} className="fill">{t("VaultEditor.save-button")}</button>
                 </div>
             </section>
 
