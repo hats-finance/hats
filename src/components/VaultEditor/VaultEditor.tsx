@@ -40,10 +40,17 @@ const newVaultDescription: IVaultDescription = {
     }
 }
 
+const newContract = {
+    name: "",
+    address: "",
+    severities: [],
+}
+
 export default function VaultEditor() {
     const { t } = useTranslation();
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [pageNumber, setPageNumber] = useState<number>(1)
+    const [contracts, setContracts] = useState({ contracts: [{...newContract}]})
 
     // eslint-disable-next-line no-useless-escape
     const splitChars = /[\.\[\]\'\"]/
@@ -75,13 +82,13 @@ export default function VaultEditor() {
         })
     }
 
-    function removeFromArray(path: string, index: number, newItem: object) {
-        let newArray = getPath(vaultDescription, path)
+    function removeFromArray(object, path: string, index: number, newItem: object) {
+        let newArray = getPath(object, path)
         newArray.splice(index, 1)
         if (newArray.length < 1) newArray = [{...(newItem || {})}]
-        let newObject = { ...vaultDescription }
+        let newObject = { ...object }
         setPath(newObject, path, newArray)
-        setVaultDescription(newObject);
+        return newObject
     }
 
     function addMember() {
@@ -93,7 +100,30 @@ export default function VaultEditor() {
     }
 
     function removeMember(index: number) {
-        removeFromArray("committee.members", index, newMember)
+        let newVaultDescription = removeFromArray(vaultDescription, "committee.members", index, newMember)
+        setVaultDescription(newVaultDescription);
+    }
+
+    function addContract() {
+        setContracts(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, "contracts", [...prev.contracts, {...newContract}])
+            return newObject
+        })
+    }
+
+    function removeContract(index: number) {
+        let newContracts = removeFromArray(contracts, "contracts", index, newContract)
+        setContracts(newContracts);
+    }
+
+    function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        setContracts(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, e.target.name, e.target.value)
+            console.log(newObject)
+            return newObject
+        })
     }
 
     // Pagination in mobile
@@ -192,16 +222,16 @@ export default function VaultEditor() {
                     </p>
                     <div className="vault-editor__section-content">
                         <div className="contracts-covered">
-                            {(vaultDescription?.committee?.members || []).map((member, index) =>
+                            {(contracts.contracts || []).map((contract, index) =>
                                 <ContractCovered
                                     key={index}
-                                    member={member}
+                                    contract={contract}
                                     index={index}
-                                    onChange={onChange}
-                                    onRemove={removeMember}
+                                    onChange={onContractChange}
+                                    onRemove={removeContract}
                                 />)}
 
-                            <button className="fill" onClick={addMember}>
+                            <button className="fill" onClick={addContract}>
                                 {t("VaultEditor.add-member")}
                             </button>
                         </div>

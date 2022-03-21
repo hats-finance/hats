@@ -8,7 +8,9 @@ interface IMultiSelectOption {
 }
 
 interface IProps {
+  name: string;
   options: IMultiSelectOption[];
+  onChange: Function;
 }
 
 const customStyles = {
@@ -32,11 +34,15 @@ const customStyles = {
 }
 
 export default function Countdown(props: IProps) {
-  const { options } = props;
+  const { options, name, onChange } = props;
+
+  const onSelectChange = (e) => {
+    console.log(e)
+  }
 
   return (
     <div className="multi-select">
-      <ReactMultiSelectCheckboxes styles={customStyles} options={options} />
+      <ReactMultiSelectCheckboxes name={name} onChange={onSelectChange} styles={customStyles} options={options} />
     </div>
   );
 }
