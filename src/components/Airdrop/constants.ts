@@ -5,7 +5,7 @@ export const TOKEN_AIRDROP_IPFS_CID = "QmcLrUzm7Hs14V5dN6Hgzns7joGwJxNrmSDVjsrmQ
  */
 export const AIRDROP_TOKEN_AIRDROP_ADDRESS = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
 
-export const DELEGATEES_IPFS = "Qmew8Hu6VpdCy9gMBMm279BC9kwjQpXs9avXki7bqq5Mph";
+export const DELEGATEES_IPFS = "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm";
 
 export const DELEGATION_EXPIRY = 10e9;
 

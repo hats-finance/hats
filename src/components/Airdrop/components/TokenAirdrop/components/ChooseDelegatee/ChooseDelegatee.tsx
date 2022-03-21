@@ -67,7 +67,6 @@ export default function ChooseDelegatee({ address, selectedDelegatee, setDelegat
       try {
         const delegateesData = (await axios.get(`${IPFS_PREFIX}/${DELEGATEES_IPFS}`));
         setDelegatees(delegateesData.data.delegates);
-        console.log(delegateesData.data.delegates);
       } catch (error) {
         console.error(error);
         // TODO: show error to the user - maybe have the option of self delegatee only?

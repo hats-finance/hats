@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { AIRDROP_TOKEN_AIRDROP_ADDRESS, IDelegateeData } from "components/Airdrop/constants";
 import { hashToken } from "components/Airdrop/utils";
 import Loading from "components/Shared/Loading";
+import { IPFS_PREFIX } from "constants/constants";
 import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -66,14 +67,17 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
 
         <div className="review-delegatee">
           <span>{t("Airdrop.TokenAirdrop.Claim.chosen-delegatee")}</span>
-          <div className="delegatee-info">
-            <div className="delegatee-name">{delegateeData?.self ? "Yourself" : delegateeData.name}</div>
-            {!delegateeData.self && (
-              <>
-                <div className="delegatee-username-votes">{`${delegateeData.tweeter_username} · ${delegateeData.votes} Votes`}</div>
-                <div className="delegatee-role">{delegateeData.role}</div>
-              </>
-            )}
+          <div className="delegatee-info-wrapper">
+            {!delegateeData.self && <img src={`${delegateeData.image.replace("ipfs://", `${IPFS_PREFIX}/`)}`} alt="delegatee avatar" />}
+            <div className="delegatee-info">
+              <div className="delegatee-name">{delegateeData?.self ? "Yourself" : delegateeData.name}</div>
+              {!delegateeData.self && (
+                <>
+                  <div className="delegatee-username-votes">{`${delegateeData.tweeter_username} · ${delegateeData.votes} Votes`}</div>
+                  <div className="delegatee-role">{delegateeData.role}</div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

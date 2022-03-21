@@ -24,15 +24,20 @@
     }
     .review-delegatee {
       margin-bottom: 50px;
-      .delegatee-info {
+      .delegatee-info-wrapper {
         display: flex;
-        flex-direction: column;
         border: 1px solid $turquoise;
         background-color: $field-blue;
         padding: 10px;
         width: 500px;
         box-sizing: border-box;
         margin-top: 5px;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 40px;
+          margin-right: 20px;
+        }
         .delegatee-name {
           font-size: $moderate;
         }
@@ -74,7 +79,7 @@
         }
       }
       .review-delegatee {
-        .delegatee-info {
+        .delegatee-info-wrapper {
           width: 100%;
         }
       }
