@@ -197,14 +197,21 @@
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
         "description-2": "Complete the transaction by authorized signer/s",
-        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir",
-        "committee-address": "Committee Address",
-        "submit-vulnerability": "SUBMIT VULNERABILITY",
-        "prize-division": "Prize Content Division",
-        "deposit-withdraw": "DEPOSIT / WITHDRAW",
-        "total-vault": "Total vault"
+        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir"
       },
       "img-placeholder": "SVG/PNG"
+    },
+    "Vault": {
+      "vault-details": "Vault Details",
+      "committee-members": "Committee Members",
+      "committee-address": "Committee Address",
+      "severity-prizes": "SEVERITY PRIZES",
+      "total-vault": "Total vault",
+      "deposit-withdraw": "DEPOSIT / WITHDRAW",
+      "withdrawal-request-pending": "WITHDRAWAL REQUEST PENDING",
+      "withdrawal-available": "WITHDRAWAL AVAILABLE",
+      "prize-division": "Prize Content Division",
+      "submit-vulnerability": "SUBMIT VULNERABILITY"
     }
   }
 }

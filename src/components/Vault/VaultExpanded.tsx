@@ -1,3 +1,4 @@
+import { t } from "i18next";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
@@ -17,9 +18,10 @@ import "./VaultExpanded.scss";
 
 interface IProps {
   data: IVault
-  withdrawRequests: IPoolWithdrawRequest[]
-  setShowModal: Function
-  setModalData: Function
+  withdrawRequests?: IPoolWithdrawRequest[]
+  setShowModal?: Function
+  setModalData?: Function
+  preview?: boolean
 }
 
 export default function VaultExpanded(props: IProps) {
@@ -62,32 +64,29 @@ export default function VaultExpanded(props: IProps) {
         <div className="vault-expanded">
           {screenSize === ScreenSize.Mobile && (
             <div >
-              <VaultAction data={props.data}
-                withdrawRequests={props.withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData} />
+              <VaultAction {...props} />
             </div>
           )}
           <div className="vault-details-wrapper">
             <div className="sub-title">
-              VAULT DETAILS
+              {t("Vault.vault-details")}
             </div>
             <div className="vault-details-content">
               <div>
-                <span className="vault-expanded-subtitle">Committee Members:</span>
+                <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
+                <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
-                  <span className="vault-expanded-subtitle">Committee Address:</span>
+                  <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
                   <Multisig multisigAddress={isGuest ? parentDescription?.committee["multisig-address"] || "" : description.committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
-                <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                <span className="vault-expanded-subtitle">{t("Vault.prize-division")}:</span>
                 <div className="pie-chart-wrapper">
 
                   <div className="pie-chart-container">
@@ -109,14 +108,16 @@ export default function VaultExpanded(props: IProps) {
               </div>
             </div>
           </div>
-          <div className="severity-prizes-wrapper">
-            <div className="sub-title">SEVERITY PRIZES</div>
-            <div className="severity-prizes-content">
-              <Severities
-                severities={description?.severities}
-                parentVault={props.data.parentVault} />
+          {!props.preview && (
+            <div className="severity-prizes-wrapper">
+              <div className="sub-title">{t("Vault.severity-prizes")}</div>
+              <div className="severity-prizes-content">
+                <Severities
+                  severities={description?.severities}
+                  parentVault={props.data.parentVault} />
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </td>
     </tr >
