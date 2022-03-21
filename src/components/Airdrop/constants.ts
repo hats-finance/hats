@@ -3,7 +3,7 @@ export const TOKEN_AIRDROP_IPFS_CID = "QmcLrUzm7Hs14V5dN6Hgzns7joGwJxNrmSDVjsrmQ
 /** 
  * TODO: temporary until we fetch it from the subgraph
  */
-export const AIRDROP_TOKEN_AIRDROP_ADDRESS = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
+export const REWARDS_TOKEN = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
 
 export const DELEGATEES_IPFS = "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm";
 

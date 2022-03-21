@@ -2,7 +2,7 @@
 import { getCurrentVotes } from "actions/contractsActions";
 import axios from "axios";
 import classNames from "classnames";
-import { AIRDROP_TOKEN_AIRDROP_ADDRESS, DELEGATEES_IPFS, IDelegateeData } from "components/Airdrop/constants";
+import { REWARDS_TOKEN, DELEGATEES_IPFS, IDelegateeData } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import Modal from "components/Shared/Modal";
 import { IPFS_PREFIX } from "constants/constants";
@@ -29,7 +29,7 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 
   useEffect(() => {
     (async () => {
-      setVotes(await getCurrentVotes(data.address, AIRDROP_TOKEN_AIRDROP_ADDRESS));
+      setVotes(await getCurrentVotes(data.address, REWARDS_TOKEN));
     })();
   }, [data.address])
 

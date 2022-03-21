@@ -1,7 +1,7 @@
 import { claimToken, createTransaction } from "actions/contractsActions";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
-import { AIRDROP_TOKEN_AIRDROP_ADDRESS, IDelegateeData } from "components/Airdrop/constants";
+import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
 import { hashToken } from "components/Airdrop/utils";
 import Loading from "components/Shared/Loading";
 import { IPFS_PREFIX } from "constants/constants";
@@ -27,7 +27,6 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
   const dispatch = useDispatch();
   const { setStage } = useContext(TokenAirdropContext);
   const [pendingWallet, setPendingWallet] = useState(false);
-  //const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const [merkleTree, setMerkleTree] = useState();
 
@@ -44,7 +43,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
     setPendingWallet(true);
 
     await createTransaction(
-      async () => claimToken(delegateeData.address, tokenAmount, proof, AIRDROP_TOKEN_AIRDROP_ADDRESS, chainId),
+      async () => claimToken(delegateeData.address, tokenAmount, proof, REWARDS_TOKEN, chainId),
       () => { },
       () => { setPendingWallet(false); setStage(Stage.Success); },
       () => { setPendingWallet(false); },
