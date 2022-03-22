@@ -81,7 +81,7 @@ export interface ICommitteeMember {
 export interface ISeverity {
   "name": string
   "index": number
-  "contracts-covered": Array<string>
+  "contracts-covered": { [key: string]: string }[]
   "nft-metadata": INFTMetaData
   "reward-for": string
   "description": string

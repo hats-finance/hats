@@ -3,13 +3,13 @@ import { linkToEtherscan, truncatedAddress } from "../../utils";
 import { isAddress } from "ethers/lib/utils";
 
 interface IProps {
-  contracts: Array<string>
+  contracts: Array<{}>
 }
 
 export default function ContractsCovered(props: IProps) {
   return (
     <>
-      {props.contracts.map((contract: string, index: number) => {
+      {props.contracts.map((contract: { [key: string]: string; }, index: number) => {
         const contractName = Object.keys(contract)[0];
         const contractVaule = contract?.[contractName];
         const isLink = isAddress(contractVaule) ? false : true;

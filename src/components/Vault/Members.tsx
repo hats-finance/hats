@@ -14,6 +14,8 @@ export default function Members(props: IProps) {
   const verifyIPFSLink = (memberLink: string) => {
     if (memberLink.startsWith("ipfs/")) {
       return memberLink.slice(5);
+    } else if (memberLink.startsWith("ipfs://")) {
+      return memberLink.slice(7);
     }
     return memberLink;
   }

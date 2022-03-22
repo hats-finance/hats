@@ -24,7 +24,7 @@ async function pinFile(fileContents: any) {
 
     console.log('uploaded file', response.data)
 
-    return response.data.uri
+    return response.data.IpfsHash
 }
 
 async function pinJson(object: any) {
@@ -37,7 +37,7 @@ async function pinJson(object: any) {
                 'address': '0x8F402318BB49776f5017d2FB12c90D0B0acAAaE8'
             }
         })
-    return response.data.uri
+    return response.data.IpfsHash
 }
 
 export async function uploadVaultDescription(vaultDescription: IVaultDescription) {
@@ -50,8 +50,8 @@ export async function uploadVaultDescription(vaultDescription: IVaultDescription
         if (typeof value !== 'string') continue
         if (isBlob(value)) {
             const blob = await await (await fetch(value)).blob()
-            const pinnedUri = await pinFile(blob)
-            setPath(vaultDescription, iconPath, pinnedUri)
+            const IpfsHash = await pinFile(blob)
+            setPath(vaultDescription, iconPath, `ipfs://${IpfsHash}`)
         }
     }
 

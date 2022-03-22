@@ -33,7 +33,7 @@ const customStyles = {
   }),
 }
 
-export default function Countdown(props: IProps) {
+export default function MultiSelect(props: IProps) {
   const { options, name, onChange } = props;
 
   const onSelectChange = (e) => {
