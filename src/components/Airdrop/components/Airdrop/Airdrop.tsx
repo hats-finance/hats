@@ -86,7 +86,8 @@ export default function Airdrop() {
             eligibilityStatus={tokenEligibilityStatus}
             tokenAmount={tokenAmount!}
             eligibleTokens={tokenET!}
-            setInTokenAirdrop={setInTokenAirdrop} />);
+            setInTokenAirdrop={setInTokenAirdrop}
+            setTokenEligibilityStatus={setTokenEligibilityStatus} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return <div className="error-label">{t("Airdrop.not-eligible-token")}</div>;
     }

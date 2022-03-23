@@ -7,7 +7,7 @@
     flex-direction: column;
     align-items: center;
     margin-top: 60px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
     a {
       width: 500px;
       height: 90px;
@@ -28,13 +28,28 @@
       background-color: $purple;
     }
   }
+  .secondary-actions-wrapper {
+    margin-top: 100px;
+    button {
+      margin-left: auto;
+      display: block;
+      width: 150px;
+    }
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .claim-success-wrapper {
     .actions-wrapper {
+      margin-top: 30px;
       a {
         width: 100%;
+      }
+    }
+    .secondary-actions-wrapper {
+      button {
+        width: 100%;
+        margin: 10px 0;
       }
     }
   }

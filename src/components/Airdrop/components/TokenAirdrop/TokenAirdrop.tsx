@@ -15,6 +15,7 @@ interface IProps {
   tokenAmount: number
   eligibleTokens: TokenAirdropET
   setInTokenAirdrop: (value: boolean) => void
+  setTokenEligibilityStatus: (value: EligibilityStatus) => void
 }
 
 export const enum Stage {
@@ -27,7 +28,7 @@ export const enum Stage {
 
 export const TokenAirdropContext = createContext({ setStage: (value: Stage) => { } });
 
-export default function TokenAirdrop({ address, eligibilityStatus, tokenAmount, eligibleTokens, setInTokenAirdrop }: IProps) {
+export default function TokenAirdrop({ address, eligibilityStatus, tokenAmount, eligibleTokens, setInTokenAirdrop, setTokenEligibilityStatus }: IProps) {
   const [stage, setStage] = useState(Stage.CheckEligibility);
   const [delegatee, setDelegatee] = useState<IDelegateeData | undefined>();
 
@@ -42,7 +43,11 @@ export default function TokenAirdrop({ address, eligibilityStatus, tokenAmount, 
       case Stage.Claim:
         return <Claim delegateeData={delegatee!} address={address} tokenAmount={tokenAmount} eligibleTokens={eligibleTokens} />;
       case Stage.Success:
-        return <ClaimSuccess tokenAmount={tokenAmount} />
+        return <ClaimSuccess tokenAmount={tokenAmount} backToAirdrop={() => {
+          setInTokenAirdrop(false);
+          setTokenEligibilityStatus(EligibilityStatus.REDEEMED);
+          setStage(Stage.CheckEligibility);
+        }} />
     }
   }
 
