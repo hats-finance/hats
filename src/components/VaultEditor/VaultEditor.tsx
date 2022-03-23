@@ -6,13 +6,14 @@ import EditableContent from "components/CommitteeTools/components/EditableConten
 import CommmitteeMember from "./CommitteeMember";
 import ContractCovered from "./ContractCovered";
 import VaultDetails from "./VaultDetails";
-import PgpKey from "./PgpKey";
+import CommunicationChannel from "./CommunicationChannel";
 import VaultReview from "./VaultReview";
 import VaultSign from "./VaultSign";
 import './index.scss'
 import { uploadVaultDescription } from "./uploadVaultDescription";
 import { getPath, setPath } from "./objectUtils";
 import { useLocation } from "react-router-dom";
+import { VaultProvider } from "components/CommitteeTools/store";
 
 interface IContract {
     name: string;
@@ -77,7 +78,7 @@ export default function VaultEditor() {
     const { t } = useTranslation();
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [pageNumber, setPageNumber] = useState<number>(1)
-    const [contracts, setContracts] = useState({ contracts: [{...newContract}]})
+    const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
 
     const location = useLocation();
 
@@ -92,7 +93,7 @@ export default function VaultEditor() {
         }
         // convert severities of vault description to contracts state variable
         severitiesToContracts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search]);
 
     // Convert contracts state variable to severities of vault description
@@ -150,6 +151,33 @@ export default function VaultEditor() {
         })
     }
 
+    function addPgpKey(pgpKey) {
+        setVaultDescription(prev => {
+            let newObject = { ...prev }
+            const keys = prev["communication-channel"]["pgp-pk"]
+            const sureArray = typeof keys === "string" ?
+                keys === "" ? [] : [keys] :
+                keys
+            setPath(newObject, "communication-channel.pgp-pk", [...sureArray, pgpKey])
+            return newObject
+        })
+    }
+
+    function removePgpKey(index: number) {
+        const path = "communication-channel.pgp-pk"
+        let value = getPath(vaultDescription, path)
+        if (typeof value === "string") {
+            setVaultDescription(prev => {
+                let newObject = { ...prev }
+                setPath(newObject, path, "")
+                return newObject
+            })
+        } else {
+            let newVaultDescription = removeFromArray(vaultDescription, "communication-channel.pgp-pk", index)
+            setVaultDescription(newVaultDescription);
+        }
+    }
+
     function removeMember(index: number) {
         let newVaultDescription = removeFromArray(vaultDescription, "committee.members", index, newMember)
         setVaultDescription(newVaultDescription);
@@ -158,7 +186,7 @@ export default function VaultEditor() {
     function addContract() {
         setContracts(prev => {
             let newObject = { ...prev }
-            setPath(newObject, "contracts", [...prev.contracts, {...newContract}])
+            setPath(newObject, "contracts", [...prev.contracts, { ...newContract }])
             return newObject
         })
     }
@@ -322,10 +350,14 @@ export default function VaultEditor() {
                         5. {t("VaultEditor.pgp-key")}
                     </p>
                     <div className="vault-editor__section-content">
-                        <PgpKey
-                            communicationChannel={vaultDescription?.["communication-channel"]}
-                            onChange={onChange}
-                        />
+                        <VaultProvider>
+                            <CommunicationChannel
+                                removePgpKey={removePgpKey}
+                                communicationChannel={vaultDescription?.["communication-channel"]}
+                                addPgpKey={addPgpKey}
+                                onChange={onChange}
+                            />
+                        </VaultProvider>
                     </div>
                 </div>
 
