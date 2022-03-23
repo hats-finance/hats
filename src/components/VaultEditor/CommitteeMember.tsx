@@ -2,10 +2,20 @@ import EditableContent from "components/CommitteeTools/components/EditableConten
 import { useTranslation } from "react-i18next";
 import IconInput from "./IconEditor";
 import RemoveIcon from "assets/icons/remove-member.svg";
+import { IPFS_PREFIX } from "../../constants/constants";
 
 export default function CommmitteeMember({ index, member, onChange, onRemove }) {
     const { t } = useTranslation();
     const basePath = `committee.members.${index}`;
+
+    const verifyIPFSLink = (memberLink: string) => {
+        if (memberLink.startsWith("ipfs/")) {
+            return memberLink.slice(5);
+        } else if (memberLink.startsWith("ipfs://")) {
+            return memberLink.slice(7);
+        }
+        return memberLink;
+    }
 
     return <>
         <div className="committee-members__member">
@@ -46,7 +56,13 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                         <label>{t("VaultEditor.member-image")}</label>
                         <IconInput
                             name={`${basePath}.image-ipfs-link`}
-                            value={member["image-ipfs-link"] || ''}
+                            value={
+                                member?.["image-ipfs-link"]
+                                  ? member?.["image-ipfs-link"].startsWith("blob")
+                                    ? member?.["image-ipfs-link"]
+                                    : `${IPFS_PREFIX}${verifyIPFSLink(member?.["image-ipfs-link"])}`
+                                  : ""
+                            }
                             onChange={onChange} />
                     </div>
                 </div>
