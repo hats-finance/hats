@@ -14,6 +14,7 @@ import { uploadVaultDescription } from "./uploadVaultDescription";
 import { getPath, setPath } from "./objectUtils";
 import { useLocation } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
+import { IPFS_PREFIX } from "constants/constants";
 
 interface IContract {
     name: string;
@@ -87,7 +88,7 @@ export default function VaultEditor() {
         const params = Object.fromEntries(urlSearchParams.entries());
         if (params.ipfs) {
             (async () => {
-                const response = await fetch(params.ipfs)
+                const response = await fetch(IPFS_PREFIX + params.ipfs)
                 setVaultDescription(await response.json())
             })();
         }

@@ -1,6 +1,7 @@
 import { IVaultDescription } from "types/types";
 import axios from "axios"
 import { getPath, setPath } from "./objectUtils";
+import { RoutePaths } from "constants/constants";
 
 
 function isBlob(uri: string) {
@@ -55,6 +56,6 @@ export async function uploadVaultDescription(vaultDescription: IVaultDescription
         }
     }
 
-    const uploadedFile = pinJson(vaultDescription)
-
+    const uploadedFile = await pinJson(vaultDescription)
+    window.location.href = `${RoutePaths.vault_editor}?ipfs=${uploadedFile}`
 }
