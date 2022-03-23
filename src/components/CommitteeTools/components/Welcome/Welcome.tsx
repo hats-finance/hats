@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultContext } from "../../store";
 import CreateVaultModal from "../CreateVaultModal/CreateVaultModal";
+import UnlockVaultModal from "../UnlockVaultModal/UnlockVaultModal";
 import "./index.scss";
 
 const Welcome = () => {

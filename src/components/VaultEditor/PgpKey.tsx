@@ -1,92 +1,85 @@
-import { useState } from "react";
+import { VaultContext } from "components/CommitteeTools/store";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
-import Tooltip from "rc-tooltip";
-import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
-import InfoIcon from "assets/icons/info.icon";
-import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
-import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
-import {
-  Colors,
-  RC_TOOLTIP_OVERLAY_INNER_STYLE
-} from "../../constants/constants";
+import SelectKeyModal from "components/CommitteeTools/components/SelectKeyModal/SelectKeyModal";
+import CreateVaultModal from "components/CommitteeTools/components/CreateVaultModal/CreateVaultModal";
+import UnlockVaultModal from "components/CommitteeTools/components/UnlockVaultModal/UnlockVaultModal";
+import CopyIcon from "assets/icons/copy.icon.svg";
 
-export default function PgpKey({ communicationChannel, onChange }) {
+
+export default function PgpKey({ onSelected }) {
+  const [showSelectKeyModal, setShowSelectKeyModal] = useState(false);
+  const [showSelectedKeyDetails, setShowSelectedKeyDetails] = useState(false);
+  const [showCreateVault, setShowCreateVault] = useState(false);
+  const [showUnlockVault, setShowUnlockVault] = useState(false);
+
+  const vaultContext = useContext(VaultContext);
   const { t } = useTranslation();
-  const [showMobileHint, setShowMobileHint] = useState<boolean>(false);
+
+  useEffect(() => {
+    onSelected(vaultContext.selectedKey)
+  }, [vaultContext.selectedKey])
+
+  const SelectedKeypair = () =>
+    vaultContext && (
+      <div className="decrypt-wrapper__selected-key">
+        <div className="box-with-copy">
+          <div className="selected-key">
+            <div className="selected-key__fish-eye" />
+            <span>
+              {vaultContext.selectedKey
+                ? vaultContext.selectedKey.alias
+                : t("CommitteeTools.Decrypt.no-key-selected")}
+            </span>
+          </div>
+          {vaultContext.selectedKey && (
+            <img
+              alt="copy"
+              src={CopyIcon}
+              onClick={() => {
+                setShowSelectedKeyDetails(true);
+              }}
+            />
+          )}
+        </div>
+        <button
+          className="open-key-list fill"
+          onClick={() => {
+            setShowSelectKeyModal(true);
+          }}
+        >
+          {t("CommitteeTools.Decrypt.select-keypair")}
+        </button>
+      </div>
+    );
 
   return (
-    <div className="pgp-key">
-      <div className="pgp-key__hint">
-        {t("VaultEditor.pgp-key-hint-1")}
-        <Tooltip
-          placement="top"
-          overlayClassName="tooltip"
-          overlayInnerStyle={{
-            ...RC_TOOLTIP_OVERLAY_INNER_STYLE,
-            maxWidth: 500
+    <div>
+      {!vaultContext.isLocked && <SelectedKeypair />}
+      {(showSelectKeyModal || showSelectedKeyDetails) && (
+        <SelectKeyModal
+          showKey={
+            showSelectedKeyDetails ? vaultContext.selectedKey : undefined
+          }
+          setShowModal={() => {
+            if (showSelectedKeyDetails) setShowSelectedKeyDetails(false);
+            if (showSelectKeyModal) setShowSelectKeyModal(false);
           }}
-          overlay={t("VaultEditor.pgp-key-hint-tooltip")}
-        >
-          <span className="pgp-key__hint-desk-tooltip">
-            <InfoIcon width="15" height="15" fill={Colors.white} />
-          </span>
-        </Tooltip>
-        {t("VaultEditor.pgp-key-hint-2")}
-
-        <div className="mobile-only">
-          <div
-            className="pgp-key__hint-question"
-            onClick={() => setShowMobileHint((old) => !old)}
-          >
-            {t("VaultEditor.pgp-key-hint-question")}
-            {showMobileHint && (
-              <img
-                src={DownArrowIcon}
-                alt="down arrow"
-                width={12}
-                height={12}
-              />
-            )}
-            {!showMobileHint && (
-              <img src={UpArrowIcon} alt="up arrow" width={12} height={12} />
-            )}
-          </div>
-
-          <div
-            className={classNames("pgp-key__hint-tooltip", {
-              "pgp-key__hint-tooltip--show": showMobileHint
-            })}
-          >
-            {t("VaultEditor.pgp-key-hint-tooltip")}
-          </div>
-        </div>
-      </div>
-      <p className="vault-editor__section-description">
-        {t("VaultEditor.pgp-key-description")}
-        <br></br>
-        <br></br>
-      </p>
-      <button className="fill">{t("VaultEditor.go-to-tool")}</button>
-      <div>
-        <label>{t("VaultEditor.pgp-key")}</label>
-        <EditableContent
-          name="communication-channel.pgp-pk"
-          pastable
-          value={communicationChannel["pgp-pk"]}
-          onChange={onChange}
-          placeholder={t("VaultEditor.pgp-key-placeholder")}
         />
-      </div>
-      <div>
-        <label>{t("VaultEditor.committee-bot")}</label>
-        <EditableContent
-          textInput
-          name="communication-channel.committee-bot"
-          value={communicationChannel["committee-bot"]}
-          onChange={onChange}
-        />
-      </div>
+      )}
+      {vaultContext.isCreated && vaultContext.isLocked && (<>
+        <button onClick={() => setShowUnlockVault(true)} className="fill">{t("CommitteeTools.unlock-vault")}</button>
+      </>)}
+
+      {!vaultContext.isCreated && (<>
+        <button onClick={() => setShowCreateVault(true)} className="fill">{t("CommitteeTools.create-vault")}</button>
+      </>)}
+      {showCreateVault && !vaultContext.isCreated && (
+        <CreateVaultModal setShowModal={setShowCreateVault} />
+      )}
+      {showUnlockVault && vaultContext.isLocked && (
+        <UnlockVaultModal setShowModal={setShowUnlockVault} />
+      )}
     </div>
-  );
+  )
 }
