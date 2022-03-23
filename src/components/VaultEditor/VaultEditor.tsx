@@ -215,10 +215,10 @@ export default function VaultEditor() {
     function severitiesToContracts(vaultDescription: IVaultDescription) {
         let contracts = [] as IContract[];
         vaultDescription.severities.forEach((severity) => {
-            const contractsCovered = severity["contracts-covered"]?.lentgth == 0 ? [newContract] : severity["contracts-covered"];
+            const contractsCovered = severity["contracts-covered"]?.length == 0 ? [newContract] : severity["contracts-covered"];
             contractsCovered.forEach(item => {
                 const name = Object.keys(item)[0];
-                const address = Object.values(item)[0];
+                const address = Object.values(item)[0] as string;
                 let contract = contracts.find(item => item.name === name && item.address === address);
                 if (contract) {
                     let contractIndex = contracts.indexOf(contract)
