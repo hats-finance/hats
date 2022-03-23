@@ -55,7 +55,7 @@ const Welcome = () => {
           </button>
         ) : (
           <button onClick={() => setShowCreateVault(true)}>
-            {t("CommitteeTools.Welcome.create-vault")}
+            {t("CommitteeTools.create-vault")}
           </button>
         )}
       </div>
