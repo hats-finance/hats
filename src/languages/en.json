@@ -44,7 +44,7 @@
       }
     },
     "Airdrop": {
-      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
+      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop \n “The Crow Clan” and the HATS Token airdrop.",
       "search-placeholder": "Enter wallet address",
       "search-error": "Please enter a valid address",
       "not-eligible-nft": "This address is not eligible to NFT airdrop",
@@ -66,7 +66,7 @@
           "section-2-title": "WHERE DOES THE PRIZE COME FROM?",
           "section-2": "When a hack is happening 100% of your holding is at risk. While a responsible disclosure occurs only % from the % of your stacking is in risk, and you will stay with $HATs tokens. No Token or TVL downside a win-win for everyone involved.",
           "section-3-title": "WHAT IS MY BENEFIT OF USING HATS",
-          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
+          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming. \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
         },
         "ChooseDelegatee": {
           "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",

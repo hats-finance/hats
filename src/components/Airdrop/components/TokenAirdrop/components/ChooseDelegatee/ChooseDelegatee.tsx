@@ -7,7 +7,7 @@ import Loading from "components/Shared/Loading";
 import Modal from "components/Shared/Modal";
 import { IPFS_PREFIX } from "constants/constants";
 import { t } from "i18next";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -26,6 +26,17 @@ interface IDelegateeElementProps {
 const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementProps) => {
   const [votes, setVotes] = useState<number | undefined>();
   const [showDescription, setShowDescription] = useState(false);
+  const parent = useRef(null);
+
+  useEffect(() => {
+    (parent.current as any).addEventListener("click", e => {
+      if (e.target !== e.currentTarget && e.target.id === "readMore") {
+        setShowDescription(true);
+      } else {
+        setDelegatee({ ...data, votes: votes });
+      }
+    })
+  }, [data, setDelegatee, votes])
 
   useEffect(() => {
     (async () => {
@@ -34,15 +45,14 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
   }, [data.address])
 
   return (
-    <div className={classNames("delegatee-element", { "selected": selected })}>
+    <div ref={parent} className={classNames("delegatee-element", { "selected": selected })}>
       <img src={`${data.image.replace("ipfs://", `${IPFS_PREFIX}/`)}`} alt="delegatee avatar" />
       <div className="delegatee-info">
         <div className="delegatee-name">{data.name}</div>
         <div className="delegatee-username-votes">{`${data.tweeter_username} · ${votes} Votes`}</div>
         <div className="delegatee-role">{data.role}</div>
         <div className="delegatee-actions-container">
-          <div className="read-more" onClick={() => setShowDescription(true)}>Read More</div>
-          <div className="choose" onClick={() => setDelegatee({ ...data, votes: votes })}>Choose</div>
+          <div id="readMore" className="read-more">Read More</div>
         </div>
       </div>
 
@@ -81,7 +91,7 @@ export default function ChooseDelegatee({ address, selectedDelegatee, setDelegat
         key={index}
         data={delegateeData}
         setDelegatee={setDelegatee}
-        selected={selectedDelegatee?.address === delegateeData.address} />)
+        selected={selectedDelegatee?.self ? false : selectedDelegatee?.address === delegateeData.address} />)
   })
 
   const handleCheckboxClick = (value: boolean) => {

@@ -5,13 +5,14 @@
   .delegatees-container {
     margin-top: 10px;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 20px;
     .delegatee-element {
       display: flex;
       border: 1px solid $turquoise;
       background-color: $field-blue;
       padding: 10px;
+      cursor: pointer;
       img {
         width: 40px;
         height: 40px;
@@ -38,9 +39,7 @@
           display: flex;
           color: $dirty-turquoise;
           font-size: $xsmall;
-          .choose,
           .read-more {
-            cursor: pointer;
             margin-right: 10px;
             text-decoration: underline;
             &:hover {
