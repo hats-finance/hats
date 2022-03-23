@@ -38,7 +38,7 @@ const newContract: IContract = {
 function createSeverity(severity: string): ISeverity {
     return {
         name: severity,
-        "contracts-covered": [{ "NEW_CONTRACT": "0x0" }],
+        "contracts-covered": [],
         index: 1,
         "nft-metadata": {
             "name": "",
@@ -215,7 +215,7 @@ export default function VaultEditor() {
     function severitiesToContracts(vaultDescription: IVaultDescription) {
         let contracts = [] as IContract[];
         vaultDescription.severities.forEach((severity) => {
-            const contractsCovered = severity["contracts-covered"];
+            const contractsCovered = severity["contracts-covered"]?.lentgth == 0 ? [newContract] : severity["contracts-covered"];
             contractsCovered.forEach(item => {
                 const name = Object.keys(item)[0];
                 const address = Object.values(item)[0];
