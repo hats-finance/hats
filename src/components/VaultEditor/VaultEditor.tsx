@@ -298,6 +298,7 @@ export default function VaultEditor() {
                         <label>{t("VaultEditor.multisig-address")}</label>
                         <EditableContent
                             name="committee.multisig-address"
+                            value={vaultDescription?.committee["multisig-address"] || ''}
                             pastable
                             textInput
                             onChange={onChange}
