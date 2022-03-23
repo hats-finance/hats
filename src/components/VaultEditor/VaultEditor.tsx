@@ -131,6 +131,10 @@ export default function VaultEditor() {
             value = e.target.value
         }
 
+        if (vaultDescription?.["Project-metadata"]) {
+            e.target.name = e.target.name.replace('project-metadata', 'Project-metadata')
+        }
+
         setVaultDescription(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, value)
@@ -278,7 +282,7 @@ export default function VaultEditor() {
                     </p>
                     <div className="vault-editor__section-content">
                         <VaultDetails
-                            projectMetaData={vaultDescription?.["project-metadata"]}
+                            projectMetaData={vaultDescription?.["project-metadata"] || vaultDescription?.["Project-metadata"]}
                             onChange={onChange}
                         />
                     </div>
