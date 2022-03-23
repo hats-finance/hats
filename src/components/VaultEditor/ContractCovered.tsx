@@ -2,21 +2,17 @@ import { useTranslation } from "react-i18next";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import Severities from "components/Vault/Severities/Severities";
-import { ISeverity } from "types/types";
 
-export default function ContractCovered({ index, contract, onChange, onRemove, severities, activeSeverities }:
-  {
-    index: number,
-    contract: { [key: string]: string },
-    onChange: any,
-    onRemove: any,
-    severities: ISeverity[],
-    activeSeverities: ISeverity[]
-  }) {
+export default function ContractCovered({ index, contract, onChange, onRemove }) {
   const { t } = useTranslation();
-  const contractName = Object.keys(contract)[0];
-  const address = contract?.[contractName];
+  const basePath = `contracts.${index}`;
+
+  const severitiesOptions = [
+    { label: "Low", value: 'low' },
+    { label: "Medium", value: 'medium' },
+    { label: "High", value: 'high' },
+    { label: "Critical", value: 'critical' }
+  ];
 
   return (
     <>
@@ -28,26 +24,27 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
               <label>{t("VaultEditor.contract-name")}</label>
               <EditableContent
                 textInput
-                name="name"
-                value={contractName}
-                onChange={(e) => onChange(e, activeSeverities, index)}
-                placeholder={t("Vault Editor.contract-name-placeholder")}
+                name={`${basePath}.name`}
+                value={contract.name}
+                onChange={onChange}
+                placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
             <div className="contracts-covered__contract-severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
-                name="severities"
+                name={`${basePath}.severities`}
+                value={contract.severities}
                 onChange={onChange}
-                options={severities.map(severity => ({ label: severity.name, value: severity.index }))} />
+                options={severitiesOptions} />
             </div>
           </div>
           <label>{t("VaultEditor.contract-address")}</label>
           <EditableContent
             textInput
             pastable
-            name="address"
-            value={address}
+            name={`${basePath}.address`}
+            value={contract.address}
             onChange={onChange}
             placeholder={t("VaultEditor.contract-address-placeholder")}
           />

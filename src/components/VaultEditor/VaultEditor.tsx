@@ -14,11 +14,23 @@ import { uploadVaultDescription } from "./uploadVaultDescription";
 import { getPath, setPath } from "./objectUtils";
 import { useLocation } from "react-router-dom";
 
+interface IContract {
+    name: string;
+    address: string;
+    severities: string[];
+}
+
 const newMember: ICommitteeMember = {
     name: "",
     address: "",
     "twitter-link": "",
     "image-ipfs-link": ""
+}
+
+const newContract: IContract = {
+    name: "",
+    address: "",
+    severities: [],
 }
 
 function createSeverity(severity: string): ISeverity {
@@ -54,20 +66,18 @@ const newVaultDescription: IVaultDescription = {
         "multisig-address": "",
         members: [{ ...newMember }]
     },
-    severities: ["Low", "Medium", "High", "Critical"].map(createSeverity),
+    severities: ["low", "medium", "high", "critical"].map(createSeverity),
     source: {
         name: "",
         url: ""
     }
 }
 
-
-
-
 export default function VaultEditor() {
     const { t } = useTranslation();
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [pageNumber, setPageNumber] = useState<number>(1)
+    const [contracts, setContracts] = useState({ contracts: [{...newContract}]})
 
     const location = useLocation();
 
@@ -80,7 +90,28 @@ export default function VaultEditor() {
                 setVaultDescription(await response.json())
             })();
         }
+        // convert severities of vault description to contracts state variable
+        severitiesToContracts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search]);
+
+    // Convert contracts state variable to severities of vault description
+    useEffect(() => {
+        let severities = ["low", "medium", "high", "critical"].map((severityName) => {
+            const filterContracts = contracts.contracts.filter((contract) => {
+                return contract.severities.includes(severityName)
+            })
+            return {
+                ...createSeverity(severityName),
+                "contracts-covered": filterContracts.map((contract) => ({ [contract.name]: contract.address })),
+            }
+        })
+        setVaultDescription(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, "severities", severities)
+            return newObject
+        })
+    }, [contracts])
 
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -125,73 +156,52 @@ export default function VaultEditor() {
     }
 
     function addContract() {
-        // setVaultDescription(prev => {
-        //     let newObject = { ...prev }
-        //     setPath(newObject, "severities", [...prev.severities, { ...create }])
-
-        //     return newObject
-        // })
-    }
-
-    function removeContract(index: number) {
-        // let newContracts = removeFromArray(contracts, "contracts", index, newContract)
-        // setContracts(newContracts);
-    }
-
-    // function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    //     setContracts(prev => {
-    //         let newObject = { ...prev }
-    //         setPath(newObject, e.target.name, e.target.value)
-    //         console.log(newObject)
-    //         return newObject
-    //     })
-    // }
-
-    function onChangeContract(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, activeSeverities: ISeverity[], index: number) {
-        console.log({ e, activeSeverities, index })
-        let value
-        if (e.target instanceof HTMLInputElement) {
-            if (e.target.files && e.target.files.length > 0) {
-                value = URL.createObjectURL(e.target.files[0])
-            } else {
-                value = e.target.value
-            }
-        } else if (e.target instanceof HTMLTextAreaElement) {
-            value = e.target.value
-        }
-
-        activeSeverities.forEach((severity, severityIndex) => {
-            setVaultDescription(prev => {
-                let newObject = { ...prev }
-                let path
-                if (e.target.name == "name") {
-                    removeFromArray(newObject, `severities.${severityIndex}.contracts-covered`, index)
-                    path = `severities.${severityIndex}.contracts-covered.${index}.${e.target.value}`
-                } else if (e.target.name == "severities") {
-                    path = `severities.${severityIndex}.contracts-covered.${index}.${e.target.name}`
-                } else if (e.target.name == "address") {
-                    path = `severities.${severityIndex}.contracts-covered.${index}.${e.target.name}`
-                }
-                setPath(newObject, path, value)
-                return newObject
-            })
+        setContracts(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, "contracts", [...prev.contracts, {...newContract}])
+            return newObject
         })
     }
 
-    function severitiesToContracts(severities: ISeverity[]): { [key: string]: string } {
-        const contracts = {}
-        for (let severity of severities) {
-            severity["contracts-covered"].forEach(contract => {
-                let contractName = Object.keys(contract)[0]
-                contracts[contractName] = contract[contractName]
-
-            })
-        }
-        return contracts
+    function removeContract(index: number) {
+        let newContracts = removeFromArray(contracts, "contracts", index, newContract)
+        setContracts(newContracts);
     }
 
-    let contracts = severitiesToContracts(vaultDescription.severities)
-    console.log(contracts)
+    function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        setContracts(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, e.target.name, e.target.value)
+            return newObject
+        })
+    }
+
+    function severitiesToContracts() {
+        let contracts = [] as IContract[];
+        vaultDescription.severities.forEach((severity) => {
+            const contractsCovered = severity["contracts-covered"];
+            contractsCovered.forEach(item => {
+                const name = Object.keys(item)[0];
+                const address = Object.values(item)[0];
+                let contract = contracts.find(item => item.name === name && item.address === address);
+                if (contract) {
+                    let contractIndex = contracts.indexOf(contract)
+                    contracts[contractIndex] = {
+                        name,
+                        address,
+                        severities: [...contract.severities, severity.name]
+                    };
+                } else {
+                    contracts.push({
+                        name,
+                        address,
+                        severities: [severity.name]
+                    });
+                }
+            })
+        })
+        setContracts({ contracts });
+    }
 
     // Pagination in mobile
     function nextPage() {
@@ -213,8 +223,6 @@ export default function VaultEditor() {
             behavior: 'smooth'
         });
     }
-
-    contracts = severitiesToContracts(vaultDescription.severities)
 
     return (
         <div className="content vault-editor">
@@ -291,14 +299,12 @@ export default function VaultEditor() {
                     </p>
                     <div className="vault-editor__section-content">
                         <div className="contracts-covered">
-                            {(Object.entries(contracts) || []).map((contract, index) =>
+                            {(contracts.contracts || []).map((contract, index) =>
                                 <ContractCovered
                                     key={index}
-                                    contract={{ [contract[0]]: contract[1] }}
-                                    severities={vaultDescription.severities}
-                                    activeSeverities={vaultDescription.severities.filter(severity => severity["contracts-covered"].find(contractCovered => contractCovered[contract[0]]))}
+                                    contract={contract}
                                     index={index}
-                                    onChange={onChangeContract}
+                                    onChange={onContractChange}
                                     onRemove={removeContract}
                                 />)}
 
