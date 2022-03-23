@@ -108,16 +108,14 @@ export default function VaultExpanded(props: IProps) {
               </div>
             </div>
           </div>
-          {!props.preview && (
-            <div className="severity-prizes-wrapper">
-              <div className="sub-title">{t("Vault.severity-prizes")}</div>
-              <div className="severity-prizes-content">
-                <Severities
-                  severities={description?.severities}
-                  parentVault={props.data.parentVault} />
-              </div>
+          <div className="severity-prizes-wrapper">
+            <div className="sub-title">{t("Vault.severity-prizes")}</div>
+            <div className="severity-prizes-content">
+              <Severities
+                severities={description?.severities}
+                parentVault={props.data.parentVault} />
             </div>
-          )}
+          </div>
         </div>
       </td>
     </tr >
