@@ -18,6 +18,7 @@ export default function PgpKey({ onSelected }) {
 
   useEffect(() => {
     onSelected(vaultContext.selectedKey)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultContext.selectedKey])
 
   const SelectedKeypair = () =>

@@ -18,7 +18,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                     <EditableContent
                         textInput
                         name={`${basePath}.name`}
-                        value={member.name}
+                        value={member.name || ''}
                         onChange={onChange}
                         placeholder={t("VaultEditor.member-name-placeholder")}
                     />
@@ -27,7 +27,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                         textInput
                         pastable
                         name={`${basePath}.twitter-link`}
-                        value={member["twitter-link"]}
+                        value={member["twitter-link"] || ''}
                         onChange={onChange}
                         placeholder={t("VaultEditor.member-twitter-placeholder")}
                     />
@@ -36,7 +36,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                         textInput
                         pastable
                         name={`${basePath}.address`}
-                        value={member.address}
+                        value={member.address || ''}
                         onChange={onChange}
                         placeholder={t("VaultEditor.member-address-placeholder")}
                     />
@@ -46,7 +46,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                         <label>{t("VaultEditor.member-image")}</label>
                         <IconInput
                             name={`${basePath}.image-ipfs-link`}
-                            value={member["image-ipfs-link"]}
+                            value={member["image-ipfs-link"] || ''}
                             onChange={onChange} />
                     </div>
                 </div>

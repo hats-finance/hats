@@ -89,11 +89,14 @@ export default function VaultEditor() {
         if (params.ipfs) {
             (async () => {
                 const response = await fetch(IPFS_PREFIX + params.ipfs)
-                setVaultDescription(await response.json())
+                const newVaultDescription = await response.json()
+                severitiesToContracts(newVaultDescription)
+                setVaultDescription(newVaultDescription)
             })();
+        } else {
+            // convert severities of vault description to contracts state variable
+            severitiesToContracts(vaultDescription);
         }
-        // convert severities of vault description to contracts state variable
-        severitiesToContracts();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.search]);
 
@@ -205,7 +208,7 @@ export default function VaultEditor() {
         })
     }
 
-    function severitiesToContracts() {
+    function severitiesToContracts(vaultDescription: IVaultDescription) {
         let contracts = [] as IContract[];
         vaultDescription.severities.forEach((severity) => {
             const contractsCovered = severity["contracts-covered"];

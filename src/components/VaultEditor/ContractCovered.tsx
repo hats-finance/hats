@@ -25,7 +25,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove })
               <EditableContent
                 textInput
                 name={`${basePath}.name`}
-                value={contract.name}
+                value={contract.name || ''}
                 onChange={onChange}
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
@@ -34,7 +34,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove })
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
                 name={`${basePath}.severities`}
-                value={contract.severities}
+                value={contract.severities || ''}
                 onChange={onChange}
                 options={severitiesOptions} />
             </div>
@@ -44,7 +44,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove })
             textInput
             pastable
             name={`${basePath}.address`}
-            value={contract.address}
+            value={contract.address || ''}
             onChange={onChange}
             placeholder={t("VaultEditor.contract-address-placeholder")}
           />
