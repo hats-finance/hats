@@ -3,16 +3,9 @@ import EditableContent from "components/CommitteeTools/components/EditableConten
 import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 
-export default function ContractCovered({ index, contract, onChange, onRemove }) {
+export default function ContractCovered({ index, contract, onChange, onRemove, severitiesOptions }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
-
-  const severitiesOptions = [
-    { label: "Low", value: 'low' },
-    { label: "Medium", value: 'medium' },
-    { label: "High", value: 'high' },
-    { label: "Critical", value: 'critical' }
-  ];
 
   return (
     <>

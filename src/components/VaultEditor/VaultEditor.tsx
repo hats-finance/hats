@@ -66,7 +66,7 @@ export default function VaultEditor() {
     const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
     const [savingToIpfs, setSavingToIpfs] = useState(false)
-    const [ipfsDate, setIpfsDate] = useState<Date | undefined>(undefined)
+    const [ipfsDate, setIpfsDate] = useState<Date | undefined>()
     const location = useLocation();
 
     const vaultName = vaultDescription["project-metadata"].name
@@ -358,6 +358,9 @@ export default function VaultEditor() {
                                 <ContractCovered
                                     key={index}
                                     contract={contract}
+                                    severitiesOptions={vaultDescription.severities.map(severity => ({
+                                        label: severity.name, value: severity.name
+                                    }))}
                                     index={index}
                                     onChange={onContractChange}
                                     onRemove={removeContract}
