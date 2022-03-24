@@ -2,6 +2,7 @@ import { IVaultDescription } from "types/types";
 import axios from "axios"
 import { getPath, setPath } from "./objectUtils";
 import { RoutePaths } from "constants/constants";
+import { VAULT_SERVICE } from "settings";
 
 
 function isBlob(uri: string) {
@@ -14,7 +15,7 @@ async function pinFile(fileContents: any) {
 
 
     const response = await axios
-        .post(`${process.env.VAULT_SERVICE}/pinfile`, data, {
+        .post(`${VAULT_SERVICE}/pinfile`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'chain': 'rinkeby',
