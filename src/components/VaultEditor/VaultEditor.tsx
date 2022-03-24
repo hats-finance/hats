@@ -67,8 +67,9 @@ export default function VaultEditor() {
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
     const [savingToIpfs, setSavingToIpfs] = useState(false)
     const [ipfsDate, setIpfsDate] = useState<Date | undefined>(undefined)
-
     const location = useLocation();
+
+    const vaultName = vaultDescription["project-metadata"].name
 
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(location.search);
@@ -107,7 +108,7 @@ export default function VaultEditor() {
                 ...severity,
                 "nft-metadata": {
                     ...severity["nft-metadata"],
-                    "description": vaultDescription["project-metadata"].name + severity["nft-metadata"].description
+                    "description": vaultName + severity["nft-metadata"].description
                 },
                 "contracts-covered": contracts.contracts.filter((contract) => {
                     return contract.severities.includes(severity.name)
@@ -115,7 +116,7 @@ export default function VaultEditor() {
             })))
             return newObject
         })
-    }, [contracts, vaultDescription])
+    }, [contracts, vaultName])
 
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
