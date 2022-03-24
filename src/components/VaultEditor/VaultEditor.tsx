@@ -64,21 +64,29 @@ export default function VaultEditor() {
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
+    const [ipfsDate, setIpfsDate] = useState<Date | undefined>(undefined)
+    console.log(ipfsDate)
 
     const location = useLocation();
 
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
-        setLoadingFromIpfs(true)
         if (params.ipfs) {
             (async () => {
                 try {
                     setLoadingFromIpfs(true)
                     const response = await fetch(IPFS_PREFIX + params.ipfs)
+                    const lastModified = response.headers.get('last-modified')
+                    console.log(lastModified)
+                    if (lastModified) {
+                        setIpfsDate(new Date(lastModified))
+                    }
                     const newVaultDescription = await response.json()
                     severitiesToContracts(newVaultDescription)
                     setVaultDescription(newVaultDescription)
+                } catch (error) {
+                    console.error(error)
                 } finally {
                     setLoadingFromIpfs(false)
                 }
@@ -265,11 +273,13 @@ export default function VaultEditor() {
                 <p className="vault-editor__description">
                     {t("VaultEditor.create-vault-description")}
                 </p>
-                <div className="vault-editor__last-saved-time">
-                    {`${t("VaultEditor.last-saved-time")} `}
-                    2/14/2022 00:00
-                    {`(${t("VaultEditor.local-time")})`}
-                </div>
+                {ipfsDate &&
+                    <div className="vault-editor__last-saved-time">
+                        {`${t("VaultEditor.last-saved-time")} `}
+                        {ipfsDate.toLocaleString()}
+                        {`(${t("VaultEditor.local-time")})`}
+                    </div>
+                }
 
                 <div className="vault-editor__section">
                     <p className="vault-editor__section-title">
