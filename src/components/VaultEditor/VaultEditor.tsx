@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { ICommitteeMember, ISeverity, IVaultDescription } from "types/types"
+import { ICommitteeMember, IVaultDescription } from "types/types"
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
@@ -115,7 +115,7 @@ export default function VaultEditor() {
             })))
             return newObject
         })
-    }, [contracts, vaultDescription["project-metadata"].name])
+    }, [contracts, vaultDescription])
 
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
