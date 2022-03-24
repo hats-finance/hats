@@ -83,7 +83,7 @@ export interface ISeverity {
   "index": number
   "contracts-covered": { [key: string]: string }[]
   "nft-metadata": INFTMetaData
-  "reward-for": string
+  //  "reward-for": string
   "description": string
 }
 

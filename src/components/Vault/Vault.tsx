@@ -19,7 +19,7 @@ interface IProps {
 }
 
 export default function Vault(props: IProps) {
-  const [toggleRow, setToggleRow] = useState(false);
+  const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   const { name, isGuest, bounty, id, description } = props.data;
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.tokenPrice);
   const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.apy);

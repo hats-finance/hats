@@ -15,6 +15,7 @@ import { getPath, setPath } from "./objectUtils";
 import { useLocation } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
+import { severities } from './severities'
 
 interface IContract {
     name: string;
@@ -35,24 +36,6 @@ const newContract: IContract = {
     severities: [],
 }
 
-function createSeverity(severity: string): ISeverity {
-    return {
-        name: severity,
-        "contracts-covered": [],
-        index: 1,
-        "nft-metadata": {
-            "name": "",
-            "description": "",
-            "animation_url": "",
-            "image": "",
-            "external_url": ""
-        },
-        "reward-for": "",
-        "description": ""
-    }
-}
-
-
 const newVaultDescription: IVaultDescription = {
     "project-metadata": {
         name: "",
@@ -68,7 +51,7 @@ const newVaultDescription: IVaultDescription = {
         "multisig-address": "",
         members: [{ ...newMember }]
     },
-    severities: ["low", "medium", "high", "critical"].map(createSeverity),
+    severities,
     source: {
         name: "",
         url: ""
@@ -80,18 +63,25 @@ export default function VaultEditor() {
     const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription)
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
+    const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
 
     const location = useLocation();
 
     useEffect(() => {
         const urlSearchParams = new URLSearchParams(location.search);
         const params = Object.fromEntries(urlSearchParams.entries());
+        setLoadingFromIpfs(true)
         if (params.ipfs) {
             (async () => {
-                const response = await fetch(IPFS_PREFIX + params.ipfs)
-                const newVaultDescription = await response.json()
-                severitiesToContracts(newVaultDescription)
-                setVaultDescription(newVaultDescription)
+                try {
+                    setLoadingFromIpfs(true)
+                    const response = await fetch(IPFS_PREFIX + params.ipfs)
+                    const newVaultDescription = await response.json()
+                    severitiesToContracts(newVaultDescription)
+                    setVaultDescription(newVaultDescription)
+                } finally {
+                    setLoadingFromIpfs(false)
+                }
             })();
         } else {
             // convert severities of vault description to contracts state variable
@@ -102,21 +92,22 @@ export default function VaultEditor() {
 
     // Convert contracts state variable to severities of vault description
     useEffect(() => {
-        let severities = ["low", "medium", "high", "critical"].map((severityName) => {
-            const filterContracts = contracts.contracts.filter((contract) => {
-                return contract.severities.includes(severityName)
-            })
-            return {
-                ...createSeverity(severityName),
-                "contracts-covered": filterContracts.map((contract) => ({ [contract.name]: contract.address })),
-            }
-        })
         setVaultDescription(prev => {
             let newObject = { ...prev }
-            setPath(newObject, "severities", severities)
+            setPath(newObject, "severities", severities.map(severity =>
+            ({
+                ...severity,
+                "nft-metadata": {
+                    ...severity["nft-metadata"],
+                    "description": vaultDescription["project-metadata"].name + severity["nft-metadata"].description
+                },
+                "contracts-covered": contracts.contracts.filter((contract) => {
+                    return contract.severities.includes(severity.name)
+                }).map((contract) => ({ [contract.name]: contract.address }))
+            })))
             return newObject
         })
-    }, [contracts])
+    }, [contracts, vaultDescription["project-metadata"].name])
 
 
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -258,6 +249,10 @@ export default function VaultEditor() {
             left: 0,
             behavior: 'smooth'
         });
+    }
+
+    if (loadingFromIpfs) {
+        return <div>Loading...</div>
     }
 
     return (
