@@ -31,7 +31,7 @@ async function pinFile(fileContents: any) {
 
 async function pinJson(object: any) {
     const response = await axios
-        .post(`${process.env.REACT_APP_API_URL}/pinjson`, object, {
+        .post(`${VAULT_SERVICE}/pinjson`, object, {
             headers: {
                 'Content-Type': 'application/json',
                 'chain': 'rinkeby',
