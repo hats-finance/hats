@@ -14,7 +14,7 @@ async function pinFile(fileContents: any) {
 
 
     const response = await axios
-        .post(`${process.env.REACT_APP_API_URL}/pinfile`, data, {
+        .post(`${process.env.VAULT_SERVICE}/pinfile`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
                 'chain': 'rinkeby',
