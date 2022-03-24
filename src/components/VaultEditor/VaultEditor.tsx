@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
+import Loading from "components/Shared/Loading";
 
 interface IContract {
     name: string;
@@ -64,8 +65,8 @@ export default function VaultEditor() {
     const [pageNumber, setPageNumber] = useState<number>(1)
     const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
+    const [savingToIpfs, setSavingToIpfs] = useState(false)
     const [ipfsDate, setIpfsDate] = useState<Date | undefined>(undefined)
-    console.log(ipfsDate)
 
     const location = useLocation();
 
@@ -78,7 +79,6 @@ export default function VaultEditor() {
                     setLoadingFromIpfs(true)
                     const response = await fetch(IPFS_PREFIX + params.ipfs)
                     const lastModified = response.headers.get('last-modified')
-                    console.log(lastModified)
                     if (lastModified) {
                         setIpfsDate(new Date(lastModified))
                     }
@@ -238,6 +238,18 @@ export default function VaultEditor() {
         setContracts({ contracts });
     }
 
+    async function saveToIpfs() {
+        try {
+            setSavingToIpfs(true)
+            await uploadVaultDescription(vaultDescription)
+        } catch (error) {
+            console.error(error)
+        }
+        finally {
+            setSavingToIpfs(false)
+        }
+    }
+
     // Pagination in mobile
     function nextPage() {
         if (pageNumber >= 5) return
@@ -259,8 +271,8 @@ export default function VaultEditor() {
         });
     }
 
-    if (loadingFromIpfs) {
-        return <div>Loading...</div>
+    if (loadingFromIpfs || savingToIpfs) {
+        return <Loading fixed />
     }
 
     return (
@@ -376,9 +388,7 @@ export default function VaultEditor() {
                 </div>
 
                 <div className="vault-editor__button-container">
-                    <button onClick={() => {
-                        uploadVaultDescription(vaultDescription)
-                    }} className="fill">{t("VaultEditor.save-button")}</button>
+                    <button onClick={saveToIpfs} className="fill">{t("VaultEditor.save-button")}</button>
                 </div>
             </section>
 
