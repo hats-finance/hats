@@ -10,8 +10,8 @@ interface IProps {
 }
 
 export default function ClaimSuccess({ tokenAmount, backToAirdrop }: IProps) {
-  const twitterShareText = "Checkout HATS on twitter!";
-  const twitterShareLink = `https://twitter.com/intent/tweet?text=${twitterShareText}&url=${encodeURIComponent(SocialLinks.Twitter)}`;
+  // &url=${encodeURIComponent(SocialLinks.Twitter)}
+  const twitterShareLink = `https://twitter.com/intent/tweet?text=${t("Airdrop.TokenAirdrop.Success.twitter-share-text")}`;
   return (
     <div className="claim-success-wrapper">
       <h3>{t("Airdrop.TokenAirdrop.Success.title")}</h3>
