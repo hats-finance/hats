@@ -106,12 +106,12 @@ export default function CommunicationChannel({ communicationChannel, onChange, a
             <div>
                 <button onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
                 {pgpError && <div>{pgpError}</div>}
-                <div className="signees">
+                <div className="pgp-key__list">
                     {publicKeys.map((key, index) => (
-                        <div key={index} className="signees__signee">
-                            <div className="signees__signee-number">{index + 1}</div>
-                            <div className="signees__signee-content">
-                                {key.split("\n")[2].substring(0, 30) + "..."}
+                        <div key={index} className="pgp-key__list-key">
+                            <div className="pgp-key__list-key-number">{index + 1}</div>
+                            <div className="pgp-key__list-key-content">
+                                <span>{key.split("\n")[2].substring(0, 30) + "..."}</span>
                                 <button onClick={() => removePgpKey(index)}>{t("VaultEditor.remove-pgp")}</button>
                             </div>
                         </div>
