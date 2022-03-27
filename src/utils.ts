@@ -500,3 +500,17 @@ export const normalizeAddress = (address: string) => {
 export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
+
+/**
+ * Get safes for a given weallet from gnosis safe api
+ * @param {string} walletAddress
+ */
+export const getSafesOwnedBy = async (walletAddress: string) => {
+  let api
+  switch (NETWORK) {
+    case Networks.main: api = "https://safe-transaction.gnosis.io/api/v1"; break;
+    case Networks.rinkeby: api = "https://safe-transaction.rinkeby.gnosis.io/api/v1"; break;
+  }
+  const response = await fetch(`${api}?/owners/${walletAddress}/safes/`);
+  return await response.json();
+}

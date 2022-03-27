@@ -17,6 +17,7 @@ import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
+import { getSafesOwnedBy } from "utils";
 
 interface IContract {
     name: string;
@@ -140,6 +141,12 @@ export default function VaultEditor() {
             setPath(newObject, e.target.name, value)
             return newObject
         })
+    }
+
+    async function onMultiFocus(e) {
+        onChange(e)
+        const safes = await getSafesOwnedBy(e.target.value)
+        console.log({ safes })
     }
 
     function removeFromArray(object, path: string, index: number, newItem?: object) {
