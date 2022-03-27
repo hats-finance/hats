@@ -245,7 +245,9 @@ function App() {
         <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
         <Route path={RoutePaths.pools} element={<LiquidityPools />} />
         <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
-        <Route path={RoutePaths.vault_editor} element={<VaultEditor />} />
+        <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
+          <Route path=":ipfsHash" element={<VaultEditor />} />
+        </Route>
         <Route path={RoutePaths.nft_airdrop} element={<NFTAirdrop />} />
       </Routes>
       {

@@ -12,12 +12,11 @@ import VaultSign from "./VaultSign";
 import './index.scss'
 import { uploadVaultDescription } from "./uploadVaultDescription";
 import { getPath, setPath } from "./objectUtils";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
-import { getSafesOwnedBy } from "utils";
 
 interface IContract {
     name: string;
@@ -68,37 +67,39 @@ export default function VaultEditor() {
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
     const [savingToIpfs, setSavingToIpfs] = useState(false)
     const [ipfsDate, setIpfsDate] = useState<Date | undefined>()
-    const location = useLocation();
+    const { ipfsHash } = useParams()
 
     const vaultName = vaultDescription["project-metadata"].name
 
+    async function loadFromIpfs(ipfsHash) {
+        try {
+            setLoadingFromIpfs(true)
+            const response = await fetch(IPFS_PREFIX + ipfsHash)
+            const lastModified = response.headers.get('last-modified')
+            if (lastModified) {
+                setIpfsDate(new Date(lastModified))
+            }
+            const newVaultDescription = await response.json()
+            severitiesToContracts(newVaultDescription)
+            setVaultDescription(newVaultDescription)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoadingFromIpfs(false)
+        }
+    }
+
     useEffect(() => {
-        const urlSearchParams = new URLSearchParams(location.search);
-        const params = Object.fromEntries(urlSearchParams.entries());
-        if (params.ipfs) {
+        if (ipfsHash) {
             (async () => {
-                try {
-                    setLoadingFromIpfs(true)
-                    const response = await fetch(IPFS_PREFIX + params.ipfs)
-                    const lastModified = response.headers.get('last-modified')
-                    if (lastModified) {
-                        setIpfsDate(new Date(lastModified))
-                    }
-                    const newVaultDescription = await response.json()
-                    severitiesToContracts(newVaultDescription)
-                    setVaultDescription(newVaultDescription)
-                } catch (error) {
-                    console.error(error)
-                } finally {
-                    setLoadingFromIpfs(false)
-                }
+                await loadFromIpfs(ipfsHash)
             })();
         } else {
             // convert severities of vault description to contracts state variable
             severitiesToContracts(vaultDescription);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [location.search]);
+    }, [ipfsHash]);
 
     // Convert contracts state variable to severities of vault description
     useEffect(() => {
@@ -141,12 +142,6 @@ export default function VaultEditor() {
             setPath(newObject, e.target.name, value)
             return newObject
         })
-    }
-
-    async function onMultiFocus(e) {
-        onChange(e)
-        const safes = await getSafesOwnedBy(e.target.value)
-        console.log({ safes })
     }
 
     function removeFromArray(object, path: string, index: number, newItem?: object) {
