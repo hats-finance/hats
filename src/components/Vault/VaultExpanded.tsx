@@ -4,7 +4,6 @@ import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
 import Severities from "./Severities/Severities";
-import { useHistory } from "react-router-dom";
 import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
@@ -15,6 +14,7 @@ import VaultAction from "./VaultAction";
 import { isMobile } from "web3modal";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import "./VaultExpanded.scss";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   data: IVault
@@ -27,7 +27,7 @@ interface IProps {
 export default function VaultExpanded(props: IProps) {
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, isGuest, parentDescription, description } = props.data;
-  const history = useHistory();
+  const navigate = useNavigate()
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const pieChartData = [
@@ -75,14 +75,14 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
+                  <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
                   <Multisig multisigAddress={isGuest ? parentDescription?.committee["multisig-address"] || "" : description.committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
+                  <button onClick={() => { setVulnerabilityProject(name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
