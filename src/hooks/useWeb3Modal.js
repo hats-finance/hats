@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { NETWORK, INFURA_ID, WALLET_CONNECT_RPC } from "../settings";
@@ -40,15 +39,18 @@ function useWeb3Modal(config = {}) {
   // Open wallet selection modal.
   const loadWeb3Modal = useCallback(async () => {
     const newProvider = await web3Modal.connect();
-    setProvider(new Web3Provider(newProvider));
+    setProvider(newProvider);
   }, [web3Modal]);
 
   const logoutOfWeb3Modal = useCallback(
     async function () {
       await web3Modal.clearCachedProvider();
+      if (provider instanceof WalletConnectProvider) {
+        await provider.disconnect()
+      }
       window.location.reload();
     },
-    [web3Modal],
+    [web3Modal, provider],
   );
 
   // If autoLoad is enabled and the the wallet had been loaded before, load it automatically now.

@@ -7,8 +7,6 @@ import { useTranslation } from "react-i18next";
 
 import {
   changeScreenSize,
-  updateSelectedAddress,
-  toggleNotification,
   updateVaults,
   updateRewardsToken,
   updateHatsPrice,
@@ -16,7 +14,6 @@ import {
   updateAirdropEligibleTokens,
 } from "./actions/index";
 import {
-  getNetworkNameByChainId,
   getTokenPrice,
   calculateApy,
   getWithdrawSafetyPeriod,
@@ -24,11 +21,10 @@ import {
   getTokensPrices,
   parseJSONToObject,
 } from "./utils";
-import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
+import { DATA_POLLING_INTERVAL } from "./settings";
 import {
   IPFS_PREFIX,
   LocalStorage,
-  NotificationType,
   RoutePaths,
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -53,8 +49,6 @@ import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
 import axios from "axios";
 import "./i18n.ts"; // Initialise i18n
-import { Web3Provider } from "@ethersproject/providers";
-import WalletConnectProvider from "@walletconnect/web3-provider";
 
 function App() {
   const dispatch = useDispatch();
@@ -62,7 +56,6 @@ function App() {
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
@@ -73,37 +66,12 @@ function App() {
     if (language && language !== i18n.language) i18n.changeLanguage(language);
   }, [i18n]);
 
-  useEffect(() => {
-    const network = getNetworkNameByChainId(provider?.chainId);
-    if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
-    }
-  }, [dispatch, provider]);
-
   const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
-
-  useEffect(() => {
-    if (provider) {
-      if (provider instanceof Web3Provider) {
-        provider.on("accountsChanged", (accounts) => {
-          dispatch(updateSelectedAddress(normalizeAddress(accounts[0])));
-        });
-        provider.on("chainChanged", (chainId) => {
-          // Handle the new chain.
-          // Correctly handling chain changes can be complicated.
-          // We recommend reloading the page unless you have good reason not to.
-          window.location.reload();
-        });
-      } else if (provider instanceof WalletConnectProvider) {
-        dispatch(updateSelectedAddress(normalizeAddress(provider.accounts[0])));
-      }
-    }
-  }, [provider, dispatch])
 
   const {
     loading: loadingRewardsToken,

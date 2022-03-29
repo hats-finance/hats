@@ -2,7 +2,7 @@ import * as types from "../constants/action-types";
 import { ScreenSize, NotificationType } from "../constants/constants";
 import { EligibleTokens, IVault, IWithdrawSafetyPeriod } from "../types/types";
 
-export const connect = ({ provider }: any) => ({
+export const connect = (provider: any) => ({
   type: types.CONNECT,
   provider
 })
@@ -16,6 +16,11 @@ export const updateWalletBalance = (ethBalance: any, hatsBalance: any) => ({
   type: types.UPDATE_WALLET_BALANCE,
   ethBalance,
   hatsBalance
+})
+
+export const updateNetwork = (network: string) => ({
+  type: types.UPDATE_NETWORK,
+  network
 })
 
 export const changeScreenSize = (screenSize: ScreenSize) => ({

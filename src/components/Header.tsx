@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import useWeb3Modal from "../hooks/useWeb3Modal";
-import { connect, toggleMenu } from "../actions/index";
+import { connect, toggleMenu, toggleNotification, updateNetwork, updateSelectedAddress, updateWalletBalance } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getNetworkNameByChainId,
@@ -9,7 +9,7 @@ import {
 } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import { ScreenSize } from "../constants/constants";
+import { NotificationType, ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
 import Modal from "./Shared/Modal";
@@ -22,6 +22,8 @@ import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
+import { Web3Provider } from "@ethersproject/providers";
+import { ethers } from "ethers";
 
 export default function Header() {
   const location = useLocation();
@@ -51,8 +53,38 @@ export default function Header() {
   );
 
   useEffect(() => {
-    dispatch(connect(provider || {}));
+    if (provider) {
+      const actualProvider = new Web3Provider(provider)
+      dispatch(connect(actualProvider));
+      (async () => {
+        const network = (await actualProvider.getNetwork()).name
+        dispatch(updateNetwork(network));
+        if (network !== NETWORK) {
+          dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
+        }
+        const signer = await actualProvider.getSigner()
+        dispatch(updateSelectedAddress(await signer.getAddress()))
+        dispatch(updateWalletBalance(ethers.utils.formatEther(await signer.getBalance()), null))
+        if (actualProvider) {
+          actualProvider.on("accountsChanged", (accounts) => {
+            console.log("accountsChanged", accounts);
+            dispatch(updateSelectedAddress(accounts[0]));
+          });
+          actualProvider.on("chainChanged", (chainId) => {
+            // Handle the new chain.
+            // Correctly handling chain changes can be complicated.
+            // We recommend reloading the page unless you have good reason not to.
+            window.location.reload();
+          });
+          // if (provider instanceof WalletConnectProvider) {
+          //   dispatch(updateSelectedAddress(normalizeAddress(provider.accounts[0])));
+          // }
+
+        }
+      })()
+    }
   }, [provider, dispatch]);
+
 
   useEffect(() => {
     const getWalletBalance = async () => {
@@ -82,12 +114,12 @@ export default function Header() {
       {provider && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||
         (screenSize === ScreenSize.Mobile && !inTransaction)) && (
-        <WalletButton
-          provider={provider}
-          loadWeb3Modal={loadWeb3Modal}
-          logoutOfWeb3Modal={logoutOfWeb3Modal}
-        />
-      )}
+          <WalletButton
+            provider={provider}
+            loadWeb3Modal={loadWeb3Modal}
+            logoutOfWeb3Modal={logoutOfWeb3Modal}
+          />
+        )}
 
       {screenSize === ScreenSize.Mobile && (
         <div onClick={() => dispatch(toggleMenu(!showMenu))}>
