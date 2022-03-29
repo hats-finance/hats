@@ -53,6 +53,8 @@ import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
 import axios from "axios";
 import "./i18n.ts"; // Initialise i18n
+import { Web3Provider } from "@ethersproject/providers";
+import WalletConnectProvider from "@walletconnect/web3-provider";
 
 function App() {
   const dispatch = useDispatch();
@@ -85,18 +87,23 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  if (window.ethereum) {
-    window.ethereum.on("accountsChanged", (accounts) => {
-      dispatch(updateSelectedAddress(normalizeAddress(accounts[0])));
-    });
-
-    window.ethereum.on("chainChanged", (chainId) => {
-      // Handle the new chain.
-      // Correctly handling chain changes can be complicated.
-      // We recommend reloading the page unless you have good reason not to.
-      window.location.reload();
-    });
-  }
+  useEffect(() => {
+    if (provider) {
+      if (provider instanceof Web3Provider) {
+        provider.on("accountsChanged", (accounts) => {
+          dispatch(updateSelectedAddress(normalizeAddress(accounts[0])));
+        });
+        provider.on("chainChanged", (chainId) => {
+          // Handle the new chain.
+          // Correctly handling chain changes can be complicated.
+          // We recommend reloading the page unless you have good reason not to.
+          window.location.reload();
+        });
+      } else if (provider instanceof WalletConnectProvider) {
+        dispatch(updateSelectedAddress(normalizeAddress(provider.accounts[0])));
+      }
+    }
+  }, [provider, dispatch])
 
   const {
     loading: loadingRewardsToken,

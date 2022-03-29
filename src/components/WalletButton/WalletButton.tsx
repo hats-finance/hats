@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { isMobile } from "web3modal";
 import { Colors, ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { isEthereumProvider, truncatedAddress } from "../../utils";
@@ -17,18 +16,12 @@ export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Moda
   const handleClick = () => {
     if (!provider) {
       loadWeb3Modal();
-      /** 
-       * Warn the user in case no window.ethereum is detected on mobile.
-       * Should be solved in more mobile browsers in future updates of WalletConnect.
-       */
-      if (!isEthereumProvider() && isMobile()) {
+      if (!isEthereumProvider()) {
         console.warn("No Ethereum provider detected. We recommend to use the built-in browser of your wallet to interact with the blockchain.");
-        setShowNoEthereumPrompt(true);
       }
-    } else if (screenSize === ScreenSize.Desktop) {
+    }
+    else {
       logoutOfWeb3Modal();
-    } else {
-      setShowDisconnectPrompt(true);
     }
   }
 

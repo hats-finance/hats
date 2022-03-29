@@ -67,19 +67,23 @@ export const truncatedAddress = (address: string): string => {
  * Returns network name by it's chainId
  * @param {string} chainId
  */
-export const getNetworkNameByChainId = (chainId: string): Networks | string => {
+export const getNetworkNameByChainId = (chainId: string | number): Networks | string => {
   switch (chainId) {
     case "0x1":
     case "1":
+    case 1:
       return Networks.main;
     case "100":
     case "0x64":
+    case 100:
       return Networks.xdai;
     case "4":
     case "0x4":
+    case 4:
       return Networks.rinkeby;
     case "0x2a":
     case "42":
+    case 42:
       return Networks.kovan;
     default:
       return `unsupported network: ${chainId}`;

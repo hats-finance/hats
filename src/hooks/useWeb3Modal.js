@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState, useMemo } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { NETWORK, INFURA_ID } from "../settings";
+import { NETWORK, INFURA_ID, WALLET_CONNECT_RPC } from "../settings";
+import { NetworksIDs } from "../constants/constants";
 
 function useWeb3Modal(config = {}) {
   const [provider, setProvider] = useState();
@@ -20,6 +21,9 @@ function useWeb3Modal(config = {}) {
           package: WalletConnectProvider,
           options: {
             infuraId,
+            rpc: {
+              [NetworksIDs[NETWORK]]: WALLET_CONNECT_RPC,
+            }
           },
         },
       },
