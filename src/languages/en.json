@@ -44,7 +44,7 @@
       }
     },
     "Airdrop": {
-      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop \n “The Crow Clan” and the HATS Token airdrop.",
+      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
       "search-placeholder": "Enter wallet address",
       "search-error": "Please enter a valid address",
       "not-eligible-nft": "This address is not eligible to NFT airdrop",
@@ -57,6 +57,7 @@
           "claim": "Claim your hats"
         },
         "CheckEligibility": {
+          "title": "HATS TOKEN AIRDROP",
           "claim-amount": "Total available to claim",
           "token-claim-continue": "START CLAIMING PROCESS"
         },
@@ -91,7 +92,7 @@
         }
       },
       "NFTAirdrop": {
-        "your-nft": "Your Crow Clan NFT",
+        "your-nft": "CROW CLAN NFT AIRDROP",
         "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
         "redeem-success": "NFT redeemed successfully"
       }

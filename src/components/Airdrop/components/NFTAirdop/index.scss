@@ -2,6 +2,11 @@
 
 .nft-airdrop-wrapper {
   margin: 50px 0;
+  border: 1px solid $light-gray;
+  legend {
+    color: $white;
+    font-weight: bold;
+  }
   .nft-container-wrapper {
     display: flex;
     justify-content: space-between;
@@ -16,8 +21,8 @@
       align-items: center;
       margin-top: 5px;
       .nft-image {
-        width: 300px;
-        height: 300px;
+        width: 250px;
+        height: 250px;
         margin-bottom: 20px;
       }
       .redeem-btn {

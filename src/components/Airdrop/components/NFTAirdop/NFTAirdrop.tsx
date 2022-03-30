@@ -77,8 +77,8 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
   }
 
   return (
-    <div className="nft-airdrop-wrapper">
-      <span>{t("Airdrop.NFTAirdrop.your-nft")}</span>
+    <fieldset className="nft-airdrop-wrapper">
+      <legend>{t("Airdrop.NFTAirdrop.your-nft")}</legend>
       <div className="nft-container-wrapper">
         <span className="nft-text">{t("Airdrop.NFTAirdrop.nft-text")}</span>
         <div className="nft-container">
@@ -105,6 +105,6 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
           )}
         </div>
       </div>
-    </div>
+    </fieldset>
   )
 }

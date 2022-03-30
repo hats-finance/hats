@@ -7,17 +7,17 @@
   align-items: center;
 
   .airdorp-content {
-    max-width: $element-max-width;
+    max-width: 700px;
     margin: auto;
     width: 100%;
     .search-wrapper {
       display: flex;
       flex-direction: column;
+      color: $white;
       .input-container {
         border: 1px solid $turquoise;
         margin: 40px 0px 5px 0px;
         display: flex;
-        width: 500px;
         .address-input {
           border: none;
           background: none;

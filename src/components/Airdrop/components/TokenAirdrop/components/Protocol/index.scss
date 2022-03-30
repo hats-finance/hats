@@ -2,10 +2,14 @@
 
 .protocol-wrapper {
   color: $white;
+  p {
+    margin-bottom: 40px;
+  }
   .actions-wrapper {
     display: flex;
     justify-content: space-between;
     margin-top: 100px;
+    margin-bottom: 20px;
     button {
       width: 150px;
     }

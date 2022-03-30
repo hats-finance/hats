@@ -4,6 +4,8 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 50px;
+  background-color: $moderate-blue;
+  padding: 25px;
   .stage-element {
     display: flex;
     align-items: center;
@@ -28,5 +30,9 @@
   .progress-bar-wrapper {
     flex-direction: column;
     margin-bottom: 30px;
+    padding: 5px;
+    .stage-element {
+      margin-bottom: 10px;
+    }
   }
 }
