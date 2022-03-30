@@ -214,6 +214,30 @@
       "withdrawal-available": "WITHDRAWAL AVAILABLE",
       "prize-division": "Prize Content Division",
       "submit-vulnerability": "SUBMIT VULNERABILITY"
+    },
+    "BountyPayout": {
+      "create": "CREATE BOUNTY PAYOUT",
+      "pgp-not-recognized": "The PGP key wasn’t recognized please",
+      "last-saved-time": "Last updated on",
+      "local-time": "local time",
+      "signed-pgp": "Signed PGP key",
+      "decrypted-message": "Decrypted Message",
+      "payout-details": "Payout Details",
+      "revert": "Revert",
+      "new": "New",
+      "add-wallet-address": "Add Beneficiary wallet address",
+      "wallet-address": "Beneficiary wallet address",
+      "severity": "Severity",
+      "severity-description": "Severity description",
+      "severity-description-content": "A bug is considered critical severity if it enables an attack that could lead to loss of funds of greater than $1M. Prize will be capped to the amount that could be frozen, extracted or at risk in production at the time of disclosure.",
+      "payout": "Payout",
+      "payout-severity-desc": "The payout is calculated automatically when choosing a severity",
+      "clear": "Clear",
+      "create-payout-transaciton": "Create Payout transaction",
+      "signees": "signees",
+      "signees-desc": "Once all the sigatures are collected you can execute the transaction during the safe period.",
+      "approved-signees": "Approved signees",
+      "pending-signees": "Pending signees"
     }
   }
 }

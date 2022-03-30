@@ -9,7 +9,7 @@ interface IMultiSelectOption {
 }
 
 interface IProps {
-  name: string;
+  name?: string;
   value: Array<string | number>;
   options: IMultiSelectOption[];
   onChange: Function;

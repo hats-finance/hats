@@ -20,7 +20,8 @@ export enum RoutePaths {
   pools = "/pools",
   nft_airdrop = "/nft_airdrop/",
   committee_tools = "/committee-tools",
-  vault_editor = "/vault-editor"
+  vault_editor = "/vault-editor",
+  submission = "/bounty-payout"
 }
 
 export enum Networks {

@@ -1,0 +1,168 @@
+@import "../../styles/constants.scss";
+
+.bounty-payout {
+  &__title {
+    color: $white;
+    font-size: $medium;
+    line-height: 32px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+  &__description {
+    color: $white;
+    font-size: $small;
+    line-height: 21px;
+    margin-bottom: 40px;
+  }
+  &__section {
+    margin-bottom: 60px;
+    &-title {
+      color: $white;
+      font-size: $small;
+      margin: 0;
+      padding: 0 0 16px;
+      text-transform: uppercase;
+    }
+    .pgp-key {
+      button {
+        margin: 0;
+      }
+      > div:first-child {
+        margin-bottom: 24px;
+      }
+    }
+    .payout-details {
+      &__header {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid $vault-editor-border;
+        margin-bottom: 30px;
+      }
+      &__actions {
+        display: flex;
+        justify-content: space-between;
+      }
+      &__last-saved-time {
+        margin: 0;
+        font-size: $xxsmall;
+      }
+      &__buttons {
+        button {
+          margin: 0;
+          margin-left: 20px;
+          padding: 8px 16px;
+        }
+      }
+      &__content {
+        border: 1px solid $vault-editor-border-2;
+        padding: 30px 20px;
+      }
+      &__address {
+        margin-bottom: 40px;
+        .pastable-content {
+          width: 60%;
+          input {
+            text-indent: 0px;
+          }
+        }
+      }
+      &__severity {
+        margin-bottom: 30px;
+        &-desc {
+          label {
+            color: $dark-turquoise;
+          }
+          p {
+            color: $white;
+            margin: 0;
+          }
+        }
+      }
+    }
+    .payout {
+      &__content {
+        border: 1px solid $vault-editor-border-2;
+        padding: 30px 20px;
+      }
+      &__severity {
+        display: flex;
+        justify-content: space-between;
+        border: 1px solid $turquoise;
+        padding: 30px 20px;
+        p {
+          margin: 0;
+        }
+        &-title {
+          color: $turquoise;
+          font-size: $moderate;
+        }
+        &-value {
+          color: $turquoise;
+          font-size: $medium;
+        }
+        &-desc {
+          margin-top: 4px;
+          color: $dark-turquoise;
+        }
+      }
+    }
+    .signees {
+      &__content {
+        border: 1px solid $vault-editor-border-2;
+        padding: 30px 20px;
+        margin-bottom: 30px;
+        > div:last-child {
+          margin-bottom: 0;
+        }
+      }
+      &__title {
+        color: $white;
+        margin-bottom: 30px;
+      }
+      &__signee {
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        &-number {
+          flex-shrink: 0;
+          color: $white;
+          width: 40px;
+          height: 40px;
+          margin-right: 24px;
+          border: 1px solid $turquoise;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-sizing: border-box;
+        }
+        &-content {
+          flex: 1 0;
+          color: $white;
+          word-break: break-all;
+        }
+      }
+      &__desc {
+        color: $white;
+      }
+    }
+    label {
+      display: inline-block;
+      color: $white;
+      padding-bottom: 8px;
+    }
+  }
+  &__actions {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 60px;
+
+    button {
+      padding: 8px 32px;
+    }
+  }
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    margin-left: 20px !important;
+    margin-right: 20px !important;
+  }
+}
