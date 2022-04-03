@@ -2,6 +2,7 @@ import React from 'react';
 import { t } from "i18next";
 import AddIcon from "assets/icons/add.icon.svg";
 import './IconEditor.scss'
+import { ipfsTransformUri } from 'utils';
 
 const IconInput = ({ value, onChange, name }: {
     value: string | undefined,
@@ -33,7 +34,7 @@ const IconInput = ({ value, onChange, name }: {
                 {value && (
                     <label htmlFor={`icon-input-${name}`} className="preview">
                         <img
-                            src={value}
+                            src={ipfsTransformUri(value)}
                             alt="Thumb"
                         />
                     </label>
