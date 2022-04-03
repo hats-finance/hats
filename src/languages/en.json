@@ -149,6 +149,7 @@
       "last-saved-time": "Last updated on",
       "local-time": "local time",
       "remove-pgp": "Remove Key",
+      "reset-button": "Reset",
       "vault-details": {
         "title": "Vault Details",
         "name": "Name",
@@ -159,6 +160,7 @@
         "website-placeholder": "Link website",
         "multisig-address-placeholder": "Committee multisig address"
       },
+      "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
       "committee": "Committee",
       "pgp-key": "PGP Public Key",

@@ -1,26 +1,22 @@
 import { useTranslation } from "react-i18next";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 
-export default function VaultSign() {
+export default function VaultSign({ signatures, onChange, message }) {
   const { t } = useTranslation();
   return (
     <>
       <label>{t("VaultEditor.sign-message")}</label>
-      <EditableContent removable name="sign_message" />
+      <EditableContent onChange={onChange} value={message} removable name="sign_message" />
       <label>{t("VaultEditor.signees")}</label>
       <div className="signees">
-        <div className="signees__signee">
-          <div className="signees__signee-number">1</div>
-          <div className="signees__signee-content">
-            2345fhgf345678909087654kjghfdssdfg
+        {signatures.map((signature, index) => (
+          <div className="signees__signee">
+            <div className="signees__signee-number">{index + 1}</div>
+            <div className="signees__signee-content">
+              {signature}
+            </div>
           </div>
-        </div>
-        <div className="signees__signee">
-          <div className="signees__signee-number">2</div>
-          <div className="signees__signee-content">
-            2345fhgf345678909087654kjghfdssdfg
-          </div>
-        </div>
+        ))}
       </div>
     </>
   );

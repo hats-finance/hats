@@ -10,14 +10,13 @@ import CommunicationChannel from "./CommunicationChannel";
 import VaultReview from "./VaultReview";
 import VaultSign from "./VaultSign";
 import './index.scss'
-import { uploadVaultDescription } from "./uploadVaultDescription";
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
-
+import { uploadVaultDescription } from "./vaultService";
 interface IContract {
     name: string;
     address: string;
@@ -45,7 +44,7 @@ const newVaultDescription: IVaultDescription = {
         website: "",
     },
     "communication-channel": {
-        "committee-bot": "",
+        "committee-bot": "https://demo-bot-hats.herokuapp.com/broadcast-message/",
         "pgp-pk": "",
     },
     committee: {
@@ -66,6 +65,7 @@ export default function VaultEditor() {
     const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] })
     const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false)
     const [savingToIpfs, setSavingToIpfs] = useState(false)
+    const [changed, setChanged] = useState(false)
     const [ipfsDate, setIpfsDate] = useState<Date | undefined>()
     const { ipfsHash } = useParams()
 
@@ -82,6 +82,7 @@ export default function VaultEditor() {
             const newVaultDescription = await response.json()
             severitiesToContracts(newVaultDescription)
             setVaultDescription(newVaultDescription)
+            setChanged(false)
         } catch (error) {
             console.error(error)
         } finally {
@@ -120,7 +121,6 @@ export default function VaultEditor() {
         })
     }, [contracts, vaultName])
 
-
     function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
         let value
         if (e.target instanceof HTMLInputElement) {
@@ -142,6 +142,7 @@ export default function VaultEditor() {
             setPath(newObject, e.target.name, value)
             return newObject
         })
+        setChanged(true)
     }
 
     function removeFromArray(object, path: string, index: number, newItem?: object) {
@@ -159,6 +160,7 @@ export default function VaultEditor() {
             setPath(newObject, "committee.members", [...prev.committee.members, { ...newMember }])
             return newObject
         })
+        setChanged(true)
     }
 
     function addPgpKey(pgpKey) {
@@ -171,6 +173,7 @@ export default function VaultEditor() {
             setPath(newObject, "communication-channel.pgp-pk", [...sureArray, pgpKey])
             return newObject
         })
+        setChanged(true)
     }
 
     function removePgpKey(index: number) {
@@ -186,11 +189,13 @@ export default function VaultEditor() {
             let newVaultDescription = removeFromArray(vaultDescription, "communication-channel.pgp-pk", index)
             setVaultDescription(newVaultDescription);
         }
+        setChanged(true)
     }
 
     function removeMember(index: number) {
         let newVaultDescription = removeFromArray(vaultDescription, "committee.members", index, newMember)
         setVaultDescription(newVaultDescription);
+        setChanged(true)
     }
 
     function addContract() {
@@ -199,6 +204,7 @@ export default function VaultEditor() {
             setPath(newObject, "contracts", [...prev.contracts, { ...newContract }])
             return newObject
         })
+        setChanged(true)
     }
 
     function removeContract(index: number) {
@@ -250,6 +256,11 @@ export default function VaultEditor() {
         }
         finally {
             setSavingToIpfs(false)
+        }
+    }
+
+    async function sign() {
+        if (ipfsHash) {
         }
     }
 
@@ -393,9 +404,6 @@ export default function VaultEditor() {
                     </div>
                 </div>
 
-                <div className="vault-editor__button-container">
-                    <button onClick={saveToIpfs} className="fill">{t("VaultEditor.save-button")}</button>
-                </div>
             </section>
 
             <div className="vault-editor__divider desktop-only"></div>
@@ -407,14 +415,39 @@ export default function VaultEditor() {
                     </p>
                     <div className="vault-editor__section-content">
                         <VaultReview vaultDescription={vaultDescription} />
-                        <VaultSign />
                     </div>
                 </div>
-
-                <div className="vault-editor__button-container">
-                    <button className="fill">{t("VaultEditor.sign-submit")}</button>
-                </div>
             </section>
+
+            {
+                changed &&
+                <div className="vault-editor__button-container">
+                    <button onClick={saveToIpfs} className="fill">{t("VaultEditor.save-button")}</button>
+                </div>
+            }
+
+            {/* {
+                !changed && ipfsHash && <>
+                    <section className={classNames({ 'desktop-only': pageNumber !== 6 })}>
+                        <div className="vault-editor__section">
+                            <p className="vault-editor__section-title">
+                                7. {t("VaultEditor.review-vault.title")}
+                            </p>
+                            <div className="vault-editor__section-content">
+                                <VaultSign message={""} onChange={null} signatures={[]} />
+                            </div>
+                        </div>
+
+                        <div className="vault-editor__button-container">
+                            <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
+                        </div>
+                    </section>
+                </>
+            } */}
+            {changed && ipfsHash &&
+                <div className="vault-editor__button-container">
+                    <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>
+                </div>}
 
             <div className="vault-editor__next-preview">
                 {pageNumber < 5 && (
@@ -428,6 +461,6 @@ export default function VaultEditor() {
                     </div>
                 )}
             </div>
-        </div>
+        </div >
     )
 }

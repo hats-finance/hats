@@ -4,7 +4,6 @@ import { getPath, setPath } from "./objectUtils";
 import { RoutePaths } from "constants/constants";
 import { VAULT_SERVICE } from "settings";
 
-
 function isBlob(uri: string) {
     return uri.startsWith("blob:")
 }
@@ -43,7 +42,6 @@ async function pinJson(object: any) {
 }
 
 export async function uploadVaultDescription(vaultDescription: IVaultDescription) {
-
     let icons = ["project-metadata.icon", "project-metadata.tokenIcon"]
     vaultDescription.committee.members.map((member, index) =>
         icons.push(`committee.members.${index}.image-ipfs-link`))
@@ -57,6 +55,22 @@ export async function uploadVaultDescription(vaultDescription: IVaultDescription
         }
     }
 
-    const uploadedFile = await pinJson(vaultDescription)
-    window.location.href = `${RoutePaths.vault_editor}?ipfs=${uploadedFile}`
+    const ipfsHash = await pinJson(vaultDescription)
+    window.location.href = `${RoutePaths.vault_editor}/${ipfsHash}`
+}
+
+export async function getSignatures(ipfsHash: string) {
+    const response = await axios.get(`${VAULT_SERVICE}/signatures/${ipfsHash}`)
+    return response.data
+}
+
+export async function signIpfs(ipfsHash: string, address: string, message: string, signature: string) {
+    const response = await axios.post(`${VAULT_SERVICE}/signipfs`, { ipfsHash, message, signature },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                'address': address
+            }
+        })
+    return response.data
 }
