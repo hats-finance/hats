@@ -8,7 +8,6 @@ import ContractCovered from "./ContractCovered";
 import VaultDetails from "./VaultDetails";
 import CommunicationChannel from "./CommunicationChannel";
 import VaultReview from "./VaultReview";
-import VaultSign from "./VaultSign";
 import './index.scss'
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
@@ -81,6 +80,10 @@ export default function VaultEditor() {
             }
             const newVaultDescription = await response.json()
             severitiesToContracts(newVaultDescription)
+            if ("Project-metadata" in newVaultDescription) {
+                newVaultDescription["project-metadata"] = newVaultDescription["Project-metadata"]
+                delete newVaultDescription["Project-metadata"]
+            }
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {
@@ -131,10 +134,6 @@ export default function VaultEditor() {
             }
         } else if (e.target instanceof HTMLTextAreaElement) {
             value = e.target.value
-        }
-
-        if (vaultDescription?.["Project-metadata"]) {
-            e.target.name = e.target.name.replace('project-metadata', 'Project-metadata')
         }
 
         setVaultDescription(prev => {
@@ -259,11 +258,6 @@ export default function VaultEditor() {
         }
     }
 
-    async function sign() {
-        if (ipfsHash) {
-        }
-    }
-
     // Pagination in mobile
     function nextPage() {
         if (pageNumber >= 5) return
@@ -313,7 +307,7 @@ export default function VaultEditor() {
                     </p>
                     <div className="vault-editor__section-content">
                         <VaultDetails
-                            projectMetaData={vaultDescription?.["project-metadata"] || vaultDescription?.["Project-metadata"]}
+                            projectMetaData={vaultDescription?.["project-metadata"]}
                             onChange={onChange}
                         />
                     </div>
