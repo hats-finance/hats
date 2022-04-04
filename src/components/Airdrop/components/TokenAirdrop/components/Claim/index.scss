@@ -29,7 +29,7 @@
         border: 1px solid $turquoise;
         background-color: $field-blue;
         padding: 15px;
-        width: 350px;
+        width: 700px;
         box-sizing: border-box;
         margin-top: 5px;
         img {
@@ -80,6 +80,7 @@
         }
       }
       .review-delegatee {
+        align-self: unset;
         .delegatee-info-wrapper {
           width: 100%;
         }

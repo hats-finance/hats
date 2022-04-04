@@ -12,8 +12,8 @@ import { RootState } from "reducers";
 import { isEthereumProvider, normalizeAddress } from "../../../../utils";
 import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
-import "./index.scss";
 import { useHistory } from "react-router-dom";
+import "./index.scss";
 
 export default function Airdrop() {
   const [userInput, setUserInput] = useState("");

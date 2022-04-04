@@ -18,8 +18,8 @@ export default function ClaimSuccess({ tokenAmount, backToAirdrop }: IProps) {
       <p>{`${t("Airdrop.TokenAirdrop.Success.section-1")} ${tokenAmount} Hats!`}</p>
       <p>{t("Airdrop.TokenAirdrop.Success.section-2")}</p>
       <div className="actions-wrapper">
-        <a className="twitter-link" target="_blank" rel="noopener noreferrer" href={twitterShareLink}><span>{t("Airdrop.TokenAirdrop.Success.twitter-share")}</span><TwitterIcon width={35} height={35} /></a>
-        <a className="discord-link" target="_blank" rel="noopener noreferrer" href={SocialLinks.Discord}><span>{t("Airdrop.TokenAirdrop.Success.join-discord")}</span><DiscordIcon width={35} height={35} /></a>
+        <a className="twitter-link" target="_blank" rel="noopener noreferrer" href={twitterShareLink}><TwitterIcon width={35} height={35} /><span>{t("Airdrop.TokenAirdrop.Success.twitter-share")}</span></a>
+        <a className="discord-link" target="_blank" rel="noopener noreferrer" href={SocialLinks.Discord}><DiscordIcon width={35} height={35} /><span>{t("Airdrop.TokenAirdrop.Success.join-discord")}</span></a>
       </div>
 
       <div className="secondary-actions-wrapper">
