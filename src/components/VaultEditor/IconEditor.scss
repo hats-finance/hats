@@ -38,4 +38,14 @@
             height: 100%;
         }
     }
+    &--changed {
+        .add-icon {
+            border: 1px solid $yellow;
+        }
+        .preview {
+            img {
+                border: 1px solid $yellow;
+            }
+        }
+    }
 }

@@ -17,6 +17,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
               <label>{t("VaultEditor.contract-name")}</label>
               <EditableContent
                 textInput
+                colorable
                 name={`${basePath}.name`}
                 value={contract.name}
                 onChange={onChange}
@@ -26,6 +27,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
             <div className="contracts-covered__contract-severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
+                colorable
                 name={`${basePath}.severities`}
                 value={contract.severities}
                 onChange={onChange}
@@ -36,6 +38,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
           <EditableContent
             textInput
             pastable
+            colorable
             name={`${basePath}.address`}
             value={contract.address}
             onChange={onChange}

@@ -327,6 +327,7 @@ export default function VaultEditor() {
                                 value={vaultDescription?.committee["multisig-address"] || ''}
                                 pastable
                                 textInput
+                                colorable
                                 onChange={onChange}
                                 placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")} />
                         </div>

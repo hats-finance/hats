@@ -27,6 +27,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove, me
                     <label>{t("VaultEditor.member-name")}</label>
                     <EditableContent
                         textInput
+                        colorable
                         name={`${basePath}.name`}
                         value={member.name || ''}
                         onChange={onChange}
@@ -36,6 +37,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove, me
                     <EditableContent
                         textInput
                         pastable
+                        colorable
                         name={`${basePath}.twitter-link`}
                         value={member["twitter-link"] || ''}
                         onChange={onChange}
@@ -45,6 +47,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove, me
                     <EditableContent
                         textInput
                         pastable
+                        colorable
                         name={`${basePath}.address`}
                         value={member.address || ''}
                         onChange={onChange}
@@ -56,6 +59,7 @@ export default function CommmitteeMember({ index, member, onChange, onRemove, me
                         <label>{t("VaultEditor.member-image")}</label>
                         <IconInput
                             name={`${basePath}.image-ipfs-link`}
+                            colorable
                             value={
                                 member?.["image-ipfs-link"]
                                   ? member?.["image-ipfs-link"].startsWith("blob")

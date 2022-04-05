@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import classNames from "classnames";
 import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
 import { Colors } from "../../../constants/constants";
 import "./index.scss";
@@ -13,6 +14,7 @@ interface IProps {
   value: Array<string | number>;
   options: IMultiSelectOption[];
   onChange: Function;
+  colorable?: boolean;
 }
 
 const customStyles = {
@@ -36,7 +38,8 @@ const customStyles = {
 }
 
 export default function MultiSelect(props: IProps) {
-  const { options, name, onChange, value } = props;
+  const [changed, setChanged] = useState(false)
+  const { options, name, onChange, value, colorable } = props;
   const [selectedValue, setSelectedValue] = useState<IMultiSelectOption[]>([]);
 
   useEffect(() => {
@@ -45,6 +48,7 @@ export default function MultiSelect(props: IProps) {
   }, [value, options])
 
   const onSelectChange = (e) => {
+    setChanged(true)
     onChange({
       target: {
         name,
@@ -54,7 +58,9 @@ export default function MultiSelect(props: IProps) {
   }
 
   return (
-    <div className="multi-select">
+    <div className={classNames("multi-select", {
+      "multi-select--changed": changed && colorable
+    })}>
       <ReactMultiSelectCheckboxes
         name={name}
         value={selectedValue}

@@ -97,6 +97,7 @@ export default function CommunicationChannel({ communicationChannel, onChange, a
                 <EditableContent
                     name="communication-channel.pgp-pk"
                     pastable
+                    colorable
                     value={publicPgpKey}
                     onChange={(e) => setPublicPgpKey(e.target.value)}
                     placeholder={t("VaultEditor.pgp-key-placeholder")}
@@ -106,22 +107,25 @@ export default function CommunicationChannel({ communicationChannel, onChange, a
             <div>
                 <button onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
                 {pgpError && <div>{pgpError}</div>}
-                <div className="pgp-key__list">
-                    {publicKeys.map((key, index) => (
-                        <div key={index} className="pgp-key__list-key">
-                            <div className="pgp-key__list-key-number">{index + 1}</div>
-                            <div className="pgp-key__list-key-content">
-                                <span>{key.split("\n")[2].substring(0, 30) + "..."}</span>
-                                <button onClick={() => removePgpKey(index)}>{t("VaultEditor.remove-pgp")}</button>
+                {publicKeys.length > 0 && (
+                    <div className="pgp-key__list">
+                        {publicKeys.map((key, index) => (
+                            <div key={index} className="pgp-key__list-key">
+                                <div className="pgp-key__list-key-number">{index + 1}</div>
+                                <div className="pgp-key__list-key-content">
+                                    <span>{key.split("\n")[2].substring(0, 30) + "..."}</span>
+                                    <button onClick={() => removePgpKey(index)}>{t("VaultEditor.remove-pgp")}</button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
             <div>
                 <label>{t("VaultEditor.committee-bot")}</label>
                 <EditableContent
                     textInput
+                    colorable
                     name="communication-channel.committee-bot"
                     value={communicationChannel["committee-bot"]}
                     onChange={onChange}

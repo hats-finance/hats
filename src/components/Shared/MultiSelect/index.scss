@@ -19,4 +19,11 @@
       margin-top: 2px !important;
     }
   }
+  &--changed {
+    > div {
+      > button {
+        border: 1px solid $yellow;
+      }
+    }
+  }
 }
