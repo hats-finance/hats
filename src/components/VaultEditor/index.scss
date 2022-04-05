@@ -1,6 +1,10 @@
 @import "../../styles/constants.scss";
 
 .vault-editor {
+    &__container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
     &__title {
         font-size: $large;
         line-height: 47px;
@@ -48,6 +52,10 @@
             margin: 0;
             width: 280px;
             text-transform: uppercase;
+        }
+        button + button {
+            margin-left: 30px;
+            margin-top: 0px;
         }
     }
     &__divider {
@@ -366,7 +374,12 @@
         margin-left: 20px !important;
         margin-right: 20px !important;
 
+        &__title {
+            font-size: 30px;
+        }
+
         &__section {
+            margin-bottom: 60px;
             &-content {
                 border: none;
                 padding: 0;
@@ -378,6 +391,10 @@
             padding-bottom: 0;
             button {
                 width: 100%;
+            }
+            button + button {
+                margin-left: 0;
+                margin-top: 15px;
             }
         }
 
@@ -429,6 +446,11 @@
                         }
                     }
                 }
+                &-buttons {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                }
             }
             button {
                 margin-left: 0;
@@ -454,6 +476,11 @@
                 }
                 &-severities {
                     width: 100%;
+                }
+                &-buttons {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
                 }
             }
             button {
@@ -510,7 +537,7 @@
                 display: block;
                 width: 100%;
                 margin: 0;
-                margin-top: 20px;
+                margin-top: 15px;
                 margin-bottom: 10px;
             }
         }

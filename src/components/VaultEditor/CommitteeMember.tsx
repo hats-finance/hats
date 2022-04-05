@@ -4,7 +4,7 @@ import IconInput from "./IconEditor";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { IPFS_PREFIX } from "../../constants/constants";
 
-export default function CommmitteeMember({ index, member, onChange, onRemove }) {
+export default function CommmitteeMember({ index, member, onChange, onRemove, membersCount, addMember }) {
     const { t } = useTranslation();
     const basePath = `committee.members.${index}`;
 
@@ -68,9 +68,18 @@ export default function CommmitteeMember({ index, member, onChange, onRemove }) 
                 </div>
             </div>
         </div>
-        <button className="fill" onClick={() => onRemove(index)}>
-            <img src={RemoveIcon} height={12} alt="remove-member" />
-            {` ${t("VaultEditor.remove-member")}`}
-        </button>
+        <div className="committee-members__member-buttons">
+            {membersCount > 1 && (
+                <button className="fill" onClick={() => onRemove(index)}>
+                    <img src={RemoveIcon} height={12} alt="remove-member" />
+                    {` ${t("VaultEditor.remove-member")}`}
+                </button>
+            )}
+            {(index === membersCount - 1) && (
+                <button className="fill" onClick={addMember}>
+                    {t("VaultEditor.add-member")}
+                </button>
+            )}
+        </div>
     </>
 }

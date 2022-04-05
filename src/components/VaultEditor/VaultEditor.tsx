@@ -285,175 +285,167 @@ export default function VaultEditor() {
 
     return (
         <div className="content vault-editor">
-            <div className="vault-editor__title">
-                {t("VaultEditor.create-vault")}
-            </div>
-
-            <section className={classNames({ 'desktop-only': pageNumber !== 1 })}>
-                <p className="vault-editor__description">
-                    {t("VaultEditor.create-vault-description")}
-                </p>
-                {ipfsDate &&
-                    <div className="vault-editor__last-saved-time">
-                        {`${t("VaultEditor.last-saved-time")} `}
-                        {ipfsDate.toLocaleString()}
-                        {`(${t("VaultEditor.local-time")})`}
-                    </div>
-                }
-
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        1. {t("VaultEditor.vault-details.title")}
-                    </p>
-                    <div className="vault-editor__section-content">
-                        <VaultDetails
-                            projectMetaData={vaultDescription?.["project-metadata"]}
-                            onChange={onChange}
-                        />
-                    </div>
-                </div>
-            </section>
-
-            <section className={classNames({ 'desktop-only': pageNumber !== 2 })}>
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        2. {t("VaultEditor.committee-details")}
-                    </p>
-                    <div className="vault-editor__section-content">
-                        <label>{t("VaultEditor.multisig-address")}</label>
-                        <EditableContent
-                            name="committee.multisig-address"
-                            value={vaultDescription?.committee["multisig-address"] || ''}
-                            pastable
-                            textInput
-                            onChange={onChange}
-                            placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")} />
-                    </div>
+            <div className="vault-editor__container">
+                <div className="vault-editor__title">
+                    {t("VaultEditor.create-vault")}
                 </div>
 
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        3. {t("VaultEditor.committee-members")}
+                <section className={classNames({ 'desktop-only': pageNumber !== 1 })}>
+                    <p className="vault-editor__description">
+                        {t("VaultEditor.create-vault-description")}
                     </p>
-                    <div className="vault-editor__section-content">
-                        <div className="committee-members">
-                            {(vaultDescription?.committee?.members || []).map((member, index) =>
-                                <CommmitteeMember
-                                    key={index}
-                                    member={member}
-                                    index={index}
-                                    onChange={onChange}
-                                    onRemove={removeMember}
-                                />)}
-
-                            <button className="fill" onClick={addMember}>
-                                {t("VaultEditor.add-member")}
-                            </button>
+                    {ipfsDate &&
+                        <div className="vault-editor__last-saved-time">
+                            {`${t("VaultEditor.last-saved-time")} `}
+                            {ipfsDate.toLocaleString()}
+                            {`(${t("VaultEditor.local-time")})`}
                         </div>
-                    </div>
-                </div>
-            </section>
+                    }
 
-            <section className={classNames({ 'desktop-only': pageNumber !== 3 })}>
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        4. {t("VaultEditor.contracts-covered")}
-                    </p>
-                    <div className="vault-editor__section-content">
-                        <div className="contracts-covered">
-                            {(contracts.contracts || []).map((contract, index) =>
-                                <ContractCovered
-                                    key={index}
-                                    contract={contract}
-                                    severitiesOptions={vaultDescription.severities.map(severity => ({
-                                        label: severity.name, value: severity.name
-                                    }))}
-                                    index={index}
-                                    onChange={onContractChange}
-                                    onRemove={removeContract}
-                                />)}
-
-                            <button className="fill" onClick={addContract}>
-                                {t("VaultEditor.add-member")}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section className={classNames({ 'desktop-only': pageNumber !== 4 })}>
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        5. {t("VaultEditor.pgp-key")}
-                    </p>
-                    <div className="vault-editor__section-content">
-                        <VaultProvider>
-                            <CommunicationChannel
-                                removePgpKey={removePgpKey}
-                                communicationChannel={vaultDescription?.["communication-channel"]}
-                                addPgpKey={addPgpKey}
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            1. {t("VaultEditor.vault-details.title")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <VaultDetails
+                                projectMetaData={vaultDescription?.["project-metadata"]}
                                 onChange={onChange}
                             />
-                        </VaultProvider>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-            </section>
-
-            <div className="vault-editor__divider desktop-only"></div>
-
-            <section className={classNames({ 'desktop-only': pageNumber !== 5 })}>
-                <div className="vault-editor__section">
-                    <p className="vault-editor__section-title">
-                        6. {t("VaultEditor.review-vault.title")}
-                    </p>
-                    <div className="vault-editor__section-content">
-                        <VaultReview vaultDescription={vaultDescription} />
+                <section className={classNames({ 'desktop-only': pageNumber !== 2 })}>
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            2. {t("VaultEditor.committee-details")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <label>{t("VaultEditor.multisig-address")}</label>
+                            <EditableContent
+                                name="committee.multisig-address"
+                                value={vaultDescription?.committee["multisig-address"] || ''}
+                                pastable
+                                textInput
+                                onChange={onChange}
+                                placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")} />
+                        </div>
                     </div>
-                </div>
-            </section>
 
-            {
-                changed &&
-                <div className="vault-editor__button-container">
-                    <button onClick={saveToIpfs} className="fill">{t("VaultEditor.save-button")}</button>
-                </div>
-            }
-
-            {/* {
-                !changed && ipfsHash && <>
-                    <section className={classNames({ 'desktop-only': pageNumber !== 6 })}>
-                        <div className="vault-editor__section">
-                            <p className="vault-editor__section-title">
-                                7. {t("VaultEditor.review-vault.title")}
-                            </p>
-                            <div className="vault-editor__section-content">
-                                <VaultSign message={""} onChange={null} signatures={[]} />
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            3. {t("VaultEditor.committee-members")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <div className="committee-members">
+                                {(vaultDescription?.committee?.members || []).map((member, index) =>
+                                    <CommmitteeMember
+                                        key={index}
+                                        member={member}
+                                        index={index}
+                                        membersCount={(vaultDescription?.committee?.members || []).length}
+                                        onChange={onChange}
+                                        onRemove={removeMember}
+                                        addMember={addMember}
+                                    />)}
                             </div>
                         </div>
+                    </div>
+                </section>
 
-                        <div className="vault-editor__button-container">
-                            <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
+                <section className={classNames({ 'desktop-only': pageNumber !== 3 })}>
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            4. {t("VaultEditor.contracts-covered")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <div className="contracts-covered">
+                                {(contracts.contracts || []).map((contract, index) =>
+                                    <ContractCovered
+                                        key={index}
+                                        contract={contract}
+                                        severitiesOptions={vaultDescription.severities.map(severity => ({
+                                            label: severity.name, value: severity.name
+                                        }))}
+                                        index={index}
+                                        contractsCount={(contracts.contracts || []).length}
+                                        onChange={onContractChange}
+                                        onRemove={removeContract}
+                                        addContract={addContract}
+                                    />)}
+                            </div>
                         </div>
-                    </section>
-                </>
-            } */}
-            {changed && ipfsHash &&
-                <div className="vault-editor__button-container">
-                    <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>
-                </div>}
+                    </div>
+                </section>
 
-            <div className="vault-editor__next-preview">
-                {pageNumber < 5 && (
-                    <div>
-                        <button className="fill" onClick={nextPage}>{t("VaultEditor.next")}</button>
+                <section className={classNames({ 'desktop-only': pageNumber !== 4 })}>
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            5. {t("VaultEditor.pgp-key")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <VaultProvider>
+                                <CommunicationChannel
+                                    removePgpKey={removePgpKey}
+                                    communicationChannel={vaultDescription?.["communication-channel"]}
+                                    addPgpKey={addPgpKey}
+                                    onChange={onChange}
+                                />
+                            </VaultProvider>
+                        </div>
                     </div>
-                )}
-                {pageNumber > 1 && (
-                    <div>
-                        <button onClick={previousPage}>{t("VaultEditor.previous")}</button>
+
+                </section>
+
+                <div className="vault-editor__divider desktop-only"></div>
+
+                <section className={classNames({ 'desktop-only': pageNumber !== 5 })}>
+                    <div className="vault-editor__section">
+                        <p className="vault-editor__section-title">
+                            6. {t("VaultEditor.review-vault.title")}
+                        </p>
+                        <div className="vault-editor__section-content">
+                            <VaultReview vaultDescription={vaultDescription} />
+                        </div>
                     </div>
-                )}
+                </section>
+
+                <div className="vault-editor__button-container">
+                    {changed && ipfsHash && <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>}
+                    <button onClick={saveToIpfs} className="fill" disabled={!changed}>{t("VaultEditor.save-button")}</button>
+                </div>
+
+                {/* {
+                    !changed && ipfsHash && <>
+                        <section className={classNames({ 'desktop-only': pageNumber !== 6 })}>
+                            <div className="vault-editor__section">
+                                <p className="vault-editor__section-title">
+                                    7. {t("VaultEditor.review-vault.title")}
+                                </p>
+                                <div className="vault-editor__section-content">
+                                    <VaultSign message={""} onChange={null} signatures={[]} />
+                                </div>
+                            </div>
+
+                            <div className="vault-editor__button-container">
+                                <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
+                            </div>
+                        </section>
+                    </>
+                } */}
+
+                <div className="vault-editor__next-preview">
+                    {pageNumber < 5 && (
+                        <div>
+                            <button onClick={nextPage}>{t("VaultEditor.next")}</button>
+                        </div>
+                    )}
+                    {pageNumber > 1 && (
+                        <div>
+                            <button onClick={previousPage}>{t("VaultEditor.previous")}</button>
+                        </div>
+                    )}
+                </div>
             </div>
         </div >
     )

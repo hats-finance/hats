@@ -3,7 +3,7 @@ import EditableContent from "components/CommitteeTools/components/EditableConten
 import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 
-export default function ContractCovered({ index, contract, onChange, onRemove, severitiesOptions }) {
+export default function ContractCovered({ index, contract, onChange, onRemove, severitiesOptions, contractsCount, addContract }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
 
@@ -43,10 +43,19 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
           />
         </div>
       </div>
-      <button className="fill" onClick={() => onRemove(index)}>
-        <img src={RemoveIcon} height={12} alt="remove-member" />
-        {` ${t("VaultEditor.remove-member")}`}
-      </button>
+      <div className="contracts-covered__contract-buttons">
+        {contractsCount > 1 && (
+          <button className="fill" onClick={() => onRemove(index)}>
+            <img src={RemoveIcon} height={12} alt="remove-member" />
+            {` ${t("VaultEditor.remove-member")}`}
+          </button>
+        )}
+        {(index === contractsCount - 1) && (
+          <button className="fill" onClick={addContract}>
+            {t("VaultEditor.add-member")}
+          </button>
+        )}
+      </div>
     </>
   );
 }
