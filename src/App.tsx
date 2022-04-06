@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
@@ -238,33 +238,20 @@ function App() {
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to={RoutePaths.vaults} />
+      <Routes>
+        <Route path="/" element={<Navigate to={RoutePaths.vaults} replace={true} />} />
+        <Route path={RoutePaths.vaults} element={<Honeypots />} />
+        <Route path={RoutePaths.gov} element={<Gov />} />
+        <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
+        <Route path={RoutePaths.pools} element={<LiquidityPools />} />
+        <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
+        <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
+          <Route path=":ipfsHash" element={<VaultEditor />} />
         </Route>
-        <Route path={RoutePaths.vaults}>
-          <Honeypots />
-        </Route>
-        <Route path={RoutePaths.gov}>
-          <Gov />
-        </Route>
-        <Route path={RoutePaths.vulnerability}>
-          <VulnerabilityAccordion />
-        </Route>
-        <Route path={RoutePaths.pools}>
-          <LiquidityPools />
-        </Route>
-        <Route path={RoutePaths.committee_tools}>
-          <CommitteeTools />
-        </Route >
-        < Route path={RoutePaths.vault_editor} >
-          <VaultEditor />
-        </Route >
-        <Route path={RoutePaths.nft_airdrop}>
-          <NFTAirdrop />
-        </Route>
-      </Switch >
-      {showNotification && hasSeenWelcomePage && <Notification />
+        <Route path={RoutePaths.nft_airdrop} element={<NFTAirdrop />} />
+      </Routes>
+      {
+        showNotification && hasSeenWelcomePage && <Notification />
       }
       {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
     </>

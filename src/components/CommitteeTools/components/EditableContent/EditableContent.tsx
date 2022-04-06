@@ -1,47 +1,66 @@
-import { forwardRef, useRef } from "react";
+import { forwardRef, useRef, useState } from "react";
 import "./index.scss";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
+import RemoveIcon from "assets/icons/delete.icon.svg";
+import classNames from "classnames";
+
+type Props = {
+  pastable?: boolean;
+  copyable?: boolean;
+  removable?: boolean;
+  colorable?: boolean;
+  textInput?: boolean
+} & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+& React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>
 
 function EditableContent(
   {
-    onChange,
     pastable,
     copyable,
+    removable,
     textInput,
-    name,
+    colorable,
     ...props
-  }: {
-    onChange?: (value: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void;
-    pastable?: boolean;
-    copyable?: boolean;
-    name?: string
-    textInput?: boolean
-    placeholder?: string;
-  },
+  }: Props,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
-  const extraIcons = pastable || copyable;
+  const extraIcons = pastable || copyable || removable;
+  const [changed, setChanged] = useState(false)
+
   return (
     <div className="pastable-content">
-      {textInput ? (<input
-        type="text"
-        name={name}
-        onChange={e => {
-          if (onChange) {
-            onChange(e)
-          }
-        }} ref={ref || localRef} {...props} className="pastable-content__input" />) : (
-        <textarea
-          name={name}
-          onChange={e => {
-            if (onChange) {
-              onChange(e)
+      {textInput ? (
+        <input
+          type="text"
+          ref={ref || localRef} {...props} className={classNames("pastable-content__input", {
+            "pastable-content__input--changed": changed && colorable
+          })}
+          onChange={(e) => {
+            setChanged(true)
+            if (props.onChange) {
+              props.onChange(e)
             }
-          }} ref={ref || localRef} {...props} className="pastable-content__textarea" />)}
+          }}
+        />
+        ) : (
+        <textarea
+          ref={ref || localRef} {...props} className={classNames("pastable-content__textarea", {
+            "pastable-content__textarea--changed": changed && colorable
+          })}
+          onChange={(e) => {
+            setChanged(true)
+            if (props.onChange) {
+              props.onChange(e)
+            }
+          }}
+        />
+      )}
       {extraIcons && (
-        <div className="pastable-content__extra-icons">
+        <div className={classNames("pastable-content__extra-icons", {
+          "pastable-content__extra-icons--input": textInput
+        })}>
           {pastable && (
             <img
               alt="paste"
@@ -62,6 +81,16 @@ function EditableContent(
               src={CopyIcon}
               onClick={() => {
                 navigator.clipboard.writeText(ref ? ref.current!.value : localRef.current!.value);
+              }}
+            />
+          )}
+          {removable && (
+            <img
+              alt="remove"
+              src={RemoveIcon}
+              onClick={() => {
+                if (ref) ref.current!.value = ''
+                else localRef.current!.value = ''
               }}
             />
           )}

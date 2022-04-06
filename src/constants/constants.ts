@@ -30,6 +30,11 @@ export enum Networks {
   kovan = "kovan"
 }
 
+export enum VaultService {
+  main = "",
+  rinkeby = "https://vault-editor-service.herokuapp.com",
+}
+
 export enum MasterAddresses {
   main = "0x571f39d351513146248acafa9d0509319a327c4d",
   rinkeby = "0xccaadc293faaea229e0ca4a22b0330b65634b483"

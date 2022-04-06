@@ -45,7 +45,7 @@ export interface IVault {
   description: IVaultDescription
   bounty: string
   isGuest: boolean
-  parentDescription: IVaultDescription
+  parentDescription?: IVaultDescription
   parentVault: IParentVault;
 }
 
@@ -58,7 +58,7 @@ export interface IVaultDescription {
   }
   "communication-channel": {
     "committee-bot": string
-    "pgp-pk": string,
+    "pgp-pk": string | string[],
   }
   "committee": {
     "multisig-address": string
@@ -81,9 +81,9 @@ export interface ICommitteeMember {
 export interface ISeverity {
   "name": string
   "index": number
-  "contracts-covered": Array<string>
+  "contracts-covered": { [key: string]: string }[]
   "nft-metadata": INFTMetaData
-  "reward-for": string
+  //  "reward-for": string
   "description": string
 }
 

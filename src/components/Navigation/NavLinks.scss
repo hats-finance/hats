@@ -22,6 +22,9 @@
     background-color: $blue;
     font-weight: bold;
   }
+  &.hidden {
+    display: none;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
