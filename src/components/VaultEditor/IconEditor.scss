@@ -18,8 +18,8 @@
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
-        width: 124px !important;
-        height: 124px !important;
+        width: 124px;
+        height: 124px;
         padding: 0;
         color: $dark-turquoise;
         img {
@@ -29,8 +29,8 @@
     .preview {
         cursor: pointer;
         padding: 0;
-        width: 124px !important;
-        height: 124px !important;
+        width: 124px;
+        height: 124px;
         img {
             box-sizing: border-box;
             border: 1px solid $turquoise;
