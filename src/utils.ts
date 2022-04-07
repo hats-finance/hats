@@ -31,12 +31,12 @@ export const isEthereumProvider = () => {
 
 /**
  * Returns true if there is a valid provider and connected to the right network, otherwise returns false
- * @param {any} proivder
+ * @param {any} provider
  * @returns {boolean}
  */
-export const isProviderAndNetwork = (proivder: any) => {
-  if (proivder && proivder.chainId) {
-    const network = getNetworkNameByChainId(proivder.chainId);
+export const isProviderAndNetwork = (provider: any) => {
+  if (provider && provider._network?.chainId) {
+    const network = getNetworkNameByChainId(provider._network?.chainId);
     if (network === NETWORK) {
       return true;
     }
