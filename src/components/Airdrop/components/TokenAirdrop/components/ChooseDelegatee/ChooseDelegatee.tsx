@@ -5,9 +5,12 @@ import classNames from "classnames";
 import { REWARDS_TOKEN, DELEGATEES_IPFS, IDelegateeData } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import Modal from "components/Shared/Modal";
-import { IPFS_PREFIX } from "constants/constants";
+import { IPFS_PREFIX, Networks } from "constants/constants";
 import { t } from "i18next";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "reducers";
+import { NETWORK } from "settings";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -24,6 +27,7 @@ interface IDelegateeElementProps {
 }
 
 const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementProps) => {
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const [votes, setVotes] = useState<number | undefined>();
   const [showDescription, setShowDescription] = useState(false);
   const parent = useRef(null);
@@ -40,9 +44,9 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 
   useEffect(() => {
     (async () => {
-      setVotes(await getCurrentVotes(data.address, REWARDS_TOKEN));
+      setVotes(await getCurrentVotes(data.address, NETWORK === Networks.main ? rewardsToken : REWARDS_TOKEN));
     })();
-  }, [data.address])
+  }, [data.address, rewardsToken])
 
   return (
     <div ref={parent} className={classNames("delegatee-element", { "selected": selected })}>

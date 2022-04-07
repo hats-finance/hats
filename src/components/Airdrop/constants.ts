@@ -1,7 +1,7 @@
 export const TOKEN_AIRDROP_IPFS_CID = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1";
 
 /** 
- * TODO: temporary until we fetch it from the subgraph
+ * This is used for rinkeby. In mainnet it is fetched from the subgraph
  */
 export const REWARDS_TOKEN = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
 

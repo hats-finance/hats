@@ -4,12 +4,14 @@ import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
 import { hashToken } from "components/Airdrop/utils";
 import Loading from "components/Shared/Loading";
-import { IPFS_PREFIX } from "constants/constants";
+import { IPFS_PREFIX, Networks } from "constants/constants";
 import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
+import { NETWORK } from "settings";
 import { TokenAirdropET } from "types/types";
+import { formatWei } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -25,6 +27,7 @@ const keccak256 = require('keccak256');
 
 export default function Claim({ delegateeData, address, tokenAmount, eligibleTokens }: IProps) {
   const dispatch = useDispatch();
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { setStage } = useContext(TokenAirdropContext);
   const [pendingWallet, setPendingWallet] = useState(false);
   const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
@@ -43,7 +46,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
     setPendingWallet(true);
 
     await createTransaction(
-      async () => claimToken(delegateeData.address, tokenAmount, proof, REWARDS_TOKEN, chainId),
+      async () => claimToken(delegateeData.address, tokenAmount, proof, NETWORK === Networks.main ? rewardsToken : REWARDS_TOKEN, chainId),
       () => { },
       () => { setPendingWallet(false); setStage(Stage.Success); },
       () => { setPendingWallet(false); },
@@ -60,7 +63,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
         <div className="review-amount">
           <span>{t("Airdrop.TokenAirdrop.Claim.claim-amount")}</span>
           <div className="amount-container">
-            <Logo /> {tokenAmount} HATS
+            <Logo /> {formatWei(tokenAmount)} HATS
           </div>
         </div>
 

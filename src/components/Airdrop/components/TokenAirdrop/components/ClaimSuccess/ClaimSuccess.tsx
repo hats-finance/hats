@@ -3,6 +3,7 @@ import { SocialLinks } from "constants/constants";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
 import "./index.scss";
+import { formatWei } from "utils";
 
 interface IProps {
   tokenAmount: number
@@ -15,7 +16,7 @@ export default function ClaimSuccess({ tokenAmount, backToAirdrop }: IProps) {
   return (
     <div className="claim-success-wrapper">
       <h3>{t("Airdrop.TokenAirdrop.Success.title")}</h3>
-      <p>{`${t("Airdrop.TokenAirdrop.Success.section-1")} ${tokenAmount} Hats!`}</p>
+      <p>{`${t("Airdrop.TokenAirdrop.Success.section-1")} ${formatWei(tokenAmount)} Hats!`}</p>
       <p>{t("Airdrop.TokenAirdrop.Success.section-2")}</p>
       <div className="actions-wrapper">
         <a className="twitter-link" target="_blank" rel="noopener noreferrer" href={twitterShareLink}><TwitterIcon width={35} height={35} /><span>{t("Airdrop.TokenAirdrop.Success.twitter-share")}</span></a>
