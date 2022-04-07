@@ -6,6 +6,7 @@
   padding: 30px 50px;
   align-items: center;
   color: $white;
+  height: 100%;
   h2 {
     align-self: flex-start;
     margin-top: 0;
@@ -35,5 +36,8 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-prompt-wrapper {
     padding: 20px;
+    .reveal-link {
+      margin-top: 100%;
+    }
   }
 }

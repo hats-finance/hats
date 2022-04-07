@@ -1,6 +1,9 @@
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { LocalStorage, RoutePaths } from "../../../../constants/constants";
+import Confetti from "react-confetti";
+import { RootState } from "reducers";
+import { LocalStorage, RoutePaths, ScreenSize } from "../../../../constants/constants";
 import { truncatedAddress } from "../../../../utils";
 import Modal from "../../../Shared/Modal";
 import "./index.scss";
@@ -11,6 +14,7 @@ interface IProps {
 }
 
 export default function AirdropPrompt({ address, closePrompt }: IProps) {
+  const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   useEffect(() => {
     const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
@@ -20,6 +24,7 @@ export default function AirdropPrompt({ address, closePrompt }: IProps) {
 
   return (
     <Modal title="AIRDROP" setShowModal={closePrompt} height="fit-content">
+      <Confetti numberOfPieces={currentScreenSize === ScreenSize.Mobile ? 50 : 200} />
       <div className="airdrop-prompt-wrapper">
         <h2>Congrats!</h2>
         <span>You are eligible to Hats Airdrop!</span>
