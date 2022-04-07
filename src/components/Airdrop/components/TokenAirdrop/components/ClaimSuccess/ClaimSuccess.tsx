@@ -12,6 +12,8 @@ interface IProps {
 
 export default function ClaimSuccess({ tokenAmount, backToAirdrop }: IProps) {
   // &url=${encodeURIComponent(SocialLinks.Twitter)}
+  // TODO: check if it's possible to attach an image to the sharing link
+  // TODO: add HATs token automatically to MetaMask?
   const twitterShareLink = `https://twitter.com/intent/tweet?text=${t("Airdrop.TokenAirdrop.Success.twitter-share-text")}`;
   return (
     <div className="claim-success-wrapper">
