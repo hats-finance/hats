@@ -1,4 +1,4 @@
-export const TOKEN_AIRDROP_IPFS_CID = "QmbEFFYwsHTRdLXfWadCArR4uLSSkEmrVvSc2HqEMfcvNk";
+export const TOKEN_AIRDROP_IPFS_CID = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1";
 
 /** 
  * TODO: temporary until we fetch it from the subgraph
@@ -16,7 +16,7 @@ export enum NFTAirdropAddress {
 
 export enum TokenAirdropAddress {
   main = "",
-  rinkeby = "0x40EFeB10601B2928733cCDFbBdCe337062B9f142"
+  rinkeby = "0x2B70108ed607Cd5FBE0E4b8659D71335C4be7687"
 }
 
 export enum EligibilityStatus {
