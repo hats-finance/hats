@@ -14,6 +14,7 @@
     "@types/react": "^17.0.38",
     "@types/react-router-dom": "^5.1.7",
     "@types/showdown": "^1.9.3",
+    "@usedapp/core": "^0.12.7",
     "@walletconnect/web3-provider": "^1.7.7",
     "axios": "^0.24.0",
     "browser-passworder": "^2.0.3",

@@ -1,17 +1,17 @@
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
+import { useEthers } from "@usedapp/core";
 import classNames from "classnames";
 import moment from "moment";
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createTransaction, uniswapClaimReward, uniswapGetRewardInfo, uniswapRewards } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
-import { RootState } from "../../reducers";
 import { DATA_POLLING_INTERVAL } from "../../settings";
 import "../../styles/LiquidityPools.scss";
 import { IIncentive, IPosition } from "../../types/types";
-import { fetchWalletBalance, formatWei, getNetworkNameByChainId, isProviderAndNetwork } from "../../utils";
+import { formatWei } from "../../utils";
 import Loading from "../Shared/Loading";
 import Modal from "../Shared/Modal";
 import Positions from "./Positions";
@@ -22,17 +22,14 @@ interface IProps {
 
 export default function LiquidityPool(props: IProps) {
   const dispatch = useDispatch();
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const { incentive } = props;
   const [showModal, setShowModal] = useState(false);
   const startTime = moment.unix(Number(incentive?.startTime)).local().format('DD-MM-YYYY HH:mm');
   const endTime = moment.unix(Number(incentive?.endTime)).local().format('DD-MM-YYYY HH:mm');
   const [pendingWalletAction, setPendingWalletAction] = useState(false);
   const [accruedRewards, setAccruedRewards] = useState(BigNumber.from(0));
-  const { loading, error, data } = useQuery(getPositions(selectedAddress), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
+  const { account } = useEthers()
+  const { loading, error, data } = useQuery(getPositions(account!), { pollInterval: DATA_POLLING_INTERVAL, context: { clientName: LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } });
   const [positions, setPositions] = useState<IPosition[]>([]);
   const [numberOfStakes, setNumberOfStakes] = useState("-");
   const [pendingReward, setPendingReward] = useState();
@@ -47,12 +44,12 @@ export default function LiquidityPool(props: IProps) {
   const claim = async () => {
     setPendingWalletAction(true);
     await createTransaction(
-      async () => uniswapClaimReward(incentive.rewardToken, selectedAddress),
+      async () => uniswapClaimReward(incentive.rewardToken, account!),
       () => { },
       async () => {
         setPendingWalletAction(false);
-        fetchWalletBalance(dispatch, getNetworkNameByChainId(chainId), selectedAddress, rewardsToken);
-        setAccruedRewards(await uniswapRewards(incentive?.rewardToken, selectedAddress));
+        //fetchWalletBalance(dispatch, getNetworkNameByChainId(chainId), selectedAddress, rewardsToken);
+        setAccruedRewards(await uniswapRewards(incentive?.rewardToken, account!));
       },
       () => { setPendingWalletAction(false); },
       dispatch,
@@ -62,11 +59,11 @@ export default function LiquidityPool(props: IProps) {
 
   useEffect(() => {
     (async () => {
-      if (selectedAddress && incentive) {
-        setAccruedRewards(await uniswapRewards(incentive?.rewardToken, selectedAddress));
+      if (account && incentive) {
+        setAccruedRewards(await uniswapRewards(incentive?.rewardToken, account));
       }
     })();
-  }, [incentive, selectedAddress])
+  }, [incentive, account])
 
   useEffect(() => {
     (async () => {
@@ -120,9 +117,9 @@ export default function LiquidityPool(props: IProps) {
         </div>
       </div>
       <div className="lp-actions">
-        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider) || loading}>STAKE &#38; UNSTAKE LP TOKENS</button>
-        <button className="lp-action-btn claim" onClick={async () => await claim()} disabled={!isProviderAndNetwork(provider) || accruedRewards.eq(0)}>CLAIM ACCRUED REWARDS</button>
-        <button className="lp-action-btn withdraw" onClick={() => setShowModal(true)} disabled={!isProviderAndNetwork(provider)}>WITHDRAW</button>
+        <button className="lp-action-btn stake" onClick={() => setShowModal(true)} disabled={!account || loading}>STAKE &#38; UNSTAKE LP TOKENS</button>
+        <button className="lp-action-btn claim" onClick={async () => await claim()} disabled={!account || accruedRewards.eq(0)}>CLAIM ACCRUED REWARDS</button>
+        <button className="lp-action-btn withdraw" onClick={() => setShowModal(true)} disabled={!account}>WITHDRAW</button>
       </div>
 
       {pendingWalletAction && <Loading />}

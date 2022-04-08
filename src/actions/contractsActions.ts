@@ -298,7 +298,7 @@ export const getMerkleTree = async () => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     const data = contract.filters.MerkleTreeChanged();
     const filter = await contract.queryFilter(data, 0);
-    return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+    return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
   } catch (error) {
     console.error(error);
   }

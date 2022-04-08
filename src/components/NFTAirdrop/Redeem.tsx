@@ -5,13 +5,14 @@ import { createTransaction, getDeadline, getBaseURI, nftAirdropRedeem } from "..
 import { IPFS_PREFIX, LocalStorage, TERMS_OF_SALE_OF_NFTS } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { EligibleTokens, IAirdropElement } from "../../types/types";
-import { hashToken, isDateBefore, isProviderAndNetwork } from "../../utils";
+import { hashToken, isDateBefore } from "../../utils";
 import Countdown from "../Shared/Countdown/Countdown";
 import { EligibilityStatus } from "./NFTAirdrop";
 import QuestionIcon from "../../assets/icons/big-question-icon.svg";
 import Image from "../Shared/Image/Image";
 import { t } from "i18next";
 import "./Redeem.scss";
+import { useEthers } from "@usedapp/core";
 
 interface IProps {
   merkleTree: any
@@ -33,7 +34,7 @@ const removeAddressFromLocalStorage = (address: string) => {
 
 export default function Redeem({ merkleTree, walletAddress, setPendingWalletAction, onSuccess, eligibilityStatus, reveal }: IProps) {
   const dispatch = useDispatch();
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
+  const { account } = useEthers()
   const [revealed, setRevealed] = useState((eligibilityStatus === EligibilityStatus.REDEEMED || reveal) ? true : false);
   const [nftData, setNftData] = useState<IAirdropElement>();
   const eligibleTokens = useSelector((state: RootState) => state.dataReducer.airdropEligibleTokens) as EligibleTokens;
@@ -103,7 +104,7 @@ export default function Redeem({ merkleTree, walletAddress, setPendingWalletActi
           {revealed && (
             <div className="redeem-wrapper__redeem-btn-container">
               <label>By redeeming, I agree to the <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_SALE_OF_NFTS}>TERMS OF SALE OF NFTs</a></u></label>
-              <button disabled={!isProviderAndNetwork(provider) || !redeemable} className="action-btn redeem-btn" onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+              <button disabled={!account || !redeemable} className="action-btn redeem-btn" onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
             </div>
           )}
           {!revealed && <button className="action-btn reveal-btn" onClick={() => setRevealed(true)}>{t("NFTAirdop.Redeem.reveal")}</button>}

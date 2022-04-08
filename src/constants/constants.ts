@@ -1,3 +1,4 @@
+import { ChainId } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -22,20 +23,6 @@ export enum RoutePaths {
   committee_tools = "/committee-tools"
 }
 
-export enum Networks {
-  main = "mainnet",
-  xdai = "xdai",
-  rinkeby = "rinkeby",
-  kovan = "kovan"
-}
-
-export enum NetworksIDs {
-  main = 1,
-  rinkeby = 4,
-  xdai = 100,
-  kovan = 42,
-}
-
 export enum MasterAddresses {
   main = "0x571f39d351513146248acafa9d0509319a327c4d",
   rinkeby = "0xccaadc293faaea229e0ca4a22b0330b65634b483"
@@ -51,9 +38,9 @@ export enum NFTAirdropAddress {
   rinkeby = "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
 }
 
-export enum WalletConnectRPC {
-  main = "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-  rinkeby = "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
+export const WalletConnectRPC = {
+  [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
+  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
 
 export enum Pages {

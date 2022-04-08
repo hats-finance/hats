@@ -1,15 +1,12 @@
-import { useState, useEffect } from "react";
-import useWeb3Modal from "../hooks/useWeb3Modal";
-import { connect, toggleMenu, toggleNotification, updateNetwork, updateSelectedAddress, updateWalletBalance } from "../actions/index";
+import { useState } from "react";
+import { toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getNetworkNameByChainId,
   getMainPath,
-  fetchWalletBalance
 } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import { NotificationType, ScreenSize } from "../constants/constants";
+import { ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
 import Modal from "./Shared/Modal";
@@ -22,28 +19,15 @@ import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
-import { Web3Provider } from "@ethersproject/providers";
-import { ethers } from "ethers";
+import { useEthers } from "@usedapp/core";
 
 export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const [provider, loadWeb3Modal, logoutOfWeb3Modal] = useWeb3Modal();
-  const selectedAddress =
-    useSelector(
-      (state: RootState) => state.web3Reducer.provider?.selectedAddress
-    ) ?? "";
   const screenSize = useSelector(
     (state: RootState) => state.layoutReducer.screenSize
   );
   const [showModal, setShowModal] = useState(false);
-  const chainId =
-    useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ??
-    "";
-  const network = getNetworkNameByChainId(chainId);
-  const rewardsToken = useSelector(
-    (state: RootState) => state.dataReducer.rewardsToken
-  );
   const showMenu = useSelector(
     (state: RootState) => state.layoutReducer.showMenu
   );
@@ -52,48 +36,17 @@ export default function Header() {
     (state: RootState) => state.layoutReducer.inTransaction
   );
 
-  useEffect(() => {
-    if (provider) {
-      const actualProvider = new Web3Provider(provider)
-      dispatch(connect(actualProvider));
-      (async () => {
-        const network = (await actualProvider.getNetwork()).name
-        dispatch(updateNetwork(network));
-        if (network !== NETWORK) {
-          dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
-        }
-        const signer = await actualProvider.getSigner()
-        dispatch(updateSelectedAddress(await signer.getAddress()))
-        dispatch(updateWalletBalance(ethers.utils.formatEther(await signer.getBalance()), null))
-        if (actualProvider) {
-          actualProvider.on("accountsChanged", (accounts) => {
-            console.log("accountsChanged", accounts);
-            dispatch(updateSelectedAddress(accounts[0]));
-          });
-          actualProvider.on("chainChanged", (chainId) => {
-            // Handle the new chain.
-            // Correctly handling chain changes can be complicated.
-            // We recommend reloading the page unless you have good reason not to.
-            window.location.reload();
-          });
-          // if (provider instanceof WalletConnectProvider) {
-          //   dispatch(updateSelectedAddress(normalizeAddress(provider.accounts[0])));
-          // }
 
-        }
-      })()
-    }
-  }, [provider, dispatch]);
+  // useEffect(() => {
+  //   const getWalletBalance = async () => {
+  //     fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+  //   };
+  //   if (network === NETWORK && selectedAddress && rewardsToken) {
+  //     getWalletBalance();
+  //   }
+  // }, [selectedAddress, network, rewardsToken, dispatch]);
 
-
-  useEffect(() => {
-    const getWalletBalance = async () => {
-      fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-    };
-    if (network === NETWORK && selectedAddress && rewardsToken) {
-      getWalletBalance();
-    }
-  }, [selectedAddress, network, rewardsToken, dispatch]);
+  const { chainId, account } = useEthers()
 
   return (
     <header data-testid="Header">
@@ -103,7 +56,7 @@ export default function Header() {
         </div>
       )}
       <button
-        disabled={network !== NETWORK}
+        disabled={chainId !== NETWORK}
         className="hats-btn"
         onClick={() => setShowModal(true)}
       >
@@ -111,14 +64,10 @@ export default function Header() {
         <span>{hatsBalance ? `${millify(hatsBalance)}` : "-"}</span>
       </button>
 
-      {provider && <WalletInfo />}
+      {account && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||
         (screenSize === ScreenSize.Mobile && !inTransaction)) && (
-          <WalletButton
-            provider={provider}
-            loadWeb3Modal={loadWeb3Modal}
-            logoutOfWeb3Modal={logoutOfWeb3Modal}
-          />
+          <WalletButton />
         )}
 
       {screenSize === ScreenSize.Mobile && (

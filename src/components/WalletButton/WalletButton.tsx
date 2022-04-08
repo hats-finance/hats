@@ -1,56 +1,81 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { Colors, ScreenSize } from "../../constants/constants";
+import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
+import { useDispatch, useSelector } from "react-redux";
+import { Colors, NotificationType, ScreenSize, WalletConnectRPC } from "../../constants/constants";
 import { RootState } from "../../reducers";
-import { isEthereumProvider, truncatedAddress } from "../../utils";
-import Modal from "../Shared/Modal";
 import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
+import WalletConnectProvider from "@walletconnect/web3-provider";
+import { NETWORK, WALLET_CONNECT_RPC } from "settings";
+import { shortenIfAddress, useEthers } from "@usedapp/core";
+import { useCallback, useEffect, useState } from "react";
+import { toggleNotification } from "actions";
 
-export default function WalletButton({ provider, loadWeb3Modal, logoutOfWeb3Modal }) {
+export default function WalletButton() {
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const [showDisconnectPrompt, setShowDisconnectPrompt] = useState(false);
-  const [showNoEthereumPrompt, setShowNoEthereumPrompt] = useState(false);
+  const dispatch = useDispatch();
+  const { account, activate, deactivate, error } = useEthers();
+  const [provider, setProvider] = useState<any>();
 
-  const handleClick = () => {
-    if (!provider) {
-      loadWeb3Modal();
-      if (!isEthereumProvider()) {
-        console.warn("No Ethereum provider detected. We recommend to use the built-in browser of your wallet to interact with the blockchain.");
+  useEffect(() => {
+    if (error) {
+      dispatch(toggleNotification(true, NotificationType.Error, error?.message, false));
+    }
+  }, [error, dispatch]);
+
+  const activateProvider = async () => {
+    const networkName = CHAIN_DATA_LIST[NETWORK].network
+    const web3Modal = new Web3Modal({
+      network: networkName,
+      cacheProvider: false,
+      providerOptions: {
+        walletconnect: {
+          package: WalletConnectProvider,
+          options: {
+            chainId: NETWORK,
+            rpc: {
+              [NETWORK]: WALLET_CONNECT_RPC || WalletConnectRPC[NETWORK],
+            }
+          },
+        },
+      },
+      theme: {
+        background: "rgb(39, 49, 56)",
+        main: "rgb(199, 199, 199)",
+        secondary: "rgb(136, 136, 136)",
+        border: "rgba(195, 195, 195, 0.14)",
+        hover: "rgb(16, 26, 32)"
       }
-    }
-    else {
-      logoutOfWeb3Modal();
-    }
+    });
+
+    web3Modal.clearCachedProvider()
+    const provider = await web3Modal.connect()
+    setProvider(provider)
+    await activate(provider)
   }
+
+  const deactivateProvider = useCallback(async () => {
+    try {
+      if (provider instanceof WalletConnectProvider) {
+        provider.close()
+      }
+      await deactivate()
+    } catch (error: any) {
+      console.log(error.message);
+    }
+  }, [deactivate, provider])
+
+
 
   return (
     <>
       <button
-        className={!provider ? "wallet-btn disconnected" : "wallet-btn connected"}
-        onClick={handleClick}>
+        className={account ? "wallet-btn connected" : "wallet-btn disconnected"}
+        onClick={account ? deactivateProvider : activateProvider}>
         <div>
-          <Dot color={!provider ? Colors.red : Colors.turquoise} />
-          {!provider ? "Connect a Wallet" : screenSize === ScreenSize.Desktop ? "Disconnect Wallet" : `${truncatedAddress(selectedAddress)}`}
+          <Dot color={account ? Colors.turquoise : Colors.red} />
+          {account ? screenSize === ScreenSize.Desktop ? "Disconnect Wallet" : `${shortenIfAddress(account)}` : "Connect a Wallet"}
         </div>
       </button>
-      {showDisconnectPrompt && (
-        <Modal title="Disconnect Wallet?" setShowModal={setShowDisconnectPrompt} height="fit-content">
-          <div className="disconnect-prompt-wrapper">
-            <button className="disconnect" onClick={() => { logoutOfWeb3Modal(); setShowDisconnectPrompt(false); }}>Disconnect Wallet</button>
-            <button onClick={() => setShowDisconnectPrompt(false)}>Cancel</button>
-          </div>
-        </Modal>
-      )}
-      {showNoEthereumPrompt && (
-        <Modal title="No Ethereum provider detected" setShowModal={setShowNoEthereumPrompt}>
-          <div className="no-ethereum-prompt-wrapper">
-            <span>We recommend to use the built-in browser of your wallet to interact with the blockchain.</span>
-            <button onClick={() => setShowNoEthereumPrompt(false)}>Got it</button>
-          </div>
-        </Modal>
-      )}
     </>
   );
 }

@@ -1,4 +1,3 @@
-
 import { useSelector } from "react-redux";
 import { ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";

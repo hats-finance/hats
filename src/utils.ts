@@ -1,15 +1,11 @@
-import { LocalStorage, Networks } from "./constants/constants";
+import { LocalStorage } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
   COIN_GECKO_ETHEREUM
 } from "./constants/constants";
-import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
-import { Dispatch } from "redux";
-import { updateWalletBalance } from "./actions";
-import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS, NETWORK } from "./settings";
@@ -17,6 +13,8 @@ import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
+import { ChainId } from "@usedapp/core";
+import { CHAIN_DATA_LIST } from "web3modal";
 
 /**
  * Returns true if an Ethereum Provider is detected, otherwise returns false.
@@ -28,21 +26,6 @@ export const isEthereumProvider = () => {
   }
   return true;
 }
-
-/**
- * Returns true if there is a valid provider and connected to the right network, otherwise returns false
- * @param {any} provider
- * @returns {boolean}
- */
-export const isProviderAndNetwork = (provider: any) => {
-  if (provider && provider._network?.chainId) {
-    const network = getNetworkNameByChainId(provider._network?.chainId);
-    if (network === NETWORK) {
-      return true;
-    }
-  }
-  return false;
-};
 
 /**
  * Adds commas to a given number
@@ -64,33 +47,6 @@ export const truncatedAddress = (address: string): string => {
 };
 
 /**
- * Returns network name by it's chainId
- * @param {string} chainId
- */
-export const getNetworkNameByChainId = (chainId: string | number): Networks | string => {
-  switch (chainId) {
-    case "0x1":
-    case "1":
-    case 1:
-      return Networks.main;
-    case "100":
-    case "0x64":
-    case 100:
-      return Networks.xdai;
-    case "4":
-    case "0x4":
-    case 4:
-      return Networks.rinkeby;
-    case "0x2a":
-    case "42":
-    case 42:
-      return Networks.kovan;
-    default:
-      return `unsupported network: ${chainId}`;
-  }
-};
-
-/**
  * Returns "LARGE" if the screen width larger than SMALL_SCREEN_BREAKPOINT, otherwise returens "SMALL"
  * @returns {ScreenSize}
  */
@@ -106,24 +62,6 @@ export const getScreenSize = () => {
  */
 export const getMainPath = (path: string) => {
   return path.split("/")[1];
-};
-
-/**
- * Given network and account address returns the ether balance
- * @param {Networks} network
- * @param {string} selectedAddress
- */
-export const getEtherBalance = async (
-  network: Networks,
-  selectedAddress: string
-) => {
-  try {
-    const defaultProvider = getDefaultProvider(network);
-    const balance = await defaultProvider.getBalance(selectedAddress);
-    return ethers.utils.formatEther(balance);
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 /**
@@ -201,27 +139,6 @@ export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
 };
 
-/**
- * Updates the ETH and HATS wallet balance
- * @param {Dispatch} dispatch
- * @param {Networks} network
- * @param {string} selectedAddress
- * @param {string} rewardsToken
- */
-export const fetchWalletBalance = async (
-  dispatch: Dispatch,
-  network: any,
-  selectedAddress: string,
-  rewardsToken: string
-) => {
-  dispatch(updateWalletBalance(null, null));
-  dispatch(
-    updateWalletBalance(
-      await getEtherBalance(network, selectedAddress),
-      await getTokenBalance(rewardsToken, selectedAddress)
-    )
-  );
-};
 
 /**
  * Gets token price in USD using CoinGecko API
@@ -313,10 +230,10 @@ export const copyToClipboard = (value: string) => {
  */
 export const linkToEtherscan = (
   value: string,
-  network: Networks,
+  network: ChainId,
   isTransaction?: boolean
 ): string => {
-  const prefix = network !== Networks.main ? `${network}.` : "";
+  const prefix = network !== ChainId.Mainnet ? `${network}.` : "";
   return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
 };
 
@@ -327,7 +244,7 @@ export const linkToEtherscan = (
  * @param {Networks} network
  */
 export const linkToTokenEtherscan = (address: string, tokenID: string, network = NETWORK): string => {
-  const prefix = network !== Networks.main ? `${network}.` : "";
+  const prefix = network !== ChainId.Mainnet ? `${network}.` : "";
   return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
 }
 
@@ -503,4 +420,8 @@ export const normalizeAddress = (address: string) => {
  */
 export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
+}
+
+export const chainIdToName = (chainId: ChainId | number) => {
+  return CHAIN_DATA_LIST[chainId].network;
 }

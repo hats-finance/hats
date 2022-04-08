@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fetchWalletBalance, fromWei, getNetworkNameByChainId, isDigitsOnly, toWei } from "../../utils";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fromWei, isDigitsOnly, toWei } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
@@ -62,7 +62,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
       <span>
         WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
         YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff), { units: ["d", "h", "m"] })} PERIOD</span><br /><br />
-      WITHDRAWAL AVAILABLE WITHIN:
+        WITHDRAWAL AVAILABLE WITHIN:
       </span>
       <Countdown
         endDate={withdrawEnableTime}
@@ -88,9 +88,6 @@ export default function DepositWithdraw(props: IProps) {
   const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
   const isAboveMinimumDeposit = !userInput ? false : toWei(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
-  const network = getNetworkNameByChainId(chainId);
   const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
   const withdrawSafetyPeriodData = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
@@ -168,7 +165,7 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
   }
 
@@ -180,7 +177,7 @@ export default function DepositWithdraw(props: IProps) {
       async () => {
         setWithdrawRequests(undefined);
         setUserInput("");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
   }
 
@@ -202,7 +199,7 @@ export default function DepositWithdraw(props: IProps) {
       () => { if (props.setShowModal) { props.setShowModal(false); } },
       async () => {
         setUserInput("");
-        fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
       }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
   }
 
