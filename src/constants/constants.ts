@@ -23,22 +23,22 @@ export enum RoutePaths {
   committee_tools = "/committee-tools"
 }
 
-export enum MasterAddresses {
-  main = "0x571f39d351513146248acafa9d0509319a327c4d",
-  rinkeby = "0xccaadc293faaea229e0ca4a22b0330b65634b483"
+export const MasterAddresses = {
+  [ChainId.Mainnet]: "0x571f39d351513146248acafa9d0509319a327c4d",
+  [ChainId.Rinkeby]: "0xccaadc293faaea229e0ca4a22b0330b65634b483"
 }
 
-export enum NFTMangerAddress {
-  main = "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-  rinkeby = "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+export const NFTMangerAddress = {
+  [ChainId.Mainnet]: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+  [ChainId.Rinkeby]: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
 
-export enum NFTAirdropAddress {
-  main = "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
-  rinkeby = "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
+export const NFTAirdropAddress = {
+  [ChainId.Mainnet]: "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
+  [ChainId.Rinkeby]: "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
 }
 
-export const WalletConnectRPC = {
+export const Endpoint = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
@@ -51,9 +51,9 @@ export enum Pages {
   nft_airdrop = "NFT Airdrop"
 }
 
-export enum LPUniswapURIs {
-  main = "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
-  rinkeby = "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
+export const LPUniswapURIs = {
+  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
+  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
 }
 
 export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";

@@ -1,17 +1,18 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, fromWei, isDigitsOnly, toWei } from "../../utils";
+import { useSelector } from "react-redux";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
-import * as contractsActions from "../../actions/contractsActions";
+//import * as contractsActions from "../../actions/contractsActions";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
+import { formatUnits, formatEther, parseUnits } from "@ethersproject/units"
 import { RootState } from "../../reducers";
 import Tooltip from "rc-tooltip";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE } from "../../constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import millify from "millify";
 import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../../settings";
@@ -19,6 +20,8 @@ import moment from "moment";
 import Countdown from "../Shared/Countdown/Countdown";
 import humanizeDuration from "humanize-duration";
 import ApproveToken from "./ApproveToken";
+import { useEthers, useTokenBalance } from "@usedapp/core";
+import { useAllowance, useApproveToken, useClaim, useDepositAndClaim, usePendingReward, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 
 interface IProps {
   data: IVault
@@ -76,20 +79,15 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 }
 
 export default function DepositWithdraw(props: IProps) {
-  const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol, committeeCheckedIn, depositPause } = props.data.parentVault;
   const { parentDescription, isGuest, description } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
-  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
-  const [pendingWalletAction, setPendingWalletAction] = useState(false);
-  const [tokenBalance, setTokenBalance] = useState("0");
-  const notEnoughBalance = parseInt(userInput) > parseInt(tokenBalance);
-  const isAboveMinimumDeposit = !userInput ? false : toWei(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { loading, error, data } = useQuery(getStakerData(id, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
-  const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, selectedAddress), { pollInterval: DATA_POLLING_INTERVAL });
+  const isAboveMinimumDeposit = !userInput ? false : parseUnits(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
+  const { account } = useEthers()
+  const { loading, error, data } = useQuery(getStakerData(id, account!), { pollInterval: DATA_POLLING_INTERVAL });
+  const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: DATA_POLLING_INTERVAL });
   const withdrawSafetyPeriodData = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
@@ -119,89 +117,84 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
 
-  const canWithdraw = availableToWithdraw && Number(fromWei(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
-  useEffect(() => {
-    const getTokenData = async () => {
-      setTokenBalance(await contractsActions.getTokenBalance(stakingToken, selectedAddress, stakingTokenDecimals));
-    }
-    getTokenData();
-  }, [stakingToken, selectedAddress, inTransaction, stakingTokenDecimals]);
-
-  const [pendingReward, setPendingReward] = useState(BigNumber.from(0));
-  const amountToClaim = millify(Number(fromWei(pendingReward)), { precision: 3 });
-
-  useEffect(() => {
-    const getPendingReward = async () => {
-      setPendingReward(await contractsActions.getPendingReward(master.address, pid, selectedAddress));
-    }
-    getPendingReward();
-  }, [master.address, selectedAddress, pid, inTransaction])
-
-  const approveToken = async (amountToSpend?: BigNumber) => {
-    setPendingWalletAction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.approveToken(stakingToken, master.address, amountToSpend),
-      () => { },
-      async () => {
-        setPendingWalletAction(false);
-      },
-      () => { setPendingWalletAction(false); }, dispatch, `Spending ${stakingTokenSymbol} approved`);
+  let userInputValue
+  try {
+    userInputValue = parseUnits(userInput!, stakingTokenDecimals)
+  } catch {
+    userInputValue = BigNumber.from(0)
   }
 
+
+  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
+
+  const tokenBalance = formatUnits(useTokenBalance(stakingToken, account) ?? 0, stakingTokenDecimals);
+  const notEnoughBalance = userInputValue > tokenBalance;
+
+  const pendingReward = usePendingReward(master.address, pid, account!) ?? BigNumber.from(0)
+  const amountToClaim = millify(Number(formatEther(pendingReward)), { precision: 3 });
+
+  const { send: approveToken, state: approveTokenState } = useApproveToken(stakingToken)
+  const handleApproveToken = async (amountToSpend?: BigNumber) => {
+    approveToken(amountToSpend ?? MAX_SPENDING);
+  }
+
+
+  const allowance = useAllowance(stakingToken, account!, master.address)
+  const hasAllowance = allowance?.gte(userInputValue);
   const tryDeposit = async () => {
-    if (!await contractsActions.hasAllowance(stakingToken, selectedAddress, master.address, userInput, stakingTokenDecimals)) {
+    if (!hasAllowance) {
       setShowUnlimitedMessage(true);
     }
     else {
-      depositAndClaim();
+      handleDepositAndClaim();
     }
   }
 
-  const depositAndClaim = async () => {
-    setPendingWalletAction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.depositAndClaim(pid, master.address, userInput, stakingTokenDecimals),
-      () => { if (props.setShowModal) { props.setShowModal(false); } },
-      async () => {
-        setUserInput("");
-        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+  console.log("master address", master.address);
+
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address)
+  const handleDepositAndClaim = async () => {
+    depositAndClaim(pid, userInputValue)
+    // () => { if (props.setShowModal) { props.setShowModal(false); } },
+    // async () => {
+    //   setUserInput("");
+    //   //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+    // }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
   }
 
-  const withdrawAndClaim = async () => {
-    setPendingWalletAction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.withdrawAndClaim(pid, master.address, calculateActualWithdrawValue(availableToWithdraw, userInput, userShares, stakingTokenDecimals)),
-      () => { if (props.setShowModal) { props.setShowModal(false); } },
-      async () => {
-        setWithdrawRequests(undefined);
-        setUserInput("");
-        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address)
+
+  const handleWithdrawAndClaim = async () => {
+    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares, stakingTokenDecimals))
+    // await contractsActions.createTransaction(
+    //   async () => contractsActions.withdraw AndClaim(pid, master.address, ),
+    //   () => { if (props.setShowModal) { props.setShowModal(false); } },
+    //   async () => {
+    //     setWithdrawRequests(undefined);
+    //     setUserInput("");
+    //     //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+    //   }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
   }
 
-  const withdrawRequest = async () => {
-    setPendingWalletAction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.withdrawRequest(pid, master.address),
-      () => { },
-      async () => { setPendingWalletAction(false); },
-      () => { setPendingWalletAction(false); },
-      dispatch,
-      "Withdrawal Request succeeded");
+  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address)
+  const handleWithdrawRequest = async () => {
+    withdrawRequest(pid)
   }
 
-  const claim = async () => {
-    setPendingWalletAction(true);
-    await contractsActions.createTransaction(
-      async () => contractsActions.claim(pid, master.address),
-      () => { if (props.setShowModal) { props.setShowModal(false); } },
-      async () => {
-        setUserInput("");
-        //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-      }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+  const { send: claim, state: claimState } = useClaim(master.address)
+  const handleClaim = async () => {
+    claim(pid)
+    // () => { if (props.setShowModal) { props.setShowModal(false); } },
+    // async () => {
+    //   setUserInput("");
+    //   //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
+    // }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
   }
+
+  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState]
+
+  const pendingWalletAction = allStates.some(state => state.status === 'PendingSignature' || state.status === 'Mining');
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,
@@ -229,11 +222,11 @@ export default function DepositWithdraw(props: IProps) {
       <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
         <div className="balance-wrapper">
           {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${stakingTokenSymbol}`}
-          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(fromWei(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
+          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : fromWei(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
+            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : formatUnits(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
         </div>
         <div>
           <div className={amountWrapperClass}>
@@ -246,7 +239,7 @@ export default function DepositWithdraw(props: IProps) {
               <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? parentDescription?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
-            {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${fromWei(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
+            {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${parseUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
             {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
@@ -254,11 +247,11 @@ export default function DepositWithdraw(props: IProps) {
         <div className="staked-wrapper">
           <div>
             <span>Staked</span>
-            <span>{fromWei(deposited, stakingTokenDecimals)}</span>
+            <span>{formatUnits(deposited, stakingTokenDecimals)}</span>
           </div>
           <div>
             <span>Withdrawn</span>
-            <span>{fromWei(withdrawAmount, stakingTokenDecimals)}</span>
+            <span>{formatUnits(withdrawAmount, stakingTokenDecimals)}</span>
           </div>
         </div>
         <div className="apy-wrapper">
@@ -288,8 +281,8 @@ export default function DepositWithdraw(props: IProps) {
       <div className="action-btn-wrapper">
         {tab === "deposit" && showUnlimitedMessage &&
           <ApproveToken
-            approveToken={approveToken}
-            depositAndClaim={depositAndClaim}
+            approveToken={handleApproveToken}
+            depositAndClaim={handleDepositAndClaim}
             userInput={userInput}
             setShowUnlimitedMessage={setShowUnlimitedMessage}
             stakingTokenDecimals={stakingTokenDecimals} />}
@@ -303,14 +296,14 @@ export default function DepositWithdraw(props: IProps) {
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriodData.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
-            onClick={async () => await withdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
+            onClick={async () => await handleWithdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
           </button>}
         {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
           <button
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
-            onClick={async () => await withdrawRequest()}>WITHDRAWAL REQUEST</button>}
-        <button onClick={async () => await claim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
+            onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
+        <button onClick={async () => await handleClaim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
       {pendingWalletAction && <Loading />}
     </div>

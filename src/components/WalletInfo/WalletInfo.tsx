@@ -12,7 +12,8 @@ export default function WalletInfo() {
   const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { account, chainId } = useEthers()
-  const ethBalance = useEtherBalance(account)
+  const ethBalance = formatEther(useEtherBalance(account) ?? 0)
+  const ethBalanceString = (+ethBalance).toFixed(4)
   const correctNetwork = NETWORK === chainId
   const ensName = useLookupAddress()
 
@@ -20,7 +21,7 @@ export default function WalletInfo() {
     <div className="wallet-info-wrapper">
       {screenSize === ScreenSize.Desktop && correctNetwork &&
         <div className="wallet-balance">
-          {ethBalance && <span>{`${formatEther(ethBalance)} ETH`}</span>}
+          {ethBalance && <span>{ethBalanceString} ETH</span>}
         </div>}
       {inTransaction ? (
         <TransactionInfo />

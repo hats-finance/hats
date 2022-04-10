@@ -10,11 +10,13 @@ import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { ScreenSize } from "../constants/constants";
+import { useVaults } from "hooks/useVaults";
+import { fromWei } from "utils";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
+  const { vaults } = useVaults();
   const [selectedVault, setSelectedVault] = useState("");
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
@@ -30,7 +32,14 @@ export default function Honeypots() {
 
   const guestVaults: Array<JSX.Element> = [];
 
-  const vaults = vaultsData.map((vault: IVault) => {
+  const vaultValue = (vault: IVault) => {
+    const { honeyPotBalance, stakingTokenDecimals, tokenPrice } = vault.parentVault;
+    return Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice
+  }
+
+  const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
+    return vaultValue(b) - vaultValue(a);
+  }).map((vault: IVault) => {
     // TODO: temp to not show guest vaults
     if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
@@ -46,7 +55,7 @@ export default function Honeypots() {
 
   return (
     <div className="content honeypots-wrapper">
-      {vaultsData.length === 0 ? <Loading fixed /> :
+      {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>
             <SafePeriodBar />
@@ -74,7 +83,7 @@ export default function Honeypots() {
             <tr className="transparent-row">
               <td colSpan={7}>Hats Native vaults</td>
             </tr>
-            {vaults}
+            {vaultsDisplay}
             {guestVaults.length > 0 &&
               <tr className="transparent-row">
                 <td colSpan={7}>Hats Guest bounties</td>

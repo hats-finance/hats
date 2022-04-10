@@ -139,16 +139,20 @@ export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
 };
 
-
+let lastCoinGeckoError = 0
 /**
  * Gets token price in USD using CoinGecko API
  * @param {string} tokenAddress
  */
 export const getTokenPrice = async (tokenAddress: string) => {
+  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
+    return
+  }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`);
     return data.data[Object.keys(data.data)[0]]?.usd;
   } catch (err) {
+    lastCoinGeckoError = Date.now()
     console.error(err);
   }
 };
@@ -159,10 +163,14 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @returns the prices for each given token
  */
 export const getTokensPrices = async (tokensAddresses: string[]) => {
+  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
+    return
+  }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
     return data.data;
   } catch (err) {
+    lastCoinGeckoError = Date.now()
     console.error(err);
   }
 };

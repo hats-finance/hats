@@ -1,6 +1,6 @@
 import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors, NotificationType, ScreenSize, WalletConnectRPC } from "../../constants/constants";
+import { Colors, Endpoint, NotificationType, ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
@@ -33,7 +33,7 @@ export default function WalletButton() {
           options: {
             chainId: NETWORK,
             rpc: {
-              [NETWORK]: WALLET_CONNECT_RPC || WalletConnectRPC[NETWORK],
+              [NETWORK]: WALLET_CONNECT_RPC || Endpoint[NETWORK],
             }
           },
         },

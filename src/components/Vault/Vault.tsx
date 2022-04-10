@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import "../../styles/Vault/Vault.scss";
-import { IVault } from "../../types/types";
+import { IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
 import { formatWei, fromWei } from "../../utils";
@@ -18,9 +18,7 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const [toggleRow, setToggleRow] = useState(false);
-  const { name, isGuest, bounty, id, description } = props.data;
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.tokenPrice);
-  const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0].parentVault.apy);
+  const { name, isGuest, bounty, description, parentVault: { tokenPrice, apy } } = props.data;
   const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
@@ -65,7 +63,7 @@ export default function Vault(props: IProps) {
             <img src={description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{name}</div>
-              {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}
+              {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={(description as IVaultDescription)?.source?.url}>By {(description as IVaultDescription)?.source?.name}</a>}
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>

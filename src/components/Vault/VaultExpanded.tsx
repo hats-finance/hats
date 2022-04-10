@@ -1,4 +1,4 @@
-import { IPoolWithdrawRequest, IVault } from "../../types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
@@ -77,11 +77,11 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">Committee Members:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? parentDescription?.committee?.members : description?.committee?.members} />
+                  <Members members={isGuest ? (parentDescription as IVaultDescription)?.committee?.members : (description as IVaultDescription)?.committee?.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">Committee Address:</span>
-                  <Multisig multisigAddress={isGuest ? parentDescription?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
+                  <Multisig multisigAddress={isGuest ? (parentDescription as IVaultDescription)?.committee?.["multisig-address"] : (description as IVaultDescription)?.committee?.["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
                   <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
@@ -117,7 +117,7 @@ export default function VaultExpanded(props: IProps) {
             <div className="sub-title">SEVERITY PRIZES</div>
             <div className="severity-prizes-content">
               <Severities
-                severities={description?.severities}
+                severities={(description as IVaultDescription)?.severities}
                 parentVault={props.data.parentVault} />
             </div>
           </div>

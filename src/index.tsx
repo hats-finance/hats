@@ -7,7 +7,7 @@ import "./index.css";
 import App from "./App";
 import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, WALLET_CONNECT_RPC } from "./settings";
 import HttpsRedirect from "react-https-redirect";
-import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, WalletConnectRPC } from "./constants/constants";
+import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, Endpoint } from "./constants/constants";
 import { Config, DAppProvider } from "@usedapp/core";
 import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 
@@ -25,7 +25,7 @@ let config: Config = {
   networks: [getChainById(NETWORK)!],
   readOnlyChainId: NETWORK,
   readOnlyUrls: {
-    [NETWORK]: WALLET_CONNECT_RPC || WalletConnectRPC[NETWORK]
+    [NETWORK]: WALLET_CONNECT_RPC || Endpoint[NETWORK]
   },
   autoConnect: true
 }
