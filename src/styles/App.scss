@@ -26,7 +26,6 @@ button {
   font-size: $small;
   border: none;
   padding: 10px;
-  margin: 5px;
   cursor: pointer;
   background-color: transparent;
   border: 1px solid $turquoise;
@@ -73,7 +72,7 @@ a {
 }
 
 /* Default input border color when not valid */
-.inputError {
+.input-error {
   border-color: $strong-red !important;
 }
 

@@ -5,12 +5,16 @@ import erc20Abi from "../data/abis/erc20.json";
 import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
 import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
+import TokenAirdrop from "../data/abis/TokenAirdrop.json";
+import HatsToken from "../data/abis/HatsToken.json";
 import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
-import { NETWORK, NFT_AIRDROP_ADDRESS } from "../settings";
+import { NETWORK, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
+import { buildDataDelegation } from "components/Airdrop/utils";
+import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
 
 let provider: ethers.providers.Web3Provider;
 let signer: Signer;
@@ -21,7 +25,7 @@ if (window.ethereum) {
 }
 
 /**
- * Returns the current block number
+ * @returns The current block number
  */
 export const getBlockNumber = async () => {
   try {
@@ -287,7 +291,7 @@ export const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentiv
 
 
 
-/** NFT Airdrop contract actions - START */
+/** Airdrop contract actions - START */
 
 /**
  * Get the merkle tree ref (eligible tokens)
@@ -298,7 +302,7 @@ export const getMerkleTree = async () => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     const data = contract.filters.MerkleTreeChanged();
     const filter = await contract.queryFilter(data, 0);
-    return (filter[filter.length -1].args as any).merkleTreeIPFSRef;
+    return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
   } catch (error) {
     console.error(error);
   }
@@ -331,7 +335,7 @@ export const getDeadline = async () => {
  * @param {string} tokenID 
  * @param {any} proof 
  */
-export const nftAirdropRedeem = async (account: string, tokenID: string, proof: any) => {
+export const redeemNFT = async (account: string, tokenID: string, proof: any) => {
   const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
   return await contract.redeem(account, tokenID, proof);
 }
@@ -350,7 +354,72 @@ export const isRedeemed = async (tokenID: string, address: string) => {
   }
 }
 
-/** NFT Airdrop contract actions - END */
+/**
+ * Checks if a given address has claimed the token reward.
+ * @param {string} address
+ */
+export const hasClaimed = async (address: string) => {
+  const contract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  try {
+    return await contract.hasClaimed(address);
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * get current votes for a given account
+ * @param {string} address 
+ * @param {string} rewardsToken 
+ */
+export const getCurrentVotes = async (address: string, rewardsToken: string) => {
+  try {
+    const contract = new Contract(rewardsToken, HatsToken, signer);
+    return (await contract.getCurrentVotes(address) as BigNumber).toNumber();
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/**
+ * Claim Hats token
+ * @param {string} delegatee 
+ * @param {number} amount 
+ * @param {any} proof
+ * @param {string} rewardsToken
+ * @param {string} chainId
+ */
+export const claimToken = async (delegatee: string, amount: number, proof: any, rewardsToken: string, chainId: string) => {
+  const tokenAirdropContract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
+  const hatsContract = new Contract(rewardsToken, HatsToken, signer);
+
+  try {
+    const address = await signer.getAddress();
+    const nonce = (await hatsContract.nonces(address) as BigNumber).toNumber();
+    const data = buildDataDelegation(
+      parseInt(chainId.replace('0x', '')),
+      rewardsToken,
+      delegatee,
+      nonce,
+      DELEGATION_EXPIRY,
+    );
+
+    const signature = await (signer as any).provider.send("eth_signTypedData_v3", [
+      address,
+      JSON.stringify(data)
+    ]);
+
+    const r = '0x' + signature.substring(2).substring(0, 64);
+    const s = '0x' + signature.substring(2).substring(64, 128);
+    const v = '0x' + signature.substring(2).substring(128, 130);
+
+    return await tokenAirdropContract.delegateAndClaim(address, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/** Airdrop contract actions - END */
 
 
 /**

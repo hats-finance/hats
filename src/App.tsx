@@ -12,8 +12,7 @@ import {
   updateVaults,
   updateRewardsToken,
   updateHatsPrice,
-  updateWithdrawSafetyPeriod,
-  updateAirdropEligibleTokens,
+  updateWithdrawSafetyPeriod
 } from "./actions/index";
 import {
   getNetworkNameByChainId,
@@ -26,7 +25,6 @@ import {
 } from "./utils";
 import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
 import {
-  IPFS_PREFIX,
   LocalStorage,
   NotificationType,
   RoutePaths,
@@ -46,13 +44,12 @@ import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
-import { EligibleTokens, IVault } from "./types/types";
-import NFTAirdropNotification from "./components/NFTAirdropNotification/NFTAirdropNotification";
-import { getMerkleTree, isRedeemed } from "./actions/contractsActions";
-import NFTAirdrop from "./components/NFTAirdrop/NFTAirdrop";
+import { IVault } from "./types/types";
+import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
+import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import { PROTECTED_TOKENS } from "./data/vaults";
-import axios from "axios";
 import "./i18n.ts"; // Initialise i18n
+import { fetchAirdropData } from "./components/Airdrop/utils";
 
 function App() {
   const dispatch = useDispatch();
@@ -78,7 +75,7 @@ function App() {
     }
   }, [dispatch, provider]);
 
-  const [showNFTAirdropNotification, setShowNFTAirdropNotification] = useState(false);
+  const [showAirdropPrompt, setShowAirdropPrompt] = useState(false);
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
@@ -200,28 +197,7 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      try {
-        const ipfsEligibleTokens = await getMerkleTree();
-        const data = await axios.get(`${IPFS_PREFIX}${ipfsEligibleTokens}`);
-
-        for (const key in data.data) {
-          data.data[key] = normalizeAddress(data.data[key]);
-        }
-
-        dispatch(updateAirdropEligibleTokens(data.data));
-
-        if (Object.values(data.data as EligibleTokens).includes(normalizeAddress(selectedAddress))) {
-          const savedItems = JSON.parse(localStorage.getItem(LocalStorage.NFTAirdrop) ?? "[]");
-          const tokenID = Object.keys(data.data).find(key => data.data[key] === normalizeAddress(selectedAddress));
-
-          if (!savedItems.includes(normalizeAddress(selectedAddress)) && await isRedeemed(tokenID ?? "", normalizeAddress(selectedAddress)) === false) {
-            setShowNFTAirdropNotification(true);
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        // TODO: show error
-      }
+      await fetchAirdropData(normalizeAddress(selectedAddress), () => setShowAirdropPrompt(true), dispatch);
     })();
   }, [dispatch, selectedAddress])
 
@@ -255,12 +231,15 @@ function App() {
         <Route path={RoutePaths.committee_tools}>
           <CommitteeTools />
         </Route>
-        <Route path={RoutePaths.nft_airdrop}>
-          <NFTAirdrop />
+        <Route path={RoutePaths.airdrop}>
+          <Airdrop />
         </Route>
       </Switch>
       {showNotification && hasSeenWelcomePage && <Notification />}
-      {hasSeenWelcomePage === "1" && showNFTAirdropNotification && <NFTAirdropNotification setShowNFTAirdropNotification={setShowNFTAirdropNotification} />}
+      {hasSeenWelcomePage === "1" && showAirdropPrompt && (
+        <AirdropPrompt
+          address={normalizeAddress(selectedAddress)}
+          closePrompt={() => setShowAirdropPrompt(false)} />)}
     </>
   );
 }
