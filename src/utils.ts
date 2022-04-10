@@ -403,15 +403,6 @@ export const checkMasterAddress = (masterAddress: string) => {
 }
 
 /**
- * Used to hashToken in NFTAirdrop
- * @param {string} tokenID
- * @param {string} account 
- */
-export const hashToken = (tokenID: string, account: string) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [tokenID, account]).slice(2), 'hex');
-}
-
-/**
  * Normalize any supported address-format to a checksum address.
  * @param {string} address
  */

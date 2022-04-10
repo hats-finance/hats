@@ -1,5 +1,3 @@
-import { PrivateKey } from "openpgp";
-
 export interface IParentVault {
   id: string
   pid: string
@@ -192,12 +190,15 @@ export interface IPosition {
   canWithdraw: boolean
 }
 
-/** NFTAirdrop Eligible Tokens */
-export type EligibleTokens = {
-  [key: string]: string
+export type NFTAirdropET = { [key: string]: string };
+export type TokenAirdropET = { [key: string]: number };
+
+export interface IAirdropData {
+  nft: NFTAirdropET,
+  token: TokenAirdropET
 }
 
-export interface IAirdropElement {
+export interface INFTAirdropElement {
   description: string
   external_url: string
   image: string

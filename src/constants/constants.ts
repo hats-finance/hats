@@ -5,7 +5,7 @@ export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  NFTAirdrop = "HATS_NFT_AIRDROP_USER_NOTIFIED",
+  Airdrop = "HATS_AIRDROP_USER_NOTIFIED",
   PGPKeystore = "HATS_PGP_KEYSTORE"
 }
 
@@ -19,7 +19,7 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
-  nft_airdrop = "/nft_airdrop/",
+  airdrop = "/airdrop",
   committee_tools = "/committee-tools"
 }
 
@@ -48,7 +48,7 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  nft_airdrop = "NFT Airdrop"
+  airdrop = "Airdrop"
 }
 
 export const LPUniswapURIs = {
@@ -92,7 +92,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
-export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs/";
+export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs";
 
 export const DEFAULT_RINKEBY_SUBGRAPH_URI =
   "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
