@@ -1,13 +1,19 @@
-export const TOKEN_AIRDROP_IPFS_CID = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1";
-
 /** 
  * This is used for rinkeby. In mainnet it is fetched from the subgraph
  */
 export const REWARDS_TOKEN = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
 
-export const DELEGATEES_IPFS = "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm";
-
 export const DELEGATION_EXPIRY = 10e9;
+
+export enum TokenAirdropCID {
+  main = "",
+  rinkeby = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1"
+}
+
+export enum TokenAirdropDelegatees {
+  main = "",
+  rinkeby = "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm"
+}
 
 export enum NFTAirdropAddress {
   main = "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",

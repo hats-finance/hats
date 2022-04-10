@@ -2,7 +2,7 @@
 import { getCurrentVotes } from "actions/contractsActions";
 import axios from "axios";
 import classNames from "classnames";
-import { REWARDS_TOKEN, DELEGATEES_IPFS, IDelegateeData } from "components/Airdrop/constants";
+import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import Modal from "components/Shared/Modal";
 import { IPFS_PREFIX, Networks } from "constants/constants";
@@ -10,7 +10,7 @@ import { t } from "i18next";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { NETWORK } from "settings";
+import { DELEGATEES_IPFS, NETWORK } from "settings";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 

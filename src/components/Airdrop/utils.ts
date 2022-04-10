@@ -1,11 +1,12 @@
 import axios from "axios";
 import { ethers } from "ethers";
 import { Dispatch } from "redux";
+import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
 import { getMerkleTree, hasClaimed, isRedeemed } from "../../actions/contractsActions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
-import { Delegation, EIP712Domain, TOKEN_AIRDROP_IPFS_CID } from "./constants";
+import { Delegation, EIP712Domain } from "./constants";
 
 /**
  * Function to fetch airdrop data
