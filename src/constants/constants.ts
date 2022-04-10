@@ -43,6 +43,11 @@ export const Endpoint = {
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
 
+export const Subgraph = {
+  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
+  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4"
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
@@ -93,9 +98,6 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
 export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs";
-
-export const DEFAULT_RINKEBY_SUBGRAPH_URI =
-  "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4";
 
 export const HATS_WEBSITE = "https://hats.finance";
 
