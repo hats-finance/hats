@@ -151,8 +151,6 @@ export default function DepositWithdraw(props: IProps) {
     }
   }
 
-  console.log("master address", master.address);
-
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address)
   const handleDepositAndClaim = async () => {
     depositAndClaim(pid, userInputValue)

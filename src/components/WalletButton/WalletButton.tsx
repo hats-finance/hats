@@ -1,11 +1,11 @@
 import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors, Endpoint, NotificationType, ScreenSize } from "../../constants/constants";
+import { Colors, NotificationType, ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { NETWORK, WALLET_CONNECT_RPC } from "settings";
+import { ENDPOINT, NETWORK } from "settings";
 import { shortenIfAddress, useEthers } from "@usedapp/core";
 import { useCallback, useEffect, useState } from "react";
 import { toggleNotification } from "actions";
@@ -33,7 +33,7 @@ export default function WalletButton() {
           options: {
             chainId: NETWORK,
             rpc: {
-              [NETWORK]: WALLET_CONNECT_RPC || Endpoint[NETWORK],
+              [NETWORK]: ENDPOINT,
             }
           },
         },

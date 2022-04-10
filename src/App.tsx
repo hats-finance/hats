@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
+import { GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
@@ -17,10 +17,7 @@ import {
   calculateApy,
   getWithdrawSafetyPeriod,
   normalizeAddress,
-  getTokensPrices,
-  parseJSONToObject,
 } from "./utils";
-import { DATA_POLLING_INTERVAL } from "./settings";
 import {
   LocalStorage,
   RoutePaths,
@@ -43,7 +40,6 @@ import { RootState } from "./reducers";
 import { IVault } from "./types/types";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
-import { PROTECTED_TOKENS } from "./data/vaults";
 import "./i18n.ts"; // Initialise i18n
 import { fetchAirdropData } from "./components/Airdrop/utils";
 
@@ -98,48 +94,6 @@ function App() {
 
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
 
-  /**
-    * The new ApolloClient InMemoryCache policy makes the retrieved data frozen/sealed,
-    * meaning it's not extensible and no new fields can be added to the object.
-    * Here we use "no-cache" fetch policy to get the data not frozen.
-   */
-  const { loading, error, data } = useQuery(GET_VAULTS, {
-    pollInterval: DATA_POLLING_INTERVAL,
-    fetchPolicy: "no-cache"
-  });
-
-  useEffect(() => {
-    (async () => {
-      if (!loading && !error && data && data.vaults) {
-
-        const calculateTokenPrices = async () => {
-          const stakingTokens = (data.vaults as IVault[]).map((vault) => {
-            // TODO: Temporay until the protected token will be manifested in the subgraph.
-            if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
-              vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
-            }
-            return vault.parentVault.stakingToken;
-          })
-
-          const tokensPrices = await getTokensPrices(stakingTokens);
-
-          for (const vault of data.vaults as IVault[]) {
-            if (tokensPrices.hasOwnProperty(vault.parentVault.stakingToken)) {
-              vault.parentVault.tokenPrice = tokensPrices[vault.parentVault.stakingToken].usd;
-            }
-            vault.description = parseJSONToObject(vault.description as any);
-            if (vault.parentDescription) {
-              vault.parentDescription = parseJSONToObject(vault.parentDescription as any);
-            }
-          }
-        };
-
-        await calculateTokenPrices();
-        dispatch(updateVaults(data.vaults));
-      }
-    })();
-  }, [loading, error, data, dispatch]);
-
   const vaults: Array<IVault> = useSelector(
     (state: RootState) => state.dataReducer.vaults
   );
@@ -157,19 +111,6 @@ function App() {
     }
   }, [dispatch, hatsPrice, vaults]);
 
-  useEffect(() => {
-    const calculatetokenPrices = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.tokenPrice = await getTokenPrice(
-          vault.parentVault.stakingToken
-        );
-      }
-      dispatch(updateVaults(vaults));
-    };
-    if (vaults) {
-      calculatetokenPrices();
-    }
-  }, [dispatch, vaults]);
 
   useEffect(() => {
     (async () => {
