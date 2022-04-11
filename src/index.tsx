@@ -5,7 +5,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
-import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, ENDPOINT } from "./settings";
+import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, ENDPOINT, AVAILABLE_NETWORKS } from "./settings";
 import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { Config, DAppProvider } from "@usedapp/core";
@@ -22,7 +22,7 @@ const lp_uniswap_subgraph = new HttpLink({
 const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, lp_uniswap_subgraph, main_subgraph);
 
 let config: Config = {
-  networks: [getChainById(NETWORK)!],
+  networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!) || [getChainById(NETWORK)],
   readOnlyChainId: NETWORK,
   readOnlyUrls: {
     [NETWORK]: ENDPOINT

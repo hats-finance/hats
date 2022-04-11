@@ -3,6 +3,7 @@ import { ChainId } from '@usedapp/core'
 import { NFTAirdropAddress, TokenAirdropAddress, TokenAirdropCID, TokenAirdropDelegatees } from "components/Airdrop/constants";
 require('dotenv').config();
 
+export const AVAILABLE_NETWORKS: ChainId[] = process.env.REACT_APP_AVAILABLE_NETWORKS ? process.env.REACT_APP_AVAILABLE_NETWORKS.split(',').map(chainId => parseInt(chainId)) : undefined || [ChainId.Mainnet, ChainId.Rinkeby];
 export const NETWORK: ChainId = parseInt(process.env.REACT_APP_NETWORK!) as ChainId || ChainId.Rinkeby;
 export const SUBGRAPH_URI = process.env.REACT_APP_SUBGRAPH_URI || Subgraph[NETWORK];
 export const LP_UNISWAP_URI = process.env.REACT_APP_LP_UNISWAP_URI || LPUniswapURIs[NETWORK];

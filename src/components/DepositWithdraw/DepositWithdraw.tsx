@@ -5,7 +5,7 @@ import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 //import * as contractsActions from "../../actions/contractsActions";
-import { IPoolWithdrawRequest, IVault } from "../../types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -21,7 +21,7 @@ import Countdown from "../Shared/Countdown/Countdown";
 import humanizeDuration from "humanize-duration";
 import ApproveToken from "./ApproveToken";
 import { useEthers, useTokenBalance } from "@usedapp/core";
-import { useAllowance, useApproveToken, useClaim, useDepositAndClaim, usePendingReward, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { useAllowance, useApproveToken, useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 
 interface IProps {
   data: IVault
@@ -190,7 +190,12 @@ export default function DepositWithdraw(props: IProps) {
     // }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
   }
 
-  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState]
+  const { send: checkIn, state: checkInState } = useCheckIn(master.address)
+  const handleCheckIn = () => {
+    checkIn(pid)
+  }
+
+  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState, checkInState]
 
   const pendingWalletAction = allStates.some(state => state.status === 'PendingSignature' || state.status === 'Mining');
 
@@ -203,6 +208,11 @@ export default function DepositWithdraw(props: IProps) {
     "amount-wrapper": true,
     "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriodData.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
   })
+
+  const multisigAddress = isGuest ? (parentDescription as IVaultDescription)?.committee?.["multisig-address"] : (description as IVaultDescription)?.committee?.["multisig-address"]
+  console.log({ multisigAddress, account })
+
+  const isCommitteMultisig = multisigAddress === account
 
   return (
     <div className={depositWithdrawWrapperClass}>
@@ -301,6 +311,7 @@ export default function DepositWithdraw(props: IProps) {
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
+        {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
         <button onClick={async () => await handleClaim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
       {pendingWalletAction && <Loading />}

@@ -56,3 +56,8 @@ export function useClaim(address: string) {
     return useContractFunction(new Contract(address, vaultAbi), 'claim')
 }
 
+export function useCheckIn(address: string) {
+    checkMasterAddress(address)
+    return useContractFunction(new Contract(address, vaultAbi), 'checkIn')
+}
+
