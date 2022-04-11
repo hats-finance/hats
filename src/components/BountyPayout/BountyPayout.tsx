@@ -1,34 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
-import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
+import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
 import { VaultProvider } from "components/CommitteeTools/store";
+import { setPath } from "components/VaultEditor/objectUtils";
+import { RootState } from "reducers";
+import { IVault } from "types/types";
 
 import "./BountyPayout.scss";
 
-const severitiesOptions = [
-  {
-    label: "low",
-    value: "low"
-  },
-  {
-    label: "medium",
-    value: "medium"
-  },
-  {
-    label: "high",
-    value: "high"
-  },
-  {
-    label: "critical",
-    value: "critical"
-  }
-];
+export interface IClaimToSubmit {
+  pid: string;
+  beneficiary: string;
+  severity: string;
+}
 
 export default function BountyPayout() {
   const { t } = useTranslation();
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
+  const [selectedVault, setSelectedVault] = useState<IVault>({} as IVault);
+  const [claimToSubmit, setClaimToSubmit] = useState({
+    pid: "",
+    beneficiary: "",
+    severity: ""
+  } as IClaimToSubmit);
+  const vaultsData = useSelector(
+    (state: RootState) => state.dataReducer.vaults
+  );
+
+  useEffect(() => {
+    if (vaultsData.length) {
+      // Need to make the UI to select Vault - Reusable
+      setSelectedVault(vaultsData[0]);
+      // Will select the vault from this UI and set its id to claimToSubmit
+      setClaimToSubmit((prev) => {
+        let newObject = { ...prev };
+        setPath(newObject, "pid", vaultsData[0].id);
+        return newObject;
+      });
+    }
+  }, [vaultsData]);
+
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setClaimToSubmit((prev) => {
+      let newObject = { ...prev };
+      setPath(newObject, e.target.name, e.target.value);
+      return newObject;
+    });
+  };
 
   return (
     <div className="content bounty-payout">
@@ -82,16 +105,24 @@ export default function BountyPayout() {
               <EditableContent
                 textInput
                 pastable
-                onChange={() => {}}
+                name="beneficiary"
+                value={claimToSubmit.beneficiary}
+                onChange={onChange}
                 placeholder={t("BountyPayout.wallet-address")}
               />
             </div>
             <div className="payout-details__severity">
               <label>{t("BountyPayout.severity")}</label>
-              <MultiSelect
-                value={[]}
-                onChange={() => {}}
-                options={severitiesOptions}
+              <Select
+                name="severity"
+                value={claimToSubmit.severity}
+                onChange={onChange}
+                options={(selectedVault?.description?.severities || []).map(
+                  (severity) => ({
+                    label: severity.name,
+                    value: severity.name
+                  })
+                )}
               />
             </div>
             <div className="payout-details__severity-desc">

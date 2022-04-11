@@ -1,0 +1,10 @@
+@import "../../../styles/constants.scss";
+
+.react-select-container {
+  .react-select__control {
+    &:hover {
+      border-color: $turquoise;
+      box-shadow: none;
+    }
+  }
+}

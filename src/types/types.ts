@@ -143,7 +143,7 @@ export interface IApprovedClaims {
   approver: string
   parentVault: IParentVault
   beneficiary: string
-  sevirity: string
+  severity: string
   hackerReward: string
   approverReward: string
   swapAndBurn: string
