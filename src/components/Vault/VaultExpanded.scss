@@ -22,6 +22,8 @@
         padding: 20px 30px;
         border: 1px solid $purple-blue;
         width: 50%;
+        flex: 0 0 auto;
+        box-sizing: border-box;
       }
       .multi-sig-wrapper {
         margin-bottom: 20px;
@@ -95,9 +97,14 @@
       align-items: center;
       height: 100%;
       .pie-chart-container {
-        svg {
-          max-width: 150px;
+        flex-shrink: 0;
+        > svg {
+          max-width: 120px;
           cursor: pointer;
+          overflow: visible;
+        }
+        button {
+          border: none;
         }
         button {
           border: none;
@@ -107,7 +114,7 @@
         color: $white;
       }
       .label-wrapper {
-        margin-left: 50px;
+        margin-left: 40px;
         padding-left: 10px;
         display: flex;
         flex-direction: column;

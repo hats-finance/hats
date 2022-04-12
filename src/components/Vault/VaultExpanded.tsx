@@ -41,6 +41,7 @@ export default function VaultExpanded(props: IProps) {
 
   const pieChartNonZeroVaules = pieChartData.filter((obj) => obj.value !== 0);
   const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+  const [chartMouseOver, setChartMouseOver] = useState(false);
 
   const nextSegement = () => {
     if (selectedSegmentIndex + 1 === pieChartNonZeroVaules.length) {
@@ -93,9 +94,12 @@ export default function VaultExpanded(props: IProps) {
                     {isMobile() && <button style={{ transform: "rotate(180deg)" }} onClick={nextSegement}><ArrowIcon width="20" height="20" /></button>}
                     <PieChart
                       onMouseOver={(e, segmentIndex) => {
+                        setChartMouseOver(true);
                         setSelectedSegmentIndex(segmentIndex);
                       }}
-                      lineWidth={30}
+                      onMouseOut={() => setChartMouseOver(false)}
+                      segmentsShift={(index) => (index === selectedSegmentIndex && (chartMouseOver || screenSize === ScreenSize.Mobile) ? 7 : 0)}
+                      lineWidth={45}
                       data={pieChartNonZeroVaules} />
                     {isMobile() && <button onClick={prevSegement}><ArrowIcon width="20" height="20" /></button>}
                   </div>
