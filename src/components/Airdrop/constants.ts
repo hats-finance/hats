@@ -7,7 +7,7 @@ export const DELEGATION_EXPIRY = 10e9;
 
 export enum TokenAirdropCID {
   main = "",
-  rinkeby = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1"
+  rinkeby = "QmVtwH39GHFbR7HJK4e9WK4JWHSoQdTTBRuti81rRdCkSJ"
 }
 
 export enum TokenAirdropDelegatees {
@@ -22,7 +22,7 @@ export enum NFTAirdropAddress {
 
 export enum TokenAirdropAddress {
   main = "",
-  rinkeby = "0x2B70108ed607Cd5FBE0E4b8659D71335C4be7687"
+  rinkeby = "0xB2F80c70345EF3cc13968487bc692F62D9417a6E"
 }
 
 export enum EligibilityStatus {
