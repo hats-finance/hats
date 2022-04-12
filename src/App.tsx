@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { GET_VAULTS, GET_MASTER_DATA } from "./graphql/subgraph";
 import { useQuery } from "@apollo/client";
@@ -8,14 +8,12 @@ import { useTranslation } from "react-i18next";
 import {
   changeScreenSize,
   updateSelectedAddress,
-  toggleNotification,
   updateVaults,
   updateRewardsToken,
   updateHatsPrice,
   updateWithdrawSafetyPeriod
 } from "./actions/index";
 import {
-  getNetworkNameByChainId,
   getTokenPrice,
   calculateApy,
   getWithdrawSafetyPeriod,
@@ -23,10 +21,9 @@ import {
   getTokensPrices,
   parseJSONToObject,
 } from "./utils";
-import { NETWORK, DATA_POLLING_INTERVAL } from "./settings";
+import { DATA_POLLING_INTERVAL } from "./settings";
 import {
   LocalStorage,
-  NotificationType,
   RoutePaths,
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -40,6 +37,8 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
+//import CommitteeTools from "./components/CommitteeTools/CommitteTools";
+import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
@@ -57,7 +56,6 @@ function App() {
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider) ?? "";
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
@@ -67,13 +65,6 @@ function App() {
     const language = window.localStorage.getItem("i18nextLng");
     if (language && language !== i18n.language) i18n.changeLanguage(language);
   }, [i18n]);
-
-  useEffect(() => {
-    const network = getNetworkNameByChainId(provider?.chainId);
-    if (provider && provider?.chainId && network !== NETWORK) {
-      dispatch(toggleNotification(true, NotificationType.Error, `Please change network to ${NETWORK}`, true));
-    }
-  }, [dispatch, provider]);
 
   const [showAirdropPrompt, setShowAirdropPrompt] = useState(false);
 
@@ -212,34 +203,27 @@ function App() {
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
-      <Switch>
-        <Route path="/" exact>
-          <Redirect to={RoutePaths.vaults} />
+      <Routes>
+        <Route path="/" element={<Navigate to={RoutePaths.vaults} replace={true} />} />
+        <Route path={RoutePaths.vaults} element={<Honeypots />} />
+        <Route path={RoutePaths.gov} element={<Gov />} />
+        <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
+        <Route path={RoutePaths.pools} element={<LiquidityPools />} />
+        <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
+        <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
+          <Route path=":ipfsHash" element={<VaultEditor />} />
         </Route>
-        <Route path={RoutePaths.vaults}>
-          <Honeypots />
+        <Route path={RoutePaths.airdrop} element={<Airdrop />} >
+          <Route path=":walletAddress" element={<Airdrop />} />
         </Route>
-        <Route path={RoutePaths.gov}>
-          <Gov />
-        </Route>
-        <Route path={RoutePaths.vulnerability}>
-          <VulnerabilityAccordion />
-        </Route>
-        <Route path={RoutePaths.pools}>
-          <LiquidityPools />
-        </Route>
-        <Route path={RoutePaths.committee_tools}>
-          <CommitteeTools />
-        </Route>
-        <Route path={RoutePaths.airdrop}>
-          <Airdrop />
-        </Route>
-      </Switch>
+      </Routes >
       {showNotification && hasSeenWelcomePage && <Notification />}
-      {hasSeenWelcomePage === "1" && showAirdropPrompt && (
-        <AirdropPrompt
-          address={normalizeAddress(selectedAddress)}
-          closePrompt={() => setShowAirdropPrompt(false)} />)}
+      {
+        hasSeenWelcomePage === "1" && showAirdropPrompt && (
+          <AirdropPrompt
+            address={normalizeAddress(selectedAddress)}
+            closePrompt={() => setShowAirdropPrompt(false)} />)
+      }
     </>
   );
 }

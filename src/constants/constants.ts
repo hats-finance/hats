@@ -18,6 +18,8 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
+  nft_airdrop = "/nft_airdrop/",
+  vault_editor = "/vault-editor",
   airdrop = "/airdrop",
   committee_tools = "/committee-tools"
 }
@@ -27,6 +29,11 @@ export enum Networks {
   xdai = "xdai",
   rinkeby = "rinkeby",
   kovan = "kovan"
+}
+
+export enum VaultService {
+  main = "",
+  rinkeby = "https://vault-editor-service.herokuapp.com",
 }
 
 export enum MasterAddresses {

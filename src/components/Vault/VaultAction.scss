@@ -12,6 +12,9 @@
   }
 
   .deposit-withdraw {
+    border: 1px solid;
+    color: $turquoise;
+    background-color: $light-blue;
     &:active {
       color: $white;
       background-color: $dirty-turquoise;

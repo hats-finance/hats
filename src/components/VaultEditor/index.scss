@@ -1,0 +1,584 @@
+@import "../../styles/constants.scss";
+
+.vault-editor {
+    &__container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    &__title {
+        font-size: $large;
+        line-height: 47px;
+        margin-bottom: 30px;
+        color: $white;
+    }
+    &__description {
+        color: $white;
+        font-size: $small;
+        line-height: 21px;
+        color: $white;
+        margin-bottom: 80px;
+    }
+    &__last-saved-time {
+        padding-bottom: 20px;
+        margin-bottom: 42px;
+        border-bottom: 1px solid $vault-editor-border;
+    }
+    &__section {
+        &-title {
+            color: $white;
+            text-transform: uppercase;
+            font-size: $small;
+            margin: 0;
+            padding: 0 0 16px;
+        }
+        &-content {
+            border: 1px solid $vault-editor-border-2;
+            padding: 40px;
+            margin-bottom: 40px;
+        }
+        &-description {
+            color: $white;
+        }
+        label {
+            display: inline-block;
+            color: $white;
+            padding-bottom: 4px;
+        }
+    }
+    &__button-container {
+        text-align: right;
+        padding-bottom: 40px;
+        button {
+            margin: 0;
+            width: 280px;
+            text-transform: uppercase;
+        }
+        button + button {
+            margin-left: 30px;
+            margin-top: 0px;
+        }
+    }
+    &__divider {
+        border-bottom: 1px solid $vault-editor-border;
+        margin-bottom: 40px;
+    }
+    &__next-preview {
+        display: none;
+    }
+    
+    .vault-details {
+        display: flex;
+        flex-wrap: wrap;
+        .field {
+            width: 50%;
+            .pastable-content:last-child {
+                margin-bottom: 0;
+            }
+        }
+        .icon-inputs {
+            display: flex;
+            justify-content: flex-end;
+
+            > div + div {
+                margin-left: 30px;
+            }
+        }
+    }
+
+    .committee-members {
+        &__member {
+            display: flex;
+            align-items: flex-start;
+            label {
+                height: 20px;
+            }
+            &-number {
+                flex-shrink: 0;
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-top: 24px;
+                margin-right: 14px;
+                margin-bottom: 24px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                flex: 1 0 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            &-inputs {
+                width: 60%;
+            }
+            &-icons {
+                .icon-input {
+                    > label {
+                        height: 124px;
+                    }
+                }
+            }
+        }
+        button {
+            margin: 0;
+            margin-left: 54px;
+            margin-bottom: 30px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+    }
+
+    .contracts-covered {
+        &__contract {
+            display: flex;
+            align-items: flex-start;
+            label {
+                height: 20px;
+            }
+            &-number {
+                flex-shrink: 0;
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-top: 24px;
+                margin-right: 14px;
+                margin-bottom: 24px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                width: 65%;
+            }
+            &-subcontent {
+                display: flex;
+                justify-content: space-between;
+            }
+            &-name {
+                width: 60%;
+            }
+            &-severities {
+                width: 35%;
+            }
+        }
+        button {
+            margin: 0;
+            margin-left: 54px;
+            margin-bottom: 30px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+        .multi-select {
+            > div {
+                button {
+                    padding: 12px 16px;
+                }
+            }
+        }
+    }
+
+    .pgp-key {
+        &__hint {
+            margin: 0 -20px 30px;
+            padding: 20px;
+            border: 1px solid $red;
+            color: $white;
+        }
+        &__list {
+            border: 1px solid $turquoise;
+            padding: 20px;
+            margin-bottom: 30px;
+            &-key {
+                display: flex;
+                align-items: center;
+                &-number {
+                    flex-shrink: 0;
+                    color: $white;
+                    width: 40px;
+                    height: 40px;
+                    margin-right: 24px;
+                    border: 1px solid $turquoise;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    box-sizing: border-box;
+                }
+                &-content {
+                    flex: 1 0;
+                    color: $white;
+                    word-break: break-all;
+                    button {
+                        margin-bottom: 0 !important;
+                    }
+                    span {
+                        margin-right: 10px;
+                    }
+                }
+            }
+            > div + div {
+                margin-top: 20px;
+            }
+        }
+        button {
+            margin: 0;
+            margin-bottom: 40px;
+        }
+    }
+
+    .signees {
+        border: 1px solid $turquoise;
+        padding: 20px;
+        &__signee {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            &-number {
+                flex-shrink: 0;
+                color: $white;
+                width: 40px;
+                height: 40px;
+                margin-right: 24px;
+                border: 1px solid $turquoise;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                box-sizing: border-box;
+            }
+            &-content {
+                flex: 1 0;
+                color: $white;
+                word-break: break-all;
+            }
+        }
+        > div + div {
+            margin-bottom: 0;
+        }
+    }
+
+    .mobile-only {
+        display: none;
+    }
+    .desktop-only {
+        display: block;
+    }
+
+    .pastable-content {
+        margin-bottom: 24px;
+        input {
+            text-indent: 0px;
+        }
+    }
+
+    // preview vault
+    tr {
+        border-bottom: 2px solid $dark-blue;
+        &.guest {
+            td {
+                background-color: $field-blue !important;
+            }
+        }
+    
+        td {
+            padding: 15px;
+            background-color: $strong-blue;
+            &.sub-row {
+                background-color: transparent;
+                padding: 0px;
+            }
+        }
+    }
+    
+    .arrow {
+        cursor: pointer;
+        transform: rotate(0deg);
+        transition: transform 0.1s linear;
+        margin-left: 20px;
+        &.open {
+            transform: rotate(90deg);
+            transition: transform 0.1s linear;
+        }
+        :hover {
+            opacity: 0.8;
+        }
+    }
+    
+    .project-name-wrapper {
+        display: flex;
+        align-items: center;
+        img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            object-position: center;
+            margin-right: 15px;
+            border-radius: 50%;
+        }
+        .name-source-wrapper {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            .project-name {
+                font-weight: bold;
+            }
+            .source-name {
+                margin-top: 10px;
+                color: $dirty-turquoise;
+            }
+        }
+    }
+    
+    .max-rewards-wrapper {
+        display: flex;
+        text-align: left;
+    }
+    .sub-label {
+        font-size: $tiny;
+        color: $gray;
+    }
+    
+    .honeypot-balance-value {
+        color: $white;
+        font-weight: bold;
+    }
+    
+    .contract-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        .contract-name {
+            color: $dark-turquoise;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 10px;
+        }
+        .contract-value {
+            max-width: 150px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    }
+    
+    .contracts-covered-modal-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 50px 0;
+        border-top: 1px solid $dark-turquoise;
+        > a {
+            width: 60%;
+            display: flex;
+            justify-content: space-between;
+        }
+    }
+
+    .preview-vault {
+        margin-bottom: 30px;
+        border: 1px solid $turquoise;
+        box-sizing: border-box;
+    }
+
+    @media only screen and (max-width: $mobile-breakpoint) {
+        margin-left: 20px !important;
+        margin-right: 20px !important;
+
+        &__title {
+            font-size: 30px;
+        }
+
+        &__section {
+            margin-bottom: 60px;
+            &-content {
+                border: none;
+                padding: 0;
+                margin-bottom: 20px;
+            }
+        }
+
+        &__button-container {
+            padding-bottom: 0;
+            button {
+                width: 100%;
+            }
+            button + button {
+                margin-left: 0;
+                margin-top: 15px;
+            }
+        }
+
+        .vault-details {
+            .field {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .icon-inputs {
+                display: block;
+
+                > div + div {
+                    margin-left: 0;
+                    margin-top: 24px;
+                }
+
+                .icon-input {
+                    > label {
+                        width: 100% !important;
+                    }
+                    img {
+                        object-fit: contain;
+                    }
+                }
+            }
+        }
+
+        .committee-members {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            &__member {
+                display: block;
+                width: 100%;
+                &-inputs {
+                    width: 100%;
+                }
+                &-icons {
+                    width: 100%;
+                    margin-bottom: 30px;
+
+                    .icon-input {
+                        > label {
+                            width: 100% !important;
+                        }
+                        img {
+                            object-fit: contain;
+                        }
+                    }
+                }
+                &-buttons {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+            button {
+                margin-left: 0;
+            }
+        }
+
+        .contracts-covered {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            &__contract {
+                display: block;
+                width: 100%;
+                &-content {
+                    width: 100%;
+                }
+                &-subcontent {
+                    display: block;
+                }
+                &-name {
+                    width: 100%;
+                }
+                &-severities {
+                    width: 100%;
+                }
+                &-buttons {
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+            button {
+                margin-left: 0;
+            }
+        }
+
+        .pgp-key {
+            &__hint {
+                margin: 0 0 30px;
+                padding: 20px;
+                border: 1px solid $red;
+                color: $white;
+
+                &-question {
+                    cursor: pointer;
+                    margin-top: 20px;
+                    img {
+                        margin-left: 10px;
+                    }
+                }
+                &-tooltip {
+                    margin-top: 8px;
+                    display: none;
+
+                    &--show {
+                        display: block;
+                    }
+                }
+                &-desk-tooltip {
+                    display: none;
+                }
+            }
+            &__list {
+                &-key {
+                    align-items: flex-start;
+                    &-content {
+                        span {
+                            display: block;
+                            margin-right: 0;
+                            padding-bottom: 10px;
+                        }
+                    }
+                }
+            }
+            button {
+                width: 100%;
+            }
+        }
+        
+        &__next-preview {
+            display: block;
+            button {
+                display: block;
+                width: 100%;
+                margin: 0;
+                margin-top: 15px;
+                margin-bottom: 10px;
+            }
+        }
+
+        .mobile-only {
+            display: block;
+        }
+        .desktop-only {
+            display: none;
+        }
+
+        // preview vault
+        .arrow {
+            margin-left: unset;
+        }
+        .rewards-cell {
+            width: 100%;
+        }
+        .contracts-covered-modal-wrapper {
+            padding: 40px 20px;
+            > a {
+                width: 100%;
+            }
+        }
+        .max-rewards-wrapper {
+            flex-direction: row;
+            margin: 5px 0;
+        }
+    }
+}

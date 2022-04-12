@@ -1,0 +1,51 @@
+@import "../../styles/constants.scss";
+
+.icon-input {
+    .hide-file-input {
+        position: absolute;
+        opacity: 0;
+        flex: 0 1;
+        width: 0;
+        height: 0;
+        padding: 0;
+        margin: 0;
+    }
+    .add-icon {
+        cursor: pointer;
+        border: 1px solid $turquoise;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 124px;
+        height: 124px;
+        padding: 0;
+        color: $dark-turquoise;
+        img {
+            margin-top: 40px;
+        }
+    }
+    .preview {
+        cursor: pointer;
+        padding: 0;
+        width: 124px;
+        height: 124px;
+        img {
+            box-sizing: border-box;
+            border: 1px solid $turquoise;
+            width: 100%;
+            height: 100%;
+        }
+    }
+    &--changed {
+        .add-icon {
+            border: 1px solid $yellow;
+        }
+        .preview {
+            img {
+                border: 1px solid $yellow;
+            }
+        }
+    }
+}
