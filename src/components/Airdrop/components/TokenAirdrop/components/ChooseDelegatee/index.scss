@@ -1,0 +1,102 @@
+@import "../../../../../../styles/constants.scss";
+
+.choose-delegatee-wrapper {
+  color: $white;
+  p {
+    margin-bottom: 40px;
+  }
+  .delegatees-container {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 20px;
+    .delegatee-element {
+      display: flex;
+      border: 1px solid $turquoise;
+      background-color: $field-blue;
+      padding: 15px;
+      cursor: pointer;
+      img {
+        width: 40px;
+        height: 40px;
+        border-radius: 40px;
+        margin-right: 20px;
+      }
+      .delegatee-info {
+        display: flex;
+        flex-direction: column;
+        .delegatee-name {
+          font-size: $moderate;
+        }
+        .delegatee-role {
+          color: $dirty-turquoise;
+          font-size: $xsmall;
+          margin-bottom: 10px;
+        }
+        .delegatee-username-votes {
+          color: $dark-turquoise;
+          font-size: $xxsmall;
+          margin-bottom: 10px;
+        }
+        .delegatee-actions-container {
+          display: flex;
+          color: $dirty-turquoise;
+          font-size: $xsmall;
+          .read-more {
+            margin-right: 10px;
+            text-decoration: underline;
+            &:hover {
+              opacity: 0.9;
+            }
+          }
+        }
+      }
+      &.selected {
+        outline: 4px solid $turquoise;
+      }
+    }
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+  .self-delegatee-checkbox-container {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    input {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+  }
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    button {
+      width: 150px;
+    }
+  }
+}
+
+.delegatee-description-container {
+  padding: $element-padding-mobile;
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .choose-delegatee-wrapper {
+    .delegatees-container {
+      grid-template-columns: 1fr;
+    }
+    .actions-wrapper {
+      flex-direction: column-reverse;
+      margin-top: 30px;
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  }
+}

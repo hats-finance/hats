@@ -4,7 +4,7 @@ import { t } from "i18next";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { formatWei, fromWei } from "../../utils";
+import { formatWei, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -64,7 +64,7 @@ export default function Vault(props: IProps) {
         <td>
           <div className="project-name-wrapper">
             {/* TODO: handle project-metadata and Project-metadata */}
-            <img src={description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon} alt="project logo" />
+            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
               {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}

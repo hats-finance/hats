@@ -1,0 +1,39 @@
+@import "../../../../../../styles/constants.scss";
+
+.progress-bar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 50px;
+  background-color: $moderate-blue;
+  padding: 25px;
+  color: $white;
+  .stage-element {
+    display: flex;
+    align-items: center;
+    .stage-number {
+      border: 1px solid $turquoise;
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      line-height: 30px;
+      margin-right: 10px;
+    }
+    .stage-name {
+      &.current {
+        color: $turquoise;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .progress-bar-wrapper {
+    flex-direction: column;
+    margin-bottom: 30px;
+    padding: 5px;
+    .stage-element {
+      margin-bottom: 10px;
+    }
+  }
+}

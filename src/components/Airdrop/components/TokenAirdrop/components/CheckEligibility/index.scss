@@ -1,0 +1,49 @@
+@import "../../../../../../styles/constants.scss";
+
+.check-eligibility-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 50px 0;
+  border: 1px solid $light-gray;
+  legend {
+    color: $white;
+    font-weight: bold;
+  }
+  .check-eligibility-text {
+    margin-top: 30px;
+    margin-bottom: 5px;
+    color: $white;
+  }
+  .amount-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid $turquoise;
+    color: $white;
+    font-size: $medium;
+    font-family: RobotoMono;
+    font-weight: bold;
+    text-indent: 20px;
+    padding: 10px 0;
+    margin-top: 5px;
+  }
+  .redeemed-info-wrapper {
+    margin-top: 15px;
+  }
+  .continue-btn {
+    width: 250px;
+    margin: 20px 0 20px auto;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .check-eligibility-wrapper {
+    margin-bottom: unset;
+    .amount-container {
+      width: 100%;
+      font-size: $moderate;
+    }
+    .continue-btn {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,98 @@
+@import "../../../../../../styles/constants.scss";
+
+.claim-wrapper {
+  color: $white;
+  .claim-review-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .review-amount {
+      margin-bottom: 50px;
+      .amount-container {
+        display: flex;
+        align-items: center;
+        border: 1px solid $turquoise;
+        color: $white;
+        font-size: $medium;
+        font-family: RobotoMono;
+        font-weight: bold;
+        width: 700px;
+        text-indent: 20px;
+        padding: 10px 0;
+        margin-top: 5px;
+      }
+    }
+    .review-delegatee {
+      margin-bottom: 50px;
+      .delegatee-info-wrapper {
+        display: flex;
+        border: 1px solid $turquoise;
+        background-color: $field-blue;
+        padding: 15px;
+        width: 700px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        img {
+          width: 40px;
+          height: 40px;
+          border-radius: 40px;
+          margin-right: 20px;
+        }
+        .delegatee-name {
+          font-size: $moderate;
+        }
+        .delegatee-role {
+          color: $dirty-turquoise;
+          font-size: $xsmall;
+        }
+        .delegatee-username-votes {
+          color: $dark-turquoise;
+          font-size: $xxsmall;
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    button {
+      width: 150px;
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5 !important;
+    pointer-events: none;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .claim-wrapper {
+    .claim-review-container {
+      align-items: unset;
+      .review-amount {
+        .amount-container {
+          width: 100%;
+          font-size: $moderate;
+        }
+      }
+      .review-delegatee {
+        align-self: unset;
+        .delegatee-info-wrapper {
+          width: 100%;
+        }
+      }
+    }
+    .actions-wrapper {
+      flex-direction: column-reverse;
+      margin-top: 30px;
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  }
+}

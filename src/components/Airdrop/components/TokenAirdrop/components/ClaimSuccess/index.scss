@@ -1,0 +1,62 @@
+@import "../../../../../../styles/constants.scss";
+
+.claim-success-wrapper {
+  color: $white;
+  .actions-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+    margin-bottom: 40px;
+    a {
+      width: 500px;
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin-left: 10px;
+        font-weight: bold;
+        font-size: $moderate;
+        font-size: $medium;
+      }
+    }
+    .twitter-link {
+      background-color: $azure;
+      margin-bottom: 30px;
+    }
+    .discord-link {
+      background-color: $purple;
+    }
+  }
+  .secondary-actions-wrapper {
+    margin-top: 100px;
+    margin-bottom: 20px;
+    button {
+      margin-left: auto;
+      display: block;
+      width: 250px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .claim-success-wrapper {
+    .actions-wrapper {
+      margin-top: 30px;
+      a {
+        width: 100%;
+        height: 70px;
+        span {
+          font-size: $small;
+        }
+      }
+    }
+    .secondary-actions-wrapper {
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  }
+}

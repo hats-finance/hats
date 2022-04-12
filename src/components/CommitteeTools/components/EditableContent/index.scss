@@ -19,6 +19,10 @@
       color: $dirty-turquoise;
       font-family: RobotoMono;
     }
+
+    &--changed {
+      border-color: $yellow;
+    }
   }
 
   &__input {
@@ -35,6 +39,10 @@
     &::placeholder {
       color: $dirty-turquoise;
       font-family: RobotoMono;
+    }
+
+    &--changed {
+      border-color: $yellow;
     }
   }
 

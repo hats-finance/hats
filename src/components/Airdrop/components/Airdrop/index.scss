@@ -1,0 +1,62 @@
+@import "../../../../styles/constants.scss";
+
+.airdrop-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .airdorp-content {
+    max-width: $element-max-width;
+    margin: auto;
+    width: 100%;
+    .search-wrapper {
+      display: flex;
+      flex-direction: column;
+      color: $white;
+      .input-container {
+        border: 1px solid $turquoise;
+        margin: 40px 0px 5px 0px;
+        display: flex;
+        max-width: 500px;
+        .address-input {
+          border: none;
+          background: none;
+          color: $white;
+          height: 50px;
+          text-indent: 10px;
+          width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .clear-input {
+          border: none;
+        }
+      }
+      .error-label {
+        color: $red;
+      }
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5 !important;
+    pointer-events: none;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .airdrop-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+    .airdorp-content {
+      .search-wrapper {
+        width: 100%;
+        .input-container {
+          width: 100%;
+          max-width: unset;
+        }
+      }
+    }
+  }
+}

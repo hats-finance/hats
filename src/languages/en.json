@@ -2,7 +2,8 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL"
+      "cancel": "CANCEL",
+      "no-ethereum": "No Ethereum provider detected. Please install one or try a different browser"
     },
     "Welcome": {
       "title": "Hats",
@@ -40,6 +41,60 @@
         "bot-resend": "RESEND TO BOT",
         "submit-complete-text": "While waiting, become an active member of our community and let us know what you think.",
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
+      }
+    },
+    "Airdrop": {
+      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
+      "search-placeholder": "Enter wallet address",
+      "search-error": "Please enter a valid address",
+      "not-eligible-nft": "This address is not eligible to NFT airdrop",
+      "not-eligible-token": "This address is not eligible to token airdrop",
+      "redeemed-link": "Redeemed - View on Etherscan",
+      "TokenAirdrop": {
+        "ProgressBar": {
+          "protocol": "Understand the protocol",
+          "delegatee": "Choose a Delegatee",
+          "claim": "Claim your hats"
+        },
+        "CheckEligibility": {
+          "title": "HATS TOKEN AIRDROP",
+          "claim-amount": "Total available to claim",
+          "token-claim-continue": "START CLAIMING PROCESS"
+        },
+        "Protocol": {
+          "section-1-title": "WHAT IS THE HATS PROTOCOL?",
+          "section-1": "Hats.finance is a decentralized cybersecurity protocol that allows everyone to add liquidity to bug bounties while farming $HATS.  Hackers can responsibly disclose vulnerabilities without KYC & be rewarded with the highest prize & NFTs for their work.",
+          "section-2-title": "WHERE DOES THE PRIZE COME FROM?",
+          "section-2": "When a hack is happening 100% of your holding is at risk. While a responsible disclosure occurs only % from the % of your stacking is in risk, and you will stay with $HATs tokens. No Token or TVL downside a win-win for everyone involved.",
+          "section-3-title": "WHAT IS MY BENEFIT OF USING HATS",
+          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming. \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
+        },
+        "ChooseDelegatee": {
+          "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",
+          "section-1": "Delegation is a shifting of authority and responsibility, e.g. on Hats DAO, voting power from one person to another. The delegatee you choose will represent you on hats future DAO decision. You may choose a delegatee from our list of auditors, dao specialists, security experts or represent yourself",
+          "choose-delegatee": "Choose your delegatee:",
+          "self-delegatee": "I choose myself as a delegatee"
+        },
+        "Claim": {
+          "claim-success": "Hats token claimed successfully",
+          "review": "REVIEW YOUR CLAIM",
+          "claim-amount": "Total available to claim",
+          "chosen-delegatee": "Your chosen delegatee",
+          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions. One time for your delegatee choice and the second for claim transaction."
+        },
+        "Success": {
+          "title": "CLAIM SUCCESSFUL!",
+          "section-1": "Congratulation on claiming your ",
+          "section-2": "Welcome to the Hats! \n\n We encourage you to share on Twitter and join Hats community on Discord to get involved in the governance.",
+          "twitter-share": "Share on twitter",
+          "join-discord": "Join Discord",
+          "twitter-share-text": "Let me share some crypto alpha. \n I just received $HAT tokens for my early contribution in @HatsFinance, the first fully decentralized and community owned bug bounty marketplace. \n Become a chain protector by visiting their dApp or claim tokens if eligible https://app.hats.finance"
+        }
+      },
+      "NFTAirdrop": {
+        "your-nft": "CROW CLAN NFT AIRDROP",
+        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
+        "redeem-success": "NFT redeemed successfully"
       }
     },
     "NFTAirdop": {
@@ -149,6 +204,7 @@
       "last-saved-time": "Last updated on",
       "local-time": "local time",
       "remove-pgp": "Remove Key",
+      "reset-button": "Reset",
       "vault-details": {
         "title": "Vault Details",
         "name": "Name",
@@ -159,6 +215,7 @@
         "website-placeholder": "Link website",
         "multisig-address-placeholder": "Committee multisig address"
       },
+      "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
       "committee": "Committee",
       "pgp-key": "PGP Public Key",
@@ -193,7 +250,7 @@
       "save-button": "Save",
       "sign-submit": "Sign and submit",
       "next": "Next",
-      "previous": "Previous",
+      "previous": "Back",
       "contracts-covered": "Contracts-Covered",
       "review-vault": {
         "title": "Review Vault",

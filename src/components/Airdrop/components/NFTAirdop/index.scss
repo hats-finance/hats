@@ -1,0 +1,63 @@
+@import "../../../../styles/constants.scss";
+
+.nft-airdrop-wrapper {
+  margin: 50px 0;
+  border: 1px solid $light-gray;
+  legend {
+    color: $white;
+    font-weight: bold;
+  }
+  .nft-container-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .nft-text {
+      margin-right: 50px;
+      color: $white;
+    }
+    .nft-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 5px;
+      .nft-image {
+        width: 250px;
+        height: 250px;
+        margin-bottom: 20px;
+      }
+      .redeem-btn {
+        margin-top: 50px;
+        width: 300px;
+      }
+      .redeemed-info-wrapper {
+        display: flex;
+        .open-in-icon {
+          margin-left: 10px;
+          cursor: pointer;
+        }
+        .open-in-icon:hover {
+          opacity: 0.9;
+        }
+      }
+    }
+  }
+
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .nft-airdrop-wrapper {
+    .nft-container-wrapper {
+      flex-direction: column;
+      .nft-text {
+        margin-right: unset;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .nft-container {
+        .redeem-btn {
+          width: 100%;
+        }
+      }
+    }
+  }
+}

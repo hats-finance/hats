@@ -1,4 +1,4 @@
-import { LocalStorage, Networks } from "./constants/constants";
+import { IPFS_PREFIX, LocalStorage, Networks } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -474,15 +474,6 @@ export const checkMasterAddress = (masterAddress: string) => {
 }
 
 /**
- * Used to hashToken in NFTAirdrop
- * @param {string} tokenID
- * @param {string} account 
- */
-export const hashToken = (tokenID: string, account: string) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [tokenID, account]).slice(2), 'hex');
-}
-
-/**
  * Normalize any supported address-format to a checksum address.
  * @param {string} address
  */
@@ -513,4 +504,23 @@ export const getSafesOwnedBy = async (walletAddress: string) => {
   }
   const response = await fetch(`${api}?/owners/${walletAddress}/safes/`);
   return await response.json();
+}
+
+export const ipfsTransformUri = (uri: string) => {
+  if (uri.startsWith("ipfs")) {
+    let ipfs
+    if (uri.startsWith("ipfs/")) {
+      ipfs = uri.slice(5);
+    } else if (uri.startsWith("ipfs://")) {
+      ipfs = uri.slice(7);
+    }
+    return `${IPFS_PREFIX}${ipfs}`;
+  }
+  if (uri.startsWith("http")) {
+    return uri;
+  }
+  if (uri.startsWith("blob")) {
+    return uri;
+  }
+  return `${IPFS_PREFIX}${uri}`;
 }
