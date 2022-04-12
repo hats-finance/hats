@@ -210,8 +210,6 @@ export default function DepositWithdraw(props: IProps) {
   })
 
   const multisigAddress = isGuest ? (parentDescription as IVaultDescription)?.committee?.["multisig-address"] : (description as IVaultDescription)?.committee?.["multisig-address"]
-  console.log({ multisigAddress, account })
-
   const isCommitteMultisig = multisigAddress === account
 
   return (
