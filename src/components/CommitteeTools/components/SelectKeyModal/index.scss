@@ -131,22 +131,14 @@
       }
     }
     &__button {
-      &.loading {
-        position: relative;
-        &:after {
-          content: "";
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          opacity: 1;
-          background-position: center;
-          background-size: contain;
-          background-repeat: no-repeat;
-          background-image: url("../../../../assets/icons/loading.svg");
-        }
+      position: relative;
+      .loading-icon {
+        top: 50%;
+        position: absolute;
+        width: 40px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 1;
       }
     }
     &__result {

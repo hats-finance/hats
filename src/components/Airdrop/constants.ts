@@ -7,14 +7,14 @@ export const REWARDS_TOKEN = "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A";
 
 export const DELEGATION_EXPIRY = 10e9;
 
-export enum TokenAirdropCID {
-  main = "",
-  rinkeby = "QmWE6g84yh6toqaHQAdr4PpGbxTADnV88mFQdSwuopHQk1"
+export const TokenAirdropCID = {
+  [ChainId.Mainnet]: "",
+  [ChainId.Rinkeby]: "QmVtwH39GHFbR7HJK4e9WK4JWHSoQdTTBRuti81rRdCkSJ"
 }
 
-export enum TokenAirdropDelegatees {
-  main = "",
-  rinkeby = "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm"
+export const TokenAirdropDelegatees = {
+  [ChainId.Mainnet]: "",
+  [ChainId.Rinkeby]: "QmRoETRRwd6Ty7MqMb7payUJT4oj9kyX2GtvPXHvP3nqXm"
 }
 
 export const NFTAirdropAddress = {
@@ -22,9 +22,9 @@ export const NFTAirdropAddress = {
   [ChainId.Rinkeby]: "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
 }
 
-export enum TokenAirdropAddress {
-  main = "",
-  rinkeby = "0x2B70108ed607Cd5FBE0E4b8659D71335C4be7687"
+export const TokenAirdropAddress = {
+  [ChainId.Mainnet]: "",
+  [ChainId.Rinkeby]: "0xB2F80c70345EF3cc13968487bc692F62D9417a6E"
 }
 
 export enum EligibilityStatus {

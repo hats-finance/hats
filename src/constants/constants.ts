@@ -19,6 +19,8 @@ export enum RoutePaths {
   gov = "/gov",
   vulnerability = "/vulnerability",
   pools = "/pools",
+  nft_airdrop = "/nft_airdrop/",
+  vault_editor = "/vault-editor",
   airdrop = "/airdrop",
   committee_tools = "/committee-tools"
 }
@@ -32,6 +34,8 @@ export const NFTMangerAddress = {
   [ChainId.Mainnet]: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
   [ChainId.Rinkeby]: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
 }
+export const VaultService = "https://vault-editor-service.herokuapp.com"
+
 
 export const NFTAirdropAddress = {
   [ChainId.Mainnet]: "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",

@@ -1,7 +1,6 @@
 import ReactDOM from "react-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
@@ -10,6 +9,7 @@ import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { Config, DAppProvider } from "@usedapp/core";
 import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
+import { BrowserRouter } from "react-router-dom";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
@@ -39,9 +39,9 @@ ReactDOM.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <HttpsRedirect>
-          <Router>
+          <BrowserRouter>
             <App />
-          </Router>
+          </BrowserRouter>
         </HttpsRedirect>
       </ApolloProvider>
     </Provider>

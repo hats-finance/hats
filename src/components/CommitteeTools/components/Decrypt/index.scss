@@ -4,6 +4,15 @@
   width: 100%;
   margin-bottom: $spacing-4;
 
+  &__title {
+    color: $white;
+    font-size: $large;
+  }
+  &__description {
+    color: $white;
+    font-size: $small;
+    padding-bottom: 30px;
+  }
   &__textbox {
     &-container {
       margin-bottom: $spacing-3;
@@ -12,8 +21,18 @@
       }
     }
     &-title {
+      color: $white;
       margin-bottom: $spacing-3;
     }
+  }
+  &__button {
+    padding: 8px 30px;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  &__selected-key-label {
+    color: $white;
+    margin-bottom: $spacing-3;
   }
   &__selected-key {
     display: flex;
@@ -27,7 +46,7 @@
       flex-direction: row;
       align-items: center;
       margin-right: 5px;
-      padding: 8px 8px 8px 16px;
+      padding: 12px 12px 12px 16px;
       border: 1px solid $turquoise;
       .selected-key {
         flex: 1;
@@ -65,6 +84,7 @@
     .open-key-list {
       width: 30%;
       margin: unset;
+      margin-bottom: 0 !important;
     }
   }
 

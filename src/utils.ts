@@ -1,4 +1,4 @@
-import { LocalStorage } from "./constants/constants";
+import { IPFS_PREFIX, LocalStorage } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -14,7 +14,6 @@ import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/Vulnerabilit
 import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
 import { ChainId } from "@usedapp/core";
-import { CHAIN_DATA_LIST } from "web3modal";
 
 /**
  * Returns true if an Ethereum Provider is detected, otherwise returns false.
@@ -421,6 +420,21 @@ export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
 
-export const chainIdToName = (chainId: ChainId | number) => {
-  return CHAIN_DATA_LIST[chainId].network;
+export const ipfsTransformUri = (uri: string) => {
+  if (uri.startsWith("ipfs")) {
+    let ipfs
+    if (uri.startsWith("ipfs/")) {
+      ipfs = uri.slice(5);
+    } else if (uri.startsWith("ipfs://")) {
+      ipfs = uri.slice(7);
+    }
+    return `${IPFS_PREFIX}${ipfs}`;
+  }
+  if (uri.startsWith("http")) {
+    return uri;
+  }
+  if (uri.startsWith("blob")) {
+    return uri;
+  }
+  return `${IPFS_PREFIX}${uri}`;
 }

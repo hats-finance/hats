@@ -34,8 +34,9 @@
         justify-content: center;
         margin-top: 50px;
         button {
+          background: transparent;
           color: $drak-green;
-          border-color: $drak-green;
+          border: 1px solid $drak-green;
           width: 350px;
         }
       }
@@ -105,6 +106,9 @@
         button {
           border: none;
         }
+        button {
+          border: none;
+        }
       }
       span {
         color: $white;
@@ -159,7 +163,7 @@
       min-height: unset;
       overflow: auto;
       white-space: nowrap;
-      width: 90vw;
+      width: calc(100vw - 82px);
     }
     .prize-division-wrapper {
       .pie-chart-wrapper {

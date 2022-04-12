@@ -1,29 +1,31 @@
 import { useEthers } from "@usedapp/core";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { t } from "i18next";
 import { Colors } from "../../constants/constants";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import Countdown from "../Shared/Countdown/Countdown";
 import "./VaultAction.scss";
 
 interface IProps {
-  data: IVault
-  withdrawRequests: IPoolWithdrawRequest[]
-  setShowModal: Function
-  setModalData: Function
+  data?: IVault
+  withdrawRequests?: IPoolWithdrawRequest[]
+  setShowModal?: Function
+  setModalData?: Function
+  preview?: boolean
 }
 
 export default function VaultAction(props: IProps) {
   const { account } = useEthers()
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
-  const withdrawRequest = props.withdrawRequests.filter((request: IPoolWithdrawRequest) => request.beneficiary === account);
+  const withdrawRequest = props.withdrawRequests?.filter((request: IPoolWithdrawRequest) => request.beneficiary === account);
 
   // TODO: This is a temp fix to the issue when the countdown gets to minus value once it reaches 0.
   const [timerChanged, setTimerChanged] = useState(false);
 
   useEffect(() => {
-    if (account) {
+    if (account && withdrawRequest) {
       setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime)), moment.unix(Number(withdrawRequest[0]?.expiryTime))));
       setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest[0]?.withdrawEnableTime))));
     }
@@ -33,11 +35,16 @@ export default function VaultAction(props: IProps) {
     <div className="vault-action-wrapper">
       <button
         className="deposit-withdraw"
-        onClick={() => { props.setShowModal(true); props.setModalData(props.data); }}
-        disabled={!account}>
-        DEPOSIT / WITHDRAW
+        onClick={() => {
+          if (props.setShowModal && props.setModalData) {
+            props.setShowModal(true);
+            props.setModalData(props.data);
+          }
+        }}
+        disabled={props.preview || !account}>
+        {t("Vault.deposit-withdraw")}
       </button>
-      {account && isPendingWithdraw && !isWithdrawable &&
+      {!props.preview && account && isPendingWithdraw && !isWithdrawable && withdrawRequest &&
         <>
           <div className="countdown-wrapper">
             <Countdown
@@ -50,10 +57,11 @@ export default function VaultAction(props: IProps) {
               }}
               textColor={Colors.yellow} />
           </div>
-          <span>WITHDRAWAL REQUEST PENDING</span>
+          <span>{t("Vault.withdrawal-request-pending")}</span>
         </>
       }
-      {account && isWithdrawable && !isPendingWithdraw &&
+      {
+        !props.preview && account && isWithdrawable && !isPendingWithdraw && withdrawRequest &&
         <>
           <div className="countdown-wrapper">
             <Countdown
@@ -65,9 +73,9 @@ export default function VaultAction(props: IProps) {
               }}
             />
           </div>
-          <span>WITHDRAWAL AVAILABLE</span>
+          <span>{t("Vault.withdrawal-available")}</span>
         </>
       }
-    </div>
+    </div >
   )
 }

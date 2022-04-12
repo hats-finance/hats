@@ -12,12 +12,11 @@ import { RootState } from "reducers";
 import { isEthereumProvider, normalizeAddress } from "../../../../utils";
 import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
-import { useHistory } from "react-router-dom";
 import "./index.scss";
+import { useSearchParams } from "react-router-dom";
 
 export default function Airdrop() {
   const [userInput, setUserInput] = useState("");
-  const history = useHistory()
   const [pendingWallet, setPendingWallet] = useState(false);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
   const tokenET = useSelector((state: RootState) => state.dataReducer.airdrop?.token);
@@ -26,6 +25,9 @@ export default function Airdrop() {
   const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
   const [tokenAmount, setTokenAmount] = useState<number>();
   const [inTokenAirdop, setInTokenAirdrop] = useState(false);
+  const [searchParams] = useSearchParams();
+  const walletAddress = searchParams.get("walletAddress");
+
 
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
@@ -61,20 +63,10 @@ export default function Airdrop() {
   }, [nftET, tokenET]);
 
   useEffect(() => {
-    const checkURLParams = () => {
-      const urlSearchParams = new URLSearchParams(window.location.search);
-      const params = Object.fromEntries(urlSearchParams.entries());
-      if (params.walletAddress) {
-        handleChange(params.walletAddress);
-      }
+    if (walletAddress) {
+      handleChange(walletAddress);
     }
-
-    checkURLParams();
-
-    return history.listen(() => {
-      checkURLParams()
-    })
-  }, [handleChange, history])
+  }, [walletAddress, handleChange]);
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import "../../styles/Vault/Vault.scss";
+import { t } from "i18next";
 import { IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { formatWei, fromWei } from "../../utils";
+import { formatWei, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -12,13 +13,16 @@ import VaultAction from "./VaultAction";
 
 interface IProps {
   data: IVault,
-  setShowModal: (show: boolean) => any,
-  setModalData: (data: any) => any
+  setShowModal?: (show: boolean) => any,
+  setModalData?: (data: any) => any,
+  preview?: boolean,
 }
 
 export default function Vault(props: IProps) {
-  const [toggleRow, setToggleRow] = useState(false);
   const { name, isGuest, bounty, description, parentVault: { tokenPrice, apy } } = props.data;
+  const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
+  // const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.tokenPrice);
+  // const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.apy);
   const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
@@ -49,7 +53,7 @@ export default function Vault(props: IProps) {
         {formatWei(honeyPotBalance, 3, stakingTokenDecimals)}
         {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
       </div>
-      {screenSize === ScreenSize.Mobile && <span className="sub-label">Total vault</span>}
+      {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
   )
 
@@ -60,9 +64,9 @@ export default function Vault(props: IProps) {
         <td>
           <div className="project-name-wrapper">
             {/* TODO: handle project-metadata and Project-metadata */}
-            <img src={description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon} alt="project logo" />
+            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
-              <div className="project-name">{name}</div>
+              <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
               {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={(description as IVaultDescription)?.source?.url}>By {(description as IVaultDescription)?.source?.name}</a>}
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
@@ -82,7 +86,8 @@ export default function Vault(props: IProps) {
                 data={props.data}
                 withdrawRequests={withdrawRequests}
                 setShowModal={props.setShowModal}
-                setModalData={props.setModalData} />
+                setModalData={props.setModalData}
+                preview={props.preview} />
             </td>
           </>
         )}
@@ -93,7 +98,8 @@ export default function Vault(props: IProps) {
           data={props.data}
           withdrawRequests={withdrawRequests}
           setShowModal={props.setShowModal}
-          setModalData={props.setModalData} />}
+          setModalData={props.setModalData}
+          preview={props.preview} />}
     </>
   )
 }
