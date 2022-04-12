@@ -27,9 +27,11 @@ export default function HatsBreakdown() {
   const [stakingAPY, setStakingAPY] = useState(0);
 
   const findTokenPrice = useCallback((parentVaultID: string) => {
-    for (const vault of vaults) {
-      if (vault.parentVault.id === parentVaultID) {
-        return vault.parentVault.tokenPrice;
+    if (vaults) {
+      for (const vault of vaults) {
+        if (vault.parentVault.id === parentVaultID) {
+          return vault.parentVault.tokenPrice;
+        }
       }
     }
     return 0;
@@ -46,7 +48,7 @@ export default function HatsBreakdown() {
         const userDepositSize = Number(fromWei(staked.depositAmount));
         const tokenValue: number = findTokenPrice(staked.parentVault.id);
         let vaultAPY = 0;
-        if (tokenValue) {
+        if (tokenValue && vaults) {
           vaults.forEach((vault: IVault) => {
             if (staked.parentVault.stakingToken === vault.parentVault.stakingToken) {
               vaultAPY = vault.parentVault.apy

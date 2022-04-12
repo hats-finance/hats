@@ -60,4 +60,3 @@ export function useCheckIn(address: string) {
     checkMasterAddress(address)
     return useContractFunction(new Contract(address, vaultAbi), 'checkIn')
 }
-

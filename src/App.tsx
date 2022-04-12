@@ -1,21 +1,12 @@
 import { useState, useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { GET_MASTER_DATA } from "./graphql/subgraph";
-import { useQuery } from "@apollo/client";
 import { useTranslation } from "react-i18next";
 
 import {
   changeScreenSize,
-  updateVaults,
-  updateRewardsToken,
-  updateHatsPrice,
-  updateWithdrawSafetyPeriod
 } from "./actions/index";
 import {
-  getTokenPrice,
-  calculateApy,
-  getWithdrawSafetyPeriod,
   normalizeAddress,
 } from "./utils";
 import {
@@ -37,7 +28,6 @@ import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
-import { IVault } from "./types/types";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import "./i18n.ts"; // Initialise i18n
@@ -48,7 +38,6 @@ function App() {
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
-  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
@@ -66,51 +55,6 @@ function App() {
   screenSize.addEventListener("change", (screenSize) => {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
-
-  const {
-    loading: loadingRewardsToken,
-    error: errorRewardsToken,
-    data: dataRewardsToken,
-  } = useQuery(GET_MASTER_DATA);
-
-  useEffect(() => {
-    const getWithdrawSafetyPeriodData = async () => {
-      if (!loadingRewardsToken && !errorRewardsToken && dataRewardsToken && dataRewardsToken.masters) {
-        const { rewardsToken, withdrawPeriod, safetyPeriod } = dataRewardsToken.masters[0];
-        dispatch(updateRewardsToken(rewardsToken));
-        dispatch(updateWithdrawSafetyPeriod(getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)));
-      }
-    };
-    getWithdrawSafetyPeriodData();
-  }, [loadingRewardsToken, errorRewardsToken, dataRewardsToken, dispatch]);
-
-  useEffect(() => {
-    (async () => {
-      if (rewardsToken && rewardsToken !== "") {
-        dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
-      }
-    })();
-  }, [dispatch, rewardsToken]);
-
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-
-  const vaults: Array<IVault> = useSelector(
-    (state: RootState) => state.dataReducer.vaults
-  );
-
-  useEffect(() => {
-    const calculateVaultsApy = async () => {
-      for (const vault of vaults) {
-        vault.parentVault.apy = await calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
-      }
-      dispatch(updateVaults(vaults));
-    };
-
-    if (hatsPrice && vaults) {
-      calculateVaultsApy();
-    }
-  }, [dispatch, hatsPrice, vaults]);
-
 
   useEffect(() => {
     (async () => {
