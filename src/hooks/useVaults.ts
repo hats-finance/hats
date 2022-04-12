@@ -14,7 +14,6 @@ export function useVaults() {
     const apolloClient = useApolloClient()
     const { hatsPrice, vaults } = useSelector((state: RootState) => state.dataReducer);
     const [tokenPrices, setTokenPrices] = useState<{ [token: string]: number }>();
-    console.log({ tokenPrices, hatsPrice, vaults });
 
     const getMasterData = useCallback(async () => {
         const { data } = await apolloClient.query({ query: GET_MASTER_DATA })
