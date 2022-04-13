@@ -25,7 +25,7 @@ const apolloLink = ApolloLink.split(operation => operation.getContext().clientNa
 console.log(`Using ${ChainId[NETWORK]} network`);
 
 let config: Config = {
-  networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!) || [getChainById(NETWORK)],
+  networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!),
   readOnlyChainId: NETWORK,
   readOnlyUrls: {
     [NETWORK]: window.location.hostname ? getDefaultProvider(NETWORK) : ENDPOINT

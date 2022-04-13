@@ -4,8 +4,8 @@ import { NFTAirdropAddress, TokenAirdropAddress, TokenAirdropCID, TokenAirdropDe
 
 require('dotenv').config();
 
-export const AVAILABLE_NETWORKS: ChainId[] = process.env.REACT_APP_AVAILABLE_NETWORKS ? process.env.REACT_APP_AVAILABLE_NETWORKS.split(',').map(chainId => parseInt(chainId)) : undefined || [ChainId.Mainnet, ChainId.Rinkeby];
 export const NETWORK: ChainId = parseInt(process.env.REACT_APP_NETWORK!) as ChainId || ChainId.Rinkeby;
+export const AVAILABLE_NETWORKS: ChainId[] = process.env.REACT_APP_AVAILABLE_NETWORKS ? process.env.REACT_APP_AVAILABLE_NETWORKS.split(',').map(chainId => parseInt(chainId)) : undefined || [NETWORK];
 export const SUBGRAPH_URI = process.env.REACT_APP_SUBGRAPH_URI || Subgraph[NETWORK];
 export const LP_UNISWAP_URI = process.env.REACT_APP_LP_UNISWAP_URI || LPUniswapURIs[NETWORK];
 export const MASTER_ADDRESS = process.env.REACT_APP_MASTER_ADDRESS || MasterAddresses[NETWORK];
