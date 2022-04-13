@@ -52,10 +52,7 @@ export const useWeb3Modal = () => {
     );
 
     useEffect(() => {
-        console.log({ autoLoad, autoLoaded, cacheProvider: web3Modal.cachedProvider })
-
         if (autoLoad && !autoLoaded && web3Modal.cachedProvider) {
-            console.log("autoLoading connection to wallet");
             activateProvider();
             setAutoLoaded(true);
         }
