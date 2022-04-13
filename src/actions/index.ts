@@ -51,6 +51,11 @@ export const updateRewardsToken = (rewardsToken: string) => ({
   rewardsToken
 })
 
+export const updateTokenPrices = (tokenPrices: { [token: string]: number }) => ({
+  type: types.UPDATE_TOKEN_PRICES,
+  tokenPrices
+})
+
 export const toggleInTransaction = (inTransaction: boolean) => ({
   type: types.TOGGLE_IN_TRANSACTION,
   inTransaction

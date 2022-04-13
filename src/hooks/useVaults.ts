@@ -1,8 +1,8 @@
 import { useApolloClient } from "@apollo/client";
-import { updateHatsPrice, updateRewardsToken, updateVaults, updateWithdrawSafetyPeriod } from "actions";
+import { updateHatsPrice, updateRewardsToken, updateTokenPrices, updateVaults, updateWithdrawSafetyPeriod } from "actions";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
@@ -12,8 +12,7 @@ import { calculateApy, getTokenPrice, getTokensPrices, getWithdrawSafetyPeriod }
 export function useVaults() {
     const dispatch = useDispatch()
     const apolloClient = useApolloClient()
-    const { hatsPrice, vaults } = useSelector((state: RootState) => state.dataReducer);
-    const [tokenPrices, setTokenPrices] = useState<{ [token: string]: number }>();
+    const { hatsPrice, vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
 
     const getMasterData = useCallback(async () => {
         const { data } = await apolloClient.query({ query: GET_MASTER_DATA })
@@ -30,6 +29,11 @@ export function useVaults() {
         if (data) {
             dispatch(updateVaults((data.vaults as IVault[]).map(vault => ({
                 ...vault,
+                parentVault: {
+                    ...vault.parentVault,
+                    stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken) ?
+                        PROTECTED_TOKENS[vault.parentVault.stakingToken] : vault.parentVault.stakingToken
+                },
                 description: JSON.parse(vault.description as string),
                 parentDescription: vault.parentDescription ? JSON.parse(vault.parentDescription as string) : undefined
             }))));
@@ -38,17 +42,15 @@ export function useVaults() {
 
     const getPrices = useCallback(async () => {
         if (vaults) {
-            const stakingTokens = vaults?.map((vault) => {
-                // TODO: Temporay until the protected token will be manifested in the subgraph.
-                if (PROTECTED_TOKENS.hasOwnProperty(vault.parentVault.stakingToken)) {
-                    vault.parentVault.stakingToken = PROTECTED_TOKENS[vault.parentVault.stakingToken];
-                }
-                return vault.parentVault.stakingToken;
-            })
+            console.log("getPrices");
+
+            const stakingTokens = vaults?.map((vault) => vault.parentVault.stakingToken)
             const uniqueTokens = Array.from(new Set(stakingTokens!));
             const tokenPrices = await getTokensPrices(uniqueTokens!)
+            console.log("tokenPrices", tokenPrices);
+
             if (tokenPrices) {
-                setTokenPrices(tokenPrices);
+                dispatch(updateTokenPrices(tokenPrices));
                 dispatch(updateVaults(vaults.map((vault) => {
                     const prices = tokenPrices[vault.parentVault.stakingToken]
                     const tokenPrice = prices ? prices['usd'] : undefined
@@ -60,13 +62,14 @@ export function useVaults() {
 
             }
         }
-    }, [vaults, setTokenPrices, dispatch])
+    }, [vaults, dispatch])
 
     useEffect(() => {
-        if (vaults && !tokenPrices) {
+        if (vaults && Object.keys(tokenPrices).length == 0) {
             getPrices()
         }
     }, [vaults, tokenPrices, getPrices])
+
 
     useEffect(() => {
         if (vaults) {
@@ -87,6 +90,13 @@ export function useVaults() {
         }
     }, [dispatch, hatsPrice, vaults, getMasterData]);
 
+    useEffect(() => {
+        console.log("vaults", vaults);
+    }, [vaults]);
+
+    useEffect(() => {
+        console.log("tokenPrices", tokenPrices);
+    }, [tokenPrices])
 
     return { vaults }
 }

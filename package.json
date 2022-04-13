@@ -15,8 +15,8 @@
     "@types/downloadjs": "^1.4.2",
     "@types/react": "^17.0.38",
     "@types/showdown": "^1.9.3",
-    "@usedapp/coingecko": "^0.5.0",
-    "@usedapp/core": "^0.12.8",
+    "@usedapp/coingecko": "^0.5.1",
+    "@usedapp/core": "^0.12.9",
     "@walletconnect/web3-provider": "^1.7.7",
     "axios": "^0.24.0",
     "browser-passworder": "^2.0.3",
@@ -49,7 +49,7 @@
     "showdown": "^1.9.0",
     "typescript": "^4.5.5",
     "web-vitals": "^2.1.2",
-    "web3modal": "^1.9.4"
+    "web3modal": "^1.9.6"
   },
   "devDependencies": {
     "@types/react-redux": "^7.1.16",

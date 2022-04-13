@@ -34,6 +34,7 @@ import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/Airdrop
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import "./i18n.ts"; // Initialise i18n
 import { fetchAirdropData } from "./components/Airdrop/utils";
+import { useEthers } from "@usedapp/core";
 
 function App() {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ function App() {
   const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
+  const { account } = useEthers()
 
   const { i18n } = useTranslation();
   useEffect(() => {
@@ -59,9 +60,11 @@ function App() {
 
   useEffect(() => {
     (async () => {
-      await fetchAirdropData(normalizeAddress(selectedAddress), () => setShowAirdropPrompt(true), dispatch);
+      if (account) {
+        await fetchAirdropData(normalizeAddress(account), () => setShowAirdropPrompt(true), dispatch);
+      }
     })();
-  }, [dispatch, selectedAddress])
+  }, [dispatch, account])
 
   return (
     <>
@@ -90,10 +93,8 @@ function App() {
       </Routes >
       {showNotification && hasSeenWelcomePage && <Notification />}
       {
-        hasSeenWelcomePage === "1" && showAirdropPrompt && (
-          <AirdropPrompt
-            address={normalizeAddress(selectedAddress)}
-            closePrompt={() => setShowAirdropPrompt(false)} />)
+        account && hasSeenWelcomePage === "1" && showAirdropPrompt && (
+          <AirdropPrompt closePrompt={() => setShowAirdropPrompt(false)} />)
       }
     </>
   );
