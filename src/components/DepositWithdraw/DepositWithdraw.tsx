@@ -138,7 +138,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: approveToken, state: approveTokenState } = useApproveToken(stakingToken)
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
-    approveToken(amountToSpend ?? MAX_SPENDING);
+    approveToken(account, amountToSpend ?? MAX_SPENDING);
   }
 
 
