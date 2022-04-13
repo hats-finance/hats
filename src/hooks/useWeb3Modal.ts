@@ -12,7 +12,7 @@ export const useWeb3Modal = () => {
     const { activate, deactivate, error } = useEthers();
     const [autoLoaded, setAutoLoaded] = useState(false);
     const autoLoad = true
-    const web3Modal = new Web3Modal({
+    const web3Modal = useMemo(() => new Web3Modal({
         network: CHAIN_DATA_LIST[NETWORK].network,
         cacheProvider: true,
         providerOptions: {
@@ -33,13 +33,13 @@ export const useWeb3Modal = () => {
             border: "rgba(195, 195, 195, 0.14)",
             hover: "rgb(16, 26, 32)"
         }
-    })
+    }), [])
 
     const activateProvider = useCallback(async () => {
         const newProvider = await web3Modal.connect();
         await activate(newProvider)
         setProvider(newProvider);
-    }, [web3Modal]);
+    }, [web3Modal, activate]);
 
     const deactivateProvider = useCallback(async () => {
         await web3Modal.clearCachedProvider();
@@ -48,7 +48,7 @@ export const useWeb3Modal = () => {
         }
         await deactivate()
     },
-        [web3Modal, provider],
+        [web3Modal, provider, deactivate],
     );
 
     useEffect(() => {
