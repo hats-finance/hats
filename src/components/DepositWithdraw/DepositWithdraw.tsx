@@ -20,8 +20,8 @@ import moment from "moment";
 import Countdown from "../Shared/Countdown/Countdown";
 import humanizeDuration from "humanize-duration";
 import ApproveToken from "./ApproveToken";
-import { useEthers, useTokenBalance } from "@usedapp/core";
-import { useAllowance, useApproveToken, useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
+import {  useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 
 interface IProps {
   data: IVault
@@ -136,13 +136,12 @@ export default function DepositWithdraw(props: IProps) {
   const pendingReward = usePendingReward(master.address, pid, account!) ?? BigNumber.from(0)
   const amountToClaim = millify(Number(formatEther(pendingReward)), { precision: 3 });
 
-  const { send: approveToken, state: approveTokenState } = useApproveToken(stakingToken)
+  const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken)
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
-    approveToken(account, amountToSpend ?? MAX_SPENDING);
+    approveToken(master.address, amountToSpend ?? MAX_SPENDING, );
   }
 
-
-  const allowance = useAllowance(stakingToken, account!, master.address)
+  const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = allowance?.gte(userInputValue);
   const tryDeposit = async () => {
     if (!hasAllowance) {
