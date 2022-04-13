@@ -65,18 +65,16 @@ export function useVaults() {
     }, [vaults, dispatch])
 
     useEffect(() => {
-        if (vaults && Object.keys(tokenPrices).length == 0) {
+        if (vaults && Object.keys(tokenPrices).length === 0) {
             getPrices()
         }
     }, [vaults, tokenPrices, getPrices])
 
 
     useEffect(() => {
-        if (vaults) {
-        } else {
+        if (!vaults) {
             getVaults()
             getMasterData();
-
         }
     }, [vaults, getVaults, getMasterData])
 
@@ -98,5 +96,5 @@ export function useVaults() {
         console.log("tokenPrices", tokenPrices);
     }, [tokenPrices])
 
-    return { vaults }
+    return { vaults, getVaults }
 }
