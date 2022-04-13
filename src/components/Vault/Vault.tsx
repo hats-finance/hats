@@ -4,7 +4,7 @@ import { t } from "i18next";
 import { IVault, IVaultDescription } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { formatWei, fromWei, ipfsTransformUri } from "../../utils";
+import { calculateApy, formatWei, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -19,19 +19,17 @@ interface IProps {
 }
 
 export default function Vault(props: IProps) {
-  const { name, isGuest, bounty, description, parentVault: { tokenPrice, apy } } = props.data;
+  const { name, isGuest, bounty, description, parentVault: { tokenPrice } } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   // const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.tokenPrice);
   // const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.apy);
   const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
-  const [vaultAPY, setVaultAPY] = useState("-");
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
+  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
-  useEffect(() => {
-    setVaultAPY(apy ? `${millify(apy, { precision: 3 })}%` : "-");
-  }, [setVaultAPY, apy])
-
+  const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
+  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
   // temporary fix to https://github.com/hats-finance/hats/issues/29
   // useEffect(() => {
   //   setTimeout(() => {
@@ -80,7 +78,7 @@ export default function Vault(props: IProps) {
               {maxRewards}
             </td>
             <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
-            <td>{vaultAPY}</td>
+            <td>{vaultApy}</td>
             <td>
               <VaultAction
                 data={props.data}

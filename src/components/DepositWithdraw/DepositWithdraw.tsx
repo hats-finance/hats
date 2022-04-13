@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, isDigitsOnly } from "../../utils";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, calculateApy, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
@@ -79,7 +79,8 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 }
 
 export default function DepositWithdraw(props: IProps) {
-  const { id, pid, master, stakingToken, tokenPrice, apy, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol, committeeCheckedIn, depositPause } = props.data.parentVault;
+  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
+    committeeCheckedIn, depositPause } = props.data.parentVault;
   const { parentDescription, isGuest, description } = props.data;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
@@ -88,7 +89,7 @@ export default function DepositWithdraw(props: IProps) {
   const { account } = useEthers()
   const { loading, error, data } = useQuery(getStakerData(id, account!), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: DATA_POLLING_INTERVAL });
-  const withdrawSafetyPeriodData = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
+  const { withdrawSafetyPeriod, hatsPrice } = useSelector((state: RootState) => state.dataReducer);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
@@ -98,6 +99,7 @@ export default function DepositWithdraw(props: IProps) {
   const [availableToWithdraw, setAvailableToWithdraw] = useState(BigNumber.from(0));
   const [withdrawAmount, setWithdrawAmount] = useState(BigNumber.from(0));
   const [userShares, setUserShares] = useState(BigNumber.from(0));
+  const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
 
   useEffect(() => {
     if (!loading && !error && data && data.stakers && data.stakers.length > 0) {
@@ -206,7 +208,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const amountWrapperClass = classNames({
     "amount-wrapper": true,
-    "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriodData.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
+    "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriod.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
   })
 
   const multisigAddress = isGuest ? (parentDescription as IVaultDescription)?.committee?.["multisig-address"] : (description as IVaultDescription)?.committee?.["multisig-address"]
@@ -282,7 +284,7 @@ export default function DepositWithdraw(props: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === "withdraw" && withdrawSafetyPeriodData.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+      {tab === "withdraw" && withdrawSafetyPeriod.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
       {tab === "deposit" && (isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
       <div className="action-btn-wrapper">
         {tab === "deposit" && showUnlimitedMessage &&
@@ -300,7 +302,7 @@ export default function DepositWithdraw(props: IProps) {
           </button>}
         {tab === "withdraw" && withdrawRequests && isWithdrawable && !isPendingWithdraw &&
           <button
-            disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriodData.isSafetyPeriod || !committeeCheckedIn}
+            disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
           </button>}

@@ -90,7 +90,6 @@ export default function VaultReview({ vaultDescription }) {
         approvedClaims: [],
         stakers: [],
         guests: [],
-        apy: 0,
         tokenPrice: 0
       }
     };

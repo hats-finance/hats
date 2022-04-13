@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import Logo from "../assets/icons/logo.icon";
 import { getStakerAmounts } from "../graphql/subgraph";
 import { useQuery } from "@apollo/client";
-import { formatNumber, fromWei, getTokenMarketCap } from "../utils";
+import { calculateApy, formatNumber, fromWei, getTokenMarketCap } from "../utils";
 import { IStaker, IVault } from "../types/types";
 import { RootState } from "../reducers";
 import "../styles/HatsBreakdown.scss";
@@ -11,8 +11,7 @@ import "../styles/HatsBreakdown.scss";
 export default function HatsBreakdown() {
   const hatsBalance = useSelector((state: RootState) => state.web3Reducer.hatsBalance);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
-  const vaults = useSelector((state: RootState) => state.dataReducer.vaults);
+  const { hatsPrice, vaults } = useSelector((state: RootState) => state.dataReducer);
   const { loading, error, data } = useQuery(getStakerAmounts(selectedAddress), { fetchPolicy: "cache-and-network" });
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
 
@@ -51,7 +50,7 @@ export default function HatsBreakdown() {
         if (tokenValue && vaults) {
           vaults.forEach((vault: IVault) => {
             if (staked.parentVault.stakingToken === vault.parentVault.stakingToken) {
-              vaultAPY = vault.parentVault.apy
+              vaultAPY = hatsPrice ? calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice) : 0;
             }
           });
           amountToSum = amountToSum + (userDepositSize * tokenValue * vaultAPY);
@@ -62,7 +61,7 @@ export default function HatsBreakdown() {
     if (stakerAmounts.length > 0) {
       getTotalStaked();
     }
-  }, [stakerAmounts, vaults, findTokenPrice])
+  }, [stakerAmounts, vaults, findTokenPrice, hatsPrice])
 
   const [hatsMarketCap, setHatsMarketCap] = useState(0);
 

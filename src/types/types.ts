@@ -32,7 +32,6 @@ export interface IParentVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
-  apy: number // calculated on the UI - not via subgraph
   tokenPrice: number // calculated on the UI - not via subgraph
 }
 

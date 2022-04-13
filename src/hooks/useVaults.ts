@@ -6,13 +6,13 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
-import { calculateApy, getTokenPrice, getTokensPrices, getWithdrawSafetyPeriod } from "utils";
+import { getTokenPrice, getTokensPrices, getWithdrawSafetyPeriod } from "utils";
 
 
 export function useVaults() {
     const dispatch = useDispatch()
     const apolloClient = useApolloClient()
-    const { hatsPrice, vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
+    const { vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
 
     const getMasterData = useCallback(async () => {
         const { data } = await apolloClient.query({ query: GET_MASTER_DATA })
@@ -47,7 +47,6 @@ export function useVaults() {
             const stakingTokens = vaults?.map((vault) => vault.parentVault.stakingToken)
             const uniqueTokens = Array.from(new Set(stakingTokens!));
             const tokenPrices = await getTokensPrices(uniqueTokens!)
-            console.log("tokenPrices", tokenPrices);
 
             if (tokenPrices) {
                 dispatch(updateTokenPrices(tokenPrices));
@@ -65,6 +64,8 @@ export function useVaults() {
     }, [vaults, dispatch])
 
     useEffect(() => {
+        console.log({ vaults, tokenPrices })
+
         if (vaults && Object.keys(tokenPrices).length === 0) {
             getPrices()
         }
@@ -77,16 +78,6 @@ export function useVaults() {
             getMasterData();
         }
     }, [vaults, getVaults, getMasterData])
-
-    useEffect(() => {
-        if (hatsPrice && vaults) {
-            for (const vault of vaults!) {
-                vault.parentVault.apy = calculateApy(vault.parentVault, hatsPrice, vault.parentVault.tokenPrice);
-            }
-            dispatch(updateVaults(vaults!));
-
-        }
-    }, [dispatch, hatsPrice, vaults, getMasterData]);
 
     useEffect(() => {
         console.log("vaults", vaults);
