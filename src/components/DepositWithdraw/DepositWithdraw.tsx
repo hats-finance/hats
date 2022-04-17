@@ -131,7 +131,7 @@ export default function DepositWithdraw(props: IProps) {
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
   const tokenBalance = formatUnits(useTokenBalance(stakingToken, account) ?? 0, stakingTokenDecimals);
-  const notEnoughBalance = userInputValue > tokenBalance;
+  const notEnoughBalance = userInputValue.gte(parseUnits(tokenBalance!, stakingTokenDecimals));
 
   const pendingReward = usePendingReward(master.address, pid, account!) ?? BigNumber.from(0)
   const amountToClaim = millify(Number(formatEther(pendingReward)), { precision: 3 });
@@ -246,7 +246,7 @@ export default function DepositWithdraw(props: IProps) {
               <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? parentDescription?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
-            {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${parseUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
+            {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
             {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
