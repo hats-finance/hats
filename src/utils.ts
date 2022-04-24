@@ -325,12 +325,10 @@ export const calculateAmountAvailableToWithdraw = (
  */
 export const calculateActualWithdrawValue = (
   amountAvailableToWithdraw: BigNumber,
-  userInput: string,
-  userShares: BigNumber,
-  decimals: string
+  userInput: BigNumber,
+  userShares: BigNumber
 ) => {
-  return toWei(userInput, decimals)
-    .mul(userShares)
+  return userInput.mul(userShares)
     .div(amountAvailableToWithdraw)
     .toString();
 };
