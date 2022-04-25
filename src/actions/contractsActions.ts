@@ -184,6 +184,18 @@ export const submitVulnerability = async (address: string, descriptionHash: stri
   return await contract.claim(descriptionHash);
 }
 
+/**
+ * Create pending approval claim
+ * @param {string} address
+ * @param {string} pid
+ * @param {string} beneficiary
+ * @param {number} severity
+ */
+ export const createPendingApprovalClaim = async (address: string, pid: string, beneficiary: string, severity: number) => {
+  const contract = new Contract(address, vaultAbi, signer);
+  return await contract.pendingApprovalClaim(pid, beneficiary, severity);
+}
+
 
 
 

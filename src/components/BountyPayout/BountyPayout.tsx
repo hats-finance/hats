@@ -8,13 +8,14 @@ import { VaultProvider } from "components/CommitteeTools/store";
 import { setPath } from "components/VaultEditor/objectUtils";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
+import { createPendingApprovalClaim } from "actions/contractsActions";
 
 import "./BountyPayout.scss";
 
 export interface IClaimToSubmit {
   pid: string;
   beneficiary: string;
-  severity: string;
+  severity: number;
 }
 
 export default function BountyPayout() {
@@ -24,7 +25,7 @@ export default function BountyPayout() {
   const [claimToSubmit, setClaimToSubmit] = useState({
     pid: "",
     beneficiary: "",
-    severity: ""
+    severity: 0
   } as IClaimToSubmit);
   const vaultsData = useSelector(
     (state: RootState) => state.dataReducer.vaults
@@ -38,6 +39,11 @@ export default function BountyPayout() {
       setClaimToSubmit((prev) => {
         let newObject = { ...prev };
         setPath(newObject, "pid", vaultsData[0].id);
+        setPath(
+          newObject,
+          "severity",
+          vaultsData[0].description?.severities[0]?.index
+        );
         return newObject;
       });
     }
@@ -51,6 +57,23 @@ export default function BountyPayout() {
       setPath(newObject, e.target.name, e.target.value);
       return newObject;
     });
+  };
+
+  const clearClaimToSubmit = () => {
+    setClaimToSubmit({
+      pid: selectedVault?.id || "",
+      beneficiary: "",
+      severity: selectedVault?.description?.severities[0]?.index
+    });
+  };
+
+  const createPayoutTransaction = () => {
+    createPendingApprovalClaim(
+      selectedVault.parentVault.master.address,
+      claimToSubmit.pid,
+      claimToSubmit.beneficiary,
+      claimToSubmit.severity
+    );
   };
 
   return (
@@ -120,7 +143,7 @@ export default function BountyPayout() {
                 options={(selectedVault?.description?.severities || []).map(
                   (severity) => ({
                     label: severity.name,
-                    value: severity.name
+                    value: severity.index
                   })
                 )}
               />
@@ -153,8 +176,18 @@ export default function BountyPayout() {
       </section>
 
       <div className="bounty-payout__actions">
-        <button>{t("BountyPayout.clear")}</button>
-        <button className="fill">
+        <button onClick={clearClaimToSubmit}>{t("BountyPayout.clear")}</button>
+        <button
+          disabled={
+            !(
+              claimToSubmit.pid &&
+              claimToSubmit.beneficiary &&
+              claimToSubmit.severity > -1
+            )
+          }
+          className="fill"
+          onClick={createPayoutTransaction}
+        >
           {t("BountyPayout.create-payout-transaciton")}
         </button>
       </div>
