@@ -50,7 +50,7 @@ export default function Header() {
     (state: RootState) => state.layoutReducer.inTransaction
   );
 
-  useEffect(() => {
+  useEffect(() => {    
     dispatch(connect(provider || {}));
   }, [provider, dispatch]);
 
@@ -61,7 +61,7 @@ export default function Header() {
     if (network === NETWORK && selectedAddress && rewardsToken) {
       getWalletBalance();
     }
-  }, [selectedAddress, network, rewardsToken, dispatch]);
+  }, [selectedAddress, network, rewardsToken, dispatch]);  
 
   return (
     <header data-testid="Header">

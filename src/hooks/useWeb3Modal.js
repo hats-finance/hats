@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState, useMemo } from "react";
-import { Web3Provider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { NETWORK, INFURA_ID } from "../settings";
@@ -19,7 +19,7 @@ function useWeb3Modal(config = {}) {
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            infuraId,
+            infuraId: "86cb52052cad42c98697241dca0ba003"
           },
         },
       },
@@ -36,7 +36,12 @@ function useWeb3Modal(config = {}) {
   // Open wallet selection modal.
   const loadWeb3Modal = useCallback(async () => {
     const newProvider = await web3Modal.connect();
+    console.log(newProvider);
+    if (newProvider instanceof WalletConnectProvider) {
+      setProvider(newProvider);
+    } else { 
     setProvider(new Web3Provider(newProvider));
+    }
   }, [web3Modal]);
 
   const logoutOfWeb3Modal = useCallback(

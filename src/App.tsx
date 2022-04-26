@@ -58,6 +58,7 @@ function App() {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
+  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
 
   const { i18n } = useTranslation();
@@ -73,18 +74,34 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  if (window.ethereum) {
-    window.ethereum.on("accountsChanged", (accounts) => {
+  useEffect(() => {
+
+    if (!provider) {
+      console.log("no provider");
+      return
+    }
+
+    console.log("there is a provider!", provider);    
+    provider.on("accountsChanged", (accounts) => {
+      console.log("accountsChanged", accounts);
+      
       dispatch(updateSelectedAddress(normalizeAddress(accounts[0])));
     });
 
-    window.ethereum.on("chainChanged", (chainId) => {
+    provider.on("chainChanged", (chainId) => {
+      console.log("chainChanged", chainId);
+    
       // Handle the new chain.
       // Correctly handling chain changes can be complicated.
       // We recommend reloading the page unless you have good reason not to.
       window.location.reload();
     });
-  }
+    return () => {
+      console.log("remove all listeners");
+      
+      provider.removeAllListeners();      
+    }
+  }, [provider, dispatch])
 
   const {
     loading: loadingRewardsToken,
