@@ -152,6 +152,7 @@ export default function BountyPayout() {
               <EditableContent
                 textInput
                 pastable
+                colorable
                 name="beneficiary"
                 value={claimToSubmit.beneficiary}
                 onChange={onChange}
