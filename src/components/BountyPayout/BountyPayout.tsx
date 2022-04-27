@@ -48,7 +48,7 @@ export default function BountyPayout() {
         setSubmittedClaim(data.submittedClaims[0]);
         setClaimToSubmit((prev) => {
           let newObject = { ...prev };
-          setPath(newObject, 'beneficiary', data.submittedClaims[0].claimer);
+          setPath(newObject, "beneficiary", data.submittedClaims[0].claimer);
           return newObject;
         });
       }
@@ -202,19 +202,27 @@ export default function BountyPayout() {
 
       <div className="bounty-payout__actions">
         <button onClick={clearClaimToSubmit}>{t("BountyPayout.clear")}</button>
-        <button
-          disabled={
-            !(
-              claimToSubmit.pid &&
-              claimToSubmit.beneficiary &&
-              claimToSubmit.severity > -1
-            )
-          }
-          className="fill"
-          onClick={createPayoutTransaction}
-        >
-          {t("BountyPayout.create-payout-transaciton")}
-        </button>
+        <div style={{ display: "flex" }}>
+          <button
+            disabled={
+              !(
+                claimToSubmit.pid &&
+                claimToSubmit.beneficiary &&
+                claimToSubmit.severity > -1
+              )
+            }
+            className="fill"
+            onClick={createPayoutTransaction}
+          >
+            {t("BountyPayout.create-payout-transaciton")}
+          </button>
+          {/* <button
+            className="fill"
+            onClick={approvePayoutTransaction}
+          >
+            {t("BountyPayout.approve-payout-transaciton")}
+          </button> */}
+        </div>
       </div>
 
       {/* Signees */}

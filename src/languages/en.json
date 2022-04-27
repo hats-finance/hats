@@ -294,6 +294,7 @@
       "payout-severity-desc": "The payout is calculated automatically when choosing a severity",
       "clear": "Clear",
       "create-payout-transaciton": "Create Payout transaction",
+      "approve-payout-transaciton": "Approve Payout",
       "signees": "signees",
       "signees-desc": "Once all the sigatures are collected you can execute the transaction during the safe period.",
       "approved-signees": "Approved signees",
