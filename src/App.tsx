@@ -216,7 +216,9 @@ function App() {
         <Route path={RoutePaths.airdrop} element={<Airdrop />} >
           <Route path=":walletAddress" element={<Airdrop />} />
         </Route>
-        <Route path={RoutePaths.submission} element={<BountyPayout />} />
+        <Route path={RoutePaths.submission} element={<BountyPayout />} > 
+          <Route path=":descriptionHash" element={<BountyPayout />} />
+        </Route>
       </Routes >
       {showNotification && hasSeenWelcomePage && <Notification />}
       {

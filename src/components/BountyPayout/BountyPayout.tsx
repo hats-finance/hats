@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
@@ -20,6 +21,7 @@ export interface IClaimToSubmit {
 
 export default function BountyPayout() {
   const { t } = useTranslation();
+  const { descriptionHash } = useParams()
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<IVault>({} as IVault);
   const [claimToSubmit, setClaimToSubmit] = useState({
