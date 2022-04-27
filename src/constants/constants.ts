@@ -21,7 +21,7 @@ export enum RoutePaths {
   nft_airdrop = "/nft_airdrop/",
   committee_tools = "/committee-tools",
   vault_editor = "/vault-editor",
-  submission = "/bounty-payout",
+  submission = "/payout",
   airdrop = "/airdrop"
 }
 

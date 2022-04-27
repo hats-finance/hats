@@ -151,3 +151,16 @@ export const getPositions = (owner: string) => {
     }
   `;
 }
+
+export const getSubmittedClaim = (claim: string) => {
+  return gql`
+    query getSubmittedClaim {
+      submittedClaims (where: { claim: "${claim}" }) {
+        id
+        claim
+        claimer
+        master
+      }
+    }
+  `;
+}

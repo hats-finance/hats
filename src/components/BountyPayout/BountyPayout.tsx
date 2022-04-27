@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
+import { getSubmittedClaim } from "graphql/subgraph";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
@@ -21,7 +23,14 @@ export interface IClaimToSubmit {
 
 export default function BountyPayout() {
   const { t } = useTranslation();
-  const { descriptionHash } = useParams()
+  const { descriptionHash } = useParams();
+  const { loading, error, data } = useQuery(
+    getSubmittedClaim(descriptionHash || ""),
+    {
+      fetchPolicy: "no-cache"
+    }
+  );
+  const [submittedClaim, setSubmittedClaim] = useState({});
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<IVault>({} as IVault);
   const [claimToSubmit, setClaimToSubmit] = useState({
@@ -32,6 +41,19 @@ export default function BountyPayout() {
   const vaultsData = useSelector(
     (state: RootState) => state.dataReducer.vaults
   );
+
+  useEffect(() => {
+    if (!loading && !error && data && data.submittedClaims) {
+      if (data.submittedClaims.length) {
+        setSubmittedClaim(data.submittedClaims[0]);
+        setClaimToSubmit((prev) => {
+          let newObject = { ...prev };
+          setPath(newObject, 'beneficiary', data.submittedClaims[0].claimer);
+          return newObject;
+        });
+      }
+    }
+  }, [loading, error, data]);
 
   useEffect(() => {
     if (vaultsData.length) {
