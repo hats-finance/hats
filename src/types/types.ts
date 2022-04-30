@@ -67,6 +67,7 @@ export interface IVaultDescription {
     name: string
     url: string
   }
+  gamification?: boolean
 }
 
 export interface ICommitteeMember {
