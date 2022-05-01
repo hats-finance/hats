@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -13,6 +13,10 @@ import { IVault } from "types/types";
 import { createPendingApprovalClaim } from "actions/contractsActions";
 
 import "./BountyPayout.scss";
+import { ipfsTransformUri } from "utils";
+import { VaultContext } from "components/CommitteeTools/store";
+import { readPrivateKeyFromStoredKey } from "components/CommitteeTools/components/Decrypt/Decrypt";
+import { decrypt, readMessage } from "openpgp";
 
 export interface IClaimToSubmit {
   pid: string;
@@ -22,6 +26,7 @@ export interface IClaimToSubmit {
 
 export default function BountyPayout() {
   const { t } = useTranslation();
+  const vaultContext = useContext(VaultContext);
   const { descriptionHash } = useParams();
   const { loading, error, data } = useQuery(
     getSubmittedClaim(descriptionHash || ""),
@@ -32,6 +37,8 @@ export default function BountyPayout() {
   const [submittedClaim, setSubmittedClaim] = useState({});
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<IVault>({} as IVault);
+  const [decryptedMessage, setDecryptedMessage] = useState<string>("");
+  const [vaultOfKey, setVaultOfKey] = useState<IVault | undefined>();
   const [claimToSubmit, setClaimToSubmit] = useState({
     pid: "",
     beneficiary: "",
@@ -98,6 +105,52 @@ export default function BountyPayout() {
       claimToSubmit.severity
     );
   };
+
+  const tryDecryptClaim = async (ipfsHash) => {
+    // we must have the vault unlocked to try to decrypt
+    if (vaultContext.isLocked) return;
+    // download the message from IPFS
+    const data = await fetch(`${ipfsTransformUri(ipfsHash)}`)
+    const armoredMessage = await data.text()
+
+    // try to decrypt the message with all available keys
+    for (const storedKey of vaultContext.vault!.storedKeys) {
+      const privateKey = await readPrivateKeyFromStoredKey(
+        storedKey.privateKey,
+        storedKey.passphrase
+      );
+      // we try because on failure we go to the next key
+      try {
+        const message = await readMessage({ armoredMessage });
+        const { data: decrypted } = await decrypt({
+          message,
+          decryptionKeys: privateKey
+        });
+        setDecryptedMessage(decrypted);
+        // we need to find the vault which contains the key
+        const vaultOfKey = vaultsData.find((vault) => {
+          const description = vault && (vault.isGuest ? vault.parentDescription : vault.description);
+          const keyOrKeys = description?.["communication-channel"]["pgp-pk"]
+          if (Array.isArray(keyOrKeys)) {
+            const keys = keyOrKeys as string[]
+            return keys.includes(storedKey.publicKey)
+          } else {
+            const key = keyOrKeys as string
+            return key === storedKey.publicKey
+          }
+        })
+        setVaultOfKey(vaultOfKey);
+        break;
+      } catch (error) {
+        // this key cannot decrypt the message, we try the next one
+        continue;
+      }
+    }
+  }
+
+  useEffect(() => {
+    tryDecryptClaim(descriptionHash);
+  }, [descriptionHash]);
 
   return (
     <div className="content bounty-payout">
