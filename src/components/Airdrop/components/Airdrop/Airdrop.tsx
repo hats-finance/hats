@@ -116,7 +116,7 @@ export default function Airdrop() {
               {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
             </div>
           )}
-          {/* Temporary disable token airdrop  */}
+          {/* Temporary disable token airdrop  **/}
           {/* {renderTokenAirdrop(tokenEligibilityStatus)} */}
           {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
