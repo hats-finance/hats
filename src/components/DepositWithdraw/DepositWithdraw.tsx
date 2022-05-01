@@ -165,7 +165,7 @@ export default function DepositWithdraw(props: IProps) {
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address)
 
   const handleWithdrawAndClaim = async () => {
-    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares, stakingTokenDecimals))
+    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares))
     // await contractsActions.createTransaction(
     //   async () => contractsActions.withdraw AndClaim(pid, master.address, ),
     //   () => { if (props.setShowModal) { props.setShowModal(false); } },
