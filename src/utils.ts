@@ -508,7 +508,7 @@ export const getSafesOwnedBy = async (walletAddress: string) => {
 
 export const ipfsTransformUri = (uri: string) => {
   if (uri.startsWith("ipfs")) {
-    let ipfs
+    let ipfs;
     if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
@@ -522,5 +522,5 @@ export const ipfsTransformUri = (uri: string) => {
   if (uri.startsWith("blob")) {
     return uri;
   }
-  return `${IPFS_PREFIX}${uri}`;
+  return `${IPFS_PREFIX}/${uri}`;
 }
