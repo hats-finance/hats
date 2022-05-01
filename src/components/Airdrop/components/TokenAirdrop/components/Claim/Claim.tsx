@@ -1,5 +1,5 @@
 import { ChainId } from "@usedapp/core";
-import { claimToken, createTransaction } from "actions/contractsActions";
+import { createTransaction, useActions } from "actions/contractsActions";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
@@ -27,6 +27,7 @@ const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 export default function Claim({ delegateeData, address, tokenAmount, eligibleTokens }: IProps) {
+  const { claimToken } = useActions();
   const dispatch = useDispatch();
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { setStage } = useContext(TokenAirdropContext);

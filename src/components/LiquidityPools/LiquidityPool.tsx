@@ -5,7 +5,7 @@ import classNames from "classnames";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { createTransaction, uniswapClaimReward, uniswapGetRewardInfo, uniswapRewards } from "../../actions/contractsActions";
+import { createTransaction, useActions } from "../../actions/contractsActions";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "../../constants/constants";
 import { getPositions } from "../../graphql/subgraph";
 import { DATA_POLLING_INTERVAL } from "../../settings";
@@ -22,6 +22,7 @@ interface IProps {
 
 export default function LiquidityPool(props: IProps) {
   const dispatch = useDispatch();
+  const { uniswapClaimReward, uniswapGetRewardInfo, uniswapRewards } = useActions();
   const { incentive } = props;
   const [showModal, setShowModal] = useState(false);
   const startTime = moment.unix(Number(incentive?.startTime)).local().format('DD-MM-YYYY HH:mm');

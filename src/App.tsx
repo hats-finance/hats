@@ -7,9 +7,6 @@ import {
   changeScreenSize,
 } from "./actions/index";
 import {
-  normalizeAddress,
-} from "./utils";
-import {
   LocalStorage,
   RoutePaths,
   ScreenSize,
@@ -33,7 +30,7 @@ import { RootState } from "./reducers";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import "./i18n.ts"; // Initialise i18n
-import { fetchAirdropData } from "./components/Airdrop/utils";
+import { useFetchAirdropData } from "./components/Airdrop/utils";
 import { useEthers } from "@usedapp/core";
 
 function App() {
@@ -58,13 +55,7 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  useEffect(() => {
-    (async () => {
-      if (account) {
-        await fetchAirdropData(normalizeAddress(account), () => setShowAirdropPrompt(true), dispatch);
-      }
-    })();
-  }, [dispatch, account])
+  useFetchAirdropData(() => setShowAirdropPrompt(true));
 
   return (
     <>

@@ -1,6 +1,6 @@
 
 import { ChainId } from "@usedapp/core";
-import { getCurrentVotes } from "actions/contractsActions";
+import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
@@ -29,6 +29,7 @@ interface IDelegateeElementProps {
 
 const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementProps) => {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const { getCurrentVotes } = useActions();
   const [votes, setVotes] = useState<number | undefined>();
   const [showDescription, setShowDescription] = useState(false);
   const parent = useRef(null);
@@ -47,7 +48,7 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
     (async () => {
       setVotes(await getCurrentVotes(data.address, NETWORK === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN));
     })();
-  }, [data.address, rewardsToken])
+  }, [data.address, rewardsToken, getCurrentVotes])
 
   return (
     <div ref={parent} className={classNames("delegatee-element", { "selected": selected })}>

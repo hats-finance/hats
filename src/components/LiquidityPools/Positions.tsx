@@ -1,7 +1,7 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createTransaction, uniswapSafeTransferFrom, uniswapStake, uniswapUnstake, uniswapWithdrawToken } from "../../actions/contractsActions";
+import { createTransaction, useActions } from "../../actions/contractsActions";
 import { UNISWAP_V3_APP } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import { IIncentive, IPosition } from "../../types/types";
@@ -16,6 +16,7 @@ interface IProps {
 
 export default function Positions(props: IProps) {
   const dispatch = useDispatch();
+  const { uniswapSafeTransferFrom, uniswapStake, uniswapUnstake, uniswapWithdrawToken } = useActions();
   const { incentive, positions, setShowModal } = props;
   const [selectedPosition, setSelectedPosition] = useState<IPosition>();
   const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";

@@ -1,4 +1,3 @@
-import { hasClaimed, isRedeemed } from "actions/contractsActions";
 import CloseIcon from "assets/icons/close.icon";
 import classNames from "classnames";
 import { EligibilityStatus } from "components/Airdrop/constants";
@@ -14,8 +13,10 @@ import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
 import "./index.scss";
 import { useSearchParams } from "react-router-dom";
+import { useActions } from "actions/contractsActions";
 
 export default function Airdrop() {
+  const { hasClaimed, isRedeemed } = useActions();
   const [userInput, setUserInput] = useState("");
   const [pendingWallet, setPendingWallet] = useState(false);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
@@ -60,13 +61,13 @@ export default function Airdrop() {
       setNFTEligibilityStatus(EligibilityStatus.UNKNOWN);
       setTokenEligibilityStatus(EligibilityStatus.UNKNOWN);
     }
-  }, [nftET, tokenET]);
+  }, [nftET, tokenET, hasClaimed, isRedeemed]);
 
   useEffect(() => {
     if (walletAddress) {
       handleChange(walletAddress);
     }
-  }, [walletAddress, handleChange]);
+  }, [walletAddress, handleChange, hasClaimed, isRedeemed]);
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {

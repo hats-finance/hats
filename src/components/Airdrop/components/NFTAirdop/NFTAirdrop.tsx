@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { t } from "i18next";
-import { createTransaction, getBaseURI, getDeadline, redeemNFT } from "actions/contractsActions";
+import { createTransaction, useActions } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
 import { isDateBefore, linkToTokenEtherscan } from "utils";
@@ -29,6 +29,7 @@ interface IProps {
 
 export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus, pendingWallet }: IProps) {
   const dispatch = useDispatch();
+  const { getBaseURI, getDeadline, redeemNFT } = useActions();
   const { account } = useEthers()
   const [merkleTree, setMerkleTree] = useState();
   const [deadline, setDeadline] = useState();
@@ -41,7 +42,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
       setDeadline(deadline);
       setRedeemable(isDateBefore(deadline));
     })();
-  }, [])
+  }, [getDeadline, getBaseURI]);
 
   useEffect(() => {
     try {
@@ -61,7 +62,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
         console.error(error);
       }
     })();
-  }, [tokenId])
+  }, [tokenId, getBaseURI]);
 
   const redeem = async () => {
     const proof = (merkleTree as any).getHexProof(hashNFT(tokenId, walletAddress));
