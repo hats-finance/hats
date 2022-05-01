@@ -11,7 +11,6 @@ import VaultReview from "./VaultReview";
 import './index.scss'
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
-import { VaultProvider } from "components/CommitteeTools/store";
 import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
@@ -385,14 +384,12 @@ export default function VaultEditor() {
                             5. {t("VaultEditor.pgp-key")}
                         </p>
                         <div className="vault-editor__section-content">
-                            <VaultProvider>
-                                <CommunicationChannel
-                                    removePgpKey={removePgpKey}
-                                    communicationChannel={vaultDescription?.["communication-channel"]}
-                                    addPgpKey={addPgpKey}
-                                    onChange={onChange}
-                                />
-                            </VaultProvider>
+                            <CommunicationChannel
+                                removePgpKey={removePgpKey}
+                                communicationChannel={vaultDescription?.["communication-channel"]}
+                                addPgpKey={addPgpKey}
+                                onChange={onChange}
+                            />
                         </div>
                     </div>
 

@@ -8,6 +8,7 @@ import { LP_UNISWAP_URI, SUBGRAPH_URI } from "./settings";
 import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { BrowserRouter } from "react-router-dom";
+import { VaultProvider } from "components/CommitteeTools/store";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
@@ -29,7 +30,9 @@ ReactDOM.render(
     <ApolloProvider client={client}>
       <BrowserRouter>
         <HttpsRedirect>
-          <App />
+          <VaultProvider>
+            <App />
+          </VaultProvider>
         </HttpsRedirect>
       </BrowserRouter>
     </ApolloProvider>
