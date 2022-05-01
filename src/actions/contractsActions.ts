@@ -21,7 +21,12 @@ import { useEthers } from "@usedapp/core";
 export function useActions() {
   const { library } = useEthers()
   const provider = library!
-  const signer = provider.getSigner()
+  let signer
+
+  // only use signer if we have one
+  try {
+    signer = provider.getSigner()
+  } catch (error) { }
   /**
    * @returns The current block number
    */
