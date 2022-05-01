@@ -9,6 +9,7 @@ function useWeb3Modal(config = {}) {
   const [autoLoaded, setAutoLoaded] = useState(false);
   const { autoLoad = true, infuraId = INFURA_ID, network = NETWORK } = config;
 
+  
   // Web3Modal also supports many other wallets.
   // You can see other options at https://github.com/Web3Modal/web3modal
   const web3Modal = useMemo(() => {
