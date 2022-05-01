@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
-import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, ENDPOINT, AVAILABLE_NETWORKS } from "./settings";
+import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, ENDPOINT, AVAILABLE_NETWORKS, MASTER_ADDRESS } from "./settings";
 import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { ChainId, Config, DAppProvider } from "@usedapp/core";
