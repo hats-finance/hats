@@ -28,7 +28,7 @@ let config: Config = {
   networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!),
   readOnlyChainId: NETWORK,
   readOnlyUrls: {
-    [NETWORK]: window.location.hostname === "localhost" ? getDefaultProvider(NETWORK) : ENDPOINT
+    [NETWORK]: getDefaultProvider(NETWORK) // window.location.hostname === "localhost" ? getDefaultProvider(NETWORK) : ENDPOINT
   },
   autoConnect: true
 }
