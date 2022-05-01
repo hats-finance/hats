@@ -7,7 +7,6 @@ import { getSubmittedClaim } from "graphql/subgraph";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
-import { VaultProvider } from "components/CommitteeTools/store";
 import { setPath } from "components/VaultEditor/objectUtils";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
@@ -112,15 +111,13 @@ export default function BountyPayout() {
       <section className="bounty-payout__section">
         <label>{t("BountyPayout.signed-pgp")}</label>
         <div className="pgp-key">
-          <VaultProvider>
-            <PgpKey onSelected={() => {}}></PgpKey>
-            <label>{t("BountyPayout.decrypted-message")}</label>
-            <EditableContent
-              name="communication-channel.pgp-pk"
-              pastable
-              onChange={() => {}}
-            />
-          </VaultProvider>
+          <PgpKey onSelected={() => { }}></PgpKey>
+          <label>{t("BountyPayout.decrypted-message")}</label>
+          <EditableContent
+            name="communication-channel.pgp-pk"
+            pastable
+            onChange={() => { }}
+          />
         </div>
       </section>
 
