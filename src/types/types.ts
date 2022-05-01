@@ -53,6 +53,7 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
+    gamification?: boolean
   }
   "communication-channel": {
     "committee-bot": string
@@ -67,7 +68,6 @@ export interface IVaultDescription {
     name: string
     url: string
   }
-  gamification?: boolean
 }
 
 export interface ICommitteeMember {

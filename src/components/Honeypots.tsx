@@ -35,7 +35,7 @@ export default function Honeypots() {
     // TODO: temp to not show guest vaults
     if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
-        if (vault.description?.gamification) {
+        if (vault.description?.["project-metadata"]?.gamification) {
           gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
           return null;
         }

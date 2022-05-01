@@ -59,7 +59,7 @@ export default function Vault(props: IProps) {
 
   return (
     <>
-      <tr className={isGuest ? "guest" : description?.gamification ? "gamification" : ""}>
+      <tr className={isGuest ? "guest" : description?.["project-metadata"]?.gamification ? "gamification" : ""}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
