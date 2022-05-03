@@ -52,6 +52,7 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
+    gamification?: boolean
   }
   "communication-channel": {
     "committee-bot": string

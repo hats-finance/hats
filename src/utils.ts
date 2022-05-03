@@ -420,7 +420,7 @@ export const isDateBefore = (value: number | string): boolean => {
 
 export const ipfsTransformUri = (uri: string) => {
   if (uri.startsWith("ipfs")) {
-    let ipfs
+    let ipfs;
     if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
