@@ -11,7 +11,7 @@ import { t } from "i18next";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { DELEGATEES_IPFS, NETWORK } from "settings";
+import { DELEGATEES_IPFS, CHAINID } from "settings";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -46,7 +46,7 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 
   useEffect(() => {
     (async () => {
-      setVotes(await getCurrentVotes(data.address, NETWORK === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN));
+      setVotes(await getCurrentVotes(data.address, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN));
     })();
   }, [data.address, rewardsToken, getCurrentVotes])
 

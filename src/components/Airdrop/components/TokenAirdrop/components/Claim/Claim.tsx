@@ -10,7 +10,7 @@ import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { NETWORK } from "settings";
+import { CHAINID } from "settings";
 import { TokenAirdropET } from "types/types";
 import { formatWei } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
@@ -48,7 +48,7 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
     setPendingWallet(true);
 
     await createTransaction(
-      async () => claimToken(delegateeData.address, tokenAmount, proof, NETWORK === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN, chainId),
+      async () => claimToken(delegateeData.address, tokenAmount, proof, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN, chainId),
       () => { },
       () => { setPendingWallet(false); setStage(Stage.Success); },
       () => { setPendingWallet(false); },

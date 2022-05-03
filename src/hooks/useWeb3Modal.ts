@@ -1,10 +1,9 @@
 import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
 import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ENDPOINT, NETWORK } from "settings";
+import { ENDPOINT, CHAINID } from "settings";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { useNotification } from "./useNotification";
-import { NotificationType } from "constants/constants";
 
 export const useWeb3Modal = () => {
   const [provider, setProvider] = useState<any>();
@@ -15,15 +14,15 @@ export const useWeb3Modal = () => {
   const web3Modal = useMemo(
     () =>
       new Web3Modal({
-        network: CHAIN_DATA_LIST[NETWORK].network,
+        network: CHAIN_DATA_LIST[CHAINID].network,
         cacheProvider: true,
         providerOptions: {
           walletconnect: {
             package: WalletConnectProvider,
             options: {
-              chainId: NETWORK,
+              chainId: CHAINID,
               rpc: {
-                [NETWORK]: ENDPOINT
+                [CHAINID]: ENDPOINT
               }
             }
           }

@@ -11,7 +11,7 @@ import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddres
 import { Dispatch } from "redux";
 import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
-import { NETWORK, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
+import { CHAINID, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
 import { buildDataDelegation } from "components/Airdrop/utils";
 import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
@@ -200,7 +200,7 @@ export function useActions() {
    * @param {IIncentive} incentive 
    */
   const uniswapSafeTransferFrom = async (from: string, tokenID: string, incentive: IIncentive) => {
-    const contract = new Contract(NFTMangerAddress[NETWORK], NFTManagerABI, signer);
+    const contract = new Contract(NFTMangerAddress[CHAINID], NFTManagerABI, signer);
     const encodedData = ethers.utils.defaultAbiCoder.encode([INCENTIVE_KEY_ABI], [{
       pool: incentive.pool,
       startTime: incentive.startTime,

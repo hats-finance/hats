@@ -8,7 +8,7 @@ import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS, NETWORK } from "./settings";
+import { MASTER_ADDRESS, CHAINID } from "./settings";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
@@ -250,7 +250,7 @@ export const linkToEtherscan = (
  * @param {string} tokenID
  * @param {Networks} network
  */
-export const linkToTokenEtherscan = (address: string, tokenID: string, network = NETWORK): string => {
+export const linkToTokenEtherscan = (address: string, tokenID: string, network = CHAINID): string => {
   const prefix = network !== ChainId.Mainnet ? `${network}.` : "";
   return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
 }

@@ -1,4 +1,4 @@
-import { NETWORK } from "../../settings";
+import { CHAINID } from "../../settings";
 import { linkToEtherscan, truncatedAddress } from "../../utils";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import "./Multisig.scss";
@@ -13,7 +13,7 @@ export default function Multisig(props: IProps) {
     <div className="multi-sig-address-wrapper">
       <a target="_blank"
         rel="noopener noreferrer"
-        href={linkToEtherscan(multisigAddress, NETWORK)}
+        href={linkToEtherscan(multisigAddress, CHAINID)}
         className="multi-sig-address">
         {truncatedAddress(multisigAddress ?? "")}
       </a>

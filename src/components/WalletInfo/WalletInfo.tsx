@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { NETWORK } from "../../settings";
+import { CHAINID } from "../../settings";
 import "./WalletInfo.scss";
 import TransactionInfo from "../TransactionInfo/TransactionInfo";
 import { ScreenSize } from "../../constants/constants";
@@ -14,7 +14,7 @@ export default function WalletInfo() {
   const { account, chainId } = useEthers()
   const ethBalance = formatEther(useEtherBalance(account) ?? 0)
   const ethBalanceString = (+ethBalance).toFixed(4)
-  const correctNetwork = NETWORK === chainId
+  const correctNetwork = CHAINID === chainId
   const ensName = useLookupAddress()
 
   return (

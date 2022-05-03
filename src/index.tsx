@@ -4,13 +4,13 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
-import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, AVAILABLE_NETWORKS, ENDPOINT } from "./settings";
+import { LP_UNISWAP_URI, CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { ChainId, Config, DAppProvider } from "@usedapp/core";
-import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 import { BrowserRouter } from "react-router-dom";
 import { getDefaultProvider } from "@ethersproject/providers";
+import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
@@ -22,13 +22,13 @@ const lp_uniswap_subgraph = new HttpLink({
 
 const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, lp_uniswap_subgraph, main_subgraph);
 
-console.log(`Using ${ChainId[NETWORK]} network`);
+console.log(`Using ${ChainId[CHAINID]} network`);
 
 let config: Config = {
-  networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!),
-  readOnlyChainId: NETWORK,
+  networks: [getChainById(CHAINID)!],
+  readOnlyChainId: CHAINID,
   readOnlyUrls: {
-    [NETWORK]: ENDPOINT || getDefaultProvider(NETWORK)
+    [CHAINID]: ENDPOINT || getDefaultProvider(CHAINID)
   },
   autoConnect: true
 }

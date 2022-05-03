@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
 import Modal from "./Shared/Modal";
 import HatsBreakdown from "./HatsBreakdown";
-import { NETWORK } from "../settings";
+import { CHAINID } from "../settings";
 import MenuIcon from "../assets/icons/hamburger.icon";
 import CloseIcon from "../assets/icons/close.icon";
 import Logo from "../assets/icons/logo.icon";
@@ -56,7 +56,7 @@ export default function Header() {
         </div>
       )}
       <button
-        disabled={chainId !== NETWORK}
+        disabled={chainId !== CHAINID}
         className="hats-btn"
         onClick={() => setShowModal(true)}
       >
