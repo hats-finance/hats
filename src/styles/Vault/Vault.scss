@@ -8,12 +8,19 @@ tr {
     }
   }
 
+  &.gamification {
+    td {
+      background-color: $strong-purple !important;
+    }
+  }
+
   td {
     padding: 15px;
     background-color: $strong-blue;
     &.sub-row {
       background-color: transparent;
       padding: 0px;
+      width: 100%;
     }
   }
 }

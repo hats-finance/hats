@@ -13,11 +13,12 @@
     }
   }
   button {
+    margin: 0;
     margin-top: 50px;
   }
   input {
-    max-width: 250px;
     height: 50px;
+    min-height: 50px;
     padding-right: 20px;
   }
   .error-label {

@@ -1,9 +1,9 @@
+import { t } from "i18next";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
 import Severities from "./Severities/Severities";
-import { useHistory } from "react-router-dom";
 import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
@@ -14,18 +14,20 @@ import VaultAction from "./VaultAction";
 import { isMobile } from "web3modal";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import "./VaultExpanded.scss";
+import { useNavigate } from "react-router-dom";
 
 interface IProps {
   data: IVault
-  withdrawRequests: IPoolWithdrawRequest[]
-  setShowModal: Function
-  setModalData: Function
+  withdrawRequests?: IPoolWithdrawRequest[]
+  setShowModal?: Function
+  setModalData?: Function
+  preview?: boolean
 }
 
 export default function VaultExpanded(props: IProps) {
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, isGuest, parentDescription, description } = props.data;
-  const history = useHistory();
+  const navigate = useNavigate()
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const pieChartData = [
@@ -39,6 +41,7 @@ export default function VaultExpanded(props: IProps) {
 
   const pieChartNonZeroVaules = pieChartData.filter((obj) => obj.value !== 0);
   const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+  const [chartMouseOver, setChartMouseOver] = useState(false);
 
   const nextSegement = () => {
     if (selectedSegmentIndex + 1 === pieChartNonZeroVaules.length) {
@@ -62,41 +65,41 @@ export default function VaultExpanded(props: IProps) {
         <div className="vault-expanded">
           {screenSize === ScreenSize.Mobile && (
             <div >
-              <VaultAction data={props.data}
-                withdrawRequests={props.withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData} />
+              <VaultAction {...props} />
             </div>
           )}
           <div className="vault-details-wrapper">
             <div className="sub-title">
-              VAULT DETAILS
+              {t("Vault.vault-details")}
             </div>
             <div className="vault-details-content">
               <div>
-                <span className="vault-expanded-subtitle">Committee Members:</span>
+                <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? parentDescription?.committee?.members : description?.committee?.members} />
+                  <Members members={isGuest ? (parentDescription?.committee.members || []) : description.committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
-                  <span className="vault-expanded-subtitle">Committee Address:</span>
-                  <Multisig multisigAddress={isGuest ? parentDescription?.committee?.["multisig-address"] : description?.committee?.["multisig-address"]} />
+                  <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
+                  <Multisig multisigAddress={isGuest ? parentDescription?.committee["multisig-address"] || "" : description.committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(name, id); history.push(RoutePaths.vulnerability); }}>SUBMIT VULNERABILITY</button>
+                  <button onClick={() => { setVulnerabilityProject(name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
-                <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                <span className="vault-expanded-subtitle">{t("Vault.prize-division")}:</span>
                 <div className="pie-chart-wrapper">
 
                   <div className="pie-chart-container">
                     {isMobile() && <button style={{ transform: "rotate(180deg)" }} onClick={nextSegement}><ArrowIcon width="20" height="20" /></button>}
                     <PieChart
                       onMouseOver={(e, segmentIndex) => {
+                        setChartMouseOver(true);
                         setSelectedSegmentIndex(segmentIndex);
                       }}
-                      lineWidth={30}
+                      onMouseOut={() => setChartMouseOver(false)}
+                      segmentsShift={(index) => (index === selectedSegmentIndex && (chartMouseOver || screenSize === ScreenSize.Mobile) ? 7 : 0)}
+                      lineWidth={45}
                       data={pieChartNonZeroVaules} />
                     {isMobile() && <button onClick={prevSegement}><ArrowIcon width="20" height="20" /></button>}
                   </div>
@@ -110,7 +113,7 @@ export default function VaultExpanded(props: IProps) {
             </div>
           </div>
           <div className="severity-prizes-wrapper">
-            <div className="sub-title">SEVERITY PRIZES</div>
+            <div className="sub-title">{t("Vault.severity-prizes")}</div>
             <div className="severity-prizes-content">
               <Severities
                 severities={description?.severities}

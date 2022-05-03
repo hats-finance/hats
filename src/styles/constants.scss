@@ -4,13 +4,14 @@ $sidebar-width: 265px;
 $element-padding-mobile: 20px;
 $modal-element-padding: 40px;
 $modal-element-padding-mobile: 20px;
-$table-max-width: 1220px;
+$element-max-width: 1220px;
 $header-button-hight: 56px;
 
 /* colors */
 $white: #FFFFFF;
 $black: #000206;
 $dark-blue: #000723;
+$moderate-blue: #000930;
 $strong-blue: #001571;
 $blue: #000C3B;
 $field-blue: #0C1436;
@@ -28,6 +29,10 @@ $orange: #D1891D;
 $yellow: #F2C94C;
 $transparent-black: rgba(0,0,0,0.2); // for modal
 $gray: #C6C6C6;
+$light-gray: #212842;
+$azure: #13A8FD;
+$purple: #4F72EB;
+$strong-purple: #4B239F;
 
 /* pie chart colors */
 $vested-token: #15686B;
@@ -44,6 +49,9 @@ $severity-critical: #122777;
 $severity-audit-request: #D1891D;
 
 $committee-blue: #c0f2f2;
+
+$vault-editor-border: #59648f;
+$vault-editor-border-2: #212842;
 
 /* font sizes */
 $xlarge: 48px;

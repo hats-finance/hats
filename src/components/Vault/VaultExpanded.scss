@@ -22,6 +22,8 @@
         padding: 20px 30px;
         border: 1px solid $purple-blue;
         width: 50%;
+        flex: 0 0 auto;
+        box-sizing: border-box;
       }
       .multi-sig-wrapper {
         margin-bottom: 20px;
@@ -32,8 +34,9 @@
         justify-content: center;
         margin-top: 50px;
         button {
+          background: transparent;
           color: $drak-green;
-          border-color: $drak-green;
+          border: 1px solid $drak-green;
           width: 350px;
         }
       }
@@ -94,16 +97,24 @@
       align-items: center;
       height: 100%;
       .pie-chart-container {
-        svg {
-          max-width: 150px;
+        flex-shrink: 0;
+        > svg {
+          max-width: 120px;
           cursor: pointer;
+          overflow: visible;
+        }
+        button {
+          border: none;
+        }
+        button {
+          border: none;
         }
       }
       span {
         color: $white;
       }
       .label-wrapper {
-        margin-left: 50px;
+        margin-left: 40px;
         padding-left: 10px;
         display: flex;
         flex-direction: column;
@@ -152,7 +163,7 @@
       min-height: unset;
       overflow: auto;
       white-space: nowrap;
-      width: 90vw;
+      width: calc(100vw - 82px);
     }
     .prize-division-wrapper {
       .pie-chart-wrapper {

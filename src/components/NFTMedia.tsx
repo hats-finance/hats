@@ -16,12 +16,12 @@ export default function NFTMedia(props: IProps) {
       {IMAGES_EXTENTIONS.includes(extension) ?
         <img
           className="nft-image"
-          src={`${IPFS_PREFIX}${link.substring(12)}`}
+          src={`${IPFS_PREFIX}/${link.substring(12)}`}
           alt="NFT"
           width={width} /> :
         VIDEOS_EXTENTIONS.includes(extension) ?
           <video loop autoPlay muted width={width} playsInline>
-            <source src={`${IPFS_PREFIX}${link.substring(12)}`} type="video/mp4" />
+            <source src={`${IPFS_PREFIX}/${link.substring(12)}`} type="video/mp4" />
           </video> :
           <span>Unsupported media</span>}
     </div>

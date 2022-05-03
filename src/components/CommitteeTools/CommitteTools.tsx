@@ -19,7 +19,7 @@ function Content() {
   return (
     <div className="content committee-tools-wrapper">
       <div className="committee-tools-content">
-        {vault.isCreated && vault.isLocked && <UnlockVaultModal />}
+        {vault.isCreated && vault.isLocked && <UnlockVaultModal setShowModal={() => { }} />}
         {vault.isCreated ? <Decrypt /> : <Welcome />}
       </div>
     </div>

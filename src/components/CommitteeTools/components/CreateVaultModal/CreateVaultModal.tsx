@@ -43,7 +43,7 @@ export default function CreateVaultModal({ setShowModal }: { setShowModal: (show
         />
         {error && <div className="error-label">{error}</div>}
         <button disabled={!password || !passwordConfirm} onClick={createVault}>
-          {t("CommitteeTools.Welcome.create-vault")}
+          {t("CommitteeTools.create-vault")}
         </button>
       </div>
     </Modal>

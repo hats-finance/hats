@@ -6,7 +6,8 @@
   "https_only": true,
  "headers": {
    "/**": {
-     "X-Frame-Options": "DENY"
+     "X-Frame-Options": "DENY",
+     "x-ipfs-path": "/ipfs/bafybeidwskfoy4rcdkhe5wkzgxcftkvwuad32zn7t2nf63djzmjpc3j644"
    }
  }
 }

@@ -26,6 +26,9 @@
       background-color: $severity-audit-request;
       color: $white;
     }
+    &.caught-the-flag {
+      background-color: $strong-purple;
+    }
     .severity-title {
       color: $white;
       font-weight: bold;
@@ -51,6 +54,7 @@
     padding: 10px 30px;
     border-right: 1px solid $purple-blue;
     border-left: 1px solid $purple-blue;
+    border-bottom: 1px solid $purple-blue;
     .severity-data-item {
       display: flex;
       flex-direction: column;
