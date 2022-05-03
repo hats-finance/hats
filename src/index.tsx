@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import store from "./store/index";
 import "./index.css";
 import App from "./App";
-import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, ENDPOINT, AVAILABLE_NETWORKS, MASTER_ADDRESS } from "./settings";
+import { LP_UNISWAP_URI, NETWORK, SUBGRAPH_URI, AVAILABLE_NETWORKS, ENDPOINT } from "./settings";
 import HttpsRedirect from "react-https-redirect";
 import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { ChainId, Config, DAppProvider } from "@usedapp/core";
@@ -28,7 +28,7 @@ let config: Config = {
   networks: AVAILABLE_NETWORKS.map(network => getChainById(network)!),
   readOnlyChainId: NETWORK,
   readOnlyUrls: {
-    [NETWORK]: getDefaultProvider(NETWORK) // window.location.hostname === "localhost" ? getDefaultProvider(NETWORK) : ENDPOINT
+    [NETWORK]: ENDPOINT || getDefaultProvider(NETWORK)
   },
   autoConnect: true
 }
