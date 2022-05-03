@@ -198,7 +198,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState, checkInState]
 
-  const pendingWalletAction = allStates.some(state => state.status === 'PendingSignature' || state.status === 'Mining');
+  const pendingWalletAction = allStates.some(state => state.status === 'Mining');
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,
