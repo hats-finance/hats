@@ -8,6 +8,12 @@ tr {
     }
   }
 
+  &.gamification {
+    td {
+      background-color: $strong-purple !important;
+    }
+  }
+
   td {
     padding: 15px;
     background-color: $strong-blue;

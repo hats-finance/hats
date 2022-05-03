@@ -29,11 +29,16 @@ export default function Honeypots() {
   }, [modalData])
 
   const guestVaults: Array<JSX.Element> = [];
+  const gamificationVaults: Array<JSX.Element> = [];
 
   const vaults = vaultsData.map((vault: IVault) => {
     // TODO: temp to not show guest vaults
     if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
+        if (vault.description?.["project-metadata"]?.gamification) {
+          gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
+          return null;
+        }
         if (vault.isGuest) {
           guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
           return null;
@@ -71,6 +76,12 @@ export default function Honeypots() {
                 </>
               )}
             </tr>
+            {gamificationVaults.length > 0 && (
+              <tr className="transparent-row">
+                <td colSpan={7}>Gamification vault</td>
+              </tr>
+            )}
+            {gamificationVaults}
             <tr className="transparent-row">
               <td colSpan={7}>Hats Native vaults</td>
             </tr>

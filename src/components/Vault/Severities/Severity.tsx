@@ -36,7 +36,7 @@ export default function Severity(props: IProps) {
     <>
       <div className="severity-wrapper" key={severityIndex}>
         <div
-          className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase()}`}
+          className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase().split(' ').join('-')}`}
           onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
           <div className="severity-title">{`${severity?.name.toUpperCase()} SEVERITY`}</div>
           <div className={expanded ? "arrow open" : "arrow"}><ArrowIcon /></div>
