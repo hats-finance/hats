@@ -12,10 +12,11 @@ import './index.scss'
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
-import { IPFS_PREFIX } from "constants/constants";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
+import { ipfsTransformUri } from "utils";
+
 interface IContract {
     name: string;
     address: string;
@@ -73,7 +74,7 @@ export default function VaultEditor() {
     async function loadFromIpfs(ipfsHash) {
         try {
             setLoadingFromIpfs(true)
-            const response = await fetch(IPFS_PREFIX + ipfsHash)
+            const response = await fetch(ipfsTransformUri(ipfsHash)!)
             const lastModified = response.headers.get('last-modified')
             if (lastModified) {
                 setIpfsDate(new Date(lastModified))
@@ -84,6 +85,8 @@ export default function VaultEditor() {
                 newVaultDescription["project-metadata"] = newVaultDescription["Project-metadata"]
                 delete newVaultDescription["Project-metadata"]
             }
+            console.log("loaded",newVaultDescription);
+            
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {
