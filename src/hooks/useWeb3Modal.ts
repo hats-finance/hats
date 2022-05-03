@@ -68,9 +68,7 @@ export const useWeb3Modal = () => {
 
   useEffect(() => {
     if (error) {
-      console.log("launching notification", error);
-
-      toggleNotification(true, NotificationType.Error, error.message, true);
+      console.log("error with provider", error);
     }
   }, [error, toggleNotification]);
 
