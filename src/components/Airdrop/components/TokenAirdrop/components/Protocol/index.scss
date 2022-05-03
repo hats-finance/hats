@@ -1,0 +1,30 @@
+@import "../../../../../../styles/constants.scss";
+
+.protocol-wrapper {
+  color: $white;
+  p {
+    margin-bottom: 40px;
+  }
+  .actions-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 100px;
+    margin-bottom: 20px;
+    button {
+      width: 150px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .protocol-wrapper {
+    .actions-wrapper {
+      flex-direction: column-reverse;
+      margin-top: 30px;
+      button {
+        width: 100%;
+        margin: 10px 0;
+      }
+    }
+  }
+}

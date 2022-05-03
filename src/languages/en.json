@@ -2,7 +2,8 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL"
+      "cancel": "CANCEL",
+      "no-ethereum": "No Ethereum provider detected. Please install one or try a different browser"
     },
     "Welcome": {
       "title": "Hats",
@@ -42,6 +43,60 @@
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
       }
     },
+    "Airdrop": {
+      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
+      "search-placeholder": "Enter wallet address",
+      "search-error": "Please enter a valid address",
+      "not-eligible-nft": "This address is not eligible to NFT airdrop",
+      "not-eligible-token": "This address is not eligible to token airdrop",
+      "redeemed-link": "Redeemed - View on Etherscan",
+      "TokenAirdrop": {
+        "ProgressBar": {
+          "protocol": "Understand the protocol",
+          "delegatee": "Choose a Delegatee",
+          "claim": "Claim your hats"
+        },
+        "CheckEligibility": {
+          "title": "HATS TOKEN AIRDROP",
+          "claim-amount": "Total available to claim",
+          "token-claim-continue": "START CLAIMING PROCESS"
+        },
+        "Protocol": {
+          "section-1-title": "WHAT IS THE HATS PROTOCOL?",
+          "section-1": "Hats.finance is a decentralized cybersecurity protocol that allows everyone to add liquidity to bug bounties while farming $HATS.  Hackers can responsibly disclose vulnerabilities without KYC & be rewarded with the highest prize & NFTs for their work.",
+          "section-2-title": "WHERE DOES THE PRIZE COME FROM?",
+          "section-2": "When a hack is happening 100% of your holding is at risk. While a responsible disclosure occurs only % from the % of your stacking is in risk, and you will stay with $HATs tokens. No Token or TVL downside a win-win for everyone involved.",
+          "section-3-title": "WHAT IS MY BENEFIT OF USING HATS",
+          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming. \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
+        },
+        "ChooseDelegatee": {
+          "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",
+          "section-1": "Delegation is a shifting of authority and responsibility, e.g. on Hats DAO, voting power from one person to another. The delegatee you choose will represent you on hats future DAO decision. You may choose a delegatee from our list of auditors, dao specialists, security experts or represent yourself",
+          "choose-delegatee": "Choose your delegatee:",
+          "self-delegatee": "I choose myself as a delegatee"
+        },
+        "Claim": {
+          "claim-success": "Hats token claimed successfully",
+          "review": "REVIEW YOUR CLAIM",
+          "claim-amount": "Total available to claim",
+          "chosen-delegatee": "Your chosen delegatee",
+          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions. One time for your delegatee choice and the second for claim transaction."
+        },
+        "Success": {
+          "title": "CLAIM SUCCESSFUL!",
+          "section-1": "Congratulation on claiming your ",
+          "section-2": "Welcome to the Hats! \n\n We encourage you to share on Twitter and join Hats community on Discord to get involved in the governance.",
+          "twitter-share": "Share on twitter",
+          "join-discord": "Join Discord",
+          "twitter-share-text": "Let me share some crypto alpha. \n I just received $HAT tokens for my early contribution in @HatsFinance, the first fully decentralized and community owned bug bounty marketplace. \n Become a chain protector by visiting their dApp or claim tokens if eligible https://app.hats.finance"
+        }
+      },
+      "NFTAirdrop": {
+        "your-nft": "CROW CLAN NFT AIRDROP",
+        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
+        "redeem-success": "NFT redeemed successfully"
+      }
+    },
     "NFTAirdop": {
       "eligible-text": "Congratulations on being part of the first Hats NFT airdrop “The Crow’s Clan” Redeem your NFT and join the clan. \n\n The crows clan is a one of its kind NFT collection, highlighting the importance of crypto security in a space of constant innovation and change. We chose the crow as the main character of the collection because in many ways crows hold the same values as Hats Finance. \n\n The crow is an animal associated with mysteries and magic, often in a negative connotation. However, they also serve an important role in the ecosystem, helping the world get rid of bacteria and restore the forests. The same can be said about Hackers, who are often seen as negative characters, yet they are essential in the crypto ecosystem. \n\n Like our early supporters, crows are clever, intelligent, adaptable, with excellent teamwork and reciprocity - exactly what we see in the Hat's community.",
       "Redeem": {
@@ -53,6 +108,8 @@
       }
     },
     "CommitteeTools": {
+      "unlock-vault": "Unlock Vault",
+      "create-vault": "Create Vault",
       "Welcome": {
         "title": "Welcome to the committee tools",
         "content-1": "The committe tools allow you to easily decrypt vulnerabilities messages submitted by hackers.",
@@ -68,10 +125,8 @@
         "create-description": "Please create a password for your vault",
         "create-addenum": "Make sure to save your password in a secure place. Your password can reveal all your private keys, if you lose it, the vault becomes unreadable and may only be deleted.",
         "unlock-title": "Unlock Vault",
-        "unlock-vault": "Unlock Vault",
         "unlock-vault-description": "Please enter your vault password",
         "delete-vault": "Delete Vault",
-        "create-vault": "Create Vault",
         "delete-confirmation": "Are you sure you want to delete your vault? type 'yes' to confirm",
         "delete-yes": "yes",
         "password": "Password",
@@ -129,6 +184,9 @@
         "your-keys": "Your Keys"
       },
       "Decrypt": {
+        "decrypt-tool": "Decrypt tool",
+        "decrypt-description": "Hello @committee member, Generate or import key-pair in order to decrypt",
+        "selected-key-label": "Signed Alias",
         "decrypt": "Decrypt",
         "encrypt": "Encrypt",
         "select-keypair": "SELECT KEY-PAIR",
@@ -138,7 +196,84 @@
         "encrypt-button": "Encrypt message",
         "no-key-selected": "No key-pair selected",
         "no-message-decrypt": "No message to decrypt"
-      }
+      },
+      "NewKey": {}
+    },
+    "VaultEditor": {
+      "title": "Vault Editor",
+      "hatsOfir": "@hatsOfir",
+      "create-vault": "Create a vault",
+      "create-vault-description": "Please fill the form and sign. Any questions you can refer to @hatsofir.",
+      "last-saved-time": "Last updated on",
+      "local-time": "local time",
+      "remove-pgp": "Remove Key",
+      "reset-button": "Reset",
+      "vault-details": {
+        "title": "Vault Details",
+        "name": "Name",
+        "name-placeholder": "Enter vault name",
+        "icon": "Vault Logo",
+        "token-icon": "Token Icon",
+        "website": "Website",
+        "website-placeholder": "Link website",
+        "multisig-address-placeholder": "Committee multisig address"
+      },
+      "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
+      "committee-details": "Committee Details",
+      "committee": "Committee",
+      "pgp-key": "PGP Public Key",
+      "pgp-key-placeholder": "Paste your public key here",
+      "pgp-key-description": "Please Create A Vault And PGP Key-Pair On Our Dedicated Tool. It will only be stored on the browser's local storage.",
+      "pgp-key-hint-1": "The Vault PGP Keys ",
+      "pgp-key-hint-2": " Are To Be Generated By The Vault Committee/Signers Only!",
+      "pgp-key-hint-question": "What are keys",
+      "pgp-key-hint-tooltip": "The encryption works with a private and public PGP keys, where the public key is visible to all people and is used to encrypt messages. The private key should be available only to committee members and allows them to decrypt and read the messages.",
+      "add-pgp": "Add PGP Key",
+      "go-to-tool": "GO TO TOOL",
+      "committee-bot": "Committee Bot",
+      "multisig-address": "Multisig-Address",
+      "committee-members": "Committee Members",
+      "member-name": "Name",
+      "member-name-placeholder": "Full name or nickname",
+      "member-address": "Wallet-Address",
+      "member-address-placeholder": "Committee wallet-address",
+      "member-twitter": "Twitter Account",
+      "member-twitter-placeholder": "Link Twitter account",
+      "member-image": "Image",
+      "contract-name": "Contract Name",
+      "contract-name-placeholder": "Contract Name",
+      "contract-severities": "Severities",
+      "contract-address": "Address",
+      "contract-address-placeholder": "Contract Address",
+      "add-member": "+ Add",
+      "remove-member": "Remove",
+      "sign-message": "SIGN MESSAGE",
+      "preview-vault": "PREVIEW VAULT",
+      "signees": "SIGNEES",
+      "save-button": "Save",
+      "sign-submit": "Sign and submit",
+      "next": "Next",
+      "previous": "Back",
+      "contracts-covered": "Contracts-Covered",
+      "review-vault": {
+        "title": "Review Vault",
+        "description-1": "In order to submit the form for review by hats team.",
+        "description-2": "Complete the transaction by authorized signer/s",
+        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir"
+      },
+      "img-placeholder": "SVG/PNG"
+    },
+    "Vault": {
+      "vault-details": "Vault Details",
+      "committee-members": "Committee Members",
+      "committee-address": "Committee Address",
+      "severity-prizes": "SEVERITY PRIZES",
+      "total-vault": "Total vault",
+      "deposit-withdraw": "DEPOSIT / WITHDRAW",
+      "withdrawal-request-pending": "WITHDRAWAL REQUEST PENDING",
+      "withdrawal-available": "WITHDRAWAL AVAILABLE",
+      "prize-division": "Prize Content Division",
+      "submit-vulnerability": "SUBMIT VULNERABILITY"
     }
   }
 }

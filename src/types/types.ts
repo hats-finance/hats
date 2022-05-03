@@ -1,5 +1,3 @@
-import { PrivateKey } from "openpgp";
-
 export interface IParentVault {
   id: string
   pid: string
@@ -45,7 +43,7 @@ export interface IVault {
   description: IVaultDescription
   bounty: string
   isGuest: boolean
-  parentDescription: IVaultDescription
+  parentDescription?: IVaultDescription
   parentVault: IParentVault;
 }
 
@@ -55,11 +53,11 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
+    gamification?: boolean
   }
   "communication-channel": {
     "committee-bot": string
-    "pgp-pk": string,
-    "router-pgp-pk": string
+    "pgp-pk": string | string[],
   }
   "committee": {
     "multisig-address": string
@@ -82,9 +80,9 @@ export interface ICommitteeMember {
 export interface ISeverity {
   "name": string
   "index": number
-  "contracts-covered": Array<string>
+  "contracts-covered": { [key: string]: string }[]
   "nft-metadata": INFTMetaData
-  "reward-for": string
+  //  "reward-for": string
   "description": string
 }
 
@@ -192,12 +190,15 @@ export interface IPosition {
   canWithdraw: boolean
 }
 
-/** NFTAirdrop Eligible Tokens */
-export type EligibleTokens = {
-  [key: string]: string
+export type NFTAirdropET = { [key: string]: string };
+export type TokenAirdropET = { [key: string]: number };
+
+export interface IAirdropData {
+  nft: NFTAirdropET,
+  token: TokenAirdropET
 }
 
-export interface IAirdropElement {
+export interface INFTAirdropElement {
   description: string
   external_url: string
   image: string

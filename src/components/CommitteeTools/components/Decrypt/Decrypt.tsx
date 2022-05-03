@@ -112,39 +112,51 @@ export default function Decrypt() {
 
   const SelectedKeypair = () =>
     vaultContext && (
-      <div className="decrypt-wrapper__selected-key">
-        <div className="box-with-copy">
-          <div className="selected-key">
-            <div className="selected-key__fish-eye" />
-            <span>
-              {vaultContext.selectedKey
-                ? vaultContext.selectedKey.alias
-                : t("CommitteeTools.Decrypt.no-key-selected")}
-            </span>
+      <>
+        <p className="decrypt-wrapper__selected-key-label">
+          {t("CommitteeTools.Decrypt.selected-key-label")}
+        </p>
+        <div className="decrypt-wrapper__selected-key">
+          <div className="box-with-copy">
+            <div className="selected-key">
+              <div className="selected-key__fish-eye" />
+              <span>
+                {vaultContext.selectedKey
+                  ? vaultContext.selectedKey.alias
+                  : t("CommitteeTools.Decrypt.no-key-selected")}
+              </span>
+            </div>
+            {vaultContext.selectedKey && (
+              <img
+                alt="copy"
+                src={CopyIcon}
+                onClick={() => {
+                  setShowSelectedKeyDetails(true);
+                }}
+              />
+            )}
           </div>
-          {vaultContext.selectedKey && (
-            <img
-              alt="copy"
-              src={CopyIcon}
-              onClick={() => {
-                setShowSelectedKeyDetails(true);
-              }}
-            />
-          )}
+          <button
+            className="open-key-list fill"
+            onClick={() => {
+              setShowSelectKeyModal(true);
+            }}
+          >
+            {t("CommitteeTools.Decrypt.select-keypair")}
+          </button>
         </div>
-        <button
-          className="open-key-list fill"
-          onClick={() => {
-            setShowSelectKeyModal(true);
-          }}
-        >
-          {t("CommitteeTools.Decrypt.select-keypair")}
-        </button>
-      </div>
+      </>
     );
 
   return (
     <div className="decrypt-wrapper">
+      <h2 className="decrypt-wrapper__title">
+        {t("CommitteeTools.Decrypt.decrypt-tool")}
+      </h2>
+      <p className="decrypt-wrapper__description">
+        {t("CommitteeTools.Decrypt.decrypt-description")}
+      </p>
+
       <SelectedKeypair />
 
       <div className="decrypt-wrapper__textbox-container">
@@ -153,7 +165,7 @@ export default function Decrypt() {
         </p>
         <EditableContent pastable ref={encryptedMessageRef} />
         {error && <div className="error-label">{error}</div>}
-        <button onClick={_decrypt} className="fill">
+        <button onClick={_decrypt} className="fill decrypt-wrapper__button">
           {t("CommitteeTools.Decrypt.decrypt")}
         </button>
       </div>
@@ -163,7 +175,7 @@ export default function Decrypt() {
           {t("CommitteeTools.Decrypt.decrypted-message")}
         </p>
         <EditableContent copyable ref={decryptedMessageRef} />
-        <button onClick={_encrypt} className="fill">
+        <button onClick={_encrypt} className="fill decrypt-wrapper__button">
           {t("CommitteeTools.Decrypt.encrypt")}
         </button>
       </div>

@@ -19,6 +19,31 @@
       color: $dirty-turquoise;
       font-family: RobotoMono;
     }
+
+    &--changed {
+      border-color: $yellow;
+    }
+  }
+
+  &__input {
+    margin: 0;
+    width: 100%;
+    height: 40px;
+    padding: 12px 16px;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: $turquoise;
+    resize: none;
+    border: 1px solid $turquoise;
+
+    &::placeholder {
+      color: $dirty-turquoise;
+      font-family: RobotoMono;
+    }
+
+    &--changed {
+      border-color: $yellow;
+    }
   }
 
   &__extra-icons {
@@ -28,8 +53,15 @@
 
     img {
       cursor: pointer;
-      margin-right: $spacing-half;
-      margin-bottom: $spacing-half;
+      margin-right: 18px;
+      margin-bottom: 18px;
+    }
+
+    &--input {
+      img {
+        margin-right: 4px;
+        margin-bottom: 4px;
+      }
     }
   }
 }

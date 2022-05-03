@@ -4,7 +4,7 @@ import { VaultContext } from "../../store";
 import { t } from "i18next";
 import "./index.scss";
 
-export default function UnlockVaultModal() {
+export default function UnlockVaultModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
   const vaultContext = useContext(VaultContext);
@@ -22,7 +22,7 @@ export default function UnlockVaultModal() {
   return (
     <Modal
       title={t("CommitteeTools.Welcome.unlock-title")}
-      setShowModal={() => {}}
+      setShowModal={() => { }}
       height="fit-content"
       hideClose={true}
     >

@@ -1,4 +1,4 @@
-import { LocalStorage, Networks } from "./constants/constants";
+import { IPFS_PREFIX, LocalStorage, Networks } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
@@ -474,15 +474,6 @@ export const checkMasterAddress = (masterAddress: string) => {
 }
 
 /**
- * Used to hashToken in NFTAirdrop
- * @param {string} tokenID
- * @param {string} account 
- */
-export const hashToken = (tokenID: string, account: string) => {
-  return Buffer.from(ethers.utils.solidityKeccak256(['uint256', 'address'], [tokenID, account]).slice(2), 'hex');
-}
-
-/**
  * Normalize any supported address-format to a checksum address.
  * @param {string} address
  */
@@ -499,4 +490,37 @@ export const normalizeAddress = (address: string) => {
  */
 export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
+}
+
+/**
+ * Get safes for a given weallet from gnosis safe api
+ * @param {string} walletAddress
+ */
+export const getSafesOwnedBy = async (walletAddress: string) => {
+  let api
+  switch (NETWORK) {
+    case Networks.main: api = "https://safe-transaction.gnosis.io/api/v1"; break;
+    case Networks.rinkeby: api = "https://safe-transaction.rinkeby.gnosis.io/api/v1"; break;
+  }
+  const response = await fetch(`${api}?/owners/${walletAddress}/safes/`);
+  return await response.json();
+}
+
+export const ipfsTransformUri = (uri: string) => {
+  if (!uri) {
+    return;
+  } else if (uri.startsWith("ipfs")) {
+    let ipfs;
+    if (uri.startsWith("ipfs/")) {
+      ipfs = uri.slice(5);
+    } else if (uri.startsWith("ipfs://")) {
+      ipfs = uri.slice(7);
+    }
+    return `${IPFS_PREFIX}${ipfs}`;
+  } else if (uri.startsWith("http")) {
+    return uri;
+  } else if (uri.startsWith("blob")) {
+    return uri;
+  }
+  return `${IPFS_PREFIX}/${uri}`;
 }

@@ -19,7 +19,8 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    max-width: $table-max-width;
+    max-width: $element-max-width;
+    margin-bottom: 150px;
     tr {
       text-align: center;
     }
@@ -45,6 +46,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .honeypots-wrapper {
     table {
+      margin-bottom: 50px;
       .transparent-row {
         td {
           padding-left: 20px;
