@@ -10,7 +10,7 @@ const initialState = {
     text: "",
     disableAutoHide: undefined
   },
-  inTransaction: false,
+  inTransaction: null,
   transactionHash: "",
   liquidityPoolID: "",
   submittingVulnerability: false
