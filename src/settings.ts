@@ -10,6 +10,7 @@ export const MASTER_ADDRESS = process.env.REACT_APP_MASTER_ADDRESS || MasterAddr
 export const VAULT_SERVICE = process.env.VAULT_SERVICE || VaultService[NETWORK];
 export const NFT_AIRDROP_ADDRESS = NFTAirdropAddress[NETWORK] || NFTAirdropAddress.main;
 export const TOKEN_AIRDROP_ADDRESS = TokenAirdropAddress[NETWORK];
+export const DEFAULT_CLAIM_BOT = process.env.REACT_APP_DEFAULT_CLAIM_BOT || "https://demo-bot-hats.herokuapp.com/broadcast-message";
 export const DELEGATEES_IPFS = process.env.REACT_APP_DELEGATEES_IPFS || TokenAirdropDelegatees[NETWORK];
 export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_CID || TokenAirdropCID[NETWORK];
 export const DATA_POLLING_INTERVAL = 10000;
