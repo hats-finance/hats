@@ -85,7 +85,6 @@ export default function VaultEditor() {
                 newVaultDescription["project-metadata"] = newVaultDescription["Project-metadata"]
                 delete newVaultDescription["Project-metadata"]
             }
-            console.log("loaded",newVaultDescription);
             
             setVaultDescription(newVaultDescription)
             setChanged(false)
