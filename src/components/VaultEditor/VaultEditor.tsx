@@ -44,7 +44,7 @@ const newVaultDescription: IVaultDescription = {
         website: "",
     },
     "communication-channel": {
-        "committee-bot": "https://demo-bot-hats.herokuapp.com/broadcast-message/",
+        "committee-bot": "",
         "pgp-pk": "",
     },
     committee: {
