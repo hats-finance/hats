@@ -31,6 +31,11 @@ export enum Networks {
   kovan = "kovan"
 }
 
+export enum DefaultBotService {
+  main = "https://hats-heroku-app.herokuapp.com/broadcast-message/",
+  rinkeby = "https://demo-bot-hats.herokuapp.com/broadcast-message/"
+}
+
 export enum VaultService {
   main = "",
   rinkeby = "https://vault-editor-service.herokuapp.com",
