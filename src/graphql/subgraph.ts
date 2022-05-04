@@ -9,7 +9,6 @@ export const GET_VAULTS = gql`
       descriptionHash
       description
       bounty
-      isGuest
       parentDescription
       parentVault {
         id

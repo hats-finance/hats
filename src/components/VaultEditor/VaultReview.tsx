@@ -12,7 +12,6 @@ export default function VaultReview({ vaultDescription }) {
       description: description,
       descriptionHash: "",
       bounty: "",
-      isGuest: false,
       parentVault: {
         id: "",
         pid: "",
@@ -89,7 +88,6 @@ export default function VaultReview({ vaultDescription }) {
         committeeCheckedIn: true,
         approvedClaims: [],
         stakers: [],
-        guests: [],
         apy: 0,
         tokenPrice: 0
       }

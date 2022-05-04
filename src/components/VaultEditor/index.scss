@@ -278,12 +278,6 @@
     // preview vault
     tr {
         border-bottom: 2px solid $dark-blue;
-        &.guest {
-            td {
-                background-color: $field-blue !important;
-            }
-        }
-    
         td {
             padding: 15px;
             background-color: $strong-blue;

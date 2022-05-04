@@ -2,12 +2,6 @@
 
 tr {
   border-bottom: 2px solid $dark-blue;
-  &.guest {
-    td {
-      background-color: $field-blue !important;
-    }
-  }
-
   &.gamification {
     td {
       background-color: $strong-purple !important;

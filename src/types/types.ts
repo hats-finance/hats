@@ -21,7 +21,6 @@ export interface IParentVault {
   withdrawRequests: Array<IPoolWithdrawRequest>
   totalUsersShares: string
   descriptionHash: string
-  guests: Array<IVault>
   hackerVestedRewardSplit: string
   hackerRewardSplit: string
   committeeRewardSplit: string
@@ -42,7 +41,6 @@ export interface IVault {
   descriptionHash: string
   description: IVaultDescription
   bounty: string
-  isGuest: boolean
   parentDescription?: IVaultDescription
   parentVault: IParentVault;
 }
