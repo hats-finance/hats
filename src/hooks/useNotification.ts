@@ -7,7 +7,7 @@ export const useNotification = () => {
 
     return {
         toggleNotification: (show: boolean, notificationType: NotificationType | undefined, text: string, disableAutoHide?: boolean) => {
-            dispatch(toggleNotification(show, notificationType, text, disableAutoHide))
+            dispatch(toggleNotification(show, notificationType, text, disableAutoHide));
         }
     }
 }

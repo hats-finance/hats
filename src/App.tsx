@@ -21,7 +21,6 @@ import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
-//import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import Notification from "./components/Shared/Notification";
@@ -29,7 +28,7 @@ import "./styles/App.scss";
 import { RootState } from "./reducers";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
-import "./i18n.ts"; // Initialise i18n
+import "./i18n.ts";
 import { useFetchAirdropData } from "./components/Airdrop/utils";
 import { useEthers } from "@usedapp/core";
 

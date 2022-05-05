@@ -1,31 +1,31 @@
 import { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@apollo/client";
+import { BigNumber } from "@ethersproject/bignumber";
+import humanizeDuration from "humanize-duration";
+import moment from "moment";
+import millify from "millify";
+import classNames from "classnames";
+import Tooltip from "rc-tooltip";
+import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
+import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, calculateApy, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
-import "../../styles/DepositWithdraw/DepositWithdraw.scss";
-//import * as contractsActions from "../../actions/contractsActions";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
-import { useQuery } from "@apollo/client";
-import { BigNumber } from "@ethersproject/bignumber";
-import { formatUnits, formatEther, parseUnits } from "@ethersproject/units"
 import { RootState } from "../../reducers";
-import Tooltip from "rc-tooltip";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
-import millify from "millify";
-import classNames from "classnames";
 import { DATA_POLLING_INTERVAL } from "../../settings";
-import moment from "moment";
 import Countdown from "../Shared/Countdown/Countdown";
-import humanizeDuration from "humanize-duration";
 import ApproveToken from "./ApproveToken";
-import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import {  useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { toggleInTransaction, updateTransactionHash } from "actions";
+import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 
 interface IProps {
   data: IVault
-  setShowModal?: Function
+  setShowModal: Function
   isPool?: boolean
 }
 
@@ -79,9 +79,11 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 }
 
 export default function DepositWithdraw(props: IProps) {
+  const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
     committeeCheckedIn, depositPause } = props.data.parentVault;
   const { parentDescription, isGuest, description } = props.data;
+  const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
@@ -120,13 +122,12 @@ export default function DepositWithdraw(props: IProps) {
   }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
 
 
-  let userInputValue
+  let userInputValue;
   try {
-    userInputValue = parseUnits(userInput!, stakingTokenDecimals)
+    userInputValue = parseUnits(userInput!, stakingTokenDecimals);
   } catch {
-    userInputValue = BigNumber.from(0)
+    userInputValue = BigNumber.from(0);
   }
-
 
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
@@ -138,7 +139,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken)
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
-    approveToken(master.address, amountToSpend ?? MAX_SPENDING, );
+    approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
 
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
@@ -152,44 +153,34 @@ export default function DepositWithdraw(props: IProps) {
     }
   }
 
-  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address)
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = async () => {
-    depositAndClaim(pid, userInputValue)
-    // () => { if (props.setShowModal) { props.setShowModal(false); } },
-    // async () => {
-    //   setUserInput("");
-    //   //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-    // }, () => { setPendingWalletAction(false); }, dispatch, `Deposited ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+    await depositAndClaim(pid, userInputValue);
   }
 
-  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address)
+  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = async () => {
-    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares))
-    // await contractsActions.createTransaction(
-    //   async () => contractsActions.withdraw AndClaim(pid, master.address, ),
-    //   () => { if (props.setShowModal) { props.setShowModal(false); } },
-    //   async () => {
-    //     setWithdrawRequests(undefined);
-    //     setUserInput("");
-    //     //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-    //   }, () => { setPendingWalletAction(false); }, dispatch, `Withdrawn ${userInput} ${stakingTokenSymbol} ${pendingReward.eq(0) ? "" : `and Claimed ${millify(Number(fromWei(pendingReward)))} HATS`}`);
+    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares));
   }
 
-  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address)
+  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
-    withdrawRequest(pid)
+    withdrawRequest(pid);
   }
 
-  const { send: claim, state: claimState } = useClaim(master.address)
+  const { send: claim, state: claimState } = useClaim(master.address);
   const handleClaim = async () => {
-    claim(pid)
-    // () => { if (props.setShowModal) { props.setShowModal(false); } },
-    // async () => {
-    //   setUserInput("");
-    //   //fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-    // }, () => { setPendingWalletAction(false); }, dispatch, `Claimed ${millify(Number(fromWei(pendingReward)))} HATS`);
+    claim(pid);
   }
+
+  useEffect(() => {
+    switch (depositAndClaimState.status || withdrawAndClaimState.status || claimState.status) {
+      case "Mining":
+        setShowModal(false);
+        break;
+    }
+  }, [depositAndClaimState.status, withdrawAndClaimState.status, claimState.status, setShowModal]);
 
   const { send: checkIn, state: checkInState } = useCheckIn(master.address)
   const handleCheckIn = () => {
@@ -198,7 +189,15 @@ export default function DepositWithdraw(props: IProps) {
 
   const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState, checkInState]
 
-  const pendingWalletAction = allStates.some(state => state.status === 'Mining');
+  const pendingWalletAction = allStates.some(state => state.status === "PendingSignature");
+  const inTransaction = allStates.find(state => state.status === "Mining");
+
+  useEffect(() => {
+    if (inTransaction) {
+      dispatch(toggleInTransaction(true));
+      dispatch(updateTransactionHash(inTransaction.transaction?.hash!));
+    }
+  }, [inTransaction, dispatch])
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,

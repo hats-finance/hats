@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { toggleMenu } from "../actions/index";
+import { useEffect, useState } from "react";
+import { toggleInTransaction, toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getMainPath,
 } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import { ScreenSize } from "../constants/constants";
+import { NotificationType, ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
 import Modal from "./Shared/Modal";
@@ -19,7 +19,8 @@ import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useNotifications } from "@usedapp/core";
+import { useNotification } from "hooks/useNotification";
 
 export default function Header() {
   const location = useLocation();
@@ -36,17 +37,42 @@ export default function Header() {
     (state: RootState) => state.layoutReducer.inTransaction
   );
 
+  const { chainId, account } = useEthers();
+  const { notifications } = useNotifications();
+  const { toggleNotification } = useNotification();
 
+  // const { transactions } = useTransactions();
   // useEffect(() => {
-  //   const getWalletBalance = async () => {
-  //     fetchWalletBalance(dispatch, network, selectedAddress, rewardsToken);
-  //   };
-  //   if (network === NETWORK && selectedAddress && rewardsToken) {
-  //     getWalletBalance();
-  //   }
-  // }, [selectedAddress, network, rewardsToken, dispatch]);
+  //   console.log("transactions", transactions);
+  // }, [transactions])
 
-  const { chainId, account } = useEthers()
+  useEffect(() => {
+    //console.log("notifications", notifications);
+    if (notifications.length > 0) {
+      const notification = notifications[0];
+      let type;
+      let text;
+      // if (notification.type === "transactionStarted") {
+
+      // }
+      switch (notification.type) {
+        case "transactionFailed":
+          type = NotificationType.Error;
+          text = "Transaction Failed";
+          break;
+        case "transactionSucceed":
+          type = NotificationType.Success;
+          text = "Transaction Succeed";
+          break;
+      }
+      toggleNotification(true, type, text);
+    } else {
+      setTimeout(() => {
+        //toggleNotification(false, undefined, "");
+        dispatch(toggleInTransaction(false));
+      }, 3000);
+    }
+  }, [notifications, dispatch, toggleNotification])
 
   return (
     <header data-testid="Header">
