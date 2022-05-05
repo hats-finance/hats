@@ -70,7 +70,7 @@ export default function Severity(props: IProps) {
                 &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
               </span>
               {
-                screenSize === ScreenSize.Desktop && rewardPrice &&  (
+                screenSize === ScreenSize.Desktop && rewardPrice && (
                   <>
                     <span className="vault-expanded-subtitle">Prize Content Division:</span>
                     <div className="severity-prize-division-wrapper">
