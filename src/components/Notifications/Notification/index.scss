@@ -1,0 +1,28 @@
+@import "../../../styles/constants.scss";
+
+.notification-wrapper {
+  background-color: $purple;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 0.25rem;
+  width: 500px;
+
+  .dismiss-btn {
+    background: none;
+    border: none;
+    color: $white;
+    font-weight: bold;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .notification-wrapper {
+    width: 100%;
+  }
+}

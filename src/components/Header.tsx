@@ -6,7 +6,7 @@ import {
 } from "../utils";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import { NotificationType, ScreenSize } from "../constants/constants";
+import { ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
 import Modal from "./Shared/Modal";
@@ -19,8 +19,8 @@ import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
-import { useEthers, useNotifications } from "@usedapp/core";
-import { useNotification } from "hooks/useNotification";
+import { useEthers, useNotifications, useTransactions } from "@usedapp/core";
+import useNotification from "hooks/useNotification";
 
 export default function Header() {
   const location = useLocation();
@@ -39,40 +39,36 @@ export default function Header() {
 
   const { chainId, account } = useEthers();
   const { notifications } = useNotifications();
-  const { toggleNotification } = useNotification();
+  const { notify } = useNotification();
 
-  // const { transactions } = useTransactions();
-  // useEffect(() => {
-  //   console.log("transactions", transactions);
-  // }, [transactions])
+  const { transactions } = useTransactions();
+  useEffect(() => {
+    console.log("transactions", transactions);
+  }, [transactions])
 
   useEffect(() => {
-    //console.log("notifications", notifications);
+    console.log("notifications", notifications);
     if (notifications.length > 0) {
       const notification = notifications[0];
-      let type;
-      let text;
       // if (notification.type === "transactionStarted") {
 
       // }
+      console.log(notification.type);
       switch (notification.type) {
         case "transactionFailed":
-          type = NotificationType.Error;
-          text = "Transaction Failed";
+          notify("Transaction Failed");
           break;
         case "transactionSucceed":
-          type = NotificationType.Success;
-          text = "Transaction Succeed";
+          notify("Transaction Succeed");
           break;
       }
-      toggleNotification(true, type, text);
-    } else {
-      setTimeout(() => {
-        //toggleNotification(false, undefined, "");
-        dispatch(toggleInTransaction(false));
-      }, 3000);
     }
-  }, [notifications, dispatch, toggleNotification])
+    // else {
+    //   setTimeout(() => {
+    //     dispatch(toggleInTransaction(false));
+    //   }, 3000);
+    // }
+  }, [dispatch, notifications, notify])
 
   return (
     <header data-testid="Header">

@@ -88,12 +88,6 @@ export const MAX_SPENDING = BigNumber.from(2)
 /** The minimum amount to deposit in WEI units */
 export const MINIMUM_DEPOSIT = 1000000;
 
-export enum NotificationType {
-  Success = "SUCCESS",
-  Error = "ERROR",
-  Info = "INFO"
-}
-
 export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",
   minHeight: "unset"

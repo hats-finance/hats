@@ -3,11 +3,11 @@ import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ENDPOINT, CHAINID } from "settings";
 import WalletConnectProvider from "@walletconnect/web3-provider";
-import { useNotification } from "./useNotification";
+import useNotification from "./useNotification";
 
 export const useWeb3Modal = () => {
   const [provider, setProvider] = useState<any>();
-  const { toggleNotification } = useNotification();
+  const { notify } = useNotification();
   const { activate, deactivate, error } = useEthers();
   const [autoLoaded, setAutoLoaded] = useState(false);
   const autoLoad = true;
@@ -42,7 +42,8 @@ export const useWeb3Modal = () => {
     const newProvider = await web3Modal.connect();
     await activate(newProvider);
     setProvider(newProvider);
-  }, [web3Modal, activate]);
+    notify("Connected to wallet");
+  }, [web3Modal, activate, notify]);
 
   const deactivateProvider = useCallback(async () => {
     await web3Modal.clearCachedProvider();
@@ -69,7 +70,7 @@ export const useWeb3Modal = () => {
     if (error) {
       console.log("error with provider", error);
     }
-  }, [error, toggleNotification]);
+  }, [error]);
 
   return { activateProvider, deactivateProvider, error };
 };

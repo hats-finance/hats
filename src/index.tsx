@@ -2,7 +2,6 @@ import ReactDOM from "react-dom";
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
 import { Provider } from "react-redux";
 import store from "./store/index";
-import "./index.css";
 import App from "./App";
 import { LP_UNISWAP_URI, CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import HttpsRedirect from "react-https-redirect";
@@ -11,6 +10,8 @@ import { ChainId, Config, DAppProvider } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
+import NotificationProvider from "components/Notifications/NotificationProvider";
+import "./index.css";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
@@ -43,7 +44,9 @@ ReactDOM.render(
       <ApolloProvider client={client}>
         <HttpsRedirect>
           <BrowserRouter>
-            <App />
+            <NotificationProvider>
+              <App />
+            </NotificationProvider>
           </BrowserRouter>
         </HttpsRedirect>
       </ApolloProvider>

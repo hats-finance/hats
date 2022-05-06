@@ -23,7 +23,6 @@ import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAcco
 import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
-import Notification from "./components/Shared/Notification";
 import "./styles/App.scss";
 import { RootState } from "./reducers";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
@@ -36,7 +35,6 @@ function App() {
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
-  const showNotification = useSelector((state: RootState) => state.layoutReducer.notification.show);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const { account } = useEthers()
@@ -81,7 +79,6 @@ function App() {
           <Route path=":walletAddress" element={<Airdrop />} />
         </Route>
       </Routes >
-      {showNotification && hasSeenWelcomePage && <Notification />}
       {
         account && hasSeenWelcomePage === "1" && showAirdropPrompt && (
           <AirdropPrompt closePrompt={() => setShowAirdropPrompt(false)} />)

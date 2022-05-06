@@ -7,9 +7,9 @@ import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 import HatsToken from "../data/abis/HatsToken.json";
-import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, NotificationType, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
+import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
 import { Dispatch } from "redux";
-import { toggleInTransaction, toggleNotification, updateTransactionHash } from "./index";
+import { toggleInTransaction, updateTransactionHash } from "./index";
 import { Logger } from "ethers/lib/utils";
 import { CHAINID, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { IIncentive } from "../types/types";
@@ -470,7 +470,7 @@ export function useActions() {
  */
 export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1, disableAutoHide?: boolean) => {
   try {
-    dispatch(toggleNotification(false, undefined, ""));
+    //dispatch(toggleNotification(false, undefined, ""));
     const transaction = await tx();
     await onWalletAction();
     if (transaction) {
@@ -479,11 +479,11 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
       const transactionStatus = await transactionWait(transaction, confirmations);
       if (transactionStatus === TransactionStatus.Success) {
         await onSuccess();
-        dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
-        dispatch(toggleInTransaction(false));
+        //dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
+        // dispatch(toggleInTransaction(false));
       } else if (transactionStatus === TransactionStatus.Cancelled) {
         await onFail();
-        dispatch(toggleNotification(true, NotificationType.Info, "Transaction was cancelled", disableAutoHide));
+        //dispatch(toggleNotification(true, NotificationType.Info, "Transaction was cancelled", disableAutoHide));
         dispatch(toggleInTransaction(false));
       } else {
         throw new Error(DEFAULT_ERROR_MESSAGE);
@@ -494,7 +494,7 @@ export const createTransaction = async (tx: Function, onWalletAction: Function, 
   } catch (error: any) {
     console.error(error);
     await onFail();
-    dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
+    //dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
     dispatch(toggleInTransaction(false));
   }
 }

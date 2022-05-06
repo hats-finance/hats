@@ -1,5 +1,5 @@
 import * as types from "../constants/action-types";
-import { ScreenSize, NotificationType } from "../constants/constants";
+import { ScreenSize } from "../constants/constants";
 import { IAirdropData, IVault, IWithdrawSafetyPeriod } from "../types/types";
 
 export const connect = (provider: any) => ({
@@ -31,14 +31,6 @@ export const changeScreenSize = (screenSize: ScreenSize) => ({
 export const toggleMenu = (showMenu: boolean) => ({
   type: types.TOGGLE_MENU,
   showMenu
-})
-
-export const toggleNotification = (show: boolean, notificationType: NotificationType | undefined, text: string, disableAutoHide?: boolean) => ({
-  type: types.TOGGLE_NOTIFICATION,
-  show,
-  notificationType,
-  text,
-  disableAutoHide
 })
 
 export const updateVaults = (vaults: Array<IVault>) => ({

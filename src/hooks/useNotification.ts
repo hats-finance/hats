@@ -1,13 +1,20 @@
-import { toggleNotification } from "actions";
-import { NotificationType } from "constants/constants";
-import { useDispatch } from "react-redux";
+import {
+  useNotificationContext,
+  NotificationContextValue,
+} from "../components/Notifications/context";
 
-export const useNotification = () => {
-    const dispatch = useDispatch()
-
-    return {
-        toggleNotification: (show: boolean, notificationType: NotificationType | undefined, text: string, disableAutoHide?: boolean) => {
-            dispatch(toggleNotification(show, notificationType, text, disableAutoHide));
-        }
-    }
+interface Return {
+  notify: NotificationContextValue["addNotification"];
 }
+
+const useNotification = (): Return => {
+  const { addNotification } = useNotificationContext();
+
+  const notify: Return["notify"] = (value) => {
+    addNotification(value);
+  };
+
+  return { notify };
+};
+
+export default useNotification;
