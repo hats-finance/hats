@@ -2,8 +2,7 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL",
-      "no-ethereum": "No Ethereum provider detected. Please install one or try a different browser"
+      "cancel": "CANCEL"
     },
     "Welcome": {
       "title": "Hats",

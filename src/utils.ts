@@ -16,17 +16,6 @@ import { IVulnerabilityData } from "./components/Vulnerability/types";
 import { ChainId } from "@usedapp/core";
 
 /**
- * Returns true if an Ethereum Provider is detected, otherwise returns false.
- * @returns {boolean}
- */
-export const isEthereumProvider = () => {
-  if (window.ethereum === undefined) {
-    return false;
-  }
-  return true;
-}
-
-/**
  * Adds commas to a given number
  * @param {number} number
  */
