@@ -6,7 +6,6 @@ const initialState = {
   showMenu: false,
   inTransaction: false,
   transactionHash: "",
-  liquidityPoolID: "",
   submittingVulnerability: false
 };
 

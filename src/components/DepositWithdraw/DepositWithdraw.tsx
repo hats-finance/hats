@@ -82,7 +82,7 @@ export default function DepositWithdraw(props: IProps) {
   const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
     committeeCheckedIn, depositPause } = props.data.parentVault;
-  const { parentDescription, isGuest, description } = props.data;
+  const { description } = props.data;
   const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
@@ -209,8 +209,8 @@ export default function DepositWithdraw(props: IProps) {
     "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriod.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
   })
 
-  const multisigAddress = isGuest ? (parentDescription as IVaultDescription)?.committee?.["multisig-address"] : (description as IVaultDescription)?.committee?.["multisig-address"]
-  const isCommitteMultisig = multisigAddress === account
+  const multisigAddress = (description as IVaultDescription)?.committee?.["multisig-address"];
+  const isCommitteMultisig = multisigAddress === account;
 
   return (
     <div className={depositWithdrawWrapperClass}>
@@ -242,7 +242,7 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <div className="input-wrapper">
               {/* TODO: handle project-metadata and Project-metadata */}
-              <div className="pool-token">{props.isPool ? null : <img width="30px" src={isGuest ? parentDescription?.["project-metadata"]?.tokenIcon : description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
+              <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
             {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}

@@ -20,7 +20,6 @@ export default function NavLinks() {
   return (
     <>
       <NavLink to={RoutePaths.vaults} className={activeableClass} onClick={() => handleClick()}>Vaults</NavLink>
-      <NavLink to={RoutePaths.pools} className={activeableClass} onClick={() => handleClick()}>Liquidity Pools</NavLink>
       <NavLink to={RoutePaths.gov} className={activeableClass} onClick={() => handleClick()}>Gov</NavLink>
       <NavLink to={RoutePaths.airdrop} className={activeableClass} onClick={() => handleClick()}>Airdrop</NavLink>
       <NavLink to={RoutePaths.vulnerability} className={({ isActive }) =>

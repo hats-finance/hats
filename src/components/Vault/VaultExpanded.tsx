@@ -26,7 +26,7 @@ interface IProps {
 
 export default function VaultExpanded(props: IProps) {
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
-  const { name, isGuest, parentDescription, description } = props.data;
+  const { name, description } = props.data;
   const navigate = useNavigate()
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
@@ -76,11 +76,11 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={isGuest ? (parentDescription as IVaultDescription)?.committee.members || [] : (description as IVaultDescription).committee.members} />
+                  <Members members={(description as IVaultDescription).committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
-                  <Multisig multisigAddress={isGuest ? (parentDescription as IVaultDescription)?.committee["multisig-address"] || "" : (description as IVaultDescription).committee["multisig-address"]} />
+                  <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
                   <button onClick={() => { setVulnerabilityProject(name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>

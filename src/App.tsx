@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
+import { useEthers } from "@usedapp/core";
+import "./i18n.ts";
 
 import {
   changeScreenSize,
@@ -20,16 +22,13 @@ import Menu from "./components/Navigation/Menu";
 import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
 import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
-import LiquidityPools from "./components/LiquidityPools/LiquidityPools";
 import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
-import "./styles/App.scss";
 import { RootState } from "./reducers";
 import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
-import "./i18n.ts";
 import { useFetchAirdropData } from "./components/Airdrop/utils";
-import { useEthers } from "@usedapp/core";
+import "./styles/App.scss";
 
 function App() {
   const dispatch = useDispatch();
@@ -70,7 +69,6 @@ function App() {
         <Route path={RoutePaths.vaults} element={<Honeypots />} />
         <Route path={RoutePaths.gov} element={<Gov />} />
         <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
-        <Route path={RoutePaths.pools} element={<LiquidityPools />} />
         <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
         <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
           <Route path=":ipfsHash" element={<VaultEditor />} />

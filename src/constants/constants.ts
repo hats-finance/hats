@@ -18,7 +18,6 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  pools = "/pools",
   nft_airdrop = "/nft_airdrop/",
   vault_editor = "/vault-editor",
   airdrop = "/airdrop",
@@ -59,13 +58,6 @@ export enum Pages {
   pools = "Liquidity Pools",
   airdrop = "Airdrop"
 }
-
-export const LPUniswapURIs = {
-  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
-  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
-}
-
-export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
 
 /**
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
@@ -151,3 +143,12 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
+
+/** Currently not in use */
+
+// export const LPUniswapURIs = {
+//   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
+//   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
+// }
+
+// export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";

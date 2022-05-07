@@ -1,27 +1,20 @@
 import ReactDOM from "react-dom";
-import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, ApolloLink } from "@apollo/client";
+import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { Provider } from "react-redux";
 import store from "./store/index";
-import App from "./App";
-import { LP_UNISWAP_URI, CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import HttpsRedirect from "react-https-redirect";
-import { LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT } from "./constants/constants";
 import { ChainId, Config, DAppProvider } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
+import App from "./App";
+import { CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import NotificationProvider from "components/Notifications/NotificationProvider";
 import "./index.css";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
 });
-
-const lp_uniswap_subgraph = new HttpLink({
-  uri: LP_UNISWAP_URI
-});
-
-const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, lp_uniswap_subgraph, main_subgraph);
 
 console.log(`Using ${ChainId[CHAINID]} network`);
 
@@ -35,7 +28,7 @@ let config: Config = {
 }
 const client = new ApolloClient({
   cache: new InMemoryCache(),
-  link: apolloLink
+  link: main_subgraph
 })
 
 ReactDOM.render(
@@ -54,3 +47,11 @@ ReactDOM.render(
   </DAppProvider>,
   document.getElementById("root")
 );
+
+/** Currently not in use - this is to support multiple subgraphs */
+
+// const lp_uniswap_subgraph = new HttpLink({
+//   uri: LP_UNISWAP_URI
+// });
+
+//const apolloLink = ApolloLink.split(operation => operation.getContext().clientName === LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT, lp_uniswap_subgraph, main_subgraph);

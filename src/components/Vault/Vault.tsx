@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../../styles/Vault/Vault.scss";
 import { t } from "i18next";
-import { IVault, IVaultDescription } from "../../types/types";
+import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
 import { calculateApy, formatWei, fromWei, ipfsTransformUri } from "../../utils";
@@ -19,10 +19,8 @@ interface IProps {
 }
 
 export default function Vault(props: IProps) {
-  const { name, isGuest, bounty, description, parentVault: { tokenPrice } } = props.data;
+  const { name, description, parentVault: { tokenPrice } } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
-  // const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.tokenPrice);
-  // const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.apy);
   const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
@@ -30,14 +28,6 @@ export default function Vault(props: IProps) {
 
   const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
-  // temporary fix to https://github.com/hats-finance/hats/issues/29
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     if (apy) {
-  //       setVaultAPY(`${millify(apy, { precision: 3 })}%`);
-  //     }
-  //   }, 1000);
-  // }, [setVaultAPY, apy])
 
   useEffect(() => {
     setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
@@ -57,7 +47,7 @@ export default function Vault(props: IProps) {
 
   return (
     <>
-      <tr className={isGuest ? "guest" : description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
@@ -65,7 +55,6 @@ export default function Vault(props: IProps) {
             <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
-              {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={(description as IVaultDescription)?.source?.url}>By {(description as IVaultDescription)?.source?.name}</a>}
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>
@@ -74,7 +63,6 @@ export default function Vault(props: IProps) {
         {screenSize === ScreenSize.Desktop && (
           <>
             <td className="rewards-cell">
-              {isGuest && `${bounty} bounty + `}
               {maxRewards}
             </td>
             <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
