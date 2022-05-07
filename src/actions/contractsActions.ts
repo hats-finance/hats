@@ -1,22 +1,18 @@
+import { useEthers } from "@usedapp/core";
+import { Logger } from "ethers/lib/utils";
+import { Dispatch } from "redux";
+import { BigNumber, Contract } from "ethers";
 import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
-import { ethers, BigNumber, Contract } from "ethers";
+import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, TransactionStatus } from "../constants/constants";
+import { toggleInTransaction, updateTransactionHash } from "./index";
+import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
+import { buildDataDelegation } from "components/Airdrop/utils";
+import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
-import NFTManagerABI from "../data/abis/NonfungiblePositionManager.json";
-import UniswapV3Staker from "../data/abis/UniswapV3Staker.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 import HatsToken from "../data/abis/HatsToken.json";
-import { DEFAULT_ERROR_MESSAGE, INCENTIVE_KEY_ABI, MAX_SPENDING, NFTMangerAddress, TransactionStatus, UNISWAP_V3_STAKER_ADDRESS } from "../constants/constants";
-import { Dispatch } from "redux";
-import { toggleInTransaction, updateTransactionHash } from "./index";
-import { Logger } from "ethers/lib/utils";
-import { CHAINID, NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
-import { IIncentive } from "../types/types";
-import { buildDataDelegation } from "components/Airdrop/utils";
-import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
-import { useEthers } from "@usedapp/core";
-
 
 export function useActions() {
   const { library } = useEthers()
@@ -187,113 +183,6 @@ export function useActions() {
     return await contract.claim(descriptionHash);
   }
 
-
-
-
-  /** Uniswap V3 Liquidity Pool contract actions - START */
-
-  /**
-   * SafeTransferFrom in Uniswap V3 Liquidity Pool
-   * Used when canWithdraw is false - meaning the token is not in the contract
-   * @param {string} from 
-   * @param {string} tokenID 
-   * @param {IIncentive} incentive 
-   */
-  const uniswapSafeTransferFrom = async (from: string, tokenID: string, incentive: IIncentive) => {
-    const contract = new Contract(NFTMangerAddress[CHAINID], NFTManagerABI, signer);
-    const encodedData = ethers.utils.defaultAbiCoder.encode([INCENTIVE_KEY_ABI], [{
-      pool: incentive.pool,
-      startTime: incentive.startTime,
-      endTime: incentive.endTime,
-      rewardToken: incentive.rewardToken,
-      refundee: incentive.refundee
-    }]);
-    return await contract.safeTransferFrom(from, UNISWAP_V3_STAKER_ADDRESS, Number(tokenID), encodedData);
-  }
-
-  /**
-   * Stakes in Uniswap V3 Liquidity Pool
-   * Used when canWithdraw is true - meaning the token is still in the contract
-   * @param {string} tokenID 
-   * @param {string} incentiveID 
-   */
-  const uniswapStake = async (tokenID: string, incentive: IIncentive) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.stakeToken({
-      pool: incentive.pool,
-      startTime: incentive.startTime,
-      endTime: incentive.endTime,
-      rewardToken: incentive.rewardToken,
-      refundee: incentive.refundee
-    }, Number(tokenID));
-  }
-
-  /**
-   * Unstakes in Uniswap V3 Liquidity Pool
-   * @param {string} tokenID 
-   * @param {IIncentive} incentive 
-   */
-  const uniswapUnstake = async (tokenID: string, incentive: IIncentive) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.unstakeToken({
-      pool: incentive.pool,
-      startTime: incentive.startTime,
-      endTime: incentive.endTime,
-      rewardToken: incentive.rewardToken,
-      refundee: incentive.refundee
-    }, Number(tokenID));
-  }
-
-  /**
-   * Claims in Uniswap V3 Liquidity Pool
-   * @param {string} rewardToken
-   * @param {string} from
-   */
-  const uniswapClaimReward = async (rewardToken: string, from: string) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.claimReward(rewardToken, from, 0); // zero means claiming anything available
-  }
-
-  /**
-   * Withdraws Token in Uniswap V3 Liquidity Pool
-   * @param {string} tokenID
-   * @param {string} to
-   */
-  const uniswapWithdrawToken = async (tokenID: string, to: string) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.withdrawToken(tokenID, to, "0x");
-  }
-
-  /**
-   * Gets the accrued rewards in Uniswap V3 Liquidity Pool
-   * @param {string} rewardToken 
-   * @param {string} userAddress
-   */
-  const uniswapRewards = async (rewardToken: string, userAddress: string) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.rewards(rewardToken, userAddress);
-  }
-
-  /**
-   * Gets reward info for a position in Uniswap V3 Liquidity Pool
-   * @param {string} tokenID
-   * @param {string} incentiveID
-   */
-  const uniswapGetRewardInfo = async (tokenID: string, incentive: IIncentive) => {
-    const contract = new Contract(UNISWAP_V3_STAKER_ADDRESS, UniswapV3Staker, signer);
-    return await contract.getRewardInfo({
-      pool: incentive.pool,
-      startTime: incentive.startTime,
-      endTime: incentive.endTime,
-      rewardToken: incentive.rewardToken,
-      refundee: incentive.refundee
-    }, Number(tokenID));
-  }
-
-  /** Uniswap V3 Liquidity Pool contract actions - END */
-
-
-
   /** Airdrop contract actions - START */
 
   /**
@@ -437,13 +326,6 @@ export function useActions() {
     claim,
     getPendingReward,
     submitVulnerability,
-    uniswapSafeTransferFrom,
-    uniswapStake,
-    uniswapUnstake,
-    uniswapClaimReward,
-    uniswapWithdrawToken,
-    uniswapRewards,
-    uniswapGetRewardInfo,
     getMerkleTree,
     getBaseURI,
     getDeadline,
@@ -454,6 +336,8 @@ export function useActions() {
     claimToken
   }
 }
+
+// TODO: remove createTransaction and transactionWait after we eliminate the use of it in NFTairdop and TokenAirdrop
 
 /**
  * This is a generic function that wraps a call that interacts with the blockchain.

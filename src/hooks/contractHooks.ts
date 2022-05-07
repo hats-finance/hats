@@ -4,6 +4,8 @@ import { BigNumber } from "ethers";
 import { checkMasterAddress } from "utils";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
+import NFTAirdrop from "../data/abis/NFTAirdrop.json";
+import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 
 export function usePendingReward(
   address: string,
@@ -52,4 +54,14 @@ export function useClaim(address: string) {
 export function useCheckIn(address: string) {
   checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "checkIn");
+}
+
+export function useRedeemNFT(address: string) {
+  checkMasterAddress(address);
+  return useContractFunction(new Contract(address, NFTAirdrop), "redeemNFT");
+}
+
+export function useClaimToken(address: string) {
+  checkMasterAddress(address);
+  return useContractFunction(new Contract(address, TokenAirdrop), "claimToken");
 }

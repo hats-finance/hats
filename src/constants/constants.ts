@@ -29,12 +29,7 @@ export const MasterAddresses = {
   [ChainId.Rinkeby]: "0xccaadc293faaea229e0ca4a22b0330b65634b483"
 }
 
-export const NFTMangerAddress = {
-  [ChainId.Mainnet]: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-  [ChainId.Rinkeby]: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
-}
 export const VaultService = "https://vault-editor-service.herokuapp.com"
-
 
 export const NFTAirdropAddress = {
   [ChainId.Mainnet]: "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
@@ -101,11 +96,6 @@ export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
 
-export const UNISWAP_V3_APP = "https://app.uniswap.org/#/pool";
-
-export const UNISWAP_V3_STAKER_ADDRESS =
-  "0x1f98407aaB862CdDeF78Ed252D6f557aA5b0f00d";
-
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
@@ -152,3 +142,7 @@ export enum SocialLinks {
 // }
 
 // export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
+// export const NFTMangerAddress = {
+//   [ChainId.Mainnet]: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
+//   [ChainId.Rinkeby]: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
+// }

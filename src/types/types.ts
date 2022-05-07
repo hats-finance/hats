@@ -162,31 +162,6 @@ export interface IWithdrawSafetyPeriod {
   saftyEndsAt: number
 }
 
-export interface IIncentive {
-  id: string
-  rewardToken: string
-  pool: string
-  startTime: string
-  endTime: string
-  refundee: string
-  reward: string
-  ended: boolean
-  totalRewardUnclaimed: string
-}
-
-export interface IPosition {
-  id: string
-  tokenId: string
-  owner: string
-  staked: boolean
-  oldOwner: string
-  liquidity: string
-  approved: string
-  token1: string
-  token2: string
-  canWithdraw: boolean
-}
-
 export type NFTAirdropET = { [key: string]: string };
 export type TokenAirdropET = { [key: string]: number };
 
