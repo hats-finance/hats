@@ -13,6 +13,8 @@ export const NFT_AIRDROP_ADDRESS = NFTAirdropAddress[CHAINID] || NFTAirdropAddre
 export const TOKEN_AIRDROP_ADDRESS = TokenAirdropAddress[CHAINID];
 export const DELEGATEES_IPFS = process.env.REACT_APP_DELEGATEES_IPFS || TokenAirdropDelegatees[CHAINID];
 export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_CID || TokenAirdropCID[CHAINID];
+
+/** TODO: need to remove this after we handle getStakerData and getBeneficiaryWithdrawRequests */
 export const DATA_POLLING_INTERVAL = 10000;
 
 /** Currently not in use */

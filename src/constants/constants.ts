@@ -43,7 +43,7 @@ export const Endpoint = {
 
 export const Subgraph = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
-  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4"
+  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4",
 }
 
 export enum Pages {
@@ -51,10 +51,11 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  airdrop = "Airdrop"
+  airdrop = "Airdrop",
 }
 
 /**
+ * TODO: remove this after removing createTransaction function
  * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
  */
 export enum TransactionStatus {
@@ -99,10 +100,6 @@ export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sal
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
-/** Used for the Uniswap V3 Liquidity Pool staking */
-export const INCENTIVE_KEY_ABI =
-  "tuple(address rewardToken, address pool, uint256 startTime, uint256 endTime, address refundee)";
-
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {
   white = "#FFFFFF",
@@ -133,16 +130,3 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
-
-/** Currently not in use */
-
-// export const LPUniswapURIs = {
-//   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/univ3staker",
-//   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/uni-v3-staker-rinkeby"
-// }
-
-// export const LP_UNISWAP_V3_HAT_ETH_APOLLO_CONTEXT = "lp_uniswap_v3_hat_eth";
-// export const NFTMangerAddress = {
-//   [ChainId.Mainnet]: "0xc36442b4a4522e871399cd717abdd847ab11fe88",
-//   [ChainId.Rinkeby]: "0xC36442b4a4522E871399CD717aBDD847Ab11FE88"
-// }
