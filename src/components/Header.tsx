@@ -21,6 +21,7 @@ import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
 import { useEthers, useNotifications, useTransactions } from "@usedapp/core";
 import useNotification from "hooks/useNotification";
+import { NotificationType } from "./Notifications/NotificationProvider";
 
 export default function Header() {
   const location = useLocation();
@@ -43,23 +44,23 @@ export default function Header() {
 
   const { transactions } = useTransactions();
   useEffect(() => {
-    console.log("transactions", transactions);
+    //console.log("transactions", transactions);
   }, [transactions])
 
   useEffect(() => {
-    console.log("notifications", notifications);
+    //console.log("notifications", notifications);
     if (notifications.length > 0) {
       const notification = notifications[0];
       // if (notification.type === "transactionStarted") {
 
       // }
-      console.log(notification.type);
+      //console.log(notification.type);
       switch (notification.type) {
         case "transactionFailed":
-          notify("Transaction Failed");
+          notify("Transaction Failed", NotificationType.Error);
           break;
         case "transactionSucceed":
-          notify("Transaction Succeed");
+          notify("Transaction Succeed", NotificationType.Success);
           break;
       }
     }

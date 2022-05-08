@@ -10,8 +10,8 @@ interface Return {
 const useNotification = (): Return => {
   const { addNotification } = useNotificationContext();
 
-  const notify: Return["notify"] = (value) => {
-    addNotification(value);
+  const notify: Return["notify"] = (value, type) => {
+    addNotification(value, type);
   };
 
   return { notify };

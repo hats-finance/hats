@@ -1,7 +1,8 @@
 import { createContext, useContext, ReactNode } from "react";
+import { NotificationType } from "./NotificationProvider";
 
 export interface NotificationContextValue {
-  addNotification: (value: ReactNode) => void;
+  addNotification: (value: ReactNode, type?: NotificationType) => void;
 }
 
 export const NotificationContext = createContext<NotificationContextValue>({

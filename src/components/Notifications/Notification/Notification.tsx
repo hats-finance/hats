@@ -1,5 +1,7 @@
 import { useEffect } from "react";
-import { INotification } from "../NotificationProvider";
+import { INotification, NotificationType } from "../NotificationProvider";
+import CloseIcon from "assets/icons/close.icon";
+import { Colors } from "constants/constants";
 import "./index.scss";
 
 interface IProps {
@@ -7,16 +9,15 @@ interface IProps {
   removeNotification: () => void;
 }
 
-// export enum NotificationType {
-//   Success = "SUCCESS",
-//   Error = "ERROR",
-//   Info = "INFO"
-// }
-
 const DISPLAY_DURATION = 5000;
 
 export default function Notification({ notification, removeNotification }: IProps) {
-  
+  console.log("notification.type", notification.type);
+
+  const notificationColor = notification.type === NotificationType.Success ?
+    Colors.turquoise : notification.type === NotificationType.Error ?
+      Colors.red : Colors.gray;
+
   useEffect(() => {
     const removeTimeout = setTimeout(() => removeNotification(), DISPLAY_DURATION);
     return () => {
@@ -25,9 +26,9 @@ export default function Notification({ notification, removeNotification }: IProp
   }, [notification.id, removeNotification])
 
   return (
-    <div className="notification-wrapper">
+    <div className="notification-wrapper" style={{ backgroundColor: notificationColor }}>
       <div>{notification.content}</div>
-      <button className="dismiss-btn" onClick={removeNotification}>OK</button>
+      <button className="dismiss-btn" onClick={removeNotification}><CloseIcon fill={Colors.black} /></button>
     </div>
   )
 }

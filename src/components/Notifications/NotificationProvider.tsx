@@ -6,6 +6,13 @@ import "./index.scss";
 export interface INotification {
   id: number;
   content: React.ReactNode;
+  type?: NotificationType;
+}
+
+export enum NotificationType {
+  Success,
+  Error,
+  Info,
 }
 
 const MAX_NOTIFICATIONS_DISPLAY = 3;
@@ -13,8 +20,8 @@ const MAX_NOTIFICATIONS_DISPLAY = 3;
 const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
 
-  const addNotification = useCallback<NotificationContextValue["addNotification"]>((value) => {
-    setNotifications((notifications) => notifications.concat({ id: notifications.length, content: value }));
+  const addNotification = useCallback<NotificationContextValue["addNotification"]>((value, type) => {
+    setNotifications((notifications) => notifications.concat({ id: notifications.length, content: value, type: type }));
   }, []);
 
   const removeNotification = useCallback((id: number) => {
