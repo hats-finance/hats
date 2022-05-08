@@ -1,6 +1,7 @@
 import { Contract } from "@ethersproject/contracts";
 import { useCall, useContractFunction } from "@usedapp/core";
 import { BigNumber } from "ethers";
+import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";
 import { checkMasterAddress } from "utils";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
@@ -56,12 +57,10 @@ export function useCheckIn(address: string) {
   return useContractFunction(new Contract(address, vaultAbi), "checkIn");
 }
 
-export function useRedeemNFT(address: string) {
-  checkMasterAddress(address);
-  return useContractFunction(new Contract(address, NFTAirdrop), "redeemNFT");
+export function useRedeemNFT() {
+  return useContractFunction(new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop), "redeem");
 }
 
-export function useClaimToken(address: string) {
-  checkMasterAddress(address);
-  return useContractFunction(new Contract(address, TokenAirdrop), "claimToken");
+export function useClaimToken() {
+  return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim");
 }

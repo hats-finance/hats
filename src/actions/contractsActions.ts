@@ -1,10 +1,7 @@
 import { useEthers } from "@usedapp/core";
-import { Logger } from "ethers/lib/utils";
-import { Dispatch } from "redux";
 import { BigNumber, Contract } from "ethers";
 import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
-import { DEFAULT_ERROR_MESSAGE, MAX_SPENDING, TransactionStatus } from "../constants/constants";
-import { toggleInTransaction, updateTransactionHash } from "./index";
+import { MAX_SPENDING } from "../constants/constants";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import { buildDataDelegation } from "components/Airdrop/utils";
 import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
@@ -335,76 +332,4 @@ export function useActions() {
     getCurrentVotes,
     claimToken
   }
-}
-
-// TODO: remove createTransaction and transactionWait after we eliminate the use of it in NFTairdop and TokenAirdrop
-
-/**
- * This is a generic function that wraps a call that interacts with the blockchain.
- * Dispatches automatically a notification on success or on error.
- * Uses the transactionWait function to wait for a transaction status.
- * @param {Function} tx The function that creates the transaction on the blockchain
- * @param {Function} onSuccess Function to call on success
- * @param {Function} onWalletAction Function to call while a transaction is being processed
- * @param {Function} onFail Function to call on fail
- * @param {Dispatch} dispatch The Redux dispath function to dispatch the notification
- * @param {string} successText Optional extra text to show on success
- * @param {number} confirmations The number of confirmations on the blockchain to wait until we consider the transaction has succeeded. Default is 1 confirmation.
- * @param {boolean} disableAutoHide Disable auto-hide of the notifications
- */
-export const createTransaction = async (tx: Function, onWalletAction: Function, onSuccess: Function, onFail: Function, dispatch: Dispatch, successText?: string, confirmations = 1, disableAutoHide?: boolean) => {
-  try {
-    //dispatch(toggleNotification(false, undefined, ""));
-    const transaction = await tx();
-    await onWalletAction();
-    if (transaction) {
-      dispatch(toggleInTransaction(true));
-      dispatch(updateTransactionHash(transaction.hash));
-      const transactionStatus = await transactionWait(transaction, confirmations);
-      if (transactionStatus === TransactionStatus.Success) {
-        await onSuccess();
-        //dispatch(toggleNotification(true, NotificationType.Success, successText ?? "Transaction succeeded", disableAutoHide));
-        // dispatch(toggleInTransaction(false));
-      } else if (transactionStatus === TransactionStatus.Cancelled) {
-        await onFail();
-        //dispatch(toggleNotification(true, NotificationType.Info, "Transaction was cancelled", disableAutoHide));
-        dispatch(toggleInTransaction(false));
-      } else {
-        throw new Error(DEFAULT_ERROR_MESSAGE);
-      }
-    } else {
-      throw new Error(DEFAULT_ERROR_MESSAGE);
-    }
-  } catch (error: any) {
-    console.error(error);
-    await onFail();
-    //dispatch(toggleNotification(true, NotificationType.Error, error?.error?.message ?? error?.message ?? DEFAULT_ERROR_MESSAGE, disableAutoHide));
-    dispatch(toggleInTransaction(false));
-  }
-}
-
-/**
- * Wait for a transaction result.
- * If the transaction is failed and it's not a user cancellation (e.g. tx speed-up) 
- * so we call recursively to transactionWait to get the new tx hash and wait again for a result.
- * @param {any} tx
- * @param {number} confirmations
- * @returns {TransactionStatus}
- */
-export const transactionWait = async (tx: any, confirmations = 1): Promise<TransactionStatus> => {
-  try {
-    const receipt = await tx.wait(confirmations);
-    if (receipt.status === TransactionStatus.Success) {
-      return TransactionStatus.Success;
-    }
-  } catch (error: any) {
-    if (error.code === Logger.errors.TRANSACTION_REPLACED) {
-      if (error.cancelled) {
-        return TransactionStatus.Cancelled;
-      } else {
-        return await transactionWait(error.replacement, confirmations);
-      }
-    }
-  }
-  return TransactionStatus.Fail;
 }

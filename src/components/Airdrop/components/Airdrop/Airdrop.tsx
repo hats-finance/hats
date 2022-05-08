@@ -11,14 +11,13 @@ import { RootState } from "reducers";
 import { normalizeAddress } from "../../../../utils";
 import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
-import "./index.scss";
 import { useSearchParams } from "react-router-dom";
 import { useActions } from "actions/contractsActions";
+import "./index.scss";
 
 export default function Airdrop() {
   const { hasClaimed, isRedeemed } = useActions();
   const [userInput, setUserInput] = useState("");
-  const [pendingWallet, setPendingWallet] = useState(false);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
   const tokenET = useSelector((state: RootState) => state.dataReducer.airdrop?.token);
   const [nftEligibilityStatus, setNFTEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
@@ -96,15 +95,14 @@ export default function Airdrop() {
             eligibleTokens={nftET!}
             walletAddress={normalizeAddress(userInput)}
             eligibilityStatus={nftEligibilityStatus}
-            setEligibilityStatus={setNFTEligibilityStatus}
-            pendingWallet={setPendingWallet} />);
+            setEligibilityStatus={setNFTEligibilityStatus} />);
       case EligibilityStatus.NOT_ELIGIBLE:
         return <div className="error-label">{t("Airdrop.not-eligible-nft")}</div>;
     }
   }
 
   return (
-    <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": pendingWallet || !nftET || !tokenET })}>
+    <div className={classNames({ "content": true, "airdrop-wrapper": true, "disabled": !nftET || !tokenET })}>
       <div className="airdorp-content">
         {!inTokenAirdop && (
           <div className="search-wrapper">
@@ -120,7 +118,7 @@ export default function Airdrop() {
         {/* {renderTokenAirdrop(tokenEligibilityStatus)} */}
         {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
-        {(pendingWallet || !nftET || !tokenET) && <Loading />}
+        {(!nftET || !tokenET) && <Loading />}
       </div>
     </div>
   )

@@ -1,14 +1,13 @@
 import { ChainId } from "@usedapp/core";
-import { createTransaction, useActions } from "actions/contractsActions";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
 import { hashToken } from "components/Airdrop/utils";
-import Loading from "components/Shared/Loading";
 import { IPFS_PREFIX } from "constants/constants";
+import { useClaimToken } from "hooks/contractHooks";
 import { t } from "i18next";
 import { useContext, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { CHAINID } from "settings";
 import { TokenAirdropET } from "types/types";
@@ -27,12 +26,8 @@ const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 export default function Claim({ delegateeData, address, tokenAmount, eligibleTokens }: IProps) {
-  const { claimToken } = useActions();
-  const dispatch = useDispatch();
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { setStage } = useContext(TokenAirdropContext);
-  const [pendingWallet, setPendingWallet] = useState(false);
-  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
   const [merkleTree, setMerkleTree] = useState();
 
   useEffect(() => {
@@ -42,23 +37,22 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
       console.error(error);
     }
   }, [eligibleTokens])
+  
 
+  const { send: claimToken, state: claimTokenState } = useClaimToken();
   const claim = async () => {
     const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
-    setPendingWallet(true);
-
-    await createTransaction(
-      async () => claimToken(delegateeData.address, tokenAmount, proof, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN, chainId),
-      () => { },
-      () => { setPendingWallet(false); setStage(Stage.Success); },
-      () => { setPendingWallet(false); },
-      dispatch,
-      t("Airdrop.TokenAirdrop.Claim.claim-success")
-    );
+    claimToken(delegateeData.address, tokenAmount, proof, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN);
   }
 
+  useEffect(() => {
+    if (claimTokenState.status === "Success") {
+      setStage(Stage.Success);
+    }
+  }, [claimTokenState.status, setStage])
+
   return (
-    <div className={classNames({ "claim-wrapper": true, "disabled": pendingWallet })}>
+    <div className={classNames({ "claim-wrapper": true, "disabled": claimTokenState.status === "Mining" })}>
       <h3>{t("Airdrop.TokenAirdrop.Claim.review")}</h3>
       <div className="claim-review-container">
 
@@ -91,8 +85,6 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
         <button onClick={() => setStage(Stage.ChooseDelegatee)}>BACK</button>
         <button className="fill" onClick={claim}>CLAIM</button>
       </div>
-
-      {pendingWallet && <Loading />}
     </div>
   )
 }

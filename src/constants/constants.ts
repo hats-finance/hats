@@ -54,16 +54,6 @@ export enum Pages {
   airdrop = "Airdrop",
 }
 
-/**
- * TODO: remove this after removing createTransaction function
- * Corresponds to a transaction receipt status that is received after a transaction on the blockchain occurs
- */
-export enum TransactionStatus {
-  Fail = 0,
-  Success = 1,
-  Cancelled = 2
-}
-
 export const SMALL_SCREEN_BREAKPOINT = "1000px";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;

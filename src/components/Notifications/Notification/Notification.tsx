@@ -12,7 +12,6 @@ interface IProps {
 const DISPLAY_DURATION = 5000;
 
 export default function Notification({ notification, removeNotification }: IProps) {
-  console.log("notification.type", notification.type);
 
   const notificationColor = notification.type === NotificationType.Success ?
     Colors.turquoise : notification.type === NotificationType.Error ?

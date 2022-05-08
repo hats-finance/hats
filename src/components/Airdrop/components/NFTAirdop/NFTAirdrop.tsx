@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 import { t } from "i18next";
-import { createTransaction, useActions } from "actions/contractsActions";
+import { useActions } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
 import { isDateBefore, linkToTokenEtherscan } from "utils";
@@ -11,9 +10,10 @@ import Countdown from "components/Shared/Countdown/Countdown";
 import { EligibilityStatus } from "components/Airdrop/constants";
 import { NFT_AIRDROP_ADDRESS } from "settings";
 import OpenInIcon from "assets/icons/openIn.icon";
-import "./index.scss";
 import { hashNFT } from "components/Airdrop/utils";
 import { useEthers } from "@usedapp/core";
+import { useRedeemNFT } from "hooks/contractHooks";
+import "./index.scss";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -24,12 +24,10 @@ interface IProps {
   walletAddress: string
   eligibilityStatus: EligibilityStatus
   setEligibilityStatus: (value: EligibilityStatus) => void
-  pendingWallet: (value: boolean) => void
 }
 
-export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus, pendingWallet }: IProps) {
-  const dispatch = useDispatch();
-  const { getBaseURI, getDeadline, redeemNFT } = useActions();
+export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus }: IProps) {
+  const { getBaseURI, getDeadline } = useActions();
   const { account } = useEthers()
   const [merkleTree, setMerkleTree] = useState();
   const [deadline, setDeadline] = useState();
@@ -64,18 +62,19 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     })();
   }, [tokenId, getBaseURI]);
 
+
+  const { send: redeemNFT, state: redeemNFTState } = useRedeemNFT();
+
   const redeem = async () => {
     const proof = (merkleTree as any).getHexProof(hashNFT(tokenId, walletAddress));
-    pendingWallet(true);
-    await createTransaction(
-      async () => redeemNFT(walletAddress, tokenId, proof),
-      () => { },
-      () => { setEligibilityStatus(EligibilityStatus.REDEEMED); pendingWallet(false); },
-      () => { pendingWallet(false); },
-      dispatch,
-      t("Airdrop.NFTAirdrop.redeem-success")
-    );
+    await redeemNFT(walletAddress, tokenId, proof);
   }
+
+  useEffect(() => {
+    if (redeemNFTState.status === "Success") {
+      setEligibilityStatus(EligibilityStatus.REDEEMED);
+    }
+  }, [redeemNFTState.status, setEligibilityStatus])
 
   return (
     <fieldset className="nft-airdrop-wrapper">
