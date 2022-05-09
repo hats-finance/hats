@@ -115,7 +115,7 @@ export default function Airdrop() {
           </div>
         )}
         {/* Temporary disable token airdrop  **/}
-        {/* {renderTokenAirdrop(tokenEligibilityStatus)} */}
+        {renderTokenAirdrop(tokenEligibilityStatus)}
         {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
         {(!nftET || !tokenET) && <Loading />}

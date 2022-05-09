@@ -3,8 +3,6 @@ import { BigNumber, Contract } from "ethers";
 import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
 import { MAX_SPENDING } from "../constants/constants";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
-import { buildDataDelegation } from "components/Airdrop/utils";
-import { DELEGATION_EXPIRY } from "components/Airdrop/constants";
 import vaultAbi from "../data/abis/HATSVault.json";
 import erc20Abi from "../data/abis/erc20.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
@@ -12,14 +10,16 @@ import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 import HatsToken from "../data/abis/HatsToken.json";
 
 export function useActions() {
-  const { library } = useEthers()
-  const provider = library!
-  let signer
+  const { library } = useEthers();
+  const provider = library!;
+  let signer;
 
   // only use signer if we have one
   try {
-    signer = provider.getSigner()
-  } catch (error) { }
+    signer = provider.getSigner();
+  } catch (error) {
+    console.error(error);
+  }
   /**
    * @returns The current block number
    */
@@ -104,53 +104,6 @@ export function useActions() {
     } catch (error) {
       console.error(error);
     }
-  }
-
-  /**
-   * Withdraw Request
-   * @param {string} pid
-   * @param {string} address
-   */
-  const withdrawRequest = async (pid: string, address: string) => {
-    try {
-      const contract = new Contract(address, vaultAbi, signer);
-      return await contract.withdrawRequest(pid);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /**
-   * Deposit and claim (if acceptable)
-   * @param {string} address
-   * @param {string} amount
-   */
-  const depositAndClaim = async (pid: string, address: string, amount: string, decimals: string) => {
-    checkMasterAddress(address);
-    const contract = new Contract(address, vaultAbi, signer);
-    return await contract.deposit(pid, toWei(amount, decimals));
-  }
-
-  /**
-   * Withdraw and claim (if acceptable)
-   * @param {string} pid
-   * @param {string} address
-   * @param {string} amount
-   */
-  const withdrawAndClaim = async (pid: string, address: string, amount: string) => {
-    checkMasterAddress(address);
-    const contract = new Contract(address, vaultAbi, signer);
-    return await contract.withdraw(pid, amount);
-  }
-
-  /**
-   * Claim
-   * @param {stirng} address
-   */
-  const claim = async (pid: string, address: string) => {
-    checkMasterAddress(address);
-    const contract = new Contract(address, vaultAbi, signer);
-    return await contract.claimReward(pid);
   }
 
   /**
@@ -270,44 +223,6 @@ export function useActions() {
     }
   }
 
-  /**
-   * Claim Hats token
-   * @param {string} delegatee 
-   * @param {number} amount 
-   * @param {any} proof
-   * @param {string} rewardsToken
-   * @param {string} chainId
-   */
-  const claimToken = async (delegatee: string, amount: number, proof: any, rewardsToken: string, chainId: string) => {
-    const tokenAirdropContract = new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop, signer);
-    const hatsContract = new Contract(rewardsToken, HatsToken, signer);
-
-    try {
-      const address = await signer.getAddress();
-      const nonce = (await hatsContract.nonces(address) as BigNumber).toNumber();
-      const data = buildDataDelegation(
-        parseInt(chainId.replace('0x', '')),
-        rewardsToken,
-        delegatee,
-        nonce,
-        DELEGATION_EXPIRY,
-      );
-
-      const signature = await (signer as any).provider.send("eth_signTypedData_v3", [
-        address,
-        JSON.stringify(data)
-      ]);
-
-      const r = '0x' + signature.substring(2).substring(0, 64);
-      const s = '0x' + signature.substring(2).substring(64, 128);
-      const v = '0x' + signature.substring(2).substring(128, 130);
-
-      return await tokenAirdropContract.delegateAndClaim(address, amount, proof, delegatee, nonce, DELEGATION_EXPIRY, v, r, s);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
   /** Airdrop contract actions - END */
 
   return {
@@ -317,10 +232,6 @@ export function useActions() {
     getTokenBalance,
     hasAllowance,
     approveToken,
-    withdrawRequest,
-    depositAndClaim,
-    withdrawAndClaim,
-    claim,
     getPendingReward,
     submitVulnerability,
     getMerkleTree,
@@ -330,6 +241,5 @@ export function useActions() {
     isRedeemed,
     hasClaimed,
     getCurrentVotes,
-    claimToken
   }
 }

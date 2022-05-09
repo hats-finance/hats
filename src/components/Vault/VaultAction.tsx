@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export default function VaultAction(props: IProps) {
-  const { account } = useEthers()
+  const { account } = useEthers();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const withdrawRequest = props.withdrawRequests?.filter((request: IPoolWithdrawRequest) => request.beneficiary === account);

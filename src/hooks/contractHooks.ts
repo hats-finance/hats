@@ -52,6 +52,11 @@ export function useClaim(address: string) {
   return useContractFunction(new Contract(address, vaultAbi), "claim");
 }
 
+export function useClaimReward(address: string) {
+  checkMasterAddress(address);
+  return useContractFunction(new Contract(address, vaultAbi), "claimReward");
+}
+
 export function useCheckIn(address: string) {
   checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "checkIn");
@@ -61,6 +66,6 @@ export function useRedeemNFT() {
   return useContractFunction(new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop), "redeem");
 }
 
-export function useClaimToken() {
+export function useDelegateAndClaim() {
   return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim");
 }

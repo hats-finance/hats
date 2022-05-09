@@ -19,7 +19,7 @@ import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE, 
 import { DATA_POLLING_INTERVAL } from "../../settings";
 import Countdown from "../Shared/Countdown/Countdown";
 import ApproveToken from "./ApproveToken";
-import { useCheckIn, useClaim, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 import { toggleInTransaction, updateTransactionHash } from "actions";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 
@@ -169,25 +169,25 @@ export default function DepositWithdraw(props: IProps) {
     withdrawRequest(pid);
   }
 
-  const { send: claim, state: claimState } = useClaim(master.address);
-  const handleClaim = async () => {
-    claim(pid);
+  const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
+  const handleClaimReward = async () => {
+    claimReward(pid);
   }
 
   useEffect(() => {
-    switch (depositAndClaimState.status || withdrawAndClaimState.status || claimState.status) {
+    switch (depositAndClaimState.status || withdrawAndClaimState.status || claimRewardState.status) {
       case "Mining":
         setShowModal(false);
         break;
     }
-  }, [depositAndClaimState.status, withdrawAndClaimState.status, claimState.status, setShowModal]);
+  }, [depositAndClaimState.status, withdrawAndClaimState.status, claimRewardState.status, setShowModal]);
 
   const { send: checkIn, state: checkInState } = useCheckIn(master.address)
   const handleCheckIn = () => {
     checkIn(pid)
   }
 
-  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimState, checkInState]
+  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimRewardState, checkInState]
 
   const pendingWalletAction = allStates.some(state => state.status === "PendingSignature");
   const inTransaction = allStates.find(state => state.status === "Mining");
@@ -310,7 +310,7 @@ export default function DepositWithdraw(props: IProps) {
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
         {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
-        <button onClick={async () => await handleClaim()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
+        <button onClick={async () => await handleClaimReward()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
       {pendingWalletAction && <Loading />}
     </div>

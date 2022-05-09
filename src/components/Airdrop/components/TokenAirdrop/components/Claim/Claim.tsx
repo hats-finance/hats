@@ -1,12 +1,12 @@
-import { ChainId } from "@usedapp/core";
+import { ChainId, useEthers, useToken } from "@usedapp/core";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
-import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
-import { hashToken } from "components/Airdrop/utils";
+import { REWARDS_TOKEN, IDelegateeData, DELEGATION_EXPIRY } from "components/Airdrop/constants";
+import { buildDataDelegation, hashToken } from "components/Airdrop/utils";
 import { IPFS_PREFIX } from "constants/constants";
-import { useClaimToken } from "hooks/contractHooks";
+import { useDelegateAndClaim } from "hooks/contractHooks";
 import { t } from "i18next";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { CHAINID } from "settings";
@@ -29,6 +29,8 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { setStage } = useContext(TokenAirdropContext);
   const [merkleTree, setMerkleTree] = useState();
+  const { account, library } = useEthers();
+  const tokenInfo = useToken(CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN);
 
   useEffect(() => {
     try {
@@ -37,22 +39,45 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
       console.error(error);
     }
   }, [eligibleTokens])
-  
 
-  const { send: claimToken, state: claimTokenState } = useClaimToken();
-  const claim = async () => {
-    const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
-    claimToken(delegateeData.address, tokenAmount, proof, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN);
-  }
+
+  const { send: delegateAndClaim, state: delegateAndClaimState } = useDelegateAndClaim();
+
+  const claim = useCallback(async () => {
+    try {
+      const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
+
+      const data = buildDataDelegation(
+        CHAINID,
+        address,
+        delegateeData.address,
+        tokenInfo?.decimals!,
+        DELEGATION_EXPIRY,
+      );
+
+      const signature = await (library?.getSigner()!).signMessage(
+        //address,
+        JSON.stringify(data)
+      );
+
+      const r = '0x' + signature.substring(2).substring(0, 64);
+      const s = '0x' + signature.substring(2).substring(64, 128);
+      const v = '0x' + signature.substring(2).substring(128, 130);
+
+      await delegateAndClaim(account, tokenAmount, proof, delegateeData.address, tokenInfo?.decimals!, DELEGATION_EXPIRY, v, r, s);
+    } catch (error) {
+      console.error(error);
+    }
+  }, [tokenInfo?.decimals, delegateAndClaim, merkleTree, account, address, delegateeData.address, library, tokenAmount])
 
   useEffect(() => {
-    if (claimTokenState.status === "Success") {
+    if (delegateAndClaimState.status === "Success") {
       setStage(Stage.Success);
     }
-  }, [claimTokenState.status, setStage])
+  }, [delegateAndClaimState.status, setStage])
 
   return (
-    <div className={classNames({ "claim-wrapper": true, "disabled": claimTokenState.status === "Mining" })}>
+    <div className={classNames({ "claim-wrapper": true, "disabled": delegateAndClaimState.status === "Mining" })}>
       <h3>{t("Airdrop.TokenAirdrop.Claim.review")}</h3>
       <div className="claim-review-container">
 
