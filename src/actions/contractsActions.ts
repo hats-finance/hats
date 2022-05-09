@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
-import { toWei, fromWei, checkMasterAddress, normalizeAddress } from "../utils";
+import { checkMasterAddress, normalizeAddress } from "../utils";
 import { MAX_SPENDING } from "../constants/constants";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
@@ -156,7 +156,6 @@ export function useActions() {
   /** Airdrop contract actions - END */
 
   return {
-    hasAllowance,
     approveToken,
     getPendingReward,
     submitVulnerability,
