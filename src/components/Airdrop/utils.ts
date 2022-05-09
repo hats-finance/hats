@@ -17,11 +17,12 @@ import { Delegation, EIP712Domain } from "./constants";
 export const fetchAirdropData = async (selectedAddress: string, showAirdropPrompt: () => void, dispatch: Dispatch) => {
   try {
 
-    const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+    // TODO: tokenData is temporary disabled
+    // const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
-    for (let key in tokenData) {
-      key = normalizeAddress(key);
-    }
+    // for (let key in tokenData) {
+    //   key = normalizeAddress(key);
+    // }
 
     const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
     const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
@@ -30,11 +31,13 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
       nftData[key] = normalizeAddress(nftData[key]);
     }
 
-    dispatch(updateAirdropData({ nft: nftData, token: tokenData }));
+    dispatch(updateAirdropData({ nft: nftData, token: {} }));
 
 
     // Here we check if to show the user the Airdrop Prompt or not
-    if (Object.values(nftData).includes(selectedAddress) || Object.keys(tokenData).includes(selectedAddress)) {
+    // TODO: tokenData is temporary disabled
+    //  || Object.keys(tokenData).includes(selectedAddress)
+    if (Object.values(nftData).includes(selectedAddress)) {
       const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
 
       if (!savedItems.includes(selectedAddress)) {
