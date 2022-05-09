@@ -1,4 +1,5 @@
-import { ChainId, useEthers, useToken } from "@usedapp/core";
+import { Contract } from "@ethersproject/contracts";
+import { ChainId, useEthers } from "@usedapp/core";
 import Logo from "assets/icons/logo.icon";
 import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData, DELEGATION_EXPIRY } from "components/Airdrop/constants";
@@ -13,7 +14,9 @@ import { CHAINID } from "settings";
 import { TokenAirdropET } from "types/types";
 import { formatWei } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
+import HatsToken from "data/abis/HatsToken.json";
 import "./index.scss";
+import { BigNumber } from "ethers";
 
 interface IProps {
   delegateeData: IDelegateeData
@@ -30,7 +33,6 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
   const { setStage } = useContext(TokenAirdropContext);
   const [merkleTree, setMerkleTree] = useState();
   const { account, library } = useEthers();
-  const tokenInfo = useToken(CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN);
 
   useEffect(() => {
     try {
@@ -44,31 +46,34 @@ export default function Claim({ delegateeData, address, tokenAmount, eligibleTok
   const { send: delegateAndClaim, state: delegateAndClaimState } = useDelegateAndClaim();
 
   const claim = useCallback(async () => {
+    const actualRewardsToken = CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN;
+    const hatsContract = new Contract(actualRewardsToken, HatsToken, library);
+    const nonce = (await hatsContract.nonces(account) as BigNumber).toNumber();
     try {
       const proof = (merkleTree as any).getHexProof(hashToken(address, tokenAmount));
 
       const data = buildDataDelegation(
         CHAINID,
-        address,
+        actualRewardsToken,
         delegateeData.address,
-        tokenInfo?.decimals!,
+        nonce,
         DELEGATION_EXPIRY,
       );
 
-      const signature = await (library?.getSigner()!).signMessage(
-        //address,
+      const signature = await (library as any).send("eth_signTypedData_v3", [
+        account,
         JSON.stringify(data)
-      );
+      ]);
 
       const r = '0x' + signature.substring(2).substring(0, 64);
       const s = '0x' + signature.substring(2).substring(64, 128);
       const v = '0x' + signature.substring(2).substring(128, 130);
 
-      await delegateAndClaim(account, tokenAmount, proof, delegateeData.address, tokenInfo?.decimals!, DELEGATION_EXPIRY, v, r, s);
+      await delegateAndClaim(account, tokenAmount, proof, delegateeData.address, nonce, DELEGATION_EXPIRY, v, r, s);
     } catch (error) {
       console.error(error);
     }
-  }, [tokenInfo?.decimals, delegateAndClaim, merkleTree, account, address, delegateeData.address, library, tokenAmount])
+  }, [delegateAndClaim, merkleTree, account, address, delegateeData.address, library, tokenAmount, rewardsToken])
 
   useEffect(() => {
     if (delegateAndClaimState.status === "Success") {

@@ -210,7 +210,7 @@ export function useActions() {
   }
 
   /**
-   * get current votes for a given account
+   * Get current votes for a given account
    * @param {string} address 
    * @param {string} rewardsToken 
    */
