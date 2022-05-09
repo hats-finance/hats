@@ -20,76 +20,6 @@ export function useActions() {
   } catch (error) {
     console.error(error);
   }
-  /**
-   * @returns The current block number
-   */
-  const getBlockNumber = async () => {
-    try {
-      return await provider.getBlockNumber();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /**
-   * Given an hexadecimal address returns it's ENS
-   * @param {string} address
-   */
-  const resolveENS = async (address: string) => {
-    try {
-      return await provider.lookupAddress(address);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /**
-   * Given token address returns it's symbol
-   * @param {string} tokenAddress
-   */
-  const getTokenSymbol = async (tokenAddress: string) => {
-    try {
-      const contract = new Contract(tokenAddress, erc20Abi, provider);
-      return await contract.symbol();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /**
-   * Given token address and current wallet account address returns the token balance
-   * @param {string} tokenAddress
-   * @param {string} selectedAddress
-   */
-  const getTokenBalance = async (tokenAddress: string, selectedAddress: string, decimals = "18") => {
-    try {
-      const contract = new Contract(tokenAddress, erc20Abi, provider);
-      const balance: BigNumber = await contract.balanceOf(selectedAddress);
-      return fromWei(balance, decimals);
-    } catch (error) {
-      console.error(error);
-      return "0";
-    }
-  }
-
-  /**
-   * Checks whether a given account address and a spender can spend amount of a given token
-   * @param {string} tokenAddress
-   * @param {string} selectedAddress
-   * @param {string} tokenSpender
-   * @param {stirng} amount
-   * @param {string} stakingTokenDecimals
-   */
-  const hasAllowance = async (tokenAddress: string, selectedAddress: string, tokenSpender: string, amount: string, stakingTokenDecimals: string) => {
-    try {
-      const contract = new Contract(tokenAddress, erc20Abi, provider);
-      const allowance: BigNumber = await contract.allowance(selectedAddress, tokenSpender);
-      return allowance.gte(BigNumber.from(toWei(amount, stakingTokenDecimals)));
-    } catch (error) {
-      console.error(error);
-      return false;
-    }
-  }
 
   /**
    * Approves a spender to spend amount of a given token. If no amount given, spending the MAX_SPENDING by default. 
@@ -226,10 +156,6 @@ export function useActions() {
   /** Airdrop contract actions - END */
 
   return {
-    getBlockNumber,
-    resolveENS,
-    getTokenSymbol,
-    getTokenBalance,
     hasAllowance,
     approveToken,
     getPendingReward,
