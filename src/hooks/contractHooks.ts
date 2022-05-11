@@ -86,7 +86,6 @@ export function useContract<T extends TypedContract, FN extends ContractFunction
   const { notify } = useNotification();
   const { send: originalSend, state, events, resetState } = useContractFunction(contract, functionName, options);
   useEffect(() => {
-    console.log("state", state)
     switch (state.status) {
       case 'None':
         // dispatch(togglePendingWallet(false));

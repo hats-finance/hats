@@ -83,21 +83,6 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
   `;
 }
 
-export const getStakerAmounts = (stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { address: "${stakerAddress}" }) {
-        shares
-        depositAmount
-        withdrawAmount
-        parentVault {
-          id
-        }
-      }
-    }
-  `;
-}
-
 export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
   return gql`
     {

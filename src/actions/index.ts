@@ -7,22 +7,6 @@ export const connect = (provider: any) => ({
   provider
 })
 
-export const updateSelectedAddress = (selectedAddress: string) => ({
-  type: types.UPDATE_SELECTED_ADDRESS,
-  selectedAddress
-})
-
-export const updateWalletBalance = (ethBalance: any, hatsBalance: any) => ({
-  type: types.UPDATE_WALLET_BALANCE,
-  ethBalance,
-  hatsBalance
-})
-
-export const updateNetwork = (network: string) => ({
-  type: types.UPDATE_NETWORK,
-  network
-})
-
 export const changeScreenSize = (screenSize: ScreenSize) => ({
   type: types.CHANGE_SCREEN_SIZE,
   screenSize
