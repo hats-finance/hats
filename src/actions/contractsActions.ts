@@ -1,10 +1,8 @@
 import { useEthers } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
 import { checkMasterAddress, normalizeAddress } from "../utils";
-import { MAX_SPENDING } from "../constants/constants";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
-import erc20Abi from "../data/abis/erc20.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
 import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 import HatsToken from "../data/abis/HatsToken.json";
@@ -19,21 +17,6 @@ export function useActions() {
     signer = provider.getSigner();
   } catch (error) {
     console.error(error);
-  }
-
-  /**
-   * Approves a spender to spend amount of a given token. If no amount given, spending the MAX_SPENDING by default. 
-   * @param {string} tokenAddress
-   * @param {string} tokenSpender
-   * @param {BigNumber} amountToSpend
-   */
-  const approveToken = async (tokenAddress: string, tokenSpender: string, amountToSpend?: BigNumber) => {
-    try {
-      const contract = new Contract(tokenAddress, erc20Abi, signer);
-      return await contract.approve(tokenSpender, amountToSpend ?? MAX_SPENDING);
-    } catch (error) {
-      console.error(error);
-    }
   }
 
   /**
@@ -156,7 +139,6 @@ export function useActions() {
   /** Airdrop contract actions - END */
 
   return {
-    approveToken,
     getPendingReward,
     submitVulnerability,
     getMerkleTree,

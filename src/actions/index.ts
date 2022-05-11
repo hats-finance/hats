@@ -53,6 +53,11 @@ export const toggleInTransaction = (inTransaction: boolean) => ({
   inTransaction
 })
 
+export const togglePendingWallet = (pendingWallet: boolean) => ({
+  type: types.TOGGLE_PENDING_WALLET,
+  pendingWallet
+})
+
 export const updateTransactionHash = (transactionHash: string) => ({
   type: types.UPDATE_TRANSACTION_HASH,
   transactionHash

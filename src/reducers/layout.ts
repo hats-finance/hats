@@ -1,10 +1,11 @@
-import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_SUBMITTING_VULNERABILITY, UPDATE_TRANSACTION_HASH } from '../constants/action-types';
+import { CHANGE_SCREEN_SIZE, TOGGLE_IN_TRANSACTION, TOGGLE_MENU, TOGGLE_PENDING_WALLET, TOGGLE_SUBMITTING_VULNERABILITY, UPDATE_TRANSACTION_HASH } from '../constants/action-types';
 import { getScreenSize } from '../utils';
 
 const initialState = {
   screenSize: getScreenSize(),
   showMenu: false,
   inTransaction: false,
+  pendingWallet: false,
   transactionHash: "",
   submittingVulnerability: false
 };
@@ -26,6 +27,11 @@ export const layoutReducer = (state = initialState, action: any) => {
       return {
         ...state,
         inTransaction: action.inTransaction,
+      }
+    case TOGGLE_PENDING_WALLET:
+      return {
+        ...state,
+        pendingWallet: action.pendingWallet
       }
     case UPDATE_TRANSACTION_HASH:
       return {

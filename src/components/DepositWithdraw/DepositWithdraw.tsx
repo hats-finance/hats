@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
 import humanizeDuration from "humanize-duration";
@@ -20,7 +20,6 @@ import { DATA_POLLING_INTERVAL } from "../../settings";
 import Countdown from "../Shared/Countdown/Countdown";
 import ApproveToken from "./ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
-import { toggleInTransaction, updateTransactionHash } from "actions";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 
 interface IProps {
@@ -79,7 +78,6 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 }
 
 export default function DepositWithdraw(props: IProps) {
-  const dispatch = useDispatch();
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
     committeeCheckedIn, depositPause } = props.data.parentVault;
   const { description } = props.data;
@@ -91,7 +89,7 @@ export default function DepositWithdraw(props: IProps) {
   const { account } = useEthers()
   const { loading, error, data } = useQuery(getStakerData(id, account!), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: DATA_POLLING_INTERVAL });
-  const { withdrawSafetyPeriod, hatsPrice } = useSelector((state: RootState) => state.dataReducer);
+  const { dataReducer: { withdrawSafetyPeriod, hatsPrice }, layoutReducer: { inTransaction, pendingWallet } } = useSelector((state: RootState) => state);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
@@ -137,7 +135,7 @@ export default function DepositWithdraw(props: IProps) {
   const pendingReward = usePendingReward(master.address, pid, account!) ?? BigNumber.from(0)
   const amountToClaim = millify(Number(formatEther(pendingReward)), { precision: 3 });
 
-  const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken)
+  const { send: approveToken } = useTokenApprove(stakingToken)
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
@@ -153,55 +151,40 @@ export default function DepositWithdraw(props: IProps) {
     }
   }
 
-  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
+  const { send: depositAndClaim } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = async () => {
     await depositAndClaim(pid, userInputValue);
   }
 
-  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
+  const { send: withdrawAndClaim } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = async () => {
     withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares));
   }
 
-  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address);
+  const { send: withdrawRequest } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
     withdrawRequest(pid);
   }
 
-  const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
+  const { send: claimReward } = useClaimReward(master.address);
   const handleClaimReward = async () => {
     claimReward(pid);
   }
 
   useEffect(() => {
-    switch (depositAndClaimState.status || withdrawAndClaimState.status || claimRewardState.status) {
-      case "Mining":
-        setShowModal(false);
-        break;
-    }
-  }, [depositAndClaimState.status, withdrawAndClaimState.status, claimRewardState.status, setShowModal]);
+    if (inTransaction)
+      setShowModal(false);
+  }, [inTransaction, setShowModal]);
 
-  const { send: checkIn, state: checkInState } = useCheckIn(master.address)
+  const { send: checkIn } = useCheckIn(master.address)
   const handleCheckIn = () => {
     checkIn(pid)
   }
 
-  const allStates = [approveTokenState, depositAndClaimState, withdrawAndClaimState, withdrawRequestState, claimRewardState, checkInState]
-
-  const pendingWalletAction = allStates.some(state => state.status === "PendingSignature");
-  const inTransaction = allStates.find(state => state.status === "Mining");
-
-  useEffect(() => {
-    if (inTransaction) {
-      dispatch(toggleInTransaction(true));
-      dispatch(updateTransactionHash(inTransaction.transaction?.hash!));
-    }
-  }, [inTransaction, dispatch])
-
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,
-    "disabled": pendingWalletAction
+    "disabled": pendingWallet
   })
 
   const amountWrapperClass = classNames({
@@ -312,7 +295,7 @@ export default function DepositWithdraw(props: IProps) {
         {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
         <button onClick={async () => await handleClaimReward()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
       </div>
-      {pendingWalletAction && <Loading />}
+      {pendingWallet && <Loading />}
     </div>
   )
 }

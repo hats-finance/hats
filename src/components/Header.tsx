@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { toggleInTransaction, toggleMenu } from "../actions/index";
+import { useState } from "react";
+import { toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getMainPath,
@@ -19,9 +19,7 @@ import { RootState } from "../reducers";
 import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import millify from "millify";
-import { useEthers, useNotifications, useTransactions } from "@usedapp/core";
-import useNotification from "hooks/useNotification";
-import { NotificationType } from "./Notifications/NotificationProvider";
+import { useEthers } from "@usedapp/core";
 
 export default function Header() {
   const location = useLocation();
@@ -39,37 +37,6 @@ export default function Header() {
   );
 
   const { chainId, account } = useEthers();
-  const { notifications } = useNotifications();
-  const { notify } = useNotification();
-
-  const { transactions } = useTransactions();
-  useEffect(() => {
-    //console.log("transactions", transactions);
-  }, [transactions])
-
-  useEffect(() => {
-    //console.log("notifications", notifications);
-    if (notifications.length > 0) {
-      const notification = notifications[0];
-      // if (notification.type === "transactionStarted") {
-
-      // }
-      //console.log(notification.type);
-      switch (notification.type) {
-        case "transactionFailed":
-          notify("Transaction Failed", NotificationType.Error);
-          break;
-        case "transactionSucceed":
-          notify("Transaction Succeed", NotificationType.Success);
-          break;
-      }
-    }
-    // else {
-    //   setTimeout(() => {
-    //     dispatch(toggleInTransaction(false));
-    //   }, 3000);
-    // }
-  }, [dispatch, notifications, notify])
 
   return (
     <header data-testid="Header">
