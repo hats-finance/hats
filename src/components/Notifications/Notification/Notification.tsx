@@ -6,7 +6,7 @@ import "./index.scss";
 
 interface IProps {
   notification: INotification;
-  removeNotification: () => void;
+  removeNotification?: () => void;
 }
 
 const DISPLAY_DURATION = 5000;
@@ -18,16 +18,17 @@ export default function Notification({ notification, removeNotification }: IProp
       Colors.red : Colors.gray;
 
   useEffect(() => {
+    if (!removeNotification) return;
     const removeTimeout = setTimeout(() => removeNotification(), DISPLAY_DURATION);
     return () => {
       clearTimeout(removeTimeout);
     };
-  }, [notification.id, removeNotification])
+  }, [notification, removeNotification])
 
   return (
     <div className="notification-wrapper" style={{ backgroundColor: notificationColor }}>
       <div>{notification.content}</div>
-      <button className="dismiss-btn" onClick={removeNotification}><CloseIcon fill={Colors.black} /></button>
+      {removeNotification && <button className="dismiss-btn" onClick={removeNotification}><CloseIcon fill={Colors.black} /></button>}
     </div>
   )
 }

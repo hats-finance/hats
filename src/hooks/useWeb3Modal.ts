@@ -43,7 +43,6 @@ export const useWeb3Modal = () => {
     const newProvider = await web3Modal.connect();
     await activate(newProvider);
     setProvider(newProvider);
-    notify("Connected to wallet");
   }, [web3Modal, activate, notify]);
 
   const deactivateProvider = useCallback(async () => {
