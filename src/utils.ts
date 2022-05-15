@@ -408,7 +408,9 @@ export const isDateBefore = (value: number | string): boolean => {
 }
 
 export const ipfsTransformUri = (uri: string) => {
-  if (uri.startsWith("ipfs")) {
+  if (!uri) {
+    return;
+  } else if (uri.startsWith("ipfs")) {
     let ipfs;
     if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
@@ -416,11 +418,9 @@ export const ipfsTransformUri = (uri: string) => {
       ipfs = uri.slice(7);
     }
     return `${IPFS_PREFIX}${ipfs}`;
-  }
-  if (uri.startsWith("http")) {
+  } else if (uri.startsWith("http")) {
     return uri;
-  }
-  if (uri.startsWith("blob")) {
+  } else if (uri.startsWith("blob")) {
     return uri;
   }
   return `${IPFS_PREFIX}/${uri}`;

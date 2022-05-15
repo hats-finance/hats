@@ -16,16 +16,17 @@ import { Delegation, EIP712Domain } from "./constants";
  * @param {Dispatch} dispatch
  */
 export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { getMerkleTree, hasClaimed, isRedeemed } = useActions();
-  const { account } = useEthers()
+  const { account } = useEthers();
   try {
 
-    const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+    // TODO: tokenData is temporary disabled
+    // const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
-    for (let key in tokenData) {
-      key = normalizeAddress(key);
-    }
+    // for (let key in tokenData) {
+    //   key = normalizeAddress(key);
+    // }
 
     const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
     const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
@@ -34,17 +35,18 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
       nftData[key] = normalizeAddress(nftData[key]);
     }
 
-    dispatch(updateAirdropData({ nft: nftData, token: tokenData }));
-    if (!account) return;
+    dispatch(updateAirdropData({ nft: nftData, token: {} }));
 
 
     // Here we check if to show the user the Airdrop Prompt or not
-    if (Object.values(nftData).includes(account) || Object.keys(tokenData).includes(account)) {
+    // TODO: tokenData is temporary disabled
+    //  || Object.keys(tokenData).includes(selectedAddress)
+    if (Object.values(nftData).includes(account)) {
       const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
 
       if (!savedItems.includes(account)) {
         const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
-        if (!await isRedeemed(tokenID!, account) || !await hasClaimed(account)) {
+        if (!await isRedeemed(tokenID!, account!) || !await hasClaimed(account!)) {
           showAirdropPrompt();
         }
       }
