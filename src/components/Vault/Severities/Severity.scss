@@ -26,8 +26,14 @@
       background-color: $severity-audit-request;
       color: $white;
     }
-    &.caught-the-flag {
-      background-color: $strong-purple;
+    &.capture-the-flag {
+      background-color: $severity-purple-1;
+    }
+    &.other-bugs {
+      background-color: $severity-purple-2;
+    }
+    &.gas-optimization {
+      background-color: $severity-purple-3;
     }
     .severity-title {
       color: $white;
@@ -67,7 +73,7 @@
         font-style: italic;
         cursor: pointer;
         text-decoration: underline;
-        margin-top: 20px;
+        margin-top: auto;
         width: 100%;
         &:hover {
           opacity: 0.9;

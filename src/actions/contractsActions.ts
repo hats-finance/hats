@@ -71,7 +71,7 @@ export function useActions() {
       const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, provider);
       return await contract.baseTokenURI();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

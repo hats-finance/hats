@@ -1,4 +1,3 @@
-import { TransactionStatus } from "@usedapp/core";
 import * as types from "../constants/action-types";
 import { ScreenSize } from "../constants/constants";
 import { IAirdropData, IVault, IWithdrawSafetyPeriod } from "../types/types";

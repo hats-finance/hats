@@ -69,7 +69,7 @@ export const useWeb3Modal = () => {
   useEffect(() => {
     if (error) {
       notify(error.message, NotificationType.Error)
-      console.log("error with provider", error);
+      console.error("error with provider", error);
     }
   }, [error, notify]);
 

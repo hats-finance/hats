@@ -1,6 +1,6 @@
 import { toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
-import { TransactionStatus, useEthers, useTransactions } from "@usedapp/core";
+import { useEthers, useTransactions } from "@usedapp/core";
 import {
   getMainPath,
 } from "../utils";
