@@ -43,7 +43,7 @@ export const useWeb3Modal = () => {
     const newProvider = await web3Modal.connect();
     await activate(newProvider);
     setProvider(newProvider);
-  }, [web3Modal, activate, notify]);
+  }, [web3Modal, activate]);
 
   const deactivateProvider = useCallback(async () => {
     await web3Modal.clearCachedProvider();

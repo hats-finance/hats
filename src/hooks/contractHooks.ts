@@ -26,48 +26,49 @@ export function usePendingReward(
 }
 
 export function useTokenApprove(tokenAddress: string) {
-  return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve");
+  return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: "Approve" });
 }
 
 export function useDepositAndClaim(address: string) {
   checkMasterAddress(address);
-  return useContractFunction(new Contract(address, vaultAbi), "deposit");
+  return useContractFunction(new Contract(address, vaultAbi), "deposit", { transactionName: "deposit and claim" });
 }
 
 export function useWithdrawAndClaim(address: string) {
   checkMasterAddress(address);
-  return useContractFunction(new Contract(address, vaultAbi), "withdraw");
+  return useContractFunction(new Contract(address, vaultAbi), "withdraw", { transactionName: "Withdraw And Claim" });
 }
 
 export function useWithdrawRequest(address: string) {
   checkMasterAddress(address);
   return useContractFunction(
     new Contract(address, vaultAbi),
-    "withdrawRequest"
+    "withdrawRequest",
+    { transactionName: "Withdraw Request" }
   );
 }
 
 export function useClaim(address: string) {
   checkMasterAddress(address);
-  return useContractFunction(new Contract(address, vaultAbi), "claim");
+  return useContractFunction(new Contract(address, vaultAbi), "claim", { transactionName: "Claim" });
 }
 
 export function useClaimReward(address: string) {
   checkMasterAddress(address);
-  return useContractFunction(new Contract(address, vaultAbi), "claimReward");
+  return useContractFunction(new Contract(address, vaultAbi), "claimReward", { transactionName: "Claim Reward" });
 }
 
 export function useCheckIn(address: string) {
   checkMasterAddress(address);
-  return useContractFunction(new Contract(address, vaultAbi), "checkIn");
+  return useContractFunction(new Contract(address, vaultAbi), "checkIn", { transactionName: "Check In" });
 }
 
 export function useRedeemNFT() {
-  return useContractFunction(new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop), "redeem");
+  return useContractFunction(new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop), "redeem", { transactionName: "Redeem NFT" });
 }
 
 export function useDelegateAndClaim() {
-  return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim");
+  return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim", { transactionName: "Delegate And Claim" });
 }
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(
 //   contract: T,
