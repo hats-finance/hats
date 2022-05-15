@@ -19,8 +19,6 @@ export default function WalletInfo() {
   const hatsBalance = formatEther(useTokenBalance(rewardsToken, account) ?? 0);
   const hatsBalanceString = (+hatsBalance).toFixed(4);
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
-  console.log("currentTransaction", currentTransaction);
-
 
   return (
     <div className="wallet-info-wrapper">

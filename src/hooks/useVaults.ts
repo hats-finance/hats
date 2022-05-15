@@ -99,13 +99,5 @@ export function useVaults() {
     }
   }, [vaults, getVaults, getMasterData]);
 
-  // useEffect(() => {
-  //     console.log("vaults", vaults);
-  // }, [vaults]);
-
-  // useEffect(() => {
-  //     console.log("tokenPrices", tokenPrices);
-  // }, [tokenPrices])
-
   return { vaults, getVaults };
 }

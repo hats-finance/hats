@@ -3,7 +3,7 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from "@apollo/c
 import { Provider } from "react-redux";
 import store from "./store/index";
 import HttpsRedirect from "react-https-redirect";
-import { ChainId, Config, DAppProvider } from "@usedapp/core";
+import { Config, DAppProvider } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
 import { getDefaultProvider } from "@ethersproject/providers";
 import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
@@ -15,8 +15,6 @@ import "./index.css";
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
 });
-
-console.log(`Using ${ChainId[CHAINID]} network`);
 
 let config: Config = {
   networks: [getChainById(CHAINID)!],

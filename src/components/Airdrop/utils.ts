@@ -3,7 +3,7 @@ import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
-import { TOKEN_AIRDROP_IPFS_CID } from "settings";
+//import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
