@@ -4,12 +4,11 @@ import { CHAINID } from "../../settings";
 import TransactionInfo from "../TransactionInfo/TransactionInfo";
 import { ScreenSize } from "../../constants/constants";
 import Davatar from '@davatar/react';
-import { ChainId, shortenIfAddress, useEtherBalance, useEthers, useLookupAddress, useTokenBalance } from "@usedapp/core";
+import { ChainId, shortenIfAddress, useEtherBalance, useEthers, useLookupAddress, useTokenBalance, useTransactions } from "@usedapp/core";
 import { formatEther } from "ethers/lib/utils";
 import "./WalletInfo.scss";
 
 export default function WalletInfo() {
-  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { account, chainId } = useEthers();
@@ -19,6 +18,9 @@ export default function WalletInfo() {
   const ensName = useLookupAddress();
   const hatsBalance = formatEther(useTokenBalance(rewardsToken, account) ?? 0);
   const hatsBalanceString = (+hatsBalance).toFixed(4);
+  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
+  console.log("currentTransaction", currentTransaction);
+
 
   return (
     <div className="wallet-info-wrapper">
@@ -27,7 +29,7 @@ export default function WalletInfo() {
           {hatsBalance && <span>{hatsBalanceString} HATS&nbsp;|&nbsp;</span>}
           {ethBalance && <span>{ethBalanceString} ETH</span>}
         </div>}
-      {inTransaction ? (
+      {currentTransaction ? (
         <TransactionInfo />
       ) : (
         screenSize === ScreenSize.Desktop && (

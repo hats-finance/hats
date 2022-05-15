@@ -89,7 +89,7 @@ export default function DepositWithdraw(props: IProps) {
   const { account } = useEthers()
   const { loading, error, data } = useQuery(getStakerData(id, account!), { pollInterval: DATA_POLLING_INTERVAL });
   const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: DATA_POLLING_INTERVAL });
-  const { dataReducer: { withdrawSafetyPeriod, hatsPrice }, layoutReducer: { inTransaction, pendingWallet } } = useSelector((state: RootState) => state);
+  const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
@@ -151,36 +151,47 @@ export default function DepositWithdraw(props: IProps) {
     }
   }
 
-  const { send: depositAndClaim } = useDepositAndClaim(master.address);
+
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = async () => {
-    await depositAndClaim(pid, userInputValue);
+    depositAndClaim(pid, userInputValue);
   }
 
-  const { send: withdrawAndClaim } = useWithdrawAndClaim(master.address);
+  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = async () => {
     withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares));
   }
 
-  const { send: withdrawRequest } = useWithdrawRequest(master.address);
+  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
     withdrawRequest(pid);
   }
 
-  const { send: claimReward } = useClaimReward(master.address);
+  const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
   const handleClaimReward = async () => {
     claimReward(pid);
   }
+
+
+  const { send: checkIn, state: checkInState } = useCheckIn(master.address)
+  const handleCheckIn = () => {
+    checkIn(pid)
+  }
+
+  const transactionStates = [
+    depositAndClaimState,
+    withdrawAndClaimState,
+    withdrawRequestState,
+    claimRewardState,
+    checkInState]
+  const inTransaction = transactionStates.some(state => state.status === 'Mining')
+  const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
 
   useEffect(() => {
     if (inTransaction)
       setShowModal(false);
   }, [inTransaction, setShowModal]);
-
-  const { send: checkIn } = useCheckIn(master.address)
-  const handleCheckIn = () => {
-    checkIn(pid)
-  }
 
   const depositWithdrawWrapperClass = classNames({
     "deposit-wrapper": true,

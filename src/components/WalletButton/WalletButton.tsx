@@ -7,7 +7,7 @@ import { shortenIfAddress, useEthers } from "@usedapp/core";
 import { useWeb3Modal } from "hooks/useWeb3Modal";
 
 export default function WalletButton() {
-  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { account } = useEthers()
   const { activateProvider, deactivateProvider } = useWeb3Modal()
 

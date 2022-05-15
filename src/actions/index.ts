@@ -1,3 +1,4 @@
+import { TransactionStatus } from "@usedapp/core";
 import * as types from "../constants/action-types";
 import { ScreenSize } from "../constants/constants";
 import { IAirdropData, IVault, IWithdrawSafetyPeriod } from "../types/types";
@@ -32,21 +33,6 @@ export const updateTokenPrices = (tokenPrices: { [token: string]: number }) => (
   tokenPrices
 })
 
-export const toggleInTransaction = (inTransaction: boolean) => ({
-  type: types.TOGGLE_IN_TRANSACTION,
-  inTransaction
-})
-
-export const togglePendingWallet = (pendingWallet: boolean) => ({
-  type: types.TOGGLE_PENDING_WALLET,
-  pendingWallet
-})
-
-export const updateTransactionHash = (transactionHash: string) => ({
-  type: types.UPDATE_TRANSACTION_HASH,
-  transactionHash
-})
-
 export const updateHatsPrice = (hatsPrice: number) => ({
   type: types.UPDATE_HATS_PRICE,
   hatsPrice
@@ -55,11 +41,6 @@ export const updateHatsPrice = (hatsPrice: number) => ({
 export const updateWithdrawSafetyPeriod = (withdrawSafetyPeriod: IWithdrawSafetyPeriod) => ({
   type: types.UPDATE_WITHDRAW_SAFETY_PERIOD,
   withdrawSafetyPeriod
-})
-
-export const toggleSubmittingVulnerability = (submittingVulnerability: boolean) => ({
-  type: types.TOGGLE_SUBMITTING_VULNERABILITY,
-  submittingVulnerability
 })
 
 export const updateAirdropData = (airdrop: IAirdropData) => ({

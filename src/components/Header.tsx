@@ -1,6 +1,6 @@
 import { toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
-import { useEthers } from "@usedapp/core";
+import { TransactionStatus, useEthers, useTransactions } from "@usedapp/core";
 import {
   getMainPath,
 } from "../utils";
@@ -19,16 +19,9 @@ import Logo from "assets/icons/logo.icon";
 export default function Header() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const screenSize = useSelector(
-    (state: RootState) => state.layoutReducer.screenSize
-  );
-  const showMenu = useSelector(
-    (state: RootState) => state.layoutReducer.showMenu
-  );
-  const inTransaction = useSelector(
-    (state: RootState) => state.layoutReducer.inTransaction
-  );
+  const { screenSize, showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { account } = useEthers();
+  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
   return (
     <header data-testid="Header">
@@ -40,7 +33,7 @@ export default function Header() {
       {screenSize === ScreenSize.Mobile && <Logo />}
       {account && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||
-        (screenSize === ScreenSize.Mobile && !inTransaction)) && (
+        (screenSize === ScreenSize.Mobile && !currentTransaction)) && (
           <WalletButton />
         )}
 
