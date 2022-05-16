@@ -4,10 +4,9 @@ import { Link } from "react-router-dom";
 import Confetti from "react-confetti";
 import { RootState } from "reducers";
 import { LocalStorage, RoutePaths, ScreenSize } from "../../../../constants/constants";
-import { truncatedAddress } from "../../../../utils";
 import Modal from "../../../Shared/Modal";
 import "./index.scss";
-import { useEthers } from "@usedapp/core";
+import { shortenAddress, useEthers } from "@usedapp/core";
 
 interface IProps {
   closePrompt: () => void;
@@ -31,7 +30,7 @@ export default function AirdropPrompt({ closePrompt }: IProps) {
         <span>You are eligible to Hats Airdrop!</span>
         <div className="wallet-address-container">
           <span>Eligible wallet address:</span>
-          <span className="wallet-address">{`${truncatedAddress(account!)}`}</span>
+          <span className="wallet-address">{`${shortenAddress(account!)}`}</span>
         </div>
         <Link to={{ pathname: RoutePaths.airdrop, search: `walletAddress=${account}` }} onClick={closePrompt} className="reveal-link">SHOW ME</Link>
       </div>
