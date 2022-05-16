@@ -1,5 +1,5 @@
+import { getChainById, shortenIfAddress } from "@usedapp/core/dist/esm/src/helpers";
 import { CHAINID } from "../../settings";
-import { linkToEtherscan, truncatedAddress } from "../../utils";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import "./Multisig.scss";
 
@@ -9,13 +9,15 @@ interface IProps {
 
 export default function Multisig(props: IProps) {
   const { multisigAddress } = props;
+  const chain = getChainById(CHAINID)
+
   return (
     <div className="multi-sig-address-wrapper">
       <a target="_blank"
         rel="noopener noreferrer"
-        href={linkToEtherscan(multisigAddress, CHAINID)}
+        href={chain?.getExplorerAddressLink(multisigAddress)}
         className="multi-sig-address">
-        {truncatedAddress(multisigAddress ?? "")}
+        {shortenIfAddress(multisigAddress)}
       </a>
       <CopyToClipboard value={multisigAddress} />
     </div>

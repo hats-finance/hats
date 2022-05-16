@@ -8,12 +8,11 @@ import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS, CHAINID } from "./settings";
+import { MASTER_ADDRESS } from "./settings";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
-import { ChainId } from "@usedapp/core";
 
 /**
  * Adds commas to a given number
@@ -21,17 +20,6 @@ import { ChainId } from "@usedapp/core";
  */
 export const numberWithCommas = (number: number): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-/**
- * Truncate an address with ellipsis dots in the middle
- * @param {string} address
- */
-export const truncatedAddress = (address: string): string => {
-  if (address.length < 10) {
-    return address;
-  }
-  return address.substr(0, 6) + "..." + address.substr(address.length - 4);
 };
 
 /**
@@ -217,32 +205,6 @@ export const copyToClipboard = (value: string) => {
   document.execCommand("copy");
   document.body.removeChild(tempInputElement);
 };
-
-/**
- * Given a value of address or transaction and network returns the Etherscan link
- * @param {string} value
- * @param {Networks} network
- * @param {boolean} isTransaction
- */
-export const linkToEtherscan = (
-  value: string,
-  network: ChainId,
-  isTransaction?: boolean
-): string => {
-  const prefix = network !== ChainId.Mainnet ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
-};
-
-/**
- * Given an address and a tokenID returns the Etherscan link
- * @param {string} address
- * @param {string} tokenID
- * @param {Networks} network
- */
-export const linkToTokenEtherscan = (address: string, tokenID: string, network = CHAINID): string => {
-  const prefix = network !== ChainId.Mainnet ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
-}
 
 /**
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.

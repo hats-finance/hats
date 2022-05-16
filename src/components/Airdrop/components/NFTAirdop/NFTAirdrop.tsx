@@ -4,16 +4,17 @@ import { t } from "i18next";
 import { useActions } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
-import { isDateBefore, linkToTokenEtherscan } from "utils";
+import { isDateBefore } from "utils";
 import Image from "../../../Shared/Image/Image";
 import Countdown from "components/Shared/Countdown/Countdown";
 import { EligibilityStatus } from "components/Airdrop/constants";
-import { NFT_AIRDROP_ADDRESS } from "settings";
+import { CHAINID, NFT_AIRDROP_ADDRESS } from "settings";
 import OpenInIcon from "assets/icons/openIn.icon";
 import { hashNFT } from "components/Airdrop/utils";
 import { useEthers } from "@usedapp/core";
 import { useRedeemNFT } from "hooks/contractHooks";
 import "./index.scss";
+import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -27,6 +28,7 @@ interface IProps {
 }
 
 export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus }: IProps) {
+  const chain = getChainById(CHAINID);
   const { getBaseURI, getDeadline } = useActions();
   const { account } = useEthers()
   const [merkleTree, setMerkleTree] = useState();
@@ -89,7 +91,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
           {eligibilityStatus === EligibilityStatus.REDEEMED && (
             <span className="redeemed-info-wrapper">
               <span>{t("Airdrop.redeemed-link")}</span>
-              <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, tokenId))}>
+              <span className="open-in-icon" onClick={() => window.open(chain?.getExplorerAddressLink(NFT_AIRDROP_ADDRESS))}>
                 <OpenInIcon />
               </span>
             </span>
