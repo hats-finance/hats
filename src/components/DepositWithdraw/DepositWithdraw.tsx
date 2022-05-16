@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -9,14 +9,13 @@ import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, calculateApy, isDigitsOnly } from "../../utils";
+import { calculateApy, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import InfoIcon from "../../assets/icons/info.icon";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
-import { DATA_POLLING_INTERVAL } from "../../settings";
 import Countdown from "../Shared/Countdown/Countdown";
 import ApproveToken from "./ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
@@ -87,38 +86,30 @@ export default function DepositWithdraw(props: IProps) {
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
   const isAboveMinimumDeposit = !userInput ? false : parseUnits(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
   const { account } = useEthers()
-  const { loading, error, data } = useQuery(getStakerData(id, account!), { pollInterval: DATA_POLLING_INTERVAL });
-  const { loading: loadingWithdrawRequests, error: errorWithdrawRequests, data: dataWithdrawRequests } = useQuery(getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: DATA_POLLING_INTERVAL });
+  const { data: staker, refetch: refetchStaker } = useQuery(
+    getStakerData(id, account!),
+    { fetchPolicy: "network-only" });
+  const { data: withdrawRequests, refetch: refetchWithdrawRequests } = useQuery(
+    getBeneficiaryWithdrawRequests(pid, account!),
+    { fetchPolicy: "network-only" });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
-  const [withdrawRequests, setWithdrawRequests] = useState<IPoolWithdrawRequest>();
-  const [isWithdrawable, setIsWithdrawable] = useState(false);
-  const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);
   const [termsOfUse, setTermsOfUse] = useState(false);
-
-  const [deposited, setDeposited] = useState(BigNumber.from(0));
-  const [availableToWithdraw, setAvailableToWithdraw] = useState(BigNumber.from(0));
-  const [withdrawAmount, setWithdrawAmount] = useState(BigNumber.from(0));
-  const [userShares, setUserShares] = useState(BigNumber.from(0));
   const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
 
-  useEffect(() => {
-    if (!loading && !error && data && data.stakers && data.stakers.length > 0) {
-      setDeposited(data.stakers[0]?.depositAmount);
-      setAvailableToWithdraw(calculateAmountAvailableToWithdraw(data.stakers[0]?.shares, honeyPotBalance, totalUsersShares));
-      setWithdrawAmount(data.stakers[0]?.withdrawAmount);
-      setUserShares(BigNumber.from(data.stakers[0]?.shares));
-    }
-  }, [loading, error, data, honeyPotBalance, totalUsersShares])
+  const withdrawRequest = withdrawRequests?.parentVaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
+  const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
+  const [isPendingWithdraw, setIsPendingWithdraw] = useState(moment().isBefore(moment.unix(Number(withdrawRequest?.withdrawEnableTime))));
 
   useEffect(() => {
-    if (!loadingWithdrawRequests && !errorWithdrawRequests && dataWithdrawRequests && dataWithdrawRequests.parentVaults) {
-      const withdrawRequest: IPoolWithdrawRequest = dataWithdrawRequests.parentVaults[0]?.withdrawRequests[0];
-      setWithdrawRequests(withdrawRequest);
-      setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest?.withdrawEnableTime)), moment.unix(Number(withdrawRequest?.expiryTime))));
+    if (withdrawRequest) {
       setIsPendingWithdraw(moment().isBefore(moment.unix(Number(withdrawRequest?.withdrawEnableTime))));
+      setIsWithdrawable(moment().isBetween(moment.unix(Number(withdrawRequest?.withdrawEnableTime)), moment.unix(Number(withdrawRequest?.expiryTime))))
     }
-  }, [loadingWithdrawRequests, errorWithdrawRequests, dataWithdrawRequests])
+  }, [withdrawRequest]);
 
+  const { shares, depositAmount, withdrawAmount } = staker?.stakers[0];
+  const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
+  console.log({ withdrawRequests, isWithdrawable, isPendingWithdraw });
 
   let userInputValue;
   try {
@@ -126,6 +117,7 @@ export default function DepositWithdraw(props: IProps) {
   } catch {
     userInputValue = BigNumber.from(0);
   }
+
 
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
@@ -151,7 +143,6 @@ export default function DepositWithdraw(props: IProps) {
     }
   }
 
-
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = async () => {
     depositAndClaim(pid, userInputValue);
@@ -159,13 +150,13 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
-  const handleWithdrawAndClaim = async () => {
-    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, userShares));
-  }
+  const handleWithdrawAndClaim = useCallback(async () => {
+    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
+  }, [availableToWithdraw, userInputValue, shares, pid, withdrawAndClaim]);
 
-  const { send: withdrawRequest, state: withdrawRequestState } = useWithdrawRequest(master.address);
+  const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
-    withdrawRequest(pid);
+    withdrawRequestCall(pid);
   }
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
@@ -185,7 +176,15 @@ export default function DepositWithdraw(props: IProps) {
     withdrawRequestState,
     claimRewardState,
     checkInState]
-  const inTransaction = transactionStates.some(state => state.status === 'Mining')
+
+  useEffect(() => {
+    if ([withdrawRequestState, withdrawAndClaimState].some(state => state.status === "Success")) {
+      refetchWithdrawRequests();
+      refetchStaker();
+    }
+  }, [withdrawRequestState, withdrawAndClaimState, refetchWithdrawRequests, refetchStaker]);
+
+  const inTransaction = transactionStates.filter(state => state !== withdrawRequestState).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
 
   useEffect(() => {
@@ -214,7 +213,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       {tab === "withdraw" && isPendingWithdraw &&
         <PendingWithdraw
-          withdrawEnableTime={withdrawRequests?.withdrawEnableTime || ""}
+          withdrawEnableTime={withdrawRequest?.withdrawEnableTime || ""}
           expiryTime={withdrawRequests?.expiryTime || ""}
           setIsPendingWithdraw={setIsPendingWithdraw}
           setIsWithdrawable={setIsWithdrawable}
@@ -226,7 +225,7 @@ export default function DepositWithdraw(props: IProps) {
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : formatUnits(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
+            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : !availableToWithdraw ? "-" : formatUnits(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
         </div>
         <div>
           <div className={amountWrapperClass}>
@@ -247,7 +246,7 @@ export default function DepositWithdraw(props: IProps) {
         <div className="staked-wrapper">
           <div>
             <span>Staked</span>
-            <span>{formatUnits(deposited, stakingTokenDecimals)}</span>
+            <span>{formatUnits(depositAmount, stakingTokenDecimals)}</span>
           </div>
           <div>
             <span>Withdrawn</span>
@@ -267,7 +266,10 @@ export default function DepositWithdraw(props: IProps) {
           <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
         </div>
       </div>
-      {tab === "withdraw" && isWithdrawable && !isPendingWithdraw && <WithdrawTimer expiryTime={withdrawRequests?.expiryTime || ""} setIsWithdrawable={setIsWithdrawable} />}
+      {tab === "withdraw" && isWithdrawable && !isPendingWithdraw &&
+        <WithdrawTimer
+          expiryTime={withdrawRequests?.expiryTime || ""}
+          setIsWithdrawable={setIsWithdrawable} />}
       {tab === "deposit" && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
@@ -292,7 +294,7 @@ export default function DepositWithdraw(props: IProps) {
             className="action-btn"
             onClick={async () => await tryDeposit()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
           </button>}
-        {tab === "withdraw" && withdrawRequests && isWithdrawable && !isPendingWithdraw &&
+        {tab === "withdraw" && withdrawRequest && isWithdrawable && !isPendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
@@ -310,3 +312,39 @@ export default function DepositWithdraw(props: IProps) {
     </div>
   )
 }
+
+
+/**
+ * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares
+ * @param {string} userShares
+ * @param {string} poolBalance
+ * @param {string} totalUsersShares
+ */
+const calculateAmountAvailableToWithdraw = (
+  userShares?: string,
+  poolBalance?: string,
+  totalUsersShares?: string
+) => {
+  if (!userShares || !poolBalance || !totalUsersShares) return undefined;
+  return BigNumber.from(userShares)
+    .mul(BigNumber.from(poolBalance))
+    .div(BigNumber.from(totalUsersShares));
+};
+
+/**
+ * Calculates the value we send to the contract when a user wants to withdraw
+ * @param {BigNumber} amountAvailableToWithdraw
+ * @param {string} userInput The actual number the user insterted
+ * @param {BigNumber} userShares
+ * @param {string} decimals
+ */
+const calculateActualWithdrawValue = (
+  amountAvailableToWithdraw?: BigNumber,
+  userInput?: BigNumber,
+  userShares?: BigNumber
+) => {
+  if (!amountAvailableToWithdraw || !userInput || !userShares) return undefined;
+  return userInput.mul(userShares)
+    .div(amountAvailableToWithdraw)
+    .toString();
+};

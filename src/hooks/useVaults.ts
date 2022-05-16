@@ -1,4 +1,5 @@
 import { useApolloClient } from "@apollo/client";
+import { useTransactions } from "@usedapp/core";
 import {
   updateHatsPrice,
   updateRewardsToken,
@@ -21,8 +22,11 @@ export function useVaults() {
     (state: RootState) => state.dataReducer
   );
 
+  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
+
+
   const getMasterData = useCallback(async () => {
-    const { data } = await apolloClient.query({ query: GET_MASTER_DATA });
+    const { data } = await apolloClient.query({ query: GET_MASTER_DATA, fetchPolicy: 'no-cache' });
     if (data) {
       const { rewardsToken, withdrawPeriod, safetyPeriod } = data.masters[0];
       dispatch(updateRewardsToken(rewardsToken));
@@ -36,8 +40,10 @@ export function useVaults() {
   }, [apolloClient, dispatch]);
 
   const getVaults = useCallback(async () => {
-    const { data } = await apolloClient.query({ query: GET_VAULTS });
+    console.log('getVaults');
+    const { data } = await apolloClient.query({ query: GET_VAULTS, fetchPolicy: 'no-cache' });
     if (data) {
+      console.log('got vaults', data);
       dispatch(
         updateVaults(
           (data.vaults as IVault[]).map((vault) => ({
@@ -98,6 +104,12 @@ export function useVaults() {
       getMasterData();
     }
   }, [vaults, getVaults, getMasterData]);
+
+  useEffect(() => {
+    if (currentTransaction == null) {
+      getVaults()
+    }
+  }, [currentTransaction, getVaults]);
 
   return { vaults, getVaults };
 }
