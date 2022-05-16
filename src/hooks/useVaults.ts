@@ -40,10 +40,8 @@ export function useVaults() {
   }, [apolloClient, dispatch]);
 
   const getVaults = useCallback(async () => {
-    console.log('getVaults');
     const { data } = await apolloClient.query({ query: GET_VAULTS, fetchPolicy: 'no-cache' });
     if (data) {
-      console.log('got vaults', data);
       dispatch(
         updateVaults(
           (data.vaults as IVault[]).map((vault) => ({

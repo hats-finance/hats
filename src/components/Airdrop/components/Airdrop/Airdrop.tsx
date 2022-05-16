@@ -28,15 +28,14 @@ export default function Airdrop() {
   const [searchParams] = useSearchParams();
   const walletAddress = searchParams.get("walletAddress");
 
-
   const handleChange = useCallback(async (input: string) => {
     setUserInput(input);
-    if (isAddress(input)) {
+    if (isAddress(input) && nftET) {
       const address = normalizeAddress(input);
-      if (Object.values(nftET!).includes(address)) {
-        const tokenId = Object.keys(nftET!).find(key => nftET![key] === address);
-        setTokenId(tokenId!);
-        if (await isRedeemed(tokenId!, address)) {
+      if (Object.values(nftET).includes(address)) {
+        const tokenId = Object.keys(nftET!).find(key => nftET[key] === address);
+        setTokenId(tokenId);
+        if (tokenId && await isRedeemed(tokenId, address)) {
           setNFTEligibilityStatus(EligibilityStatus.REDEEMED);
         } else {
           setNFTEligibilityStatus(EligibilityStatus.ELIGIBLE);
@@ -45,15 +44,17 @@ export default function Airdrop() {
         setNFTEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
       }
 
-      if (Object.keys(tokenET!).includes(address)) {
-        setTokenAmount(tokenET![address]);
-        if (await hasClaimed(address)) {
-          setTokenEligibilityStatus(EligibilityStatus.REDEEMED);
+      if (tokenET) {
+        if (Object.keys(tokenET).includes(address)) {
+          setTokenAmount(tokenET[address]);
+          if (await hasClaimed(address)) {
+            setTokenEligibilityStatus(EligibilityStatus.REDEEMED);
+          } else {
+            setTokenEligibilityStatus(EligibilityStatus.ELIGIBLE);
+          }
         } else {
-          setTokenEligibilityStatus(EligibilityStatus.ELIGIBLE);
+          setTokenEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
         }
-      } else {
-        setTokenEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
       }
 
     } else {
@@ -62,11 +63,12 @@ export default function Airdrop() {
     }
   }, [nftET, tokenET, hasClaimed, isRedeemed]);
 
+  // TODO: Fix issue when the useEffect always rendered when changing the input when walletAddress is fetched from searchParams.
   useEffect(() => {
     if (walletAddress) {
       handleChange(walletAddress);
     }
-  }, [walletAddress, handleChange, hasClaimed, isRedeemed]);
+  }, [handleChange, walletAddress]);
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {
@@ -114,7 +116,6 @@ export default function Airdrop() {
             {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
           </div>
         )}
-        {/* Temporary disable token airdrop  **/}
         {renderTokenAirdrop(tokenEligibilityStatus)}
         {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
