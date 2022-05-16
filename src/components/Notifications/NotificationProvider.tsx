@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState, FC } from "react";
+import { useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
 import "./index.scss";
-import { useNotifications } from "@usedapp/core";
+
 export interface INotification {
   id: string;
   content: React.ReactNode;
@@ -52,8 +53,9 @@ const NotificationProvider: FC = ({ children }) => {
         return { id: notification.id, type: NotificationType.Success, content: `Transaction Succeeded: ${notification.transactionName}` };
       case "walletConnected":
         return { id: "walletconnected", type: NotificationType.Info, content: `Wallet Connected` };
+      default:
+        return { id: "", type: NotificationType.Info, content: `unknown` };
     }
-    return { id: "", type: NotificationType.Info, content: `unknown` };
   });
 
   return (
