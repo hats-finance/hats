@@ -107,7 +107,7 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [withdrawRequest]);
 
-  const { shares, depositAmount, withdrawAmount } = staker?.stakers[0];
+  const { shares, depositAmount, withdrawAmount } = staker?.stakers[0] || {};
   const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
   console.log({ withdrawRequests, isWithdrawable, isPendingWithdraw });
 
@@ -179,6 +179,8 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     if ([withdrawRequestState, withdrawAndClaimState].some(state => state.status === "Success")) {
+      console.log("refetching");
+
       refetchWithdrawRequests();
       refetchStaker();
     }
@@ -214,7 +216,7 @@ export default function DepositWithdraw(props: IProps) {
       {tab === "withdraw" && isPendingWithdraw &&
         <PendingWithdraw
           withdrawEnableTime={withdrawRequest?.withdrawEnableTime || ""}
-          expiryTime={withdrawRequests?.expiryTime || ""}
+          expiryTime={withdrawRequest?.expiryTime || ""}
           setIsPendingWithdraw={setIsPendingWithdraw}
           setIsWithdrawable={setIsWithdrawable}
         />}
@@ -246,11 +248,11 @@ export default function DepositWithdraw(props: IProps) {
         <div className="staked-wrapper">
           <div>
             <span>Staked</span>
-            <span>{formatUnits(depositAmount, stakingTokenDecimals)}</span>
+            <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
           </div>
           <div>
             <span>Withdrawn</span>
-            <span>{formatUnits(withdrawAmount, stakingTokenDecimals)}</span>
+            <span>{withdrawAmount ? formatUnits(withdrawAmount, stakingTokenDecimals) : "-"}</span>
           </div>
         </div>
         <div className="apy-wrapper">
@@ -268,7 +270,7 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       {tab === "withdraw" && isWithdrawable && !isPendingWithdraw &&
         <WithdrawTimer
-          expiryTime={withdrawRequests?.expiryTime || ""}
+          expiryTime={withdrawRequest?.expiryTime || ""}
           setIsWithdrawable={setIsWithdrawable} />}
       {tab === "deposit" && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
