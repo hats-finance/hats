@@ -44,6 +44,7 @@ export default function VaultAction(props: IProps) {
         disabled={props.preview || !account}>
         {t("Vault.deposit-withdraw")}
       </button>
+      {/* TODO: Need to fetch withdrawRequests in useVaults and handle it globally from there */}
       {!props.preview && account && isPendingWithdraw && !isWithdrawable && withdrawRequest &&
         <>
           <div className="countdown-wrapper">

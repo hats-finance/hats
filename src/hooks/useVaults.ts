@@ -24,7 +24,6 @@ export function useVaults() {
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
-
   const getMasterData = useCallback(async () => {
     const { data } = await apolloClient.query({ query: GET_MASTER_DATA, fetchPolicy: 'no-cache' });
     if (data) {

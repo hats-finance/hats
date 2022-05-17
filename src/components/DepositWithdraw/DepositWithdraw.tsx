@@ -109,7 +109,6 @@ export default function DepositWithdraw(props: IProps) {
 
   const { shares, depositAmount, withdrawAmount } = staker?.stakers[0] || {};
   const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
-  console.log({ withdrawRequests, isWithdrawable, isPendingWithdraw });
 
   let userInputValue;
   try {
@@ -179,8 +178,6 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     if ([withdrawRequestState, withdrawAndClaimState].some(state => state.status === "Success")) {
-      console.log("refetching");
-
       refetchWithdrawRequests();
       refetchStaker();
     }
