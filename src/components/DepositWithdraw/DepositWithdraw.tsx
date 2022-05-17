@@ -84,7 +84,6 @@ export default function DepositWithdraw(props: IProps) {
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
-  const isAboveMinimumDeposit = !userInput ? false : parseUnits(userInput, stakingTokenDecimals).gte(BigNumber.from(MINIMUM_DEPOSIT));
   const { account } = useEthers()
   const { data: staker, refetch: refetchStaker } = useQuery(
     getStakerData(id, account!),
@@ -109,22 +108,21 @@ export default function DepositWithdraw(props: IProps) {
 
   const { shares, depositAmount, withdrawAmount } = staker?.stakers[0] || {};
   const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
+  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, stakingTokenDecimals) : "-";
 
-  let userInputValue;
+  let userInputValue: BigNumber | undefined = undefined;
   try {
     userInputValue = parseUnits(userInput!, stakingTokenDecimals);
   } catch {
-    userInputValue = BigNumber.from(0);
+    // userInputValue = BigNumber.from(0);
   }
-
-
+  const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
-
-  const tokenBalance = formatUnits(useTokenBalance(stakingToken, account) ?? 0, stakingTokenDecimals);
-  const notEnoughBalance = userInputValue.gte(parseUnits(tokenBalance!, stakingTokenDecimals));
-
-  const pendingReward = usePendingReward(master.address, pid, account!) ?? BigNumber.from(0)
-  const amountToClaim = millify(Number(formatEther(pendingReward)), { precision: 3 });
+  const tokenBalance = useTokenBalance(stakingToken, account)
+  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, stakingTokenDecimals) : "-";
+  const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gte(tokenBalance) : false;
+  const pendingReward = usePendingReward(master.address, pid, account!)
+  const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
 
   const { send: approveToken } = useTokenApprove(stakingToken)
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
@@ -132,7 +130,7 @@ export default function DepositWithdraw(props: IProps) {
   }
 
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
-  const hasAllowance = allowance?.gte(userInputValue);
+  const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
   const tryDeposit = async () => {
     if (!hasAllowance) {
       setShowUnlimitedMessage(true);
@@ -219,12 +217,17 @@ export default function DepositWithdraw(props: IProps) {
         />}
       <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
         <div className="balance-wrapper">
-          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalance))} ${stakingTokenSymbol}`}
+          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${stakingTokenSymbol}`}
           {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={() => setUserInput(tab === "deposit" ? tokenBalance : !availableToWithdraw ? "-" : formatUnits(availableToWithdraw, stakingTokenDecimals))}>(Max)</button>
+            onClick={() => setUserInput(
+              tab === "deposit" ?
+                formattedTokenBalance :
+                formatAvailableToWithdraw)}>
+            (Max)
+          </button>
         </div>
         <div>
           <div className={amountWrapperClass}>
@@ -291,13 +294,16 @@ export default function DepositWithdraw(props: IProps) {
           <button
             disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause}
             className="action-btn"
-            onClick={async () => await tryDeposit()}>{`DEPOSIT ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
+            onClick={async () => await tryDeposit()}>
+            {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
         {tab === "withdraw" && withdrawRequest && isWithdrawable && !isPendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
-            onClick={async () => await handleWithdrawAndClaim()}>{`WITHDRAW ${pendingReward.eq(0) ? "" : `AND CLAIM ${amountToClaim} HATS`}`}
+            onClick={async () => await handleWithdrawAndClaim()}>
+            {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ?
+              "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
         {tab === "withdraw" && !isPendingWithdraw && !isWithdrawable &&
           <button
@@ -305,7 +311,12 @@ export default function DepositWithdraw(props: IProps) {
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
         {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
-        <button onClick={async () => await handleClaimReward()} disabled={pendingReward.eq(0)} className="action-btn claim-btn fill">{`CLAIM ${amountToClaim} HATS`}</button>
+        <button
+          onClick={async () => await handleClaimReward()}
+          disabled={!pendingReward || pendingReward.eq(0)}
+          className="action-btn claim-btn fill">
+          {`CLAIM ${pendingRewardFormat} HATS`}
+        </button>
       </div>
       {pendingWallet && <Loading />}
     </div>
