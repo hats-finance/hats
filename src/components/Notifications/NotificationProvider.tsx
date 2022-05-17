@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState, FC } from "react";
-import { useNotifications } from "@usedapp/core";
+import { useEthers, useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
 import "./index.scss";
@@ -43,6 +43,8 @@ const NotificationProvider: FC = ({ children }) => {
     setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
   }
 
+  const { error } = useEthers()
+
   const useDappNotifications = useNotifications().notifications.map((notification): INotification => {
     switch (notification.type) {
       case "transactionStarted":
@@ -72,6 +74,12 @@ const NotificationProvider: FC = ({ children }) => {
           <Notification
             key={notifications.length + index}
             notification={notification} />))}
+        {error && <Notification key="error" notification={{
+
+          id: "ethers-error",
+          content: error.message,
+          type: NotificationType.Error
+        }} />}
 
       </div>
     </NotificationContext.Provider>
