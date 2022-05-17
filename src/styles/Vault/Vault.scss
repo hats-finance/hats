@@ -57,6 +57,11 @@ tr {
 .max-rewards-wrapper {
   display: flex;
   text-align: left;
+  img {
+    width: 20px;
+    margin-right: 10px;
+    border-radius: 100px;
+  }
 }
 .sub-label {
   font-size: $tiny;
