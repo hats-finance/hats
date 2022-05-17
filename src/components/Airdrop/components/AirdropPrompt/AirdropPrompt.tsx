@@ -2,11 +2,11 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Confetti from "react-confetti";
+import { shortenAddress, useEthers } from "@usedapp/core";
 import { RootState } from "reducers";
 import { LocalStorage, RoutePaths, ScreenSize } from "../../../../constants/constants";
 import Modal from "../../../Shared/Modal";
 import "./index.scss";
-import { shortenAddress, useEthers } from "@usedapp/core";
 
 interface IProps {
   closePrompt: () => void;
@@ -32,7 +32,7 @@ export default function AirdropPrompt({ closePrompt }: IProps) {
           <span>Eligible wallet address:</span>
           <span className="wallet-address">{`${shortenAddress(account!)}`}</span>
         </div>
-        <Link to={{ pathname: RoutePaths.airdrop, search: `walletAddress=${account}` }} onClick={closePrompt} className="reveal-link">SHOW ME</Link>
+        <Link to={{ pathname: `${RoutePaths.airdrop}/${account}` }} onClick={closePrompt} className="reveal-link">SHOW ME</Link>
       </div>
     </Modal>
   )

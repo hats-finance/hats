@@ -11,13 +11,14 @@ import { RootState } from "reducers";
 import { normalizeAddress } from "../../../../utils";
 import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useActions } from "actions/contractsActions";
 import "./index.scss";
 
 export default function Airdrop() {
   const { hasClaimed, isRedeemed } = useActions();
-  const [userInput, setUserInput] = useState("");
+  const { walletAddress } = useParams();
+  const [userInput, setUserInput] = useState(walletAddress);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
   const tokenET = useSelector((state: RootState) => state.dataReducer.airdrop?.token);
   const [nftEligibilityStatus, setNFTEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
@@ -25,13 +26,10 @@ export default function Airdrop() {
   const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
   const [tokenAmount, setTokenAmount] = useState<number>();
   const [inTokenAirdop, setInTokenAirdrop] = useState(false);
-  const [searchParams] = useSearchParams();
-  const walletAddress = searchParams.get("walletAddress");
 
-  const handleChange = useCallback(async (input: string) => {
-    setUserInput(input);
-    if (isAddress(input) && nftET) {
-      const address = normalizeAddress(input);
+  const checkAirdrop = useCallback(async () => {
+    if (userInput && isAddress(userInput) && nftET) {
+      const address = normalizeAddress(userInput);
       if (Object.values(nftET).includes(address)) {
         const tokenId = Object.keys(nftET!).find(key => nftET[key] === address);
         setTokenId(tokenId);
@@ -61,14 +59,15 @@ export default function Airdrop() {
       setNFTEligibilityStatus(EligibilityStatus.UNKNOWN);
       setTokenEligibilityStatus(EligibilityStatus.UNKNOWN);
     }
-  }, [nftET, tokenET, hasClaimed, isRedeemed]);
+  }, [nftET, tokenET, hasClaimed, isRedeemed, userInput])
 
-  // TODO: Fix issue when the useEffect always rendered when changing the input when walletAddress is fetched from searchParams.
   useEffect(() => {
-    if (walletAddress) {
-      handleChange(walletAddress);
-    }
-  }, [handleChange, walletAddress]);
+    checkAirdrop();
+  }, [checkAirdrop])
+
+  useEffect(() => {
+    checkAirdrop();
+  }, [userInput, checkAirdrop])
 
   const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
     switch (tokenEligibilityStatus) {
@@ -76,7 +75,7 @@ export default function Airdrop() {
       case EligibilityStatus.ELIGIBLE:
         return (
           <TokenAirdrop
-            address={normalizeAddress(userInput)}
+            address={normalizeAddress(userInput!)}
             eligibilityStatus={tokenEligibilityStatus}
             tokenAmount={tokenAmount!}
             eligibleTokens={tokenET!}
@@ -95,7 +94,7 @@ export default function Airdrop() {
           <NFTAirdrop
             tokenId={tokenId!}
             eligibleTokens={nftET!}
-            walletAddress={normalizeAddress(userInput)}
+            walletAddress={normalizeAddress(userInput!)}
             eligibilityStatus={nftEligibilityStatus}
             setEligibilityStatus={setNFTEligibilityStatus} />);
       case EligibilityStatus.NOT_ELIGIBLE:
@@ -109,11 +108,11 @@ export default function Airdrop() {
         {!inTokenAirdop && (
           <div className="search-wrapper">
             <span>{t("Airdrop.enter-address")}</span>
-            <div className={classNames({ "input-container": true, "input-error": userInput !== "" && !isAddress(userInput) })}>
-              <input className="address-input" type="text" value={userInput} placeholder={t("Airdrop.search-placeholder")} onChange={(e) => handleChange(e.target.value)} />
-              <button className="clear-input" onClick={() => handleChange("")}><CloseIcon width="10" height="10" fill={Colors.gray} /></button>
+            <div className={classNames({ "input-container": true, "input-error": userInput && !isAddress(userInput) })}>
+              <input className="address-input" type="text" value={userInput} placeholder={t("Airdrop.search-placeholder")} onChange={(e) => setUserInput(e.target.value)} />
+              <button className="clear-input" onClick={() => setUserInput("")}><CloseIcon width="10" height="10" fill={Colors.gray} /></button>
             </div>
-            {userInput !== "" && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
+            {userInput && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
           </div>
         )}
         {renderTokenAirdrop(tokenEligibilityStatus)}
