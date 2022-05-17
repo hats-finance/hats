@@ -23,7 +23,7 @@ export default function Vault(props: IProps) {
   const { name, isGuest, bounty, id, description } = props.data;
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.tokenPrice);
   const apy = useSelector((state: RootState) => state.dataReducer.vaults.filter((vault: IVault) => vault.id === id)[0]?.parentVault?.apy);
-  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
+  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data.parentVault;
   const [vaultAPY, setVaultAPY] = useState("-");
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -50,7 +50,10 @@ export default function Vault(props: IProps) {
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
+        <img src={description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token icon" />
         {formatWei(honeyPotBalance, 3, stakingTokenDecimals)}
+        {" "}
+        {stakingTokenSymbol}
         {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
@@ -79,7 +82,6 @@ export default function Vault(props: IProps) {
               {isGuest && `${bounty} bounty + `}
               {maxRewards}
             </td>
-            <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
             <td>{vaultAPY}</td>
             <td>
               <VaultAction
