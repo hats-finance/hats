@@ -95,7 +95,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const withdrawRequest = withdrawRequests?.parentVaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
-  const [isPendingWithdraw, setIsPendingWithdraw] = useState(moment().isBefore(moment.unix(Number(withdrawRequest?.withdrawEnableTime))));
+  const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();
 
   useEffect(() => {
     if (withdrawRequest) {

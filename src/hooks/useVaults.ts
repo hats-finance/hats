@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { useTransactions } from "@usedapp/core";
 import {
-  updateHatsPrice,
   updateRewardsToken,
   updateTokenPrices,
   updateVaults,
@@ -13,7 +12,7 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
-import { getTokenPrice, getTokensPrices, getWithdrawSafetyPeriod } from "utils";
+import { getTokensPrices, getWithdrawSafetyPeriod } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
