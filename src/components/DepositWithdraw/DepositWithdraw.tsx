@@ -85,12 +85,10 @@ export default function DepositWithdraw(props: IProps) {
   const [userInput, setUserInput] = useState("");
   const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
   const { account } = useEthers()
-  const { data: staker, refetch: refetchStaker } = useQuery(
-    getStakerData(id, account!),
-    { fetchPolicy: "network-only" });
-  const { data: withdrawRequests, refetch: refetchWithdrawRequests } = useQuery(
-    getBeneficiaryWithdrawRequests(pid, account!),
-    { fetchPolicy: "network-only" });
+  const { data: staker } = useQuery(
+    getStakerData(id, account!), { pollInterval: 5000 });
+  const { data: withdrawRequests } = useQuery(
+    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: 5000 });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
@@ -173,13 +171,6 @@ export default function DepositWithdraw(props: IProps) {
     withdrawRequestState,
     claimRewardState,
     checkInState]
-
-  useEffect(() => {
-    if ([withdrawRequestState, withdrawAndClaimState].some(state => state.status === "Success")) {
-      refetchWithdrawRequests();
-      refetchStaker();
-    }
-  }, [withdrawRequestState, withdrawAndClaimState, refetchWithdrawRequests, refetchStaker]);
 
   const inTransaction = transactionStates.filter(state => state !== withdrawRequestState).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");

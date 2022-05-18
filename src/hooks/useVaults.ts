@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useTransactions } from "@usedapp/core";
 import {
   updateHatsPrice,
@@ -17,33 +17,32 @@ import { getTokenPrice, getTokensPrices, getWithdrawSafetyPeriod } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const apolloClient = useApolloClient();
+  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: 10000 });
+  const { data: masterData } = useQuery(GET_MASTER_DATA);
   const { vaults, tokenPrices } = useSelector(
     (state: RootState) => state.dataReducer
   );
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
-  const getMasterData = useCallback(async () => {
-    const { data } = await apolloClient.query({ query: GET_MASTER_DATA, fetchPolicy: 'no-cache' });
-    if (data) {
-      const { rewardsToken, withdrawPeriod, safetyPeriod } = data.masters[0];
+  useEffect(() => {
+    if (masterData) {
+      const { rewardsToken, withdrawPeriod, safetyPeriod } = masterData.masters[0];
       dispatch(updateRewardsToken(rewardsToken));
       dispatch(
         updateWithdrawSafetyPeriod(
           getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)
         )
       );
-      dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
+      //dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
     }
-  }, [apolloClient, dispatch]);
+  }, [masterData, dispatch]);
 
   const getVaults = useCallback(async () => {
-    const { data } = await apolloClient.query({ query: GET_VAULTS, fetchPolicy: 'no-cache' });
-    if (data) {
+    if (vaultsData) {
       dispatch(
         updateVaults(
-          (data.vaults as IVault[]).map((vault) => ({
+          (vaultsData.vaults as IVault[]).map((vault) => ({
             ...vault,
             parentVault: {
               ...vault.parentVault,
@@ -61,7 +60,7 @@ export function useVaults() {
         )
       );
     }
-  }, [apolloClient, dispatch]);
+  }, [vaultsData, dispatch]);
 
   const getPrices = useCallback(async () => {
     if (vaults) {
@@ -94,13 +93,6 @@ export function useVaults() {
       getPrices();
     }
   }, [vaults, tokenPrices, getPrices]);
-
-  useEffect(() => {
-    if (!vaults) {
-      getVaults();
-      getMasterData();
-    }
-  }, [vaults, getVaults, getMasterData]);
 
   useEffect(() => {
     if (currentTransaction == null) {
