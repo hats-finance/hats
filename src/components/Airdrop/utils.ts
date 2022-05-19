@@ -3,7 +3,7 @@ import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useDispatch } from "react-redux";
-import { TOKEN_AIRDROP_IPFS_CID } from "settings";
+//import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
@@ -21,11 +21,12 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
   const { account } = useEthers();
 
   try {
-    const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+    // TODO: Temporary disable Token Airdrop
+    //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
-    for (let key in tokenData) {
-      key = normalizeAddress(key);
-    }
+    // for (let key in tokenData) {
+    //   key = normalizeAddress(key);
+    // }
 
     const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
     const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
@@ -34,7 +35,7 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
       nftData[key] = normalizeAddress(nftData[key]);
     }
 
-    dispatch(updateAirdropData({ nft: nftData, token: tokenData }));
+    dispatch(updateAirdropData({ nft: nftData, token: {} }));
 
     // Here we check if to show the user the Airdrop Prompt or not
     if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))

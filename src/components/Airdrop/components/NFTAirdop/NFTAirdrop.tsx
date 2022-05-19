@@ -40,6 +40,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     (async () => {
       if (!deadline) {
         const deadline = await getDeadline();
+        console.log(deadline)
         setDeadline(deadline);
       }
     })();
@@ -95,11 +96,15 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
           )}
           {eligibilityStatus !== EligibilityStatus.REDEEMED && (
             <>
-              {redeemable && <Countdown endDate={deadline!} compactView />}
-              <button
-                disabled={!account || !redeemable}
-                className="action-btn redeem-btn fill"
-                onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+              {redeemable ? (
+                <>
+                  <button
+                    disabled={!account || !redeemable}
+                    className="action-btn redeem-btn fill"
+                    onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+                  <Countdown endDate={deadline!} compactView />
+                </>
+              ) : "Redeem period ended"}
             </>
           )}
         </div>

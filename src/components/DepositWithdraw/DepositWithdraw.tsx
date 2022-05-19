@@ -118,30 +118,31 @@ export default function DepositWithdraw(props: IProps) {
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
   const tokenBalance = useTokenBalance(stakingToken, account)
   const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, stakingTokenDecimals) : "-";
-  const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gte(tokenBalance) : false;
+  const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!)
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
 
-  const { send: approveToken } = useTokenApprove(stakingToken)
+  const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
 
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
-  const tryDeposit = async () => {
+
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
+  const handleDepositAndClaim = useCallback(async () => {
+    depositAndClaim(pid, userInputValue);
+  }, [pid, userInputValue, depositAndClaim])
+
+  const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
       setShowUnlimitedMessage(true);
     }
     else {
       handleDepositAndClaim();
     }
-  }
-
-  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
-  const handleDepositAndClaim = async () => {
-    depositAndClaim(pid, userInputValue);
-  }
+  }, [setShowUnlimitedMessage, handleDepositAndClaim, hasAllowance])
 
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
@@ -165,14 +166,24 @@ export default function DepositWithdraw(props: IProps) {
     checkIn(pid)
   }
 
+  useEffect(() => {
+    console.log("approveTokenState.status", approveTokenState.status);
+    if (approveTokenState.status === "Success") {
+
+      handleDepositAndClaim();
+    }
+  }, [approveTokenState, handleDepositAndClaim])
+
   const transactionStates = [
+    approveTokenState,
     depositAndClaimState,
     withdrawAndClaimState,
     withdrawRequestState,
     claimRewardState,
     checkInState]
 
-  const inTransaction = transactionStates.filter(state => state !== withdrawRequestState).some(state => state.status === 'Mining')
+  const keepModalOpen = [withdrawRequestState, approveTokenState];
+  const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
 
   useEffect(() => {
@@ -277,7 +288,6 @@ export default function DepositWithdraw(props: IProps) {
         {tab === "deposit" && showUnlimitedMessage &&
           <ApproveToken
             approveToken={handleApproveToken}
-            depositAndClaim={handleDepositAndClaim}
             userInput={userInput}
             setShowUnlimitedMessage={setShowUnlimitedMessage}
             stakingTokenDecimals={stakingTokenDecimals} />}

@@ -11,6 +11,8 @@ export default function TransactionInfo() {
   const transactionHash = currentTransaction?.transaction?.hash
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const chain = getChainById(CHAINID);
+
+  console.log(transactionHash);
   return (
     <div onClick={() => window.open(chain?.getExplorerTransactionLink(transactionHash!))} className="pending-transaction-wrapper">
       {screenSize === ScreenSize.Desktop ? "Pending Transaction" : "Pending"}

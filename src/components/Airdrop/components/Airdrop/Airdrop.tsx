@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { normalizeAddress } from "../../../../utils";
-import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
+//import TokenAirdrop from "../TokenAirdrop/TokenAirdrop";
 import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
 import { useParams } from "react-router-dom";
 import { useActions } from "actions/contractsActions";
@@ -23,8 +23,8 @@ export default function Airdrop() {
   const tokenET = useSelector((state: RootState) => state.dataReducer.airdrop?.token);
   const [nftEligibilityStatus, setNFTEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
   const [tokenId, setTokenId] = useState<string>();
-  const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
-  const [tokenAmount, setTokenAmount] = useState<number>();
+  //const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
+  //const [tokenAmount, setTokenAmount] = useState<number>();
   const [inTokenAirdop, setInTokenAirdrop] = useState(false);
 
   const checkAirdrop = useCallback(async () => {
@@ -42,22 +42,23 @@ export default function Airdrop() {
         setNFTEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
       }
 
-      if (tokenET) {
-        if (Object.keys(tokenET).includes(address)) {
-          setTokenAmount(tokenET[address]);
-          if (await hasClaimed(address)) {
-            setTokenEligibilityStatus(EligibilityStatus.REDEEMED);
-          } else {
-            setTokenEligibilityStatus(EligibilityStatus.ELIGIBLE);
-          }
-        } else {
-          setTokenEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
-        }
-      }
+      // TODO: Temporary disable Token Airdrop
+      // if (tokenET) {
+      //   if (Object.keys(tokenET).includes(address)) {
+      //     setTokenAmount(tokenET[address]);
+      //     if (await hasClaimed(address)) {
+      //       setTokenEligibilityStatus(EligibilityStatus.REDEEMED);
+      //     } else {
+      //       setTokenEligibilityStatus(EligibilityStatus.ELIGIBLE);
+      //     }
+      //   } else {
+      //     setTokenEligibilityStatus(EligibilityStatus.NOT_ELIGIBLE);
+      //   }
+      // }
 
     } else {
       setNFTEligibilityStatus(EligibilityStatus.UNKNOWN);
-      setTokenEligibilityStatus(EligibilityStatus.UNKNOWN);
+      //setTokenEligibilityStatus(EligibilityStatus.UNKNOWN);
     }
   }, [nftET, tokenET, hasClaimed, isRedeemed, userInput])
 
@@ -69,22 +70,23 @@ export default function Airdrop() {
     checkAirdrop();
   }, [userInput, checkAirdrop])
 
-  const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
-    switch (tokenEligibilityStatus) {
-      case EligibilityStatus.REDEEMED:
-      case EligibilityStatus.ELIGIBLE:
-        return (
-          <TokenAirdrop
-            address={normalizeAddress(userInput!)}
-            eligibilityStatus={tokenEligibilityStatus}
-            tokenAmount={tokenAmount!}
-            eligibleTokens={tokenET!}
-            setInTokenAirdrop={setInTokenAirdrop}
-            setTokenEligibilityStatus={setTokenEligibilityStatus} />);
-      case EligibilityStatus.NOT_ELIGIBLE:
-        return <div className="error-label">{t("Airdrop.not-eligible-token")}</div>;
-    }
-  }
+  // TODO: Temporary disable Token Airdrop
+  // const renderTokenAirdrop = (tokenEligibilityStatus: EligibilityStatus) => {
+  //   switch (tokenEligibilityStatus) {
+  //     case EligibilityStatus.REDEEMED:
+  //     case EligibilityStatus.ELIGIBLE:
+  //       return (
+  //         <TokenAirdrop
+  //           address={normalizeAddress(userInput!)}
+  //           eligibilityStatus={tokenEligibilityStatus}
+  //           tokenAmount={tokenAmount!}
+  //           eligibleTokens={tokenET!}
+  //           setInTokenAirdrop={setInTokenAirdrop}
+  //           setTokenEligibilityStatus={setTokenEligibilityStatus} />);
+  //     case EligibilityStatus.NOT_ELIGIBLE:
+  //       return <div className="error-label">{t("Airdrop.not-eligible-token")}</div>;
+  //   }
+  // }
 
   const renderNFTAirdrop = (nftEligibilityStatus: EligibilityStatus) => {
     switch (nftEligibilityStatus) {
@@ -115,7 +117,7 @@ export default function Airdrop() {
             {userInput && !isAddress(userInput) && <span className="error-label">{t("Airdrop.search-error")}</span>}
           </div>
         )}
-        {renderTokenAirdrop(tokenEligibilityStatus)}
+        {/* {renderTokenAirdrop(tokenEligibilityStatus)} */}
         {!inTokenAirdop && renderNFTAirdrop(nftEligibilityStatus)}
 
         {(!nftET || !tokenET) && <Loading />}
