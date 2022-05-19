@@ -50,10 +50,6 @@ export default function Vault(props: IProps) {
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        <img src={description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token icon" />
-        {formatWei(honeyPotBalance, 3, stakingTokenDecimals)}
-        {" "}
-        {stakingTokenSymbol}
         {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
@@ -69,7 +65,10 @@ export default function Vault(props: IProps) {
             {/* TODO: handle project-metadata and Project-metadata */}
             <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
-              <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
+              <div className="project-name">
+                {props.preview ? description["project-metadata"].name : name}
+                <div className="token-symbol">{stakingTokenSymbol}</div>
+              </div>
               {isGuest && <a className="source-name" target="_blank" rel="noopener noreferrer" href={description?.source?.url}>By {description?.source?.name}</a>}
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
