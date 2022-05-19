@@ -166,12 +166,13 @@ export default function DepositWithdraw(props: IProps) {
     checkIn(pid)
   }
 
+  // TODO: need to see what to do with handleDepositAndClaim missing from the dependancy array
   useEffect(() => {
     console.log("approveTokenState.status", approveTokenState.status);
     if (approveTokenState.status === "Success") {
       handleDepositAndClaim();
     }
-  }, [approveTokenState, handleDepositAndClaim])
+  }, [approveTokenState])
 
   const transactionStates = [
     approveTokenState,
