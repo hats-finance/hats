@@ -83,7 +83,7 @@ export default function DepositWithdraw(props: IProps) {
   const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
-  const [showUnlimitedMessage, setShowUnlimitedMessage] = useState(false);
+  const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers()
   const { data: staker } = useQuery(
     getStakerData(id, account!), { pollInterval: 5000 });
@@ -112,6 +112,7 @@ export default function DepositWithdraw(props: IProps) {
   try {
     userInputValue = parseUnits(userInput!, stakingTokenDecimals);
   } catch {
+    // TODO: do something
     // userInputValue = BigNumber.from(0);
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
@@ -137,12 +138,12 @@ export default function DepositWithdraw(props: IProps) {
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
-      setShowUnlimitedMessage(true);
+      setShowApproveSpendingModal(true);
     }
     else {
       handleDepositAndClaim();
     }
-  }, [setShowUnlimitedMessage, handleDepositAndClaim, hasAllowance])
+  }, [setShowApproveSpendingModal, handleDepositAndClaim, hasAllowance])
 
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
@@ -160,7 +161,6 @@ export default function DepositWithdraw(props: IProps) {
     claimReward(pid);
   }
 
-
   const { send: checkIn, state: checkInState } = useCheckIn(master.address)
   const handleCheckIn = () => {
     checkIn(pid)
@@ -169,7 +169,6 @@ export default function DepositWithdraw(props: IProps) {
   useEffect(() => {
     console.log("approveTokenState.status", approveTokenState.status);
     if (approveTokenState.status === "Success") {
-
       handleDepositAndClaim();
     }
   }, [approveTokenState, handleDepositAndClaim])
@@ -285,11 +284,11 @@ export default function DepositWithdraw(props: IProps) {
       {tab === "withdraw" && withdrawSafetyPeriod.isSafetyPeriod && isWithdrawable && !isPendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
       {tab === "deposit" && (isWithdrawable || isPendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
       <div className="action-btn-wrapper">
-        {tab === "deposit" && showUnlimitedMessage &&
+        {tab === "deposit" && showApproveSpendingModal &&
           <ApproveToken
             approveToken={handleApproveToken}
             userInput={userInput}
-            setShowUnlimitedMessage={setShowUnlimitedMessage}
+            hideApproveSpending={() => setShowApproveSpendingModal(false)}
             stakingTokenDecimals={stakingTokenDecimals} />}
         {tab === "deposit" &&
           <button
