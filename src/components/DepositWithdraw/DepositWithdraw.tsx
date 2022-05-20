@@ -166,14 +166,6 @@ export default function DepositWithdraw(props: IProps) {
     checkIn(pid)
   }
 
-  // TODO: need to see what to do with handleDepositAndClaim missing from the dependancy array
-  useEffect(() => {
-    console.log("approveTokenState.status", approveTokenState.status);
-    if (approveTokenState.status === "Success") {
-      handleDepositAndClaim();
-    }
-  }, [approveTokenState])
-
   const transactionStates = [
     approveTokenState,
     depositAndClaimState,
@@ -185,6 +177,13 @@ export default function DepositWithdraw(props: IProps) {
   const keepModalOpen = [withdrawRequestState, approveTokenState];
   const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
+
+  useEffect(() => {
+    console.log("approveTokenState.status", approveTokenState.status);
+    if (approveTokenState.status === "Success" && !pendingWallet) {
+      handleDepositAndClaim();
+    }
+  }, [pendingWallet, approveTokenState, handleDepositAndClaim])
 
   useEffect(() => {
     if (inTransaction)
