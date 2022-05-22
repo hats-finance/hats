@@ -41,7 +41,7 @@ export default function Honeypots() {
     return vaultValue(b) - vaultValue(a);
   }).map((vault: IVault) => {
     // TODO: We'll eliminate guest vault completely once it will be removed from the subgraph
-    if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
+    if (!vault.parentVault.liquidityPool && vault.parentVault.registered) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.description?.["project-metadata"]?.gamification) {
           gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);

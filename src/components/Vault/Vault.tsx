@@ -54,7 +54,7 @@ export default function Vault(props: IProps) {
             {/* TODO: handle project-metadata and Project-metadata */}
             <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
-              <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
+              <div className="project-name">{props.preview ? description?.["project-metadata"] : name}</div>
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>

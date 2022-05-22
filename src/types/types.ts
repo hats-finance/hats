@@ -38,10 +38,8 @@ export interface IVault {
   id: string
   name: string
   descriptionHash: string
-  description: IVaultDescription | string
-  parentDescription?: IVaultDescription | string
+  description: IVaultDescription | undefined
   parentVault: IParentVault
-  isGuest?: boolean
 }
 
 export interface IVaultDescription {
