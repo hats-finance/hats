@@ -64,14 +64,10 @@ export function useVaults() {
       const vaultsWithData = await Promise.all(
         (vaultsData.vaults as IVault[]).map(async (vault) => ({
           ...vault,
-          parentVault: {
-            ...vault.parentVault,
-            stakingToken: PROTECTED_TOKENS.hasOwnProperty(
-              vault.parentVault.stakingToken
-            )
-              ? PROTECTED_TOKENS[vault.parentVault.stakingToken]
-              : vault.parentVault.stakingToken
-          },
+          stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
+            PROTECTED_TOKENS[vault.stakingToken]
+            : vault.stakingToken
+          ,
           description: await loadVaultDescription(vault)
         })));
       console.log(vaultsWithData);
@@ -83,7 +79,7 @@ export function useVaults() {
   const getPrices = useCallback(async () => {
     if (vaults) {
       const stakingTokens = vaults?.map(
-        (vault) => vault.parentVault.stakingToken
+        (vault) => vault.stakingToken
       );
       const uniqueTokens = Array.from(new Set(stakingTokens!));
       const tokenPrices = await getTokensPrices(uniqueTokens!);
@@ -93,11 +89,11 @@ export function useVaults() {
         dispatch(
           updateVaults(
             vaults.map((vault) => {
-              const prices = tokenPrices[vault.parentVault.stakingToken];
+              const prices = tokenPrices[vault.stakingToken];
               const tokenPrice = prices ? prices["usd"] : undefined;
               return {
                 ...vault,
-                parentVault: { ...vault.parentVault, tokenPrice }
+                parentVault: { ...vault, tokenPrice }
               };
             })
           )

@@ -78,7 +78,7 @@ const PendingWithdraw = (props: IPendingWithdrawProps) => {
 
 export default function DepositWithdraw(props: IProps) {
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
-    committeeCheckedIn, depositPause } = props.data.parentVault;
+    committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
@@ -91,7 +91,7 @@ export default function DepositWithdraw(props: IProps) {
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: 5000 });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
+  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
 
   const withdrawRequest = withdrawRequests?.parentVaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
