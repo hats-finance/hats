@@ -25,6 +25,23 @@ export function usePendingReward(
   return value?.[0];
 }
 
+export function useCalcClaimRewards(
+  pid?: string,
+  severity?: number
+): {
+  hackerReward: BigNumber;
+} | undefined {
+  const { value, error } = useCall({
+    contract: new Contract(MASTER_ADDRESS, vaultAbi),
+    method: "calcClaimRewards",
+    args: [pid, severity]
+  }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value;
+}
+
 export function useTokenApprove(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: "Approve" });
 }

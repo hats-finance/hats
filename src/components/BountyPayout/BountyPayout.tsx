@@ -14,26 +14,25 @@ import { VaultContext } from "components/CommitteeTools/store";
 import { readPrivateKeyFromStoredKey } from "components/CommitteeTools/components/Decrypt/Decrypt";
 import { decrypt, readMessage } from "openpgp";
 import { useVaults } from "hooks/useVaults";
-import { usePendingApprovalClaim } from "hooks/contractHooks";
+import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
+import VaultSelector from "./VaultSelector";
 
 export default function BountyPayout() {
   const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
   const { descriptionHash } = useParams();
   const { loading, error, data } = useQuery(
-    getSubmittedClaim(descriptionHash || ""),
-    {
-      fetchPolicy: "no-cache"
-    }
-  );
+    getSubmittedClaim(descriptionHash || ""), { fetchPolicy: "no-cache" });
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
-  const [selectedVault, setSelectedVault] = useState<IVault | undefined>();
-  const [severity, setSeverity] = useState<number | undefined>();
+  const [selectedVault, setSelectedVault] = useState<string | undefined>();
+  const [selectedSeverity, setSelectedSeverity] = useState<number | undefined>();
   const [beneficiary, setBeneficiary] = useState<string | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
   const { vaults } = useVaults()
   const { send: pendingApprovalClaim } = usePendingApprovalClaim()
-  const pid = selectedVault?.parentVault.pid;
+  const vault = vaults && vaults.find(v => v.parentVault.pid === selectedVault)
+  const severities = (vault?.description as IVaultDescription)?.severities;
+  const severity = severities && severities.find(s => s.index === selectedSeverity)
 
   useEffect(() => {
     if (!loading && !error && data && data.submittedClaims) {
@@ -43,19 +42,22 @@ export default function BountyPayout() {
     }
   }, [loading, error, data]);
 
+  const { hackerReward } = useCalcClaimRewards(selectedVault, selectedSeverity) ?? {}
+  console.log({ selectedVault, selectedSeverity, hackerReward });
+
+
   const clearClaimToSubmit = () => {
     setBeneficiary(undefined);
-    setSeverity(undefined);
+    setSelectedSeverity(undefined);
     setSelectedVault(undefined);
   };
 
-
   const createPayoutTransaction = useCallback(() => {
-    pendingApprovalClaim(selectedVault?.parentVault.pid,
+    pendingApprovalClaim(selectedVault,
       beneficiary,
-      severity
+      selectedSeverity
     );
-  }, [selectedVault, beneficiary, severity, pendingApprovalClaim]);
+  }, [selectedVault, beneficiary, selectedSeverity, pendingApprovalClaim]);
 
   const tryDecryptClaim = useCallback(async (ipfsHash) => {
     // we must have the vault unlocked to try to decrypt
@@ -90,7 +92,7 @@ export default function BountyPayout() {
             return key === storedKey.publicKey
           }
         })
-        setSelectedVault(vaultOfKey);
+        setSelectedVault(vaultOfKey?.parentVault.pid);
         break;
       } catch (error) {
         // this key cannot decrypt the message, we try the next one
@@ -110,6 +112,10 @@ export default function BountyPayout() {
       <p className="bounty-payout__description">
         {t("BountyPayout.pgp-not-recognized")}
       </p>
+
+      <VaultSelector
+        onSelect={pid => setSelectedVault(pid)}
+        selected={selectedVault} />
 
       {/* Communication Channel */}
       <section className="bounty-payout__section">
@@ -164,14 +170,14 @@ export default function BountyPayout() {
               <label>{t("BountyPayout.severity")}</label>
               <Select
                 name="severity"
-                value={severity}
-                onChange={(e) => setSeverity(parseInt(e.target.value))}
-                options={((selectedVault?.description as IVaultDescription)?.severities || []).map(
+                value={selectedSeverity}
+                onChange={(e) => setSelectedSeverity(parseInt(e.target.value))}
+                options={((severities || []).map(
                   (severity) => ({
                     label: severity.name,
                     value: severity.index
                   })
-                )}
+                ))}
               />
             </div>
             <div className="payout-details__severity-desc">
@@ -192,7 +198,7 @@ export default function BountyPayout() {
             <label>{t("BountyPayout.payout")}</label>
             <div className="payout__severity">
               <p className="payout__severity-title">High severity</p>
-              <p className="payout__severity-value">300,000 USDC</p>
+              <p className="payout__severity-value">{hackerReward} USDC</p>
             </div>
             <div className="payout__severity-desc">
               {t("BountyPayout.payout-severity-desc")}
@@ -206,7 +212,7 @@ export default function BountyPayout() {
         <div style={{ display: "flex" }}>
           <button
             disabled={
-              !(pid && severity && beneficiary)
+              !(selectedVault && selectedSeverity && beneficiary)
             }
             className="fill"
             onClick={createPayoutTransaction}
