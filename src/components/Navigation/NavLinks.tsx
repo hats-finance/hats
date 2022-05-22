@@ -31,7 +31,7 @@ export default function NavLinks() {
       <NavLink to={RoutePaths.vault_editor} className={({ isActive }) =>
         (isActive ? "nav-link selected" : "nav-link hidden")}
         onClick={() => handleClick()}>Vault Editor</NavLink>
-      <NavLink to={RoutePaths.submission} className={({ isActive }) =>
+      <NavLink to={RoutePaths.payout} className={({ isActive }) =>
         (isActive ? "nav-link selected" : "nav-link hidden")}
         onClick={() => handleClick()}>Bounty Payout</NavLink>
     </>

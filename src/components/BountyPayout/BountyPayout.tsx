@@ -214,7 +214,7 @@ export default function BountyPayout() {
                 name="severity"
                 value={claimToSubmit.severity}
                 onChange={onChange}
-                options={((selectedVault?.description as IVaultDescription).severities || []).map(
+                options={((selectedVault?.description as IVaultDescription)?.severities || []).map(
                   (severity) => ({
                     label: severity.name,
                     value: severity.index
