@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef, MutableRefObject } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -177,13 +177,14 @@ export default function DepositWithdraw(props: IProps) {
   const keepModalOpen = [withdrawRequestState, approveTokenState];
   const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
+  const prevApproveTokenState = usePrevious(approveTokenState);
 
+  // after successful approve transaction immediatly call deposit and claim
   useEffect(() => {
-    console.log("approveTokenState.status", approveTokenState.status);
-    if (approveTokenState.status === "Success" && !pendingWallet) {
+    if (approveTokenState.status === "Success" && prevApproveTokenState?.status !== approveTokenState.status) {
       handleDepositAndClaim();
     }
-  }, [pendingWallet, approveTokenState, handleDepositAndClaim])
+  }, [approveTokenState, prevApproveTokenState, handleDepositAndClaim])
 
   useEffect(() => {
     if (inTransaction)
@@ -321,6 +322,16 @@ export default function DepositWithdraw(props: IProps) {
       {pendingWallet && <Loading />}
     </div>
   )
+}
+
+function usePrevious<T>(
+  value: T,
+): MutableRefObject<T | undefined>['current'] {
+  const ref = useRef<T>();
+  useEffect(() => {
+    ref.current = value;
+  }, [value]);
+  return ref.current;
 }
 
 
