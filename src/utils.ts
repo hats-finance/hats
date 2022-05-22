@@ -1,48 +1,18 @@
-import { IPFS_PREFIX, LocalStorage, Networks } from "./constants/constants";
+import { IPFS_PREFIX, LocalStorage } from "./constants/constants";
 import {
   ScreenSize,
   SMALL_SCREEN_BREAKPOINT,
   COIN_GECKO_ETHEREUM
 } from "./constants/constants";
-import { getDefaultProvider } from "@ethersproject/providers";
 import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
-import { Dispatch } from "redux";
-import { updateWalletBalance } from "./actions";
-import { getTokenBalance } from "./actions/contractsActions";
 import axios from "axios";
 import { IParentVault, IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS, NETWORK } from "./settings";
+import { MASTER_ADDRESS } from "./settings";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
-
-/**
- * Returns true if an Ethereum Provider is detected, otherwise returns false.
- * @returns {boolean}
- */
-export const isEthereumProvider = () => {
-  if (window.ethereum === undefined) {
-    return false;
-  }
-  return true;
-}
-
-/**
- * Returns true if there is a valid provider and connected to the right network, otherwise returns false
- * @param {any} proivder
- * @returns {boolean}
- */
-export const isProviderAndNetwork = (proivder: any) => {
-  if (proivder && proivder.chainId) {
-    const network = getNetworkNameByChainId(proivder.chainId);
-    if (network === NETWORK) {
-      return true;
-    }
-  }
-  return false;
-};
 
 /**
  * Adds commas to a given number
@@ -50,40 +20,6 @@ export const isProviderAndNetwork = (proivder: any) => {
  */
 export const numberWithCommas = (number: number): string => {
   return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-/**
- * Truncate an address with ellipsis dots in the middle
- * @param {string} address
- */
-export const truncatedAddress = (address: string): string => {
-  if (address.length < 10) {
-    return address;
-  }
-  return address.substr(0, 6) + "..." + address.substr(address.length - 4);
-};
-
-/**
- * Returns network name by it's chainId
- * @param {string} chainId
- */
-export const getNetworkNameByChainId = (chainId: string): Networks | string => {
-  switch (chainId) {
-    case "0x1":
-    case "1":
-      return Networks.main;
-    case "100":
-    case "0x64":
-      return Networks.xdai;
-    case "4":
-    case "0x4":
-      return Networks.rinkeby;
-    case "0x2a":
-    case "42":
-      return Networks.kovan;
-    default:
-      return `unsupported network: ${chainId}`;
-  }
 };
 
 /**
@@ -102,24 +38,6 @@ export const getScreenSize = () => {
  */
 export const getMainPath = (path: string) => {
   return path.split("/")[1];
-};
-
-/**
- * Given network and account address returns the ether balance
- * @param {Networks} network
- * @param {string} selectedAddress
- */
-export const getEtherBalance = async (
-  network: Networks,
-  selectedAddress: string
-) => {
-  try {
-    const defaultProvider = getDefaultProvider(network);
-    const balance = await defaultProvider.getBalance(selectedAddress);
-    return ethers.utils.formatEther(balance);
-  } catch (error) {
-    console.error(error);
-  }
 };
 
 /**
@@ -197,37 +115,20 @@ export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
 };
 
-/**
- * Updates the ETH and HATS wallet balance
- * @param {Dispatch} dispatch
- * @param {Networks} network
- * @param {string} selectedAddress
- * @param {string} rewardsToken
- */
-export const fetchWalletBalance = async (
-  dispatch: Dispatch,
-  network: any,
-  selectedAddress: string,
-  rewardsToken: string
-) => {
-  dispatch(updateWalletBalance(null, null));
-  dispatch(
-    updateWalletBalance(
-      await getEtherBalance(network, selectedAddress),
-      await getTokenBalance(rewardsToken, selectedAddress)
-    )
-  );
-};
-
+let lastCoinGeckoError = 0
 /**
  * Gets token price in USD using CoinGecko API
  * @param {string} tokenAddress
  */
 export const getTokenPrice = async (tokenAddress: string) => {
+  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
+    return
+  }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`);
     return data.data[Object.keys(data.data)[0]]?.usd;
   } catch (err) {
+    lastCoinGeckoError = Date.now()
     console.error(err);
   }
 };
@@ -238,10 +139,14 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @returns the prices for each given token
  */
 export const getTokensPrices = async (tokensAddresses: string[]) => {
+  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
+    return
+  }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
     return data.data;
   } catch (err) {
+    lastCoinGeckoError = Date.now()
     console.error(err);
   }
 };
@@ -266,7 +171,7 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
  * @param {IVault} vault
  * @param {number} hatsPrice
  */
-export const calculateApy = async (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
+export const calculateApy = (vault: IParentVault, hatsPrice: number, tokenPrice: number) => {
   // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
   if (Number(fromWei(vault.totalStaking)) === 0 || !tokenPrice) {
     return 0;
@@ -300,32 +205,6 @@ export const copyToClipboard = (value: string) => {
   document.execCommand("copy");
   document.body.removeChild(tempInputElement);
 };
-
-/**
- * Given a value of address or transaction and network returns the Etherscan link
- * @param {string} value
- * @param {Networks} network
- * @param {boolean} isTransaction
- */
-export const linkToEtherscan = (
-  value: string,
-  network: Networks,
-  isTransaction?: boolean
-): string => {
-  const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/${isTransaction ? "tx" : "address"}/${value}`;
-};
-
-/**
- * Given an address and a tokenID returns the Etherscan link
- * @param {string} address
- * @param {string} tokenID
- * @param {Networks} network
- */
-export const linkToTokenEtherscan = (address: string, tokenID: string, network = NETWORK): string => {
-  const prefix = network !== Networks.main ? `${network}.` : "";
-  return `https://${prefix}etherscan.io/token/${address}?a=${tokenID}`;
-}
 
 /**
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
@@ -370,41 +249,6 @@ export const isMobile = (): boolean => {
       )
     )
   );
-};
-
-/**
- * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares
- * @param {string} userShares
- * @param {string} poolBalance
- * @param {string} totalUsersShares
- */
-export const calculateAmountAvailableToWithdraw = (
-  userShares: string,
-  poolBalance: string,
-  totalUsersShares: string
-) => {
-  return BigNumber.from(userShares)
-    .mul(BigNumber.from(poolBalance))
-    .div(BigNumber.from(totalUsersShares));
-};
-
-/**
- * Calculates the value we send to the contract when a user wants to withdraw
- * @param {BigNumber} amountAvailableToWithdraw
- * @param {string} userInput The actual number the user insterted
- * @param {BigNumber} userShares
- * @param {string} decimals
- */
-export const calculateActualWithdrawValue = (
-  amountAvailableToWithdraw: BigNumber,
-  userInput: string,
-  userShares: BigNumber,
-  decimals: string
-) => {
-  return toWei(userInput, decimals)
-    .mul(userShares)
-    .div(amountAvailableToWithdraw)
-    .toString();
 };
 
 /**
@@ -492,35 +336,21 @@ export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
 
-/**
- * Get safes for a given weallet from gnosis safe api
- * @param {string} walletAddress
- */
-export const getSafesOwnedBy = async (walletAddress: string) => {
-  let api
-  switch (NETWORK) {
-    case Networks.main: api = "https://safe-transaction.gnosis.io/api/v1"; break;
-    case Networks.rinkeby: api = "https://safe-transaction.rinkeby.gnosis.io/api/v1"; break;
-  }
-  const response = await fetch(`${api}?/owners/${walletAddress}/safes/`);
-  return await response.json();
-}
-
 export const ipfsTransformUri = (uri: string) => {
-  if (uri.startsWith("ipfs")) {
-    let ipfs
+  if (!uri) {
+    return;
+  } else if (uri.startsWith("ipfs")) {
+    let ipfs;
     if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
       ipfs = uri.slice(7);
     }
     return `${IPFS_PREFIX}${ipfs}`;
-  }
-  if (uri.startsWith("http")) {
+  } else if (uri.startsWith("http")) {
+    return uri;
+  } else if (uri.startsWith("blob")) {
     return uri;
   }
-  if (uri.startsWith("blob")) {
-    return uri;
-  }
-  return `${IPFS_PREFIX}${uri}`;
+  return `${IPFS_PREFIX}/${uri}`;
 }

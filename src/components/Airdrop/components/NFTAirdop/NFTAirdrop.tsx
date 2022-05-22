@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { t } from "i18next";
-import { createTransaction, getBaseURI, getDeadline, redeemNFT } from "actions/contractsActions";
+import { useActions } from "actions/contractsActions";
 import { IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
-import { isDateBefore, isProviderAndNetwork, linkToTokenEtherscan } from "utils";
+import { isDateBefore } from "utils";
 import Image from "../../../Shared/Image/Image";
 import Countdown from "components/Shared/Countdown/Countdown";
-import { RootState } from "reducers";
 import { EligibilityStatus } from "components/Airdrop/constants";
-import { NFT_AIRDROP_ADDRESS } from "settings";
+import { CHAINID, NFT_AIRDROP_ADDRESS } from "settings";
 import OpenInIcon from "assets/icons/openIn.icon";
-import "./index.scss";
 import { hashNFT } from "components/Airdrop/utils";
+import { useEthers } from "@usedapp/core";
+import { useRedeemNFT } from "hooks/contractHooks";
+import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
+import "./index.scss";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -24,57 +25,54 @@ interface IProps {
   walletAddress: string
   eligibilityStatus: EligibilityStatus
   setEligibilityStatus: (value: EligibilityStatus) => void
-  pendingWallet: (value: boolean) => void
 }
 
-export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus, pendingWallet }: IProps) {
-  const dispatch = useDispatch();
-  const provider = useSelector((state: RootState) => state.web3Reducer.provider);
-  const [merkleTree, setMerkleTree] = useState();
+export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus }: IProps) {
+  const chain = getChainById(CHAINID);
+  const { getBaseURI, getDeadline } = useActions();
+  const { account } = useEthers();
+  const merkleTree = new MerkleTree(Object.entries(eligibleTokens).map(token => hashNFT(...token)), keccak256, { sortPairs: true });
   const [deadline, setDeadline] = useState();
-  const [redeemable, setRedeemable] = useState(false);
+  const redeemable = deadline ? isDateBefore(deadline) : false;
   const [nftData, setNftData] = useState<INFTAirdropElement>();
 
   useEffect(() => {
     (async () => {
-      const deadline = await getDeadline();
-      setDeadline(deadline);
-      setRedeemable(isDateBefore(deadline));
+      if (!deadline) {
+        const deadline = await getDeadline();
+        console.log(deadline)
+        setDeadline(deadline);
+      }
     })();
-  }, [])
-
-  useEffect(() => {
-    try {
-      setMerkleTree(new MerkleTree(Object.entries(eligibleTokens).map(token => hashNFT(...token)), keccak256, { sortPairs: true }));
-    } catch (error) {
-      console.error(error);
-    }
-  }, [eligibleTokens])
+  }, [getDeadline, getBaseURI, deadline]);
 
   useEffect(() => {
     (async () => {
       try {
-        const tokenBaseURI = await getBaseURI();
-        const data = await axios.get(`${IPFS_PREFIX}/${tokenBaseURI.substring(7)}${tokenId}`);
-        setNftData(data.data);
+        if (!nftData) {
+          const tokenBaseURI = await getBaseURI();
+          const data = await axios.get(`${IPFS_PREFIX}/${tokenBaseURI.substring(7)}${tokenId}`);
+          setNftData(data.data);
+        }
       } catch (error) {
         console.error(error);
       }
     })();
-  }, [tokenId])
+  }, [tokenId, getBaseURI, nftData]);
+
+
+  const { send: redeemNFT, state: redeemNFTState } = useRedeemNFT();
 
   const redeem = async () => {
     const proof = (merkleTree as any).getHexProof(hashNFT(tokenId, walletAddress));
-    pendingWallet(true);
-    await createTransaction(
-      async () => redeemNFT(walletAddress, tokenId, proof),
-      () => { },
-      () => { setEligibilityStatus(EligibilityStatus.REDEEMED); pendingWallet(false); },
-      () => { pendingWallet(false); },
-      dispatch,
-      t("Airdrop.NFTAirdrop.redeem-success")
-    );
+    await redeemNFT(walletAddress, tokenId, proof);
   }
+
+  useEffect(() => {
+    if (redeemNFTState.status === "Success") {
+      setEligibilityStatus(EligibilityStatus.REDEEMED);
+    }
+  }, [redeemNFTState.status, setEligibilityStatus])
 
   return (
     <fieldset className="nft-airdrop-wrapper">
@@ -82,25 +80,31 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
       <div className="nft-container-wrapper">
         <span className="nft-text">{t("Airdrop.NFTAirdrop.nft-text")}</span>
         <div className="nft-container">
-          <Image
-            source={`${IPFS_PREFIX}/${nftData?.image.substring(7)}`}
-            alt="nft"
-            className="nft-image" />
+          {nftData && (
+            <Image
+              source={`${IPFS_PREFIX}/${nftData.image.substring(7)}`}
+              alt="nft"
+              className="nft-image" />
+          )}
           {eligibilityStatus === EligibilityStatus.REDEEMED && (
             <span className="redeemed-info-wrapper">
               <span>{t("Airdrop.redeemed-link")}</span>
-              <span className="open-in-icon" onClick={() => window.open(linkToTokenEtherscan(NFT_AIRDROP_ADDRESS, tokenId))}>
+              <span className="open-in-icon" onClick={() => window.open(chain?.getExplorerAddressLink(NFT_AIRDROP_ADDRESS))}>
                 <OpenInIcon />
               </span>
             </span>
           )}
           {eligibilityStatus !== EligibilityStatus.REDEEMED && (
             <>
-              {redeemable && <Countdown endDate={deadline!} compactView />}
-              <button
-                disabled={!isProviderAndNetwork(provider) || !redeemable}
-                className="action-btn redeem-btn fill"
-                onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+              {redeemable ? (
+                <>
+                  <button
+                    disabled={!account || !redeemable}
+                    className="action-btn redeem-btn fill"
+                    onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
+                  <Countdown endDate={deadline!} compactView />
+                </>
+              ) : "Redeem period ended"}
             </>
           )}
         </div>

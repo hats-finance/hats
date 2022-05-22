@@ -9,14 +9,15 @@ import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
 import { setPath } from "components/VaultEditor/objectUtils";
 import { RootState } from "reducers";
-import { IVault } from "types/types";
-import { createPendingApprovalClaim } from "actions/contractsActions";
+import { IVault, IVaultDescription } from "types/types";
 
 import "./BountyPayout.scss";
 import { ipfsTransformUri } from "utils";
 import { VaultContext } from "components/CommitteeTools/store";
 import { readPrivateKeyFromStoredKey } from "components/CommitteeTools/components/Decrypt/Decrypt";
 import { decrypt, readMessage } from "openpgp";
+import { useVaults } from "hooks/useVaults";
+import { usePendingApprovalClaim } from "hooks/contractHooks";
 
 export interface IClaimToSubmit {
   pid: string;
@@ -36,7 +37,7 @@ export default function BountyPayout() {
   );
   const [submittedClaim, setSubmittedClaim] = useState({});
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
-  const [selectedVault, setSelectedVault] = useState<IVault>({} as IVault);
+  const [selectedVault, setSelectedVault] = useState<IVault | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
   const [vaultOfKey, setVaultOfKey] = useState<IVault | undefined>();
   const [claimToSubmit, setClaimToSubmit] = useState({
@@ -44,9 +45,8 @@ export default function BountyPayout() {
     beneficiary: "",
     severity: 0
   } as IClaimToSubmit);
-  const vaultsData = useSelector(
-    (state: RootState) => state.dataReducer.vaults
-  );
+  const { vaults } = useVaults()
+  const { send: pendingApprovalClaim } = usePendingApprovalClaim()
 
   useEffect(() => {
     if (!loading && !error && data && data.submittedClaims) {
@@ -62,22 +62,22 @@ export default function BountyPayout() {
   }, [loading, error, data]);
 
   useEffect(() => {
-    if (vaultsData.length) {
+    if (vaults?.length) {
       // Need to make the UI to select Vault - Reusable
-      setSelectedVault(vaultsData[0]);
+      setSelectedVault(vaults[0]);
       // Will select the vault from this UI and set its id to claimToSubmit
       setClaimToSubmit((prev) => {
         let newObject = { ...prev };
-        setPath(newObject, "pid", vaultsData[0].id);
+        setPath(newObject, "pid", vaults[0].id);
         setPath(
           newObject,
           "severity",
-          vaultsData[0].description?.severities[0]?.index
+          (vaults[0].description as IVaultDescription).severities[0]?.index
         );
         return newObject;
       });
     }
-  }, [vaultsData]);
+  }, [vaults]);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -93,14 +93,13 @@ export default function BountyPayout() {
     setClaimToSubmit({
       pid: selectedVault?.id || "",
       beneficiary: "",
-      severity: selectedVault?.description?.severities[0]?.index
+      severity: (selectedVault?.description as IVaultDescription)?.severities[0]?.index
     });
   };
 
+
   const createPayoutTransaction = () => {
-    createPendingApprovalClaim(
-      selectedVault.parentVault.master.address,
-      claimToSubmit.pid,
+    pendingApprovalClaim(claimToSubmit.pid,
       claimToSubmit.beneficiary,
       claimToSubmit.severity
     );
@@ -128,7 +127,7 @@ export default function BountyPayout() {
         });
         setDecryptedMessage(decrypted);
         // we need to find the vault which contains the key
-        const vaultOfKey = vaultsData.find((vault) => {
+        const vaultOfKey = vaults?.find((vault) => {
           const description = vault && (vault.isGuest ? vault.parentDescription : vault.description);
           const keyOrKeys = description?.["communication-channel"]["pgp-pk"]
           if (Array.isArray(keyOrKeys)) {
@@ -150,7 +149,7 @@ export default function BountyPayout() {
 
   useEffect(() => {
     tryDecryptClaim(descriptionHash);
-  }, [descriptionHash]);
+  }, [descriptionHash, tryDecryptClaim]);
 
   return (
     <div className="content bounty-payout">
@@ -215,7 +214,7 @@ export default function BountyPayout() {
                 name="severity"
                 value={claimToSubmit.severity}
                 onChange={onChange}
-                options={(selectedVault?.description?.severities || []).map(
+                options={((selectedVault?.description as IVaultDescription).severities || []).map(
                   (severity) => ({
                     label: severity.name,
                     value: severity.index

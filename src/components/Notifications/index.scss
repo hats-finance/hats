@@ -1,0 +1,17 @@
+@import "../../styles/constants.scss";
+
+.notifications-container {
+  position: fixed;
+  z-index: $notifications-container-z-index;
+  right: 50%;
+  transform: translateX(50%);
+  top: 0;
+  width: 500px;
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .notifications-container {
+    width: 100%;
+    top: calc(100% - 60px);
+  }
+}

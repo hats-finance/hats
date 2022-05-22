@@ -21,7 +21,6 @@ export interface IParentVault {
   withdrawRequests: Array<IPoolWithdrawRequest>
   totalUsersShares: string
   descriptionHash: string
-  guests: Array<IVault>
   hackerVestedRewardSplit: string
   hackerRewardSplit: string
   committeeRewardSplit: string
@@ -32,7 +31,6 @@ export interface IParentVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
-  apy: number // calculated on the UI - not via subgraph
   tokenPrice: number // calculated on the UI - not via subgraph
 }
 
@@ -40,11 +38,10 @@ export interface IVault {
   id: string
   name: string
   descriptionHash: string
-  description: IVaultDescription
-  bounty: string
-  isGuest: boolean
-  parentDescription?: IVaultDescription
-  parentVault: IParentVault;
+  description: IVaultDescription | string
+  parentDescription?: IVaultDescription | string
+  parentVault: IParentVault
+  isGuest?: boolean
 }
 
 export interface IVaultDescription {
@@ -53,6 +50,7 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
+    gamification?: boolean
   }
   "communication-channel": {
     "committee-bot": string
@@ -162,31 +160,6 @@ export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean
   saftyStartsAt: number
   saftyEndsAt: number
-}
-
-export interface IIncentive {
-  id: string
-  rewardToken: string
-  pool: string
-  startTime: string
-  endTime: string
-  refundee: string
-  reward: string
-  ended: boolean
-  totalRewardUnclaimed: string
-}
-
-export interface IPosition {
-  id: string
-  tokenId: string
-  owner: string
-  staked: boolean
-  oldOwner: string
-  liquidity: string
-  approved: string
-  token1: string
-  token2: string
-  canWithdraw: boolean
 }
 
 export type NFTAirdropET = { [key: string]: string };

@@ -3,18 +3,20 @@ import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
-import "../styles/Honeypots.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { ScreenSize } from "../constants/constants";
+import { useVaults } from "hooks/useVaults";
+import { fromWei } from "utils";
+import "../styles/Honeypots.scss";
 
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const vaultsData = useSelector((state: RootState) => state.dataReducer.vaults);
+  const { vaults } = useVaults();
   const [selectedVault, setSelectedVault] = useState("");
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
@@ -28,14 +30,21 @@ export default function Honeypots() {
     }
   }, [modalData])
 
-  const guestVaults: Array<JSX.Element> = [];
+  const gamificationVaults: Array<JSX.Element> = [];
 
-  const vaults = vaultsData.map((vault: IVault) => {
-    // TODO: temp to not show guest vaults
+  const vaultValue = (vault: IVault) => {
+    const { honeyPotBalance, stakingTokenDecimals, tokenPrice } = vault.parentVault;
+    return Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice
+  }
+
+  const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
+    return vaultValue(b) - vaultValue(a);
+  }).map((vault: IVault) => {
+    // TODO: We'll eliminate guest vault completely once it will be removed from the subgraph
     if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
       if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
-        if (vault.isGuest) {
-          guestVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
+        if (vault.description?.["project-metadata"]?.gamification) {
+          gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
           return null;
         }
         return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
@@ -46,7 +55,7 @@ export default function Honeypots() {
 
   return (
     <div className="content honeypots-wrapper">
-      {vaultsData.length === 0 ? <Loading fixed /> :
+      {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>
             <SafePeriodBar />
@@ -71,15 +80,16 @@ export default function Honeypots() {
                 </>
               )}
             </tr>
+            {gamificationVaults.length > 0 && (
+              <tr className="transparent-row">
+                <td colSpan={7}>Gamification vault</td>
+              </tr>
+            )}
+            {gamificationVaults}
             <tr className="transparent-row">
               <td colSpan={7}>Hats Native vaults</td>
             </tr>
-            {vaults}
-            {guestVaults.length > 0 &&
-              <tr className="transparent-row">
-                <td colSpan={7}>Hats Guest bounties</td>
-              </tr>}
-            {guestVaults}
+            {vaultsDisplay}
           </tbody>
         </table>}
       {showModal &&

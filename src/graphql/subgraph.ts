@@ -8,7 +8,6 @@ export const GET_VAULTS = gql`
       name
       descriptionHash
       description
-      bounty
       isGuest
       parentDescription
       parentVault {
@@ -80,21 +79,6 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
         shares
         depositAmount
         withdrawAmount
-      }
-    }
-  `;
-}
-
-export const getStakerAmounts = (stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { address: "${stakerAddress}" }) {
-        shares
-        depositAmount
-        withdrawAmount
-        parentVault {
-          id
-        }
       }
     }
   `;

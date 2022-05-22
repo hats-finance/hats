@@ -35,8 +35,9 @@ export default function Severity(props: IProps) {
   return (
     <>
       <div className="severity-wrapper" key={severityIndex}>
+        {/* TODO: make a rubust way to handle severities colors https://github.com/hats-finance/hats/issues/132 */}
         <div
-          className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase()}`}
+          className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase().split(' ').join('-')}`}
           onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
           <div className="severity-title">{`${severity?.name.toUpperCase()} SEVERITY`}</div>
           <div className={expanded ? "arrow open" : "arrow"}><ArrowIcon /></div>
@@ -70,7 +71,7 @@ export default function Severity(props: IProps) {
                 &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
               </span>
               {
-                screenSize === ScreenSize.Desktop && rewardPrice &&  (
+                screenSize === ScreenSize.Desktop && rewardPrice && (
                   <>
                     <span className="vault-expanded-subtitle">Prize Content Division:</span>
                     <div className="severity-prize-division-wrapper">

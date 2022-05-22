@@ -26,6 +26,15 @@
       background-color: $severity-audit-request;
       color: $white;
     }
+    &.capture-the-flag {
+      background-color: $severity-purple-1;
+    }
+    &.other-bugs {
+      background-color: $severity-purple-2;
+    }
+    &.gas-optimization {
+      background-color: $severity-purple-3;
+    }
     .severity-title {
       color: $white;
       font-weight: bold;
@@ -51,6 +60,7 @@
     padding: 10px 30px;
     border-right: 1px solid $purple-blue;
     border-left: 1px solid $purple-blue;
+    border-bottom: 1px solid $purple-blue;
     .severity-data-item {
       display: flex;
       flex-direction: column;
@@ -63,7 +73,7 @@
         font-style: italic;
         cursor: pointer;
         text-decoration: underline;
-        margin-top: 20px;
+        margin-top: auto;
         width: 100%;
         &:hover {
           opacity: 0.9;
