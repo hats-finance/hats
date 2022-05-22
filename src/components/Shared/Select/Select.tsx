@@ -5,12 +5,12 @@ import "./index.scss";
 
 interface IMultiSelectOption {
   label: string | number;
-  value: string | number;
+  value: string | number | undefined;
 }
 
 interface IProps {
   name?: string;
-  value: string | number;
+  value: string | number | undefined;
   options: IMultiSelectOption[];
   onChange: Function;
 }
