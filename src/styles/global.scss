@@ -1,10 +1,5 @@
 @import "./constants.scss";
 
-// TODO: until figuring out the issue with an iframe that appears on top of everything.
-iframe {
-  display: none !important;
-}
-
 input {
   font-family: RobotoMono;
   background-color: $purple-blue;

@@ -1,42 +1,45 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
-import { NETWORK } from "../../settings";
-import { getNetworkNameByChainId, truncatedAddress } from "../../utils";
-import millify from "millify";
-import "./WalletInfo.scss";
+import { CHAINID } from "../../settings";
 import TransactionInfo from "../TransactionInfo/TransactionInfo";
 import { ScreenSize } from "../../constants/constants";
-import useENS from "../../hooks/useENS";
 import Davatar from '@davatar/react';
+import { ChainId, shortenIfAddress, useEtherBalance, useEthers, useLookupAddress, useTokenBalance, useTransactions } from "@usedapp/core";
+import { formatEther } from "ethers/lib/utils";
+import "./WalletInfo.scss";
 
 export default function WalletInfo() {
-  const chainId = useSelector((state: RootState) => state.web3Reducer.provider?.chainId) ?? "";
-  const network = getNetworkNameByChainId(chainId);
-  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const { ethBalance } = useSelector((state: RootState) => state.web3Reducer);
-  const selectedAddress = useSelector((state: RootState) => state.web3Reducer.provider?.selectedAddress) ?? "";
-  const { ensName } = useENS(selectedAddress)
+  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const { account, chainId } = useEthers();
+  const ethBalance = formatEther(useEtherBalance(account) ?? 0);
+  const ethBalanceString = (+ethBalance).toFixed(4);
+  const correctNetwork = CHAINID === chainId;
+  const ensName = useLookupAddress();
+  const hatsBalance = formatEther(useTokenBalance(rewardsToken, account) ?? 0);
+  const hatsBalanceString = (+hatsBalance).toFixed(4);
+  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
   return (
     <div className="wallet-info-wrapper">
-      {screenSize === ScreenSize.Desktop && network === NETWORK &&
+      {screenSize === ScreenSize.Desktop && correctNetwork &&
         <div className="wallet-balance">
-          {ethBalance && <span>{`${millify(ethBalance)} ETH`}</span>}
+          {hatsBalance && <span>{hatsBalanceString} HATS&nbsp;|&nbsp;</span>}
+          {ethBalance && <span>{ethBalanceString} ETH</span>}
         </div>}
-        {inTransaction ? (
-          <TransactionInfo />
-        ) : (
-          screenSize === ScreenSize.Desktop && (
-            <div className="wallet-user">
-              <div className="davatar">
-                <Davatar size={20} address={selectedAddress} generatedAvatarType="jazzicon" />
-              </div>
-              <span>{ensName || truncatedAddress(selectedAddress)}</span>
+      {currentTransaction ? (
+        <TransactionInfo />
+      ) : (
+        screenSize === ScreenSize.Desktop && (
+          <div className="wallet-user">
+            <div className="davatar">
+              <Davatar size={20} address={account!} generatedAvatarType="jazzicon" />
             </div>
-          )
-        )}
-      {screenSize === ScreenSize.Desktop && <span className="network-name">{`${network}`}</span>}
+            <span>{ensName || shortenIfAddress(account)}</span>
+          </div>
+        )
+      )}
+      {screenSize === ScreenSize.Desktop && <span className="network-name">{ChainId[chainId!]}</span>}
     </div>
   )
 }
