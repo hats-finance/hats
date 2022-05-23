@@ -47,6 +47,11 @@ export const Subgraph = {
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4",
 }
 
+export const GnosisSafeAPI = {
+  [ChainId.Mainnet]: "https://safe-relay.mainnet.gnosis.io/api",
+  [ChainId.Rinkeby]: "https://safe-relay.rinkeby.gnosis.io/api",
+}
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
