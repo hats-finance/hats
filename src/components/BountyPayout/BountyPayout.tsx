@@ -16,6 +16,7 @@ import { decrypt, readMessage } from "openpgp";
 import { useVaults } from "hooks/useVaults";
 import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
 import VaultSelector from "./VaultSelector";
+import { formatUnits } from "@ethersproject/units";
 
 export default function BountyPayout() {
   const { t } = useTranslation();
@@ -43,8 +44,6 @@ export default function BountyPayout() {
   }, [loading, error, data]);
 
   const { hackerReward } = useCalcClaimRewards(selectedVault, selectedSeverity) ?? {}
-  console.log({ selectedVault, selectedSeverity, hackerReward });
-
 
   const clearClaimToSubmit = () => {
     setBeneficiary(undefined);
@@ -171,7 +170,11 @@ export default function BountyPayout() {
               <Select
                 name="severity"
                 value={selectedSeverity}
-                onChange={(e) => setSelectedSeverity(parseInt(e.target.value))}
+                onChange={(e) => {
+                  console.log(e.target);
+
+                  setSelectedSeverity(parseInt(e.target.value))
+                }}
                 options={((severities || []).map(
                   (severity) => ({
                     label: severity.name,
@@ -197,8 +200,11 @@ export default function BountyPayout() {
           <div className="payout__content">
             <label>{t("BountyPayout.payout")}</label>
             <div className="payout__severity">
-              <p className="payout__severity-title">High severity</p>
-              <p className="payout__severity-value">{hackerReward} USDC</p>
+              <p className="payout__severity-title">{severity ? severity.name : "Select Sevetiy"}</p>
+              <p className="payout__severity-value">{
+                hackerReward ?
+                  formatUnits(hackerReward, vault?.parentVault.stakingTokenDecimals)
+                  : "-"} {vault?.parentVault.stakingTokenSymbol}</p>
             </div>
             <div className="payout__severity-desc">
               {t("BountyPayout.payout-severity-desc")}

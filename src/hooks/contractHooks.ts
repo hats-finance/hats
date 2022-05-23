@@ -25,21 +25,25 @@ export function usePendingReward(
   return value?.[0];
 }
 
+interface IClaimRewards {
+  committeeReward: BigNumber;
+  hackerReward: BigNumber;
+}
+
 export function useCalcClaimRewards(
   pid?: string,
   severity?: number
-): {
-  hackerReward: BigNumber;
-} | undefined {
-  const { value, error } = useCall({
-    contract: new Contract(MASTER_ADDRESS, vaultAbi),
-    method: "calcClaimRewards",
-    args: [pid, severity]
-  }) ?? {};
+): IClaimRewards | undefined {
+  const { value, error } =
+    useCall({
+      contract: new Contract(MASTER_ADDRESS, vaultAbi),
+      method: "calcClaimRewards",
+      args: [pid, severity]
+    }) ?? {};
   if (error) {
     return undefined;
   }
-  return value;
+  return value?.claimRewards;
 }
 
 export function useTokenApprove(tokenAddress: string) {
