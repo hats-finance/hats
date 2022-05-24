@@ -66,12 +66,9 @@ export function useVaults() {
           ...vault,
           stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
             PROTECTED_TOKENS[vault.stakingToken]
-            : vault.stakingToken
-          ,
+            : vault.stakingToken,
           description: await loadVaultDescription(vault)
         })));
-      console.log(vaultsWithData);
-
       dispatch(updateVaults(vaultsWithData));
     }
   }, [vaultsData, dispatch]);
