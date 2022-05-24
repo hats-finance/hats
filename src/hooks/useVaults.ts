@@ -93,7 +93,7 @@ export function useVaults() {
               const tokenPrice = prices ? prices["usd"] : undefined;
               return {
                 ...vault,
-                parentVault: { ...vault, tokenPrice }
+                tokenPrice
               };
             })
           )

@@ -67,7 +67,7 @@ export const GET_MASTER_DATA = gql`
 export const getStakerData = (vaultID: string, stakerAddress: string) => {
   return gql`
     {
-      stakers (where: { parentVault: "${vaultID}", address: "${stakerAddress}" }) {
+      stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
         shares
         depositAmount
         withdrawAmount
@@ -79,7 +79,7 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
 export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
   return gql`
     {
-      parentVaults (where: { pid: "${pid}" }) {
+      vaults (where: { pid: "${pid}" }) {
         withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
           id
           beneficiary

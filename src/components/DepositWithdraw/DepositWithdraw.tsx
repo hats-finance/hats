@@ -93,7 +93,7 @@ export default function DepositWithdraw(props: IProps) {
   const [termsOfUse, setTermsOfUse] = useState(false);
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
 
-  const withdrawRequest = withdrawRequests?.parentVaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
+  const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
   const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();
 
