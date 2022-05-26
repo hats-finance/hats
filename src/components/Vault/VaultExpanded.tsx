@@ -25,8 +25,9 @@ interface IProps {
 }
 
 export default function VaultExpanded(props: IProps) {
-  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
-  const { name, description } = props.data;
+  const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit,
+    governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol,
+    description } = props.data;
   const navigate = useNavigate()
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
@@ -34,7 +35,7 @@ export default function VaultExpanded(props: IProps) {
     { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
     { title: `${stakingTokenSymbol} (Hacker reward)`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
     { title: 'Committee', value: Number(committeeRewardSplit) / 100, color: PieChartColors.committee },
-    { title: `Vested Hats for ${humanizeDuration(Number(props.data.parentVault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
+    { title: `Vested Hats for ${humanizeDuration(Number(props.data.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerHatRewardSplit) / 100, color: PieChartColors.vestedHats },
     { title: 'Governance', value: Number(governanceHatRewardSplit) / 100, color: PieChartColors.governance },
     { title: 'Swap and Burn', value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
   ];
@@ -76,14 +77,14 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={(description as IVaultDescription).committee.members} />
+                  <Members members={description!.committee.members} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
                   <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
+                  <button onClick={() => { setVulnerabilityProject(description!["project-metadata"].name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
@@ -117,7 +118,7 @@ export default function VaultExpanded(props: IProps) {
             <div className="severity-prizes-content">
               <Severities
                 severities={(description as IVaultDescription)?.severities}
-                parentVault={props.data.parentVault} />
+                vault={props.data} />
             </div>
           </div>
         </div>

@@ -11,8 +11,8 @@ import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { IVault } from "types/types";
-import { getTokensPrices, getWithdrawSafetyPeriod } from "utils";
+import { IVault, IVaultDescription } from "types/types";
+import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
@@ -37,34 +37,46 @@ export function useVaults() {
     }
   }, [masterData, dispatch]);
 
+  const fixObject = (description: any): IVaultDescription => {
+    if ("Project-metadata" in description) {
+      description["project-metadata"] = description["Project-metadata"]
+      delete description["Project-metadata"]
+    }
+    return description;
+  }
+
   const getVaults = useCallback(async () => {
+    const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
+      if (vault.descriptionHash && vault.descriptionHash !== "") {
+        try {
+          const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!)
+          const object = await dataResponse.json()
+          return fixObject(object)
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    }
+
     if (vaultsData) {
-      dispatch(
-        updateVaults(
-          (vaultsData.vaults as IVault[]).map((vault) => ({
-            ...vault,
-            parentVault: {
-              ...vault.parentVault,
-              stakingToken: PROTECTED_TOKENS.hasOwnProperty(
-                vault.parentVault.stakingToken
-              )
-                ? PROTECTED_TOKENS[vault.parentVault.stakingToken]
-                : vault.parentVault.stakingToken
-            },
-            description: JSON.parse(vault.description as string),
-            parentDescription: vault.parentDescription
-              ? JSON.parse(vault.parentDescription as string)
-              : undefined
-          }))
-        )
-      );
+      const vaultsWithData = await Promise.all(
+        (vaultsData.vaults as IVault[]).map(async (vault) => ({
+          ...vault,
+          stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
+            PROTECTED_TOKENS[vault.stakingToken]
+            : vault.stakingToken,
+          description: await loadVaultDescription(vault)
+        })));
+      dispatch(updateVaults(vaultsWithData));
     }
   }, [vaultsData, dispatch]);
 
   const getPrices = useCallback(async () => {
     if (vaults) {
       const stakingTokens = vaults?.map(
-        (vault) => vault.parentVault.stakingToken
+        (vault) => vault.stakingToken
       );
       const uniqueTokens = Array.from(new Set(stakingTokens!));
       const tokenPrices = await getTokensPrices(uniqueTokens!);
@@ -74,11 +86,11 @@ export function useVaults() {
         dispatch(
           updateVaults(
             vaults.map((vault) => {
-              const prices = tokenPrices[vault.parentVault.stakingToken];
+              const prices = tokenPrices[vault.stakingToken];
               const tokenPrice = prices ? prices["usd"] : undefined;
               return {
                 ...vault,
-                parentVault: { ...vault.parentVault, tokenPrice }
+                tokenPrice
               };
             })
           )

@@ -43,7 +43,7 @@ export const Endpoint = {
 
 export const Subgraph = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
-  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_rinkeby_v4",
+  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
 }
 
 export enum Pages {

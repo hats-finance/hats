@@ -19,14 +19,14 @@ interface IProps {
 }
 
 export default function Vault(props: IProps) {
-  const { name, description, parentVault: { tokenPrice } } = props.data;
+  const { description, tokenPrice, totalRewardAmount, honeyPotBalance,
+    withdrawRequests, stakingTokenDecimals } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
-  const { totalRewardAmount, honeyPotBalance, withdrawRequests, stakingTokenDecimals } = props.data.parentVault;
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
-  const apy = hatsPrice ? calculateApy(props.data.parentVault, hatsPrice, tokenPrice) : 0;
+  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function Vault(props: IProps) {
             {/* TODO: handle project-metadata and Project-metadata */}
             <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
             <div className="name-source-wrapper">
-              <div className="project-name">{props.preview ? description["project-metadata"].name : name}</div>
+              <div className="project-name">{description?.["project-metadata"].name}</div>
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>
