@@ -11,12 +11,27 @@ import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { IVault, IVaultDescription } from "types/types";
+import { POLL_INTERVAL } from "settings";
+import { IAdditionalToken, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
+
+/** TODO: temporary mock data */
+const ADDITIONAL_TOKENS: IAdditionalToken[] = [
+  {
+    token: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
+    tokenSymbol: "USDC",
+    tokenIcon: "https://raw.githubusercontent.com/hats-finance/icons/main/hats.svg",
+  },
+  {
+    token: "0xcf907e25e49295b27f989917df31da9f49a73515",
+    tokenSymbol: "pUMA-HV",
+    tokenIcon: "https://hats-finance.mypinata.cloud/ipfs/QmNViLny9Uz7rNCQUZ3zD8hmpLSMPUpRGDbQtfBKSqaW2K",
+  },
+];
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: 10000 });
+  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: POLL_INTERVAL });
   const { data: masterData } = useQuery(GET_MASTER_DATA);
   const { vaults, tokenPrices } = useSelector(
     (state: RootState) => state.dataReducer
@@ -42,6 +57,10 @@ export function useVaults() {
       description["project-metadata"] = description["Project-metadata"]
       delete description["Project-metadata"]
     }
+
+    /** TODO: temporary mock data */
+    description["additional-tokens"] = ADDITIONAL_TOKENS;
+
     return description;
   }
 

@@ -20,11 +20,13 @@ import Countdown from "../Shared/Countdown/Countdown";
 import ApproveToken from "./ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
+import { POLL_INTERVAL } from "settings";
+import TokenSelect from "./TokenSelect/TokenSelect";
+import Assets from "./Assets/Assets";
 
 interface IProps {
   data: IVault
   setShowModal: Function
-  isPool?: boolean
 }
 
 type Tab = "deposit" | "withdraw";
@@ -86,9 +88,9 @@ export default function DepositWithdraw(props: IProps) {
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers()
   const { data: staker } = useQuery(
-    getStakerData(id, account!), { pollInterval: 5000 });
+    getStakerData(id, account!), { pollInterval: POLL_INTERVAL });
   const { data: withdrawRequests } = useQuery(
-    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: 5000 });
+    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
@@ -238,8 +240,15 @@ export default function DepositWithdraw(props: IProps) {
               <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
             </div>
             <div className="input-wrapper">
-              {/* TODO: handle project-metadata and Project-metadata */}
-              <div className="pool-token">{props.isPool ? null : <img width="30px" src={description?.["project-metadata"]?.tokenIcon ?? description?.["Project-metadata"]?.tokenIcon} alt="token logo" />}<span>{stakingTokenSymbol}</span></div>
+              <div className="pool-token">
+                <TokenSelect
+                  stakingTokenSymbol={stakingTokenSymbol}
+                  additionalTokens={description?.["additional-tokens"] ?? []} />
+                {/* <Option value={stakingToken}>
+                    <img width="30px" src={description?.["project-metadata"]?.tokenIcon} alt="token logo" />
+                    <span>{stakingTokenSymbol}</span>
+                  </Option> */}
+              </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
             {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
@@ -247,7 +256,8 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <div className="staked-wrapper">
+        <Assets />
+        {/* <div className="staked-wrapper">
           <div>
             <span>Staked</span>
             <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
@@ -268,7 +278,7 @@ export default function DepositWithdraw(props: IProps) {
             </Tooltip>
           </span>
           <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
-        </div>
+        </div> */}
       </div>
       {tab === "withdraw" && isWithdrawable && !isPendingWithdraw &&
         <WithdrawTimer

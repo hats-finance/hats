@@ -57,6 +57,13 @@ export interface IVaultDescription {
     name: string
     url: string
   }
+  "additional-tokens"?: IAdditionalToken[];
+}
+
+export interface IAdditionalToken {
+  token: string;
+  tokenSymbol: string;
+  tokenIcon: string;
 }
 
 export interface ICommitteeMember {
