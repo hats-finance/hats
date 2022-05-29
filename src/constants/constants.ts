@@ -1,4 +1,4 @@
-import { ChainId } from "@usedapp/core";
+import { ChainId, Mainnet, Rinkeby } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -22,6 +22,11 @@ export enum RoutePaths {
   vault_editor = "/vault-editor",
   airdrop = "/airdrop",
   committee_tools = "/committee-tools"
+}
+
+export const Chains = {
+  [ChainId.Mainnet]: Mainnet,
+  [ChainId.Rinkeby]: Rinkeby
 }
 
 export const MasterAddresses = {
