@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
 import Select, { Option } from "rc-select";
 import { Colors } from "../../../constants/constants";
@@ -47,6 +47,11 @@ export default function MultiSelect(props: IProps) {
     setSelectedValue(selectedValue);
   }, [value, options])
 
+  useEffect(() => {
+    console.log("selectedValue", selectedValue);
+
+  })
+
   return (
     <div className={classNames("multi-select", {
       "multi-select--changed": changed && colorable
@@ -54,22 +59,29 @@ export default function MultiSelect(props: IProps) {
       <Select
         mode="multiple"
         value={selectedValue}
-        onSelect={(value, option) => {
-          console.log({value, option});
+        onSelect={useCallback((value, option) => {
+          console.log("onSelected", { value, option, selectedValue });
           setChanged(true)
-          // // onChange({
-          // //   target: {
-          // //     name,
-          // //     value: .map(item => item.value)
-          // //   },
-          // })
+          onChange({
+            target: {
+              name,
+              value: [...selectedValue, option].map(item => item.value)
+            },
+          })
 
-        }}
-        onDeselect={(value, option) => {
-          console.log({value, option});
+        }, [selectedValue])}
+        onDeselect={useCallback((value, option) => {
+          console.log("onDeselect", { value, option, selectedValue });
+          setChanged(true)
+          onChange({
+            target: {
+              name,
+              value: selectedValue.filter((item) => item.value !== value).map(item => item.value)
+            }
+          })
 
-        }}>
-        {options.map(option => (<Option value={option.value} >{option.label}</Option>))}
+        }, [selectedValue])}>
+        {options.map(option => (<Option key={option.value} value={option.value} >{option.label}</Option>))}
       </Select>
     </div>
   );
