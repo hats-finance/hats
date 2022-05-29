@@ -32,12 +32,11 @@ export default function WalletInfo() {
       ) : (
         screenSize === ScreenSize.Desktop && (
           <div className="wallet-user">
-            {/*<div className="davatar">*/}
-            {/*  <Davatar size={20} address={account!} generatedAvatarType="jazzicon" />*/}
-            {/*</div>*/}
+            <div className="davatar">
+              <Davatar size={20} address={account!} generatedAvatarType="jazzicon" />
+            </div>
             <span>{ens || shortenIfAddress(account)}</span>
-          </div>
-        )
+          </div>)
       )}
       {screenSize === ScreenSize.Desktop && <span className="network-name">{ChainId[chainId!]}</span>}
     </div>
