@@ -18,56 +18,72 @@ interface IProps {
 }
 
 const customStyles = {
+  menuList: (provider, state) => ({
+    padding: "0px"
+  }),
+  dropdownButton: (providers, state) => ({
+    ...providers,
+    width: "100%",
+    height: "40px",
+    margin: "0!important",
+    border: "1px solid #8afcfd",
+    borderRadius: "0",
+    background: "transparent",
+    padding: "12px 16px",
+    color: "#8afcfd"
+  }),
   indicatorsContainer: (provided, state) => ({
     ...provided,
-    display: 'none'
+    display: "none"
   }),
   control: (provided, state) => ({
     ...provided,
-    display: 'none'
+    display: "none"
   }),
   option: (provided, state) => ({
     ...provided,
-    border: '1px solid',
+    border: "1px solid",
     color: `${Colors.turquoise} !important`,
     borderColor: Colors.turquoise,
     backgroundColor: `${Colors.darkBlue} !important`,
-    minWidth: 'unset',
-    width: '100%'
-  }),
-}
+    minWidth: "unset",
+    width: "100%"
+  })
+};
 
 export default function MultiSelect(props: IProps) {
-  const [changed, setChanged] = useState(false)
+  const [changed, setChanged] = useState(false);
   const { options, name, onChange, value, colorable } = props;
   const [selectedValue, setSelectedValue] = useState<IMultiSelectOption[]>([]);
 
   useEffect(() => {
-    let selectedValue = options.filter((option) => value.includes(option.value))
+    let selectedValue = options.filter((option) =>
+      value.includes(option.value)
+    );
     setSelectedValue(selectedValue);
-  }, [value, options])
+  }, [value, options]);
 
   const onSelectChange = (e) => {
-    setChanged(true)
+    setChanged(true);
     onChange({
       target: {
         name,
-        value: e.map(item => item.value)
-      },
-    })
-  }
+        value: e.map((item) => item.value)
+      }
+    });
+  };
 
   return (
-    <div className={classNames("multi-select", {
-      "multi-select--changed": changed && colorable
-    })}>
-      <ReactMultiSelectCheckboxes
-        name={name}
-        value={selectedValue}
-        onChange={onSelectChange}
-        styles={customStyles}
-        options={options}
-      />
+    <div className={"severity-data"}>
+      <div className="severity-data-item">
+        <ReactMultiSelectCheckboxes
+          name={name}
+          value={selectedValue}
+          onChange={onSelectChange}
+          styles={customStyles}
+          options={options}
+        />
+      </div>
     </div>
   );
 }
