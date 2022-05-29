@@ -42,7 +42,7 @@ export const Endpoint = {
 }
 
 export const Subgraph = {
-  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/Hatsmainnetv5",
+  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
 }
 
