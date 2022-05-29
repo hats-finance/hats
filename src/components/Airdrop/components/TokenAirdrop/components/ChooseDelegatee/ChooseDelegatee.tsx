@@ -1,16 +1,17 @@
 
-import { getCurrentVotes } from "actions/contractsActions";
+import { ChainId } from "@usedapp/core";
+import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import classNames from "classnames";
 import { REWARDS_TOKEN, IDelegateeData } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import Modal from "components/Shared/Modal";
-import { IPFS_PREFIX, Networks } from "constants/constants";
+import { IPFS_PREFIX } from "constants/constants";
 import { t } from "i18next";
 import { useContext, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
-import { DELEGATEES_IPFS, NETWORK } from "settings";
+import { DELEGATEES_IPFS, CHAINID } from "settings";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -28,6 +29,7 @@ interface IDelegateeElementProps {
 
 const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementProps) => {
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
+  const { getCurrentVotes } = useActions();
   const [votes, setVotes] = useState<number | undefined>();
   const [showDescription, setShowDescription] = useState(false);
   const parent = useRef(null);
@@ -44,9 +46,9 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 
   useEffect(() => {
     (async () => {
-      setVotes(await getCurrentVotes(data.address, NETWORK === Networks.main ? rewardsToken : REWARDS_TOKEN));
+      setVotes(await getCurrentVotes(data.address, CHAINID === ChainId.Mainnet ? rewardsToken : REWARDS_TOKEN));
     })();
-  }, [data.address, rewardsToken])
+  }, [data.address, rewardsToken, getCurrentVotes])
 
   return (
     <div ref={parent} className={classNames("delegatee-element", { "selected": selected })}>

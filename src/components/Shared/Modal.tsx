@@ -1,8 +1,7 @@
 import React, { useCallback } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../reducers";
 import "../../styles/Shared/Modal.scss";
 import ReactDOM from "react-dom";
+import { useTransactions } from "@usedapp/core";
 
 interface IProps {
   title: string,
@@ -22,7 +21,7 @@ export default function Modal(props: IProps) {
   document.documentElement.style.setProperty("--modal-max-width", props.maxWidth ?? "600px");
   document.documentElement.style.setProperty("--modal-max-height", props.maxHeight ?? "100vh");
 
-  const inTransaction = useSelector((state: RootState) => state.layoutReducer.inTransaction);
+  const inTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
   const escapeHandler = useCallback((event) => {
     if (event.keyCode === 27 && !inTransaction) {

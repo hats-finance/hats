@@ -2,25 +2,25 @@ import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Confetti from "react-confetti";
+import { shortenAddress, useEthers } from "@usedapp/core";
 import { RootState } from "reducers";
 import { LocalStorage, RoutePaths, ScreenSize } from "../../../../constants/constants";
-import { truncatedAddress } from "../../../../utils";
 import Modal from "../../../Shared/Modal";
 import "./index.scss";
 
 interface IProps {
-  address: string;
   closePrompt: () => void;
 }
 
-export default function AirdropPrompt({ address, closePrompt }: IProps) {
+export default function AirdropPrompt({ closePrompt }: IProps) {
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const { account } = useEthers()
 
   useEffect(() => {
     const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
-    savedItems.push(address);
+    savedItems.push(account);
     localStorage.setItem(LocalStorage.Airdrop, JSON.stringify(savedItems));
-  }, [address])
+  }, [account])
 
   return (
     <Modal title="AIRDROP" setShowModal={closePrompt} height="fit-content">
@@ -30,9 +30,9 @@ export default function AirdropPrompt({ address, closePrompt }: IProps) {
         <span>You are eligible to Hats Airdrop!</span>
         <div className="wallet-address-container">
           <span>Eligible wallet address:</span>
-          <span className="wallet-address">{`${truncatedAddress(address)}`}</span>
+          <span className="wallet-address">{`${shortenAddress(account!)}`}</span>
         </div>
-        <Link to={{ pathname: RoutePaths.airdrop, search: `walletAddress=${address}` }} onClick={closePrompt} className="reveal-link">SHOW ME</Link>
+        <Link to={{ pathname: `${RoutePaths.airdrop}/${account}` }} onClick={closePrompt} className="reveal-link">SHOW ME</Link>
       </div>
     </Modal>
   )
