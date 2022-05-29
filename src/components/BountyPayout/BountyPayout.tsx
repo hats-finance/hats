@@ -31,7 +31,7 @@ export default function BountyPayout() {
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
   const { vaults } = useVaults()
   const { send: pendingApprovalClaim } = usePendingApprovalClaim()
-  const vault = vaults && vaults.find(v => v.parentVault.pid === selectedVault)
+  const vault = vaults && vaults.find(v => v.pid === selectedVault)
   const severities = (vault?.description as IVaultDescription)?.severities;
   const severity = severities && severities.find(s => s.index === selectedSeverity)
 
@@ -81,7 +81,7 @@ export default function BountyPayout() {
         setDecryptedMessage(decrypted);
         // we need to find the vault which contains the key
         const vaultOfKey = vaults?.find((vault) => {
-          const description = vault && (vault.isGuest ? vault.parentDescription : vault.description);
+          const description = vault?.description;
           const keyOrKeys = description?.["communication-channel"]["pgp-pk"]
           if (Array.isArray(keyOrKeys)) {
             const keys = keyOrKeys as string[]
@@ -91,7 +91,7 @@ export default function BountyPayout() {
             return key === storedKey.publicKey
           }
         })
-        setSelectedVault(vaultOfKey?.parentVault.pid);
+        setSelectedVault(vaultOfKey?.pid);
         break;
       } catch (error) {
         // this key cannot decrypt the message, we try the next one
@@ -203,8 +203,8 @@ export default function BountyPayout() {
               <p className="payout__severity-title">{severity ? severity.name : "Select Sevetiy"}</p>
               <p className="payout__severity-value">{
                 hackerReward ?
-                  formatUnits(hackerReward, vault?.parentVault.stakingTokenDecimals)
-                  : "-"} {vault?.parentVault.stakingTokenSymbol}</p>
+                  formatUnits(hackerReward, vault?.stakingTokenDecimals)
+                  : "-"} {vault?.stakingTokenSymbol}</p>
             </div>
             <div className="payout__severity-desc">
               {t("BountyPayout.payout-severity-desc")}

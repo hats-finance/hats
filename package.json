@@ -13,7 +13,6 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/downloadjs": "^1.4.2",
-    "@types/react": "^17.0.38",
     "@types/showdown": "^1.9.3",
     "@usedapp/coingecko": "^0.5.1",
     "@usedapp/core": "^0.12.9",

@@ -18,17 +18,17 @@ export default function VaultSelector({ onSelect, selected }: {
     const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
     const vaults = vaultsData?.map((vault: IVault, index: number) => {
-        const projectName = vault.name;
+        const projectName = vault.description?.["project-metadata"]?.name;
         // TODO: We'll eliminate guest vault completely once it will be removed from the subgraph
-        if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
+        if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.liquidityPool && vault.registered) {
             return (<tr
                 key={index}
-                className={selected === vault.parentVault.pid ? " project-row selected" : "project-row"}
-                onClick={() => onSelect(vault.parentVault.pid)} >
+                className={selected === vault.pid ? " project-row selected" : "project-row"}
+                onClick={() => onSelect(vault.pid)} >
                 {/* TODO: handle project-metadata and Project-metadata */}
                 <td className="project-name-wrapper" >
                     <img className="project-logo" src={ipfsTransformUri(vault.description?.["project-metadata"]?.icon ?? vault.description?.["Project-metadata"]?.icon)} alt="project logo" />{projectName}</td >
-                <td>{formatWei(vault.parentVault.honeyPotBalance, 3, vault.parentVault.stakingTokenDecimals)}</td>
+                <td>{formatWei(vault.honeyPotBalance, 3, vault.stakingTokenDecimals)}</td>
             </tr >
             )
         }
