@@ -1,0 +1,9 @@
+@import "../../../styles/constants.scss";
+
+.withdraw-timer-wrapper {
+  display: flex;
+  justify-content: space-between;
+  color: $white;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}

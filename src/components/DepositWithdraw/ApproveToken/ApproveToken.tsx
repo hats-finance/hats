@@ -1,7 +1,7 @@
-import LockIcon from "../../assets/icons/lock.icon";
-import "../../styles/DepositWithdraw/ApproveToken.scss";
-import { toWei } from "../../utils";
 import ReactDOM from "react-dom";
+import LockIcon from "../../../assets/icons/lock.icon";
+import { toWei } from "../../../utils";
+import "./index.scss";
 
 interface IProps {
   approveToken: Function

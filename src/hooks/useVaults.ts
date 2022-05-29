@@ -12,17 +12,19 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { POLL_INTERVAL } from "settings";
-import { IAdditionalToken, IVault, IVaultDescription } from "types/types";
+import { IAdditionalVaults, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 
 /** TODO: temporary mock data */
-const ADDITIONAL_TOKENS: IAdditionalToken[] = [
+const ADDITIONAL_VAULTS: IAdditionalVaults[] = [
   {
+    vaultId: "0xb0927b86c1493b127f04ac044956b1ba8098fc8c28ae3370a2c375510a5eec8e",
     token: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
     tokenSymbol: "USDC",
     tokenIcon: "https://raw.githubusercontent.com/hats-finance/icons/main/hats.svg",
   },
   {
+    vaultId: "0x433d22598c2275a50f2a91df3189b07603a9f32220b80c0c38663a7fb5a63fe2",
     token: "0xcf907e25e49295b27f989917df31da9f49a73515",
     tokenSymbol: "pUMA-HV",
     tokenIcon: "https://hats-finance.mypinata.cloud/ipfs/QmNViLny9Uz7rNCQUZ3zD8hmpLSMPUpRGDbQtfBKSqaW2K",
@@ -59,7 +61,7 @@ export function useVaults() {
     }
 
     /** TODO: temporary mock data */
-    description["additional-tokens"] = ADDITIONAL_TOKENS;
+    description["additional-vaults"] = ADDITIONAL_VAULTS;
 
     return description;
   }

@@ -1,28 +1,27 @@
-import { useState, useEffect, useCallback, useRef, MutableRefObject } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
-import humanizeDuration from "humanize-duration";
 import moment from "moment";
 import millify from "millify";
 import classNames from "classnames";
-import Tooltip from "rc-tooltip";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { calculateApy, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
-import InfoIcon from "../../assets/icons/info.icon";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
-import Countdown from "../Shared/Countdown/Countdown";
-import ApproveToken from "./ApproveToken";
+import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
+import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
-import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 import { POLL_INTERVAL } from "settings";
 import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
+import { PendingWithdraw } from "./PendingWithdraw/PendingWithdraw";
+import { WithdrawTimer } from "./WithdrawTimer/WithdrawTimer";
+import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, usePrevious } from "./utils";
+import "./index.scss";
 
 interface IProps {
   data: IVault
@@ -30,53 +29,6 @@ interface IProps {
 }
 
 type Tab = "deposit" | "withdraw";
-
-interface IWithdrawTimerProps {
-  expiryTime: string
-  setIsWithdrawable: Function
-}
-
-const WithdrawTimer = (props: IWithdrawTimerProps) => {
-  return (
-    <div className="withdraw-timer-wrapper">
-      <span>WITHDRAWAL AVAILABLE FOR:</span>
-      <Countdown
-        endDate={props.expiryTime}
-        compactView={true}
-        onEnd={() => {
-          props.setIsWithdrawable(false);
-        }} />
-    </div>
-  )
-}
-
-interface IPendingWithdrawProps {
-  withdrawEnableTime: string
-  expiryTime: string
-  setIsPendingWithdraw: Function
-  setIsWithdrawable: Function
-}
-
-const PendingWithdraw = (props: IPendingWithdrawProps) => {
-  const { withdrawEnableTime, expiryTime, setIsPendingWithdraw, setIsWithdrawable } = props;
-  const diff = moment.unix(Number(expiryTime)).diff(moment.unix(Number(withdrawEnableTime)), "milliseconds");
-  return (
-    <div className="pending-withdraw-timer-wrapper">
-      <span>
-        WITHDRAWAL REQUEST HASE BEEN SENT.<br /><br />
-        YOU WILL BE ABLE TO MAKE A WITHDRAWAL FOR <span>{humanizeDuration(Number(diff), { units: ["d", "h", "m"] })} PERIOD</span><br /><br />
-        WITHDRAWAL AVAILABLE WITHIN:
-      </span>
-      <Countdown
-        endDate={withdrawEnableTime}
-        onEnd={() => {
-          setIsPendingWithdraw(false);
-          setIsWithdrawable(true);
-        }}
-        textColor={Colors.yellow} />
-    </div>
-  )
-}
 
 export default function DepositWithdraw(props: IProps) {
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
@@ -86,7 +38,7 @@ export default function DepositWithdraw(props: IProps) {
   const [tab, setTab] = useState<Tab>("deposit");
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
-  const { account } = useEthers()
+  const { account } = useEthers();
   const { data: staker } = useQuery(
     getStakerData(id, account!), { pollInterval: POLL_INTERVAL });
   const { data: withdrawRequests } = useQuery(
@@ -106,7 +58,7 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [withdrawRequest]);
 
-  const { shares, depositAmount, withdrawAmount } = staker?.stakers[0] || {};
+  const { shares, depositAmount } = staker?.stakers[0] || {};
   const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
   const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, stakingTokenDecimals) : "-";
 
@@ -243,11 +195,7 @@ export default function DepositWithdraw(props: IProps) {
               <div className="pool-token">
                 <TokenSelect
                   stakingTokenSymbol={stakingTokenSymbol}
-                  additionalTokens={description?.["additional-tokens"] ?? []} />
-                {/* <Option value={stakingToken}>
-                    <img width="30px" src={description?.["project-metadata"]?.tokenIcon} alt="token logo" />
-                    <span>{stakingTokenSymbol}</span>
-                  </Option> */}
+                  additionalVaults={description?.["additional-vaults"] ?? []} />
               </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
@@ -256,15 +204,13 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <Assets />
+        <Assets
+          stakingTokenSymbol={stakingTokenSymbol}
+          additionalVaults={description?.["additional-vaults"] ?? []} />
         {/* <div className="staked-wrapper">
           <div>
             <span>Staked</span>
             <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
-          </div>
-          <div>
-            <span>Withdrawn</span>
-            <span>{withdrawAmount ? formatUnits(withdrawAmount, stakingTokenDecimals) : "-"}</span>
           </div>
         </div>
         <div className="apy-wrapper">
@@ -333,49 +279,3 @@ export default function DepositWithdraw(props: IProps) {
     </div>
   )
 }
-
-function usePrevious<T>(
-  value: T,
-): MutableRefObject<T | undefined>['current'] {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
-
-
-/**
- * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares
- * @param {string} userShares
- * @param {string} poolBalance
- * @param {string} totalUsersShares
- */
-const calculateAmountAvailableToWithdraw = (
-  userShares?: string,
-  poolBalance?: string,
-  totalUsersShares?: string
-) => {
-  if (!userShares || !poolBalance || !totalUsersShares) return undefined;
-  return BigNumber.from(userShares)
-    .mul(BigNumber.from(poolBalance))
-    .div(BigNumber.from(totalUsersShares));
-};
-
-/**
- * Calculates the value we send to the contract when a user wants to withdraw
- * @param {BigNumber} amountAvailableToWithdraw
- * @param {string} userInput The actual number the user insterted
- * @param {BigNumber} userShares
- * @param {string} decimals
- */
-const calculateActualWithdrawValue = (
-  amountAvailableToWithdraw?: BigNumber,
-  userInput?: BigNumber,
-  userShares?: BigNumber
-) => {
-  if (!amountAvailableToWithdraw || !userInput || !userShares) return undefined;
-  return userInput.mul(userShares)
-    .div(amountAvailableToWithdraw)
-    .toString();
-};

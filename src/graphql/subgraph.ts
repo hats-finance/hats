@@ -70,7 +70,6 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
       stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
         shares
         depositAmount
-        withdrawAmount
       }
     }
   `;

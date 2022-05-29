@@ -57,13 +57,14 @@ export interface IVaultDescription {
     name: string
     url: string
   }
-  "additional-tokens"?: IAdditionalToken[];
+  "additional-vaults"?: IAdditionalVaults[];
 }
 
-export interface IAdditionalToken {
+export interface IAdditionalVaults {
   token: string;
   tokenSymbol: string;
   tokenIcon: string;
+  vaultId: string;
 }
 
 export interface ICommitteeMember {
@@ -99,7 +100,6 @@ export interface IStaker {
   rewardPaid: string
   shares: string
   depositAmount: string
-  withdrawAmount: string
 }
 
 export interface IMaster {

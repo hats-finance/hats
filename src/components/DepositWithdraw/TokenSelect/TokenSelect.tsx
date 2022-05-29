@@ -1,12 +1,12 @@
-import { IAdditionalToken } from "types/types";
+import { IAdditionalVaults } from "types/types";
 
 interface IProps {
   stakingTokenSymbol: string;
-  additionalTokens: IAdditionalToken[];
+  additionalVaults: IAdditionalVaults[];
 }
 
-export default function TokenSelect({ stakingTokenSymbol, additionalTokens }: IProps) {
-  const tokens = additionalTokens.map(token => {
+export default function TokenSelect({ stakingTokenSymbol, additionalVaults }: IProps) {
+  const tokens = additionalVaults.map(token => {
     return <option>{token.tokenSymbol}</option>
   })
 
