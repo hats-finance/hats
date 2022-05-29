@@ -16,36 +16,39 @@ export default function Assets({ stakingTokenSymbol, additionalVaults }: IProps)
   const { account } = useEthers();
   //const { data: staker } = useQuery(getStakerData(id, account!));
 
-  const additionalTokens = additionalVaults.map(vault => {
+  const additionalTokens = additionalVaults.map((vault, index) => {
     return (
-      <tr>
+      <tr key={index}>
         <td>{vault.tokenSymbol}</td>
         <td>DEPOSITED</td>
         <td>APY</td>
-      </tr>)
+      </tr>
+    )
   })
 
   return (
     <table className="assets-table">
-      <tr>
-        <th className="assets-column">Assets</th>
-        <th>Staked</th>
-        <th className="apy-column">
-          <span>APY</span>
-          <Tooltip
-            overlayClassName="tooltip"
-            overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-            overlay="Estimated yearly earnings based on total staked amount and rate reward">
-            <div className="info-icon"><InfoIcon fill={Colors.white} /></div>
-          </Tooltip>
-        </th>
-      </tr>
-      <tr>
-        <td>{stakingTokenSymbol}</td>
-        <td></td>
-        <td></td>
-      </tr>
-      {additionalTokens}
+      <tbody>
+        <tr>
+          <th className="assets-column">Assets</th>
+          <th>Staked</th>
+          <th className="apy-column">
+            <span>APY</span>
+            <Tooltip
+              overlayClassName="tooltip"
+              overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+              overlay="Estimated yearly earnings based on total staked amount and rate reward">
+              <div className="info-icon"><InfoIcon fill={Colors.white} /></div>
+            </Tooltip>
+          </th>
+        </tr>
+        <tr>
+          <td>{stakingTokenSymbol}</td>
+          <td></td>
+          <td></td>
+        </tr>
+        {additionalTokens}
+      </tbody>
     </table>
   )
 }

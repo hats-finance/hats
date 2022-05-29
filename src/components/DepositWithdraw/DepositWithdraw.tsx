@@ -71,7 +71,8 @@ export default function DepositWithdraw(props: IProps) {
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
-  const tokenBalance = useTokenBalance(stakingToken, account)
+  const [selectedToken, setSelectedToken] = useState({ stakingToken: stakingToken, tokenSymbol: stakingTokenSymbol });
+  const tokenBalance = useTokenBalance(selectedToken.stakingToken, account)
   const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!)
@@ -173,8 +174,8 @@ export default function DepositWithdraw(props: IProps) {
         />}
       <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
         <div className="balance-wrapper">
-          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${stakingTokenSymbol}`}
-          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${stakingTokenSymbol}`}
+          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedToken.tokenSymbol}`}
+          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${selectedToken.tokenSymbol}`}
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
@@ -194,8 +195,10 @@ export default function DepositWithdraw(props: IProps) {
             <div className="input-wrapper">
               <div className="pool-token">
                 <TokenSelect
+                  stakingToken={stakingToken}
                   stakingTokenSymbol={stakingTokenSymbol}
-                  additionalVaults={description?.["additional-vaults"] ?? []} />
+                  additionalVaults={description?.["additional-vaults"] ?? []}
+                  onSelect={(token: string, tokenSymbol: string) => setSelectedToken({ stakingToken: token, tokenSymbol: tokenSymbol })} />
               </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
