@@ -211,13 +211,23 @@ export default function VaultEditor() {
         setContracts(newContracts);
     }
 
-    function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, payload?:{name:string, value:any}) {
+    if(payload){
+      const {name, value} = payload;
+        console.log("onContractChange", {name, value});
+        setContracts(prev => {
+            let newObject = { ...prev }
+            setPath(newObject, name, value)
+            return newObject
+        })
+    }else{
         console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)
             return newObject
         })
+    }
     }
 
     function severitiesToContracts(vaultDescription: IVaultDescription) {
