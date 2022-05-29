@@ -105,7 +105,7 @@ export function useActions() {
     try {
       return normalizeAddress(await contract.ownerOf(tokenID)) === address;
     } catch (error) {
-      return false;
+      console.error(error);
     }
   }
 
@@ -118,7 +118,7 @@ export function useActions() {
     try {
       return await contract.hasClaimed(address);
     } catch (error) {
-      return false;
+      console.error(error);
     }
   }
 
