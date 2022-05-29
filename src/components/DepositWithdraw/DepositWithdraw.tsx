@@ -20,6 +20,7 @@ import Countdown from "../Shared/Countdown/Countdown";
 import ApproveToken from "./ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
+import { POLL_INTERVAL } from "settings";
 
 interface IProps {
   data: IVault
@@ -86,9 +87,9 @@ export default function DepositWithdraw(props: IProps) {
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers()
   const { data: staker } = useQuery(
-    getStakerData(id, account!), { pollInterval: 5000 });
+    getStakerData(id, account!), { pollInterval: POLL_INTERVAL });
   const { data: withdrawRequests } = useQuery(
-    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: 5000 });
+    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
