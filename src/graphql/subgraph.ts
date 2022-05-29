@@ -4,58 +4,51 @@ export const GET_VAULTS = gql`
   query getVaults {
     vaults {
       id
-      name
       descriptionHash
-      description
-      isGuest
-      parentDescription
-      parentVault {
-        id
-        pid
-        stakingToken
-        stakingTokenDecimals
-        stakingTokenSymbol
-        totalStaking
-        honeyPotBalance
-        totalReward
-        totalRewardPaid
-        committee
-        allocPoint
-        master {
-          address
-          numberOfSubmittedClaims
-          withdrawPeriod
-          safetyPeriod
-          withdrawRequestEnablePeriod
-          withdrawRequestPendingPeriod
-          vestingHatDuration
-          vestingHatPeriods
-        }
-        numberOfApprovedClaims
-        rewardsLevels
-        totalRewardAmount
-        liquidityPool
-        registered
-        withdrawRequests {
-          id
-          beneficiary
-          withdrawEnableTime
-          createdAt
-          expiryTime
-        }
-        totalUsersShares
-        descriptionHash
-        hackerVestedRewardSplit
-        hackerRewardSplit
-        committeeRewardSplit
-        swapAndBurnSplit
-        governanceHatRewardSplit
-        hackerHatRewardSplit
-        vestingDuration
-        vestingPeriods
-        depositPause
-        committeeCheckedIn
+      pid
+      stakingToken
+      stakingTokenDecimals
+      stakingTokenSymbol
+      totalStaking
+      honeyPotBalance
+      totalReward
+      totalRewardPaid
+      committee
+      allocPoint
+      master {
+        address
+        numberOfSubmittedClaims
+        withdrawPeriod
+        safetyPeriod
+        withdrawRequestEnablePeriod
+        withdrawRequestPendingPeriod
+        vestingHatDuration
+        vestingHatPeriods
       }
+      numberOfApprovedClaims
+      rewardsLevels
+      totalRewardAmount
+      liquidityPool
+      registered
+      withdrawRequests {
+        id
+        beneficiary
+        withdrawEnableTime
+        createdAt
+        expiryTime
+      }
+      totalUsersShares
+      descriptionHash
+      hackerVestedRewardSplit
+      hackerRewardSplit
+      committeeRewardSplit
+      swapAndBurnSplit
+      governanceHatRewardSplit
+      hackerHatRewardSplit
+      vestingDuration
+      vestingPeriods
+      depositPause
+      committeeCheckedIn
     }
   }
 `;
@@ -74,7 +67,7 @@ export const GET_MASTER_DATA = gql`
 export const getStakerData = (vaultID: string, stakerAddress: string) => {
   return gql`
     {
-      stakers (where: { parentVault: "${vaultID}", address: "${stakerAddress}" }) {
+      stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
         shares
         depositAmount
         withdrawAmount
@@ -86,7 +79,7 @@ export const getStakerData = (vaultID: string, stakerAddress: string) => {
 export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
   return gql`
     {
-      parentVaults (where: { pid: "${pid}" }) {
+      vaults (where: { pid: "${pid}" }) {
         withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
           id
           beneficiary
