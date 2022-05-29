@@ -26,6 +26,7 @@
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
     "downloadjs": "^1.4.7",
+    "eth-typed-data": "^0.1.0-beta.0",
     "fs": "^0.0.1-security",
     "graphql": "^16.5.0",
     "https-browserify": "^1.0.0",
