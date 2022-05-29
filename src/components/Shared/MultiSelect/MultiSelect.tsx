@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import classNames from "classnames";
-import ReactMultiSelectCheckboxes from "react-multiselect-checkboxes";
+import Select, { Option } from "rc-select";
 import { Colors } from "../../../constants/constants";
 import "./index.scss";
 
@@ -17,25 +17,25 @@ interface IProps {
   colorable?: boolean;
 }
 
-const customStyles = {
-  indicatorsContainer: (provided, state) => ({
-    ...provided,
-    display: 'none'
-  }),
-  control: (provided, state) => ({
-    ...provided,
-    display: 'none'
-  }),
-  option: (provided, state) => ({
-    ...provided,
-    border: '1px solid',
-    color: `${Colors.turquoise} !important`,
-    borderColor: Colors.turquoise,
-    backgroundColor: `${Colors.darkBlue} !important`,
-    minWidth: 'unset',
-    width: '100%'
-  }),
-}
+// const customStyles = {
+//   indicatorsContainer: (provided, state) => ({
+//     ...provided,
+//     display: 'none'
+//   }),
+//   control: (provided, state) => ({
+//     ...provided,
+//     display: 'none'
+//   }),
+//   option: (provided, state) => ({
+//     ...provided,
+//     border: '1px solid',
+//     color: `${Colors.turquoise} !important`,
+//     borderColor: Colors.turquoise,
+//     backgroundColor: `${Colors.darkBlue} !important`,
+//     minWidth: 'unset',
+//     width: '100%'
+//   }),
+// }
 
 export default function MultiSelect(props: IProps) {
   const [changed, setChanged] = useState(false)
@@ -47,27 +47,36 @@ export default function MultiSelect(props: IProps) {
     setSelectedValue(selectedValue);
   }, [value, options])
 
-  const onSelectChange = (e) => {
-    setChanged(true)
-    onChange({
-      target: {
-        name,
-        value: e.map(item => item.value)
-      },
-    })
-  }
-
   return (
     <div className={classNames("multi-select", {
       "multi-select--changed": changed && colorable
     })}>
-      <ReactMultiSelectCheckboxes
-        name={name}
+      <Select
+        className="multi-select"
+        mode="multiple"
+        showSearch={false}
         value={selectedValue}
-        onChange={onSelectChange}
-        styles={customStyles}
-        options={options}
-      />
+        onSelect={useCallback((value, option) => {
+          setChanged(true)
+          onChange({
+            target: {
+              name,
+              value: [...selectedValue, option].map(item => item.value)
+            },
+          })
+
+        }, [selectedValue, setChanged, onChange, name])}
+        onDeselect={useCallback((value, option) => {
+          setChanged(true)
+          onChange({
+            target: {
+              name,
+              value: selectedValue.filter((item) => item.value !== value).map(item => item.value)
+            }
+          })
+        }, [selectedValue, setChanged, onChange, name])}>
+        {options.map(option => (<Option key={option.value} value={option.value} >{option.label}</Option>))}
+      </Select>
     </div>
   );
 }

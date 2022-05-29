@@ -1,5 +1,5 @@
-import { t } from "i18next";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
 
@@ -9,6 +9,7 @@ interface IProps {
 
 export default function Protocol({ setInTokenAirdrop }: IProps) {
   const { setStage } = useContext(TokenAirdropContext);
+  const { t } = useTranslation();
 
   return (
     <div className="protocol-wrapper">

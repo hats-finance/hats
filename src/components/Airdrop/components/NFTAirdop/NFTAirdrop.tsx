@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { t } from "i18next";
 import { useActions } from "actions/contractsActions";
-import { IPFS_PREFIX } from "constants/constants";
+import { Chains, IPFS_PREFIX } from "constants/constants";
 import { INFTAirdropElement, NFTAirdropET } from "types/types";
 import { isDateBefore } from "utils";
 import Image from "../../../Shared/Image/Image";
@@ -13,8 +12,8 @@ import OpenInIcon from "assets/icons/openIn.icon";
 import { hashNFT } from "components/Airdrop/utils";
 import { useEthers } from "@usedapp/core";
 import { useRedeemNFT } from "hooks/contractHooks";
-import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -28,13 +27,14 @@ interface IProps {
 }
 
 export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eligibilityStatus, setEligibilityStatus }: IProps) {
-  const chain = getChainById(CHAINID);
+  const chain = Chains[CHAINID];
   const { getBaseURI, getDeadline } = useActions();
   const { account } = useEthers();
   const merkleTree = new MerkleTree(Object.entries(eligibleTokens).map(token => hashNFT(...token)), keccak256, { sortPairs: true });
   const [deadline, setDeadline] = useState();
   const redeemable = deadline ? isDateBefore(deadline) : false;
   const [nftData, setNftData] = useState<INFTAirdropElement>();
+  const { t } = useTranslation()
 
   useEffect(() => {
     (async () => {

@@ -1,4 +1,4 @@
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink } from "@apollo/client";
 import { Provider } from "react-redux";
 import store from "./store/index";
@@ -7,18 +7,18 @@ import { Config, DAppProvider } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
 import { VaultProvider } from "components/CommitteeTools/store";
 import { getDefaultProvider } from "@ethersproject/providers";
-import { getChainById } from "@usedapp/core/dist/esm/src/helpers";
 import App from "./App";
 import { CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import NotificationProvider from "components/Notifications/NotificationProvider";
 import "./index.css";
+import { Chains } from "./constants/constants";
 
 const main_subgraph = new HttpLink({
   uri: SUBGRAPH_URI
 });
 
 let config: Config = {
-  networks: [getChainById(CHAINID)!],
+  networks: [Chains[CHAINID]],
   readOnlyChainId: CHAINID,
   readOnlyUrls: {
     [CHAINID]: ENDPOINT || getDefaultProvider(CHAINID)
@@ -30,7 +30,8 @@ const client = new ApolloClient({
   link: main_subgraph
 })
 
-ReactDOM.render(
+const root = createRoot(document.getElementById("root")!)
+root.render(
   <DAppProvider config={config}>
     <Provider store={store}>
       <ApolloProvider client={client}>
@@ -46,7 +47,7 @@ ReactDOM.render(
       </ApolloProvider>
     </Provider>
   </DAppProvider>,
-  document.getElementById("root")
+
 );
 
 /** Currently not in use - this is to support multiple subgraphs */
