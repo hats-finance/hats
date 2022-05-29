@@ -43,7 +43,7 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
 
       if (!savedItems.includes(account)) {
         const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
-        if (tokenID && account && await isRedeemed(tokenID, account) === false) { // || !await hasClaimed(account!)
+        if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
           showAirdropPrompt();
         }
       }
