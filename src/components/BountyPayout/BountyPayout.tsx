@@ -34,8 +34,6 @@ export default function BountyPayout() {
   const vault = vaults && vaults.find(v => v.pid === selectedVault)
   const severities = (vault?.description as IVaultDescription)?.severities;
   const severity = severities && severities.find(s => s.index === selectedSeverity)
-  console.log({ severities });
-
 
   useEffect(() => {
     if (!loading && !error && data && data.submittedClaims) {
