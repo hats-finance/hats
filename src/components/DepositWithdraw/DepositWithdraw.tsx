@@ -22,6 +22,7 @@ import { PendingWithdraw } from "./PendingWithdraw/PendingWithdraw";
 import { WithdrawTimer } from "./WithdrawTimer/WithdrawTimer";
 import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, usePrevious } from "./utils";
 import "./index.scss";
+import { useVaults } from "hooks/useVaults";
 
 interface IProps {
   data: IVault
@@ -32,7 +33,7 @@ type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
   const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
-    committeeCheckedIn, depositPause } = props.data;
+    committeeCheckedIn, depositPause, multipleVaults } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
@@ -194,11 +195,10 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <div className="input-wrapper">
               <div className="pool-token">
-                <TokenSelect
-                  stakingToken={stakingToken}
-                  stakingTokenSymbol={stakingTokenSymbol}
-                  additionalVaults={description?.["additional-vaults"] ?? []}
+                {multipleVaults ? <TokenSelect
+                  tokens={multipleVaults}
                   onSelect={(token: string, tokenSymbol: string) => setSelectedToken({ stakingToken: token, tokenSymbol: tokenSymbol })} />
+                  : <div>single token handling</div>}
               </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
@@ -207,9 +207,9 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <Assets
-          stakingTokenSymbol={stakingTokenSymbol}
-          additionalVaults={description?.["additional-vaults"] ?? []} />
+        {multipleVaults ? <Assets
+          tokens={multipleVaults} /> :
+          <div>single token logic</div>}
         {/* <div className="staked-wrapper">
           <div>
             <span>Staked</span>

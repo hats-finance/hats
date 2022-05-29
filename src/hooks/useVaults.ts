@@ -12,24 +12,8 @@ import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { POLL_INTERVAL } from "settings";
-import { IAdditionalVaults, IVault, IVaultDescription } from "types/types";
+import { IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
-
-/** TODO: temporary mock data */
-const ADDITIONAL_VAULTS: IAdditionalVaults[] = [
-  {
-    vaultId: "0xb0927b86c1493b127f04ac044956b1ba8098fc8c28ae3370a2c375510a5eec8e",
-    token: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
-    tokenSymbol: "USDC",
-    tokenIcon: "https://raw.githubusercontent.com/hats-finance/icons/main/hats.svg",
-  },
-  {
-    vaultId: "0x433d22598c2275a50f2a91df3189b07603a9f32220b80c0c38663a7fb5a63fe2",
-    token: "0xcf907e25e49295b27f989917df31da9f49a73515",
-    tokenSymbol: "pUMA-HV",
-    tokenIcon: "https://hats-finance.mypinata.cloud/ipfs/QmNViLny9Uz7rNCQUZ3zD8hmpLSMPUpRGDbQtfBKSqaW2K",
-  },
-];
 
 export function useVaults() {
   const dispatch = useDispatch();
@@ -59,10 +43,6 @@ export function useVaults() {
       description["project-metadata"] = description["Project-metadata"]
       delete description["Project-metadata"]
     }
-
-    /** TODO: temporary mock data */
-    description["additional-vaults"] = ADDITIONAL_VAULTS;
-
     return description;
   }
 
@@ -83,13 +63,29 @@ export function useVaults() {
 
     if (vaultsData) {
       const vaultsWithData = await Promise.all(
-        (vaultsData.vaults as IVault[]).map(async (vault) => ({
+        (vaultsData.vaults as IVault[]).map(async (vault): Promise<IVault> => ({
           ...vault,
           stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
             PROTECTED_TOKENS[vault.stakingToken]
             : vault.stakingToken,
           description: await loadVaultDescription(vault)
         })));
+
+      /// mock one vault with multiple tokens based on other vaults as additional vaults
+      const firstVault = vaultsData[0] as IVault;
+      const additionalVaults = [vaultsData[1] as IVault, vaultsData[2] as IVault];
+      firstVault.description!["additional-vaults"] = additionalVaults.map(vault => vault.pid)
+
+      for (const vault of vaultsWithData) {
+        if (vault.description?.["additional-vaults"]) {
+          const additionalPids = vault.description?.["additional-vaults"]
+          const addtionalVaults = additionalPids
+            .map(pid => vaultsWithData.find(v => v.pid === pid))
+            .filter(v => v) as IVault[]
+          vault.multipleVaults = [vault, ...additionalVaults];
+        }
+      }
+
       dispatch(updateVaults(vaultsWithData));
     }
   }, [vaultsData, dispatch]);

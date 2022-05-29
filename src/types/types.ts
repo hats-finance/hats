@@ -34,6 +34,7 @@ export interface IVault {
   depositPause: boolean
   committeeCheckedIn: boolean
   tokenPrice: number // calculated on the UI - not via subgraph
+  multipleVaults?: IVault[]
 }
 
 export interface IVaultDescription {
@@ -57,14 +58,7 @@ export interface IVaultDescription {
     name: string
     url: string
   }
-  "additional-vaults"?: IAdditionalVaults[];
-}
-
-export interface IAdditionalVaults {
-  token: string;
-  tokenSymbol: string;
-  tokenIcon: string;
-  vaultId: string;
+  "additional-vaults"?: string[];
 }
 
 export interface ICommitteeMember {

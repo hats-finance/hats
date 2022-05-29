@@ -1,16 +1,11 @@
-import { IAdditionalVaults } from "types/types";
+import { IVault } from "types/types";
 
 interface IProps {
-  stakingToken: string;
-  stakingTokenSymbol: string;
-  additionalVaults: IAdditionalVaults[];
+  tokens: IVault[]
   onSelect: (token: string, tokenSymbol: string) => void;
 }
 
-export default function TokenSelect({ stakingToken, stakingTokenSymbol, additionalVaults, onSelect }: IProps) {
-  const tokens = additionalVaults.map((token, index) => {
-    return <option key={index} value={token.token}>{token.tokenSymbol}</option>
-  })
+export default function TokenSelect({ tokens, onSelect }: IProps) {
 
   const handleSelect = (e) => {
     const index = e.nativeEvent.target.selectedIndex;
@@ -19,8 +14,9 @@ export default function TokenSelect({ stakingToken, stakingTokenSymbol, addition
 
   return (
     <select onChange={handleSelect}>
-      <option value={stakingToken}>{stakingTokenSymbol}</option>
-      {tokens}
+      {tokens.map((token, index) => {
+        return <option key={index} value={token.stakingToken}>{token.stakingTokenSymbol}</option>
+      })}
     </select>
   )
 }

@@ -4,22 +4,21 @@ import InfoIcon from "assets/icons/info.icon";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { getStakerData } from "graphql/subgraph";
 import Tooltip from "rc-tooltip";
-import { IAdditionalVaults } from "types/types";
+import { IVault } from "types/types";
 import "./index.scss";
 
 interface IProps {
-  stakingTokenSymbol: string;
-  additionalVaults: IAdditionalVaults[];
+  tokens: IVault[]; // each vault represents a token
 }
 
-export default function Assets({ stakingTokenSymbol, additionalVaults }: IProps) {
+export default function Assets({ tokens }: IProps) {
   const { account } = useEthers();
   //const { data: staker } = useQuery(getStakerData(id, account!));
 
-  const additionalTokens = additionalVaults.map((vault, index) => {
+  const additionalTokens = tokens.map((vault, index) => {
     return (
       <tr key={index}>
-        <td>{vault.tokenSymbol}</td>
+        <td>{vault.stakingTokenSymbol}</td>
         <td>DEPOSITED</td>
         <td>APY</td>
       </tr>
@@ -43,7 +42,7 @@ export default function Assets({ stakingTokenSymbol, additionalVaults }: IProps)
           </th>
         </tr>
         <tr>
-          <td>{stakingTokenSymbol}</td>
+          <td>{/*stakingTokenSymbol*/}</td>
           <td></td>
           <td></td>
         </tr>
