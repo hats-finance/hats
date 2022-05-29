@@ -22,7 +22,6 @@ import { PendingWithdraw } from "./PendingWithdraw/PendingWithdraw";
 import { WithdrawTimer } from "./WithdrawTimer/WithdrawTimer";
 import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, usePrevious } from "./utils";
 import "./index.scss";
-import { useVaults } from "hooks/useVaults";
 
 interface IProps {
   data: IVault
