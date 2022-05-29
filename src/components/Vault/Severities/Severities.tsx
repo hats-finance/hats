@@ -1,11 +1,11 @@
 
 import { useState } from "react";
-import { IParentVault, ISeverity } from "../../../types/types";
+import { IVault, ISeverity } from "../../../types/types";
 import Severity from "./Severity";
 
 interface IProps {
   severities: Array<ISeverity>
-  parentVault: IParentVault
+  vault: IVault
 }
 
 export default function Severities(props: IProps) {
@@ -16,7 +16,7 @@ export default function Severities(props: IProps) {
       <Severity
         key={index}
         severity={severity}
-        parentVault={props.parentVault}
+        vault={props.vault}
         severityIndex={index}
         expanded={expandedSeverityIndex === index}
         expandedSeverityIndex={expandedSeverityIndex}

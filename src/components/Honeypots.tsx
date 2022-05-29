@@ -33,7 +33,7 @@ export default function Honeypots() {
   const gamificationVaults: Array<JSX.Element> = [];
 
   const vaultValue = (vault: IVault) => {
-    const { honeyPotBalance, stakingTokenDecimals, tokenPrice } = vault.parentVault;
+    const { honeyPotBalance, stakingTokenDecimals, tokenPrice } = vault;
     return Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice
   }
 
@@ -41,8 +41,8 @@ export default function Honeypots() {
     return vaultValue(b) - vaultValue(a);
   }).map((vault: IVault) => {
     // TODO: We'll eliminate guest vault completely once it will be removed from the subgraph
-    if (!vault.parentVault.liquidityPool && vault.parentVault.registered && !vault.isGuest) {
-      if (vault.name.toLowerCase().includes(userSearch.toLowerCase())) {
+    if (!vault.liquidityPool && vault.registered) {
+      if (vault?.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.description?.["project-metadata"]?.gamification) {
           gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
           return null;

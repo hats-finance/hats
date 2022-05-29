@@ -1,5 +1,8 @@
-export interface IParentVault {
+
+export interface IVault {
   id: string
+  descriptionHash: string
+  description: IVaultDescription | undefined
   pid: string
   stakingToken: string
   stakingTokenDecimals: string
@@ -20,7 +23,6 @@ export interface IParentVault {
   registered: boolean
   withdrawRequests: Array<IPoolWithdrawRequest>
   totalUsersShares: string
-  descriptionHash: string
   hackerVestedRewardSplit: string
   hackerRewardSplit: string
   committeeRewardSplit: string
@@ -32,16 +34,6 @@ export interface IParentVault {
   depositPause: boolean
   committeeCheckedIn: boolean
   tokenPrice: number // calculated on the UI - not via subgraph
-}
-
-export interface IVault {
-  id: string
-  name: string
-  descriptionHash: string
-  description: IVaultDescription | string
-  parentDescription?: IVaultDescription | string
-  parentVault: IParentVault
-  isGuest?: boolean
 }
 
 export interface IVaultDescription {
@@ -96,7 +88,7 @@ export interface IStaker {
   pid: string
   createdAt: string
   address: string
-  parentVault: IParentVault
+  vault: IVault
   rewardPaid: string
   shares: string
   depositAmount: string
@@ -112,7 +104,7 @@ export interface IMaster {
   totalRewardPaid: string
   rewardPerBlock: string
   startBlock: string
-  parentVaults: Array<IParentVault>
+  vaults: Array<IVault>
   totalAllocPoints: string
   createdAt: string
   rewardsToken: string
@@ -137,7 +129,7 @@ export interface ISubmittedClaim {
 export interface IApprovedClaims {
   id: string
   approver: string
-  parentVault: IParentVault
+  vault: IVault
   beneficiary: string
   severity: string
   hackerReward: string
