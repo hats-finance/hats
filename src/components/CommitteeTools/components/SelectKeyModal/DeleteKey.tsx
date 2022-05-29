@@ -1,7 +1,7 @@
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { IStoredKey } from "../../../../types/types";
 import { VaultContext } from "../../store";
-import { t } from "i18next";
 
 function DeleteKey({
   keyToDelete,
@@ -10,6 +10,7 @@ function DeleteKey({
   keyToDelete: IStoredKey;
   onFinish: () => any;
 }) {
+  const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
 
   return (

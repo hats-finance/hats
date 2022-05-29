@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
@@ -15,6 +14,7 @@ import { isMobile } from "web3modal";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import "./VaultExpanded.scss";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   data: IVault
@@ -25,6 +25,7 @@ interface IProps {
 }
 
 export default function VaultExpanded(props: IProps) {
+  const { t } = useTranslation();
   const { id, hackerVestedRewardSplit, hackerRewardSplit, committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.data.parentVault;
   const { name, description } = props.data;
   const navigate = useNavigate()

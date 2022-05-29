@@ -1,7 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { Colors } from "../../constants/constants";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import Countdown from "../Shared/Countdown/Countdown";
@@ -16,6 +16,7 @@ interface IProps {
 }
 
 export default function VaultAction(props: IProps) {
+  const { t } = useTranslation();
   const { account } = useEthers();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
   const [isPendingWithdraw, setIsPendingWithdraw] = useState(false);

@@ -1,11 +1,12 @@
 import CopyToClipboard from "components/Shared/CopyToClipboard";
 import CheckboxIcon from "assets/icons/checkbox.svg";
-import { t } from "i18next";
 import { useState } from "react";
 import classNames from "classnames";
 import { IStoredKey } from "types/types";
+import { useTranslation } from "react-i18next";
 
 export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey, onFinish: () => void }) {
+    const { t } = useTranslation();
     const [sentPublicChecked, setSentPublicChecked] = useState<boolean>();
     return (
         <>

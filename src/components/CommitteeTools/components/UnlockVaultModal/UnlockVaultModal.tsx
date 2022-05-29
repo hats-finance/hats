@@ -1,10 +1,11 @@
 import { useContext, useState } from "react";
 import Modal from "components/Shared/Modal";
 import { VaultContext } from "../../store";
-import { t } from "i18next";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 export default function UnlockVaultModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
   const vaultContext = useContext(VaultContext);
