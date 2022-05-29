@@ -47,20 +47,16 @@ export default function MultiSelect(props: IProps) {
     setSelectedValue(selectedValue);
   }, [value, options])
 
-  useEffect(() => {
-    console.log("selectedValue", selectedValue);
-
-  })
-
   return (
     <div className={classNames("multi-select", {
       "multi-select--changed": changed && colorable
     })}>
       <Select
+        className="multi-select"
         mode="multiple"
+        showSearch={false}
         value={selectedValue}
         onSelect={useCallback((value, option) => {
-          console.log("onSelected", { value, option, selectedValue });
           setChanged(true)
           onChange({
             target: {
@@ -69,9 +65,8 @@ export default function MultiSelect(props: IProps) {
             },
           })
 
-        }, [selectedValue])}
+        }, [selectedValue, setChanged, onChange, name])}
         onDeselect={useCallback((value, option) => {
-          console.log("onDeselect", { value, option, selectedValue });
           setChanged(true)
           onChange({
             target: {
@@ -79,8 +74,7 @@ export default function MultiSelect(props: IProps) {
               value: selectedValue.filter((item) => item.value !== value).map(item => item.value)
             }
           })
-
-        }, [selectedValue])}>
+        }, [selectedValue, setChanged, onChange, name])}>
         {options.map(option => (<Option key={option.value} value={option.value} >{option.label}</Option>))}
       </Select>
     </div>
