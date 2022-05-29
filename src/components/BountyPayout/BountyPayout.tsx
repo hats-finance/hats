@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { getSubmittedClaim } from "graphql/subgraph";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
-import Select from "components/Shared/Select/Select";
 import PgpKey from "components/VaultEditor/PgpKey";
-import { IVault, IVaultDescription } from "types/types";
+import { IVaultDescription } from "types/types";
 
 import "./BountyPayout.scss";
 import { ipfsTransformUri } from "utils";
@@ -17,6 +16,7 @@ import { useVaults } from "hooks/useVaults";
 import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
 import VaultSelector from "./VaultSelector";
 import { formatUnits } from "@ethersproject/units";
+import Select, { Option } from "rc-select";
 
 export default function BountyPayout() {
   const { t } = useTranslation();
@@ -34,6 +34,8 @@ export default function BountyPayout() {
   const vault = vaults && vaults.find(v => v.pid === selectedVault)
   const severities = (vault?.description as IVaultDescription)?.severities;
   const severity = severities && severities.find(s => s.index === selectedSeverity)
+  console.log({ severities });
+
 
   useEffect(() => {
     if (!loading && !error && data && data.submittedClaims) {
@@ -78,7 +80,7 @@ export default function BountyPayout() {
           message,
           decryptionKeys: privateKey
         });
-        setDecryptedMessage(decrypted);
+        setDecryptedMessage(decrypted as string);
         // we need to find the vault which contains the key
         const vaultOfKey = vaults?.find((vault) => {
           const description = vault?.description;
@@ -168,20 +170,19 @@ export default function BountyPayout() {
             <div className="payout-details__severity">
               <label>{t("BountyPayout.severity")}</label>
               <Select
-                name="severity"
-                value={selectedSeverity}
-                onChange={(e) => {
-                  console.log(e.target);
-
-                  setSelectedSeverity(parseInt(e.target.value))
+                mode="combobox"
+                showSearch={false}
+                value={String(selectedSeverity)}
+                onChange={(value) => {
+                  console.log("onChange", value, parseInt(value));
+                  setSelectedSeverity(parseInt(value));
                 }}
-                options={((severities || []).map(
-                  (severity) => ({
-                    label: severity.name,
-                    value: severity.index
-                  })
+              >
+                {severities?.map((severity, index) => (
+                  <Option key={index} value={String(severity.index)}>{severity.name}</Option>
                 ))}
-              />
+              </Select>
+
             </div>
             <div className="payout-details__severity-desc">
               <label>{t("BountyPayout.severity-description")}</label>
@@ -200,7 +201,7 @@ export default function BountyPayout() {
           <div className="payout__content">
             <label>{t("BountyPayout.payout")}</label>
             <div className="payout__severity">
-              <p className="payout__severity-title">{severity ? severity.name : "Select Sevetiy"}</p>
+              <p className="payout__severity-title">{severity ? severity.name : "Select Severity"}</p>
               <p className="payout__severity-value">{
                 hackerReward ?
                   formatUnits(hackerReward, vault?.stakingTokenDecimals)
