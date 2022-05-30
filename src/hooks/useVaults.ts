@@ -71,19 +71,10 @@ export function useVaults() {
           description: await loadVaultDescription(vault)
         })));
 
-      /// mock one vault with multiple tokens based on other vaults as additional vaults
-      const firstVault = vaultsData[0] as IVault;
-      const additionalVaults = [vaultsData[1] as IVault, vaultsData[2] as IVault];
-      firstVault.description!["additional-vaults"] = additionalVaults.map(vault => vault.pid)
-
-      for (const vault of vaultsWithData) {
-        if (vault.description?.["additional-vaults"]) {
-          const additionalPids = vault.description?.["additional-vaults"]
-          const addtionalVaults = additionalPids
-            .map(pid => vaultsWithData.find(v => v.pid === pid))
-            .filter(v => v) as IVault[]
-          vault.multipleVaults = [vault, ...additionalVaults];
-        }
+      // mock one vault with multiple tokens based on other vaults as additional vaults
+      vaultsWithData[1].multipleVaults = [vaultsWithData[2], vaultsWithData[3]];
+      if (vaultsWithData[1].description) {
+        vaultsWithData[1].description["additional-vaults"] = [vaultsWithData[2].pid, vaultsWithData[3].pid];
       }
 
       dispatch(updateVaults(vaultsWithData));

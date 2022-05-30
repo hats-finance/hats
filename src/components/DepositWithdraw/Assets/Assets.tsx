@@ -8,14 +8,15 @@ import { IVault } from "types/types";
 import "./index.scss";
 
 interface IProps {
-  tokens: IVault[]; // each vault represents a token
+  tokens: IVault[] | undefined; // each vault represents a token
+  stakingTokenSymbol: string;
 }
 
-export default function Assets({ tokens }: IProps) {
+export default function Assets({ tokens, stakingTokenSymbol }: IProps) {
   const { account } = useEthers();
   //const { data: staker } = useQuery(getStakerData(id, account!));
 
-  const additionalTokens = tokens.map((vault, index) => {
+  const additionalTokens = tokens?.map((vault, index) => {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
@@ -42,7 +43,7 @@ export default function Assets({ tokens }: IProps) {
           </th>
         </tr>
         <tr>
-          <td>{/*stakingTokenSymbol*/}</td>
+          <td>{stakingTokenSymbol}</td>
           <td></td>
           <td></td>
         </tr>

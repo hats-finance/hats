@@ -194,10 +194,12 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <div className="input-wrapper">
               <div className="pool-token">
-                {multipleVaults ? <TokenSelect
+                <TokenSelect
+                  tokenIcon={description?.["project-metadata"].tokenIcon}
+                  stakingToken={stakingToken}
+                  stakingTokenSymbol={stakingTokenSymbol}
                   tokens={multipleVaults}
                   onSelect={(token: string, tokenSymbol: string) => setSelectedToken({ stakingToken: token, tokenSymbol: tokenSymbol })} />
-                  : <div>single token handling</div>}
               </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
@@ -206,9 +208,9 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        {multipleVaults ? <Assets
-          tokens={multipleVaults} /> :
-          <div>single token logic</div>}
+        <Assets
+          tokens={multipleVaults}
+          stakingTokenSymbol={stakingTokenSymbol} />
         {/* <div className="staked-wrapper">
           <div>
             <span>Staked</span>
