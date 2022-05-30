@@ -2,8 +2,7 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL",
-      "no-ethereum": "No Ethereum provider detected. Please install one or try a different browser"
+      "cancel": "CANCEL"
     },
     "Welcome": {
       "title": "Hats",
@@ -93,7 +92,7 @@
       },
       "NFTAirdrop": {
         "your-nft": "CROW CLAN NFT AIRDROP",
-        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop“The crow clan”.",
+        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop “The crow clan.",
         "redeem-success": "NFT redeemed successfully"
       }
     },

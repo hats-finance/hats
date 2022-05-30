@@ -1,9 +1,10 @@
+import { useEthers } from "@usedapp/core";
+import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import { ethers } from "ethers";
-import { Dispatch } from "redux";
-import { TOKEN_AIRDROP_IPFS_CID } from "settings";
+import { useDispatch } from "react-redux";
+//import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
-import { getMerkleTree, hasClaimed, isRedeemed } from "../../actions/contractsActions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
 import { normalizeAddress } from "../../utils";
 import { Delegation, EIP712Domain } from "./constants";
@@ -14,11 +15,14 @@ import { Delegation, EIP712Domain } from "./constants";
  * @param {Function} showAirdropPrompt 
  * @param {Dispatch} dispatch
  */
-export const fetchAirdropData = async (selectedAddress: string, showAirdropPrompt: () => void, dispatch: Dispatch) => {
-  try {
+export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
+  const dispatch = useDispatch();
+  const { getMerkleTree, isRedeemed } = useActions(); //hasClaimed
+  const { account } = useEthers();
 
-    // TODO: tokenData is temporary disabled
-    // const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+  try {
+    // TODO: Temporary disable Token Airdrop
+    //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
     // for (let key in tokenData) {
     //   key = normalizeAddress(key);
@@ -33,16 +37,13 @@ export const fetchAirdropData = async (selectedAddress: string, showAirdropPromp
 
     dispatch(updateAirdropData({ nft: nftData, token: {} }));
 
-
     // Here we check if to show the user the Airdrop Prompt or not
-    // TODO: tokenData is temporary disabled
-    //  || Object.keys(tokenData).includes(selectedAddress)
-    if (Object.values(nftData).includes(selectedAddress)) {
+    if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))
       const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
 
-      if (!savedItems.includes(selectedAddress)) {
-        const tokenID = Object.keys(nftData).find(key => nftData[key] === selectedAddress);
-        if (!await isRedeemed(tokenID!, selectedAddress) || !await hasClaimed(selectedAddress)) {
+      if (!savedItems.includes(account)) {
+        const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
+        if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
           showAirdropPrompt();
         }
       }
