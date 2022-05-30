@@ -51,8 +51,7 @@ export default function Vault(props: IProps) {
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
-            {/* TODO: handle project-metadata and Project-metadata */}
-            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
+            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
             <div className="name-source-wrapper">
               <div className="project-name">{description?.["project-metadata"].name}</div>
               {screenSize === ScreenSize.Mobile && maxRewards}
