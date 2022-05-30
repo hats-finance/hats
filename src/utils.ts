@@ -336,7 +336,7 @@ export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
 
-export const ipfsTransformUri = (uri: string) => {
+export const ipfsTransformUri = (uri: string | undefined) => {
   if (!uri) {
     return;
   } else if (uri.startsWith("ipfs")) {

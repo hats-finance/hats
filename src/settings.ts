@@ -15,7 +15,7 @@ export const DELEGATEES_IPFS = process.env.REACT_APP_DELEGATEES_IPFS || TokenAir
 export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_CID || TokenAirdropCID[CHAINID];
 
 /** TODO: temporary until we'll eliminate the polling */
-export const POLL_INTERVAL = 1000000000;
+export const POLL_INTERVAL = 100000;
 
 /** Currently not in use */
 export const INFURA_ID = process.env.REACT_APP_INFURA_ID || "";
