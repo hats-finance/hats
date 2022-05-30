@@ -73,7 +73,6 @@ export default function Honeypots() {
               {screenSize === ScreenSize.Desktop && (
                 <>
                   <th>TOTAL VAULT</th>
-                  <th>PRIZE GIVEN</th>
                   <th>APY</th>
                   <th></th>
                 </>
