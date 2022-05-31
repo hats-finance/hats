@@ -2,34 +2,29 @@ import { IVault } from "types/types";
 import "./index.scss";
 
 interface IProps {
-  tokenIcon: string | undefined;
-  stakingToken: string;
-  stakingTokenSymbol: string;
-  tokens: IVault[] | undefined;
-  onSelect: (token: string, tokenSymbol: string) => void;
+  vault: IVault
+  onSelect: (pid: string) => void;
 }
 
-export default function TokenSelect({ tokens, onSelect, stakingToken, stakingTokenSymbol, tokenIcon }: IProps) {
+export default function TokenSelect({ vault, onSelect }: IProps) {
 
   const handleSelect = (e) => {
-    const index = e.nativeEvent.target.selectedIndex;
-    onSelect(e.target.value, e.nativeEvent.target[index].text);
+    onSelect(e.target.value);
   }
 
   return (
     <div className="token-select-wrapper">
-      {!tokens ? (
-        <div className="token-icon-wrapper">
-          <img src={tokenIcon} className="token-icon" alt="token icon" />
-          {stakingTokenSymbol}
-        </div>
-      ) : (
+      {vault.multipleVaults ? (
         <select onChange={handleSelect}>
-          <option value={stakingToken}>{stakingTokenSymbol}</option>
-          {tokens?.map((token, index) => {
-            return <option key={index} value={token.stakingToken}>{token.stakingTokenSymbol}</option>
+          {vault.multipleVaults?.map((vault, index) => {
+            return <option key={index} value={vault.pid}>{vault.stakingTokenSymbol}</option>
           })}
         </select>
+      ) : (
+        <div className="token-icon-wrapper">
+          <img src={vault.description?.["project-metadata"].tokenIcon} className="token-icon" alt="token icon" />
+          {vault.stakingTokenSymbol}
+        </div>
       )}
     </div>
   )

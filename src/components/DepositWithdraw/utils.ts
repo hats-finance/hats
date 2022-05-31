@@ -11,24 +11,6 @@ export function usePrevious<T>(
   return ref.current;
 }
 
-
-/**
- * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares
- * @param {string} userShares
- * @param {string} poolBalance
- * @param {string} totalUsersShares
- */
-export const calculateAmountAvailableToWithdraw = (
-  userShares?: string,
-  poolBalance?: string,
-  totalUsersShares?: string
-) => {
-  if (!userShares || !poolBalance || !totalUsersShares) return undefined;
-  return BigNumber.from(userShares)
-    .mul(BigNumber.from(poolBalance))
-    .div(BigNumber.from(totalUsersShares));
-};
-
 /**
  * Calculates the value we send to the contract when a user wants to withdraw
  * @param {BigNumber} amountAvailableToWithdraw

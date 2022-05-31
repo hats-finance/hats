@@ -1,8 +1,5 @@
-import { useQuery } from "@apollo/client";
-import { useEthers } from "@usedapp/core";
 import InfoIcon from "assets/icons/info.icon";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { getStakerData } from "graphql/subgraph";
 import Tooltip from "rc-tooltip";
 import { IVault } from "types/types";
 import "./index.scss";
@@ -13,14 +10,12 @@ interface IProps {
 }
 
 export default function Assets({ tokens, stakingTokenSymbol }: IProps) {
-  const { account } = useEthers();
-  //const { data: staker } = useQuery(getStakerData(id, account!));
 
   const additionalTokens = tokens?.map((vault, index) => {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
-        <td>DEPOSITED</td>
+        {/* <td><DepositAmount vaultId={vault.id} /></td> */}
         <td>APY</td>
       </tr>
     )

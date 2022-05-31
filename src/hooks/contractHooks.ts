@@ -25,6 +25,22 @@ export function usePendingReward(
   return value?.[0];
 }
 
+export function useUserSharesPerVault(
+  address: string,
+  pid: string,
+  account: string
+) {
+  const { value, error } = useCall({
+    contract: new Contract(address, vaultAbi),
+    method: "userInfo",
+    args: [pid, account]
+  }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value?.[0];
+}
+
 export function useTokenApprove(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: "Approve" });
 }

@@ -33,7 +33,7 @@ export default function WalletInfo() {
         screenSize === ScreenSize.Desktop && (
           <div className="wallet-user">
             <div className="davatar">
-              <Davatar size={20} address={account!} generatedAvatarType="jazzicon" />
+              {/* <Davatar size={20} address={account!} generatedAvatarType="jazzicon" /> */}
             </div>
             <span>{ensName || shortenIfAddress(account)}</span>
           </div>

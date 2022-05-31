@@ -14,13 +14,13 @@ import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/sub
 import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
-import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
+import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 import { POLL_INTERVAL } from "settings";
 import TokenSelect from "./TokenSelect/TokenSelect";
-import Assets from "./Assets/Assets";
+//import Assets from "./Assets/Assets";
 import { PendingWithdraw } from "./PendingWithdraw/PendingWithdraw";
 import { WithdrawTimer } from "./WithdrawTimer/WithdrawTimer";
-import { calculateActualWithdrawValue, calculateAmountAvailableToWithdraw, usePrevious } from "./utils";
+import { calculateActualWithdrawValue, usePrevious } from "./utils";
 import "./index.scss";
 
 interface IProps {
@@ -31,7 +31,7 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
-  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares, stakingTokenSymbol,
+  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares,
     committeeCheckedIn, depositPause, multipleVaults } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
@@ -46,7 +46,6 @@ export default function DepositWithdraw(props: IProps) {
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
-
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
   const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();
@@ -58,9 +57,7 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [withdrawRequest]);
 
-  const { shares, depositAmount } = staker?.stakers[0] || {};
-  const availableToWithdraw = calculateAmountAvailableToWithdraw(shares, honeyPotBalance, totalUsersShares);
-  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, stakingTokenDecimals) : "-";
+  const { shares } = staker?.stakers[0] || {};
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -70,13 +67,16 @@ export default function DepositWithdraw(props: IProps) {
     // userInputValue = BigNumber.from(0);
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
-  const [selectedToken, setSelectedToken] = useState({ stakingToken: stakingToken, tokenSymbol: stakingTokenSymbol });
-  const tokenBalance = useTokenBalance(selectedToken.stakingToken, account)
+  const [selectedPid, setSelectedPid] = useState<string>(pid);
+  const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
+  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account)
   const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
-  const pendingReward = usePendingReward(master.address, pid, account!)
+  const pendingReward = usePendingReward(master.address, pid, account!);
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
+  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault.pid, account!);
+  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, stakingTokenDecimals) : "-";
+  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
@@ -174,8 +174,8 @@ export default function DepositWithdraw(props: IProps) {
         />}
       <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
         <div className="balance-wrapper">
-          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedToken.tokenSymbol}`}
-          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${selectedToken.tokenSymbol}`}
+          {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
+          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
@@ -195,11 +195,8 @@ export default function DepositWithdraw(props: IProps) {
             <div className="input-wrapper">
               <div className="pool-token">
                 <TokenSelect
-                  tokenIcon={description?.["project-metadata"].tokenIcon}
-                  stakingToken={stakingToken}
-                  stakingTokenSymbol={stakingTokenSymbol}
-                  tokens={multipleVaults}
-                  onSelect={(token: string, tokenSymbol: string) => setSelectedToken({ stakingToken: token, tokenSymbol: tokenSymbol })} />
+                  vault={props.data}
+                  onSelect={pid => setSelectedPid(pid)} />
               </div>
               <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
             </div>
@@ -208,27 +205,9 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <Assets
+        {/* <Assets
           tokens={multipleVaults}
-          stakingTokenSymbol={stakingTokenSymbol} />
-        {/* <div className="staked-wrapper">
-          <div>
-            <span>Staked</span>
-            <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
-          </div>
-        </div>
-        <div className="apy-wrapper">
-          <span>
-            APY
-            <Tooltip
-              overlayClassName="tooltip"
-              overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-              overlay="Estimated yearly earnings based on total staked amount and rate reward">
-              <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon /></div>
-            </Tooltip>
-          </span>
-          <span>{apy ? `${millify(apy, { precision: 3 })}%` : "-"}</span>
-        </div> */}
+          stakingTokenSymbol={stakingTokenSymbol} /> */}
       </div>
       {tab === "withdraw" && isWithdrawable && !isPendingWithdraw &&
         <WithdrawTimer
