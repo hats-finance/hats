@@ -2,11 +2,12 @@ import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
 import { VaultContext } from "../../store";
 import { IStoredKey } from "types/types";
-import { t } from "i18next";
 import { KeyGenerated } from "./KeyGenerated";
 import Loading from "components/Shared/Loading";
+import { useTranslation } from "react-i18next";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
+  const { t } = useTranslation();
   const [alias, setAlias] = useState("");
   const [passphrase, setPassphrase] = useState("");
   const [name, setName] = useState("");

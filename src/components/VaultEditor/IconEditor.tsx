@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { t } from "i18next";
 import classNames from "classnames";
 import AddIcon from "assets/icons/add.icon.svg";
 import './IconEditor.scss'
 import { ipfsTransformUri } from 'utils';
+import { useTranslation } from 'react-i18next';
 
 const IconInput = ({ value, onChange, name, colorable }: {
     value: string | undefined,
@@ -11,6 +11,7 @@ const IconInput = ({ value, onChange, name, colorable }: {
     name?: string
     colorable?: boolean
 }) => {
+    const { t } = useTranslation();
     const [changed, setChanged] = useState(false)
 
     return (

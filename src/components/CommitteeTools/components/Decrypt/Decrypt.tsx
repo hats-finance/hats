@@ -76,7 +76,7 @@ export default function Decrypt() {
         message,
         decryptionKeys: privateKey
       });
-      decryptedMessageRef.current!.value = decrypted;
+      decryptedMessageRef.current!.value = decrypted as string;
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -102,7 +102,7 @@ export default function Decrypt() {
       encryptedMessageRef.current!.value = await encrypt({
         message,
         encryptionKeys: privateKey?.toPublic()
-      });
+      }) as string;
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

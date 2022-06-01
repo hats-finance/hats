@@ -1,14 +1,15 @@
 import { useContext, useState } from "react";
 import Modal from "../../../Shared/Modal";
 import { VaultContext } from "../../store";
-import { t } from "i18next";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 export default function CreateVaultModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
   const [password, setPasswordRef] = useState("");
   const [passwordConfirm, setPasswordConfirmRef] = useState("");
   const [error, setError] = useState<string>();
   const vaultContext = useContext(VaultContext);
+  const { t } = useTranslation();
 
   const createVault = () => {
     if (password !== passwordConfirm) {

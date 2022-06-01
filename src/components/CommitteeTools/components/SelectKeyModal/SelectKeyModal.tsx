@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import { t } from "i18next";
 import classNames from "classnames";
 import { IStoredKey } from "types/types";
 import { useContext, useState } from "react";
@@ -14,6 +13,7 @@ import ImportKeyapirIcon from "assets/icons/import-keypair.svg";
 import DeleteIcon from "assets/icons/delete.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 enum ActionType {
   Generate,
@@ -34,6 +34,7 @@ export function SelectKeyModal({
   showKey?: IStoredKey; // used to show key details
   setShowModal: (show: boolean) => any;
 }) {
+  const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
   const [action, setAction] = useState<IAction>(
     showKey

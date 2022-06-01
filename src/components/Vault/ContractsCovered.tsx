@@ -1,13 +1,14 @@
 import { CHAINID } from "../../settings";
 import { isAddress } from "ethers/lib/utils";
-import { getChainById, shortenAddress } from "@usedapp/core/dist/esm/src/helpers";
+import { shortenAddress } from "@usedapp/core";
+import { Chains } from "../../constants/constants";
 
 interface IProps {
   contracts: Array<{}>
 }
 
 export default function ContractsCovered(props: IProps) {
-  const chain = getChainById(CHAINID)
+  const chain = Chains[CHAINID];
 
   return (
     <>
