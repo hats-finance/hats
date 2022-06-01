@@ -1,17 +1,18 @@
-import { useQuery } from "@apollo/client";
+import { formatUnits } from "@ethersproject/units";
 import { useEthers } from "@usedapp/core";
-import { getStakerDeposit } from "graphql/subgraph";
-import { POLL_INTERVAL } from "settings";
+import { useUserSharesPerVault } from "hooks/contractHooks";
+import { IVault } from "types/types";
 
 interface IProps {
-  vaultId: string;
+  vault: IVault;
 }
 
-export const DepositAmount = ({ vaultId }: IProps) => {
+export const DepositAmount = ({ vault }: IProps) => {
   const { account } = useEthers();
-  const { loading, data } = useQuery(getStakerDeposit(vaultId, account!), { pollInterval: POLL_INTERVAL });
+  const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
+  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, vault.stakingTokenDecimals) : "-";
 
   return (
-    <span>{loading ? "-" : data?.stakers[0].depositAmount}</span>
+    <span>{formatAvailableToWithdraw}</span>
   )
 }

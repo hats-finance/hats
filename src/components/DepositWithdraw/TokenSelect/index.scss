@@ -1,5 +1,12 @@
+@import "../../../styles/constants.scss";
 
 .token-select-wrapper {
+  .token-select {
+    background-color: transparent;
+    color: $white;
+    border-color: $turquoise;
+    padding: 15px;
+  }
   .token-icon-wrapper {
     display: flex;
     align-items: center;

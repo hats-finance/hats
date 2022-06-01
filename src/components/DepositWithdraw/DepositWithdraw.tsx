@@ -7,7 +7,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { calculateApy, isDigitsOnly } from "../../utils";
+import { isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
@@ -17,7 +17,7 @@ import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest } from "hooks/contractHooks";
 import { POLL_INTERVAL } from "settings";
 import TokenSelect from "./TokenSelect/TokenSelect";
-//import Assets from "./Assets/Assets";
+import Assets from "./Assets/Assets";
 import { PendingWithdraw } from "./PendingWithdraw/PendingWithdraw";
 import { WithdrawTimer } from "./WithdrawTimer/WithdrawTimer";
 import { calculateActualWithdrawValue, usePrevious } from "./utils";
@@ -31,7 +31,7 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
-  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals, honeyPotBalance, totalUsersShares,
+  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals,
     committeeCheckedIn, depositPause, multipleVaults } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
@@ -43,9 +43,8 @@ export default function DepositWithdraw(props: IProps) {
     getStakerData(id, account!), { pollInterval: POLL_INTERVAL });
   const { data: withdrawRequests } = useQuery(
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
-  const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
+  const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
   const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();
@@ -205,9 +204,7 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        {/* <Assets
-          tokens={multipleVaults}
-          stakingTokenSymbol={stakingTokenSymbol} /> */}
+        <Assets vault={props.data} />
       </div>
       {tab === "withdraw" && isWithdrawable && !isPendingWithdraw &&
         <WithdrawTimer

@@ -15,7 +15,7 @@ export default function TokenSelect({ vault, onSelect }: IProps) {
   return (
     <div className="token-select-wrapper">
       {vault.multipleVaults ? (
-        <select onChange={handleSelect}>
+        <select className="token-select" onChange={handleSelect}>
           {vault.multipleVaults?.map((vault, index) => {
             return <option key={index} value={vault.pid}>{vault.stakingTokenSymbol}</option>
           })}

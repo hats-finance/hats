@@ -1,29 +1,39 @@
 import InfoIcon from "assets/icons/info.icon";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import Tooltip from "rc-tooltip";
+import { useSelector } from "react-redux";
+import { RootState } from "reducers";
 import { IVault } from "types/types";
+import { calculateApy } from "utils";
+import { DepositAmount } from "./DepositAmount";
 import "./index.scss";
 
 interface IProps {
-  tokens: IVault[] | undefined; // each vault represents a token
-  stakingTokenSymbol: string;
+  vault: IVault
 }
 
-export default function Assets({ tokens, stakingTokenSymbol }: IProps) {
+export default function Assets({ vault }: IProps) {
+  const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);
 
-  const additionalTokens = tokens?.map((vault, index) => {
+  const additionalTokens = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
-        {/* <td><DepositAmount vaultId={vault.id} /></td> */}
-        <td>APY</td>
+        <td><DepositAmount vault={vault} /></td>
+        <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td>
       </tr>
     )
-  })
+  }) : (
+    <tr>
+      <td>{vault.stakingTokenSymbol}</td>
+      <td><DepositAmount vault={vault} /></td>
+      <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td>
+    </tr>
+  )
 
   return (
     <table className="assets-table">
-      <tbody>
+      <thead>
         <tr>
           <th className="assets-column">Assets</th>
           <th>Staked</th>
@@ -37,11 +47,8 @@ export default function Assets({ tokens, stakingTokenSymbol }: IProps) {
             </Tooltip>
           </th>
         </tr>
-        <tr>
-          <td>{stakingTokenSymbol}</td>
-          <td></td>
-          <td></td>
-        </tr>
+      </thead>
+      <tbody>
         {additionalTokens}
       </tbody>
     </table>
