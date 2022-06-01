@@ -3,9 +3,10 @@ import { IStoredKey } from "types/types";
 import { VaultContext } from "../../store";
 import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
 import EditableContent from "../EditableContent/EditableContent";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 export default function ImportKey({ onFinish }: { onFinish: () => any }) {
+  const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);

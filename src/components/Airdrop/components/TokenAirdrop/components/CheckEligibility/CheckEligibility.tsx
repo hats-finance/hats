@@ -2,6 +2,7 @@ import Logo from "assets/icons/logo.icon";
 import { EligibilityStatus } from "components/Airdrop/constants";
 import { t } from "i18next";
 import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { formatWei } from "utils";
 import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import "./index.scss";
@@ -13,6 +14,7 @@ interface IProps {
 }
 
 export default function CheckEligibility({ eligibilityStatus, setInTokenAirdrop, tokenAmount }: IProps) {
+  const { t } = useTranslation();
   const { setStage } = useContext(TokenAirdropContext);
 
   return (

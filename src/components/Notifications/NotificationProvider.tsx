@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, FC } from "react";
+import React, { useCallback, useMemo, useState, FC, ReactElement } from "react";
 import { useEthers, useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
@@ -18,7 +18,11 @@ export enum NotificationType {
 
 const MAX_NOTIFICATIONS_DISPLAY = 3;
 
-const NotificationProvider: FC = ({ children }) => {
+interface Props {
+  children: ReactElement
+}
+
+const NotificationProvider: FC<Props> = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [lastId, setLastId] = useState(0);
 

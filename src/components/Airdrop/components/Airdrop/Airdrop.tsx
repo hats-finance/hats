@@ -4,7 +4,6 @@ import { EligibilityStatus } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import { Colors } from "constants/constants";
 import { isAddress } from "ethers/lib/utils";
-import { t } from "i18next";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -14,8 +13,10 @@ import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
 import { useParams } from "react-router-dom";
 import { useActions } from "actions/contractsActions";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 export default function Airdrop() {
+  const { t } = useTranslation();
   const { isRedeemed } = useActions(); // hasClaimed
   const { walletAddress } = useParams();
   const [userInput, setUserInput] = useState(walletAddress);

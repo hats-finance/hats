@@ -9,6 +9,7 @@ import Modal from "components/Shared/Modal";
 import { IPFS_PREFIX } from "constants/constants";
 import { t } from "i18next";
 import { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { DELEGATEES_IPFS, CHAINID } from "settings";
@@ -73,6 +74,7 @@ const DelegateeElement = ({ data, setDelegatee, selected }: IDelegateeElementPro
 }
 
 export default function ChooseDelegatee({ address, selectedDelegatee, setDelegatee }: IProps) {
+  const { t } = useTranslation();
   const { setStage } = useContext(TokenAirdropContext);
   const [selfDelegatee, setSelfDelegatee] = useState(selectedDelegatee?.self ? true : false);
   const [loading, setLoading] = useState(true);
