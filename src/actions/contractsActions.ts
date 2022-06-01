@@ -1,5 +1,5 @@
 import { useEthers } from "@usedapp/core";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, providers } from "ethers";
 import { checkMasterAddress, normalizeAddress } from "../utils";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
@@ -25,7 +25,11 @@ export function useActions() {
    * @param {stirng} pid
    * @param {string} selectedAddress
    */
-  const getPendingReward = async (address: string, pid: string, selectedAddress: string) => {
+  const getPendingReward = async (
+    address: string,
+    pid: string,
+    selectedAddress: string
+  ) => {
     try {
       const contract = new Contract(address, vaultAbi, signer);
       return await contract.pendingReward(pid, selectedAddress);
@@ -33,18 +37,21 @@ export function useActions() {
       console.error(error);
       return BigNumber.from(0);
     }
-  }
+  };
 
   /**
    * Submits the hash of the vulnerability description
    * @param {string} address
    * @param {string} descriptionHash the sha256 of the vulnerability description
    */
-  const submitVulnerability = async (address: string, descriptionHash: string) => {
+  const submitVulnerability = async (
+    address: string,
+    descriptionHash: string
+  ) => {
     checkMasterAddress(address);
     const contract = new Contract(address, vaultAbi, signer);
     return await contract.claim(descriptionHash);
-  }
+  };
 
   /** Airdrop contract actions - START */
 
@@ -54,14 +61,17 @@ export function useActions() {
    */
   const getMerkleTree = async () => {
     try {
-      const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
+      const { ethereum } = window;
+      const newProvider = new providers.Web3Provider(ethereum);
+      const newSigner = newProvider.getSigner();
+      const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, newSigner);
       const data = contract.filters.MerkleTreeChanged();
       const filter = await contract.queryFilter(data, 0);
       return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   /**
    * Get the base URI
@@ -73,7 +83,7 @@ export function useActions() {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   /**
    * Get the NFT Airdrop deadline
@@ -82,25 +92,25 @@ export function useActions() {
   const getDeadline = async () => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     return await contract.deadline();
-  }
+  };
 
   /**
    * Redeem NFT
-   * @param {string} account 
-   * @param {string} tokenID 
-   * @param {any} proof 
+   * @param {string} account
+   * @param {string} tokenID
+   * @param {any} proof
    */
   const redeemNFT = async (account: string, tokenID: string, proof: any) => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     return await contract.redeem(account, tokenID, proof);
-  }
+  };
 
   /**
    * Check if a tokenId has already been redeemed by a given address.
    * NOTE: ERC721 contract function works it returns an error when the tokenId is not yet redeemed
    * for this reason in case of an exception we return false.
    * @param {string} tokenId
-   * @param {string} address  
+   * @param {string} address
    */
   const isRedeemed = async (tokenId: string, address: string) => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
@@ -109,11 +119,11 @@ export function useActions() {
     } catch (error) {
       return false;
     }
-  }
+  };
 
   /**
    * Checks if a given address has claimed the token reward.
-   * NOTE: ERC721 contract function works it returns an error when the address has not yet redeemed 
+   * NOTE: ERC721 contract function works it returns an error when the address has not yet redeemed
    * for this reason in case of an exception we return false.
    * @param {string} address
    */
@@ -124,21 +134,23 @@ export function useActions() {
     } catch (error) {
       return false;
     }
-  }
+  };
 
   /**
    * Get current votes for a given account
-   * @param {string} address 
-   * @param {string} rewardsToken 
+   * @param {string} address
+   * @param {string} rewardsToken
    */
   const getCurrentVotes = async (address: string, rewardsToken: string) => {
     try {
       const contract = new Contract(rewardsToken, HatsToken, signer);
-      return (await contract.getCurrentVotes(address) as BigNumber).toNumber();
+      return (
+        (await contract.getCurrentVotes(address)) as BigNumber
+      ).toNumber();
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   /** Airdrop contract actions - END */
 
@@ -151,6 +163,6 @@ export function useActions() {
     redeemNFT,
     isRedeemed,
     hasClaimed,
-    getCurrentVotes,
-  }
+    getCurrentVotes
+  };
 }
