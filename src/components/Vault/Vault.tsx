@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import "../../styles/Vault/Vault.scss";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { calculateApy, formatWei, fromWei, ipfsTransformUri } from "../../utils";
+import { calculateApy, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
 import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
+import "../../styles/Vault/Vault.scss";
 
 interface IProps {
   data: IVault,
@@ -20,7 +20,7 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const { t } = useTranslation();
-  const { description, tokenPrice, totalRewardAmount, honeyPotBalance,
+  const { description, tokenPrice, honeyPotBalance,
     withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
