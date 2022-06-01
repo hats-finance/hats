@@ -98,7 +98,7 @@ export function useActions() {
   /**
    * Check if a tokenId has already been redeemed by a given address.
    * NOTE: ERC721 contract function works it returns an error when the tokenId is not yet redeemed
-   * for this reason in case of an exception we return false
+   * for this reason in case of an exception we return false.
    * @param {string} tokenId
    * @param {string} address  
    */
