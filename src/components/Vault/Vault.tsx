@@ -21,7 +21,7 @@ interface IProps {
 export default function Vault(props: IProps) {
   const { t } = useTranslation();
   const { description, tokenPrice, totalRewardAmount, honeyPotBalance,
-    withdrawRequests, stakingTokenDecimals } = props.data;
+    withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
@@ -39,7 +39,6 @@ export default function Vault(props: IProps) {
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {formatWei(honeyPotBalance, 3, stakingTokenDecimals)}
         {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
@@ -52,10 +51,12 @@ export default function Vault(props: IProps) {
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
-            {/* TODO: handle project-metadata and Project-metadata */}
-            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? description?.["Project-metadata"]?.icon)} alt="project logo" />
+            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
             <div className="name-source-wrapper">
-              <div className="project-name">{description?.["project-metadata"].name}</div>
+              <div className="project-name">
+                {description?.["project-metadata"].name}
+                <div className="token-symbol">{stakingTokenSymbol}</div>
+              </div>
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
           </div>
@@ -66,7 +67,6 @@ export default function Vault(props: IProps) {
             <td className="rewards-cell">
               {maxRewards}
             </td>
-            <td>{millify(Number(fromWei(totalRewardAmount, stakingTokenDecimals)))}</td>
             <td>{vaultApy}</td>
             <td>
               <VaultAction

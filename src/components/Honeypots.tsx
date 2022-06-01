@@ -40,7 +40,6 @@ export default function Honeypots() {
   const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
     return vaultValue(b) - vaultValue(a);
   }).map((vault: IVault) => {
-    // TODO: We'll eliminate guest vault completely once it will be removed from the subgraph
     if (!vault.liquidityPool && vault.registered) {
       if (vault?.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.description?.["project-metadata"]?.gamification) {
@@ -74,7 +73,6 @@ export default function Honeypots() {
               {screenSize === ScreenSize.Desktop && (
                 <>
                   <th>TOTAL VAULT</th>
-                  <th>PRIZE GIVEN</th>
                   <th>APY</th>
                   <th></th>
                 </>

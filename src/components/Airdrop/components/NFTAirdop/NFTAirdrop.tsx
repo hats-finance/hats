@@ -40,7 +40,6 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
     (async () => {
       if (!deadline) {
         const deadline = await getDeadline();
-        console.log(deadline)
         setDeadline(deadline);
       }
     })();
