@@ -79,10 +79,6 @@ export default function VaultEditor() {
             }
             const newVaultDescription = await response.json()
             severitiesToContracts(newVaultDescription)
-            if ("Project-metadata" in newVaultDescription) {
-                newVaultDescription["project-metadata"] = newVaultDescription["Project-metadata"]
-                delete newVaultDescription["Project-metadata"]
-            }
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {

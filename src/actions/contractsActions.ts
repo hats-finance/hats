@@ -97,6 +97,8 @@ export function useActions() {
 
   /**
    * Check if a tokenID has already been redeemed by a given address.
+   * NOTE: by the way the contract function works it returns an error when the tokenID is not yet redeemed. 
+   * For this reason in case of an exception we return false; 
    * @param {string} tokenID 
    * @param {string} address  
    */
@@ -111,6 +113,8 @@ export function useActions() {
 
   /**
    * Checks if a given address has claimed the token reward.
+   * NOTE: by the way the contract function works it returns an error when the address has not yet redeemed. 
+   * For this reason in case of an exception we return false; 
    * @param {string} address
    */
   const hasClaimed = async (address: string) => {

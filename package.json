@@ -1,6 +1,6 @@
 {
   "name": "hats.fe-2",
-  "version": "0.2.6",
+  "version": "1.1.0",
   "private": true,
   "devDependencies": {
     "@apollo/client": "^3.6.5",
