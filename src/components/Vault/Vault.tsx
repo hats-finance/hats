@@ -29,13 +29,13 @@ export default function Vault(props: IProps) {
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
-  const honeyPotBalanceValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined)
+  const honeyPotBalanceValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "-")
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
 
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue || ''}`}</span>}
+        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
