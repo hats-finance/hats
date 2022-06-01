@@ -114,7 +114,7 @@ export function useActions() {
   /**
    * Checks if a given address has claimed the token reward.
    * NOTE: ERC721 contract function works it returns an error when the address has not yet redeemed 
-   * for this reason in case of an exception we return false
+   * for this reason in case of an exception we return false.
    * @param {string} address
    */
   const hasClaimed = async (address: string) => {
