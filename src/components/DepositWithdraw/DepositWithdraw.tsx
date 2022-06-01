@@ -107,7 +107,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
-    withdrawRequestCall(pid);
+    withdrawRequestCall(selectedPid);
   }
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
