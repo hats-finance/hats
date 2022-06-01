@@ -23,23 +23,19 @@ export default function Vault(props: IProps) {
   const { description, tokenPrice, honeyPotBalance,
     withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
-  const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
-  useEffect(() => {
-    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
-  }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
-
+  const honeyPotBalanceValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined)
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
 
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
+        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue || ''}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
