@@ -96,16 +96,16 @@ export function useActions() {
   }
 
   /**
-   * Check if a tokenID has already been redeemed by a given address.
-   * NOTE: by the way the contract function works it returns an error when the tokenID is not yet redeemed. 
-   * For this reason in case of an exception we return false; 
-   * @param {string} tokenID 
+   * Check if a tokenId has already been redeemed by a given address.
+   * NOTE: ERC721 contract function works it returns an error when the tokenId is not yet redeemed
+   * for this reason in case of an exception we return false
+   * @param {string} tokenId
    * @param {string} address  
    */
-  const isRedeemed = async (tokenID: string, address: string) => {
+  const isRedeemed = async (tokenId: string, address: string) => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     try {
-      return normalizeAddress(await contract.ownerOf(tokenID)) === address;
+      return normalizeAddress(await contract.ownerOf(tokenId)) === address;
     } catch (error) {
       return false;
     }
@@ -113,8 +113,8 @@ export function useActions() {
 
   /**
    * Checks if a given address has claimed the token reward.
-   * NOTE: by the way the contract function works it returns an error when the address has not yet redeemed. 
-   * For this reason in case of an exception we return false; 
+   * NOTE: ERC721 contract function works it returns an error when the address has not yet redeemed 
+   * for this reason in case of an exception we return false
    * @param {string} address
    */
   const hasClaimed = async (address: string) => {
