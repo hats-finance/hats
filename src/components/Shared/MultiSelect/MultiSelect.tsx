@@ -12,14 +12,16 @@ export type MultiselectOptions = Array<Option>;
 
 interface CustomMultiselectProps {
   value: Array<string | number>;
-  onChange: (value: Array<string | number>) => void;
+  onChange: Function;
   options: MultiselectOptions;
+  name?: string;
 }
 
 export default function CustomMultiSelect({
   value,
   onChange,
-  options
+  options,
+  name
 }: CustomMultiselectProps) {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [hasChanged, setChanged] = React.useState<boolean>(false);
@@ -29,14 +31,16 @@ export default function CustomMultiSelect({
   useOnClickOutside(menuRef, () => setOpen(false));
 
   function handleAddingItemToLocalValue(item: string | number) {
-    onChange([...value, item]);
+    onChange({ target: { name, value: [...value, item] } });
     if (!hasChanged) {
       setChanged(true);
     }
   }
 
   function handleRemoveItemFromLocalValue(item: string | number) {
-    onChange(value.filter((stateItem) => stateItem !== item));
+    onChange({
+      target: { name, value: value.filter((stateItem) => stateItem !== item) }
+    });
     if (!hasChanged) {
       setChanged(true);
     }

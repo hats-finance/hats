@@ -17,10 +17,6 @@ export default function ContractCovered({
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
 
-  const onMultiselectChange = (value: typeof severitiesOptions[0]) => {
-    onChange(null, { name: `${basePath}.severities`, value });
-  };
-
   return (
     <>
       <div className="contracts-covered__contract">
@@ -41,8 +37,9 @@ export default function ContractCovered({
             <div className="contracts-covered__contract-severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
+                name={`${basePath}.severities`}
                 value={contract.severities}
-                onChange={onMultiselectChange}
+                onChange={onChange}
                 options={severitiesOptions as MultiselectOptions}
               />
             </div>
