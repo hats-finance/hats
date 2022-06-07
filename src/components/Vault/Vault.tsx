@@ -20,18 +20,18 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const { t } = useTranslation();
-  const { description, tokenPrice, honeyPotBalance,
-    withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
-  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
-  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
-
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
+
   const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+  const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
+  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
   const maxRewards = (
     <>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -21,6 +21,7 @@ export default function Honeypots() {
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
 
   useEffect(() => {
     if (modalData) {
@@ -32,10 +33,12 @@ export default function Honeypots() {
 
   const gamificationVaults: Array<JSX.Element> = [];
 
-  const vaultValue = (vault: IVault) => {
-    const { honeyPotBalance, stakingTokenDecimals, tokenPrice } = vault;
-    return Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice
-  }
+  const vaultValue = useCallback((vault: IVault) => {
+    const { honeyPotBalance, stakingTokenDecimals } = vault;
+    const tokenPrice = tokenPrices?.[vault.stakingToken]?.['usd'];
+
+    return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
+  }, [tokenPrices])
 
   const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
     return vaultValue(b) - vaultValue(a);

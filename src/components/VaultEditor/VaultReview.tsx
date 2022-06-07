@@ -83,7 +83,6 @@ export default function VaultReview({ vaultDescription }) {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
-      tokenPrice: 0
     };
   }
 

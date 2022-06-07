@@ -280,7 +280,7 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} honeyPotBalance
  * @param {string} stakingTokenDecimals
  */
-export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number | undefined, honeyPotBalance: string, stakingTokenDecimals: string) => {
   if (tokenPrice) {
     return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
