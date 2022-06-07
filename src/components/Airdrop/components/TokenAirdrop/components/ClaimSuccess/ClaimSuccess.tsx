@@ -1,9 +1,9 @@
-import { t } from "i18next";
 import { SocialLinks } from "constants/constants";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
 import "./index.scss";
 import { formatWei } from "utils";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   tokenAmount: number
@@ -11,6 +11,7 @@ interface IProps {
 }
 
 export default function ClaimSuccess({ tokenAmount, backToAirdrop }: IProps) {
+  const { t } = useTranslation();
   // &url=${encodeURIComponent(SocialLinks.Twitter)}
   // TODO: check if it's possible to attach an image to the sharing link
   // TODO: add HATs token automatically to MetaMask?

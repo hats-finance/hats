@@ -11,12 +11,13 @@ import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
+import { POLL_INTERVAL } from "settings";
 import { IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: 10000 });
+  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: POLL_INTERVAL });
   const { data: masterData } = useQuery(GET_MASTER_DATA);
   const { vaults, tokenPrices } = useSelector(
     (state: RootState) => state.dataReducer

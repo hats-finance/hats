@@ -4,7 +4,6 @@ import { EligibilityStatus } from "components/Airdrop/constants";
 import Loading from "components/Shared/Loading";
 import { Colors } from "constants/constants";
 import { isAddress } from "ethers/lib/utils";
-import { t } from "i18next";
 import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -14,9 +13,11 @@ import NFTAirdrop from "../NFTAirdop/NFTAirdrop";
 import { useParams } from "react-router-dom";
 import { useActions } from "actions/contractsActions";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 export default function Airdrop() {
-  const { hasClaimed, isRedeemed } = useActions();
+  const { t } = useTranslation();
+  const { isRedeemed } = useActions(); // hasClaimed
   const { walletAddress } = useParams();
   const [userInput, setUserInput] = useState(walletAddress);
   const nftET = useSelector((state: RootState) => state.dataReducer.airdrop?.nft);
@@ -25,7 +26,7 @@ export default function Airdrop() {
   const [tokenId, setTokenId] = useState<string>();
   //const [tokenEligibilityStatus, setTokenEligibilityStatus] = useState(EligibilityStatus.UNKNOWN);
   //const [tokenAmount, setTokenAmount] = useState<number>();
-  const [inTokenAirdop, setInTokenAirdrop] = useState(false);
+  const [inTokenAirdop] = useState(false); //setInTokenAirdrop
 
   const checkAirdrop = useCallback(async () => {
     if (userInput && isAddress(userInput) && nftET) {
@@ -60,7 +61,7 @@ export default function Airdrop() {
       setNFTEligibilityStatus(EligibilityStatus.UNKNOWN);
       //setTokenEligibilityStatus(EligibilityStatus.UNKNOWN);
     }
-  }, [nftET, tokenET, hasClaimed, isRedeemed, userInput])
+  }, [nftET, isRedeemed, userInput]) // tokenET, hasClaimed
 
   useEffect(() => {
     checkAirdrop();

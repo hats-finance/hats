@@ -80,10 +80,6 @@ export default function VaultEditor() {
             }
             const newVaultDescription = await response.json()
             severitiesToContracts(newVaultDescription)
-            if ("Project-metadata" in newVaultDescription) {
-                newVaultDescription["project-metadata"] = newVaultDescription["Project-metadata"]
-                delete newVaultDescription["Project-metadata"]
-            }
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {
@@ -212,6 +208,7 @@ export default function VaultEditor() {
     }
 
     function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+        console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)

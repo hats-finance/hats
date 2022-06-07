@@ -6,7 +6,6 @@ import { REWARDS_TOKEN, IDelegateeData, DELEGATION_EXPIRY } from "components/Air
 import { buildDataDelegation, hashToken } from "components/Airdrop/utils";
 import { IPFS_PREFIX } from "constants/constants";
 import { useDelegateAndClaim } from "hooks/contractHooks";
-import { t } from "i18next";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -17,6 +16,7 @@ import { Stage, TokenAirdropContext } from "../../TokenAirdrop";
 import HatsToken from "data/abis/HatsToken.json";
 import "./index.scss";
 import { BigNumber } from "ethers";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   delegateeData: IDelegateeData
@@ -29,6 +29,7 @@ const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
 export default function Claim({ delegateeData, address, tokenAmount, eligibleTokens }: IProps) {
+  const { t } = useTranslation();
   const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { setStage } = useContext(TokenAirdropContext);
   const [merkleTree, setMerkleTree] = useState();

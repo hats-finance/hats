@@ -1,7 +1,8 @@
-import { getChainById, shortenIfAddress } from "@usedapp/core/dist/esm/src/helpers";
 import { CHAINID } from "../../settings";
 import CopyToClipboard from "../Shared/CopyToClipboard";
 import "./Multisig.scss";
+import { Chains } from "../../constants/constants";
+import { shortenIfAddress } from "@usedapp/core";
 
 interface IProps {
   multisigAddress: string
@@ -9,7 +10,7 @@ interface IProps {
 
 export default function Multisig(props: IProps) {
   const { multisigAddress } = props;
-  const chain = getChainById(CHAINID)
+  const chain = Chains[CHAINID];
 
   return (
     <div className="multi-sig-address-wrapper">

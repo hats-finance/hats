@@ -1,4 +1,4 @@
-import { ChainId } from "@usedapp/core";
+import { ChainId, Mainnet, Rinkeby } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -24,6 +24,11 @@ export enum RoutePaths {
   committee_tools = "/committee-tools"
 }
 
+export const Chains = {
+  [ChainId.Mainnet]: Mainnet,
+  [ChainId.Rinkeby]: Rinkeby
+}
+
 export const MasterAddresses = {
   [ChainId.Mainnet]: "0x571f39d351513146248acafa9d0509319a327c4d",
   [ChainId.Rinkeby]: "0xccaadc293faaea229e0ca4a22b0330b65634b483"
@@ -42,7 +47,7 @@ export const Endpoint = {
 }
 
 export const Subgraph = {
-  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
+  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
 }
 
