@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
@@ -30,13 +30,14 @@ export default function Vault(props: IProps) {
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
-  const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "-";
+  const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
 
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceUSDValue && <span className="honeypot-balance-value">{honeyPotBalanceValue} &nbsp;{`≈ $${honeyPotBalanceUSDValue}`}</span>}
+        {honeyPotBalanceValue}
+        {honeyPotBalanceUSDValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceUSDValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
