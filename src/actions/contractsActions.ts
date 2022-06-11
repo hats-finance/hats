@@ -1,5 +1,5 @@
 import { useEthers } from "@usedapp/core";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, ethers } from "ethers";
 import { checkMasterAddress, normalizeAddress } from "../utils";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
@@ -54,10 +54,17 @@ export function useActions() {
    */
   const getMerkleTree = async () => {
     try {
-      const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
-      const data = contract.filters.MerkleTreeChanged();
-      const filter = await contract.queryFilter(data, 0);
-      return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
+            const {ethereum} = window;
+      if(ethereum){
+        const newProvider = new ethers.providers.Web3Provider(ethereum);
+        const newSighner = newProvider.getSigner()
+        const nftContract = new ethers.Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, newSighner);
+        const data = nftContract.filters.MerkleTreeChanged();
+        const filter = await nftContract.queryFilter(data, 0);
+        return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
+      }else{
+        throw new Error ("metamask extention is not installed")
+      }
     } catch (error) {
       console.error(error);
     }
