@@ -2,19 +2,17 @@ import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW
 import { IVault, IWithdrawSafetyPeriod, IAirdropData } from '../types/types';
 
 interface IDataReducer {
-  vaults: Array<IVault> | undefined
-  tokenPrices: { [token: string]: number }
+  vaults?: Array<IVault>
+  tokenPrices: { [token: string]: {} | { usd: number } }
   rewardsToken: string
-  hatsPrice: number | undefined
+  hatsPrice?: number
   withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
   airdrop: null | IAirdropData
 }
 
 const initialState: IDataReducer = {
-  vaults: undefined,
   rewardsToken: "",
   tokenPrices: {},
-  hatsPrice: undefined,
   withdrawSafetyPeriod: {},
   airdrop: null,
 };
