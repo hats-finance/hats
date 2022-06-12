@@ -2,6 +2,7 @@ import { useEthers } from "@usedapp/core";
 import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import { ethers } from "ethers";
+import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 //import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
@@ -20,37 +21,46 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
   const { getMerkleTree, isRedeemed } = useActions(); //hasClaimed
   const { account } = useEthers();
 
-  try {
-    // TODO: Temporary disable Token Airdrop
-    //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+  const getAirdropData = async () => {
 
-    // for (let key in tokenData) {
-    //   key = normalizeAddress(key);
-    // }
+    try {
+      // TODO: Temporary disable Token Airdrop
+      //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
-    const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
-    const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
+      // for (let key in tokenData) {
+      //   key = normalizeAddress(key);
+      // }
 
-    for (const key in nftData) {
-      nftData[key] = normalizeAddress(nftData[key]);
-    }
+      const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
+      console.log({ NFT_AIRDRPOP_IPFS_CID });
 
-    dispatch(updateAirdropData({ nft: nftData, token: {} }));
+      const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
 
-    // Here we check if to show the user the Airdrop Prompt or not
-    if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))
-      const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
+      for (const key in nftData) {
+        nftData[key] = normalizeAddress(nftData[key]);
+      }
 
-      if (!savedItems.includes(account)) {
-        const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
-        if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
-          showAirdropPrompt();
+      dispatch(updateAirdropData({ nft: nftData, token: {} }));
+
+      // Here we check if to show the user the Airdrop Prompt or not
+      if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))
+        const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
+
+        if (!savedItems.includes(account)) {
+          const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
+          if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
+            showAirdropPrompt();
+          }
         }
       }
+    } catch (error) {
+      console.error(error);
     }
-  } catch (error) {
-    console.error(error);
   }
+
+  useEffect(() => {
+    getAirdropData();
+  }, []);
 }
 
 /**
