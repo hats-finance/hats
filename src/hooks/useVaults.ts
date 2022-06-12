@@ -36,13 +36,6 @@ export function useVaults() {
     }
   }, [masterData, dispatch]);
 
-  const fixObject = (description: any): IVaultDescription => {
-    if ("Project-metadata" in description) {
-      description["project-metadata"] = description["Project-metadata"]
-      delete description["Project-metadata"]
-    }
-    return description;
-  }
 
   const getVaults = useCallback(async () => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -99,4 +92,12 @@ export function useVaults() {
   }, [currentTransaction, getVaults]);
 
   return { vaults, getVaults };
+}
+
+export const fixObject = (description: any): IVaultDescription => {
+  if ("Project-metadata" in description) {
+    description["project-metadata"] = description["Project-metadata"]
+    delete description["Project-metadata"]
+  }
+  return description;
 }
