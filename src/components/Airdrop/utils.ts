@@ -2,11 +2,11 @@ import { useEthers } from "@usedapp/core";
 import { useActions } from "actions/contractsActions";
 import axios from "axios";
 import { ethers } from "ethers";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
 //import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
-import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
+import { LocalStorage } from "../../constants/constants";
 import { ipfsTransformUri, normalizeAddress } from "../../utils";
 import { Delegation, EIP712Domain } from "./constants";
 
@@ -21,7 +21,7 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
   const { getMerkleTree, isRedeemed } = useActions(); //hasClaimed
   const { account } = useEthers();
 
-  const getAirdropData = async () => {
+  const getAirdropData = useCallback(async () => {
 
     try {
       // TODO: Temporary disable Token Airdrop
@@ -58,11 +58,11 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
     } catch (error) {
       console.error(error);
     }
-  }
+  }, [account, dispatch, getMerkleTree, isRedeemed, showAirdropPrompt]);
 
   useEffect(() => {
     getAirdropData();
-  }, [account]);
+  }, [account, getAirdropData]);
 }
 
 /**
