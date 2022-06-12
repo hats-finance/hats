@@ -32,7 +32,9 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
       // }
 
       const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
-      console.log({ NFT_AIRDRPOP_IPFS_CID });
+      if (!NFT_AIRDRPOP_IPFS_CID) {
+        return;
+      }
 
       const nftData = (await axios.get(ipfsTransformUri(NFT_AIRDRPOP_IPFS_CID))).data;
 
