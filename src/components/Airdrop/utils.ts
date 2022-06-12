@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 //import { TOKEN_AIRDROP_IPFS_CID } from "settings";
 import { updateAirdropData } from "../../actions";
 import { IPFS_PREFIX, LocalStorage } from "../../constants/constants";
-import { normalizeAddress } from "../../utils";
+import { ipfsTransformUri, normalizeAddress } from "../../utils";
 import { Delegation, EIP712Domain } from "./constants";
 
 /**
@@ -34,7 +34,7 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
       const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
       console.log({ NFT_AIRDRPOP_IPFS_CID });
 
-      const nftData = (await axios.get(`${IPFS_PREFIX}/${NFT_AIRDRPOP_IPFS_CID}`)).data;
+      const nftData = (await axios.get(ipfsTransformUri(NFT_AIRDRPOP_IPFS_CID))).data;
 
       for (const key in nftData) {
         nftData[key] = normalizeAddress(nftData[key]);
@@ -60,7 +60,7 @@ export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
 
   useEffect(() => {
     getAirdropData();
-  }, []);
+  }, [account]);
 }
 
 /**
