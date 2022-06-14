@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { useTransactions } from "@usedapp/core";
+import { useEtherBalance, useEthers, useTransactions } from "@usedapp/core";
 import {
   updateRewardsToken,
   updateTokenPrices,
@@ -17,8 +17,12 @@ import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "util
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(GET_VAULTS, { pollInterval: POLL_INTERVAL });
-  const { data: masterData } = useQuery(GET_MASTER_DATA);
+  const { chainId } = useEthers();
+  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(
+    GET_VAULTS,
+    { context: { chainId }, pollInterval: POLL_INTERVAL }
+  );
+  const { data: masterData } = useQuery(GET_MASTER_DATA, { context: { chainId } });
   const { vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
