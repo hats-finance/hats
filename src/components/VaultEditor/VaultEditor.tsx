@@ -82,7 +82,6 @@ export default function VaultEditor() {
             }
             const newVaultDescription = await response.json()
             severitiesToContracts(fixObject(newVaultDescription))
-            console.log({ newVaultDescription })
 
             setVaultDescription(newVaultDescription)
             setChanged(false)
@@ -212,7 +211,6 @@ export default function VaultEditor() {
     }
 
     function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)

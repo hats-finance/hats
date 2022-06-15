@@ -3,23 +3,25 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, ApolloLink } fro
 import { Provider } from "react-redux";
 import store from "./store/index";
 import HttpsRedirect from "react-https-redirect";
-import { ChainId, Config, DAppProvider, useEthers } from "@usedapp/core";
+import { ChainId, Config, DAppProvider, Mainnet, Rinkeby } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
-import { getDefaultProvider } from "@ethersproject/providers";
 import App from "./App";
-import { CHAINID, SUBGRAPH_URI, ENDPOINT } from "./settings";
 import NotificationProvider from "components/Notifications/NotificationProvider";
 import "./index.css";
-import { Chains, Subgraph, UNISWAP_V3_SUBGRAPH } from "./constants/constants";
+import { Endpoint, Chains, Subgraph, UNISWAP_V3_SUBGRAPH } from "./constants/constants";
 import { getMainDefinition } from "@apollo/client/utilities";
+
+if (process.env.REACT_APP_ENDPOINT_MAINNET) {
+  Endpoint[Mainnet.chainId] = process.env.REACT_APP_ENDPOINT_MAINNET;
+}
+if (process.env.REACT_APP_ENDPOINT_RINKEBY) {
+  Endpoint[Rinkeby.chainId] = process.env.REACT_APP_ENDPOINT_RINKEBY;
+}
 
 const defaultChain = ChainId.Mainnet;
 
 const subgraphByChain = new ApolloLink(operation => {
   const { chainId } = operation.getContext();
-  console.log("chainId", chainId);
-
-
   const link = new HttpLink({ uri: Subgraph[chainId || defaultChain] });
   return link.request(operation);
 });
@@ -48,9 +50,7 @@ const client = new ApolloClient({
 let config: Config = {
   networks: Object.values(Chains),
   //readOnlyChainId: CHAINID,
-  readOnlyUrls: {
-    [CHAINID]: ENDPOINT || getDefaultProvider(CHAINID)
-  },
+  readOnlyUrls: Endpoint,
   autoConnect: true
 }
 
