@@ -3,13 +3,14 @@ import { ApolloProvider, ApolloClient, InMemoryCache, HttpLink, ApolloLink } fro
 import { Provider } from "react-redux";
 import store from "./store/index";
 import HttpsRedirect from "react-https-redirect";
-import { ChainId, Config, DAppProvider, Mainnet, Rinkeby } from "@usedapp/core";
+import { Chain, ChainId, Config, DAppProvider, Mainnet, Rinkeby } from "@usedapp/core";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import NotificationProvider from "components/Notifications/NotificationProvider";
 import "./index.css";
 import { Endpoint, Chains, Subgraph, UNISWAP_V3_SUBGRAPH } from "./constants/constants";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { CHAINID } from "settings";
 
 if (process.env.REACT_APP_ENDPOINT_MAINNET) {
   Endpoint[Mainnet.chainId] = process.env.REACT_APP_ENDPOINT_MAINNET;
@@ -18,11 +19,11 @@ if (process.env.REACT_APP_ENDPOINT_RINKEBY) {
   Endpoint[Rinkeby.chainId] = process.env.REACT_APP_ENDPOINT_RINKEBY;
 }
 
-const defaultChain = ChainId.Mainnet;
+const defaultChain: Chain = Chains[CHAINID];
 
 const subgraphByChain = new ApolloLink(operation => {
   const { chainId } = operation.getContext();
-  const link = new HttpLink({ uri: Subgraph[chainId || defaultChain] });
+  const link = new HttpLink({ uri: Subgraph[chainId || defaultChain.chainId] });
   return link.request(operation);
 });
 
@@ -49,7 +50,7 @@ const client = new ApolloClient({
 
 let config: Config = {
   networks: Object.values(Chains),
-  //readOnlyChainId: CHAINID,
+  readOnlyChainId: defaultChain.chainId,
   readOnlyUrls: Endpoint,
   autoConnect: true
 }
