@@ -11,8 +11,6 @@ import "./index.css";
 import { ethersConfig } from "config/ethers";
 import { client } from "config/apollo";
 
-
-
 const root = createRoot(document.getElementById("root")!)
 root.render(
   <DAppProvider config={ethersConfig}>
