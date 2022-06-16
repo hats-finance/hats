@@ -82,8 +82,6 @@ export function useVaults() {
   }, [vaultsData, dispatch]);
 
   const getPrices = useCallback(async () => {
-    console.log("getPriceds");
-
     if (vaults) {
       const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
