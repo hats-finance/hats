@@ -1,4 +1,4 @@
-import { useQuery } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { useEthers, useTransactions } from "@usedapp/core";
 import {
   updateRewardsToken,
@@ -8,15 +8,17 @@ import {
 } from "actions";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
+import { GET_PRICES } from "graphql/uniswap";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { POLL_INTERVAL } from "settings";
-import { IVault, IVaultDescription } from "types/types";
+import { CoinGeckoPriceResponse, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
+  const apolloClient = useApolloClient();
   const { chainId } = useEthers();
   const {
     refetch: refetchVaults,
@@ -79,17 +81,42 @@ export function useVaults() {
 
   const getPrices = useCallback(async () => {
     if (vaults) {
-      const stakingTokens = vaults?.map(
+      const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
-      );
-      const uniqueTokens = Array.from(new Set(stakingTokens!));
-      const tokenPrices = (await getTokensPrices(uniqueTokens!));
+      )));
+      const tokenPrices = {};
+      try {
+        const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!) as CoinGeckoPriceResponse;
+        stakingTokens?.forEach((token) => {
+          if (coinGeckoTokenPrices.hasOwnProperty(token)) {
+            const price = coinGeckoTokenPrices?.[token]?.['usd'];
 
-      if (tokenPrices) {
-        dispatch(updateTokenPrices(tokenPrices));
+            if (price > 0) {
+              tokenPrices[token] = price;
+            }
+          }
+        })
+      } catch (error) {
+        console.error(error);
       }
+
+      // get all tokens that are still without prices
+      const missingTokens = stakingTokens?.filter((token) => !tokenPrices.hasOwnProperty(token));
+      if (missingTokens && missingTokens.length > 0) {
+        const uniswapPrices = await apolloClient.query({ query: GET_PRICES, variables: { tokens: missingTokens } }) as { data: { tokens: { id, name, tokenDayData: { priceUSD: number[] } }[] } };
+        uniswapPrices.data.tokens.forEach(tokenData => {
+          const price = tokenData.tokenDayData[0].priceUSD;
+          if (price > 0) {
+            tokenPrices[tokenData.id] = price;
+          }
+        });
+        console.log(uniswapPrices);
+
+      }
+
+      dispatch(updateTokenPrices(tokenPrices));
     }
-  }, [vaults, dispatch]);
+  }, [vaults, dispatch, apolloClient]);
 
   useEffect(() => {
     if (vaults && (!tokenPrices || Object.keys(tokenPrices).length === 0)) {

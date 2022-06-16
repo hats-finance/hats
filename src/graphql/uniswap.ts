@@ -11,3 +11,15 @@ query Price($token: String!) @uniswapv3 {
     }
 }
 `;
+
+export const GET_PRICES = gql`
+query Price($tokens: [String!]) @uniswapv3 {
+    tokens( where: {id_in: $tokens}) {
+        id
+        name
+        tokenDayData(skip:1,first:1) {
+        priceUSD
+        }
+    }
+}
+`;
