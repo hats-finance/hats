@@ -1,5 +1,5 @@
 import { useApolloClient, useQuery } from "@apollo/client";
-import { useEthers, useTransactions } from "@usedapp/core";
+import { useEthers } from "@usedapp/core";
 import {
   updateRewardsToken,
   updateTokenPrices,
@@ -36,8 +36,6 @@ export function useVaults() {
     context: { chainId }
   });
   const { vaults } = useSelector((state: RootState) => state.dataReducer);
-
-  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
   useEffect(() => {
     if (masterData) {
