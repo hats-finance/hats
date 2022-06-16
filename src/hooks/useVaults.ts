@@ -110,8 +110,6 @@ export function useVaults() {
             tokenPrices[tokenData.id] = price;
           }
         });
-        console.log(uniswapPrices);
-
       }
 
       dispatch(updateTokenPrices(tokenPrices));
