@@ -51,7 +51,8 @@ const NotificationProvider: FC<Props> = ({ children }) => {
 
   useEffect(() => {
     if (error) {
-      addNotification(error?.message, NotificationType.Error);
+      console.error(error)
+      //addNotification(error?.message, NotificationType.Error);
     }
   }, [error, addNotification])
 
