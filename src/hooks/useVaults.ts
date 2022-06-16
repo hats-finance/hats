@@ -82,6 +82,8 @@ export function useVaults() {
   }, [vaultsData, dispatch]);
 
   const getPrices = useCallback(async () => {
+    console.log("getPriceds");
+
     if (vaults) {
       const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
@@ -89,15 +91,17 @@ export function useVaults() {
       const tokenPrices = {};
       try {
         const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!) as CoinGeckoPriceResponse;
-        stakingTokens?.forEach((token) => {
-          if (coinGeckoTokenPrices.hasOwnProperty(token)) {
-            const price = coinGeckoTokenPrices?.[token]?.['usd'];
+        if (coinGeckoTokenPrices) {
+          stakingTokens?.forEach((token) => {
+            if (coinGeckoTokenPrices.hasOwnProperty(token)) {
+              const price = coinGeckoTokenPrices?.[token]?.['usd'];
 
-            if (price > 0) {
-              tokenPrices[token] = price;
+              if (price > 0) {
+                tokenPrices[token] = price;
+              }
             }
-          }
-        })
+          })
+        }
       } catch (error) {
         console.error(error);
       }
