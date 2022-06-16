@@ -128,10 +128,8 @@ export function useVaults() {
   }, [chainId, refetchMaster, refetchVaults]);
 
   useEffect(() => {
-    if (currentTransaction == null) {
-      getVaults()
-    }
-  }, [currentTransaction, getVaults]);
+    getVaults()
+  }, [getVaults, vaultsData]);
 
   return { vaults, getVaults };
 }

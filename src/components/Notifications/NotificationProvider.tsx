@@ -78,12 +78,12 @@ const NotificationProvider: FC<Props> = ({ children }) => {
           <Notification
             key={notifications.length + index}
             notification={notification} />))}
-        {error && <Notification key="error" notification={{
+        {/* {error && <Notification key="error" notification={{
 
           id: "ethers-error",
           content: error.message,
           type: NotificationType.Error
-        }} />}
+        }} />} */}
 
       </div>
     </NotificationContext.Provider>
