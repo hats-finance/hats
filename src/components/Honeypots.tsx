@@ -35,7 +35,7 @@ export default function Honeypots() {
 
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
-    const tokenPrice = tokenPrices?.[vault.stakingToken]?.['usd'];
+    const tokenPrice = tokenPrices?.[vault.stakingToken];
 
     return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, [tokenPrices])

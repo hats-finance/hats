@@ -92,7 +92,7 @@ export default function DepositWithdraw(props: IProps) {
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
 
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
