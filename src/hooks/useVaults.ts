@@ -25,15 +25,17 @@ export function useVaults() {
     data: vaultsData } = useQuery<{ vaults: IVault[] }>(
       GET_VAULTS,
       {
+        fetchPolicy: "no-cache",
         context: {
           chainId
         },
         pollInterval: POLL_INTERVAL
-      }
-    );
-
-  const { refetch: refetchMaster, data: masterData } = useQuery(GET_MASTER_DATA, { context: { chainId } });
-  const { vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
+      });
+  const { refetch: refetchMaster, data: masterData } = useQuery(GET_MASTER_DATA, {
+    fetchPolicy: "no-cache",
+    context: { chainId }
+  });
+  const { vaults } = useSelector((state: RootState) => state.dataReducer);
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
@@ -117,14 +119,14 @@ export function useVaults() {
   }, [vaults, dispatch, apolloClient]);
 
   useEffect(() => {
-    if (vaults && (!tokenPrices || Object.keys(tokenPrices).length === 0)) {
+    if (vaults) {
       getPrices();
     }
-  }, [vaults, tokenPrices, getPrices]);
+  }, [vaults, getPrices, chainId]);
 
   useEffect(() => {
-    refetchMaster();
-    refetchVaults();
+    refetchMaster({ context: { chainId } });
+    refetchVaults({ context: { chainId } });
   }, [chainId, refetchMaster, refetchVaults]);
 
   useEffect(() => {
