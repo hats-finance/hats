@@ -66,7 +66,9 @@ function App() {
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
       <Routes>
         <Route path="/" element={<Navigate to={RoutePaths.vaults} replace={true} />} />
-        <Route path={RoutePaths.vaults} element={<Honeypots />} />
+        <Route path={RoutePaths.vaults} element={<Honeypots />}>
+          <Route path=":pid" element={<Honeypots />} />
+        </Route>
         <Route path={RoutePaths.gov} element={<Gov />} />
         <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
         <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
