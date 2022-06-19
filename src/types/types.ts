@@ -33,6 +33,7 @@ export interface IVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
+  multipleVaults?: IVault[]
 }
 
 export interface IVaultDescription {
