@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
@@ -20,26 +20,24 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const { t } = useTranslation();
-  const { description, tokenPrice, honeyPotBalance,
-    withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
-  const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
-  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
-  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
+  const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
 
-  useEffect(() => {
-    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
-  }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
-
+  const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+  const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
+  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
+        {honeyPotBalanceValue}
+        {honeyPotBalanceUSDValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceUSDValue}`}</span>}
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>

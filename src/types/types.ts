@@ -33,8 +33,6 @@ export interface IVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
-  tokenPrice: number // calculated on the UI - not via subgraph
-  multipleVaults?: IVault[]
 }
 
 export interface IVaultDescription {

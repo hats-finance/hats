@@ -112,6 +112,41 @@
     }
   }
 
+  .deposited-wrapper {
+    display: flex;
+    font-size: $moderate;
+    color: $white;
+    margin: 20px 0;
+    flex-direction: column;
+    > div {
+      display: flex;
+      justify-content: space-between;
+      margin: 5px 0px;
+    }
+  }
+  .apy-wrapper {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid $field-blue;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+    color: $white;
+    padding-bottom: 25px;
+    border-bottom: 1px solid $turquoise;
+    margin-bottom: 25px;
+    span:nth-child(1) {
+      display: flex;
+      align-items: center;
+    }
+  }
+  .withdraw-timer-wrapper {
+    display: flex;
+    justify-content: space-between;
+    color: $white;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
   .terms-of-use-wrapper {
     color: $white;
     margin: 20px 0;

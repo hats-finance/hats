@@ -7,7 +7,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { isDigitsOnly } from "../../utils";
+import { calculateApy, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
@@ -31,8 +31,8 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
-  const { id, pid, master, stakingToken, tokenPrice, stakingTokenDecimals,
-    committeeCheckedIn, depositPause, multipleVaults } = props.data;
+  const { id, pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
+    committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
   const [tab, setTab] = useState<Tab>("deposit");
@@ -45,6 +45,9 @@ export default function DepositWithdraw(props: IProps) {
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
+  //const apy = tokenPrice && tokenPrice ? calculateApy(props.data, tokenPrice, tokenPrice) : 0;
+
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
   const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();

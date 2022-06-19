@@ -17,11 +17,9 @@ import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "util
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const { data: vaultsData } = useQuery(GET_VAULTS, { pollInterval: POLL_INTERVAL });
+  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(GET_VAULTS, { pollInterval: POLL_INTERVAL });
   const { data: masterData } = useQuery(GET_MASTER_DATA);
-  const { vaults, tokenPrices } = useSelector(
-    (state: RootState) => state.dataReducer
-  );
+  const { vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
@@ -38,13 +36,6 @@ export function useVaults() {
     }
   }, [masterData, dispatch]);
 
-  const fixObject = (description: any): IVaultDescription => {
-    if ("Project-metadata" in description) {
-      description["project-metadata"] = description["Project-metadata"]
-      delete description["Project-metadata"]
-    }
-    return description;
-  }
 
   const getVaults = useCallback(async () => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -63,7 +54,7 @@ export function useVaults() {
 
     if (vaultsData) {
       const vaultsWithData = await Promise.all(
-        (vaultsData.vaults as IVault[]).map(async (vault): Promise<IVault> => ({
+        (vaultsData.vaults).map(async (vault) => ({
           ...vault,
           stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
             PROTECTED_TOKENS[vault.stakingToken]
@@ -87,28 +78,16 @@ export function useVaults() {
         (vault) => vault.stakingToken
       );
       const uniqueTokens = Array.from(new Set(stakingTokens!));
-      const tokenPrices = await getTokensPrices(uniqueTokens!);
+      const tokenPrices = (await getTokensPrices(uniqueTokens!));
 
       if (tokenPrices) {
         dispatch(updateTokenPrices(tokenPrices));
-        dispatch(
-          updateVaults(
-            vaults.map((vault) => {
-              const prices = tokenPrices[vault.stakingToken];
-              const tokenPrice = prices ? prices["usd"] : undefined;
-              return {
-                ...vault,
-                tokenPrice
-              };
-            })
-          )
-        );
       }
     }
   }, [vaults, dispatch]);
 
   useEffect(() => {
-    if (vaults && Object.keys(tokenPrices).length === 0) {
+    if (vaults && (!tokenPrices || Object.keys(tokenPrices).length === 0)) {
       getPrices();
     }
   }, [vaults, tokenPrices, getPrices]);
@@ -120,4 +99,12 @@ export function useVaults() {
   }, [currentTransaction, getVaults]);
 
   return { vaults, getVaults };
+}
+
+export const fixObject = (description: any): IVaultDescription => {
+  if ("Project-metadata" in description) {
+    description["project-metadata"] = description["Project-metadata"]
+    delete description["Project-metadata"]
+  }
+  return description;
 }
