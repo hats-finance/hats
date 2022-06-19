@@ -19,8 +19,6 @@ import { useTranslation } from "react-i18next";
 interface IProps {
   data: IVault
   withdrawRequests?: IPoolWithdrawRequest[]
-  setShowModal?: Function
-  setModalData?: Function
   preview?: boolean
 }
 

@@ -13,8 +13,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 interface IProps {
   data: IVault,
-  setShowModal?: (show: boolean) => any,
-  setModalData?: (data: any) => any,
   preview?: boolean,
 }
 
@@ -33,7 +31,7 @@ export default function Vault(props: IProps) {
   const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div
     className={toggleRow ? "arrow open" : "arrow"}
-    onClick={() => navigate(`${RoutePaths.vaults}/${toggleRow ? "" : pid}`)}>
+    onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
     <ArrowIcon />
   </div >;
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
@@ -76,8 +74,6 @@ export default function Vault(props: IProps) {
               <VaultAction
                 data={props.data}
                 withdrawRequests={withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData}
                 preview={props.preview} />
             </td>
           </>
@@ -88,8 +84,6 @@ export default function Vault(props: IProps) {
         <VaultExpanded
           data={props.data}
           withdrawRequests={withdrawRequests}
-          setShowModal={props.setShowModal}
-          setModalData={props.setModalData}
           preview={props.preview} />}
     </>
   )

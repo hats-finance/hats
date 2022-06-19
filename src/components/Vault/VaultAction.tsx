@@ -2,7 +2,8 @@ import { useEthers } from "@usedapp/core";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Colors } from "../../constants/constants";
+import { useNavigate, useParams } from "react-router-dom";
+import { Colors, RoutePaths } from "../../constants/constants";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import Countdown from "../Shared/Countdown/Countdown";
 import "./VaultAction.scss";
@@ -10,12 +11,12 @@ import "./VaultAction.scss";
 interface IProps {
   data?: IVault
   withdrawRequests?: IPoolWithdrawRequest[]
-  setShowModal?: Function
-  setModalData?: Function
   preview?: boolean
 }
 
 export default function VaultAction(props: IProps) {
+  const navigate = useNavigate();
+  const params = useParams();
   const { t } = useTranslation();
   const { account } = useEthers();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
@@ -37,10 +38,7 @@ export default function VaultAction(props: IProps) {
       <button
         className="deposit-withdraw"
         onClick={() => {
-          if (props.setShowModal && props.setModalData) {
-            props.setShowModal(true);
-            props.setModalData(props.data);
-          }
+          navigate(`${RoutePaths.vaults}/${params.pid}/deposit`)
         }}
         disabled={props.preview || !account}>
         {t("Vault.deposit-withdraw")}
