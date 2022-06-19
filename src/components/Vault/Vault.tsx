@@ -10,13 +10,14 @@ import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import "../../styles/Vault/Vault.scss";
 import { useNavigate, useParams } from "react-router-dom";
+import { ForwardedRef, forwardRef } from "react";
 
 interface IProps {
   data: IVault,
   preview?: boolean,
 }
 
-export default function Vault(props: IProps) {
+const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
   const params = useParams();
   const navigate = useNavigate()
   const { t } = useTranslation();
@@ -49,7 +50,7 @@ export default function Vault(props: IProps) {
 
   return (
     <>
-      <tr className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr ref={ref} className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
@@ -87,4 +88,6 @@ export default function Vault(props: IProps) {
           preview={props.preview} />}
     </>
   )
-}
+});
+
+export default Vault;

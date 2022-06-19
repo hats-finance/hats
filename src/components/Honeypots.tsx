@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -24,6 +24,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
   const { pid } = useParams();
+  const selectedVaultRef = useRef<HTMLTableRowElement>(null)
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
 
@@ -40,6 +41,12 @@ export default function Honeypots({ showDeposit }: IProps) {
     navigate(`${RoutePaths.vaults}/${pid}`);
   }, [navigate, pid])
 
+  useEffect(() => {
+    if (selectedVaultRef.current) {
+      selectedVaultRef.current.scrollIntoView();
+    }
+  }, [selectedVaultRef.current])
+
   const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
     return vaultValue(b) - vaultValue(a);
   }).map((vault: IVault) => {
@@ -49,7 +56,10 @@ export default function Honeypots({ showDeposit }: IProps) {
           gamificationVaults.push(<Vault key={vault.id} data={vault} />);
           return null;
         }
-        return <Vault key={vault.id} data={vault} />;
+        return <Vault
+          ref={vault.pid === pid ? selectedVaultRef : null}
+          key={vault.id}
+          data={vault} />
       }
     }
     return null;
@@ -99,7 +109,7 @@ export default function Honeypots({ showDeposit }: IProps) {
           setShowModal={closeModal}
           height="fit-content"
           maxHeight="100vh"
-          icon={selectedVault!.description?.["project-metadata"].icon}>
+          icon={selectedVault!.description?.["project-metadata"].icon!}>
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>}
     </div>
