@@ -20,14 +20,14 @@ export default function Assets({ vault }: IProps) {
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
         <td><DepositAmount vault={vault} /></td>
-        <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td>
+        {/* <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td> */}
       </tr>
     )
   }) : (
     <tr>
       <td>{vault.stakingTokenSymbol}</td>
       <td><DepositAmount vault={vault} /></td>
-      <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td>
+      {/* <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td> */}
     </tr>
   )
 
