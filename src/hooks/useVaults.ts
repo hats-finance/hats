@@ -1,5 +1,5 @@
-import { useQuery } from "@apollo/client";
-import { useTransactions } from "@usedapp/core";
+import { useApolloClient, useQuery } from "@apollo/client";
+import { useEthers } from "@usedapp/core";
 import {
   updateRewardsToken,
   updateTokenPrices,
@@ -8,20 +8,34 @@ import {
 } from "actions";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_MASTER_DATA, GET_VAULTS } from "graphql/subgraph";
+import { GET_PRICES } from "graphql/uniswap";
 import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { POLL_INTERVAL } from "settings";
-import { IVault, IVaultDescription } from "types/types";
+import { CoinGeckoPriceResponse, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 
 export function useVaults() {
   const dispatch = useDispatch();
-  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(GET_VAULTS, { pollInterval: POLL_INTERVAL });
-  const { data: masterData } = useQuery(GET_MASTER_DATA);
-  const { vaults, tokenPrices } = useSelector((state: RootState) => state.dataReducer);
-
-  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
+  const apolloClient = useApolloClient();
+  const { chainId } = useEthers();
+  const {
+    refetch: refetchVaults,
+    data: vaultsData } = useQuery<{ vaults: IVault[] }>(
+      GET_VAULTS,
+      {
+        fetchPolicy: "no-cache",
+        context: {
+          chainId
+        },
+        pollInterval: POLL_INTERVAL
+      });
+  const { refetch: refetchMaster, data: masterData } = useQuery(GET_MASTER_DATA, {
+    fetchPolicy: "no-cache",
+    context: { chainId }
+  });
+  const { vaults } = useSelector((state: RootState) => state.dataReducer);
 
   useEffect(() => {
     if (masterData) {
@@ -67,29 +81,57 @@ export function useVaults() {
 
   const getPrices = useCallback(async () => {
     if (vaults) {
-      const stakingTokens = vaults?.map(
+      const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
-      );
-      const uniqueTokens = Array.from(new Set(stakingTokens!));
-      const tokenPrices = (await getTokensPrices(uniqueTokens!));
+      )));
+      const tokenPrices = {};
+      try {
+        const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!) as CoinGeckoPriceResponse;
+        if (coinGeckoTokenPrices) {
+          stakingTokens?.forEach((token) => {
+            if (coinGeckoTokenPrices.hasOwnProperty(token)) {
+              const price = coinGeckoTokenPrices?.[token]?.['usd'];
 
-      if (tokenPrices) {
-        dispatch(updateTokenPrices(tokenPrices));
+              if (price > 0) {
+                tokenPrices[token] = price;
+              }
+            }
+          })
+        }
+      } catch (error) {
+        console.error(error);
       }
+
+      // get all tokens that are still without prices
+      const missingTokens = stakingTokens?.filter((token) => !tokenPrices.hasOwnProperty(token));
+      if (missingTokens && missingTokens.length > 0) {
+        const uniswapPrices = await apolloClient.query({ query: GET_PRICES, variables: { tokens: missingTokens } }) as { data: { tokens: { id, name, tokenDayData: { priceUSD: number[] } }[] } };
+        uniswapPrices.data.tokens.forEach(tokenData => {
+          const price = tokenData.tokenDayData[0].priceUSD;
+          if (price > 0) {
+            tokenPrices[tokenData.id] = price;
+          }
+        });
+      }
+
+      dispatch(updateTokenPrices(tokenPrices));
     }
-  }, [vaults, dispatch]);
+  }, [vaults, dispatch, apolloClient]);
 
   useEffect(() => {
-    if (vaults && (!tokenPrices || Object.keys(tokenPrices).length === 0)) {
+    if (vaults) {
       getPrices();
     }
-  }, [vaults, tokenPrices, getPrices]);
+  }, [vaults, getPrices, chainId]);
 
   useEffect(() => {
-    if (currentTransaction == null) {
-      getVaults()
-    }
-  }, [currentTransaction, getVaults]);
+    refetchMaster({ context: { chainId } });
+    refetchVaults({ context: { chainId } });
+  }, [chainId, refetchMaster, refetchVaults]);
+
+  useEffect(() => {
+    getVaults()
+  }, [getVaults, vaultsData]);
 
   return { vaults, getVaults };
 }

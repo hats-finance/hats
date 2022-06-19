@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, FC, ReactElement } from "react";
+import React, { useCallback, useMemo, useState, FC, ReactElement, useEffect } from "react";
 import { useEthers, useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
@@ -49,6 +49,13 @@ const NotificationProvider: FC<Props> = ({ children }) => {
 
   const { error } = useEthers()
 
+  useEffect(() => {
+    if (error) {
+      console.error(error)
+      //addNotification(error?.message, NotificationType.Error);
+    }
+  }, [error, addNotification])
+
   const useDappNotifications = useNotifications().notifications.map((notification): INotification => {
     switch (notification.type) {
       case "transactionStarted":
@@ -78,12 +85,12 @@ const NotificationProvider: FC<Props> = ({ children }) => {
           <Notification
             key={notifications.length + index}
             notification={notification} />))}
-        {error && <Notification key="error" notification={{
+        {/* {error && <Notification key="error" notification={{
 
           id: "ethers-error",
           content: error.message,
           type: NotificationType.Error
-        }} />}
+        }} />} */}
 
       </div>
     </NotificationContext.Provider>
