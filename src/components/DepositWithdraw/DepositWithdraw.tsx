@@ -7,7 +7,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { calculateApy, isDigitsOnly } from "../../utils";
+import { isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
 import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
@@ -45,8 +45,7 @@ export default function DepositWithdraw(props: IProps) {
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
-  //const apy = tokenPrice && tokenPrice ? calculateApy(props.data, tokenPrice, tokenPrice) : 0;
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
 
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
   const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
@@ -72,7 +71,7 @@ export default function DepositWithdraw(props: IProps) {
   const [selectedPid, setSelectedPid] = useState<string>(pid);
   const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
   const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account)
-  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, stakingTokenDecimals) : "-";
+  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault.stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!);
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";

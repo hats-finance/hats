@@ -14,20 +14,21 @@ interface IProps {
 
 export default function Assets({ vault }: IProps) {
   const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);
+  const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
 
   const additionalTokens = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
         <td><DepositAmount vault={vault} /></td>
-        {/* <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td> */}
+        <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
       </tr>
     )
   }) : (
     <tr>
       <td>{vault.stakingTokenSymbol}</td>
       <td><DepositAmount vault={vault} /></td>
-      {/* <td>{hatsPrice ? calculateApy(vault, hatsPrice, vault.tokenPrice) : "-"}</td> */}
+      <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
     </tr>
   )
 
