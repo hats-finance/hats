@@ -176,3 +176,5 @@ export interface IStoredKey {
   passphrase?: string | undefined
   publicKey: string
 }
+
+export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } }

@@ -2,7 +2,6 @@ import { Contract } from "@usedapp/core/node_modules/@ethersproject/contracts";
 import { useCall, useContractFunction } from "@usedapp/core";
 import { BigNumber } from "ethers";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";
-import { checkMasterAddress } from "utils";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
@@ -46,17 +45,14 @@ export function useTokenApprove(tokenAddress: string) {
 }
 
 export function useDepositAndClaim(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "deposit", { transactionName: "deposit and claim" });
 }
 
 export function useWithdrawAndClaim(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "withdraw", { transactionName: "Withdraw And Claim" });
 }
 
 export function useWithdrawRequest(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(
     new Contract(address, vaultAbi),
     "withdrawRequest",
@@ -65,17 +61,14 @@ export function useWithdrawRequest(address: string) {
 }
 
 export function useClaim(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "claim", { transactionName: "Claim" });
 }
 
 export function useClaimReward(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "claimReward", { transactionName: "Claim Reward" });
 }
 
 export function useCheckIn(address: string) {
-  checkMasterAddress(address);
   return useContractFunction(new Contract(address, vaultAbi), "checkIn", { transactionName: "Check In" });
 }
 
