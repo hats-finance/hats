@@ -248,7 +248,7 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <div className="staked-wrapper">
+        <div className="deposited-wrapper">
           <div>
             <span>Deposited</span>
             <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
