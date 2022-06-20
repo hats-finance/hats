@@ -40,6 +40,15 @@ export function useUserSharesPerVault(
   return value?.[0];
 }
 
+// TODO: use this to calcualte withdrawEnableTime and expiryTime
+export function useWithdrawRequestInfo(address: string, pid: string, account: string) {
+  const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "withdrawRequests", args: [pid, account] }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value?.[0];
+}
+
 export function useTokenApprove(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: "Approve" });
 }
@@ -79,6 +88,7 @@ export function useRedeemNFT() {
 export function useDelegateAndClaim() {
   return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim", { transactionName: "Delegate And Claim" });
 }
+
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(
 //   contract: T,
 //   functionName: FN,

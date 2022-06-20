@@ -10,7 +10,7 @@ import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "../../types/types";
-import { getBeneficiaryWithdrawRequests, getStakerData } from "../../graphql/subgraph";
+import { getBeneficiaryWithdrawRequests } from "../../graphql/subgraph";
 import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
@@ -31,7 +31,7 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
-  const { id, pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
+  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
     committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
@@ -39,16 +39,20 @@ export default function DepositWithdraw(props: IProps) {
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers();
-  const { data: staker } = useQuery(
-    getStakerData(id, account!), { pollInterval: POLL_INTERVAL });
+  const [selectedPid, setSelectedPid] = useState<string>(pid);
+  const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
+
+  // Need to get from the contract
   const { data: withdrawRequests } = useQuery(
-    getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
+    getBeneficiaryWithdrawRequests(selectedPid, account!), { pollInterval: POLL_INTERVAL });
+
+
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
 
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
-  const [isWithdrawable, setIsWithdrawable] = useState<boolean>()
+  const [isWithdrawable, setIsWithdrawable] = useState<boolean>();
   const [isPendingWithdraw, setIsPendingWithdraw] = useState<boolean>();
 
   useEffect(() => {
@@ -58,26 +62,24 @@ export default function DepositWithdraw(props: IProps) {
     }
   }, [withdrawRequest]);
 
-  const { shares } = staker?.stakers[0] || {};
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
-    userInputValue = parseUnits(userInput!, stakingTokenDecimals);
+    userInputValue = parseUnits(userInput!, selectedVault.stakingTokenDecimals);
   } catch {
     // TODO: do something
     // userInputValue = BigNumber.from(0);
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  const [selectedPid, setSelectedPid] = useState<string>(pid);
-  const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
-  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account)
+  const tokenBalance = useTokenBalance(selectedVault.stakingToken, account);
   const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault.stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!);
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
-  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault.pid, account!);
-  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, stakingTokenDecimals) : "-";
-  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, stakingTokenDecimals)) >= Number(userInput);
+  const availableToWithdraw = useUserSharesPerVault(master.address, selectedPid, account!);
+  const shares = availableToWithdraw?.toString();
+  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals) : "-";
+  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)) >= Number(userInput);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
@@ -89,8 +91,8 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
-    depositAndClaim(pid, userInputValue);
-  }, [pid, userInputValue, depositAndClaim])
+    depositAndClaim(selectedPid, userInputValue);
+  }, [selectedPid, userInputValue, depositAndClaim])
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -104,8 +106,8 @@ export default function DepositWithdraw(props: IProps) {
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
-  }, [availableToWithdraw, userInputValue, shares, pid, withdrawAndClaim]);
+    withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
+  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
@@ -114,12 +116,12 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
   const handleClaimReward = async () => {
-    claimReward(pid);
+    claimReward(selectedPid);
   }
 
   const { send: checkIn, state: checkInState } = useCheckIn(master.address)
   const handleCheckIn = () => {
-    checkIn(pid)
+    checkIn(selectedPid)
   }
 
   const transactionStates = [
@@ -152,11 +154,6 @@ export default function DepositWithdraw(props: IProps) {
     "disabled": pendingWallet
   })
 
-  const amountWrapperClass = classNames({
-    "amount-wrapper": true,
-    "disabled": (tab === "withdraw" && ((isPendingWithdraw || withdrawSafetyPeriod.isSafetyPeriod) || (!isPendingWithdraw && !isWithdrawable)))
-  })
-
   const multisigAddress = (description as IVaultDescription)?.committee?.["multisig-address"];
   const isCommitteMultisig = multisigAddress === account;
 
@@ -176,7 +173,7 @@ export default function DepositWithdraw(props: IProps) {
       <div style={{ display: `${isPendingWithdraw && tab === "withdraw" ? "none" : ""}` }}>
         <div className="balance-wrapper">
           {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
-          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
+          {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
@@ -188,7 +185,7 @@ export default function DepositWithdraw(props: IProps) {
           </button>
         </div>
         <div>
-          <div className={amountWrapperClass}>
+          <div className="amount-wrapper">
             <div className="top">
               <span>Vault token</span>
               <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>

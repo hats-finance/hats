@@ -97,10 +97,6 @@
       color: $red;
       font-size: $xsmall;
     }
-    &.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
   }
   .percentage-btn {
     background-color: $black;
