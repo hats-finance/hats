@@ -92,7 +92,7 @@ export default function DepositWithdraw(props: IProps) {
     getBeneficiaryWithdrawRequests(pid, account!), { pollInterval: POLL_INTERVAL });
   const { dataReducer: { withdrawSafetyPeriod, hatsPrice } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken]?.['usd'];
+  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
 
   const withdrawRequest = withdrawRequests?.vaults[0]?.withdrawRequests[0] as IPoolWithdrawRequest;
@@ -248,9 +248,9 @@ export default function DepositWithdraw(props: IProps) {
             {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
           </div>
         </div>
-        <div className="staked-wrapper">
+        <div className="deposited-wrapper">
           <div>
-            <span>Staked</span>
+            <span>Deposited</span>
             <span>{depositAmount ? formatUnits(depositAmount, stakingTokenDecimals) : "-"}</span>
           </div>
           <div>
@@ -264,7 +264,7 @@ export default function DepositWithdraw(props: IProps) {
             <Tooltip
               overlayClassName="tooltip"
               overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-              overlay="Estimated yearly earnings based on total staked amount and rate reward">
+              overlay="Estimated yearly earnings based on total deposited amount and rate reward">
               <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon /></div>
             </Tooltip>
           </span>

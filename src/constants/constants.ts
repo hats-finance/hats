@@ -51,6 +51,8 @@ export const Subgraph = {
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
 }
 
+export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",

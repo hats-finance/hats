@@ -15,7 +15,7 @@ export default function VaultReview({ vaultDescription }) {
       stakingTokenDecimals: "18",
       stakingTokenSymbol: "",
       totalStaking: "",
-      honeyPotBalance: "",
+      honeyPotBalance: "0",
       totalReward: "0",
       totalRewardPaid: "0",
       committee: [""],

@@ -16,6 +16,8 @@ import { severities } from './severities'
 import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
 import { ipfsTransformUri } from "utils";
+import { fixObject } from "hooks/useVaults";
+
 interface IContract {
     name: string;
     address: string;
@@ -79,7 +81,8 @@ export default function VaultEditor() {
                 setIpfsDate(new Date(lastModified))
             }
             const newVaultDescription = await response.json()
-            severitiesToContracts(newVaultDescription)
+            severitiesToContracts(fixObject(newVaultDescription))
+
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {
@@ -208,7 +211,6 @@ export default function VaultEditor() {
     }
 
     function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)

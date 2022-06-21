@@ -3,7 +3,7 @@ import { IVault, IWithdrawSafetyPeriod, IAirdropData } from '../types/types';
 
 interface IDataReducer {
   vaults?: Array<IVault>
-  tokenPrices: { [token: string]: {} | { usd: number } }
+  tokenPrices: { [token: string]: number }
   rewardsToken: string
   hatsPrice?: number
   withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
