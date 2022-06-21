@@ -280,7 +280,7 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} honeyPotBalance
  * @param {string} stakingTokenDecimals
  */
-export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number, honeyPotBalance: string, stakingTokenDecimals: string) => {
+export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number | undefined, honeyPotBalance: string, stakingTokenDecimals: string) => {
   if (tokenPrice) {
     return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
@@ -336,10 +336,8 @@ export const isDateBefore = (value: number | string): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
 
-export const ipfsTransformUri = (uri: string | undefined) => {
-  if (!uri) {
-    return;
-  } else if (uri.startsWith("ipfs")) {
+export const ipfsTransformUri = (uri: string) => {
+  if (uri.startsWith("ipfs")) {
     let ipfs;
     if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
