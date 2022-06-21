@@ -344,7 +344,7 @@ export const ipfsTransformUri = (uri: string) => {
     } else if (uri.startsWith("ipfs://")) {
       ipfs = uri.slice(7);
     }
-    return `${IPFS_PREFIX}${ipfs}`;
+    return `${IPFS_PREFIX}/${ipfs}`;
   } else if (uri.startsWith("http")) {
     return uri;
   } else if (uri.startsWith("blob")) {
