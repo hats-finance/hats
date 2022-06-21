@@ -40,13 +40,20 @@ export function useUserSharesPerVault(
   return value?.[0];
 }
 
-// TODO: use this to calcualte withdrawEnableTime and expiryTime
-export function useWithdrawRequestInfo(address: string, pid: string, account: string) {
+export function useWithdrawRequestInfo(address: string, pid: string, account: string): BigNumber | undefined {
   const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "withdrawRequests", args: [pid, account] }) ?? {};
   if (error) {
     return undefined;
   }
   return value?.[0];
+}
+
+export function useGeneralParameters(address: string) {
+  const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "generalParameters", args: [] }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value;
 }
 
 export function useTokenApprove(tokenAddress: string) {

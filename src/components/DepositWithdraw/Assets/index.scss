@@ -7,6 +7,7 @@
   max-height: 200px;
   display: block;
   overflow-y: scroll;
+  padding: 0px 40px;
   th {
     border-bottom: 1px solid $gray;
     text-align: left;
@@ -16,7 +17,10 @@
     background-color: unset;
   }
   .assets-column {
-    width: 100%;
+    width: 50%;
+  }
+  .withdraw-status-column {
+    width: 50%;
   }
   .apy-column {
     display: flex;

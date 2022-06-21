@@ -63,19 +63,3 @@ export const GET_MASTER_DATA = gql`
     }
   }
 `
-
-export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
-  return gql`
-    {
-      vaults (where: { pid: "${pid}" }) {
-        withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
-          id
-          beneficiary
-          withdrawEnableTime
-          createdAt
-          expiryTime
-        }
-      }
-    }
-  `;
-}

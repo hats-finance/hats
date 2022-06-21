@@ -5,7 +5,7 @@ import moment from 'moment';
 import { Colors } from "../../../constants/constants";
 
 interface IProps {
-  endDate: string
+  endDate: string | undefined
   compactView?: boolean
   onEnd?: Function
   textColor?: Colors

@@ -330,10 +330,19 @@ export const normalizeAddress = (address: string) => {
 
 /**
  * Checks whether a given date (in unix time) has passed.
- * @param {number | string} value
+ * @param {number | string | undefined} value
  */
-export const isDateBefore = (value: number | string): boolean => {
+export const isDateBefore = (value: number | string | undefined): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
+}
+
+/**
+ * Checks whether the current date is bwtween two given dates (in unix time).
+ * @param {number | string | undefined} start
+ * @param {number | string | undefined} end 
+ */
+export const isDateBetween = (start: number | string | undefined, end: number | string | undefined): boolean => {
+  return moment().isAfter(moment.unix(Number(start))) && moment().isBefore(moment.unix(Number(end)));
 }
 
 export const ipfsTransformUri = (uri: string) => {

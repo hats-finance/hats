@@ -6,6 +6,7 @@ import { RootState } from "reducers";
 import { IVault } from "types/types";
 import { calculateApy } from "utils";
 import { DepositAmount } from "./DepositAmount";
+import WithdrawTimer from "../WithdrawTimer/WithdrawTimer";
 import "./index.scss";
 
 interface IProps {
@@ -20,6 +21,7 @@ export default function Assets({ vault }: IProps) {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
+        <td><WithdrawTimer vault={vault} /></td>
         <td><DepositAmount vault={vault} /></td>
         <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
       </tr>
@@ -27,6 +29,7 @@ export default function Assets({ vault }: IProps) {
   }) : (
     <tr>
       <td>{vault.stakingTokenSymbol}</td>
+      <td><WithdrawTimer vault={vault} /></td>
       <td><DepositAmount vault={vault} /></td>
       <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
     </tr>
@@ -37,7 +40,8 @@ export default function Assets({ vault }: IProps) {
       <thead>
         <tr>
           <th className="assets-column">Assets</th>
-          <th>Staked</th>
+          <th className="withdraw-status-column">Withdraw Status</th>
+          <th>Deposited</th>
           <th className="apy-column">
             <span>APY</span>
             <Tooltip
