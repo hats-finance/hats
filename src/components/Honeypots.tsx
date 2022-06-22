@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -24,7 +24,6 @@ export default function Honeypots({ showDeposit }: IProps) {
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
   const { pid } = useParams();
-  const selectedVaultRef = useRef<HTMLTableRowElement>(null)
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
 
@@ -41,11 +40,11 @@ export default function Honeypots({ showDeposit }: IProps) {
     navigate(`${RoutePaths.vaults}/${pid}`);
   }, [navigate, pid])
 
-  useEffect(() => {
-    if (selectedVaultRef.current) {
-      selectedVaultRef.current.scrollIntoView();
+  const scrollRef = useCallback(element => {
+    if (element) {
+      element.scrollIntoView()
     }
-  }, [selectedVaultRef.current])
+  }, [])
 
   const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
     return vaultValue(b) - vaultValue(a);
@@ -57,7 +56,7 @@ export default function Honeypots({ showDeposit }: IProps) {
           return null;
         }
         return <Vault
-          ref={vault.pid === pid ? selectedVaultRef : null}
+          ref={vault.pid === pid ? scrollRef : null}
           key={vault.id}
           data={vault} />
       }
