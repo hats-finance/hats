@@ -22,10 +22,13 @@ export default function WithdrawTimer({ vault }: IProps) {
   return (
     <>
       {(pendingWithdraw || isWithdrawable) ? (
-        <Countdown
-          compactView
-          endDate={countdownValue}
-          textColor={(pendingWithdraw && !isWithdrawable) ? Colors.yellow : undefined} />
+        <>
+          <span>{pendingWithdraw ? "Pending " : "Withdrawable "}until</span>
+          <Countdown
+            plainTextView
+            endDate={countdownValue}
+            textColor={pendingWithdraw ? Colors.yellow : Colors.turquoise} />
+        </>
       ) : "-"}
     </>
   )

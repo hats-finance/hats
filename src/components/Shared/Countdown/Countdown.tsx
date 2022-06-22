@@ -1,18 +1,20 @@
 
 import { useState, useEffect, useCallback } from "react";
-import "./index.scss";
 import moment from 'moment';
+import classNames from "classnames";
 import { Colors } from "../../../constants/constants";
+import "./index.scss";
 
 interface IProps {
   endDate: string | undefined
   compactView?: boolean
+  plainTextView?: boolean
   onEnd?: Function
   textColor?: Colors
 }
 
 export default function Countdown(props: IProps) {
-  const { endDate, compactView, onEnd } = props;
+  const { endDate, compactView, plainTextView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [timer, setTimer] = useState({
     days: 0,
@@ -70,23 +72,27 @@ export default function Countdown(props: IProps) {
   }, [setNewTime]);
 
   return (
-    <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`} style={{ color: `${props.textColor}` }}>
-      {timer.days > 0 && <div className="time-element">
-        <span className="value">{timer.days || '00'}</span>
-        <span className="type">{String(timer.days) === "1" ? "DAY" : "DAYS"}</span>
-      </div>}
-      <div className="time-element">
+    <div className={classNames("withdraw-countdown-wrapper", { "compact-view": compactView })} style={{ color: `${props.textColor}` }}>
+      {timer.days > 0 && (
+        <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
+          <span className="value">{timer.days || '00'}</span>
+          {plainTextView && ":"}
+          {!plainTextView && <span className="type">{String(timer.days) === "1" ? "DAY" : "DAYS"}</span>}
+        </div>)}
+      <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{timer.hours || '00'}</span>
-        <span className="type">{String(timer.hours) === "01" ? "HOUR" : "HOURS"}</span>
+        {!plainTextView && <span className="type">{String(timer.hours) === "01" ? "HOUR" : "HOURS"}</span>}
+        {plainTextView && ":"}
       </div>
-      <div className="time-element">
+      <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{timer.minutes || '00'}</span>
-        <span className="type">{String(timer.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>
+        {!plainTextView && <span className="type">{String(timer.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>}
+        {plainTextView && ":"}
       </div>
       {String(timer.days) === "0" && (
-        <div className="time-element">
+        <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{timer.seconds || '00'}</span>
-          <span className="type">{String(timer.seconds) === "01" ? "SECOND" : "SECONDS"}</span>
+          {!plainTextView && <span className="type">{String(timer.seconds) === "01" ? "SECOND" : "SECONDS"}</span>}
         </div>
       )}
     </div>

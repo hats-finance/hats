@@ -39,7 +39,7 @@ export default function Assets({ vault }: IProps) {
     <table className="assets-table">
       <thead>
         <tr>
-          <th className="assets-column">Assets</th>
+          <th>Assets</th>
           <th className="withdraw-status-column">Withdraw Status</th>
           <th>Deposited</th>
           <th className="apy-column">

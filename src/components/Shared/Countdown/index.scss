@@ -26,6 +26,17 @@
     &:last-child {
       margin-right: 0;
     }
+    &.plain-text-view {
+      margin: unset;
+      padding: unset;
+      background-color: unset;
+      width: unset;
+      height: unset;
+      display: unset;
+      .value {
+        font-size: unset;
+      }
+    }
   }
   &.compact-view {
     .time-element {
