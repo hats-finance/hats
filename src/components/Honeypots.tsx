@@ -26,6 +26,8 @@ export default function Honeypots({ showDeposit }: IProps) {
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
+  console.log(selectedVault);
+
 
   const gamificationVaults: Array<JSX.Element> = [];
 
@@ -102,13 +104,13 @@ export default function Honeypots({ showDeposit }: IProps) {
             {vaultsDisplay}
           </tbody>
         </table>}
-      {showDeposit &&
+      {showDeposit && selectedVault &&
         <Modal
-          title={selectedVault!.description?.["project-metadata"].name!}
+          title={selectedVault.description?.["project-metadata"].name!}
           setShowModal={closeModal}
           height="fit-content"
           maxHeight="100vh"
-          icon={selectedVault!.description?.["project-metadata"].icon!}>
+          icon={selectedVault.description?.["project-metadata"].icon!}>
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>}
     </div>
