@@ -26,8 +26,6 @@ export default function Honeypots({ showDeposit }: IProps) {
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
-  console.log(selectedVault);
-
 
   const gamificationVaults: Array<JSX.Element> = [];
 
