@@ -1,10 +1,8 @@
-import { MasterAddresses, Endpoint, Subgraph, VaultService, Chains } from "./constants/constants";
+import { Endpoint, VaultService, Chains } from "./constants/constants";
 import { Chain, ChainId } from '@usedapp/core'
 import { NFTAirdropAddress, TokenAirdropAddress, TokenAirdropCID, TokenAirdropDelegatees } from "components/Airdrop/constants";
 
 export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Rinkeby;
-export const SUBGRAPH_URI = process.env.REACT_APP_SUBGRAPH_URI || Subgraph[CHAINID];
-export const MASTER_ADDRESS = process.env.REACT_APP_MASTER_ADDRESS || MasterAddresses[CHAINID];
 export const ENDPOINT = process.env.REACT_APP_ENDPOINT || Endpoint[CHAINID];
 export const VAULT_SERVICE = process.env.REACT_APP_VAULT_SERVICE || VaultService;
 export const NFT_AIRDROP_ADDRESS = NFTAirdropAddress[CHAINID] || NFTAirdropAddress[ChainId.Mainnet];

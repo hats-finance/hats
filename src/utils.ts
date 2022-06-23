@@ -8,7 +8,6 @@ import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
 import { IVault, IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS } from "./settings";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
