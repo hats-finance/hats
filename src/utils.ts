@@ -310,11 +310,6 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
  * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally.
  * @param {string} masterAddress
  */
-export const checkMasterAddress = (masterAddress: string) => {
-  if (masterAddress !== MASTER_ADDRESS) {
-    throw new Error("Master address does not match!");
-  }
-}
 
 /**
  * Normalize any supported address-format to a checksum address.
