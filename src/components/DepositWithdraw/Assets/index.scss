@@ -12,12 +12,20 @@
     border-bottom: 1px solid $gray;
     text-align: left;
   }
-  th, td {
+  th,
+  td {
     padding: 10px;
     background-color: unset;
   }
   .withdraw-status-column {
     width: 100%;
+    text-align: center;
+  }
+  .withdraw-status-data {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
   }
   .apy-column {
     display: flex;

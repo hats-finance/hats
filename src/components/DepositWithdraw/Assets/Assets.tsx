@@ -21,7 +21,7 @@ export default function Assets({ vault }: IProps) {
     return (
       <tr key={index}>
         <td>{vault.stakingTokenSymbol}</td>
-        <td><WithdrawTimer vault={vault} /></td>
+        <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
         <td><DepositAmount vault={vault} /></td>
         <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
       </tr>
@@ -29,7 +29,7 @@ export default function Assets({ vault }: IProps) {
   }) : (
     <tr>
       <td>{vault.stakingTokenSymbol}</td>
-      <td><WithdrawTimer vault={vault} /></td>
+      <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
       <td><DepositAmount vault={vault} /></td>
       <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
     </tr>
