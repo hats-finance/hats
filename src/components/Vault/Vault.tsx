@@ -9,6 +9,7 @@ import { ScreenSize } from "../../constants/constants";
 import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
+import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import "../../styles/Vault/Vault.scss";
 
 interface IProps {
@@ -20,7 +21,7 @@ interface IProps {
 
 export default function Vault(props: IProps) {
   const { t } = useTranslation();
-  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol } = props.data;
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken } = props.data;
   const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -53,7 +54,7 @@ export default function Vault(props: IProps) {
             <div className="name-source-wrapper">
               <div className="project-name">
                 {description?.["project-metadata"].name}
-                <div className="token-symbol">{stakingTokenSymbol}</div>
+                <TokensSymbols vault={props.data} />
               </div>
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
