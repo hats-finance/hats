@@ -1,6 +1,5 @@
-import { Contract } from "@usedapp/core/node_modules/@ethersproject/contracts";
 import { useCall, useContractFunction } from "@usedapp/core";
-import { BigNumber } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
