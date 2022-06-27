@@ -1,6 +1,7 @@
 @import "../constants.scss";
 
 tr {
+  scroll-margin-top: $header-height*2;
   border-bottom: 2px solid $dark-blue;
   &.gamification {
     td {

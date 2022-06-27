@@ -67,6 +67,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Navigate to={RoutePaths.vaults} replace={true} />} />
         <Route path={RoutePaths.vaults} element={<Honeypots />} />
+        <Route path={`${RoutePaths.vaults}/:pid`} element={<Honeypots />} />
+        <Route path={`${RoutePaths.vaults}/:pid/deposit`} element={<Honeypots showDeposit={true} />} />
         <Route path={RoutePaths.gov} element={<Gov />} />
         <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
         <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
