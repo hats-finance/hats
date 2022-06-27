@@ -426,7 +426,6 @@ export default function VaultEditor() {
                                     <VaultSign message={""} onChange={null} signatures={[]} />
                                 </div>
                             </div>
-
                             <div className="vault-editor__button-container">
                                 <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
                             </div>
