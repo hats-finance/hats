@@ -20,12 +20,17 @@
   .withdraw-status-column {
     width: 100%;
     text-align: center;
+    white-space: nowrap;
+  }
+  .token-symbol {
+    font-weight: bold;
   }
   .withdraw-status-data {
     display: flex;
     justify-content: center;
     flex-direction: column;
     align-items: center;
+    text-align: center;
   }
   .apy-column {
     display: flex;
@@ -34,5 +39,12 @@
       display: flex;
       margin-left: 10px;
     }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .assets-table {
+    font-size: $xxsmall;
+    padding: unset;
   }
 }

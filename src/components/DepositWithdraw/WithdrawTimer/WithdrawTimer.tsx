@@ -23,7 +23,7 @@ export default function WithdrawTimer({ vault }: IProps) {
     <>
       {(pendingWithdraw || isWithdrawable) ? (
         <>
-          <span>{pendingWithdraw ? "Pending " : "Withdrawable "}until</span>
+          <span>{pendingWithdraw ? "Pending " : "Withdrawable "}</span>
           <Countdown
             plainTextView
             endDate={countdownValue}

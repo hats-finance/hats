@@ -1,5 +1,5 @@
 import InfoIcon from "assets/icons/info.icon";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
 import Tooltip from "rc-tooltip";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -16,11 +16,12 @@ interface IProps {
 export default function Assets({ vault }: IProps) {
   const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);
   const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
 
   const additionalTokens = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (
       <tr key={index}>
-        <td>{vault.stakingTokenSymbol}</td>
+        <td className="token-symbol">{vault.stakingTokenSymbol}</td>
         <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
         <td><DepositAmount vault={vault} /></td>
         <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
@@ -28,7 +29,7 @@ export default function Assets({ vault }: IProps) {
     )
   }) : (
     <tr>
-      <td>{vault.stakingTokenSymbol}</td>
+      <td className="token-symbol">{vault.stakingTokenSymbol}</td>
       <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
       <td><DepositAmount vault={vault} /></td>
       <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
@@ -40,7 +41,7 @@ export default function Assets({ vault }: IProps) {
       <thead>
         <tr>
           <th>Assets</th>
-          <th className="withdraw-status-column">Withdraw Status</th>
+          <th className="withdraw-status-column">Withdraw {screenSize === ScreenSize.Desktop && "Status"}</th>
           <th>Deposited</th>
           <th className="apy-column">
             <span>APY</span>
