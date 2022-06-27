@@ -7,7 +7,7 @@ import {
 import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
-import { IVault, IWithdrawSafetyPeriod } from "./types/types";
+import { CoinGeckoPriceResponse, IVault, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
@@ -137,9 +137,9 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @param {string[]} tokensAddresses
  * @returns the prices for each given token
  */
-export const getTokensPrices = async (tokensAddresses: string[]) => {
+export const getTokensPrices = async (tokensAddresses: string[]): Promise<CoinGeckoPriceResponse> => {
   if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
-    return
+    return {}
   }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
@@ -148,6 +148,7 @@ export const getTokensPrices = async (tokensAddresses: string[]) => {
     lastCoinGeckoError = Date.now()
     console.error(err);
   }
+  return {}
 };
 
 /**

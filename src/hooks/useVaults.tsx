@@ -5,7 +5,7 @@ import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES } from "graphql/uniswap";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { CoinGeckoPriceResponse, IVault, IVaultDescription } from "types/types";
+import { IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 
 interface IVaultsContext {
@@ -47,9 +47,9 @@ export function VaultsProvider({ children }) {
       const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
       )));
-      const newTokenPrices = Array<number>();
+      const newTokenPrices = tokenPrices || Array<number>();
       try {
-        const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!) as CoinGeckoPriceResponse;
+        const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!);
         if (coinGeckoTokenPrices) {
           stakingTokens?.forEach((token) => {
             if (coinGeckoTokenPrices.hasOwnProperty(token)) {
@@ -77,9 +77,11 @@ export function VaultsProvider({ children }) {
         });
       }
 
+      console.log("newTokenPrices", newTokenPrices);
+
       setTokenPrices(newTokenPrices);
     }
-  }, [apolloClient]);
+  }, [apolloClient, tokenPrices]);
 
 
   const getAllVaults = useCallback(async () => {
