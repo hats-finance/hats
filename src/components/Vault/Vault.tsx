@@ -10,6 +10,7 @@ import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import "../../styles/Vault/Vault.scss";
+import { useVaults } from "hooks/useVaults";
 
 interface IProps {
   data: IVault,
@@ -26,7 +27,8 @@ export default function Vault(props: IProps) {
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
+  const { tokenPrices } = useVaults();
+  const tokenPrice = tokenPrices?.[stakingToken];
 
   const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;

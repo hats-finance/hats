@@ -11,6 +11,7 @@ import ContractsCovered from "../ContractsCovered";
 import { calculateRewardPrice, formatNumber } from "../../../utils";
 import "./Severity.scss";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
+import { useVaults } from "hooks/useVaults";
 
 interface IProps {
   severity: ISeverity
@@ -32,7 +33,8 @@ export default function Severity(props: IProps) {
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingTokenSymbol];
+  const tokenPrices = useVaults();
+  const tokenPrice = tokenPrices?.[stakingTokenSymbol];
   const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
   return (
