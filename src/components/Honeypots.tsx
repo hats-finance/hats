@@ -16,12 +16,16 @@ import "../styles/Honeypots.scss";
 export default function Honeypots() {
   const [showModal, setShowModal] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const { vaults } = useVaults();
+  const { vaults, subscribeToVaults } = useVaults();
   const [selectedVault, setSelectedVault] = useState("");
   const [vaultIcon, setVaultIcon] = useState("");
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
+
+  useEffect(() => {
+    subscribeToVaults();
+  }, [subscribeToVaults]);
 
   useEffect(() => {
     if (modalData) {
