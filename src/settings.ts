@@ -1,4 +1,4 @@
-import { Endpoint, VaultService, Chains } from "./constants/constants";
+import { Endpoint, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
 import { Chain, ChainId } from '@usedapp/core'
 import { NFTAirdropAddress, TokenAirdropAddress, TokenAirdropCID, TokenAirdropDelegatees } from "components/Airdrop/constants";
 
