@@ -33,7 +33,7 @@ export default function Severity(props: IProps) {
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
-  const tokenPrices = useVaults();
+  const { tokenPrices } = useVaults();
   const tokenPrice = tokenPrices?.[stakingToken];
   const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
