@@ -1,7 +1,7 @@
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { calculateApy, fromWei, ipfsTransformUri } from "../../utils";
+import { fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { RoutePaths, ScreenSize } from "../../constants/constants";
@@ -9,9 +9,10 @@ import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import TokensSymbols from "./TokensSymbols/TokensSymbols";
-import "../../styles/Vault/Vault.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ForwardedRef, forwardRef } from "react";
+import { calculateApy, calculateUSDValue, sumUSDValues } from "./utils";
+import "../../styles/Vault/Vault.scss";
 
 interface IProps {
   data: IVault,
@@ -22,7 +23,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
   const params = useParams();
   const navigate = useNavigate()
   const { t } = useTranslation();
-  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, pid } = props.data;
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, pid, multipleVaults } = props.data;
   const toggleRow = props.preview ? true : pid === params.pid;
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -30,7 +31,9 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
 
-  const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
+  const tokensPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
+
+
   const vaultExpand = <div
     className={toggleRow ? "arrow open" : "arrow"}
     onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
@@ -42,8 +45,8 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceValue}
-        {honeyPotBalanceUSDValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceUSDValue}`}</span>}
+        {!multipleVaults && honeyPotBalanceValue}
+        <span className="honeypot-balance-value">&nbsp;{`≈ $${multipleVaults ? millify(sumUSDValues(tokensPrices, multipleVaults)) : millify(calculateUSDValue(tokensPrices, props.data) ?? 0)}`}</span>
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>

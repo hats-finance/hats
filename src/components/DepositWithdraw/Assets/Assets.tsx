@@ -4,9 +4,9 @@ import Tooltip from "rc-tooltip";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { IVault } from "types/types";
-import { calculateApy } from "utils";
 import { DepositAmount } from "./DepositAmount";
 import WithdrawTimer from "../WithdrawTimer/WithdrawTimer";
+import { calculateApy } from "components/Vault/utils";
 import "./index.scss";
 
 interface IProps {
