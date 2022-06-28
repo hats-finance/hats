@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -8,31 +8,23 @@ import { RootState } from "../reducers";
 import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
-import { ScreenSize } from "../constants/constants";
+import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
 import { fromWei } from "utils";
 import "../styles/Honeypots.scss";
+import { useNavigate, useParams } from "react-router-dom";
 
-export default function Honeypots() {
-  const [showModal, setShowModal] = useState(false);
-  const [modalData, setModalData] = useState(null);
-  const { vaults, subscribeToVaults, tokenPrices } = useVaults();
-  const [selectedVault, setSelectedVault] = useState("");
-  const [vaultIcon, setVaultIcon] = useState("");
+interface IProps {
+  showDeposit?: boolean
+}
+
+export default function Honeypots({ showDeposit }: IProps) {
+  const { vaults, tokenPrices } = useVaults();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-
-  useEffect(() => {
-    subscribeToVaults();
-  }, [subscribeToVaults]);
-
-  useEffect(() => {
-    if (modalData) {
-      const description = (modalData as any).description;
-      setSelectedVault(description?.["project-metadata"]?.name);
-      setVaultIcon(description?.["project-metadata"]?.icon);
-    }
-  }, [modalData])
+  const { pid } = useParams();
+  const navigate = useNavigate();
+  const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
 
   const gamificationVaults: Array<JSX.Element> = [];
 
@@ -43,16 +35,29 @@ export default function Honeypots() {
     return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, [tokenPrices])
 
+  const closeModal = useCallback(() => {
+    navigate(`${RoutePaths.vaults}/${pid}`);
+  }, [navigate, pid])
+
+  const scrollRef = useCallback(element => {
+    if (element) {
+      element.scrollIntoView()
+    }
+  }, [])
+
   const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
     return vaultValue(b) - vaultValue(a);
   }).map((vault: IVault) => {
     if (!vault.liquidityPool && vault.registered) {
       if (vault?.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
         if (vault.description?.["project-metadata"]?.gamification) {
-          gamificationVaults.push(<Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />);
+          gamificationVaults.push(<Vault key={vault.id} data={vault} />);
           return null;
         }
-        return <Vault key={vault.id} data={vault} setShowModal={setShowModal} setModalData={setModalData} />;
+        return <Vault
+          ref={vault.pid === pid ? scrollRef : null}
+          key={vault.id}
+          data={vault} />
       }
     }
     return null;
@@ -96,9 +101,14 @@ export default function Honeypots() {
             {vaultsDisplay}
           </tbody>
         </table>}
-      {showModal &&
-        <Modal title={selectedVault} setShowModal={setShowModal} height="fit-content" maxHeight="100vh" icon={vaultIcon}>
-          <DepositWithdraw data={modalData as any} setShowModal={setShowModal} />
+      {showDeposit && selectedVault &&
+        <Modal
+          title={selectedVault.description?.["project-metadata"].name!}
+          setShowModal={closeModal}
+          height="fit-content"
+          maxHeight="100vh"
+          icon={selectedVault.description?.["project-metadata"].icon!}>
+          <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>}
     </div>
   )

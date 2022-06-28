@@ -1,28 +1,29 @@
-import { useState } from "react";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
 import { calculateApy, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
-import { ScreenSize } from "../../constants/constants";
+import { RoutePaths, ScreenSize } from "../../constants/constants";
 import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import "../../styles/Vault/Vault.scss";
 import { useVaults } from "hooks/useVaults";
+import { useNavigate, useParams } from "react-router-dom";
+import { ForwardedRef, forwardRef } from "react";
 
 interface IProps {
   data: IVault,
-  setShowModal?: (show: boolean) => any,
-  setModalData?: (data: any) => any,
   preview?: boolean,
 }
 
-export default function Vault(props: IProps) {
+const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
+  const params = useParams();
+  const navigate = useNavigate()
   const { t } = useTranslation();
-  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol } = props.data;
-  const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol, pid } = props.data;
+  const toggleRow = props.preview ? true : pid === params.pid;
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
 
@@ -31,7 +32,11 @@ export default function Vault(props: IProps) {
   const tokenPrice = tokenPrices?.[stakingToken];
 
   const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
-  const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+  const vaultExpand = <div
+    className={toggleRow ? "arrow open" : "arrow"}
+    onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
+    <ArrowIcon />
+  </div >;
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
@@ -47,7 +52,7 @@ export default function Vault(props: IProps) {
 
   return (
     <>
-      <tr className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr ref={ref} className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
@@ -72,8 +77,6 @@ export default function Vault(props: IProps) {
               <VaultAction
                 data={props.data}
                 withdrawRequests={withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData}
                 preview={props.preview} />
             </td>
           </>
@@ -84,9 +87,9 @@ export default function Vault(props: IProps) {
         <VaultExpanded
           data={props.data}
           withdrawRequests={withdrawRequests}
-          setShowModal={props.setShowModal}
-          setModalData={props.setModalData}
           preview={props.preview} />}
     </>
   )
-}
+});
+
+export default Vault;

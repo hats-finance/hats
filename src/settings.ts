@@ -9,6 +9,7 @@ export const NFT_AIRDROP_ADDRESS = NFTAirdropAddress[CHAINID] || NFTAirdropAddre
 export const TOKEN_AIRDROP_ADDRESS = TokenAirdropAddress[CHAINID];
 export const DELEGATEES_IPFS = process.env.REACT_APP_DELEGATEES_IPFS || TokenAirdropDelegatees[CHAINID];
 export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_CID || TokenAirdropCID[CHAINID];
+export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddress;
 
 export const defaultChain: Chain = Chains[CHAINID];
 
