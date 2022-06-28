@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -19,7 +19,7 @@ interface IProps {
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
-  const { vaults, tokenPrices } = useVaults();
+  const { vaults, tokenPrices, subscribeToVaults, removeSubscription } = useVaults();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { pid } = useParams();
@@ -38,6 +38,13 @@ export default function Honeypots({ showDeposit }: IProps) {
   const closeModal = useCallback(() => {
     navigate(`${RoutePaths.vaults}/${pid}`);
   }, [navigate, pid])
+
+  useEffect(() => {
+    subscribeToVaults();
+    return () => {
+      removeSubscription();
+    }
+  })
 
   const scrollRef = useCallback(element => {
     if (element) {

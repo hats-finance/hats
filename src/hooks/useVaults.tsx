@@ -76,9 +76,6 @@ export function VaultsProvider({ children }) {
           }
         });
       }
-
-      console.log("newTokenPrices", newTokenPrices);
-
       setTokenPrices(newTokenPrices);
     }
   }, [apolloClient, tokenPrices]);
