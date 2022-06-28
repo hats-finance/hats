@@ -11,8 +11,9 @@ import { useTranslation } from "react-i18next";
 import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { useNavigate, useParams } from "react-router-dom";
 import { ForwardedRef, forwardRef } from "react";
-import { calculateApy, calculateUSDValue, sumUSDValues } from "./utils";
+import { calculateApy } from "./utils";
 import "../../styles/Vault/Vault.scss";
+import { useVaultsTotalPrices } from "./useVaultsTotalPrices";
 
 interface IProps {
   data: IVault,
@@ -30,15 +31,17 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
+  const { totalPrices } = useVaultsTotalPrices(multipleVaults ? multipleVaults : [props.data]);
 
-  const tokensPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
+  const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-
-  const vaultExpand = <div
-    className={toggleRow ? "arrow open" : "arrow"}
-    onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
-    <ArrowIcon />
-  </div >;
+  const vaultExpand = (
+    <div
+      className={toggleRow ? "arrow open" : "arrow"}
+      onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
+      <ArrowIcon />
+    </div>
+  );
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
   const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
@@ -46,7 +49,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
     <>
       <div className="max-rewards-wrapper">
         {!multipleVaults && honeyPotBalanceValue}
-        <span className="honeypot-balance-value">&nbsp;{`≈ $${multipleVaults ? millify(sumUSDValues(tokensPrices, multipleVaults)) : millify(calculateUSDValue(tokensPrices, props.data) ?? 0)}`}</span>
+        <span className="honeypot-balance-value">&nbsp;{`≈ $${millify(sumTotalPrices)}`}</span>
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>

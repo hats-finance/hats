@@ -1,26 +1,5 @@
-import { IVault, TokensPrices } from "types/types";
+import { IVault } from "types/types";
 import { fromWei } from "utils";
-
-/**
- * 
- * @param tokensPrices
- * @param vault 
-
- */
-export const calculateUSDValue = (tokensPrices: TokensPrices, vault: IVault) => {
-  return tokensPrices[vault.stakingToken] ? tokensPrices[vault.stakingToken] * Number(fromWei(vault.honeyPotBalance, vault.stakingTokenDecimals)) : undefined;
-}
-
-export const sumUSDValues = (tokensPrices: TokensPrices, vaults: IVault[]) => {
-  let sum = 0;
-  vaults.forEach(vault => {
-    const usdValue = calculateUSDValue(tokensPrices, vault);
-    if (usdValue) {
-      sum += usdValue;
-    }
-  })
-  return sum;
-}
 
 /**
  * Calculates the APY for a given vault

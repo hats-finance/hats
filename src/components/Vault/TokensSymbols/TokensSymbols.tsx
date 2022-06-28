@@ -1,11 +1,9 @@
-import { useSelector } from "react-redux";
 import Tooltip from "rc-tooltip";
-import { RootState } from "reducers";
 import millify from "millify";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { IVault } from "types/types";
 import { formatWei } from "utils";
-import { calculateUSDValue } from "../utils";
+import { useVaultsTotalPrices } from "../useVaultsTotalPrices";
 import "./index.scss";
 
 interface IProps {
@@ -13,12 +11,13 @@ interface IProps {
 }
 
 export default function TokensSymbols({ vault }: IProps) {
-  const tokensPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
+  const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ? vault.multipleVaults : [vault]);
+
   const symbols = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (
       <Tooltip
         key={index}
-        overlay={`${formatWei(vault.honeyPotBalance, 1, vault.stakingTokenDecimals)}  ≈ $${millify(calculateUSDValue(tokensPrices, vault) ?? 0)}`}
+        overlay={`${formatWei(vault.honeyPotBalance, 1, vault.stakingTokenDecimals)}  ≈ $${millify(totalPrices[vault.stakingToken] ?? 0)}`}
         overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
         placement="top">
         <span className="token-symbol">{vault.stakingTokenSymbol}</span>
