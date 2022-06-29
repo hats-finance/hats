@@ -15,9 +15,9 @@ import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, useGeneralParameters, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
-import { calculateActualWithdrawValue } from "./utils";
-import { usePrevious } from "hooks/usePrevious";
-import "./index.scss"
+import { calculateActualWithdrawValue, usePrevious } from "./utils";
+import { useVaults } from "hooks/useVaults";
+import "./index.scss";
 
 interface IProps {
   data: IVault
@@ -40,7 +40,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
+  const { tokenPrices } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -50,15 +50,15 @@ export default function DepositWithdraw(props: IProps) {
     // userInputValue = BigNumber.from(0);
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  const tokenBalance = useTokenBalance(selectedVault.stakingToken, account);
-  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault.stakingTokenDecimals) : "-";
+  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account);
+  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!);
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
   const availableToWithdraw = useUserSharesPerVault(master.address, selectedPid, account!);
   const shares = availableToWithdraw?.toString();
-  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals) : "-";
-  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)) >= Number(userInput);
+  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals) : "-";
+  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
   const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
   const generalParams = useGeneralParameters(master.address);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
@@ -164,7 +164,7 @@ export default function DepositWithdraw(props: IProps) {
         <div className="amount-wrapper">
           <div className="top">
             <span>Vault token</span>
-            <span>&#8776; {!tokenPrice ? "-" : `$${millify(tokenPrice, { precision: 3 })}`}</span>
+            <span>&#8776; {!tokenPrices?.[stakingToken] ? "-" : `$${millify(tokenPrices?.[stakingToken], { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
             <div className="pool-token">

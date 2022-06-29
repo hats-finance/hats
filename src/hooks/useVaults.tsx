@@ -155,6 +155,13 @@ export function VaultsProvider({ children }) {
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getAllVaults().then(vaults => {
         if (!cancelled) {
+          ///////
+          // TODO: TEMPORARY - mock one vault with multiple tokens based on other vaults as additional vaults
+          vaults[1].multipleVaults = [vaults[1], vaults[12], vaults[3], vaults[4], vaults[5]];
+          if (vaults[1].description) {
+            vaults[1].description["additional-vaults"] = [vaults[1].pid, vaults[11].pid, vaults[3].pid, vaults[4].pid, vaults[5].pid];
+          }
+          ///////
           setVaults(vaults);
         }
       });
