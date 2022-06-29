@@ -11,8 +11,8 @@ import { useTranslation } from "react-i18next";
 import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { useNavigate, useParams } from "react-router-dom";
 import { ForwardedRef, forwardRef } from "react";
-import { calculateApy } from "./utils";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
+import { useVaultsApy } from "./hooks/useVaultsApy";
 import "../../styles/Vault/Vault.scss";
 
 interface IProps {
@@ -26,14 +26,11 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, pid, multipleVaults } = props.data;
   const toggleRow = props.preview ? true : pid === params.pid;
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
-
   const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
+  const { apys } = useVaultsApy(props.data.multipleVaults ?? [props.data]);
 
   const vaultExpand = (
     <div
@@ -42,8 +39,6 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
       <ArrowIcon />
     </div>
   );
-  const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
-  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
 
   const maxRewards = (
     <>
@@ -77,7 +72,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
             <td className="rewards-cell">
               {maxRewards}
             </td>
-            <td>{vaultApy}</td>
+            <td>{apys[stakingToken]}</td>
             <td>
               <VaultAction
                 data={props.data}

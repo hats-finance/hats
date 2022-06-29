@@ -6,7 +6,7 @@ import { RootState } from "reducers";
 import { IVault } from "types/types";
 import { DepositAmount } from "./DepositAmount";
 import WithdrawTimer from "../WithdrawTimer/WithdrawTimer";
-import { calculateApy } from "components/Vault/utils";
+import { useVaultsApy } from "components/Vault/hooks/useVaultsApy";
 import "./index.scss";
 
 interface IProps {
@@ -14,9 +14,8 @@ interface IProps {
 }
 
 export default function Assets({ vault }: IProps) {
-  const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);
-  const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
+  const { apys } = useVaultsApy(vault.multipleVaults ?? [vault]);
 
   const additionalTokens = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (
@@ -24,7 +23,7 @@ export default function Assets({ vault }: IProps) {
         <td className="token-symbol">{vault.stakingTokenSymbol}</td>
         <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
         <td><DepositAmount vault={vault} /></td>
-        <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
+        <td>{apys[vault.stakingToken]}</td>
       </tr>
     )
   }) : (
@@ -32,7 +31,7 @@ export default function Assets({ vault }: IProps) {
       <td className="token-symbol">{vault.stakingTokenSymbol}</td>
       <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
       <td><DepositAmount vault={vault} /></td>
-      <td>{hatsPrice ? calculateApy(vault, hatsPrice, tokenPrices[vault.stakingToken]) : "-"}</td>
+      <td>{apys[vault.stakingToken]}</td>
     </tr>
   )
 
