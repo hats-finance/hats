@@ -51,7 +51,7 @@ export default function Severity(props: IProps) {
           <div className="severity-data">
             {severity?.description &&
               <div className="severity-data-item">
-                <span className="vault-expanded-subtitle">Severity description:</span>
+                <span className="vault-expanded-subtitle">{isNormalVault && 'Severity '} Description:</span>
                 <span style={{ color: "white" }}>{severity.description}</span>
               </div>}
             {severity?.["nft-metadata"] &&
