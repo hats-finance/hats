@@ -89,7 +89,7 @@ export default function Honeypots({ showDeposit }: IProps) {
             {vaultsByGroup && Object.entries(vaultsByGroup).map(([type, vaults]) =>
               <React.Fragment key={type}>
                 <tr className="transparent-row">
-                  <td colSpan={7}>{type === normalVaultKey ? "Hats Native" : capitalizeFirstLetter(type)} vault</td>
+                  <td colSpan={7}>{type === normalVaultKey ? "Hats Native" : capitalizeFirstLetter(type)} Vaults</td>
                 </tr>
                 {vaults.map(vault =>
                   <Vault
