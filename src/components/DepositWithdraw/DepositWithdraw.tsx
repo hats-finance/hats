@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef, MutableRefObject } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useQuery } from "@apollo/client";
 import { BigNumber } from "@ethersproject/bignumber";
@@ -22,6 +22,7 @@ import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTo
 import "../../styles/DepositWithdraw/DepositWithdraw.scss";
 import { POLL_INTERVAL } from "settings";
 import { useVaults } from "hooks/useVaults";
+import { usePrevious } from "hooks/usePrevious";
 
 interface IProps {
   data: IVault
@@ -326,17 +327,6 @@ export default function DepositWithdraw(props: IProps) {
     </div>
   )
 }
-
-function usePrevious<T>(
-  value: T,
-): MutableRefObject<T | undefined>['current'] {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
-
 
 /**
  * Calculates how much available to withdraw considring the userShares, poolBalance and totalUsersShares

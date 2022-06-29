@@ -4,6 +4,7 @@ import { VaultInstances } from "constants/constants";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES } from "graphql/uniswap";
+import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
@@ -18,15 +19,26 @@ interface IVaultsContext {
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
 export function useVaults() {
-  return useContext(VaultsContext);
+  // every place useVaults is used we subscribed and remove subscription upon unmounting.
+  // this should not create any overhead 
+  const vaultsContext = useContext(VaultsContext);
+  useEffect(() => {
+    vaultsContext.subscribeToVaults();
+    return () => {
+      vaultsContext.removeSubscription();
+    }
+  }, [vaultsContext])
+  return vaultsContext
 }
 
 export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>();
-  const [subscribed, setSubscribed] = useState<boolean>(false)
+  const [subscriptions, setSubscrptions] = useState<number>(0)
+  const prevSubscriptions = usePrevious(subscriptions);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
   const { chainId } = useEthers();
+  const prevChainId = usePrevious(chainId);
 
   // useEffect(() => {
   //   if (masterData) {
@@ -47,7 +59,7 @@ export function VaultsProvider({ children }) {
       const stakingTokens = Array.from(new Set(vaults?.map(
         (vault) => vault.stakingToken
       )));
-      const newTokenPrices = tokenPrices || Array<number>();
+      const newTokenPrices = Array<number>();
       try {
         const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!);
         if (coinGeckoTokenPrices) {
@@ -76,19 +88,18 @@ export function VaultsProvider({ children }) {
           }
         });
       }
-      setTokenPrices(newTokenPrices);
+      return newTokenPrices;
     }
-  }, [apolloClient, tokenPrices]);
-
+  }, [apolloClient]);
 
   const getAllVaults = useCallback(async () => {
 
     const getVaultsFromGraph = async (chainId, version) =>
       (await apolloClient.query<{ vaults: IVault[] }>({
         query: GET_VAULTS,
+        variables: { chainId, version },
         context: { chainId, version },
         fetchPolicy: "no-cache"
-
       })).data.vaults
 
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -119,24 +130,46 @@ export function VaultsProvider({ children }) {
         .map(version => getVaultsFromGraph(chainId, version)));
     const allVaults = vaultsPerVersion.flat(); // all versions in one array
     const vaultsWithDescription = await getVaultsData(allVaults);
-    setVaults(vaultsWithDescription);
-    getPrices(allVaults);
 
-  }, [setVaults, apolloClient, getPrices, chainId]);
+    return vaultsWithDescription;
+
+  }, [apolloClient, chainId]);
 
 
   useEffect(() => {
-    if (subscribed) {
-      getAllVaults();
+    let cancelled = false;
+    if (vaults)
+      getPrices(vaults)
+        .then((prices) => {
+          if (!cancelled) {
+            setTokenPrices(prices)
+          }
+        })
+    return () => {
+      cancelled = true;
     }
-  }, [chainId, subscribed, getAllVaults]);
+  }, [vaults, getPrices, chainId])
+
+  useEffect(() => {
+    let cancelled = false;
+    if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
+      getAllVaults().then(vaults => {
+        if (!cancelled) {
+          setVaults(vaults);
+        }
+      });
+    }
+    return () => {
+      cancelled = true;
+    }
+  }, [chainId, subscriptions, prevSubscriptions, prevChainId, getAllVaults]);
 
   const subscribeToVaults = () => {
-    setSubscribed(true);
+    setSubscrptions(subscriptions => subscriptions + 1);
   }
 
   const removeSubscription = () => {
-    setSubscribed(false);
+    setSubscrptions(subscriptions => subscriptions - 1);
   }
 
   const context: IVaultsContext = {
