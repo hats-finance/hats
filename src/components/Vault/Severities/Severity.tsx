@@ -26,7 +26,7 @@ export default function Severity(props: IProps) {
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
-  const { rewardsLevels, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit,
+  const { description, rewardsLevels, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit,
     committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration,
     stakingToken, stakingTokenSymbol } = props.vault;
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
@@ -35,6 +35,8 @@ export default function Severity(props: IProps) {
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
   const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
 
+  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === '';
+
   return (
     <>
       <div className="severity-wrapper" key={severityIndex}>
@@ -42,7 +44,7 @@ export default function Severity(props: IProps) {
         <div
           className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase().split(' ').join('-')}`}
           onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
-          <div className="severity-title">{`${severity?.name.toUpperCase()} SEVERITY`}</div>
+          <div className="severity-title">{`${severity?.name.toUpperCase()}`}{isNormalVault && ' SEVERITY'} </div>
           <div className={expanded ? "arrow open" : "arrow"}><ArrowIcon /></div>
         </div>
         {expanded && (

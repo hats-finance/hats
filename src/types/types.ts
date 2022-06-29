@@ -41,7 +41,7 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
-    type: string
+    type?: string
   }
   "communication-channel": {
     "committee-bot": string
