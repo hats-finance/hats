@@ -318,7 +318,10 @@ export const isDateBetween = (start: number | string | undefined, end: number | 
   return moment().isAfter(moment.unix(Number(start))) && moment().isBefore(moment.unix(Number(end)));
 }
 
-export const ipfsTransformUri = (uri: string) => {
+export const ipfsTransformUri = (uri: string | undefined) => {
+  if (!uri) {
+    return "";
+  }
   if (uri.startsWith("ipfs")) {
     let ipfs;
     if (uri.startsWith("ipfs/")) {
