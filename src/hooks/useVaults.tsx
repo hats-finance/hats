@@ -3,7 +3,7 @@ import { useEthers } from "@usedapp/core";
 import { VaultInstances } from "constants/constants";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
-import { GET_PRICES } from "graphql/uniswap";
+import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IVault, IVaultDescription } from "types/types";
@@ -80,7 +80,7 @@ export function VaultsProvider({ children }) {
       // get all tokens that are still without prices
       const missingTokens = stakingTokens?.filter((token) => !newTokenPrices.hasOwnProperty(token));
       if (missingTokens && missingTokens.length > 0) {
-        const uniswapPrices = await apolloClient.query({ query: GET_PRICES, variables: { tokens: missingTokens } }) as { data: { tokens: { id, name, tokenDayData: { priceUSD: number[] } }[] } };
+        const uniswapPrices = (await apolloClient.query<UniswapV3GetPrices>({ query: GET_PRICES, variables: { tokens: missingTokens } })).data;
         uniswapPrices.data.tokens.forEach(tokenData => {
           const price = tokenData.tokenDayData[0].priceUSD;
           if (price > 0) {
