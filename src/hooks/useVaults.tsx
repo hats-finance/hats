@@ -81,7 +81,7 @@ export function VaultsProvider({ children }) {
       const missingTokens = stakingTokens?.filter((token) => !newTokenPrices.hasOwnProperty(token));
       if (missingTokens && missingTokens.length > 0) {
         const uniswapPrices = (await apolloClient.query<UniswapV3GetPrices>({ query: GET_PRICES, variables: { tokens: missingTokens } })).data;
-        uniswapPrices.data.tokens.forEach(tokenData => {
+        uniswapPrices.tokens.forEach(tokenData => {
           const price = tokenData.tokenDayData[0].priceUSD;
           if (price > 0) {
             newTokenPrices[tokenData.id] = price;
