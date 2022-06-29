@@ -31,7 +31,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
-  const { totalPrices } = useVaultsTotalPrices(multipleVaults ? multipleVaults : [props.data]);
+  const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
 
   const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 

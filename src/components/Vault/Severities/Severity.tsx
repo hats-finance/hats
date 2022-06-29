@@ -11,6 +11,7 @@ import ContractsCovered from "../ContractsCovered";
 import { calculateRewardPrice, formatNumber } from "../../../utils";
 import "./Severity.scss";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
+import { useVaultsTotalPrices } from "../useVaultsTotalPrices";
 
 interface IProps {
   severity: ISeverity
@@ -26,16 +27,17 @@ export default function Severity(props: IProps) {
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
-  const { rewardsLevels, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit,
+  const { rewardsLevels, hackerVestedRewardSplit, hackerRewardSplit,
     committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration,
-    stakingToken, stakingTokenSymbol } = props.vault;
+    stakingToken, stakingTokenSymbol, multipleVaults } = props.vault;
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
   const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingToken];
 
-  // TODO: handle the case of multi vaults 
-  const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
+  const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.vault]);
+  const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
+  const rewardPrice = calculateRewardPrice(props.vault, rewardPercentage, tokenPrice, sumTotalPrices);
 
   return (
     <>

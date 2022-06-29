@@ -11,7 +11,7 @@ interface IProps {
 }
 
 export default function TokensSymbols({ vault }: IProps) {
-  const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ? vault.multipleVaults : [vault]);
+  const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ?? [vault]);
 
   const symbols = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
     return (

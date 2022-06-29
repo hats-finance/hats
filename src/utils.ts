@@ -7,7 +7,7 @@ import {
 import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
-import { IWithdrawSafetyPeriod } from "./types/types";
+import { IVault, IWithdrawSafetyPeriod } from "./types/types";
 import { MASTER_ADDRESS } from "./settings";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
@@ -262,14 +262,17 @@ export const parseJSONToObject = (dataString: string) => {
 
 /**
  * Calculates the reward price in USD for given vault and it's rewardPercentage
+ * @param {IVault} vault
  * @param {number} rewardPercentage
  * @param {number} tokenPrice
- * @param {string} honeyPotBalance
- * @param {string} stakingTokenDecimals
+ * @param {number} sumTotalPrices
  */
-export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number | undefined, honeyPotBalance: string, stakingTokenDecimals: string) => {
+export const calculateRewardPrice = (vault: IVault, rewardPercentage: number, tokenPrice: number | undefined, sumTotalPrices: number) => {
+  if (vault.multipleVaults && sumTotalPrices) {
+    return sumTotalPrices * (rewardPercentage / 100);
+  }
   if (tokenPrice) {
-    return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
+    return (Number(fromWei(vault.honeyPotBalance, vault.stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
   }
   return undefined;
 };
