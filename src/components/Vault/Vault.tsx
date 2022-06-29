@@ -12,8 +12,8 @@ import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { useNavigate, useParams } from "react-router-dom";
 import { ForwardedRef, forwardRef } from "react";
 import { calculateApy } from "./utils";
+import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import "../../styles/Vault/Vault.scss";
-import { useVaultsTotalPrices } from "./useVaultsTotalPrices";
 
 interface IProps {
   data: IVault,

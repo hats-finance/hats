@@ -10,7 +10,7 @@ import NFTPrize from "../../NFTPrize";
 import ContractsCovered from "../ContractsCovered";
 import { formatNumber } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
-import { useSeverityReward } from "../useSeverityReward";
+import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
 
 interface IProps {
