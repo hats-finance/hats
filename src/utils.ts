@@ -7,8 +7,7 @@ import {
 import { BigNumber, ethers } from "ethers";
 import { isAddress, getAddress } from "ethers/lib/utils";
 import axios from "axios";
-import { IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS } from "./settings";
+import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
@@ -138,9 +137,9 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @param {string[]} tokensAddresses
  * @returns the prices for each given token
  */
-export const getTokensPrices = async (tokensAddresses: string[]) => {
+export const getTokensPrices = async (tokensAddresses: string[]): Promise<CoinGeckoPriceResponse> => {
   if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
-    return
+    return {}
   }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
@@ -149,6 +148,7 @@ export const getTokensPrices = async (tokensAddresses: string[]) => {
     lastCoinGeckoError = Date.now()
     console.error(err);
   }
+  return {}
 };
 
 /**
@@ -284,11 +284,6 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
  * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally.
  * @param {string} masterAddress
  */
-export const checkMasterAddress = (masterAddress: string) => {
-  if (masterAddress !== MASTER_ADDRESS) {
-    throw new Error("Master address does not match!");
-  }
-}
 
 /**
  * Normalize any supported address-format to a checksum address.

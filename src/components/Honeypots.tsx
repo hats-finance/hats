@@ -19,10 +19,9 @@ interface IProps {
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
-  const { vaults } = useVaults();
+  const { vaults, tokenPrices } = useVaults();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;

@@ -23,3 +23,5 @@ query Price($tokens: [String!]) @uniswapv3 {
     }
 }
 `;
+
+export type UniswapV3GetPrices = { tokens: { id, name, tokenDayData: { priceUSD: number[] } }[] };

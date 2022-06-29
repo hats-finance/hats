@@ -27,11 +27,6 @@ export const updateRewardsToken = (rewardsToken: string) => ({
   rewardsToken
 })
 
-export const updateTokenPrices = (tokenPrices: { [token: string]: number }) => ({
-  type: types.UPDATE_TOKEN_PRICES,
-  tokenPrices
-})
-
 export const updateHatsPrice = (hatsPrice: number) => ({
   type: types.UPDATE_HATS_PRICE,
   hatsPrice

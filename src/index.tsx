@@ -10,19 +10,22 @@ import NotificationProvider from "components/Notifications/NotificationProvider"
 import "./index.css";
 import { ethersConfig } from "config/ethers";
 import { client } from "config/apollo";
+import { VaultsProvider } from "hooks/useVaults";
 
 const root = createRoot(document.getElementById("root")!)
 root.render(
   <DAppProvider config={ethersConfig}>
     <Provider store={store}>
       <ApolloProvider client={client}>
-        <HttpsRedirect>
-          <BrowserRouter>
-            <NotificationProvider>
-              <App />
-            </NotificationProvider>
-          </BrowserRouter>
-        </HttpsRedirect>
+        <VaultsProvider>
+          <HttpsRedirect>
+            <BrowserRouter>
+              <NotificationProvider>
+                <App />
+              </NotificationProvider>
+            </BrowserRouter>
+          </HttpsRedirect>
+        </VaultsProvider>
       </ApolloProvider>
     </Provider>
   </DAppProvider>,
