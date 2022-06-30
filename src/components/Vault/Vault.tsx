@@ -47,7 +47,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   return (
     <>
-      <tr ref={ref} className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr ref={ref} className={description?.["project-metadata"]?.type}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
