@@ -20,6 +20,7 @@ interface IProps {
 
 export default function Honeypots({ showDeposit }: IProps) {
   const { vaults, tokenPrices } = useVaults();
+  const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { pid } = useParams();
@@ -93,6 +94,8 @@ export default function Honeypots({ showDeposit }: IProps) {
                 {vaults.map(vault =>
                   <Vault
                     ref={vault.pid === pid ? scrollRef : null}
+                    expanded={expanded === vault}
+                    setExpanded={setExpanded}
                     key={vault.id}
                     data={vault} />
                 )}
