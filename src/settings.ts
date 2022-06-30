@@ -16,7 +16,7 @@ export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddres
 export const defaultChain: Chain = Chains[CHAINID];
 
 /** TODO: temporary until we'll eliminate the polling */
-export const POLL_INTERVAL = 100000;
+export const POLL_INTERVAL = 10000;
 
 /** Currently not in use */
 export const INFURA_ID = process.env.REACT_APP_INFURA_ID || "";

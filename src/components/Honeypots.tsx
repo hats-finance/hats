@@ -50,9 +50,11 @@ export default function Honeypots({ showDeposit }: IProps) {
 
   const normalVaultKey: string = ''
 
-  let vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
-    const key = vault.description?.["project-metadata"].type || normalVaultKey;
-    (groups[key] = groups[key] || []).push(vault);
+  const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
+    if (vault.registered) {
+      const key = vault.description?.["project-metadata"].type || normalVaultKey;
+      (groups[key] = groups[key] || []).push(vault);
+    }
     return groups;
   }, [] as IVault[][])!
 
