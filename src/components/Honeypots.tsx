@@ -6,7 +6,7 @@ import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { IVault } from "../types/types";
-import SafePeriodBar from "./SafePeriodBar";
+//import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
