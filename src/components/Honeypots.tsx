@@ -57,10 +57,11 @@ export default function Honeypots({ showDeposit }: IProps) {
   }, [] as IVault[][])!
 
   // re-order bounty vaults to be last
-  const temp = vaultsByGroup?.[normalVaultKey]
-  delete vaultsByGroup?.[normalVaultKey]
-  vaultsByGroup[normalVaultKey] = temp;
-
+  const temp = vaultsByGroup?.[normalVaultKey];
+  delete vaultsByGroup?.[normalVaultKey];
+  if (temp) {
+    vaultsByGroup[normalVaultKey] = temp;
+  }
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
