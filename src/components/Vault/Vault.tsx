@@ -9,15 +9,16 @@ import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import "../../styles/Vault/Vault.scss";
-import { ForwardedRef, forwardRef, useState } from "react";
+import { ForwardedRef, forwardRef } from "react";
 
 interface IProps {
   data: IVault,
+  expanded: boolean,
+  setExpanded?: any,
   preview?: boolean,
 }
 
 const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
-  const [expanded, setExpanded] = useState<boolean>(!!props.preview);
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, stakingTokenSymbol } = props.data;
   const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
@@ -28,8 +29,12 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   const honeyPotBalanceUSDValue = tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : undefined;
   const vaultExpand = <div
-    className={expanded ? "arrow open" : "arrow"}
-    onClick={() => setExpanded(state => !state)}>
+    className={props.expanded ? "arrow open" : "arrow"}
+    onClick={() => {
+      if (props.setExpanded) {
+        props.setExpanded(props.expanded ? null : props.data)
+      }
+    }}>
     <ArrowIcon />
   </div >;
   const apy = hatsPrice && tokenPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
@@ -78,7 +83,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
         )}
         {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
-      {expanded &&
+      {props.expanded &&
         <VaultExpanded
           data={props.data}
           withdrawRequests={withdrawRequests}
