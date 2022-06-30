@@ -30,13 +30,12 @@ export default function Honeypots({ showDeposit }: IProps) {
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
     const tokenPrice = tokenPrices?.[vault.stakingToken];
-
     return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, [tokenPrices])
 
   const closeModal = useCallback(() => {
-    navigate(`${RoutePaths.vaults}/${pid}`);
-  }, [navigate, pid])
+    navigate(`${RoutePaths.vaults}`);
+  }, [navigate])
 
   const scrollRef = useCallback(element => {
     if (element) {
@@ -48,13 +47,21 @@ export default function Honeypots({ showDeposit }: IProps) {
     vault.description?.["project-metadata"].name.toLowerCase()
       .includes(userSearch.toLowerCase()));
 
-  const normalVaultKey = ''
+  const normalVaultKey: string = ''
 
-  const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
+  let vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     const key = vault.description?.["project-metadata"].type || normalVaultKey;
     (groups[key] = groups[key] || []).push(vault);
     return groups;
-  }, {} as { [index: string]: IVault[] })
+  }, [] as IVault[][])!
+
+  // re-order bounty vaults to be last
+  if (vaultsByGroup) {
+    const temp = vaultsByGroup[normalVaultKey]
+    delete vaultsByGroup[normalVaultKey]
+    vaultsByGroup[normalVaultKey] = temp;
+  }
+
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -91,7 +98,7 @@ export default function Honeypots({ showDeposit }: IProps) {
                 <tr className="transparent-row">
                   <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
                 </tr>
-                {vaults.map(vault =>
+                {vaults && vaults.map(vault =>
                   <Vault
                     ref={vault.pid === pid ? scrollRef : null}
                     expanded={expanded === vault}
