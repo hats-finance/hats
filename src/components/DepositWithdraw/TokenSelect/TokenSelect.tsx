@@ -56,22 +56,26 @@ export default function TokenSelect({ vault, onSelect }: IProps) {
     })
   }
 
+  const tokensOptions = vault.multipleVaults?.map(vault => {
+    return (
+      {
+        value: vault.pid,
+        label: <TokenOption symbol={vault.stakingTokenSymbol} icon={vault.description?.["project-metadata"].tokenIcon} />
+      }
+    )
+  })
+
   return (
     <div className="token-select-wrapper">
       {vault.multipleVaults ? (
         <Select
+          defaultValue={tokensOptions?.[0]}
+          components={{ IndicatorSeparator: () => null }}
           styles={selectStyles}
           isSearchable={false}
           className="select-tokens"
           onChange={handleSelect}
-          options={vault.multipleVaults?.map(vault => {
-            return (
-              {
-                value: vault.pid,
-                label: <TokenOption symbol={vault.stakingTokenSymbol} icon={vault.description?.["project-metadata"].tokenIcon} />
-              }
-            )
-          })} />
+          options={tokensOptions} />
       ) : (
         <div className="token-icon-wrapper">
           <img src={vault.description?.["project-metadata"].tokenIcon} className="token-icon" alt="token icon" />
