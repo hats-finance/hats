@@ -47,7 +47,11 @@ export function useActions() {
       const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
       const data = contract.filters.MerkleTreeChanged();
       const filter = await contract.queryFilter(data, 0);
-      return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
+      if (filter) {
+        const lastElement = filter[filter.length - 1] as any;
+        return lastElement.args?.merkleTreeIPFSRef;
+      }
+      return null
     } catch (error) {
       console.error(error);
     }
