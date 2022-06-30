@@ -2,12 +2,21 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL"
+      "cancel": "CANCEL",
+      "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward"
     },
     "Welcome": {
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
+    },
+    "DepositWithdraw": {
+      "Assets": {
+        "assets": "Assets",
+        "withdraw": "Withdraw",
+        "status": "Status",
+        "deposited": "Deposited"
+      }
     },
     "SubmitVulnerability": {
       "TermsAndProcess": {
