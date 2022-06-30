@@ -1,6 +1,5 @@
 import { useApolloClient } from "@apollo/client";
 import { useEthers } from "@usedapp/core";
-import { VaultInstances } from "constants/constants";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
@@ -80,7 +79,10 @@ export function VaultsProvider({ children }) {
       // get all tokens that are still without prices
       const missingTokens = stakingTokens?.filter((token) => !newTokenPrices.hasOwnProperty(token));
       if (missingTokens && missingTokens.length > 0) {
-        const uniswapPrices = (await apolloClient.query<UniswapV3GetPrices>({ query: GET_PRICES, variables: { tokens: missingTokens } })).data;
+        const uniswapPrices = (await apolloClient.query<UniswapV3GetPrices>({
+          query: GET_PRICES,
+          variables: { tokens: missingTokens }
+        })).data;
         uniswapPrices.tokens.forEach(tokenData => {
           const price = tokenData.tokenDayData[0].priceUSD;
           if (price > 0) {
@@ -92,13 +94,12 @@ export function VaultsProvider({ children }) {
     }
   }, [apolloClient]);
 
-  const getAllVaults = useCallback(async () => {
-
-    const getVaultsFromGraph = async (chainId, version) =>
+  const getVaults = useCallback(async () => {
+    const getVaultsFromGraph = async (chainId) =>
       (await apolloClient.query<{ vaults: IVault[] }>({
         query: GET_VAULTS,
-        variables: { chainId, version },
-        context: { chainId, version },
+        variables: { chainId },
+        context: { chainId },
         fetchPolicy: "no-cache"
       })).data.vaults
 
@@ -125,12 +126,8 @@ export function VaultsProvider({ children }) {
         description: await loadVaultDescription(vault)
       })));
 
-    const vaultsPerVersion = await Promise.all(
-      Object.keys(VaultInstances)
-        .map(version => getVaultsFromGraph(chainId, version)));
-    const allVaults = vaultsPerVersion.flat(); // all versions in one array
-    const vaultsWithDescription = await getVaultsData(allVaults);
-
+    const vaults = await getVaultsFromGraph(chainId);
+    const vaultsWithDescription = await getVaultsData(vaults);
     return vaultsWithDescription;
 
   }, [apolloClient, chainId]);
@@ -153,7 +150,7 @@ export function VaultsProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
-      getAllVaults().then(vaults => {
+      getVaults().then(vaults => {
         if (!cancelled) {
           ///////
           // TODO: TEMPORARY - mock one vault with multiple tokens based on other vaults as additional vaults
@@ -169,7 +166,7 @@ export function VaultsProvider({ children }) {
     return () => {
       cancelled = true;
     }
-  }, [chainId, subscriptions, prevSubscriptions, prevChainId, getAllVaults]);
+  }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
 
   const subscribeToVaults = () => {
     setSubscrptions(subscriptions => subscriptions + 1);

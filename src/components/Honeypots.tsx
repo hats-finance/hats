@@ -68,7 +68,7 @@ export default function Honeypots({ showDeposit }: IProps) {
       {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>
-            <SafePeriodBar />
+            {/* <SafePeriodBar /> */}
             <tr>
               <th colSpan={screenSize === ScreenSize.Desktop ? 2 : 3} className="search-cell" >
                 <div className="search-wrapper">

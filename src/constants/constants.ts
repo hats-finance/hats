@@ -41,17 +41,9 @@ export const Endpoint = {
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
 
-export const VaultInstances = {
-  v1: {
-    addresses: {
-      [ChainId.Mainnet]: "0x571f39d351513146248acafa9d0509319a327c4d",
-      [ChainId.Rinkeby]: "0xccaadc293faaea229e0ca4a22b0330b65634b483"
-    },
-    subgraph: {
-      [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
-      [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
-    }
-  }
+export const VaultSubgraphs = {
+  [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
+  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
 };
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
