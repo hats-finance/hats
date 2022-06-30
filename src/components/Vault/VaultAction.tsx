@@ -1,4 +1,5 @@
 import { useEthers } from "@usedapp/core";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,6 +17,7 @@ interface IProps {
 
 export default function VaultAction(props: IProps) {
   const navigate = useNavigate();
+  const isSupportedNetwork = useSupportedNetwork();
   const { t } = useTranslation();
   const { account } = useEthers();
   const [isWithdrawable, setIsWithdrawable] = useState(false);
@@ -39,7 +41,7 @@ export default function VaultAction(props: IProps) {
         onClick={() => {
           navigate(`${RoutePaths.vaults}/${props.data?.pid}/deposit`)
         }}
-        disabled={props.preview || !account}>
+        disabled={props.preview || !account || !isSupportedNetwork}>
         {t("Vault.deposit-withdraw")}
       </button>
       {/* TODO: Need to fetch withdrawRequests in useVaults and handle it globally from there */}
