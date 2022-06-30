@@ -1,4 +1,4 @@
-import { Contract } from "@usedapp/core/node_modules/@ethersproject/contracts";
+import { Contract } from "ethers";
 import { useCall, useContractFunction } from "@usedapp/core";
 import { BigNumber } from "ethers";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";

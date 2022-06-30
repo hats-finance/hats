@@ -37,7 +37,7 @@ export default function Honeypots({ showDeposit }: IProps) {
 
   const closeModal = useCallback(() => {
     navigate(`${RoutePaths.vaults}`);
-  }, [navigate, pid])
+  }, [navigate])
 
   const scrollRef = useCallback(element => {
     if (element) {

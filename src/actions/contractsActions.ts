@@ -48,8 +48,8 @@ export function useActions() {
       const data = contract.filters.MerkleTreeChanged();
       const filter = await contract.queryFilter(data, 0);
       if (filter) {
-        const lastElement = filter[filter.length - 1] as any;
-        return lastElement.args?.merkleTreeIPFSRef;
+        const lastElement = filter[filter.length - 1] as any | undefined;
+        return lastElement?.args?.merkleTreeIPFSRef;
       }
       return null
     } catch (error) {
