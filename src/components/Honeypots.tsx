@@ -36,7 +36,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   }, [tokenPrices])
 
   const closeModal = useCallback(() => {
-    navigate(`${RoutePaths.vaults}/${pid}`);
+    navigate(`${RoutePaths.vaults}`);
   }, [navigate, pid])
 
   const scrollRef = useCallback(element => {
