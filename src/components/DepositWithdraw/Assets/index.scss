@@ -11,8 +11,11 @@
   th {
     border-bottom: 1px solid $gray;
     text-align: left;
+    position: sticky;
+    top: 0px;
+    background-color: $field-blue;
+    padding: 10px;
   }
-  th,
   td {
     padding: 10px;
     background-color: unset;

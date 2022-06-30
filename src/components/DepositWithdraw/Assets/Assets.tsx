@@ -42,14 +42,16 @@ export default function Assets({ vault }: IProps) {
           <th>Assets</th>
           <th className="withdraw-status-column">Withdraw {screenSize === ScreenSize.Desktop && "Status"}</th>
           <th>Deposited</th>
-          <th className="apy-column">
-            <span>APY</span>
-            <Tooltip
-              overlayClassName="tooltip"
-              overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-              overlay="Estimated yearly earnings based on total staked amount and rate reward">
-              <div className="info-icon"><InfoIcon fill={Colors.white} /></div>
-            </Tooltip>
+          <th>
+            <div className="apy-column">
+              <span>APY</span>
+              <Tooltip
+                overlayClassName="tooltip"
+                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+                overlay="Estimated yearly earnings based on total staked amount and rate reward">
+                <div className="info-icon"><InfoIcon fill={Colors.white} /></div>
+              </Tooltip>
+            </div>
           </th>
         </tr>
       </thead>

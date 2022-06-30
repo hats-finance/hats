@@ -41,6 +41,9 @@ export default function TokenSelect({ vault, onSelect }: IProps) {
       color: state.isSelected ? `${Colors.turquoise}` : "",
       height: "60px",
       display: "flex",
+      "&:hover": {
+        opacity: "0.8",
+      }
     }),
     control: () => ({
       border: `1px solid ${Colors.turquoise}`,
