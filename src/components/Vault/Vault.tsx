@@ -4,12 +4,11 @@ import millify from "millify";
 import { fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
-import { RoutePaths, ScreenSize } from "../../constants/constants";
+import { ScreenSize } from "../../constants/constants";
 import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
 import TokensSymbols from "./TokensSymbols/TokensSymbols";
-import { useNavigate, useParams } from "react-router-dom";
 import { ForwardedRef, forwardRef } from "react";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import { useVaultsApy } from "./hooks/useVaultsApy";
@@ -17,15 +16,14 @@ import "../../styles/Vault/Vault.scss";
 
 interface IProps {
   data: IVault,
+  expanded: boolean,
+  setExpanded?: any,
   preview?: boolean,
 }
 
 const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
-  const params = useParams();
-  const navigate = useNavigate()
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, pid, multipleVaults } = props.data;
-  const toggleRow = props.preview ? true : pid === params.pid;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
@@ -34,8 +32,12 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   const vaultExpand = (
     <div
-      className={toggleRow ? "arrow open" : "arrow"}
-      onClick={() => navigate(`${RoutePaths.vaults}${toggleRow ? "" : "/" + pid}`)}>
+      className={props.expanded ? "arrow open" : "arrow"}
+      onClick={() => {
+        if (props.setExpanded) {
+          props.setExpanded(props.expanded ? null : props.data)
+        }
+      }}>
       <ArrowIcon />
     </div>
   );
@@ -52,7 +54,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
   return (
     <>
-      <tr ref={ref} className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr ref={ref} className={description?.["project-metadata"]?.type}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
@@ -83,7 +85,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
         )}
         {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
-      {toggleRow &&
+      {props.expanded &&
         <VaultExpanded
           data={props.data}
           withdrawRequests={withdrawRequests}

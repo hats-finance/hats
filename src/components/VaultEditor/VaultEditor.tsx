@@ -43,6 +43,7 @@ const newVaultDescription: IVaultDescription = {
         icon: "",
         tokenIcon: "",
         website: "",
+        type: ""
     },
     "communication-channel": {
         "committee-bot": "https://demo-bot-hats.herokuapp.com/broadcast-message/",

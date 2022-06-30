@@ -193,5 +193,9 @@ export const fixObject = (description: any): IVaultDescription => {
     description["project-metadata"] = description["Project-metadata"]
     delete description["Project-metadata"]
   }
+  if ('gamification' in description["project-metadata"] &&
+    description["project-metadata"].gamification) {
+    description["project-metadata"].type = 'gamification';
+  }
   return description;
 }

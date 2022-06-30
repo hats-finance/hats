@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -20,13 +20,12 @@ interface IProps {
 
 export default function Honeypots({ showDeposit }: IProps) {
   const { vaults, tokenPrices } = useVaults();
+  const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
-
-  const gamificationVaults: Array<JSX.Element> = [];
 
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
@@ -44,24 +43,22 @@ export default function Honeypots({ showDeposit }: IProps) {
       element.scrollIntoView()
     }
   }, [])
+  const sortedVaults = vaults?.sort((a: IVault, b: IVault) => vaultValue(b) - vaultValue(a))
+  const vaultsMatchSearch = sortedVaults?.filter(vault =>
+    vault.description?.["project-metadata"].name.toLowerCase()
+      .includes(userSearch.toLowerCase()));
 
-  const vaultsDisplay = (vaults as IVault[])?.sort((a: IVault, b: IVault) => {
-    return vaultValue(b) - vaultValue(a);
-  }).map((vault: IVault) => {
-    if (!vault.liquidityPool && vault.registered) {
-      if (vault?.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())) {
-        if (vault.description?.["project-metadata"]?.gamification) {
-          gamificationVaults.push(<Vault key={vault.id} data={vault} />);
-          return null;
-        }
-        return <Vault
-          ref={vault.pid === pid ? scrollRef : null}
-          key={vault.id}
-          data={vault} />
-      }
-    }
-    return null;
-  });
+  const normalVaultKey = ''
+
+  const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
+    const key = vault.description?.["project-metadata"].type || normalVaultKey;
+    (groups[key] = groups[key] || []).push(vault);
+    return groups;
+  }, {} as { [index: string]: IVault[] })
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   return (
     <div className="content honeypots-wrapper">
@@ -89,19 +86,25 @@ export default function Honeypots({ showDeposit }: IProps) {
                 </>
               )}
             </tr>
-            {gamificationVaults.length > 0 && (
-              <tr className="transparent-row">
-                <td colSpan={7}>Gamification vault</td>
-              </tr>
+            {vaultsByGroup && Object.entries(vaultsByGroup).map(([type, vaults]) =>
+              <React.Fragment key={type}>
+                <tr className="transparent-row">
+                  <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
+                </tr>
+                {vaults.map(vault =>
+                  <Vault
+                    ref={vault.pid === pid ? scrollRef : null}
+                    expanded={expanded === vault}
+                    setExpanded={setExpanded}
+                    key={vault.id}
+                    data={vault} />
+                )}
+              </React.Fragment>
             )}
-            {gamificationVaults}
-            <tr className="transparent-row">
-              <td colSpan={7}>Hats Native vaults</td>
-            </tr>
-            {vaultsDisplay}
           </tbody>
         </table>}
-      {showDeposit && selectedVault &&
+      {
+        showDeposit && selectedVault &&
         <Modal
           title={selectedVault.description?.["project-metadata"].name!}
           setShowModal={closeModal}
@@ -109,7 +112,8 @@ export default function Honeypots({ showDeposit }: IProps) {
           maxHeight="100vh"
           icon={selectedVault.description?.["project-metadata"].icon!}>
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
-        </Modal>}
-    </div>
+        </Modal>
+      }
+    </div >
   )
 }
