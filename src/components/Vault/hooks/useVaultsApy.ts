@@ -7,11 +7,11 @@ import { fromWei } from "utils";
 export function useVaultsApy(vaults: IVault[]) {
   const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);
   const { tokenPrices } = useVaults();
-  const apys: { [token: string]: number | string } = {};
+  const apys: { [token: string]: number | undefined } = {};
 
   vaults.forEach(vault => {
     if (!hatsPrice || !tokenPrices?.[vault.stakingToken]) {
-      apys[vault.stakingToken] = "-";
+      apys[vault.stakingToken] = undefined;
     } else if (Number(fromWei(vault.totalStaking)) === 0) {
       apys[vault.stakingToken] = 0;
     } else {

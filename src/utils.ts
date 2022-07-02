@@ -332,3 +332,7 @@ export const ipfsTransformUri = (uri: string | undefined) => {
   }
   return `${IPFS_PREFIX}/${uri}`;
 }
+
+export const formatApy = (apy: number | undefined): string => {
+  return apy ? `${apy.toFixed(2)}%` : "-";
+}

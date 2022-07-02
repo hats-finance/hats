@@ -1,7 +1,7 @@
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, ipfsTransformUri } from "../../utils";
+import { formatApy, fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -12,6 +12,7 @@ import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { ForwardedRef, forwardRef } from "react";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import { useVaultsApy } from "./hooks/useVaultsApy";
+import MultiTokensAPY from "./MultiTokensAPY/MultiTokensAPY";
 import "../../styles/Vault/Vault.scss";
 
 interface IProps {
@@ -74,7 +75,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
             <td className="rewards-cell">
               {maxRewards}
             </td>
-            <td>{apys[stakingToken]}</td>
+            <td>{props.data.multipleVaults ? <MultiTokensAPY apys={apys} /> : formatApy(apys[stakingToken])}</td>
             <td>
               <VaultAction
                 data={props.data}
