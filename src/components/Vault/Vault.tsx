@@ -1,7 +1,7 @@
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { formatApy, fromWei, ipfsTransformUri } from "../../utils";
+import { fromWei, ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -11,8 +11,7 @@ import { useTranslation } from "react-i18next";
 import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { ForwardedRef, forwardRef } from "react";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
-import { useVaultsApy } from "./hooks/useVaultsApy";
-import MultiTokensAPY from "./MultiTokensAPY/MultiTokensAPY";
+import VaultAPY from "./VaultAPY/VaultAPY";
 import "../../styles/Vault/Vault.scss";
 
 interface IProps {
@@ -24,12 +23,11 @@ interface IProps {
 
 const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
   const { t } = useTranslation();
-  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingToken, multipleVaults } = props.data;
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
   const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
-  const { apys } = useVaultsApy(props.data.multipleVaults ?? [props.data]);
 
   const vaultExpand = (
     <div
@@ -75,7 +73,9 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
             <td className="rewards-cell">
               {maxRewards}
             </td>
-            <td>{props.data.multipleVaults ? <MultiTokensAPY apys={apys} /> : formatApy(apys[stakingToken])}</td>
+            <td>
+              <VaultAPY vault={props.data} />
+            </td>
             <td>
               <VaultAction
                 data={props.data}

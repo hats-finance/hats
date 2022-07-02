@@ -8,7 +8,7 @@ import { IVault } from "types/types";
 import { DepositAmount } from "./DepositAmount";
 import WithdrawTimer from "../WithdrawTimer/WithdrawTimer";
 import { useVaultsApy } from "components/Vault/hooks/useVaultsApy";
-import { formatApy } from "utils";
+import { formatAPY } from "utils";
 import "./index.scss";
 
 interface IProps {
@@ -24,17 +24,21 @@ export default function Assets({ vault }: IProps) {
     return (
       <tr key={index}>
         <td className="token-symbol">{vault.stakingTokenSymbol}</td>
-        <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
+        <td className="withdraw-status-data">
+          <WithdrawTimer vault={vault} />
+        </td>
         <td><DepositAmount vault={vault} /></td>
-        <td>{formatApy(apys[vault.stakingToken])}</td>
+        <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
       </tr>
     )
   }) : (
     <tr>
       <td className="token-symbol">{vault.stakingTokenSymbol}</td>
-      <td className="withdraw-status-data"><WithdrawTimer vault={vault} /></td>
+      <td className="withdraw-status-data">
+        <WithdrawTimer vault={vault} />
+      </td>
       <td><DepositAmount vault={vault} /></td>
-      <td>{formatApy(apys[vault.stakingToken])}</td>
+      <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
     </tr>
   )
 
