@@ -27,6 +27,9 @@ export default function Countdown(props: IProps) {
       const currentTime = new Date().getTime();
 
       const distanceToDate = countdownDate - currentTime;
+      if (distanceToDate < 0) {
+        return;
+      }
 
       let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
       let hours = Math.floor(
@@ -76,22 +79,22 @@ export default function Countdown(props: IProps) {
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{timer.days || '00'}</span>
           {plainTextView && ":"}
-          {!plainTextView && <span className="type">{String(timer.days) === "1" ? "DAY" : "DAYS"}</span>}
+          {!plainTextView && <span className="type">DAYS</span>}
         </div>)}
       <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{timer.hours || '00'}</span>
-        {!plainTextView && <span className="type">{String(timer.hours) === "01" ? "HOUR" : "HOURS"}</span>}
+        {!plainTextView && <span className="type">HOURS</span>}
         {plainTextView && ":"}
       </div>
       <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{timer.minutes || '00'}</span>
-        {!plainTextView && <span className="type">{String(timer.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>}
+        {!plainTextView && <span className="type">MINUTES</span>}
         {plainTextView && ":"}
       </div>
       {String(timer.days) === "0" && (
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{timer.seconds || '00'}</span>
-          {!plainTextView && <span className="type">{String(timer.seconds) === "01" ? "SECOND" : "SECONDS"}</span>}
+          {!plainTextView && <span className="type">SECONDS</span>}
         </div>
       )}
     </div>
