@@ -8,6 +8,12 @@
   display: block;
   overflow-y: scroll;
   padding: 0px 40px;
+  // tr:nth-child(even) {
+  //   background-color: $field-blue;
+  // }
+  // tr:nth-child(odd) {
+  //   background-color: $purple-blue;
+  // }
   th {
     border-bottom: 1px solid $gray;
     text-align: left;

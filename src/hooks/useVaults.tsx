@@ -152,14 +152,8 @@ export function VaultsProvider({ children }) {
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
         if (!cancelled) {
-          ///////
-          // TODO: TEMPORARY - mock one vault with multiple tokens based on other vaults as additional vaults
-          vaults[1].multipleVaults = [vaults[1], vaults[12], vaults[3], vaults[4], vaults[5]];
-          if (vaults[1].description) {
-            vaults[1].description["additional-vaults"] = [vaults[1].pid, vaults[11].pid, vaults[3].pid, vaults[4].pid, vaults[5].pid];
-          }
-          ///////
-          setVaults(vaults);
+          const updatedVaults = checkForMultiVaults(vaults);
+          setVaults(updatedVaults as IVault[]);
         }
       });
     }
@@ -198,4 +192,28 @@ export const fixObject = (description: any): IVaultDescription => {
     description["project-metadata"].type = 'gamification';
   }
   return description;
+}
+
+const checkForMultiVaults = (vaults: IVault[]) => {
+  const updatedVaults = vaults.map(vault => {
+    if (vault.description?.["additional-vaults"]) {
+      const multiVault = vault;
+      multiVault.multipleVaults = [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])] as IVault[];
+      return multiVault;
+    } else {
+      return vault;
+    }
+  })
+
+  return updatedVaults;
+}
+
+const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => {
+  const multipleVaults = pids.map(pid => {
+    return vaults.find(vault => {
+      return vault.pid === pid;
+    });
+  })
+
+  return multipleVaults;
 }
