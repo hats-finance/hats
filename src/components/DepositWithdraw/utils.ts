@@ -1,15 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
-
-export function usePrevious<T>(
-  value: T,
-): MutableRefObject<T | undefined>['current'] {
-  const ref = useRef<T>();
-  useEffect(() => {
-    ref.current = value;
-  }, [value]);
-  return ref.current;
-}
 
 /**
  * Calculates the value we send to the contract when a user wants to withdraw

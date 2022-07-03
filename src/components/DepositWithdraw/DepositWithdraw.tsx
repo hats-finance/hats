@@ -15,9 +15,10 @@ import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, useGeneralParameters, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
-import { calculateActualWithdrawValue, usePrevious } from "./utils";
+import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import "./index.scss";
+import { usePrevious } from "hooks/usePrevious";
 
 interface IProps {
   data: IVault
