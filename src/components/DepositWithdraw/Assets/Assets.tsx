@@ -25,7 +25,7 @@ export default function Assets({ vault }: IProps) {
       <tr key={index}>
         <td className="token-symbol">{vault.stakingTokenSymbol}</td>
         <td className="withdraw-status-data">
-          <WithdrawTimer vault={vault} />
+          <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
         </td>
         <td><DepositAmount vault={vault} /></td>
         <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
@@ -35,7 +35,7 @@ export default function Assets({ vault }: IProps) {
     <tr>
       <td className="token-symbol">{vault.stakingTokenSymbol}</td>
       <td className="withdraw-status-data">
-        <WithdrawTimer vault={vault} />
+        <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
       </td>
       <td><DepositAmount vault={vault} /></td>
       <td>{formatAPY(apys[vault.stakingToken].apy)}</td>

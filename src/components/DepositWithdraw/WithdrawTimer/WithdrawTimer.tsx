@@ -8,9 +8,12 @@ import { isDateBefore, isDateBetween } from "utils";
 
 interface IProps {
   vault: IVault;
+  plainTextView?: boolean;
+  placeHolder?: string;
+  showWithdrawState?: boolean;
 }
 
-export default function WithdrawTimer({ vault }: IProps) {
+export default function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawState = true }: IProps) {
   const { account } = useEthers();
   const generalParams = useGeneralParameters(vault.master.address);
   const withdrawRequestTime = useWithdrawRequestInfo(vault.master.address, vault.pid, account!);
@@ -23,13 +26,13 @@ export default function WithdrawTimer({ vault }: IProps) {
     <>
       {(pendingWithdraw || isWithdrawable) ? (
         <>
-          <span>{pendingWithdraw ? "Pending " : "Withdrawable "}</span>
+          {showWithdrawState && <span>{pendingWithdraw ? "Pending " : "Withdrawable "}</span>}
           <Countdown
-            plainTextView
+            plainTextView={plainTextView}
             endDate={countdownValue}
             textColor={pendingWithdraw ? Colors.yellow : Colors.turquoise} />
         </>
-      ) : "-"}
+      ) : placeHolder}
     </>
   )
 }

@@ -3,6 +3,7 @@
 .withdraw-countdown-wrapper {
   display: flex;
   color: $turquoise;
+  margin-top: 10px;
   .time-element {
     display: flex;
     flex-direction: column;
@@ -12,13 +13,13 @@
     font-weight: bold;
     margin: 0 8px;
     padding: 6px;
-    width: 85px;
-    height: 130px;
+    width: 50px;
+    height: 55px;
     .value {
-      font-size: $xlarge;
+      font-size: $moderate;
     }
     .type {
-      font-size: $xsmall;
+      font-size: $tiny;
     }
     &:first-child {
       margin-left: 0;
@@ -35,18 +36,6 @@
       display: unset;
       .value {
         font-size: unset;
-      }
-    }
-  }
-  &.compact-view {
-    .time-element {
-      width: 50px;
-      height: 55px;
-      .value {
-        font-size: $moderate;
-      }
-      .type {
-        font-size: $tiny;
       }
     }
   }

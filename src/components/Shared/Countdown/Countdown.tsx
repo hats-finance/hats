@@ -7,14 +7,13 @@ import "./index.scss";
 
 interface IProps {
   endDate: string | undefined
-  compactView?: boolean
   plainTextView?: boolean
   onEnd?: Function
   textColor?: Colors
 }
 
 export default function Countdown(props: IProps) {
-  const { endDate, compactView, plainTextView, onEnd } = props;
+  const { endDate, plainTextView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [timer, setTimer] = useState({
     days: 0,
@@ -72,7 +71,7 @@ export default function Countdown(props: IProps) {
   }, [setNewTime]);
 
   return (
-    <div className={classNames("withdraw-countdown-wrapper", { "compact-view": compactView })} style={{ color: `${props.textColor}` }}>
+    <div className="withdraw-countdown-wrapper" style={{ color: `${props.textColor}` }}>
       {timer.days > 0 && (
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{timer.days || '00'}</span>
