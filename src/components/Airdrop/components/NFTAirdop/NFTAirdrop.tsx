@@ -101,7 +101,7 @@ export default function NFTAirdrop({ tokenId, eligibleTokens, walletAddress, eli
                     disabled={!account || !redeemable}
                     className="action-btn redeem-btn fill"
                     onClick={redeem}>{t("NFTAirdop.Redeem.redeem")}</button>
-                  <Countdown endDate={deadline!} compactView />
+                  <Countdown endDate={deadline!} />
                 </>
               ) : "Redeem period ended"}
             </>

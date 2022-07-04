@@ -1,9 +1,8 @@
-import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, UPDATE_AIRDROP_DATA, UPDATE_TOKEN_PRICES } from '../constants/action-types';
+import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, UPDATE_AIRDROP_DATA } from '../constants/action-types';
 import { IVault, IWithdrawSafetyPeriod, IAirdropData } from '../types/types';
 
 interface IDataReducer {
   vaults?: Array<IVault>
-  tokenPrices: { [token: string]: number }
   rewardsToken: string
   hatsPrice?: number
   withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
@@ -12,7 +11,6 @@ interface IDataReducer {
 
 const initialState: IDataReducer = {
   rewardsToken: "",
-  tokenPrices: {},
   withdrawSafetyPeriod: {},
   airdrop: null,
 };
@@ -29,12 +27,6 @@ export const dataReducer = (state: IDataReducer = initialState, action: any): ID
       return {
         ...state,
         rewardsToken: action.rewardsToken
-      }
-    }
-    case UPDATE_TOKEN_PRICES: {
-      return {
-        ...state,
-        tokenPrices: action.tokenPrices
       }
     }
     case UPDATE_HATS_PRICE: {

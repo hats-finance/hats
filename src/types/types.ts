@@ -33,6 +33,7 @@ export interface IVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
+  multipleVaults?: IVault[]
 }
 
 export interface IVaultDescription {
@@ -56,6 +57,7 @@ export interface IVaultDescription {
     name: string
     url: string
   }
+  "additional-vaults"?: string[];
 }
 
 export interface ICommitteeMember {
@@ -91,7 +93,6 @@ export interface IStaker {
   rewardPaid: string
   shares: string
   depositAmount: string
-  withdrawAmount: string
 }
 
 export interface IMaster {
@@ -176,4 +177,12 @@ export interface IStoredKey {
   publicKey: string
 }
 
-export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } }
+export interface GeneralParameters {
+  withdrawRequestEnablePeriod: number
+  withdrawPeriod: number
+  safetyPeriod: number
+}
+
+export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
+
+export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };

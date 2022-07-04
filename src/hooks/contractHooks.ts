@@ -1,6 +1,5 @@
-import { Contract } from "ethers";
 import { useCall, useContractFunction } from "@usedapp/core";
-import { BigNumber } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
@@ -22,6 +21,39 @@ export function usePendingReward(
     return undefined;
   }
   return value?.[0];
+}
+
+export function useUserSharesPerVault(
+  address: string,
+  pid: string,
+  account: string
+) {
+  const { value, error } = useCall({
+    contract: new Contract(address, vaultAbi),
+    method: "userInfo",
+    args: [pid, account]
+  }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value?.[0];
+}
+
+export function useWithdrawRequestInfo(address: string, pid: string, account: string): BigNumber | undefined {
+  const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "withdrawRequests", args: [pid, account] }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value?.[0];
+}
+
+// TODO: need to add return type
+export function useGeneralParameters(address: string) {
+  const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "generalParameters", args: [] }) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value;
 }
 
 export function useTokenApprove(tokenAddress: string) {
@@ -63,6 +95,7 @@ export function useRedeemNFT() {
 export function useDelegateAndClaim() {
   return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim", { transactionName: "Delegate And Claim" });
 }
+
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(
 //   contract: T,
 //   functionName: FN,

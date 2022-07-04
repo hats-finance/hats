@@ -63,31 +63,3 @@ export const GET_MASTER_DATA = gql`
     }
   }
 `
-
-export const getStakerData = (vaultID: string, stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
-        shares
-        depositAmount
-        withdrawAmount
-      }
-    }
-  `;
-}
-
-export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
-  return gql`
-    {
-      vaults (where: { pid: "${pid}" }) {
-        withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
-          id
-          beneficiary
-          withdrawEnableTime
-          createdAt
-          expiryTime
-        }
-      }
-    }
-  `;
-}
