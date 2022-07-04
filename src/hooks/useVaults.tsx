@@ -194,17 +194,13 @@ export const fixObject = (description: any): IVaultDescription => {
   return description;
 }
 
-const checkForMultiVaults = (vaults: IVault[]) => (
-  vaults.map(vault => {
-    if (vault.description?.["additional-vaults"]) {
-      const multiVault = vault;
-      multiVault.multipleVaults = [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])] as IVault[];
-      return multiVault;
-    } else {
-      return vault;
+const checkForMultiVaults = (vaults: IVault[]) =>
+  vaults.map(vault => vault.description?.["additional-vaults"] ?
+    {
+      ...vault,
+      multipleVaults: [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])]
     }
-  })
-)
+    : vault);
 
 const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => (
   pids.map(pid => {
