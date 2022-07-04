@@ -5,12 +5,12 @@ import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "../types/types";
-import SafePeriodBar from "./SafePeriodBar";
+//import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
-import { fromWei } from "utils";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -19,11 +19,10 @@ interface IProps {
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
-  const { vaults } = useVaults();
+  const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const tokenPrices = useSelector((state: RootState) => state.dataReducer.tokenPrices);
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
@@ -31,7 +30,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
     const tokenPrice = tokenPrices?.[vault.stakingToken];
-    return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
+    return tokenPrice ? Number(formatUnits(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, [tokenPrices])
 
   const closeModal = useCallback(() => {
@@ -58,13 +57,6 @@ export default function Honeypots({ showDeposit }: IProps) {
     return groups;
   }, [] as IVault[][])!
 
-  // re-order bounty vaults to be last
-  const temp = vaultsByGroup?.[normalVaultKey];
-  delete vaultsByGroup?.[normalVaultKey];
-  if (temp) {
-    vaultsByGroup[normalVaultKey] = temp;
-  }
-
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
@@ -74,7 +66,7 @@ export default function Honeypots({ showDeposit }: IProps) {
       {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>
-            <SafePeriodBar />
+            {/* <SafePeriodBar /> */}
             <tr>
               <th colSpan={screenSize === ScreenSize.Desktop ? 2 : 3} className="search-cell" >
                 <div className="search-wrapper">

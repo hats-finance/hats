@@ -18,7 +18,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "_halvingAfterBlock",
+        "name": "_multiplierPeriod",
         "type": "uint256"
       },
       {
@@ -27,7 +27,7 @@
         "type": "address"
       },
       {
-        "internalType": "contract IUniswapV2Router01",
+        "internalType": "contract ISwapRouter",
         "name": "_uniSwapRouter",
         "type": "address"
       },
@@ -60,12 +60,6 @@
         "internalType": "address",
         "name": "_lpToken",
         "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "_name",
-        "type": "string"
       },
       {
         "indexed": false,
@@ -170,7 +164,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       },
       {
@@ -301,7 +295,7 @@
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "_atBlock",
+        "name": "_at",
         "type": "uint256"
       }
     ],
@@ -375,6 +369,50 @@
       }
     ],
     "name": "PendingApprovalLog",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256[]",
+        "name": "_rewardsLevels",
+        "type": "uint256[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_timeStamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "PendingRewardsLevelsLog",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "RewardDepositors",
     "type": "event"
   },
   {
@@ -487,7 +525,7 @@
         "type": "uint256"
       },
       {
-        "indexed": true,
+        "indexed": false,
         "internalType": "uint256[]",
         "name": "_rewardsLevels",
         "type": "uint256[]"
@@ -538,7 +576,7 @@
             "type": "uint256"
           }
         ],
-        "indexed": true,
+        "indexed": false,
         "internalType": "struct HATMaster.RewardsSplit",
         "name": "_rewardsSplit",
         "type": "tuple"
@@ -578,6 +616,25 @@
       {
         "indexed": true,
         "internalType": "uint256",
+        "name": "_withdrawPeriod",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "_safetyPeriod",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetWithdrawSafetyPeriod",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
         "name": "_pid",
         "type": "uint256"
       },
@@ -590,7 +647,7 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "_amountBurnet",
+        "name": "_amountBurned",
         "type": "uint256"
       }
     ],
@@ -685,25 +742,6 @@
     "type": "event"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "HALVING_AT_BLOCK",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "HAT",
     "outputs": [
@@ -717,14 +755,21 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "MINIMUM_DEPOSIT",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
       }
     ],
-    "name": "REWARD_MULTIPLIER",
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MULTIPLIER_PERIOD",
     "outputs": [
       {
         "internalType": "uint256",
@@ -763,33 +808,7 @@
   },
   {
     "inputs": [],
-    "name": "TIME_LOCK_DELAY_IN_BLOCKS_UNIT",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WITHDRAW_DISABLE_PERIOD",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "WITHDRAW_PERIOD",
+    "name": "TIME_LOCK_DELAY",
     "outputs": [
       {
         "internalType": "uint256",
@@ -879,7 +898,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       }
     ],
@@ -892,7 +911,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       },
       {
@@ -950,6 +969,16 @@
         "internalType": "uint256",
         "name": "_pid",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_from",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_lastPoolUpdate",
+        "type": "uint256"
       }
     ],
     "name": "calcPoolReward",
@@ -977,16 +1006,16 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "claimFee",
-    "outputs": [
+    "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "_pid",
         "type": "uint256"
       }
     ],
-    "stateMutability": "view",
+    "name": "claimReward",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -997,7 +1026,7 @@
         "type": "uint256"
       }
     ],
-    "name": "claimReward",
+    "name": "committeeCheckIn",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1025,25 +1054,6 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "defaultRewardLevel",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
         "name": "_pid",
         "type": "uint256"
       },
@@ -1062,7 +1072,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       }
     ],
@@ -1082,6 +1092,54 @@
     "name": "emergencyWithdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "generalParameters",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "hatVestingDuration",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "hatVestingPeriods",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawPeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "safetyPeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "setRewardsLevelsDelay",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawRequestEnablePeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "withdrawRequestPendingPeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "claimFee",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -1170,41 +1228,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_from",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_to",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_allocPoint",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_totalAllocPoint",
-        "type": "uint256"
-      }
-    ],
-    "name": "getPoolReward",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       }
     ],
@@ -1250,11 +1274,6 @@
             "type": "tuple"
           },
           {
-            "internalType": "uint256",
-            "name": "pendingLpTokenRewards",
-            "type": "uint256"
-          },
-          {
             "internalType": "uint256[]",
             "name": "rewardsLevels",
             "type": "uint256[]"
@@ -1287,7 +1306,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_pid",
         "type": "uint256"
       }
     ],
@@ -1306,15 +1325,30 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_poolId",
+        "name": "_from",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_to",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_allocPoint",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_totalAllocPoint",
         "type": "uint256"
       }
     ],
-    "name": "getPoolRewardsPendingLpToken",
+    "name": "getRewardForBlocksRange",
     "outputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "reward",
         "type": "uint256"
       }
     ],
@@ -1325,7 +1359,7 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "pid1",
+        "name": "_pid1",
         "type": "uint256"
       }
     ],
@@ -1458,32 +1492,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "hatVestingDuration",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "hatVestingPeriods",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -1580,6 +1588,44 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "pendingRewardsLevels",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "poolDepositPause",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -1635,6 +1681,11 @@
         "internalType": "uint256",
         "name": "lastProcessedTotalAllocPoint",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "balance",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1651,6 +1702,24 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "rewardDepositors",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1686,7 +1755,7 @@
   },
   {
     "inputs": [],
-    "name": "setGovernancePendingAtBlock",
+    "name": "setGovernancePendingAt",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1736,6 +1805,24 @@
         "type": "uint256"
       },
       {
+        "internalType": "uint256[]",
+        "name": "_rewardsLevels",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "setPendingRewardsLevels",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
         "internalType": "uint256",
         "name": "_allocPoint",
         "type": "uint256"
@@ -1743,6 +1830,11 @@
       {
         "internalType": "bool",
         "name": "_registered",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "_depositPause",
         "type": "bool"
       },
       {
@@ -1762,14 +1854,22 @@
         "internalType": "uint256",
         "name": "_pid",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_rewardsLevels",
-        "type": "uint256[]"
       }
     ],
     "name": "setRewardsLevels",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_delay",
+        "type": "uint256"
+      }
+    ],
+    "name": "setRewardsLevelsDelay",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1856,11 +1956,29 @@
       },
       {
         "internalType": "uint256",
-        "name": "_withdrawEnablePeriod",
+        "name": "_withdrawRequestEnablePeriod",
         "type": "uint256"
       }
     ],
-    "name": "setWithrawRequestParams",
+    "name": "setWithdrawRequestParams",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_withdrawPeriod",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_safetyPeriod",
+        "type": "uint256"
+      }
+    ],
+    "name": "setWithdrawSafetyPeriod",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1895,6 +2013,16 @@
         "internalType": "address",
         "name": "_beneficiary",
         "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amountOutMinimum",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint24[2]",
+        "name": "_fees",
+        "type": "uint24[2]"
       }
     ],
     "name": "swapBurnSend",
@@ -1916,25 +2044,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "totalAllocPointUpdatedAtBlock",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "transferGovernorship",
     "outputs": [],
@@ -1946,7 +2055,7 @@
     "name": "uniSwapRouter",
     "outputs": [
       {
-        "internalType": "contract IUniswapV2Router01",
+        "internalType": "contract ISwapRouter",
         "name": "",
         "type": "address"
       }
@@ -2005,26 +2114,13 @@
       },
       {
         "internalType": "uint256",
-        "name": "_amount",
+        "name": "_shares",
         "type": "uint256"
       }
     ],
     "name": "withdraw",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "withdrawEnablePeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -2038,19 +2134,6 @@
     "name": "withdrawRequest",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "withdrawRequestPendingPeriod",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

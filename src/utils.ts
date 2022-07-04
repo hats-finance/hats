@@ -4,11 +4,10 @@ import {
   SMALL_SCREEN_BREAKPOINT,
   COIN_GECKO_ETHEREUM
 } from "./constants/constants";
-import { BigNumber, ethers } from "ethers";
-import { isAddress, getAddress } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
+import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import axios from "axios";
-import { IVault, IWithdrawSafetyPeriod } from "./types/types";
-import { MASTER_ADDRESS } from "./settings";
+import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
 import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
 import millify from "millify";
@@ -41,24 +40,6 @@ export const getMainPath = (path: string) => {
 };
 
 /**
- * Given amount in WEI returns the formatted amount
- * @param {BigNumber | string} wei
- * @param {string} decimals
- */
-export const fromWei = (wei: BigNumber | string, decimals = "18"): string => {
-  return ethers.utils.formatUnits(wei, decimals);
-};
-
-/**
- * Given amount in string returns (ethers) BigNumber
- * @param {string} value
- * @param {string} decimals
- */
-export const toWei = (value: string, decimals = "18"): BigNumber => {
-  return ethers.utils.parseUnits(value, decimals);
-};
-
-/**
  * Formats a WEI value.
  * If the value is null/undefined, the function returns "-"
  * If the value is too small to be represented by the given precision, the function returns "+0".
@@ -79,7 +60,7 @@ export const formatWei = (
     value = value.toString();
   }
 
-  const formattedValue = millify(Number(fromWei(String(value), decimals)), {
+  const formattedValue = millify(Number(formatUnits(String(value), decimals)), {
     precision: precision
   });
 
@@ -138,9 +119,9 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @param {string[]} tokensAddresses
  * @returns the prices for each given token
  */
-export const getTokensPrices = async (tokensAddresses: string[]) => {
+export const getTokensPrices = async (tokensAddresses: string[]): Promise<CoinGeckoPriceResponse> => {
   if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
-    return
+    return {}
   }
   try {
     const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
@@ -149,6 +130,7 @@ export const getTokensPrices = async (tokensAddresses: string[]) => {
     lastCoinGeckoError = Date.now()
     console.error(err);
   }
+  return {}
 };
 
 /**
@@ -164,19 +146,6 @@ export const getTokenMarketCap = async (tokenAddress: string) => {
   } catch (err) {
     console.error(err);
   }
-};
-
-/**
- * Calculates the APY for a given vault
- * @param {IVault} vault
- * @param {number} hatsPrice
- */
-export const calculateApy = (vault: IVault, hatsPrice: number, tokenPrice: number) => {
-  // TODO: If the divdier is 0 so we get NaN and then it shows "-". Need to decide if it's okay or show 0 in this case.
-  if (Number(fromWei(vault.totalStaking)) === 0 || !tokenPrice) {
-    return 0;
-  }
-  return (((Number(fromWei(vault.totalRewardPaid)) * Number(hatsPrice)) / Number(fromWei(vault.totalStaking))) * tokenPrice);
 };
 
 /**
@@ -274,20 +243,6 @@ export const parseJSONToObject = (dataString: string) => {
 };
 
 /**
- * Calculates the reward price in USD for given vault and it's rewardPercentage
- * @param {number} rewardPercentage
- * @param {number} tokenPrice
- * @param {string} honeyPotBalance
- * @param {string} stakingTokenDecimals
- */
-export const calculateRewardPrice = (rewardPercentage: number, tokenPrice: number | undefined, honeyPotBalance: string, stakingTokenDecimals: string) => {
-  if (tokenPrice) {
-    return (Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * (rewardPercentage / 100) * tokenPrice);
-  }
-  return undefined;
-};
-
-/**
  * Used to set the current project which the user selects from the vaults lists to submit a vulnerability
  * @param {string} projectName
  * @param {string} projectId
@@ -311,11 +266,6 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
  * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally.
  * @param {string} masterAddress
  */
-export const checkMasterAddress = (masterAddress: string) => {
-  if (masterAddress !== MASTER_ADDRESS) {
-    throw new Error("Master address does not match!");
-  }
-}
 
 /**
  * Normalize any supported address-format to a checksum address.
@@ -330,13 +280,25 @@ export const normalizeAddress = (address: string) => {
 
 /**
  * Checks whether a given date (in unix time) has passed.
- * @param {number | string} value
+ * @param {number | string | undefined} value
  */
-export const isDateBefore = (value: number | string): boolean => {
+export const isDateBefore = (value: number | string | undefined): boolean => {
   return moment().isBefore(moment.unix(Number(value)));
 }
 
-export const ipfsTransformUri = (uri: string) => {
+/**
+ * Checks whether the current date is bwtween two given dates (in unix time).
+ * @param {number | string | undefined} start
+ * @param {number | string | undefined} end 
+ */
+export const isDateBetween = (start: number | string | undefined, end: number | string | undefined): boolean => {
+  return moment().isAfter(moment.unix(Number(start))) && moment().isBefore(moment.unix(Number(end)));
+}
+
+export const ipfsTransformUri = (uri: string | undefined) => {
+  if (!uri) {
+    return "";
+  }
   if (uri.startsWith("ipfs")) {
     let ipfs;
     if (uri.startsWith("ipfs/")) {
@@ -351,4 +313,8 @@ export const ipfsTransformUri = (uri: string) => {
     return uri;
   }
   return `${IPFS_PREFIX}/${uri}`;
+}
+
+export const formatAPY = (apy: number | undefined): string => {
+  return apy ? `${apy.toFixed(2)}%` : "-";
 }
