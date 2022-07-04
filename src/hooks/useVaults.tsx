@@ -208,12 +208,10 @@ const checkForMultiVaults = (vaults: IVault[]) => {
   return updatedVaults;
 }
 
-const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => {
-  const multipleVaults = pids.map(pid => {
+const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => (
+  pids.map(pid => {
     return vaults.find(vault => {
       return vault.pid === pid;
     });
   })
-
-  return multipleVaults;
-}
+)
