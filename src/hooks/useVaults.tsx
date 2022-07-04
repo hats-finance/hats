@@ -39,20 +39,6 @@ export function VaultsProvider({ children }) {
   const { chainId } = useEthers();
   const prevChainId = usePrevious(chainId);
 
-  // useEffect(() => {
-  //   if (masterData) {
-  //     const { rewardsToken, withdrawPeriod, safetyPeriod } = masterData.masters[0];
-  //     dispatch(updateRewardsToken(rewardsToken));
-  //     dispatch(
-  //       updateWithdrawSafetyPeriod(
-  //         getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)
-  //       )
-  //     );
-  //     //dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
-  //   }
-  // }, [masterData, dispatch]);
-
-
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {
       const stakingTokens = Array.from(new Set(vaults?.map(
