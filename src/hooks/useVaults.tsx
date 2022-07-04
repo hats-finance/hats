@@ -7,6 +7,7 @@ import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
+import { useGoodDollarPrice } from "./GoodDollar";
 
 interface IVaultsContext {
   vaults?: IVault[]
@@ -52,6 +53,8 @@ export function VaultsProvider({ children }) {
   //   }
   // }, [masterData, dispatch]);
 
+  const goodDollarPrice = useGoodDollarPrice();
+  console.log("goodDollarPrice", goodDollarPrice);
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {

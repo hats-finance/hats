@@ -48,6 +48,8 @@ export const VaultSubgraphs = {
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
 
+export const GoodDollarContractAddress = "0x6C35677206ae7FF1bf753877649cF57cC30D1c42";
+
 export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
