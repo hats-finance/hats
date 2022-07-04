@@ -24,7 +24,7 @@ export default function WithdrawTimer({ vault, plainTextView, placeHolder, showW
 
   return (
     <>
-      {(pendingWithdraw || isWithdrawable) ? (
+      {(pendingWithdraw || isWithdrawable) && countdownValue ? (
         <>
           {showWithdrawState && <span>{pendingWithdraw ? "Pending " : "Withdrawable "}</span>}
           <Countdown

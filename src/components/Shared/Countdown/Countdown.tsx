@@ -6,7 +6,7 @@ import { Colors } from "../../../constants/constants";
 import "./index.scss";
 
 interface IProps {
-  endDate: string | undefined
+  endDate: string
   plainTextView?: boolean
   onEnd?: Function
   textColor?: Colors
