@@ -1,4 +1,5 @@
 import { useEthers } from "@usedapp/core";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import WithdrawTimer from "components/DepositWithdraw/WithdrawTimer/WithdrawTimer";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +15,7 @@ interface IProps {
 
 export default function VaultAction(props: IProps) {
   const navigate = useNavigate();
+  const isSupportedNetwork = useSupportedNetwork();
   const { t } = useTranslation();
   const { account } = useEthers();
 
@@ -24,7 +26,7 @@ export default function VaultAction(props: IProps) {
         onClick={() => {
           navigate(`${RoutePaths.vaults}/${props.data?.pid}/deposit`)
         }}
-        disabled={props.preview || !account}>
+        disabled={props.preview || !account || !isSupportedNetwork}>
         {t("Vault.deposit-withdraw")}
       </button>
       {!props.data?.multipleVaults && <WithdrawTimer vault={props.data!} showWithdrawState={false} />}
