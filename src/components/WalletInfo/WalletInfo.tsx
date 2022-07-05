@@ -5,14 +5,15 @@ import { ScreenSize } from "../../constants/constants";
 import { ChainId, shortenIfAddress, useEtherBalance, useEthers, useLookupAddress, useTokenBalance, useTransactions } from "@usedapp/core";
 import { formatEther } from "ethers/lib/utils";
 import "./WalletInfo.scss";
+import { useRewardsToken } from "hooks/useRewardsToken";
 
 export default function WalletInfo() {
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const rewardsToken = useSelector((state: RootState) => state.dataReducer.rewardsToken);
   const { account, chainId } = useEthers();
   const ethBalance = formatEther(useEtherBalance(account) ?? 0);
   const ethBalanceString = (+ethBalance).toFixed(4);
   const { ens } = useLookupAddress(account);
+  const { rewardsToken } = useRewardsToken();
   const hatsBalance = formatEther(useTokenBalance(rewardsToken, account) ?? 0);
   const hatsBalanceString = (+hatsBalance).toFixed(4);
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
