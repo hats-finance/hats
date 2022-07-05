@@ -19,6 +19,7 @@ import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import "./index.scss";
 import { usePrevious } from "hooks/usePrevious";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 
 interface IProps {
   data: IVault
@@ -28,6 +29,7 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
+  const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
     committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
@@ -200,12 +202,12 @@ export default function DepositWithdraw(props: IProps) {
             stakingTokenDecimals={stakingTokenDecimals} />}
         {tab === "deposit" &&
           <button
-            disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause}
+            disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause || !isSupportedNetwork}
             className="action-btn"
             onClick={async () => await tryDeposit()}>
             {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && isWithdrawable && !pendingWithdraw && // withdrawRequest
+        {tab === "withdraw" && isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
