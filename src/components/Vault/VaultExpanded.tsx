@@ -84,7 +84,7 @@ export default function VaultExpanded(props: IProps) {
                   <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(description!["project-metadata"].name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
+                  <button onClick={() => { setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">

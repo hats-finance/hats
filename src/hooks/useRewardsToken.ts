@@ -24,7 +24,7 @@ export function useRewardsToken() {
     return () => {
       cancelled = true;
     }
-  }, [apolloClient])
+  }, [apolloClient, chainId])
 
   return { rewardsToken };
 }
