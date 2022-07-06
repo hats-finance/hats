@@ -105,6 +105,24 @@
         "redeem-success": "NFT redeemed successfully"
       }
     },
+    "AirdropMachine": {
+      "section-1": {
+        "title": "HATS AIRDROP",
+        "text": "Welcome to Hats.finance fisrt airdrop. The airdrop will become live in the next months. \n\n Since we don’t want to keep ypu waiting you can check your  eligibliy now and join an embassy"
+      },
+      "section-2": {
+        "title": "ELIGIBILITY CRITERIA",
+        "text-1": "Committee members of the projects who are listed on Hats. \n\n",
+        "text-2": "Depositors who added liquidity to one of the vaults (bug bounty) in Hats dApp. \n\n",
+        "text-3": "“Crows” NFT holders will be airdropped as well for their part in creating a community and expanding our reach. We are becoming a big clan! \n\n",
+        "text-4": "“Super coder” NFT holders - security experts who participate in the Hats game. Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas \n\n",
+        "text-5": "Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas. \n\n"
+      },
+      "section-3": {
+        "title": "CHECK YOUR  TOKEN ELIGIBILTY",
+        "text": "Your tokens will be availble when the airdrop becomes live in the next few months."
+      }
+    },
     "NFTAirdop": {
       "eligible-text": "Congratulations on being part of the first Hats NFT airdrop “The Crow’s Clan” Redeem your NFT and join the clan. \n\n The crows clan is a one of its kind NFT collection, highlighting the importance of crypto security in a space of constant innovation and change. We chose the crow as the main character of the collection because in many ways crows hold the same values as Hats Finance. \n\n The crow is an animal associated with mysteries and magic, often in a negative connotation. However, they also serve an important role in the ecosystem, helping the world get rid of bacteria and restore the forests. The same can be said about Hackers, who are often seen as negative characters, yet they are essential in the crypto ecosystem. \n\n Like our early supporters, crows are clever, intelligent, adaptable, with excellent teamwork and reciprocity - exactly what we see in the Hat's community.",
       "Redeem": {

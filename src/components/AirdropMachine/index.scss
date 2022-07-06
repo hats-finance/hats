@@ -1,0 +1,46 @@
+@import "../../styles/constants.scss";
+
+.airdrop-machine-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .airdrop-machine-content {
+    max-width: $element-max-width;
+    margin: auto;
+    width: 100%;
+    color: $white;
+    font-size: $moderate;
+    .airdrop-machine__section {
+      border-left: 2px solid $vault-blue;
+      display: flex;
+      flex-direction: column;
+      padding: 50px 0;
+      .airdrop-machine__title-wrapper {
+        position: relative;
+        font-size: $large;
+        padding-left: 50px;
+      }
+      .airdrop-machine__section-content {
+        padding-left: 50px;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .airdrop-machine-wrapper {
+    .airdrop-machine-content {
+      .airdrop-machine__section {
+        border-left: unset;
+        .airdrop-machine__title-wrapper {
+          padding: unset;
+        }
+        .airdrop-machine__section-content {
+          padding: unset;
+        }
+      }
+    }
+  }
+}

@@ -29,6 +29,7 @@ import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/Airdrop
 import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
 import { useFetchAirdropData } from "./components/Airdrop/utils";
 import "./styles/App.scss";
+import AirdropMachine from "components/AirdropMachine/AirdropMachine";
 
 function App() {
   const dispatch = useDispatch();
@@ -78,6 +79,7 @@ function App() {
         <Route path={RoutePaths.airdrop} element={<Airdrop />} >
           <Route path=":walletAddress" element={<Airdrop />} />
         </Route>
+        <Route path={RoutePaths.airdrop_machine} element={<AirdropMachine />} />
       </Routes >
       {
         account && hasSeenWelcomePage === "1" && showAirdropPrompt && (

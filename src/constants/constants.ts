@@ -21,7 +21,8 @@ export enum RoutePaths {
   nft_airdrop = "/nft_airdrop/",
   vault_editor = "/vault-editor",
   airdrop = "/airdrop",
-  committee_tools = "/committee-tools"
+  committee_tools = "/committee-tools",
+  airdrop_machine = "/airdrop_machine",
 }
 
 export const Chains = {
@@ -54,6 +55,7 @@ export enum Pages {
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
   airdrop = "Airdrop",
+  airdrop_machine = "Airdrop Machine",
 }
 
 export const SMALL_SCREEN_BREAKPOINT = "1000px";
