@@ -247,7 +247,7 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} projectName
  * @param {string} projectId
  */
-export const setVulnerabilityProject = (projectName: string, projectId: string) => {
+export const setVulnerabilityProject = (projectName: string, projectId: string, master: string) => {
   let cachedData: IVulnerabilityData = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
@@ -257,7 +257,8 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
   cachedData.project = {
     verified: true,
     projectName: projectName,
-    projectId: projectId
+    projectId: projectId,
+    master: master
   }
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 }
