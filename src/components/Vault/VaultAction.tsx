@@ -29,7 +29,7 @@ export default function VaultAction(props: IProps) {
         disabled={props.preview || !account || !isSupportedNetwork}>
         {t("Vault.deposit-withdraw")}
       </button>
-      {!props.data?.multipleVaults && <WithdrawTimer vault={props.data!} showWithdrawState={false} />}
+      {!props.data?.multipleVaults && !props.preview && <WithdrawTimer vault={props.data!} showWithdrawState={false} />}
     </div >
   )
 }

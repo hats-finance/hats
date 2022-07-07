@@ -12,7 +12,7 @@ import { IVault, IVaultDescription } from "../../types/types";
 import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
-import { useCheckIn, useClaimReward, useDepositAndClaim, useGeneralParameters, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
+import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
 import { calculateActualWithdrawValue } from "./utils";
@@ -43,7 +43,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices } = useVaults();
+  const { tokenPrices, generalParameters } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -63,9 +63,8 @@ export default function DepositWithdraw(props: IProps) {
   const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals) : "-";
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
   const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
-  const generalParams = useGeneralParameters(master.address);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(generalParams?.withdrawRequestEnablePeriod.toString(), "seconds").unix();
+  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(generalParameters?.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
