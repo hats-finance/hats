@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useState, FC, ReactElement, useEffect } fr
 import { useEthers, useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
+import { usePrevious } from "hooks/usePrevious";
 import "./index.scss";
 
 export interface INotification {
@@ -25,7 +26,8 @@ interface Props {
 const NotificationProvider: FC<Props> = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [lastId, setLastId] = useState(0);
-
+  const { error } = useEthers();
+  const prevError = usePrevious(error);
 
   const addNotification = useCallback<NotificationContextValue["addNotification"]>((value, type) => {
     setNotifications((notifications) => notifications.concat({ id: lastId.toString(), content: value, type: type }));
@@ -47,14 +49,11 @@ const NotificationProvider: FC<Props> = ({ children }) => {
     setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
   }
 
-  const { error } = useEthers()
-
   useEffect(() => {
-    if (error) {
-      console.error(error)
-      //addNotification(error?.message, NotificationType.Error);
+    if (error && error?.message !== prevError?.message) {
+      addNotification(error?.message, NotificationType.Error);
     }
-  }, [error, addNotification])
+  }, [error, prevError, addNotification])
 
   const useDappNotifications = useNotifications().notifications.map((notification): INotification => {
     switch (notification.type) {
