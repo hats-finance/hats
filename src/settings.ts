@@ -12,10 +12,3 @@ export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_C
 export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddress;
 
 export const defaultChain: Chain = Chains[CHAINID];
-
-/** TODO: temporary until we'll eliminate the polling */
-export const POLL_INTERVAL = 10000;
-
-/** Currently not in use */
-export const INFURA_ID = process.env.REACT_APP_INFURA_ID || "";
-//export const LP_UNISWAP_URI = process.env.REACT_APP_LP_UNISWAP_URI || LPUniswapURIs[CHAINID];

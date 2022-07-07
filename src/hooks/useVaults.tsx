@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useTransactions } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
@@ -13,7 +13,10 @@ interface IVaultsContext {
   tokenPrices?: number[]
   subscribeToVaults: Function
   removeSubscription: Function
+  refresh: Function;
 }
+
+const DATA_REFRESH_TIME = 10000;
 
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
@@ -38,6 +41,8 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { chainId } = useEthers();
   const prevChainId = usePrevious(chainId);
+  const { transactions } = useTransactions();
+  const prevTransactions = usePrevious(transactions);
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {
@@ -86,7 +91,7 @@ export function VaultsProvider({ children }) {
         query: GET_VAULTS,
         variables: { chainId },
         context: { chainId },
-        fetchPolicy: "no-cache"
+        fetchPolicy: "network-only",
       })).data.vaults
 
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -114,7 +119,7 @@ export function VaultsProvider({ children }) {
 
     const vaults = await getVaultsFromGraph(chainId);
     const vaultsWithDescription = await getVaultsData(vaults);
-    return vaultsWithDescription;
+    return addMultiVaults(vaultsWithDescription);
 
   }, [apolloClient, chainId]);
 
@@ -137,9 +142,8 @@ export function VaultsProvider({ children }) {
     let cancelled = false;
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
-        if (!cancelled) {
-          const updatedVaults = checkForMultiVaults(vaults);
-          setVaults(updatedVaults as IVault[]);
+        if (!cancelled && vaults) {
+          setVaults(vaults);
         }
       });
     }
@@ -147,6 +151,21 @@ export function VaultsProvider({ children }) {
       cancelled = true;
     }
   }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
+
+  const refresh = useCallback(() => {
+    getVaults().then(vaults => {
+      setVaults(vaults);
+    })
+  }, [getVaults])
+
+  useEffect(() => {
+    const currentTransaction = transactions?.find(tx => !tx.receipt);
+    const prevCurrentTransaction = prevTransactions?.find(tx => !tx.receipt);
+
+    if (!currentTransaction && currentTransaction !== prevCurrentTransaction && subscriptions !== 0) {
+      setTimeout(refresh, DATA_REFRESH_TIME);
+    }
+  }, [transactions, prevTransactions, refresh, subscriptions])
 
   const subscribeToVaults = () => {
     setSubscrptions(subscriptions => subscriptions + 1);
@@ -160,7 +179,8 @@ export function VaultsProvider({ children }) {
     vaults,
     tokenPrices,
     subscribeToVaults,
-    removeSubscription
+    removeSubscription,
+    refresh
   };
 
   return <VaultsContext.Provider value={context}>
@@ -180,7 +200,7 @@ export const fixObject = (description: any): IVaultDescription => {
   return description;
 }
 
-const checkForMultiVaults = (vaults: IVault[]) =>
+const addMultiVaults = (vaults: IVault[]) =>
   vaults.map(vault => vault.description?.["additional-vaults"] ?
     {
       ...vault,
@@ -189,5 +209,5 @@ const checkForMultiVaults = (vaults: IVault[]) =>
     : vault);
 
 const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => (
-  pids.map(pid => vaults.find(vault => vault.pid === pid))
+  pids.map(pid => vaults.find(vault => vault.pid === pid)).filter(vault => vault) as IVault[]
 )
