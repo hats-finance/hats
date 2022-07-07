@@ -5,12 +5,13 @@ import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IVault, IVaultDescription } from "types/types";
+import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
+  generalParameters?: IMaster
   subscribeToVaults: Function
   removeSubscription: Function
   refresh: Function;
@@ -139,10 +140,12 @@ export function VaultsProvider({ children }) {
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
+    console.log({subscriptions, prevChainId, chainId, prevSubscriptions})
     let cancelled = false;
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
         if (!cancelled && vaults) {
+          console.log({vaults});
           setVaults(vaults);
         }
       });
@@ -178,6 +181,7 @@ export function VaultsProvider({ children }) {
   const context: IVaultsContext = {
     vaults,
     tokenPrices,
+    generalParameters: vaults?.[0].master,
     subscribeToVaults,
     removeSubscription,
     refresh

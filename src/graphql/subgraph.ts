@@ -24,6 +24,7 @@ export const GET_VAULTS = gql`
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
+        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels
@@ -53,7 +54,7 @@ export const GET_VAULTS = gql`
   }
 `;
 
-export const GET_REWARDS_TOKEN = gql`
+export const GET_GENERAL_PARAMETERS = gql`
   query getRewardsToken {
     masters {
       rewardsToken
