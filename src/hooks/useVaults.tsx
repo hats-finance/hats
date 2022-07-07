@@ -120,8 +120,8 @@ export function VaultsProvider({ children }) {
 
     const vaults = await getVaultsFromGraph(chainId);
     const vaultsWithDescription = await getVaultsData(vaults);
-    return addMultiVaults(vaultsWithDescription);
-
+    const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
+    return vaultsWithMultiVaults;
   }, [apolloClient, chainId]);
 
 
@@ -140,18 +140,20 @@ export function VaultsProvider({ children }) {
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
-    console.log({subscriptions, prevChainId, chainId, prevSubscriptions})
     let cancelled = false;
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
+
       getVaults().then(vaults => {
-        if (!cancelled && vaults) {
-          console.log({vaults});
-          setVaults(vaults);
+        if (!cancelled) {
+          if (vaults) {
+            setVaults(vaults);
+          }
         }
       });
     }
     return () => {
-      cancelled = true;
+      if (chainId === prevChainId)
+        cancelled = true;
     }
   }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
 

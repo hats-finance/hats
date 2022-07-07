@@ -20,7 +20,6 @@ interface IProps {
 
 export default function Honeypots({ showDeposit }: IProps) {
   const { vaults, tokenPrices } = useVaults();
-  console.log(vaults);
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
