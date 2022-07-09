@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
 import TimelineDot from "./components/TimelineDot/TimelineDot";
+import SailBoatImage from "../../assets/images/sail-boat.svg";
 import "./index.scss";
 
 export default function AirdropMachine() {
@@ -13,7 +14,8 @@ export default function AirdropMachine() {
   return (
     <div className="content airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
-        <div className="airdrop-machine__section">
+        <img src={SailBoatImage} className="airdrop-machine__sail-boat" alt="sail boat" />
+        <div className="airdrop-machine__section first-section">
           <div className="airdrop-machine__title-wrapper">
             {screenSize === ScreenSize.Desktop && <TimelineDot />}
             {t("AirdropMachine.section-1.title")}
@@ -22,6 +24,7 @@ export default function AirdropMachine() {
             {t("AirdropMachine.section-1.text")}
           </div>
         </div>
+        {screenSize === ScreenSize.Mobile && <TimelineDot />}
         <div className="airdrop-machine__section">
           <div className="airdrop-machine__title-wrapper">
             {screenSize === ScreenSize.Desktop && <TimelineDot />}
@@ -35,6 +38,7 @@ export default function AirdropMachine() {
             {t("AirdropMachine.section-2.text-5")}
           </div>
         </div>
+        {screenSize === ScreenSize.Mobile && <TimelineDot />}
         <div className="airdrop-machine__section">
           <div className="airdrop-machine__title-wrapper">
             {screenSize === ScreenSize.Desktop && <TimelineDot />}
@@ -43,6 +47,17 @@ export default function AirdropMachine() {
           <div className="airdrop-machine__section-content">
             <CheckEligibility />
           </div>
+        </div>
+        {screenSize === ScreenSize.Mobile && <TimelineDot />}
+        <div className="airdrop-machine__section last-section">
+          <div className="airdrop-machine__title-wrapper">
+            {screenSize === ScreenSize.Desktop && <TimelineDot />}
+            {t("AirdropMachine.section-4.title")}
+          </div>
+          <div className="airdrop-machine__section-content">
+            {t("AirdropMachine.section-4.text")}
+          </div>
+          <button className="fill">{t("AirdropMachine.section-4.button-text")}</button>
         </div>
       </div>
     </div>

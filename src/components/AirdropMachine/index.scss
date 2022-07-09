@@ -12,6 +12,10 @@
     width: 100%;
     color: $white;
     font-size: $moderate;
+    .airdrop-machine__sail-boat {
+      display: flex;
+      margin: auto;
+    }
     .airdrop-machine__section {
       border-left: 2px solid $vault-blue;
       display: flex;
@@ -21,9 +25,17 @@
         position: relative;
         font-size: $large;
         padding-left: 50px;
+        font-weight: bold;
       }
       .airdrop-machine__section-content {
         padding-left: 50px;
+      }
+      &.first-section {
+        padding-top: 0;
+      }
+      &.last-section {
+        border-left: unset;
+        padding-top: 0;
       }
     }
   }
@@ -32,13 +44,21 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-machine-wrapper {
     .airdrop-machine-content {
+      .airdrop-machine__sail-boat {
+        width: 200px;
+      }
       .airdrop-machine__section {
         border-left: unset;
+        padding-left: 20px;
+        padding-right: 20px;
         .airdrop-machine__title-wrapper {
           padding: unset;
+          font-size: $small;
+          text-align: center;
         }
         .airdrop-machine__section-content {
           padding: unset;
+          font-size: $xsmall;
         }
       }
     }

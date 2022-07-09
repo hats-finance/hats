@@ -17,3 +17,11 @@
     background-color: $light-blue-2;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .timeline-dot-wrapper {
+    position: unset;
+    margin: auto;
+    left: unset;
+  }
+}

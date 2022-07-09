@@ -119,8 +119,18 @@
         "text-5": "Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas. \n\n"
       },
       "section-3": {
-        "title": "CHECK YOUR  TOKEN ELIGIBILTY",
-        "text": "Your tokens will be availble when the airdrop becomes live in the next few months."
+        "title": "CHECK YOUR TOKEN ELIGIBILTY"
+      },
+      "section-4": {
+        "title": "JOIN YOUR EMBASSY",
+        "text": "You can access your embassy with your NFT. \n\n Each project embassy can send one ambassador to the security council. \n\n Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance. \n\n To be part of a unique group with the project committee. To be the first to learn about security topics related to your protocol.",
+        "button-text": "JOIN EMBASSY"
+      },
+      "CheckEligibility": {
+        "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
+        "input-placeholder": "Connect to wallet or paste a wallet adress",
+        "input-error": "Please enter a valid address",
+        "button-text": "CHECK"
       }
     },
     "NFTAirdop": {

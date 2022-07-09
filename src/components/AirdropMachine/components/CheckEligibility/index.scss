@@ -1,5 +1,48 @@
 @import "../../../../styles/constants.scss";
 
-.airdrop-machine__check-eligibility-wrapper {
+.check-eligibility-wrapper {
+  .check-eligibility__input-wrapper {
+    max-width: 500px;
+    .check-eligibility__input-container {
+      border: 1px solid $turquoise;
+      display: flex;
+      &.check-eligibility__input-error {
+        border: 1px solid $red;
+      }
+      .check-eligibility__address-input {
+        border: none;
+        background: none;
+        color: $white;
+        height: 50px;
+        text-indent: 10px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .check-eligibility__clear-input {
+        border: none;
+      }
+    }
+    .check-eligibility__error-label {
+      color: $red;
+      font-size: $xsmall;
+    }
+    .check-eligibility__check-button {
+      $check-button-width: 220px;
+      width: $check-button-width;
+      margin-left: calc(100% - $check-button-width);
+    }
+  }
+}
 
+@media only screen and (max-width: $mobile-breakpoint) {
+  .check-eligibility-wrapper {
+    .check-eligibility__input-wrapper {
+      max-width: unset;
+      .check-eligibility__check-button {
+        margin: unset;
+        width: 100%;
+      }
+    }
+  }
 }
