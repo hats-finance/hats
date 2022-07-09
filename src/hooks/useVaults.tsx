@@ -5,12 +5,13 @@ import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IVault, IVaultDescription } from "types/types";
+import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
+  generalParameters?: IMaster
   subscribeToVaults: Function
   removeSubscription: Function
   refresh: Function;
@@ -119,36 +120,27 @@ export function VaultsProvider({ children }) {
 
     const vaults = await getVaultsFromGraph(chainId);
     const vaultsWithDescription = await getVaultsData(vaults);
-    return addMultiVaults(vaultsWithDescription);
-
+    const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
+    return vaultsWithMultiVaults;
   }, [apolloClient, chainId]);
 
 
   useEffect(() => {
-    let cancelled = false;
     if (vaults)
       getPrices(vaults)
         .then((prices) => {
-          if (!cancelled) {
-            setTokenPrices(prices)
-          }
+          setTokenPrices(prices)
         })
-    return () => {
-      cancelled = true;
-    }
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
-    let cancelled = false;
+
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
-        if (!cancelled && vaults) {
+        if (vaults) {
           setVaults(vaults);
         }
       });
-    }
-    return () => {
-      cancelled = true;
     }
   }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
 
@@ -178,6 +170,7 @@ export function VaultsProvider({ children }) {
   const context: IVaultsContext = {
     vaults,
     tokenPrices,
+    generalParameters: vaults?.[0].master,
     subscribeToVaults,
     removeSubscription,
     refresh

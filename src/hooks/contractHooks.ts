@@ -47,15 +47,6 @@ export function useWithdrawRequestInfo(address: string, pid: string, account: st
   return value?.[0];
 }
 
-// TODO: need to add return type
-export function useGeneralParameters(address: string) {
-  const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "generalParameters", args: [] }) ?? {};
-  if (error) {
-    return undefined;
-  }
-  return value;
-}
-
 export function useTokenApprove(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: "Approve" });
 }
