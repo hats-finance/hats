@@ -126,34 +126,21 @@ export function VaultsProvider({ children }) {
 
 
   useEffect(() => {
-    let cancelled = false;
     if (vaults)
       getPrices(vaults)
         .then((prices) => {
-          if (!cancelled) {
-            setTokenPrices(prices)
-          }
+          setTokenPrices(prices)
         })
-    return () => {
-      cancelled = true;
-    }
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
-    let cancelled = false;
-    if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
 
+    if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
-        if (!cancelled) {
-          if (vaults) {
-            setVaults(vaults);
-          }
+        if (vaults) {
+          setVaults(vaults);
         }
       });
-    }
-    return () => {
-      if (chainId === prevChainId)
-        cancelled = true;
     }
   }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
 
