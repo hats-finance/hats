@@ -186,3 +186,20 @@ export interface GeneralParameters {
 export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
+
+export interface AirdropMachineWallet {
+  id: string;
+  token_eligibility: {
+    committee_member: number;
+    depositor: number;
+    crow: number;
+    coder: number;
+    early_contributor: number;
+  },
+  nft_elegebility: {
+    contract_address: string;
+    version: number;
+    pid: number;
+    tier: number;
+  }[];
+}

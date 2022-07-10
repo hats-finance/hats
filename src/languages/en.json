@@ -131,6 +131,10 @@
         "input-placeholder": "Connect to wallet or paste a wallet adress",
         "input-error": "Please enter a valid address",
         "button-text": "CHECK"
+      },
+      "Eligible": {
+        "title": "CONGRATS!",
+        "text": "You are eligible to Hats token and NFT airdrop"
       }
     },
     "NFTAirdop": {

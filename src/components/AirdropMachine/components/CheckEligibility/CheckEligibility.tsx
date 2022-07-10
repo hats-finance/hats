@@ -5,7 +5,7 @@ import { isAddress } from "ethers/lib/utils";
 import useModal from "hooks/useModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Eligibility from "../Eligibility/Eligibility";
+import Redeem from "../Redeem/Redeem";
 import "./index.scss";
 
 export default function CheckEligibility() {
@@ -38,7 +38,7 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={toggle}>
-        <Eligibility address={userInput} />
+        <Redeem address={userInput} />
       </Modal>
     </div>
   )

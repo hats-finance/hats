@@ -1,0 +1,47 @@
+@import "../../../../../../styles/constants.scss";
+
+.eligible-wrapper {
+  color: $white;
+  width: 900px;
+  .eligible__header-wrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    .eligible__header-title {
+      font-size: $medium-2;
+      font-weight: bold;
+    }
+  }
+  .eligible__stages-wrapper {
+    display: flex;
+    justify-content: space-between;
+    .eligible__stage-title-wrapper {
+      display: flex;
+      align-items: center;
+      font-size: $medium;
+      .eligible__stage-number {
+        background-color: $turquoise;
+        color: $field-blue;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px; 
+        line-height: 25px;
+        text-align: center;
+        font-weight: bold;
+        margin-right: 10px;
+      }
+      .eligible__stage-title {
+        &.eligible__stage-title-current {
+          border-bottom: 3px solid $turquoise;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .eligible-wrapper {
+    width: unset;
+  }
+}
