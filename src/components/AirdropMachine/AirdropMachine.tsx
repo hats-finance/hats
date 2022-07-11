@@ -5,6 +5,7 @@ import { RootState } from "reducers";
 import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
 import TimelineDot from "./components/TimelineDot/TimelineDot";
 import SailBoatImage from "../../assets/images/sail-boat.svg";
+import RadioButtonChecked from "../../assets/icons/radio-button-checked.svg";
 import "./index.scss";
 
 export default function AirdropMachine() {
@@ -31,11 +32,43 @@ export default function AirdropMachine() {
             {t("AirdropMachine.section-2.title")}
           </div>
           <div className="airdrop-machine__section-content">
-            {t("AirdropMachine.section-2.text-1")}
-            {t("AirdropMachine.section-2.text-2")}
-            {t("AirdropMachine.section-2.text-3")}
-            {t("AirdropMachine.section-2.text-4")}
-            {t("AirdropMachine.section-2.text-5")}
+            <div className="airdrop-machine__eligibility-types">
+              <div className="airdrop-machine__eligibility-type">
+                <img src={RadioButtonChecked} alt="radio button" />
+                <div className="airdrop-machine__eligibility-type-text">
+                  <div><b>{t("AirdropMachine.section-2.sub-title-1")}</b></div>
+                  {t("AirdropMachine.section-2.text-1")}
+                </div>
+              </div>
+              <div className="airdrop-machine__eligibility-type">
+                <img src={RadioButtonChecked} alt="radio button" />
+                <div className="airdrop-machine__eligibility-type-text">
+                  <div><b>{t("AirdropMachine.section-2.sub-title-2")}</b></div>
+                  {t("AirdropMachine.section-2.text-2")}
+                </div>
+              </div>
+              <div className="airdrop-machine__eligibility-type">
+                <img src={RadioButtonChecked} alt="radio button" />
+                <div className="airdrop-machine__eligibility-type-text">
+                  <div><b>{t("AirdropMachine.section-2.sub-title-3")}</b></div>
+                  {t("AirdropMachine.section-2.text-3")}
+                </div>
+              </div>
+              <div className="airdrop-machine__eligibility-type">
+                <img src={RadioButtonChecked} alt="radio button" />
+                <div className="airdrop-machine__eligibility-type-text">
+                  <div><b>{t("AirdropMachine.section-2.sub-title-4")}</b></div>
+                  {t("AirdropMachine.section-2.text-4")}
+                </div>
+              </div>
+              <div className="airdrop-machine__eligibility-type">
+                <img src={RadioButtonChecked} alt="radio button" />
+                <div className="airdrop-machine__eligibility-type-text">
+                  <div><b>{t("AirdropMachine.section-2.sub-title-5")}</b></div>
+                  {t("AirdropMachine.section-2.text-5")}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         {screenSize === ScreenSize.Mobile && <TimelineDot />}

@@ -112,11 +112,16 @@
       },
       "section-2": {
         "title": "ELIGIBILITY CRITERIA",
-        "text-1": "Committee members of the projects who are listed on Hats. \n\n",
-        "text-2": "Depositors who added liquidity to one of the vaults (bug bounty) in Hats dApp. \n\n",
-        "text-3": "“Crows” NFT holders will be airdropped as well for their part in creating a community and expanding our reach. We are becoming a big clan! \n\n",
-        "text-4": "“Super coder” NFT holders - security experts who participate in the Hats game. Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas \n\n",
-        "text-5": "Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas. \n\n"
+        "sub-title-1": "Committee members",
+        "text-1": "of the projects who are listed on Hats.",
+        "sub-title-2": "Depositors ",
+        "text-2": "who added liquidity to one of the vaults (bug bounty) in Hats dApp.",
+        "sub-title-3": "“Crows” NFT holders",
+        "text-3": "will be airdropped as well for their part in creating a community and expanding our reach. We are becoming a big clan!",
+        "sub-title-4": "“Super coder” NFT holders",
+        "text-4": "security experts who participate in the Hats game. Hats early supporters - a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas",
+        "sub-title-5": "Hats early supporters",
+        "text-5": "a collective of experts who tested and helped the dev team from day one. We will forever remember your contribution during the early days of developing our vision and core ideas."
       },
       "section-3": {
         "title": "CHECK YOUR TOKEN ELIGIBILTY"
