@@ -57,7 +57,7 @@ export default function AirdropMachine() {
           <div className="airdrop-machine__section-content">
             {t("AirdropMachine.section-4.text")}
           </div>
-          <button className="fill">{t("AirdropMachine.section-4.button-text")}</button>
+          <button className="airdrop-machine__join-embassy-btn fill">{t("AirdropMachine.section-4.button-text")}</button>
         </div>
       </div>
     </div>

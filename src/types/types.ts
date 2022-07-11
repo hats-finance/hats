@@ -198,7 +198,6 @@ export interface AirdropMachineWallet {
   },
   nft_elegebility: {
     contract_address: string;
-    version: number;
     pid: number;
     tier: number;
   }[];

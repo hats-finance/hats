@@ -19,9 +19,6 @@ export default function Eligible({ data }: IProps) {
   const { t } = useTranslation();
   const [stage, setStage] = useState(Stage.TokenEligibility);
 
-  console.log(stage);
-  console.log(Stage.TokenEligibility)
-
   return (
     <div className="eligible-wrapper">
       <div className="eligible__header-wrapper">
@@ -42,7 +39,11 @@ export default function Eligible({ data }: IProps) {
           </div>
         </div>
       </div>
-      {stage === Stage.TokenEligibility ? <TokenEligibility /> : <NFTAirdrop />}
+      {stage === Stage.TokenEligibility ? (
+        <TokenEligibility
+          data={data}
+          nextStage={() => setStage(Stage.NFTAirdrop)} />
+      ) : <NFTAirdrop />}
     </div>
   )
 }

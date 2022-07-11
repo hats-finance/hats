@@ -3,6 +3,8 @@
 .eligible-wrapper {
   color: $white;
   width: 900px;
+  padding: 50px;
+  box-sizing: border-box;
   .eligible__header-wrapper {
     display: flex;
     flex-direction: column;
@@ -15,6 +17,7 @@
   .eligible__stages-wrapper {
     display: flex;
     justify-content: space-between;
+    margin: 50px 0;
     .eligible__stage-title-wrapper {
       display: flex;
       align-items: center;
@@ -24,7 +27,7 @@
         color: $field-blue;
         border-radius: 50%;
         width: 25px;
-        height: 25px; 
+        height: 25px;
         line-height: 25px;
         text-align: center;
         font-weight: bold;
@@ -43,5 +46,16 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .eligible-wrapper {
     width: unset;
+    padding: 10px;
+    .eligible__header-wrapper {
+      .eligible__header-title {
+        font-size: $moderate;
+      }
+    }
+    .eligible__stages-wrapper {
+      .eligible__stage-title-wrapper {
+        font-size: $xsmall;
+      }
+    }
   }
 }

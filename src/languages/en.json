@@ -135,6 +135,32 @@
       "Eligible": {
         "title": "CONGRATS!",
         "text": "You are eligible to Hats token and NFT airdrop"
+      },
+      "TokenEligibility": {
+        "text-1": "Your tokens will be availble when the airdrop becomes live in the next few months.",
+        "text-2": "token eligibilty",
+        "text-3": "Eligibility ctiteria breakdown",
+        "text-4": "Learn more",
+        "text-5": "Committee members",
+        "text-6": "Depositors",
+        "text-7": "“Crows” NFT holders",
+        "text-8": "“Super coder” NFT holders",
+        "text-9": "Hats early supporters",
+        "text-10": "TOTAL",
+        "text-11": "Please notice!",
+        "text-12": "In order to stay eligible and recieve your token airdrop you must redeem your NFT and use it to join an embassy.",
+        "text-13": "What is an embassy?",
+        "text-14": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that is reviewing disclosed exploits or have deposited into the bug bounty will gain access to their Embassy.",
+        "button-text": "CONTINUE TO THE NFT AIRDROP"
+      },
+      "NFTAirdrop": {
+        "text-1": "You are eligible to Hats NFT airdrop - while cool looking the NFT has a utility. Redeem your NFT and use it to enter your embassy.",
+        "text-2": "Why should I join an embassy?",
+        "text-3": "Stay eligible and recieve your token airdrop",
+        "text-4": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
+        "text-5": "Be the first to learn about security topics related to your protocol.",
+        "text-6": "Be part of a unique group with the project committee.",
+        "button-text": "REDEEM YOUR NFT"
       }
     },
     "NFTAirdop": {

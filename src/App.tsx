@@ -76,15 +76,15 @@ function App() {
         <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
           <Route path=":ipfsHash" element={<VaultEditor />} />
         </Route>
-        <Route path={RoutePaths.airdrop} element={<Airdrop />} >
+        {/* <Route path={RoutePaths.airdrop} element={<Airdrop />} >
           <Route path=":walletAddress" element={<Airdrop />} />
-        </Route>
+        </Route> */}
         <Route path={RoutePaths.airdrop_machine} element={<AirdropMachine />} />
       </Routes >
-      {
+      {/* {
         account && hasSeenWelcomePage === "1" && showAirdropPrompt && (
           <AirdropPrompt closePrompt={() => setShowAirdropPrompt(false)} />)
-      }
+      } */}
     </>
   );
 }
