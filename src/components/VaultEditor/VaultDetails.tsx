@@ -17,6 +17,15 @@ export default function VaultDetails({ projectMetaData, onChange }) {
           colorable
           placeholder={t("VaultEditor.vault-details.name-placeholder")}
         />
+        <label>{t("VaultEditor.vault-details.type")}</label>
+        <EditableContent
+          textInput
+          name="project-metadata.type"
+          value={projectMetaData.type}
+          onChange={onChange}
+          colorable
+          placeholder={t("VaultEditor.vault-details.type-placeholder")}
+        />
         <label>{t("VaultEditor.vault-details.website")}</label>
         <EditableContent
           name="project-metadata.website"
