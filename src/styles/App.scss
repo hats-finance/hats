@@ -76,6 +76,11 @@ a {
   border-color: $strong-red !important;
 }
 
+/* This goes with <br /> tag to break line only in mobile */
+.mobile-break {
+  display: none;
+}
+
 @media only screen and (max-width: $small-screen-breakpoint) {
   html {
     font-size: $xsmall;
@@ -91,5 +96,10 @@ a {
     padding-top: $header-height + 50;
     margin-left: unset;
     margin-right: unset;
+  }
+  
+  /* This goes with <br /> tag to break line only in mobile */
+  .mobile-break {
+    display: block;
   }
 }

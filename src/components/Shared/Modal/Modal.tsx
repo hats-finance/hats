@@ -19,7 +19,7 @@ export default function Modal({ isShowing, hide, children }: IProps) {
       <>
         <div className="modal-overlay" />
         <div className="modal-wrapper" aria-modal role="dialog">
-          <div className="modal">
+          <div className="modal" id="modalBody">
             <div className="modal-header">
               <button type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={hide}>
                 <span aria-hidden="true">&times;</span>

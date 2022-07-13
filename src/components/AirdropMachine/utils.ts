@@ -1,6 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect } from "react";
 import { TEMP_WALLETS } from "./data";
+import { solidityKeccak256 } from "ethers/lib/utils";
 
 export const checkEligibility = async (address: string) => (
   TEMP_WALLETS.wallets.find(wallet => wallet.id === address)
@@ -25,4 +26,8 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   useEffect(() => {
     getAirdropData();
   }, [account]);
+}
+
+function hashToken(hatVaults, pid, account, tier) {
+  return Buffer.from(solidityKeccak256(['address', 'uint256', 'address', 'uint8'], [hatVaults, pid, account, tier]).slice(2), 'hex');
 }

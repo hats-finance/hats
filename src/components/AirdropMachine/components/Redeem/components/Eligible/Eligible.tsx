@@ -20,6 +20,11 @@ export default function Eligible({ data, closeRedeemModal }: IProps) {
   const { t } = useTranslation();
   const [stage, setStage] = useState(Stage.TokenEligibility);
 
+  const nextStage = () => {
+    setStage(Stage.NFTAirdrop);
+    document.getElementById("modalBody")?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }
+
   return (
     <div className="eligible-wrapper">
       <div className="eligible__header-wrapper">
@@ -27,23 +32,23 @@ export default function Eligible({ data, closeRedeemModal }: IProps) {
         <div>{t("AirdropMachine.Eligible.text")}</div>
       </div>
       <div className="eligible__stages-wrapper">
-        <div className="eligible__stage-title-wrapper">
+        <div onClick={() => setStage(Stage.TokenEligibility)} className="eligible__stage-title-wrapper">
           <div className="eligible__stage-number">1</div>
           <div className={classNames("eligible__stage-title", { "eligible__stage-title-current": stage === Stage.TokenEligibility })}>
-            TOKEN ELIGIBILITY
+            TOKEN <br className="mobile-break" /> ELIGIBILITY
           </div>
         </div>
-        <div className="eligible__stage-title-wrapper">
+        <div onClick={() => setStage(Stage.NFTAirdrop)} className="eligible__stage-title-wrapper">
           <div className="eligible__stage-number">2</div>
           <div className={classNames("eligible__stage-title", { "eligible__stage-title-current": stage === Stage.NFTAirdrop })}>
-            NFT AIRDROP
+            NFT <br className="mobile-break" /> AIRDROP
           </div>
         </div>
       </div>
       {stage === Stage.TokenEligibility ? (
         <TokenEligibility
           data={data}
-          nextStage={() => setStage(Stage.NFTAirdrop)} />
+          nextStage={nextStage} />
       ) : <NFTAirdrop />}
     </div>
   )

@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers"
 
 export interface IVault {
   id: string
@@ -190,11 +191,11 @@ export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbo
 export interface AirdropMachineWallet {
   id: string;
   token_eligibility: {
-    committee_member: number;
-    depositor: number;
-    crow: number;
-    coder: number;
-    early_contributor: number;
+    committee_member: BigNumber;
+    depositor: BigNumber;
+    crow: BigNumber;
+    coder: BigNumber;
+    early_contributor: BigNumber;
   },
   nft_elegebility: {
     contract_address: string;

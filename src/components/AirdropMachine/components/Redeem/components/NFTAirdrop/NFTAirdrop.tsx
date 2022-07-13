@@ -11,9 +11,9 @@ const TEMP_NFTS = ["892", "342", "427", "374"];
 export default function NFTAirdrop() {
   const { t } = useTranslation();
 
-  const nftsSlides = TEMP_NFTS.map((nft) => {
+  const nftsSlides = TEMP_NFTS.map((nft, index) => {
     return (
-      <SwiperSlide>
+      <SwiperSlide key={index}>
         <img key={nft} src={`${IPFS_PREFIX}/${TEMP_IPFS_NFT_COLLECTION}/${nft}.png`} alt="nft" />
       </SwiperSlide>
     )

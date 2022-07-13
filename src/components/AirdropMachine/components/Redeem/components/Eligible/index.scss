@@ -23,6 +23,10 @@
       display: flex;
       align-items: center;
       font-size: $medium;
+      cursor: pointer;
+      &:hover {
+        opacity: 0.9;
+      }
       .eligible__stage-number {
         background-color: $turquoise;
         color: $field-blue;
@@ -56,6 +60,7 @@
     .eligible__stages-wrapper {
       .eligible__stage-title-wrapper {
         font-size: $xsmall;
+        text-align: center;
       }
     }
   }

@@ -20,7 +20,6 @@ export enum RoutePaths {
   vulnerability = "/vulnerability",
   nft_airdrop = "/nft_airdrop/",
   vault_editor = "/vault-editor",
-  airdrop = "/airdrop",
   committee_tools = "/committee-tools",
   airdrop_machine = "/airdrop_machine",
 }
@@ -31,11 +30,6 @@ export const Chains = {
 }
 
 export const VaultService = "https://vault-editor-service.herokuapp.com"
-
-export const NFTAirdropAddress = {
-  [ChainId.Mainnet]: "0x7AABB77BA782c57209dBe88aFF8beF113f55c05b",
-  [ChainId.Rinkeby]: "0x572927d1641Ea6d633fB1EeF030FaB0D07Bf77e4"
-}
 
 export const Endpoint = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
@@ -54,7 +48,6 @@ export enum Pages {
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
   pools = "Liquidity Pools",
-  airdrop = "Airdrop",
   airdrop_machine = "Airdrop Machine",
 }
 

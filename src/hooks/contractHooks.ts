@@ -1,10 +1,7 @@
 import { useCall, useContractFunction } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
-import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "settings";
 import erc20Abi from "../data/abis/erc20.json";
 import vaultAbi from "../data/abis/HATSVault.json";
-import NFTAirdrop from "../data/abis/NFTAirdrop.json";
-import TokenAirdrop from "../data/abis/TokenAirdrop.json";
 
 export function usePendingReward(
   address: string,
@@ -77,14 +74,6 @@ export function useClaimReward(address: string) {
 
 export function useCheckIn(address: string) {
   return useContractFunction(new Contract(address, vaultAbi), "checkIn", { transactionName: "Check In" });
-}
-
-export function useRedeemNFT() {
-  return useContractFunction(new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop), "redeem", { transactionName: "Redeem NFT" });
-}
-
-export function useDelegateAndClaim() {
-  return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim", { transactionName: "Delegate And Claim" });
 }
 
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(
