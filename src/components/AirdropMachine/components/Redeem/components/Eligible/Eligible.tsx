@@ -8,6 +8,7 @@ import "./index.scss";
 
 interface IProps {
   data: AirdropMachineWallet;
+  closeRedeemModal: () => void;
 }
 
 enum Stage {
@@ -15,7 +16,7 @@ enum Stage {
   NFTAirdrop,
 }
 
-export default function Eligible({ data }: IProps) {
+export default function Eligible({ data, closeRedeemModal }: IProps) {
   const { t } = useTranslation();
   const [stage, setStage] = useState(Stage.TokenEligibility);
 

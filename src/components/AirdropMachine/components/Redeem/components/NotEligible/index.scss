@@ -1,0 +1,28 @@
+@import "../../../../../../styles/constants.scss";
+
+.not-eligible-wrapper {
+  color: $white;
+  padding: $modal-element-padding;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .not-eligible__title {
+    font-size: $medium-2;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .check-other-wallet-button {
+    margin-top: 30px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .not-eligible-wrapper {
+    padding: $modal-element-padding-mobile;
+    text-align: center  ;
+    .not-eligible__title {
+      font-size: $moderate;
+    }
+  }
+}

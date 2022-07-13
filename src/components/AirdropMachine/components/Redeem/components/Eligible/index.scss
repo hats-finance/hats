@@ -3,7 +3,8 @@
 .eligible-wrapper {
   color: $white;
   width: 900px;
-  padding: 50px;
+  max-height: 1000px;
+  padding: $modal-element-padding;
   box-sizing: border-box;
   .eligible__header-wrapper {
     display: flex;
@@ -46,7 +47,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .eligible-wrapper {
     width: unset;
-    padding: 10px;
+    padding: $modal-element-padding-mobile;
     .eligible__header-wrapper {
       .eligible__header-title {
         font-size: $moderate;

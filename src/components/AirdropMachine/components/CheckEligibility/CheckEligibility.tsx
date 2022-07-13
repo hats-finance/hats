@@ -43,7 +43,7 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={toggle}>
-        <Redeem address={userInput} />
+        <Redeem address={userInput} closeRedeemModal={toggle} />
       </Modal>
     </div>
   )

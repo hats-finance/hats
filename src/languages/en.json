@@ -144,6 +144,11 @@
         "input-error": "Please enter a valid address",
         "button-text": "CHECK"
       },
+      "NotEligible": {
+        "title": "HO NO!",
+        "text-1": "You are not eligible for this airdrop machine round",
+        "button-text": "CHECK ANOTHER WALLET"
+      },
       "Eligible": {
         "title": "CONGRATS!",
         "text": "You are eligible to Hats token and NFT airdrop"
@@ -151,7 +156,7 @@
       "TokenEligibility": {
         "text-1": "Your tokens will be availble when the airdrop becomes live in the next few months.",
         "text-2": "token eligibilty",
-        "text-3": "Eligibility ctiteria breakdown",
+        "text-3": "Eligibility criteria breakdown",
         "text-4": "Learn more",
         "text-5": "Committee members",
         "text-6": "Depositors",
