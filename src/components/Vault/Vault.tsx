@@ -1,7 +1,8 @@
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { fromWei, ipfsTransformUri } from "../../utils";
+import { formatUnits } from "ethers/lib/utils";
+import { ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
@@ -25,7 +26,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const honeyPotBalanceValue = millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)));
+  const honeyPotBalanceValue = millify(Number(formatUnits(honeyPotBalance, stakingTokenDecimals)));
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
   const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 

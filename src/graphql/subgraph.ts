@@ -24,6 +24,7 @@ export const GET_VAULTS = gql`
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
+        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels
@@ -53,13 +54,10 @@ export const GET_VAULTS = gql`
   }
 `;
 
-// rewardsToken is the HAT token
-export const GET_MASTER_DATA = gql`
-  query getMaster {
+export const GET_GENERAL_PARAMETERS = gql`
+  query getRewardsToken {
     masters {
       rewardsToken
-      withdrawPeriod
-      safetyPeriod
     }
   }
 `

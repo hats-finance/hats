@@ -5,12 +5,12 @@ import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
+import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "../types/types";
 //import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
-import { fromWei } from "utils";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -30,7 +30,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
     const tokenPrice = tokenPrices?.[vault.stakingToken];
-    return tokenPrice ? Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
+    return tokenPrice ? Number(formatUnits(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, [tokenPrices])
 
   const closeModal = useCallback(() => {

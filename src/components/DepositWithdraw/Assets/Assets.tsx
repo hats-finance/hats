@@ -46,7 +46,10 @@ export default function Assets({ vault }: IProps) {
     <table className="assets-table">
       <thead>
         <tr>
-          <th>{t("DepositWithdraw.Assets.assets")}</th>
+          <th>
+            {t("DepositWithdraw.Assets.assets")}
+            {vault.multipleVaults && ` (${vault.multipleVaults?.length})`}
+          </th>
           <th className="withdraw-status-column">
             {t("DepositWithdraw.Assets.withdraw")}
             {screenSize === ScreenSize.Desktop && <span>&nbsp;{t("DepositWithdraw.Assets.status")}</span>}

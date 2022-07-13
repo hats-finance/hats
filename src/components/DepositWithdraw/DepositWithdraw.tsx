@@ -12,13 +12,14 @@ import { IVault, IVaultDescription } from "../../types/types";
 import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
-import { useCheckIn, useClaimReward, useDepositAndClaim, useGeneralParameters, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
+import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
 import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import "./index.scss";
 import { usePrevious } from "hooks/usePrevious";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 
 interface IProps {
   data: IVault
@@ -28,6 +29,7 @@ interface IProps {
 type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
+  const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
     committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
@@ -41,7 +43,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices } = useVaults();
+  const { tokenPrices, generalParameters } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -61,9 +63,8 @@ export default function DepositWithdraw(props: IProps) {
   const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals) : "-";
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
   const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
-  const generalParams = useGeneralParameters(master.address);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(generalParams?.withdrawRequestEnablePeriod.toString(), "seconds").unix();
+  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(generalParameters?.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
@@ -200,12 +201,12 @@ export default function DepositWithdraw(props: IProps) {
             stakingTokenDecimals={stakingTokenDecimals} />}
         {tab === "deposit" &&
           <button
-            disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause}
+            disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause || !isSupportedNetwork}
             className="action-btn"
             onClick={async () => await tryDeposit()}>
             {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && isWithdrawable && !pendingWithdraw && // withdrawRequest
+        {tab === "withdraw" && isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"

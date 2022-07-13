@@ -1,20 +1,24 @@
 import { useApolloClient } from "@apollo/client";
-import { useEthers } from "@usedapp/core";
+import { useEthers, useTransactions } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IVault, IVaultDescription } from "types/types";
+import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 import { useGoodDollarPrice } from "./GoodDollar";
 
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
+  generalParameters?: IMaster
   subscribeToVaults: Function
   removeSubscription: Function
+  refresh: Function;
 }
+
+const DATA_REFRESH_TIME = 10000;
 
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
@@ -39,22 +43,8 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { chainId } = useEthers();
   const prevChainId = usePrevious(chainId);
-
-  // useEffect(() => {
-  //   if (masterData) {
-  //     const { rewardsToken, withdrawPeriod, safetyPeriod } = masterData.masters[0];
-  //     dispatch(updateRewardsToken(rewardsToken));
-  //     dispatch(
-  //       updateWithdrawSafetyPeriod(
-  //         getWithdrawSafetyPeriod(withdrawPeriod, safetyPeriod)
-  //       )
-  //     );
-  //     //dispatch(updateHatsPrice(await getTokenPrice(rewardsToken)));
-  //   }
-  // }, [masterData, dispatch]);
-
-  const goodDollarPrice = useGoodDollarPrice();
-  console.log("goodDollarPrice", goodDollarPrice);
+  const { transactions } = useTransactions();
+  const prevTransactions = usePrevious(transactions);
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {
@@ -103,7 +93,7 @@ export function VaultsProvider({ children }) {
         query: GET_VAULTS,
         variables: { chainId },
         context: { chainId },
-        fetchPolicy: "no-cache"
+        fetchPolicy: "network-only",
       })).data.vaults
 
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -131,39 +121,44 @@ export function VaultsProvider({ children }) {
 
     const vaults = await getVaultsFromGraph(chainId);
     const vaultsWithDescription = await getVaultsData(vaults);
-    return vaultsWithDescription;
-
+    const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
+    return vaultsWithMultiVaults;
   }, [apolloClient, chainId]);
 
 
   useEffect(() => {
-    let cancelled = false;
     if (vaults)
       getPrices(vaults)
         .then((prices) => {
-          if (!cancelled) {
-            setTokenPrices(prices)
-          }
+          setTokenPrices(prices)
         })
-    return () => {
-      cancelled = true;
-    }
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
-    let cancelled = false;
+
     if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
       getVaults().then(vaults => {
-        if (!cancelled) {
-          const updatedVaults = checkForMultiVaults(vaults);
-          setVaults(updatedVaults as IVault[]);
+        if (vaults) {
+          setVaults(vaults);
         }
       });
     }
-    return () => {
-      cancelled = true;
-    }
   }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
+
+  const refresh = useCallback(() => {
+    getVaults().then(vaults => {
+      setVaults(vaults);
+    })
+  }, [getVaults])
+
+  useEffect(() => {
+    const currentTransaction = transactions?.find(tx => !tx.receipt);
+    const prevCurrentTransaction = prevTransactions?.find(tx => !tx.receipt);
+
+    if (!currentTransaction && currentTransaction !== prevCurrentTransaction && subscriptions !== 0) {
+      setTimeout(refresh, DATA_REFRESH_TIME);
+    }
+  }, [transactions, prevTransactions, refresh, subscriptions])
 
   const subscribeToVaults = () => {
     setSubscrptions(subscriptions => subscriptions + 1);
@@ -176,8 +171,10 @@ export function VaultsProvider({ children }) {
   const context: IVaultsContext = {
     vaults,
     tokenPrices,
+    generalParameters: vaults?.[0].master,
     subscribeToVaults,
-    removeSubscription
+    removeSubscription,
+    refresh
   };
 
   return <VaultsContext.Provider value={context}>
@@ -197,26 +194,14 @@ export const fixObject = (description: any): IVaultDescription => {
   return description;
 }
 
-const checkForMultiVaults = (vaults: IVault[]) => {
-  const updatedVaults = vaults.map(vault => {
-    if (vault.description?.["additional-vaults"]) {
-      const multiVault = vault;
-      multiVault.multipleVaults = [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])] as IVault[];
-      return multiVault;
-    } else {
-      return vault;
+const addMultiVaults = (vaults: IVault[]) =>
+  vaults.map(vault => vault.description?.["additional-vaults"] ?
+    {
+      ...vault,
+      multipleVaults: [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])]
     }
-  })
+    : vault);
 
-  return updatedVaults;
-}
-
-const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => {
-  const multipleVaults = pids.map(pid => {
-    return vaults.find(vault => {
-      return vault.pid === pid;
-    });
-  })
-
-  return multipleVaults;
-}
+const fetchVaultsByPids = (vaults: IVault[], pids: string[]) => (
+  pids.map(pid => vaults.find(vault => vault.pid === pid)).filter(vault => vault) as IVault[]
+)

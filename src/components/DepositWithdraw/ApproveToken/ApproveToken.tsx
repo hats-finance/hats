@@ -1,6 +1,6 @@
 import ReactDOM from "react-dom";
+import { ethers } from "ethers";
 import LockIcon from "../../../assets/icons/lock.icon";
-import { toWei } from "../../../utils";
 import "./index.scss";
 
 interface IProps {
@@ -28,7 +28,7 @@ export default function ApproveToken(props: IProps) {
         <span className="sub-text">Want to approve before each transaction?</span>
         <button className="limited-approval-button" onClick={async () => {
           hideApproveSpending();
-          await approveToken(toWei(userInput, stakingTokenDecimals));
+          await approveToken(ethers.utils.parseUnits(userInput, stakingTokenDecimals));
         }}>Limited approval</button>
       </div>
     </div>, document.body

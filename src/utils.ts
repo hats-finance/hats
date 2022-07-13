@@ -4,8 +4,8 @@ import {
   SMALL_SCREEN_BREAKPOINT,
   COIN_GECKO_ETHEREUM
 } from "./constants/constants";
-import { BigNumber, ethers } from "ethers";
-import { isAddress, getAddress } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
+import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import axios from "axios";
 import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
@@ -40,24 +40,6 @@ export const getMainPath = (path: string) => {
 };
 
 /**
- * Given amount in WEI returns the formatted amount
- * @param {BigNumber | string} wei
- * @param {string} decimals
- */
-export const fromWei = (wei: BigNumber | string, decimals = "18"): string => {
-  return ethers.utils.formatUnits(wei, decimals);
-};
-
-/**
- * Given amount in string returns (ethers) BigNumber
- * @param {string} value
- * @param {string} decimals
- */
-export const toWei = (value: string, decimals = "18"): BigNumber => {
-  return ethers.utils.parseUnits(value, decimals);
-};
-
-/**
  * Formats a WEI value.
  * If the value is null/undefined, the function returns "-"
  * If the value is too small to be represented by the given precision, the function returns "+0".
@@ -78,7 +60,7 @@ export const formatWei = (
     value = value.toString();
   }
 
-  const formattedValue = millify(Number(fromWei(String(value), decimals)), {
+  const formattedValue = millify(Number(formatUnits(String(value), decimals)), {
     precision: precision
   });
 
@@ -265,7 +247,7 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} projectName
  * @param {string} projectId
  */
-export const setVulnerabilityProject = (projectName: string, projectId: string) => {
+export const setVulnerabilityProject = (projectName: string, projectId: string, contractAddress: string) => {
   let cachedData: IVulnerabilityData = JSON.parse(localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA));
 
   if (cachedData.version !== getAppVersion()) {
@@ -275,7 +257,8 @@ export const setVulnerabilityProject = (projectName: string, projectId: string) 
   cachedData.project = {
     verified: true,
     projectName: projectName,
-    projectId: projectId
+    projectId: projectId,
+    contractAddress: contractAddress
   }
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 }
