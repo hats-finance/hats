@@ -18,4 +18,22 @@
       }
     }
   }
+  .nft-airdrop__nfts-wrapper {
+    margin: 50px 0;
+    img {
+      width: 250px;
+      height: 250px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .nft-airdrop-wrapper {
+    .nft-airdrop__nfts-wrapper {
+      img {
+        width: 100px;
+        height: 250px;
+      }
+    }
+  }
 }

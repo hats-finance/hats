@@ -24,7 +24,12 @@ export default function CheckEligibility() {
       {t("AirdropMachine.CheckEligibility.text-1")}
       <div className="check-eligibility__input-wrapper">
         <div className={classNames({ "check-eligibility__input-container": true, "check-eligibility__input-error": inputError })}>
-          <input className="check-eligibility__address-input" type="text" placeholder={t("AirdropMachine.CheckEligibility.input-placeholder")} value={userInput} onChange={(e) => setUserInput(e.target.value)} />
+          <input
+            className="check-eligibility__address-input"
+            type="text"
+            placeholder={t("AirdropMachine.CheckEligibility.input-placeholder")}
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)} />
           <button className="check-eligibility__clear-input" onClick={() => setUserInput("")}>&times;</button>
         </div>
         {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}

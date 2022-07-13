@@ -6,6 +6,7 @@ import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
 import TimelineDot from "./components/TimelineDot/TimelineDot";
 import SailBoatImage from "../../assets/images/sail-boat.svg";
 import RadioButtonChecked from "../../assets/icons/radio-button-checked.svg";
+import DiscordIcon from "assets/icons/social/discord.icon";
 import "./index.scss";
 
 export default function AirdropMachine() {
@@ -90,7 +91,11 @@ export default function AirdropMachine() {
           <div className="airdrop-machine__section-content">
             {t("AirdropMachine.section-4.text")}
           </div>
-          <button className="airdrop-machine__join-embassy-btn fill">{t("AirdropMachine.section-4.button-text")}</button>
+          <button className="airdrop-machine__join-embassy-btn fill">
+            <DiscordIcon />
+            &nbsp;
+            {t("AirdropMachine.section-4.button-text")}
+          </button>
         </div>
       </div>
     </div>

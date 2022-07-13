@@ -1,6 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import { useActions } from "actions/contractsActions";
 import axios from "axios";
+import { checkEligibility } from "components/AirdropMachine/utils";
 import { ethers } from "ethers";
 import { useCallback, useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -10,60 +11,55 @@ import { LocalStorage } from "../../constants/constants";
 import { ipfsTransformUri, normalizeAddress } from "../../utils";
 import { Delegation, EIP712Domain } from "./constants";
 
-/**
- * Function to fetch airdrop data
- * @param {string} selectedAddress
- * @param {Function} showAirdropPrompt 
- * @param {Dispatch} dispatch
- */
-export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
-  const dispatch = useDispatch();
-  const { getMerkleTree, isRedeemed } = useActions(); //hasClaimed
-  const { account } = useEthers();
 
-  const getAirdropData = useCallback(async () => {
+// export const useFetchAirdropData = async (showAirdropPrompt: () => void) => {
+//   const dispatch = useDispatch();
+//   const { getMerkleTree, isRedeemed } = useActions(); //hasClaimed
+//   const { account } = useEthers();
 
-    try {
-      // TODO: Temporary disable Token Airdrop
-      //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
+//   const getAirdropData = useCallback(async () => {
 
-      // for (let key in tokenData) {
-      //   key = normalizeAddress(key);
-      // }
+//     try {
+//       // TODO: Temporary disable Token Airdrop
+//       //const tokenData = (await axios.get(`${IPFS_PREFIX}/${TOKEN_AIRDROP_IPFS_CID}`)).data;
 
-      const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
-      if (!NFT_AIRDRPOP_IPFS_CID) {
-        return;
-      }
+//       // for (let key in tokenData) {
+//       //   key = normalizeAddress(key);
+//       // }
 
-      const nftData = (await axios.get(ipfsTransformUri(NFT_AIRDRPOP_IPFS_CID))).data;
+//       const NFT_AIRDRPOP_IPFS_CID = await getMerkleTree();
+//       if (!NFT_AIRDRPOP_IPFS_CID) {
+//         return;
+//       }
 
-      for (const key in nftData) {
-        nftData[key] = normalizeAddress(nftData[key]);
-      }
+//       const nftData = (await axios.get(ipfsTransformUri(NFT_AIRDRPOP_IPFS_CID))).data;
 
-      dispatch(updateAirdropData({ nft: nftData, token: {} }));
+//       for (const key in nftData) {
+//         nftData[key] = normalizeAddress(nftData[key]);
+//       }
 
-      // Here we check if to show the user the Airdrop Prompt or not
-      if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))
-        const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
+//       dispatch(updateAirdropData({ nft: nftData, token: {} }));
 
-        if (!savedItems.includes(account)) {
-          const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
-          if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
-            showAirdropPrompt();
-          }
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }, [account, dispatch, getMerkleTree, isRedeemed, showAirdropPrompt]);
+//       // Here we check if to show the user the Airdrop Prompt or not
+//       if (Object.values(nftData).includes(account)) { // (account && Object.keys(tokenData).includes(account))
+//         const savedItems = JSON.parse(localStorage.getItem(LocalStorage.Airdrop) ?? "[]");
 
-  useEffect(() => {
-    getAirdropData();
-  }, [account, getAirdropData]);
-}
+//         if (!savedItems.includes(account)) {
+//           const tokenID = Object.keys(nftData).find(key => nftData[key] === account);
+//           if (tokenID && account && !await isRedeemed(tokenID, account)) { // || !await hasClaimed(account!)
+//             showAirdropPrompt();
+//           }
+//         }
+//       }
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   }, [account, dispatch, getMerkleTree, isRedeemed, showAirdropPrompt]);
+
+//   useEffect(() => {
+//     getAirdropData();
+//   }, [account, getAirdropData]);
+// }
 
 /**
  * hashNFT

@@ -106,6 +106,13 @@
       }
     },
     "AirdropMachine": {
+      "AirdropPrompt": {
+        "title": "CONGRATS!",
+        "text-1": "You are eligible to Hats token airdrop machine",
+        "text-2": "Wallet address",
+        "text-3": "Press continue to view your token eligibilty and NFT/s",
+        "button-text": "CONTINUE"
+      },
       "section-1": {
         "title": "HATS AIRDROP",
         "text": "Welcome to Hats.finance fisrt airdrop. The airdrop will become live in the next months. \n\n Since we don’t want to keep ypu waiting you can check your  eligibliy now and join an embassy"
@@ -129,7 +136,7 @@
       "section-4": {
         "title": "JOIN YOUR EMBASSY",
         "text": "You can access your embassy with your NFT. \n\n Each project embassy can send one ambassador to the security council. \n\n Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance. \n\n To be part of a unique group with the project committee. To be the first to learn about security topics related to your protocol.",
-        "button-text": "JOIN EMBASSY"
+        "button-text": "JOIN AN EMBASSY ON DISCORD"
       },
       "CheckEligibility": {
         "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",

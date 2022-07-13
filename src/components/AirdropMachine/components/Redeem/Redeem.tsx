@@ -1,4 +1,4 @@
-import { TEMP_WALLETS } from "components/AirdropMachine/data";
+import { checkEligibility } from "components/AirdropMachine/utils";
 import Loading from "components/Shared/Loading";
 import { useEffect, useState } from "react";
 import { AirdropMachineWallet } from "types/types";
@@ -47,7 +47,3 @@ export default function Redeem({ address }: IProps) {
     </>
   )
 }
-
-const checkEligibility = async (address: string) => (
-  TEMP_WALLETS.wallets.find(wallet => wallet.id === address)
-)
