@@ -17,8 +17,32 @@
       margin: auto;
       margin-bottom: 50px;
     }
+    .airdrop-machine__container-with-timeline {
+      border-left: 5px solid;
+      border-image-slice: 1;
+      -webkit-animation: DyanamicGradient 5s ease infinite;
+      -moz-animation: DyanamicGradient 5s ease infinite;
+      animation: DyanamicGradient 5s ease infinite;
+      @keyframes DyanamicGradient {
+        0% {
+          border-image-source: linear-gradient(0deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);
+        }
+        25% {
+          border-image-source: linear-gradient(90deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);
+        }
+        50% {
+          border-image-source: linear-gradient(180deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);
+        }
+        75% {
+          border-image-source: linear-gradient(270deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);
+        }
+        100% {
+          border-image-source: linear-gradient(360deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);
+        }
+      }
+    }
     .airdrop-machine__section {
-      border-left: 2px solid $vault-blue;
+      //border-left: 2px solid $vault-blue;
       display: flex;
       flex-direction: column;
       padding: 50px 0;
@@ -60,6 +84,7 @@
         justify-content: center;
         color: $white;
         font-weight: bold;
+        width: 100%;
       }
     }
   }
@@ -70,6 +95,9 @@
     .airdrop-machine-content {
       .airdrop-machine__sail-boat {
         width: 200px;
+      }
+      .airdrop-machine__container-with-timeline {
+        border-left: unset;
       }
       .airdrop-machine__section {
         border-left: unset;
