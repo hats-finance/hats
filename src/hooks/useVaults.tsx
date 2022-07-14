@@ -7,8 +7,6 @@ import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { getGoodDollarPrice } from "./GoodDollar";
-
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
