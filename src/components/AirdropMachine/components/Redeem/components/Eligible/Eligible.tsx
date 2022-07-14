@@ -49,7 +49,7 @@ export default function Eligible({ data, closeRedeemModal }: IProps) {
         <TokenEligibility
           data={data}
           nextStage={nextStage} />
-      ) : <NFTAirdrop />}
+      ) : <NFTAirdrop data={data} closeRedeemModal={closeRedeemModal} />}
     </div>
   )
 }

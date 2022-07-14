@@ -2,6 +2,10 @@ import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect } from "react";
 import { TEMP_WALLETS } from "./data";
 import { solidityKeccak256 } from "ethers/lib/utils";
+import { AirdropMachineWallet } from "types/types";
+
+const { MerkleTree } = require('merkletreejs');
+const keccak256 = require('keccak256');
 
 export const checkEligibility = async (address: string) => (
   TEMP_WALLETS.wallets.find(wallet => wallet.id === address)
@@ -28,6 +32,22 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   }, [account]);
 }
 
-function hashToken(hatVaults, pid, account, tier) {
+export const getProofs = (data: AirdropMachineWallet) => {
+  const merkleTree = buildMerkleTree(data);
+  const proofs = data.nft_elegebility.map(nft => {
+    return merkleTree.getHexProof(hashToken(nft.contract_address, nft.pid, data.id, nft.tier));
+  })
+  return proofs;
+}
+
+const buildMerkleTree = (data: AirdropMachineWallet) => {
+  const hashes = data.nft_elegebility.map(nft => {
+    return hashToken(nft.contract_address, nft.pid, data.id, nft.tier);
+  })
+
+  return new MerkleTree(hashes, keccak256, { sortPairs: true });
+}
+
+const hashToken = (hatVaults: string, pid: number, account: string, tier: number) => {
   return Buffer.from(solidityKeccak256(['address', 'uint256', 'address', 'uint8'], [hatVaults, pid, account, tier]).slice(2), 'hex');
 }

@@ -2,14 +2,31 @@ import { IPFS_PREFIX } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { AirdropMachineWallet } from "types/types";
 import "swiper/css";
 import "./index.scss";
+import { getProofs } from "components/AirdropMachine/utils";
 
 const TEMP_IPFS_NFT_COLLECTION = "QmSiPFLfYwodihG94ASaiWJuQ6uLUXkz8p8kvoCTv8KraP";
 const TEMP_NFTS = ["892", "342", "427", "374"];
 
-export default function NFTAirdrop() {
+interface IProps {
+  data: AirdropMachineWallet;
+  closeRedeemModal: () => void;
+}
+
+export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
   const { t } = useTranslation();
+
+  const handleRedeem = () => {
+    try {
+      const proofs = getProofs(data);
+      console.log(proofs);
+      // TODO: call redeemMultipleFromTree from contract
+    } catch (error) {
+      console.error(error);
+    }
+  }
 
   const nftsSlides = TEMP_NFTS.map((nft, index) => {
     return (
@@ -54,7 +71,7 @@ export default function NFTAirdrop() {
           {nftsSlides}
         </Swiper>
       </div>
-      <button className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
+      <button onClick={handleRedeem} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
     </div>
   )
 }
