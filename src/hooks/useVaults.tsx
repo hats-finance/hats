@@ -1,4 +1,4 @@
-import { useApolloClient } from "@apollo/client";
+import { useApolloClient, useQuery } from "@apollo/client";
 import { useEthers, useTransactions } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -45,6 +45,15 @@ export function VaultsProvider({ children }) {
   const { transactions } = useTransactions();
   const prevTransactions = usePrevious(transactions);
 
+  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(
+    GET_VAULTS, {
+    variables: { chainId },
+    context: { chainId },
+    fetchPolicy: "network-only",
+    pollInterval: DATA_REFRESH_TIME
+  })
+
+
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {
       const stakingTokens = Array.from(new Set(vaults?.map(
@@ -86,15 +95,7 @@ export function VaultsProvider({ children }) {
     }
   }, [apolloClient]);
 
-  const getVaults = useCallback(async () => {
-    const getVaultsFromGraph = async (chainId) =>
-      (await apolloClient.query<{ vaults: IVault[] }>({
-        query: GET_VAULTS,
-        variables: { chainId },
-        context: { chainId },
-        fetchPolicy: "network-only",
-      })).data.vaults
-
+  const setVaultsWithDetails = useCallback(async (vaultsData: IVault[]) => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
       if (vault.descriptionHash && vault.descriptionHash !== "") {
         try {
@@ -110,7 +111,7 @@ export function VaultsProvider({ children }) {
     }
 
     const getVaultsData = async (vaults: IVault[]) => Promise.all(
-      vaults.map(async (vault) => ({
+      vaultsData.map(async (vault) => ({
         ...vault,
         stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
           PROTECTED_TOKENS[vault.stakingToken]
@@ -118,12 +119,10 @@ export function VaultsProvider({ children }) {
         description: await loadVaultDescription(vault)
       })));
 
-    const vaults = await getVaultsFromGraph(chainId);
-    const vaultsWithDescription = await getVaultsData(vaults);
+    const vaultsWithDescription = await getVaultsData(vaultsData);
     const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    return vaultsWithMultiVaults;
+    setVaults(vaultsWithMultiVaults);
   }, [apolloClient, chainId]);
-
 
   useEffect(() => {
     let cancelled = false;
@@ -139,29 +138,14 @@ export function VaultsProvider({ children }) {
     }
   }, [vaults, getPrices, chainId])
 
-  useEffect(() => {
-    let cancelled = false;
-    if ((subscriptions && prevSubscriptions === 0) || (chainId !== prevChainId && prevChainId)) {
-      getVaults().then(vaults => {
-        if (!cancelled) {
-          if (vaults) {
-            setVaults(vaults);
-          }
-        }
-      });
-    }
-
-    return () => {
-      if (chainId === prevChainId)
-        cancelled = true;
-    }
-  }, [chainId, subscriptions, prevSubscriptions, prevChainId, getVaults]);
-
   const refresh = useCallback(() => {
-    getVaults().then(vaults => {
-      setVaults(vaults);
-    })
-  }, [getVaults])
+
+  }, []);
+
+  useEffect(() => {
+    if (vaultsData?.vaults)
+      setVaultsWithDetails(vaultsData?.vaults)
+  }, [vaultsData])
 
   useEffect(() => {
     const currentTransaction = transactions?.find(tx => !tx.receipt);
