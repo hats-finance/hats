@@ -43,6 +43,7 @@ const newVaultDescription: IVaultDescription = {
         icon: "",
         tokenIcon: "",
         website: "",
+        type: ""
     },
     "communication-channel": {
         "committee-bot": "https://demo-bot-hats.herokuapp.com/broadcast-message/",
@@ -82,7 +83,6 @@ export default function VaultEditor() {
             }
             const newVaultDescription = await response.json()
             severitiesToContracts(fixObject(newVaultDescription))
-            console.log({ newVaultDescription })
 
             setVaultDescription(newVaultDescription)
             setChanged(false)
@@ -212,7 +212,6 @@ export default function VaultEditor() {
     }
 
     function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)
@@ -428,7 +427,6 @@ export default function VaultEditor() {
                                     <VaultSign message={""} onChange={null} signatures={[]} />
                                 </div>
                             </div>
-
                             <div className="vault-editor__button-container">
                                 <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
                             </div>

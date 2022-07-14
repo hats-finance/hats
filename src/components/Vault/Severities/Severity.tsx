@@ -8,9 +8,10 @@ import { useState } from "react";
 import Modal from "../../Shared/Modal";
 import NFTPrize from "../../NFTPrize";
 import ContractsCovered from "../ContractsCovered";
-import { calculateRewardPrice, formatNumber } from "../../../utils";
-import "./Severity.scss";
+import { formatNumber } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
+import { useSeverityReward } from "../hooks/useSeverityReward";
+import "./Severity.scss";
 
 interface IProps {
   severity: ISeverity
@@ -26,14 +27,14 @@ export default function Severity(props: IProps) {
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
-  const { rewardsLevels, honeyPotBalance, stakingTokenDecimals, hackerVestedRewardSplit, hackerRewardSplit,
-    committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration,
-    stakingTokenSymbol } = props.vault;
+  const { description, rewardsLevels, hackerVestedRewardSplit, hackerRewardSplit,
+    committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.vault;
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const rewardPercentage = (Number(rewardsLevels[severity.index]) / 10000) * 100;
-  const tokenPrice = useSelector((state: RootState) => state.dataReducer.tokenPrices)?.[stakingTokenSymbol]?.['usd'];
-  const rewardPrice = calculateRewardPrice(rewardPercentage, tokenPrice, honeyPotBalance, stakingTokenDecimals);
+  const rewardPrice = useSeverityReward(props.vault, severity.index);
+
+  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === '';
 
   return (
     <>
@@ -42,14 +43,14 @@ export default function Severity(props: IProps) {
         <div
           className={`severity-top-wrapper ${severity?.name.toLocaleLowerCase().split(' ').join('-')}`}
           onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
-          <div className="severity-title">{`${severity?.name.toUpperCase()} SEVERITY`}</div>
+          <div className="severity-title">{`${severity?.name.toUpperCase()}`}{isNormalVault && ' SEVERITY'} </div>
           <div className={expanded ? "arrow open" : "arrow"}><ArrowIcon /></div>
         </div>
         {expanded && (
           <div className="severity-data">
             {severity?.description &&
               <div className="severity-data-item">
-                <span className="vault-expanded-subtitle">Severity description:</span>
+                <span className="vault-expanded-subtitle">{isNormalVault && 'Severity '} Description:</span>
                 <span style={{ color: "white" }}>{severity.description}</span>
               </div>}
             {severity?.["nft-metadata"] &&

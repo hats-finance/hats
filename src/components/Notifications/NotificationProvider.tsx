@@ -1,7 +1,8 @@
-import React, { useCallback, useMemo, useState, FC, ReactElement } from "react";
+import React, { useCallback, useMemo, useState, FC, ReactElement, useEffect } from "react";
 import { useEthers, useNotifications } from "@usedapp/core";
 import { NotificationContext, NotificationContextValue } from "./context";
 import Notification from "./Notification/Notification";
+import { usePrevious } from "hooks/usePrevious";
 import "./index.scss";
 
 export interface INotification {
@@ -25,7 +26,8 @@ interface Props {
 const NotificationProvider: FC<Props> = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [lastId, setLastId] = useState(0);
-
+  const { error } = useEthers();
+  const prevError = usePrevious(error);
 
   const addNotification = useCallback<NotificationContextValue["addNotification"]>((value, type) => {
     setNotifications((notifications) => notifications.concat({ id: lastId.toString(), content: value, type: type }));
@@ -47,7 +49,11 @@ const NotificationProvider: FC<Props> = ({ children }) => {
     setNotifications((notifications) => notifications.filter((notification, index) => index !== 0));
   }
 
-  const { error } = useEthers()
+  useEffect(() => {
+    if (error && error?.message !== prevError?.message && !error.message.includes('missing revert data in call')) {
+      addNotification(error?.message, NotificationType.Error);
+    }
+  }, [error, prevError, addNotification])
 
   const useDappNotifications = useNotifications().notifications.map((notification): INotification => {
     switch (notification.type) {
@@ -78,12 +84,12 @@ const NotificationProvider: FC<Props> = ({ children }) => {
           <Notification
             key={notifications.length + index}
             notification={notification} />))}
-        {error && <Notification key="error" notification={{
+        {/* {error && <Notification key="error" notification={{
 
           id: "ethers-error",
           content: error.message,
           type: NotificationType.Error
-        }} />}
+        }} />} */}
 
       </div>
     </NotificationContext.Provider>

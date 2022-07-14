@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
-import { checkMasterAddress, normalizeAddress } from "../utils";
+import { normalizeAddress } from "../utils";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
@@ -35,16 +35,6 @@ export function useActions() {
     }
   }
 
-  /**
-   * Submits the hash of the vulnerability description
-   * @param {string} address
-   * @param {string} descriptionHash the sha256 of the vulnerability description
-   */
-  const submitVulnerability = async (address: string, descriptionHash: string) => {
-    checkMasterAddress(address);
-    const contract = new Contract(address, vaultAbi, signer);
-    return await contract.claim(descriptionHash);
-  }
 
   /** Airdrop contract actions - START */
 
@@ -57,7 +47,11 @@ export function useActions() {
       const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
       const data = contract.filters.MerkleTreeChanged();
       const filter = await contract.queryFilter(data, 0);
-      return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
+      if (filter) {
+        const lastElement = filter[filter.length - 1] as any | undefined;
+        return lastElement?.args?.merkleTreeIPFSRef;
+      }
+      return null
     } catch (error) {
       console.error(error);
     }
@@ -144,7 +138,6 @@ export function useActions() {
 
   return {
     getPendingReward,
-    submitVulnerability,
     getMerkleTree,
     getBaseURI,
     getDeadline,

@@ -2,12 +2,21 @@
   "translation": {
     "Shared": {
       "yes": "YES",
-      "cancel": "CANCEL"
+      "cancel": "CANCEL",
+      "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward"
     },
     "Welcome": {
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
+    },
+    "DepositWithdraw": {
+      "Assets": {
+        "assets": "Assets",
+        "withdraw": "Withdraw",
+        "status": "Status",
+        "deposited": "Deposited"
+      }
     },
     "SubmitVulnerability": {
       "TermsAndProcess": {
@@ -211,6 +220,8 @@
         "title": "Vault Details",
         "name": "Name",
         "name-placeholder": "Enter vault name",
+        "type": "Type",
+        "type-placeholder": "Enter vault type(gamification, grants...)",
         "icon": "Vault Logo",
         "token-icon": "Token Icon",
         "website": "Website",
@@ -266,6 +277,7 @@
       "vault-details": "Vault Details",
       "committee-members": "Committee Members",
       "committee-address": "Committee Address",
+      "prizes": "PRIZES",
       "severity-prizes": "SEVERITY PRIZES",
       "total-vault": "Total vault",
       "deposit-withdraw": "DEPOSIT / WITHDRAW",

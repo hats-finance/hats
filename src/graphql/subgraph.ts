@@ -24,6 +24,7 @@ export const GET_VAULTS = gql`
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
+        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels
@@ -53,41 +54,10 @@ export const GET_VAULTS = gql`
   }
 `;
 
-// rewardsToken is the HAT token
-export const GET_MASTER_DATA = gql`
-  query getMaster {
+export const GET_GENERAL_PARAMETERS = gql`
+  query getRewardsToken {
     masters {
       rewardsToken
-      withdrawPeriod
-      safetyPeriod
     }
   }
 `
-
-export const getStakerData = (vaultID: string, stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
-        shares
-        depositAmount
-        withdrawAmount
-      }
-    }
-  `;
-}
-
-export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
-  return gql`
-    {
-      vaults (where: { pid: "${pid}" }) {
-        withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
-          id
-          beneficiary
-          withdrawEnableTime
-          createdAt
-          expiryTime
-        }
-      }
-    }
-  `;
-}

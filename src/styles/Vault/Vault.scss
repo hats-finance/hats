@@ -1,6 +1,7 @@
 @import "../constants.scss";
 
 tr {
+  scroll-margin-top: $header-height*2;
   border-bottom: 2px solid $dark-blue;
   &.gamification {
     td {
@@ -49,13 +50,6 @@ tr {
       display: flex;
       align-items: center;
       font-weight: bold;
-      .token-symbol {
-        margin-left: 20px;
-        padding: 2px 11px;
-        background-color: $vault-blue;
-        text-transform: uppercase;
-        font-size: $xxsmall;
-      }
     }
     .source-name {
       margin-top: 10px;
@@ -117,15 +111,6 @@ tr {
 @media only screen and (max-width: $mobile-breakpoint) {
   .arrow {
     margin-left: unset;
-  }
-  .project-name-wrapper {
-    .name-source-wrapper {
-      .project-name {
-        .token-symbol {
-          font-size: $tiny;
-        }
-      }
-    }
   }
   .rewards-cell {
     width: 100%;

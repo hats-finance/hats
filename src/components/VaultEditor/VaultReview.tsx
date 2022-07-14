@@ -100,7 +100,7 @@ export default function VaultReview({ vaultDescription }) {
       <div className="preview-vault honeypots-wrapper">
         <table>
           <tbody>
-            <PreviewVault data={getVault(vaultDescription)} preview />
+            <PreviewVault expanded={true} data={getVault(vaultDescription)} preview />
           </tbody>
         </table>
       </div>
