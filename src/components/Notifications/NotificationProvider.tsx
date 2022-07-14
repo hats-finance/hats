@@ -50,7 +50,7 @@ const NotificationProvider: FC<Props> = ({ children }) => {
   }
 
   useEffect(() => {
-    if (error && error?.message !== prevError?.message) {
+    if (error && error?.message !== prevError?.message && !error.message.includes('missing revert data in call')) {
       addNotification(error?.message, NotificationType.Error);
     }
   }, [error, prevError, addNotification])
