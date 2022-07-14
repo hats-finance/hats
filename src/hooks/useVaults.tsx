@@ -7,7 +7,7 @@ import { usePrevious } from "hooks/usePrevious";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { useGoodDollarPrice } from "./GoodDollar";
+import { getGoodDollarPrice } from "./GoodDollar";
 
 interface IVaultsContext {
   vaults?: IVault[]
@@ -86,6 +86,8 @@ export function VaultsProvider({ children }) {
       return newTokenPrices;
     }
   }, [apolloClient]);
+
+
 
   const getVaults = useCallback(async () => {
     const getVaultsFromGraph = async (chainId) =>
