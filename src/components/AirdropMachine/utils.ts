@@ -34,17 +34,11 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
 
 export const getProofsAndUpdateTree = (data: AirdropMachineWallet) => {
   const merkleTree = buildMerkleTree(data);
-  const root = merkleTree.getHexRoot();
 
   const proofs = data.nft_elegebility.map(nft => {
     return merkleTree.getHexProof(hashToken(nft.contract_address, nft.pid, data.id, nft.tier));
   })
   return proofs;
-
-  // 0x6691Ab33D3902E78e4655B918C2138917d15bA03
-  // getRoot
-  // updateTree()
-  // addVault()
 }
 
 const buildMerkleTree = (data: AirdropMachineWallet) => {
