@@ -20,9 +20,9 @@
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
       border-image-slice: 1;
-      -webkit-animation: DyanamicGradient 5s ease infinite;
-      -moz-animation: DyanamicGradient 5s ease infinite;
-      animation: DyanamicGradient 5s ease infinite;
+      -webkit-animation: DyanamicGradient 5s ease infinite reverse;
+      -moz-animation: DyanamicGradient 5s ease infinite reverse;
+      animation: DyanamicGradient 5s ease infinite reverse;
       @keyframes DyanamicGradient {
         0% {
           border-image-source: linear-gradient(0deg, #A8FDFE, #E0FFFF, #8AFCFD, #4A7BCE, #0E51C2);

@@ -15,7 +15,12 @@ export const TEMP_WALLETS =
           "contract_address": "0x571f39d351513146248AcafA9D0509319A327C4D",
           "pid": 3,
           "tier": 0
-        }
+        },
+        {
+          "contract_address": "0x571f39d351513146248AcafA9D0509319A327C4D",
+          "pid": 3,
+          "tier": 0
+        },
       ]
     }
   ]

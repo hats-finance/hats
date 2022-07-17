@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AirdropMachineWallet } from "types/types";
+import { getProofsAndUpdateTree } from "components/AirdropMachine/utils";
 import "swiper/css";
 import "./index.scss";
-import { getProofs } from "components/AirdropMachine/utils";
 
 const TEMP_IPFS_NFT_COLLECTION = "QmSiPFLfYwodihG94ASaiWJuQ6uLUXkz8p8kvoCTv8KraP";
 const TEMP_NFTS = ["892", "342", "427", "374"];
@@ -20,7 +20,7 @@ export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
 
   const handleRedeem = () => {
     try {
-      const proofs = getProofs(data);
+      const proofs = getProofsAndUpdateTree(data);
       console.log(proofs);
       // TODO: call redeemMultipleFromTree from contract
     } catch (error) {
