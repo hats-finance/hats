@@ -30,12 +30,17 @@
     overflow: scroll;
     .modal-header {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
       position: sticky;
       top: 0;
       z-index: 1;
       color: $turquoise;
       background-color: $field-blue;
+      .modal-header__icon-title-wrapper {
+        padding: 10px;
+        color: $white;
+        font-weight: bold;
+      }
     }
     
     .modal-close-button {

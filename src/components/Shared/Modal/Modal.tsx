@@ -6,9 +6,10 @@ interface IProps {
   isShowing: boolean;
   hide: () => void;
   children: React.ReactElement;
+  title?: string;
 }
 
-export default function Modal({ isShowing, hide, children }: IProps) {
+export default function Modal({ isShowing, hide, children, title }: IProps) {
 
   useEffect(() => {
     document.body.style.overflow = isShowing ? "hidden" : "initial";
@@ -21,6 +22,9 @@ export default function Modal({ isShowing, hide, children }: IProps) {
         <div className="modal-wrapper" aria-modal role="dialog">
           <div className="modal" id="modalBody">
             <div className="modal-header">
+              <div className="modal-header__icon-title-wrapper">
+                {title && <span>{title}</span>}
+              </div>
               <button type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={hide}>
                 <span aria-hidden="true">&times;</span>
               </button>
