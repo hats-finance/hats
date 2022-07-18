@@ -3,6 +3,7 @@ import { useEthers } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
+import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
@@ -24,7 +25,7 @@ export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>();
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
-  const { chainId } = useEthers();
+  const { chainId, library } = useEthers();
 
   const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(
     GET_VAULTS, {
@@ -36,13 +37,28 @@ export function VaultsProvider({ children }) {
 
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
-    if (vaults) {
-      const stakingTokens = Array.from(new Set(vaults?.map(
-        (vault) => vault.stakingToken
-      )));
+    if (vaults && library) {
+      const stakingTokens = Array.from(new Set(vaults?.map(vault => vault.stakingToken.toLowerCase())));
       const newTokenPrices = Array<number>();
+      if (library) {
+        for (const token in tokenPriceFunctions) {
+          const getPriceFunction = tokenPriceFunctions[token]
+          if (getPriceFunction !== undefined) {
+            const price = await tokenPriceFunctions[token](library);
+            console.log({ token, price });
+
+            if (price && price > 0)
+              newTokenPrices[token] = price;
+          }
+        }
+      }
+
       try {
-        const coinGeckoTokenPrices = await getTokensPrices(stakingTokens!);
+        // get all tokens that did not have price from contract
+        console.log({ newTokenPrices });
+
+        const coinGeckoTokenPrices = await getTokensPrices(
+          stakingTokens.filter(token => !(token in newTokenPrices)));
         if (coinGeckoTokenPrices) {
           stakingTokens?.forEach((token) => {
             if (coinGeckoTokenPrices.hasOwnProperty(token)) {
@@ -74,7 +90,7 @@ export function VaultsProvider({ children }) {
       }
       return newTokenPrices;
     }
-  }, [apolloClient]);
+  }, [apolloClient, library]);
 
   const setVaultsWithDetails = async (vaultsData: IVault[]) => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
