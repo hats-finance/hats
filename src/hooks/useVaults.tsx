@@ -55,15 +55,12 @@ export function VaultsProvider({ children }) {
 
       try {
         // get all tokens that did not have price from contract
-        console.log({ newTokenPrices });
-
         const coinGeckoTokenPrices = await getTokensPrices(
           stakingTokens.filter(token => !(token in newTokenPrices)));
         if (coinGeckoTokenPrices) {
           stakingTokens?.forEach((token) => {
             if (coinGeckoTokenPrices.hasOwnProperty(token)) {
               const price = coinGeckoTokenPrices?.[token]?.['usd'];
-
               if (price > 0) {
                 newTokenPrices[token] = price;
               }
