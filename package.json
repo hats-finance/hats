@@ -63,7 +63,8 @@
     "url": "^0.11.0",
     "util": "^0.12.4",
     "web-vitals": "^2.1.2",
-    "web3modal": "^1.9.7"
+    "web3modal": "^1.9.7",
+    "swiper": "^8.3.0"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -88,8 +89,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "dependencies": {
-    "swiper": "^8.3.0"
   }
 }
