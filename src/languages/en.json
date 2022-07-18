@@ -1,5 +1,8 @@
 {
   "translation": {
+    "MyAccount": {
+      "hello": "HELLO"
+    },
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

@@ -1,5 +1,25 @@
 @import "../../styles/constants.scss";
 
 .my-account-wrapper {
+  display: flex;
+  flex-direction: column;
+  color: $white;
+  padding: $modal-element-padding;
+  .my-account__wallet {
+    display: flex;
+    flex-direction: column;
+    .my-account__hello {
+      font-weight: bold;
+      font-size: $moderate;
+    }
+    .my-account__address {
+      font-size: $medium;
+    }
+  }
+}
 
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-account-wrapper {
+    padding: $modal-element-padding-mobile;
+  }
 }
