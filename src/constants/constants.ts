@@ -24,6 +24,11 @@ export enum RoutePaths {
   airdrop_machine = "/airdrop_machine",
 }
 
+export const HATVaultsNFTContract = {
+  [ChainId.Mainnet]: "",
+  [ChainId.Rinkeby]: "0x221c5279a9eA8cFf1873b9dc5A37AFc14940D2Eb"
+}
+
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
   [ChainId.Rinkeby]: Rinkeby

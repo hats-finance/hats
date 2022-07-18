@@ -34,7 +34,7 @@ export default function Header() {
           {Pages[getMainPath(location.pathname)]}
         </div>
       )}
-      <button onClick={toggle}>My Account</button>
+      <button disabled={!account} onClick={toggle}>My Account</button>
       {screenSize === ScreenSize.Mobile && <Logo />}
       {account && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||

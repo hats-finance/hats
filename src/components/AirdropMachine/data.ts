@@ -12,12 +12,12 @@ export const TEMP_WALLETS =
       },
       "nft_elegebility": [
         {
-          "contract_address": "0x571f39d351513146248AcafA9D0509319A327C4D",
+          "contract_address": "0x12efc2544ec89Ab6F8Aa0C9c4Da0673beda2C739",
           "pid": 3,
           "tier": 0
         },
         {
-          "contract_address": "0x571f39d351513146248AcafA9D0509319A327C4D",
+          "contract_address": "0x12efc2544ec89Ab6F8Aa0C9c4Da0673beda2C739",
           "pid": 3,
           "tier": 0
         },
