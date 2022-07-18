@@ -26,7 +26,10 @@ interface IProps {
   setShowModal: Function
 }
 
-type Tab = "deposit" | "withdraw";
+enum Tab {
+  Deposit = 1,
+  Withdraw
+}
 
 export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
@@ -34,7 +37,7 @@ export default function DepositWithdraw(props: IProps) {
     committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
-  const [tab, setTab] = useState<Tab>("deposit");
+  const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers();
@@ -135,28 +138,23 @@ export default function DepositWithdraw(props: IProps) {
       setShowModal(false);
   }, [inTransaction, setShowModal]);
 
-  const depositWithdrawWrapperClass = classNames({
-    "deposit-wrapper": true,
-    "disabled": pendingWallet
-  })
-
   const multisigAddress = (description as IVaultDescription)?.committee?.["multisig-address"];
   const isCommitteMultisig = multisigAddress === account;
 
   return (
-    <div className={depositWithdrawWrapperClass}>
+    <div className={classNames("deposit-wrapper", { "disabled": pendingWallet })}>
       <div className="tabs-wrapper">
-        <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
-        <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Deposit })} onClick={() => { setTab(Tab.Deposit); setUserInput(""); }}>DEPOSIT</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Withdraw })} onClick={() => { setTab(Tab.Withdraw); setUserInput(""); }}>WITHDRAW</button>
       </div>
       <div className="balance-wrapper">
-        {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
-        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Deposit && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Withdraw && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
         <button
           className="max-button"
           disabled={!committeeCheckedIn}
           onClick={() => setUserInput(
-            tab === "deposit" ?
+            tab === Tab.Deposit ?
               formattedTokenBalance :
               formatAvailableToWithdraw)}>
           (Max)
@@ -176,13 +174,13 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
           </div>
-          {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
-          {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
+          {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
+          {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
+          {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
       <Assets vault={props.data} />
-      {tab === "deposit" && (
+      {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
           <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
@@ -190,23 +188,23 @@ export default function DepositWithdraw(props: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === "withdraw" && withdrawSafetyPeriod.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
-      {tab === "deposit" && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
+      {tab === Tab.Withdraw && withdrawSafetyPeriod.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+      {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
       <div className="action-btn-wrapper">
-        {tab === "deposit" && showApproveSpendingModal &&
+        {tab === Tab.Deposit && showApproveSpendingModal &&
           <ApproveToken
             approveToken={handleApproveToken}
             userInput={userInput}
             hideApproveSpending={() => setShowApproveSpendingModal(false)}
             stakingTokenDecimals={stakingTokenDecimals} />}
-        {tab === "deposit" &&
+        {tab === Tab.Deposit &&
           <button
             disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause || !isSupportedNetwork}
             className="action-btn"
             onClick={async () => await tryDeposit()}>
             {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && isWithdrawable && !pendingWithdraw &&
+        {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
@@ -214,7 +212,7 @@ export default function DepositWithdraw(props: IProps) {
             {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ?
               "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
+        {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
@@ -227,7 +225,7 @@ export default function DepositWithdraw(props: IProps) {
           {`CLAIM ${pendingRewardFormat} HATS`}
         </button>
       </div>
-      {pendingWallet && <Loading />}
+      {pendingWallet && <Loading zIndex={10000} />}
     </div>
   )
 }
