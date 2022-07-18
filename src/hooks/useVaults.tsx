@@ -45,8 +45,6 @@ export function VaultsProvider({ children }) {
           const getPriceFunction = tokenPriceFunctions[token]
           if (getPriceFunction !== undefined) {
             const price = await tokenPriceFunctions[token](library);
-            console.log({ token, price });
-
             if (price && price > 0)
               newTokenPrices[token] = price;
           }
