@@ -18,7 +18,7 @@ export default function VaultReview({ vaultDescription }) {
       honeyPotBalance: "0",
       totalReward: "0",
       totalRewardPaid: "0",
-      committee: [""],
+      committee: "",
       allocPoint: "0",
       master: {
         address: "",
