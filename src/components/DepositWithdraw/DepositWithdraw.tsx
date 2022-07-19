@@ -30,7 +30,7 @@ type Tab = "deposit" | "withdraw";
 
 export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
-  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
+  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
   const { description } = props.data;
   const { setShowModal } = props;
@@ -140,8 +140,7 @@ export default function DepositWithdraw(props: IProps) {
     "disabled": pendingWallet
   })
 
-  const multisigAddress = (description as IVaultDescription)?.committee?.["multisig-address"];
-  const isCommitteMultisig = multisigAddress === account;
+  const isCommitteMultisig = committee.toLowerCase() === account?.toLowerCase();
 
   return (
     <div className={depositWithdrawWrapperClass}>
