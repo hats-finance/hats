@@ -10,7 +10,7 @@ import { getTokensPrices, ipfsTransformUri } from "utils";
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
-  generalParameters?: IMaster
+  masters?: IMaster[]
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -27,7 +27,7 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { chainId, library } = useEthers();
 
-  const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(
+  const { data } = useQuery<{ vaults: IVault[], masters: IMaster[] }>(
     GET_VAULTS, {
     variables: { chainId },
     context: { chainId },
@@ -103,7 +103,7 @@ export function VaultsProvider({ children }) {
     }
 
     const getVaultsData = async (vaults: IVault[]) => Promise.all(
-      vaultsData.map(async (vault) => ({
+      vaults.map(async (vault) => ({
         ...vault,
         stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken) ?
           PROTECTED_TOKENS[vault.stakingToken]
@@ -131,14 +131,14 @@ export function VaultsProvider({ children }) {
   }, [vaults, getPrices, chainId])
 
   useEffect(() => {
-    if (vaultsData?.vaults)
-      setVaultsWithDetails(vaultsData?.vaults)
-  }, [vaultsData])
+    if (data?.vaults)
+      setVaultsWithDetails(data?.vaults)
+  }, [data])
 
   const context: IVaultsContext = {
     vaults,
     tokenPrices,
-    generalParameters: vaults?.[0].master,
+    masters: data?.masters
   };
 
   return <VaultsContext.Provider value={context}>
