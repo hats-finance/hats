@@ -17,6 +17,7 @@ import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
+import CreateVault from "./CreateVault";
 
 interface IContract {
     name: string;
@@ -411,10 +412,15 @@ export default function VaultEditor() {
                     </div>
                 </section>
 
+                <CreateVault descriptionHash={ipfsHash} />
+
                 <div className="vault-editor__button-container">
                     {changed && ipfsHash && <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>}
                     <button onClick={saveToIpfs} className="fill" disabled={!changed}>{t("VaultEditor.save-button")}</button>
+
                 </div>
+
+
 
                 {/* {
                     !changed && ipfsHash && <>
