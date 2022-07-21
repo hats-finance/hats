@@ -3,11 +3,6 @@
     "inputs": [
       {
         "internalType": "string",
-        "name": "_uri",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
         "name": "_merkleTreeIPFSRef",
         "type": "string"
       },
@@ -262,6 +257,11 @@
         "internalType": "uint256",
         "name": "pid",
         "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "_uri",
+        "type": "string"
       }
     ],
     "name": "addVault",
@@ -354,6 +354,35 @@
         "internalType": "uint8",
         "name": "",
         "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "hatVaults",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "getTiersToRedeemFromShares",
+    "outputs": [
+      {
+        "internalType": "bool[3]",
+        "name": "tiers",
+        "type": "bool[3]"
       }
     ],
     "stateMutability": "view",
@@ -862,11 +891,30 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "",
+        "name": "tokenId",
         "type": "uint256"
       }
     ],
     "name": "uri",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "uris",
     "outputs": [
       {
         "internalType": "string",

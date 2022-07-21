@@ -5,7 +5,7 @@ import "./index.scss";
 /**
  * Proof of deposit:
  * 1. Fetch staker data (all pids that the current user has deposited)
- * 2. Check only for these pids with getTierFromShares if it hasn't been redeemed yet
+ * 2. Check only for these pids with getTiersToRedeemFromShares if it hasn't been redeemed yet
  * 3. If it's still eligibale use tokensIds to fetch the tokenId
  * 4. Use uri to fetch the ipfs uri of the NFT in order to display it
  * 
@@ -16,7 +16,7 @@ import "./index.scss";
  * 
  * NOTE:
  * tokensRedeemed[hatVaults][pid][tier][account]    1<= tier <=3
- * getTierFromShares[hatVaults][pid][account]
+ * getTiersToRedeemFromShares[hatVaults][pid][account]
  * tokenIds[hatVaults][pid][tier]
  * uri[tokenId]
  */

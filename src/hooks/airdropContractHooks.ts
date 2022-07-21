@@ -1,7 +1,7 @@
 import { useCall, useContractFunction } from "@usedapp/core";
 import { HAT_VAULTS_CONSTANT } from "components/AirdropMachine/data";
 import { HATVaultsNFTContract } from "constants/constants";
-import { Contract } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { CHAINID } from "settings";
 import hatVaultNftAbi from "../data/abis/HATVaultsNFT.json";
 
@@ -29,8 +29,8 @@ export function useTokenIds(account: string, pid: string, tier: number ): string
   return value?.[0];
 }
 
-export function useGetTierFromShares(pid: string, account: string): number | undefined {
-  const { value, error } = useCall({ contract: new Contract(HATVaultsNFTContract[CHAINID], hatVaultNftAbi), method: "getTierFromShares", args: [HAT_VAULTS_CONSTANT, pid, account] }) ?? {};
+export function useGetTierToRedeemFromShares(pid: string, account: string): number | undefined {
+  const { value, error } = useCall({ contract: new Contract(HATVaultsNFTContract[CHAINID], hatVaultNftAbi), method: "getTiersToRedeemFromShares", args: [HAT_VAULTS_CONSTANT, pid, account] }) ?? {};
   if (error) {
     return undefined;
   }
@@ -47,10 +47,10 @@ export function useUri(tokenId: string) {
 }
 
 /** Relevant only for airdrop */
-export function useDeadline() {
+export function useDeadline(): string | undefined {
   const { value, error } = useCall({ contract: new Contract(HATVaultsNFTContract[CHAINID], hatVaultNftAbi), method: "deadline", args: [] }) ?? {};
   if (error) {
     return undefined;
   }
-  return value?.[0];
+  return (value?.[0] as BigNumber)?.toString();
 }

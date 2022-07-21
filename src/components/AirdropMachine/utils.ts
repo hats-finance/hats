@@ -3,24 +3,29 @@ import { useCallback, useEffect } from "react";
 import { TEMP_WALLETS } from "./data";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { AirdropMachineWallet } from "types/types";
+import { useDeadline } from "hooks/airdropContractHooks";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
+/**
+ * TODO: need to fetch the JSON file from the IPFS
+ */
 export const getEligibilityData = async (address: string) => (
   TEMP_WALLETS.wallets.find(wallet => wallet.id === address)
 )
 
 export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   const { account } = useEthers();
+  const deadline = useDeadline();
+  const afterDeadline = !deadline ? true : Date.now() > Number(deadline);
 
   const getAirdropData = useCallback(async () => {
     if (account) {
       const eligibaleData = await getEligibilityData(account);
       /** TODO: show only when:
        * 1. not redeemed - need to check
-       * 2. check if deadline is in the future
-       * 3. not appears in the local storage
+       * 2. not appears in the local storage
        */
       if (eligibaleData) {
         toggleAirdropPrompt();
@@ -30,9 +35,11 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
 
   useEffect(() => {
     (async () => {
-      await getAirdropData();
+      if (!afterDeadline) {
+        await getAirdropData();
+      }
     })();
-  }, [account]);
+  }, [account, afterDeadline]);
 }
 
 export const buildProofs = (data: AirdropMachineWallet) => {
@@ -40,6 +47,7 @@ export const buildProofs = (data: AirdropMachineWallet) => {
 
   /**
    * TODO: build proofs only from the NFTs that haven't been redeemed yet ; need to filter before useTokensRedeemed
+   *       Can use useGetTierToRedeemFromShares?
    */
   const proofs = data.nft_elegebility.map(nft => {
     return merkleTree.getHexProof(hashToken(nft.contract_address, nft.pid, data.id, nft.tier));

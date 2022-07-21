@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { HAT_VAULTS_CONSTANT } from "components/AirdropMachine/data";
-import { useGetTierFromShares, useRedeemMultipleFromShares, useTokenIds, useUri } from "hooks/airdropContractHooks";
+import { useGetTierToRedeemFromShares, useRedeemMultipleFromShares, useTokenIds, useUri } from "hooks/airdropContractHooks";
 import { useTranslation } from "react-i18next";
 
 interface IProps {
@@ -14,7 +14,7 @@ export default function NFTElement({ pid }: IProps) {
   const { t } = useTranslation();
   const { account } = useEthers();
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useRedeemMultipleFromShares();
-  const tier = useGetTierFromShares(pid, account!);
+  const tier = useGetTierToRedeemFromShares(pid, account!);
   const tokenId = useTokenIds(account!, pid, tier ?? 0);
   const uri = useUri(tokenId ?? "");
 
