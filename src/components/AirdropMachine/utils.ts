@@ -7,7 +7,7 @@ import { AirdropMachineWallet } from "types/types";
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
 
-export const checkEligibility = async (address: string) => (
+export const getEligibilityData = async (address: string) => (
   TEMP_WALLETS.wallets.find(wallet => wallet.id === address)
 )
 
@@ -16,10 +16,11 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
 
   const getAirdropData = useCallback(async () => {
     if (account) {
-      const eligibaleData = await checkEligibility(account);
+      const eligibaleData = await getEligibilityData(account);
       /** TODO: show only when:
        * 1. not redeemed - need to check
-       * 2. not appears in the local storage
+       * 2. check if deadline is in the future
+       * 3. not appears in the local storage
        */
       if (eligibaleData) {
         toggleAirdropPrompt();
@@ -28,11 +29,13 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   }, [account, toggleAirdropPrompt])
 
   useEffect(() => {
-    getAirdropData();
+    (async () => {
+      await getAirdropData();
+    })();
   }, [account]);
 }
 
-export const getProofsAndUpdateTree = (data: AirdropMachineWallet) => {
+export const buildProofs = (data: AirdropMachineWallet) => {
   const merkleTree = buildMerkleTree(data);
 
   const proofs = data.nft_elegebility.map(nft => {

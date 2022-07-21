@@ -1,4 +1,4 @@
-import { checkEligibility } from "components/AirdropMachine/utils";
+import { getEligibilityData } from "components/AirdropMachine/utils";
 import Loading from "components/Shared/Loading";
 import { useEffect, useState } from "react";
 import { AirdropMachineWallet } from "types/types";
@@ -24,9 +24,12 @@ export default function Redeem({ address, closeRedeemModal }: IProps) {
 
   useEffect(() => {
     (async () => {
-      const data = await checkEligibility(address);
+      const data = await getEligibilityData(address);
       /**
-       * TODO: checkEligibility needs to indicate if it's already redeemed.
+       * TODO:
+       * 1. getEligibilityData needs to indicate if it's already redeemed.
+       * 2. check if deadline is in the future - maybe no need since we might just disable the
+       *    input box if we are after the deadline.
        */
       setEligibilityStatus(data ? EligibilityStatus.ELIGIBLE : EligibilityStatus.NOT_ELIGIBLE);
       setData(data as any);

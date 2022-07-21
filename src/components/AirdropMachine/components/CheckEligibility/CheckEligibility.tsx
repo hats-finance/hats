@@ -19,6 +19,9 @@ export default function CheckEligibility() {
     setUserInput(account ?? "");
   }, [setUserInput, account])
 
+  /**
+   * Check if the deadline is in the future - if not - disable the input box and show an appropriate error.
+   */
   return (
     <div className="check-eligibility-wrapper">
       {t("AirdropMachine.CheckEligibility.text-1")}

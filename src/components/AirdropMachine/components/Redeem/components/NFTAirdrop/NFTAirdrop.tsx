@@ -1,37 +1,48 @@
-import { IPFS_PREFIX } from "constants/constants";
+//import { IPFS_PREFIX } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AirdropMachineWallet } from "types/types";
-import { getProofsAndUpdateTree } from "components/AirdropMachine/utils";
+import { buildProofs } from "components/AirdropMachine/utils";
 import "swiper/css";
 import "./index.scss";
+import { useRedeemMultipleFromTree } from "hooks/airdropContractHooks";
 
-const TEMP_IPFS_NFT_COLLECTION = "QmSiPFLfYwodihG94ASaiWJuQ6uLUXkz8p8kvoCTv8KraP";
-const TEMP_NFTS = ["892", "342", "427", "374"];
+//const TEMP_IPFS_NFT_COLLECTION = "QmSiPFLfYwodihG94ASaiWJuQ6uLUXkz8p8kvoCTv8KraP";
+//const TEMP_NFTS = ["892", "342", "427", "374"];
 
 interface IProps {
   data: AirdropMachineWallet;
   closeRedeemModal: () => void;
 }
 
+
+/**
+ * NEED TO CHECK WHICH OF THE NFTS ARE NOT REDEEMED YET AND DISPLAY ONLY THEM.
+ * THEN SENDING ONLY THEM TO redeemMultipleFromTree
+ */
 export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
   const { t } = useTranslation();
+  const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } = useRedeemMultipleFromTree();
 
   const handleRedeem = () => {
     try {
-      const proofs = getProofsAndUpdateTree(data);
+      const proofs = buildProofs(data);
       console.log(proofs);
-      // TODO: call redeemMultipleFromTree from contract
+      /**
+       * TODO: NEED TO ADD THE PARAMS:
+       * hatVaults: string[], pids: number[], account: string, tiers: number[], proofs: any[]
+       */
+      redeemMultipleFromTree();
     } catch (error) {
       console.error(error);
     }
   }
 
-  const nftsSlides = TEMP_NFTS.map((nft, index) => {
+  const nftsSlides = data.nft_elegebility.map((nft, index) => {
     return (
       <SwiperSlide key={index}>
-        <img key={nft} src={`${IPFS_PREFIX}/${TEMP_IPFS_NFT_COLLECTION}/${nft}.png`} alt="nft" />
+        <img key={index} src={nft.uri} alt="nft" />
       </SwiperSlide>
     )
   })

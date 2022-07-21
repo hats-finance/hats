@@ -2,19 +2,24 @@ import { useVaults } from "hooks/useVaults";
 import NFTElement from "../NFTElement/NFTElement";
 import "./index.scss";
 
-
-// fetch by staker "pid"
-// run the loop only on the "pids"
-// call tokensRedeemed[hatVaults][pid][tier][account]     1<= tier <=3
-// getTierFromShares (only on the pids from Staker query) [hatVaults, pid, account] // checks if it's eligiable (hasn’t redeemed yet)
-
-// From tree - only tokensRedeemed (according the tree - no need the query)
-
-
-
-// to fetch URI need tokenId
-// use tokenIds [account the constant, pid, tier]
-
+/**
+ * Proof of deposit:
+ * 1. Fetch staker data (all pids that the current user has deposited)
+ * 2. Check only for these pids with getTierFromShares if it hasn't been redeemed yet
+ * 3. If it's still eligibale use tokensIds to fetch the tokenId
+ * 4. Use uri to fetch the ipfs uri of the NFT in order to display it
+ * 
+ * Tree:
+ * 1. Use tokensRedeemed with the params from the JSON
+ * 2. Use tokenIds to fetch the tokenId
+ * 3. Use uri to fetch the ipfs uri of the NFT in order to display it
+ * 
+ * NOTE:
+ * tokensRedeemed[hatVaults][pid][tier][account]    1<= tier <=3
+ * getTierFromShares[hatVaults][pid][account]
+ * tokenIds[hatVaults][pid][tier]
+ * uri[tokenId]
+ */
 
 export default function MyNFTs() {
   const { stakerData } = useVaults();

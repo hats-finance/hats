@@ -1,7 +1,10 @@
 {
   "translation": {
     "MyAccount": {
-      "hello": "HELLO"
+      "hello": "HELLO",
+      "MyNFTs": {
+        "button-text": "REDEEM"
+      }
     },
     "Shared": {
       "yes": "YES",
