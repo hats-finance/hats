@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { useEthers } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
-import { GET_VAULTS } from "graphql/subgraph";
+import { GET_VAULTS, getStaker } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription } from "types/types";
@@ -11,6 +11,7 @@ interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
   generalParameters?: IMaster
+  stakerData?: string[];
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -26,6 +27,7 @@ export function VaultsProvider({ children }) {
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
   const { chainId } = useEthers();
+  const { account } = useEthers();
 
   const { data: vaultsData } = useQuery<{ vaults: IVault[] }>(
     GET_VAULTS, {
@@ -35,6 +37,12 @@ export function VaultsProvider({ children }) {
     pollInterval: DATA_REFRESH_TIME
   })
 
+  const { data: stakerData } = useQuery<{ stakers: string[] }>(
+    getStaker(account!), {
+    variables: { chainId },
+    context: { chainId },
+    pollInterval: DATA_REFRESH_TIME
+  })
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults) {
@@ -129,11 +137,14 @@ export function VaultsProvider({ children }) {
     vaults,
     tokenPrices,
     generalParameters: vaults?.[0].master,
+    stakerData: stakerData?.stakers,
   };
 
-  return <VaultsContext.Provider value={context}>
-    {children}
-  </VaultsContext.Provider>
+  return (
+    <VaultsContext.Provider value={context}>
+      {children}
+    </VaultsContext.Provider>
+  )
 }
 
 export const fixObject = (description: any): IVaultDescription => {

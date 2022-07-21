@@ -61,3 +61,13 @@ export const GET_GENERAL_PARAMETERS = gql`
     }
   }
 `
+
+export const getStaker = (stakerAddress: string) => {
+  return gql`
+    {
+      stakers (where: { address: "${stakerAddress}" }) {
+        pid
+      }
+    }
+  `;
+}

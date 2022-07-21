@@ -1,3 +1,5 @@
+export const HAT_VAULTS_CONSTANT = "0x12efc2544ec89Ab6F8Aa0C9c4Da0673beda2C739";
+
 export const TEMP_WALLETS =
 {
   "wallets": [
@@ -12,15 +14,15 @@ export const TEMP_WALLETS =
       },
       "nft_elegebility": [
         {
-          "contract_address": "0x12efc2544ec89Ab6F8Aa0C9c4Da0673beda2C739",
-          "pid": 3,
-          "tier": 0
+          "contract_address": HAT_VAULTS_CONSTANT,
+          "pid": 0,
+          "tier": 1
         },
         {
-          "contract_address": "0x12efc2544ec89Ab6F8Aa0C9c4Da0673beda2C739",
-          "pid": 3,
-          "tier": 0
-        },
+          "contract_address": HAT_VAULTS_CONSTANT,
+          "pid": 11,
+          "tier": 2
+        }
       ]
     }
   ]
