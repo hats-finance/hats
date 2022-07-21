@@ -36,17 +36,23 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
 }
 
 export const buildProofs = (data: AirdropMachineWallet) => {
-  const merkleTree = buildMerkleTree(data);
+  const merkleTree = buildMerkleTree(TEMP_WALLETS.wallets);
 
+  /**
+   * TODO: build proofs only from the NFTs that haven't been redeemed yet ; need to filter before useTokensRedeemed
+   */
   const proofs = data.nft_elegebility.map(nft => {
     return merkleTree.getHexProof(hashToken(nft.contract_address, nft.pid, data.id, nft.tier));
   })
   return proofs;
 }
 
-const buildMerkleTree = (data: AirdropMachineWallet) => {
-  const hashes = data.nft_elegebility.map(nft => {
-    return hashToken(nft.contract_address, nft.pid, data.id, nft.tier);
+const buildMerkleTree = (data: AirdropMachineWallet[]) => {
+  const hashes: Buffer[] = [];
+  data.forEach(wallet => {
+    wallet.nft_elegebility.forEach(nft => {
+      hashes.push(hashToken(nft.contract_address, nft.pid, wallet.id, nft.tier));
+    })
   })
 
   return new MerkleTree(hashes, keccak256, { sortPairs: true });

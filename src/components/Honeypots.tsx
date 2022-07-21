@@ -13,6 +13,7 @@ import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
+import { ipfsTransformUri } from "utils";
 
 interface IProps {
   showDeposit?: boolean
@@ -111,7 +112,7 @@ export default function Honeypots({ showDeposit }: IProps) {
           setShowModal={closeModal}
           height="fit-content"
           maxHeight="100vh"
-          icon={selectedVault.description?.["project-metadata"].icon!}>
+          icon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}>
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>
       }

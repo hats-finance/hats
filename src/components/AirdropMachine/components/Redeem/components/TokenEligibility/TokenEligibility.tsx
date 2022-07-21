@@ -18,7 +18,7 @@ export default function TokenEligibility({ data, nextStage }: IProps) {
   const { t } = useTranslation();
 
   const totalHatsEligibility = Object.values(data.token_eligibility)
-    .reduce((a: BigNumber, b = BigNumber.from(0)) => a.add(b), BigNumber.from(0));
+    .reduce((a, b) => a.add(b), BigNumber.from(0));
 
   return (
     <div className="token-eligibility-wrapper">

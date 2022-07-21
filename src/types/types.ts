@@ -191,11 +191,11 @@ export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbo
 export interface AirdropMachineWallet {
   id: string;
   token_eligibility: {
-    committee_member: BigNumber;
-    depositor: BigNumber;
-    crow: BigNumber;
-    coder: BigNumber;
-    early_contributor: BigNumber;
+    committee_member: string;
+    depositor: string;
+    crow: string;
+    coder: string;
+    early_contributor: string;
   },
   nft_elegebility: {
     contract_address: string;

@@ -2,6 +2,7 @@ import Select from 'react-select';
 import { Colors } from 'constants/constants';
 import { IVault } from "types/types";
 import "./index.scss";
+import { ipfsTransformUri } from 'utils';
 
 interface IProps {
   vault: IVault
@@ -60,7 +61,7 @@ export default function TokenSelect({ vault, onSelect }: IProps) {
     return (
       {
         value: vault.pid,
-        label: <TokenOption symbol={vault.stakingTokenSymbol} icon={vault.description?.["project-metadata"].tokenIcon} />
+        label: <TokenOption symbol={vault.stakingTokenSymbol} icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} />
       }
     )
   })
@@ -78,7 +79,7 @@ export default function TokenSelect({ vault, onSelect }: IProps) {
           options={tokensOptions} />
       ) : (
         <div className="token-icon-wrapper">
-          <img src={vault.description?.["project-metadata"].tokenIcon} className="token-icon" alt="token icon" />
+          <img src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} className="token-icon" alt="token icon" />
           {vault.stakingTokenSymbol}
         </div>
       )}
