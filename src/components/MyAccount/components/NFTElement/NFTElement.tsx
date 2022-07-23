@@ -1,25 +1,37 @@
 import { useEthers } from "@usedapp/core";
 import { HAT_VAULTS_CONSTANT } from "components/AirdropMachine/data";
-import { useGetTierToRedeemFromShares, useRedeemMultipleFromShares, useTokenIds, useUri } from "hooks/airdropContractHooks";
+import { useGetTierFromShares, useRedeemMultipleFromShares, useTokenActions } from "hooks/tokenContractHooks";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import "./index.scss";
 
 interface IProps {
-  pid: string;
+  pid: number;
 }
 
-/**
- * If tier --> meaning it hasn't been redeemed yet? or need to check also with tokensRedeemed?
- */
 export default function NFTElement({ pid }: IProps) {
   const { t } = useTranslation();
   const { account } = useEthers();
+  const { isTokenRedeemed, getTokenId, getTokenUri } = useTokenActions();
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useRedeemMultipleFromShares();
-  const tier = useGetTierToRedeemFromShares(pid, account!);
-  const tokenId = useTokenIds(account!, pid, tier ?? 0);
-  const uri = useUri(tokenId ?? "");
+  const tier = useGetTierFromShares(pid, account!);
+  const [uri, setUri] = useState("");
+  const [redeemed, setRedeemed] = useState<boolean>();
 
-  /** Need to check id already redeemed */
-  const redeemed = false;
+  useEffect(() => {
+    (async () => {
+      const isRedeemed = await isTokenRedeemed(pid, tier!, account!);
+      setRedeemed(isRedeemed);
+    })();
+  }, [pid, tier, account, isTokenRedeemed, setRedeemed])
+
+  useEffect(() => {
+    (async () => {
+      const tokenId = await getTokenId(account!, pid, tier!);
+      const tokenUri = await getTokenUri(tokenId);
+      setUri(tokenUri);
+    })();
+  }, [account, pid, tier, getTokenId, getTokenUri, setUri])
 
   const handleRedeem = () => {
     try {
@@ -30,12 +42,9 @@ export default function NFTElement({ pid }: IProps) {
     }
   }
 
-  /**
-   * Need to build the correct URI after it updates in the contract.
-   */
   return (
     <div className="nft-element-wrapper">
-      {tier ? <img src={uri} alt="nft" /> : null}
+      <img src={uri} alt="nft" />
       {!redeemed && <button onClick={handleRedeem} className="fill">{t("MyAccount.MyNFTs.button-text")}</button>}
     </div>
   )

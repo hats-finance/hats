@@ -24,7 +24,7 @@ import "./index.scss";
 export default function MyNFTs() {
   const { stakerData } = useVaults();
   const nfts = stakerData?.map((pid, index) => {
-    return <NFTElement key={index} pid={pid} />
+    return <NFTElement key={index} pid={Number(pid)} />
   })
 
   return (

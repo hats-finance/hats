@@ -1,51 +1,55 @@
-//import { IPFS_PREFIX } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { AirdropMachineWallet } from "types/types";
 import { buildProofs } from "components/AirdropMachine/utils";
+import { useRedeemMultipleFromTree, useTokenActions } from "hooks/tokenContractHooks";
 import "swiper/css";
 import "./index.scss";
-import { useRedeemMultipleFromTree } from "hooks/airdropContractHooks";
-
-//const TEMP_IPFS_NFT_COLLECTION = "QmSiPFLfYwodihG94ASaiWJuQ6uLUXkz8p8kvoCTv8KraP";
-//const TEMP_NFTS = ["892", "342", "427", "374"];
+import { useEffect, useState } from "react";
 
 interface IProps {
   data: AirdropMachineWallet;
   closeRedeemModal: () => void;
 }
 
-
-/**
- * NEED TO CHECK WHICH OF THE NFTS ARE NOT REDEEMED YET AND DISPLAY ONLY THEM.
- * THEN SENDING ONLY THEM TO redeemMultipleFromTree
- */
 export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
   const { t } = useTranslation();
+  const { getTokenId, getTokenUri } = useTokenActions();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } = useRedeemMultipleFromTree();
+  const [nfts, setNfts] = useState<JSX.Element[]>();
 
-  const handleRedeem = () => {
+  const handleRedeem = async () => {
     try {
       const proofs = buildProofs(data);
-      console.log(proofs);
-      /**
-       * TODO: NEED TO ADD THE PARAMS:
-       * hatVaults: string[], pids: number[], account: string, tiers: number[], proofs: any[]
-       */
-      redeemMultipleFromTree();
+      console.log("proofs", proofs);
+
+      const hatVaults = data.nft_elegebility.map(nft => nft.contract_address);
+      const pids = data.nft_elegebility.map(nft => nft.pid);
+      const tiers = data.nft_elegebility.map(nft => nft.tier);
+
+      await redeemMultipleFromTree(hatVaults, pids, data.id, tiers, proofs);
+      closeRedeemModal();
     } catch (error) {
       console.error(error);
     }
   }
 
-  const nftsSlides = data.nft_elegebility.map((nft, index) => {
-    return (
-      <SwiperSlide key={index}>
-        <img key={index} src={nft.uri} alt="nft" />
-      </SwiperSlide>
-    )
-  })
+
+  useEffect(() => {
+    (async () => {
+      const nfts = await Promise.all(data.nft_elegebility.map(async (nft, index) => {
+        const tokenId = await getTokenId(data.id, nft.pid, nft.tier);
+        const tokenUri = await getTokenUri(tokenId);
+        return (
+          <SwiperSlide key={index}>
+            <img key={index} src={tokenUri} alt="nft" />
+          </SwiperSlide>
+        )
+      }))
+      setNfts(nfts);
+    })();
+  }, [data, getTokenId, getTokenUri])
 
   return (
     <div className="nft-airdrop-wrapper">
@@ -79,7 +83,7 @@ export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
           touchRatio={1.5}
           navigation={true}
           effect={"flip"}>
-          {nftsSlides}
+          {nfts}
         </Swiper>
       </div>
       <button onClick={handleRedeem} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>

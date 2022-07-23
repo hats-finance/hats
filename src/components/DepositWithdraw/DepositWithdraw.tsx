@@ -82,8 +82,7 @@ export default function DepositWithdraw(props: IProps) {
   const handleDepositAndClaim = useCallback(async () => {
     depositAndClaim(selectedPid, userInputValue);
     /**
-     * TODO:
-     * Need to call useGetTierToRedeemFromShares to see if the user eligieble for NFT (show popup)
+     * TODO: Need to call useGetTierToRedeemFromShares? to see if the user eligieble for NFT (show popup)
      */
   }, [selectedPid, userInputValue, depositAndClaim])
 

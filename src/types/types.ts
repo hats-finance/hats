@@ -201,6 +201,5 @@ export interface AirdropMachineWallet {
     contract_address: string;
     pid: number;
     tier: number;
-    uri: string;
   }[];
 }

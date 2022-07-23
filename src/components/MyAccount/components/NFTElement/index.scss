@@ -1,5 +1,6 @@
 @import "../../../../styles/constants.scss";
 
-.my-nfts-wrapper {
+.nft-element-wrapper {
   display: flex;
+  flex-direction: column;
 }

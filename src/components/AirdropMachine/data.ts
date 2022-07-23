@@ -17,13 +17,11 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1223"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1574"
         }
       ]
     },
@@ -41,13 +39,11 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1223"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1574"
         }
       ]
     },
@@ -65,13 +61,11 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1223"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "uri": "https://gateway.pinata.cloud/ipfs/id/1574"
         }
       ]
     }

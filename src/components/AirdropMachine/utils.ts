@@ -3,7 +3,7 @@ import { useCallback, useEffect } from "react";
 import { TEMP_WALLETS } from "./data";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { AirdropMachineWallet } from "types/types";
-import { useDeadline } from "hooks/airdropContractHooks";
+import { useDeadline, useTokenActions } from "hooks/tokenContractHooks";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require('keccak256');
@@ -18,20 +18,24 @@ export const getEligibilityData = async (address: string) => (
 export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   const { account } = useEthers();
   const deadline = useDeadline();
-  const afterDeadline = !deadline ? true : Date.now() > Number(deadline);
+  const { isTokenRedeemed } = useTokenActions();
+  /**
+   * TODO: temporary always show
+   */
+  const afterDeadline = false; // !deadline ? true : Date.now() > Number(deadline);
 
   const getAirdropData = useCallback(async () => {
     if (account) {
       const eligibaleData = await getEligibilityData(account);
-      /** TODO: show only when:
-       * 1. not redeemed - need to check
-       * 2. not appears in the local storage
+      const somethingToRedeem = eligibaleData?.nft_elegebility.some(async (nft) => !(await isTokenRedeemed(nft.pid, nft.tier, eligibaleData.id))); 
+      /**
+       * TODO: check if we already notified the user in the local srorage?
        */
-      if (eligibaleData) {
+      if (eligibaleData && somethingToRedeem) {
         toggleAirdropPrompt();
       }
     }
-  }, [account, toggleAirdropPrompt])
+  }, [account, toggleAirdropPrompt, isTokenRedeemed])
 
   useEffect(() => {
     (async () => {
@@ -43,11 +47,14 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
 }
 
 export const buildProofs = (data: AirdropMachineWallet) => {
+  /**
+   * The tree is built from ALL the data (including the redeemed NFTs)
+   */
   const merkleTree = buildMerkleTree(TEMP_WALLETS.wallets);
 
   /**
-   * TODO: build proofs only from the NFTs that haven't been redeemed yet ; need to filter before useTokensRedeemed
-   *       Can use useGetTierToRedeemFromShares?
+   * Build the proofs only for the non-redeemed NFTs.
+   * The data was already filtered in Redeem component.
    */
   const proofs = data.nft_elegebility.map(nft => {
     return merkleTree.getHexProof(hashToken(nft.contract_address, nft.pid, data.id, nft.tier));

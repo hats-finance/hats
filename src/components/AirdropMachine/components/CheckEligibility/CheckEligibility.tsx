@@ -2,7 +2,7 @@ import { useEthers } from "@usedapp/core";
 import classNames from "classnames";
 import Modal from "components/Shared/Modal/Modal";
 import { isAddress } from "ethers/lib/utils";
-import { useDeadline } from "hooks/airdropContractHooks";
+import { useDeadline } from "hooks/tokenContractHooks";
 import useModal from "hooks/useModal";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,7 +13,10 @@ export default function CheckEligibility() {
   const { t } = useTranslation();
   const { account } = useEthers();
   const deadline = useDeadline();
-  const afterDeadline = !deadline ? true : Date.now() > Number(deadline);
+  /**
+   * TODO: temporary always show
+   */
+  const afterDeadline = false; //!deadline ? true : Date.now() > Number(deadline);
   const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
   const inputError = userInput && !isAddress(userInput);
@@ -22,9 +25,6 @@ export default function CheckEligibility() {
     setUserInput(account ?? "");
   }, [setUserInput, account])
 
-  /**
-   * Check if the deadline is in the future - if not - disable the input box and show an appropriate error.
-   */
   return (
     <div className="check-eligibility-wrapper">
       {t("AirdropMachine.CheckEligibility.text-1")}
