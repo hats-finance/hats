@@ -53,11 +53,3 @@ export const GET_VAULTS = gql`
     }
   }
 `;
-
-export const GET_GENERAL_PARAMETERS = gql`
-  query getRewardsToken {
-    masters {
-      rewardsToken
-    }
-  }
-`
