@@ -13,8 +13,8 @@ export default function WalletInfo() {
   const ethBalance = formatEther(useEtherBalance(account) ?? 0);
   const ethBalanceString = (+ethBalance).toFixed(4);
   const { ens } = useLookupAddress(account);
-  const { generalParameters } = useVaults();
-  const hatsBalance = formatEther(useTokenBalance(generalParameters?.rewardsToken, account) ?? 0);
+  const { masters } = useVaults();
+  const hatsBalance = formatEther(useTokenBalance(masters?.[0].rewardsToken, account) ?? 0);
   const hatsBalanceString = (+hatsBalance).toFixed(4);
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 

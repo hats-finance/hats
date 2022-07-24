@@ -2,6 +2,18 @@ import { gql } from "@apollo/client";
 
 export const GET_VAULTS = gql`
   query getVaults {
+    masters {
+      address
+      governance
+      numberOfSubmittedClaims
+      withdrawPeriod
+      safetyPeriod
+      withdrawRequestEnablePeriod
+      withdrawRequestPendingPeriod
+      vestingHatDuration
+      vestingHatPeriods
+      rewardsToken
+    }
     vaults {
       id
       descriptionHash
