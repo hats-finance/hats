@@ -2,30 +2,39 @@ import { useContractFunction, useEthers } from "@usedapp/core";
 import { Contract } from "ethers";
 import vaultAbi from "data/abis/HATSVault.json";
 import { useVaults } from "hooks/useVaults";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, SyntheticEvent, useState } from "react";
 
 
 
-export default function ({ descriptionHash }) {
+export default function CreateVault({ descriptionHash }) {
     const { account } = useEthers();
-    const isGovernance = account?.toLowerCase() === account?.toLowerCase()
     const { vaults, masters } = useVaults()
+    const governedMasters = masters?.filter(master => master.governance.toLowerCase() === account?.toLowerCase())
     const vault = vaults?.find(vault => vault.descriptionHash === descriptionHash);
-    const master = masters?.[0]; // for now just use first contract as default
-    console.log(vault);
-
+    const [master, setMaster] = useState(masters?.[0]); // for now just use first contract as default
     const [levelCount, setLevelCount] = useState<number>()
-    if (vault || !master) return <></>;
 
     const { send: sendAddPool, state: addPoolState } = useContractFunction(
-        new Contract(master.address, vaultAbi), "addPool", { transactionName: "Add Pool" });
+        master?.address ? new Contract(master.address, vaultAbi) : undefined, "addPool", { transactionName: "Add Pool" });
 
-    const handleAddPool: FormEventHandler = (e) => {
+    if (vault || !governedMasters) return <></>;
+
+
+    const handleAddPool: FormEventHandler<HTMLFormElement> = (e: SyntheticEvent) => {
+        e.preventDefault();
+        console.log(e.target);
         sendAddPool()
     }
 
-    if (!isGovernance) return <></>;
+    if (["Mining", "PendingSignature"].includes(addPoolState.status)) {
+        return <></>;
+    }
+
     return <div>
+        <input onSelect={(e: React.ChangeEvent<HTMLSelectElement>) => setMaster(e)} type="option">
+            {masters?.map(master =>
+                <option value={master.address}>{master.address}</option>)}
+        </input>
         <form onSubmit={handleAddPool}>
             <input name="_allocPoint"></input>
             <input name="_lpToken"></input>
