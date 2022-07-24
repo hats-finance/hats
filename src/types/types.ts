@@ -13,7 +13,7 @@ export interface IVault {
   honeyPotBalance: string
   totalReward: string
   totalRewardPaid: string
-  committee: Array<string>
+  committee: string
   allocPoint: string
   master: IMaster
   numberOfApprovedClaims: string

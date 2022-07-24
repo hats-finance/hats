@@ -2,6 +2,18 @@ import { gql } from "@apollo/client";
 
 export const GET_VAULTS = gql`
   query getVaults {
+    masters {
+      address
+      governance
+      numberOfSubmittedClaims
+      withdrawPeriod
+      safetyPeriod
+      withdrawRequestEnablePeriod
+      withdrawRequestPendingPeriod
+      vestingHatDuration
+      vestingHatPeriods
+      rewardsToken
+    }
     vaults {
       id
       descriptionHash
@@ -53,14 +65,6 @@ export const GET_VAULTS = gql`
     }
   }
 `;
-
-export const GET_GENERAL_PARAMETERS = gql`
-  query getRewardsToken {
-    masters {
-      rewardsToken
-    }
-  }
-`
 
 export const getStaker = (stakerAddress: string) => {
   return gql`

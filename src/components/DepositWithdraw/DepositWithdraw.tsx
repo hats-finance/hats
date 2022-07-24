@@ -8,7 +8,7 @@ import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
-import { IVault, IVaultDescription } from "../../types/types";
+import { IVault } from "../../types/types";
 import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
@@ -33,9 +33,8 @@ enum Tab {
 
 export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
-  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults,
+  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
-  const { description } = props.data;
   const { setShowModal } = props;
   const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
@@ -46,7 +45,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices, generalParameters } = useVaults();
+  const { tokenPrices } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -67,7 +66,7 @@ export default function DepositWithdraw(props: IProps) {
   const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
   const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(generalParameters?.withdrawRequestEnablePeriod.toString(), "seconds").unix();
+  const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(master.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
@@ -141,8 +140,7 @@ export default function DepositWithdraw(props: IProps) {
       setShowModal(false);
   }, [inTransaction, setShowModal]);
 
-  const multisigAddress = (description as IVaultDescription)?.committee?.["multisig-address"];
-  const isCommitteMultisig = multisigAddress === account;
+  const isCommitteMultisig = committee.toLowerCase() === account?.toLowerCase();
 
   return (
     <div className={classNames("deposit-wrapper", { "disabled": pendingWallet })}>
