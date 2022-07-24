@@ -24,7 +24,7 @@ export default function TokenEligibility({ data, nextStage }: IProps) {
     <div className="token-eligibility-wrapper">
       <span>{t("AirdropMachine.TokenEligibility.text-1")}</span>
       <div className="token-eligibility__total-hats-container">
-        <span>{`${shortenIfAddress(data.id)} ${t("AirdropMachine.TokenEligibility.text-2")}`}</span>
+        <span>{`${shortenIfAddress(data.address)} ${t("AirdropMachine.TokenEligibility.text-2")}`}</span>
         <div className="token-eligibility__total-hats">
           <img src={HatsLogo} alt="hats logo" />
           <span className="token-eligibility__value">{millify(Number(formatUnits(totalHatsEligibility)))} HATS</span>

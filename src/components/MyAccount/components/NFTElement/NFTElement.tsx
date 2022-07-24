@@ -12,26 +12,26 @@ interface IProps {
 export default function NFTElement({ pid }: IProps) {
   const { t } = useTranslation();
   const { account } = useEthers();
-  const { isTokenRedeemed, getTokenId, getTokenUri } = useTokenActions();
+  //const { isTokenRedeemed, getTokenId, getTokenUri } = useTokenActions();
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useRedeemMultipleFromShares();
   const tier = useGetTierFromShares(pid, account!);
   const [uri, setUri] = useState("");
   const [redeemed, setRedeemed] = useState<boolean>();
 
-  useEffect(() => {
-    (async () => {
-      const isRedeemed = await isTokenRedeemed(pid, tier!, account!);
-      setRedeemed(isRedeemed);
-    })();
-  }, [pid, tier, account, isTokenRedeemed, setRedeemed])
+  // useEffect(() => {
+  //   (async () => {
+  //     const isRedeemed = await isTokenRedeemed(pid, tier!, account!);
+  //     setRedeemed(isRedeemed);
+  //   })();
+  // }, [pid, tier, account, isTokenRedeemed, setRedeemed])
 
-  useEffect(() => {
-    (async () => {
-      const tokenId = await getTokenId(account!, pid, tier!);
-      const tokenUri = await getTokenUri(tokenId);
-      setUri(tokenUri);
-    })();
-  }, [account, pid, tier, getTokenId, getTokenUri, setUri])
+  // useEffect(() => {
+  //   (async () => {
+  //     const tokenId = await getTokenId(account!, pid, tier!);
+  //     const tokenUri = await getTokenUri(tokenId);
+  //     setUri(tokenUri);
+  //   })();
+  // }, [account, pid, tier, getTokenId, getTokenUri, setUri])
 
   const handleRedeem = () => {
     try {

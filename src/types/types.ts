@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers"
-
 export interface IVault {
   id: string
   descriptionHash: string
@@ -188,8 +186,14 @@ export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?:
 
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
 
+export interface NFTEligibilityElement {
+  contract_address: string;
+  pid: number;
+  tier: number;
+}
+
 export interface AirdropMachineWallet {
-  id: string;
+  address: string;
   token_eligibility: {
     committee_member: string;
     depositor: string;
@@ -197,9 +201,5 @@ export interface AirdropMachineWallet {
     coder: string;
     early_contributor: string;
   },
-  nft_elegebility: {
-    contract_address: string;
-    pid: number;
-    tier: number;
-  }[];
+  nft_elegebility: NFTEligibilityElement[];
 }

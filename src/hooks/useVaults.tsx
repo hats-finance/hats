@@ -1,7 +1,7 @@
 import { useApolloClient, useQuery } from "@apollo/client";
 import { useEthers } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
-import { GET_VAULTS, getStaker } from "graphql/subgraph";
+import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
@@ -26,20 +26,13 @@ export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>();
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
-  const { chainId, library, account } = useEthers();
+  const { chainId, library } = useEthers();
 
   const { data } = useQuery<{ vaults: IVault[], masters: IMaster[] }>(
     GET_VAULTS, {
     variables: { chainId },
     context: { chainId },
     fetchPolicy: "network-only",
-    pollInterval: DATA_REFRESH_TIME
-  })
-
-  const { data: stakerData } = useQuery<{ stakers: string[] }>(
-    getStaker(account!), {
-    variables: { chainId },
-    context: { chainId },
     pollInterval: DATA_REFRESH_TIME
   })
 

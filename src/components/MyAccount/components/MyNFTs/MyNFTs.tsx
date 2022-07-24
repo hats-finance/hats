@@ -22,14 +22,13 @@ import "./index.scss";
  */
 
 export default function MyNFTs() {
-  const { stakerData } = useVaults();
-  const nfts = stakerData?.map((pid, index) => {
-    return <NFTElement key={index} pid={Number(pid)} />
-  })
+  // const nfts = stakerData?.map((pid, index) => {
+  //   return <NFTElement key={index} pid={Number(pid)} />
+  // })
 
   return (
     <div className="my-nfts-wrapper">
-      {nfts}
+      
     </div>
   )
 }
