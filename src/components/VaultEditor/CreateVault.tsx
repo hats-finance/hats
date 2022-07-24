@@ -11,11 +11,12 @@ export default function CreateVault({ descriptionHash }) {
     const { vaults, masters } = useVaults()
     const governedMasters = masters?.filter(master => master.governance.toLowerCase() === account?.toLowerCase())
     const vault = vaults?.find(vault => vault.descriptionHash === descriptionHash);
-    const [master, setMaster] = useState(masters?.[0]); // for now just use first contract as default
-    const [levelCount, setLevelCount] = useState<number>()
+    const [masterAddress, setMasterAddress] = useState<string | undefined>(masters?.[0].address); // for now just use first contract as default
+    const levelCount = 6;
+    //    const [levelCount, setLevelCount] = useState<number>()
 
     const { send: sendAddPool, state: addPoolState } = useContractFunction(
-        master?.address ? new Contract(master.address, vaultAbi) : undefined, "addPool", { transactionName: "Add Pool" });
+        masterAddress ? new Contract(masterAddress, vaultAbi) : undefined, "addPool", { transactionName: "Add Pool" });
 
     if (vault || !governedMasters) return <></>;
 
@@ -31,7 +32,7 @@ export default function CreateVault({ descriptionHash }) {
     }
 
     return <div>
-        <input onSelect={(e: React.ChangeEvent<HTMLSelectElement>) => setMaster(e)} type="option">
+        <input onSelect={(e) => setMasterAddress(e.currentTarget.value as string)} type="option">
             {masters?.map(master =>
                 <option value={master.address}>{master.address}</option>)}
         </input>
