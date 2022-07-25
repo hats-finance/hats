@@ -2,7 +2,7 @@ import { useEthers } from "@usedapp/core";
 import classNames from "classnames";
 import Modal from "components/Shared/Modal/Modal";
 import { isAddress } from "ethers/lib/utils";
-import { INFTTokenData, useNFTTokenData } from "hooks/tokenContractHooks";
+import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import useModal from "hooks/useModal";
 import { createContext, MouseEventHandler, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

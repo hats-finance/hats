@@ -1,16 +1,13 @@
 import { useQuery } from "@apollo/client";
-import { TransactionStatus, useCall, useContractFunction, useEthers } from "@usedapp/core";
-import { HAT_VAULTS_CONSTANT } from "components/AirdropMachine/data";
+import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
 import { HATVaultsNFTContract } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useState } from "react";
-import { CHAINID } from "settings";
-import { AirdropMachineWallet, NFTTokenInfo } from "types/types";
+import { AirdropMachineWallet, IStaker, NFTTokenInfo } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
-import { getStaker } from "graphql/subgraph";
-import { useVaults } from "./useVaults";
+import { GET_STAKER } from "graphql/subgraph";
 
 const { MerkleTree } = require('merkletreejs');
 
@@ -28,6 +25,8 @@ export interface INFTTokenData {
   redeem: () => Promise<any>;
   redeemMultipleFromTree: (...args: any[]) => Promise<any>;
   redeemMultipleFromTreeState: TransactionStatus;
+  redeemMultipleFromShares: (...args: any[]) => Promise<any>;
+  redeemMultipleFromSharesState: TransactionStatus;
   actualAddressInfo?: AirdropMachineWallet;
   actualAddress?: string;
 }
@@ -36,11 +35,12 @@ const DATA_REFRESH_TIME = 10000;
 
 export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, account, chainId } = useEthers();
-  const { masters } = useVaults();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
-    useContractFunction(new Contract(HATVaultsNFTContract[CHAINID
-    ], hatVaultNftAbi), "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
+    useContractFunction(new Contract(chainId && HATVaultsNFTContract[chainId],
+      hatVaultNftAbi), "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
+  const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
+    new Contract(chainId && HATVaultsNFTContract[chainId], hatVaultNftAbi), "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
   const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
   const actualAddress = address ?? account;
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
@@ -60,19 +60,19 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       setContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
   }, [library, chainId])
 
-  const { data: stakerData } = useQuery<{ stakers: { pid: number }[] }>(
-    getStaker(account!), {
-    variables: { chainId },
+  const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(
+    GET_STAKER, {
+    variables: { address: actualAddress },
     context: { chainId },
     pollInterval: DATA_REFRESH_TIME
   })
 
-  const pids = stakerData?.stakers.map(staker => staker?.pid);
+  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
   const getEligibilityForPids = useCallback(async () => {
-    const masterAddress = masters?.[0].address;
-    if (!pids || !contract || !masterAddress) return;
-    const eligibilitiesPerPid = await Promise.all(pids?.map(async (pid) => {
+    if (!pidsWithAddress || !contract) return;
+    const eligibilitiesPerPid = await Promise.all(pidsWithAddress?.map(async (pidWithAddress) => {
+      const { pid, masterAddress } = pidWithAddress
       const isEligibile = await contract.isEligible(masterAddress, pid, actualAddress);
       const tier = await contract.getTierFromShares(masterAddress, pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
@@ -80,18 +80,18 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const isRedeemed = await contract.tokensRedeemed(pid, tier, actualAddress) as boolean;
         const tokenId = await contract.tokenIds(actualAddress, pid, tier);
         const tokenUri = await contract.uri(tokenId);
-        tokens.push({ pid, tier, isEligibile, isRedeemed, masterAddress, tokenId, tokenUri, type: "Deposit" });
+        tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, tokenUri, type: "Deposit" });
       }
       return tokens;
     }));
     const eligibilityPerPid = eligibilitiesPerPid.flat();
     setNftTokens(prev => [...prev, ...eligibilityPerPid]);
-  }, [contract, actualAddress, masters, pids])
+  }, [contract, actualAddress, pidsWithAddress])
 
   useEffect(() => {
-    if (pids && pids.length > 0)
+    if (pidsWithAddress && pidsWithAddress.length > 0)
       getEligibilityForPids();
-  }, [getEligibilityForPids, pids])
+  }, [getEligibilityForPids, pidsWithAddress])
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !actualAddressInfo) return;
@@ -147,6 +147,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [redeemable, merkleTree, actualAddress]);
 
 
+
+
   const redeem = useCallback(async () => {
     const redeemableProofs = buildProofsForRedeemables();
     if (!redeemable) return;
@@ -154,7 +156,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const pids = redeemable.map(nft => nft.pid);
     const tiers = redeemable.map(nft => nft.tier);
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
-  }, [redeemable, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree])
+  }, [redeemable, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
+
   return {
     lastMerkleTree,
     merkleTree,
@@ -163,6 +166,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     redeem,
     redeemMultipleFromTree,
     redeemMultipleFromTreeState,
+    redeemMultipleFromShares,
+    redeemMultipleFromSharesState,
     actualAddressInfo,
     actualAddress
   };
@@ -182,16 +187,4 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
 
 const hashToken = (hatVaults: string, pid: number, account: string, tier: number) => {
   return Buffer.from(solidityKeccak256(['address', 'uint256', 'address', 'uint8'], [hatVaults, pid, account, tier]).slice(2), 'hex');
-}
-
-export function useRedeemMultipleFromShares() {
-  return useContractFunction(new Contract(HATVaultsNFTContract[CHAINID], hatVaultNftAbi), "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
-}
-
-export function useGetTierFromShares(pid: number, account: string): number | undefined {
-  const { value, error } = useCall({ contract: new Contract(HATVaultsNFTContract[CHAINID], hatVaultNftAbi), method: "getTierFromShares", args: [HAT_VAULTS_CONSTANT, pid, account] }) ?? {};
-  if (error) {
-    return undefined;
-  }
-  return value?.[0];
 }

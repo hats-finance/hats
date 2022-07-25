@@ -85,13 +85,14 @@ export interface INFTMetaData {
 
 export interface IStaker {
   id: string
-  pid: string
+  pid: number
   createdAt: string
   address: string
   vault: IVault
   rewardPaid: string
   shares: string
   depositAmount: string
+  master: IMaster
 }
 
 export interface IMaster {

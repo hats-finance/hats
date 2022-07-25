@@ -7,7 +7,7 @@ import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { INFTTokenData, useNFTTokenData } from "./tokenContractHooks";
+import { INFTTokenData, useNFTTokenData } from "./useNFTTokenData";
 
 interface IVaultsContext {
   vaults?: IVault[]

@@ -66,12 +66,10 @@ export const GET_VAULTS = gql`
   }
 `;
 
-export const getStaker = (stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { address: "${stakerAddress}" }) {
+export const GET_STAKER = gql`
+   query getStaker($address: String!) {
+      stakers (where: { address: $address }) {
         pid
       }
     }
-  `;
-}
+  `
