@@ -18,7 +18,6 @@ export enum RoutePaths {
   vaults = "/vaults",
   gov = "/gov",
   vulnerability = "/vulnerability",
-  nft_airdrop = "/nft_airdrop/",
   vault_editor = "/vault-editor",
   committee_tools = "/committee-tools",
   airdrop_machine = "/airdrop_machine",
@@ -52,7 +51,6 @@ export enum Pages {
   vaults = "Vaults",
   gov = "Gov",
   vulnerability = "Submit Vulnerability",
-  pools = "Liquidity Pools",
   airdrop_machine = "Airdrop Machine",
 }
 
