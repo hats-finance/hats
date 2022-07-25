@@ -4,7 +4,7 @@ export const TEMP_WALLETS =
 {
   "wallets": [
     {
-      "id": "0x853D2d862E2a2c76ef8a4F6Ef2b8A9fB3dA1f604",
+      "address": "0x853D2d862E2a2c76ef8a4F6Ef2b8A9fB3dA1f604",
       "token_eligibility": {
         "committee_member": "0",
         "depositor": "200000000000000000000",
@@ -17,16 +17,18 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
+          "masterAddress": ""
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
+          "masterAddress": ""
         }
       ]
     },
     {
-      "id": "0x58f7841D1A7f8957763D9B61ccBB15b7e91951De",
+      "address": "0x58f7841D1A7f8957763D9B61ccBB15b7e91951De",
       "token_eligibility": {
         "committee_member": "0",
         "depositor": "200000000000000000000",
@@ -39,16 +41,18 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
+          "masterAddress": ""
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
+          "masterAddress": ""
         }
       ]
     },
     {
-      "id": "0x52345579c7c6A329e015A517c7363Cb9DCE8A396",
+      "address": "0x52345579c7c6A329e015A517c7363Cb9DCE8A396",
       "token_eligibility": {
         "committee_member": "0",
         "depositor": "200000000000000000000",
@@ -61,11 +65,13 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
+          "masterAddress": ""
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
+          "masterAddress": ""
         }
       ]
     }

@@ -70,6 +70,9 @@ export const GET_STAKER = gql`
    query getStaker($address: String!) {
       stakers (where: { address: $address }) {
         pid
+        masters {
+          address
+        }
       }
     }
   `

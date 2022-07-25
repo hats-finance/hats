@@ -8,6 +8,7 @@ import { AirdropMachineWallet, IStaker, NFTTokenInfo } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
+import { TEMP_WALLETS } from "components/AirdropMachine/data";
 
 const { MerkleTree } = require('merkletreejs');
 
@@ -44,7 +45,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
   const actualAddress = address ?? account;
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
-  const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
+  /** Temporary use of TEMP_WALLETS until the merkle tree will be updated to the new structure */
+  const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>(TEMP_WALLETS.wallets);
   const isBeforeDeadline = lastMerkleTree?.deadline ? Date.now() < Number(lastMerkleTree.deadline) : undefined;
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
@@ -114,7 +116,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const lastElement = filter[filter.length - 1] as any | undefined;
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
-      setMerkleTree(await response.json());
+      /** temporary disable fetching of the merkle tree (use mock data) */
+      //setMerkleTree(await response.json());
       setLastMerkleTree(args);
     }
   }, [contract])

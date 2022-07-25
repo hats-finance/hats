@@ -42,7 +42,7 @@ export const Endpoints = {
 
 export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
-  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
+  [ChainId.Rinkeby]: "https://api.studio.thegraph.com/query/31348/hatsrinkebyv6/v0.0.18",
 };
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";

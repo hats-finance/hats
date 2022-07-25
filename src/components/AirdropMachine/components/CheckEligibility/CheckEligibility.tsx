@@ -4,7 +4,7 @@ import Modal from "components/Shared/Modal/Modal";
 import { isAddress } from "ethers/lib/utils";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import useModal from "hooks/useModal";
-import { createContext, MouseEventHandler, useContext, useEffect, useState } from "react";
+import { createContext, MouseEventHandler, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
@@ -18,7 +18,6 @@ export interface IAirdropMachineContext {
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
 
 export default function CheckEligibility() {
-  const { nftData: { isBeforeDeadline } } = useContext(AirdropMachineContext);
   const { t } = useTranslation();
   const { account } = useEthers();
   const [userInput, setUserInput] = useState("");
@@ -38,7 +37,7 @@ export default function CheckEligibility() {
       <div className="check-eligibility__input-wrapper">
         <div className={classNames({ "check-eligibility__input-container": true, "check-eligibility__input-error": inputError })}>
           <input
-            disabled={!isBeforeDeadline}
+            disabled={!nftData.isBeforeDeadline}
             className="check-eligibility__address-input"
             type="text"
             placeholder={t("AirdropMachine.CheckEligibility.input-placeholder")}
@@ -47,11 +46,11 @@ export default function CheckEligibility() {
           <button className="check-eligibility__clear-input" onClick={() => setUserInput("")}>&times;</button>
         </div>
         {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}
-        {!isBeforeDeadline && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
+        {!nftData.isBeforeDeadline && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
         <button
           className="check-eligibility__check-button fill"
           onClick={toggle}
-          disabled={inputError || !userInput || !isBeforeDeadline}>
+          disabled={inputError || !userInput || !nftData.isBeforeDeadline}>
           {t("AirdropMachine.CheckEligibility.button-text")}
         </button>
       </div>
