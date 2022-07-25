@@ -29,8 +29,8 @@ import AirdropMachine from "components/AirdropMachine/AirdropMachine";
 import useModal from "hooks/useModal";
 import Modal from "components/Shared/Modal/Modal";
 import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/AirdropPrompt";
-import { useFetchAirdropData } from "components/AirdropMachine/utils";
 import "./styles/App.scss";
+import { useFetchAirdropData } from "components/AirdropMachine/utils";
 
 function App() {
   const dispatch = useDispatch();
@@ -52,7 +52,7 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  useFetchAirdropData(() => toggleAirdropPrompt());
+  useFetchAirdropData(toggleAirdropPrompt);
 
   return (
     <>

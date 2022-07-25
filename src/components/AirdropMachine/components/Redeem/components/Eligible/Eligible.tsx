@@ -1,22 +1,17 @@
 import classNames from "classnames";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AirdropMachineWallet } from "types/types";
 import NFTAirdrop from "../NFTAirdrop/NFTAirdrop";
 import TokenEligibility from "../TokenEligibility/TokenEligibility";
 import "./index.scss";
 
-interface IProps {
-  data: AirdropMachineWallet;
-  closeRedeemModal: () => void;
-}
 
 enum Stage {
   TokenEligibility = 1,
   NFTAirdrop,
 }
 
-export default function Eligible({ data, closeRedeemModal }: IProps) {
+export default function Eligible() {
   const { t } = useTranslation();
   const [stage, setStage] = useState(Stage.TokenEligibility);
 
@@ -47,9 +42,8 @@ export default function Eligible({ data, closeRedeemModal }: IProps) {
       </div>
       {stage === Stage.TokenEligibility ? (
         <TokenEligibility
-          data={data}
           nextStage={nextStage} />
-      ) : <NFTAirdrop data={data} closeRedeemModal={closeRedeemModal} />}
+      ) : <NFTAirdrop />}
     </div>
   )
 }

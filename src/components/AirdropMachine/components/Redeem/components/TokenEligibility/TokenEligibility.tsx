@@ -1,30 +1,34 @@
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "@usedapp/core";
-import HatsLogo from "../../../../../../assets/icons/hats-logo-circle.svg";
-import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
-import RadioButton from "../../../../../../assets/icons/radio-button.svg";
-import { AirdropMachineWallet } from "types/types";
+import HatsLogo from "assets/icons/hats-logo-circle.svg";
+import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
+import RadioButton from "assets/icons/radio-button.svg";
 import millify from "millify";
 import { BigNumber } from "ethers";
 import { formatUnits } from "@ethersproject/units";
 import "./index.scss";
+import { useContext } from "react";
+import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 
 interface IProps {
-  data: AirdropMachineWallet;
   nextStage: () => void;
 }
 
-export default function TokenEligibility({ data, nextStage }: IProps) {
+export default function TokenEligibility({ nextStage }: IProps) {
   const { t } = useTranslation();
+  const { nftData: { actualAddress, actualAddressInfo } } = useContext(AirdropMachineContext);
+  if (!actualAddressInfo) return <></>;
+  const { token_eligibility } = actualAddressInfo;
 
-  const totalHatsEligibility = Object.values(data.token_eligibility)
+
+  const totalHatsEligibility = Object.values(token_eligibility)
     .reduce((a, b) => a.add(b), BigNumber.from(0));
 
   return (
     <div className="token-eligibility-wrapper">
       <span>{t("AirdropMachine.TokenEligibility.text-1")}</span>
       <div className="token-eligibility__total-hats-container">
-        <span>{`${shortenIfAddress(data.address)} ${t("AirdropMachine.TokenEligibility.text-2")}`}</span>
+        <span>{`${shortenIfAddress(actualAddress)} ${t("AirdropMachine.TokenEligibility.text-2")}`}</span>
         <div className="token-eligibility__total-hats">
           <img src={HatsLogo} alt="hats logo" />
           <span className="token-eligibility__value">{millify(Number(formatUnits(totalHatsEligibility)))} HATS</span>
@@ -43,52 +47,52 @@ export default function TokenEligibility({ data, nextStage }: IProps) {
 
         <div className="token-eligibility__breakdown-element">
           <div className="token-eligibility__breakdown_element-name">
-            <img src={BigNumber.from(data.token_eligibility.committee_member).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img src={BigNumber.from(token_eligibility.committee_member).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
             {t("AirdropMachine.TokenEligibility.text-5")}
           </div>
           <div className="token-eligibility__breakdown_element-value">
-            {millify(Number(formatUnits(data.token_eligibility.committee_member)))} HATS
+            {millify(Number(formatUnits(token_eligibility.committee_member)))} HATS
           </div>
         </div>
 
         <div className="token-eligibility__breakdown-element">
           <div className="token-eligibility__breakdown_element-name">
-            <img src={BigNumber.from(data.token_eligibility.depositor).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img src={BigNumber.from(token_eligibility.depositor).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
             {t("AirdropMachine.TokenEligibility.text-6")}
           </div>
           <div className="token-eligibility__breakdown_element-value">
-            {millify(Number(formatUnits(data.token_eligibility.depositor)))} HATS
+            {millify(Number(formatUnits(token_eligibility.depositor)))} HATS
           </div>
         </div>
 
         <div className="token-eligibility__breakdown-element">
           <div className="token-eligibility__breakdown_element-name">
-            <img src={BigNumber.from(data.token_eligibility.crow).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img src={BigNumber.from(token_eligibility.crow).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
             {t("AirdropMachine.TokenEligibility.text-7")}
           </div>
           <div className="token-eligibility__breakdown_element-value">
-            {millify(Number(formatUnits(data.token_eligibility.crow)))} HATS
+            {millify(Number(formatUnits(token_eligibility.crow)))} HATS
           </div>
         </div>
 
         <div className="token-eligibility__breakdown-element">
           <div className="token-eligibility__breakdown_element-name">
-            <img src={BigNumber.from(data.token_eligibility.coder).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img src={BigNumber.from(token_eligibility.coder).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
             {t("AirdropMachine.TokenEligibility.text-8")}
           </div>
           <div className="token-eligibility__breakdown_element-value">
-            {millify(Number(formatUnits(data.token_eligibility.coder)))} HATS
+            {millify(Number(formatUnits(token_eligibility.coder)))} HATS
           </div>
         </div>
 
 
         <div className="token-eligibility__breakdown-element">
           <div className="token-eligibility__breakdown_element-name">
-            <img src={BigNumber.from(data.token_eligibility.early_contributor).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img src={BigNumber.from(token_eligibility.early_contributor).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
             {t("AirdropMachine.TokenEligibility.text-9")}
           </div>
           <div className="token-eligibility__breakdown_element-value">
-            {millify(Number(formatUnits(data.token_eligibility.early_contributor)))} HATS
+            {millify(Number(formatUnits(token_eligibility.early_contributor)))} HATS
           </div>
         </div>
 

@@ -2,24 +2,35 @@ import { useEthers } from "@usedapp/core";
 import classNames from "classnames";
 import Modal from "components/Shared/Modal/Modal";
 import { isAddress } from "ethers/lib/utils";
-import { useTokenActions } from "hooks/tokenContractHooks";
+import { INFTTokenData, useNFTTokenData } from "hooks/tokenContractHooks";
 import useModal from "hooks/useModal";
-import { useEffect, useState } from "react";
+import { createContext, MouseEventHandler, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
 
+
+export interface IAirdropMachineContext {
+  nftData: INFTTokenData;
+  closeRedeemModal: MouseEventHandler<HTMLButtonElement>
+}
+
+export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
+
 export default function CheckEligibility() {
+  const { nftData: { isBeforeDeadline } } = useContext(AirdropMachineContext);
   const { t } = useTranslation();
   const { account } = useEthers();
-  const { isBeforeDeadline } = useTokenActions();
   const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
   const inputError = userInput && !isAddress(userInput);
+  const actualAddress = (userInput && userInput !== "") ? userInput : account;
+  const nftData = useNFTTokenData(actualAddress);
 
   useEffect(() => {
     setUserInput(account ?? "");
   }, [setUserInput, account])
+
 
   return (
     <div className="check-eligibility-wrapper">
@@ -47,7 +58,9 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={toggle}>
-        <Redeem address={userInput} closeRedeemModal={toggle} />
+        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: () => { toggle() } }} >
+          <Redeem />
+        </AirdropMachineContext.Provider>
       </Modal>
     </div>
   )

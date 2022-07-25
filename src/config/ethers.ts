@@ -1,4 +1,4 @@
-import { Config, Mainnet, Rinkeby } from "@usedapp/core";
+import { Config } from "@usedapp/core";
 import { Chains } from "constants/constants";
 import { defaultChain, ENDPOINTS } from "settings";
 

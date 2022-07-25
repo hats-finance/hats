@@ -1,12 +1,11 @@
+import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import "./index.scss";
 
-interface IProps {
-  closeRedeemModal: () => void;
-}
-
-export default function NotEligible({ closeRedeemModal }: IProps) {
+export default function NotEligible() {
   const { t } = useTranslation();
+  const { closeRedeemModal } = useContext(AirdropMachineContext);
 
   return (
     <div className="not-eligible-wrapper">

@@ -161,6 +161,16 @@ export interface IAirdropData {
   token: TokenAirdropET
 }
 
+interface NFTokenInfo {
+  pid: number;
+  tier: number;
+  tokenId: number;
+  tokenUri: string;
+  isEligibile: boolean;
+  isRedeemed: boolean;
+  masterAddress: string;
+}
+
 export interface INFTAirdropElement {
   description: string
   external_url: string
@@ -190,6 +200,7 @@ export interface NFTEligibilityElement {
   contract_address: string;
   pid: number;
   tier: number;
+  masterAddress: string;
 }
 
 export interface AirdropMachineWallet {
@@ -202,4 +213,15 @@ export interface AirdropMachineWallet {
     early_contributor: string;
   },
   nft_elegebility: NFTEligibilityElement[];
+}
+
+export interface NFTTokenInfo {
+  pid: number;
+  tier: number;
+  tokenId: number;
+  tokenUri: string;
+  isEligibile: boolean;
+  isRedeemed: boolean;
+  masterAddress: string;
+  type: 'MerkleTree' | 'Deposit';
 }

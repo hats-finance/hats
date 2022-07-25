@@ -1,21 +1,14 @@
-import { useEthers } from "@usedapp/core";
-import { useCallback, useEffect } from "react";
-import { TEMP_WALLETS } from "./data";
-import { solidityKeccak256 } from "ethers/lib/utils";
-import { AirdropMachineWallet } from "types/types";
-import { useTokenActions } from "hooks/tokenContractHooks";
-import { ipfsTransformUri } from "utils";
-
-const { MerkleTree } = require('merkletreejs');
-const keccak256 = require('keccak256');
+import { useVaults } from "hooks/useVaults";
+import { useEffect } from "react";
 
 export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
-  const { isBeforeDeadline, extendedEligibility } = useTokenActions();
-  const somethingToRedeem = extendedEligibility?.some(nft => !nft.isRedeemed);
+  const { nftData } = useVaults();
+  const { isBeforeDeadline, redeemable } = nftData || {};
+  const somethingToRedeem = redeemable && redeemable.length > 0;
 
   useEffect(() => {
     if (isBeforeDeadline && somethingToRedeem) {
       toggleAirdropPrompt();
     }
-  }, [isBeforeDeadline, somethingToRedeem])
+  }, [isBeforeDeadline, somethingToRedeem, toggleAirdropPrompt])
 }

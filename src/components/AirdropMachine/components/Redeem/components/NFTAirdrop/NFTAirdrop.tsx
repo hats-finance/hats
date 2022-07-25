@@ -1,26 +1,22 @@
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { AirdropMachineWallet } from "types/types";
-import { useTokenActions } from "hooks/tokenContractHooks";
 import "swiper/css";
 import "./index.scss";
+import { useContext } from "react";
+import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 
-interface IProps {
-  data: AirdropMachineWallet;
-  closeRedeemModal: () => void;
-}
 
-export default function NFTAirdrop({ data, closeRedeemModal }: IProps) {
+export default function NFTAirdrop() {
   const { t } = useTranslation();
-  const { redeem, extendedEligibility } = useTokenActions();
+  const { closeRedeemModal, nftData: { redeem, redeemable } } = useContext(AirdropMachineContext);
 
-  const handleRedeem = async () => {
+  const handleRedeem = async (e) => {
     await redeem();
-    closeRedeemModal();
+    closeRedeemModal(e);
   }
 
-  const nfts = extendedEligibility?.map(({ tokenUri }, index) =>
+  const nfts = redeemable?.map(({ tokenUri }, index) =>
     <SwiperSlide key={index}>
       <img key={index} src={tokenUri} alt="nft" />
     </SwiperSlide>

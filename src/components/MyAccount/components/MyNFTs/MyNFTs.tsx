@@ -1,5 +1,5 @@
-import { useVaults } from "hooks/useVaults";
-import NFTElement from "../NFTElement/NFTElement";
+// import { useVaults } from "hooks/useVaults";
+// import NFTElement from "../NFTElement/NFTElement";
 import "./index.scss";
 
 /**
@@ -28,7 +28,7 @@ export default function MyNFTs() {
 
   return (
     <div className="my-nfts-wrapper">
-      
+
     </div>
   )
 }
