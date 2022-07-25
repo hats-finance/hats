@@ -1,7 +1,7 @@
 import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
 import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ENDPOINT, CHAINID } from "settings";
+import { ENDPOINTS, CHAINID } from "settings";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export const useWeb3Modal = () => {
@@ -20,7 +20,7 @@ export const useWeb3Modal = () => {
             options: {
               chainId: CHAINID,
               rpc: {
-                [CHAINID]: ENDPOINT
+                ENDPOINTS
               }
             }
           }

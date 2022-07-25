@@ -26,7 +26,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "",
-  [ChainId.Rinkeby]: "0x11A7D0501895059177E8436Fe89bB1e3BdeBf8D8"
+  [ChainId.Rinkeby]: "0x6267F899330De49c4eC3dc53143E76c0915F9119"
 }
 
 export const Chains = {
@@ -36,7 +36,7 @@ export const Chains = {
 
 export const VaultService = "https://vault-editor-service.herokuapp.com"
 
-export const Endpoint = {
+export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
