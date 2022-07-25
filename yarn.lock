@@ -2903,18 +2903,10 @@
   resolved "https://registry.yarnpkg.com/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz#2103ca23b8007c59ec71718d34cdc97861c409e5"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@usedapp/coingecko@^1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@usedapp/coingecko/-/coingecko-1.0.15.tgz#bfbb6e927880d72d7bd8e307f1f34fa9cbc5a4d3"
-  integrity sha512-YIy95fqIj232m93TlG51U2EdYUQmHQ4nTqlb+/3zRRPAzrImDCPduu4Ga59+u2Rh/bIhMYul9K2xq6ls6r3h3w==
-  dependencies:
-    "@usedapp/core" "1.0.15"
-    isomorphic-fetch "^3.0.0"
-
-"@usedapp/core@1.0.15", "@usedapp/core@^1.0.15":
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/@usedapp/core/-/core-1.0.15.tgz#66c982c13cf9aeb061b74fa6ad1f8ef6f7cd4fd2"
-  integrity sha512-dvjLiYVyutM25BiwiFlPjyhPVlLQA4Dg/WnN0Q8XPnWtyasM0mytxerGQMl0Um1WCtqQynV2R8SU5iQY723cCA==
+"@usedapp/core@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@usedapp/core/-/core-1.1.3.tgz#04f087edd96b5a5ec9726ba7fa278a6e68f5b937"
+  integrity sha512-2hWzZ9oCsfgzN8Ewu3of2JuWuiFfBUtSY4b+dz3YygZcx1D48IxjyUO3+VjxVbE5eQAYSjfnA6WVMDIBZ+K5zQ==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@uniswap/token-lists" "^1.0.0-beta.27"
@@ -7541,14 +7533,6 @@ isexe@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/isexe/-/isexe-2.0.0.tgz#e8fbf374dc556ff8947a10dcb0572d633f2cfa10"
   integrity sha512-RHxMLp9lnKHGHRng9QFhRCMbYAcVpn69smSGcq3f36xjgVVWThj4qqLbTLlq7Ssj8B+fIQ1EuCEGI2lKsyQeIw==
-
-isomorphic-fetch@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/isomorphic-fetch/-/isomorphic-fetch-3.0.0.tgz#0267b005049046d2421207215d45d6a262b8b8b4"
-  integrity sha512-qvUtwJ3j6qwsF3jLxkZ72qCgjMysPzDfeV240JHiGZsANBYd+EEuu35v7dfrJ9Up0Ak07D7GGSkGhCHTqg/5wA==
-  dependencies:
-    node-fetch "^2.6.1"
-    whatwg-fetch "^3.4.1"
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -13231,7 +13215,7 @@ whatwg-fetch@^2.0.4:
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
   integrity sha512-dcQ1GWpOD/eEQ97k66aiEVpNnapVj90/+R+SXTPYGHpYBBypfKJEQjLrvMZ7YXbKm21gXd4NcuxUTjiv1YtLng==
 
-whatwg-fetch@^3.4.1, whatwg-fetch@^3.6.2:
+whatwg-fetch@^3.6.2:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.6.2.tgz#dced24f37f2624ed0281725d51d0e2e3fe677f8c"
   integrity sha512-bJlen0FcuU/0EMLrdbJ7zOnW6ITZLrZMIarMUVmdKtsGvZna8vxKYaexICWPfZ8qwf9fzNq+UEIZrnSaApt6RA==
