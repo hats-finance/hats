@@ -211,7 +211,7 @@
       "title": "Vault Editor",
       "hatsOfir": "@hatsOfir",
       "create-vault": "Create a vault",
-      "create-vault-description": "Please fill the form and sign. Any questions you can refer to @hatsofir.",
+      "create-vault-description": "Please refer to @hatsofir on telegram if you have any questions.",
       "last-saved-time": "Last updated on",
       "local-time": "local time",
       "remove-pgp": "Remove Key",
@@ -269,7 +269,7 @@
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
         "description-2": "Complete the transaction by authorized signer/s",
-        "description-3": "You may be asked by the to add dedails to the vault by @hatsOfir"
+        "description-3": "You may be asked to add details to the vault by @hatsOfir"
       },
       "img-placeholder": "SVG/PNG"
     },

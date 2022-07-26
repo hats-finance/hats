@@ -411,10 +411,15 @@ export default function VaultEditor() {
                     </div>
                 </section>
 
+                {/* <CreateVault descriptionHash={ipfsHash} /> */}
+
                 <div className="vault-editor__button-container">
                     {changed && ipfsHash && <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>}
                     <button onClick={saveToIpfs} className="fill" disabled={!changed}>{t("VaultEditor.save-button")}</button>
+
                 </div>
+
+
 
                 {/* {
                     !changed && ipfsHash && <>
