@@ -3,7 +3,8 @@
     "MyAccount": {
       "hello": "HELLO",
       "MyNFTs": {
-        "button-text": "REDEEM"
+        "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
+        "deposit-redeem": "REDEEM ALL FROM DEPOSITS"
       }
     },
     "Shared": {
