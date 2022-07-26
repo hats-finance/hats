@@ -17,7 +17,6 @@ import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import CreateVault from "./CreateVault";
 
 interface IContract {
     name: string;
