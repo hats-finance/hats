@@ -122,7 +122,7 @@ export default function DepositWithdraw(props: IProps) {
 
   const keepModalOpen = [withdrawRequestState, approveTokenState];
   const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
-  const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
+  const pendingWallet = transactionStates.some(state => state.status === "PendingSignature" || state.status === "Mining");
   const prevApproveTokenState = usePrevious(approveTokenState);
 
   // after successful approve transaction immediatly call deposit and claim

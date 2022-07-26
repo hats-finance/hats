@@ -1,0 +1,16 @@
+@import "styles/constants.scss";
+
+.embassy-nft-ticket-wrapper {
+  display: flex;
+  flex-direction: column;
+  color: $white;
+  padding: $modal-element-padding;
+  white-space: pre-line;
+  max-width: 600px;
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .embassy-nft-ticket-wrapper {
+    padding: $modal-element-padding-mobile;
+  }
+}

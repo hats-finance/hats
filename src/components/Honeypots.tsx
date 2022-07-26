@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
 import Vault from "./Vault/Vault";
@@ -14,19 +14,29 @@ import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import useModal from "hooks/useModal";
+import { default as ModalHook } from "./Shared/Modal/Modal";
+import EmbassyNftTicketPrompt from "./EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   showDeposit?: boolean
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
+  const { t } = useTranslation();
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
+  const { isShowing: showEmbassyTicketPrompt, toggle: toggleShowEmbassyTicketPrompt } = useModal();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
+
+  /**
+   * TODO: need to call toggleShowEmbassyTicketPrompt after deposit only if the user is eligible now
+   */
 
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
@@ -116,6 +126,12 @@ export default function Honeypots({ showDeposit }: IProps) {
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>
       }
+      <ModalHook
+        title={t("EmbassyNftTicketPrompt.prompt-title")}
+        isShowing={showEmbassyTicketPrompt}
+        hide={toggleShowEmbassyTicketPrompt}>
+        <EmbassyNftTicketPrompt />
+      </ModalHook>
     </div >
   )
 }

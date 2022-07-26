@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import RadioButtonChecked from "../../../../../../assets/icons/radio-button-checked.svg";
+import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "./index.scss";

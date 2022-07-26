@@ -8,6 +8,3 @@ export const ethersConfig: Config = {
     readOnlyUrls: ENDPOINTS,
     autoConnect: true
 }
-
-console.log("config", ethersConfig);
-
