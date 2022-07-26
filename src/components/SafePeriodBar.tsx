@@ -1,18 +1,22 @@
-import { useSelector } from "react-redux";
 import moment from "moment";
-import { RootState } from "../reducers";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
 import Tooltip from "rc-tooltip";
 import InfoIcon from "../assets/icons/info.icon";
 import "../styles/SafePeriodBar.scss";
+import { useVaults } from "hooks/useVaults";
+import classNames from "classnames";
 
 export default function SafePeriodBar() {
-  const { isSafetyPeriod, saftyEndsAt, saftyStartsAt } = useSelector((state: RootState) => state.dataReducer.withdrawSafetyPeriod);
+  const { withdrawSafetyPeriod } = useVaults();
+  if (!withdrawSafetyPeriod) {
+    return null;
+  }
+  const { isSafetyPeriod, saftyEndsAt, saftyStartsAt } = withdrawSafetyPeriod;
   const safetyPeriodDate = moment.unix(isSafetyPeriod ? saftyEndsAt : saftyStartsAt).local().format('DD-MM-YYYY HH:mm');
 
   return (
     <tr>
-      <th colSpan={7} className={`safe-period ${isSafetyPeriod && "on"}`}>
+      <th colSpan={7} className={classNames("safe-period", { "on": isSafetyPeriod })}>
         <div className="text-wrapper">
           {isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`THE NEXT SAFE PERIOD WILL START AT ${safetyPeriodDate}`}</div>}
           <Tooltip
