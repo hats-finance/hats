@@ -18,6 +18,8 @@
       "button": "ENTER"
     },
     "DepositWithdraw": {
+      "min-amount-for-embassy": "Min requirement to enter an embassy is",
+      "proof-of-deposit-eligibility": "Your desposit will give you elegibility for a chain protector NFT ticket for Hats embassy. \n\n You NFT will be redeemable after the deposit transaction.",
       "Assets": {
         "assets": "Assets",
         "withdraw": "Withdraw",

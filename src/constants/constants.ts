@@ -68,6 +68,8 @@ export const MAX_SPENDING = BigNumber.from(2)
 /** The minimum amount to deposit in WEI units */
 export const MINIMUM_DEPOSIT = 1000000;
 
+export const MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE = 0.1;
+
 export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",
   minHeight: "unset"

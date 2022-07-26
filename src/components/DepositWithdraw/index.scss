@@ -92,11 +92,19 @@
         width: 100%;
       }
     }
+    .deposit__min-to-embassy {
+      margin-top: 10px;
+    }
     .input-error {
       align-self: flex-end;
       color: $red;
       font-size: $xsmall;
     }
+  }
+  .deposit__proof-of-deposit-text {
+    white-space: pre-line;
+    color: $white;
+    margin-top: 20px;
   }
   .percentage-btn {
     background-color: $black;
