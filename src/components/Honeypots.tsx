@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
 import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "../types/types";
-//import SafePeriodBar from "./SafePeriodBar";
+import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
 import { RoutePaths, ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
@@ -67,7 +67,7 @@ export default function Honeypots({ showDeposit }: IProps) {
       {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>
-            {/* <SafePeriodBar /> */}
+            <SafePeriodBar />
             <tr>
               <th colSpan={screenSize === ScreenSize.Desktop ? 2 : 3} className="search-cell" >
                 <div className="search-wrapper">

@@ -179,11 +179,11 @@ export const copyToClipboard = (value: string) => {
  * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
  * @param {string} withdrawPeriod
  * @param {string} safetyPeriod
- * @returns {IWithdrawSafetyPeriod}
+ * @returns {IWithdrawSafetyPeriod | undefined}
  */
 export const getWithdrawSafetyPeriod = (
-  withdrawPeriod: string,
-  safetyPeriod: string
+  withdrawPeriod: string | undefined,
+  safetyPeriod: string | undefined
 ) => {
   const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
     isSafetyPeriod: false,

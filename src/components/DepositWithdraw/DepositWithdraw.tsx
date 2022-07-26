@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSelector } from "react-redux";
 import { BigNumber } from "@ethersproject/bignumber";
 import moment from "moment";
 import millify from "millify";
@@ -9,7 +8,6 @@ import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IVault } from "../../types/types";
-import { RootState } from "../../reducers";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
@@ -43,9 +41,8 @@ export default function DepositWithdraw(props: IProps) {
   const [selectedPid, setSelectedPid] = useState<string>(pid);
   const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
 
-  const { dataReducer: { withdrawSafetyPeriod } } = useSelector((state: RootState) => state);
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices } = useVaults();
+  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -189,7 +186,7 @@ export default function DepositWithdraw(props: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === Tab.Withdraw && withdrawSafetyPeriod.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
       {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
       <div className="action-btn-wrapper">
         {tab === Tab.Deposit && showApproveSpendingModal &&
@@ -207,7 +204,7 @@ export default function DepositWithdraw(props: IProps) {
           </button>}
         {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw &&
           <button
-            disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod.isSafetyPeriod || !committeeCheckedIn}
+            disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod?.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawAndClaim()}>
             {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ?

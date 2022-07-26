@@ -5,15 +5,16 @@ import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IMaster, IVault, IVaultDescription } from "types/types";
-import { getTokensPrices, ipfsTransformUri } from "utils";
+import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
+import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 import { INFTTokenData, useNFTTokenData } from "./useNFTTokenData";
 
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
   masters?: IMaster[],
-  nftData?: INFTTokenData
+  nftData?: INFTTokenData,
+  withdrawSafetyPeriod?: IWithdrawSafetyPeriod,
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -139,11 +140,14 @@ export function VaultsProvider({ children }) {
       setVaultsWithDetails(data?.vaults)
   }, [data])
 
+  const withdrawSafetyPeriod = getWithdrawSafetyPeriod(data?.masters[0].withdrawPeriod, data?.masters[0].safetyPeriod);
+
   const context: IVaultsContext = {
     nftData,
     vaults,
     tokenPrices,
-    masters: data?.masters
+    masters: data?.masters,
+    withdrawSafetyPeriod,
   };
 
   return (
