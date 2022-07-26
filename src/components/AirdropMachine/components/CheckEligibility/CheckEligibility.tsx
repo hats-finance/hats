@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
 
-
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
   closeRedeemModal: MouseEventHandler<HTMLButtonElement>

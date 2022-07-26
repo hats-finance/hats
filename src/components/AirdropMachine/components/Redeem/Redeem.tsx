@@ -1,4 +1,3 @@
-//import Loading from "components/Shared/Loading";
 import { useContext } from "react";
 import { AirdropMachineContext } from "../CheckEligibility/CheckEligibility";
 import Eligible from "./components/Eligible/Eligible";
@@ -12,7 +11,11 @@ export default function Redeem() {
     if (redeemable.length > 0) {
       return <Eligible />;
     } else
-      return <span>ALREADY REDEEMED</span>;
+      return (
+        <div className="already-redeemed-wrapper">
+          Already Redeemed!
+        </div>
+      );
   } else {
     return <NotEligible />;
   }

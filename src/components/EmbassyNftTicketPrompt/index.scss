@@ -7,6 +7,13 @@
   padding: $modal-element-padding;
   white-space: pre-line;
   max-width: 600px;
+  .embassy-nft-ticket__redeem-btn {
+    margin-top: 20px;
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

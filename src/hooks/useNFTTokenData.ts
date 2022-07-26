@@ -23,10 +23,9 @@ export interface INFTTokenData {
   merkleTree?: AirdropMachineWallet[];
   isBeforeDeadline?: boolean;
   redeemable?: NFTTokenInfo[];
-  redeem: () => Promise<any>;
-  redeemMultipleFromTree: (...args: any[]) => Promise<any>;
+  redeemTree: () => Promise<any>;
   redeemMultipleFromTreeState: TransactionStatus;
-  redeemMultipleFromShares: (...args: any[]) => Promise<any>;
+  redeemShares: () => Promise<any>;
   redeemMultipleFromSharesState: TransactionStatus;
   actualAddressInfo?: AirdropMachineWallet;
   actualAddress?: string;
@@ -50,7 +49,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const isBeforeDeadline = lastMerkleTree?.deadline ? Date.now() < Number(lastMerkleTree.deadline) : undefined;
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
-  /** Only redeemable */
   const redeemable = nftTokens?.filter(nft => !nft.isRedeemed);
 
   useEffect(() => {
@@ -149,10 +147,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     return proofs;
   }, [redeemable, merkleTree, actualAddress]);
 
-
-
-
-  const redeem = useCallback(async () => {
+  const redeemTree = useCallback(async () => {
     const redeemableProofs = buildProofsForRedeemables();
     if (!redeemable) return;
     const hatVaults = redeemable.map(nft => nft.masterAddress);
@@ -161,15 +156,21 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
   }, [redeemable, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
 
+  const redeemShares = useCallback(async () => {
+    const depositRedeemables = redeemable.filter(nft => nft.type === "Deposit" && nft.isEligibile);
+    const hatVaults = depositRedeemables.map(nft => nft.masterAddress);
+    const pids = depositRedeemables.map(nft => nft.pid);
+    await redeemMultipleFromShares(hatVaults, pids, actualAddress);
+  }, [redeemMultipleFromShares, actualAddress, redeemable])
+
   return {
     lastMerkleTree,
     merkleTree,
     isBeforeDeadline,
     redeemable,
-    redeem,
-    redeemMultipleFromTree,
+    redeemTree,
     redeemMultipleFromTreeState,
-    redeemMultipleFromShares,
+    redeemShares,
     redeemMultipleFromSharesState,
     actualAddressInfo,
     actualAddress

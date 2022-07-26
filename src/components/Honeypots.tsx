@@ -34,9 +34,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
 
-  /**
-   * TODO: need to call toggleShowEmbassyTicketPrompt after deposit only if the user is eligible now
-   */
+  useCheckForDepositElegibility(toggleShowEmbassyTicketPrompt);
 
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
@@ -134,4 +132,14 @@ export default function Honeypots({ showDeposit }: IProps) {
       </ModalHook>
     </div >
   )
+}
+
+const useCheckForDepositElegibility = async (toggleShowEmbassyTicketPrompt: () => void) => {
+  const { nftData } = useVaults();
+  const somethingToRedeem = nftData?.redeemable?.filter(nft => nft.type === "Deposit" && nft.isEligibile);
+  useEffect(() => {
+    if (somethingToRedeem && somethingToRedeem?.length > 0) {
+      toggleShowEmbassyTicketPrompt();
+    }
+  }, [somethingToRedeem, toggleShowEmbassyTicketPrompt])
 }

@@ -1,28 +1,33 @@
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
-import "swiper/css";
-import "./index.scss";
 import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
-
+import classNames from "classnames";
+import Loading from "components/Shared/Loading";
+import "swiper/css";
+import "./index.scss";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
-  const { closeRedeemModal, nftData: { redeem, redeemable } } = useContext(AirdropMachineContext);
+  const { closeRedeemModal, nftData: { redeemTree, redeemable, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
+
+  const showLoader = redeemMultipleFromTreeState.status === "PendingSignature" || redeemMultipleFromTreeState.status === "Mining";
 
   const handleRedeem = async (e) => {
-    await redeem();
-    closeRedeemModal(e);
+    await redeemTree();
+    if (redeemMultipleFromTreeState.status === "Success") {
+      closeRedeemModal(e);
+    }
   }
 
-  const nfts = redeemable?.map(({ tokenUri }, index) =>
+  const nfts = redeemable?.filter(nft => nft.type === "MerkleTree").map(({ tokenUri }, index) =>
     <SwiperSlide key={index}>
       <img key={index} src={tokenUri} alt="nft" />
     </SwiperSlide>
   )
   return (
-    <div className="nft-airdrop-wrapper">
+    <div className={classNames("nft-airdrop-wrapper", { "disabled": showLoader })}>
       <span>{t("AirdropMachine.NFTAirdrop.text-1")}</span>
       <section>
         <b>{t("AirdropMachine.NFTAirdrop.text-2")}</b>
@@ -57,6 +62,7 @@ export default function NFTAirdrop() {
         </Swiper>
       </div>
       <button onClick={handleRedeem} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
+      {showLoader && <Loading />}
     </div>
   )
 }

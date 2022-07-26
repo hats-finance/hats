@@ -1,4 +1,4 @@
-@import "../../../../../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .nft-airdrop-wrapper {
   display: flex;
@@ -25,6 +25,10 @@
       width: 250px;
       height: 250px;
     }
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
   }
 }
 
