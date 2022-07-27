@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
-import { HATVaultsNFTContract } from "constants/constants";
+import { HATVaultsNFTContract, NFTContractDataProxy } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useState } from "react";
@@ -73,8 +73,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     if (!pidsWithAddress || !contract) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress?.map(async (pidWithAddress) => {
       const { pid, masterAddress } = pidWithAddress
-      const isEligibile = await contract.isEligible(masterAddress, pid, actualAddress);
-      const tier = await contract.getTierFromShares(masterAddress, pid, actualAddress);
+      const isEligibile = await contract.isEligible(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
+      const tier = await contract.getTierFromShares(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
       for (let i = 1; i++; i <= tier) {
         const isRedeemed = await contract.tokensRedeemed(pid, tier, actualAddress) as boolean;
@@ -115,7 +115,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
       /** temporary disable fetching of the merkle tree (use mock data) */
-      //setMerkleTree(await response.json());
+      setMerkleTree(await response.json());
       setLastMerkleTree(args);
     }
   }, [contract])
@@ -182,7 +182,7 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
   const hashes: Buffer[] = [];
   data.forEach(wallet => {
     wallet.nft_elegebility.forEach(nft => {
-      hashes.push(hashToken(nft.contract_address, nft.pid, wallet.address, nft.tier));
+      hashes.push(hashToken(nft.masterAddress, nft.pid, wallet.address, nft.tier));
     })
   })
 

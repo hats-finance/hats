@@ -45,6 +45,10 @@ export const VaultSubgraphs = {
   [ChainId.Rinkeby]: "https://api.studio.thegraph.com/query/31348/hatsrinkebyv6/v0.0.18",
 };
 
+export const NFTContractDataProxy = {
+  ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0xf48f42192421E7680da1e5D648E2dceF404360E5"
+}
+
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
 
 export enum Pages {

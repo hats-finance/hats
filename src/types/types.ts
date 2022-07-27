@@ -161,17 +161,6 @@ export interface IAirdropData {
   nft: NFTAirdropET,
   token: TokenAirdropET
 }
-
-interface NFTokenInfo {
-  pid: number;
-  tier: number;
-  tokenId: number;
-  tokenUri: string;
-  isEligibile: boolean;
-  isRedeemed: boolean;
-  masterAddress: string;
-}
-
 export interface INFTAirdropElement {
   description: string
   external_url: string
@@ -198,7 +187,6 @@ export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?:
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
 
 export interface NFTEligibilityElement {
-  contract_address: string;
   pid: number;
   tier: number;
   masterAddress: string;
