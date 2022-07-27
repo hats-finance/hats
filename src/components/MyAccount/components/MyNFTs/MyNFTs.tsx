@@ -16,8 +16,6 @@ export default function MyNFTs() {
     </SwiperSlide>
   )
 
-  const airdropToRedeem = nftData?.redeemable?.filter(nft => nft.type === "MerkleTree")?.some(nft => !nft.isRedeemed);
-  const depositToRedeem = nftData?.redeemable?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
   const showLoader =
     nftData?.redeemMultipleFromTreeState.status === "PendingSignature" ||
     nftData?.redeemMultipleFromTreeState.status === "Mining" ||
@@ -39,8 +37,8 @@ export default function MyNFTs() {
           </Swiper>
         )}
       </div>
-      {airdropToRedeem && <button onClick={nftData?.redeemTree} className="my-nfts__action-btn fill">{t("MyAccount.MyNFTs.airdrop-redeem")}</button>}
-      {depositToRedeem && <button onClick={nftData?.redeemShares} className="my-nfts__action-btn fill">{t("MyAccount.MyNFTs.deposit-redeem")}</button>}
+      {nftData?.airdropToRedeem && <button onClick={nftData?.redeemTree} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.airdrop-redeem")}</button>}
+      {nftData?.depositToRedeem && <button onClick={nftData?.redeemShares} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.deposit-redeem")}</button>}
       {showLoader && <Loading />}
     </div>
   )

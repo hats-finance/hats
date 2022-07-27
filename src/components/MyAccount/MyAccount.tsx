@@ -10,7 +10,7 @@ export default function MyAccount() {
   return (
     <div className="my-account-wrapper">
       <div className="my-account__wallet">
-        <span className="my-account__hello">{t("MyAccount.hello")},</span>
+        <span className="my-account__hello">{t("Header.MyAccount.hello")},</span>
         <span className="my-account__address">{shortenIfAddress(account)}</span>
       </div>
       <MyNFTs />
