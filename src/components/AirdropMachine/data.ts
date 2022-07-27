@@ -1,4 +1,4 @@
-export const HAT_VAULTS_CONSTANT = "0xf48f42192421E7680da1e5D648E2dceF404360E5";
+export const HAT_VAULTS_CONSTANT = "0xd2C2a6C95490C539C85475F7Da5c182EFef61CBc";
 
 export const TEMP_WALLETS =
 {
@@ -17,13 +17,13 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         }
       ]
     },
@@ -41,13 +41,13 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         }
       ]
     },
@@ -65,13 +65,13 @@ export const TEMP_WALLETS =
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 0,
           "tier": 1,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         },
         {
           "contract_address": HAT_VAULTS_CONSTANT,
           "pid": 11,
           "tier": 2,
-          "masterAddress": ""
+          "masterAddress": "0xCCaadc293FaAEa229e0ca4A22B0330b65634b483"
         }
       ]
     }

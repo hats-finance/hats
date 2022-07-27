@@ -7,6 +7,7 @@ import "./index.scss";
 export default function Redeem() {
   const { nftData: { redeemable } } = useContext(AirdropMachineContext);
 
+  /** TODO: need to show a loader until the data is fetched */
   if (redeemable) {
     if (redeemable.length > 0) {
       return <Eligible />;

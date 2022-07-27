@@ -204,11 +204,17 @@ export interface AirdropMachineWallet {
   nft_elegebility: NFTEligibilityElement[];
 }
 
+export interface TokenInfo {
+  name: string;
+  description: string;
+  image: string;
+}
+
 export interface NFTTokenInfo {
   pid: number;
   tier: number;
   tokenId: number;
-  tokenUri: string;
+  nftInfo: TokenInfo;
   isEligibile: boolean;
   isRedeemed: boolean;
   masterAddress: string;

@@ -4,6 +4,7 @@ import Loading from "../Shared/Loading";
 import RedeemTicketSuccess from "./components/RedeemTicketSuccess/RedeemTicketSuccess";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
+import { ipfsTransformUri } from "utils";
 import "./index.scss";
 import "swiper/css";
 
@@ -17,9 +18,9 @@ export default function EmbassyNftTicketPrompt() {
 
   const showLoader = nftData?.redeemMultipleFromSharesState.status === "PendingSignature" || nftData?.redeemMultipleFromSharesState.status === "Mining";
 
-  const nfts = nftData?.redeemable?.filter(nft => nft.type === "Deposit" && nft.isEligibile).map(({ tokenUri }, index) =>
+  const nfts = nftData?.redeemable?.filter(nft => nft.type === "Deposit" && nft.isEligibile).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
-      <img key={index} src={tokenUri} alt="nft" />
+      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>)
 
   return (

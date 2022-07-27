@@ -10,6 +10,9 @@
   .embassy-nft-ticket__redeem-btn {
     margin-top: 20px;
   }
+  img {
+    width: 100px;
+  }
   &.disabled {
     pointer-events: none;
     opacity: 0.5;

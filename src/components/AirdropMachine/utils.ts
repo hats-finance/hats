@@ -3,12 +3,12 @@ import { useEffect } from "react";
 
 export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
   const { nftData } = useVaults();
-  const { isBeforeDeadline, redeemable } = nftData || {};
-  const somethingToRedeem = redeemable && redeemable.length > 0;
+  const { isBeforeDeadline, airdropToRedeem } = nftData || {};
 
   useEffect(() => {
-    if (isBeforeDeadline && somethingToRedeem) {
+    if (isBeforeDeadline && airdropToRedeem) {
       toggleAirdropPrompt();
     }
-  }, [isBeforeDeadline, somethingToRedeem, toggleAirdropPrompt])
+    /** TODO: when putting toggleAirdropPrompt in the array we have endless refreshes. Need to fix. */
+  }, [isBeforeDeadline, airdropToRedeem])
 }

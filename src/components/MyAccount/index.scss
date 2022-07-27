@@ -6,6 +6,7 @@
   color: $white;
   padding: $modal-element-padding;
   min-width: 500px;
+  max-width: 500px;
   .my-account__wallet {
     display: flex;
     flex-direction: column;

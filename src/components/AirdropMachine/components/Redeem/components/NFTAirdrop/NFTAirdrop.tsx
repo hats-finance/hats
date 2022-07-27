@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
+import { ipfsTransformUri } from "utils";
 import "swiper/css";
 import "./index.scss";
 
@@ -21,9 +22,9 @@ export default function NFTAirdrop() {
     }
   }
 
-  const nfts = redeemable?.filter(nft => nft.type === "MerkleTree").map(({ tokenUri }, index) =>
+  const nfts = redeemable?.filter(nft => nft.type === "MerkleTree").map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
-      <img key={index} src={tokenUri} alt="nft" />
+      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>
   )
   return (

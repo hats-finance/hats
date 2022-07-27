@@ -3,6 +3,7 @@ import { useVaults } from "hooks/useVaults";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
+import { ipfsTransformUri } from "utils";
 import "./index.scss";
 import "swiper/css";
 
@@ -12,7 +13,7 @@ export default function MyNFTs() {
 
   const nfts = nftData?.redeemable?.map((nft, index) =>
     <SwiperSlide key={index}>
-      <img key={index} src={nft.tokenUri} alt="nft" />
+      <img key={index} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
     </SwiperSlide>
   )
 
