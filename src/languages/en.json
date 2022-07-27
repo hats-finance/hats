@@ -1,12 +1,5 @@
 {
   "translation": {
-    "MyAccount": {
-      "hello": "HELLO",
-      "MyNFTs": {
-        "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
-        "deposit-redeem": "REDEEM ALL FROM DEPOSITS"
-      }
-    },
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
@@ -16,6 +9,18 @@
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
+    },
+    "Header": {
+      "WalletInfo": {
+        "my-account": "My Account"
+      },
+      "MyAccount": {
+        "hello": "HELLO",
+        "MyNFTs": {
+          "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
+          "deposit-redeem": "REDEEM ALL FROM DEPOSITS"
+        }
+      }
     },
     "DepositWithdraw": {
       "min-amount-for-embassy": "Min requirement to enter an embassy is",

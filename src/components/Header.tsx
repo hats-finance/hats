@@ -14,10 +14,7 @@ import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import Logo from "assets/icons/logo.icon";
-import useModal from "hooks/useModal";
-import Modal from "./Shared/Modal/Modal";
-import MyAccount from "./MyAccount/MyAccount";
+//import Logo from "assets/icons/logo.icon";
 
 export default function Header() {
   const location = useLocation();
@@ -25,7 +22,7 @@ export default function Header() {
   const { screenSize, showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { account } = useEthers();
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
-  const { isShowing, toggle } = useModal();
+
 
   return (
     <header data-testid="Header">
@@ -34,8 +31,7 @@ export default function Header() {
           {Pages[getMainPath(location.pathname)]}
         </div>
       )}
-      {account && <button onClick={toggle}>My Account</button>}
-      {screenSize === ScreenSize.Mobile && <Logo />}
+      {/* {screenSize === ScreenSize.Mobile && <Logo />} */}
       {account && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||
         (screenSize === ScreenSize.Mobile && !currentTransaction)) && (
@@ -47,11 +43,6 @@ export default function Header() {
           {showMenu ? <CloseIcon /> : <MenuIcon />}
         </div>
       )}
-      <Modal
-        isShowing={isShowing}
-        hide={toggle}>
-        <MyAccount />
-      </Modal>
     </header>
   );
 }

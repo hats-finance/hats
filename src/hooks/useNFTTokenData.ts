@@ -29,6 +29,8 @@ export interface INFTTokenData {
   redeemMultipleFromSharesState: TransactionStatus;
   actualAddressInfo?: AirdropMachineWallet;
   actualAddress?: string;
+  airdropToRedeem: boolean;
+  depositToRedeem: boolean;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -50,6 +52,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
   const redeemable = nftTokens?.filter(nft => !nft.isRedeemed);
+
+  const airdropToRedeem = redeemable?.filter(nft => nft.type === "MerkleTree")?.some(nft => !nft.isRedeemed);
+  const depositToRedeem = redeemable?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
 
   useEffect(() => {
     setNftTokens([]);
@@ -173,7 +178,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     redeemShares,
     redeemMultipleFromSharesState,
     actualAddressInfo,
-    actualAddress
+    actualAddress,
+    airdropToRedeem,
+    depositToRedeem
   };
 };
 
