@@ -67,10 +67,10 @@ export const GET_VAULTS = gql`
 `;
 
 export const GET_STAKER = gql`
-   query getStaker($address: String!) {
-      stakers (where: { address: $address }) {
+   query getStaker($address: Bytes!) {
+      stakers (where: {address: $address }) {
         pid
-        masters {
+        master {
           address
         }
       }

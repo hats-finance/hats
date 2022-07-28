@@ -53,9 +53,12 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
   const redeemable = nftTokens?.filter(nft => !nft.isRedeemed);
+  console.log("redeemable", redeemable);
+
 
   const airdropToRedeem = redeemable?.filter(nft => nft.type === "MerkleTree")?.some(nft => !nft.isRedeemed);
   const depositToRedeem = redeemable?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
+  console.log("useNftTokenData", actualAddress);
 
   useEffect(() => {
     setNftTokens([]);
@@ -72,6 +75,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     context: { chainId },
     pollInterval: DATA_REFRESH_TIME
   })
+  console.log("staker", stakerData);
+
 
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
