@@ -49,7 +49,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   /** Temporary use of TEMP_WALLETS until the merkle tree will be updated to the new structure */
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
-  console.log({ merkleTree });
 
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
