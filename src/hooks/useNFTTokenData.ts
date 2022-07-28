@@ -75,8 +75,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     context: { chainId },
     pollInterval: DATA_REFRESH_TIME
   })
-  console.log("staker", stakerData);
-
 
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
@@ -84,7 +82,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     if (!pidsWithAddress || !contract) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress?.map(async (pidWithAddress) => {
       const { pid, masterAddress } = pidWithAddress;
-      console.log(masterAddress);
       const isEligibile = await contract.isEligible(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tier = await contract.getTierFromShares(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
