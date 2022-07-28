@@ -10,5 +10,5 @@ export const useFetchAirdropData = async (toggleAirdropPrompt: () => void) => {
       toggleAirdropPrompt();
     }
     /** TODO: when putting toggleAirdropPrompt in the array we have endless refreshes. Need to fix. */
-  }, [isBeforeDeadline, airdropToRedeem, toggleAirdropPrompt])
+  }, [isBeforeDeadline, airdropToRedeem])
 }

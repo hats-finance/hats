@@ -46,19 +46,16 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
   const actualAddress = address ?? account;
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
-  /** Temporary use of TEMP_WALLETS until the merkle tree will be updated to the new structure */
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
 
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
   const redeemable = nftTokens?.filter(nft => !nft.isRedeemed);
-  console.log("redeemable", redeemable);
 
 
   const airdropToRedeem = redeemable?.filter(nft => nft.type === "MerkleTree")?.some(nft => !nft.isRedeemed);
   const depositToRedeem = redeemable?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
-  console.log("useNftTokenData", actualAddress);
 
   useEffect(() => {
     setNftTokens([]);
@@ -72,11 +69,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(
     GET_STAKER, {
     variables: { address: actualAddress },
-    context: { chainId }
+    context: { chainId },
+    pollInterval: DATA_REFRESH_TIME
   })
 
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
+  /** TODO: this function is called endless times ; need to fix that */
   const getEligibilityForPids = useCallback(async () => {
     if (!pidsWithAddress || !contract) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress?.map(async (pidWithAddress) => {
@@ -85,16 +84,16 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const tier = await contract.getTierFromShares(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
       for (let i = 1; i++; i <= tier) {
-        const isRedeemed = await contract.tokensRedeemed(pid, tier, actualAddress) as boolean;
-        /** TODO: need to add +1 like in tree? ; need to fetch the tokenInfo like in the tree? */
+        const isRedeemed = await contract.tokensRedeemed(NFTContractDataProxy[masterAddress.toLowerCase()], pid, tier, actualAddress) as boolean;
         const tokenId = await contract.tokenIds(actualAddress, pid, tier);
-        const nftInfo = await contract.uri(tokenId);
+        const nftInfo = await contract.uri(tokenId + 1);
+        console.log({ nftInfo })
+        //const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
         tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, nftInfo, type: "Deposit" });
       }
       return tokens;
     }));
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    console.log("sdfdf")
     setNftTokens(prev => [...prev, ...eligibilityPerPid]);
   }, [contract, actualAddress, pidsWithAddress])
 
