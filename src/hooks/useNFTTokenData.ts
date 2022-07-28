@@ -72,8 +72,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(
     GET_STAKER, {
     variables: { address: actualAddress },
-    context: { chainId },
-    pollInterval: DATA_REFRESH_TIME
+    context: { chainId }
   })
 
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
