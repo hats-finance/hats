@@ -22,7 +22,7 @@ export default function NFTAirdrop() {
     }
   }
 
-  const nfts = redeemable?.filter(nft => nft.type === "MerkleTree").map(({ nftInfo }, index) =>
+  const nfts = redeemable?.filter(nft => nft.type === "MerkleTree" && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
       <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>
