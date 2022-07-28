@@ -89,7 +89,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const isRedeemed = await contract.tokensRedeemed(pid, tier, actualAddress) as boolean;
         /** TODO: need to add +1 like in tree? ; need to fetch the tokenInfo like in the tree? */
         const tokenId = await contract.tokenIds(actualAddress, pid, tier);
-        console.log(tokenId)
         const nftInfo = await contract.uri(tokenId);
         tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, nftInfo, type: "Deposit" });
       }
