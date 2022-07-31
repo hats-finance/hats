@@ -1,4 +1,4 @@
-@import "../../../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .my-nfts-wrapper {
   display: flex;
@@ -8,8 +8,20 @@
   margin-top: 20px;
   .my-nfts__container {
     margin: 15px 0;
-    img {
-      width: 100px;
+    .my-nfts__slide {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin: 0 10px;
+      font-size: $xsmall;
+      color: $red;
+      img {
+        width: 150px;
+      }
+      .my-nfts__not-redeemed {
+        opacity: 0.5;
+      }
     }
   }
   .my-nfts__action-btn {

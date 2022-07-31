@@ -18,7 +18,9 @@
         "hello": "HELLO",
         "MyNFTs": {
           "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
-          "deposit-redeem": "REDEEM ALL FROM DEPOSITS"
+          "deposit-redeem": "REDEEM ALL FROM DEPOSITS",
+          "not-redeemed": "Not redeemed yet",
+          "after-deadline": "Deadline has passed"
         }
       }
     },

@@ -86,9 +86,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       for (let i = 1; i++; i <= tier) {
         const isRedeemed = await contract.tokensRedeemed(NFTContractDataProxy[masterAddress.toLowerCase()], pid, tier, actualAddress) as boolean;
         const tokenId = await contract.tokenIds(actualAddress, pid, tier);
-        const nftInfo = await contract.uri(tokenId + 1);
-        console.log({ nftInfo })
-        //const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
+        const tokenUri = await contract.uri(tokenId + 1);
+        console.log({ tokenUri })
+        const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
         tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, nftInfo, type: "Deposit" });
       }
       return tokens;
@@ -98,8 +98,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [contract, actualAddress, pidsWithAddress])
 
   useEffect(() => {
-    if (pidsWithAddress && pidsWithAddress.length > 0)
-      getEligibilityForPids();
+    /** TODO: this function is called endless times ; need to fix that */
+    // if (pidsWithAddress && pidsWithAddress.length > 0)
+    //   getEligibilityForPids();
   }, [getEligibilityForPids, pidsWithAddress])
 
   const getTreeEligibility = useCallback(async () => {

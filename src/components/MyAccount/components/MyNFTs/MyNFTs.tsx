@@ -12,8 +12,9 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
 
   const nfts = nftData?.redeemable?.map((nft, index) =>
-    <SwiperSlide key={index}>
-      <img key={index} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+    <SwiperSlide key={index} className="my-nfts__slide">
+      <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+      <span>{t("Header.MyAccount.MyNFTs.not-redeemed")}</span>
     </SwiperSlide>
   )
 
@@ -38,7 +39,14 @@ export default function MyNFTs() {
           </Swiper>
         )}
       </div>
-      {nftData?.airdropToRedeem && <button onClick={nftData?.redeemTree} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.airdrop-redeem")}</button>}
+      {nftData?.airdropToRedeem && (
+        <button
+          disabled={!nftData?.isBeforeDeadline}
+          onClick={nftData?.redeemTree}
+          className="my-nfts__action-btn fill">
+          {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
+          {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
+        </button>)}
       {nftData?.depositToRedeem && <button onClick={nftData?.redeemShares} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.deposit-redeem")}</button>}
       {showLoader && <Loading />}
     </div>
