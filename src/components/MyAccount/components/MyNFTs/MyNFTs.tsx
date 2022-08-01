@@ -11,7 +11,7 @@ export default function MyNFTs() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
 
-  const nfts = nftData?.redeemable?.map((nft, index) =>
+  const nfts = nftData?.nftTokens?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
       <span>{t("Header.MyAccount.MyNFTs.not-redeemed")}</span>
