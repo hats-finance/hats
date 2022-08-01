@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
@@ -15,12 +15,15 @@ export default function NFTAirdrop() {
 
   const showLoader = redeemMultipleFromTreeState.status === "PendingSignature" || redeemMultipleFromTreeState.status === "Mining";
 
-  const handleRedeem = async (e) => {
+  const handleRedeem = async () => {
     await redeemTree();
-    if (redeemMultipleFromTreeState.status === "Success") {
-      closeRedeemModal(e);
-    }
   }
+
+  useEffect(() => {
+    if (redeemMultipleFromTreeState.status === "Success") {
+      closeRedeemModal();
+    }
+  }, [redeemMultipleFromTreeState, closeRedeemModal])
 
   const nfts = nftTokens?.filter(nft => nft.type === "MerkleTree" && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>

@@ -4,14 +4,14 @@ import Modal from "components/Shared/Modal/Modal";
 import { isAddress } from "ethers/lib/utils";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import useModal from "hooks/useModal";
-import { createContext, MouseEventHandler, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
-  closeRedeemModal: MouseEventHandler<HTMLButtonElement>
+  closeRedeemModal: () => void;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -56,7 +56,7 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={toggle}>
-        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: () => { toggle() } }} >
+        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle }} >
           <Redeem />
         </AirdropMachineContext.Provider>
       </Modal>

@@ -136,9 +136,9 @@ export default function Honeypots({ showDeposit }: IProps) {
 
 const useCheckForDepositElegibility = async (toggleShowEmbassyTicketPrompt: () => void) => {
   const { nftData } = useVaults();
-  const somethingToRedeem = nftData?.nftTokens?.filter(nft => nft.type === "Deposit" && nft.isEligibile);
+  const somethingToRedeem = nftData?.nftTokens?.some(nft => nft.type === "Deposit" && nft.isEligibile && !nft.isRedeemed);
   useEffect(() => {
-    if (somethingToRedeem && somethingToRedeem?.length > 0) {
+    if (somethingToRedeem) {
       toggleShowEmbassyTicketPrompt();
     }
   }, [somethingToRedeem, toggleShowEmbassyTicketPrompt])
