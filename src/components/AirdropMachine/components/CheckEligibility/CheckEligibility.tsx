@@ -7,11 +7,13 @@ import useModal from "hooks/useModal";
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
+import RedeemTicketSuccess from "components/EmbassyNftTicketPrompt/components/RedeemTicketSuccess/RedeemTicketSuccess";
 import "./index.scss";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
   closeRedeemModal: () => void;
+  actualAddress: string | undefined;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -24,11 +26,17 @@ export default function CheckEligibility() {
   const inputError = userInput && !isAddress(userInput);
   const actualAddress = (userInput && userInput !== "") ? userInput : account;
   const nftData = useNFTTokenData(actualAddress);
+  const [redeemed, setRedeemed] = useState(false);
 
   useEffect(() => {
     setUserInput(account ?? "");
   }, [setUserInput, account])
 
+  useEffect(() => {
+    if (nftData.redeemMultipleFromTreeState.status === "Success") {
+      setRedeemed(true);
+    }
+  }, [nftData.redeemMultipleFromTreeState, setRedeemed])
 
   return (
     <div className="check-eligibility-wrapper">
@@ -56,8 +64,8 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={toggle}>
-        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle }} >
-          <Redeem />
+        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle, actualAddress }} >
+          {redeemed ? <RedeemTicketSuccess /> : <Redeem />}
         </AirdropMachineContext.Provider>
       </Modal>
     </div>

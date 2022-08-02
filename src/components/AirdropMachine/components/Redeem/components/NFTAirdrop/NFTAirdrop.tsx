@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
-import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
@@ -11,19 +10,13 @@ import "./index.scss";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
-  const { closeRedeemModal, nftData: { redeemTree, nftTokens, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
+  const { nftData: { redeemTree, nftTokens, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
 
   const showLoader = redeemMultipleFromTreeState.status === "PendingSignature" || redeemMultipleFromTreeState.status === "Mining";
 
   const handleRedeem = async () => {
     await redeemTree();
   }
-
-  useEffect(() => {
-    if (redeemMultipleFromTreeState.status === "Success") {
-      closeRedeemModal();
-    }
-  }, [redeemMultipleFromTreeState, closeRedeemModal])
 
   const nfts = nftTokens?.filter(nft => nft.type === "MerkleTree" && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
@@ -35,24 +28,7 @@ export default function NFTAirdrop() {
       <span>{t("AirdropMachine.NFTAirdrop.text-1")}</span>
       <section>
         <b>{t("AirdropMachine.NFTAirdrop.text-2")}</b>
-        <div className="nft-airdrop__features-wrapper">
-          <div className="nft-airdrop__feature">
-            <img src={RadioButtonChecked} alt="radio button" />
-            {t("AirdropMachine.NFTAirdrop.text-3")}
-          </div>
-          <div className="nft-airdrop__feature">
-            <img src={RadioButtonChecked} alt="radio button" />
-            {t("AirdropMachine.NFTAirdrop.text-4")}
-          </div>
-          <div className="nft-airdrop__feature">
-            <img src={RadioButtonChecked} alt="radio button" />
-            {t("AirdropMachine.NFTAirdrop.text-5")}
-          </div>
-          <div className="nft-airdrop__feature">
-            <img src={RadioButtonChecked} alt="radio button" />
-            {t("AirdropMachine.NFTAirdrop.text-6")}
-          </div>
-        </div>
+        <span>{t("AirdropMachine.NFTAirdrop.text-3")}</span>
       </section>
       <div className="nft-airdrop__nfts-wrapper">
         <Swiper

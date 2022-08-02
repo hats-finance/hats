@@ -168,12 +168,24 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
   }, [nftTokens, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
 
+  useEffect(() => {
+    if (redeemMultipleFromTreeState.status === "Success") {
+      getTreeEligibility();
+    }
+  }, [redeemMultipleFromTreeState, getTreeEligibility])
+
   const redeemShares = useCallback(async () => {
     const depositRedeemables = nftTokens.filter(nft => nft.type === "Deposit" && nft.isEligibile);
     const hatVaults = depositRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = depositRedeemables.map(nft => nft.pid);
     await redeemMultipleFromShares(hatVaults, pids, actualAddress);
   }, [redeemMultipleFromShares, actualAddress, nftTokens])
+
+  useEffect(() => {
+    if (redeemMultipleFromSharesState.status === "Success") {
+      /** call getEligibilityForPids */
+    }
+  }, [redeemMultipleFromSharesState])
 
   return {
     lastMerkleTree,

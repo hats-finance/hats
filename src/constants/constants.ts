@@ -5,7 +5,6 @@ export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  Airdrop = "HATS_AIRDROP_USER_NOTIFIED",
   PGPKeystore = "HATS_PGP_KEYSTORE"
 }
 

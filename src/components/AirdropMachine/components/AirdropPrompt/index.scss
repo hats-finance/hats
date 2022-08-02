@@ -11,18 +11,20 @@
     text-align: center;
     margin-bottom: 10px;
   }
+  .airdrop-prompt__text-1 {
+    text-align: center;
+  }
   .airdrop-prompt__wallet-container {
     display: flex;
     flex-direction: column;
     color: $dirty-turquoise;
     margin: 40px 0;
     .airdrop-prompt__wallet-address {
-      margin-top: 5px;
-      border: 1px solid $turquoise;
-      padding: 20px;
+      padding: 20px 0;
       color: $turquoise;
       overflow: hidden;
       text-overflow: ellipsis;
+      font-size: $medium-2;
     }
   }
   .airdrop-prompt__continue-btn {

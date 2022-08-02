@@ -3,21 +3,9 @@
 .nft-airdrop-wrapper {
   display: flex;
   flex-direction: column;
+  white-space: pre-line;
   section {
     margin: 30px 0;
-  }
-  .nft-airdrop__features-wrapper {
-    display: flex;
-    flex-direction: column;
-    margin-top: 10px;
-    .nft-airdrop__feature {
-      display: flex;
-      align-items: center;
-      margin: 5px 0;
-      img {
-        margin-right: 10px;
-      }
-    }
   }
   .nft-airdrop__nfts-wrapper {
     margin: 50px 0;

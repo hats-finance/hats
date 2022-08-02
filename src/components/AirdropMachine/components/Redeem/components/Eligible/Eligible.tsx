@@ -5,7 +5,6 @@ import NFTAirdrop from "../NFTAirdrop/NFTAirdrop";
 import TokenEligibility from "../TokenEligibility/TokenEligibility";
 import "./index.scss";
 
-
 enum Stage {
   TokenEligibility = 1,
   NFTAirdrop,

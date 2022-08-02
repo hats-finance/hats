@@ -67,60 +67,6 @@
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
       }
     },
-    "Airdrop": {
-      "enter-address": "Please enter a wallet address to check your eligibility for the NFT airdrop “The Crow Clan” and the HATS Token airdrop.",
-      "search-placeholder": "Enter wallet address",
-      "search-error": "Please enter a valid address",
-      "not-eligible-nft": "This address is not eligible to NFT airdrop",
-      "not-eligible-token": "This address is not eligible to token airdrop",
-      "redeemed-link": "Redeemed - View on Etherscan",
-      "TokenAirdrop": {
-        "ProgressBar": {
-          "protocol": "Understand the protocol",
-          "delegatee": "Choose a Delegatee",
-          "claim": "Claim your hats"
-        },
-        "CheckEligibility": {
-          "title": "HATS TOKEN AIRDROP",
-          "claim-amount": "Total available to claim",
-          "token-claim-continue": "START CLAIMING PROCESS"
-        },
-        "Protocol": {
-          "section-1-title": "WHAT IS THE HATS PROTOCOL?",
-          "section-1": "Hats.finance is a decentralized cybersecurity protocol that allows everyone to add liquidity to bug bounties while farming $HATS.  Hackers can responsibly disclose vulnerabilities without KYC & be rewarded with the highest prize & NFTs for their work.",
-          "section-2-title": "WHERE DOES THE PRIZE COME FROM?",
-          "section-2": "When a hack is happening 100% of your holding is at risk. While a responsible disclosure occurs only % from the % of your stacking is in risk, and you will stay with $HATs tokens. No Token or TVL downside a win-win for everyone involved.",
-          "section-3-title": "WHAT IS MY BENEFIT OF USING HATS",
-          "section-3": "- Join the effort to secure your favorite  project. \n - Financial incentive in the form of Yield farming. \n - Be part of a DeFi cybersecurity protocol. \n\n A win-win for everyone involved"
-        },
-        "ChooseDelegatee": {
-          "section-1-title": "WHAT IS A DELEGATEE AND WHY DO I NEED ONE?",
-          "section-1": "Delegation is a shifting of authority and responsibility, e.g. on Hats DAO, voting power from one person to another. The delegatee you choose will represent you on hats future DAO decision. You may choose a delegatee from our list of auditors, dao specialists, security experts or represent yourself",
-          "choose-delegatee": "Choose your delegatee:",
-          "self-delegatee": "I choose myself as a delegatee"
-        },
-        "Claim": {
-          "claim-success": "Hats token claimed successfully",
-          "review": "REVIEW YOUR CLAIM",
-          "claim-amount": "Total available to claim",
-          "chosen-delegatee": "Your chosen delegatee",
-          "claim-tx-notice": "Once you press claim you will be asked to sign for 2 transactions. One time for your delegatee choice and the second for claim transaction."
-        },
-        "Success": {
-          "title": "CLAIM SUCCESSFUL!",
-          "section-1": "Congratulation on claiming your ",
-          "section-2": "Welcome to the Hats! \n\n We encourage you to share on Twitter and join Hats community on Discord to get involved in the governance.",
-          "twitter-share": "Share on twitter",
-          "join-discord": "Join Discord",
-          "twitter-share-text": "Let me share some crypto alpha. \n I just received $HAT tokens for my early contribution in @HatsFinance, the first fully decentralized and community owned bug bounty marketplace. \n Become a chain protector by visiting their dApp or claim tokens if eligible https://app.hats.finance"
-        }
-      },
-      "NFTAirdrop": {
-        "your-nft": "CROW CLAN NFT AIRDROP",
-        "nft-text": "You are eligible to Hats token airdrop and NFT airdrop “The crow clan.",
-        "redeem-success": "NFT redeemed successfully"
-      }
-    },
     "AirdropMachine": {
       "AirdropPrompt": {
         "title": "CONGRATS!",
@@ -154,6 +100,18 @@
         "text": "You can access your embassy with your NFT. \n\n Each project embassy can send one ambassador to the security council. \n\n Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance. \n\n To be part of a unique group with the project committee. To be the first to learn about security topics related to your protocol.",
         "button-text": "JOIN AN EMBASSY ON DISCORD"
       },
+      "FAQ": {
+        "question-1": "WHAT IS AN EMBASSY? \n\n",
+        "answer-1": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that reviews disclosed exploits or who have deposited into the bug bounty will gain access to their Embassy.",
+        "question-2": "WHAT IS THE SECURITY COUNCIL? \n\n",
+        "answer-2": "A security council is a collective of different protocol users such as builders, community members and an array of security experts that contribute to the growth of a project. In our vision, we see a collective of security councils where users who participate in securing protocols are well rewarded for their contributions.",
+        "question-3": "WHEN WILL I RECEIVE MY TOKENS? \n\n",
+        "answer-3": "The token will be available only when the Token Generated Event occurs. Please remember that you can receive the token only if you are eligible and hold the NFT.",
+        "question-4": "FOR HOW LONG CAN I REDEEM MY NFT? \n\n",
+        "answer-4": "Being part of the embassy will give you different perks in the future, but it's not mandatory to receive the future token airdrop. Please remember that you can receive the token only if you are eligible and hold the NFT.",
+        "question-5": "??? \n\n",
+        "answer-5": "Yes, you can deposit to more than one vault and be part of their embassies."
+      },
       "CheckEligibility": {
         "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
         "input-placeholder": "Connect to wallet or paste a wallet adress",
@@ -164,6 +122,14 @@
       "NotEligible": {
         "title": "HO NO!",
         "text-1": "You are not eligible for this airdrop machine round",
+        "text-2": "Wallet address",
+        "text-3": "Eligibility criteria breakdown",
+        "text-4": "Learn more",
+        "criteria-1": "Committee members",
+        "criteria-2": "Depositors",
+        "criteria-3": "“Crows” NFT holders",
+        "criteria-4": "“Super coder” NFT holders",
+        "criteria-5": "Hats early supporters",
         "button-text": "CHECK ANOTHER WALLET"
       },
       "Eligible": {
@@ -182,18 +148,13 @@
         "text-9": "Hats early supporters",
         "text-10": "TOTAL",
         "text-11": "Please notice!",
-        "text-12": "In order to stay eligible and recieve your token airdrop you must redeem your NFT and use it to join an embassy.",
-        "text-13": "What is an embassy?",
-        "text-14": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that is reviewing disclosed exploits or have deposited into the bug bounty will gain access to their Embassy.",
+        "text-12": "In order to stay eligible and receive your token airdrop you must redeem your NFT",
         "button-text": "CONTINUE TO THE NFT AIRDROP"
       },
       "NFTAirdrop": {
-        "text-1": "You are eligible to Hats NFT airdrop - while cool looking the NFT has a utility. Redeem your NFT and use it to enter your embassy.",
-        "text-2": "Why should I join an embassy?",
-        "text-3": "Stay eligible and recieve your token airdrop",
-        "text-4": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
-        "text-5": "Be the first to learn about security topics related to your protocol.",
-        "text-6": "Be part of a unique group with the project committee.",
+        "text-1": "To claim the token airdrop, when the airdrop become live, you will need to hold the below NFT in your wallet. \n\n The NFT will generate you an access to the project Embassy - redeem and join!",
+        "text-2": "What is an embassy? \n\n",
+        "text-3": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that reviews disclosed exploits or who have deposited into the bug bounty will gain access to their Embassy.",
         "button-text": "REDEEM YOUR NFT"
       }
     },
@@ -202,7 +163,7 @@
       "text": "Protector of the chain! \n\n Your contribution to Hats vault security is valued. \n\n You are invited to join Hats embassy and continue to be active in your vault security. \n\n Redeem your NFT and use it to enter the embassy on discord.",
       "button-text": "REDEEM",
       "RedeemTicketSuccess": {
-        "text-1": "Continue to discord and join your vault  embassy",
+        "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
         "text-2": "Why should I join an embassy?",
         "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
         "text-4": "Be the first to learn about security topics related to your protocol.",

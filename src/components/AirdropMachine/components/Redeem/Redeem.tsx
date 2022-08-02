@@ -8,7 +8,7 @@ export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
 
   /** TODO: need to show a loader until the data is fetched */
-  if (nftData) {
+  if (nftData?.actualAddressInfo) {
     if (nftData.airdropToRedeem) {
       return <Eligible />
     } else return (
