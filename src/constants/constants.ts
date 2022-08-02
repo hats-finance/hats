@@ -127,4 +127,4 @@ export enum SocialLinks {
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
 
-export const GOV_DISCORD_LINK = "https://discord.com/channels/810534320040837121/810538319095005184";
+export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
