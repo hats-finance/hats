@@ -126,3 +126,5 @@ export enum SocialLinks {
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
 }
+
+export const GOV_DISCORD_LINK = "https://discord.com/channels/810534320040837121/810538319095005184";
