@@ -170,6 +170,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (redeemMultipleFromTreeState.status === "Success") {
+      console.log("getTreeEligibility again");
+      /** TODO: need to update the nftData?.airdropToRedeem */
       getTreeEligibility();
     }
   }, [redeemMultipleFromTreeState, getTreeEligibility])

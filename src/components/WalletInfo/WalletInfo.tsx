@@ -24,6 +24,8 @@ export default function WalletInfo() {
   const hatsBalanceString = (+hatsBalance).toFixed(4);
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const { isShowing: isShowingMyAccount, toggle: toggleMyAccount } = useModal();
+  
+  console.log("nftData?.airdropToRedeem", nftData?.airdropToRedeem);
 
   return (
     <div className="wallet-info-wrapper">

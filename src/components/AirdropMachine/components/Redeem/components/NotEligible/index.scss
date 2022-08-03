@@ -54,5 +54,10 @@
     .not-eligible__title {
       font-size: $moderate;
     }
+    .not-eligible__criterias-wrapper {
+      .not-eligible__criterias-top {
+        text-align: start;
+      }
+    }
   }
 }

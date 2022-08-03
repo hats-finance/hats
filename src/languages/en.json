@@ -109,7 +109,7 @@
         "answer-3": "The token will be available only when the Token Generated Event occurs. Please remember that you can receive the token only if you are eligible and hold the NFT.",
         "question-4": "FOR HOW LONG CAN I REDEEM MY NFT? \n\n",
         "answer-4": "Being part of the embassy will give you different perks in the future, but it's not mandatory to receive the future token airdrop. Please remember that you can receive the token only if you are eligible and hold the NFT.",
-        "question-5": "??? \n\n",
+        "question-5": "IF I WON’T JOIN AN EMBASSY CAN I STILL RECEIVE MY FUTURE TOKEN AIRDROP? \n\n",
         "answer-5": "Yes, you can deposit to more than one vault and be part of their embassies."
       },
       "CheckEligibility": {
@@ -160,7 +160,7 @@
     },
     "EmbassyNftTicketPrompt": {
       "prompt-title": "EMBASSY NFT TICKET",
-      "text": "Protector of the chain! \n\n Your contribution to Hats vault security is valued. \n\n You are invited to join Hats embassy and continue to be active in your vault security. \n\n Redeem your NFT and use it to enter the embassy on discord.",
+      "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
       "button-text": "REDEEM",
       "RedeemTicketSuccess": {
         "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
