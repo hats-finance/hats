@@ -221,15 +221,6 @@ export const isMobile = (): boolean => {
 };
 
 /**
- * Given a link string returns it's extension
- * @param {string} link
- */
-export const getLinkExtension = (link: string): string => {
-  const reg = /(?:\.([^.]+))?$/;
-  return reg.exec(link)?.[1] ?? "";
-};
-
-/**
  * Converts a JavaScript Object Notation (JSON) string into an object
  * @param {string} dataString
  */

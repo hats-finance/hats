@@ -1,4 +1,4 @@
-import { getLinkExtension, ipfsTransformUri } from "utils";
+import { ipfsTransformUri } from "utils";
 import "styles/NFTMedia.scss";
 
 interface IProps {
@@ -8,12 +8,11 @@ interface IProps {
 
 export default function NFTMedia(props: IProps) {
   const { link, width } = props;
-  const extension = getLinkExtension(link);
-  const poster = !extension ? ipfsTransformUri(link) : undefined;
 
   return (
     <div className="nft-media-wrapper">
-      <video loop autoPlay muted width={width} playsInline poster={poster}>
+      {/* The poster is needed here in case the media is not a video */}
+      <video loop autoPlay muted width={width} playsInline poster={ipfsTransformUri(link)}>
         <source src={ipfsTransformUri(link)} type="video/mp4" />
       </video>
     </div>
