@@ -115,10 +115,6 @@ export enum PieChartColors {
   swapAndBurn = "#035B5F"
 }
 
-/** Supported images and videos extensions for NFTs media */
-export const IMAGES_EXTENTIONS = ["png"];
-export const VIDEOS_EXTENTIONS = ["mp4"];
-
 export enum SocialLinks {
   Discord = "https://discord.gg/xDphwRGyW7",
   Twitter = "https://twitter.com/HatsFinance",

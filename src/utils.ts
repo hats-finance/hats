@@ -302,7 +302,9 @@ export const ipfsTransformUri = (uri: string | undefined) => {
   }
   if (uri.startsWith("ipfs")) {
     let ipfs;
-    if (uri.startsWith("ipfs/")) {
+    if (uri.startsWith("ipfs://ipfs/")) {
+      ipfs = uri.slice(12);
+    } else if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
       ipfs = uri.slice(7);

@@ -1,4 +1,3 @@
-import { IMAGES_EXTENTIONS, IPFS_PREFIX, VIDEOS_EXTENTIONS } from "constants/constants";
 import { getLinkExtension, ipfsTransformUri } from "utils";
 import "styles/NFTMedia.scss";
 
@@ -9,23 +8,14 @@ interface IProps {
 
 export default function NFTMedia(props: IProps) {
   const { link, width } = props;
-  const extension = getLinkExtension(link) ?? "png";
+  const extension = getLinkExtension(link);
+  const poster = !extension ? ipfsTransformUri(link) : undefined;
 
   return (
     <div className="nft-media-wrapper">
-      {IMAGES_EXTENTIONS.includes(extension) ?
-        <img
-          className="nft-image"
-          src={`${IPFS_PREFIX}/${link.substring(12)}`}
-          alt="NFT"
-          width={width} /> :
-        VIDEOS_EXTENTIONS.includes(extension) ?
-          <video loop autoPlay muted width={width} playsInline>
-            <source src={`${IPFS_PREFIX}/${link.substring(12)}`} type="video/mp4" />
-          </video> :
-          !extension ?
-            <img src={ipfsTransformUri(link)} width={width} alt="NFT" /> :
-            <span>Unsupported media</span>}
+      <video loop autoPlay muted width={width} playsInline poster={poster}>
+        <source src={ipfsTransformUri(link)} type="video/mp4" />
+      </video>
     </div>
   )
 }
