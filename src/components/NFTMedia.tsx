@@ -24,7 +24,7 @@ export default function NFTMedia(props: IProps) {
             <source src={`${IPFS_PREFIX}/${link.substring(12)}`} type="video/mp4" />
           </video> :
           !extension ?
-            <img src={ipfsTransformUri(link)} alt="NFT" /> :
+            <img src={ipfsTransformUri(link)} width={width} alt="NFT" /> :
             <span>Unsupported media</span>}
     </div>
   )
