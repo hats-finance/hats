@@ -30,15 +30,18 @@ import useModal from "hooks/useModal";
 import Modal from "components/Shared/Modal/Modal";
 import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/AirdropPrompt";
 import "./styles/App.scss";
-import { useFetchAirdropData } from "components/AirdropMachine/utils";
+import { useCheckRedeemableNfts } from "components/AirdropMachine/utils";
+import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 
 function App() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentScreenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const { isShowing: showAirdropPrompt, toggle: toggleAirdropPrompt } = useModal();
+  const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { account } = useEthers();
 
   const { i18n } = useTranslation();
@@ -52,7 +55,7 @@ function App() {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  useFetchAirdropData(toggleAirdropPrompt);
+  useCheckRedeemableNfts(toggleAirdropPrompt, toggleEmbassyPrompt);
 
   return (
     <>
@@ -80,11 +83,19 @@ function App() {
       </Routes >
 
       {account && hasSeenWelcomePage === "1" && (
-        <Modal
-          isShowing={showAirdropPrompt}
-          hide={toggleAirdropPrompt}>
-          <AirdropPrompt closePrompt={toggleAirdropPrompt} />
-        </Modal>
+        <>
+          <Modal
+            isShowing={showAirdropPrompt}
+            hide={toggleAirdropPrompt}>
+            <AirdropPrompt closePrompt={toggleAirdropPrompt} />
+          </Modal>
+          <Modal
+            title={t("EmbassyNftTicketPrompt.prompt-title")}
+            isShowing={showEmbassyPrompt}
+            hide={toggleEmbassyPrompt}>
+            <EmbassyNftTicketPrompt />
+          </Modal>
+        </>
       )}
     </>
   );
