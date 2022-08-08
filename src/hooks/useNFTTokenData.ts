@@ -40,10 +40,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, account, chainId } = useEthers();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
-    useContractFunction(new Contract(chainId && HATVaultsNFTContract[chainId],
-      hatVaultNftAbi), "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
+    useContractFunction(contract, "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
-    new Contract(chainId && HATVaultsNFTContract[chainId], hatVaultNftAbi), "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
+    contract, "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
   const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
   console.log("nftTokens", nftTokens);
   const actualAddress = address ?? account;
