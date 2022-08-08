@@ -44,6 +44,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     new Contract(chainId && HATVaultsNFTContract[chainId], hatVaultNftAbi), "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
   const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
+  console.log("nftTokens", nftTokens);
   const actualAddress = address ?? account;
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
@@ -72,34 +73,32 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
-  /** TODO: this function is called endless times ; need to fix that */
   const getEligibilityForPids = useCallback(async () => {
-    if (!pidsWithAddress || !contract) return;
-    const eligibilitiesPerPid = await Promise.all(pidsWithAddress?.map(async (pidWithAddress) => {
+    if (!pidsWithAddress || !contract || pidsWithAddress.length === 0) return;
+    const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const isEligibile = await contract.isEligible(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tier = await contract.getTierFromShares(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
-      for (let i = 1; i++; i <= tier) {
+      for (let i = 1; i <= tier; i++) {
         const isRedeemed = await contract.tokensRedeemed(NFTContractDataProxy[masterAddress.toLowerCase()], pid, tier, actualAddress) as boolean;
         /** adding +1 because the indexes in the IPFS start in 1 (not 0) */
         const tokenId = ((await contract.tokenIds(actualAddress, pid, tier)) as BigNumber).add(1).toNumber();
         const tokenUri = await contract.uri(tokenId);
-        console.log({ tokenUri })
         const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
         tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, nftInfo, type: "Deposit" });
       }
       return tokens;
-    }));
+    }))
+
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    setNftTokens(prev => [...prev, ...eligibilityPerPid]);
+    //setNftTokens([...nftTokens, ...eligibilityPerPid]);
+    setNftTokens((prevState) => [...prevState, ...eligibilityPerPid]);
   }, [contract, actualAddress, pidsWithAddress])
 
   useEffect(() => {
-    /** TODO: this function is called endless times ; need to fix that */
-    // if (pidsWithAddress && pidsWithAddress.length > 0)
-    //   getEligibilityForPids();
-  }, [getEligibilityForPids, pidsWithAddress])
+    getEligibilityForPids();
+  }, [getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !actualAddressInfo) return;
@@ -111,8 +110,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
       return { ...nft, isRedeemed, tokenId, nftInfo, isEligibile: true, type: "MerkleTree" };
     }));
-    // setNftTokens(prev => [...prev, ...treeNfts]);
-    setNftTokens(treeNfts);
+
+    //setNftTokens([...nftTokens, ...treeNfts]);
+    setNftTokens((prevState) => [...prevState, ...treeNfts]);
   }, [contract, actualAddress, actualAddressInfo])
 
   const getMerkleTree = useCallback(async () => {
@@ -170,8 +170,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (redeemMultipleFromTreeState.status === "Success") {
-      console.log("getTreeEligibility again");
-      /** TODO: need to update the nftData?.airdropToRedeem */
+      /** TODO: need to update the nftData?.airdropToRedeem? */
       getTreeEligibility();
     }
   }, [redeemMultipleFromTreeState, getTreeEligibility])
@@ -185,9 +184,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (redeemMultipleFromSharesState.status === "Success") {
-      /** call getEligibilityForPids */
+      /** TODO: need to update the nftData?.depositToRedeem? */
+      getEligibilityForPids();
     }
-  }, [redeemMultipleFromSharesState])
+  }, [redeemMultipleFromSharesState, getEligibilityForPids])
 
   return {
     lastMerkleTree,

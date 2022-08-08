@@ -25,8 +25,6 @@ export default function WalletInfo() {
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const { isShowing: isShowingMyAccount, toggle: toggleMyAccount } = useModal();
   
-  console.log("nftData?.airdropToRedeem", nftData?.airdropToRedeem);
-
   return (
     <div className="wallet-info-wrapper">
       <button className="wallet-info__my-account-btn" onClick={toggleMyAccount}>
