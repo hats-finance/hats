@@ -57,8 +57,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const depositToRedeem = nftTokens?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
 
   useEffect(() => {
-    setNftTokens([]);
-  }, [actualAddress]);
+    if (actualAddress !== prevActualAddress)
+      setNftTokens([]);
+  }, [actualAddress, prevActualAddress]);
 
   useEffect(() => {
     if (chainId)
