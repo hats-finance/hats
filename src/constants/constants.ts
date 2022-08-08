@@ -118,10 +118,6 @@ export enum PieChartColors {
   swapAndBurn = "#035B5F"
 }
 
-/** Supported images and videos extensions for NFTs media */
-export const IMAGES_EXTENTIONS = ["png"];
-export const VIDEOS_EXTENTIONS = ["mp4"];
-
 export enum SocialLinks {
   Discord = "https://discord.gg/xDphwRGyW7",
   Twitter = "https://twitter.com/HatsFinance",
@@ -131,3 +127,13 @@ export enum SocialLinks {
 }
 
 export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
+
+const NORMAL_SEVERITIES_COLORS = ["#141F50", "#19265F", "#213173", "#122777"];
+const GAMIFICATION_SEVERITIES_COLORS = ["#2A115F", "#3B1B7E", "#4B239F"];
+
+export const VAULTS_TYPE_SEVERITIES_COLORS = {
+  "gamification": GAMIFICATION_SEVERITIES_COLORS,
+  "normal": NORMAL_SEVERITIES_COLORS,
+  "Grants": NORMAL_SEVERITIES_COLORS,
+  "": NORMAL_SEVERITIES_COLORS
+}

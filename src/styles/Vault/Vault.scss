@@ -8,6 +8,11 @@ tr {
       background-color: $strong-purple !important;
     }
   }
+  &.Grants {
+    td {
+      background-color: $turquoise-2 !important;
+    }
+  }
 
   td {
     padding: 15px;

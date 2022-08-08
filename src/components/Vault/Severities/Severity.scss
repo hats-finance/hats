@@ -10,31 +10,6 @@
     cursor: pointer;
     height: 25px;
     align-items: center;
-    &.low {
-      background-color: $severity-low;
-    }
-    &.medium {
-      background-color: $severity-medium;
-    }
-    &.high {
-      background-color: $severity-high;
-    }
-    &.critical {
-      background-color: $severity-critical;
-    }
-    &.audit-request {
-      background-color: $severity-audit-request;
-      color: $white;
-    }
-    &.capture-the-flag {
-      background-color: $severity-purple-1;
-    }
-    &.other-bugs {
-      background-color: $severity-purple-2;
-    }
-    &.gas-optimization {
-      background-color: $severity-purple-3;
-    }
     .severity-title {
       color: $white;
       font-weight: bold;

@@ -221,15 +221,6 @@ export const isMobile = (): boolean => {
 };
 
 /**
- * Given a link string returns it's extension
- * @param {string} link
- */
-export const getLinkExtension = (link: string): string => {
-  const reg = /(?:\.([^.]+))?$/;
-  return reg.exec(link)?.[1] ?? "";
-};
-
-/**
  * Converts a JavaScript Object Notation (JSON) string into an object
  * @param {string} dataString
  */
@@ -302,7 +293,9 @@ export const ipfsTransformUri = (uri: string | undefined) => {
   }
   if (uri.startsWith("ipfs")) {
     let ipfs;
-    if (uri.startsWith("ipfs/")) {
+    if (uri.startsWith("ipfs://ipfs/")) {
+      ipfs = uri.slice(12);
+    } else if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
       ipfs = uri.slice(7);
