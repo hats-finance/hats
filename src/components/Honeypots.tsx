@@ -141,5 +141,5 @@ const useCheckForDepositElegibility = async (toggleShowEmbassyTicketPrompt: () =
     if (somethingToRedeem) {
       toggleShowEmbassyTicketPrompt();
     }
-  }, [somethingToRedeem, toggleShowEmbassyTicketPrompt])
+  }, [somethingToRedeem])
 }
