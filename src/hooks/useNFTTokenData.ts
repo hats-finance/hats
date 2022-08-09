@@ -3,7 +3,7 @@ import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core
 import { HATVaultsNFTContract, NFTContractDataProxy } from "constants/constants";
 import { BigNumber, Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AirdropMachineWallet, IStaker, NFTTokenInfo, TokenInfo } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
@@ -43,8 +43,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
-  const [nftTokens, setNftTokens] = useState<NFTTokenInfo[]>([]);
-  console.log("nftTokens", nftTokens);
+  const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
+  const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
+  const nftTokens = useMemo(() => [...(treeTokens || []), ...(proofTokens || [])], [treeTokens, proofTokens]);
   const actualAddress = address ?? account;
   const prevActualAddress = usePrevious(actualAddress);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
@@ -57,8 +58,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const depositToRedeem = nftTokens?.filter(nft => nft.type === "Deposit")?.some(nft => !nft.isRedeemed);
 
   useEffect(() => {
-    if (actualAddress !== prevActualAddress)
-      setNftTokens([]);
+    if (actualAddress !== prevActualAddress) {
+      setTreeTokens(undefined);
+      setProofTokens(undefined);
+    }
   }, [actualAddress, prevActualAddress]);
 
   useEffect(() => {
@@ -76,16 +79,17 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
   const getEligibilityForPids = useCallback(async () => {
-    if (!pidsWithAddress || !contract || pidsWithAddress.length === 0 || prevActualAddress === actualAddress) return;
+    if (!pidsWithAddress || !contract || pidsWithAddress.length === 0 || proofTokens) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
-      const isEligibile = await contract.isEligible(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
-      const tier = await contract.getTierFromShares(NFTContractDataProxy[masterAddress.toLowerCase()], pid, actualAddress);
+      const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
+      const isEligibile = await contract.isEligible(proxyAddress, pid, actualAddress);
+      const tiers = await contract.getTierFromShares(proxyAddress, pid, actualAddress);
       const tokens: NFTTokenInfo[] = [];
-      for (let i = 1; i <= tier; i++) {
-        const isRedeemed = await contract.tokensRedeemed(NFTContractDataProxy[masterAddress.toLowerCase()], pid, tier, actualAddress) as boolean;
+      for (let tier = 1; tier <= tiers; tier++) {
         /** adding +1 because the indexes in the IPFS start in 1 (not 0) */
-        const tokenId = ((await contract.tokenIds(actualAddress, pid, tier)) as BigNumber).add(1).toNumber();
+        const tokenId = await contract.getTokenId(proxyAddress, pid, tier);// as BigNumber).add(1).toNumber();
+        const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
         const tokenUri = await contract.uri(tokenId);
         const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
         tokens.push({ ...pidWithAddress, tier, isEligibile, isRedeemed, tokenId, nftInfo, type: "Deposit" });
@@ -94,28 +98,28 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }))
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    //setNftTokens([...nftTokens, ...eligibilityPerPid]);
-    setNftTokens((prevState) => [...prevState, ...eligibilityPerPid]);
-  }, [contract, actualAddress, prevActualAddress, pidsWithAddress])
+    setProofTokens(eligibilityPerPid);
+  }, [contract, actualAddress, pidsWithAddress, proofTokens])
 
   useEffect(() => {
     getEligibilityForPids();
   }, [getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
-    if (!contract || !actualAddressInfo || actualAddress === prevActualAddress) return;
+    if (!contract || !actualAddressInfo || treeTokens) return;
+
     const treeNfts = await Promise.all(actualAddressInfo.nft_elegebility.map(async (nft): Promise<NFTTokenInfo> => {
-      const isRedeemed = await contract.tokensRedeemed(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, nft.tier, actualAddress) as boolean;
-      /** adding +1 because the indexes in the IPFS start in 1 (not 0) */
-      const tokenId = ((await contract.tokenIds(actualAddress, nft.pid, nft.tier)) as BigNumber).add(1).toNumber();
+      const { pid, tier, masterAddress } = nft;
+      const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
+      const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
+      const isRedeemed = await contract.tokensRedeemed(proxyAddress, pid, tier, actualAddress) as boolean;
       const tokenUri = await contract.uri(tokenId);
       const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
       return { ...nft, isRedeemed, tokenId, nftInfo, isEligibile: true, type: "MerkleTree" };
     }));
 
-    //setNftTokens([...nftTokens, ...treeNfts]);
-    setNftTokens((prevState) => [...prevState, ...treeNfts]);
-  }, [contract, actualAddress, prevActualAddress, actualAddressInfo])
+    setTreeTokens(treeNfts);
+  }, [contract, actualAddress, treeTokens, actualAddressInfo])
 
   const getMerkleTree = useCallback(async () => {
     const data = contract?.filters.MerkleTreeChanged();
