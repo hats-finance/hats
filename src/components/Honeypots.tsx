@@ -89,7 +89,8 @@ export default function Honeypots({ showDeposit }: IProps) {
                 </>
               )}
             </tr>
-            {vaultsByGroup && Object.entries(vaultsByGroup).map(([type, vaults]) =>
+            {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
+            {vaultsByGroup && Object.entries(vaultsByGroup).sort().reverse().map(([type, vaults]) =>
               <React.Fragment key={type}>
                 <tr className="transparent-row">
                   <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
