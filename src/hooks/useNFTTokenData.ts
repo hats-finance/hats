@@ -112,7 +112,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const { pid, tier, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
       const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
-      const isRedeemed = await contract.tokensRedeemed(proxyAddress, pid, tier, actualAddress) as boolean;
+      const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
       const tokenUri = await contract.uri(tokenId);
       const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
       return { ...nft, isRedeemed, tokenId, nftInfo, isEligibile: true, type: "MerkleTree" };
