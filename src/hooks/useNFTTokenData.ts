@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
 import { HATVaultsNFTContract, NFTContractDataProxy } from "constants/constants";
-import { BigNumber, Bytes, Contract } from "ethers";
+import { Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AirdropMachineWallet, IStaker, NFTTokenInfo, TokenInfo } from "types/types";
@@ -76,10 +76,12 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     pollInterval: DATA_REFRESH_TIME
   })
 
+  const prevStakerData = usePrevious(stakerData);
+
   const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
 
   const getEligibilityForPids = useCallback(async () => {
-    if (!pidsWithAddress || !contract || pidsWithAddress.length === 0 || proofTokens) return;
+    if (!pidsWithAddress || !contract) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -99,15 +101,18 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
     setProofTokens(eligibilityPerPid);
-  }, [contract, actualAddress, pidsWithAddress, proofTokens])
+  }, [contract, actualAddress, pidsWithAddress])
+
 
   useEffect(() => {
-    getEligibilityForPids();
-  }, [getEligibilityForPids])
+    if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
+      getEligibilityForPids();
+    }
+
+  }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
-    if (!contract || !actualAddressInfo || treeTokens) return;
-
+    if (!contract || !actualAddressInfo) return;
     const treeNfts = await Promise.all(actualAddressInfo.nft_elegebility.map(async (nft): Promise<NFTTokenInfo> => {
       const { pid, tier, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -119,7 +124,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }));
 
     setTreeTokens(treeNfts);
-  }, [contract, actualAddress, treeTokens, actualAddressInfo])
+  }, [contract, actualAddress, actualAddressInfo])
 
   const getMerkleTree = useCallback(async () => {
     const data = contract?.filters.MerkleTreeChanged();
@@ -134,6 +139,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const ipfsContent = await response.json();
       setMerkleTree(ipfsContent.wallets);
       setLastMerkleTree(args);
+      getTreeEligibility()
     }
   }, [contract])
 
@@ -143,8 +149,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [getMerkleTree, contract])
 
   useEffect(() => {
-    getTreeEligibility();
-  }, [getTreeEligibility]);
+    if (actualAddressInfo)
+      getTreeEligibility();
+  }, [actualAddressInfo, getTreeEligibility]);
 
   const buildProofsForRedeemables = useCallback(() => {
     if (!merkleTree) {
