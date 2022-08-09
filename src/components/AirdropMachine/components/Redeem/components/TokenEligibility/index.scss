@@ -1,48 +1,8 @@
-@import "../../../../../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .token-eligibility-wrapper {
   display: flex;
   flex-direction: column;
-  .token-eligibility__total-hats-container {
-    display: flex;
-    flex-direction: column;
-    color: $dark-turquoise;
-    margin: 30px 0;
-    .token-eligibility__total-hats {
-      display: flex;
-      align-items: center;
-      border: 1px solid $turquoise;
-      padding: 20px;
-      color: $white;
-      margin-top: 5px;
-      .token-eligibility__value {
-        font-size: $medium-2;
-        margin-left: 15px;
-        font-weight: bold;
-      }
-    }
-  }
-  .token-eligibility__breakdown-wrapper {
-    .token-eligibility__breakdown-element {
-      display: flex;
-      justify-content: space-between;
-      margin: 15px 0;
-      .token-eligibility__breakdown_element-name {
-        display: flex;
-        align-items: center;
-        img {
-          margin-right: 10px;
-        }
-      }
-      .token-eligibility__breakdown_element-value {
-        white-space: nowrap;
-      }
-      &.total {
-        border-top: 1px solid $gray;
-        padding-top: 15px;
-      }
-    }
-  }
 
   section {
     display: flex;
@@ -54,8 +14,4 @@
       color: $yellow;
     }
   }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-
 }

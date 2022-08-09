@@ -136,8 +136,18 @@
         "title": "CONGRATS!",
         "text": "You are eligible to Hats token and NFT airdrop"
       },
+      "Redeemed": {
+        "title": "ALREADY REDEEMED",
+        "text-1": "It seems you already redeemed your NFT, view your eligibility:",
+        "button-text": "CHECK ANOTHER WALLET"
+      },
       "TokenEligibility": {
         "text-1": "Your tokens will be availble when the airdrop becomes live in the next few months.",
+        "text-2": "Please notice!",
+        "text-3": "In order to stay eligible and receive your token airdrop you must redeem your NFT",
+        "button-text": "CONTINUE TO THE NFT AIRDROP"
+      },
+      "TokenEligibilityInfo": {
         "text-2": "token eligibilty",
         "text-3": "Eligibility criteria breakdown",
         "text-4": "Learn more",
@@ -146,10 +156,7 @@
         "text-7": "“Crows” NFT holders",
         "text-8": "“Super coder” NFT holders",
         "text-9": "Hats early supporters",
-        "text-10": "TOTAL",
-        "text-11": "Please notice!",
-        "text-12": "In order to stay eligible and receive your token airdrop you must redeem your NFT",
-        "button-text": "CONTINUE TO THE NFT AIRDROP"
+        "text-10": "TOTAL"
       },
       "NFTAirdrop": {
         "text-1": "To claim the token airdrop, when the airdrop become live, you will need to hold the below NFT in your wallet. \n\n The NFT will generate you an access to the project Embassy - redeem and join!",

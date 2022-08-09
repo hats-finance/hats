@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AirdropMachineContext } from "../CheckEligibility/CheckEligibility";
 import Eligible from "./components/Eligible/Eligible";
 import NotEligible from "./components/NotEligible/NotEligible";
-import "./index.scss";
+import Redeemed from "./components/Redeemed/Redeemed";
 
 export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
@@ -11,10 +11,6 @@ export default function Redeem() {
   if (nftData?.actualAddressInfo) {
     if (nftData.airdropToRedeem) {
       return <Eligible />
-    } else return (
-      <div className="already-redeemed-wrapper">
-        Already Redeemed!
-      </div>
-    )
+    } else return <Redeemed />
   } else return <NotEligible />;
 }

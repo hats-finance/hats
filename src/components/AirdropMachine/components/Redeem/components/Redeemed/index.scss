@@ -1,23 +1,23 @@
 @import "styles/constants.scss";
 
-.not-eligible-wrapper {
+.redeemed-wrapper {
   color: $white;
   padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  .not-eligible__title {
+  .redeemed__title {
     font-size: $medium-2;
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
   }
-  .not-eligible__wallet-container {
+  .redeemed__wallet-container {
     display: flex;
     flex-direction: column;
     color: $dirty-turquoise;
     margin: 40px 0;
-    .not-eligible__wallet-address {
+    .redeemed__wallet-address {
       padding: 20px 0;
       color: $turquoise;
       overflow: hidden;
@@ -25,15 +25,15 @@
       font-size: $medium-2;
     }
   }
-  .not-eligible__criterias-wrapper {
+  .redeemed__criterias-wrapper {
     display: flex;
     flex-direction: column;
-    .not-eligible__criterias-top {
+    .redeemed__criterias-top {
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
     }
-    .not-eligible__criteria {
+    .redeemed__criteria {
       display: flex;
       align-items: center;
       margin: 10px 0;
@@ -48,14 +48,14 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
-  .not-eligible-wrapper {
+  .redeemed-wrapper {
     padding: $modal-element-padding-mobile;
     text-align: center;
-    .not-eligible__title {
+    .redeemed__title {
       font-size: $moderate;
     }
-    .not-eligible__criterias-wrapper {
-      .not-eligible__criterias-top {
+    .redeemed__criterias-wrapper {
+      .redeemed__criterias-top {
         text-align: start;
       }
     }
