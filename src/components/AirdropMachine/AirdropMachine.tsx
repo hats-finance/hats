@@ -16,9 +16,7 @@ export default function AirdropMachine() {
   return (
     <div className="content airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
-        <div className="airdrop-machine__image-container">
-          <img src={SailBoatImage} className="airdrop-machine__image" alt="sail boat" />
-        </div>
+        <img src={SailBoatImage} className="airdrop-machine__image" alt="sail boat" />
         <div className="airdrop-machine__container-with-timeline">
           <div className="airdrop-machine__section first-section">
             <div className="airdrop-machine__title-wrapper">

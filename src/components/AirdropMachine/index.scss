@@ -12,18 +12,13 @@
     width: 100%;
     color: $white;
     font-size: $moderate;
-    .airdrop-machine__image-container {
-      position: relative;
-      .airdrop-machine__image {
-        display: flex;
-        margin: auto;
-        margin-bottom: 50px;
-      }
+    .airdrop-machine__image {
+      width: inherit;
+      margin-bottom: 50px;
     }
+
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
-      border-image-slice: 1;
-      border-image-source: url("../../assets/animations/airdrop-timeline.gif");
     }
     .airdrop-machine__section {
       //border-left: 2px solid $vault-blue;
@@ -65,10 +60,8 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-machine-wrapper {
     .airdrop-machine-content {
-      .airdrop-machine__image-container {
-        .airdrop-machine__image {
-          width: 100vw;
-        }
+      .airdrop-machine__image {
+        width: 100vw;
       }
       .airdrop-machine__container-with-timeline {
         border-left: unset;
