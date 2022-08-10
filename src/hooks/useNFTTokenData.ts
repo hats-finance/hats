@@ -138,7 +138,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const ipfsContent = await response.json();
       setMerkleTree(ipfsContent.wallets);
       setLastMerkleTree(args);
-      getTreeEligibility()
     }
   }, [contract])
 
