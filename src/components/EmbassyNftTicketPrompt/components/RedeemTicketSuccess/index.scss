@@ -6,6 +6,12 @@
   color: $white;
   padding: $modal-element-padding;
   max-width: 600px;
+  .redeem-ticket-success__title{
+    font-weight: bold;
+    font-size: $medium;
+    text-align: center;
+    margin-bottom: 10px;
+  }
   .redeem-ticket-success__features-wrapper {
     display: flex;
     flex-direction: column;

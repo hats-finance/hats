@@ -32,3 +32,18 @@
     opacity: 0.5;
   }
 }
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-nfts-wrapper {
+    .my-nfts__container {
+      .my-nfts__slide {
+        img {
+          width: 100px;
+        }
+        .my-nfts__not-redeemed-label {
+          font-size: $xxsmall;
+        }
+      }
+    }
+  }
+}

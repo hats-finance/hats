@@ -10,8 +10,17 @@
   .embassy-nft-ticket__redeem-btn {
     margin-top: 20px;
   }
-  img {
-    width: 100px;
+  .swiper {
+    margin-left: unset;
+    margin-right: unset;
+    margin-top: 15px;
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      img {
+        width: 150px;
+      }
+    }
   }
   &.disabled {
     pointer-events: none;

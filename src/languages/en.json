@@ -95,11 +95,6 @@
       "section-3": {
         "title": "CHECK YOUR TOKEN ELIGIBILTY"
       },
-      "section-4": {
-        "title": "JOIN YOUR EMBASSY",
-        "text": "You can access your embassy with your NFT. \n\n Each project embassy can send one ambassador to the security council. \n\n Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance. \n\n To be part of a unique group with the project committee. To be the first to learn about security topics related to your protocol.",
-        "button-text": "JOIN AN EMBASSY ON DISCORD"
-      },
       "FAQ": {
         "question-1": "WHAT IS AN EMBASSY? \n\n",
         "answer-1": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that reviews disclosed exploits or who have deposited into the bug bounty will gain access to their Embassy.",
@@ -160,7 +155,7 @@
       },
       "NFTAirdrop": {
         "text-1": "To claim the token airdrop, when the airdrop become live, you will need to hold the below NFT in your wallet. \n\n The NFT will generate you an access to the project Embassy - redeem and join!",
-        "text-2": "What is an embassy? \n\n",
+        "text-2": "WHAT IS AN EMBASSY? \n\n",
         "text-3": "Every project that hosts a decentral bug bounty will form an embassy. Embassies are token gated communities for those that have proof of participating in the security of a project. The access will be managed by a special NFT that can be earned for contributions. Individuals that are either part of the committee that reviews disclosed exploits or who have deposited into the bug bounty will gain access to their Embassy.",
         "button-text": "REDEEM YOUR NFT"
       }
@@ -170,8 +165,9 @@
       "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
       "button-text": "REDEEM",
       "RedeemTicketSuccess": {
+        "title": "REDEEM SUCCESSFUL!",
         "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
-        "text-2": "Why should I join an embassy?",
+        "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
         "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
         "text-4": "Be the first to learn about security topics related to your protocol.",
         "text-5": "Be part of a unique group with the project committee.",

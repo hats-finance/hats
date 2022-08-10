@@ -8,6 +8,7 @@ export default function RedeemTicketSuccess() {
 
   return (
     <div className="redeem-ticket-success-wrapper">
+      <div className="redeem-ticket-success__title">{t("EmbassyNftTicketPrompt.RedeemTicketSuccess.title")}</div>
       {t("EmbassyNftTicketPrompt.RedeemTicketSuccess.text-1")}
       <b>{t("EmbassyNftTicketPrompt.RedeemTicketSuccess.text-2")}</b>
       <div className="redeem-ticket-success__features-wrapper">
