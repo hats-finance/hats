@@ -7,11 +7,15 @@
   flex-direction: column;
   justify-content: center;
   min-width: 750px;
+  padding-top: 0;
   .not-eligible__title {
     font-size: $medium-2;
     font-weight: bold;
     text-align: center;
     margin-bottom: 10px;
+  }
+  .not-eligible__sub-title {
+    text-align: center;
   }
   .not-eligible__wallet-container {
     display: flex;

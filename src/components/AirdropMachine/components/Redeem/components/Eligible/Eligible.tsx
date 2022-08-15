@@ -27,13 +27,13 @@ export default function Eligible() {
       </div>
       <div className="eligible__stages-wrapper">
         <div onClick={() => setStage(Stage.TokenEligibility)} className="eligible__stage-title-wrapper">
-          <div className="eligible__stage-number">1</div>
+          <div className="eligible__stage-number first">1</div>
           <div className={classNames("eligible__stage-title", { "eligible__stage-title-current": stage === Stage.TokenEligibility })}>
             TOKEN <br className="mobile-break" /> ELIGIBILITY
           </div>
         </div>
         <div onClick={() => setStage(Stage.NFTAirdrop)} className="eligible__stage-title-wrapper">
-          <div className="eligible__stage-number">2</div>
+          <div className="eligible__stage-number second">2</div>
           <div className={classNames("eligible__stage-title", { "eligible__stage-title-current": stage === Stage.NFTAirdrop })}>
             NFT <br className="mobile-break" /> AIRDROP
           </div>

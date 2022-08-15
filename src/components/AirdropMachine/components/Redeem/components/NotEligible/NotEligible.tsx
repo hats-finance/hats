@@ -12,7 +12,7 @@ export default function NotEligible() {
   return (
     <div className="not-eligible-wrapper">
       <div className="not-eligible__title">{t("AirdropMachine.NotEligible.title")}</div>
-      <div>{t("AirdropMachine.NotEligible.text-1")}</div>
+      <div className="not-eligible__sub-title">{t("AirdropMachine.NotEligible.text-1")}</div>
       <div className="not-eligible__wallet-container">
         <span>{t("AirdropMachine.NotEligible.text-2")}</span>
         <div className="not-eligible__wallet-address">

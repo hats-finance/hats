@@ -19,6 +19,10 @@
 
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
+      border-image-source: linear-gradient(to bottom, #3756C0, #8AFCFD);
+      border-image-slice: 1;
+      border-width: 5px;
+      padding-bottom: 50px;
     }
     .airdrop-machine__section {
       //border-left: 2px solid $vault-blue;
@@ -30,10 +34,11 @@
         font-size: $large;
         padding-left: 50px;
         font-weight: bold;
-        margin-bottom: 10px;
+        margin-bottom: 24px;
       }
       .airdrop-machine__section-content {
         padding-left: 50px;
+        max-width: 900px;
         .airdrop-machine__eligibility-types {
           display: flex;
           flex-direction: column;
@@ -41,7 +46,7 @@
             display: flex;
             margin: 15px 0;
             img {
-              margin-right: 10px;
+              margin-right: 30px;
               height: 25px;
             }
           }

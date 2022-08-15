@@ -20,7 +20,7 @@ export default function AirdropMachine() {
         <div className="airdrop-machine__container-with-timeline">
           <div className="airdrop-machine__section first-section">
             <div className="airdrop-machine__title-wrapper">
-              {screenSize === ScreenSize.Desktop && <TimelineDot />}
+              {screenSize === ScreenSize.Desktop && <TimelineDot color="#3756C0" />}
               {t("AirdropMachine.section-1.title")}
             </div>
             <div className="airdrop-machine__section-content">
@@ -30,7 +30,7 @@ export default function AirdropMachine() {
           {screenSize === ScreenSize.Mobile && <TimelineDot />}
           <div className="airdrop-machine__section">
             <div className="airdrop-machine__title-wrapper">
-              {screenSize === ScreenSize.Desktop && <TimelineDot />}
+              {screenSize === ScreenSize.Desktop && <TimelineDot color="#4C80D0" />}
               {t("AirdropMachine.section-2.title")}
             </div>
             <div className="airdrop-machine__section-content">
@@ -77,7 +77,7 @@ export default function AirdropMachine() {
         </div>
         <div className="airdrop-machine__section last-section">
           <div className="airdrop-machine__title-wrapper">
-            {screenSize === ScreenSize.Desktop && <TimelineDot />}
+            {screenSize === ScreenSize.Desktop && <TimelineDot color="#88F7FC" left="-25px" />}
             {t("AirdropMachine.section-3.title")}
           </div>
           <div className="airdrop-machine__section-content">

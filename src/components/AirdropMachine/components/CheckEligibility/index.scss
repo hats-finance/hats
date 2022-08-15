@@ -3,10 +3,12 @@
 .check-eligibility-wrapper {
   .check-eligibility__input-wrapper {
     max-width: 1000px;
-    margin-top: 10px;
+    margin-top: 24px;
     .check-eligibility__input-container {
       border: 1px solid $turquoise;
       display: flex;
+      height: 70px;
+      align-items: center;
       &.check-eligibility__input-error {
         border: 1px solid $red;
       }
@@ -15,13 +17,13 @@
         background: none;
         color: $white;
         height: 50px;
-        text-indent: 10px;
         width: 100%;
         overflow: hidden;
         text-overflow: ellipsis;
       }
       .check-eligibility__clear-input {
         border: none;
+        font-size: $medium;
       }
     }
     .check-eligibility__error-label {
@@ -32,7 +34,7 @@
       $check-button-width: 220px;
       width: $check-button-width;
       margin-left: calc(100% - $check-button-width);
-      margin-top: 20px;
+      margin-top: 30px;
     }
   }
 }
