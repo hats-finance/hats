@@ -26,6 +26,7 @@ export default function MyNFTs() {
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
+      <span className="my-nfts__title">NFTs</span>
       <div className="my-nfts__container">
         {nfts?.length === 0 ? "No NFTs yet" : (
           <Swiper

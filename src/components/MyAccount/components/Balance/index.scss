@@ -1,0 +1,25 @@
+@import "styles/constants.scss";
+
+.my-account-balance-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $blue-2;
+  padding: 15px;
+  .my-account-balance__title {
+    font-weight: bold;
+  }
+  .my-account-balance__value {
+    margin-top: 20px;
+    color: $turquoise;
+    font-weight: bold;
+    font-size: $medium;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-account-balance-wrapper {
+    .my-account-balance__value {
+      font-size: $moderate;
+    }
+  }
+}

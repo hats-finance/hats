@@ -1,0 +1,25 @@
+@import "styles/constants.scss";
+
+.total-staked-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $blue-2;
+  padding: 15px;
+  .total-staked__title {
+    font-weight: bold;
+  }
+  .total-staked__value {
+    margin-top: 20px;
+    color: $turquoise;
+    font-weight: bold;
+    font-size: $medium;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .total-staked-wrapper {
+    .total-staked__value {
+      font-size: $moderate;
+    }
+  }
+}

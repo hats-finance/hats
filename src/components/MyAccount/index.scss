@@ -18,6 +18,11 @@
       font-size: $medium;
     }
   }
+  .my-account__top-wrapper {
+    display: flex;
+    margin-top: 20px;
+    justify-content: space-between;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

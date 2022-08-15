@@ -6,6 +6,9 @@
   background-color: $blue-2;
   padding: 15px;
   margin-top: 20px;
+  .my-nfts__title {
+    font-weight: bold;
+  }
   .my-nfts__container {
     margin: 15px 0;
     .my-nfts__slide {
