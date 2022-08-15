@@ -12,9 +12,9 @@ export default function Balance() {
   const hatsBalanceString = (+hatsBalance).toFixed(4);
 
   return (
-    <div className="balance-wrapper">
-      <span className="balance__title">{t("Header.MyAccount.Balance.title")}</span>
-      <span className="balance__value">{hatsBalanceString}</span>
+    <div className="my-account-balance-wrapper">
+      <span className="my-account-balance__title">{t("Header.MyAccount.Balance.title")}</span>
+      <span className="my-account-balance__value">{hatsBalanceString}</span>
     </div>
   )
 }
