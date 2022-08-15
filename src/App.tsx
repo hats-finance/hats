@@ -32,6 +32,7 @@ import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/Ai
 import "./styles/App.scss";
 import { useCheckRedeemableNfts } from "components/AirdropMachine/utils";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import EmbassyNotificationBar from "components/EmbassyNotificationBar/EmbassyNotificationBar";
 
 function App() {
   const { t } = useTranslation();
@@ -65,6 +66,7 @@ function App() {
       {hasSeenWelcomePage && acceptedCookies !== "1" && (
         <Cookies setAcceptedCookies={setAcceptedCookies} />
       )}
+      <EmbassyNotificationBar />
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}

@@ -10,6 +10,10 @@
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
     },
+    "EmbassyNotificationBar": {
+      "title": "NEW - JOIN YOUR SECURITY EMBASSY",
+      "learn-more": "LEARN MORE"
+    },
     "Header": {
       "WalletInfo": {
         "my-account": "My Account"
@@ -25,8 +29,14 @@
       }
     },
     "DepositWithdraw": {
-      "min-amount-for-embassy": "Min requirement to enter an embassy is",
-      "proof-of-deposit-eligibility": "Your desposit will give you elegibility for a chain protector NFT ticket for Hats embassy. \n\n You NFT will be redeemable after the deposit transaction.",
+      "EmbassyEligibility": {
+        "title": "NEW! Embassy eligibility",
+        "text-1": "The minimum requirement to enter an embassy is ",
+        "text-2": "(Staked token) \n\n",
+        "text-3": "You are eligible to",
+        "text-4": "vault Embassy NFT \n\n",
+        "text-5": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's embassy."
+      },
       "Assets": {
         "assets": "Assets",
         "withdraw": "Withdraw",

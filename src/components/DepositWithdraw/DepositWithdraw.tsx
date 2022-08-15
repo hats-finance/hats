@@ -8,7 +8,7 @@ import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IVault } from "../../types/types";
-import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING, MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE } from "../../constants/constants";
+import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
 import ApproveToken from "./ApproveToken/ApproveToken";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import TokenSelect from "./TokenSelect/TokenSelect";
@@ -17,8 +17,8 @@ import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import { useTranslation } from "react-i18next";
 import "./index.scss";
+import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
 
 interface IProps {
   data: IVault
@@ -31,7 +31,6 @@ enum Tab {
 }
 
 export default function DepositWithdraw(props: IProps) {
-  const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
@@ -67,7 +66,6 @@ export default function DepositWithdraw(props: IProps) {
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
   const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(master.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
-  const minToEmbassy = millify(Number(formatUnits(selectedVault.honeyPotBalance, selectedVault.stakingTokenDecimals)) * MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
@@ -175,10 +173,9 @@ export default function DepositWithdraw(props: IProps) {
           {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
           {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
           {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
-          {tab === Tab.Deposit && <div className="deposit__min-to-embassy">{`${t("DepositWithdraw.min-amount-for-embassy")} ${minToEmbassy} ${selectedVault?.stakingTokenSymbol}`}</div>}
         </div>
-        {tab === Tab.Deposit && <div className="deposit__proof-of-deposit-text">{t("DepositWithdraw.proof-of-deposit-eligibility")}</div>}
       </div>
+      {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />}
       <Assets vault={props.data} />
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
