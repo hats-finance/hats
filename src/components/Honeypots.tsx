@@ -35,7 +35,6 @@ export default function Honeypots({ showDeposit }: IProps) {
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
   const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
-  const prevDepositToRedeem = usePrevious(nftData?.depositToRedeem);
 
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const prevCurrentTransaction = usePrevious(currentTransaction);
@@ -75,11 +74,11 @@ export default function Honeypots({ showDeposit }: IProps) {
   }
 
   useEffect(() => {
-    if (!currentTransaction && prevCurrentTransaction?.transactionName === "deposit and claim" && nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem) {
-      console.log("toggleEmbassyPrompt NOWWWW")
+    // TODO: we need to have an enum of transactions names >>>
+    if (!currentTransaction && prevCurrentTransaction?.transactionName === "deposit and claim" && nftData?.depositToRedeem) {
       toggleEmbassyPrompt();
     }
-  }, [toggleEmbassyPrompt, nftData?.depositToRedeem, prevDepositToRedeem, currentTransaction, prevCurrentTransaction])
+  }, [toggleEmbassyPrompt, nftData?.depositToRedeem, currentTransaction, prevCurrentTransaction])
 
   return (
     <div className="content honeypots-wrapper">
