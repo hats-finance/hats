@@ -48,7 +48,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
     if (exists) {
-      console.log("exists");
 
       if (curr.isDeposit)
         exists.isDeposit = true;
@@ -68,9 +67,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const airdropToRedeem = nftTokens?.filter(nft => nft.isMerkleTree)?.some(nft => !nft.isRedeemed);
   const depositToRedeem = nftTokens?.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed);
-
-  console.log("nftTokens", nftTokens);
-
 
   useEffect(() => {
     if (actualAddress !== prevActualAddress) {
