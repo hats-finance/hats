@@ -16,8 +16,8 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const { account } = useEthers();
   const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
   const formatAvailableToWithdraw = availableToWithdraw ? Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals)) : 0;
-  const minToEmbassy = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) * MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE;
-  const isEligible = formatAvailableToWithdraw >= minToEmbassy ? true : false;
+  const minToEmbassy = (Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) - formatAvailableToWithdraw) * MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE;
+  const isEligible = formatAvailableToWithdraw >= minToEmbassy;
 
   return (
     <div className="embassy-eligibility-wrapper">

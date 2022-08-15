@@ -20,6 +20,15 @@
       },
       "MyAccount": {
         "hello": "HELLO",
+        "Balance": {
+          "title": "HAT Balance"
+        },
+        "TotalStaked": {
+          "title": "Total Staked"
+        },
+        "StakingApy": {
+          "title": "Staking APY"
+        },
         "MyNFTs": {
           "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
           "deposit-redeem": "REDEEM ALL FROM DEPOSITS",

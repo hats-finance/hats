@@ -1,0 +1,25 @@
+@import "styles/constants.scss";
+
+.balance-wrapper {
+  display: flex;
+  flex-direction: column;
+  background-color: $blue-2;
+  padding: 15px;
+  .balance__title {
+    font-weight: bold;
+  }
+  .balance__value {
+    margin-top: 20px;
+    color: $turquoise;
+    font-weight: bold;
+    font-size: $medium;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .balance-wrapper {
+    .balance__value {
+      font-size: $moderate;
+    }
+  }
+}

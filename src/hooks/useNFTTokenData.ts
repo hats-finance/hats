@@ -105,6 +105,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
+      console.log(">>>>>>")
       getEligibilityForPids();
     }
 
@@ -182,6 +183,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   useEffect(() => {
     if (redeemMultipleFromTreeState.status === "Success") {
       /** TODO: need to update the nftData?.airdropToRedeem? */
+      console.log("calling again getTreeEligibility")
       getTreeEligibility();
     }
   }, [redeemMultipleFromTreeState, getTreeEligibility])
@@ -196,6 +198,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   useEffect(() => {
     if (redeemMultipleFromSharesState.status === "Success") {
       /** TODO: need to update the nftData?.depositToRedeem? */
+      console.log("calling again getEligibilityForPids")
       getEligibilityForPids();
     }
   }, [redeemMultipleFromSharesState, getEligibilityForPids])
