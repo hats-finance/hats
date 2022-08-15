@@ -1,6 +1,7 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Loading from "./Shared/Loading";
 import Modal from "./Shared/Modal";
+import { default as ModalHook } from "../components/Shared/Modal/Modal";
 import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import { useSelector } from "react-redux";
@@ -14,20 +15,30 @@ import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import EmbassyNftTicketPrompt from "./EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import useModal from "hooks/useModal";
+import { useTranslation } from "react-i18next";
+import { usePrevious } from "hooks/usePrevious";
+import { useTransactions } from "@usedapp/core";
 
 interface IProps {
   showDeposit?: boolean
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
-
-  const { vaults, tokenPrices } = useVaults();
+  const { t } = useTranslation();
+  const { vaults, tokenPrices, nftData } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { pid } = useParams();
   const navigate = useNavigate();
   const selectedVault = pid ? vaults?.find(v => v.pid === pid) : undefined;
+  const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
+  const prevDepositToRedeem = usePrevious(nftData?.depositToRedeem);
+
+  const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
+  const prevCurrentTransaction = usePrevious(currentTransaction);
 
   const vaultValue = useCallback((vault: IVault) => {
     const { honeyPotBalance, stakingTokenDecimals } = vault;
@@ -62,6 +73,13 @@ export default function Honeypots({ showDeposit }: IProps) {
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
+
+  useEffect(() => {
+    if (!currentTransaction && prevCurrentTransaction?.transactionName === "deposit and claim" && nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem) {
+      console.log("toggleEmbassyPrompt NOWWWW")
+      toggleEmbassyPrompt();
+    }
+  }, [toggleEmbassyPrompt, nftData?.depositToRedeem, prevDepositToRedeem, currentTransaction, prevCurrentTransaction])
 
   return (
     <div className="content honeypots-wrapper">
@@ -118,6 +136,12 @@ export default function Honeypots({ showDeposit }: IProps) {
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>
       }
+      <ModalHook
+        title={t("EmbassyNftTicketPrompt.prompt-title")}
+        isShowing={showEmbassyPrompt}
+        hide={toggleEmbassyPrompt}>
+        <EmbassyNftTicketPrompt />
+      </ModalHook>
     </div>
   )
 }
