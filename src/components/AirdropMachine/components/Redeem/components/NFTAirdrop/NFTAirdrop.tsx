@@ -12,13 +12,13 @@ export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { nftData: { redeemTree, nftTokens, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
 
-  const showLoader = redeemMultipleFromTreeState.status === "PendingSignature" || redeemMultipleFromTreeState.status === "Mining";
+  const showLoader = ["PendingSignature", "Mining"].includes(redeemMultipleFromTreeState.status);
 
   const handleRedeem = async () => {
     await redeemTree();
   }
 
-  const nfts = nftTokens?.filter(nft => nft.type === "MerkleTree" && !nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>

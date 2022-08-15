@@ -1,3 +1,5 @@
+import { BigNumber } from "ethers"
+
 export interface IVault {
   id: string
   descriptionHash: string
@@ -213,10 +215,10 @@ export interface TokenInfo {
 export interface NFTTokenInfo {
   pid: number;
   tier: number;
-  tokenId: number;
+  tokenId: BigNumber;
   nftInfo: TokenInfo;
-  isEligibile: boolean;
   isRedeemed: boolean;
   masterAddress: string;
-  type: 'MerkleTree' | 'Deposit';
+  isMerkleTree: boolean;
+  isDeposit: boolean;
 }

@@ -20,9 +20,9 @@ export default function EmbassyNftTicketPrompt() {
     }
   }, [nftData?.redeemMultipleFromSharesState])
 
-  const showLoader = nftData?.redeemMultipleFromSharesState.status === "PendingSignature" || nftData?.redeemMultipleFromSharesState.status === "Mining";
+  const showLoader = nftData?.redeemMultipleFromSharesState.status && ["PendingSignature", "Mining"].includes(nftData?.redeemMultipleFromSharesState.status);
 
-  const nfts = nftData?.nftTokens?.filter(nft => nft.type === "Deposit" && nft.isEligibile).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
       <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>)
