@@ -7,7 +7,8 @@ export default function TotalStaked() {
   return (
     <div className="total-staked-wrapper">
       <span className="total-staked__title">{t("Header.MyAccount.TotalStaked.title")}</span>
-      <span className="total-staked__value">???</span>
+      {/* TODO: need to calculate */}
+      <span className="total-staked__value">-</span>
     </div>
   )
 }
