@@ -76,6 +76,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   useEffect(() => {
     // TODO: we need to have an enum of transactions names >>>
     if (!currentTransaction && prevCurrentTransaction?.transactionName === "deposit and claim" && nftData?.depositToRedeem) {
+      console.log("prevCurrentTransaction", prevCurrentTransaction);
       toggleEmbassyPrompt();
     }
   }, [toggleEmbassyPrompt, nftData?.depositToRedeem, currentTransaction, prevCurrentTransaction])

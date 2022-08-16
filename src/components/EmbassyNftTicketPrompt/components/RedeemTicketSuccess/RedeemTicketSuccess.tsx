@@ -2,6 +2,7 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { useTranslation } from "react-i18next";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import "./index.scss";
+import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
 
 export default function RedeemTicketSuccess() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export default function RedeemTicketSuccess() {
           {t("EmbassyNftTicketPrompt.RedeemTicketSuccess.text-5")}
         </div>
       </div>
-      <button className="redeem-ticket-success__join-embassy-btn">
+      <button className="redeem-ticket-success__join-embassy-btn" onClick={() => window.open(DISCORD_ENTRY_CHANNEL)}>
         <DiscordIcon />
         &nbsp;
         {t("EmbassyNftTicketPrompt.RedeemTicketSuccess.button-text")}

@@ -127,6 +127,7 @@ export enum SocialLinks {
 }
 
 export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
+export const DISCORD_ENTRY_CHANNEL = "https://discord.com/channels/810534320040837121/976144633899925504";
 
 const NORMAL_SEVERITIES_COLORS = ["#141F50", "#19265F", "#213173", "#122777"];
 const GAMIFICATION_SEVERITIES_COLORS = ["#2A115F", "#3B1B7E", "#4B239F"];

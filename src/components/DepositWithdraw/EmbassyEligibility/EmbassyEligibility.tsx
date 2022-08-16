@@ -23,14 +23,19 @@ export default function EmbassyEligibility({ vault }: IProps) {
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
-        {isEligible ?
-            <span>
-              {`${t("DepositWithdraw.EmbassyEligibility.text-3")} ${vault.description?.["project-metadata"].name} ${t("DepositWithdraw.EmbassyEligibility.text-4")}`}
-            </span> :
-            <span className="embassy-eligibility__content__min-to-embassy">
-              {`${t("DepositWithdraw.EmbassyEligibility.text-1")} ${millify(minToEmbassy)} ${t("DepositWithdraw.EmbassyEligibility.text-2")}`}
-            </span>}
-          <span>{t("DepositWithdraw.EmbassyEligibility.text-5")}</span>
+        {availableToWithdraw ? isEligible ?
+          <span>
+            {`${t("DepositWithdraw.EmbassyEligibility.text-3")}
+            ${vault.description?.["project-metadata"].name}
+            ${t("DepositWithdraw.EmbassyEligibility.text-4")}`} <br /><br />
+          </span> :
+          <span className="embassy-eligibility__content__min-to-embassy">
+            {`${t("DepositWithdraw.EmbassyEligibility.text-1")}
+            ${millify(minToEmbassy)}
+            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`} <br /><br />
+          </span>
+          : ""}
+        <span>{t("DepositWithdraw.EmbassyEligibility.text-5")}</span>
       </div>
     </div>
   )
