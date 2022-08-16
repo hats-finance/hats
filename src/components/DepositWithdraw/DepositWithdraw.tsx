@@ -23,6 +23,7 @@ import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
 interface IProps {
   data: IVault
   setShowModal: Function
+  toggleEmbassyPrompt: () => void
 }
 
 enum Tab {
@@ -34,7 +35,7 @@ export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
-  const { setShowModal } = props;
+  const { setShowModal, toggleEmbassyPrompt } = props;
   const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
@@ -43,7 +44,7 @@ export default function DepositWithdraw(props: IProps) {
   const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
 
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -66,7 +67,6 @@ export default function DepositWithdraw(props: IProps) {
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
   const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(master.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
-
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
@@ -77,7 +77,12 @@ export default function DepositWithdraw(props: IProps) {
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
-    depositAndClaim(selectedPid, userInputValue);
+    await depositAndClaim(selectedPid, userInputValue);
+    if (nftData?.depositToRedeem && nftData?.nftTokens?.some(nft => nft.pid === Number(selectedPid))) {
+      toggleEmbassyPrompt();
+    } else {
+      setShowModal(false);
+    }
   }, [selectedPid, userInputValue, depositAndClaim])
 
   const tryDeposit = useCallback(async () => {
@@ -118,7 +123,7 @@ export default function DepositWithdraw(props: IProps) {
     claimRewardState,
     checkInState]
 
-  const keepModalOpen = [withdrawRequestState, approveTokenState];
+  const keepModalOpen = [withdrawRequestState, approveTokenState, depositAndClaimState];
   const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature" || state.status === "Mining");
   const prevApproveTokenState = usePrevious(approveTokenState);
