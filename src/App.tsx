@@ -63,7 +63,7 @@ function App() {
       {hasSeenWelcomePage && acceptedCookies !== "1" && (
         <Cookies setAcceptedCookies={setAcceptedCookies} />
       )}
-      <EmbassyNotificationBar />
+      {hasSeenWelcomePage === "1" && <EmbassyNotificationBar />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
