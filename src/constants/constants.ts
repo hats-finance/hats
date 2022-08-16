@@ -58,7 +58,7 @@ export enum Pages {
 
 export const SMALL_SCREEN_BREAKPOINT = "1000px";
 
-export const DefaultBotAddress = "http://localhost:4000/broadcast-message";
+export const DefaultBotAddress = "https://hats-telegram-bot.herokuapp.com/broadcast-message";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 
