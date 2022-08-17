@@ -83,7 +83,7 @@ export default function DepositWithdraw(props: IProps) {
     } else {
       setShowModal(false);
     }
-  }, [selectedPid, userInputValue, depositAndClaim])
+  }, [selectedPid, userInputValue, depositAndClaim, toggleEmbassyPrompt, setShowModal, nftData?.nftTokens, nftData?.depositToRedeem])
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {

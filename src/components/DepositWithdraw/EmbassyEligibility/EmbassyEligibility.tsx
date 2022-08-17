@@ -31,7 +31,7 @@ export default function EmbassyEligibility({ vault }: IProps) {
           </span> :
           <span className="embassy-eligibility__content__min-to-embassy">
             {`${t("DepositWithdraw.EmbassyEligibility.text-1")}
-            ${millify(minToEmbassy)}
+            ${millify(minToEmbassy - formatAvailableToWithdraw)}
             ${t("DepositWithdraw.EmbassyEligibility.text-2")}`} <br /><br />
           </span>
           : ""}

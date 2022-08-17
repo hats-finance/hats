@@ -30,8 +30,8 @@ export interface INFTTokenData {
   redeemMultipleFromSharesState: TransactionStatus;
   actualAddressInfo?: AirdropMachineWallet;
   actualAddress?: string;
-  airdropToRedeem: boolean;
-  depositToRedeem: boolean;
+  airdropToRedeem: boolean | undefined;
+  depositToRedeem: boolean | undefined;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -44,11 +44,11 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
   const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
+  console.log("treeTokens", treeTokens);
   const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
     if (exists) {
-
       if (curr.isDeposit)
         exists.isDeposit = true;
       if (curr.isMerkleTree)
@@ -65,8 +65,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
-  const airdropToRedeem = nftTokens?.filter(nft => nft.isMerkleTree)?.some(nft => !nft.isRedeemed);
-  const depositToRedeem = nftTokens?.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed);
+  const airdropToRedeem = useMemo(() => treeTokens?.some(nft => !nft.isRedeemed), [treeTokens]);
+  console.log("airdropToRedeem", airdropToRedeem)
+  const depositToRedeem = useMemo(() => proofTokens?.some(nft => !nft.isRedeemed), [proofTokens]);
 
   useEffect(() => {
     if (actualAddress !== prevActualAddress) {
@@ -103,7 +104,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       for (let tier = 1; tier <= tiers; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
-        console.log("isRedeemed", isRedeemed);
         const tokenUri = await contract.uri(tokenId);
         const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
         tokens.push({ ...pidWithAddress, tier, isRedeemed, tokenId, nftInfo, isDeposit: true, isMerkleTree: false });
@@ -225,7 +225,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     actualAddressInfo,
     actualAddress,
     airdropToRedeem,
-    depositToRedeem
+    depositToRedeem,
   };
 };
 
