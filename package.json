@@ -37,7 +37,7 @@
     "keccak256": "^1.0.6",
     "merkletreejs": "^0.2.31",
     "millify": "^4.0.0",
-    "moment": "^2.29.3",
+    "moment": "^2.29.4",
     "openpgp": "5.2.1",
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
