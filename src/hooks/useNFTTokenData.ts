@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
+import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
 import { HATVaultsNFTContract, NFTContractDataProxy } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
@@ -44,7 +44,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
   const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
-  console.log("treeTokens", treeTokens);
   const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
@@ -66,7 +65,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
   const airdropToRedeem = useMemo(() => treeTokens?.some(nft => !nft.isRedeemed), [treeTokens]);
-  console.log("airdropToRedeem", airdropToRedeem)
   const depositToRedeem = useMemo(() => proofTokens?.some(nft => !nft.isRedeemed), [proofTokens]);
 
   useEffect(() => {
@@ -192,13 +190,15 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
   }, [nftTokens, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
 
+  const transaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem NFTs");
+  const prevTransaction = usePrevious(transaction);
+
   useEffect(() => {
-    if (redeemMultipleFromTreeState.status === "Success") {
-      console.log("calling again getTreeEligibility")
+    if (prevTransaction?.receipt?.status === 1) {
       getTreeEligibility();
     }
-  }, [redeemMultipleFromTreeState, getTreeEligibility])
-
+  }, [transaction, getTreeEligibility, prevTransaction?.receipt?.status])
+  
   const redeemShares = useCallback(async () => {
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
     const hatVaults = depositRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
@@ -208,7 +208,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (redeemMultipleFromSharesState.status === "Success") {
-      console.log("calling again getEligibilityForPids")
       getEligibilityForPids();
     }
   }, [redeemMultipleFromSharesState, getEligibilityForPids])

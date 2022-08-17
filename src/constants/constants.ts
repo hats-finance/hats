@@ -24,7 +24,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "",
-  [ChainId.Rinkeby]: "0x518E5BFd0853ed9A6206B93956cF3BD06994eA82"
+  [ChainId.Rinkeby]: "0xe501B39F0Ad8221fa110a13fa912c7bB54AeaCA0"
 }
 
 export const Chains = {
@@ -45,7 +45,7 @@ export const VaultSubgraphs = {
 };
 
 export const NFTContractDataProxy = {
-  ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x3965416aAc46eEdb4BEe2b8Bc12eBAB99Ed92FaE"
+  ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x42Ec0D1CB03cd1A9b14DBaac4EA466352439d3f2"
 }
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";

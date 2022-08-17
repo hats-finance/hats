@@ -24,7 +24,7 @@ export default function CheckEligibility() {
   const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
   const inputError = userInput && !isAddress(userInput);
-  const actualAddress = (userInput && userInput !== "") ? userInput : account;
+  const actualAddress = isAddress(userInput) ? userInput : undefined;
   const nftData = useNFTTokenData(actualAddress);
   const [redeemed, setRedeemed] = useState(false);
 
