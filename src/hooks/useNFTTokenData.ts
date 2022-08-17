@@ -40,9 +40,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, account, chainId } = useEthers();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
-    useContractFunction(contract, "redeemMultipleFromTree", { transactionName: "Redeem NFTs" });
+    useContractFunction(contract, "redeemMultipleFromTree", { transactionName: "Redeem Tree NFTs" });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
-    contract, "redeemMultipleFromShares", { transactionName: "Redeem NFTs" });
+    contract, "redeemMultipleFromShares", { transactionName: "Redeem Deposit NFTs" });
   const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
   const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
@@ -190,14 +190,21 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
   }, [nftTokens, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
 
-  const transaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem NFTs");
-  const prevTransaction = usePrevious(transaction);
-
+  const redeemTreeTransaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem Tree NFTs");
+  const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
   useEffect(() => {
-    if (prevTransaction?.receipt?.status === 1) {
+    if (prevRedeemTreeTransaction?.receipt?.status === 1) {
       getTreeEligibility();
     }
-  }, [transaction, getTreeEligibility, prevTransaction?.receipt?.status])
+  }, [redeemTreeTransaction, getTreeEligibility, prevRedeemTreeTransaction?.receipt?.status])
+
+  const redeemDepsoitTransaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem Deposit NFTs");
+  const prevRedeemDepositTransaction = usePrevious(redeemDepsoitTransaction);
+  useEffect(() => {
+    if (redeemDepsoitTransaction?.receipt?.status === 1) {
+      getEligibilityForPids();
+    }
+  }, [redeemDepsoitTransaction, getEligibilityForPids, prevRedeemDepositTransaction?.receipt?.status])
   
   const redeemShares = useCallback(async () => {
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
@@ -205,12 +212,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const pids = depositRedeemables.map(nft => nft.pid);
     await redeemMultipleFromShares(hatVaults, pids, actualAddress);
   }, [redeemMultipleFromShares, actualAddress, nftTokens])
-
-  useEffect(() => {
-    if (redeemMultipleFromSharesState.status === "Success") {
-      getEligibilityForPids();
-    }
-  }, [redeemMultipleFromSharesState, getEligibilityForPids])
 
   return {
     lastMerkleTree,
