@@ -3,6 +3,18 @@ import moment from "moment";
 
 export const GET_VAULTS = gql`
   query getVaults {
+    masters {
+      address
+      governance
+      numberOfSubmittedClaims
+      withdrawPeriod
+      safetyPeriod
+      withdrawRequestEnablePeriod
+      withdrawRequestPendingPeriod
+      vestingHatDuration
+      vestingHatPeriods
+      rewardsToken
+    }
     vaults {
       id
       descriptionHash
@@ -25,6 +37,7 @@ export const GET_VAULTS = gql`
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
+        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels
@@ -53,91 +66,3 @@ export const GET_VAULTS = gql`
     }
   }
 `;
-
-// rewardsToken is the HAT token
-export const GET_MASTER_DATA = gql`
-  query getMaster {
-    masters {
-      rewardsToken
-      withdrawPeriod
-      safetyPeriod
-    }
-  }
-`
-
-export const getStakerData = (vaultID: string, stakerAddress: string) => {
-  return gql`
-    {
-      stakers (where: { vault: "${vaultID}", address: "${stakerAddress}" }) {
-        shares
-        depositAmount
-        withdrawAmount
-      }
-    }
-  `;
-}
-
-export const getBeneficiaryWithdrawRequests = (pid: string, beneficiary: string) => {
-  return gql`
-    {
-      vaults (where: { pid: "${pid}" }) {
-        withdrawRequests(where: { beneficiary: "${beneficiary}" }) {
-          id
-          beneficiary
-          withdrawEnableTime
-          createdAt
-          expiryTime
-        }
-      }
-    }
-  `;
-}
-
-export const getIncentives = (rewardToken: string, ended: boolean) => {
-  return gql`
-    query getIncentives {
-      incentives (where: { rewardToken: "${rewardToken}", ended: ${ended}, startTime_lte: ${moment().unix()}, endTime_gte: ${moment().unix()} }) {
-        id
-        pool
-        startTime
-        endTime
-        refundee
-        reward
-        rewardToken
-        totalRewardUnclaimed
-      }
-    }
-  `;
-}
-
-export const getPositions = (owner: string) => {
-  return gql`
-    query getPositions {
-      positions (where: { owner: "${owner}" }) {
-        id
-        tokenId
-        owner
-        staked
-        oldOwner
-        liquidity
-        approved
-        token1
-        token2
-        canWithdraw
-      }
-    }
-  `;
-}
-
-export const getSubmittedClaim = (claim: string) => {
-  return gql`
-    query getSubmittedClaim {
-      submittedClaims (where: { claim: "${claim}" }) {
-        id
-        claim
-        claimer
-        master
-      }
-    }
-  `;
-}

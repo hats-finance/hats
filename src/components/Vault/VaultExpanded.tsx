@@ -19,8 +19,6 @@ import { useTranslation } from "react-i18next";
 interface IProps {
   data: IVault
   withdrawRequests?: IPoolWithdrawRequest[]
-  setShowModal?: Function
-  setModalData?: Function
   preview?: boolean
 }
 
@@ -31,6 +29,7 @@ export default function VaultExpanded(props: IProps) {
     description } = props.data;
   const navigate = useNavigate()
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === '';
 
   const pieChartData = [
     { title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward)`, value: Number(hackerVestedRewardSplit) / 100, color: PieChartColors.vestedToken },
@@ -85,7 +84,7 @@ export default function VaultExpanded(props: IProps) {
                   <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
-                  <button onClick={() => { setVulnerabilityProject(description!["project-metadata"].name, id); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
+                  <button onClick={() => { setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address); navigate(RoutePaths.vulnerability); }} disabled={props.preview}>{t("Vault.submit-vulnerability")}</button>
                 </div>
               </div>
               <div className="prize-division-wrapper">
@@ -115,7 +114,7 @@ export default function VaultExpanded(props: IProps) {
             </div>
           </div>
           <div className="severity-prizes-wrapper">
-            <div className="sub-title">{t("Vault.severity-prizes")}</div>
+            <div className="sub-title">{isNormalVault ? t("Vault.severity-prizes") : t("Vault.prizes")}</div>
             <div className="severity-prizes-content">
               <Severities
                 severities={(description as IVaultDescription)?.severities}

@@ -1,18 +1,19 @@
 
 import { useState, useEffect, useCallback } from "react";
-import "./index.scss";
 import moment from 'moment';
+import classNames from "classnames";
 import { Colors } from "../../../constants/constants";
+import "./index.scss";
 
 interface IProps {
   endDate: string
-  compactView?: boolean
+  plainTextView?: boolean
   onEnd?: Function
   textColor?: Colors
 }
 
 export default function Countdown(props: IProps) {
-  const { endDate, compactView, onEnd } = props;
+  const { endDate, plainTextView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [timer, setTimer] = useState({
     days: 0,
@@ -26,6 +27,9 @@ export default function Countdown(props: IProps) {
       const currentTime = new Date().getTime();
 
       const distanceToDate = countdownDate - currentTime;
+      if (distanceToDate < 0) {
+        return;
+      }
 
       let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
       let hours = Math.floor(
@@ -40,17 +44,6 @@ export default function Countdown(props: IProps) {
         if (onEnd) {
           onEnd();
         }
-      }
-
-      const numbersToAddZeroTo = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-      (days as any) = `${days}`;
-      if (numbersToAddZeroTo.includes(hours)) {
-        (hours as any) = `0${hours}`;
-      } else if (numbersToAddZeroTo.includes(minutes)) {
-        (minutes as any) = `0${minutes}`;
-      } else if (numbersToAddZeroTo.includes(seconds)) {
-        (seconds as any) = `0${seconds}`;
       }
 
       setTimer({ days: days, hours: hours, minutes: minutes, seconds: seconds });
@@ -70,23 +63,27 @@ export default function Countdown(props: IProps) {
   }, [setNewTime]);
 
   return (
-    <div className={`withdraw-countdown-wrapper ${compactView && "compact-view"}`} style={{ color: `${props.textColor}` }}>
-      {timer.days > 0 && <div className="time-element">
-        <span className="value">{timer.days || '00'}</span>
-        <span className="type">{String(timer.days) === "1" ? "DAY" : "DAYS"}</span>
-      </div>}
-      <div className="time-element">
-        <span className="value">{timer.hours || '00'}</span>
-        <span className="type">{String(timer.hours) === "01" ? "HOUR" : "HOURS"}</span>
+    <div className="withdraw-countdown-wrapper" style={{ color: `${props.textColor}` }}>
+      {timer.days > 0 && (
+        <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
+          <span className="value">{String(timer.days).padStart(2, "0")}</span>
+          {plainTextView && ":"}
+          {!plainTextView && <span className="type">DAYS</span>}
+        </div>)}
+      <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
+        <span className="value">{String(timer.hours).padStart(2, "0")}</span>
+        {!plainTextView && <span className="type">HOURS</span>}
+        {plainTextView && ":"}
       </div>
-      <div className="time-element">
-        <span className="value">{timer.minutes || '00'}</span>
-        <span className="type">{String(timer.minutes) === "01" ? "MINUTE" : "MINUTES"}</span>
+      <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
+        <span className="value">{String(timer.minutes).padStart(2, "0")}</span>
+        {!plainTextView && <span className="type">MINUTES</span>}
+        {plainTextView && ":"}
       </div>
       {String(timer.days) === "0" && (
-        <div className="time-element">
-          <span className="value">{timer.seconds || '00'}</span>
-          <span className="type">{String(timer.seconds) === "01" ? "SECOND" : "SECONDS"}</span>
+        <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
+          <span className="value">{String(timer.seconds).padStart(2, "0")}</span>
+          {!plainTextView && <span className="type">SECONDS</span>}
         </div>
       )}
     </div>

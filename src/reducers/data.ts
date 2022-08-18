@@ -1,56 +1,19 @@
-import { UPDATE_VAULTS, UPDATE_REWARDS_TOKEN, UPDATE_HATS_PRICE, UPDATE_WITHDRAW_SAFETY_PERIOD, UPDATE_AIRDROP_DATA, UPDATE_TOKEN_PRICES } from '../constants/action-types';
-import { IVault, IWithdrawSafetyPeriod, IAirdropData } from '../types/types';
+import { UPDATE_AIRDROP_DATA } from '../constants/action-types';
+import { IAirdropData } from '../types/types';
 
 interface IDataReducer {
-  vaults: Array<IVault> | undefined
-  tokenPrices: { [token: string]: number }
   rewardsToken: string
-  hatsPrice: number | undefined
-  withdrawSafetyPeriod: IWithdrawSafetyPeriod | Object | any
+  hatsPrice?: number
   airdrop: null | IAirdropData
 }
 
 const initialState: IDataReducer = {
-  vaults: undefined,
   rewardsToken: "",
-  tokenPrices: {},
-  hatsPrice: undefined,
-  withdrawSafetyPeriod: {},
   airdrop: null,
 };
 
 export const dataReducer = (state: IDataReducer = initialState, action: any): IDataReducer => {
   switch (action.type) {
-    case UPDATE_VAULTS: {
-      return {
-        ...state,
-        vaults: action.vaults as IVault[]
-      }
-    }
-    case UPDATE_REWARDS_TOKEN: {
-      return {
-        ...state,
-        rewardsToken: action.rewardsToken
-      }
-    }
-    case UPDATE_TOKEN_PRICES: {
-      return {
-        ...state,
-        tokenPrices: action.tokenPrices
-      }
-    }
-    case UPDATE_HATS_PRICE: {
-      return {
-        ...state,
-        hatsPrice: action.hatsPrice
-      }
-    }
-    case UPDATE_WITHDRAW_SAFETY_PERIOD: {
-      return {
-        ...state,
-        withdrawSafetyPeriod: action.withdrawSafetyPeriod
-      }
-    }
     case UPDATE_AIRDROP_DATA: {
       return {
         ...state,

@@ -12,7 +12,7 @@ export interface IVault {
   honeyPotBalance: string
   totalReward: string
   totalRewardPaid: string
-  committee: Array<string>
+  committee: string
   allocPoint: string
   master: IMaster
   numberOfApprovedClaims: string
@@ -33,7 +33,7 @@ export interface IVault {
   vestingPeriods: string
   depositPause: boolean
   committeeCheckedIn: boolean
-  tokenPrice: number // calculated on the UI - not via subgraph
+  multipleVaults?: IVault[]
 }
 
 export interface IVaultDescription {
@@ -42,7 +42,7 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
-    gamification?: boolean
+    type?: string
   }
   "communication-channel": {
     "committee-bot": string
@@ -57,6 +57,7 @@ export interface IVaultDescription {
     name: string
     url: string
   }
+  "additional-vaults"?: string[];
 }
 
 export interface ICommitteeMember {
@@ -92,7 +93,6 @@ export interface IStaker {
   rewardPaid: string
   shares: string
   depositAmount: string
-  withdrawAmount: string
 }
 
 export interface IMaster {
@@ -176,3 +176,13 @@ export interface IStoredKey {
   passphrase?: string | undefined
   publicKey: string
 }
+
+export interface GeneralParameters {
+  withdrawRequestEnablePeriod: number
+  withdrawPeriod: number
+  safetyPeriod: number
+}
+
+export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
+
+export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };

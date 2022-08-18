@@ -1,61 +1,123 @@
-import { useCallback, useEffect, useState } from "react";
-import classNames from "classnames";
-import Select, { Option } from "rc-select";
-import "./index.scss";
+import React, { useRef } from "react";
+import classes from "./customMultiselect.style.module.scss";
+import { ReactComponent as DropdownArrow } from "assets/icons/down-arrow.icon.svg";
+import useOnClickOutside from "hooks/useOnClickOutside";
 
-interface IMultiSelectOption {
-  label: string | number;
+type Option = {
+  label: string;
   value: string | number;
-}
+};
 
-interface IProps {
-  name?: string;
+export type MultiselectOptions = Array<Option>;
+
+interface CustomMultiselectProps {
   value: Array<string | number>;
-  options: IMultiSelectOption[];
   onChange: Function;
-  colorable?: boolean;
+  options: MultiselectOptions;
+  name?: string;
 }
 
-export default function MultiSelect(props: IProps) {
-  const [changed, setChanged] = useState(false)
-  const { options, name, onChange, value, colorable } = props;
-  const [selectedValue, setSelectedValue] = useState<IMultiSelectOption[]>([]);
+export default function CustomMultiSelect({
+  value,
+  onChange,
+  options,
+  name
+}: CustomMultiselectProps) {
+  const [isOpen, setOpen] = React.useState<boolean>(false);
+  const [hasChanged, setChanged] = React.useState<boolean>(false);
 
-  useEffect(() => {
-    let selectedValue = options.filter((option) => value.includes(option.value))
-    setSelectedValue(selectedValue);
-  }, [value, options])
+  //for handaling closing menu on click outside
+  const menuRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(menuRef, () => setOpen(false));
+
+  function handleAddingItemToLocalValue(item: string | number) {
+    onChange({ target: { name, value: [...value, item] } });
+    if (!hasChanged) {
+      setChanged(true);
+    }
+  }
+
+  function handleRemoveItemFromLocalValue(item: string | number) {
+    onChange({
+      target: { name, value: value.filter((stateItem) => stateItem !== item) }
+    });
+    if (!hasChanged) {
+      setChanged(true);
+    }
+  }
+
+  function toggleDropdown() {
+    setOpen((lastState) => !lastState);
+  }
 
   return (
-    <div className={classNames("multi-select", {
-      "multi-select--changed": changed && colorable
-    })}>
-      <Select
-        className="multi-select"
-        mode="multiple"
-        showSearch={false}
-        value={selectedValue}
-        onSelect={useCallback((value, option) => {
-          setChanged(true)
-          onChange({
-            target: {
-              name,
-              value: [...selectedValue, option].map(item => item.value)
-            },
-          })
+    <div ref={menuRef} className={classes.Root}>
+      <button
+        onClick={toggleDropdown}
+        className={`${classes.Button} ${hasChanged ? classes.Changed : ""}`}
+      >
+        <span className={classes.ButtonText}>{`${value.length} selected`}</span>
+        <span className={classes.ButtonIcon}>
+          <DropdownArrow
+            className={isOpen ? classes.Rotate : ""}
+            width="10"
+            height="8"
+          />
+        </span>
+      </button>
+      {isOpen && (
+        <div className={classes.MenuContainer}>
+          {options.map((option) => {
+            return (
+              <MenuItem
+                value={value}
+                key={option.label}
+                handleRemoveItemFromLocalValue={handleRemoveItemFromLocalValue}
+                handleAddingItemToLocalValue={handleAddingItemToLocalValue}
+                option={option}
+              />
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
-        }, [selectedValue, setChanged, onChange, name])}
-        onDeselect={useCallback(value => {
-          setChanged(true)
-          onChange({
-            target: {
-              name,
-              value: selectedValue.filter((item) => item.value !== value).map(item => item.value)
+interface MenuItemProps {
+  value: Array<string | number>;
+  option: Option;
+  handleRemoveItemFromLocalValue: (item: string | number) => void;
+  handleAddingItemToLocalValue: (item: string | number) => void;
+}
+
+function MenuItem({
+  value,
+  option,
+  handleRemoveItemFromLocalValue,
+  handleAddingItemToLocalValue
+}: MenuItemProps) {
+  const [checked, setCheked] = React.useState<boolean>(
+    value.filter((item: string | number) => item === option.value).length > 0
+  );
+
+  return (
+    <div className={classes.MenuItem}>
+      <span>
+        <input
+          checked={checked}
+          onChange={() => {
+            setCheked((laseState) => !laseState);
+            if (checked) {
+              handleRemoveItemFromLocalValue(option.value);
+            } else {
+              handleAddingItemToLocalValue(option.value);
             }
-          })
-        }, [selectedValue, setChanged, onChange, name])}>
-        {options.map(option => (<Option key={option.value} value={option.value} >{option.label}</Option>))}
-      </Select>
+          }}
+          type="checkbox"
+        />
+      </span>
+      <span>{option.label}</span>
     </div>
   );
 }

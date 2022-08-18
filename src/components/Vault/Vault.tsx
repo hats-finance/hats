@@ -1,45 +1,52 @@
-import { useState, useEffect } from "react";
 import { IVault } from "../../types/types";
 import { useSelector } from "react-redux";
 import millify from "millify";
-import { calculateApy, fromWei, ipfsTransformUri } from "../../utils";
+import { formatUnits } from "ethers/lib/utils";
+import { ipfsTransformUri } from "../../utils";
 import ArrowIcon from "../../assets/icons/arrow.icon";
 import { RootState } from "../../reducers";
 import { ScreenSize } from "../../constants/constants";
 import VaultExpanded from "./VaultExpanded";
 import VaultAction from "./VaultAction";
 import { useTranslation } from "react-i18next";
+import TokensSymbols from "./TokensSymbols/TokensSymbols";
+import { ForwardedRef, forwardRef } from "react";
+import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
+import VaultAPY from "./VaultAPY/VaultAPY";
 import "../../styles/Vault/Vault.scss";
 
 interface IProps {
   data: IVault,
-  setShowModal?: (show: boolean) => any,
-  setModalData?: (data: any) => any,
+  expanded: boolean,
+  setExpanded?: any,
   preview?: boolean,
 }
 
-export default function Vault(props: IProps) {
+const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
   const { t } = useTranslation();
-  const { description, tokenPrice, honeyPotBalance,
-    withdrawRequests, stakingTokenDecimals, stakingTokenSymbol } = props.data;
-  const [toggleRow, setToggleRow] = useState<boolean>(props.preview ? true : false);
-  const [honeyPotBalanceValue, setHoneyPotBalanceValue] = useState("");
-  const hatsPrice = useSelector((state: RootState) => state.dataReducer.hatsPrice);
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+  const honeyPotBalanceValue = millify(Number(formatUnits(honeyPotBalance, stakingTokenDecimals)));
+  const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
+  const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-  const apy = hatsPrice ? calculateApy(props.data, hatsPrice, tokenPrice) : 0;
-  const vaultApy = apy ? `${millify(apy, { precision: 3 })}%` : "-";
-
-  useEffect(() => {
-    setHoneyPotBalanceValue(tokenPrice ? millify(Number(fromWei(honeyPotBalance, stakingTokenDecimals)) * tokenPrice) : "0");
-  }, [tokenPrice, honeyPotBalance, stakingTokenDecimals])
-
-  const vaultExpand = <div className={toggleRow ? "arrow open" : "arrow"} onClick={() => setToggleRow(!toggleRow)}><ArrowIcon /></div>;
+  const vaultExpand = (
+    <div
+      className={props.expanded ? "arrow open" : "arrow"}
+      onClick={() => {
+        if (props.setExpanded) {
+          props.setExpanded(props.expanded ? null : props.data)
+        }
+      }}>
+      <ArrowIcon />
+    </div>
+  );
 
   const maxRewards = (
     <>
       <div className="max-rewards-wrapper">
-        {honeyPotBalanceValue && <span className="honeypot-balance-value">&nbsp;{`≈ $${honeyPotBalanceValue}`}</span>}
+        {!multipleVaults && honeyPotBalanceValue}
+        <span className="honeypot-balance-value">&nbsp;{`≈ $${millify(sumTotalPrices)}`}</span>
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
@@ -47,7 +54,7 @@ export default function Vault(props: IProps) {
 
   return (
     <>
-      <tr className={description?.["project-metadata"]?.gamification ? "gamification" : ""}>
+      <tr ref={ref} className={description?.["project-metadata"]?.type}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
@@ -55,7 +62,7 @@ export default function Vault(props: IProps) {
             <div className="name-source-wrapper">
               <div className="project-name">
                 {description?.["project-metadata"].name}
-                <div className="token-symbol">{stakingTokenSymbol}</div>
+                <TokensSymbols vault={props.data} />
               </div>
               {screenSize === ScreenSize.Mobile && maxRewards}
             </div>
@@ -67,26 +74,26 @@ export default function Vault(props: IProps) {
             <td className="rewards-cell">
               {maxRewards}
             </td>
-            <td>{vaultApy}</td>
+            <td>
+              <VaultAPY vault={props.data} />
+            </td>
             <td>
               <VaultAction
                 data={props.data}
                 withdrawRequests={withdrawRequests}
-                setShowModal={props.setShowModal}
-                setModalData={props.setModalData}
                 preview={props.preview} />
             </td>
           </>
         )}
         {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
-      {toggleRow &&
+      {props.expanded &&
         <VaultExpanded
           data={props.data}
           withdrawRequests={withdrawRequests}
-          setShowModal={props.setShowModal}
-          setModalData={props.setModalData}
           preview={props.preview} />}
     </>
   )
-}
+});
+
+export default Vault;

@@ -10,31 +10,6 @@
     cursor: pointer;
     height: 25px;
     align-items: center;
-    &.low {
-      background-color: $severity-low;
-    }
-    &.medium {
-      background-color: $severity-medium;
-    }
-    &.high {
-      background-color: $severity-high;
-    }
-    &.critical {
-      background-color: $severity-critical;
-    }
-    &.audit-request {
-      background-color: $severity-audit-request;
-      color: $white;
-    }
-    &.capture-the-flag {
-      background-color: $severity-purple-1;
-    }
-    &.other-bugs {
-      background-color: $severity-purple-2;
-    }
-    &.gas-optimization {
-      background-color: $severity-purple-3;
-    }
     .severity-title {
       color: $white;
       font-weight: bold;
@@ -57,7 +32,6 @@
   .severity-data {
     display: flex;
     justify-content: space-between;
-    padding: 10px 30px;
     border-right: 1px solid $purple-blue;
     border-left: 1px solid $purple-blue;
     border-bottom: 1px solid $purple-blue;
@@ -65,10 +39,12 @@
       display: flex;
       flex-direction: column;
       flex: auto;
-      margin-right: 10px;
       border-right: 1px solid $purple-blue;
-      padding-right: 10px;
+      padding: 20px 40px 35px;
       flex: 1 1 0px;
+      .vault-expanded-subtitle {
+        padding-bottom: 30px;
+      }
       .view-more {
         font-style: italic;
         cursor: pointer;
@@ -89,6 +65,15 @@
         width: 100%;
         align-items: center;
       }
+      .nft-media-wrapper {
+        padding: 40px;
+        span,
+        img,
+        video {
+          max-height: 260px;
+          margin: 0;
+        }
+      }
     }
     .severity-data-item:last-child {
       border-right: unset;
@@ -103,13 +88,25 @@
       flex-direction: column;
       border-left: unset;
       border-right: unset;
-      padding: 10px 20px;
+      padding: 0px 20px;
       .severity-data-item {
         margin-right: unset;
         border-right: unset;
         padding-right: unset;
-        .view-more {
-          margin-bottom: 20px;
+        padding: 20px;
+        .vault-expanded-subtitle {
+          margin-top: 0px;
+          padding-bottom: 25px;
+        }
+        .nft-media-wrapper {
+          padding: 0 0 30px;
+          span,
+          img,
+          video {
+            max-height: unset;
+            width: 100%;
+            margin: 0;
+          }
         }
       }
     }

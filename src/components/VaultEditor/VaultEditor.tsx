@@ -11,10 +11,13 @@ import VaultReview from "./VaultReview";
 import './index.scss'
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
-import { IPFS_PREFIX } from "constants/constants";
+import { VaultProvider } from "components/CommitteeTools/store";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
+import { ipfsTransformUri } from "utils";
+import { fixObject } from "hooks/useVaults";
+
 interface IContract {
     name: string;
     address: string;
@@ -40,6 +43,7 @@ const newVaultDescription: IVaultDescription = {
         icon: "",
         tokenIcon: "",
         website: "",
+        type: ""
     },
     "communication-channel": {
         "committee-bot": "https://demo-bot-hats.herokuapp.com/broadcast-message/",
@@ -69,16 +73,17 @@ export default function VaultEditor() {
 
     const vaultName = vaultDescription["project-metadata"].name
 
-    async function loadFromIpfs(ipfsHash) {
+    async function loadFromIpfs(ipfsHash: string) {
         try {
             setLoadingFromIpfs(true)
-            const response = await fetch(IPFS_PREFIX + ipfsHash)
+            const response = await fetch(ipfsTransformUri(ipfsHash))
             const lastModified = response.headers.get('last-modified')
             if (lastModified) {
                 setIpfsDate(new Date(lastModified))
             }
             const newVaultDescription = await response.json()
-            severitiesToContracts(newVaultDescription)
+            severitiesToContracts(fixObject(newVaultDescription))
+
             setVaultDescription(newVaultDescription)
             setChanged(false)
         } catch (error) {
@@ -207,7 +212,6 @@ export default function VaultEditor() {
     }
 
     function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-        console.log("onContractChange", e);
         setContracts(prev => {
             let newObject = { ...prev }
             setPath(newObject, e.target.name, e.target.value)
@@ -381,12 +385,14 @@ export default function VaultEditor() {
                             5. {t("VaultEditor.pgp-key")}
                         </p>
                         <div className="vault-editor__section-content">
-                            <CommunicationChannel
-                                removePgpKey={removePgpKey}
-                                communicationChannel={vaultDescription?.["communication-channel"]}
-                                addPgpKey={addPgpKey}
-                                onChange={onChange}
-                            />
+                            <VaultProvider>
+                                <CommunicationChannel
+                                    removePgpKey={removePgpKey}
+                                    communicationChannel={vaultDescription?.["communication-channel"]}
+                                    addPgpKey={addPgpKey}
+                                    onChange={onChange}
+                                />
+                            </VaultProvider>
                         </div>
                     </div>
 
@@ -405,10 +411,15 @@ export default function VaultEditor() {
                     </div>
                 </section>
 
+                {/* <CreateVault descriptionHash={ipfsHash} /> */}
+
                 <div className="vault-editor__button-container">
                     {changed && ipfsHash && <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">{t("VaultEditor.reset-button")}</button>}
                     <button onClick={saveToIpfs} className="fill" disabled={!changed}>{t("VaultEditor.save-button")}</button>
+
                 </div>
+
+
 
                 {/* {
                     !changed && ipfsHash && <>
@@ -421,7 +432,6 @@ export default function VaultEditor() {
                                     <VaultSign message={""} onChange={null} signatures={[]} />
                                 </div>
                             </div>
-
                             <div className="vault-editor__button-container">
                                 <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
                             </div>

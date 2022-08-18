@@ -30,11 +30,6 @@ export const Chains = {
   [ChainId.Rinkeby]: Rinkeby
 }
 
-export const MasterAddresses = {
-  [ChainId.Mainnet]: "0x571f39d351513146248acafa9d0509319a327c4d",
-  [ChainId.Rinkeby]: "0xccaadc293faaea229e0ca4a22b0330b65634b483"
-}
-
 export const VaultService = "https://vault-editor-service.herokuapp.com"
 
 export const NFTAirdropAddress = {
@@ -47,10 +42,12 @@ export const Endpoint = {
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
 }
 
-export const Subgraph = {
+export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv5",
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv5",
-}
+};
+
+export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
 
 export const GnosisSafeAPI = {
   [ChainId.Mainnet]: "https://safe-relay.mainnet.gnosis.io/api",
@@ -66,6 +63,8 @@ export enum Pages {
 }
 
 export const SMALL_SCREEN_BREAKPOINT = "1000px";
+
+export const DefaultBotAddress = "http://localhost:4000/broadcast-message";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 
@@ -110,6 +109,7 @@ export enum Colors {
   yellow = "#F2C94C",
   gray = "#C5C5C5",
   black = "#000000",
+  fieldBlue = "#0C1436",
 }
 
 export enum PieChartColors {
@@ -121,14 +121,22 @@ export enum PieChartColors {
   swapAndBurn = "#035B5F"
 }
 
-/** Supported images and videos extensions for NFTs media */
-export const IMAGES_EXTENTIONS = ["png"];
-export const VIDEOS_EXTENTIONS = ["mp4"];
-
 export enum SocialLinks {
   Discord = "https://discord.gg/xDphwRGyW7",
   Twitter = "https://twitter.com/HatsFinance",
   GitHub = "https://github.com/hats-finance",
   Medium = "https://medium.com/@HatsFinance",
   Telegram = "https://t.me/joinchat/QKP3HcdosVhjOTY0"
+}
+
+export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
+
+const NORMAL_SEVERITIES_COLORS = ["#141F50", "#19265F", "#213173", "#122777"];
+const GAMIFICATION_SEVERITIES_COLORS = ["#2A115F", "#3B1B7E", "#4B239F"];
+
+export const VAULTS_TYPE_SEVERITIES_COLORS = {
+  "gamification": GAMIFICATION_SEVERITIES_COLORS,
+  "normal": NORMAL_SEVERITIES_COLORS,
+  "Grants": NORMAL_SEVERITIES_COLORS,
+  "": NORMAL_SEVERITIES_COLORS
 }

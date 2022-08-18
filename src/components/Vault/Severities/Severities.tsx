@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { IVault, ISeverity } from "../../../types/types";
+import { IVault, ISeverity } from "types/types";
 import Severity from "./Severity";
 
 interface IProps {
@@ -10,7 +10,6 @@ interface IProps {
 
 export default function Severities(props: IProps) {
   const [expandedSeverityIndex, setExpandedSeverityIndex] = useState();
-
   const severities = props.severities?.map((severity: ISeverity, index: number) => {
     return (
       <Severity

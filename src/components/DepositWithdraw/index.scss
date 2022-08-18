@@ -1,4 +1,4 @@
-@import "../constants.scss";
+@import "../../styles/constants.scss";
 @import "rc-tooltip/assets/bootstrap_white.css";
 
 .deposit-wrapper {
@@ -41,17 +41,6 @@
       }
     }
   }
-  .pending-withdraw-timer-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: $white;
-    margin-bottom: 50px;
-    > span {
-      margin: 30px 0;
-      text-transform: uppercase;
-    }
-  }
   .balance-wrapper {
     position: relative;
     display: flex;
@@ -87,9 +76,7 @@
       .pool-token {
         display: flex;
         align-items: center;
-        img {
-          border-radius: 100px;
-        }
+        width: 100%;
       }
       span {
         margin-left: 10px;
@@ -110,10 +97,6 @@
       color: $red;
       font-size: $xsmall;
     }
-    &.disabled {
-      opacity: 0.5;
-      pointer-events: none;
-    }
   }
   .percentage-btn {
     background-color: $black;
@@ -124,7 +107,8 @@
       margin-left: 0px;
     }
   }
-  .staked-wrapper {
+
+  .deposited-wrapper {
     display: flex;
     font-size: $moderate;
     color: $white;

@@ -15,10 +15,10 @@ export default function VaultReview({ vaultDescription }) {
       stakingTokenDecimals: "18",
       stakingTokenSymbol: "",
       totalStaking: "",
-      honeyPotBalance: "",
+      honeyPotBalance: "0",
       totalReward: "0",
       totalRewardPaid: "0",
-      committee: [""],
+      committee: "",
       allocPoint: "0",
       master: {
         address: "",
@@ -83,7 +83,6 @@ export default function VaultReview({ vaultDescription }) {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
-      tokenPrice: 0
     };
   }
 
@@ -101,7 +100,7 @@ export default function VaultReview({ vaultDescription }) {
       <div className="preview-vault honeypots-wrapper">
         <table>
           <tbody>
-            <PreviewVault data={getVault(vaultDescription)} preview />
+            <PreviewVault expanded={true} data={getVault(vaultDescription)} preview />
           </tbody>
         </table>
       </div>

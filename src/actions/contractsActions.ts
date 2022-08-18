@@ -1,6 +1,6 @@
 import { useEthers } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
-import { checkMasterAddress, normalizeAddress } from "../utils";
+import { normalizeAddress } from "../utils";
 import { NFT_AIRDROP_ADDRESS, TOKEN_AIRDROP_ADDRESS } from "../settings";
 import vaultAbi from "../data/abis/HATSVault.json";
 import NFTAirdrop from "../data/abis/NFTAirdrop.json";
@@ -35,16 +35,6 @@ export function useActions() {
     }
   }
 
-  /**
-   * Submits the hash of the vulnerability description
-   * @param {string} address
-   * @param {string} descriptionHash the sha256 of the vulnerability description
-   */
-  const submitVulnerability = async (address: string, descriptionHash: string) => {
-    checkMasterAddress(address);
-    const contract = new Contract(address, vaultAbi, signer);
-    return await contract.claim(descriptionHash);
-  }
 
   /** Airdrop contract actions - START */
 
@@ -57,7 +47,11 @@ export function useActions() {
       const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
       const data = contract.filters.MerkleTreeChanged();
       const filter = await contract.queryFilter(data, 0);
-      return (filter[filter.length - 1].args as any).merkleTreeIPFSRef;
+      if (filter) {
+        const lastElement = filter[filter.length - 1] as any | undefined;
+        return lastElement?.args?.merkleTreeIPFSRef;
+      }
+      return null
     } catch (error) {
       console.error(error);
     }
@@ -96,16 +90,16 @@ export function useActions() {
   }
 
   /**
-   * Check if a tokenID has already been redeemed by a given address.
-   * NOTE: by the way the contract function works it returns an error when the tokenID is not yet redeemed. 
-   * For this reason in case of an exception we return false; 
-   * @param {string} tokenID 
+   * Check if a tokenId has already been redeemed by a given address.
+   * NOTE: ERC721 contract function works it returns an error when the tokenId is not yet redeemed
+   * for this reason in case of an exception we return false.
+   * @param {string} tokenId
    * @param {string} address  
    */
-  const isRedeemed = async (tokenID: string, address: string) => {
+  const isRedeemed = async (tokenId: string, address: string) => {
     const contract = new Contract(NFT_AIRDROP_ADDRESS, NFTAirdrop, signer);
     try {
-      return normalizeAddress(await contract.ownerOf(tokenID)) === address;
+      return normalizeAddress(await contract.ownerOf(tokenId)) === address;
     } catch (error) {
       return false;
     }
@@ -113,8 +107,8 @@ export function useActions() {
 
   /**
    * Checks if a given address has claimed the token reward.
-   * NOTE: by the way the contract function works it returns an error when the address has not yet redeemed. 
-   * For this reason in case of an exception we return false; 
+   * NOTE: ERC721 contract function works it returns an error when the address has not yet redeemed 
+   * for this reason in case of an exception we return false.
    * @param {string} address
    */
   const hasClaimed = async (address: string) => {
@@ -144,7 +138,6 @@ export function useActions() {
 
   return {
     getPendingReward,
-    submitVulnerability,
     getMerkleTree,
     getBaseURI,
     getDeadline,

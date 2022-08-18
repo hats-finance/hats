@@ -1,9 +1,19 @@
 import { useTranslation } from "react-i18next";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
-import MultiSelect from "components/Shared/MultiSelect/MultiSelect";
+import MultiSelect, {
+  MultiselectOptions
+} from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 
-export default function ContractCovered({ index, contract, onChange, onRemove, severitiesOptions, contractsCount, addContract }) {
+export default function ContractCovered({
+  index,
+  contract,
+  onChange,
+  onRemove,
+  severitiesOptions,
+  contractsCount,
+  addContract
+}) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
 
@@ -27,11 +37,11 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
             <div className="contracts-covered__contract-severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
-                colorable
                 name={`${basePath}.severities`}
                 value={contract.severities}
                 onChange={onChange}
-                options={severitiesOptions} />
+                options={severitiesOptions as MultiselectOptions}
+              />
             </div>
           </div>
           <label>{t("VaultEditor.contract-address")}</label>
@@ -53,7 +63,7 @@ export default function ContractCovered({ index, contract, onChange, onRemove, s
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
-        {(index === contractsCount - 1) && (
+        {index === contractsCount - 1 && (
           <button className="fill" onClick={addContract}>
             {t("VaultEditor.add-member")}
           </button>
