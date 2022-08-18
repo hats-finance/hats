@@ -68,7 +68,7 @@ export const GET_VAULTS = gql`
 `;
 
 export const GET_CLAIM = gql`
-{ 
+query getClaim($descriptionHash: String) {
   submittedClaims(where: { claim: $descriptionHash}) {
     id
     claim

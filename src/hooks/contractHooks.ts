@@ -49,6 +49,8 @@ export function useCalcClaimRewards(
   pid?: string,
   severity?: number
 ): IClaimRewards | undefined {
+  console.log("calcClaimRewards", masterAddress, pid, severity);
+
   const { value, error } =
     useCall(masterAddress ? {
       contract: new Contract(masterAddress, vaultAbi),
@@ -58,6 +60,8 @@ export function useCalcClaimRewards(
   if (error) {
     return undefined;
   }
+  console.log("value", value);
+
   return value?.claimRewards;
 }
 

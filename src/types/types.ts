@@ -186,3 +186,8 @@ export interface GeneralParameters {
 export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
+
+
+export interface ISubm {
+
+}

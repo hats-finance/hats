@@ -17,6 +17,7 @@ import { formatUnits } from "@ethersproject/units";
 import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
 import { GET_CLAIM } from "graphql/subgraph";
 import CustomMultiSelect from "components/Shared/MultiSelect/MultiSelect";
+import { isAddress } from "ethers/lib/utils";
 
 export default function BountyPayout() {
   const { t } = useTranslation();
@@ -25,15 +26,16 @@ export default function BountyPayout() {
   const { descriptionHash } = useParams();
 
   const { loading, error, data } = useQuery<{ submittedClaims: ISubmittedClaim[] }>(GET_CLAIM, { variables: { descriptionHash }, fetchPolicy: "no-cache" });
+
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<string | undefined>();
   const [selectedSeverity, setSelectedSeverity] = useState<number>();
   const [beneficiary, setBeneficiary] = useState<string | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
-  const masterAddress = data?.submittedClaims[0]?.master.address
   const { vaults } = useVaults()
-  const { send: pendingApprovalClaim } = usePendingApprovalClaim(masterAddress);
   const vault = vaults && vaults.find(v => v.pid === selectedVault)
+  const masterAddress = vault?.master.address
+  const { send: pendingApprovalClaim } = usePendingApprovalClaim(masterAddress);
   const severities = (vault?.description as IVaultDescription)?.severities;
   const severity = severities && severities.find(s => s.index === selectedSeverity)
 
@@ -45,7 +47,8 @@ export default function BountyPayout() {
     }
   }, [loading, error, data]);
 
-  const { hackerReward } = useCalcClaimRewards(masterAddress, selectedVault, selectedSeverity) ?? {}
+  const { hackerReward } = useCalcClaimRewards(masterAddress, selectedVault, selectedSeverity) ?? {};
+
 
   const clearClaimToSubmit = () => {
     setBeneficiary(undefined);
@@ -54,6 +57,8 @@ export default function BountyPayout() {
   };
 
   const createPayoutTransaction = useCallback(() => {
+    console.log(selectedVault, beneficiary, selectedSeverity);
+
     pendingApprovalClaim(selectedVault,
       beneficiary,
       selectedSeverity
@@ -61,10 +66,9 @@ export default function BountyPayout() {
   }, [selectedVault, beneficiary, selectedSeverity, pendingApprovalClaim]);
 
   const tryDecryptClaim = useCallback(async (ipfsHash) => {
-    // we must have the vault unlocked to try to decrypt
-    if (vaultContext.isLocked) return;
     // download the message from IPFS
     const data = await fetch(`${ipfsTransformUri(ipfsHash)}`)
+
     const armoredMessage = await data.text()
 
     // try to decrypt the message with all available keys
@@ -103,8 +107,9 @@ export default function BountyPayout() {
   }, [vaultContext.isLocked, vaultContext.vault, vaults])
 
   useEffect(() => {
-    tryDecryptClaim(descriptionHash);
-  }, [descriptionHash, tryDecryptClaim]);
+    if (!vaultContext.isLocked)
+      tryDecryptClaim(descriptionHash);
+  }, [vaultContext.isLocked, descriptionHash, tryDecryptClaim]);
 
   return (
     <div className="content bounty-payout">
@@ -175,6 +180,7 @@ export default function BountyPayout() {
                   setSelectedSeverity(Number(event.target.value));
                 }}
               >
+                <option key={0} value={undefined}>please select severity</option>
                 {severities?.map((severity, index) => (
                   <option key={index} value={severity.index}>{severity.name}</option>
                 ))}
@@ -216,7 +222,7 @@ export default function BountyPayout() {
         <div style={{ display: "flex" }}>
           <button
             disabled={
-              !(selectedVault && selectedSeverity && beneficiary)
+              !(selectedVault && selectedSeverity && beneficiary && isAddress(beneficiary))
             }
             className="fill"
             onClick={createPayoutTransaction}
