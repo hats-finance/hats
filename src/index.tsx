@@ -11,6 +11,7 @@ import "./index.css";
 import { ethersConfig } from "config/ethers";
 import { client } from "config/apollo";
 import { VaultsProvider } from "hooks/useVaults";
+import { VaultProvider } from "components/CommitteeTools/store";
 
 const root = createRoot(document.getElementById("root")!)
 root.render(
@@ -18,13 +19,15 @@ root.render(
     <Provider store={store}>
       <ApolloProvider client={client}>
         <VaultsProvider>
-          <HttpsRedirect>
-            <BrowserRouter>
-              <NotificationProvider>
-                <App />
-              </NotificationProvider>
-            </BrowserRouter>
-          </HttpsRedirect>
+          <VaultProvider>
+            <HttpsRedirect>
+              <BrowserRouter>
+                <NotificationProvider>
+                  <App />
+                </NotificationProvider>
+              </BrowserRouter>
+            </HttpsRedirect>
+          </VaultProvider>
         </VaultsProvider>
       </ApolloProvider>
     </Provider>

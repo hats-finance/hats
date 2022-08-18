@@ -21,6 +21,7 @@ import CustomMultiSelect from "components/Shared/MultiSelect/MultiSelect";
 export default function BountyPayout() {
   const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
+
   const { descriptionHash } = useParams();
 
   const { loading, error, data } = useQuery<{ submittedClaims: ISubmittedClaim[] }>(GET_CLAIM, { variables: { descriptionHash }, fetchPolicy: "no-cache" });
@@ -29,7 +30,7 @@ export default function BountyPayout() {
   const [selectedSeverity, setSelectedSeverity] = useState<number>();
   const [beneficiary, setBeneficiary] = useState<string | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
-  const masterAddress = data?.submittedClaims[0].master.address
+  const masterAddress = data?.submittedClaims[0]?.master.address
   const { vaults } = useVaults()
   const { send: pendingApprovalClaim } = usePendingApprovalClaim(masterAddress);
   const vault = vaults && vaults.find(v => v.pid === selectedVault)
