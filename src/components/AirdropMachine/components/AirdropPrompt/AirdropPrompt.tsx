@@ -2,6 +2,7 @@ import { useEthers, shortenIfAddress } from "@usedapp/core";
 import { RoutePaths } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import EligibleWalletIcon from "assets/icons/wallet-nfts/wallet-eligible.svg";
 import "./index.scss";
 
 interface IProps {
@@ -20,6 +21,7 @@ export default function AirdropPrompt({ closePrompt }: IProps) {
 
   return (
     <div className="airdrop-prompt-wrapper">
+      <img className="airdrop-prompt__eligible-icon" src={EligibleWalletIcon} alt="wallet" />
       <div className="airdrop-prompt__title">{t("AirdropMachine.AirdropPrompt.title")}</div>
       <span className="airdrop-prompt__text-1">{t("AirdropMachine.AirdropPrompt.text-1")}</span>
       <div className="airdrop-prompt__wallet-container">

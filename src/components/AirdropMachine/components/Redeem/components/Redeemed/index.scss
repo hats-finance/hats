@@ -7,11 +7,15 @@
   flex-direction: column;
   justify-content: center;
   padding-top: 0;
+  .redeemed__redeemed-icon {
+    width: 124px;
+    align-self: center;
+  }
   .redeemed__title {
     font-size: $medium-2;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 10px;
+    margin: 20px 0;
   }
   .redeemed__wallet-container {
     display: flex;

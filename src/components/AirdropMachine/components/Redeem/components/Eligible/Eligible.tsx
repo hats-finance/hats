@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import NFTAirdrop from "../NFTAirdrop/NFTAirdrop";
 import TokenEligibility from "../TokenEligibility/TokenEligibility";
+import RedeemWalletIcon from "assets/icons/wallet-nfts/wallet-redeem.svg";
 import "./index.scss";
 
 enum Stage {
@@ -22,6 +23,7 @@ export default function Eligible() {
   return (
     <div className="eligible-wrapper">
       <div className="eligible__header-wrapper">
+        <img className="eligible__header-icon" src={RedeemWalletIcon} alt="wallet" />
         <div className="eligible__header-title">{t("AirdropMachine.Eligible.title")}</div>
         <div>{t("AirdropMachine.Eligible.text")}</div>
       </div>

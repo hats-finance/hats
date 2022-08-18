@@ -12,10 +12,14 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    .eligible__header-icon {
+      width: 124px;
+      align-self: center;
+    }
     .eligible__header-title {
       font-size: $medium-2;
       font-weight: bold;
-      margin-bottom: 24px;
+      margin: 20px 0;
     }
   }
   .eligible__stages-wrapper {

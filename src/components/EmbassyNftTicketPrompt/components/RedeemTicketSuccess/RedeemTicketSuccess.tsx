@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import { ipfsTransformUri } from "utils";
 import { Swiper, SwiperSlide } from "swiper/react";
+import RedeemWalletIcon from "assets/icons/wallet-nfts/wallet-redeem.svg";
 import "./index.scss";
 import "swiper/css";
 
@@ -21,6 +22,7 @@ export default function RedeemTicketSuccess() {
 
   return (
     <div className="redeem-ticket-success-wrapper">
+      <img className="redeem-ticket-success__icon" src={RedeemWalletIcon} alt="wallet" />
       <div className="redeem-ticket-success__title">{t("EmbassyNftTicketPrompt.RedeemTicketSuccess.title")}</div>
       <span className="redeem-ticket-success__sub-title">{t("EmbassyNftTicketPrompt.RedeemTicketSuccess.sub-title")}</span>
       {t("EmbassyNftTicketPrompt.RedeemTicketSuccess.text-1")}

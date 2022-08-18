@@ -3,6 +3,7 @@ import { AirdropMachineContext } from "components/AirdropMachine/components/Chec
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import RadioButton from "assets/icons/radio-button.svg";
+import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
 import "./index.scss";
 
 export default function NotEligible() {
@@ -11,6 +12,7 @@ export default function NotEligible() {
 
   return (
     <div className="not-eligible-wrapper">
+      <img className="not-eligible__not-eligible-icon" src={NotEligibleWalletIcon} alt="wallet" />
       <div className="not-eligible__title">{t("AirdropMachine.NotEligible.title")}</div>
       <div className="not-eligible__sub-title">{t("AirdropMachine.NotEligible.text-1")}</div>
       <div className="not-eligible__wallet-container">
