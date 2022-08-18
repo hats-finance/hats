@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
-import { HATVaultsNFTContract, NFTContractDataProxy } from "constants/constants";
+import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -40,9 +40,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, account, chainId } = useEthers();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
-    useContractFunction(contract, "redeemMultipleFromTree", { transactionName: "Redeem Tree NFTs" });
+    useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
-    contract, "redeemMultipleFromShares", { transactionName: "Redeem Deposit NFTs" });
+    contract, "redeemMultipleFromShares", { transactionName: Transactions.RedeemDepositNFTs });
   const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
   const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
@@ -190,7 +190,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
   }, [nftTokens, actualAddress, buildProofsForRedeemables, redeemMultipleFromTree]);
 
-  const redeemTreeTransaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem Tree NFTs");
+  const redeemTreeTransaction = useTransactions().transactions.find(tx => tx.transactionName === Transactions.RedeemTreeNFTs);
   const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
   useEffect(() => {
     if (prevRedeemTreeTransaction?.receipt?.status === 1) {
@@ -198,7 +198,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }
   }, [redeemTreeTransaction, getTreeEligibility, prevRedeemTreeTransaction?.receipt?.status])
 
-  const redeemDepsoitTransaction = useTransactions().transactions.find(tx => tx.transactionName === "Redeem Deposit NFTs");
+  const redeemDepsoitTransaction = useTransactions().transactions.find(tx => tx.transactionName === Transactions.RedeemDepositNFTs);
   const prevRedeemDepositTransaction = usePrevious(redeemDepsoitTransaction);
   useEffect(() => {
     if (redeemDepsoitTransaction?.receipt?.status === 1) {

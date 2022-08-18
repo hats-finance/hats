@@ -138,3 +138,16 @@ export const VAULTS_TYPE_SEVERITIES_COLORS = {
   "Grants": NORMAL_SEVERITIES_COLORS,
   "": NORMAL_SEVERITIES_COLORS
 }
+
+export enum Transactions {
+  Approve = "Approve",
+  DepositAndClaim = "Deposit and Claim",
+  WithdrawAndClaim = "Withdraw and Claim",
+  WithdrawRequest = "Withdraw Request",
+  Claim = "Claim",
+  ClaimReward = "Claim Reward",
+  CheckIn = "Check In",
+  AddPool = "Add Pool",
+  RedeemTreeNFTs = "Redeem Tree NFTs",
+  RedeemDepositNFTs = "Redeem Deposit NFTs",
+}
