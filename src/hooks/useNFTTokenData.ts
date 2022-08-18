@@ -193,7 +193,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const redeemTreeTransaction = useTransactions().transactions.find(tx => tx.transactionName === Transactions.RedeemTreeNFTs);
   const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
   useEffect(() => {
-    if (prevRedeemTreeTransaction?.receipt?.status === 1) {
+    if (prevRedeemTreeTransaction?.receipt?.status) {
       getTreeEligibility();
     }
   }, [redeemTreeTransaction, getTreeEligibility, prevRedeemTreeTransaction?.receipt?.status])
@@ -201,7 +201,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const redeemDepsoitTransaction = useTransactions().transactions.find(tx => tx.transactionName === Transactions.RedeemDepositNFTs);
   const prevRedeemDepositTransaction = usePrevious(redeemDepsoitTransaction);
   useEffect(() => {
-    if (redeemDepsoitTransaction?.receipt?.status === 1) {
+    if (redeemDepsoitTransaction?.receipt?.status) {
       getEligibilityForPids();
     }
   }, [redeemDepsoitTransaction, getEligibilityForPids, prevRedeemDepositTransaction?.receipt?.status])
