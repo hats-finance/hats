@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import moment from "moment";
 
 export const GET_VAULTS = gql`
   query getVaults {

@@ -11,7 +11,6 @@ import VaultReview from "./VaultReview";
 import './index.scss'
 import { getPath, setPath } from "./objectUtils";
 import { useParams } from "react-router-dom";
-import { VaultProvider } from "components/CommitteeTools/store";
 import { severities } from './severities'
 import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";

@@ -16,7 +16,6 @@ import VaultSelector from "./VaultSelector";
 import { formatUnits } from "@ethersproject/units";
 import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
 import { GET_CLAIM } from "graphql/subgraph";
-import CustomMultiSelect from "components/Shared/MultiSelect/MultiSelect";
 import { isAddress } from "ethers/lib/utils";
 
 export default function BountyPayout() {
@@ -27,7 +26,6 @@ export default function BountyPayout() {
 
   const { loading, error, data } = useQuery<{ submittedClaims: ISubmittedClaim[] }>(GET_CLAIM, { variables: { descriptionHash }, fetchPolicy: "no-cache" });
 
-  const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<string | undefined>();
   const [selectedSeverity, setSelectedSeverity] = useState<number>();
   const [beneficiary, setBeneficiary] = useState<string | undefined>();
@@ -57,8 +55,6 @@ export default function BountyPayout() {
   };
 
   const createPayoutTransaction = useCallback(() => {
-    console.log(selectedVault, beneficiary, selectedSeverity);
-
     pendingApprovalClaim(selectedVault,
       beneficiary,
       selectedSeverity
@@ -104,7 +100,7 @@ export default function BountyPayout() {
         continue;
       }
     }
-  }, [vaultContext.isLocked, vaultContext.vault, vaults])
+  }, [vaultContext.vault, vaults])
 
   useEffect(() => {
     if (!vaultContext.isLocked)
@@ -146,14 +142,14 @@ export default function BountyPayout() {
             </p>
           </div>
           <div className="payout-details__actions">
-            {ipfsDate && (
+            {/* {ipfsDate && (
               <div className="payout-details__last-saved-time">
                 {`${t("BountyPayout.last-saved-time")} `}
                 {ipfsDate.toLocaleString()}
                 {`(${t("BountyPayout.local-time")})`}
               </div>
             )}
-            {!ipfsDate && <div>&nbsp;</div>}
+            {!ipfsDate && <div>&nbsp;</div>} */}
             <div className="payout-details__buttons">
               <button className="fill">{t("BountyPayout.revert")}</button>
               <button className="fill">{t("BountyPayout.new")}</button>
