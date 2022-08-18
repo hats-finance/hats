@@ -99,9 +99,7 @@ export default function TokenEligibilityInfo() {
             {millify(Number(formatUnits(totalHatsEligibility)))} HATS
           </div>
         </div>
-
       </div>
-
     </div>
   )
 }

@@ -12,6 +12,11 @@
     text-align: center;
     margin-bottom: 10px;
   }
+  .redeem-ticket-success__sub-title {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 5px;
+  }
   .redeem-ticket-success__features-wrapper {
     display: flex;
     flex-direction: column;
@@ -19,10 +24,22 @@
     .redeem-ticket-success__feature {
       display: flex;
       align-items: center;
-      margin: 5px 0;
+      margin: 15px 0;
       img {
+        align-self: baseline;
         margin-right: 10px;
       }
+    }
+  }
+  .redeem-ticket-success__nfts-wrapper {
+    margin: 25px 0;
+    .swiper-slide {
+      display: flex;
+      justify-content: center;
+      margin: 0 15px;
+    }
+    img {
+      width: 200px;
     }
   }
   .redeem-ticket-success__join-embassy-btn {

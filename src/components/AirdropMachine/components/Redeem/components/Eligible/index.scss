@@ -4,6 +4,7 @@
   color: $white;
   width: 900px;
   max-height: 1000px;
+  height: calc(100vh - 200px);
   padding: $modal-element-padding;
   box-sizing: border-box;
   padding-top: 0;
@@ -59,6 +60,7 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .eligible-wrapper {
     width: unset;
+    height: unset;
     padding: $modal-element-padding-mobile;
     .eligible__header-wrapper {
       .eligible__header-title {

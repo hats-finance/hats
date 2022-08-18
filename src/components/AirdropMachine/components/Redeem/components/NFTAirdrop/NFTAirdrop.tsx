@@ -5,12 +5,16 @@ import { AirdropMachineContext } from "components/AirdropMachine/components/Chec
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
 import { ipfsTransformUri } from "utils";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { useEthers } from "@usedapp/core";
 import "swiper/css";
 import "./index.scss";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { nftData: { redeemTree, nftTokens, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
+  const isSupportedNetwork = useSupportedNetwork();
+  const { account } = useEthers();
 
   const showLoader = ["PendingSignature", "Mining"].includes(redeemMultipleFromTreeState.status);
 
@@ -41,7 +45,8 @@ export default function NFTAirdrop() {
           {nfts}
         </Swiper>
       </div>
-      <button onClick={handleRedeem} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
+      <button onClick={handleRedeem} disabled={!account || !isSupportedNetwork} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
+      {(!account || !isSupportedNetwork) && <span className="nft-airdrop__error">{t("Shared.wallet-not-connected")}</span>}
       {showLoader && <Loading />}
     </div>
   )

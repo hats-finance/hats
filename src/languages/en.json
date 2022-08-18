@@ -3,7 +3,8 @@
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
-      "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward"
+      "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward",
+      "wallet-not-connected": "Please connect to your wallet first"
     },
     "Welcome": {
       "title": "Hats",
@@ -185,6 +186,7 @@
       "button-text": "REDEEM",
       "RedeemTicketSuccess": {
         "title": "REDEEM SUCCESSFUL!",
+        "sub-title": "OFIR NEEDS TO UPDATE",
         "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
         "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
         "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
