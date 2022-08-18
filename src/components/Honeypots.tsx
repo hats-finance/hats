@@ -5,7 +5,7 @@ import Vault from "./Vault/Vault";
 import DepositWithdraw from "./DepositWithdraw/DepositWithdraw";
 import { useSelector } from "react-redux";
 import { RootState } from "../reducers";
-import { formatUnits } from "ethers/lib/utils";
+import { formatUnits } from "@ethersproject/units";
 import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";

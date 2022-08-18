@@ -79,7 +79,7 @@ export function useActions() {
   }
 
   /**
-   * Redeem NFT
+   * Redeem NFTß
    * @param {string} account 
    * @param {string} tokenID 
    * @param {any} proof 

@@ -6,7 +6,6 @@ import { IVault } from "../../types/types";
 import { formatWei, ipfsTransformUri } from "../../utils";
 import Loading from "../Shared/Loading";
 import { ScreenSize } from "../../constants/constants";
-import "../../styles/Vulnerability/ProjectSelect.scss";
 import { useVaults } from "hooks/useVaults";
 
 export default function VaultSelector({ onSelect, selected }: {

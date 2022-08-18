@@ -39,6 +39,28 @@ export function useUserSharesPerVault(
   return value?.[0];
 }
 
+interface IClaimRewards {
+  committeeReward: BigNumber;
+  hackerReward: BigNumber;
+}
+
+export function useCalcClaimRewards(
+  masterAddress?: string,
+  pid?: string,
+  severity?: number
+): IClaimRewards | undefined {
+  const { value, error } =
+    useCall(masterAddress ? {
+      contract: new Contract(masterAddress, vaultAbi),
+      method: "calcClaimRewards",
+      args: [pid, severity]
+    } : undefined) ?? {};
+  if (error) {
+    return undefined;
+  }
+  return value?.claimRewards;
+}
+
 export function useWithdrawRequestInfo(address: string, pid: string, account: string): BigNumber | undefined {
   const { value, error } = useCall({ contract: new Contract(address, vaultAbi), method: "withdrawRequests", args: [pid, account] }) ?? {};
   if (error) {
@@ -85,6 +107,12 @@ export function useRedeemNFT() {
 
 export function useDelegateAndClaim() {
   return useContractFunction(new Contract(TOKEN_AIRDROP_ADDRESS, TokenAirdrop), "delegateAndClaim", { transactionName: "Delegate And Claim" });
+}
+
+export function usePendingApprovalClaim(masterADdress?: string) {
+  return useContractFunction(
+    masterADdress ? new Contract(masterADdress, vaultAbi) : undefined
+    , "pendingApprovalClaim", { transactionName: "Pending Approval Claim" });
 }
 
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(

@@ -66,3 +66,17 @@ export const GET_VAULTS = gql`
     }
   }
 `;
+
+export const GET_CLAIM = gql`
+{ 
+  submittedClaims(where: { claim: $descriptionHash}) {
+    id
+    claim
+    claimer
+    createdAt
+    master {
+      address
+    }
+  }
+}
+`

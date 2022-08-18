@@ -2,10 +2,9 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { getSubmittedClaim } from "graphql/subgraph";
 import EditableContent from "components/CommitteeTools/components/EditableContent/EditableContent";
 import PgpKey from "components/VaultEditor/PgpKey";
-import { IVaultDescription } from "types/types";
+import { IVaultDescription, ISubmittedClaim } from "types/types";
 
 import "./BountyPayout.scss";
 import { ipfsTransformUri } from "utils";
@@ -13,24 +12,26 @@ import { VaultContext } from "components/CommitteeTools/store";
 import { readPrivateKeyFromStoredKey } from "components/CommitteeTools/components/Decrypt/Decrypt";
 import { decrypt, readMessage } from "openpgp";
 import { useVaults } from "hooks/useVaults";
-import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
 import VaultSelector from "./VaultSelector";
 import { formatUnits } from "@ethersproject/units";
-import Select, { Option } from "rc-select";
+import { useCalcClaimRewards, usePendingApprovalClaim } from "hooks/contractHooks";
+import { GET_CLAIM } from "graphql/subgraph";
+import CustomMultiSelect from "components/Shared/MultiSelect/MultiSelect";
 
 export default function BountyPayout() {
   const { t } = useTranslation();
   const vaultContext = useContext(VaultContext);
   const { descriptionHash } = useParams();
-  const { loading, error, data } = useQuery(
-    getSubmittedClaim(descriptionHash || ""), { fetchPolicy: "no-cache" });
+
+  const { loading, error, data } = useQuery<{ submittedClaims: ISubmittedClaim[] }>(GET_CLAIM, { variables: { descriptionHash }, fetchPolicy: "no-cache" });
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>(new Date());
   const [selectedVault, setSelectedVault] = useState<string | undefined>();
-  const [selectedSeverity, setSelectedSeverity] = useState<number | undefined>();
+  const [selectedSeverity, setSelectedSeverity] = useState<number>();
   const [beneficiary, setBeneficiary] = useState<string | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string>("");
+  const masterAddress = data?.submittedClaims[0].master.address
   const { vaults } = useVaults()
-  const { send: pendingApprovalClaim } = usePendingApprovalClaim()
+  const { send: pendingApprovalClaim } = usePendingApprovalClaim(masterAddress);
   const vault = vaults && vaults.find(v => v.pid === selectedVault)
   const severities = (vault?.description as IVaultDescription)?.severities;
   const severity = severities && severities.find(s => s.index === selectedSeverity)
@@ -43,7 +44,7 @@ export default function BountyPayout() {
     }
   }, [loading, error, data]);
 
-  const { hackerReward } = useCalcClaimRewards(selectedVault, selectedSeverity) ?? {}
+  const { hackerReward } = useCalcClaimRewards(masterAddress, selectedVault, selectedSeverity) ?? {}
 
   const clearClaimToSubmit = () => {
     setBeneficiary(undefined);
@@ -167,19 +168,16 @@ export default function BountyPayout() {
             </div>
             <div className="payout-details__severity">
               <label>{t("BountyPayout.severity")}</label>
-              <Select
-                mode="combobox"
-                showSearch={false}
+              <select
                 value={String(selectedSeverity)}
-                onChange={(value) => {
-                  console.log("onChange", value, parseInt(value));
-                  setSelectedSeverity(parseInt(value));
+                onChange={(event) => {
+                  setSelectedSeverity(Number(event.target.value));
                 }}
               >
                 {severities?.map((severity, index) => (
-                  <Option key={index} value={String(severity.index)}>{severity.name}</Option>
+                  <option key={index} value={severity.index}>{severity.name}</option>
                 ))}
-              </Select>
+              </select>
 
             </div>
             <div className="payout-details__severity-desc">
