@@ -10,7 +10,7 @@
     width: 124px;
     align-self: center;
   }
-  .redeem-ticket-success__title{
+  .redeem-ticket-success__title {
     font-weight: bold;
     font-size: $medium;
     text-align: center;
@@ -37,13 +37,17 @@
   }
   .redeem-ticket-success__nfts-wrapper {
     margin: 25px 0;
-    .swiper-slide {
+    .swiper-wrapper {
       display: flex;
       justify-content: center;
-      margin: 0 15px;
-    }
-    img {
-      width: 200px;
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        margin: 0 15px;
+        img {
+          width: 200px;
+        }
+      }
     }
   }
   .redeem-ticket-success__join-embassy-btn {

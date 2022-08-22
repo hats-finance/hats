@@ -14,11 +14,16 @@
     margin-left: unset;
     margin-right: unset;
     margin-top: 15px;
-    .swiper-slide {
+    margin: 25px 0;
+    .swiper-wrapper {
       display: flex;
       justify-content: center;
-      img {
-        width: 150px;
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        img {
+          width: 150px;
+        }
       }
     }
   }

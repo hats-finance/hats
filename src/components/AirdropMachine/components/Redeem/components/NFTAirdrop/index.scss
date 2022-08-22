@@ -9,12 +9,16 @@
   }
   .nft-airdrop__nfts-wrapper {
     margin: 25px 0;
-    .swiper-slide {
+    .swiper-wrapper {
       display: flex;
       justify-content: center;
-    }
-    img {
-      width: 200px;
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        img {
+          width: 200px;
+        }
+      }
     }
   }
   .nft-airdrop__button-container {
@@ -23,10 +27,10 @@
     bottom: 0;
     background-color: $field-blue;
     z-index: 100;
-    padding-top: 50px;
-    padding-bottom: 20px;
-    //margin: 0px -40px;
-    //padding: 0 30px;
+    margin: 0px -#{$modal-element-padding};
+    padding: 0px $modal-element-padding;
+    box-shadow: 0px 0 10px rgb(255 255 255 / 80%);
+    padding-top: 40px;
     button {
       width: 100%;
     }
@@ -47,6 +51,10 @@
       img {
         width: 100px;
       }
+    }
+    .nft-airdrop__button-container {
+      margin: 0px -#{$modal-element-padding-mobile};
+      padding: 20px $modal-element-padding-mobile;
     }
   }
 }
