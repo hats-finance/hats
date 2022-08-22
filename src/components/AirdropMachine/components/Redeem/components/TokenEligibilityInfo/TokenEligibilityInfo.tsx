@@ -24,7 +24,7 @@ export default function TokenEligibilityInfo() {
       <div className="token-eligibility-info__total-hats-container">
         <span>{`${shortenIfAddress(actualAddress)} ${t("AirdropMachine.TokenEligibilityInfo.text-2")}`}</span>
         <div className="token-eligibility-info__total-hats">
-          <img src={HatsLogo} alt="hats logo" />
+          <img className="token-eligibility-info__hats-logo" src={HatsLogo} alt="hats logo" />
           <span className="token-eligibility-info__value">{millify(Number(formatUnits(totalHatsEligibility)))} HATS</span>
         </div>
       </div>

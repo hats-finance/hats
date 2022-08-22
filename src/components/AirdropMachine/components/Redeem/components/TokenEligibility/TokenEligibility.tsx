@@ -17,8 +17,9 @@ export default function TokenEligibility({ nextStage }: IProps) {
         <b className="token-eligibility__section-title">{t("AirdropMachine.TokenEligibility.text-2")}</b>
         <span>{t("AirdropMachine.TokenEligibility.text-3")}</span>
       </section>
-
-      <button className="fill" onClick={nextStage}>{t("AirdropMachine.TokenEligibility.button-text")}</button>
+      <div className="token-eligibility__button-container">
+        <button className="fill" onClick={nextStage}>{t("AirdropMachine.TokenEligibility.button-text")}</button>
+      </div>
     </div>
   )
 }

@@ -17,6 +17,20 @@
       width: 200px;
     }
   }
+  .nft-airdrop__button-container {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    background-color: $field-blue;
+    z-index: 100;
+    padding-top: 50px;
+    padding-bottom: 20px;
+    //margin: 0px -40px;
+    //padding: 0 30px;
+    button {
+      width: 100%;
+    }
+  }
   &.disabled {
     pointer-events: none;
     opacity: 0.5;

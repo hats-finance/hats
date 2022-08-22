@@ -66,6 +66,7 @@
     width: unset;
     height: unset;
     padding: $modal-element-padding-mobile;
+    padding-top: unset;
     .eligible__header-wrapper {
       .eligible__header-title {
         font-size: $moderate;
@@ -74,7 +75,11 @@
     .eligible__stages-wrapper {
       .eligible__stage-title-wrapper {
         font-size: $xsmall;
-        text-align: center;
+        .eligible__stage-number {
+          width: 30px;
+          height: 30px;
+          line-height: 30px;
+        }
       }
     }
   }
