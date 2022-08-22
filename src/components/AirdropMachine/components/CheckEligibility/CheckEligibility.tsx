@@ -53,7 +53,7 @@ export default function CheckEligibility() {
           <button className="check-eligibility__clear-input" onClick={() => setUserInput("")}>&times;</button>
         </div>
         {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}
-        {!nftData.isBeforeDeadline && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
+        {nftData.isBeforeDeadline === false && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
         <button
           className="check-eligibility__check-button fill"
           onClick={toggle}
