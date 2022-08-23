@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
 import { ipfsTransformUri } from "utils";
 import { useEffect, useState } from "react";
+import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
 import "swiper/css";
 
@@ -31,6 +32,7 @@ export default function EmbassyNftTicketPrompt() {
     <>
       {redeemed ? <RedeemTicketSuccess /> : (
         <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
+          <img className="redeem-ticket-success__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
           {t("EmbassyNftTicketPrompt.text")}
           <Swiper
             spaceBetween={1}

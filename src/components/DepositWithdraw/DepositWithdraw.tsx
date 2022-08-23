@@ -5,7 +5,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { isDateBefore, isDateBetween, isDigitsOnly } from "../../utils";
+import { delay, isDateBefore, isDateBetween, isDigitsOnly } from "../../utils";
 import Loading from "../Shared/Loading";
 import { IVault } from "../../types/types";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../constants/constants";
@@ -30,6 +30,8 @@ enum Tab {
   Deposit = 1,
   Withdraw
 }
+
+const CHECK_DEPOSIT_NFTS_DELAY = 10000;
 
 export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
@@ -78,6 +80,8 @@ export default function DepositWithdraw(props: IProps) {
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
     await depositAndClaim(selectedPid, userInputValue);
+    // /** TEMP: this short delay is to wait until the new nftData is calculated after the deposit. Need to make it more robust */
+    await delay(CHECK_DEPOSIT_NFTS_DELAY);
     if (nftData?.depositToRedeem && nftData?.nftTokens?.some(nft => nft.pid === Number(selectedPid))) {
       toggleEmbassyPrompt();
     } else {
@@ -124,7 +128,7 @@ export default function DepositWithdraw(props: IProps) {
     checkInState]
 
   const keepModalOpen = [withdrawRequestState, approveTokenState, depositAndClaimState];
-  const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
+  const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining');
   const pendingWallet = transactionStates.some(state => state.status === "PendingSignature" || state.status === "Mining");
   const prevApproveTokenState = usePrevious(approveTokenState);
 

@@ -101,6 +101,7 @@ export const COIN_GECKO_ETHEREUM =
 export enum Colors {
   white = "#FFFFFF",
   red = "#E66480",
+  strongRed = "#F24822",
   turquoise = "#8AFCFD",
   darkBlue = "#000723",
   yellow = "#F2C94C",

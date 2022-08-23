@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
 import { ipfsTransformUri } from "utils";
+import Dot from "components/Shared/Dot/Dot";
+import { Colors } from "constants/constants";
 import "./index.scss";
 import "swiper/css";
 
@@ -11,10 +13,17 @@ export default function MyNFTs() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
 
-  const nfts = nftData?.nftTokens?.map((nft, index) =>
+  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isDeposit).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
-      {!nft.isRedeemed && <span className="my-nfts__not-redeemed-label">{t("Header.MyAccount.MyNFTs.not-redeemed")}</span>}
+      {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
+    </SwiperSlide>
+  )
+
+  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isMerkleTree).map((nft, index) => 
+    <SwiperSlide key={index} className="my-nfts__slide">
+      <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+      {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
@@ -27,8 +36,9 @@ export default function MyNFTs() {
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
       <span className="my-nfts__title">NFTs</span>
-      <div className="my-nfts__container">
-        {nfts?.length === 0 ? "No NFTs yet" : (
+      <span className="my-nfts__sub-title">{t("Header.MyAccount.MyNFTs.airdrop-nfts")}</span>
+      <div className="my-nfts__airdrop-nfts-container">
+        {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
             spaceBetween={1}
             slidesPerView={3}
@@ -36,7 +46,21 @@ export default function MyNFTs() {
             touchRatio={1.5}
             navigation={true}
             effect={"flip"}>
-            {nfts}
+            {treeNfts}
+          </Swiper>
+        )}
+      </div>
+      <span className="my-nfts__sub-title">{t("Header.MyAccount.MyNFTs.depsoit-nfts")}</span>
+      <div className="my-nfts__deposit-nfts-container">
+        {depositNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-deposit-nfts")}</div> : (
+          <Swiper
+            spaceBetween={1}
+            slidesPerView={3}
+            speed={500}
+            touchRatio={1.5}
+            navigation={true}
+            effect={"flip"}>
+            {treeNfts}
           </Swiper>
         )}
       </div>

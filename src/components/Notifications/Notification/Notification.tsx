@@ -9,7 +9,7 @@ interface IProps {
   removeNotification?: () => void;
 }
 
-const DISPLAY_DURATION = 5000;
+const DISPLAY_DURATION = 50000;
 
 export default function Notification({ notification, removeNotification }: IProps) {
 

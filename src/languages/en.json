@@ -12,7 +12,7 @@
       "button": "ENTER"
     },
     "EmbassyNotificationBar": {
-      "title": "NEW - JOIN YOUR SECURITY EMBASSY",
+      "title": "HEY PROTECTOR, JOIN YOUR EMBASSY",
       "learn-more": "LEARN MORE"
     },
     "Header": {
@@ -31,21 +31,24 @@
           "title": "Staking APY"
         },
         "MyNFTs": {
+          "airdrop-nfts": "Airdrop machine",
+          "depsoit-nfts": "Depsit",
           "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
           "deposit-redeem": "REDEEM ALL FROM DEPOSITS",
-          "not-redeemed": "Not redeemed yet",
-          "after-deadline": "Deadline has passed"
+          "after-deadline": "Deadline has passed",
+          "no-tree-nfts": "No airdrop NFTs yet",
+          "no-deposit-nfts": "No depsoit NFTs yet"
         }
       }
     },
     "DepositWithdraw": {
       "EmbassyEligibility": {
         "title": "NEW! Embassy eligibility",
-        "text-1": "The minimum requirement to enter an embassy is ",
+        "text-1": "The minimum requirement to enter an Embassy is ",
         "text-2": "(Staked token) \n\n",
         "text-3": "You are eligible to",
         "text-4": "vault Embassy NFT \n\n",
-        "text-5": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's embassy."
+        "text-5": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
       },
       "Assets": {
         "assets": "Assets",
@@ -186,7 +189,7 @@
       "button-text": "REDEEM",
       "RedeemTicketSuccess": {
         "title": "REDEEM SUCCESSFUL!",
-        "sub-title": "OFIR NEEDS TO UPDATE",
+        "sub-title": "Welcome home, protector!",
         "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
         "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
         "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
