@@ -123,17 +123,21 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !actualAddressInfo) return;
-    const treeNfts = await Promise.all(actualAddressInfo.nft_elegebility.map(async (nft): Promise<NFTTokenInfo> => {
-      const { pid, tier, masterAddress } = nft;
+    const treeNfts = await Promise.all(actualAddressInfo.nft_elegebility.map(async (nft) => {
+      const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
-      const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
-      const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
-      const tokenUri = await contract.uri(tokenId);
-      const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
-      return { ...nft, isRedeemed, tokenId, nftInfo, isMerkleTree: true, isDeposit: false };
+      const tokens: NFTTokenInfo[] = [];
+      for (let tier = 1; tier <= tiers; tier++) {
+        const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
+        const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
+        const tokenUri = await contract.uri(tokenId);
+        const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
+        nftTokens.push({ ...nft, isRedeemed, tokenId, nftInfo, isMerkleTree: true, isDeposit: false });
+      }
+      return tokens;
     }));
 
-    setTreeTokens(treeNfts);
+    setTreeTokens(treeNfts.flat());
   }, [contract, actualAddress, actualAddressInfo])
 
   const getMerkleTree = useCallback(async () => {
@@ -205,7 +209,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       getEligibilityForPids();
     }
   }, [redeemDepsoitTransaction, getEligibilityForPids, prevRedeemDepositTransaction?.receipt?.status])
-  
+
   const redeemShares = useCallback(async () => {
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
     const hatVaults = depositRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
