@@ -132,11 +132,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const isRedeemed = await contract.tokensRedeemed(tokenId, actualAddress) as boolean;
         const tokenUri = await contract.uri(tokenId);
         const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
-        nftTokens.push({ ...nft, isRedeemed, tokenId, nftInfo, isMerkleTree: true, isDeposit: false });
+        tokens.push({ ...nft, isRedeemed, tokenId, nftInfo, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
-
     setTreeTokens(treeNfts.flat());
   }, [contract, actualAddress, actualAddressInfo])
 
