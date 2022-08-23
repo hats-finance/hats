@@ -13,14 +13,14 @@ export default function MyNFTs() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
 
-  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isDeposit).map((nft, index) =>
+  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isMerkleTree).map((nft, index) => 
+  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) => 
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}

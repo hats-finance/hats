@@ -32,7 +32,7 @@ export default function EmbassyNftTicketPrompt() {
     <>
       {redeemed ? <RedeemTicketSuccess /> : (
         <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
-          <img className="redeem-ticket-success__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
+          <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
           {t("EmbassyNftTicketPrompt.text")}
           <Swiper
             spaceBetween={1}

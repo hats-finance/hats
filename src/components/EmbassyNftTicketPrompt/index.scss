@@ -7,6 +7,12 @@
   padding: $modal-element-padding;
   white-space: pre-line;
   max-width: 600px;
+  padding-top: 0px;
+  .embassy-nft-ticket__icon {
+    width: 124px;
+    align-self: center;
+    margin-bottom: 20px;
+  }
   .embassy-nft-ticket__redeem-btn {
     margin-top: 20px;
   }
