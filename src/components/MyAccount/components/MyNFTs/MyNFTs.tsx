@@ -13,19 +13,26 @@ export default function MyNFTs() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
 
-  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
+  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isDeposit).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) => 
+  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isMerkleTree).map((nft, index) => 
     <SwiperSlide key={index} className="my-nfts__slide">
       <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
+
+  const shared = nftData?.nftTokens?.filter(nft => nft.isDeposit && nft.isMerkleTree).map((nft, index) => 
+  <SwiperSlide key={index} className="my-nfts__slide">
+    <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+    {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
+  </SwiperSlide>
+)
 
   const showLoader =
     nftData?.redeemMultipleFromTreeState.status === "PendingSignature" ||
@@ -60,7 +67,21 @@ export default function MyNFTs() {
             touchRatio={1.5}
             navigation={true}
             effect={"flip"}>
-            {treeNfts}
+            {depositNfts}
+          </Swiper>
+        )}
+      </div>
+      <span className="my-nfts__sub-title">{t("Header.MyAccount.MyNFTs.shared")}</span>
+      <div className="my-nfts__shared-nfts-container">
+        {shared?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-shared-nfts")}</div> : (
+          <Swiper
+            spaceBetween={1}
+            slidesPerView={3}
+            speed={500}
+            touchRatio={1.5}
+            navigation={true}
+            effect={"flip"}>
+            {shared}
           </Swiper>
         )}
       </div>

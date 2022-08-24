@@ -86,7 +86,7 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     if (depositAndClaimState.status === "Success") {
-      if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
+      if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isMerkleTree)?.some(nft => nft.pid === lastPid)) {
         toggleEmbassyPrompt();
       }
     }

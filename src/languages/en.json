@@ -33,11 +33,13 @@
         "MyNFTs": {
           "airdrop-nfts": "Airdrop machine",
           "depsoit-nfts": "Deposit",
+          "shared": "Shared",
           "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
           "deposit-redeem": "REDEEM ALL FROM DEPOSITS",
           "after-deadline": "Deadline has passed",
           "no-tree-nfts": "No airdrop NFTs yet",
-          "no-deposit-nfts": "No depsoit NFTs yet"
+          "no-deposit-nfts": "No depsoit NFTs yet",
+          "no-shared-nfts": "No shared NFTs yet"
         }
       }
     },

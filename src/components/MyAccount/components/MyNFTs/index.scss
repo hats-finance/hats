@@ -12,6 +12,7 @@
   .my-nfts__sub-title {
     margin: 5px 0;
   }
+  .my-nfts__shared-nfts-container,
   .my-nfts__airdrop-nfts-container,
   .my-nfts__deposit-nfts-container {
     margin: 15px 0;
@@ -51,6 +52,7 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .my-nfts-wrapper {
+    .my-nfts__shared-nfts-container,
     .my-nfts__airdrop-nfts-container,
     .my-nfts__deposit-nfts-container {
       .my-nfts__slide {
