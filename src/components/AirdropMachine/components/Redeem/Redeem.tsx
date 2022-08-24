@@ -9,7 +9,7 @@ export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
 
   if (nftData?.actualAddressInfo) {
-    if (nftData.airdropToRedeem === undefined) {
+    if (nftData.nftTokens?.length === 0) {
       return <Loading />;
     } else if (nftData.airdropToRedeem) {
       return <Eligible />
