@@ -2,19 +2,18 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { useTranslation } from "react-i18next";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
-import { useContext } from "react";
-import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import { ipfsTransformUri } from "utils";
 import { Swiper, SwiperSlide } from "swiper/react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
+import { useVaults } from "hooks/useVaults";
 import "./index.scss";
 import "swiper/css";
 
 export default function RedeemTicketSuccess() {
   const { t } = useTranslation();
-  const { nftData: { nftTokens } } = useContext(AirdropMachineContext);
+  const { nftData} = useVaults();
 
-  const nfts = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>
