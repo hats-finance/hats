@@ -154,6 +154,16 @@
         "title": "CONGRATS!",
         "text": "You are eligible to Hats token and NFT airdrop"
       },
+      "AirdropRedeemSuccess": {
+        "title": "REDEEM SUCCESSFUL!",
+        "sub-title": "Welcome home, protector!",
+        "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
+        "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
+        "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
+        "text-4": "Be the first to learn about security topics related to your protocol.",
+        "text-5": "Be part of a unique group with the project committee.",
+        "button-text": "JOIN AN EMBASSY ON DISCORD"
+      },
       "Redeemed": {
         "title": "ALREADY REDEEMED",
         "text-1": "It seems you already redeemed your NFT, view your eligibility:",

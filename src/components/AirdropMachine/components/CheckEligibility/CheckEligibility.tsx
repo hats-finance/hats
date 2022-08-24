@@ -7,8 +7,8 @@ import useModal from "hooks/useModal";
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
-import RedeemTicketSuccess from "components/EmbassyNftTicketPrompt/components/RedeemTicketSuccess/RedeemTicketSuccess";
 import "./index.scss";
+import AirdropRedeemSuccess from "../Redeem/components/AirdropRedeemSuccess/AirdropRedeemSuccess";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
@@ -65,7 +65,7 @@ export default function CheckEligibility() {
         isShowing={isShowing}
         hide={toggle}>
         <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle, actualAddress }} >
-          {redeemed ? <RedeemTicketSuccess /> : <Redeem />}
+          {redeemed ? <AirdropRedeemSuccess /> : <Redeem />}
         </AirdropMachineContext.Provider>
       </Modal>
     </div>

@@ -11,9 +11,9 @@ import "swiper/css";
 
 export default function RedeemTicketSuccess() {
   const { t } = useTranslation();
-  const { nftData} = useVaults();
+  const { nftData } = useVaults();
 
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
     </SwiperSlide>
