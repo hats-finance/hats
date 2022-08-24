@@ -8,15 +8,13 @@
     margin: 30px 0;
   }
   .nft-airdrop__nfts-wrapper {
-    margin: 25px 0;
+    margin: 15px 0;
     .swiper-wrapper {
-      display: flex;
-      justify-content: center;
       .swiper-slide {
         display: flex;
         justify-content: center;
         img {
-          width: 200px;
+          width: 150px;
         }
       }
     }
@@ -48,8 +46,12 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .nft-airdrop-wrapper {
     .nft-airdrop__nfts-wrapper {
-      img {
-        width: 100px;
+      .swiper-wrapper {
+        .swiper-slide {
+          img {
+            width: 100px;
+          }
+        }
       }
     }
     .nft-airdrop__button-container {

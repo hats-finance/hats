@@ -76,7 +76,7 @@ export default function DepositWithdraw(props: IProps) {
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
   const [lastPid, setLastPid] = useState<number | undefined>();
-  const prevLastPid = usePrevious(lastPid);
+  const prevDepositToRedeem = usePrevious(nftData?.depositToRedeem);
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
@@ -86,11 +86,11 @@ export default function DepositWithdraw(props: IProps) {
 
   useEffect(() => {
     if (depositAndClaimState.status === "Success") {
-      if (prevLastPid !== lastPid && nftData?.depositToRedeem && nftData?.nftTokens?.some(nft => nft.pid === lastPid)) {
+      if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
         toggleEmbassyPrompt();
       }
     }
-  }, [nftData, setShowModal, lastPid, prevLastPid, toggleEmbassyPrompt, depositAndClaimState.status])
+  }, [nftData, setShowModal, lastPid, prevDepositToRedeem, toggleEmbassyPrompt, depositAndClaimState.status])
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {

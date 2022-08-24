@@ -64,8 +64,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
-  const airdropToRedeem = useMemo(() => treeTokens?.some(nft => !nft.isRedeemed), [treeTokens]);
-  const depositToRedeem = useMemo(() => proofTokens?.some(nft => !nft.isRedeemed), [proofTokens]);
+  const airdropToRedeem = useMemo(() => nftTokens.filter(nft => nft.isMerkleTree).some(nft => !nft.isRedeemed), [nftTokens]);
+  const depositToRedeem = useMemo(() => nftTokens.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed), [nftTokens]);
 
   useEffect(() => {
     if (actualAddress !== prevActualAddress) {
