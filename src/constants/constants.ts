@@ -24,7 +24,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "",
-  [ChainId.Rinkeby]: "0x86d2d0a033fA2F693bEA2e9cFB53dFE0e6380470"
+  [ChainId.Rinkeby]: "0x4D9461C8A92CAe040Fca2eca1856bf3043C7cfa4"
 }
 
 export const Chains = {
@@ -45,7 +45,7 @@ export const VaultSubgraphs = {
 };
 
 export const NFTContractDataProxy = {
-  ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0xb47E68035f947cc0213C1a060c00f5B49C911e1d"
+  ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0xD36256BF7e5e9Ed6bd1BC5d127CDb884A0F35BbD"
 }
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
@@ -70,8 +70,6 @@ export const MAX_SPENDING = BigNumber.from(2)
 
 /** The minimum amount to deposit in WEI units */
 export const MINIMUM_DEPOSIT = 1000000;
-
-export const MINIMUM_DEPOSIT_TO_EMBASSY_PERCENTAGE = 0.101;
 
 export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   border: "none",

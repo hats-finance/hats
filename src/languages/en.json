@@ -37,7 +37,8 @@
           "deposit-redeem": "REDEEM ALL FROM DEPOSITS",
           "after-deadline": "Deadline has passed",
           "no-tree-nfts": "No airdrop NFTs yet",
-          "no-deposit-nfts": "No depsoit NFTs yet"
+          "no-deposit-nfts": "No depsoit NFTs yet",
+          "text-0": "Please note, you can redeem only one NFT for each level of trust per project."
         }
       }
     },
@@ -46,9 +47,8 @@
         "title": "NEW! Embassy eligibility",
         "text-1": "The minimum requirement to enter an Embassy is ",
         "text-2": "(Staked token) \n\n",
-        "text-3": "You are eligible to",
-        "text-4": "vault Embassy NFT \n\n",
-        "text-5": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
+        "text-3": "The minimum requirement for the next level of trust of the Protector NFT is ",
+        "text-4": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
       },
       "Assets": {
         "assets": "Assets",

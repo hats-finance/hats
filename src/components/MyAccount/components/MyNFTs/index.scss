@@ -3,7 +3,7 @@
 .my-nfts-wrapper {
   display: flex;
   flex-direction: column;
-  background-color: $blue-2;
+  border: 1px solid $blue-3;
   padding: 25px;
   margin-top: 20px;
   .my-nfts__title {
@@ -39,6 +39,11 @@
     font-size: $xxsmall;
     text-align: center;
     color: $gray-2;
+  }
+  .my-nfts__one-nft-trust-level-text {
+    color: $turquoise;
+    margin: 20px 0;
+    font-size: $xxsmall;
   }
   .my-nfts__action-btn {
     margin: 10px 0;
