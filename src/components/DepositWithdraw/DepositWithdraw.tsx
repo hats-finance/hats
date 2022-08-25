@@ -85,12 +85,10 @@ export default function DepositWithdraw(props: IProps) {
   }, [selectedPid, userInputValue, depositAndClaim])
 
   useEffect(() => {
-    //if (depositAndClaimState.status === "Success") {
       if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
         toggleEmbassyPrompt();
       }
-    //}
-  }, [nftData, setShowModal, lastPid, prevDepositToRedeem, toggleEmbassyPrompt, depositAndClaimState.status])
+  }, [nftData, setShowModal, lastPid, prevDepositToRedeem, toggleEmbassyPrompt])
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {

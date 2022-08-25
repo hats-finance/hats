@@ -1,6 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { useEthers } from "@usedapp/core";
 import { useUserSharesPerVault } from "hooks/contractHooks";
+import { useVaults } from "hooks/useVaults";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types/types";
@@ -17,11 +18,14 @@ const MIN_TO_EMBASSY_PERCENTAGES = [0.101, 1, 15];
 export default function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
   const { account } = useEthers();
+  const { nftData } = useVaults();
   const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
 
-  if (!availableToWithdraw || totalShares === 0) return null;
+  if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
+  const redeemedTiers = nftData.nftTokens.filter(nft =>  nft.pid === Number(vault.pid) && nft.isDeposit && nft.isRedeemed).map(nft => nft.tier);
+  const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers);
   const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
 
   let currentTier = 0;
@@ -31,19 +35,16 @@ export default function EmbassyEligibility({ vault }: IProps) {
     }
     currentTier++;
   }
+  if (maxRedeemedTier === 3 || currentTier === 3) return null;
 
-  const minToNextTier = (totalShares - shares) * MIN_TO_EMBASSY_PERCENTAGES[currentTier];
-  //const isEligible = shares >= minToNextTier;
-  // if (nftData?.nftTokens?.filter(nft => nft.pid === Number(vault.pid) && nft.isDeposit && nft.isRedeemed).some(nft => nft.tier === Tier.Third)) {
-  //   return null;
-  // }
+  if (maxRedeemedTier > currentTier) currentTier = maxRedeemedTier + 1;
+
+  const minToNextTier = ((totalShares - shares) * MIN_TO_EMBASSY_PERCENTAGES[currentTier]) - shares;
 
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
-        {/* <div>Current trust level: {currentTier}</div>
-        <div>Min to next trust level: {millify(minToNextTier)}</div> */}
         {currentTier === 0 ? (
           <span className="embassy-eligibility__content__min-to-embassy">
             {`${t("DepositWithdraw.EmbassyEligibility.text-1")}
