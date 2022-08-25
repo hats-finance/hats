@@ -84,6 +84,7 @@ export default function DepositWithdraw(props: IProps) {
     setLastPid(Number(selectedPid))
   }, [selectedPid, userInputValue, depositAndClaim])
 
+  // TODO: need a better condition here?
   useEffect(() => {
       if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
         toggleEmbassyPrompt();
