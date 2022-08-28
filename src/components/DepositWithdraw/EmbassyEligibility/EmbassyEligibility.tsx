@@ -12,8 +12,7 @@ interface IProps {
 }
 
 const HUNDRED_PERCENT = 10000;
-const TIER_PERCENTAGES = [10, 100, 1500];
-const MIN_TO_EMBASSY_PERCENTAGES = [0.101, 1, 15];
+const TIER_PERCENTAGES = [11, 101, 1501];
 
 export default function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
@@ -21,26 +20,25 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const { nftData } = useVaults();
   const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
-
   if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
   const redeemedTiers = nftData.nftTokens.filter(nft => nft.pid === Number(vault.pid) && nft.isDeposit && nft.isRedeemed).map(nft => nft.tier);
   const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers);
   const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
-
   let nextTier = 0;
   for (let i = 0; i < TIER_PERCENTAGES.length; i++) {
-    if (shares < totalShares * TIER_PERCENTAGES[i] / HUNDRED_PERCENT) {
+    if (shares < Number((totalShares * TIER_PERCENTAGES[i] / HUNDRED_PERCENT).toFixed(1))) {
       break;
     }
     nextTier++;
   }
+
   if (maxRedeemedTier === 3 || nextTier === 3) return null;
 
   /** this can happen in case the user already redeemed from a tier and withdraw the funds */
   if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
 
-  const minToNextTier = ((totalShares - shares) * MIN_TO_EMBASSY_PERCENTAGES[nextTier]) - shares;
+  const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
 
   return (
     <div className="embassy-eligibility-wrapper">
