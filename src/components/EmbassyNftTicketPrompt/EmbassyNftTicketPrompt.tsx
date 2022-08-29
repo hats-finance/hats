@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
 import "swiper/css";
+import NFTMedia from "components/NFTMedia";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export default function EmbassyNftTicketPrompt() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
-      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
+      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>)
 
   return (

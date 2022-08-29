@@ -61,7 +61,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
-
   const actualAddressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === actualAddress?.toLowerCase());
 
   const airdropToRedeem = useMemo(() => nftTokens.filter(nft => nft.isMerkleTree).some(nft => !nft.isRedeemed), [nftTokens]);
@@ -150,7 +149,14 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
       const ipfsContent = await response.json();
-      setMerkleTree(ipfsContent.wallets);
+      const vaultTree = Object.values(ipfsContent)[0] as any;
+      const tree: AirdropMachineWallet[] = [];
+
+      for (const wallet in vaultTree) {
+        tree.push({ address: wallet, ...vaultTree[wallet]})
+      }
+
+      setMerkleTree(tree);
       setLastMerkleTree(args);
     }
   }, [contract])

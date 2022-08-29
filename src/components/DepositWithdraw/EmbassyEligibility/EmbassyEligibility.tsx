@@ -33,9 +33,9 @@ export default function EmbassyEligibility({ vault }: IProps) {
     nextTier++;
   }
 
-  if (maxRedeemedTier === 3 || nextTier === 3) return null;
+  if (maxRedeemedTier === 3) return null;
 
-  /** this can happen in case the user already redeemed from a tier and withdraw the funds */
+  /** this can happen in case the user already redeemed from a specific tier, withdraw the funds and deposit again */
   if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
 
   const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
@@ -44,20 +44,17 @@ export default function EmbassyEligibility({ vault }: IProps) {
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
-        {nextTier === 0 ? (
-          <span className="embassy-eligibility__content__min-to-embassy">
-            {`${t("DepositWithdraw.EmbassyEligibility.text-1")}
+        <span className="embassy-eligibility__content__min-to-embassy">
+          {nextTier === 3 ? <span className="embassy-eligibility__content__all-tiers">{t("DepositWithdraw.EmbassyEligibility.text-5")}</span> : nextTier === 0 ? (
+            `${t("DepositWithdraw.EmbassyEligibility.text-1")}
             ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`} <br /><br />
-          </span>
-        ) : (
-          <span className="embassy-eligibility__content__min-to-embassy">
-            {`${t("DepositWithdraw.EmbassyEligibility.text-3")}
+            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`
+          ) :
+            `${t("DepositWithdraw.EmbassyEligibility.text-3")}
             ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`} <br /><br />
-          </span>
-        )}
-        <span>{t("DepositWithdraw.EmbassyEligibility.text-4")}</span>
+            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`}
+        </span>
+        {nextTier !== 3 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.text-4")}</span>}
       </div>
     </div>
   )

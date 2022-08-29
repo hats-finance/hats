@@ -8,6 +8,7 @@ import Dot from "components/Shared/Dot/Dot";
 import { Colors } from "constants/constants";
 import "./index.scss";
 import "swiper/css";
+import NFTMedia from "components/NFTMedia";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -15,14 +16,22 @@ export default function MyNFTs() {
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
-      <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+      <NFTMedia
+        key={index}
+        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
+        link={ipfsTransformUri(nft.nftInfo.image)}
+        width="130px" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
   const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
-      <img key={index} className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })} src={ipfsTransformUri(nft.nftInfo.image)} alt="nft" />
+      <NFTMedia
+        key={index}
+        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
+        link={ipfsTransformUri(nft.nftInfo.image)}
+        width="130px" />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )

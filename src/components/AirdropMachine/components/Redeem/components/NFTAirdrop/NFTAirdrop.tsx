@@ -9,6 +9,7 @@ import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { useEthers } from "@usedapp/core";
 import "swiper/css";
 import "./index.scss";
+import NFTMedia from "components/NFTMedia";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export default function NFTAirdrop() {
 
   const nfts = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
-      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
+      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>
   )
   return (

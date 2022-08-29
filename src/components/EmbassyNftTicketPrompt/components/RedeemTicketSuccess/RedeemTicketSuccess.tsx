@@ -8,6 +8,7 @@ import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-succ
 import { useVaults } from "hooks/useVaults";
 import "./index.scss";
 import "swiper/css";
+import NFTMedia from "components/NFTMedia";
 
 export default function RedeemTicketSuccess() {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ export default function RedeemTicketSuccess() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
-      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
+      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>
   )
 

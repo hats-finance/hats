@@ -9,6 +9,7 @@ import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import "./index.scss";
 import "swiper/css";
+import NFTMedia from "components/NFTMedia";
 
 export default function AirdropRedeemSuccess() {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ export default function AirdropRedeemSuccess() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
-      <img key={index} src={ipfsTransformUri(nftInfo.image)} alt="nft" />
+      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>
   )
 

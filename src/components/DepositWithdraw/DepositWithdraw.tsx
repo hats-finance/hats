@@ -88,7 +88,7 @@ export default function DepositWithdraw(props: IProps) {
    * In case the user is not eligible to the first tier the condition will work.
    * If the user is already eligible for the first tier and hasn't redeemed it yet, the condition is
    * not enough to show the popup again. One solution can be to add `&& !nft.isRedeemed` to the filter function.
-   * That means the popup will appear after each deposit if the user is already eligible.
+   * That means the popup will appear after each deposit if the user is already eligible. Also need to remove the prevDepositToRedeem condition.
    */
   useEffect(() => {
     if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
