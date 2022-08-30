@@ -8,6 +8,8 @@
   min-width: 500px;
   max-width: 500px;
   padding-top: 0px;
+  margin: auto;
+  max-height: 650px;
   .my-account__wallet {
     display: flex;
     flex-direction: column;
@@ -30,5 +32,11 @@
   .my-account-wrapper {
     padding: $modal-element-padding-mobile;
     min-width: unset;
+  }
+}
+
+@media only screen and (max-width: $small-screen-breakpoint) {
+  .my-account-wrapper {
+    max-height: 500px;
   }
 }

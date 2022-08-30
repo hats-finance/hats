@@ -19,8 +19,8 @@
       position: relative;
       display: flex;
       justify-content: center;
-      img {
-        width: 100px;
+      video {
+        width: 125px;
         padding-top: 5px;
       }
       .my-nfts__not-redeemed {
@@ -28,8 +28,8 @@
       }
       .my-nfts__not-redeemed-dot {
         position: absolute;
-        top: 0;
-        right: 5px;
+        top: 10px;
+        right: -5px;
         width: 20px;
         height: 20px;
       }
@@ -47,6 +47,7 @@
   }
   .my-nfts__action-btn {
     margin: 10px 0;
+    width: 100%;
   }
   &.disabled {
     pointer-events: none;
@@ -59,8 +60,15 @@
     .my-nfts__airdrop-nfts-container,
     .my-nfts__deposit-nfts-container {
       .my-nfts__slide {
-        img {
+        video {
           width: 80px;
+        }
+        .my-nfts__not-redeemed-dot {
+          position: absolute;
+          top: 10px;
+          right: -10px;
+          width: 15px;
+          height: 15px;
         }
         .my-nfts__not-redeemed-label {
           font-size: $xxsmall;

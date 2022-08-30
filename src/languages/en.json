@@ -135,7 +135,8 @@
         "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
         "input-placeholder": "Connect to wallet or paste a wallet adress",
         "input-error": "Please enter a valid address",
-        "button-text": "CHECK",
+        "button-text-0": "CHECK",
+        "button-text-1": "REDEEM",
         "deadline": "The airdrop deadline has passed"
       },
       "NotEligible": {

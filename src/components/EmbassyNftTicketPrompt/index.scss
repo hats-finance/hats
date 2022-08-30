@@ -8,8 +8,9 @@
   white-space: pre-line;
   max-width: 600px;
   padding-top: 0px;
+  max-height: calc(100vh - 100px);
   .embassy-nft-ticket__icon {
-    width: 124px;
+    width: 50px;
     align-self: center;
     margin-bottom: 20px;
   }

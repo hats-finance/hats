@@ -11,10 +11,11 @@
     margin: auto;
     width: 100%;
     color: $white;
-    font-size: $moderate;
+    font-size: $small;
     .airdrop-machine__image {
       width: inherit;
       margin-bottom: 50px;
+      height: 400px;
     }
 
     .airdrop-machine__container-with-timeline {
@@ -31,10 +32,11 @@
       padding: 50px 0;
       .airdrop-machine__title-wrapper {
         position: relative;
-        font-size: $large;
+        font-size: $moderate;
         padding-left: 50px;
         font-weight: bold;
         margin-bottom: 24px;
+        line-height: 40px;
       }
       .airdrop-machine__section-content {
         padding-left: 50px;
@@ -67,6 +69,7 @@
     .airdrop-machine-content {
       .airdrop-machine__image {
         width: 100vw;
+        height: unset;
       }
       .airdrop-machine__container-with-timeline {
         border-left: unset;

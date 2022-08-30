@@ -7,8 +7,9 @@
   flex-direction: column;
   justify-content: center;
   padding-top: 0;
+  max-height: calc(100vh - 100px);
   .redeemed__redeemed-icon {
-    width: 124px;
+    width: 50px;
     align-self: center;
   }
   .redeemed__title {

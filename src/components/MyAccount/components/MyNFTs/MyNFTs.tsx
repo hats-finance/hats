@@ -15,23 +15,19 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
+    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
-        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
-        link={ipfsTransformUri(nft.nftInfo.image)}
-        width="130px" />
+        link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
   const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
+    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
-        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
-        link={ipfsTransformUri(nft.nftInfo.image)}
-        width="130px" />
+        link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
@@ -74,15 +70,19 @@ export default function MyNFTs() {
         )}
       </div>
       <div className="my-nfts__one-nft-trust-level-text">{t("Header.MyAccount.MyNFTs.text-0")}</div>
-      {nftData?.airdropToRedeem && (
-        <button
-          disabled={!nftData?.isBeforeDeadline}
-          onClick={nftData?.redeemTree}
-          className="my-nfts__action-btn fill">
-          {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
-          {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
-        </button>)}
-      {nftData?.depositToRedeem && <button onClick={nftData?.redeemShares} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.deposit-redeem")}</button>}
+      <button
+        disabled={!nftData?.isBeforeDeadline || !nftData?.airdropToRedeem}
+        onClick={nftData?.redeemTree}
+        className="my-nfts__action-btn">
+        {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
+        {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
+      </button>
+      <button
+        disabled={!nftData?.depositToRedeem}
+        onClick={nftData?.redeemShares}
+        className="my-nfts__action-btn fill">
+        {t("Header.MyAccount.MyNFTs.deposit-redeem")}
+      </button>
       {showLoader && <Loading />}
     </div>
   )

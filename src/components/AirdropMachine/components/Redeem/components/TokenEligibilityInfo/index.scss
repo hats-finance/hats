@@ -9,11 +9,14 @@
     display: flex;
     align-items: center;
     border: 1px solid $turquoise;
-    padding: 20px;
+    padding: 10px;
     color: $white;
     margin-top: 5px;
+    .token-eligibility-info__hats-logo {
+      width: 50px;
+    }
     .token-eligibility-info__value {
-      font-size: $medium-2;
+      font-size: $moderate;
       margin-left: 15px;
       font-weight: bold;
     }
@@ -46,7 +49,7 @@
     .token-eligibility-info__total-hats {
       padding: 10px;
       .token-eligibility-info__hats-logo {
-        width: 50px;
+        width: 40px;
       }
       .token-eligibility-info__value {
         font-size: $medium;

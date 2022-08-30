@@ -77,7 +77,7 @@ export default function AirdropMachine() {
         </div>
         <div className="airdrop-machine__section last-section">
           <div className="airdrop-machine__title-wrapper">
-            {screenSize === ScreenSize.Desktop && <TimelineDot color="#88F7FC" left="-25px" />}
+            {screenSize === ScreenSize.Desktop && <TimelineDot color="#88F7FC" left="-20px" />}
             {t("AirdropMachine.section-3.title")}
           </div>
           <div className="airdrop-machine__section-content">
