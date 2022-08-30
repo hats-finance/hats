@@ -15,23 +15,19 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
+    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
-        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
-        link={ipfsTransformUri(nft.nftInfo.image)}
-        width="130px" />
+        link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
 
   const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
+    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
-        className={classNames({ "my-nfts__not-redeemed": !nft.isRedeemed })}
-        link={ipfsTransformUri(nft.nftInfo.image)}
-        width="130px" />
+        link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
   )
@@ -78,7 +74,7 @@ export default function MyNFTs() {
         <button
           disabled={!nftData?.isBeforeDeadline}
           onClick={nftData?.redeemTree}
-          className="my-nfts__action-btn fill">
+          className="my-nfts__action-btn">
           {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
           {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
         </button>)}

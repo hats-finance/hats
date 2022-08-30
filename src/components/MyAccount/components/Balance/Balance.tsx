@@ -2,6 +2,7 @@ import { formatEther } from "@ethersproject/units";
 import { useEthers, useTokenBalance } from "@usedapp/core";
 import { useVaults } from "hooks/useVaults";
 import { useTranslation } from "react-i18next";
+import WalletIcon from "assets/icons/balance.svg";
 import "./index.scss";
 
 export default function Balance() {
@@ -13,8 +14,9 @@ export default function Balance() {
 
   return (
     <div className="my-account-balance-wrapper">
-      <span className="my-account-balance__title">{t("Header.MyAccount.Balance.title")}</span>
+      <img src={WalletIcon} width="40px" alt="wallet" />
       <span className="my-account-balance__value">{hatsBalanceString}</span>
+      <span className="my-account-balance__title">{t("Header.MyAccount.Balance.title")}</span>
     </div>
   )
 }
