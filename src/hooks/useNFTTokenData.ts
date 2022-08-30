@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
 import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
-import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
+import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AirdropMachineWallet, IStaker, NFTTokenInfo, TokenInfo } from "types/types";
 import { ipfsTransformUri } from "utils";
@@ -12,6 +12,7 @@ import moment from "moment";
 import { usePrevious } from "./usePrevious";
 
 const { MerkleTree } = require('merkletreejs');
+const keccak256 = require("keccak256");
 
 interface MerkleTreeChanged {
   merkleTreeIPFSRef: string;
@@ -149,7 +150,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
       const ipfsContent = await response.json();
-      // const vaultTree = Object.values(ipfsContent)[0] as any;
       const tree: AirdropMachineWallet[] = [];
 
       for (const wallet in ipfsContent) {
@@ -183,17 +183,16 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     /**
      * Build the proofs only for the non-redeemed NFTs.
      */
-    const proofs = nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed)?.map(nft => {
-      return builtMerkleTree.getHexProof(hashToken(nft.masterAddress.toLowerCase(), nft.pid, actualAddress!, nft.tier));
+    return nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed)?.map(nft => {
+      return builtMerkleTree.getHexProof(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, actualAddress!, nft.tier))
     })
-    return proofs;
   }, [nftTokens, merkleTree, actualAddress]);
 
   const redeemTree = useCallback(async () => {
     if (!nftTokens) return;
     const redeemableProofs = buildProofsForRedeemables();
     const redeemable = nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed);
-    const hatVaults = redeemable.map(nft => nft.masterAddress.toLowerCase());
+    const hatVaults = redeemable.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = redeemable.map(nft => nft.pid);
     const tiers = redeemable.map(nft => nft.tier);
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
@@ -243,7 +242,7 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
   const hashes: Buffer[] = [];
   data.forEach(wallet => {
     wallet.nft_elegebility.forEach(nft => {
-      hashes.push(hashToken(nft.masterAddress.toLowerCase(), nft.pid, wallet.address, nft.tier));
+      hashes.push(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, wallet.address, nft.tier));
     })
   })
 
