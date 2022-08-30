@@ -70,15 +70,19 @@ export default function MyNFTs() {
         )}
       </div>
       <div className="my-nfts__one-nft-trust-level-text">{t("Header.MyAccount.MyNFTs.text-0")}</div>
-      {nftData?.airdropToRedeem && (
-        <button
-          disabled={!nftData?.isBeforeDeadline}
-          onClick={nftData?.redeemTree}
-          className="my-nfts__action-btn">
-          {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
-          {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
-        </button>)}
-      {nftData?.depositToRedeem && <button onClick={nftData?.redeemShares} className="my-nfts__action-btn fill">{t("Header.MyAccount.MyNFTs.deposit-redeem")}</button>}
+      <button
+        disabled={!nftData?.isBeforeDeadline || !nftData?.airdropToRedeem}
+        onClick={nftData?.redeemTree}
+        className="my-nfts__action-btn">
+        {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
+        {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
+      </button>
+      <button
+        disabled={!nftData?.depositToRedeem}
+        onClick={nftData?.redeemShares}
+        className="my-nfts__action-btn fill">
+        {t("Header.MyAccount.MyNFTs.deposit-redeem")}
+      </button>
       {showLoader && <Loading />}
     </div>
   )

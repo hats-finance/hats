@@ -4,7 +4,7 @@
   color: $white;
   width: 900px;
   max-height: 1000px;
-  height: calc(100vh - 200px);
+  height: calc(100vh - 100px);
   padding: $modal-element-padding;
   box-sizing: border-box;
   padding-top: 0;
@@ -13,11 +13,11 @@
     flex-direction: column;
     text-align: center;
     .eligible__header-icon {
-      width: 124px;
+      width: 50px;
       align-self: center;
     }
     .eligible__header-title {
-      font-size: $medium-2;
+      font-size: $moderate;
       font-weight: bold;
       margin: 20px 0;
     }
@@ -29,7 +29,7 @@
     .eligible__stage-title-wrapper {
       display: flex;
       align-items: center;
-      font-size: $medium;
+      font-size: $small;
       cursor: pointer;
       &:hover {
         opacity: 0.9;
@@ -38,9 +38,9 @@
         background-color: $turquoise;
         color: $field-blue;
         border-radius: 50%;
-        width: 38px;
-        height: 38px;
-        line-height: 38px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
         text-align: center;
         font-weight: bold;
         margin-right: 10px;

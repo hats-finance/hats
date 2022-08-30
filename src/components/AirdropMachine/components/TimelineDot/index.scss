@@ -3,9 +3,9 @@
 .timeline-dot-wrapper {
   display: flex;
   position: absolute;
-  width: 50px;
-  height: 50px;
-  left: -28px;
+  width: 40px;
+  height: 40px;
+  left: -24px;
   border-radius: 50%;
   border: 1px solid $light-blue-2;
   background-color: $field-blue;
@@ -13,8 +13,8 @@
   border-width: 1px;
   .timeline-dot__inner-dot {
     margin: auto;
-    width: 25px;
-    height: 25px;
+    width: 15px;
+    height: 15px;
     border-radius: 50%;
     background-color: $light-blue-2;
   }

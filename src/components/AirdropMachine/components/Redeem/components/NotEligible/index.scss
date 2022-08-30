@@ -8,8 +8,9 @@
   justify-content: center;
   min-width: 750px;
   padding-top: 0;
+  max-height: calc(100vh - 100px);
   .not-eligible__not-eligible-icon {
-    width: 124px;
+    width: 50px;
     align-self: center;
   }
   .not-eligible__title {
