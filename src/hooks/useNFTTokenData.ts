@@ -149,11 +149,11 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
       const ipfsContent = await response.json();
-      const vaultTree = Object.values(ipfsContent)[0] as any;
+      // const vaultTree = Object.values(ipfsContent)[0] as any;
       const tree: AirdropMachineWallet[] = [];
 
-      for (const wallet in vaultTree) {
-        tree.push({ address: wallet, ...vaultTree[wallet]})
+      for (const wallet in ipfsContent) {
+        tree.push({ address: wallet, ...ipfsContent[wallet] })
       }
 
       setMerkleTree(tree);
@@ -184,7 +184,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
      * Build the proofs only for the non-redeemed NFTs.
      */
     const proofs = nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed)?.map(nft => {
-      return builtMerkleTree.getHexProof(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, actualAddress!, nft.tier));
+      return builtMerkleTree.getHexProof(hashToken(nft.masterAddress.toLowerCase(), nft.pid, actualAddress!, nft.tier));
     })
     return proofs;
   }, [nftTokens, merkleTree, actualAddress]);
@@ -193,7 +193,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     if (!nftTokens) return;
     const redeemableProofs = buildProofsForRedeemables();
     const redeemable = nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed);
-    const hatVaults = redeemable.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
+    const hatVaults = redeemable.map(nft => nft.masterAddress.toLowerCase());
     const pids = redeemable.map(nft => nft.pid);
     const tiers = redeemable.map(nft => nft.tier);
     await redeemMultipleFromTree(hatVaults, pids, actualAddress, tiers, redeemableProofs);
@@ -243,7 +243,7 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
   const hashes: Buffer[] = [];
   data.forEach(wallet => {
     wallet.nft_elegebility.forEach(nft => {
-      hashes.push(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, wallet.address, nft.tier));
+      hashes.push(hashToken(nft.masterAddress.toLowerCase(), nft.pid, wallet.address, nft.tier));
     })
   })
 
