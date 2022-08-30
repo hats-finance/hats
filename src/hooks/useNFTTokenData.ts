@@ -2,7 +2,7 @@ import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
 import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
-import { keccak256, solidityKeccak256 } from "ethers/lib/utils";
+import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { AirdropMachineWallet, IStaker, NFTTokenInfo, TokenInfo } from "types/types";
 import { ipfsTransformUri } from "utils";
@@ -12,6 +12,7 @@ import moment from "moment";
 import { usePrevious } from "./usePrevious";
 
 const { MerkleTree } = require('merkletreejs');
+const keccak256 = require("keccak256")
 
 interface MerkleTreeChanged {
   merkleTreeIPFSRef: string;
@@ -184,8 +185,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
      * Build the proofs only for the non-redeemed NFTs.
      */
     const proofs = nftTokens.filter(nft => nft.isMerkleTree && !nft.isRedeemed)?.map(nft => {
-      return builtMerkleTree.getHexProof(hashToken(nft.masterAddress.toLowerCase(), nft.pid, actualAddress!, nft.tier));
+      const proxy = NFTContractDataProxy[nft.masterAddress.toLowerCase()];
+      console.log("proxy", proxy);
+
+      return builtMerkleTree.getHexProof(hashToken(proxy, nft.pid, actualAddress!, nft.tier));
     })
+    console.log("proofs", proofs);
+
     return proofs;
   }, [nftTokens, merkleTree, actualAddress]);
 
@@ -243,7 +249,8 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
   const hashes: Buffer[] = [];
   data.forEach(wallet => {
     wallet.nft_elegebility.forEach(nft => {
-      hashes.push(hashToken(nft.masterAddress.toLowerCase(), nft.pid, wallet.address, nft.tier));
+      const proxy = NFTContractDataProxy[nft.masterAddress.toLowerCase()];
+      hashes.push(hashToken(proxy, nft.pid, wallet.address, nft.tier));
     })
   })
 
