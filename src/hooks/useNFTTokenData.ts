@@ -59,6 +59,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [] as NFTTokenInfo[]), [treeTokens, proofTokens]);
   const actualAddress = address ?? account;
   const prevActualAddress = usePrevious(actualAddress);
+  const prevChainId = usePrevious(chainId);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
@@ -68,11 +69,11 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const depositToRedeem = useMemo(() => nftTokens.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed), [nftTokens]);
 
   useEffect(() => {
-    if (actualAddress !== prevActualAddress) {
+    if (actualAddress !== prevActualAddress || chainId !== prevChainId) {
       setTreeTokens(undefined);
       setProofTokens(undefined);
     }
-  }, [actualAddress, prevActualAddress]);
+  }, [actualAddress, prevActualAddress, chainId, prevChainId]);
 
   useEffect(() => {
     if (chainId)
