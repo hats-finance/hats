@@ -116,7 +116,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
 
   useEffect(() => {
-    if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
+    if (pidsWithAddress?.length === 0) setProofTokens(undefined);
+    else if (stakerData && prevStakerData !== stakerData) {
       getEligibilityForPids();
     }
 
