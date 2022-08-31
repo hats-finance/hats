@@ -91,6 +91,16 @@
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
       }
     },
+    "RedeemNftSuccess": {
+      "title": "REDEEM SUCCESSFUL!",
+      "sub-title": "Welcome home, protector!",
+      "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
+      "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
+      "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
+      "text-4": "Be the first to learn about security topics related to your protocol.",
+      "text-5": "Be part of a unique group with the project committee.",
+      "button-text": "JOIN AN EMBASSY ON DISCORD"
+    },
     "AirdropMachine": {
       "AirdropPrompt": {
         "title": "CONGRATS!",
@@ -156,16 +166,6 @@
         "title": "CONGRATS!",
         "text": "You are eligible to Hats token and NFT airdrop"
       },
-      "AirdropRedeemSuccess": {
-        "title": "REDEEM SUCCESSFUL!",
-        "sub-title": "Welcome home, protector!",
-        "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
-        "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
-        "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
-        "text-4": "Be the first to learn about security topics related to your protocol.",
-        "text-5": "Be part of a unique group with the project committee.",
-        "button-text": "JOIN AN EMBASSY ON DISCORD"
-      },
       "Redeemed": {
         "title": "ALREADY REDEEMED",
         "text-1": "It seems you already redeemed your NFT, view your eligibility:",
@@ -198,17 +198,7 @@
     "EmbassyNftTicketPrompt": {
       "prompt-title": "EMBASSY NFT TICKET",
       "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
-      "button-text": "REDEEM",
-      "RedeemTicketSuccess": {
-        "title": "REDEEM SUCCESSFUL!",
-        "sub-title": "Welcome home, protector!",
-        "text-1": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the (Project staked) Embassy on Discord. The place where your security contribution can be valuable!",
-        "text-2": "WHY SHOULD I JOIN AN EMBASSY?",
-        "text-3": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
-        "text-4": "Be the first to learn about security topics related to your protocol.",
-        "text-5": "Be part of a unique group with the project committee.",
-        "button-text": "JOIN AN EMBASSY ON DISCORD"
-      }
+      "button-text": "REDEEM"
     },
     "CommitteeTools": {
       "unlock-vault": "Unlock Vault",

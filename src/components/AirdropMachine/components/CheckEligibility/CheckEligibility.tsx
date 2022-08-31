@@ -8,7 +8,6 @@ import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
-import AirdropRedeemSuccess from "../Redeem/components/AirdropRedeemSuccess/AirdropRedeemSuccess";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
@@ -26,17 +25,10 @@ export default function CheckEligibility() {
   const inputError = userInput && !isAddress(userInput);
   const actualAddress = isAddress(userInput) ? userInput : undefined;
   const nftData = useNFTTokenData(actualAddress);
-  const [redeemed, setRedeemed] = useState(false);
 
   useEffect(() => {
     setUserInput(account ?? "");
   }, [setUserInput, account])
-
-  useEffect(() => {
-    if (nftData.redeemMultipleFromTreeState.status === "Success") {
-      setRedeemed(true);
-    }
-  }, [nftData.redeemMultipleFromTreeState, setRedeemed])
 
   return (
     <div className="check-eligibility-wrapper">
@@ -65,7 +57,7 @@ export default function CheckEligibility() {
         isShowing={isShowing}
         hide={toggle}>
         <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle, actualAddress }} >
-          {redeemed ? <AirdropRedeemSuccess /> : <Redeem />}
+          <Redeem />
         </AirdropMachineContext.Provider>
       </Modal>
     </div>

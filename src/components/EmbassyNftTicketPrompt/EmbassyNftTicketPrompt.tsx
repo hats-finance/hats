@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import Loading from "../Shared/Loading";
-import RedeemTicketSuccess from "./components/RedeemTicketSuccess/RedeemTicketSuccess";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
 import { ipfsTransformUri } from "utils";
@@ -10,6 +9,7 @@ import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-succ
 import "./index.scss";
 import "swiper/css";
 import NFTMedia from "components/NFTMedia";
+import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
@@ -29,25 +29,23 @@ export default function EmbassyNftTicketPrompt() {
       <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>)
 
+  if (redeemed) return <RedeemNftSuccess />;
+
   return (
-    <>
-      {redeemed ? <RedeemTicketSuccess /> : (
-        <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
-          <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
-          {t("EmbassyNftTicketPrompt.text")}
-          <Swiper
-            spaceBetween={1}
-            slidesPerView={3}
-            speed={500}
-            touchRatio={1.5}
-            navigation={true}
-            effect={"flip"}>
-            {nfts}
-          </Swiper>
-          <button onClick={nftData?.redeemShares} className="embassy-nft-ticket__redeem-btn fill">{t("EmbassyNftTicketPrompt.button-text")}</button>
-          {showLoader && <Loading />}
-        </div>
-      )}
-    </>
+    <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
+      <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
+      {t("EmbassyNftTicketPrompt.text")}
+      <Swiper
+        spaceBetween={1}
+        slidesPerView={3}
+        speed={500}
+        touchRatio={1.5}
+        navigation={true}
+        effect={"flip"}>
+        {nfts}
+      </Swiper>
+      <button onClick={nftData?.redeemShares} className="embassy-nft-ticket__redeem-btn fill">{t("EmbassyNftTicketPrompt.button-text")}</button>
+      {showLoader && <Loading />}
+    </div>
   )
 }

@@ -9,10 +9,16 @@ import { Colors } from "constants/constants";
 import "./index.scss";
 import "swiper/css";
 import NFTMedia from "components/NFTMedia";
+import Modal from "components/Shared/Modal/Modal";
+import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
+import useModal from "hooks/useModal";
+import { useEffect } from "react";
+import { usePrevious } from "hooks/usePrevious";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
+  const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
     <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
@@ -37,6 +43,22 @@ export default function MyNFTs() {
     nftData?.redeemMultipleFromTreeState.status === "Mining" ||
     nftData?.redeemMultipleFromSharesState.status === "PendingSignature" ||
     nftData?.redeemMultipleFromSharesState.status === "Mining";
+
+  const prevSharesStatus = usePrevious(nftData?.redeemMultipleFromSharesState.status);
+  const prevTreeStatus = usePrevious(nftData?.redeemMultipleFromTreeState.status);
+
+  useEffect(() => {
+    if ((prevSharesStatus && prevSharesStatus !== nftData?.redeemMultipleFromSharesState.status && nftData?.redeemMultipleFromSharesState.status === "Success") ||
+      (prevTreeStatus && prevTreeStatus !== nftData?.redeemMultipleFromTreeState.status && nftData?.redeemMultipleFromTreeState.status === "Success")) {
+      toggleRedeemNftPrompt();
+    }
+  }, [
+    nftData?.redeemMultipleFromSharesState.status,
+    prevSharesStatus,
+    nftData?.redeemMultipleFromTreeState.status,
+    prevTreeStatus,
+    toggleRedeemNftPrompt,
+  ])
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
@@ -84,6 +106,11 @@ export default function MyNFTs() {
         {t("Header.MyAccount.MyNFTs.deposit-redeem")}
       </button>
       {showLoader && <Loading />}
+      <Modal
+        isShowing={showRedeemNftPrompt}
+        hide={toggleRedeemNftPrompt}>
+        <RedeemNftSuccess />
+      </Modal>
     </div>
   )
 }
