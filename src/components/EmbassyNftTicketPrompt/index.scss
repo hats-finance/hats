@@ -27,7 +27,7 @@
       .swiper-slide {
         display: flex;
         justify-content: center;
-        img {
+        video {
           width: 150px;
         }
       }
@@ -42,5 +42,14 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .embassy-nft-ticket-wrapper {
     padding: $modal-element-padding-mobile;
+    .swiper {
+      .swiper-wrapper {
+        .swiper-slide {
+          video {
+            width: 100px;
+          }
+        }
+      }
+    }
   }
 }
