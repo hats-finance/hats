@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 export const useCheckRedeemableNfts = async (toggleAirdropPrompt: () => void) => {
   const { nftData } = useVaults();
-  const { isBeforeDeadline, airdropToRedeem, depositToRedeem } = nftData || {};
+  const { isBeforeDeadline, airdropToRedeem } = nftData || {};
   const prevAirdropToRedeem = usePrevious(airdropToRedeem);
 
   useEffect(() => {
@@ -13,7 +13,6 @@ export const useCheckRedeemableNfts = async (toggleAirdropPrompt: () => void) =>
     }
   }, [isBeforeDeadline,
     airdropToRedeem,
-    depositToRedeem,
     toggleAirdropPrompt,
     prevAirdropToRedeem])
 }

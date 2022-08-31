@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import moment from "moment";
 import millify from "millify";
@@ -19,11 +19,14 @@ import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import "./index.scss";
 import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
+import Modal from "components/Shared/Modal/Modal";
+import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import { t } from "i18next";
+import useModal from "hooks/useModal";
 
 interface IProps {
   data: IVault
   setShowModal: Function
-  toggleEmbassyPrompt: () => void
 }
 
 enum Tab {
@@ -35,7 +38,8 @@ export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
-  const { setShowModal, toggleEmbassyPrompt } = props;
+  const { setShowModal } = props;
+  const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
@@ -75,26 +79,27 @@ export default function DepositWithdraw(props: IProps) {
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
-  const [lastPid, setLastPid] = useState<number | undefined>();
-  const prevDepositToRedeem = usePrevious(nftData?.depositToRedeem);
+  const [lastDepositedPid, setLastDepositedPid] = useState<string | undefined>();
+  const prevLastDepositedPid = usePrevious(lastDepositedPid);
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
     await depositAndClaim(selectedPid, userInputValue);
-    setLastPid(Number(selectedPid))
+    setLastDepositedPid(selectedPid);
   }, [selectedPid, userInputValue, depositAndClaim])
 
-  /**
-   * In case the user is not eligible to the first tier the condition will work.
-   * If the user is already eligible for the first tier and hasn't redeemed it yet, the condition is
-   * not enough to show the popup again. One solution can be to add `&& !nft.isRedeemed` to the filter function.
-   * That means the popup will appear after each deposit if the user is already eligible. Also need to remove the prevDepositToRedeem condition.
-   */
+  const hasDepositNftToRedeem = useMemo(() => nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isRedeemed).some(nft => String(nft.pid) === lastDepositedPid), [nftData?.nftTokens, lastDepositedPid]);
+
   useEffect(() => {
-    if (nftData?.depositToRedeem && prevDepositToRedeem !== nftData?.depositToRedeem && nftData?.nftTokens?.filter(nft => nft.isDeposit)?.some(nft => nft.pid === lastPid)) {
+    if (lastDepositedPid && lastDepositedPid !== prevLastDepositedPid && hasDepositNftToRedeem) {
+      /**
+       * NOTE: The popup appears after each deposit as long as the user is eligible for deposit nft from this vault.
+       * KNOWN ISSUE: If the user keeps the modal open after one deposit the popup won't appear again after another depsoit
+       * because lastDepositedPid === prevLastDepositedPid
+       */
       toggleEmbassyPrompt();
     }
-  }, [nftData, setShowModal, lastPid, prevDepositToRedeem, toggleEmbassyPrompt])
+  }, [toggleEmbassyPrompt, hasDepositNftToRedeem, lastDepositedPid, prevLastDepositedPid, depositAndClaimState.status])
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -239,6 +244,12 @@ export default function DepositWithdraw(props: IProps) {
         </button>
       </div>
       {pendingWallet && <Loading zIndex={10000} />}
+      <Modal
+        title={t("EmbassyNftTicketPrompt.prompt-title")}
+        isShowing={showEmbassyPrompt}
+        hide={toggleEmbassyPrompt}>
+        <EmbassyNftTicketPrompt />
+      </Modal>
     </div>
   )
 }

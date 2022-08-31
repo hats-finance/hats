@@ -21,7 +21,7 @@ export default function Modal(props: IProps) {
   document.documentElement.style.setProperty("--modal-max-width", props.maxWidth ?? "600px");
   document.documentElement.style.setProperty("--modal-max-height", props.maxHeight ?? "100vh");
 
-  const inTransaction = useTransactions().transactions.find(tx => !tx.receipt);
+  const inTransaction = useTransactions().transactions.some(tx => !tx.receipt);
 
   const escapeHandler = useCallback((event) => {
     if (event.keyCode === 27 && !inTransaction) {
@@ -54,6 +54,7 @@ export default function Modal(props: IProps) {
           </div>
           {!props.hideClose &&
             <button
+              disabled={inTransaction}
               className="close"
               onClick={() => props.setShowModal(false)}>&times;</button>
           }

@@ -1,3 +1,4 @@
+import { useTransactions } from "@usedapp/core";
 import { useEffect } from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
@@ -10,6 +11,7 @@ interface IProps {
 }
 
 export default function Modal({ isShowing, hide, children, title }: IProps) {
+  const inTransaction = useTransactions().transactions.some(tx => !tx.receipt);
 
   useEffect(() => {
     document.body.style.overflow = isShowing ? "hidden" : "initial";
@@ -25,7 +27,7 @@ export default function Modal({ isShowing, hide, children, title }: IProps) {
               <div className="modal-header__icon-title-wrapper">
                 {title && <span>{title}</span>}
               </div>
-              <button type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={hide}>
+              <button disabled={inTransaction} type="button" className="modal-close-button" data-dismiss="modal" aria-label="Close" onClick={hide}>
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
