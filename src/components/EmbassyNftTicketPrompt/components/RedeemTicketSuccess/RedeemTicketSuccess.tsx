@@ -14,7 +14,7 @@ export default function RedeemTicketSuccess() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
 
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit && nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>
