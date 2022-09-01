@@ -1,20 +1,19 @@
 import { formatUnits } from "@ethersproject/units";
 import { shortenIfAddress } from "@usedapp/core";
-import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import { BigNumber } from "ethers";
 import millify from "millify";
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import HatsLogo from "assets/icons/hats-logo-circle.svg";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import RadioButton from "assets/icons/radio-button.svg";
 import "./index.scss";
+import { useVaults } from "hooks/useVaults";
 
 export default function TokenEligibilityInfo() {
   const { t } = useTranslation();
-  const { nftData: { actualAddress, actualAddressInfo } } = useContext(AirdropMachineContext);
-  if (!actualAddressInfo) return <></>;
-  const { token_eligibility } = actualAddressInfo;
+  const { nftData } = useVaults();
+  if (!nftData?.actualAddressInfo) return <></>;
+  const { token_eligibility } = nftData?.actualAddressInfo;
 
 
   const totalHatsEligibility = Object.values(token_eligibility)
@@ -22,7 +21,7 @@ export default function TokenEligibilityInfo() {
   return (
     <div>
       <div className="token-eligibility-info__total-hats-container">
-        <span>{`${shortenIfAddress(actualAddress)} ${t("AirdropMachine.TokenEligibilityInfo.text-2")}`}</span>
+        <span>{`${shortenIfAddress(nftData?.actualAddress)} ${t("AirdropMachine.TokenEligibilityInfo.text-2")}`}</span>
         <div className="token-eligibility-info__total-hats">
           <img className="token-eligibility-info__hats-logo" src={HatsLogo} alt="hats logo" />
           <span className="token-eligibility-info__value">{millify(Number(formatUnits(totalHatsEligibility)))} HATS</span>

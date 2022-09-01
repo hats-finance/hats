@@ -10,20 +10,21 @@ import { useEthers } from "@usedapp/core";
 import "swiper/css";
 import "./index.scss";
 import NFTMedia from "components/NFTMedia";
+import { useVaults } from "hooks/useVaults";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
-  const { nftData: { redeemTree, nftTokens, redeemMultipleFromTreeState } } = useContext(AirdropMachineContext);
+  const { nftData } = useVaults();
   const isSupportedNetwork = useSupportedNetwork();
   const { account } = useEthers();
 
-  const showLoader = ["PendingSignature", "Mining"].includes(redeemMultipleFromTreeState.status);
+  const showLoader = ["PendingSignature", "Mining"].includes(nftData?.redeemMultipleFromTreeState.status!);
 
   const handleRedeem = async () => {
-    await redeemTree();
+    await nftData?.redeemTree();
   }
 
-  const nfts = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>

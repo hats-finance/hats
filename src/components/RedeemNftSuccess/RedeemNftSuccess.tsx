@@ -5,15 +5,13 @@ import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
 //import { ipfsTransformUri } from "utils";
 //import { Swiper, SwiperSlide } from "swiper/react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
-//import { useContext } from "react";
-//import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import "./index.scss";
 import "swiper/css";
 //import NFTMedia from "components/NFTMedia";
 
 export default function RedeemNftSuccess() {
   const { t } = useTranslation();
-  // const { nftData } = useContext(AirdropMachineContext);
+  // const { nftData } = useVaults();
 
   // const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
   //   <SwiperSlide key={index} className="swiper-slide">

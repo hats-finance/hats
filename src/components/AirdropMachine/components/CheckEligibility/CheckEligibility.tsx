@@ -1,18 +1,15 @@
-import { useEthers } from "@usedapp/core";
-import classNames from "classnames";
+import { shortenIfAddress, useEthers } from "@usedapp/core";
 import Modal from "components/Shared/Modal/Modal";
-import { isAddress } from "ethers/lib/utils";
-import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import useModal from "hooks/useModal";
 import { createContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
+import { useVaults } from "hooks/useVaults";
+import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 
 export interface IAirdropMachineContext {
-  nftData: INFTTokenData;
   closeRedeemModal: () => void;
-  actualAddress: string | undefined;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -20,44 +17,45 @@ export const AirdropMachineContext = createContext<IAirdropMachineContext>(undef
 export default function CheckEligibility() {
   const { t } = useTranslation();
   const { account } = useEthers();
-  const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
-  const inputError = userInput && !isAddress(userInput);
-  const actualAddress = isAddress(userInput) ? userInput : undefined;
-  const nftData = useNFTTokenData(actualAddress);
+  const { nftData } = useVaults();
+  const [redeemed, setRedeemed] = useState(false);
 
   useEffect(() => {
-    setUserInput(account ?? "");
-  }, [setUserInput, account])
+    if (nftData?.redeemMultipleFromTreeState.status === "Success") {
+      setRedeemed(true);
+    }
+  }, [nftData?.redeemMultipleFromTreeState, setRedeemed])
+
+  const handleModalClose = () => {
+    setRedeemed(false);
+    toggle();
+  }
 
   return (
     <div className="check-eligibility-wrapper">
       {t("AirdropMachine.CheckEligibility.text-1")}
-      <div className="check-eligibility__input-wrapper">
-        <div className={classNames({ "check-eligibility__input-container": true, "check-eligibility__input-error": inputError })}>
-          <input
-            disabled={!nftData.isBeforeDeadline}
-            className="check-eligibility__address-input"
-            type="text"
-            placeholder={t("AirdropMachine.CheckEligibility.input-placeholder")}
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)} />
-          <button className="check-eligibility__clear-input" onClick={() => setUserInput("")}>&times;</button>
+      <div className="check-eligibility__address-wrapper">
+        <div className="check-eligibility__address-container">
+          {shortenIfAddress(account)}
+          {!account && <span className="check-eligibility__error-label">
+            {t("AirdropMachine.CheckEligibility.no-account")}
+          </span>}
         </div>
-        {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}
-        {nftData.isBeforeDeadline === false && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
+
+        {nftData?.isBeforeDeadline === false && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
         <button
           className="check-eligibility__check-button fill"
           onClick={toggle}
-          disabled={inputError || !userInput || !nftData.isBeforeDeadline}>
-          {nftData.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
+          disabled={!account || !nftData?.isBeforeDeadline}>
+          {nftData?.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>
       <Modal
         isShowing={isShowing}
-        hide={toggle}>
-        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle, actualAddress }} >
-          <Redeem />
+        hide={handleModalClose}>
+        <AirdropMachineContext.Provider value={{ closeRedeemModal: toggle }} >
+          {redeemed ? <RedeemNftSuccess /> : <Redeem />}
         </AirdropMachineContext.Provider>
       </Modal>
     </div>

@@ -1,4 +1,4 @@
-import { shortenIfAddress } from "@usedapp/core";
+import { shortenIfAddress, useEthers } from "@usedapp/core";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +8,8 @@ import "./index.scss";
 
 export default function NotEligible() {
   const { t } = useTranslation();
-  const { closeRedeemModal, actualAddress } = useContext(AirdropMachineContext);
+  const { account } = useEthers();
+  const { closeRedeemModal } = useContext(AirdropMachineContext);
 
   return (
     <div className="not-eligible-wrapper">
@@ -18,7 +19,7 @@ export default function NotEligible() {
       <div className="not-eligible__wallet-container">
         <span>{t("AirdropMachine.NotEligible.text-2")}</span>
         <div className="not-eligible__wallet-address">
-          {shortenIfAddress(actualAddress)}
+          {shortenIfAddress(account)}
         </div>
       </div>
       <div className="not-eligible__criterias-wrapper">

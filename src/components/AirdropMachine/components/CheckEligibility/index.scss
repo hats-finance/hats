@@ -1,30 +1,15 @@
 @import "../../../../styles/constants.scss";
 
 .check-eligibility-wrapper {
-  .check-eligibility__input-wrapper {
+  .check-eligibility__address-wrapper {
     max-width: 1000px;
     margin-top: 24px;
-    .check-eligibility__input-container {
+    .check-eligibility__address-container {
       border: 1px solid $turquoise;
       display: flex;
       height: 70px;
       align-items: center;
-      &.check-eligibility__input-error {
-        border: 1px solid $red;
-      }
-      .check-eligibility__address-input {
-        border: none;
-        background: none;
-        color: $white;
-        height: 50px;
-        width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-      .check-eligibility__clear-input {
-        border: none;
-        font-size: $medium;
-      }
+      padding: 0px 20px;
     }
     .check-eligibility__error-label {
       color: $red;
@@ -41,7 +26,7 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .check-eligibility-wrapper {
-    .check-eligibility__input-wrapper {
+    .check-eligibility__address-wrapper {
       max-width: unset;
       .check-eligibility__check-button {
         margin: 20px 0 0 0;

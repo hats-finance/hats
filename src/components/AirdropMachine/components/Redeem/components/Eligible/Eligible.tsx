@@ -1,12 +1,10 @@
 import classNames from "classnames";
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import NFTAirdrop from "../NFTAirdrop/NFTAirdrop";
 import TokenEligibility from "../TokenEligibility/TokenEligibility";
 import RedeemWalletIcon from "assets/icons/wallet-nfts/wallet-redeem.svg";
 import "./index.scss";
-import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
-import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 
 enum Stage {
   TokenEligibility = 1,
@@ -16,21 +14,11 @@ enum Stage {
 export default function Eligible() {
   const { t } = useTranslation();
   const [stage, setStage] = useState(Stage.TokenEligibility);
-  const [redeemed, setRedeemed] = useState(false);
-  const { nftData } = useContext(AirdropMachineContext);
 
   const nextStage = () => {
     setStage(Stage.NFTAirdrop);
     document.getElementById("modalBody")?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   }
-
-  useEffect(() => {
-    if (nftData.redeemMultipleFromTreeState.status === "Success") {
-      setRedeemed(true);
-    }
-  }, [nftData.redeemMultipleFromTreeState, setRedeemed])
-
-  if (redeemed) return <RedeemNftSuccess />;
 
   return (
     <div className="eligible-wrapper">
