@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
@@ -8,6 +9,9 @@ import { useEffect, useState } from "react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
 import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import NFTMedia from "components/NFTMedia";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 
@@ -36,11 +40,12 @@ export default function EmbassyNftTicketPrompt() {
       <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
       {t("EmbassyNftTicketPrompt.text")}
       <Swiper
+        modules={[Navigation, Pagination, Scrollbar, A11y]}
         spaceBetween={1}
         slidesPerView={3}
         speed={500}
         touchRatio={1.5}
-        navigation={true}
+        navigation
         effect={"flip"}>
         {nfts}
       </Swiper>

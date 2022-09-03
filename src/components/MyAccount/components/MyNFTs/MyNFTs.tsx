@@ -1,4 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useVaults } from "hooks/useVaults";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -8,6 +9,9 @@ import Dot from "components/Shared/Dot/Dot";
 import { Colors } from "constants/constants";
 import "./index.scss";
 import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
 import NFTMedia from "components/NFTMedia";
 import Modal from "components/Shared/Modal/Modal";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
@@ -67,11 +71,12 @@ export default function MyNFTs() {
       <div className="my-nfts__airdrop-nfts-container">
         {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={1}
             slidesPerView={3}
             speed={500}
             touchRatio={1.5}
-            navigation={true}
+            navigation
             effect={"flip"}>
             {treeNfts}
           </Swiper>
@@ -81,11 +86,12 @@ export default function MyNFTs() {
       <div className="my-nfts__deposit-nfts-container">
         {depositNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-deposit-nfts")}</div> : (
           <Swiper
+            modules={[Navigation, Pagination, Scrollbar, A11y]}
             spaceBetween={1}
             slidesPerView={3}
             speed={500}
             touchRatio={1.5}
-            navigation={true}
+            navigation
             effect={"flip"}>
             {depositNfts}
           </Swiper>
