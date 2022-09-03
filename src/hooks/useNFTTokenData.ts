@@ -37,7 +37,7 @@ export interface INFTTokenData {
 
 const DATA_REFRESH_TIME = 10000;
 
-export function useNFTTokenData(): INFTTokenData {
+export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, account, chainId } = useEthers();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
@@ -57,7 +57,7 @@ export function useNFTTokenData(): INFTTokenData {
       prev.push(curr);
     return prev;
   }, [] as NFTTokenInfo[]), [treeTokens, proofTokens]);
-  const actualAddress = account;
+  const actualAddress = address ?? account;
   const prevActualAddress = usePrevious(actualAddress);
   const prevChainId = usePrevious(chainId);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();

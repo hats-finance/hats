@@ -10,11 +10,10 @@ import { useEthers } from "@usedapp/core";
 import "swiper/css";
 import "./index.scss";
 import NFTMedia from "components/NFTMedia";
-import { useVaults } from "hooks/useVaults";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
-  const { nftData } = useVaults();
+  const { nftData } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
   const { account } = useEthers();
 

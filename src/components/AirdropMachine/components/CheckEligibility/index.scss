@@ -4,12 +4,32 @@
   .check-eligibility__address-wrapper {
     max-width: 1000px;
     margin-top: 24px;
-    .check-eligibility__address-container {
+    .check-eligibility__input-container {
       border: 1px solid $turquoise;
       display: flex;
       height: 70px;
       align-items: center;
       padding: 0px 20px;
+      &.check-eligibility__input-error {
+        border: 1px solid $red;
+      }
+      .check-eligibility__address-input {
+        border: none;
+        background: none;
+        color: $white;
+        height: 50px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .check-eligibility__input-container {
+        display: flex;
+        width: 100%;
+      }
+      .check-eligibility__clear-input {
+        border: none;
+        font-size: $medium;
+      }
     }
     .check-eligibility__error-label {
       color: $red;

@@ -1,11 +1,12 @@
 import Loading from "components/Shared/Loading";
-import { useVaults } from "hooks/useVaults";
+import { useContext } from "react";
+import { AirdropMachineContext } from "../CheckEligibility/CheckEligibility";
 import Eligible from "./components/Eligible/Eligible";
 import NotEligible from "./components/NotEligible/NotEligible";
 import Redeemed from "./components/Redeemed/Redeemed";
 
 export default function Redeem() {
-  const { nftData } = useVaults();
+  const { nftData } = useContext(AirdropMachineContext);
 
   if (nftData?.actualAddressInfo) {
     if (nftData.nftTokens?.length === 0) {
