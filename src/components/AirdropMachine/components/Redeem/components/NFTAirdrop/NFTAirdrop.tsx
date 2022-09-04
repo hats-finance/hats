@@ -12,6 +12,8 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./index.scss";
 import NFTMedia from "components/NFTMedia";
+import { useContext } from "react";
+import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
