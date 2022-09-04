@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
+import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
 import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
@@ -37,8 +37,6 @@ export interface INFTTokenData {
 const DATA_REFRESH_TIME = 10000;
 
 export function useNFTTokenData(address?: string): INFTTokenData {
-  console.log("useNFTTokenData", address);
-
   const { library, chainId } = useEthers();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
@@ -94,7 +92,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getEligibilityForPids = useCallback(async () => {
     if (!pidsWithAddress || !contract) return;
-    console.log("getEligibilityForPids", address, pidsWithAddress);
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -119,14 +116,12 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
-      console.log("detected change in staker data");
       getEligibilityForPids();
     }
 
   }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
-    console.log("getTreeEligibility");
     if (!contract || !addressInfo) return;
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
@@ -203,20 +198,18 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     await redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
   }, [nftTokens, address, buildProofsForRedeemables, redeemMultipleFromTree]);
 
-  const prevRedeemMultipleFromTreeStateStatus = usePrevious(redeemMultipleFromTreeState.status);
+  const redeemTreeTransaction = useTransactions().transactions.find(tx => tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
+  const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
   useEffect(() => {
-    if (prevRedeemMultipleFromTreeStateStatus !== redeemMultipleFromTreeState.status
-      && redeemMultipleFromTreeState.status === "Success") {
+    if (prevRedeemTreeTransaction && !redeemTreeTransaction) {
       getTreeEligibility();
     }
-  }, [prevRedeemMultipleFromTreeStateStatus, redeemMultipleFromTreeState.status, getTreeEligibility])
+  }, [prevRedeemTreeTransaction, redeemTreeTransaction, getTreeEligibility])
 
   const prevRedeemMultipleFromSharesStateStatus = usePrevious(redeemMultipleFromSharesState.status);
   useEffect(() => {
     if (prevRedeemMultipleFromSharesStateStatus !== redeemMultipleFromSharesState.status
       && redeemMultipleFromSharesState.status === "Success") {
-      console.log("");
-
       getEligibilityForPids();
     }
   }, [prevRedeemMultipleFromSharesStateStatus, redeemMultipleFromSharesState.status, getEligibilityForPids])
