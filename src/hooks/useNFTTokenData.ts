@@ -201,10 +201,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const redeemTreeTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
   const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
   useEffect(() => {
-    console.log('redeemTreeTransaction', redeemTreeTransaction, prevRedeemTreeTransaction);
-
     if (prevRedeemTreeTransaction && !redeemTreeTransaction) {
-      console.log('redeem transaction completed');
       getTreeEligibility();
     }
   }, [prevRedeemTreeTransaction, redeemTreeTransaction, getTreeEligibility])
