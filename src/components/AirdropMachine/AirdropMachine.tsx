@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
 import TimelineDot from "./components/TimelineDot/TimelineDot";
-import SailBoatImage from "assets/images/sail-boat.png";
+import AirdropWelcomeAnimation from "assets/videos/airdrop-machine-welcome.mp4";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import FAQ from "./components/FAQ/FAQ";
 import "./index.scss";
@@ -16,7 +16,9 @@ export default function AirdropMachine() {
   return (
     <div className="content airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
-        <img src={SailBoatImage} className="airdrop-machine__image" alt="sail boat" />
+        <video loop autoPlay muted width="100%" playsInline>
+          <source src={AirdropWelcomeAnimation} type="video/mp4" />
+        </video>
         <div className="airdrop-machine__container-with-timeline">
           <div className="airdrop-machine__section first-section">
             <div className="airdrop-machine__title-wrapper">
