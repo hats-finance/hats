@@ -206,13 +206,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }
   }, [prevRedeemTreeTransaction, redeemTreeTransaction, getTreeEligibility])
 
-  const prevRedeemMultipleFromSharesStateStatus = usePrevious(redeemMultipleFromSharesState.status);
+  const redeemSharesTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemDepositNFTs);
+  const prevRedeemSharesTransaction = usePrevious(redeemSharesTransaction);
   useEffect(() => {
-    if (prevRedeemMultipleFromSharesStateStatus !== redeemMultipleFromSharesState.status
-      && redeemMultipleFromSharesState.status === "Success") {
+    if (prevRedeemSharesTransaction && !redeemSharesTransaction) {
       getEligibilityForPids();
     }
-  }, [prevRedeemMultipleFromSharesStateStatus, redeemMultipleFromSharesState.status, getEligibilityForPids])
+  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids])
 
   const redeemShares = useCallback(async () => {
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
