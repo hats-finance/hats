@@ -2,26 +2,31 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { useTranslation } from "react-i18next";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
-//import { ipfsTransformUri } from "utils";
-//import { Swiper, SwiperSlide } from "swiper/react";
-//import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { ipfsTransformUri } from "utils";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-//import NFTMedia from "components/NFTMedia";
+import { useVaults } from "hooks/useVaults";
+import NFTMedia from "components/NFTMedia";
 
-export default function RedeemNftSuccess() {
+interface IProps {
+  type: "isMerkleTree" | "isDeposit";
+}
+
+export default function RedeemNftSuccess({ type }: IProps) {
   const { t } = useTranslation();
-  // const { nftData } = useVaults();
+  const { nftData } = useVaults();
 
-  // const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && nft.isRedeemed).map(({ nftInfo }, index) =>
-  //   <SwiperSlide key={index} className="swiper-slide">
-  //     <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
-  //   </SwiperSlide>
-  // )
+  const nfts = nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map(({ nftInfo }, index) =>
+    <SwiperSlide key={index} className="swiper-slide">
+      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
+    </SwiperSlide>
+  )
 
   return (
     <div className="airdrop-redeem-success-wrapper">
@@ -44,7 +49,7 @@ export default function RedeemNftSuccess() {
           {t("RedeemNftSuccess.text-5")}
         </div>
       </div>
-      {/* <div className="airdrop-redeem-success__nfts-wrapper">
+      <div className="airdrop-redeem-success__nfts-wrapper">
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
           spaceBetween={1}
@@ -55,7 +60,7 @@ export default function RedeemNftSuccess() {
           effect={"flip"}>
           {nfts}
         </Swiper>
-      </div> */}
+      </div>
       <button className="airdrop-redeem-success__join-embassy-btn" onClick={() => window.open(DISCORD_ENTRY_CHANNEL)}>
         <DiscordIcon />
         &nbsp;

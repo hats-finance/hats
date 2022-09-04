@@ -64,6 +64,18 @@ export default function MyNFTs() {
     toggleRedeemNftPrompt,
   ])
 
+  let redeemType;
+
+  const handleRedeemTree = () => {
+    redeemType = "isMerkleTree";
+    nftData?.redeemTree();
+  }
+
+  const handleRedeemShares = () => {
+    redeemType = "isDeposit";
+    nftData?.redeemShares();
+  }
+
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
       <span className="my-nfts__title">NFTs</span>
@@ -100,14 +112,14 @@ export default function MyNFTs() {
       <div className="my-nfts__one-nft-trust-level-text">{t("Header.MyAccount.MyNFTs.text-0")}</div>
       <button
         disabled={!nftData?.isBeforeDeadline || !nftData?.airdropToRedeem}
-        onClick={nftData?.redeemTree}
+        onClick={handleRedeemTree}
         className="my-nfts__action-btn">
         {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
         {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
       </button>
       <button
         disabled={!nftData?.depositToRedeem}
-        onClick={nftData?.redeemShares}
+        onClick={handleRedeemShares}
         className="my-nfts__action-btn fill">
         {t("Header.MyAccount.MyNFTs.deposit-redeem")}
       </button>
@@ -115,7 +127,7 @@ export default function MyNFTs() {
       <Modal
         isShowing={showRedeemNftPrompt}
         hide={toggleRedeemNftPrompt}>
-        <RedeemNftSuccess />
+        <RedeemNftSuccess type={redeemType} />
       </Modal>
     </div>
   )

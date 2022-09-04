@@ -33,7 +33,7 @@ export default function EmbassyNftTicketPrompt() {
       <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>)
 
-  if (redeemed) return <RedeemNftSuccess />;
+  if (redeemed) return <RedeemNftSuccess type="isDeposit" />;
 
   return (
     <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>

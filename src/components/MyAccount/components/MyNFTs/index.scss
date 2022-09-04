@@ -23,9 +23,6 @@
         width: 125px;
         padding-top: 5px;
       }
-      .my-nfts__not-redeemed {
-        opacity: 0.5;
-      }
       .my-nfts__not-redeemed-dot {
         position: absolute;
         top: 10px;
@@ -33,6 +30,9 @@
         width: 20px;
         height: 20px;
       }
+    }
+    .my-nfts__not-redeemed {
+      opacity: 0.5;
     }
   }
   .my-nfts__no-nfts-text {

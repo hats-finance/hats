@@ -55,7 +55,7 @@ export default function CheckEligibility() {
         isShowing={isShowing}
         hide={handleModalClose}>
         <AirdropMachineContext.Provider value={{ closeRedeemModal: toggle }} >
-          {redeemed ? <RedeemNftSuccess /> : <Redeem />}
+          {redeemed ? <RedeemNftSuccess type="isMerkleTree" /> : <Redeem />}
         </AirdropMachineContext.Provider>
       </Modal>
     </div>
