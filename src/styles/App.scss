@@ -81,6 +81,21 @@ a {
   display: none;
 }
 
+/* swiper/react styles for prev and next buttons */
+.swiper-button-prev,
+.swiper-button-next {
+  color: $black;
+  background-color: $white;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  padding: 5px;
+  &::after {
+    font-size: $xsmall;
+    font-weight: bold;
+  }
+}
+
 @media only screen and (max-width: $small-screen-breakpoint) {
   html {
     font-size: $xsmall;
@@ -97,7 +112,7 @@ a {
     margin-left: unset;
     margin-right: unset;
   }
-  
+
   /* This goes with <br /> tag to break line only in mobile */
   .mobile-break {
     display: block;

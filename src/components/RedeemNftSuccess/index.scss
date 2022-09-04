@@ -8,7 +8,7 @@
   max-width: 600px;
   margin: auto;
   .airdrop-redeem-success__icon {
-    width: 50px;
+    width: 100px;
     align-self: center;
   }
   .airdrop-redeem-success__title {
@@ -36,19 +36,19 @@
       }
     }
   }
-  // .airdrop-redeem-success__nfts-wrapper {
-  //   margin: 25px 0;
-  //   .swiper-wrapper {
-  //     .swiper-slide {
-  //       display: flex;
-  //       justify-content: center;
-  //       margin: 0 15px;
-  //       video {
-  //         width: 200px;
-  //       }
-  //     }
-  //   }
-  // }
+  .airdrop-redeem-success__nfts-wrapper {
+    margin: 25px 0;
+    .swiper-wrapper {
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        margin: 0 15px;
+        video {
+          width: 200px;
+        }
+      }
+    }
+  }
   .airdrop-redeem-success__join-embassy-btn {
     margin-top: 50px;
     background-color: $strong-purple-2;
@@ -65,14 +65,14 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-redeem-success-wrapper {
     padding: $modal-element-padding-mobile;
-    // .airdrop-redeem-success__nfts-wrapper {
-    //   .swiper-wrapper {
-    //     .swiper-slide {
-    //       video {
-    //         width: 100px;
-    //       }
-    //     }
-    //   }
-    // }
+    .airdrop-redeem-success__nfts-wrapper {
+      .swiper-wrapper {
+        .swiper-slide {
+          video {
+            width: 100px;
+          }
+        }
+      }
+    }
   }
 }

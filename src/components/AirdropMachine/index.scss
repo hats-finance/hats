@@ -12,12 +12,10 @@
     width: 100%;
     color: $white;
     font-size: $small;
-    .airdrop-machine__image {
-      width: inherit;
+    .airdrop-machine__welcome-video {
+      width: 100%;
       margin-bottom: 50px;
-      height: 400px;
     }
-
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
       border-image-source: linear-gradient(to bottom, #3756C0, #8AFCFD);
@@ -67,6 +65,9 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-machine-wrapper {
     .airdrop-machine-content {
+      .airdrop-machine__welcome-video {
+        margin-bottom: unset;
+      }
       .airdrop-machine__image {
         width: 100vw;
         height: unset;
