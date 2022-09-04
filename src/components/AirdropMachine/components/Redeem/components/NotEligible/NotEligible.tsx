@@ -8,7 +8,7 @@ import "./index.scss";
 
 export default function NotEligible() {
   const { t } = useTranslation();
-  const { closeRedeemModal, actualAddress } = useContext(AirdropMachineContext);
+  const { closeRedeemModal, address } = useContext(AirdropMachineContext);
 
   return (
     <div className="not-eligible-wrapper">
@@ -18,7 +18,7 @@ export default function NotEligible() {
       <div className="not-eligible__wallet-container">
         <span>{t("AirdropMachine.NotEligible.text-2")}</span>
         <div className="not-eligible__wallet-address">
-          {shortenIfAddress(actualAddress)}
+          {shortenIfAddress(address)}
         </div>
       </div>
       <div className="not-eligible__criterias-wrapper">

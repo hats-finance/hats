@@ -13,7 +13,7 @@ import classNames from "classnames";
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
   closeRedeemModal: () => void;
-  actualAddress: string | undefined;
+  address: string | undefined;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -25,8 +25,8 @@ export default function CheckEligibility() {
   const { isShowing, toggle } = useModal();
   const [redeemed, setRedeemed] = useState(false);
   const inputError = userInput && !isAddress(userInput);
-  const actualAddress = isAddress(userInput) ? userInput : undefined;
-  const nftData = useNFTTokenData(actualAddress);
+  const address = isAddress(userInput) ? userInput : undefined;
+  const nftData = useNFTTokenData(address);
 
   useEffect(() => {
     setUserInput(account ?? "");
@@ -70,7 +70,7 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={handleModalClose}>
-        <AirdropMachineContext.Provider value={{ nftData, closeRedeemModal: toggle, actualAddress }} >
+        <AirdropMachineContext.Provider value={{ address, nftData, closeRedeemModal: toggle }} >
           {redeemed ? <RedeemNftSuccess /> : <Redeem />}
         </AirdropMachineContext.Provider>
       </Modal>

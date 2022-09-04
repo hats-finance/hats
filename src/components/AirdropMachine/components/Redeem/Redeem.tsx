@@ -8,7 +8,7 @@ import Redeemed from "./components/Redeemed/Redeemed";
 export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
 
-  if (nftData?.actualAddressInfo) {
+  if (nftData?.addressInfo) {
     if (nftData.nftTokens?.length === 0) {
       return <Loading />;
     } else if (nftData.airdropToRedeem) {
