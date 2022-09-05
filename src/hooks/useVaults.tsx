@@ -30,8 +30,8 @@ export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>();
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
-  const { chainId, library } = useEthers();
-  const nftData = useNFTTokenData();
+  const { chainId, library, account } = useEthers();
+  const nftData = useNFTTokenData(account);
 
   const { data } = useQuery<{ vaults: IVault[], masters: IMaster[] }>(
     GET_VAULTS, {
@@ -123,7 +123,7 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults)
+    if (vaults && chainId === 1)
       getPrices(vaults)
         .then((prices) => {
           if (!cancelled) {
