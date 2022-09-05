@@ -6,25 +6,23 @@
   margin-bottom: 0.5rem 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   box-sizing: border-box;
-  width: fit-content;
-  min-width: 500px;
+  width: 100%;
   color: $black;
+  min-height: 60px;
+  .notification__content {
+    margin: auto;
+  }
   .dismiss-btn {
     background: none;
     border: none;
     color: $white;
     font-weight: bold;
+    margin-left: auto;
     cursor: pointer;
     &:hover {
       opacity: 0.8;
     }
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .notification-wrapper {
-    width: 100%;
   }
 }

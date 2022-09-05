@@ -16,7 +16,7 @@ export default function AirdropMachine() {
   return (
     <div className="content airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
-        <video loop autoPlay muted playsInline className="airdrop-machine__welcome-video">
+        <video autoPlay muted playsInline className="airdrop-machine__welcome-video">
           <source src={AirdropWelcomeAnimation} type="video/mp4" />
         </video>
         <div className="airdrop-machine__container-with-timeline">

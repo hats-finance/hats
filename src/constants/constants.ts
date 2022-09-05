@@ -24,7 +24,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "",
-  [ChainId.Rinkeby]: "0x2D506459cF8eFEA8d8006902B8D9E23652384752"
+  [ChainId.Rinkeby]: "0xC9D48f5fB252f5AACe600F6dd1a52a595Face3FC"
 }
 
 export const Chains = {

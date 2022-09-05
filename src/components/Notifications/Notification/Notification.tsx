@@ -9,7 +9,7 @@ interface IProps {
   removeNotification?: () => void;
 }
 
-const DISPLAY_DURATION = 50000;
+const DISPLAY_DURATION = 5000;
 
 export default function Notification({ notification, removeNotification }: IProps) {
 
@@ -27,7 +27,7 @@ export default function Notification({ notification, removeNotification }: IProp
 
   return (
     <div className="notification-wrapper" style={{ backgroundColor: notificationColor }}>
-      <div>{notification.content}</div>
+      <div className="notification__content">{notification.content}</div>
       {removeNotification && <button className="dismiss-btn" onClick={removeNotification}><CloseIcon fill={Colors.black} /></button>}
     </div>
   )
