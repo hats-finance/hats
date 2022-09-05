@@ -28,6 +28,7 @@ export default function MyNFTs() {
     <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
+        clickable
         link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>
@@ -37,6 +38,7 @@ export default function MyNFTs() {
     <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
       <NFTMedia
         key={index}
+        clickable
         link={ipfsTransformUri(nft.nftInfo.image)} />
       {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
     </SwiperSlide>

@@ -21,7 +21,6 @@ import "./index.scss";
 import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
 import Modal from "components/Shared/Modal/Modal";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
-import { t } from "i18next";
 import useModal from "hooks/useModal";
 
 interface IProps {
@@ -245,7 +244,6 @@ export default function DepositWithdraw(props: IProps) {
       </div>
       {pendingWallet && <Loading zIndex={10000} />}
       <Modal
-        title={t("EmbassyNftTicketPrompt.prompt-title")}
         isShowing={showEmbassyPrompt}
         hide={toggleEmbassyPrompt}>
         <EmbassyNftTicketPrompt />

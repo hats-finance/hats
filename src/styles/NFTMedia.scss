@@ -1,9 +1,51 @@
+@import "styles/constants.scss";
 
 .nft-media-wrapper {
   span,
-  img,
   video {
     max-height: 350px;
     margin: 10px;
+  }
+  &.clickable {
+    cursor: pointer;
+    :hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+.nft-media-full-screen-wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: $black;
+  z-index: $nft-media-z-index;
+  position: fixed;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  .nft-media-full-screen__close-btn {
+    border: none;
+    color: $white;
+    margin-left: auto;
+    font-size: $medium-2;
+  }
+  .nft-media-full-screen__container {
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    video {
+      width: 30%;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .nft-media-full-screen-wrapper {
+    .nft-media-full-screen__container {
+      video {
+        width: 90%;
+      }
+    }
   }
 }

@@ -30,7 +30,7 @@ export default function EmbassyNftTicketPrompt() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
-      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
+      <NFTMedia key={index} clickable link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>)
 
   if (redeemed) return <RedeemNftSuccess type="isDeposit" />;

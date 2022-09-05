@@ -29,7 +29,7 @@ export default function NFTAirdrop() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
-      <NFTMedia key={index} link={ipfsTransformUri(nftInfo.image)} />
+      <NFTMedia key={index} clickable link={ipfsTransformUri(nftInfo.image)} />
     </SwiperSlide>
   )
   return (

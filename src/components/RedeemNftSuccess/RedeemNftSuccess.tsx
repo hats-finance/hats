@@ -34,7 +34,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
 
     return (
       <SwiperSlide key={index} className="swiper-slide">
-        <NFTMedia key={index} link={ipfsTransformUri(nft.nftInfo.image)} />
+        <NFTMedia key={index} clickable link={ipfsTransformUri(nft.nftInfo.image)} />
       </SwiperSlide>
     )
   })
