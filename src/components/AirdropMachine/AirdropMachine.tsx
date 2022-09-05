@@ -1,4 +1,4 @@
-import { ScreenSize } from "constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -8,6 +8,8 @@ import AirdropWelcomeAnimation from "assets/videos/airdrop-machine-welcome.mp4";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import FAQ from "./components/FAQ/FAQ";
 import "./index.scss";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "assets/icons/info.icon";
 
 export default function AirdropMachine() {
   const { t } = useTranslation();
@@ -27,6 +29,14 @@ export default function AirdropMachine() {
             </div>
             <div className="airdrop-machine__section-content">
               {t("AirdropMachine.section-1.text")}
+              <Tooltip
+                placement="top"
+                overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+                overlay={t("AirdropMachine.section-1.tooltip")}>
+                <div className="airdrop-machine__tooltip-container">
+                  <InfoIcon width="15px" fill={Colors.white} />
+                </div>
+              </Tooltip>
             </div>
           </div>
           {screenSize === ScreenSize.Mobile && <TimelineDot />}

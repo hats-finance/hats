@@ -1,4 +1,4 @@
-@import "../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .airdrop-machine-wrapper {
   display: flex;
@@ -15,6 +15,10 @@
     .airdrop-machine__welcome-video {
       width: 100%;
       margin-bottom: 50px;
+    }
+    .airdrop-machine__tooltip-container {
+      display: inline;
+      margin-left: 5px;
     }
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
