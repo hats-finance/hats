@@ -1,6 +1,6 @@
 import "../styles/NFTPrize.scss";
 import { ISeverity } from "../types/types";
-import NFTMedia from "./NFTMedia";
+import Media from "./Shared/Media/Media";
 
 interface IProps {
   data: ISeverity
@@ -12,7 +12,7 @@ export default function NFTPrize(props: IProps) {
   return (
     <div className="nft-prize-wrapper">
       <span className="nft-name">{severity?.["nft-metadata"]?.name}</span>
-      <NFTMedia link={severity?.["nft-metadata"]?.image} />
+      <Media link={severity?.["nft-metadata"]?.image} ipfsLink />
       <div className="nft-info">
         <span className="subtitle">Description:</span>
         <span className="data">{severity?.["nft-metadata"]?.description}</span>

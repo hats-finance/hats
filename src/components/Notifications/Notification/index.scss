@@ -1,4 +1,4 @@
-@import "../../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .notification-wrapper {
   background-color: $purple;
@@ -9,8 +9,7 @@
   justify-content: center;
   box-sizing: border-box;
   width: 100%;
-  color: $black;
-  min-height: 60px;
+  color: $white;
   .notification__content {
     margin: auto;
   }

@@ -2,7 +2,6 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { useTranslation } from "react-i18next";
 import DiscordIcon from "assets/icons/social/discord.icon";
 import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
-import { ipfsTransformUri } from "utils";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
@@ -12,7 +11,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useVaults } from "hooks/useVaults";
-import NFTMedia from "components/NFTMedia";
+import NFTCard from "components/NFTCard/NFTCard";
 
 interface IProps {
   type: "isMerkleTree" | "isDeposit";
@@ -21,6 +20,12 @@ interface IProps {
 export default function RedeemNftSuccess({ type }: IProps) {
   const { t } = useTranslation();
   const { nftData, vaults } = useVaults();
+
+  /**
+   * TODO:
+   * 1. if vaultsNames > 1 show "embassies" otherwise "embassy"
+   * 2. use new TokenInfo structure (no need to search for vault name by pid)
+   */
 
   const vaultsNames = new Set();
   const nfts = nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map((nft, index) => {
@@ -34,7 +39,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
 
     return (
       <SwiperSlide key={index} className="swiper-slide">
-        <NFTMedia key={index} clickable link={ipfsTransformUri(nft.nftInfo.image)} />
+        <NFTCard key={index} tokenInfo={nft.nftInfo} />
       </SwiperSlide>
     )
   })
@@ -64,8 +69,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
       <div className="airdrop-redeem-success__nfts-wrapper">
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          spaceBetween={1}
-          slidesPerView={3}
+          slidesPerView={2}
           speed={500}
           touchRatio={1.5}
           navigation

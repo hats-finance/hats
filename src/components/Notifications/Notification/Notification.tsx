@@ -15,7 +15,7 @@ export default function Notification({ notification, removeNotification }: IProp
 
   const notificationColor = notification.type === NotificationType.Success ?
     Colors.turquoise : notification.type === NotificationType.Error ?
-      Colors.red : Colors.gray;
+      Colors.red : Colors.lightTurquoise;
 
   useEffect(() => {
     if (!removeNotification) return;

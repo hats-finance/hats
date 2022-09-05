@@ -106,6 +106,7 @@ export enum Colors {
   gray = "#C5C5C5",
   black = "#000000",
   fieldBlue = "#0C1436",
+  lightTurquoise = "9BC8CA",
 }
 
 export enum PieChartColors {

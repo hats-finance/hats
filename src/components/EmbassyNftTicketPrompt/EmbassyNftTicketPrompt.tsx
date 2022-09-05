@@ -4,7 +4,6 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
-import { ipfsTransformUri } from "utils";
 import { useEffect, useState } from "react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
@@ -12,8 +11,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import NFTMedia from "components/NFTMedia";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
+import NFTCard from "components/NFTCard/NFTCard";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
@@ -30,7 +29,7 @@ export default function EmbassyNftTicketPrompt() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map(({ nftInfo }, index) =>
     <SwiperSlide key={index}>
-      <NFTMedia key={index} clickable link={ipfsTransformUri(nftInfo.image)} />
+      <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>)
 
   if (redeemed) return <RedeemNftSuccess type="isDeposit" />;
@@ -41,8 +40,7 @@ export default function EmbassyNftTicketPrompt() {
       {t("EmbassyNftTicketPrompt.text")}
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        spaceBetween={1}
-        slidesPerView={3}
+        slidesPerView={2}
         speed={500}
         touchRatio={1.5}
         navigation

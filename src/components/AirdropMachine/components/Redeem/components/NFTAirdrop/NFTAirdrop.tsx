@@ -3,7 +3,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
-import { ipfsTransformUri } from "utils";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { useEthers } from "@usedapp/core";
 import "swiper/css";
@@ -11,9 +10,9 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./index.scss";
-import NFTMedia from "components/NFTMedia";
 import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
+import NFTCard from "components/NFTCard/NFTCard";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
@@ -29,7 +28,7 @@ export default function NFTAirdrop() {
 
   const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
     <SwiperSlide key={index} className="swiper-slide">
-      <NFTMedia key={index} clickable link={ipfsTransformUri(nftInfo.image)} />
+      <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>
   )
   return (
@@ -42,8 +41,7 @@ export default function NFTAirdrop() {
       <div className="nft-airdrop__nfts-wrapper">
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          spaceBetween={1}
-          slidesPerView={3}
+          slidesPerView={2}
           speed={500}
           touchRatio={1.5}
           navigation
