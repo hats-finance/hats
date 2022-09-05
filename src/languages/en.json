@@ -38,7 +38,8 @@
           "after-deadline": "Deadline has passed",
           "no-tree-nfts": "No airdrop NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
-          "text-0": "Please note, you can redeem only one NFT for each level of trust per project."
+          "text-0": "Please note, \n",
+          "text-1": "You can redeem only one NFT for each level of trust per project."
         }
       }
     },
@@ -109,7 +110,7 @@
         "title": "CONGRATS!",
         "text-1": "You are eligible to Hats token airdrop machine",
         "text-2": "Wallet address",
-        "text-3": "Press continue to view your token eligibilty and NFT/s",
+        "text-3": "Press continue to view your token eligibility and NFTs",
         "button-text": "CONTINUE"
       },
       "section-1": {

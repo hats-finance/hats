@@ -24,7 +24,6 @@
       padding-bottom: 50px;
     }
     .airdrop-machine__section {
-      //border-left: 2px solid $vault-blue;
       display: flex;
       flex-direction: column;
       padding: 50px 0;
@@ -56,6 +55,9 @@
         padding-top: 0;
       }
       &.last-section {
+        padding-top: 0;
+      }
+      &.faq-section {
         padding-top: 0;
       }
     }
@@ -105,6 +107,9 @@
           padding-top: 50px;
         }
         &.last-section {
+          padding-top: 50px;
+        }
+        &.faq-section {
           padding-top: 50px;
         }
       }

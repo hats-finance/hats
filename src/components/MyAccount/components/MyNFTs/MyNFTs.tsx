@@ -109,7 +109,10 @@ export default function MyNFTs() {
           </Swiper>
         )}
       </div>
-      <div className="my-nfts__one-nft-trust-level-text">{t("Header.MyAccount.MyNFTs.text-0")}</div>
+      <div className="my-nfts__info-text-container">
+        <span className="my-nfts__info-text-1">{t("Header.MyAccount.MyNFTs.text-0")}</span>
+        {t("Header.MyAccount.MyNFTs.text-1")}
+      </div>
       <button
         disabled={!nftData?.isBeforeDeadline || !nftData?.airdropToRedeem}
         onClick={handleRedeemTree}

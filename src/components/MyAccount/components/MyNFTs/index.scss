@@ -10,11 +10,11 @@
     font-weight: bold;
   }
   .my-nfts__sub-title {
-    margin: 5px 0;
+    margin-top: 5px;
   }
   .my-nfts__airdrop-nfts-container,
   .my-nfts__deposit-nfts-container {
-    margin: 15px 0;
+    margin: 8px 0;
     .my-nfts__slide {
       position: relative;
       display: flex;
@@ -40,10 +40,14 @@
     text-align: center;
     color: $gray-2;
   }
-  .my-nfts__one-nft-trust-level-text {
-    color: $turquoise;
+  .my-nfts__info-text-container {
+    color: $white;
     margin: 20px 0;
     font-size: $xxsmall;
+    white-space: pre-wrap;
+    .my-nfts__info-text-1 {
+      color: $yellow;
+    }
   }
   .my-nfts__action-btn {
     margin: 10px 0;

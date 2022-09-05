@@ -87,7 +87,7 @@ export default function AirdropMachine() {
           </div>
         </div>
         {screenSize === ScreenSize.Mobile && <TimelineDot />}
-        <div className="airdrop-machine__section">
+        <div className="airdrop-machine__section faq-section">
           <div className="airdrop-machine__section-content">
             <FAQ />
           </div>
