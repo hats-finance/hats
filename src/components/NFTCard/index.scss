@@ -16,6 +16,19 @@
       font-size: $moderate;
       font-weight: bold;
     }
+    .nft-card__info-element {
+      display: flex;
+      flex-direction: column;
+      margin: 5px 0;
+      .nft-card__info-element-title {
+        color: $committee-blue;
+        font-size: $xxsmall;
+        font-style: italic;
+      }
+      .nft-card__info-element-value {
+
+      }
+    }
   }
 
   video {
@@ -64,6 +77,7 @@
     justify-content: center;
     height: 100%;
     align-items: center;
+    flex-direction: column;
   }
 }
 

@@ -96,14 +96,16 @@
       "title": "REDEEM SUCCESSFUL!",
       "sub-title": "Welcome home, protector!",
       "text-1": "Join",
-      "text-2": "Embassy on Discord \n",
+      "text-2": " on Discord \n",
       "text-3": "The place where your security contribution can be valuable! \n\n\n",
       "text-4": "WHY SHOULD I JOIN AN EMBASSY?",
       "text-5": "Only individuals part of an embassy will be able to make governance proposals on protocol changes and the usage of the community treasury for Hats Finance.",
       "text-6": "Be the first to learn about security topics related to your protocol.",
       "text-7": "Be part of a unique group with the project committee.",
       "button-text": "JOIN AN EMBASSY ON DISCORD",
-      "text-8": "and"
+      "text-8": "and",
+      "text-9": "Embassy",
+      "text-10": "Embassies"
     },
     "AirdropMachine": {
       "AirdropPrompt": {
@@ -206,7 +208,10 @@
       "button-text": "REDEEM"
     },
     "NFTCard": {
-      "eligible": "Eligible"
+      "eligible": "Eligible",
+      "vault-embassy": "Vault Embassy",
+      "tier": "Level of trust",
+      "view-on-open-sea": "View on OpenSea"
     },
     "CommitteeTools": {
       "unlock-vault": "Unlock Vault",

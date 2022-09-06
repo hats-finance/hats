@@ -19,23 +19,13 @@ interface IProps {
 
 export default function RedeemNftSuccess({ type }: IProps) {
   const { t } = useTranslation();
-  const { nftData, vaults } = useVaults();
-
-  /**
-   * TODO:
-   * 1. if vaultsNames > 1 show "embassies" otherwise "embassy"
-   * 2. use new TokenInfo structure (no need to search for vault name by pid)
-   */
+  const { nftData } = useVaults();
 
   const vaultsNames = new Set();
   const nfts = nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map((nft, index) => {
 
-    /** this regex is to handle the special pids that begin with 8 and 9 */
-    const formattedPid = /[8-9]?0*([0-9]+)$/gm.exec(String(nft.pid));
-    if (formattedPid) {
-      const nftVaultName = (vaults?.find(vault => vault.pid === formattedPid[1]))?.description?.["project-metadata"].name;
-      if (nftVaultName) vaultsNames.add(nftVaultName);
-    }
+    const vaultName = nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
+    vaultsNames.add(vaultName)
 
     return (
       <SwiperSlide key={index} className="swiper-slide">
@@ -49,7 +39,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
       <img className="airdrop-redeem-success__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
       <div className="airdrop-redeem-success__title">{t("RedeemNftSuccess.title")}</div>
       <span className="airdrop-redeem-success__sub-title">{t("RedeemNftSuccess.sub-title")}</span>
-      {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames).join(', ').replace(/,(?!.*,)/gmi, ` ${t("RedeemNftSuccess.text-8")}`)} ${t("RedeemNftSuccess.text-2")}`}
+      {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames).join(', ').replace(/,(?!.*,)/gmi, ` ${t("RedeemNftSuccess.text-8")}`)} ${vaultsNames.size === 1 ? t("RedeemNftSuccess.text-9") : t("RedeemNftSuccess.text-10")} ${t("RedeemNftSuccess.text-2")}`}
       {t("RedeemNftSuccess.text-3")}
       <b>{t("RedeemNftSuccess.text-4")}</b>
       <div className="airdrop-redeem-success__features-wrapper">

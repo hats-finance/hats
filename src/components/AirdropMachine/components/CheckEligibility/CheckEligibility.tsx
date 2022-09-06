@@ -63,7 +63,7 @@ export default function CheckEligibility() {
         <button
           className="check-eligibility__check-button fill"
           onClick={toggle}
-          disabled={!account || !nftData?.isBeforeDeadline || inputError || !userInput}>
+          disabled={!nftData?.isBeforeDeadline || inputError || !userInput}>
           {nftData?.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>

@@ -43,9 +43,9 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
       ReactDOM.createPortal(
         <div className="nft-card-full-screen-wrapper">
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
-          {isRedeemed && <a href={openSeaUrl} target="_blank" rel="noreferrer">View on OpenSea</a>}
           <div className="nft-card-full-screen__container">
-            <Media link={metadata.animation_url} ipfsLink width="100%" />
+            <Media link={metadata.image} ipfsLink width="100%" />
+            {isRedeemed && <a href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")}</a>}
           </div>
         </div>, document.body
       )
@@ -57,8 +57,14 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
       <Media link={metadata.image} ipfsLink width={width} />
       <div className="nft-card__info-container">
         <div className="nft-card__info-title">{metadata.name}</div>
-        <div className="nft-card__info-title">{vaultName}</div>
-        <div className="nft-card__info-title">{tier}</div>
+        <div className="nft-card__info-element">
+          <div className="nft-card__info-element-title">{t("NFTCard.vault-embassy")}</div>
+          <div className="nft-card__info-element-value">{vaultName}</div>
+        </div>
+        <div className="nft-card__info-element">
+          <div className="nft-card__info-element-title">{t("NFTCard.tier")}</div>
+          <div className="nft-card__info-element-value">{tier}</div>
+        </div>
       </div>
       {!isRedeemed && <div className="nft-card__eligible-label">{t("NFTCard.eligible")}</div>}
     </div>
