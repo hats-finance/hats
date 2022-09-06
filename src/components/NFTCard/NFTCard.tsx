@@ -15,6 +15,8 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
   const { metadata, isRedeemed } = tokenInfo;
   const { t } = useTranslation();
   const [fullScreen, setFullScreen] = useState(false);
+  const tier = metadata.attributes.find(attr => attr.trait_type === "Trust Level")?.value;
+  const vaultName = metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
 
   if (fullScreen) {
     return (
@@ -34,6 +36,8 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
       <Media link={metadata.image} ipfsLink width={width} />
       <div className="nft-card__info-container">
         <div className="nft-card__info-title">{metadata.name}</div>
+        <div className="nft-card__info-title">{vaultName}</div>
+        <div className="nft-card__info-title">{tier}</div>
       </div>
       {!isRedeemed && <div className="nft-card__eligible-label">{t("NFTCard.eligible")}</div>}
     </div>
