@@ -1,7 +1,7 @@
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import { useTranslation } from "react-i18next";
 import DiscordIcon from "assets/icons/social/discord.icon";
-import { DISCORD_ENTRY_CHANNEL } from "constants/constants";
+import { DISCORD_ENTRY_CHANNEL, ScreenSize } from "constants/constants";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
@@ -12,6 +12,8 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { useVaults } from "hooks/useVaults";
 import NFTCard from "components/NFTCard/NFTCard";
+import { RootState } from "reducers";
+import { useSelector } from "react-redux";
 
 interface IProps {
   type: "isMerkleTree" | "isDeposit";
@@ -19,6 +21,7 @@ interface IProps {
 
 export default function RedeemNftSuccess({ type }: IProps) {
   const { t } = useTranslation();
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
 
   const vaultsNames = new Set();
@@ -59,7 +62,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
       <div className="airdrop-redeem-success__nfts-wrapper">
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={2}
+          slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
           speed={500}
           touchRatio={1.5}
           navigation

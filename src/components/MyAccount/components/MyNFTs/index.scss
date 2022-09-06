@@ -8,19 +8,23 @@
   margin-top: 20px;
   .my-nfts__title {
     font-weight: bold;
+    margin-bottom: 10px;
+    font-size: $small;
   }
   .my-nfts__sub-title {
     margin-top: 5px;
+    margin-bottom: 10px;
   }
   .my-nfts__airdrop-nfts-container,
   .my-nfts__deposit-nfts-container {
     margin: 8px 0;
+    margin-bottom: 24px;
     .my-nfts__slide {
       position: relative;
       display: flex;
       justify-content: center;
       video {
-        width: 125px;
+        width: 160px;
       }
     }
   }
@@ -50,11 +54,12 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .my-nfts-wrapper {
+    padding: 10px;
     .my-nfts__airdrop-nfts-container,
     .my-nfts__deposit-nfts-container {
       .my-nfts__slide {
         video {
-          width: 80px;
+          width: 200px;
         }
       }
     }

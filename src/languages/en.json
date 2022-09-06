@@ -4,7 +4,8 @@
       "yes": "YES",
       "cancel": "CANCEL",
       "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward",
-      "wallet-not-connected": "Please connect to your wallet first"
+      "wallet-not-connected": "Please connect to your wallet first",
+      "network-not-supported": "Please connect to a supported network"
     },
     "Welcome": {
       "title": "Hats",
@@ -39,7 +40,7 @@
           "no-tree-nfts": "No airdrop NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
           "text-0": "Please note, \n",
-          "text-1": "You can redeem only one NFT for each level of trust per project."
+          "text-1": "If you notice duplicate NFTs in your account, only one of them will be redeemed and the other will disappear. If you have multiple NFTs of different kinds, you will be able to redeem each of them."
         }
       }
     },
@@ -116,7 +117,7 @@
         "button-text": "CONTINUE"
       },
       "section-1": {
-        "title": "HATS AIRDROP",
+        "title": "HATS AIRDROP MACHINE",
         "text": "Welcome to Hats Finance first airdrop machine. \n\n The airdrop will go live in the coming months. Now is your chance to check your eligibility and join an Embassy",
         "tooltip": "Embassies are token gated communities for those that have proof of participating in the security of a project."
       },
@@ -209,8 +210,10 @@
     },
     "NFTCard": {
       "eligible": "Eligible",
+      "redeemed": "Redeemed",
       "vault-embassy": "Vault Embassy",
       "tier": "Level of trust",
+      "tier-text": "OUT OF 3",
       "view-on-open-sea": "View on OpenSea"
     },
     "CommitteeTools": {

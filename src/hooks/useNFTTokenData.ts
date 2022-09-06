@@ -10,6 +10,7 @@ import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
 import moment from "moment";
 import { usePrevious } from "./usePrevious";
+import { useSupportedNetwork } from "./useSupportedNetwork";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require("keccak256");
@@ -39,6 +40,7 @@ const DATA_REFRESH_TIME = 10000;
 
 export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, chainId } = useEthers();
+  const isSupportedNetwork = useSupportedNetwork();
   const [contract, setContract] = useState<Contract>();
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
@@ -76,9 +78,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [address, prevAddress, chainId, prevChainId]);
 
   useEffect(() => {
-    if (chainId)
+    if (chainId && isSupportedNetwork)
       setContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
-  }, [library, chainId])
+  }, [library, chainId, isSupportedNetwork])
 
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(
     GET_STAKER, {

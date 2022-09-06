@@ -13,9 +13,13 @@ import "./index.scss";
 import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import NFTCard from "components/NFTCard/NFTCard";
+import { useSelector } from "react-redux";
+import { RootState } from "reducers";
+import { ScreenSize } from "constants/constants";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
   const { account } = useEthers();
@@ -41,7 +45,7 @@ export default function NFTAirdrop() {
       <div className="nft-airdrop__nfts-wrapper">
         <Swiper
           modules={[Navigation, Pagination, Scrollbar, A11y]}
-          slidesPerView={2}
+          slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
           speed={500}
           touchRatio={1.5}
           navigation

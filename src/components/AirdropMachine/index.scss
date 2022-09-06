@@ -12,9 +12,23 @@
     width: 100%;
     color: $white;
     font-size: $small;
-    .airdrop-machine__welcome-video {
-      width: 100%;
-      margin-bottom: 50px;
+    .airdrop-machine__video-container {
+      position: relative;
+      .airdrop-machine__video {
+        width: 100%;
+        margin-bottom: 50px;
+      }
+      .airdrop-machine__start-btn {
+        position: absolute;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 200px;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
+      }
     }
     .airdrop-machine__tooltip-container {
       display: inline;
@@ -22,7 +36,7 @@
     }
     .airdrop-machine__container-with-timeline {
       border-left: 5px solid;
-      border-image-source: linear-gradient(to bottom, #3756C0, #8AFCFD);
+      border-image-source: linear-gradient(to bottom, #3756c0, #8afcfd);
       border-image-slice: 1;
       border-width: 5px;
       padding-bottom: 50px;

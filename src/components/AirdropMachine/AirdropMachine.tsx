@@ -4,24 +4,39 @@ import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
 import TimelineDot from "./components/TimelineDot/TimelineDot";
-import AirdropWelcomeAnimation from "assets/videos/airdrop-machine-welcome.mp4";
+import AirdropAnimation from "assets/videos/airdrop-machine-welcome.mp4";
+import AirdropAnimationPoster from "assets/images/airdrop-machine-welcome-poster.png";
+import AirdropStartButton from "assets/images/airdrop-machine-start.gif";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import FAQ from "./components/FAQ/FAQ";
 import "./index.scss";
 import Tooltip from "rc-tooltip";
 import InfoIcon from "assets/icons/info.icon";
+import { useState } from "react";
 
 export default function AirdropMachine() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
+  const [videoEnded, setVideoEnded] = useState(false);
+
+  document.getElementById("airdropMachineVideo")?.addEventListener("ended", () => {
+    setVideoEnded(true);
+  }, false);
+
+  const scrollToStart = () => {
+    document.getElementById("airdropStart")?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
 
   return (
     <div className="content airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
-        <video autoPlay muted playsInline className="airdrop-machine__welcome-video">
-          <source src={AirdropWelcomeAnimation} type="video/mp4" />
-        </video>
-        <div className="airdrop-machine__container-with-timeline">
+        <div className="airdrop-machine__video-container">
+          <video id="airdropMachineVideo" autoPlay muted playsInline className="airdrop-machine__video" poster={AirdropAnimationPoster}>
+            <source src={AirdropAnimation} type="video/mp4" />
+          </video>
+          {screenSize === ScreenSize.Desktop && videoEnded && <img onClick={scrollToStart} className="airdrop-machine__start-btn" src={AirdropStartButton} alt="start" />}
+        </div>
+        <div id="airdropStart" className="airdrop-machine__container-with-timeline">
           <div className="airdrop-machine__section first-section">
             <div className="airdrop-machine__title-wrapper">
               {screenSize === ScreenSize.Desktop && <TimelineDot color="#3756C0" />}

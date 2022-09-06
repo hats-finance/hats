@@ -11,10 +11,12 @@
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
-    border-top: 1px solid $blue-4;
+    border-top: 1px solid $blue-3;
     .nft-card__info-title {
-      font-size: $moderate;
+      font-size: $small;
       font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 10px;
     }
     .nft-card__info-element {
       display: flex;
@@ -26,7 +28,7 @@
         font-style: italic;
       }
       .nft-card__info-element-value {
-
+        text-transform: capitalize;
       }
     }
   }
@@ -41,18 +43,26 @@
   }
   &.not-redeemed {
     border: 2px dashed $blue-4;
-    video {
-      opacity: 0.5;
-    }
   }
-  .nft-card__eligible-label {
+  .nft-card__status {
     position: absolute;
-    width: 100%;
+    width: 100px;
+    height: 38px;
+    line-height: 38px;
     text-align: center;
-    color: $white;
-    background-color: $red-2;
-    border-top-right-radius: 15px;
-    border-top-left-radius: 15px;
+    border-bottom-right-radius: 13px;
+    border-bottom-left-radius: 13px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: $xsmall;
+    &.eligible {
+      color: $white;
+      background-color: $red-2;
+    }
+    &.redeemed {
+      color: $field-blue;
+      background-color: $turquoise;
+    }
   }
 }
 
@@ -84,7 +94,15 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .nft-card-wrapper {
     .nft-card__info-container {
-      padding: 5px;
+      padding: 10px;
+      .nft-card__info-title {
+        font-size: $xsmall;
+      }
+    }
+    .nft-card__status {
+      height: 30px;
+      line-height: 30px;
+      font-size: $xxsmall;
     }
   }
 

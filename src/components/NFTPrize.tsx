@@ -12,7 +12,7 @@ export default function NFTPrize(props: IProps) {
   return (
     <div className="nft-prize-wrapper">
       <span className="nft-name">{severity?.["nft-metadata"]?.name}</span>
-      <Media link={severity?.["nft-metadata"]?.image} ipfsLink />
+      <Media link={severity?.["nft-metadata"]?.image} ipfsLink maxHeight="350px" />
       <div className="nft-info">
         <span className="subtitle">Description:</span>
         <span className="data">{severity?.["nft-metadata"]?.description}</span>

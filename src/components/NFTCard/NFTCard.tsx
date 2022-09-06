@@ -6,8 +6,10 @@ import { INFTTokenInfo } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
-import { HATVaultsNFTContract } from "constants/constants";
+import { HATVaultsNFTContract, ScreenSize } from "constants/constants";
 import { useEscapePressed } from "hooks/useKeyPress";
+import { RootState } from "reducers";
+import { useSelector } from "react-redux";
 
 interface IProps {
   tokenInfo: INFTTokenInfo
@@ -15,6 +17,7 @@ interface IProps {
 }
 
 export default function NFTCard({ tokenInfo, width }: IProps) {
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { metadata, isRedeemed, tokenId } = tokenInfo;
   const { chainId } = useEthers();
   const { t } = useTranslation();
@@ -44,7 +47,7 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
         <div className="nft-card-full-screen-wrapper">
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
           <div className="nft-card-full-screen__container">
-            <Media link={metadata.image} ipfsLink width="100%" />
+            <Media link={metadata.animation_url} ipfsLink width="100%" maxWidth={screenSize === ScreenSize.Desktop ? "40%" : ""} />
             {isRedeemed && <a href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")}</a>}
           </div>
         </div>, document.body
@@ -63,10 +66,12 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
         </div>
         <div className="nft-card__info-element">
           <div className="nft-card__info-element-title">{t("NFTCard.tier")}</div>
-          <div className="nft-card__info-element-value">{tier}</div>
+          <div className="nft-card__info-element-value">{tier} {t("NFTCard.tier-text")}</div>
         </div>
       </div>
-      {!isRedeemed && <div className="nft-card__eligible-label">{t("NFTCard.eligible")}</div>}
+      <div className={classNames("nft-card__status", { "eligible": !isRedeemed, "redeemed": isRedeemed })}>
+        {isRedeemed ? t("NFTCard.redeemed") : t("NFTCard.eligible")}
+      </div>
     </div>
   )
 }

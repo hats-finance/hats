@@ -9,6 +9,7 @@ import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
@@ -27,6 +28,7 @@ export default function CheckEligibility() {
   const inputError = userInput && !isAddress(userInput);
   const address = isAddress(userInput) ? userInput : undefined;
   const nftData = useNFTTokenData(address);
+  const isSupportedNetwork = useSupportedNetwork();
 
   useEffect(() => {
     setUserInput(account ?? "");
@@ -49,7 +51,6 @@ export default function CheckEligibility() {
       <div className="check-eligibility__address-wrapper">
         <div className={classNames({ "check-eligibility__input-container": true, "check-eligibility__input-error": inputError })}>
           <input
-            disabled={!nftData.isBeforeDeadline}
             className="check-eligibility__address-input"
             type="text"
             placeholder={t("AirdropMachine.CheckEligibility.input-placeholder")}
@@ -60,10 +61,11 @@ export default function CheckEligibility() {
 
         {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}
         {nftData?.isBeforeDeadline === false && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>}
+        {!isSupportedNetwork && <span className="check-eligibility__error-label">{t("Shared.network-not-supported")}</span>}
         <button
           className="check-eligibility__check-button fill"
           onClick={toggle}
-          disabled={!nftData?.isBeforeDeadline || inputError || !userInput}>
+          disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
           {nftData?.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>

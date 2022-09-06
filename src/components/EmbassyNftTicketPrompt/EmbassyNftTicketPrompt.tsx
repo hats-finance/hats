@@ -13,9 +13,13 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 import NFTCard from "components/NFTCard/NFTCard";
+import { useSelector } from "react-redux";
+import { RootState } from "reducers";
+import { ScreenSize } from "constants/constants";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
   const [redeemed, setRedeemed] = useState(false);
 
@@ -40,7 +44,7 @@ export default function EmbassyNftTicketPrompt() {
       {t("EmbassyNftTicketPrompt.text")}
       <Swiper
         modules={[Navigation, Pagination, Scrollbar, A11y]}
-        slidesPerView={2}
+        slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
         speed={500}
         touchRatio={1.5}
         navigation

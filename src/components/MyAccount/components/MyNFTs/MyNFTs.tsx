@@ -15,9 +15,13 @@ import useModal from "hooks/useModal";
 import { useEffect } from "react";
 import { usePrevious } from "hooks/usePrevious";
 import NFTCard from "components/NFTCard/NFTCard";
+import { useSelector } from "react-redux";
+import { RootState } from "reducers";
+import { ScreenSize } from "constants/constants";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
+  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
 
@@ -81,7 +85,7 @@ export default function MyNFTs() {
         {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={2}
+            slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
             speed={500}
             touchRatio={1.5}
             navigation
@@ -95,7 +99,7 @@ export default function MyNFTs() {
         {depositNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-deposit-nfts")}</div> : (
           <Swiper
             modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={2}
+            slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
             speed={500}
             touchRatio={1.5}
             navigation
