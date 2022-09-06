@@ -206,17 +206,20 @@ export interface AirdropMachineWallet {
   nft_elegebility: NFTEligibilityElement[];
 }
 
-export interface TokenInfo {
+export interface INFTTokenMetadata {
   name: string;
   description: string;
   image: string;
+  animation_url: string;
+  attributes: Array<{ trait_type: string, value: string }>;
+
 }
 
-export interface NFTTokenInfo {
+export interface INFTTokenInfo {
   pid: number;
   tier: number;
   tokenId: BigNumber;
-  nftInfo: TokenInfo;
+  metadata: INFTTokenMetadata;
   isRedeemed: boolean;
   masterAddress: string;
   isMerkleTree: boolean;

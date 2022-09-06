@@ -4,7 +4,7 @@ import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "consta
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AirdropMachineWallet, IStaker, NFTTokenInfo, TokenInfo } from "types/types";
+import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
@@ -24,7 +24,7 @@ export interface INFTTokenData {
   lastMerkleTree?: MerkleTreeChanged;
   merkleTree?: AirdropMachineWallet[];
   isBeforeDeadline?: boolean;
-  nftTokens?: NFTTokenInfo[];
+  nftTokens?: INFTTokenInfo[];
   redeemTree: () => Promise<any>;
   redeemMultipleFromTreeState: TransactionStatus;
   redeemShares: () => Promise<any>;
@@ -44,10 +44,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: Transactions.RedeemDepositNFTs });
-  const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
+  const [treeTokens, setTreeTokens] = useState<INFTTokenInfo[] | undefined>();
   const loadingTree = treeTokens ? false : true;
-  const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
-  const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
+  const [proofTokens, setProofTokens] = useState<INFTTokenInfo[] | undefined>();
+  const nftTokens = useMemo(() => [...(treeTokens || [] as INFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
     if (exists) {
       if (curr.isDeposit)
@@ -57,7 +57,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     } else
       prev.push(curr);
     return prev;
-  }, [] as NFTTokenInfo[]), [treeTokens, proofTokens]);
+  }, [] as INFTTokenInfo[]), [treeTokens, proofTokens]);
   const prevAddress = usePrevious(address);
   const prevChainId = usePrevious(chainId);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
@@ -100,13 +100,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const isEligibile = await contract.isEligible(proxyAddress, pid, address);
       if (!isEligibile) return [];
       const tiers = await contract.getTierFromShares(proxyAddress, pid, address);
-      const tokens: NFTTokenInfo[] = [];
+      const tokens: INFTTokenInfo[] = [];
       for (let tier = 1; tier <= tiers; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
-        const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
-        tokens.push({ ...pidWithAddress, tier, isRedeemed, tokenId, nftInfo, isDeposit: true, isMerkleTree: false });
+        const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
+        tokens.push({ ...pidWithAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
       }
       return tokens;
     }))
@@ -128,13 +128,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
-      const tokens: NFTTokenInfo[] = [];
+      const tokens: INFTTokenInfo[] = [];
       for (let tier = 1; tier <= tiers; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
-        const nftInfo = await (await fetch(ipfsTransformUri(tokenUri))).json() as TokenInfo;
-        tokens.push({ ...nft, isRedeemed, tokenId, nftInfo, isMerkleTree: true, isDeposit: false });
+        const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
+        tokens.push({ ...nft, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));

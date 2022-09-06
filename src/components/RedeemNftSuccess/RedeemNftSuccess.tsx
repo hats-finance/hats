@@ -39,7 +39,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
 
     return (
       <SwiperSlide key={index} className="swiper-slide">
-        <NFTCard key={index} tokenInfo={nft.nftInfo} />
+        <NFTCard key={index} tokenInfo={nft} />
       </SwiperSlide>
     )
   })

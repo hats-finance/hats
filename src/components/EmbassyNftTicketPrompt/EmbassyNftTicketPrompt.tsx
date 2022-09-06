@@ -27,7 +27,7 @@ export default function EmbassyNftTicketPrompt() {
 
   const showLoader = nftData?.redeemMultipleFromSharesState.status && ["PendingSignature", "Mining"].includes(nftData?.redeemMultipleFromSharesState.status);
 
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nftInfo, index) =>
     <SwiperSlide key={index}>
       <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>)

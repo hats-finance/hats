@@ -25,8 +25,8 @@ export default function MyNFTs() {
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
-        tokenInfo={nft.nftInfo}
-        isRedeemed={nft.isRedeemed} />
+        tokenInfo={nft}
+      />
     </SwiperSlide>
   )
 
@@ -34,8 +34,8 @@ export default function MyNFTs() {
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
-        tokenInfo={nft.nftInfo}
-        isRedeemed={nft.isRedeemed} />
+        tokenInfo={nft}
+      />
     </SwiperSlide>
   )
 

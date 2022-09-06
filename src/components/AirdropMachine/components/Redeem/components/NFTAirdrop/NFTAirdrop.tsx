@@ -26,7 +26,7 @@ export default function NFTAirdrop() {
     await nftData?.redeemTree();
   }
 
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map(({ nftInfo }, index) =>
+  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map((nftInfo, index) =>
     <SwiperSlide key={index} className="swiper-slide">
       <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>
