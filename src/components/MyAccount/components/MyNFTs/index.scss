@@ -22,16 +22,6 @@
       video {
         width: 125px;
       }
-      .my-nfts__not-redeemed-dot {
-        position: absolute;
-        top: 20px;
-        right: 30px;
-        width: 20px;
-        height: 20px;
-      }
-    }
-    .my-nfts__not-redeemed {
-      opacity: 0.5;
     }
   }
   .my-nfts__no-nfts-text {
@@ -65,16 +55,6 @@
       .my-nfts__slide {
         video {
           width: 80px;
-        }
-        .my-nfts__not-redeemed-dot {
-          position: absolute;
-          top: 20px;
-          right: 15px;
-          width: 15px;
-          height: 15px;
-        }
-        .my-nfts__not-redeemed-label {
-          font-size: $xxsmall;
         }
       }
     }

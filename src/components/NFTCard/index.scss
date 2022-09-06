@@ -3,8 +3,9 @@
 .nft-card-wrapper {
   display: flex;
   flex-direction: column;
-  border: 1px solid $blue-3;
+  border: 2px solid $blue-3;
   border-radius: 15px;
+  position: relative;
 
   .nft-card__info-container {
     display: flex;
@@ -24,6 +25,19 @@
   cursor: pointer;
   :hover {
     opacity: 0.9;
+  }
+  &.not-redeemed {
+    border: 2px dashed $blue-3;
+    video {
+      opacity: 0.5;
+    }
+  }
+  .nft-card__eligible-label {
+    top: 10px;
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: $red;
   }
 }
 
