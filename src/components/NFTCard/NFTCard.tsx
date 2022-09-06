@@ -4,6 +4,7 @@ import "./index.scss";
 import Media from "components/Shared/Media/Media";
 import { TokenInfo } from "types/types";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   tokenInfo: TokenInfo
@@ -12,6 +13,7 @@ interface IProps {
 }
 
 export default function NFTCard({ tokenInfo, width, isRedeemed }: IProps) {
+  const { t } = useTranslation();
   const [fullScreen, setFullScreen] = useState(false);
 
   if (fullScreen) {
@@ -33,7 +35,7 @@ export default function NFTCard({ tokenInfo, width, isRedeemed }: IProps) {
       <div className="nft-card__info-container">
         <div className="nft-card__info-title">{tokenInfo.name}</div>
       </div>
-      {!isRedeemed && <div className="nft-card__eligible-label">Eligible</div>}
+      {!isRedeemed && <div className="nft-card__eligible-label">{t("NFTCard.eligible")}</div>}
     </div>
   )
 }
