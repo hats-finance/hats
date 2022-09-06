@@ -3,14 +3,15 @@
 .nft-card-wrapper {
   display: flex;
   flex-direction: column;
-  border: 1px solid $blue-3;
+  border: 2px solid $blue-4;
   border-radius: 15px;
+  position: relative;
 
   .nft-card__info-container {
     display: flex;
     flex-direction: column;
     padding: 10px 20px;
-    border-top: 1px solid $blue-3;
+    border-top: 1px solid $blue-4;
     .nft-card__info-title {
       font-size: $moderate;
       font-weight: bold;
@@ -24,6 +25,21 @@
   cursor: pointer;
   :hover {
     opacity: 0.9;
+  }
+  &.not-redeemed {
+    border: 2px dashed $blue-4;
+    video {
+      opacity: 0.5;
+    }
+  }
+  .nft-card__eligible-label {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    color: $white;
+    background-color: $red-2;
+    border-top-right-radius: 15px;
+    border-top-left-radius: 15px;
   }
 }
 
@@ -52,6 +68,12 @@
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
+  .nft-card-wrapper {
+    .nft-card__info-container {
+      padding: 5px;
+    }
+  }
+
   .nft-card-full-screen-wrapper {
     .nft-card-full-screen__container {
       video {

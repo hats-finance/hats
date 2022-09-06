@@ -4,8 +4,6 @@ import { useVaults } from "hooks/useVaults";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import Loading from "components/Shared/Loading";
-import Dot from "components/Shared/Dot/Dot";
-import { Colors } from "constants/constants";
 import "./index.scss";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -24,20 +22,20 @@ export default function MyNFTs() {
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
-    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
+    <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
-        tokenInfo={nft.nftInfo} />
-      {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
+        tokenInfo={nft.nftInfo}
+        isRedeemed={nft.isRedeemed} />
     </SwiperSlide>
   )
 
   const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
-    <SwiperSlide key={index} className={classNames("my-nfts__slide", { "my-nfts__not-redeemed": !nft.isRedeemed })}>
+    <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
-        tokenInfo={nft.nftInfo} />
-      {!nft.isRedeemed && <Dot className="my-nfts__not-redeemed-dot" color={Colors.strongRed} />}
+        tokenInfo={nft.nftInfo}
+        isRedeemed={nft.isRedeemed} />
     </SwiperSlide>
   )
 
