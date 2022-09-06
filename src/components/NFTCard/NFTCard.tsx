@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
 import Media from "components/Shared/Media/Media";
@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
 import { HATVaultsNFTContract } from "constants/constants";
+import { useEscapePressed } from "hooks/useKeyPress";
 
 interface IProps {
   tokenInfo: INFTTokenInfo
@@ -20,6 +21,13 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
   const [fullScreen, setFullScreen] = useState(false);
   const tier = metadata.attributes.find(attr => attr.trait_type === "Trust Level")?.value;
   const vaultName = metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
+  const escapePressed = useEscapePressed();
+
+  useEffect(() => {
+    if (escapePressed) {
+      setFullScreen(false);
+    }
+  }, [escapePressed])
 
   let openSeaUrl;
   const nftContract = HATVaultsNFTContract[chainId!];
