@@ -58,7 +58,8 @@
 @media only screen and (max-width: $small-screen-breakpoint) {
   .modal-wrapper {
     .modal {
-      height: 90%;
+      height: fit-content;
+      max-height: 90%;
     }
   }
 }

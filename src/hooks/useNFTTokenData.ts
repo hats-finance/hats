@@ -32,6 +32,7 @@ export interface INFTTokenData {
   addressInfo?: AirdropMachineWallet;
   airdropToRedeem: boolean | undefined;
   depositToRedeem: boolean | undefined;
+  loadingTree: boolean;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -44,6 +45,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: Transactions.RedeemDepositNFTs });
   const [treeTokens, setTreeTokens] = useState<NFTTokenInfo[] | undefined>();
+  const loadingTree = treeTokens ? false : true;
   const [proofTokens, setProofTokens] = useState<NFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as NFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
@@ -233,6 +235,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     addressInfo,
     airdropToRedeem,
     depositToRedeem,
+    loadingTree,
   };
 };
 
