@@ -1,0 +1,72 @@
+@import "styles/constants.scss";
+
+.token-eligibility-info__total-hats-container {
+  display: flex;
+  flex-direction: column;
+  color: $dark-turquoise;
+  margin: 30px 0;
+  .token-eligibility-info__total-hats {
+    display: flex;
+    align-items: center;
+    border: 1px solid $turquoise;
+    padding: 10px;
+    color: $white;
+    margin-top: 5px;
+    .token-eligibility-info__hats-logo {
+      width: 50px;
+    }
+    .token-eligibility-info__value {
+      font-size: $moderate;
+      margin-left: 15px;
+      font-weight: bold;
+    }
+  }
+}
+.token-eligibility-info__breakdown-wrapper {
+  .token-eligibility-info__breakdown-element {
+    display: flex;
+    justify-content: space-between;
+    margin: 25px 0;
+    .token-eligibility-info__breakdown_element-name {
+      display: flex;
+      align-items: center;
+      img {
+        margin-right: 10px;
+      }
+    }
+    .token-eligibility-info__breakdown_element-value {
+      white-space: nowrap;
+      &.learn-more {
+        display: flex;
+        align-items: center;
+        text-decoration: underline;
+        width: fit-content;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
+        img {
+          margin-left: 5px;
+        }
+      }
+    }
+    &.total {
+      border-top: 1px solid $gray;
+      padding-top: 15px;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .token-eligibility-info__total-hats-container {
+    .token-eligibility-info__total-hats {
+      padding: 10px;
+      .token-eligibility-info__hats-logo {
+        width: 40px;
+      }
+      .token-eligibility-info__value {
+        font-size: $medium;
+      }
+    }
+  }
+}

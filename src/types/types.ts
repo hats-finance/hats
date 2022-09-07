@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers"
 
 export interface IVault {
   id: string
@@ -86,13 +87,14 @@ export interface INFTMetaData {
 
 export interface IStaker {
   id: string
-  pid: string
+  pid: number
   createdAt: string
   address: string
   vault: IVault
   rewardPaid: string
   shares: string
   depositAmount: string
+  master: IMaster
 }
 
 export interface IMaster {
@@ -161,7 +163,6 @@ export interface IAirdropData {
   nft: NFTAirdropET,
   token: TokenAirdropET
 }
-
 export interface INFTAirdropElement {
   description: string
   external_url: string
@@ -186,3 +187,41 @@ export interface GeneralParameters {
 export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
+
+export interface NFTEligibilityElement {
+  pid: number;
+  tier: number;
+  masterAddress: string;
+}
+
+export interface AirdropMachineWallet {
+  address: string;
+  token_eligibility: {
+    committee_member: string;
+    depositor: string;
+    crow: string;
+    coder: string;
+    early_contributor: string;
+  },
+  nft_elegebility: NFTEligibilityElement[];
+}
+
+export interface INFTTokenMetadata {
+  name: string;
+  description: string;
+  image: string;
+  animation_url: string;
+  attributes: Array<{ trait_type: string, value: string }>;
+
+}
+
+export interface INFTTokenInfo {
+  pid: number;
+  tier: number;
+  tokenId: BigNumber;
+  metadata: INFTTokenMetadata;
+  isRedeemed: boolean;
+  masterAddress: string;
+  isMerkleTree: boolean;
+  isDeposit: boolean;
+}

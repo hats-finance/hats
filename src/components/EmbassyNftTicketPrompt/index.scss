@@ -1,0 +1,55 @@
+@import "styles/constants.scss";
+
+.embassy-nft-ticket-wrapper {
+  display: flex;
+  flex-direction: column;
+  color: $white;
+  padding: $modal-element-padding;
+  white-space: pre-line;
+  max-width: 600px;
+  padding-top: 0px;
+  .embassy-nft-ticket__icon {
+    width: 100px;
+    align-self: center;
+    margin-bottom: 50px;
+  }
+  .embassy-nft-ticket__redeem-btn {
+    margin-top: 20px;
+  }
+  .swiper {
+    margin-left: unset;
+    margin-right: unset;
+    margin-top: 15px;
+    margin: 25px 0;
+    .swiper-wrapper {
+      display: flex;
+      justify-content: center;
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        video {
+          width: 150px;
+        }
+      }
+    }
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .embassy-nft-ticket-wrapper {
+    padding: $modal-element-padding-mobile;
+    .swiper {
+      .swiper-wrapper {
+        .swiper-slide {
+          video {
+            width: 200px;
+          }
+        }
+      }
+    }
+  }
+}

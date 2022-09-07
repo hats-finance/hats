@@ -25,10 +25,13 @@ import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAcco
 import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import { RootState } from "./reducers";
-import AirdropPrompt from "./components/Airdrop/components/AirdropPrompt/AirdropPrompt";
-import Airdrop from "./components/Airdrop/components/Airdrop/Airdrop";
-import { useFetchAirdropData } from "./components/Airdrop/utils";
+import AirdropMachine from "components/AirdropMachine/AirdropMachine";
+import useModal from "hooks/useModal";
+import Modal from "components/Shared/Modal/Modal";
+import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/AirdropPrompt";
 import "./styles/App.scss";
+import { useCheckRedeemableNfts } from "components/AirdropMachine/utils";
+import EmbassyNotificationBar from "components/EmbassyNotificationBar/EmbassyNotificationBar";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,7 +39,8 @@ function App() {
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
-  const { account } = useEthers()
+  const { isShowing: showAirdropPrompt, toggle: toggleAirdropPrompt } = useModal();
+  const { account } = useEthers();
 
   const { i18n } = useTranslation();
   useEffect(() => {
@@ -44,14 +48,12 @@ function App() {
     if (language && language !== i18n.language) i18n.changeLanguage(language);
   }, [i18n]);
 
-  const [showAirdropPrompt, setShowAirdropPrompt] = useState(false);
-
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  useFetchAirdropData(() => setShowAirdropPrompt(true));
+  useCheckRedeemableNfts(toggleAirdropPrompt);
 
   return (
     <>
@@ -61,6 +63,7 @@ function App() {
       {hasSeenWelcomePage && acceptedCookies !== "1" && (
         <Cookies setAcceptedCookies={setAcceptedCookies} />
       )}
+      {hasSeenWelcomePage === "1" && <EmbassyNotificationBar />}
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
@@ -75,14 +78,16 @@ function App() {
         <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
           <Route path=":ipfsHash" element={<VaultEditor />} />
         </Route>
-        <Route path={RoutePaths.airdrop} element={<Airdrop />} >
-          <Route path=":walletAddress" element={<Airdrop />} />
-        </Route>
+        <Route path={RoutePaths.airdrop_machine} element={<AirdropMachine />} />
       </Routes >
-      {
-        account && hasSeenWelcomePage === "1" && showAirdropPrompt && (
-          <AirdropPrompt closePrompt={() => setShowAirdropPrompt(false)} />)
-      }
+
+      {account && hasSeenWelcomePage === "1" && (
+        <Modal
+          isShowing={showAirdropPrompt}
+          hide={toggleAirdropPrompt}>
+          <AirdropPrompt closePrompt={toggleAirdropPrompt} />
+        </Modal>
+      )}
     </>
   );
 }

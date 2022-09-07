@@ -1,0 +1,22 @@
+@import "styles/constants.scss";
+
+.faq-wrapper {
+  display: flex;
+  flex-direction: column;
+  .faq__toggle-btn {
+    font-size: $medium;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 24px;
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+  .faq__qa-container {
+    display: flex;
+    flex-direction: column;
+    p {
+      margin-bottom: 30px;
+    }
+  }
+}

@@ -2,7 +2,6 @@ import { useSelector } from "react-redux";
 import { ScreenSize, VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 import { RootState } from "../../../reducers";
 import { IVault, ISeverity } from "../../../types/types";
-import NFTMedia from "../../NFTMedia";
 import humanizeDuration from "humanize-duration";
 import { useState } from "react";
 import Modal from "../../Shared/Modal";
@@ -12,6 +11,7 @@ import { formatNumber } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
+import Media from "components/Shared/Media/Media";
 
 interface IProps {
   severity: ISeverity
@@ -57,7 +57,7 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                <NFTMedia link={severity?.["nft-metadata"]?.image} />
+                <Media link={severity?.["nft-metadata"]?.image} ipfsLink className="nft-image" />
                 <span className="view-more">
                   View NFT info
                 </span>

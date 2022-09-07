@@ -1,0 +1,67 @@
+@import "styles/constants.scss";
+
+.my-nfts-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $blue-3;
+  padding: 25px;
+  margin-top: 20px;
+  .my-nfts__title {
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: $small;
+  }
+  .my-nfts__sub-title {
+    margin-top: 5px;
+    margin-bottom: 10px;
+  }
+  .my-nfts__airdrop-nfts-container,
+  .my-nfts__deposit-nfts-container {
+    margin: 8px 0;
+    margin-bottom: 24px;
+    .my-nfts__slide {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      video {
+        width: 160px;
+      }
+    }
+  }
+  .my-nfts__no-nfts-text {
+    font-size: $xxsmall;
+    text-align: center;
+    color: $gray-2;
+  }
+  .my-nfts__info-text-container {
+    color: $white;
+    margin: 20px 0;
+    font-size: $xxsmall;
+    white-space: pre-wrap;
+    .my-nfts__info-text-1 {
+      color: $yellow;
+    }
+  }
+  .my-nfts__action-btn {
+    margin: 10px 0;
+    width: 100%;
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .my-nfts-wrapper {
+    padding: 10px;
+    .my-nfts__airdrop-nfts-container,
+    .my-nfts__deposit-nfts-container {
+      .my-nfts__slide {
+        video {
+          width: 200px;
+        }
+      }
+    }
+  }
+}

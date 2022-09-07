@@ -15,7 +15,7 @@ export default function Notification({ notification, removeNotification }: IProp
 
   const notificationColor = notification.type === NotificationType.Success ?
     Colors.turquoise : notification.type === NotificationType.Error ?
-      Colors.red : Colors.gray;
+      Colors.red : Colors.lightTurquoise;
 
   useEffect(() => {
     if (!removeNotification) return;
@@ -27,7 +27,7 @@ export default function Notification({ notification, removeNotification }: IProp
 
   return (
     <div className="notification-wrapper" style={{ backgroundColor: notificationColor }}>
-      <div>{notification.content}</div>
+      <div className="notification__content">{notification.content}</div>
       {removeNotification && <button className="dismiss-btn" onClick={removeNotification}><CloseIcon fill={Colors.black} /></button>}
     </div>
   )

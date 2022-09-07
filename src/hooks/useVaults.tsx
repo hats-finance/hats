@@ -7,11 +7,14 @@ import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
+import { INFTTokenData, useNFTTokenData } from "./useNFTTokenData";
+
 interface IVaultsContext {
   vaults?: IVault[]
   tokenPrices?: number[]
-  masters?: IMaster[]
-  withdrawSafetyPeriod?: IWithdrawSafetyPeriod
+  masters?: IMaster[],
+  nftData?: INFTTokenData,
+  withdrawSafetyPeriod?: IWithdrawSafetyPeriod,
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -20,13 +23,15 @@ export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
 export function useVaults() {
   return useContext(VaultsContext);
-}
+};
+
 
 export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>();
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
-  const { chainId, library } = useEthers();
+  const { chainId, library, account } = useEthers();
+  const nftData = useNFTTokenData(account);
 
   const { data } = useQuery<{ vaults: IVault[], masters: IMaster[] }>(
     GET_VAULTS, {
@@ -35,7 +40,6 @@ export function VaultsProvider({ children }) {
     fetchPolicy: "network-only",
     pollInterval: DATA_REFRESH_TIME
   })
-
 
   const getPrices = useCallback(async (vaults: IVault[]) => {
     if (vaults && library) {
@@ -119,7 +123,7 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults)
+    if (vaults && chainId === 1)
       getPrices(vaults)
         .then((prices) => {
           if (!cancelled) {
@@ -139,15 +143,18 @@ export function VaultsProvider({ children }) {
   const withdrawSafetyPeriod = getWithdrawSafetyPeriod(data?.masters[0].withdrawPeriod, data?.masters[0].safetyPeriod);
 
   const context: IVaultsContext = {
+    nftData,
     vaults,
     tokenPrices,
     masters: data?.masters,
     withdrawSafetyPeriod,
   };
 
-  return <VaultsContext.Provider value={context}>
-    {children}
-  </VaultsContext.Provider>
+  return (
+    <VaultsContext.Provider value={context}>
+      {children}
+    </VaultsContext.Provider>
+  )
 }
 
 export const fixObject = (description: any): IVaultDescription => {

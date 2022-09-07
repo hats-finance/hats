@@ -117,6 +117,6 @@ export default function Honeypots({ showDeposit }: IProps) {
           <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
         </Modal>
       }
-    </div >
+    </div>
   )
 }

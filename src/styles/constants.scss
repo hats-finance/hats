@@ -6,7 +6,8 @@ $modal-element-padding: 40px;
 $modal-element-padding-mobile: 20px;
 $element-max-width: 1220px;
 $header-button-hight: 56px;
-$notifications-container-z-index: 20;
+$notifications-container-z-index: 20000;
+$nft-card-z-index: 9999;
 
 /* colors */
 $white: #FFFFFF;
@@ -15,15 +16,22 @@ $dark-blue: #000723;
 $moderate-blue: #000930;
 $strong-blue: #001571;
 $blue: #000C3B;
+$blue-2: #101B4E;
+$blue-3: #1C2C74;
+$blue-4: #6472AF;
 $field-blue: #0C1436;
 $light-blue: #041558;
+$light-blue-2: #4C80D0;
 $purple-blue: #1F2748;
 $vault-blue: #0524A7;
 $turquoise: #8AFCFD;
+$turquoise-1: #58CCB1;
 $turquoise-2: #428A8D;
+$turquoise-3: #24A19B;
 $dark-turquoise: #9BC8CA;
 $dirty-turquoise: #64C1C5;
 $red: #EB889D;
+$red-2: #F24822;
 $strong-red: #E66480;
 $green: green;
 $bright-green: #05FF00;
@@ -32,10 +40,12 @@ $orange: #D1891D;
 $yellow: #F2C94C;
 $transparent-black: rgba(0,0,0,0.2); // for modal
 $gray: #C6C6C6;
+$gray-2: #8D8D8D;
 $light-gray: #212842;
 $azure: #13A8FD;
 $purple: #4F72EB;
 $strong-purple: #4B239F;
+$strong-purple-2: #5662F6;
 
 /* pie chart colors */
 $vested-token: #15686B;
@@ -55,6 +65,7 @@ $vault-editor-border-2: #212842;
 /* font sizes */
 $xlarge: 48px;
 $large: 36px;
+$medium-2: 32px;
 $medium: 24px;
 $moderate: 18px;
 $small: 16px;
@@ -87,6 +98,6 @@ $spacing-25: 200px;
 
 /* others */
 $mobile-breakpoint: 1000px;
-$small-screen-breakpoint: 1440px;
+$small-screen-breakpoint: 1600px;
 $black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal
 $sidebar-shadow: rgba(0, 0, 0, 0.25);

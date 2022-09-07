@@ -1,0 +1,62 @@
+@import "styles/constants.scss";
+
+.nft-airdrop-wrapper {
+  display: flex;
+  flex-direction: column;
+  white-space: pre-line;
+  section {
+    margin: 30px 0;
+  }
+  .nft-airdrop__nfts-wrapper {
+    margin: 15px 0;
+    .swiper-wrapper {
+      .swiper-slide {
+        display: flex;
+        justify-content: center;
+        img {
+          width: 150px;
+        }
+      }
+    }
+  }
+  .nft-airdrop__button-container {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    background-color: $field-blue;
+    z-index: 100;
+    margin: 0px -#{$modal-element-padding};
+    padding: 0px $modal-element-padding;
+    box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
+    padding-top: 40px;
+    button {
+      width: 100%;
+    }
+  }
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .nft-airdrop__error {
+    color: $red;
+    margin-top: 5px;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .nft-airdrop-wrapper {
+    .nft-airdrop__nfts-wrapper {
+      .swiper-wrapper {
+        .swiper-slide {
+          video {
+            width: 200px;
+          }
+        }
+      }
+    }
+    .nft-airdrop__button-container {
+      margin: 0px -#{$modal-element-padding-mobile};
+      padding: 20px $modal-element-padding-mobile;
+    }
+  }
+}
