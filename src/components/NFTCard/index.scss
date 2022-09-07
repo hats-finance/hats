@@ -93,6 +93,15 @@
     }
   }
 }
+@media only screen and (max-width: $small-screen-breakpoint) {
+  .nft-card-full-screen-wrapper {
+    .nft-card-full-screen__container {
+      .nft-card-full-screen__video {
+        width: 40%;
+      }
+    }
+  }
+}
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .nft-card-wrapper {
@@ -108,11 +117,10 @@
       font-size: $xxsmall;
     }
   }
-
   .nft-card-full-screen-wrapper {
     .nft-card-full-screen__container {
       .nft-card-full-screen__video {
-        width: 100%;
+        width: 40%;
       }
     }
   }
