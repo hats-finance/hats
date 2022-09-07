@@ -6,18 +6,14 @@ import { INFTTokenInfo } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
-import { HATVaultsNFTContract, ScreenSize } from "constants/constants";
+import { HATVaultsNFTContract } from "constants/constants";
 import { useEscapePressed } from "hooks/useKeyPress";
-import { RootState } from "reducers";
-import { useSelector } from "react-redux";
 
 interface IProps {
   tokenInfo: INFTTokenInfo
-  width?: string // can be any valid css width value
 }
 
-export default function NFTCard({ tokenInfo, width }: IProps) {
-  const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
+export default function NFTCard({ tokenInfo }: IProps) {
   const { metadata, isRedeemed, tokenId } = tokenInfo;
   const { chainId } = useEthers();
   const { t } = useTranslation();
@@ -47,7 +43,7 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
         <div className="nft-card-full-screen-wrapper">
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
           <div className="nft-card-full-screen__container">
-            <Media link={metadata.animation_url} ipfsLink width="100%" maxWidth={screenSize === ScreenSize.Desktop ? "40%" : ""} />
+            <Media link={metadata.animation_url} ipfsLink className="nft-card-full-screen__video" />
             {isRedeemed && <a href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")}</a>}
           </div>
         </div>, document.body
@@ -57,7 +53,7 @@ export default function NFTCard({ tokenInfo, width }: IProps) {
 
   return (
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>
-      <Media link={metadata.image} ipfsLink width={width} />
+      <Media link={metadata.image} ipfsLink />
       <div className="nft-card__info-container">
         <div className="nft-card__info-title">{metadata.name}</div>
         <div className="nft-card__info-element">
