@@ -57,7 +57,7 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                <Media link={severity?.["nft-metadata"]?.image} ipfsLink maxHeight="350px" />
+                <Media link={severity?.["nft-metadata"]?.image} ipfsLink className="nft-image" />
                 <span className="view-more">
                   View NFT info
                 </span>

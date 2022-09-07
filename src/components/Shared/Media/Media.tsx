@@ -3,17 +3,16 @@ import "./index.scss";
 
 interface IProps {
   link: string;
-  width?: string; // can be any valid css width value
+  poster?: string;
   ipfsLink?: boolean;
-  maxHeight?: string;
-  maxWidth?: string;
+  className?: string;
 }
 
-export default function Media({ link, width, ipfsLink, maxHeight, maxWidth }: IProps) {
+export default function Media({ link, poster, ipfsLink, className }: IProps) {
   return (
     <div className="media-wrapper">
       {/* The poster is needed here in case the media is not a video */}
-      <video loop autoPlay muted style={{ width: width, maxHeight: maxHeight, maxWidth: maxWidth }} playsInline poster={ipfsLink ? ipfsTransformUri(link) : link}>
+      <video loop autoPlay muted className={className} playsInline poster={poster ? poster : ipfsLink ? ipfsTransformUri(link) : link}>
         <source src={ipfsLink ? ipfsTransformUri(link) : link} type="video/mp4" />
       </video>
     </div>

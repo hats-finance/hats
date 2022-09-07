@@ -12,16 +12,19 @@ import FAQ from "./components/FAQ/FAQ";
 import "./index.scss";
 import Tooltip from "rc-tooltip";
 import InfoIcon from "assets/icons/info.icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function AirdropMachine() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const [videoEnded, setVideoEnded] = useState(false);
 
-  document.getElementById("airdropMachineVideo")?.addEventListener("ended", () => {
-    setVideoEnded(true);
-  }, false);
+  useEffect(() => {
+    const videoElement = document.getElementById("airdropMachineVideo");
+    videoElement?.addEventListener("ended", () => setVideoEnded(true));
+
+    return () => videoElement?.removeEventListener("ended", () => setVideoEnded(true));
+  }, [setVideoEnded])
 
   const scrollToStart = () => {
     document.getElementById("airdropStart")?.scrollIntoView({ behavior: "smooth", block: "nearest" });

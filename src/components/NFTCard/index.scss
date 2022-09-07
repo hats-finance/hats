@@ -88,6 +88,9 @@
     height: 100%;
     align-items: center;
     flex-direction: column;
+    .nft-card-full-screen__video {
+      width: 40%;
+    }
   }
 }
 
@@ -108,8 +111,8 @@
 
   .nft-card-full-screen-wrapper {
     .nft-card-full-screen__container {
-      video {
-        width: 90%;
+      .nft-card-full-screen__video {
+        width: 100%;
       }
     }
   }
