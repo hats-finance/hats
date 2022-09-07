@@ -31,9 +31,9 @@ export interface INFTTokenData {
   redeemShares: () => Promise<any>;
   redeemMultipleFromSharesState: TransactionStatus;
   addressInfo?: AirdropMachineWallet;
-  airdropToRedeem: boolean | undefined;
-  depositToRedeem: boolean | undefined;
-  loadingTree: boolean;
+  airdropToRedeem: boolean;
+  depositToRedeem: boolean;
+  treeTokens?: INFTTokenInfo[];
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -47,7 +47,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
     contract, "redeemMultipleFromShares", { transactionName: Transactions.RedeemDepositNFTs });
   const [treeTokens, setTreeTokens] = useState<INFTTokenInfo[] | undefined>();
-  const loadingTree = treeTokens ? false : true;
   const [proofTokens, setProofTokens] = useState<INFTTokenInfo[] | undefined>();
   const nftTokens = useMemo(() => [...(treeTokens || [] as INFTTokenInfo[]), ...(proofTokens || [])].reduce((prev, curr) => {
     const exists = prev.find(nft => nft.tokenId.eq(curr.tokenId));
@@ -60,15 +59,15 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       prev.push(curr);
     return prev;
   }, [] as INFTTokenInfo[]), [treeTokens, proofTokens]);
+
   const prevAddress = usePrevious(address);
   const prevChainId = usePrevious(chainId);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
   const addressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === address?.toLowerCase());
-
-  const airdropToRedeem = useMemo(() => nftTokens.filter(nft => nft.isMerkleTree).some(nft => !nft.isRedeemed), [nftTokens]);
-  const depositToRedeem = useMemo(() => nftTokens.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed), [nftTokens]);
+  const airdropToRedeem = useMemo(() => nftTokens?.filter(nft => nft.isMerkleTree).some(nft => !nft.isRedeemed), [nftTokens]);
+  const depositToRedeem = useMemo(() => nftTokens?.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed), [nftTokens]);
 
   useEffect(() => {
     if (address !== prevAddress || chainId !== prevChainId) {
@@ -176,7 +175,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [addressInfo, getTreeEligibility]);
 
   const buildProofsForRedeemables = useCallback(() => {
-    if (!merkleTree) {
+    if (!merkleTree || !nftTokens) {
       return;
     }
     /**
@@ -219,6 +218,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids])
 
   const redeemShares = useCallback(async () => {
+    if (!nftTokens) return;
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
     const hatVaults = depositRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = depositRedeemables.map(nft => nft.pid);
@@ -237,7 +237,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     addressInfo,
     airdropToRedeem,
     depositToRedeem,
-    loadingTree,
+    treeTokens
   };
 };
 
