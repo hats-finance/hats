@@ -89,16 +89,14 @@
     align-items: center;
     flex-direction: column;
     .nft-card-full-screen__video {
-      width: 40%;
-      object-fit: fill;
+      height: 80vh;
     }
-  }
-}
-@media only screen and (max-width: $small-screen-breakpoint) {
-  .nft-card-full-screen-wrapper {
-    .nft-card-full-screen__container {
-      .nft-card-full-screen__video {
-        width: 40%;
+    .nft-card-full-screen__opensea-link {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+      img {
+        margin-left: 5px;
       }
     }
   }
@@ -116,13 +114,6 @@
       height: 30px;
       line-height: 30px;
       font-size: $xxsmall;
-    }
-  }
-  .nft-card-full-screen-wrapper {
-    .nft-card-full-screen__container {
-      .nft-card-full-screen__video {
-        width: 40%;
-      }
     }
   }
 }

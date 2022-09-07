@@ -8,6 +8,8 @@ import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
 import { HATVaultsNFTContract } from "constants/constants";
 import { useEscapePressed } from "hooks/useKeyPress";
+import { ipfsTransformUri } from "utils";
+import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 
 interface IProps {
   tokenInfo: INFTTokenInfo
@@ -43,8 +45,8 @@ export default function NFTCard({ tokenInfo }: IProps) {
         <div className="nft-card-full-screen-wrapper">
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
           <div className="nft-card-full-screen__container">
-            <Media link={metadata.animation_url} ipfsLink poster={metadata.image} className="nft-card-full-screen__video" />
-            {isRedeemed && <a href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")}</a>}
+            <Media link={metadata.animation_url} ipfsLink poster={ipfsTransformUri(metadata.image)} className="nft-card-full-screen__video" />
+            {isRedeemed && <a className="nft-card-full-screen__opensea-link" href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")} <img src={OpenInNewTabIcon} alt="" /> </a>}
           </div>
         </div>, document.body
       )
