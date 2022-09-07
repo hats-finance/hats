@@ -41,7 +41,8 @@ const DATA_REFRESH_TIME = 10000;
 export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, chainId } = useEthers();
   const isSupportedNetwork = useSupportedNetwork();
-  const [contract, setContract] = useState<Contract>();
+  const [actualContract, setActualContract] = useState<Contract>();
+  const contract = useDebounce(actualContract, 500);
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
   const { send: redeemMultipleFromShares, state: redeemMultipleFromSharesState } = useContractFunction(
@@ -69,6 +70,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const airdropToRedeem = useMemo(() => nftTokens?.filter(nft => nft.isMerkleTree).some(nft => !nft.isRedeemed), [nftTokens]);
   const depositToRedeem = useMemo(() => nftTokens?.filter(nft => nft.isDeposit)?.some(nft => !nft.isRedeemed), [nftTokens]);
 
+
   useEffect(() => {
     if (address !== prevAddress || chainId !== prevChainId) {
       setTreeTokens(undefined);
@@ -78,7 +80,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (chainId && isSupportedNetwork)
-      setContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
+      setActualContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
   }, [library, chainId, isSupportedNetwork])
 
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(
@@ -255,4 +257,25 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
 
 const hashToken = (hatVaults: string, pid: number, account: string, tier: number) => {
   return Buffer.from(solidityKeccak256(['address', 'uint256', 'address', 'uint8'], [hatVaults, pid, account, tier]).slice(2), 'hex');
+}
+
+function useDebounce<T>(value: T, delay: number): T {
+  // State and setters for debounced value
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(
+    () => {
+      // Update debounced value after delay
+      const handler = setTimeout(() => {
+        setDebouncedValue(value);
+      }, delay);
+      // Cancel the timeout if value changes (also on delay change or unmount)
+      // This is how we prevent debounced value from updating if value is changed ...
+      // .. within the delay period. Timeout gets cleared and restarted.
+      return () => {
+        clearTimeout(handler);
+      };
+    },
+    [value, delay] // Only re-call effect if value or delay changes
+  );
+  return debouncedValue;
 }
