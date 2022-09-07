@@ -41,6 +41,19 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
+      .not-eligible__criterias-top__learn-more {
+        display: flex;
+        align-items: center;
+        text-decoration: underline;
+        width: fit-content;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
+        img {
+          margin-left: 5px;
+        }
+      }
     }
     .not-eligible__criteria {
       display: flex;

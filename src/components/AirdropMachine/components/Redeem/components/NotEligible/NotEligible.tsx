@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import RadioButton from "assets/icons/radio-button.svg";
 import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
+import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import "./index.scss";
 
 export default function NotEligible() {
@@ -24,7 +25,7 @@ export default function NotEligible() {
       <div className="not-eligible__criterias-wrapper">
         <div className="not-eligible__criterias-top">
           <b>{t("AirdropMachine.NotEligible.text-3")}</b>
-          <u>{t("AirdropMachine.NotEligible.text-4")}</u>
+          <div className="not-eligible__criterias-top__learn-more">{t("AirdropMachine.NotEligible.text-4")} <img src={OpenInNewTabIcon} alt="" /></div>
         </div>
         <div className="not-eligible__criteria">
           <img src={RadioButton} alt="radio button" />

@@ -8,6 +8,7 @@ import AirdropAnimation from "assets/videos/airdrop-machine-welcome.mp4";
 import AirdropAnimationPoster from "assets/images/airdrop-machine-welcome-poster.png";
 import AirdropStartButton from "assets/images/airdrop-machine-start.gif";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
+import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import FAQ from "./components/FAQ/FAQ";
 import "./index.scss";
 import Tooltip from "rc-tooltip";
@@ -64,6 +65,7 @@ export default function AirdropMachine() {
               {t("AirdropMachine.section-2.title")}
             </div>
             <div className="airdrop-machine__section-content">
+              <span className="airdrop-machine__learn-more">{t("AirdropMachine.section-2.learn-more")} <img src={OpenInNewTabIcon} alt="" /></span>
               <div className="airdrop-machine__eligibility-types">
                 <div className="airdrop-machine__eligibility-type">
                   <img src={RadioButtonChecked} alt="radio button" />

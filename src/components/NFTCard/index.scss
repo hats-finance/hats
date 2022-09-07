@@ -90,6 +90,7 @@
     flex-direction: column;
     .nft-card-full-screen__video {
       width: 40%;
+      object-fit: fill;
     }
   }
 }

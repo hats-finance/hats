@@ -36,6 +36,19 @@
     }
     .token-eligibility-info__breakdown_element-value {
       white-space: nowrap;
+      &.learn-more {
+        display: flex;
+        align-items: center;
+        text-decoration: underline;
+        width: fit-content;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.9;
+        }
+        img {
+          margin-left: 5px;
+        }
+      }
     }
     &.total {
       border-top: 1px solid $gray;
