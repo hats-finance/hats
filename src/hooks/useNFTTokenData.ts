@@ -34,6 +34,14 @@ export interface INFTTokenData {
   airdropToRedeem: boolean;
   depositToRedeem: boolean;
   treeTokens?: INFTTokenInfo[];
+  proofTokens?: INFTTokenInfo[];
+  toggleEmbassy: boolean;
+  checkDepositEligibility: (hint: IVaultWithAddress) => void;
+}
+
+interface IVaultWithAddress {
+  pid: number;
+  masterAddress: string;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -42,6 +50,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, chainId } = useEthers();
   const isSupportedNetwork = useSupportedNetwork();
   const [actualContract, setActualContract] = useState<Contract>();
+  const [toggleEmbassy, setToggleEmbassy] = useState<boolean>(false);
   const contract = useDebounce(actualContract, 500);
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
@@ -93,10 +102,12 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const prevStakerData = usePrevious(stakerData);
 
-  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
+  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address })) as IVaultWithAddress[] | undefined;
 
-  const getEligibilityForPids = useCallback(async () => {
-    if (!pidsWithAddress || !contract) return;
+  const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
+    if (!contract) return;
+    console.log("Getting eligibility for pids", pidsWithAddress);
+
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -115,13 +126,36 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }))
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    setProofTokens(eligibilityPerPid);
-  }, [contract, address, pidsWithAddress])
+    console.log("Eligibility for pids", eligibilityPerPid);
 
+    setProofTokens(eligibilityPerPid);
+    return eligibilityPerPid
+  }, [contract, address])
+
+  const checkDepositEligibility = useCallback(async (hint: IVaultWithAddress) => {
+    if (!contract || !pidsWithAddress) return;
+    console.log("Checking deposit eligibility for", hint);
+    const found = pidsWithAddress?.find(pidWithAddress => pidWithAddress.pid === hint.pid && pidWithAddress.masterAddress === hint.masterAddress);
+    const eligibilityPerPid = await getEligibilityForPids(found ? pidsWithAddress : [hint, ...pidsWithAddress]);
+    if (eligibilityPerPid && proofTokens && eligibilityPerPid.length > proofTokens.length)
+      setToggleEmbassy(true);
+  }, [getEligibilityForPids, pidsWithAddress, contract, proofTokens])
+
+  // useEffect(() => {
+  //   if (afterDepositProofTokens && proofTokens && proofTokens.length > afterDepositProofTokens.length) {
+  //     console.log("after deposit proof tokens", afterDepositProofTokens);
+  //     console.log("compared to current", proofTokens);
+
+  //     setToggleEmbassy(true)
+  //     setAfterDepositProofTokens(undefined);
+  //   }
+  // }, [afterDepositProofTokens, proofTokens])
 
   useEffect(() => {
-    if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
-      getEligibilityForPids();
+    console.log({ stakerData, prevStakerData, pidsWithAddress });
+
+    if (stakerData && prevStakerData !== stakerData && pidsWithAddress) {
+      getEligibilityForPids(pidsWithAddress);
     }
 
   }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
@@ -214,10 +248,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const redeemSharesTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemDepositNFTs);
   const prevRedeemSharesTransaction = usePrevious(redeemSharesTransaction);
   useEffect(() => {
-    if (prevRedeemSharesTransaction && !redeemSharesTransaction) {
-      getEligibilityForPids();
+    if (prevRedeemSharesTransaction && !redeemSharesTransaction && pidsWithAddress) {
+      getEligibilityForPids(pidsWithAddress);
     }
-  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids])
+  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids, proofTokens, pidsWithAddress])
 
   const redeemShares = useCallback(async () => {
     if (!nftTokens) return;
@@ -239,7 +273,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     addressInfo,
     airdropToRedeem,
     depositToRedeem,
-    treeTokens
+    treeTokens,
+    proofTokens,
+    toggleEmbassy,
+    checkDepositEligibility
   };
 };
 

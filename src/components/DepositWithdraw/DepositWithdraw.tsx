@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import moment from "moment";
 import millify from "millify";
@@ -78,27 +78,14 @@ export default function DepositWithdraw(props: IProps) {
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
-  const [lastDepositedPid, setLastDepositedPid] = useState<string | undefined>();
-  const prevLastDepositedPid = usePrevious(lastDepositedPid);
-
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
     await depositAndClaim(selectedPid, userInputValue);
-    setLastDepositedPid(selectedPid);
-  }, [selectedPid, userInputValue, depositAndClaim])
-
-  const hasDepositNftToRedeem = useMemo(() => nftData?.nftTokens?.filter(nft => nft.isDeposit && !nft.isRedeemed).some(nft => String(nft.pid) === lastDepositedPid), [nftData?.nftTokens, lastDepositedPid]);
-
-  useEffect(() => {
-    if (lastDepositedPid && lastDepositedPid !== prevLastDepositedPid && hasDepositNftToRedeem) {
-      /**
-       * NOTE: The popup appears after each deposit as long as the user is eligible for deposit nft from this vault.
-       * KNOWN ISSUE: If the user keeps the modal open after one deposit the popup won't appear again after another depsoit
-       * because lastDepositedPid === prevLastDepositedPid
-       */
+    const newDepositNfts = await nftData?.checkDepositEligibility({ pid: Number(selectedPid), masterAddress: master.address });
+    if (newDepositNfts) {
       toggleEmbassyPrompt();
     }
-  }, [toggleEmbassyPrompt, hasDepositNftToRedeem, lastDepositedPid, prevLastDepositedPid, depositAndClaimState.status])
+  }, [selectedPid, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -113,7 +100,9 @@ export default function DepositWithdraw(props: IProps) {
 
   const handleWithdrawAndClaim = useCallback(async () => {
     withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
-  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim]);
+    // refresh deposit eligibility
+    await nftData?.checkDepositEligibility({ pid: Number(selectedPid), masterAddress: master.address });
+  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
