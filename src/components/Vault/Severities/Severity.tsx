@@ -7,7 +7,7 @@ import { useState } from "react";
 import Modal from "../../Shared/Modal";
 import NFTPrize from "../../NFTPrize";
 import ContractsCovered from "../ContractsCovered";
-import { formatNumber } from "../../../utils";
+import { formatNumber, ipfsTransformUri } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
@@ -57,7 +57,7 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                <Media link={severity?.["nft-metadata"]?.image} ipfsLink className="nft-image" />
+                <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
                 <span className="view-more">
                   View NFT info
                 </span>

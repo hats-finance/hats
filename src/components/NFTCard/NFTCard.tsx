@@ -45,7 +45,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
         <div className="nft-card-full-screen-wrapper">
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
           <div className="nft-card-full-screen__container">
-            <Media link={metadata.animation_url} ipfsLink poster={ipfsTransformUri(metadata.image)} className="nft-card-full-screen__video" />
+            <Media link={ipfsTransformUri(metadata.animation_url)} poster={ipfsTransformUri(metadata.image)} className="nft-card-full-screen__video" />
             {isRedeemed && <a className="nft-card-full-screen__opensea-link" href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")} <img src={OpenInNewTabIcon} alt="" /> </a>}
           </div>
         </div>, document.body
@@ -55,7 +55,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
 
   return (
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>
-      <Media link={metadata.image} ipfsLink />
+      <Media link={ipfsTransformUri(metadata.image)} />
       <div className="nft-card__info-container">
         <div className="nft-card__info-title">{metadata.name}</div>
         <div className="nft-card__info-element">
