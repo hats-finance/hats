@@ -87,7 +87,7 @@ export interface INFTMetaData {
 
 export interface IStaker {
   id: string
-  pid: number
+  pid: string
   createdAt: string
   address: string
   vault: IVault

@@ -35,12 +35,11 @@ export interface INFTTokenData {
   depositToRedeem: boolean;
   treeTokens?: INFTTokenInfo[];
   proofTokens?: INFTTokenInfo[];
-  toggleEmbassy: boolean;
   checkDepositEligibility: (hint: IVaultWithAddress) => void;
 }
 
 interface IVaultWithAddress {
-  pid: number;
+  pid: string;
   masterAddress: string;
 }
 
@@ -50,7 +49,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const { library, chainId } = useEthers();
   const isSupportedNetwork = useSupportedNetwork();
   const [actualContract, setActualContract] = useState<Contract>();
-  const [toggleEmbassy, setToggleEmbassy] = useState<boolean>(false);
   const contract = useDebounce(actualContract, 500);
   const { send: redeemMultipleFromTree, state: redeemMultipleFromTreeState } =
     useContractFunction(contract, "redeemMultipleFromTree", { transactionName: Transactions.RedeemTreeNFTs });
@@ -106,8 +104,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
-    console.log("Getting eligibility for pids", pidsWithAddress);
-
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -120,13 +116,12 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...pidWithAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
+        tokens.push({ pid: Number(pidWithAddress.pid), masterAddress: pidWithAddress.masterAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
       }
       return tokens;
     }))
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    console.log("Eligibility for pids", eligibilityPerPid);
 
     setProofTokens(eligibilityPerPid);
     return eligibilityPerPid
@@ -134,30 +129,15 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const checkDepositEligibility = useCallback(async (hint: IVaultWithAddress) => {
     if (!contract || !pidsWithAddress) return;
-    console.log("Checking deposit eligibility for", hint);
-    const found = pidsWithAddress?.find(pidWithAddress => pidWithAddress.pid === hint.pid && pidWithAddress.masterAddress === hint.masterAddress);
+    const found = hint ? pidsWithAddress?.find(pidWithAddress => pidWithAddress.pid === hint.pid && pidWithAddress.masterAddress === hint.masterAddress) : false;
     const eligibilityPerPid = await getEligibilityForPids(found ? pidsWithAddress : [hint, ...pidsWithAddress]);
-    if (eligibilityPerPid && proofTokens && eligibilityPerPid.length > proofTokens.length)
-      setToggleEmbassy(true);
+    return eligibilityPerPid && proofTokens && eligibilityPerPid.length > proofTokens.length;
   }, [getEligibilityForPids, pidsWithAddress, contract, proofTokens])
 
-  // useEffect(() => {
-  //   if (afterDepositProofTokens && proofTokens && proofTokens.length > afterDepositProofTokens.length) {
-  //     console.log("after deposit proof tokens", afterDepositProofTokens);
-  //     console.log("compared to current", proofTokens);
-
-  //     setToggleEmbassy(true)
-  //     setAfterDepositProofTokens(undefined);
-  //   }
-  // }, [afterDepositProofTokens, proofTokens])
-
   useEffect(() => {
-    console.log({ stakerData, prevStakerData, pidsWithAddress });
-
     if (stakerData && prevStakerData !== stakerData && pidsWithAddress) {
       getEligibilityForPids(pidsWithAddress);
     }
-
   }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
@@ -275,7 +255,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     depositToRedeem,
     treeTokens,
     proofTokens,
-    toggleEmbassy,
     checkDepositEligibility
   };
 };
