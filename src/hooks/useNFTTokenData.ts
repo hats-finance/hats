@@ -142,6 +142,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !addressInfo) return;
+    console.log("Checking eligibility for tree", addressInfo);
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -150,12 +151,14 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
+        if (!tokenUri) return null;
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
         tokens.push({ ...nft, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
-    setTreeTokens(treeNfts.flat());
+    const withoutNulls = treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][];
+    setTreeTokens(withoutNulls.flat());
   }, [contract, address, addressInfo])
 
   const getMerkleTree = useCallback(async () => {
