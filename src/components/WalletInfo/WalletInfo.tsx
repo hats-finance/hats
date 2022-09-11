@@ -24,7 +24,6 @@ export default function WalletInfo() {
   const hatsBalanceString = (+hatsBalance).toFixed(4);
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const { isShowing: isShowingMyAccount, toggle: toggleMyAccount } = useModal();
-  
   return (
     <div className="wallet-info-wrapper">
       <button className="wallet-info__my-account-btn" onClick={toggleMyAccount}>
@@ -32,6 +31,7 @@ export default function WalletInfo() {
         {hatsBalance && screenSize === ScreenSize.Desktop && (
           <span className="wallet-info__my-account-hat-balance">{hatsBalanceString} HAT</span>
         )}
+        {!nftData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />}
         {(nftData?.airdropToRedeem || nftData?.depositToRedeem) && <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />}
       </button>
       {screenSize === ScreenSize.Desktop &&

@@ -34,6 +34,13 @@ export interface INFTTokenData {
   airdropToRedeem: boolean;
   depositToRedeem: boolean;
   treeTokens?: INFTTokenInfo[];
+  proofTokens?: INFTTokenInfo[];
+  checkDepositEligibility: (hint: IVaultWithAddress) => void;
+}
+
+interface IVaultWithAddress {
+  pid: string;
+  masterAddress: string;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -93,10 +100,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const prevStakerData = usePrevious(stakerData);
 
-  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address }));
+  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address })) as IVaultWithAddress[] | undefined;
 
-  const getEligibilityForPids = useCallback(async () => {
-    if (!pidsWithAddress || !contract) return;
+  const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
+    if (!contract) return;
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -109,21 +116,28 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...pidWithAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
+        tokens.push({ pid: Number(pidWithAddress.pid), masterAddress: pidWithAddress.masterAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
       }
       return tokens;
     }))
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-    setProofTokens(eligibilityPerPid);
-  }, [contract, address, pidsWithAddress])
 
+    setProofTokens(eligibilityPerPid);
+    return eligibilityPerPid
+  }, [contract, address])
+
+  const checkDepositEligibility = useCallback(async (hint: IVaultWithAddress) => {
+    if (!contract || !pidsWithAddress) return;
+    const found = hint ? pidsWithAddress?.find(pidWithAddress => pidWithAddress.pid === hint.pid && pidWithAddress.masterAddress === hint.masterAddress) : false;
+    const eligibilityPerPid = await getEligibilityForPids(found ? pidsWithAddress : [hint, ...pidsWithAddress]);
+    return eligibilityPerPid && proofTokens && eligibilityPerPid.length > proofTokens.length;
+  }, [getEligibilityForPids, pidsWithAddress, contract, proofTokens])
 
   useEffect(() => {
-    if (stakerData && prevStakerData !== stakerData && pidsWithAddress?.length) {
-      getEligibilityForPids();
+    if (stakerData && prevStakerData !== stakerData && pidsWithAddress) {
+      getEligibilityForPids(pidsWithAddress);
     }
-
   }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
 
   const getTreeEligibility = useCallback(async () => {
@@ -214,10 +228,10 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const redeemSharesTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemDepositNFTs);
   const prevRedeemSharesTransaction = usePrevious(redeemSharesTransaction);
   useEffect(() => {
-    if (prevRedeemSharesTransaction && !redeemSharesTransaction) {
-      getEligibilityForPids();
+    if (prevRedeemSharesTransaction && !redeemSharesTransaction && pidsWithAddress) {
+      getEligibilityForPids(pidsWithAddress);
     }
-  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids])
+  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids, proofTokens, pidsWithAddress])
 
   const redeemShares = useCallback(async () => {
     if (!nftTokens) return;
@@ -239,7 +253,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     addressInfo,
     airdropToRedeem,
     depositToRedeem,
-    treeTokens
+    treeTokens,
+    proofTokens,
+    checkDepositEligibility
   };
 };
 

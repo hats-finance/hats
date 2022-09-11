@@ -22,6 +22,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
   const [fullScreen, setFullScreen] = useState(false);
   const tier = metadata.attributes.find(attr => attr.trait_type === "Trust Level")?.value;
   const vaultName = metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
+  const roleName = metadata.attributes.find(attr => attr.trait_type === "Role")?.value;
   const escapePressed = useEscapePressed();
 
   useEffect(() => {
@@ -57,7 +58,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>
       <Media link={ipfsTransformUri(metadata.image)} />
       <div className="nft-card__info-container">
-        <div className="nft-card__info-title">{metadata.name}</div>
+        {/* <div className="nft-card__info-title">{roleName}</div> */}
         <div className="nft-card__info-element">
           <div className="nft-card__info-element-title">{t("NFTCard.vault-embassy")}</div>
           <div className="nft-card__info-element-value">{vaultName}</div>
