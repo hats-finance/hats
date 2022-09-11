@@ -82,7 +82,6 @@ export default function DepositWithdraw(props: IProps) {
   const handleDepositAndClaim = useCallback(async () => {
     await depositAndClaim(selectedPid, userInputValue);
     const newDepositNfts = await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
-    console.log("newDepositNfts", newDepositNfts);
 
     if (newDepositNfts) {
       console.log("toggling embassy prompt");
