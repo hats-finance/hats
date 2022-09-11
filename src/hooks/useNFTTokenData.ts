@@ -104,6 +104,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
+    console.log("Checking eligibility for pids", pidsWithAddress);
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -142,6 +143,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !addressInfo) return;
+    console.log("Checking eligibility for tree", addressInfo);
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
