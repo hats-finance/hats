@@ -104,7 +104,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
-    console.log("Checking eligibility for pids", pidsWithAddress);
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
