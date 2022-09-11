@@ -10,6 +10,7 @@ import "./index.scss";
 import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
+import { EMBASSY_LEARN_MORE } from "constants/constants";
 
 export default function TokenEligibilityInfo() {
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ export default function TokenEligibilityInfo() {
           <div className="token-eligibility-info__breakdown_element-name">
             <b>{t("AirdropMachine.TokenEligibilityInfo.text-3")}</b>
           </div>
-          <div className="token-eligibility-info__breakdown_element-value learn-more">
+          <div onClick={() => window.open(EMBASSY_LEARN_MORE)} className="token-eligibility-info__breakdown_element-value learn-more">
             {t("AirdropMachine.TokenEligibilityInfo.text-4")} <img src={OpenInNewTabIcon} alt="" />
           </div>
         </div>
