@@ -27,6 +27,7 @@
     position: relative;
     border-radius: 3px;
     overflow: scroll;
+    max-height: 100vh;
     .modal-header {
       display: flex;
       justify-content: space-between;
