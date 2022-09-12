@@ -107,6 +107,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
+      const tiers = await contract.getTierFromShares(proxyAddress, pid, address);
       const tokens: INFTTokenInfo[] = [];
       for (let tier = 1; tier <= 3; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
@@ -155,8 +156,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       }
       return tokens;
     }));
-    const withoutNulls = treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][];
-    setTreeTokens(withoutNulls.flat());
+    setTreeTokens(treeNfts.flat());
   }, [contract, address, addressInfo])
 
   const getMerkleTree = useCallback(async () => {
