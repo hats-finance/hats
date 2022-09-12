@@ -115,6 +115,10 @@
         padding-left: 20px;
         padding-right: 20px;
         text-align: center;
+        .airdrop-machine__learn-more {
+          width: 100%;
+          justify-content: center;
+        }
         .airdrop-machine__title-wrapper {
           padding: unset;
           font-size: $small;

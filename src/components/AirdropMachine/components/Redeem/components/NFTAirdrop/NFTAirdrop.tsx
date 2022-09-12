@@ -44,6 +44,7 @@ export default function NFTAirdrop() {
       </section>
       <div className="nft-airdrop__nfts-wrapper">
         <Swiper
+          spaceBetween={20}
           modules={[Navigation, Pagination, Scrollbar, A11y]}
           slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
           speed={500}

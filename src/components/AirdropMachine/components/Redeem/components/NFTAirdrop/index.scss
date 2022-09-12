@@ -27,8 +27,9 @@
     z-index: 100;
     margin: 0px -#{$modal-element-padding};
     padding: 0px $modal-element-padding;
-    box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
     padding-top: 40px;
+    padding-bottom: 20px;
+    box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
     button {
       width: 100%;
     }
@@ -57,6 +58,7 @@
     .nft-airdrop__button-container {
       margin: 0px -#{$modal-element-padding-mobile};
       padding: 20px $modal-element-padding-mobile;
+      padding-bottom: unset;
     }
   }
 }

@@ -59,6 +59,9 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .token-eligibility-info__total-hats-container {
+    .token-eligibility-info__address {
+      text-align: left;
+    }
     .token-eligibility-info__total-hats {
       padding: 10px;
       .token-eligibility-info__hats-logo {

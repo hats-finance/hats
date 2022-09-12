@@ -41,8 +41,10 @@ export default function EmbassyNftTicketPrompt() {
   return (
     <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
       <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
+      <div className="embassy-nft-ticket__title">{t("EmbassyNftTicketPrompt.title")}</div>
       {t("EmbassyNftTicketPrompt.text")}
       <Swiper
+        spaceBetween={20}
         modules={[Navigation, Pagination, Scrollbar, A11y]}
         slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
         speed={500}

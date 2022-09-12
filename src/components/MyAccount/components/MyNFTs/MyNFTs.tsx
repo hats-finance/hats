@@ -84,6 +84,7 @@ export default function MyNFTs() {
       <div className="my-nfts__airdrop-nfts-container">
         {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
+            spaceBetween={20}
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
             speed={500}
@@ -98,6 +99,7 @@ export default function MyNFTs() {
       <div className="my-nfts__deposit-nfts-container">
         {depositNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-deposit-nfts")}</div> : (
           <Swiper
+            spaceBetween={20}
             modules={[Navigation, Pagination, Scrollbar, A11y]}
             slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
             speed={500}
