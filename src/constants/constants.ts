@@ -24,7 +24,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
-  [ChainId.Rinkeby]: "0xA2FcE90a5D0B05397C1C158c760275146dB11055"
+  [ChainId.Rinkeby]: "0x86a664733872Cc5e3ae5efc9e3bA820Fb1F48f64"
 }
 
 export const Chains = {
@@ -95,6 +95,8 @@ export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sal
 
 export const COIN_GECKO_ETHEREUM =
   "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
+
+export const EMBASSY_LEARN_MORE = "https://medium.com/@hatsfinance/proof-of-deposit-nft-powered-security-7c0456672539";
 
 /** This is used when we need to set colors via the JavaScript */
 export enum Colors {

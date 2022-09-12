@@ -206,6 +206,7 @@
       }
     },
     "EmbassyNftTicketPrompt": {
+      "title": "EMBASSY NFT",
       "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
       "button-text": "REDEEM"
     },

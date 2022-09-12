@@ -22,7 +22,6 @@ export default function NFTCard({ tokenInfo }: IProps) {
   const [fullScreen, setFullScreen] = useState(false);
   const tier = metadata.attributes.find(attr => attr.trait_type === "Trust Level")?.value;
   const vaultName = metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
-  const roleName = metadata.attributes.find(attr => attr.trait_type === "Role")?.value;
   const escapePressed = useEscapePressed();
 
   useEffect(() => {

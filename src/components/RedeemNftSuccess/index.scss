@@ -8,6 +8,8 @@
   max-width: 600px;
   margin: auto;
   white-space: pre-line;
+  box-sizing: border-box;
+  padding-bottom: 0;
   .airdrop-redeem-success__icon {
     width: 100px;
     align-self: center;
@@ -49,22 +51,37 @@
       }
     }
   }
-  .airdrop-redeem-success__join-embassy-btn {
-    margin-top: 50px;
-    background-color: $strong-purple-2;
-    border: none;
+  .airdrop-redeem-success__join-embassy-btn-container {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    color: $white;
-    font-weight: bold;
-    width: 100%;
+    position: sticky;
+    bottom: 0;
+    background-color: $field-blue;
+    z-index: 100;
+    margin: 0px -#{$modal-element-padding};
+    padding: 0px $modal-element-padding;
+    box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
+    padding-top: 20px;
+    .airdrop-redeem-success__join-embassy-btn {
+      background-color: $strong-purple-2;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: $white;
+      font-weight: bold;
+      width: 100%;
+    }
   }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .airdrop-redeem-success-wrapper {
     padding: $modal-element-padding-mobile;
+    padding-bottom: 0;
+    max-width: unset;
+    .airdrop-redeem-success__projects {
+      text-align: center;
+    }
     .airdrop-redeem-success__nfts-wrapper {
       .swiper-wrapper {
         .swiper-slide {

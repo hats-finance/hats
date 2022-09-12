@@ -6,6 +6,7 @@ import RadioButton from "assets/icons/radio-button.svg";
 import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import "./index.scss";
+import { EMBASSY_LEARN_MORE } from "constants/constants";
 
 export default function NotEligible() {
   const { t } = useTranslation();
@@ -25,7 +26,7 @@ export default function NotEligible() {
       <div className="not-eligible__criterias-wrapper">
         <div className="not-eligible__criterias-top">
           <b>{t("AirdropMachine.NotEligible.text-3")}</b>
-          <div className="not-eligible__criterias-top__learn-more">{t("AirdropMachine.NotEligible.text-4")} <img src={OpenInNewTabIcon} alt="" /></div>
+          <div onClick={() => window.open(EMBASSY_LEARN_MORE)} className="not-eligible__criterias-top__learn-more">{t("AirdropMachine.NotEligible.text-4")} <img src={OpenInNewTabIcon} alt="" /></div>
         </div>
         <div className="not-eligible__criteria">
           <img src={RadioButton} alt="radio button" />

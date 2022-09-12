@@ -1,4 +1,4 @@
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
+import { Colors, EMBASSY_LEARN_MORE, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -65,7 +65,7 @@ export default function AirdropMachine() {
               {t("AirdropMachine.section-2.title")}
             </div>
             <div className="airdrop-machine__section-content">
-              <span className="airdrop-machine__learn-more">{t("AirdropMachine.section-2.learn-more")} <img src={OpenInNewTabIcon} alt="" /></span>
+              <span onClick={() => window.open(EMBASSY_LEARN_MORE)} className="airdrop-machine__learn-more">{t("AirdropMachine.section-2.learn-more")} <img src={OpenInNewTabIcon} alt="" /></span>
               <div className="airdrop-machine__eligibility-types">
                 <div className="airdrop-machine__eligibility-type">
                   <img src={RadioButtonChecked} alt="radio button" />

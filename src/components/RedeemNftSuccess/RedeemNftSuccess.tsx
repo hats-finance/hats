@@ -42,9 +42,11 @@ export default function RedeemNftSuccess({ type }: IProps) {
       <img className="airdrop-redeem-success__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
       <div className="airdrop-redeem-success__title">{t("RedeemNftSuccess.title")}</div>
       <span className="airdrop-redeem-success__sub-title">{t("RedeemNftSuccess.sub-title")}</span>
-      {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames).join(', ').replace(/,(?!.*,)/gmi, ` ${t("RedeemNftSuccess.text-8")}`)} ${vaultsNames.size === 1 ? t("RedeemNftSuccess.text-9") : t("RedeemNftSuccess.text-10")} ${t("RedeemNftSuccess.text-2")}`}
-      {t("RedeemNftSuccess.text-3")}
-      <b>{t("RedeemNftSuccess.text-4")}</b>
+      <span className="airdrop-redeem-success__projects">
+        {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames).join(', ').replace(/,(?!.*,)/gmi, ` ${t("RedeemNftSuccess.text-8")}`)} ${vaultsNames.size === 1 ? t("RedeemNftSuccess.text-9") : t("RedeemNftSuccess.text-10")} ${t("RedeemNftSuccess.text-2")}`}
+        {t("RedeemNftSuccess.text-3")}
+      </span>
+      <b  >{t("RedeemNftSuccess.text-4")}</b>
       <div className="airdrop-redeem-success__features-wrapper">
         <div className="airdrop-redeem-success__feature">
           <img src={RadioButtonChecked} alt="radio button" />
@@ -61,6 +63,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
       </div>
       <div className="airdrop-redeem-success__nfts-wrapper">
         <Swiper
+          spaceBetween={20}
           modules={[Navigation, Pagination, Scrollbar, A11y]}
           slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
           speed={500}
@@ -70,11 +73,13 @@ export default function RedeemNftSuccess({ type }: IProps) {
           {nfts}
         </Swiper>
       </div>
-      <button className="airdrop-redeem-success__join-embassy-btn" onClick={() => window.open(DISCORD_ENTRY_CHANNEL)}>
-        <DiscordIcon />
-        &nbsp;
-        {t("RedeemNftSuccess.button-text")}
-      </button>
+      <div className="airdrop-redeem-success__join-embassy-btn-container">
+        <button className="airdrop-redeem-success__join-embassy-btn" onClick={() => window.open(DISCORD_ENTRY_CHANNEL)}>
+          <DiscordIcon />
+          &nbsp;
+          {t("RedeemNftSuccess.button-text")}
+        </button>
+      </div>
     </div>
   )
 }

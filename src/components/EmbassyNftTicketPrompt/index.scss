@@ -11,7 +11,12 @@
   .embassy-nft-ticket__icon {
     width: 100px;
     align-self: center;
-    margin-bottom: 50px;
+  }
+  .embassy-nft-ticket__title {
+    font-weight: bold;
+    font-size: $medium;
+    text-align: center;
+    margin: 20px 0;
   }
   .embassy-nft-ticket__redeem-btn {
     margin-top: 20px;
@@ -22,8 +27,6 @@
     margin-top: 15px;
     margin: 25px 0;
     .swiper-wrapper {
-      display: flex;
-      justify-content: center;
       .swiper-slide {
         display: flex;
         justify-content: center;
@@ -42,6 +45,8 @@
 @media only screen and (max-width: $mobile-breakpoint) {
   .embassy-nft-ticket-wrapper {
     padding: $modal-element-padding-mobile;
+    padding-top: 0px;
+    text-align: center;
     .swiper {
       .swiper-wrapper {
         .swiper-slide {
