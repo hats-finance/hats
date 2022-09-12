@@ -189,7 +189,7 @@ export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?:
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
 
 export interface NFTEligibilityElement {
-  pid: number;
+  pid: number | string;
   tier: number;
   masterAddress: string;
 }

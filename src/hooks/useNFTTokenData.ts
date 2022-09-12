@@ -4,7 +4,7 @@ import { HATVaultsNFTContract, NFTContractDataProxy, Transactions } from "consta
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata } from "types/types";
+import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata, NFTEligibilityElement } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
@@ -175,7 +175,18 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const tree: AirdropMachineWallet[] = [];
 
       for (const wallet in ipfsContent) {
-        tree.push({ address: wallet, ...ipfsContent[wallet] })
+        const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
+        nft_elegebility.forEach(nft => {
+          const shouldAdd = nft_elegebility.find(innerNft => {
+            const samePid = Number(innerNft.pid) === Number(nft.pid) && innerNft.masterAddress === nft.masterAddress;
+            if (!samePid) return false;
+            const sameTier = Number(innerNft.tier) === Number(nft.tier);
+            if (sameTier && typeof innerNft === 'string' && typeof nft === 'number') return true;
+            if (nft.tier > innerNft.tier) return true;
+          })
+          if (shouldAdd)
+            tree.push({ address: wallet, ...ipfsContent[wallet] })
+        });
       }
 
       setMerkleTree(tree);
