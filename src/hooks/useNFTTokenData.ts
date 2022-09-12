@@ -153,7 +153,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) return null;
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...nft, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
+        tokens.push({ ...nft, pid: Number(nft.pid), isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
@@ -176,19 +176,21 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
       for (const wallet in ipfsContent) {
         const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
+        // handle duplicate pid with different tier or same tier but different type for pid
+        const filtered = [] as NFTEligibilityElement[];
         nft_elegebility.forEach(nft => {
           const shouldAdd = nft_elegebility.find(innerNft => {
             const samePid = Number(innerNft.pid) === Number(nft.pid) && innerNft.masterAddress === nft.masterAddress;
             if (!samePid) return false;
             const sameTier = Number(innerNft.tier) === Number(nft.tier);
-            if (sameTier && typeof innerNft === 'string' && typeof nft === 'number') return true;
+            if (sameTier && typeof innerNft.pid === 'string' && typeof nft.pid === 'number') return true;
             if (nft.tier > innerNft.tier) return true;
-          })
+          });
           if (shouldAdd)
-            tree.push({ address: wallet, ...ipfsContent[wallet] })
+            filtered.push(nft);
         });
+        tree.push({ address: wallet, ...ipfsContent[wallet], nft_elegebility: filtered });
       }
-
       setMerkleTree(tree);
       setLastMerkleTree(args);
     }
@@ -278,7 +280,7 @@ const buildMerkleTree = (data: AirdropMachineWallet[]) => {
   const hashes: Buffer[] = [];
   data.forEach(wallet => {
     wallet.nft_elegebility.forEach(nft => {
-      hashes.push(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, wallet.address, nft.tier));
+      hashes.push(hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], Number(nft.pid), wallet.address, nft.tier));
     })
   })
 
