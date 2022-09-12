@@ -112,6 +112,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       for (let tier = 1; tier <= 3; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
+        if (tier > tiers && !isRedeemed) break;
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) continue;
         const res = await fetch(ipfsTransformUri(tokenUri));
@@ -156,7 +157,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       }
       return tokens;
     }));
-    setTreeTokens(treeNfts.flat());
+    const withoutNulls = treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][];
+    setTreeTokens(withoutNulls.flat());
   }, [contract, address, addressInfo])
 
   const getMerkleTree = useCallback(async () => {
