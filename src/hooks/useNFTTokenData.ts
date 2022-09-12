@@ -107,13 +107,14 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const eligibilitiesPerPid = await Promise.all(pidsWithAddress.map(async pidWithAddress => {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
-      const tiers = await contract.getTierFromShares(proxyAddress, pid, address);
       const tokens: INFTTokenInfo[] = [];
-      for (let tier = 1; tier <= tiers; tier++) {
+      for (let tier = 1; tier <= 3; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
         const tokenUri = await contract.uri(tokenId);
-        const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
+        if (!tokenUri) continue;
+        const res = await fetch(ipfsTransformUri(tokenUri));
+        const metadata = await res.json() as INFTTokenMetadata;
         tokens.push({ pid: Number(pidWithAddress.pid), masterAddress: pidWithAddress.masterAddress, tier, isRedeemed, tokenId, metadata, isDeposit: true, isMerkleTree: false });
       }
       return tokens;
