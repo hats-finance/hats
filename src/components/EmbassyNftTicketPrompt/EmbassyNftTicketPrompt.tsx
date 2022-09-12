@@ -4,7 +4,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
 import "swiper/css";
@@ -21,23 +21,29 @@ export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
+  const [loading, setLoading] = useState(false);
   const [redeemed, setRedeemed] = useState(false);
 
-  useEffect(() => {
-    if (nftData?.redeemMultipleFromSharesState.status === "Success") {
+  const showLoader = !redeemed && loading;
+
+  const handleRedeem = useCallback(async () => {
+    try {
+      setLoading(true);
+      await nftData?.redeemShares();
+      setLoading(false);
       setRedeemed(true);
+    } catch (e) {
+      console.error(e);
+      setLoading(false);
     }
-  }, [nftData?.redeemMultipleFromSharesState])
+  }, [nftData]);
 
-  const showLoader = nftData?.redeemMultipleFromSharesState.status && ["PendingSignature", "Mining"].includes(nftData?.redeemMultipleFromSharesState.status);
-
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nftInfo, index) =>
+  const nfts = nftData?.proofTokens?.map((nftInfo, index) =>
     <SwiperSlide key={index}>
       <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>)
 
   if (redeemed) return <RedeemNftSuccess type="isDeposit" />;
-
   return (
     <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
       <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />
@@ -53,7 +59,7 @@ export default function EmbassyNftTicketPrompt() {
         effect={"flip"}>
         {nfts}
       </Swiper>
-      <button onClick={nftData?.redeemShares} className="embassy-nft-ticket__redeem-btn fill">{t("EmbassyNftTicketPrompt.button-text")}</button>
+      <button onClick={handleRedeem} className="embassy-nft-ticket__redeem-btn fill">{t("EmbassyNftTicketPrompt.button-text")}</button>
       {showLoader && <Loading />}
     </div>
   )
