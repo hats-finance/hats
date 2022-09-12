@@ -111,6 +111,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       for (let tier = 1; tier <= 3; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
         const isRedeemed = await contract.tokensRedeemed(tokenId, address) as boolean;
+        const contractTier = await contract.getTierFromShares(proxyAddress, pid, address);
+        if (tier > contractTier && !isRedeemed) break;
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) continue;
         const res = await fetch(ipfsTransformUri(tokenUri));
