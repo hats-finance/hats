@@ -12,12 +12,14 @@ import "swiper/css/scrollbar";
 import Modal from "components/Shared/Modal/Modal";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 import useModal from "hooks/useModal";
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { usePrevious } from "hooks/usePrevious";
 import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
+
+export type RedeemType = "isMerkleTree" | "isDeposit" | undefined;
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -25,7 +27,7 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
 
-  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
+  const treeNfts = nftData?.treeTokens?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
@@ -34,7 +36,7 @@ export default function MyNFTs() {
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
+  const depositNfts = nftData?.proofTokens?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
@@ -65,17 +67,17 @@ export default function MyNFTs() {
     toggleRedeemNftPrompt,
   ])
 
-  let redeemType;
+  const redeemType = useRef<RedeemType>();
 
-  const handleRedeemTree = () => {
-    redeemType = "isMerkleTree";
+  const handleRedeemTree = useCallback(() => {
+    redeemType.current = "isMerkleTree";
     nftData?.redeemTree();
-  }
+  }, [nftData])
 
-  const handleRedeemShares = () => {
-    redeemType = "isDeposit";
+  const handleRedeemShares = useCallback(() => {
+    redeemType.current = "isDeposit";
     nftData?.redeemShares();
-  }
+  }, [nftData])
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
@@ -131,7 +133,7 @@ export default function MyNFTs() {
       <Modal
         isShowing={showRedeemNftPrompt}
         hide={toggleRedeemNftPrompt}>
-        <RedeemNftSuccess type={redeemType} />
+        <RedeemNftSuccess type={redeemType.current} />
       </Modal>
     </div>
   )

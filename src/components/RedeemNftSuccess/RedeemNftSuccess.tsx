@@ -14,9 +14,10 @@ import { useVaults } from "hooks/useVaults";
 import NFTCard from "components/NFTCard/NFTCard";
 import { RootState } from "reducers";
 import { useSelector } from "react-redux";
+import { RedeemType } from "components/MyAccount/components/MyNFTs/MyNFTs";
 
 interface IProps {
-  type: "isMerkleTree" | "isDeposit";
+  type: RedeemType;
 }
 
 export default function RedeemNftSuccess({ type }: IProps) {
@@ -25,7 +26,7 @@ export default function RedeemNftSuccess({ type }: IProps) {
   const { nftData } = useVaults();
 
   const vaultsNames = new Set();
-  const nfts = nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map((nft, index) => {
+  const nfts = type && nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map((nft, index) => {
 
     const vaultName = nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
     vaultsNames.add(vaultName)
