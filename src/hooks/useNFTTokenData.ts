@@ -11,6 +11,7 @@ import { GET_STAKER } from "graphql/subgraph";
 import moment from "moment";
 import { usePrevious } from "./usePrevious";
 import { useSupportedNetwork } from "./useSupportedNetwork";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 const { MerkleTree } = require('merkletreejs');
 const keccak256 = require("keccak256");
@@ -26,9 +27,9 @@ export interface INFTTokenData {
   merkleTree?: AirdropMachineWallet[];
   isBeforeDeadline?: boolean;
   nftTokens?: INFTTokenInfo[];
-  redeemTree: () => Promise<any>;
+  redeemTree: () => Promise<TransactionReceipt | undefined>;
   redeemMultipleFromTreeState: TransactionStatus;
-  redeemShares: () => Promise<any>;
+  redeemShares: () => Promise<TransactionReceipt | undefined>;
   redeemMultipleFromSharesState: TransactionStatus;
   addressInfo?: AirdropMachineWallet;
   airdropToRedeem: boolean;
@@ -217,7 +218,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const hatVaults = redeemable.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = redeemable.map(nft => nft.pid);
     const tiers = redeemable.map(nft => nft.tier);
-    await redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
+    return redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
   }, [nftTokens, address, buildProofsForRedeemables, redeemMultipleFromTree]);
 
   const redeemTreeTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
@@ -241,7 +242,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const depositRedeemables = nftTokens.filter(nft => nft.isDeposit);
     const hatVaults = depositRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = depositRedeemables.map(nft => nft.pid);
-    await redeemMultipleFromShares(hatVaults, pids, address);
+    return await redeemMultipleFromShares(hatVaults, pids, address);
   }, [redeemMultipleFromShares, address, nftTokens])
 
   return {

@@ -12,8 +12,7 @@ import "swiper/css/scrollbar";
 import Modal from "components/Shared/Modal/Modal";
 import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 import useModal from "hooks/useModal";
-import { useEffect } from "react";
-import { usePrevious } from "hooks/usePrevious";
+import { useCallback, useState } from "react";
 import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
@@ -24,6 +23,8 @@ export default function MyNFTs() {
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
+  const [showLoader, setShowLoader] = useState(false);
+  const [redeemType, setRedeemType] = useState<"isMerkleTree" | "isDeposit">()
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
@@ -42,40 +43,34 @@ export default function MyNFTs() {
       />
     </SwiperSlide>
   )
-
-  const showLoader =
-    nftData?.redeemMultipleFromTreeState.status === "PendingSignature" ||
-    nftData?.redeemMultipleFromTreeState.status === "Mining" ||
-    nftData?.redeemMultipleFromSharesState.status === "PendingSignature" ||
-    nftData?.redeemMultipleFromSharesState.status === "Mining";
-
-  const prevSharesStatus = usePrevious(nftData?.redeemMultipleFromSharesState.status);
-  const prevTreeStatus = usePrevious(nftData?.redeemMultipleFromTreeState.status);
-
-  useEffect(() => {
-    if ((prevSharesStatus && prevSharesStatus !== nftData?.redeemMultipleFromSharesState.status && nftData?.redeemMultipleFromSharesState.status === "Success") ||
-      (prevTreeStatus && prevTreeStatus !== nftData?.redeemMultipleFromTreeState.status && nftData?.redeemMultipleFromTreeState.status === "Success")) {
-      toggleRedeemNftPrompt();
+  const handleRedeemTree = useCallback(async () => {
+    try {
+      setRedeemType("isMerkleTree");
+      setShowLoader(true);
+      const tx = await nftData?.redeemTree();
+      setShowLoader(false);
+      if (tx?.status) {
+        toggleRedeemNftPrompt();
+      }
+    } catch (e) {
+      setShowLoader(false);
     }
-  }, [
-    nftData?.redeemMultipleFromSharesState.status,
-    prevSharesStatus,
-    nftData?.redeemMultipleFromTreeState.status,
-    prevTreeStatus,
-    toggleRedeemNftPrompt,
-  ])
+  }, [nftData, toggleRedeemNftPrompt]);
 
-  let redeemType;
-
-  const handleRedeemTree = () => {
-    redeemType = "isMerkleTree";
-    nftData?.redeemTree();
-  }
-
-  const handleRedeemShares = () => {
-    redeemType = "isDeposit";
+  const handleRedeemShares = useCallback(async () => {
+    try {
+      setRedeemType("isDeposit");
+      setShowLoader(true)
+      const tx = await nftData?.redeemShares();
+      setShowLoader(false);
+      if (tx)
+        toggleRedeemNftPrompt();
+    } catch (e) {
+      console.error(e);
+      setShowLoader(false);
+    }
     nftData?.redeemShares();
-  }
+  }, [nftData, toggleRedeemNftPrompt]);
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
@@ -131,7 +126,7 @@ export default function MyNFTs() {
       <Modal
         isShowing={showRedeemNftPrompt}
         hide={toggleRedeemNftPrompt}>
-        <RedeemNftSuccess type={redeemType} />
+        <RedeemNftSuccess type={redeemType!} />
       </Modal>
     </div>
   )
