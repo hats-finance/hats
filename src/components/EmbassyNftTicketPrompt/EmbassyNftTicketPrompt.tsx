@@ -16,34 +16,31 @@ import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
+import { INFTTokenInfo } from "types/types";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
   const [loading, setLoading] = useState(false);
-  const [redeemed, setRedeemed] = useState(false);
+  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
 
   const showLoader = !redeemed && loading;
 
   const handleRedeem = useCallback(async () => {
-    try {
-      setLoading(true);
-      await nftData?.redeemShares();
-      setLoading(false);
-      setRedeemed(true);
-    } catch (e) {
-      console.error(e);
-      setLoading(false);
-    }
-  }, [nftData]);
+    if (!nftData?.proofRedeemables) return;
+    setLoading(true);
+    await nftData?.redeemProof();
+    setLoading(false);
+    setRedeemed(nftData?.proofRedeemables);
+  }, [nftData?.proofRedeemables, nftData?.redeemProof]);
 
   const nfts = nftData?.proofTokens?.map((nftInfo, index) =>
     <SwiperSlide key={index}>
       <NFTCard key={index} tokenInfo={nftInfo} />
     </SwiperSlide>)
 
-  if (redeemed) return <RedeemNftSuccess type="isDeposit" />;
+  if (redeemed) return <RedeemNftSuccess redeemed={redeemed} />;
   return (
     <div className={classNames("embassy-nft-ticket-wrapper", { "disabled": showLoader })}>
       <img className="embassy-nft-ticket__icon" src={RedeemWalletSuccessIcon} alt="wallet" />

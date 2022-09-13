@@ -32,7 +32,9 @@ export default function WalletInfo() {
           <span className="wallet-info__my-account-hat-balance">{hatsBalanceString} HAT</span>
         )}
         {!nftData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />}
-        {(nftData?.airdropToRedeem || nftData?.depositToRedeem) && <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />}
+        {(nftData?.proofRedeemables?.length ?? 0) > 0 ||
+          ((nftData?.treeRedeemables?.length ?? 0) > 0) &&
+          <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />}
       </button>
       {screenSize === ScreenSize.Desktop &&
         <div className="wallet-balance">

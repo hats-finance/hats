@@ -10,6 +10,7 @@ import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { INFTTokenInfo } from "types/types";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
@@ -24,7 +25,6 @@ export default function CheckEligibility() {
   const { account } = useEthers();
   const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
-  const [redeemed, setRedeemed] = useState(false);
   const inputError = userInput && !isAddress(userInput);
   const address = isAddress(userInput) ? userInput : undefined;
   const nftData = useNFTTokenData(address);
@@ -34,14 +34,8 @@ export default function CheckEligibility() {
     setUserInput(account ?? "");
   }, [setUserInput, account])
 
-  useEffect(() => {
-    if (nftData?.redeemMultipleFromTreeState.status === "Success") {
-      setRedeemed(true);
-    }
-  }, [nftData?.redeemMultipleFromTreeState, setRedeemed])
 
   const handleModalClose = () => {
-    setRedeemed(false);
     toggle();
   }
 
@@ -66,14 +60,15 @@ export default function CheckEligibility() {
           className="check-eligibility__check-button fill"
           onClick={toggle}
           disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
-          {nftData?.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
+          {(nftData.proofRedeemables?.length ?? 0) > 0 ? t("AirdropMachine.CheckEligibility.button-text-1") :
+            t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>
       <Modal
         isShowing={isShowing}
         hide={handleModalClose}>
         <AirdropMachineContext.Provider value={{ address, nftData, closeRedeemModal: toggle }} >
-          {redeemed ? <RedeemNftSuccess type="isMerkleTree" /> : <Redeem />}
+          <Redeem />
         </AirdropMachineContext.Provider>
       </Modal>
     </div>

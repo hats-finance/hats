@@ -17,6 +17,7 @@ import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
+import { INFTTokenInfo } from "types/types";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
   const [showLoader, setShowLoader] = useState(false);
-  const [redeemType, setRedeemType] = useState<"isMerkleTree" | "isDeposit">()
+  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
 
   const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
@@ -43,34 +44,31 @@ export default function MyNFTs() {
       />
     </SwiperSlide>
   )
-  const handleRedeemTree = useCallback(async () => {
-    try {
-      setRedeemType("isMerkleTree");
-      setShowLoader(true);
-      const tx = await nftData?.redeemTree();
-      setShowLoader(false);
+  const handleRedeem = useCallback(async () => {
+    if (!nftData?.treeRedeemables || !nftData.proofRedeemables) return;
+    setShowLoader(true);
+    let redeemed: INFTTokenInfo[] = [];
+    let success = false;
+    let tx;
+    if (nftData.treeRedeemables.length > 0) {
+      tx = await nftData?.redeemTree();
       if (tx?.status) {
-        toggleRedeemNftPrompt();
+        redeemed = [...redeemed, ...nftData?.treeRedeemables];
+        success = true;
       }
-    } catch (e) {
-      setShowLoader(false);
     }
-  }, [nftData, toggleRedeemNftPrompt]);
+    if (nftData.proofRedeemables.length > 0) {
+      tx = await nftData?.redeemProof();
+      if (tx?.status) {
+        redeemed = [...redeemed, ...nftData?.proofRedeemables];
+      }
+    }
+    setShowLoader(false);
+    setRedeemed(redeemed);
+    if (success)
+      toggleRedeemNftPrompt();
+  }, [nftData?.treeRedeemables, nftData?.proofRedeemables, toggleRedeemNftPrompt]);
 
-  const handleRedeemShares = useCallback(async () => {
-    try {
-      setRedeemType("isDeposit");
-      setShowLoader(true)
-      const tx = await nftData?.redeemShares();
-      setShowLoader(false);
-      if (tx)
-        toggleRedeemNftPrompt();
-    } catch (e) {
-      console.error(e);
-      setShowLoader(false);
-    }
-    nftData?.redeemShares();
-  }, [nftData, toggleRedeemNftPrompt]);
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
@@ -110,23 +108,17 @@ export default function MyNFTs() {
         {t("Header.MyAccount.MyNFTs.text-1")}
       </div>
       <button
-        disabled={!nftData?.isBeforeDeadline || !nftData?.airdropToRedeem}
-        onClick={handleRedeemTree}
+        disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemables?.length === 0}
+        onClick={handleRedeem}
         className="my-nfts__action-btn">
         {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
         {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
-      </button>
-      <button
-        disabled={!nftData?.depositToRedeem}
-        onClick={handleRedeemShares}
-        className="my-nfts__action-btn fill">
-        {t("Header.MyAccount.MyNFTs.deposit-redeem")}
       </button>
       {showLoader && <Loading />}
       <Modal
         isShowing={showRedeemNftPrompt}
         hide={toggleRedeemNftPrompt}>
-        <RedeemNftSuccess type={redeemType!} />
+        <RedeemNftSuccess redeemed={redeemed!} />
       </Modal>
     </div>
   )
