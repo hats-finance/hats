@@ -160,7 +160,7 @@
         "input-error": "Please enter a valid address"
       },
       "NotEligible": {
-        "title": "HO NO!",
+        "title": "OH NO!",
         "text-1": "You are not eligible for this airdrop machine round",
         "text-2": "Wallet address",
         "text-3": "Eligibility criteria",

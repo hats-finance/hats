@@ -91,5 +91,10 @@
         }
       }
     }
+    .airdrop-redeem-success__join-embassy-btn-container {
+      margin: 0 -#{$modal-element-padding-mobile};
+      padding: 0 $modal-element-padding-mobile;
+      padding-top: 20px;
+    }
   }
 }

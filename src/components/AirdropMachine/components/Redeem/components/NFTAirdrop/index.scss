@@ -21,6 +21,7 @@
   }
   .nft-airdrop__button-container {
     display: flex;
+    flex-direction: column;
     position: sticky;
     bottom: 0;
     background-color: $field-blue;
@@ -32,6 +33,7 @@
     box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
     button {
       width: 100%;
+      margin-top: 5px;
     }
   }
   &.disabled {
