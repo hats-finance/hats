@@ -11,6 +11,7 @@ import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { INFTTokenInfo } from "types/types";
+import { useVaults } from "hooks/useVaults";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
@@ -29,10 +30,23 @@ export default function CheckEligibility() {
   const { isShowing, toggle } = useModal();
   const inputError = userInput && !isAddress(userInput);
   const address = isAddress(userInput) ? userInput : undefined;
-  const nftData = useNFTTokenData(address);
   const isSupportedNetwork = useSupportedNetwork();
   const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
+  const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
+  const nftDataToCheck = useNFTTokenData(addressToCheck);
+  const { nftData: vaultsNftData } = useVaults();
+
+  const nftData = account === address && vaultsNftData ? vaultsNftData : nftDataToCheck;
+  console.log("nftData", nftData);
+
+
+  const handleCheck = useCallback(() => {
+    if (address) {
+      setAddressToCheck(address);
+      toggle();
+    }
+  }, [address, toggle]);
 
   useEffect(() => {
     setUserInput(account ?? "");
@@ -71,7 +85,7 @@ export default function CheckEligibility() {
         {!isSupportedNetwork && <span className="check-eligibility__error-label">{t("Shared.network-not-supported")}</span>}
         <button
           className="check-eligibility__check-button fill"
-          onClick={toggle}
+          onClick={handleCheck}
           disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
           {(nftData.proofRedeemables?.length ?? 0) > 0 ? t("AirdropMachine.CheckEligibility.button-text-1") :
             t("AirdropMachine.CheckEligibility.button-text-0")}

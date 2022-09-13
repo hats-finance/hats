@@ -185,7 +185,7 @@ export default function DepositWithdraw(props: IProps) {
           {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
-      {/* {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />} */}
+      {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />}
       <Assets vault={props.data} />
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>

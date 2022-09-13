@@ -37,6 +37,7 @@ export interface INFTTokenData {
   proofTokens?: INFTTokenInfo[];
   treeRedeemables?: INFTTokenInfo[];
   proofRedeemables?: INFTTokenInfo[];
+  treeRedeemablesCount: number;
 }
 
 interface IVaultWithAddress {
@@ -79,6 +80,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     && !nftTokens.find(innerNft => innerNft.isRedeemed && innerNft.tokenId.eq(nft.tokenId)));
   const proofRedeemables = nftTokens?.filter(nft => nft.isDeposit && !nft.isRedeemed
     && !treeRedeemables.find(innerNft => innerNft.isRedeemed && innerNft.tokenId.eq(nft.tokenId)));
+  const treeRedeemablesCount = treeRedeemables?.length ?? 0;
 
   useEffect(() => {
     if (address !== prevAddress || chainId !== prevChainId) {
@@ -97,12 +99,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     variables: { address },
     context: { chainId },
     pollInterval: DATA_REFRESH_TIME,
-    fetchPolicy: "no-cache",
   })
 
-  const prevStakerData = usePrevious(stakerData);
-
-  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address })) as IVaultWithAddress[] | undefined;
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
@@ -130,6 +128,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     return eligibilityPerPid
   }, [contract, address])
 
+  const pidsWithAddress = stakerData?.stakers.map(staker => ({ pid: staker?.pid, masterAddress: staker?.master.address })) as IVaultWithAddress[] | undefined;
+  const prevPidsWithAddress = usePrevious(pidsWithAddress);
   const checkDepositEligibility = useCallback(async (hint: IVaultWithAddress) => {
     if (!contract || !pidsWithAddress) return;
     const found = hint ? pidsWithAddress?.find(pidWithAddress => pidWithAddress.pid === hint.pid && pidWithAddress.masterAddress === hint.masterAddress) : false;
@@ -138,10 +138,14 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [getEligibilityForPids, pidsWithAddress, contract, proofTokens])
 
   useEffect(() => {
-    if (stakerData && prevStakerData !== stakerData && pidsWithAddress) {
+    if (pidsWithAddress && pidsWithAddress !== prevPidsWithAddress && !proofTokens) {
+      console.log("proofTokens", proofTokens);
+
+      console.log("getting eligibility for pids", pidsWithAddress);
       getEligibilityForPids(pidsWithAddress);
     }
-  }, [pidsWithAddress, prevStakerData, stakerData, getEligibilityForPids])
+
+  }, [pidsWithAddress, prevPidsWithAddress, getEligibilityForPids, proofTokens])
 
   const getTreeEligibility = useCallback(async () => {
     if (!contract || !addressInfo) return;
@@ -203,7 +207,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const pids = treeRedeemables.map(nft => nft.pid);
     const tiers = treeRedeemables.map(nft => nft.tier);
     return redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
-  }, [nftTokens, address, redeemMultipleFromTree, treeRedeemables]);
+  }, [nftTokens, address, redeemMultipleFromTree, treeRedeemables, merkleTree]);
 
   const redeemTreeTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
   const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
@@ -242,7 +246,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     proofTokens,
     checkDepositEligibility,
     treeRedeemables,
-    proofRedeemables
+    proofRedeemables,
+    treeRedeemablesCount
   };
 };
 

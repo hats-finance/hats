@@ -32,23 +32,18 @@ export default function EmbassyEligibility({ vault }: IProps) {
     }
     nextTier++;
   }
-  console.log("nextTier", nextTier);
 
   if (maxRedeemedTier === 3) return null;
-  console.log("maxRedeemedTier", maxRedeemedTier);
-
   if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
   const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
   let text = "";
 
-  console.log("minToNextTier", minToNextTier);
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
-  if (nextTier == 1) {
+  if (nextTier === 1) {
     text += t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum });
-  } else if (nextTier == 2 || nextTier == 3) {
+  } else if (nextTier === 2 || nextTier === 3) {
     text += t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum });
   }
-
 
   return (
     <div className="embassy-eligibility-wrapper">
