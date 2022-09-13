@@ -36,10 +36,7 @@ export default function CheckEligibility() {
   const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
   const nftDataToCheck = useNFTTokenData(addressToCheck);
   const { nftData: vaultsNftData } = useVaults();
-
   const nftData = account === address && vaultsNftData ? vaultsNftData : nftDataToCheck;
-  console.log("nftData", nftData);
-
 
   const handleCheck = useCallback(() => {
     if (address) {

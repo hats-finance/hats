@@ -139,12 +139,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (pidsWithAddress && pidsWithAddress !== prevPidsWithAddress && !proofTokens) {
-      console.log("proofTokens", proofTokens);
-
-      console.log("getting eligibility for pids", pidsWithAddress);
       getEligibilityForPids(pidsWithAddress);
     }
-
   }, [pidsWithAddress, prevPidsWithAddress, getEligibilityForPids, proofTokens])
 
   const getTreeEligibility = useCallback(async () => {
