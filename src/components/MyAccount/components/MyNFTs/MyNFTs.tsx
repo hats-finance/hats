@@ -111,7 +111,7 @@ export default function MyNFTs() {
         disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemables?.length === 0}
         onClick={handleRedeem}
         className="my-nfts__action-btn">
-        {t("Header.MyAccount.MyNFTs.airdrop-redeem")}
+        {t("Header.MyAccount.MyNFTs.redeem")}
         {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>}
       </button>
       {showLoader && <Loading />}

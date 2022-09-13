@@ -225,7 +225,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     if (!nftTokens) return;
     const hatVaults = proofRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = proofRedeemables.map(nft => nft.pid);
-    return await redeemMultipleFromShares(hatVaults, pids, address);
+    return redeemMultipleFromShares(hatVaults, pids, address);
   }, [redeemMultipleFromShares, address, nftTokens, proofRedeemables])
 
   return {

@@ -22,8 +22,8 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
   if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
-  const redeemedTiers = nftData.nftTokens.filter(nft => nft.pid === Number(vault.pid) && nft.isDeposit && nft.isRedeemed).map(nft => nft.tier);
-  const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers);
+  const redeemedTiers = nftData?.proofTokens?.filter((token) => token.isRedeemed) ?? [];
+  const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers.map((token) => token.tier));
   const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
   let nextTier = 0;
   for (let i = 0; i < TIER_PERCENTAGES.length; i++) {
@@ -32,29 +32,29 @@ export default function EmbassyEligibility({ vault }: IProps) {
     }
     nextTier++;
   }
+  console.log("nextTier", nextTier);
 
   if (maxRedeemedTier === 3) return null;
+  console.log("maxRedeemedTier", maxRedeemedTier);
 
-  /** this can happen in case the user already redeemed from a specific tier, withdraw the funds and deposit again */
   if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
-
   const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
-
+  nextTier = 3;
+  let text = "";
+  const minimum = millify(minToNextTier, { precision: 2 });
+  if (nextTier == 1) {
+    text += t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum });
+  } else if (nextTier == 2 || nextTier == 3) {
+    text += t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum });
+  }
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {nextTier === 3 ? <span className="embassy-eligibility__content__all-tiers">{t("DepositWithdraw.EmbassyEligibility.text-5")}</span> : nextTier === 0 ? (
-            `${t("DepositWithdraw.EmbassyEligibility.text-1")}
-            ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`
-          ) :
-            `${t("DepositWithdraw.EmbassyEligibility.text-3")}
-            ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`}
+          {text}
         </span>
-        {nextTier !== 3 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.text-4")}</span>}
+        {nextTier > 0 && nextTier < 4 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
       </div>
     </div>
   )
