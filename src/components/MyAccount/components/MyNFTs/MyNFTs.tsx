@@ -70,6 +70,8 @@ export default function MyNFTs() {
   }, [nftData?.treeRedeemables, nftData?.proofRedeemables, toggleRedeemNftPrompt]);
 
 
+  const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemables?.length ?? 0) > 0;
+
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
       <span className="my-nfts__title">NFTs</span>
@@ -104,8 +106,8 @@ export default function MyNFTs() {
         )}
       </div>
       <div className="my-nfts__info-text-container">
-        <span className="my-nfts__info-text-1">{t("Header.MyAccount.MyNFTs.text-0")}</span>
-        {t("Header.MyAccount.MyNFTs.text-1")}
+        {twoTransactions &&
+          <span className="my-nfts__info-text-1">{t("Header.MyAccount.MyNFTs.two-transactions")}</span>}
       </div>
       <button
         disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemables?.length === 0}

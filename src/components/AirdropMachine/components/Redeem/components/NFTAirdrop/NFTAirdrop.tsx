@@ -22,24 +22,9 @@ import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData } = useContext(AirdropMachineContext);
+  const { nftData, handleRedeem, showLoader } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
   const { account } = useEthers();
-  const [showLoader, setShowLoader] = useState(false);
-  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
-
-  const handleRedeem = useCallback(async () => {
-    if (!nftData?.treeRedeemables) return;
-    setShowLoader(true);
-    const tx = await nftData?.redeemTree();
-    if (tx?.status) {
-      setRedeemed(nftData?.treeRedeemables);
-    }
-    setShowLoader(false);
-  }, [nftData])
-
-  if (redeemed)
-    return <RedeemNftSuccess redeemed={redeemed} />
 
   return (
     <div className={classNames("nft-airdrop-wrapper", { "disabled": showLoader })}>

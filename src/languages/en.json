@@ -38,8 +38,7 @@
           "after-deadline": "Deadline has passed",
           "no-tree-nfts": "No airdrop NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
-          "text-0": "Please note, \n",
-          "text-1": "If you notice duplicate NFTs in your account, only one of them will be redeemed and the other will disappear. If you have multiple NFTs of different kinds, you will be able to redeem each of them."
+          "two-transactions": "In order to redeem the NFTs from both the Airdrop Machine and your deposit.You will be asked to sign two transactions on your wallet"
         }
       }
     },

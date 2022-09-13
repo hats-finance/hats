@@ -39,7 +39,6 @@ export default function EmbassyEligibility({ vault }: IProps) {
 
   if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
   const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
-  nextTier = 3;
   let text = "";
   const minimum = millify(minToNextTier, { precision: 2 });
   if (nextTier == 1) {
@@ -47,6 +46,8 @@ export default function EmbassyEligibility({ vault }: IProps) {
   } else if (nextTier == 2 || nextTier == 3) {
     text += t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum });
   }
+
+
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>

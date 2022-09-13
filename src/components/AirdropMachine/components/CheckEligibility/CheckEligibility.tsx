@@ -1,7 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import Modal from "components/Shared/Modal/Modal";
 import useModal from "hooks/useModal";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
@@ -16,6 +16,8 @@ export interface IAirdropMachineContext {
   nftData: INFTTokenData;
   closeRedeemModal: () => void;
   address: string | undefined;
+  handleRedeem: () => Promise<void>;
+  showLoader: boolean;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -29,6 +31,8 @@ export default function CheckEligibility() {
   const address = isAddress(userInput) ? userInput : undefined;
   const nftData = useNFTTokenData(address);
   const isSupportedNetwork = useSupportedNetwork();
+  const [showLoader, setShowLoader] = useState(false);
+  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
 
   useEffect(() => {
     setUserInput(account ?? "");
@@ -38,6 +42,15 @@ export default function CheckEligibility() {
   const handleModalClose = () => {
     toggle();
   }
+
+  const handleRedeem = useCallback(async () => {
+    if (!nftData?.treeRedeemables) return;
+    setShowLoader(true);
+    const tx = await nftData?.redeemTree();
+    if (tx?.status)
+      setRedeemed(nftData?.treeRedeemables);
+    setShowLoader(false);
+  }, [nftData])
 
   return (
     <div className="check-eligibility-wrapper">
@@ -67,9 +80,12 @@ export default function CheckEligibility() {
       <Modal
         isShowing={isShowing}
         hide={handleModalClose}>
-        <AirdropMachineContext.Provider value={{ address, nftData, closeRedeemModal: toggle }} >
-          <Redeem />
-        </AirdropMachineContext.Provider>
+        {redeemed ?
+          <RedeemNftSuccess redeemed={redeemed!} /> : <AirdropMachineContext.Provider
+            value={{ address, nftData, closeRedeemModal: toggle, handleRedeem, showLoader }} >
+            <Redeem />
+          </AirdropMachineContext.Provider>
+        }
       </Modal>
     </div>
   )
