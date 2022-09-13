@@ -41,6 +41,7 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
   let text = "";
 
+  console.log("minToNextTier", minToNextTier);
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
   if (nextTier == 1) {
     text += t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum });
