@@ -46,7 +46,7 @@
       "EmbassyEligibility": {
         "title": "NEW! Embassy eligibility",
         "tier-minimum": "The minimum requirement to enter an Embassy is {{minimum}} (Staked token) \n\n",
-        "tier-middle": "The minimum requirement for the {{secondOrThird}} level of trust of the Protector NFT is {{minimum}}.",
+        "tier-middle": "The minimum requirement for the {{secondOrThird}} level of trust of the Protector NFT is {{minimum}}",
         "after-deposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
       },
       "Assets": {

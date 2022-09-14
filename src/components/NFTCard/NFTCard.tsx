@@ -54,6 +54,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
   }
 
   const both = isDeposit && isMerkleTree;
+  console.log("isRedeemed", isRedeemed);
 
   return (
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>

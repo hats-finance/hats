@@ -45,20 +45,28 @@ export default function MyNFTs() {
     if (nftData.treeRedeemables.length > 0) {
       tx = await nftData?.redeemTree();
       if (tx?.status) {
-        redeemed = [...redeemed, ...nftData?.treeRedeemables];
+        const refreshed = await nftData?.getTreeEligibility();
+        if (refreshed)
+          redeemed = [...redeemed, ...refreshed.filter(nft =>
+            nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId)))];
         success = true;
       }
     }
     if (nftData.proofRedeemables.length > 0) {
       tx = await nftData?.redeemProof();
       if (tx?.status) {
-        redeemed = [...redeemed, ...nftData?.proofRedeemables];
+        const refreshed = await nftData?.refreshProof(nftData.proofRedeemables);
+        if (refreshed)
+          redeemed = [...redeemed, ...refreshed.filter(nft =>
+            nftData.proofRedeemables?.find(r => r.tokenId.eq(nft.tokenId)))];
+        success = true;
       }
     }
     setShowLoader(false);
-    setRedeemed(redeemed);
-    if (success)
+    if (success) {
+      setRedeemed(redeemed);
       toggleRedeemNftPrompt();
+    }
   }, [nftData, toggleRedeemNftPrompt]);
 
 

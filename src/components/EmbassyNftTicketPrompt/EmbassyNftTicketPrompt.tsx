@@ -30,9 +30,13 @@ export default function EmbassyNftTicketPrompt() {
   const handleRedeem = useCallback(async () => {
     if (!nftData?.proofRedeemables) return;
     setLoading(true);
-    await nftData?.redeemProof();
+    const tx = await nftData?.redeemProof();
+    if (tx?.status) {
+      const refreshed = await nftData?.refreshProof(nftData.proofRedeemables);
+      if (refreshed)
+        setRedeemed(refreshed);
+    }
     setLoading(false);
-    setRedeemed(nftData?.proofRedeemables);
   }, [nftData?.proofRedeemables, nftData?.redeemProof]);
 
   const nfts = nftData?.proofTokens?.map((nftInfo, index) =>

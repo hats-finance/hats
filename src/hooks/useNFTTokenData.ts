@@ -33,11 +33,13 @@ export interface INFTTokenData {
   redeemMultipleFromSharesState: TransactionStatus;
   addressInfo?: AirdropMachineWallet;
   checkDepositEligibility: (hint: IVaultWithAddress) => void;
+  refreshProof: (nfts: INFTTokenInfo[]) => Promise<INFTTokenInfo[] | undefined>;
   treeTokens?: INFTTokenInfo[];
   proofTokens?: INFTTokenInfo[];
   treeRedeemables?: INFTTokenInfo[];
   proofRedeemables?: INFTTokenInfo[];
   treeRedeemablesCount: number;
+  getTreeEligibility: () => Promise<INFTTokenInfo[] | undefined>;
 }
 
 interface IVaultWithAddress {
@@ -101,6 +103,18 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     pollInterval: DATA_REFRESH_TIME,
   })
 
+  const refreshProof = async (nfts: INFTTokenInfo[]) => {
+    const pidsWithAddresses = nfts.reduce((result, nft) => {
+      if (!result.find(pidWithAddress => Number(pidWithAddress.pid) === Number(nft.pid)
+        && pidWithAddress.masterAddress === nft.masterAddress)) {
+        result.push({ pid: String(nft.pid), masterAddress: nft.masterAddress })
+      }
+      return result;
+    }, [] as IVaultWithAddress[]);
+    console.log("pidsWithAddresses", pidsWithAddresses);
+    return getEligibilityForPids(pidsWithAddresses);
+  };
+
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
@@ -108,6 +122,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
       const tiers = await contract.getTierFromShares(proxyAddress, pid, address);
+      console.log("tiers", tiers);
+
       const tokens: INFTTokenInfo[] = [];
       for (let tier = 1; tier <= MAX_NFT_TIER; tier++) {
         const tokenId = await contract.getTokenId(proxyAddress, pid, tier);
@@ -123,7 +139,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }))
 
     const eligibilityPerPid = eligibilitiesPerPid.flat();
-
     setProofTokens(eligibilityPerPid);
     return eligibilityPerPid
   }, [contract, address])
@@ -155,12 +170,13 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) return null;
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...nft, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
+        tokens.push({ ...nft, tier, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
-    const withoutNulls = treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][];
-    setTreeTokens(withoutNulls.flat());
+    const treeTokens = (treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][]).flat();
+    setTreeTokens(treeTokens);
+    return treeTokens;
   }, [contract, address, addressInfo])
 
   const getMerkleTree = useCallback(async () => {
@@ -225,6 +241,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     if (!nftTokens) return;
     const hatVaults = proofRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = proofRedeemables.map(nft => nft.pid);
+
     return redeemMultipleFromShares(hatVaults, pids, address);
   }, [redeemMultipleFromShares, address, nftTokens, proofRedeemables])
 
@@ -236,14 +253,16 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     redeemTree,
     redeemMultipleFromTreeState,
     redeemProof,
+    refreshProof,
     redeemMultipleFromSharesState,
     addressInfo,
     treeTokens,
     proofTokens,
-    checkDepositEligibility,
     treeRedeemables,
     proofRedeemables,
-    treeRedeemablesCount
+    treeRedeemablesCount,
+    checkDepositEligibility,
+    getTreeEligibility
   };
 };
 

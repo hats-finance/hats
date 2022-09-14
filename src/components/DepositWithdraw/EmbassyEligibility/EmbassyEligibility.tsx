@@ -21,17 +21,21 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const { nftData } = useVaults();
   const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
-  if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
-  const eligibleOrRedeemed = nftData?.proofTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
+  if (!nftData?.nftTokens || totalShares === 0) return null;
+  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
+  console.log("eligibleOrRedeemed", eligibleOrRedeemed);
+
   const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
   if (maxRedeemedTier === MAX_NFT_TIER) return null;
-  const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
+  const shares = availableToWithdraw ? Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals)) : 0;
   const currentTiers = TIER_PERCENTAGES.map(tier_percentage => tier_percentage / HUNDRED_PERCENT)
     .map(tierPercentage => (totalShares * tierPercentage) / (1 - tierPercentage));
   const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
   const minToNextTier = currentTiers[nextTier - 1] - shares;
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
+  console.log("minToNextTier", minToNextTier, "minimum", minimum, "shares", shares, "currentTiers", currentTiers, "nextTier", nextTier);
+
 
   return (
     <div className="embassy-eligibility-wrapper">
