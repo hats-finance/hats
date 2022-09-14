@@ -27,7 +27,7 @@ export default function MyNFTs() {
   const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
 
-  const treeNfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree).map((nft, index) =>
+  const treeNfts = nftData?.treeRedeemables?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
@@ -36,7 +36,7 @@ export default function MyNFTs() {
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.nftTokens?.filter(nft => nft.isDeposit).map((nft, index) =>
+  const depositNfts = nftData?.proofRedeemables?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
@@ -67,10 +67,10 @@ export default function MyNFTs() {
     setRedeemed(redeemed);
     if (success)
       toggleRedeemNftPrompt();
-  }, [nftData?.treeRedeemables, nftData?.proofRedeemables, toggleRedeemNftPrompt]);
+  }, [nftData, toggleRedeemNftPrompt]);
 
 
-  const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemables?.length ?? 0) > 0;
+  const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemablesCount ?? 0) > 0;
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
@@ -110,7 +110,7 @@ export default function MyNFTs() {
           <span className="my-nfts__info-text-1">{t("Header.MyAccount.MyNFTs.two-transactions")}</span>}
       </div>
       <button
-        disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemables?.length === 0}
+        disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemablesCount === 0}
         onClick={handleRedeem}
         className="my-nfts__action-btn">
         {t("Header.MyAccount.MyNFTs.redeem")}
