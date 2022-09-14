@@ -1,5 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { useEthers } from "@usedapp/core";
+import { MAX_NFT_TIER } from "constants/constants";
 import { useUserSharesPerVault } from "hooks/contractHooks";
 import { useVaults } from "hooks/useVaults";
 import millify from "millify";
@@ -12,7 +13,7 @@ interface IProps {
 }
 
 const HUNDRED_PERCENT = 10000;
-const TIER_PERCENTAGES = [11, 101, 1501];
+const TIER_PERCENTAGES = [10, 100, 1500];
 
 export default function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
@@ -22,20 +23,19 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
   if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
-  const redeemedTiers = nftData?.proofTokens?.filter((token) => token.isRedeemed) ?? [];
-  const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers.map((token) => token.tier));
+  const eligibleOrRedeemed = nftData?.proofTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
+  const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
+  if (maxRedeemedTier === MAX_NFT_TIER) return null;
   const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
-  let nextTier = 0;
-  for (let i = 0; i < TIER_PERCENTAGES.length; i++) {
-    if (shares < Number((totalShares * TIER_PERCENTAGES[i] / HUNDRED_PERCENT).toFixed(1))) {
-      break;
-    }
-    nextTier++;
-  }
+  const currentTiers = TIER_PERCENTAGES.map(tier_percentage => tier_percentage / HUNDRED_PERCENT)
+    .map(tierPercentage => (totalShares * tierPercentage) / (1 - tierPercentage));
+  console.log("currentTiers", currentTiers);
 
-  if (maxRedeemedTier === 3) return null;
-  if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
-  const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
+  const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
+  console.log("nextTier", nextTier);
+
+  const minToNextTier = currentTiers[nextTier - 1] - shares;
+  console.log("minToNextTier", minToNextTier);
   let text = "";
 
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";

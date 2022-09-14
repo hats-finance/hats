@@ -82,10 +82,13 @@ export default function DepositWithdraw(props: IProps) {
   const handleDepositAndClaim = useCallback(async () => {
     await depositAndClaim(selectedPid, userInputValue);
     const newDepositNfts = await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
+    console.log("newDepositNfts", newDepositNfts);
 
     if (newDepositNfts) {
       toggleEmbassyPrompt();
     }
+    setUserInput("");
+    setTermsOfUse(false);
   }, [selectedPid, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
   const tryDeposit = useCallback(async () => {
@@ -185,7 +188,7 @@ export default function DepositWithdraw(props: IProps) {
           {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
-      {/* {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />} */}
+      {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />}
       <Assets vault={props.data} />
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>

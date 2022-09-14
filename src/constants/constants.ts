@@ -27,6 +27,8 @@ export const HATVaultsNFTContract = {
   [ChainId.Rinkeby]: "0x2bD8E95F26C27bFC3689fFE2e2D9E617489ba754"
 }
 
+export const MAX_NFT_TIER = 3;
+
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
   [ChainId.Rinkeby]: Rinkeby
