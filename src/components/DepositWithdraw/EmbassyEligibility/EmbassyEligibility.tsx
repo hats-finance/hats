@@ -29,28 +29,19 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
   const currentTiers = TIER_PERCENTAGES.map(tier_percentage => tier_percentage / HUNDRED_PERCENT)
     .map(tierPercentage => (totalShares * tierPercentage) / (1 - tierPercentage));
-  console.log("currentTiers", currentTiers);
-
   const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
-  console.log("nextTier", nextTier);
-
   const minToNextTier = currentTiers[nextTier - 1] - shares;
-  console.log("minToNextTier", minToNextTier);
-  let text = "";
 
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
-  if (nextTier === 1) {
-    text += t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum });
-  } else if (nextTier === 2 || nextTier === 3) {
-    text += t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum });
-  }
 
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {text}
+          {nextTier === 1 && t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
+          {(nextTier === 2 || nextTier === 3) && t("DepositWithdraw.EmbassyEligibility.tier-middle",
+            { secondOrThird: nextTier === 2 ? "second" : "third", minimum })}
         </span>
         {nextTier > 0 && nextTier < 4 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
       </div>
