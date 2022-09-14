@@ -24,7 +24,6 @@ export default function EmbassyEligibility({ vault }: IProps) {
 
   if (!nftData?.nftTokens || totalShares === 0) return null;
   const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
-  console.log("eligibleOrRedeemed", eligibleOrRedeemed);
 
   const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
   if (maxRedeemedTier === MAX_NFT_TIER) return null;
@@ -34,7 +33,6 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
   const minToNextTier = currentTiers[nextTier - 1] - shares;
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
-  console.log("minToNextTier", minToNextTier, "minimum", minimum, "shares", shares, "currentTiers", currentTiers, "nextTier", nextTier);
 
 
   return (

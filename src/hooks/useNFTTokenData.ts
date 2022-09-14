@@ -111,7 +111,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       }
       return result;
     }, [] as IVaultWithAddress[]);
-    console.log("pidsWithAddresses", pidsWithAddresses);
     return getEligibilityForPids(pidsWithAddresses);
   };
 
@@ -122,7 +121,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const { pid, masterAddress } = pidWithAddress;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
       const tiers = await contract.getTierFromShares(proxyAddress, pid, address);
-      console.log("tiers", tiers);
 
       const tokens: INFTTokenInfo[] = [];
       for (let tier = 1; tier <= MAX_NFT_TIER; tier++) {
