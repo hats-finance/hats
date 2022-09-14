@@ -36,14 +36,6 @@ export default function MyNFTs() {
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.proofTokens?.map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
-      <NFTCard
-        key={index}
-        tokenInfo={nft}
-      />
-    </SwiperSlide>
-  )
   const handleRedeem = useCallback(async () => {
     if (!nftData?.treeRedeemables || !nftData.proofRedeemables) return;
     setShowLoader(true);
@@ -86,22 +78,14 @@ export default function MyNFTs() {
             touchRatio={1.5}
             navigation
             effect={"flip"}>
-            {treeNfts}
-          </Swiper>
-        )}
-      </div>
-      <span className="my-nfts__sub-title">{t("Header.MyAccount.MyNFTs.depsoit-nfts")}</span>
-      <div className="my-nfts__deposit-nfts-container">
-        {depositNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-deposit-nfts")}</div> : (
-          <Swiper
-            spaceBetween={20}
-            modules={[Navigation, Pagination, Scrollbar, A11y]}
-            slidesPerView={screenSize === ScreenSize.Mobile ? 1 : 2}
-            speed={500}
-            touchRatio={1.5}
-            navigation
-            effect={"flip"}>
-            {depositNfts}
+            {nftData?.nftTokens?.map((nft, index) =>
+              <SwiperSlide key={index} className="my-nfts__slide">
+                <NFTCard
+                  key={index}
+                  tokenInfo={nft}
+                />
+              </SwiperSlide>
+            )}
           </Swiper>
         )}
       </div>

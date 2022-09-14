@@ -16,7 +16,7 @@ interface IProps {
 }
 
 export default function NFTCard({ tokenInfo }: IProps) {
-  const { metadata, isRedeemed, tokenId } = tokenInfo;
+  const { metadata, isRedeemed, tokenId, isDeposit, isMerkleTree } = tokenInfo;
   const { chainId } = useEthers();
   const { t } = useTranslation();
   const [fullScreen, setFullScreen] = useState(false);
@@ -53,6 +53,8 @@ export default function NFTCard({ tokenInfo }: IProps) {
     )
   }
 
+  const both = isDeposit && isMerkleTree;
+
   return (
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>
       <Media link={ipfsTransformUri(metadata.image)} />
@@ -68,7 +70,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
         </div>
       </div>
       <div className={classNames("nft-card__status", { "eligible": !isRedeemed, "redeemed": isRedeemed })}>
-        {isRedeemed ? t("NFTCard.redeemed") : t("NFTCard.eligible")}
+        {isRedeemed ? t("NFTCard.redeemed") : both ? "Airdrop/Deposit" : isDeposit ? "Deposit" : "Airdrop"}
       </div>
     </div>
   )
