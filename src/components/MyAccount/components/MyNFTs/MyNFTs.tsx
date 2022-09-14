@@ -27,7 +27,7 @@ export default function MyNFTs() {
   const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
 
-  const treeNfts = nftData?.treeRedeemables?.map((nft, index) =>
+  const treeNfts = nftData?.treeTokens?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
@@ -36,7 +36,7 @@ export default function MyNFTs() {
     </SwiperSlide>
   )
 
-  const depositNfts = nftData?.proofRedeemables?.map((nft, index) =>
+  const depositNfts = nftData?.proofTokens?.map((nft, index) =>
     <SwiperSlide key={index} className="my-nfts__slide">
       <NFTCard
         key={index}
