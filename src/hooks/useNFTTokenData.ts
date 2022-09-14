@@ -79,7 +79,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const treeRedeemables = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed
     && !nftTokens.find(innerNft => innerNft.isRedeemed && innerNft.tokenId.eq(nft.tokenId)));
   const proofRedeemables = nftTokens?.filter(nft => nft.isDeposit && !nft.isRedeemed
-    && !treeRedeemables.find(innerNft => innerNft.isRedeemed && innerNft.tokenId.eq(nft.tokenId)));
+    && !treeRedeemables.find(innerNft => innerNft.tokenId.eq(nft.tokenId)));
   const treeRedeemablesCount = treeRedeemables?.length ?? 0;
 
   useEffect(() => {
