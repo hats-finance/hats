@@ -67,7 +67,6 @@ export default function MyNFTs() {
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
       <span className="my-nfts__title">NFTs</span>
-      <span className="my-nfts__sub-title">{t("Header.MyAccount.MyNFTs.airdrop-nfts")}</span>
       <div className="my-nfts__airdrop-nfts-container">
         {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
