@@ -31,7 +31,6 @@ export default function EmbassyEligibility({ vault }: IProps) {
     .map(tierPercentage => (totalShares * tierPercentage) / (1 - tierPercentage));
   const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
   const minToNextTier = currentTiers[nextTier - 1] - shares;
-
   const minimum = typeof minToNextTier === "number" ? millify(minToNextTier, { precision: 2 }) : "-";
 
   return (
