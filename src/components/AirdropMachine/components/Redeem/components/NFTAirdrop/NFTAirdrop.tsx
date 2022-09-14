@@ -55,9 +55,9 @@ export default function NFTAirdrop() {
         </Swiper>
       </div>
       <div className="nft-airdrop__button-container">
+        {(!account || !isSupportedNetwork) && <span className="nft-airdrop__error">{t("Shared.wallet-not-connected")}</span>}
         <button onClick={handleRedeem} disabled={!account || !isSupportedNetwork} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
       </div>
-      {(!account || !isSupportedNetwork) && <span className="nft-airdrop__error">{t("Shared.wallet-not-connected")}</span>}
       {showLoader && <Loading />}
     </div>
   )

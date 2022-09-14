@@ -12,6 +12,8 @@
     flex-direction: column;
     padding: 10px 20px;
     border-top: 1px solid $blue-3;
+    height: 120px;
+    justify-content: space-between;
     .nft-card__info-title {
       font-size: $small;
       font-weight: bold;
@@ -106,6 +108,7 @@
   .nft-card-wrapper {
     .nft-card__info-container {
       padding: 10px;
+      height: 100px;
       .nft-card__info-title {
         font-size: $xsmall;
       }
