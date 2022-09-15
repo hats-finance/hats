@@ -10,14 +10,12 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./index.scss";
-import { useCallback, useContext, useState } from "react";
+import { useContext } from "react";
 import { AirdropMachineContext } from "components/AirdropMachine/components/CheckEligibility/CheckEligibility";
 import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
-import { INFTTokenInfo } from "types/types";
-import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();

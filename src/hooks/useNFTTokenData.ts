@@ -166,7 +166,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) return null;
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...nft, tier, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
+        tokens.push({ ...nft, pid: String(nft.pid), tier, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
@@ -199,6 +199,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
             const sameTier = Number(innerNft.tier) === Number(nft.tier);
             if (sameTier && typeof innerNft.pid === 'string' && typeof nft.pid === 'number') return true;
             if (nft.tier > innerNft.tier) return true;
+            return false;
           });
           if (shouldAdd)
             filtered.push(nft);
@@ -225,15 +226,15 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const builtMerkleTree = new MerkleTree(merkleTree.map(wallet =>
       wallet.nft_elegebility.map(nft =>
         hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()],
-          nft.pid, wallet.address, nft.tier))).flat(),
+          Number(nft.pid), wallet.address, nft.tier))).flat(),
       keccak256, { sortPairs: true });
     const redeemableProofs = addressInfo.nft_elegebility.map(nft => builtMerkleTree.getHexProof(
-      hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], nft.pid, address, nft.tier)));
+      hashToken(NFTContractDataProxy[nft.masterAddress.toLowerCase()], Number(nft.pid), address, nft.tier)));
     const hatVaults = addressInfo.nft_elegebility.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
     const pids = addressInfo.nft_elegebility.map(nft => nft.pid);
     const tiers = addressInfo.nft_elegebility.map(nft => nft.tier);
     return redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
-  }, [nftTokens, address, redeemMultipleFromTree, treeRedeemables, merkleTree]);
+  }, [nftTokens, address, redeemMultipleFromTree, addressInfo, merkleTree]);
 
   const redeemTreeTransaction = useTransactions().transactions.find(tx =>
     !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
