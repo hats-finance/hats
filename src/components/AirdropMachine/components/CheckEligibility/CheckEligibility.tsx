@@ -67,6 +67,11 @@ export default function CheckEligibility() {
     setShowLoader(false);
   }, [nftData])
 
+  console.log(nftData);
+
+  console.log(isSupportedNetwork, nftData?.isBeforeDeadline, inputError, userInput);
+
+
   return (
     <div className="check-eligibility-wrapper">
       {t("AirdropMachine.CheckEligibility.text-1")}

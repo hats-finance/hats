@@ -4,7 +4,7 @@ import { HATVaultsNFTContract, MAX_NFT_TIER, NFTContractDataProxy, Transactions 
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata, NFTEligibilityElement } from "types/types";
+import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
@@ -77,6 +77,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
   const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
+
   const addressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === address?.toLowerCase());
   const treeRedeemables = nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed);
   const proofRedeemables = nftTokens?.filter(nft => nft.isDeposit && !nft.isMerkleTree && !nft.isRedeemed);
@@ -155,7 +156,11 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [pidsWithAddress, prevPidsWithAddress, getEligibilityForPids, proofTokens])
 
   const getTreeEligibility = useCallback(async () => {
-    if (!contract || !addressInfo) return;
+    if (!addressInfo) {
+      setTreeTokens([]);
+      return [];
+    }
+    if (!contract) return;
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -166,16 +171,20 @@ export function useNFTTokenData(address?: string): INFTTokenData {
         const tokenUri = await contract.uri(tokenId);
         if (!tokenUri) return null;
         const metadata = await (await fetch(ipfsTransformUri(tokenUri))).json() as INFTTokenMetadata;
-        tokens.push({ ...nft, pid: String(nft.pid), tier, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
+        tokens.push({ ...nft, pid: Number(nft.pid), tier, isRedeemed, tokenId, metadata, isMerkleTree: true, isDeposit: false });
       }
       return tokens;
     }));
     const treeTokens = (treeNfts.filter(nfts => nfts !== null) as INFTTokenInfo[][]).flat();
+    console.log(treeTokens);
+
     setTreeTokens(treeTokens);
     return treeTokens;
   }, [contract, address, addressInfo])
 
   const getMerkleTree = useCallback(async () => {
+    console.log('getMerkleTree');
+
     const data = contract?.filters.MerkleTreeChanged();
     if (!data) {
       return;
@@ -185,27 +194,30 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const lastElement = filter[filter.length - 1] as any | undefined;
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
-      const ipfsContent = await response.json();
-      const tree: AirdropMachineWallet[] = [];
 
-      for (const wallet in ipfsContent) {
-        const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
-        // handle duplicate pid with different tier or same tier but different type for pid
-        const filtered = [] as NFTEligibilityElement[];
-        nft_elegebility.forEach(nft => {
-          const shouldAdd = nft_elegebility.find(innerNft => {
-            const samePid = Number(innerNft.pid) === Number(nft.pid) && innerNft.masterAddress === nft.masterAddress;
-            if (!samePid) return false;
-            const sameTier = Number(innerNft.tier) === Number(nft.tier);
-            if (sameTier && typeof innerNft.pid === 'string' && typeof nft.pid === 'number') return true;
-            if (nft.tier > innerNft.tier) return true;
-            return false;
-          });
-          if (shouldAdd)
-            filtered.push(nft);
-        });
-        tree.push({ address: wallet, ...ipfsContent[wallet], nft_elegebility: filtered });
-      }
+      const ipfsContent = await response.json() as { [index: string]: AirdropMachineWallet };
+
+      const tree = Object.entries(ipfsContent).map(([wallet, data]) =>
+        ({ ...data, address: wallet })) as AirdropMachineWallet[];
+
+      // for (const wallet in ipfsContent) {
+      //   const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
+      //   // handle duplicate pid with different tier or same tier but different type for pid
+      //   const filtered = [] as NFTEligibilityElement[];
+      //   nft_elegebility.forEach(nft => {
+      //     const shouldAdd = nft_elegebility.find(innerNft => {
+      //       const samePid = Number(innerNft.pid) === Number(nft.pid) && innerNft.masterAddress === nft.masterAddress;
+      //       if (!samePid) return false;
+      //       const sameTier = Number(innerNft.tier) === Number(nft.tier);
+      //       if (sameTier && typeof innerNft.pid === 'string' && typeof nft.pid === 'number') return true;
+      //       if (nft.tier > innerNft.tier) return true;
+      //       return false;
+      //     });
+      //     if (shouldAdd)
+      //       filtered.push(nft);
+      //   });
+      //   tree.push({ address: wallet, ...ipfsContent[wallet], nft_elegebility: filtered });
+      //}
       setMerkleTree(tree);
       setLastMerkleTree(args);
     }
