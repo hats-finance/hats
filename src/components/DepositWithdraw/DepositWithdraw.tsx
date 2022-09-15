@@ -75,11 +75,14 @@ export default function DepositWithdraw(props: IProps) {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
 
+
+
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
+    setUserInput("");
     await depositAndClaim(selectedPid, userInputValue);
     const newDepositNfts = await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
     if (newDepositNfts) {
