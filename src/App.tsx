@@ -32,6 +32,7 @@ import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/Ai
 import "./styles/App.scss";
 import { useCheckRedeemableNfts } from "components/AirdropMachine/utils";
 import EmbassyNotificationBar from "components/EmbassyNotificationBar/EmbassyNotificationBar";
+import { useOnNetworkChange } from "hooks/useOnNetworkChange";
 
 function App() {
   const dispatch = useDispatch();
@@ -54,6 +55,7 @@ function App() {
   });
 
   useCheckRedeemableNfts(toggleAirdropPrompt);
+  useOnNetworkChange();
 
   return (
     <>
