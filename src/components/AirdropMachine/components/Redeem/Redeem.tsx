@@ -8,17 +8,23 @@ import Redeemed from "./components/Redeemed/Redeemed";
 export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
 
-  console.log(nftData);
 
   if (nftData.treeTokens) {
-    if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0)
-      return <Redeemed />;
-    if (nftData.treeRedeemablesCount > 0)
-      return <Eligible />;
-  }
-  if (!nftData.addressInfo || nftData.treeRedeemablesCount === 0)
-    return <NotEligible />;
+    console.log("treeTokens", nftData.treeTokens);
 
+    if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
+      console.log("Redeemed");
+      return <Redeemed />;
+    }
+    if (nftData.treeRedeemablesCount > 0) {
+      console.log("Eligible");
+      return <Eligible />;
+    }
+    if (!nftData.addressInfo || nftData.treeRedeemablesCount === 0) {
+      console.log("NotEligible");
+      return <NotEligible />;
+    }
+  }
   return <Loading />;
 }
 

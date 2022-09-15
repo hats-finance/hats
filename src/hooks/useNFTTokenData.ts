@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { TransactionStatus, useContractFunction, useEthers, useTransactions } from "@usedapp/core";
+import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
 import { HATVaultsNFTContract, MAX_NFT_TIER, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
@@ -85,6 +85,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   useEffect(() => {
     if (address !== prevAddress || chainId !== prevChainId) {
+      console.log("addres changed", address);
+
       setTreeTokens(undefined);
       setProofTokens(undefined);
     }
@@ -156,11 +158,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [pidsWithAddress, prevPidsWithAddress, getEligibilityForPids, proofTokens])
 
   const getTreeEligibility = useCallback(async () => {
-    if (!addressInfo) {
-      setTreeTokens([]);
-      return [];
-    }
-    if (!contract) return;
+    if (!contract || !addressInfo) return;
     const treeNfts = await Promise.all(addressInfo.nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
@@ -229,9 +227,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [getMerkleTree, contract])
 
   useEffect(() => {
-    if (addressInfo)
+    if (addressInfo && contract)
       getTreeEligibility();
-  }, [addressInfo, getTreeEligibility]);
+  }, [addressInfo, contract, getTreeEligibility]);
 
   const redeemTree = useCallback(async () => {
     if (!nftTokens || !merkleTree || !address || !addressInfo) return;
@@ -248,22 +246,22 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     return redeemMultipleFromTree(hatVaults, pids, address, tiers, redeemableProofs);
   }, [nftTokens, address, redeemMultipleFromTree, addressInfo, merkleTree]);
 
-  const redeemTreeTransaction = useTransactions().transactions.find(tx =>
-    !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
-  const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
-  useEffect(() => {
-    if (prevRedeemTreeTransaction && !redeemTreeTransaction) {
-      getTreeEligibility();
-    }
-  }, [prevRedeemTreeTransaction, redeemTreeTransaction, addressInfo, getTreeEligibility])
+  // const redeemTreeTransaction = useTransactions().transactions.find(tx =>
+  //   !tx.receipt && tx.transactionName === Transactions.RedeemTreeNFTs);
+  // const prevRedeemTreeTransaction = usePrevious(redeemTreeTransaction);
+  // useEffect(() => {
+  //   if (prevRedeemTreeTransaction && !redeemTreeTransaction) {
+  //     getTreeEligibility();
+  //   }
+  // }, [prevRedeemTreeTransaction, redeemTreeTransaction, addressInfo, getTreeEligibility])
 
-  const redeemSharesTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemDepositNFTs);
-  const prevRedeemSharesTransaction = usePrevious(redeemSharesTransaction);
-  useEffect(() => {
-    if (prevRedeemSharesTransaction && !redeemSharesTransaction && pidsWithAddress) {
-      getEligibilityForPids(pidsWithAddress);
-    }
-  }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids, proofTokens, pidsWithAddress])
+  // const redeemSharesTransaction = useTransactions().transactions.find(tx => !tx.receipt && tx.transactionName === Transactions.RedeemDepositNFTs);
+  // const prevRedeemSharesTransaction = usePrevious(redeemSharesTransaction);
+  // useEffect(() => {
+  //   if (prevRedeemSharesTransaction && !redeemSharesTransaction && pidsWithAddress) {
+  //     getEligibilityForPids(pidsWithAddress);
+  //   }
+  // }, [prevRedeemSharesTransaction, redeemSharesTransaction, getEligibilityForPids, proofTokens, pidsWithAddress])
 
   const redeemProof = useCallback(async () => {
     if (!nftTokens) return;

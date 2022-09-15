@@ -37,7 +37,7 @@ export default function EmbassyNftTicketPrompt() {
         setRedeemed(refreshed.filter((nft) => nftData.proofRedeemables?.find((nftInfo) => nftInfo.tokenId.eq(nft.tokenId))));
     }
     setLoading(false);
-  }, [nftData?.proofRedeemables, nftData?.redeemProof]);
+  }, [nftData]);
 
   const nfts = nftData?.proofTokens?.map((nftInfo, index) =>
     <SwiperSlide key={index}>
