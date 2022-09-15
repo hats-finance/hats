@@ -147,7 +147,7 @@
         "answer-5": "Yes, you can deposit to more than one vault and be part of their embassies."
       },
       "CheckEligibility": {
-        "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
+        "text-1": "Connect your wallet to learn if you are eligible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
         "input-placeholder": "Connect to wallet or paste a wallet adress",
         "no-account": "Please connect with a wallet to check eligibility",
         "button-text-0": "CHECK",
