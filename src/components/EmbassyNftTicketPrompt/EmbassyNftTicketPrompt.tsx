@@ -34,7 +34,7 @@ export default function EmbassyNftTicketPrompt() {
     if (tx?.status) {
       const refreshed = await nftData?.refreshProof(nftData.proofRedeemables);
       if (refreshed)
-        setRedeemed(refreshed);
+        setRedeemed(refreshed.filter((nft) => nftData.proofRedeemables?.find((nftInfo) => nftInfo.tokenId.eq(nft.tokenId))));
     }
     setLoading(false);
   }, [nftData?.proofRedeemables, nftData?.redeemProof]);
