@@ -58,8 +58,12 @@ export default function CheckEligibility() {
     if (!nftData?.treeRedeemables) return;
     setShowLoader(true);
     const tx = await nftData?.redeemTree();
-    if (tx?.status)
-      setRedeemed(nftData?.treeRedeemables);
+    if (tx?.status) {
+      const refreshed = await nftData?.getTreeEligibility();
+      if (refreshed) {
+        setRedeemed(refreshed);
+      }
+    }
     setShowLoader(false);
   }, [nftData])
 
