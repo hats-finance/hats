@@ -4,7 +4,7 @@ import { HATVaultsNFTContract, MAX_NFT_TIER, NFTContractDataProxy, Transactions 
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata } from "types/types";
+import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata, NFTEligibilityElement } from "types/types";
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
@@ -185,11 +185,26 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       const lastElement = filter[filter.length - 1] as any | undefined;
       const args = lastElement.args as MerkleTreeChanged;
       const response = await fetch(ipfsTransformUri(args.merkleTreeIPFSRef));
-      const ipfsContent = await response.json() as { [index: string]: AirdropMachineWallet };
+      const ipfsContent = await response.json();
+      const tree: AirdropMachineWallet[] = [];
 
-      const tree = Object.entries(ipfsContent).map(([wallet, data]) =>
-        ({ ...data, address: wallet })) as AirdropMachineWallet[];
-
+      for (const wallet in ipfsContent) {
+        const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
+        // handle duplicate pid with different tier or same tier but different type for pid
+        const filtered = [] as NFTEligibilityElement[];
+        nft_elegebility.forEach(nft => {
+          const shouldAdd = nft_elegebility.find(innerNft => {
+            const samePid = Number(innerNft.pid) === Number(nft.pid) && innerNft.masterAddress === nft.masterAddress;
+            if (!samePid) return false;
+            const sameTier = Number(innerNft.tier) === Number(nft.tier);
+            if (sameTier && typeof innerNft.pid === 'string' && typeof nft.pid === 'number') return true;
+            if (nft.tier > innerNft.tier) return true;
+          });
+          if (shouldAdd)
+            filtered.push(nft);
+        });
+        tree.push({ address: wallet, ...ipfsContent[wallet], nft_elegebility: filtered });
+      }
       setMerkleTree(tree);
       setLastMerkleTree(args);
     }
