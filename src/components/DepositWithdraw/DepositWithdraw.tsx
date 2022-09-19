@@ -84,8 +84,8 @@ export default function DepositWithdraw(props: IProps) {
   const handleDepositAndClaim = useCallback(async () => {
     setUserInput("");
     await depositAndClaim(selectedPid, userInputValue);
-    const newDepositNfts = await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
-    if (newDepositNfts) {
+    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
+    if ((depositEligibility?.length ?? 0) > (nftData?.proofRedeemables?.length ?? 0)) {
       toggleEmbassyPrompt();
     }
     setUserInput("");
@@ -106,7 +106,7 @@ export default function DepositWithdraw(props: IProps) {
   const handleWithdrawAndClaim = useCallback(async () => {
     withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
     // refresh deposit eligibility
-    await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
+    await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
   }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);

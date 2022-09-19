@@ -40,7 +40,7 @@ export default function MyNFTs() {
       txProof = await nftData?.redeemProof();
     }
 
-    const refreshed = await nftData?.refreshRedeemed();
+    const refreshed = await nftData?.refreshProofAndRedeemed();
     const redeemed: INFTTokenInfoRedeemed[] = [];
     if (refreshed) {
       if (txTree?.status)
@@ -59,7 +59,6 @@ export default function MyNFTs() {
 
   const eligible = nftData?.proofRedeemables?.length || (nftData?.treeRedeemablesCount ?? 0);
   const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemablesCount ?? 0) > 0;
-
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
