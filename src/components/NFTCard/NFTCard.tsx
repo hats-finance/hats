@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
 import Media from "components/Shared/Media/Media";
-import { INFTTokenInfo } from "types/types";
+import { INFTTokenInfoRedeemed } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
@@ -12,7 +12,7 @@ import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 
 interface IProps {
-  tokenInfo: INFTTokenInfo
+  tokenInfo: INFTTokenInfoRedeemed
 }
 
 export default function NFTCard({ tokenInfo }: IProps) {

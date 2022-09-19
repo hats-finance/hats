@@ -16,14 +16,14 @@ import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
-import { INFTTokenInfo } from "types/types";
+import { INFTTokenInfoRedeemed } from "types/types";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { nftData } = useVaults();
   const [loading, setLoading] = useState(false);
-  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
+  const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
 
   const showLoader = !redeemed && loading;
 
@@ -32,22 +32,14 @@ export default function EmbassyNftTicketPrompt() {
     setLoading(true);
     const tx = await nftData?.redeemProof();
     if (tx?.status) {
-      const refreshed = await nftData?.refreshProof(nftData.proofRedeemables);
-      const treeRefreshed = await nftData.getTreeEligibility()
-      if (refreshed && treeRefreshed) {
-        const redeemedThatWereInProof = refreshed
-          .filter((nft) => nftData.proofRedeemables?.find((nftInfo) =>
-            nftInfo.tokenId.eq(nft.tokenId)))
-        setRedeemed(redeemedThatWereInProof);
-      }
+      const refreshed = await nftData?.refreshRedeemed();
+      const redeemed = refreshed?.filter(nft => nft.isRedeemed &&
+        nftData.proofRedeemables?.find(r => r.tokenId.eq(nft.tokenId)));
+      setRedeemed(redeemed);
     }
+
     setLoading(false);
   }, [nftData]);
-
-  const nfts = nftData?.proofTokens?.map((nftInfo, index) =>
-    <SwiperSlide key={index}>
-      <NFTCard key={index} tokenInfo={nftInfo} />
-    </SwiperSlide>)
 
   if (redeemed) return <RedeemNftSuccess redeemed={redeemed} />;
   return (
@@ -63,7 +55,10 @@ export default function EmbassyNftTicketPrompt() {
         touchRatio={1.5}
         navigation
         effect={"flip"}>
-        {nfts}
+        {nftData?.proofRedeemables?.map((nftInfo, index) =>
+          <SwiperSlide key={index}>
+            <NFTCard key={index} tokenInfo={nftInfo} />
+          </SwiperSlide>)}
       </Swiper>
       <button onClick={handleRedeem} className="embassy-nft-ticket__redeem-btn fill">{t("EmbassyNftTicketPrompt.button-text")}</button>
       {showLoader && <Loading />}

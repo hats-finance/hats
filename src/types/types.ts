@@ -220,8 +220,11 @@ export interface INFTTokenInfo {
   tier: number;
   tokenId: BigNumber;
   metadata: INFTTokenMetadata;
-  isRedeemed: boolean;
   masterAddress: string;
   isMerkleTree: boolean;
   isDeposit: boolean;
+}
+
+export interface INFTTokenInfoRedeemed extends INFTTokenInfo {
+  isRedeemed: boolean;
 }

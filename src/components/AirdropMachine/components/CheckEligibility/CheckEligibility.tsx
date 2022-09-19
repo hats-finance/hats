@@ -10,7 +10,7 @@ import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import { INFTTokenInfo } from "types/types";
+import { INFTTokenInfoRedeemed } from "types/types";
 import { useVaults } from "hooks/useVaults";
 
 export interface IAirdropMachineContext {
@@ -32,7 +32,7 @@ export default function CheckEligibility() {
   const address = isAddress(userInput) ? userInput : undefined;
   const isSupportedNetwork = useSupportedNetwork();
   const [showLoader, setShowLoader] = useState(false);
-  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
+  const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
   const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
   const nftDataToCheck = useNFTTokenData(addressToCheck);
   const { nftData: vaultsNftData } = useVaults();
@@ -59,18 +59,14 @@ export default function CheckEligibility() {
     setShowLoader(true);
     const tx = await nftData?.redeemTree();
     if (tx?.status) {
-      const refreshed = await nftData?.getTreeEligibility();
+      const refreshed = await nftData?.refreshRedeemed();
       if (refreshed) {
-        setRedeemed(refreshed);
+        setRedeemed(refreshed.filter(nft => nft.isRedeemed &&
+          nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
       }
     }
     setShowLoader(false);
   }, [nftData])
-
-  console.log(nftData);
-
-  console.log(isSupportedNetwork, nftData?.isBeforeDeadline, inputError, userInput);
-
 
   return (
     <div className="check-eligibility-wrapper">

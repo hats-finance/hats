@@ -17,7 +17,8 @@ import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
-import { INFTTokenInfo } from "types/types";
+import { INFTTokenInfoRedeemed } from "types/types";
+import { TransactionReceipt } from "@ethersproject/providers";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -25,58 +26,46 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
   const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
   const [showLoader, setShowLoader] = useState(false);
-  const [redeemed, setRedeemed] = useState<INFTTokenInfo[] | undefined>();
-
-  const treeNfts = nftData?.treeTokens?.map((nft, index) =>
-    <SwiperSlide key={index} className="my-nfts__slide">
-      <NFTCard
-        key={index}
-        tokenInfo={nft}
-      />
-    </SwiperSlide>
-  )
+  const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
 
   const handleRedeem = useCallback(async () => {
     if (!nftData?.treeRedeemables || !nftData.proofRedeemables) return;
     setShowLoader(true);
-    let redeemed: INFTTokenInfo[] = [];
-    let success = false;
-    let tx;
-    if (nftData.treeRedeemables.length > 0) {
-      tx = await nftData?.redeemTree();
-      if (tx?.status) {
-        const refreshed = await nftData?.getTreeEligibility();
-        if (refreshed)
-          redeemed = [...redeemed, ...refreshed.filter(nft =>
-            nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId)))];
-        success = true;
-      }
+    let txTree: TransactionReceipt | undefined;
+    if (nftData.treeRedeemables.length) {
+      txTree = await nftData?.redeemTree();
     }
-    if (nftData.proofRedeemables.length > 0) {
-      tx = await nftData?.redeemProof();
-      if (tx?.status) {
-        const refreshed = await nftData?.refreshProof(nftData.proofRedeemables);
-        if (refreshed)
-          redeemed = [...redeemed, ...refreshed.filter(nft =>
-            nftData.proofRedeemables?.find(r => r.tokenId.eq(nft.tokenId)))];
-        success = true;
-      }
+    let txProof: TransactionReceipt | undefined;
+    if (nftData.proofRedeemables.length) {
+      txProof = await nftData?.redeemProof();
     }
-    setShowLoader(false);
-    if (success) {
+
+    const refreshed = await nftData?.refreshRedeemed();
+    const redeemed: INFTTokenInfoRedeemed[] = [];
+    if (refreshed) {
+      if (txTree?.status)
+        redeemed.push(...refreshed.filter(nft => nft.isRedeemed &&
+          nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
+      if (txProof?.status)
+        redeemed.push(...refreshed?.filter(nft => nft.isRedeemed &&
+          nftData.proofRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
+    }
+    if (redeemed.length) {
       setRedeemed(redeemed);
       toggleRedeemNftPrompt();
     }
+    setShowLoader(false);
   }, [nftData, toggleRedeemNftPrompt]);
 
-
+  const eligible = nftData?.proofRedeemables?.length || (nftData?.treeRedeemablesCount ?? 0);
   const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemablesCount ?? 0) > 0;
+
 
   return (
     <div className={classNames("my-nfts-wrapper", { "disabled": showLoader })}>
       <span className="my-nfts__title">NFTs</span>
       <div className="my-nfts__airdrop-nfts-container">
-        {treeNfts?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
+        {nftData?.withRedeemed?.length === 0 ? <div className="my-nfts__no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div> : (
           <Swiper
             spaceBetween={20}
             modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -85,7 +74,7 @@ export default function MyNFTs() {
             touchRatio={1.5}
             navigation
             effect={"flip"}>
-            {nftData?.nftTokens?.map((nft, index) =>
+            {nftData?.withRedeemed?.map((nft, index) =>
               <SwiperSlide key={index} className="my-nfts__slide">
                 <NFTCard
                   key={index}
@@ -101,7 +90,7 @@ export default function MyNFTs() {
           <span className="my-nfts__info-text-1">{t("Header.MyAccount.MyNFTs.two-transactions")}</span>}
       </div>
       <button
-        disabled={!nftData?.isBeforeDeadline || nftData?.treeRedeemablesCount === 0}
+        disabled={!nftData?.isBeforeDeadline || !eligible}
         onClick={handleRedeem}
         className="my-nfts__action-btn">
         {t("Header.MyAccount.MyNFTs.redeem")}

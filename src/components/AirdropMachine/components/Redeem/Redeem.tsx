@@ -10,18 +10,13 @@ export default function Redeem() {
 
 
   if (nftData.treeTokens) {
-    console.log("treeTokens", nftData.treeTokens);
-
     if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
-      console.log("Redeemed");
       return <Redeemed />;
     }
     if (nftData.treeRedeemablesCount > 0) {
-      console.log("Eligible");
       return <Eligible />;
     }
     if (!nftData.addressInfo || nftData.treeRedeemablesCount === 0) {
-      console.log("NotEligible");
       return <NotEligible />;
     }
   }
