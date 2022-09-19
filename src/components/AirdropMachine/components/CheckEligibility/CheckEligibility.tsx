@@ -38,6 +38,11 @@ export default function CheckEligibility() {
   const { nftData: vaultsNftData } = useVaults();
   const nftData = account === address && vaultsNftData ? vaultsNftData : nftDataToCheck;
 
+  const handleCloseRedeemModal = useCallback(() => {
+    toggle();
+    setRedeemed(undefined);
+  }, [toggle]);
+
   const handleCheck = useCallback(() => {
     if (address) {
       setAddressToCheck(address);
@@ -66,7 +71,7 @@ export default function CheckEligibility() {
       }
     }
     setShowLoader(false);
-  }, [nftData])
+  }, [nftData]);
 
   return (
     <div className="check-eligibility-wrapper">
@@ -98,7 +103,7 @@ export default function CheckEligibility() {
         hide={handleModalClose}>
         {redeemed ?
           <RedeemNftSuccess redeemed={redeemed!} /> : <AirdropMachineContext.Provider
-            value={{ address, nftData, closeRedeemModal: toggle, handleRedeem, showLoader }} >
+            value={{ address, nftData, closeRedeemModal: handleCloseRedeemModal, handleRedeem, showLoader }} >
             <Redeem />
           </AirdropMachineContext.Provider>
         }
