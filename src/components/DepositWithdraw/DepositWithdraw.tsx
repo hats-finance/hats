@@ -85,7 +85,10 @@ export default function DepositWithdraw(props: IProps) {
     setUserInput("");
     await depositAndClaim(selectedPid, userInputValue);
     const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
-    if ((depositEligibility?.length ?? 0) > (nftData?.proofRedeemables?.length ?? 0)) {
+    const newRedeemables = depositEligibility?.filter(nft => !nft.isRedeemed &&
+      !nftData?.proofRedeemables?.find(r =>
+        r.tokenId.eq(nft.tokenId)))
+    if (newRedeemables?.length) {
       toggleEmbassyPrompt();
     }
     setUserInput("");

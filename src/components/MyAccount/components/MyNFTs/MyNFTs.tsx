@@ -18,7 +18,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { INFTTokenInfoRedeemed } from "types/types";
-import { TransactionReceipt } from "@ethersproject/providers";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -31,26 +30,20 @@ export default function MyNFTs() {
   const handleRedeem = useCallback(async () => {
     if (!nftData?.treeRedeemables || !nftData.proofRedeemables) return;
     setShowLoader(true);
-    let txTree: TransactionReceipt | undefined;
     if (nftData.treeRedeemables.length) {
-      txTree = await nftData?.redeemTree();
+      await nftData?.redeemTree();
     }
-    let txProof: TransactionReceipt | undefined;
     if (nftData.proofRedeemables.length) {
-      txProof = await nftData?.redeemProof();
+      await nftData?.redeemProof();
     }
 
     const refreshed = await nftData?.refreshProofAndRedeemed();
-    const redeemed: INFTTokenInfoRedeemed[] = [];
-    if (refreshed) {
-      if (txTree?.status)
-        redeemed.push(...refreshed.filter(nft => nft.isRedeemed &&
-          nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
-      if (txProof?.status)
-        redeemed.push(...refreshed?.filter(nft => nft.isRedeemed &&
-          nftData.proofRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
-    }
-    if (redeemed.length) {
+    const redeemed = refreshed?.filter(nft => nft.isRedeemed && (
+      nftData?.treeRedeemables?.find(r => nft.tokenId.eq(r.tokenId)) ||
+      nftData?.proofRedeemables?.find(r => nft.tokenId.eq(r.tokenId)))
+    );
+
+    if (redeemed?.length) {
       setRedeemed(redeemed);
       toggleRedeemNftPrompt();
     }

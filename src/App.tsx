@@ -30,7 +30,7 @@ import useModal from "hooks/useModal";
 import Modal from "components/Shared/Modal/Modal";
 import AirdropPrompt from "components/AirdropMachine/components/AirdropPrompt/AirdropPrompt";
 import "./styles/App.scss";
-import { useCheckRedeemableNfts } from "components/AirdropMachine/utils";
+import { useCheckRedeemableNfts } from "components/AirdropMachine/useCheckRedeemableNfts";
 import EmbassyNotificationBar from "components/EmbassyNotificationBar/EmbassyNotificationBar";
 
 function App() {

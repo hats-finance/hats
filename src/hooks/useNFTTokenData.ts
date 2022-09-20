@@ -75,7 +75,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
       return prev;
     }, [] as INFTTokenInfo[]);
   const nftTokens = useMemo(() => mergeTokens(treeTokens, proofTokens), [treeTokens, proofTokens]);
-
   const [withRedeemed, setWithRedeemed] = useState<INFTTokenInfoRedeemed[]>();
   const prevAddress = usePrevious(address);
   const prevChainId = usePrevious(chainId);
@@ -150,7 +149,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     }
   }, [pidsWithAddress, prevPidsWithAddress, getEligibilityForPids, proofTokens]);
 
-
   const getTokensRedeemed = useCallback(async (nfts: INFTTokenInfo[]) => {
     if (!contract || !address) return;
     const withRedeemed = await Promise.all(nfts.map(async nft => {
@@ -168,7 +166,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     const withPossibleHint = found || !hint ? pidsWithAddress : [hint, ...pidsWithAddress];
     const pidsEligibility = await getEligibilityForPids(withPossibleHint);
     const merged = mergeTokens(treeTokens, pidsEligibility);
-    return await getTokensRedeemed(merged);
+    const withRedeemed = await getTokensRedeemed(merged);
+    setWithRedeemed(withRedeemed);
+    return withRedeemed;
   }, [getEligibilityForPids, getTokensRedeemed, treeTokens, pidsWithAddress, contract]);
 
   const refreshRedeemed = useCallback(async () => {
