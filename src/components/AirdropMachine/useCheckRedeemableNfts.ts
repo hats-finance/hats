@@ -1,16 +1,18 @@
 import { usePrevious } from "hooks/usePrevious";
 import { useVaults } from "hooks/useVaults";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useCheckRedeemableNfts = async (toggleAirdropPrompt: () => void) => {
+  const [shown, setShown] = useState(false);
   const { nftData } = useVaults();
   const { isBeforeDeadline, treeRedeemablesCount } = nftData || {};
   const prevTreeRedeemableCount = usePrevious(treeRedeemablesCount);
 
   useEffect(() => {
-    if (isBeforeDeadline && treeRedeemablesCount &&
+    if (!shown && isBeforeDeadline && treeRedeemablesCount &&
       treeRedeemablesCount !== prevTreeRedeemableCount) {
+      setShown(true);
       toggleAirdropPrompt();
     }
-  }, [isBeforeDeadline, treeRedeemablesCount, prevTreeRedeemableCount, toggleAirdropPrompt]);
+  }, [shown, isBeforeDeadline, treeRedeemablesCount, prevTreeRedeemableCount, toggleAirdropPrompt]);
 }
