@@ -1,5 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { useEthers } from "@usedapp/core";
+import { MAX_NFT_TIER } from "constants/constants";
 import { useUserSharesPerVault } from "hooks/contractHooks";
 import { useVaults } from "hooks/useVaults";
 import millify from "millify";
@@ -12,7 +13,7 @@ interface IProps {
 }
 
 const HUNDRED_PERCENT = 10000;
-const TIER_PERCENTAGES = [11, 101, 1501];
+const TIER_PERCENTAGES = [10, 100, 1500];
 
 export default function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
@@ -20,41 +21,30 @@ export default function EmbassyEligibility({ vault }: IProps) {
   const { nftData } = useVaults();
   const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault.pid, account!);
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
-  if (!nftData?.nftTokens || !availableToWithdraw || totalShares === 0) return null;
 
-  const redeemedTiers = nftData.nftTokens.filter(nft => nft.pid === Number(vault.pid) && nft.isDeposit && nft.isRedeemed).map(nft => nft.tier);
-  const maxRedeemedTier = redeemedTiers.length === 0 ? 0 : Math.max(...redeemedTiers);
-  const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
-  let nextTier = 0;
-  for (let i = 0; i < TIER_PERCENTAGES.length; i++) {
-    if (shares < Number((totalShares * TIER_PERCENTAGES[i] / HUNDRED_PERCENT).toFixed(1))) {
-      break;
-    }
-    nextTier++;
-  }
+  if (!nftData?.nftTokens || totalShares === 0) return null;
+  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
 
-  if (maxRedeemedTier === 3) return null;
+  const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
+  if (maxRedeemedTier === MAX_NFT_TIER) return null;
+  const shares = availableToWithdraw ? Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals)) : 0;
+  const currentTiers = TIER_PERCENTAGES.map(tier_percentage => tier_percentage / HUNDRED_PERCENT)
+    .map(tierPercentage => (totalShares * tierPercentage) / (1 - tierPercentage));
+  const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex(tier => tier > shares) + 1);
+  const minToNextTier = currentTiers[nextTier - 1] - shares;
+  const minimum = millify(minToNextTier, { precision: 2 });
 
-  /** this can happen in case the user already redeemed from a specific tier, withdraw the funds and deposit again */
-  if (maxRedeemedTier > nextTier) nextTier = maxRedeemedTier + 1;
-
-  const minToNextTier = ((TIER_PERCENTAGES[nextTier] * (totalShares - shares)) / (HUNDRED_PERCENT - TIER_PERCENTAGES[nextTier])) - shares;
 
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {nextTier === 3 ? <span className="embassy-eligibility__content__all-tiers">{t("DepositWithdraw.EmbassyEligibility.text-5")}</span> : nextTier === 0 ? (
-            `${t("DepositWithdraw.EmbassyEligibility.text-1")}
-            ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`
-          ) :
-            `${t("DepositWithdraw.EmbassyEligibility.text-3")}
-            ${millify(minToNextTier)}
-            ${t("DepositWithdraw.EmbassyEligibility.text-2")}`}
+          {nextTier === 1 && t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
+          {(nextTier === 2 || nextTier === 3) && t("DepositWithdraw.EmbassyEligibility.tier-middle",
+            { secondOrThird: nextTier === 2 ? "second" : "third", minimum })}
         </span>
-        {nextTier !== 3 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.text-4")}</span>}
+        {nextTier > 0 && nextTier < 4 && <span><br /><br />{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
       </div>
     </div>
   )

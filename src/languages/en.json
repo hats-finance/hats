@@ -34,24 +34,20 @@
         "MyNFTs": {
           "airdrop-nfts": "Airdrop machine",
           "depsoit-nfts": "Deposit",
-          "airdrop-redeem": "REDEEM ALL FROM AIRDROP",
-          "deposit-redeem": "REDEEM ALL FROM DEPOSITS",
+          "redeem": "REDEEM ALL",
           "after-deadline": "Deadline has passed",
           "no-tree-nfts": "No airdrop NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
-          "text-0": "Please note, \n",
-          "text-1": "If you notice duplicate NFTs in your account, only one of them will be redeemed and the other will disappear. If you have multiple NFTs of different kinds, you will be able to redeem each of them."
+          "two-transactions": "In order to redeem the NFTs from both the Airdrop Machine and your deposit.You will be asked to sign two transactions on your wallet"
         }
       }
     },
     "DepositWithdraw": {
       "EmbassyEligibility": {
         "title": "NEW! Embassy eligibility",
-        "text-1": "The minimum requirement to enter an Embassy is ",
-        "text-2": "(Staked token) \n\n",
-        "text-3": "The minimum requirement for the next level of trust of the Protector NFT is ",
-        "text-4": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy.",
-        "text-5": "Your have eligibility to all tiers of the Protector NFTs, redeem them via my account. \n\n In turn, this NFTs will grant access to the Vault’s embassy."
+        "tier-minimum": "The minimum requirement to enter an Embassy is {{minimum}} (Staked token) \n\n",
+        "tier-middle": "The minimum requirement for the {{secondOrThird}} level of trust of the Protector NFT is {{minimum}}",
+        "after-deposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
       },
       "Assets": {
         "assets": "Assets",
@@ -151,7 +147,7 @@
         "answer-5": "Yes, you can deposit to more than one vault and be part of their embassies."
       },
       "CheckEligibility": {
-        "text-1": "Connect your wallet to learn if you are eigible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
+        "text-1": "Connect your wallet to learn if you are eligible for Hats first airdrop. \n\n The airdrop will become live in the next few months.",
         "input-placeholder": "Connect to wallet or paste a wallet adress",
         "no-account": "Please connect with a wallet to check eligibility",
         "button-text-0": "CHECK",

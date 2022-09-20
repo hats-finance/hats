@@ -189,7 +189,7 @@ export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?:
 export type VaultApys = { [token: string]: { apy: number | undefined, tokenSymbol: string } };
 
 export interface NFTEligibilityElement {
-  pid: number;
+  pid: number | string;
   tier: number;
   masterAddress: string;
 }
@@ -220,8 +220,11 @@ export interface INFTTokenInfo {
   tier: number;
   tokenId: BigNumber;
   metadata: INFTTokenMetadata;
-  isRedeemed: boolean;
   masterAddress: string;
   isMerkleTree: boolean;
   isDeposit: boolean;
+}
+
+export interface INFTTokenInfoRedeemed extends INFTTokenInfo {
+  isRedeemed: boolean;
 }

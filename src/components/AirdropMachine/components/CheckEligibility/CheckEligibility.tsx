@@ -1,7 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import Modal from "components/Shared/Modal/Modal";
 import useModal from "hooks/useModal";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
@@ -10,11 +10,15 @@ import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { INFTTokenInfoRedeemed } from "types/types";
+import { useVaults } from "hooks/useVaults";
 
 export interface IAirdropMachineContext {
   nftData: INFTTokenData;
   closeRedeemModal: () => void;
   address: string | undefined;
+  handleRedeem: () => Promise<void>;
+  showLoader: boolean;
 }
 
 export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
@@ -24,26 +28,50 @@ export default function CheckEligibility() {
   const { account } = useEthers();
   const [userInput, setUserInput] = useState("");
   const { isShowing, toggle } = useModal();
-  const [redeemed, setRedeemed] = useState(false);
   const inputError = userInput && !isAddress(userInput);
   const address = isAddress(userInput) ? userInput : undefined;
-  const nftData = useNFTTokenData(address);
   const isSupportedNetwork = useSupportedNetwork();
+  const [showLoader, setShowLoader] = useState(false);
+  const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
+  const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
+  const nftDataToCheck = useNFTTokenData(addressToCheck);
+  const { nftData: vaultsNftData } = useVaults();
+  const nftData = account === address && vaultsNftData ? vaultsNftData : nftDataToCheck;
+
+  const handleCloseRedeemModal = useCallback(() => {
+    toggle();
+    setRedeemed(undefined);
+  }, [toggle]);
+
+  const handleCheck = useCallback(() => {
+    if (address) {
+      setAddressToCheck(address);
+      toggle();
+    }
+  }, [address, toggle]);
 
   useEffect(() => {
     setUserInput(account ?? "");
   }, [setUserInput, account])
 
-  useEffect(() => {
-    if (nftData?.redeemMultipleFromTreeState.status === "Success") {
-      setRedeemed(true);
-    }
-  }, [nftData?.redeemMultipleFromTreeState, setRedeemed])
 
   const handleModalClose = () => {
-    setRedeemed(false);
     toggle();
   }
+
+  const handleRedeem = useCallback(async () => {
+    if (!nftData?.treeRedeemables) return;
+    setShowLoader(true);
+    const tx = await nftData?.redeemTree();
+    if (tx?.status) {
+      const refreshed = await nftData?.refreshRedeemed();
+      if (refreshed) {
+        setRedeemed(refreshed.filter(nft => nft.isRedeemed &&
+          nftData.treeRedeemables?.find(r => r.tokenId.eq(nft.tokenId))));
+      }
+    }
+    setShowLoader(false);
+  }, [nftData]);
 
   return (
     <div className="check-eligibility-wrapper">
@@ -64,17 +92,21 @@ export default function CheckEligibility() {
         {!isSupportedNetwork && <span className="check-eligibility__error-label">{t("Shared.network-not-supported")}</span>}
         <button
           className="check-eligibility__check-button fill"
-          onClick={toggle}
+          onClick={handleCheck}
           disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
-          {nftData?.airdropToRedeem ? t("AirdropMachine.CheckEligibility.button-text-1") : t("AirdropMachine.CheckEligibility.button-text-0")}
+          {nftData.treeRedeemablesCount > 0 ? t("AirdropMachine.CheckEligibility.button-text-1") :
+            t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>
       <Modal
         isShowing={isShowing}
         hide={handleModalClose}>
-        <AirdropMachineContext.Provider value={{ address, nftData, closeRedeemModal: toggle }} >
-          {redeemed ? <RedeemNftSuccess type="isMerkleTree" /> : <Redeem />}
-        </AirdropMachineContext.Provider>
+        {redeemed ?
+          <RedeemNftSuccess redeemed={redeemed!} /> : <AirdropMachineContext.Provider
+            value={{ address, nftData, closeRedeemModal: handleCloseRedeemModal, handleRedeem, showLoader }} >
+            <Redeem />
+          </AirdropMachineContext.Provider>
+        }
       </Modal>
     </div>
   )

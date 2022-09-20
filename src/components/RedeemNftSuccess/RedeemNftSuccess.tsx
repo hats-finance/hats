@@ -10,26 +10,19 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { useVaults } from "hooks/useVaults";
 import NFTCard from "components/NFTCard/NFTCard";
 import { RootState } from "reducers";
 import { useSelector } from "react-redux";
+import { INFTTokenInfoRedeemed } from "types/types";
 
-interface IProps {
-  type: "isMerkleTree" | "isDeposit";
-}
-
-export default function RedeemNftSuccess({ type }: IProps) {
+export default function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed[] }) {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData } = useVaults();
 
   const vaultsNames = new Set();
-  const nfts = nftData?.nftTokens?.filter(nft => nft[type] && nft.isRedeemed).map((nft, index) => {
-
+  const nfts = redeemed.map((nft, index) => {
     const vaultName = nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
     vaultsNames.add(vaultName)
-
     return (
       <SwiperSlide key={index} className="swiper-slide">
         <NFTCard key={index} tokenInfo={nft} />

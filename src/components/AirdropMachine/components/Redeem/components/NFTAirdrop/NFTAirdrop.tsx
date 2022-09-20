@@ -20,21 +20,10 @@ import { ScreenSize } from "constants/constants";
 export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData } = useContext(AirdropMachineContext);
+  const { nftData, handleRedeem, showLoader } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
   const { account } = useEthers();
 
-  const showLoader = ["PendingSignature", "Mining"].includes(nftData?.redeemMultipleFromTreeState.status!);
-
-  const handleRedeem = async () => {
-    await nftData?.redeemTree();
-  }
-
-  const nfts = nftData?.nftTokens?.filter(nft => nft.isMerkleTree && !nft.isRedeemed).map((nftInfo, index) =>
-    <SwiperSlide key={index} className="swiper-slide">
-      <NFTCard key={index} tokenInfo={nftInfo} />
-    </SwiperSlide>
-  )
   return (
     <div className={classNames("nft-airdrop-wrapper", { "disabled": showLoader })}>
       <span>{t("AirdropMachine.NFTAirdrop.text-1")}</span>
@@ -51,7 +40,11 @@ export default function NFTAirdrop() {
           touchRatio={1.5}
           navigation
           effect={"flip"}>
-          {nfts}
+          {nftData?.treeRedeemables?.map((nftInfo, index) =>
+            <SwiperSlide key={index} className="swiper-slide">
+              <NFTCard key={index} tokenInfo={nftInfo} />
+            </SwiperSlide>
+          )}
         </Swiper>
       </div>
       <div className="nft-airdrop__button-container">

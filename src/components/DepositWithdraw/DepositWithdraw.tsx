@@ -75,17 +75,24 @@ export default function DepositWithdraw(props: IProps) {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
 
+
+
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
+    setUserInput("");
     await depositAndClaim(selectedPid, userInputValue);
-    const newDepositNfts = await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
-
-    if (newDepositNfts) {
+    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
+    const newRedeemables = depositEligibility?.filter(nft => !nft.isRedeemed &&
+      !nftData?.proofRedeemables?.find(r =>
+        r.tokenId.eq(nft.tokenId)))
+    if (newRedeemables?.length) {
       toggleEmbassyPrompt();
     }
+    setUserInput("");
+    setTermsOfUse(false);
   }, [selectedPid, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
   const tryDeposit = useCallback(async () => {
@@ -102,7 +109,7 @@ export default function DepositWithdraw(props: IProps) {
   const handleWithdrawAndClaim = useCallback(async () => {
     withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
     // refresh deposit eligibility
-    await nftData?.checkDepositEligibility({ pid: selectedPid, masterAddress: master.address });
+    await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
   }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
@@ -185,7 +192,7 @@ export default function DepositWithdraw(props: IProps) {
           {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
-      {tab === Tab.Deposit && <EmbassyEligibility vault={selectedVault} />}
+      {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
       <Assets vault={props.data} />
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>

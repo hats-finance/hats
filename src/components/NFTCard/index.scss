@@ -47,9 +47,8 @@
     border: 2px dashed $blue-4;
   }
   .nft-card__status {
+    padding: 0px 10px;
     position: absolute;
-    width: 100px;
-    height: 38px;
     line-height: 38px;
     text-align: center;
     border-bottom-right-radius: 13px;
