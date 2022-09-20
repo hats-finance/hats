@@ -28,6 +28,10 @@
   }
 }
 
+.swiper-slide {
+  height:unset;
+}
+
 @media only screen and (max-width: $mobile-breakpoint) {
   .my-account-wrapper {
     padding: $modal-element-padding-mobile;
