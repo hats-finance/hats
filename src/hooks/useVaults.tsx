@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState, createContext, useContext } from "rea
 import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
 import { getTokensPrices, getWithdrawSafetyPeriod, ipfsTransformUri } from "utils";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
+import { blacklistedWallets } from "data/blacklistedWallets";
 
 interface IVaultsContext {
   vaults?: IVault[]
@@ -32,6 +33,10 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { chainId, library, account } = useEthers();
   const nftData = useNFTTokenData(account);
+
+  if (account && blacklistedWallets.indexOf(account) !== -1) {
+    throw new Error("Blacklisted wallet");
+  }
 
   const { data } = useQuery<{ vaults: IVault[], masters: IMaster[] }>(
     GET_VAULTS, {
