@@ -24,7 +24,7 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
-  [ChainId.Rinkeby]: "0x1f7658cF1f146e0180531a29f6a1F139c6F3F53B"
+  [ChainId.Rinkeby]: "0x9bcB0Fc30d564077F2dCCD1Dd658250F7Cdc98b8"
 }
 
 export const MAX_NFT_TIER = 3;
