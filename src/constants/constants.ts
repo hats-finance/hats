@@ -1,4 +1,4 @@
-import { ChainId, Mainnet, Rinkeby } from "@usedapp/core";
+import { ChainId, Goerli, Mainnet, Rinkeby } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -31,7 +31,8 @@ export const MAX_NFT_TIER = 3;
 
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
-  [ChainId.Rinkeby]: Rinkeby
+  [ChainId.Rinkeby]: Rinkeby,
+  [ChainId.Goerli]: Goerli
 }
 
 export const VaultService = "https://vault-editor-service.herokuapp.com"
@@ -39,11 +40,13 @@ export const VaultService = "https://vault-editor-service.herokuapp.com"
 export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
   [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
+  [ChainId.Goerli]: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd"
 }
 
 export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv6",
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv6",
+  [ChainId.Goerli]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsgoerli-v6"
 };
 
 export const NFTContractDataProxy = {
