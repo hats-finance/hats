@@ -43,11 +43,10 @@ export interface IVaultDescription {
     website: string
     name: string
     tokenIcon: string
-    type?: string,
-    starttime?: number,
-    endtime?: number,
-    color?: string,
-
+    type?: string
+    starttime?: number
+    endtime?: number
+    color?: string
   }
   "communication-channel": {
     "committee-bot": string
