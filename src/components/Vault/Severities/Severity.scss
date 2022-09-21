@@ -64,6 +64,9 @@
         cursor: pointer;
         width: 100%;
         align-items: center;
+        .nft-image {
+          max-height: 350px;
+        }
       }
       .nft-media-wrapper {
         padding: 40px;

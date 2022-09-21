@@ -2,16 +2,16 @@ import { useSelector } from "react-redux";
 import { ScreenSize, VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 import { RootState } from "../../../reducers";
 import { IVault, ISeverity } from "../../../types/types";
-import NFTMedia from "../../NFTMedia";
 import humanizeDuration from "humanize-duration";
 import { useState } from "react";
 import Modal from "../../Shared/Modal";
 import NFTPrize from "../../NFTPrize";
 import ContractsCovered from "../ContractsCovered";
-import { formatNumber } from "../../../utils";
+import { formatNumber, ipfsTransformUri } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
+import Media from "components/Shared/Media/Media";
 
 interface IProps {
   severity: ISeverity
@@ -57,7 +57,7 @@ export default function Severity(props: IProps) {
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
               <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
-                <NFTMedia link={severity?.["nft-metadata"]?.image} />
+                <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
                 <span className="view-more">
                   View NFT info
                 </span>
@@ -82,7 +82,7 @@ export default function Severity(props: IProps) {
                     {(Number(hackerVestedRewardSplit) / 100) > 0 && <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100}% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>}
                     {(Number(hackerRewardSplit) / 100) > 0 && <span className="division token">{`${Number(hackerRewardSplit) / 100}% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>}
                     {(Number(committeeRewardSplit) / 100) > 0 && <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber((Number(committeeRewardSplit) / 10000) * rewardPrice)}`}</span>}
-                    {(Number(hackerHatRewardSplit) / 100) > 0 && <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${formatNumber((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
+                    {(Number(hackerHatRewardSplit) / 100) > 0 && <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100}% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) pending start of TGE ≈ $${formatNumber((Number(hackerHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
                     {(Number(governanceHatRewardSplit) / 100) > 0 && <span className="division governance">{`${Number(governanceHatRewardSplit) / 100}% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>}
                     {(Number(swapAndBurnSplit) / 100) > 0 && <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${formatNumber((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>}
                   </div>

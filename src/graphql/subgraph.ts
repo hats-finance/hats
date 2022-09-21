@@ -65,3 +65,14 @@ export const GET_VAULTS = gql`
     }
   }
 `;
+
+export const GET_STAKER = gql`
+   query getStaker($address: Bytes!) {
+      stakers (where: {address: $address }) {
+        pid
+        master {
+          address
+        }
+      }
+    }
+  `

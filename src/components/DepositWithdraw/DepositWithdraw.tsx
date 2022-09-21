@@ -15,23 +15,31 @@ import TokenSelect from "./TokenSelect/TokenSelect";
 import Assets from "./Assets/Assets";
 import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
-import "./index.scss";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import "./index.scss";
+import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
+import Modal from "components/Shared/Modal/Modal";
+import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import useModal from "hooks/useModal";
 
 interface IProps {
   data: IVault
   setShowModal: Function
 }
 
-type Tab = "deposit" | "withdraw";
+enum Tab {
+  Deposit = 1,
+  Withdraw
+}
 
 export default function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
   const { setShowModal } = props;
-  const [tab, setTab] = useState<Tab>("deposit");
+  const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
+  const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers();
@@ -39,7 +47,7 @@ export default function DepositWithdraw(props: IProps) {
   const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
 
   const [termsOfUse, setTermsOfUse] = useState(false);
-  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -62,19 +70,30 @@ export default function DepositWithdraw(props: IProps) {
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
   const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(master.withdrawRequestEnablePeriod.toString(), "seconds").unix();
   const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
-
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING,);
   }
+
+
 
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
   const handleDepositAndClaim = useCallback(async () => {
-    depositAndClaim(selectedPid, userInputValue);
-  }, [selectedPid, userInputValue, depositAndClaim])
+    setUserInput("");
+    await depositAndClaim(selectedPid, userInputValue);
+    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
+    const newRedeemables = depositEligibility?.filter(nft => !nft.isRedeemed &&
+      !nftData?.proofRedeemables?.find(r =>
+        r.tokenId.eq(nft.tokenId)))
+    if (newRedeemables?.length) {
+      toggleEmbassyPrompt();
+    }
+    setUserInput("");
+    setTermsOfUse(false);
+  }, [selectedPid, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -89,7 +108,9 @@ export default function DepositWithdraw(props: IProps) {
 
   const handleWithdrawAndClaim = useCallback(async () => {
     withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
-  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim]);
+    // refresh deposit eligibility
+    await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
+  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
@@ -114,9 +135,9 @@ export default function DepositWithdraw(props: IProps) {
     claimRewardState,
     checkInState]
 
-  const keepModalOpen = [withdrawRequestState, approveTokenState];
-  const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining')
-  const pendingWallet = transactionStates.some(state => state.status === "PendingSignature");
+  const keepModalOpen = [withdrawRequestState, approveTokenState, depositAndClaimState];
+  const inTransaction = transactionStates.filter(state => !keepModalOpen.includes(state)).some(state => state.status === 'Mining');
+  const pendingWallet = transactionStates.some(state => state.status === "PendingSignature" || state.status === "Mining");
   const prevApproveTokenState = usePrevious(approveTokenState);
 
   // after successful approve transaction immediatly call deposit and claim
@@ -131,27 +152,22 @@ export default function DepositWithdraw(props: IProps) {
       setShowModal(false);
   }, [inTransaction, setShowModal]);
 
-  const depositWithdrawWrapperClass = classNames({
-    "deposit-wrapper": true,
-    "disabled": pendingWallet
-  })
-
   const isCommitteMultisig = committee.toLowerCase() === account?.toLowerCase();
 
   return (
-    <div className={depositWithdrawWrapperClass}>
+    <div className={classNames("deposit-wrapper", { "disabled": pendingWallet })}>
       <div className="tabs-wrapper">
-        <button className={tab === "deposit" ? "tab selected" : "tab"} onClick={() => { setTab("deposit"); setUserInput(""); }}>DEPOSIT</button>
-        <button className={tab === "withdraw" ? "tab selected" : "tab"} onClick={() => { setTab("withdraw"); setUserInput(""); }}>WITHDRAW</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Deposit })} onClick={() => { setTab(Tab.Deposit); setUserInput(""); }}>DEPOSIT</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Withdraw })} onClick={() => { setTab(Tab.Withdraw); setUserInput(""); }}>WITHDRAW</button>
       </div>
       <div className="balance-wrapper">
-        {tab === "deposit" && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
-        {tab === "withdraw" && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Deposit && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Withdraw && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
         <button
           className="max-button"
           disabled={!committeeCheckedIn}
           onClick={() => setUserInput(
-            tab === "deposit" ?
+            tab === Tab.Deposit ?
               formattedTokenBalance :
               formatAvailableToWithdraw)}>
           (Max)
@@ -171,13 +187,14 @@ export default function DepositWithdraw(props: IProps) {
             </div>
             <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
           </div>
-          {tab === "deposit" && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
-          {tab === "deposit" && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === "withdraw" && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
+          {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
+          {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
+          {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
       </div>
+      {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
       <Assets vault={props.data} />
-      {tab === "deposit" && (
+      {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
           <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
@@ -185,23 +202,23 @@ export default function DepositWithdraw(props: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === "withdraw" && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
-      {tab === "deposit" && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
+      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
+      {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
       <div className="action-btn-wrapper">
-        {tab === "deposit" && showApproveSpendingModal &&
+        {tab === Tab.Deposit && showApproveSpendingModal &&
           <ApproveToken
             approveToken={handleApproveToken}
             userInput={userInput}
             hideApproveSpending={() => setShowApproveSpendingModal(false)}
             stakingTokenDecimals={stakingTokenDecimals} />}
-        {tab === "deposit" &&
+        {tab === Tab.Deposit &&
           <button
             disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause || !isSupportedNetwork}
             className="action-btn"
             onClick={async () => await tryDeposit()}>
             {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && isWithdrawable && !pendingWithdraw &&
+        {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod?.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
@@ -209,7 +226,7 @@ export default function DepositWithdraw(props: IProps) {
             {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ?
               "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
           </button>}
-        {tab === "withdraw" && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
+        {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
@@ -222,7 +239,12 @@ export default function DepositWithdraw(props: IProps) {
           {`CLAIM ${pendingRewardFormat} HATS`}
         </button>
       </div>
-      {pendingWallet && <Loading />}
+      {pendingWallet && <Loading zIndex={10000} />}
+      <Modal
+        isShowing={showEmbassyPrompt}
+        hide={toggleEmbassyPrompt}>
+        <EmbassyNftTicketPrompt />
+      </Modal>
     </div>
   )
 }
