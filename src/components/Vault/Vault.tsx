@@ -52,11 +52,17 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
     </>
   )
 
+  const color = description?.["project-metadata"]?.color;
+  console.log("color", color);
+
+
   return (
     <>
-      <tr ref={ref} className={description?.["project-metadata"]?.type}>
-        {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
-        <td>
+      <tr ref={ref}
+        style={color ? { backgroundColor: color } : undefined}>
+        {screenSize === ScreenSize.Desktop &&
+          <td>{vaultExpand}</td>}
+        <td >
           <div className="project-name-wrapper">
             <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
             <div className="name-source-wrapper">
