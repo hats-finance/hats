@@ -106,14 +106,14 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     pollInterval: DATA_REFRESH_TIME,
   })
 
-  // const getPidsWithAddressees = (nfts: INFTTokenInfo[]) =>
-  //   nfts.reduce((result, nft) => {
-  //     if (!result.find(pidWithAddress => Number(pidWithAddress.pid) === Number(nft.pid)
-  //       && pidWithAddress.masterAddress === nft.masterAddress)) {
-  //       result.push({ pid: String(nft.pid), masterAddress: nft.masterAddress })
-  //     }
-  //     return result;
-  //   }, [] as IVaultWithAddress[]);
+  const getPidsWithAddressees = (nfts: INFTTokenInfo[]) =>
+    nfts.reduce((result, nft) => {
+      if (!result.find(pidWithAddress => Number(pidWithAddress.pid) === Number(nft.pid)
+        && pidWithAddress.masterAddress === nft.masterAddress)) {
+        result.push({ pid: String(nft.pid), masterAddress: nft.masterAddress })
+      }
+      return result;
+    }, [] as IVaultWithAddress[]);
 
   const getEligibilityForPids = useCallback(async (pidsWithAddress: IVaultWithAddress[]) => {
     if (!contract) return;
@@ -288,8 +288,9 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
   const redeemProof = useCallback(async () => {
     if (!nftTokens || !proofRedeemables) return;
-    const hatVaults = proofRedeemables.map(nft => NFTContractDataProxy[nft.masterAddress.toLowerCase()]);
-    const pids = proofRedeemables.map(nft => nft.pid);
+    const pidsWithAddresses = getPidsWithAddressees(proofRedeemables);
+    const hatVaults = pidsWithAddresses.map(pidWA => NFTContractDataProxy[pidWA.masterAddress.toLowerCase()]);
+    const pids = pidsWithAddresses.map(pidWA => pidWA.pid);
 
     return redeemMultipleFromShares(hatVaults, pids, address);
   }, [redeemMultipleFromShares, address, nftTokens, proofRedeemables])
