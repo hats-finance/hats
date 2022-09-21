@@ -214,8 +214,6 @@ export function useNFTTokenData(address?: string): INFTTokenData {
 
       const tree = Object.entries(ipfsContent).map(([wallet, data]) =>
         ({ ...data, address: wallet })) as AirdropMachineWallet[];
-      console.log(tree);
-
 
       // for (const wallet in ipfsContent) {
       //   const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
