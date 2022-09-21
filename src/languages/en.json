@@ -325,7 +325,12 @@
         "token-icon": "Token Icon",
         "website": "Website",
         "website-placeholder": "Link website",
-        "multisig-address-placeholder": "Committee multisig address"
+        "multisig-address-placeholder": "Committee multisig address",
+        "start-time": "Start Time",
+        "end-time": "End Time",
+        "color": "Color",
+        "color-placeholder": "Enter vault color in #aabbcc format",
+        "timestamp-placeholder": "use a number in timestamp format"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",

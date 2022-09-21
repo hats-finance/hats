@@ -44,8 +44,8 @@ export interface IVaultDescription {
     name: string
     tokenIcon: string
     type?: string
-    starttime?: number
-    endtime?: number
+    startTime?: number
+    endTime?: number
     color?: string
   }
   "communication-channel": {

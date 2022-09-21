@@ -26,6 +26,33 @@ export default function VaultDetails({ projectMetaData, onChange }) {
           colorable
           placeholder={t("VaultEditor.vault-details.type-placeholder")}
         />
+        <label>{t("VaultEditor.vault-details.start-time")}</label>
+        <EditableContent
+          textInput
+          name="project-metadata.startTime"
+          value={projectMetaData.type}
+          onChange={onChange}
+          colorable
+          placeholder={t("VaultEditor.vault-details.timestamp-placeholder")}
+        />
+        <label>{t("VaultEditor.vault-details.end-time")}</label>
+        <EditableContent
+          textInput
+          name="project-metadata.endTime"
+          value={projectMetaData.type}
+          onChange={onChange}
+          colorable
+          placeholder={t("VaultEditor.vault-details.timestamp-placeholder")}
+        />
+        <label>{t("VaultEditor.vault-details.color")}</label>
+        <EditableContent
+          textInput
+          name="project-metadata.color"
+          value={projectMetaData.type}
+          onChange={onChange}
+          colorable
+          placeholder={t("VaultEditor.vault-details.color-placeholder")}
+        />
         <label>{t("VaultEditor.vault-details.website")}</label>
         <EditableContent
           name="project-metadata.website"
