@@ -38,7 +38,7 @@ export const VaultService = "https://vault-editor-service.herokuapp.com"
 
 export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
+  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/BKrRf2b-clGp35PE4NPCa7NbMa9Aps3x",
 }
 
 export const VaultSubgraphs = {
