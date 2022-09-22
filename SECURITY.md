@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-[Releases](https://github.com/hats-finance/hats/releases/) contains all available releases. We recommend using the [most recently released version]([https://github.com/hats-finance/hats/releases/](https://github.com/hats-finance/hats/releases/)latest).
+[Releases](https://github.com/hats-finance/hats/releases/) contains all available releases. We recommend using the [most recently released version]([https://github.com/hats-finance/hats/releases/](https://github.com/hats-finance/hats/releases/latest).
 
 ## Reporting a Vulnerability
 
