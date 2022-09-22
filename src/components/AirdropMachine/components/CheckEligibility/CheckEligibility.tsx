@@ -94,7 +94,7 @@ export default function CheckEligibility() {
           className="check-eligibility__check-button fill"
           onClick={handleCheck}
           disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
-          {nftData.treeRedeemablesCount > 0 ? t("AirdropMachine.CheckEligibility.button-text-1") :
+          {nftData === vaultsNftData && nftData.treeRedeemablesCount > 0 ? t("AirdropMachine.CheckEligibility.button-text-1") :
             t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
       </div>
