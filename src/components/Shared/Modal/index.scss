@@ -1,0 +1,80 @@
+@import "../../../styles/constants.scss";
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: $black;
+  opacity: 0.5;
+}
+
+.modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1050;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  outline: 0;
+  .modal {
+    z-index: 100;
+    background: $field-blue;
+    position: relative;
+    border-radius: 3px;
+    overflow: scroll;
+    max-height: 100vh;
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      color: $turquoise;
+      background-color: $field-blue;
+      .modal-header__icon-title-wrapper {
+        padding: 10px;
+        color: $white;
+        font-weight: bold;
+      }
+    }
+    
+    .modal-close-button {
+      padding: 16px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      line-height: 1;
+      opacity: 0.3;
+      cursor: pointer;
+      border: none;
+      font-size: $medium-2;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-screen-breakpoint) {
+  .modal-wrapper {
+    .modal {
+      height: fit-content;
+      max-height: 90%;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .modal-wrapper {
+    .modal {
+      max-height: unset;
+      max-width: unset;
+      height: 100%;
+      width: 100%;
+      .modal-header {
+        padding: unset;
+      }
+    }
+  }
+}

@@ -58,12 +58,3 @@ button:focus {
     font-size: $small;
   }
 }
-
-/* Disable hover effects globally when using a touch device */
-@media (hover: none) {
-  * {
-    :hover {
-      opacity: unset !important;
-    }
-  }
-}

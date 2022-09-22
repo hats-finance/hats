@@ -1,4 +1,4 @@
-@import "../../styles/constants.scss";
+@import "styles/constants.scss";
 
 .wallet-info-wrapper {
   display: flex;
@@ -34,6 +34,24 @@
     border-left: 1px solid;
     margin-left: 10px;
   }
+  .wallet-info__my-account-btn {
+    color: $white;
+    margin-right: 20px;
+    position: relative;
+    .wallet-info__my-account-hat-balance {
+      padding-left: 10px;
+      margin-left: 10px;
+      border-left: 1px solid $turquoise;
+    }
+    .wallet-info__my-account-btn-notification {
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      margin: unset;
+      top: -10px;
+      left: -10px;
+    }
+  }
 }
 
 .disconnect-prompt-wrapper {
@@ -51,20 +69,6 @@
       background-color: $turquoise;
       color: $blue;
     }
-  }
-}
-
-.no-ethereum-prompt-wrapper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  padding: $modal-element-padding-mobile;
-  box-sizing: border-box;
-  button {
-    color: $blue;
-    background-color: $turquoise;
-    border: 1px solid $turquoise;
-    margin-top: auto;
   }
 }
 

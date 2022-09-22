@@ -1,0 +1,29 @@
+@import "../../../../styles/constants.scss";
+
+.timeline-dot-wrapper {
+  display: flex;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  left: -24px;
+  border-radius: 50%;
+  border: 1px solid $light-blue-2;
+  background-color: $field-blue;
+  border-image-slice: 1;
+  border-width: 1px;
+  .timeline-dot__inner-dot {
+    margin: auto;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: $light-blue-2;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .timeline-dot-wrapper {
+    position: unset;
+    margin: auto;
+    left: unset;
+  }
+}

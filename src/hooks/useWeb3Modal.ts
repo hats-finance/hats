@@ -1,12 +1,12 @@
 import Web3Modal, { CHAIN_DATA_LIST } from "web3modal";
 import { useEthers } from "@usedapp/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ENDPOINT, CHAINID } from "settings";
+import { ENDPOINTS, CHAINID } from "settings";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 
 export const useWeb3Modal = () => {
   const [provider, setProvider] = useState<any>();
-  const { activate, deactivate } = useEthers();
+  const { activate, deactivate, chainId } = useEthers();
   const [autoLoaded, setAutoLoaded] = useState(false);
   const autoLoad = true;
   const web3Modal = useMemo(
@@ -18,10 +18,8 @@ export const useWeb3Modal = () => {
           walletconnect: {
             package: WalletConnectProvider,
             options: {
-              chainId: CHAINID,
-              rpc: {
-                [CHAINID]: ENDPOINT
-              }
+              chainId: chainId,
+              rpc: ENDPOINTS
             }
           }
         },
@@ -33,7 +31,7 @@ export const useWeb3Modal = () => {
           hover: "rgb(16, 26, 32)"
         }
       }),
-    []
+    [chainId]
   );
 
   const activateProvider = useCallback(async () => {

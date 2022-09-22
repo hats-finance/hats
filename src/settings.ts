@@ -1,14 +1,15 @@
-import { Endpoint, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
-import { Chain, ChainId } from '@usedapp/core'
-import { NFTAirdropAddress, TokenAirdropAddress, TokenAirdropCID, TokenAirdropDelegatees } from "components/Airdrop/constants";
+import { Endpoints, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
+import { Chain, ChainId, Mainnet, Rinkeby } from '@usedapp/core';
 
 export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Rinkeby;
-export const ENDPOINT = process.env.REACT_APP_ENDPOINT || Endpoint[CHAINID];
+export const ENDPOINTS = Endpoints
+if (process.env.REACT_APP_ENDPOINT_MAINNET) {
+    ENDPOINTS[Mainnet.chainId] = process.env.REACT_APP_ENDPOINT_MAINNET;
+}
+if (process.env.REACT_APP_ENDPOINT_RINKEBY) {
+    ENDPOINTS[Rinkeby.chainId] = process.env.REACT_APP_ENDPOINT_RINKEBY;
+}
 export const VAULT_SERVICE = process.env.REACT_APP_VAULT_SERVICE || VaultService;
-export const NFT_AIRDROP_ADDRESS = NFTAirdropAddress[CHAINID] || NFTAirdropAddress[ChainId.Mainnet];
-export const TOKEN_AIRDROP_ADDRESS = TokenAirdropAddress[CHAINID];
-export const DELEGATEES_IPFS = process.env.REACT_APP_DELEGATEES_IPFS || TokenAirdropDelegatees[CHAINID];
-export const TOKEN_AIRDROP_IPFS_CID = process.env.REACT_APP_TOKEN_AIRDROP_IPFS_CID || TokenAirdropCID[CHAINID];
 export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddress;
 
 export const defaultChain: Chain = Chains[CHAINID];

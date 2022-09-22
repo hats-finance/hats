@@ -14,7 +14,7 @@ import WalletInfo from "./WalletInfo/WalletInfo";
 import WalletButton from "./WalletButton/WalletButton";
 import "../styles/Header.scss";
 import "../styles/global.scss";
-import Logo from "assets/icons/logo.icon";
+//import Logo from "assets/icons/logo.icon";
 
 export default function Header() {
   const location = useLocation();
@@ -23,6 +23,7 @@ export default function Header() {
   const { account } = useEthers();
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
 
+
   return (
     <header data-testid="Header">
       {screenSize === ScreenSize.Desktop && (
@@ -30,7 +31,7 @@ export default function Header() {
           {Pages[getMainPath(location.pathname)]}
         </div>
       )}
-      {screenSize === ScreenSize.Mobile && <Logo />}
+      {/* {screenSize === ScreenSize.Mobile && <Logo />} */}
       {account && <WalletInfo />}
       {(screenSize === ScreenSize.Desktop ||
         (screenSize === ScreenSize.Mobile && !currentTransaction)) && (

@@ -1,0 +1,25 @@
+@import "styles/constants.scss";
+
+.staking-apy-wrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid $blue-3;
+  padding: 15px;
+  .staking-apy__title {
+    font-weight: bold;
+  }
+  .staking-apy__value {
+    margin: 15px 0;
+    color: $turquoise;
+    font-weight: bold;
+    font-size: $medium;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .staking-apy-wrapper {
+    .staking-apy__value {
+      font-size: $moderate;
+    }
+  }
+}
