@@ -12,12 +12,12 @@ export default function Redeem() {
     if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
       return <Redeemed />;
     }
-    if (nftData.treeRedeemablesCount > 0) {
+    if (nftData.treeTokens.length === 0 || nftData.treeRedeemablesCount > 0) {
       return <Eligible />;
     }
   }
 
-  if (!nftData.addressInfo || nftData.treeRedeemablesCount === 0) {
+  if (!nftData.merkleTree && !nftData.addressInfo) {
     return <NotEligible />;
   }
   return <Loading />;
