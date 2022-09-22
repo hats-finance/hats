@@ -19,16 +19,7 @@ export default function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfo
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
 
-  const vaultsNames = new Set();
-  const nfts = redeemed.map((nft, index) => {
-    const vaultName = nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
-    vaultsNames.add(vaultName)
-    return (
-      <SwiperSlide key={index} className="swiper-slide">
-        <NFTCard key={index} tokenInfo={nft} />
-      </SwiperSlide>
-    )
-  })
+  const vaultsNames = new Set(redeemed.map(nft => nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value));
 
   return (
     <div className="airdrop-redeem-success-wrapper">
@@ -63,7 +54,10 @@ export default function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfo
           touchRatio={1.5}
           navigation
           effect={"flip"}>
-          {nfts}
+          {redeemed.map((nft, index) =>
+            <SwiperSlide key={index} className="swiper-slide">
+              <NFTCard key={index} tokenInfo={nft} />
+            </SwiperSlide>)}
         </Swiper>
       </div>
       <div className="airdrop-redeem-success__join-embassy-btn-container">
