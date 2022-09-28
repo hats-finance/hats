@@ -95,7 +95,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [address, prevAddress, chainId, prevChainId]);
 
   useEffect(() => {
-    if (chainId && isSupportedNetwork)
+    if (chainId && isSupportedNetwork && chainId in HATVaultsNFTContract)
       setActualContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
   }, [library, chainId, isSupportedNetwork])
 
