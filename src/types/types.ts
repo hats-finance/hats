@@ -44,6 +44,8 @@ export interface IVaultDescription {
     name: string
     tokenIcon: string
     type?: string
+    endtime?: number
+    starttime?: number
   }
   "communication-channel": {
     "pgp-pk": string | string[],
