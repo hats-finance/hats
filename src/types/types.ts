@@ -46,7 +46,6 @@ export interface IVaultDescription {
     type?: string
   }
   "communication-channel": {
-    "committee-bot": string
     "pgp-pk": string | string[],
   }
   "committee": {
