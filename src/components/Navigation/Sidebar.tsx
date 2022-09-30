@@ -1,3 +1,4 @@
+import Languages from "components/Languages/Languages";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/icons/logo.icon";
 import "../../styles/Sidebar.scss";
@@ -11,6 +12,7 @@ export default function Sidebar() {
       <NavLinks />
       <div className="bottom-wrapper">
         <SoicalAndLegal />
+        <Languages />
       </div>
     </div>
   )

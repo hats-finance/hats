@@ -1,0 +1,16 @@
+
+.languages-wrapper {
+  display: flex;
+  justify-content: center;
+  .language {
+    cursor: pointer;
+    margin: 0 5px;
+    &:hover {
+      opacity: 0.9;
+    }
+    &.selected {
+      font-weight: bold;
+      text-decoration: underline;
+    }
+  }
+}

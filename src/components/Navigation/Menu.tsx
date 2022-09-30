@@ -2,6 +2,7 @@ import NavLinks from "./NavLinks";
 import "./Menu.scss"
 import SoicalAndLegal from "./SoicalAndLegal";
 import { useEffect } from "react";
+import Languages from "components/Languages/Languages";
 
 export default function Menu() {
 
@@ -16,6 +17,7 @@ export default function Menu() {
     <div className="menu-wrapper">
       <NavLinks />
       <SoicalAndLegal />
+      <Languages />
     </div>
   )
 }

@@ -160,7 +160,9 @@
         "submit-complete-text": "While waiting, become an active member of our community and let us know what you think.",
         "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee.",
         "submit-new": "SUBMIT NEW VULNERABILITY",
-        "join-discord": "JOIN US ON DISCORD"
+        "join-discord": "JOIN US ON DISCORD",
+        "warning": "Please make sure you completed all steps and your wallet is connected.",
+        "submission-time": "Submitting might take longer than usual"
       }
     },
     "RedeemNftSuccess": {
