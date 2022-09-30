@@ -5,8 +5,11 @@ import MediumIcon from "../../assets/icons/social/medium.icon";
 import DiscordIcon from "../../assets/icons/social/discord.icon";
 import TwitterIcon from "../../assets/icons/social/twitter.icon";
 import GitHubIcon from "../../assets/icons/social/github.icon";
+import { useTranslation } from "react-i18next";
 
 export default function SoicalAndLegal() {
+  const { t } = useTranslation();
+  
   return (
     <div className="social-legal-wrapper">
       <div className="social-wrapper">
@@ -16,9 +19,9 @@ export default function SoicalAndLegal() {
         <a target="_blank" rel="noopener noreferrer" href={SocialLinks.Twitter}><TwitterIcon /></a>
         <a target="_blank" rel="noopener noreferrer" href={SocialLinks.GitHub}><GitHubIcon /></a>
       </div>
-      <a target="_blank" rel="noopener noreferrer" href={DOCS}>Docs</a>
-      <a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>Terms of Use</a>
-      <a target="_blank" rel="noopener noreferrer" href={RISK_FACTOR}>Risk Factor</a>
+      <a target="_blank" rel="noopener noreferrer" href={DOCS}>{t("SoicalAndLegal.docs")}</a>
+      <a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>{t("SoicalAndLegal.terms-of-use")}</a>
+      <a target="_blank" rel="noopener noreferrer" href={RISK_FACTOR}>{t("SoicalAndLegal.risk-factor")}</a>
     </div>
   )
 }

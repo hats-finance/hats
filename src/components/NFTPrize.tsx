@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import "../styles/NFTPrize.scss";
 import { ISeverity } from "../types/types";
@@ -8,6 +9,7 @@ interface IProps {
 }
 
 export default function NFTPrize(props: IProps) {
+  const { t } = useTranslation();
   const severity = props.data;
 
   return (
@@ -15,9 +17,9 @@ export default function NFTPrize(props: IProps) {
       <span className="nft-name">{severity?.["nft-metadata"]?.name}</span>
       <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-prize__video" />
       <div className="nft-info">
-        <span className="subtitle">Description:</span>
+        <span className="subtitle">{t("NFTPrize.description")}</span>
         <span className="data">{severity?.["nft-metadata"]?.description}</span>
-        <span className="subtitle">Severity:</span>
+        <span className="subtitle">{t("NFTPrize.severity")}</span>
         <span className="data">{severity?.name.toUpperCase()}</span>
       </div>
     </div>

@@ -4,6 +4,7 @@ import moment from 'moment';
 import classNames from "classnames";
 import { Colors } from "../../../constants/constants";
 import "./index.scss";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   endDate: string
@@ -13,6 +14,7 @@ interface IProps {
 }
 
 export default function Countdown(props: IProps) {
+  const { t } = useTranslation();
   const { endDate, plainTextView, onEnd } = props;
   const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
   const [timer, setTimer] = useState({
@@ -68,22 +70,22 @@ export default function Countdown(props: IProps) {
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{String(timer.days).padStart(2, "0")}</span>
           {plainTextView && ":"}
-          {!plainTextView && <span className="type">DAYS</span>}
+          {!plainTextView && <span className="type">{t("Countdown.days")}</span>}
         </div>)}
       <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{String(timer.hours).padStart(2, "0")}</span>
-        {!plainTextView && <span className="type">HOURS</span>}
+        {!plainTextView && <span className="type">{t("Countdown.hours")}</span>}
         {plainTextView && ":"}
       </div>
       <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{String(timer.minutes).padStart(2, "0")}</span>
-        {!plainTextView && <span className="type">MINUTES</span>}
+        {!plainTextView && <span className="type">{t("Countdown.minutes")}</span>}
         {plainTextView && ":"}
       </div>
       {String(timer.days) === "0" && (
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{String(timer.seconds).padStart(2, "0")}</span>
-          {!plainTextView && <span className="type">SECONDS</span>}
+          {!plainTextView && <span className="type">{t("Countdown.seconds")}</span>}
         </div>
       )}
     </div>

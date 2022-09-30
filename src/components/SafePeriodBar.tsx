@@ -5,8 +5,10 @@ import InfoIcon from "../assets/icons/info.icon";
 import "../styles/SafePeriodBar.scss";
 import { useVaults } from "hooks/useVaults";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 export default function SafePeriodBar() {
+  const { t } = useTranslation();
   const { withdrawSafetyPeriod } = useVaults();
   if (!withdrawSafetyPeriod) {
     return null;
@@ -18,11 +20,11 @@ export default function SafePeriodBar() {
     <tr>
       <th colSpan={7} className={classNames("safe-period", { "on": isSafetyPeriod })}>
         <div className="text-wrapper">
-          {isSafetyPeriod ? <div>{`WITHDRAWAL SAFE PERIOD IS ON UNTIL ${safetyPeriodDate}`}</div> : <div>{`THE NEXT SAFE PERIOD WILL START AT ${safetyPeriodDate}`}</div>}
+          {isSafetyPeriod ? <div>{`${t("SafePeriodBar.text-0")} ${safetyPeriodDate}`}</div> : <div>{`${t("SafePeriodBar.text-1")} ${safetyPeriodDate}`}</div>}
           <Tooltip
             overlayClassName="tooltip"
             overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-            overlay="Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled">
+            overlay={t("SafePeriodBar.text-2")}>
             <div style={{ display: "flex", marginLeft: "10px" }}><InfoIcon fill={isSafetyPeriod ? Colors.darkBlue : Colors.turquoise} /></div>
           </Tooltip>
         </div>

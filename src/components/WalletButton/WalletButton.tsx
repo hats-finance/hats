@@ -5,8 +5,10 @@ import Dot from "../Shared/Dot/Dot";
 import "./WalletButton.scss";
 import { shortenIfAddress, useEthers } from "@usedapp/core";
 import { useWeb3Modal } from "hooks/useWeb3Modal";
+import { useTranslation } from "react-i18next";
 
 export default function WalletButton() {
+  const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { account } = useEthers()
   const { activateProvider, deactivateProvider } = useWeb3Modal()
@@ -18,7 +20,7 @@ export default function WalletButton() {
         onClick={account ? deactivateProvider : activateProvider}>
         <div>
           <Dot color={account ? Colors.turquoise : Colors.red} />
-          {account ? screenSize === ScreenSize.Desktop ? "Disconnect Wallet" : `${shortenIfAddress(account)}` : "Connect a Wallet"}
+          {account ? screenSize === ScreenSize.Desktop ? t("Header.WalletButton.disconnect") : `${shortenIfAddress(account)}` : t("Header.WalletButton.connect")}
         </div>
       </button>
     </>

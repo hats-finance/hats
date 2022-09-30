@@ -7,16 +7,39 @@
       "wallet-not-connected": "Please connect to your wallet first",
       "network-not-supported": "Please connect to a supported network"
     },
+    "Countdown": {
+      "days": "DAYS",
+      "hours": "HOURS",
+      "minutes": "MINUTES",
+      "seconds": "SECONDS"
+    },
+    "CopyToClipboard": {
+      "copied": "Copied",
+      "copy": "Copy to clipboard"
+    },
     "Welcome": {
       "title": "Hats",
       "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
       "button": "ENTER"
+    },
+    "Cookies": {
+      "text-1": "This website uses cookies to ensure you the best experience on our website",
+      "text-2": "Cookies Policy",
+      "text-3": "ACCEPT"
+    },
+    "TransactionInfo": {
+      "pending-transaction": "Pending Transaction",
+      "pending": "Pending"
     },
     "EmbassyNotificationBar": {
       "title": "HEY PROTECTOR, JOIN YOUR EMBASSY",
       "learn-more": "LEARN MORE"
     },
     "Header": {
+      "WalletButton": {
+        "disconnect": "Disconnect Wallet",
+        "connect": "Connect a Wallet"
+      },
       "WalletInfo": {
         "my-account": "My Account"
       },
@@ -42,7 +65,42 @@
         }
       }
     },
+    "SoicalAndLegal": {
+      "docs": "Docs",
+      "terms-of-use": "Terms of Use",
+      "risk-factor": "Risk Factor"
+    },
+    "NavLinks": {
+      "vaults": "Vaults",
+      "gov": "Gov",
+      "airdrop-machine": "Airdrop Machine",
+      "submit-vulnerability": "Submit Vulnerability",
+      "committee-tools": "Committee Tools",
+      "vault-editor": "Vault Editor"
+    },
     "DepositWithdraw": {
+      "deposit": "DEPOSIT",
+      "withdraw": "WITHDRAW",
+      "max": "MAX",
+      "text-0": "Vault token",
+      "text-1": "Insufficient funds",
+      "text-2": "Can't withdraw more than available",
+      "text-3": "I UNDERSTAND AND AGREE TO THE",
+      "text-4": "TERMS OF USE",
+      "text-5": "COMMITTEE IS NOT CHECKED IN YET!",
+      "text-6": "DEPOSIT PAUSE IS IN EFFECT!",
+      "text-7": "SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD",
+      "text-8": "DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST",
+      "text-9": "WITHDRAWAL REQUEST",
+      "text-10": "CHECK IN",
+      "ApproveToken": {
+        "text-0": "APPROVE TOKEN",
+        "text-1": "Before you can proceed, you need to approve your token spending amount.",
+        "text-2": "You will have to sign two transactions, one for approve spend and one for deposit. If you choose unlimited approval you will need to do it only for the first time",
+        "text-3": "UNLIMITED APPROVAL",
+        "text-4": "Want to approve before each transaction?",
+        "text-5": "Limited approval"
+      },
       "EmbassyEligibility": {
         "title": "NEW! Embassy eligibility",
         "tier-minimum": "The minimum requirement to enter an Embassy is {{minimum}} (Staked token) \n\n",
@@ -54,6 +112,10 @@
         "withdraw": "Withdraw",
         "status": "Status",
         "deposited": "Deposited"
+      },
+      "WithdrawTimer": {
+        "pending": "Pending ",
+        "withdrawable": "Withdrawable "
       }
     },
     "SubmitVulnerability": {
@@ -72,10 +134,20 @@
         "awards-sub-title": "Awards",
         "awards-text-1": "For low-level severity vulnerabilities rewards are likely to be released within 14 days of the validation of your submission.\n\nFor medium, high and critical level severity vulnerabilities, rewards will be released within two weeks after the vulnerability has been properly addressed.\n\n",
         "awards-text-2": "\n\nThe size of your reward will be based on the decided severity. The severity is decided through the committee within the communicated periods",
-        "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential."
+        "warning-notice": "PLEASE BE AWARE!\n\nIf the vulnerability is exploited prior to the solution being implemented the reward will be voided. As such, please keep all activity in relation to Hats Finance vaults private and confidential.",
+        "level": "Level",
+        "prize": "Prize",
+        "text-0": "I UNDERSTAND AND AGREE TO THE",
+        "text-1": "TERMS OF USE",
+        "next": "NEXT"
       },
       "Submit": {
         "review-notice": "Please review your request before submitting:",
+        "project-name": "Project Name:",
+        "contact-info": "Contact Information:",
+        "vulnerability-description": "Vulnerability Description:",
+        "submit": "SUBMIT",
+        "committee-not-checked": "COMMITTEE IS NOT CHECKED IN YET!",
         "submit-thanks": "Hello new hatter, thank you for your submission!",
         "on-chain-transaction-success": "On-chain transaction submitted successfully",
         "on-chain-transaction": "Transaction on-chain confirmation",
@@ -86,7 +158,9 @@
         "pending": "Pending",
         "bot-resend": "RESEND TO BOT",
         "submit-complete-text": "While waiting, become an active member of our community and let us know what you think.",
-        "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee."
+        "response-notice": "If you have not received response within 12 hours please contact security@hats.finance in order to check if there is an issue with the bot or the committee.",
+        "submit-new": "SUBMIT NEW VULNERABILITY",
+        "join-discord": "JOIN US ON DISCORD"
       }
     },
     "RedeemNftSuccess": {
@@ -384,6 +458,57 @@
       "withdrawal-available": "WITHDRAWAL AVAILABLE",
       "prize-division": "Prize Content Division",
       "submit-vulnerability": "SUBMIT VULNERABILITY"
+    },
+    "Severity": {
+      "description": "Description:",
+      "view-nft-info": "View NFT info",
+      "max-prize": "Max Prize:",
+      "prize-content-division:": "Prize Content Division:",
+      "view-contracts-covered": "View Contracts Covered",
+      "nft-prize": "NFT PRIZE",
+      "contracts-covered": "CONTRACTS COVERED"
+    },
+    "Honeypots": {
+      "search-placeholder": "Search vault...",
+      "total-vault": "TOTAL VAULT",
+      "apy": "APY",
+      "bounty": "Bounty",
+      "vaults": "Vaults"
+    },
+    "Gov": {
+      "forum-link": "Forum in Discord"
+    },
+    "SafePeriodBar": {
+      "text-0": "WITHDRAWAL SAFE PERIOD IS ON UNTIL",
+      "text-1": "THE NEXT SAFE PERIOD WILL START AT",
+      "text-2": "Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled"
+    },
+    "VulnerabilityAccordion": {
+      "select-project": "SELECT PROJECT",
+      "contact-info": "CONTACT INFORMATION",
+      "vulnerability-description": "DESCRIBE VULNERABILITY",
+      "terms-and-process": "TERMS AND PROCESS",
+      "submit": "SUBMIT"
+    },
+    "ProjectSelect": {
+      "no-projects": "No projects found",
+      "project-name": "PROJECT NAME",
+      "vault-total": "VAULT TOTAL"
+    },
+    "ContactInfo": {
+      "telegram-user": "1. Add your Telegram user: \n You will be updated via your Telegram user in the submition progress",
+      "telegram-user-placeholder": "@AddYourUserNameHere",
+      "beneficiary": "2. Add your beneficiary wallet address: \n The prize will be transferred to the beneficiary wallet address you provide.",
+      "beneficiary-placeholder": "AddTheBeneficiaryWalletAddressHere",
+      "invalid-address": "Please enter a valid address",
+      "add": "ADD"
+    },
+    "Description": {
+      "save-and-download": "SAVE AND DOWNLOAD"
+    },
+    "NFTPrize": {
+      "description": "Description:",
+      "severity": "Severity:"
     }
   }
 }

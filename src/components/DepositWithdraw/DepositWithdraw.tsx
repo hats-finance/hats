@@ -22,6 +22,7 @@ import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
 import Modal from "components/Shared/Modal/Modal";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   data: IVault
@@ -34,6 +35,7 @@ enum Tab {
 }
 
 export default function DepositWithdraw(props: IProps) {
+  const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
     committeeCheckedIn, depositPause } = props.data;
@@ -157,8 +159,8 @@ export default function DepositWithdraw(props: IProps) {
   return (
     <div className={classNames("deposit-wrapper", { "disabled": pendingWallet })}>
       <div className="tabs-wrapper">
-        <button className={classNames("tab", { "selected": tab === Tab.Deposit })} onClick={() => { setTab(Tab.Deposit); setUserInput(""); }}>DEPOSIT</button>
-        <button className={classNames("tab", { "selected": tab === Tab.Withdraw })} onClick={() => { setTab(Tab.Withdraw); setUserInput(""); }}>WITHDRAW</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Deposit })} onClick={() => { setTab(Tab.Deposit); setUserInput(""); }}>{t("DepositWithdraw.deposit")}</button>
+        <button className={classNames("tab", { "selected": tab === Tab.Withdraw })} onClick={() => { setTab(Tab.Withdraw); setUserInput(""); }}>{t("DepositWithdraw.withdraw")}</button>
       </div>
       <div className="balance-wrapper">
         {tab === Tab.Deposit && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
@@ -170,13 +172,13 @@ export default function DepositWithdraw(props: IProps) {
             tab === Tab.Deposit ?
               formattedTokenBalance :
               formatAvailableToWithdraw)}>
-          (Max)
+          ({t("DepositWithdraw.max")})
         </button>
       </div>
       <div>
         <div className="amount-wrapper">
           <div className="top">
-            <span>Vault token</span>
+            <span>{t("DepositWithdraw.text-0")}</span>
             <span>&#8776; {!tokenPrices?.[stakingToken] ? "-" : `$${millify(tokenPrices?.[stakingToken], { precision: 3 })}`}</span>
           </div>
           <div className="input-wrapper">
@@ -188,8 +190,8 @@ export default function DepositWithdraw(props: IProps) {
             <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
           </div>
           {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && <span className="input-error">{`Minimum deposit is ${formatUnits(String(MINIMUM_DEPOSIT), stakingTokenDecimals)}`}</span>}
-          {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
+          {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">{t("DepositWithdraw.text-1")}</span>}
+          {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">{t("DepositWithdraw.text-2")}</span>}
         </div>
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
@@ -197,13 +199,13 @@ export default function DepositWithdraw(props: IProps) {
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-          <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
+          <label>{t("DepositWithdraw.text-3")} <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>{t("DepositWithdraw.text-4")}</a></u></label>
         </div>
       )}
-      {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
-      {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>}
-      {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>}
+      {!committeeCheckedIn && <span className="extra-info-wrapper">{t("DepositWithdraw.text-5")}</span>}
+      {depositPause && <span className="extra-info-wrapper">{t("DepositWithdraw.text-6")}</span>}
+      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && <span className="extra-info-wrapper">{t("DepositWithdraw.text-7")}</span>}
+      {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && <span className="extra-info-wrapper">{t("DepositWithdraw.text-8")}</span>}
       <div className="action-btn-wrapper">
         {tab === Tab.Deposit && showApproveSpendingModal &&
           <ApproveToken
@@ -230,8 +232,8 @@ export default function DepositWithdraw(props: IProps) {
           <button
             disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
-            onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
-        {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
+            onClick={async () => await handleWithdrawRequest()}>{t("DepositWithdraw.text-9")}</button>}
+        {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">{t("DepositWithdraw.text-10")}</button>}
         <button
           onClick={async () => await handleClaimReward()}
           disabled={!pendingReward || pendingReward.eq(0)}

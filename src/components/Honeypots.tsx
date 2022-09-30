@@ -14,12 +14,14 @@ import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   showDeposit?: boolean
 }
 
 export default function Honeypots({ showDeposit }: IProps) {
+  const { t } = useTranslation();
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
@@ -77,13 +79,13 @@ export default function Honeypots({ showDeposit }: IProps) {
                     value={userSearch}
                     onChange={(e) => setUserSearch(e.target.value)}
                     className="search-input"
-                    placeholder="Search vault..." />
+                    placeholder={t("Honeypots.search-placeholder")} />
                 </div>
               </th>
               {screenSize === ScreenSize.Desktop && (
                 <>
-                  <th>TOTAL VAULT</th>
-                  <th>APY</th>
+                  <th>{t("Honeypots.total-vault")}</th>
+                  <th>{t("Honeypots.apy")}</th>
                   <th></th>
                 </>
               )}
@@ -92,7 +94,7 @@ export default function Honeypots({ showDeposit }: IProps) {
             {vaultsByGroup && Object.entries(vaultsByGroup).sort().reverse().map(([type, vaults]) =>
               <React.Fragment key={type}>
                 <tr className="transparent-row">
-                  <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
+                  <td colSpan={7}>{type === normalVaultKey ? t("Honeypots.bounty") : capitalizeFirstLetter(type)} {t("Honeypots.vaults")}</td>
                 </tr>
                 {vaults && vaults.map(vault =>
                   <Vault

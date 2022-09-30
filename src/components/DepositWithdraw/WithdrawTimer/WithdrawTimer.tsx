@@ -3,6 +3,7 @@ import Countdown from "components/Shared/Countdown/Countdown";
 import { Colors } from "constants/constants";
 import { useWithdrawRequestInfo } from "hooks/contractHooks";
 import moment from "moment";
+import { useTranslation } from "react-i18next";
 import { IVault } from "types/types";
 import { isDateBefore, isDateBetween } from "utils";
 
@@ -14,6 +15,7 @@ interface IProps {
 }
 
 export default function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawState = true }: IProps) {
+  const { t } = useTranslation();
   const { account } = useEthers();
   const withdrawRequestTime = useWithdrawRequestInfo(vault.master.address, vault.pid, account!);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
@@ -25,7 +27,7 @@ export default function WithdrawTimer({ vault, plainTextView, placeHolder, showW
     <>
       {(pendingWithdraw || isWithdrawable) && countdownValue ? (
         <>
-          {showWithdrawState && <span>{pendingWithdraw ? "Pending " : "Withdrawable "}</span>}
+          {showWithdrawState && <span>{pendingWithdraw ? t("DepositWithdraw.WithdrawTimer.pending") : t("DepositWithdraw.WithdrawTimer.withdrawable")}</span>}
           <Countdown
             plainTextView={plainTextView}
             endDate={countdownValue}

@@ -12,6 +12,7 @@ import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
 import Media from "components/Shared/Media/Media";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   severity: ISeverity
@@ -23,6 +24,7 @@ interface IProps {
 }
 
 export default function Severity(props: IProps) {
+  const { t } = useTranslation();
   const [showNFTModal, setShowNFTModal] = useState(false);
   const [modalNFTData, setModalNFTData] = useState(null);
   const [showContractsModal, setShowContractsModal] = useState(false);
@@ -50,7 +52,7 @@ export default function Severity(props: IProps) {
         <div className="severity-data">
           {severity?.description &&
             <div className="severity-data-item">
-              <span className="vault-expanded-subtitle">{isNormalVault && 'Severity '} Description:</span>
+              <span className="vault-expanded-subtitle">{isNormalVault && 'Severity '} {t("Severity.description")}</span>
               <span style={{ color: "white" }}>{severity.description}</span>
             </div>}
           {severity?.["nft-metadata"] &&
@@ -59,12 +61,12 @@ export default function Severity(props: IProps) {
               <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
                 <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
                 <span className="view-more">
-                  View NFT info
+                  {t("Severity.view-nft-info")}
                 </span>
               </div>
             </div>}
           <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Max Prize:</span>
+            <span className="vault-expanded-subtitle">{t("Severity.max-prize")}</span>
             <span className="vault-prize">
               <b style={{ color: "white" }}>
                 {`${rewardPercentage.toFixed(2)}%`}
@@ -77,7 +79,7 @@ export default function Severity(props: IProps) {
             {
               screenSize === ScreenSize.Desktop && rewardPrice && (
                 <>
-                  <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                  <span className="vault-expanded-subtitle">{t("Severity.prize-content-division")}</span>
                   <div className="severity-prize-division-wrapper">
                     {(Number(hackerVestedRewardSplit) / 100) > 0 && <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100}% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, { units: ["d", "h", "m"] })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>}
                     {(Number(hackerRewardSplit) / 100) > 0 && <span className="division token">{`${Number(hackerRewardSplit) / 100}% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber((Number(hackerRewardSplit) / 10000) * rewardPrice)}`}</span>}
@@ -90,20 +92,20 @@ export default function Severity(props: IProps) {
               )
             }
             <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
-              View Contracts Covered
+              {t("Severity.view-contracts-covered")}
             </span>
           </div>
         </div>
       )}
       {
         showNFTModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowNFTModal} maxWidth="600px" width="60%" height="fit-content">
+        <Modal title={t("Severity.nft-prize")} setShowModal={setShowNFTModal} maxWidth="600px" width="60%" height="fit-content">
           <NFTPrize data={modalNFTData as any} />
         </Modal>
       }
       {
         showContractsModal &&
-        <Modal title="CONTRACTS COVERED" setShowModal={setShowContractsModal} height="fit-content">
+        <Modal title={t("Severity.contracts-covered")} setShowModal={setShowContractsModal} height="fit-content">
           <div className="contracts-covered-modal-wrapper"><ContractsCovered contracts={modalContractsData as any} /></div>
         </Modal>
       }
