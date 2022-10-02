@@ -82,6 +82,8 @@
       "deposit": "DEPOSIT",
       "withdraw": "WITHDRAW",
       "max": "MAX",
+      "claim": "CLAIM",
+      "and-claim": "AND CLAIM",
       "text-0": "Vault token",
       "text-1": "Insufficient funds",
       "text-2": "Can't withdraw more than available",
@@ -93,6 +95,8 @@
       "text-8": "DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST",
       "text-9": "WITHDRAWAL REQUEST",
       "text-10": "CHECK IN",
+      "text-11": "Balance:",
+      "text-12": "Balance to withdraw:",
       "ApproveToken": {
         "text-0": "APPROVE TOKEN",
         "text-1": "Before you can proceed, you need to approve your token spending amount.",

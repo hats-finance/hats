@@ -163,8 +163,8 @@ export default function DepositWithdraw(props: IProps) {
         <button className={classNames("tab", { "selected": tab === Tab.Withdraw })} onClick={() => { setTab(Tab.Withdraw); setUserInput(""); }}>{t("DepositWithdraw.withdraw")}</button>
       </div>
       <div className="balance-wrapper">
-        {tab === Tab.Deposit && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
-        {tab === Tab.Withdraw && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Deposit && `${t("DepositWithdraw.text-11")} ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Withdraw && `${t("DepositWithdraw.text-12")} ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
         <button
           className="max-button"
           disabled={!committeeCheckedIn}
@@ -218,15 +218,15 @@ export default function DepositWithdraw(props: IProps) {
             disabled={notEnoughBalance || !userInput || userInput === "0" || !termsOfUse || !isAboveMinimumDeposit || !committeeCheckedIn || depositPause || !isSupportedNetwork}
             className="action-btn"
             onClick={async () => await tryDeposit()}>
-            {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
+            {`${t("DepositWithdraw.deposit")} ${!pendingReward || pendingReward.eq(0) ? "" : `${t("DepositWithdraw.and-claim")} ${pendingRewardFormat} HATS`}`}
           </button>}
         {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw &&
           <button
             disabled={!canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod?.isSafetyPeriod || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawAndClaim()}>
-            {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ?
-              "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
+            {`${t("DepositWithdraw.withdraw")} ${!pendingReward || pendingReward.eq(0) ?
+              "" : `${t("DepositWithdraw.and-claim")} ${pendingRewardFormat} HATS`}`}
           </button>}
         {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
           <button
@@ -238,7 +238,7 @@ export default function DepositWithdraw(props: IProps) {
           onClick={async () => await handleClaimReward()}
           disabled={!pendingReward || pendingReward.eq(0)}
           className="action-btn claim-btn fill">
-          {`CLAIM ${pendingRewardFormat} HATS`}
+          {`${t("DepositWithdraw.claim")} ${pendingRewardFormat} HATS`}
         </button>
       </div>
       {pendingWallet && <Loading zIndex={10000} />}
