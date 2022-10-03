@@ -8,18 +8,20 @@ import Redeemed from "./components/Redeemed/Redeemed";
 export default function Redeem() {
   const { nftData } = useContext(AirdropMachineContext);
 
-  if (nftData.treeTokens) {
-    if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
-      return <Redeemed />;
+  if (nftData.merkleTree) {
+    if (nftData.treeTokens) {
+      if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
+        return <Redeemed />;
+      }
+      if (nftData.treeTokens.length === 0 || nftData.treeRedeemablesCount > 0) {
+        return <Eligible />;
+      }
     }
-    if (nftData.treeRedeemablesCount > 0) {
-      return <Eligible />;
+    if (!nftData.addressInfo) {
+      return <NotEligible />;
     }
   }
 
-  if (!nftData.addressInfo || nftData.treeRedeemablesCount === 0) {
-    return <NotEligible />;
-  }
   return <Loading />;
 }
 

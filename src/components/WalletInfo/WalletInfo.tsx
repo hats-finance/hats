@@ -3,8 +3,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../reducers";
 import TransactionInfo from "../TransactionInfo/TransactionInfo";
 import { Colors, ScreenSize } from "../../constants/constants";
-import { ChainId, shortenIfAddress, useEtherBalance, useEthers, useLookupAddress, useTokenBalance, useTransactions } from "@usedapp/core";
-import { formatEther } from "ethers/lib/utils";
+import { ChainId, shortenIfAddress, useEthers, useLookupAddress, useTransactions } from "@usedapp/core";
 import { useVaults } from "hooks/useVaults";
 import useModal from "hooks/useModal";
 import MyAccount from "components/MyAccount/MyAccount";
@@ -16,29 +15,19 @@ export default function WalletInfo() {
   const { t } = useTranslation();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { account, chainId } = useEthers();
-  const ethBalance = formatEther(useEtherBalance(account) ?? 0);
-  const ethBalanceString = (+ethBalance).toFixed(4);
   const { ens } = useLookupAddress(account);
-  const { masters, nftData } = useVaults();
-  const hatsBalance = formatEther(useTokenBalance(masters?.[0].rewardsToken, account) ?? 0);
-  const hatsBalanceString = (+hatsBalance).toFixed(4);
+  const { nftData } = useVaults();
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const { isShowing: isShowingMyAccount, toggle: toggleMyAccount } = useModal();
   return (
     <div className="wallet-info-wrapper">
       <button className="wallet-info__my-account-btn" onClick={toggleMyAccount}>
         {t("Header.WalletInfo.my-account")}
-        {hatsBalance && screenSize === ScreenSize.Desktop && (
-          <span className="wallet-info__my-account-hat-balance">{hatsBalanceString} HAT</span>
-        )}
+
         {!nftData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />}
         {((nftData?.withRedeemed?.filter(nft => !nft.isRedeemed).length ?? 0) > 0) &&
           <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />}
       </button>
-      {screenSize === ScreenSize.Desktop &&
-        <div className="wallet-balance">
-          {ethBalance && <span>{ethBalanceString} ETH</span>}
-        </div>}
       {currentTransaction ? (
         <TransactionInfo />
       ) : (

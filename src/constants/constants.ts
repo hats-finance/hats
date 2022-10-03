@@ -1,4 +1,4 @@
-import { ChainId, Mainnet, Rinkeby } from "@usedapp/core";
+import { ChainId, Goerli, Mainnet, Rinkeby } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -24,31 +24,36 @@ export enum RoutePaths {
 
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
-  [ChainId.Rinkeby]: "0x9bcB0Fc30d564077F2dCCD1Dd658250F7Cdc98b8"
+  [ChainId.Rinkeby]: "0x9bcB0Fc30d564077F2dCCD1Dd658250F7Cdc98b8",
+  [ChainId.Goerli]: "0x4bdDe617aB54C6E45b4Bf08963F008dFC5da92aD"
 }
 
 export const MAX_NFT_TIER = 3;
 
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
-  [ChainId.Rinkeby]: Rinkeby
+  [ChainId.Rinkeby]: Rinkeby,
+  [ChainId.Goerli]: Goerli
 }
 
 export const VaultService = "https://vault-editor-service.herokuapp.com"
 
 export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/E--RBUxi4rWPTatMrBt77VECbird1_w7",
+  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/BKrRf2b-clGp35PE4NPCa7NbMa9Aps3x",
+  [ChainId.Goerli]: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd"
 }
 
 export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv6",
   [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv6",
+  [ChainId.Goerli]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsgoerli-v6"
 };
 
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
-  ["0x571f39d351513146248AcafA9D0509319A327C4D".toLowerCase()]: "0xe127be2bc276142039bc16251bb04e15b2b34f25"
+  ["0x571f39d351513146248AcafA9D0509319A327C4D".toLowerCase()]: "0xe127be2bc276142039bc16251bb04e15b2b34f25",
+  "0x18a82fd0e4f64f0f3be455319c8609771e49d58f": "0x57f6936a48dfe792ef7dba5415a1f34cf405bad7"
 }
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
