@@ -5,6 +5,15 @@ import { variables } from './variables.styles';
 export const GlobalStyle = createGlobalStyle`
     ${variables}
 
+    /* 
+    TODO: Pending, migrate the app should to box-sizing: border-box
+    
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    } */
+
     html {
         background-color: var(--dark-blue);
         color: var(--turquoise);
@@ -12,20 +21,20 @@ export const GlobalStyle = createGlobalStyle`
         scrollbar-width: none;
         -ms-overflow-style: none;
 
-        -webkit-scrollbar {
-            display: none;
-        }
-
-        ::-webkit-scrollbar {
-            width: 0;
-            background: transparent;
-        }
-
+        
         @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
             font-size: var(--xsmall);
         }
     }
+    
+    -webkit-scrollbar {
+        display: none;
+    }
 
+    ::-webkit-scrollbar {
+        width: 0;
+        background: transparent;
+    }
 
     body {
         margin: 0;
@@ -79,7 +88,7 @@ export const GlobalStyle = createGlobalStyle`
     a {
         color: var(--white);
         text-decoration: none;
-        
+
         &:hover {
             opacity: 0.8;
         }
