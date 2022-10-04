@@ -1,13 +1,13 @@
 import { Navigate, RouteObject } from 'react-router-dom';
 import { RoutePaths } from './paths';
 // Page Components
+import { BasicLayout } from 'layout';
 import Honeypots from 'components/Honeypots';
 import Gov from 'components/Gov';
 import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
 import CommitteeTools from 'components/CommitteeTools/CommitteTools';
 import VaultEditor from 'components/VaultEditor/VaultEditor';
 import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
-import { BasicLayout } from 'layout';
 
 const routes: RouteObject[] = [
   {

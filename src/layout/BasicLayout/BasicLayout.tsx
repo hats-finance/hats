@@ -16,7 +16,6 @@ import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
 import AirdropPrompt from 'components/AirdropMachine/components/AirdropPrompt/AirdropPrompt';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
-import 'styles/App.scss';
 
 const BasicLayout = (): JSX.Element => {
   const dispatch = useDispatch();
