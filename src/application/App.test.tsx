@@ -4,8 +4,8 @@ import {
   within,
   fireEvent,
   cleanup
-} from "../test/@testing-library/react";
-import { setLocalStorage } from "../test/testHelpers";
+} from "../../test/@testing-library/react";
+import { setLocalStorage } from "../../test/testHelpers";
 
 import App from "./App";
 

@@ -2,11 +2,3 @@
   font-family: RobotoMono;
   src: url(./assets/fonts/RobotoMono-VariableFont_wght.ttf);
 }
-
-body {
-  margin: 0;
-  font-family: RobotoMono;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  letter-spacing: 1px;
-}

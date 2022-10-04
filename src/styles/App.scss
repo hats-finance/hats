@@ -5,22 +5,6 @@
   flex-wrap: wrap;
 }
 
-html {
-  background-color: $dark-blue;
-  color: $turquoise;
-  font-size: $small;
-  -webkit-scrollbar {
-    display: none;
-  }
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  ::-webkit-scrollbar {
-    width: 0; /* Remove scrollbar space */
-    background: transparent; /* Optional: just make scrollbar invisible */
-  }
-}
-
 button {
   font-family: RobotoMono;
   font-size: $small;
