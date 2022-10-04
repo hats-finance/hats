@@ -53,7 +53,7 @@ const routes: RouteObject[] = [
         path: `${RoutePaths.airdrop_machine}`,
         element: <AirdropMachine />,
       },
-    ]
+    ],
   },
   {
     path: '*',
