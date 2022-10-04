@@ -1,9 +1,9 @@
 import { useEthers, shortenIfAddress } from "@usedapp/core";
-import { RoutePaths } from "constants/constants";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import EligibleWalletIcon from "assets/icons/wallet-nfts/wallet-eligible.svg";
 import "./index.scss";
+import { RoutePaths } from "navigation";
 
 interface IProps {
   closePrompt: () => void;

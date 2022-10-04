@@ -9,11 +9,12 @@ import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
-import { RoutePaths, ScreenSize } from "../constants/constants";
+import { ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import { RoutePaths } from "navigation";
 
 interface IProps {
   showDeposit?: boolean

@@ -13,15 +13,6 @@ export enum ScreenSize {
   Desktop = "DESKTOP"
 }
 
-export enum RoutePaths {
-  vaults = "/vaults",
-  gov = "/gov",
-  vulnerability = "/vulnerability",
-  vault_editor = "/vault-editor",
-  committee_tools = "/committee-tools",
-  airdrop_machine = "/airdrop_machine",
-}
-
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
   [ChainId.Rinkeby]: "0x9bcB0Fc30d564077F2dCCD1Dd658250F7Cdc98b8",

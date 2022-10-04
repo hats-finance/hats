@@ -1,10 +1,13 @@
 import { createGlobalStyle } from 'styled-components';
+import { variables } from './variables.styles';
 
 export const GlobalStyle = createGlobalStyle`
+    ${variables}
+
     html {
-        background-color: $dark-blue;
-        color: $turquoise;
-        font-size: $small;
+        background-color: var(--dark-blue);
+        color: var(--turquoise);
+        font-size: var(--small);
         scrollbar-width: none;
         -ms-overflow-style: none;
 

@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, BrowserRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useEthers } from '@usedapp/core';
 import 'i18n.ts';
 import { changeScreenSize } from 'actions/index';
-import { LocalStorage, RoutePaths, ScreenSize, SMALL_SCREEN_BREAKPOINT } from 'constants/constants';
+import { LocalStorage, ScreenSize, SMALL_SCREEN_BREAKPOINT } from 'constants/constants';
 import Welcome from 'components/Welcome';
 import Cookies from 'components/Cookies';
 import Header from 'components/Header';
@@ -24,6 +24,7 @@ import AirdropPrompt from 'components/AirdropMachine/components/AirdropPrompt/Ai
 import 'styles/App.scss';
 import { useCheckRedeemableNfts } from 'components/AirdropMachine/useCheckRedeemableNfts';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
+import { AppRouter, routes } from 'navigation';
 
 function App() {
   const dispatch = useDispatch();
@@ -55,7 +56,9 @@ function App() {
       <Header />
       {currentScreenSize === ScreenSize.Desktop && <Sidebar />}
       {currentScreenSize === ScreenSize.Mobile && showMenu && <Menu />}
-      <Routes>
+
+      <AppRouter routes={routes} />
+      {/* <Routes>
         <Route path="/" element={<Navigate to={RoutePaths.vaults} replace={true} />} />
         <Route path={RoutePaths.vaults} element={<Honeypots />} />
         <Route path={`${RoutePaths.vaults}/:pid`} element={<Honeypots />} />
@@ -67,7 +70,7 @@ function App() {
           <Route path=":ipfsHash" element={<VaultEditor />} />
         </Route>
         <Route path={RoutePaths.airdrop_machine} element={<AirdropMachine />} />
-      </Routes>
+      </Routes> */}
 
       {account && hasSeenWelcomePage === '1' && (
         <Modal isShowing={showAirdropPrompt} hide={toggleAirdropPrompt}>
