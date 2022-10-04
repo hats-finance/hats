@@ -19,15 +19,20 @@ const routes: RouteObject[] = [
       },
       {
         path: `${RoutePaths.vaults}`,
-        element: <Honeypots />,
-      },
-      {
-        path: `${RoutePaths.vaults}/:pid`,
-        element: <Honeypots />,
-      },
-      {
-        path: `${RoutePaths.vaults}/:pid/deposit`,
-        element: <Honeypots showDeposit={true} />,
+        children: [
+          {
+            path: '',
+            element: <Honeypots />,
+          },
+          {
+            path: ':pid',
+            element: <Honeypots />,
+          },
+          {
+            path: ':pid/deposit',
+            element: <Honeypots showDeposit={true} />,
+          },
+        ],
       },
       {
         path: `${RoutePaths.gov}`,
@@ -43,11 +48,16 @@ const routes: RouteObject[] = [
       },
       {
         path: `${RoutePaths.vault_editor}`,
-        element: <VaultEditor />,
-      },
-      {
-        path: `${RoutePaths.vault_editor}/:ipfsHash`,
-        element: <VaultEditor />,
+        children: [
+          {
+            path: '',
+            element: <VaultEditor />,
+          },
+          {
+            path: ':ipfsHash',
+            element: <VaultEditor />,
+          },
+        ],
       },
       {
         path: `${RoutePaths.airdrop_machine}`,
