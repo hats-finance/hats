@@ -21,7 +21,7 @@ import Sidebar from "./components/Navigation/Sidebar";
 import Menu from "./components/Navigation/Menu";
 import Honeypots from "./components/Honeypots";
 import Gov from "./components/Gov";
-import VulnerabilityAccordion from "./components/Vulnerability/VulnerabilityAccordion";
+import VulnerabilityForm from "./components/Vulnerability/VulnerabilityForm";
 import VaultEditor from "./components/VaultEditor/VaultEditor"
 import CommitteeTools from "./components/CommitteeTools/CommitteTools";
 import { RootState } from "./reducers";
@@ -73,7 +73,7 @@ function App() {
         <Route path={`${RoutePaths.vaults}/:pid`} element={<Honeypots />} />
         <Route path={`${RoutePaths.vaults}/:pid/deposit`} element={<Honeypots showDeposit={true} />} />
         <Route path={RoutePaths.gov} element={<Gov />} />
-        <Route path={RoutePaths.vulnerability} element={<VulnerabilityAccordion />} />
+        <Route path={RoutePaths.vulnerability} element={<VulnerabilityForm />} />
         <Route path={RoutePaths.committee_tools} element={<CommitteeTools />} />
         <Route path={RoutePaths.vault_editor} element={<VaultEditor />} >
           <Route path=":ipfsHash" element={<VaultEditor />} />
