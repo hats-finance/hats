@@ -17,7 +17,7 @@ function Content() {
   const vault = useContext(VaultContext);
 
   return (
-    <div className="content committee-tools-wrapper">
+    <div className="content-wrapper committee-tools-wrapper">
       <div className="committee-tools-content">
         {vault.isCreated && vault.isLocked && <UnlockVaultModal setShowModal={() => { }} />}
         {vault.isCreated ? <Decrypt /> : <Welcome />}

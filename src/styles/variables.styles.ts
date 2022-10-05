@@ -2,8 +2,8 @@ import { css } from 'styled-components';
 
 export const variables = css`
   :root {
-    --header-height: 85px;
-    --sidebar-width: 265px;
+    --header-height: 75px;
+    --sidebar-width: 260px;
     --element-padding-mobile: 20px;
     --modal-element-padding: 40px;
     --modal-element-padding-mobile: 20px;
@@ -100,7 +100,7 @@ export const variables = css`
     --spacing-25: 200px;
 
     /* others */
-    --mobile-breakpoint: 1000px;
+    --mobile-breakpoint: 1100px;
     --small-screen-breakpoint: 1600px;
     --black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal
     --sidebar-shadow: rgba(0, 0, 0, 0.25);

@@ -4,7 +4,7 @@ import "../styles/Gov.scss";
 
 export default function Gov() {
   return (
-    <div className="content gov-wrapper">
+    <div className="content-wrapper gov-wrapper">
       <a target="_blank" rel="noopener noreferrer" href={GOV_DISCORD_LINK}>
         Forum in Discord&nbsp; <DiscordIcon />
       </a>

@@ -1,4 +1,4 @@
-import "./SoicalAndLegal.scss"
+import "./SocialAndLegal.scss"
 import { DOCS, RISK_FACTOR, SocialLinks, TERMS_OF_USE } from "../../constants/constants";
 import TelegramIcon from "../../assets/icons/social/telegram.icon";
 import MediumIcon from "../../assets/icons/social/medium.icon";
@@ -6,7 +6,7 @@ import DiscordIcon from "../../assets/icons/social/discord.icon";
 import TwitterIcon from "../../assets/icons/social/twitter.icon";
 import GitHubIcon from "../../assets/icons/social/github.icon";
 
-export default function SoicalAndLegal() {
+export default function SocialAndLegal() {
   return (
     <div className="social-legal-wrapper">
       <div className="social-wrapper">

@@ -1,14 +1,13 @@
 @import "./constants.scss";
 
 header {
+  position: sticky;
+  top: 0;
   width: 100%;
   padding: 42px;
-  padding-left: $sidebar-width + 50;
   display: flex;
   justify-content: space-between;
-  position: fixed;
   background-color: $dark-blue;
-  box-sizing: border-box;
   align-items: center;
   z-index: 1;
 
@@ -16,6 +15,10 @@ header {
     font-size: $large;
     color: $white;
     margin-right: 20px;
+  }
+
+  .menu-button {
+    margin-left: 10px;
   }
 }
 

@@ -5,5 +5,5 @@ export type BreakpointsDefinition = {
 
 export const breakpointsDefinition: BreakpointsDefinition = {
   smallScreen: '100rem', // 1600px
-  mobile: '62.5rem', // 1000px
+  mobile: '68.75rem', // 1100px
 };

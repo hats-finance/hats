@@ -32,7 +32,7 @@ export default function AirdropMachine() {
   }
 
   return (
-    <div className="content airdrop-machine-wrapper">
+    <div className="content-wrapper airdrop-machine-wrapper">
       <div className="airdrop-machine-content">
         <div className="airdrop-machine__video-container">
           <video id="airdropMachineVideo" autoPlay muted playsInline className="airdrop-machine__video" poster={AirdropAnimationPoster}>

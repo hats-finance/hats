@@ -64,7 +64,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   }
 
   return (
-    <div className="content honeypots-wrapper">
+    <div className="content-wrapper honeypots-wrapper">
       {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>

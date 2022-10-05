@@ -56,7 +56,7 @@ export enum Pages {
   airdrop_machine = "Airdrop Machine",
 }
 
-export const SMALL_SCREEN_BREAKPOINT = "1000px";
+export const SMALL_SCREEN_BREAKPOINT = "1100px";
 
 export const DefaultBotAddress = "https://hats-telegram-bot.herokuapp.com/broadcast-message";
 

@@ -4,15 +4,12 @@ import { variables } from './variables.styles';
 
 export const GlobalStyle = createGlobalStyle`
     ${variables}
-
-    /* 
-    TODO: Pending, migrate the app should to box-sizing: border-box
     
     *,
     *::before,
     *::after {
         box-sizing: border-box;
-    } */
+    }
 
     html {
         background-color: var(--dark-blue);
@@ -96,10 +93,13 @@ export const GlobalStyle = createGlobalStyle`
 
     /* This is used to a content div (not header and not sidebar), e.g. Honeypots, Gov, ... */
     .content {
-        padding-top: calc(var(--header-height) + 100px);
-        margin-left: calc(var(--sidebar-width) + 50px);
-        margin-right: 50px;
         white-space: pre-line;
+    }
+    
+    .content-wrapper {
+        max-width: var(--element-max-width);
+        white-space: pre-line;
+        margin: 0 auto;
     }
 
     .seperator {
@@ -135,12 +135,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     @media only screen and (max-width: ${breakpointsDefinition.mobile}) {
-        .content {
-            padding-top: var(--header-height) + 50;
-            margin-left: unset;
-            margin-right: unset;
-        }
-
         /* This goes with <br /> tag to break line only in mobile */
         .mobile-break {
             display: block;
