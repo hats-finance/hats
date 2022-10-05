@@ -5,6 +5,7 @@ import { BasicLayout } from 'layout';
 import Honeypots from 'components/Honeypots';
 import Gov from 'components/Gov';
 import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
+import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
 import CommitteeTools from 'components/CommitteeTools/CommitteTools';
 import VaultEditor from 'components/VaultEditor/VaultEditor';
 import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
@@ -40,7 +41,20 @@ const routes: RouteObject[] = [
       },
       {
         path: `${RoutePaths.vulnerability}`,
-        element: <VulnerabilityForm />,
+        children: [
+          {
+            path: '',
+            element: <VulnerabilityList />,
+          },
+          {
+            path: 'new',
+            element: <VulnerabilityList />,
+          },
+          {
+            path: ':vid',
+            element: <VulnerabilityForm />,
+          }
+        ]
       },
       {
         path: `${RoutePaths.committee_tools}`,
