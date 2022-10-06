@@ -44,20 +44,16 @@ const routes: RouteObject[] = [
         children: [
           {
             path: '',
-            element: <VulnerabilityForm />,
+            element: <VulnerabilityList />,
           },
-          // {
-          //   path: '',
-          //   element: <VulnerabilityList />,
-          // },
-          // {
-          //   path: 'new',
-          //   element: <VulnerabilityList />,
-          // },
-          // {
-          //   path: ':vid',
-          //   element: <VulnerabilityForm />,
-          // }
+          {
+            path: 'new',
+            element: <VulnerabilityList />,
+          },
+          {
+            path: ':vid',
+            element: <VulnerabilityForm />,
+          }
         ]
       },
       {
