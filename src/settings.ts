@@ -1,7 +1,7 @@
 import { Endpoints, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
 import { Chain, ChainId, Mainnet, Rinkeby } from '@usedapp/core';
 
-export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Rinkeby;
+export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Goerli;
 export const ENDPOINTS = Endpoints
 if (process.env.REACT_APP_ENDPOINT_MAINNET) {
     ENDPOINTS[Mainnet.chainId] = process.env.REACT_APP_ENDPOINT_MAINNET;
