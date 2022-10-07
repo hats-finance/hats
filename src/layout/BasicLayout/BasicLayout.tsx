@@ -6,9 +6,9 @@ import { changeScreenSize } from 'actions/index';
 import { LocalStorage, ScreenSize, SMALL_SCREEN_BREAKPOINT } from 'constants/constants';
 import { useCheckRedeemableNfts } from 'components/AirdropMachine/useCheckRedeemableNfts';
 // Page Components
+import { Header } from 'components';
 import Welcome from 'components/Welcome';
 import Cookies from 'components/Cookies';
-import Header from 'components/Header';
 import Sidebar from 'components/Navigation/Sidebar';
 import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
