@@ -141,4 +141,63 @@ export const GlobalStyle = createGlobalStyle`
             display: block;
         }
     }
+
+    input {
+        font-family: RobotoMono;
+        background-color: $purple-blue;
+        border: 1px solid $purple-blue;
+        color: $white;
+        text-indent: 20px;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* Remove inputs border highlight */
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus {
+        outline: none;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes disabledFade {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.5;
+        }
+    }
+
+    /* additional className added to popup overlay (rc-tooltip) */
+    .tooltip {
+        opacity: 1 !important;
+    }
+
+    @media only screen and (max-width: $mobile-breakpoint) {
+        /* Prevent auto-zooming when focusing on an input element */
+        input,
+        textarea {
+            font-size: $small;
+        }
+    }
 `;
