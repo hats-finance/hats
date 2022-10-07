@@ -1,6 +1,6 @@
 import NavLinks from "./NavLinks";
 import "./Menu.scss"
-import SoicalAndLegal from "./SoicalAndLegal";
+import SocialAndLegal from "./SocialAndLegal";
 import { useEffect } from "react";
 
 export default function Menu() {
@@ -15,7 +15,7 @@ export default function Menu() {
   return (
     <div className="menu-wrapper">
       <NavLinks />
-      <SoicalAndLegal />
+      <SocialAndLegal />
     </div>
   )
 }

@@ -9,11 +9,12 @@ import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "../types/types";
 import SafePeriodBar from "./SafePeriodBar";
 import SearchIcon from "../assets/icons/search.icon";
-import { RoutePaths, ScreenSize } from "../constants/constants";
+import { ScreenSize } from "../constants/constants";
 import { useVaults } from "hooks/useVaults";
 import "../styles/Honeypots.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import { RoutePaths } from "navigation";
 
 interface IProps {
   showDeposit?: boolean
@@ -63,7 +64,7 @@ export default function Honeypots({ showDeposit }: IProps) {
   }
 
   return (
-    <div className="content honeypots-wrapper">
+    <div className="content-wrapper honeypots-wrapper">
       {vaults === undefined ? <Loading fixed /> :
         <table>
           <tbody>

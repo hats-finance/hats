@@ -3,9 +3,9 @@ import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import WithdrawTimer from "components/DepositWithdraw/WithdrawTimer/WithdrawTimer";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { RoutePaths } from "../../constants/constants";
 import { IPoolWithdrawRequest, IVault } from "../../types/types";
 import "./VaultAction.scss";
+import { RoutePaths } from "navigation";
 
 interface IProps {
   data?: IVault

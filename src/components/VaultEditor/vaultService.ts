@@ -1,8 +1,8 @@
 import { IVaultDescription } from "types/types";
 import axios from "axios"
 import { getPath, setPath } from "./objectUtils";
-import { RoutePaths } from "constants/constants";
 import { VAULT_SERVICE } from "settings";
+import { RoutePaths } from "navigation";
 
 function isBlob(uri: string) {
   return uri.startsWith("blob:")

@@ -283,7 +283,7 @@ export default function VaultEditor() {
     }
 
     return (
-        <div className="content vault-editor">
+        <div className="content-wrapper vault-editor">
             <div className="vault-editor__container">
                 <div className="vault-editor__title">
                     {t("VaultEditor.create-vault")}
