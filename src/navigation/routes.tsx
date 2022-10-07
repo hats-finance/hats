@@ -5,7 +5,7 @@ import { BasicLayout } from 'layout';
 import Honeypots from 'components/Honeypots';
 import Gov from 'components/Gov';
 import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
-import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
+//import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
 import CommitteeTools from 'components/CommitteeTools/CommitteTools';
 import VaultEditor from 'components/VaultEditor/VaultEditor';
 import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
