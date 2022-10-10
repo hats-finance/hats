@@ -13,13 +13,13 @@ export const breakpointsDefinition: BreakpointsDefinition = {
 export const responsiveUtilityClasses = css`
   .onlyDesktop {
     @media (max-width: ${breakpointsDefinition.mobile}) {
-      display: none;
+      display: none !important;
     }
   }
 
   .onlyMobile {
     @media (min-width: ${breakpointsDefinition.mobile}) {
-      display: none;
+      display: none !important;
     }
   }
 `;
