@@ -12,7 +12,7 @@ export const StyledWalletInfo = styled.div`
   }
 
   .wallet-info__my-account-btn {
-    color: $white;
+    color: var(--white);
     margin-right: 20px;
     position: relative;
 
