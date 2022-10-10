@@ -4,7 +4,7 @@ import millify from "millify";
 import { BigNumber } from "ethers";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
-import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/state";
+import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
 import { IPFS_PREFIX, LocalStorage } from "constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
 import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "types/types";
