@@ -7,7 +7,7 @@ export default function Gov() {
   const { t } = useTranslation();
   
   return (
-    <div className="content gov-wrapper">
+    <div className="content-wrapper gov-wrapper">
       <a target="_blank" rel="noopener noreferrer" href={GOV_DISCORD_LINK}>
         {t("Gov.forum-link")}&nbsp;<DiscordIcon />
       </a>

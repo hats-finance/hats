@@ -1,9 +1,7 @@
 import { toggleMenu } from "../actions/index";
 import { useDispatch, useSelector } from "react-redux";
 import { useEthers, useTransactions } from "@usedapp/core";
-import {
-  getMainPath,
-} from "../utils";
+import { getMainPath } from "../utils";
 import { ScreenSize } from "../constants/constants";
 import { useLocation } from "react-router-dom";
 import { Pages } from "../constants/constants";
@@ -37,7 +35,7 @@ export default function Header() {
         )}
 
       {screenSize === ScreenSize.Mobile && (
-        <div onClick={() => dispatch(toggleMenu(!showMenu))}>
+        <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
           {showMenu ? <CloseIcon /> : <MenuIcon />}
         </div>
       )}

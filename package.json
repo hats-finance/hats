@@ -16,6 +16,7 @@
     "@types/react": "^18.0.9",
     "@types/react-redux": "^7.1.16",
     "@types/showdown": "^2.0.0",
+    "@types/styled-components": "^5.1.26",
     "@uiw/react-md-editor": "^3.14.1",
     "@usedapp/core": "^1.1.5",
     "@walletconnect/web3-provider": "^1.7.8",
@@ -88,5 +89,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "styled-components": "^5.3.6"
   }
 }

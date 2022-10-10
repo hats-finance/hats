@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
+import { RoutePaths } from "navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { toggleMenu } from "../../actions";
-import { RoutePaths, ScreenSize } from "../../constants/constants";
+import { ScreenSize } from "../../constants/constants";
 import { RootState } from "../../reducers";
 import "./NavLinks.scss";
 

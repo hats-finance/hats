@@ -9,7 +9,7 @@ import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import axios from "axios";
 import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
-import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
+import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityForm";
 import millify from "millify";
 import { IVulnerabilityData } from "./components/Vulnerability/types";
 

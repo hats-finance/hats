@@ -1,29 +1,33 @@
-@import "../../../styles/constants.scss";
+@import '../../../styles/constants.scss';
 
 .severity-wrapper {
   display: flex;
   flex-direction: column;
+
   .severity-top-wrapper {
     display: flex;
     justify-content: space-between;
-    padding: 10px 30px;
+    padding: 12px 30px;
     cursor: pointer;
-    height: 25px;
     align-items: center;
+
     .severity-title {
       color: $white;
       font-weight: bold;
       font-size: $xsmall;
     }
+
     .arrow {
       transform: rotate(0deg);
       transition: transform 0.1s linear;
       margin-left: 20px;
+
       &.open {
         transform: rotate(90deg);
         transition: transform 0.1s linear;
       }
     }
+
     &:hover {
       opacity: 0.9;
     }
@@ -35,6 +39,7 @@
     border-right: 1px solid $purple-blue;
     border-left: 1px solid $purple-blue;
     border-bottom: 1px solid $purple-blue;
+
     .severity-data-item {
       display: flex;
       flex-direction: column;
@@ -42,19 +47,23 @@
       border-right: 1px solid $purple-blue;
       padding: 20px 40px 35px;
       flex: 1 1 0px;
+
       .vault-expanded-subtitle {
         padding-bottom: 30px;
       }
+
       .view-more {
         font-style: italic;
         cursor: pointer;
         text-decoration: underline;
         margin-top: auto;
         width: 100%;
+
         &:hover {
           opacity: 0.9;
         }
       }
+
       .nft-image-wrapper {
         position: relative;
         display: flex;
@@ -64,10 +73,12 @@
         cursor: pointer;
         width: 100%;
         align-items: center;
+
         .nft-image {
           max-height: 350px;
         }
       }
+
       .nft-media-wrapper {
         padding: 40px;
         span,
@@ -78,6 +89,7 @@
         }
       }
     }
+
     .severity-data-item:last-child {
       border-right: unset;
       margin-right: unset;
@@ -92,17 +104,21 @@
       border-left: unset;
       border-right: unset;
       padding: 0px 20px;
+
       .severity-data-item {
         margin-right: unset;
         border-right: unset;
         padding-right: unset;
         padding: 20px;
+
         .vault-expanded-subtitle {
           margin-top: 0px;
           padding-bottom: 25px;
         }
+
         .nft-media-wrapper {
           padding: 0 0 30px;
+          
           span,
           img,
           video {
