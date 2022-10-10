@@ -2,13 +2,13 @@ import { Navigate, RouteObject } from 'react-router-dom';
 import { RoutePaths } from './paths';
 // Page Components
 import { BasicLayout } from 'layout';
-import Honeypots from 'components/Honeypots';
 import Gov from 'components/Gov';
 import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
 //import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
 import CommitteeTools from 'components/CommitteeTools/CommitteTools';
 import VaultEditor from 'components/VaultEditor/VaultEditor';
 import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
+import { HoneypotsPage } from 'pages';
 
 const routes: RouteObject[] = [
   {
@@ -23,15 +23,15 @@ const routes: RouteObject[] = [
         children: [
           {
             path: '',
-            element: <Honeypots />,
+            element: <HoneypotsPage />,
           },
           {
             path: ':pid',
-            element: <Honeypots />,
+            element: <HoneypotsPage />,
           },
           {
             path: ':pid/deposit',
-            element: <Honeypots showDeposit={true} />,
+            element: <HoneypotsPage showDeposit={true} />,
           },
         ],
       },
