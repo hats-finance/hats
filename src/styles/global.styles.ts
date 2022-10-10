@@ -144,9 +144,9 @@ export const GlobalStyle = createGlobalStyle`
 
     input {
         font-family: RobotoMono;
-        background-color: $purple-blue;
-        border: 1px solid $purple-blue;
-        color: $white;
+        background-color: var(--purple-blue);
+        border: 1px solid var(--purple-blue);
+        color: var(--white);
         text-indent: 20px;
     }
 
@@ -193,11 +193,11 @@ export const GlobalStyle = createGlobalStyle`
         opacity: 1 !important;
     }
 
-    @media only screen and (max-width: $mobile-breakpoint) {
+    @media only screen and (max-width: ${breakpointsDefinition.mobile}) {
         /* Prevent auto-zooming when focusing on an input element */
         input,
         textarea {
-            font-size: $small;
+            font-size: var(--small);
         }
     }
 `;
