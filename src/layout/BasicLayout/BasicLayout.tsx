@@ -9,7 +9,7 @@ import { useCheckRedeemableNfts } from 'components/AirdropMachine/useCheckRedeem
 import { Header } from 'components';
 import Welcome from 'components/Welcome';
 import Cookies from 'components/Cookies';
-import Sidebar from 'components/Navigation/Sidebar';
+import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
 import AirdropPrompt from 'components/AirdropMachine/components/AirdropPrompt/AirdropPrompt';

@@ -1,14 +1,16 @@
-@import "../../styles/constants.scss";
+import styled from "styled-components";
 
-.social-legal-wrapper {
+export const StyledSocialAndLegal = styled.div`
   margin: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+
   .social-wrapper {
     margin-bottom: 10px;
+    
     > a {
       margin: 0 8px;
     }
   }
-}
+`;
