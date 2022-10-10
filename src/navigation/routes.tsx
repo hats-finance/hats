@@ -2,13 +2,10 @@ import { Navigate, RouteObject } from 'react-router-dom';
 import { RoutePaths } from './paths';
 // Page Components
 import { BasicLayout } from 'layout';
-import Gov from 'components/Gov';
-import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
-//import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
 import CommitteeTools from 'components/CommitteeTools/CommitteTools';
 import VaultEditor from 'components/VaultEditor/VaultEditor';
 import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
-import { HoneypotsPage } from 'pages';
+import { HoneypotsPage, GovPage, VulnerabilityListPage, VulnerabilityFormPage } from 'pages';
 
 const routes: RouteObject[] = [
   {
@@ -37,22 +34,22 @@ const routes: RouteObject[] = [
       },
       {
         path: `${RoutePaths.gov}`,
-        element: <Gov />,
+        element: <GovPage />,
       },
       {
         path: `${RoutePaths.vulnerability}`,
         children: [
           {
             path: '',
-            element: <VulnerabilityForm />,
+            element: <VulnerabilityFormPage />,
           },
           // {
           //   path: '',
-          //   element: <VulnerabilityList />,
+          //   element: <VulnerabilityListPage />,
           // },
           // {
           //   path: 'new',
-          //   element: <VulnerabilityList />,
+          //   element: <VulnerabilityListPage />,
           // },
           // {
           //   path: ':vid',

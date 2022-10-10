@@ -9,9 +9,9 @@ import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import axios from "axios";
 import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
 import moment from "moment";
-import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityForm";
+import { VULNERABILITY_INIT_DATA } from "./pages/VulnerabilityFormPage/VulnerabilityFormPage";
 import millify from "millify";
-import { IVulnerabilityData } from "./components/Vulnerability/types";
+import { IVulnerabilityData } from "./components/VulnerabilityForm/types";
 
 /**
  * Adds commas to a given number
