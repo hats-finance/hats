@@ -89,9 +89,7 @@
     &__member {
       display: flex;
       align-items: flex-start;
-      label {
-        height: 20px;
-      }
+
       &-number {
         flex-shrink: 0;
         color: $white;
@@ -136,9 +134,6 @@
     &__contract {
       display: flex;
       align-items: flex-start;
-      label {
-        height: 20px;
-      }
       &-number {
         flex-shrink: 0;
         color: $white;
