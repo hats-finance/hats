@@ -26,4 +26,5 @@ export const AppContent = styled.section`
 export const ContentWrapper = styled.section`
   flex: 1;
   overflow: auto;
+  background-color: var(--dark-blue);
 `;

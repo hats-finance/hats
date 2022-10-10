@@ -13,12 +13,11 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     html {
-        background-color: var(--dark-blue);
         color: var(--turquoise);
         font-size: var(--small);
         scrollbar-width: none;
         -ms-overflow-style: none;
-
+        
         
         @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
             font-size: var(--xsmall);
@@ -28,13 +27,14 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-scrollbar {
         display: none;
     }
-
+    
     ::-webkit-scrollbar {
         width: 0;
         background: transparent;
     }
-
+    
     body {
+        background-color: var(--dark-blue);
         margin: 0;
         font-family: RobotoMono;
         -webkit-font-smoothing: antialiased;
