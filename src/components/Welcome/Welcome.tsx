@@ -1,8 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import Logo from "../assets/icons/logo.icon";
-import { LocalStorage } from "../constants/constants";
-import "../styles/Welcome.scss";
+import { LocalStorage } from "../../constants/constants";
+import Logo from "../../assets/icons/logo.icon";
+import "styles/Welcome.scss";
 
 interface IProps {
   setHasSeenWelcomePage: Function;

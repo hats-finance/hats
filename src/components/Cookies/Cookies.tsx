@@ -1,6 +1,6 @@
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import { COOKIES_POLICY, LocalStorage } from "../constants/constants";
-import "../styles/Cookies.scss";
+import { COOKIES_POLICY, LocalStorage } from "constants/constants";
+import "styles/Cookies.scss";
 
 interface IProps {
   setAcceptedCookies: Function;

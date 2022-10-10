@@ -1,10 +1,10 @@
 import moment from "moment";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../constants/constants";
-import Tooltip from "rc-tooltip";
-import InfoIcon from "../assets/icons/info.icon";
-import "../styles/SafePeriodBar.scss";
-import { useVaults } from "hooks/useVaults";
 import classNames from "classnames";
+import { useVaults } from "hooks/useVaults";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import Tooltip from "rc-tooltip";
+import InfoIcon from "assets/icons/info.icon";
+import "styles/SafePeriodBar.scss";
 
 export default function SafePeriodBar() {
   const { withdrawSafetyPeriod } = useVaults();

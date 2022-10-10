@@ -10,7 +10,7 @@ import Loading from "../../components/Shared/Loading";
 import Modal from "../../components/Shared/Modal";
 import Vault from "../../components/Vault/Vault";
 import DepositWithdraw from "../../components/DepositWithdraw/DepositWithdraw";
-import SafePeriodBar from "../../components/SafePeriodBar";
+import SafePeriodBar from "../../components/SafePeriodBar/SafePeriodBar";
 import { StyledHoneypotsPage } from "./styles";
 
 interface HoneypotsPageProps {

@@ -1,7 +1,7 @@
 import { ipfsTransformUri } from "utils";
-import "../styles/NFTPrize.scss";
-import { ISeverity } from "../types/types";
-import Media from "./Shared/Media/Media";
+import { ISeverity } from "../../types/types";
+import Media from "../Shared/Media/Media";
+import "styles/NFTPrize.scss";
 
 interface IProps {
   data: ISeverity

@@ -7,8 +7,8 @@ import { LocalStorage, ScreenSize, SMALL_SCREEN_BREAKPOINT } from 'constants/con
 import { useCheckRedeemableNfts } from 'pages/AirdropMachinePage/useCheckRedeemableNfts';
 // Page Components
 import { Header } from 'components';
-import Welcome from 'components/Welcome';
-import Cookies from 'components/Cookies';
+import Welcome from 'components/Welcome/Welcome';
+import Cookies from 'components/Cookies/Cookies';
 import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
