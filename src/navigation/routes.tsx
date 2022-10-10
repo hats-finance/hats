@@ -1,33 +1,38 @@
-import { Navigate, RouteObject } from 'react-router-dom';
-import { RoutePaths } from './paths';
+import { Navigate, RouteObject } from "react-router-dom";
+import { RoutePaths } from "./paths";
 // Page Components
-import { BasicLayout } from 'layout';
-import CommitteeTools from 'components/CommitteeTools/CommitteTools';
-import VaultEditor from 'components/VaultEditor/VaultEditor';
-import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
-import { HoneypotsPage, GovPage, VulnerabilityListPage, VulnerabilityFormPage } from 'pages';
+import { BasicLayout } from "layout";
+import {
+  HoneypotsPage,
+  GovPage,
+  // VulnerabilityListPage,
+  VulnerabilityFormPage,
+  CommitteeToolsPage,
+  VaultEditorPage,
+  AirdropMachinePage,
+} from "pages";
 
 const routes: RouteObject[] = [
   {
     element: <BasicLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Navigate to={RoutePaths.vaults} replace={true} />,
       },
       {
         path: `${RoutePaths.vaults}`,
         children: [
           {
-            path: '',
+            path: "",
             element: <HoneypotsPage />,
           },
           {
-            path: ':pid',
+            path: ":pid",
             element: <HoneypotsPage />,
           },
           {
-            path: ':pid/deposit',
+            path: ":pid/deposit",
             element: <HoneypotsPage showDeposit={true} />,
           },
         ],
@@ -40,7 +45,7 @@ const routes: RouteObject[] = [
         path: `${RoutePaths.vulnerability}`,
         children: [
           {
-            path: '',
+            path: "",
             element: <VulnerabilityFormPage />,
           },
           // {
@@ -55,33 +60,33 @@ const routes: RouteObject[] = [
           //   path: ':vid',
           //   element: <VulnerabilityForm />,
           // }
-        ]
+        ],
       },
       {
         path: `${RoutePaths.committee_tools}`,
-        element: <CommitteeTools />,
+        element: <CommitteeToolsPage />,
       },
       {
         path: `${RoutePaths.vault_editor}`,
         children: [
           {
-            path: '',
-            element: <VaultEditor />,
+            path: "",
+            element: <VaultEditorPage />,
           },
           {
-            path: ':ipfsHash',
-            element: <VaultEditor />,
+            path: ":ipfsHash",
+            element: <VaultEditorPage />,
           },
         ],
       },
       {
         path: `${RoutePaths.airdrop_machine}`,
-        element: <AirdropMachine />,
+        element: <AirdropMachinePage />,
       },
     ],
   },
   {
-    path: '*',
+    path: "*",
     element: <Navigate to={RoutePaths.vaults} />,
   },
 ];
