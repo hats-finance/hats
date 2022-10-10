@@ -1,9 +1,9 @@
-import { AirdropMachineContext } from "pages/AirdropMachinePage/components/CheckEligibility/CheckEligibility";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import TokenEligibilityInfo from "../TokenEligibilityInfo/TokenEligibilityInfo";
 import RedeemedWalletIcon from "assets/icons/wallet-nfts/wallet-redeemed.svg";
 import "./index.scss";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
 
 export default function Redeemed() {
   const { t } = useTranslation();

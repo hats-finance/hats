@@ -1,12 +1,12 @@
 import { shortenIfAddress } from "@usedapp/core";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/components/CheckEligibility/CheckEligibility";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import RadioButton from "assets/icons/radio-button.svg";
 import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
-import "./index.scss";
 import { EMBASSY_LEARN_MORE } from "constants/constants";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
+import "./index.scss";
 
 export default function NotEligible() {
   const { t } = useTranslation();

@@ -8,9 +8,9 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import RadioButton from "assets/icons/radio-button.svg";
 import "./index.scss";
 import { useContext } from "react";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/components/CheckEligibility/CheckEligibility";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { EMBASSY_LEARN_MORE } from "constants/constants";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
 
 export default function TokenEligibilityInfo() {
   const { t } = useTranslation();

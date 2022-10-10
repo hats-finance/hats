@@ -12,7 +12,7 @@ import Cookies from 'components/Cookies/Cookies';
 import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
-import AirdropPrompt from 'pages/AirdropMachinePage/components/AirdropPrompt/AirdropPrompt';
+import AirdropPrompt from 'pages/AirdropMachinePage/AirdropPrompt/AirdropPrompt';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
 import { AppLayout, AppContent, ContentWrapper, StyledApp } from './styles';
 

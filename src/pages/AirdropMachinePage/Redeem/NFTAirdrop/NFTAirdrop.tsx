@@ -11,11 +11,11 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./index.scss";
 import { useContext } from "react";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/components/CheckEligibility/CheckEligibility";
 import NFTCard from "components/NFTCard/NFTCard";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();

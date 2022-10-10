@@ -1,19 +1,19 @@
-import { Colors, EMBASSY_LEARN_MORE, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
+import Tooltip from "rc-tooltip";
 import { RootState } from "reducers";
-import CheckEligibility from "./components/CheckEligibility/CheckEligibility";
-import TimelineDot from "./components/TimelineDot/TimelineDot";
+import { Colors, EMBASSY_LEARN_MORE, RC_TOOLTIP_OVERLAY_INNER_STYLE, ScreenSize } from "constants/constants";
 import AirdropAnimation from "assets/videos/airdrop-machine-welcome.mp4";
 import AirdropAnimationPoster from "assets/images/airdrop-machine-welcome-poster.png";
 import AirdropStartButton from "assets/images/airdrop-machine-start.gif";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
-import FAQ from "./components/FAQ/FAQ";
-import "./index.scss";
-import Tooltip from "rc-tooltip";
 import InfoIcon from "assets/icons/info.icon";
-import { useEffect, useState } from "react";
+import TimelineDot from "./TimelineDot/TimelineDot";
+import CheckEligibility from "./CheckEligibility/CheckEligibility";
+import FAQ from "./FAQ/FAQ";
+import "./index.scss";
 
 const AirdropMachinePage = () => {
   const { t } = useTranslation();
