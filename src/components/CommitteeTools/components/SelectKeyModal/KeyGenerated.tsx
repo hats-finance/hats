@@ -4,6 +4,7 @@ import { useState } from "react";
 import classNames from "classnames";
 import { IStoredKey } from "types/types";
 import { useTranslation } from "react-i18next";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 
 export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey, onFinish: () => void }) {
     const { t } = useTranslation();
@@ -36,9 +37,8 @@ export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey, onF
             <p>
                 {t("CommitteeTools.keymodal.generated-notice-1")}
                 <a
+                    {...defaultAnchorProps}
                     className="keymodal-generate__hatsofir"
-                    target="_blank"
-                    rel="noreferrer"
                     href="https://t.me/Hatsofir"
                 >
                     {t("CommitteeTools.keymodal.hatsOfir")}
@@ -65,9 +65,8 @@ export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey, onF
                     <p>
                         {t("CommitteeTools.keymodal.generated-notice-6")}{" "}
                         <a
+                            {...defaultAnchorProps}
                             className="keymodal-generate__hatsofir"
-                            target="_blank"
-                            rel="noreferrer"
                             href="https://t.me/Hatsofir"
                         >
                             {t("CommitteeTools.keymodal.hatsOfir")}

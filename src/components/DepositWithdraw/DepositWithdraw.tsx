@@ -22,6 +22,7 @@ import EmbassyEligibility from "./EmbassyEligibility/EmbassyEligibility";
 import Modal from "components/Shared/Modal/Modal";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 
 interface IProps {
   data: IVault
@@ -197,7 +198,7 @@ export default function DepositWithdraw(props: IProps) {
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
-          <label>I UNDERSTAND AND AGREE TO THE <u><a target="_blank" rel="noopener noreferrer" href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
+          <label>I UNDERSTAND AND AGREE TO THE <u><a {...defaultAnchorProps} href={TERMS_OF_USE}>TERMS OF USE</a></u></label>
         </div>
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}

@@ -1,3 +1,4 @@
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { COOKIES_POLICY, LocalStorage } from "../constants/constants";
 import "../styles/Cookies.scss";
 
@@ -19,9 +20,8 @@ export default function Cookies(props: IProps) {
       </span>
       <div className="cookies-links-wrapper">
         <a
+          {...defaultAnchorProps}
           className="policy-link"
-          target="_blank"
-          rel="noopener noreferrer"
           href={COOKIES_POLICY}
         >
           Cookies Policy
