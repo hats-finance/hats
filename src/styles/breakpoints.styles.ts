@@ -11,20 +11,15 @@ export const breakpointsDefinition: BreakpointsDefinition = {
 };
 
 export const responsiveUtilityClasses = css`
-  .onlyDesktop,
-  .onlyMobile {
-    display: none;
-  }
-
   .onlyDesktop {
-    @media (min-width: ${breakpointsDefinition.mobile}) {
-      display: inherit;
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      display: none;
     }
   }
 
   .onlyMobile {
-    @media (max-width: ${breakpointsDefinition.mobile}) {
-      display: inherit;
+    @media (min-width: ${breakpointsDefinition.mobile}) {
+      display: none;
     }
   }
 `;
