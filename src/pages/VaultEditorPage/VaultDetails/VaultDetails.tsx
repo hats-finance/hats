@@ -1,13 +1,20 @@
 import { useTranslation } from "react-i18next";
+import { IVaultDescription } from "types/types";
 import EditableContent from "components/EditableContent/EditableContent";
 import IconInput from "components/IconEditor/IconEditor";
+import { StyledVaultDetails } from "./styles";
 
-export default function VaultDetails({ projectMetaData, onChange }) {
+type VaultDetailsProps = {
+  projectMetaData: IVaultDescription["project-metadata"];
+  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+}
+
+export default function VaultDetails({ projectMetaData, onChange }: VaultDetailsProps) {
   const { t } = useTranslation();
 
   return (
-    <div className="vault-details">
-      <div className="field">
+    <StyledVaultDetails>
+      <div className="inputs">
         <label>{t("VaultEditor.vault-details.name")}</label>
         <EditableContent
           textInput
@@ -36,8 +43,9 @@ export default function VaultDetails({ projectMetaData, onChange }) {
           placeholder={t("VaultEditor.vault-details.website-placeholder")}
         />
       </div>
-      <div className="field icon-inputs">
-        <div>
+
+      <div className="icons">
+        <div className="icons__input">
           <label>{t("VaultEditor.vault-details.icon")}</label>
           <IconInput
             name="project-metadata.icon"
@@ -46,7 +54,7 @@ export default function VaultDetails({ projectMetaData, onChange }) {
             colorable
           />
         </div>
-        <div>
+        <div className="icons__input">
           <label>{t("VaultEditor.vault-details.token-icon")}</label>
           <IconInput
             name="project-metadata.tokenIcon"
@@ -56,6 +64,6 @@ export default function VaultDetails({ projectMetaData, onChange }) {
           />
         </div>
       </div>
-    </div>
+    </StyledVaultDetails>
   );
 }

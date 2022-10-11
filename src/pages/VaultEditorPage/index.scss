@@ -66,25 +66,6 @@
     display: none;
   }
 
-  .vault-details {
-    display: flex;
-    flex-wrap: wrap;
-    .field {
-      width: 50%;
-      .pastable-content:last-child {
-        margin-bottom: 0;
-      }
-    }
-    .icon-inputs {
-      display: flex;
-      justify-content: flex-end;
-
-      > div + div {
-        margin-left: 30px;
-      }
-    }
-  }
-
   .contracts-covered {
     &__contract {
       display: flex;
