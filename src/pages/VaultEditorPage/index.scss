@@ -85,51 +85,6 @@
     }
   }
 
-  .committee-members {
-    &__member {
-      display: flex;
-      align-items: flex-start;
-
-      &-number {
-        flex-shrink: 0;
-        color: $white;
-        width: 40px;
-        height: 40px;
-        margin-top: 24px;
-        margin-right: 14px;
-        margin-bottom: 24px;
-        border: 1px solid $turquoise;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-sizing: border-box;
-      }
-      &-content {
-        flex: 1 0 0;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-      }
-      &-inputs {
-        width: 60%;
-      }
-      &-icons {
-        .icon-input {
-          > label {
-            height: 124px;
-          }
-        }
-      }
-    }
-    button {
-      margin: 0;
-      margin-left: 54px;
-      margin-bottom: 30px;
-      padding-left: 25px;
-      padding-right: 25px;
-    }
-  }
-
   .contracts-covered {
     &__contract {
       display: flex;
