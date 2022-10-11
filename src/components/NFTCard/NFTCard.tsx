@@ -10,6 +10,7 @@ import { HATVaultsNFTContract } from "constants/constants";
 import { useEscapePressed } from "hooks/useKeyPress";
 import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 
 interface IProps {
   tokenInfo: INFTTokenInfoRedeemed
@@ -46,7 +47,7 @@ export default function NFTCard({ tokenInfo }: IProps) {
           <button onClick={() => setFullScreen(false)} className="nft-card-full-screen__close-btn">&times;</button>
           <div className="nft-card-full-screen__container">
             <Media link={ipfsTransformUri(metadata.animation_url)} poster={ipfsTransformUri(metadata.image)} className="nft-card-full-screen__video" />
-            {isRedeemed && <a className="nft-card-full-screen__opensea-link" href={openSeaUrl} target="_blank" rel="noreferrer">{t("NFTCard.view-on-open-sea")} <img src={OpenInNewTabIcon} alt="" /> </a>}
+            {isRedeemed && <a className="nft-card-full-screen__opensea-link" href={openSeaUrl} {...defaultAnchorProps}>{t("NFTCard.view-on-open-sea")} <img src={OpenInNewTabIcon} alt="" /> </a>}
           </div>
         </div>, document.body
       )

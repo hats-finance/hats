@@ -1,90 +1,92 @@
-import { Navigate, RouteObject } from 'react-router-dom';
-import { RoutePaths } from './paths';
+import { Navigate, RouteObject } from "react-router-dom";
+import { RoutePaths } from "./paths";
 // Page Components
-import { BasicLayout } from 'layout';
-import Honeypots from 'components/Honeypots';
-import Gov from 'components/Gov';
-import VulnerabilityForm from 'components/Vulnerability/VulnerabilityForm';
-//import VulnerabilityList from 'components/Vulnerability/VulnerabilityList/VulnerabilityList';
-import CommitteeTools from 'components/CommitteeTools/CommitteTools';
-import VaultEditor from 'components/VaultEditor/VaultEditor';
-import AirdropMachine from 'components/AirdropMachine/AirdropMachine';
+import { BasicLayout } from "layout";
+import {
+  HoneypotsPage,
+  GovPage,
+  // VulnerabilityListPage,
+  VulnerabilityFormPage,
+  CommitteeToolsPage,
+  VaultEditorPage,
+  AirdropMachinePage,
+} from "pages";
 
 const routes: RouteObject[] = [
   {
     element: <BasicLayout />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Navigate to={RoutePaths.vaults} replace={true} />,
       },
       {
         path: `${RoutePaths.vaults}`,
         children: [
           {
-            path: '',
-            element: <Honeypots />,
+            path: "",
+            element: <HoneypotsPage />,
           },
           {
-            path: ':pid',
-            element: <Honeypots />,
+            path: ":pid",
+            element: <HoneypotsPage />,
           },
           {
-            path: ':pid/deposit',
-            element: <Honeypots showDeposit={true} />,
+            path: ":pid/deposit",
+            element: <HoneypotsPage showDeposit={true} />,
           },
         ],
       },
       {
         path: `${RoutePaths.gov}`,
-        element: <Gov />,
+        element: <GovPage />,
       },
       {
         path: `${RoutePaths.vulnerability}`,
         children: [
           {
-            path: '',
-            element: <VulnerabilityForm />,
+            path: "",
+            element: <VulnerabilityFormPage />,
           },
           // {
           //   path: '',
-          //   element: <VulnerabilityList />,
+          //   element: <VulnerabilityListPage />,
           // },
           // {
           //   path: 'new',
-          //   element: <VulnerabilityList />,
+          //   element: <VulnerabilityListPage />,
           // },
           // {
           //   path: ':vid',
           //   element: <VulnerabilityForm />,
           // }
-        ]
+        ],
       },
       {
         path: `${RoutePaths.committee_tools}`,
-        element: <CommitteeTools />,
+        element: <CommitteeToolsPage />,
       },
       {
         path: `${RoutePaths.vault_editor}`,
         children: [
           {
-            path: '',
-            element: <VaultEditor />,
+            path: "",
+            element: <VaultEditorPage />,
           },
           {
-            path: ':ipfsHash',
-            element: <VaultEditor />,
+            path: ":ipfsHash",
+            element: <VaultEditorPage />,
           },
         ],
       },
       {
         path: `${RoutePaths.airdrop_machine}`,
-        element: <AirdropMachine />,
+        element: <AirdropMachinePage />,
       },
     ],
   },
   {
-    path: '*',
+    path: "*",
     element: <Navigate to={RoutePaths.vaults} />,
   },
 ];

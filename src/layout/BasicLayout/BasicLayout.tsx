@@ -4,15 +4,15 @@ import { useDispatch } from 'react-redux';
 import { useEthers } from '@usedapp/core';
 import { changeScreenSize } from 'actions/index';
 import { LocalStorage, ScreenSize, SMALL_SCREEN_BREAKPOINT } from 'constants/constants';
-import { useCheckRedeemableNfts } from 'components/AirdropMachine/useCheckRedeemableNfts';
+import { useCheckRedeemableNfts } from 'pages/AirdropMachinePage/useCheckRedeemableNfts';
 // Page Components
-import Welcome from 'components/Welcome';
-import Cookies from 'components/Cookies';
-import Header from 'components/Header';
-import Sidebar from 'components/Navigation/Sidebar';
+import { Header } from 'components';
+import Welcome from 'components/Welcome/Welcome';
+import Cookies from 'components/Cookies/Cookies';
+import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
 import Modal from 'components/Shared/Modal/Modal';
-import AirdropPrompt from 'components/AirdropMachine/components/AirdropPrompt/AirdropPrompt';
+import AirdropPrompt from 'pages/AirdropMachinePage/AirdropPrompt/AirdropPrompt';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
 import { AppLayout, AppContent, ContentWrapper, StyledApp } from './styles';
 
