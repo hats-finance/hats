@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledContractCoveredCard = styled.div`
   .contract {
@@ -22,18 +23,34 @@ export const StyledContractCoveredCard = styled.div`
 
     &__content {
       width: 65%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
     }
 
     &__subcontent {
       display: flex;
       justify-content: space-between;
 
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        flex-direction: column;
+      }
+
       &__name {
         width: 60%;
+
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          width: 100%;
+        }
       }
 
       &__severities {
         width: 35%;
+
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          width: 100%;
+        }
       }
     }
   }

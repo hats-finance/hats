@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledCommitteeMemberCard = styled.div`
   .member-details {
@@ -25,14 +27,26 @@ export const StyledCommitteeMemberCard = styled.div`
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        flex-direction: column;
+      }
     }
 
     &__inputs {
       width: 60%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
     }
   }
 
   .controller-buttons {
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      margin-top: ${getSpacing(3)};
+    }
+
     button {
       margin: 0;
       margin-left: 54px;
