@@ -177,14 +177,6 @@ export interface INFTAirdropElement {
   name: string
   attributes: Array<any>
 }
-
-export interface IStoredKey {
-  alias: string
-  privateKey: string
-  passphrase?: string | undefined
-  publicKey: string
-}
-
 export interface GeneralParameters {
   withdrawRequestEnablePeriod: number
   withdrawPeriod: number

@@ -1,22 +1,22 @@
 import { useContext, useState } from "react";
-import Modal from "../../../components/Shared/Modal";
-import { VaultContext } from "../store";
+import Modal from "../../Shared/Modal";
+import { KeystoreContext } from "../store";
 import "./index.scss";
 import { useTranslation } from "react-i18next";
 
-export default function CreateVaultModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
+export function CreateKeystoreModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
   const [password, setPasswordRef] = useState("");
   const [passwordConfirm, setPasswordConfirmRef] = useState("");
   const [error, setError] = useState<string>();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const { t } = useTranslation();
 
-  const createVault = () => {
+  const createKeystore = () => {
     if (password !== passwordConfirm) {
       setError(t("CommitteeTools.Welcome.passwords-mismatch"));
       return;
     }
-    vaultContext.createVault(password);
+    keystoreContext.createKeystore(password);
   };
 
   return (
@@ -43,7 +43,7 @@ export default function CreateVaultModal({ setShowModal }: { setShowModal: (show
           placeholder={t("CommitteeTools.Welcome.create-retype-placeholder")}
         />
         {error && <div className="error-label">{error}</div>}
-        <button disabled={!password || !passwordConfirm} onClick={createVault}>
+        <button disabled={!password || !passwordConfirm} onClick={createKeystore}>
           {t("CommitteeTools.create-vault")}
         </button>
       </div>

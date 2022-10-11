@@ -1,27 +1,15 @@
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { createMessage, decrypt, encrypt, readMessage, decryptKey, readPrivateKey } from "openpgp";
-import { VaultContext } from "../store";
-import SelectKeyModal from "../SelectKeyModal/SelectKeyModal";
-import EditableContent from "../../../components/EditableContent/EditableContent";
+import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
+import { readPrivateKeyFromStoredKey } from "components/Keystore/utils";
+import { KeystoreContext, SelectKeyModal } from "components/Keystore";
+import { EditableContent } from "components";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import "./index.scss";
 
-export async function readPrivateKeyFromStoredKey(
-  privateKey: string,
-  passphrase: string | undefined
-) {
-  return passphrase
-    ? await decryptKey({
-      privateKey: await readPrivateKey({ armoredKey: privateKey }),
-      passphrase
-    })
-    : await readPrivateKey({ armoredKey: privateKey });
-}
-
 export default function Decrypt() {
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false);
   const [showSelectedKeyDetails, setShowSelectedKeyDetails] = useState(false);
   const [error, setError] = useState<string>();
@@ -45,17 +33,17 @@ export default function Decrypt() {
 
   useEffect(() => {
     if (
-      vaultContext.vault?.storedKeys.length === 0 ||
-      !vaultContext.selectedKey === undefined
+      keystoreContext.keystore?.storedKeys.length === 0 ||
+      !keystoreContext.selectedKey === undefined
     ) {
       setShowSelectKeyModal(true);
     }
-  }, [vaultContext.vault, vaultContext.selectedKey]);
+  }, [keystoreContext.keystore, keystoreContext.selectedKey]);
 
   const _decrypt = useCallback(async () => {
     try {
       setError(undefined)
-      if (!vaultContext.selectedKey) {
+      if (!keystoreContext.selectedKey) {
         setShowSelectKeyModal(true);
         return;
       }
@@ -67,8 +55,8 @@ export default function Decrypt() {
       }
 
       const privateKey = await readPrivateKeyFromStoredKey(
-        vaultContext.selectedKey.privateKey,
-        vaultContext.selectedKey.passphrase
+        keystoreContext.selectedKey.privateKey,
+        keystoreContext.selectedKey.passphrase
       );
       const message = await readMessage({ armoredMessage });
       const { data: decrypted } = await decrypt({
@@ -82,18 +70,18 @@ export default function Decrypt() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vaultContext.selectedKey]);
+  }, [keystoreContext.selectedKey]);
 
   const _encrypt = useCallback(async () => {
     try {
       setError("");
-      if (!vaultContext.selectedKey) {
+      if (!keystoreContext.selectedKey) {
         setShowSelectKeyModal(true);
         return;
       }
       const privateKey = await readPrivateKeyFromStoredKey(
-        vaultContext.selectedKey.privateKey,
-        vaultContext.selectedKey.passphrase
+        keystoreContext.selectedKey.privateKey,
+        keystoreContext.selectedKey.passphrase
       );
       const message = await createMessage({
         text: decryptedMessageRef.current!.value!
@@ -107,10 +95,10 @@ export default function Decrypt() {
         setError(error.message);
       }
     }
-  }, [vaultContext.selectedKey]);
+  }, [keystoreContext.selectedKey]);
 
   const SelectedKeypair = () =>
-    vaultContext && (
+    keystoreContext && (
       <>
         <p className="decrypt-wrapper__selected-key-label">
           {t("CommitteeTools.Decrypt.selected-key-label")}
@@ -120,12 +108,12 @@ export default function Decrypt() {
             <div className="selected-key">
               <div className="selected-key__fish-eye" />
               <span>
-                {vaultContext.selectedKey
-                  ? vaultContext.selectedKey.alias
+                {keystoreContext.selectedKey
+                  ? keystoreContext.selectedKey.alias
                   : t("CommitteeTools.Decrypt.no-key-selected")}
               </span>
             </div>
-            {vaultContext.selectedKey && (
+            {keystoreContext.selectedKey && (
               <img
                 alt="copy"
                 src={CopyIcon}
@@ -182,7 +170,7 @@ export default function Decrypt() {
       {(showSelectKeyModal || showSelectedKeyDetails) && (
         <SelectKeyModal
           showKey={
-            showSelectedKeyDetails ? vaultContext.selectedKey : undefined
+            showSelectedKeyDetails ? keystoreContext.selectedKey : undefined
           }
           setShowModal={() => {
             if (showSelectedKeyDetails) setShowSelectedKeyDetails(false);

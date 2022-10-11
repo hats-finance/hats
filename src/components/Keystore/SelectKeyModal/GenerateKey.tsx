@@ -1,18 +1,18 @@
 import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
-import { VaultContext } from "../store";
-import { IStoredKey } from "types/types";
+import { KeystoreContext } from "../store";
 import { KeyGenerated } from "./KeyGenerated";
 import Loading from "components/Shared/Loading";
 import { useTranslation } from "react-i18next";
+import { IStoredKey } from "../types";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const { t } = useTranslation();
+  const keystoreContext = useContext(KeystoreContext);
   const [alias, setAlias] = useState("");
   const [passphrase, setPassphrase] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const vaultContext = useContext(VaultContext);
   const [error, setError] = useState<string>();
   const [addedKey, setAddedKey] = useState<IStoredKey>();
   const [loading, setLoading] = useState<boolean>(false);
@@ -29,9 +29,9 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         format: "armored" // output key format, defaults to 'armored' (other options: 'binary' or 'object')
       });
       const toAdd = { alias, privateKey, passphrase, publicKey };
-      vaultContext.addKey(toAdd);
-      if (vaultContext.selectedKey === undefined)
-        vaultContext.setSelectedAlias(alias);
+      keystoreContext.addKey(toAdd);
+      if (keystoreContext.selectedKey === undefined)
+        keystoreContext.setSelectedAlias(alias);
       setAddedKey(toAdd);
       setLoading(false);
     } catch (error) {

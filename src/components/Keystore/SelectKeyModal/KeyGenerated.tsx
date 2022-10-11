@@ -2,9 +2,9 @@ import CopyToClipboard from "components/Shared/CopyToClipboard";
 import CheckboxIcon from "assets/icons/checkbox.svg";
 import { useState } from "react";
 import classNames from "classnames";
-import { IStoredKey } from "types/types";
 import { useTranslation } from "react-i18next";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { IStoredKey } from "../types";
 
 export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey, onFinish: () => void }) {
     const { t } = useTranslation();

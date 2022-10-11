@@ -20,7 +20,7 @@ type Props = {
     HTMLTextAreaElement
   >;
 
-function EditableContent(
+function EditableContentComponent(
   { pastable, copyable, removable, textInput, colorable, ...props }: Props,
   ref
 ) {
@@ -105,4 +105,4 @@ function EditableContent(
   );
 }
 
-export default forwardRef(EditableContent);
+export const EditableContent = forwardRef(EditableContentComponent);

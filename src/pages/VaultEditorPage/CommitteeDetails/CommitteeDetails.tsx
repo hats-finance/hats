@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { IVaultDescription } from "types/types";
-import EditableContent from "components/EditableContent/EditableContent";
+import { EditableContent } from "components";
 
 type VaultDetailsProps = {
   committee: IVaultDescription["committee"];

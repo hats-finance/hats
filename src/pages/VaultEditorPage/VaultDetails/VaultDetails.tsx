@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { IVaultDescription } from "types/types";
-import EditableContent from "components/EditableContent/EditableContent";
-import IconInput from "components/IconEditor/IconEditor";
+import { EditableContent, IconEditor } from "components";
 import { StyledVaultDetails } from "./styles";
 
 type VaultDetailsProps = {
@@ -47,7 +46,7 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
       <div className="icons">
         <div className="icons__input">
           <label>{t("VaultEditor.vault-details.icon")}</label>
-          <IconInput
+          <IconEditor
             name="project-metadata.icon"
             value={projectMetaData?.icon}
             onChange={onChange}
@@ -56,7 +55,7 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
         </div>
         <div className="icons__input">
           <label>{t("VaultEditor.vault-details.token-icon")}</label>
-          <IconInput
+          <IconEditor
             name="project-metadata.tokenIcon"
             value={projectMetaData?.tokenIcon}
             onChange={onChange}

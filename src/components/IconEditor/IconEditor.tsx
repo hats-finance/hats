@@ -5,7 +5,7 @@ import './IconEditor.scss'
 import { ipfsTransformUri } from 'utils';
 import { useTranslation } from 'react-i18next';
 
-const IconInput = ({ value, onChange, name, colorable }: {
+export const IconEditor = ({ value, onChange, name, colorable }: {
     value: string | undefined,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     name?: string
@@ -53,5 +53,3 @@ const IconInput = ({ value, onChange, name, colorable }: {
         </>
     );
 };
-
-export default IconInput

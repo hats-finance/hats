@@ -5,7 +5,7 @@ export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  PGPKeystore = "HATS_PGP_KEYSTORE"
+  Keystore = "HATS_PGP_KEYSTORE"
 }
 
 export enum ScreenSize {

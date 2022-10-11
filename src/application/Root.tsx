@@ -9,7 +9,8 @@ import { ethersConfig } from 'config/ethers';
 import { client } from 'config/apollo';
 import { VaultsProvider } from 'hooks/useVaults';
 import { GlobalStyle } from 'styles';
-import NotificationProvider from 'components/Notifications/NotificationProvider';
+import { KeystoreProvider } from 'components/Keystore';
+import { NotificationProvider } from 'components/Notifications/NotificationProvider';
 import App from './App';
 import store from '../store';
 import 'i18n.ts';
@@ -30,7 +31,9 @@ function Root() {
               <BrowserRouter>
                 <GlobalStyle />
                 <NotificationProvider>
-                  <App />
+                  <KeystoreProvider>
+                    <App />
+                  </KeystoreProvider>
                 </NotificationProvider>
               </BrowserRouter>
             </HttpsRedirect>

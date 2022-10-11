@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ICommitteeMember } from "types/types";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import EditableContent from "components/EditableContent/EditableContent";
-import IconInput from "components/IconEditor/IconEditor";
+import { EditableContent, IconEditor } from "components";
 import { StyledCommitteeMemberCard } from "./styles";
 
 type CommmitteeMemberCardProps = {
@@ -57,7 +56,7 @@ const CommmitteeMemberCard = ({ index, member, onChange, onRemove, membersCount,
           </div>
           <div>
             <label>{t("VaultEditor.member-image")}</label>
-            <IconInput name={`${basePath}.image-ipfs-link`} colorable value={member?.["image-ipfs-link"]} onChange={onChange} />
+            <IconEditor name={`${basePath}.image-ipfs-link`} colorable value={member?.["image-ipfs-link"]} onChange={onChange} />
           </div>
         </div>
       </div>

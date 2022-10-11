@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { IStoredKey } from "types/types";
 import CopyToClipboard from "components/Shared/CopyToClipboard";
 import "./index.scss";
+import { IStoredKey } from "../types";
 
 function KeyDetails({ storedKey }: { storedKey: IStoredKey }) {
   const { t } = useTranslation();

@@ -1,18 +1,18 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { VaultContext } from "../store";
+import { KeystoreContext } from "../store";
 import Modal from "components/Shared/Modal";
 import "./index.scss";
 
-export default function UnlockVaultModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
+export function UnlockKeystoreModal() {
   const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
 
-  const unlockVault = async () => {
+  const unlockKeystore = async () => {
     try {
-      await vaultContext.unlockVault(password);
+      await keystoreContext.unlockKeystore(password);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -39,7 +39,7 @@ export default function UnlockVaultModal({ setShowModal }: { setShowModal: (show
           placeholder={t("CommitteeTools.Welcome.enter-password-placeholder")}
         />
         {error && <div className="error-label">{error}</div>}
-        <button disabled={!password} onClick={unlockVault}>
+        <button disabled={!password} onClick={unlockKeystore}>
           {t("CommitteeTools.Welcome.unlock")}
         </button>
       </div>

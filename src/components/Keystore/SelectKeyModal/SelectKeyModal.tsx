@@ -1,9 +1,10 @@
-import { NavLink } from "react-router-dom";
-import classNames from "classnames";
-import { IStoredKey } from "types/types";
 import { useContext, useState } from "react";
+import { NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import classNames from "classnames";
 import Modal from "components/Shared/Modal";
-import { VaultContext } from "../store";
+import { IStoredKey } from "../types";
+import { KeystoreContext } from "../store";
 import KeyDetails from "./KeyDetails";
 import GenerateKey from "./GenerateKey";
 import ImportKey from "./ImportKey";
@@ -13,7 +14,6 @@ import ImportKeyapirIcon from "assets/icons/import-keypair.svg";
 import DeleteIcon from "assets/icons/delete.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import "./index.scss";
-import { useTranslation } from "react-i18next";
 
 enum ActionType {
   Generate,
@@ -35,13 +35,13 @@ export function SelectKeyModal({
   setShowModal: (show: boolean) => any;
 }) {
   const { t } = useTranslation();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const [action, setAction] = useState<IAction>(
     showKey
       ? { type: ActionType.Display, key: showKey }
       : { type: ActionType.None }
   );
-  const vault = vaultContext.vault;
+  const vault = keystoreContext.keystore;
 
   const onFinish = () => {
     if (
@@ -94,14 +94,14 @@ export function SelectKeyModal({
   );
 
   const keyRow = (key: IStoredKey) => {
-    const selected = key.alias === vaultContext.selectedKey?.alias;
+    const selected = key.alias === keystoreContext.selectedKey?.alias;
     return (
       <li key={key.alias}>
         <NavLink
           to="#"
           className="title"
           onClick={() => {
-            vaultContext.setSelectedAlias(key.alias);
+            keystoreContext.setSelectedAlias(key.alias);
             setShowModal(false);
           }}
         >

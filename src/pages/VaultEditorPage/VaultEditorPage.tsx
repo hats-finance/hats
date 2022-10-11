@@ -6,7 +6,6 @@ import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
 import { ICommitteeMember, IContract, IVaultDescription } from "types/types";
 import Loading from "components/Shared/Loading";
-import { VaultProvider } from "pages/CommitteeToolsPage/store";
 import CommmitteeMembers from "./CommitteeMembers/CommitteeMembers";
 import VaultDetails from "./VaultDetails/VaultDetails";
 import CommunicationChannel from "./CommunicationChannel/CommunicationChannel";
@@ -344,14 +343,12 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">5. {t("VaultEditor.pgp-key")}</p>
             <div className="vault-editor__section-content">
-              <VaultProvider>
-                <CommunicationChannel
-                  removePgpKey={removePgpKey}
-                  communicationChannel={vaultDescription?.["communication-channel"]}
-                  addPgpKey={addPgpKey}
-                  onChange={onChange}
-                />
-              </VaultProvider>
+              <CommunicationChannel
+                removePgpKey={removePgpKey}
+                communicationChannel={vaultDescription?.["communication-channel"]}
+                addPgpKey={addPgpKey}
+                onChange={onChange}
+              />
             </div>
           </div>
         </section>

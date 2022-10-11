@@ -1,22 +1,19 @@
 import { useContext } from "react";
-import { VaultProvider, VaultContext } from "./store";
+import { KeystoreContext, UnlockKeystoreModal } from "components/Keystore";
 import Decrypt from "./Decrypt/Decrypt";
 import Welcome from "./Welcome/Welcome";
-import UnlockVaultModal from "./UnlockVaultModal/UnlockVaultModal";
 import { StyledCommitteeToolsPage } from "./styles";
 
 const CommitteeToolsPage = () => {
-  const vault = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
 
   return (
-    <VaultProvider>
-      <StyledCommitteeToolsPage className="content-wrapper">
-        <div className="committee-tools-content">
-          {vault.isCreated && vault.isLocked && <UnlockVaultModal setShowModal={() => {}} />}
-          {vault.isCreated ? <Decrypt /> : <Welcome />}
-        </div>
-      </StyledCommitteeToolsPage>
-    </VaultProvider>
+    <StyledCommitteeToolsPage className="content-wrapper">
+      <div className="committee-tools-content">
+        {keystoreContext.isCreated && keystoreContext.isLocked && <UnlockKeystoreModal />}
+        {keystoreContext.isCreated ? <Decrypt /> : <Welcome />}
+      </div>
+    </StyledCommitteeToolsPage>
   );
 }
 

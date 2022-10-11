@@ -1,11 +1,7 @@
-import { VaultContext } from "pages/CommitteeToolsPage/store";
+import { KeystoreContext, SelectKeyModal, UnlockKeystoreModal, CreateKeystoreModal } from "components/Keystore";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import CreateVaultModal from "pages/CommitteeToolsPage/CreateVaultModal/CreateVaultModal";
 import CopyIcon from "assets/icons/copy.icon.svg";
-import SelectKeyModal from "pages/CommitteeToolsPage/SelectKeyModal/SelectKeyModal";
-import UnlockVaultModal from "pages/CommitteeToolsPage/UnlockVaultModal/UnlockVaultModal";
-
 
 export default function PgpKey({ onSelected }) {
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false);
@@ -13,27 +9,27 @@ export default function PgpKey({ onSelected }) {
   const [showCreateVault, setShowCreateVault] = useState(false);
   const [showUnlockVault, setShowUnlockVault] = useState(false);
 
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const { t } = useTranslation();
 
   useEffect(() => {
-    onSelected(vaultContext.selectedKey)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vaultContext.selectedKey])
+    onSelected(keystoreContext.selectedKey)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keystoreContext.selectedKey])
 
   const SelectedKeypair = () =>
-    vaultContext && (
+    keystoreContext && (
       <div className="decrypt-wrapper__selected-key">
         <div className="box-with-copy">
           <div className="selected-key">
             <div className="selected-key__fish-eye" />
             <span>
-              {vaultContext.selectedKey
-                ? vaultContext.selectedKey.alias
+              {keystoreContext.selectedKey
+                ? keystoreContext.selectedKey.alias
                 : t("CommitteeTools.Decrypt.no-key-selected")}
             </span>
           </div>
-          {vaultContext.selectedKey && (
+          {keystoreContext.selectedKey && (
             <img
               alt="copy"
               src={CopyIcon}
@@ -56,11 +52,11 @@ export default function PgpKey({ onSelected }) {
 
   return (
     <div>
-      {!vaultContext.isLocked && <SelectedKeypair />}
+      {!keystoreContext.isLocked && <SelectedKeypair />}
       {(showSelectKeyModal || showSelectedKeyDetails) && (
         <SelectKeyModal
           showKey={
-            showSelectedKeyDetails ? vaultContext.selectedKey : undefined
+            showSelectedKeyDetails ? keystoreContext.selectedKey : undefined
           }
           setShowModal={() => {
             if (showSelectedKeyDetails) setShowSelectedKeyDetails(false);
@@ -68,18 +64,18 @@ export default function PgpKey({ onSelected }) {
           }}
         />
       )}
-      {vaultContext.isCreated && vaultContext.isLocked && (<>
+      {keystoreContext.isCreated && keystoreContext.isLocked && (<>
         <button onClick={() => setShowUnlockVault(true)} className="fill">{t("CommitteeTools.unlock-vault")}</button>
       </>)}
 
-      {!vaultContext.isCreated && (<>
+      {!keystoreContext.isCreated && (<>
         <button onClick={() => setShowCreateVault(true)} className="fill">{t("CommitteeTools.create-vault")}</button>
       </>)}
-      {showCreateVault && !vaultContext.isCreated && (
-        <CreateVaultModal setShowModal={setShowCreateVault} />
+      {showCreateVault && !keystoreContext.isCreated && (
+        <CreateKeystoreModal setShowModal={setShowCreateVault} />
       )}
-      {showUnlockVault && vaultContext.isLocked && (
-        <UnlockVaultModal setShowModal={setShowUnlockVault} />
+      {showUnlockVault && keystoreContext.isLocked && (
+        <UnlockKeystoreModal />
       )}
     </div>
   )

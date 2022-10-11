@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import MultiSelect, { MultiselectOptions } from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import EditableContent from "components/EditableContent/EditableContent";
+import { EditableContent } from "components";
 import { StyledContractCoveredCard } from "./styles";
 
 export default function ContractCoveredCard({

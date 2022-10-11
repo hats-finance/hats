@@ -1,13 +1,13 @@
 import { useContext, useRef, useState } from "react";
-import { IStoredKey } from "types/types";
-import { VaultContext } from "../store";
-import { readPrivateKeyFromStoredKey } from "../Decrypt/Decrypt";
-import EditableContent from "../../../components/EditableContent/EditableContent";
+import { KeystoreContext } from "../store";
+import { readPrivateKeyFromStoredKey } from "../utils";
+import { EditableContent } from "components";
 import { useTranslation } from "react-i18next";
+import { IStoredKey } from "../types";
 
 export default function ImportKey({ onFinish }: { onFinish: () => any }) {
   const { t } = useTranslation();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const aliasRef = useRef<HTMLInputElement>(null);
   const passphraseRef = useRef<HTMLInputElement>(null);
   const privateKeyRef = useRef<HTMLTextAreaElement>(null);
@@ -31,8 +31,8 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         passphrase,
         publicKey: readKey.toPublic().armor()
       };
-      vaultContext.addKey(toAdd);
-      vaultContext.setSelectedAlias(toAdd.alias);
+      keystoreContext.addKey(toAdd);
+      keystoreContext.setSelectedAlias(toAdd.alias);
       onFinish();
     } catch (error) {
       if (error instanceof Error) {

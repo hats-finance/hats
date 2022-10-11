@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EditableContent } from "components";
 import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import InfoIcon from "assets/icons/info.icon";
@@ -11,7 +12,6 @@ import {
 } from "../../../constants/constants";
 import PgpKey from "./PgpKey/PgpKey";
 import { readKey } from "openpgp";
-import EditableContent from "components/EditableContent/EditableContent";
 
 export default function CommunicationChannel({ communicationChannel, onChange, addPgpKey, removePgpKey }) {
     const { t } = useTranslation();
@@ -121,17 +121,6 @@ export default function CommunicationChannel({ communicationChannel, onChange, a
                     </div>
                 )}
             </div>
-            <div>
-                <label>{t("VaultEditor.committee-bot")}</label>
-                <EditableContent
-                    textInput
-                    colorable
-                    name="communication-channel.committee-bot"
-                    value={communicationChannel["committee-bot"]}
-                    onChange={onChange}
-                />
-            </div>
-
         </div >
     );
 }

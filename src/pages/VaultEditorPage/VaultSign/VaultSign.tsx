@@ -1,4 +1,4 @@
-import EditableContent from "components/EditableContent/EditableContent";
+import { EditableContent } from "components";
 import { useTranslation } from "react-i18next";
 
 export default function VaultSign({ signatures, onChange, message }) {

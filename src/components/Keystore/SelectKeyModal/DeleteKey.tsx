@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { IStoredKey } from "../../../types/types";
-import { VaultContext } from "../store";
+import { IStoredKey } from "../types";
+import { KeystoreContext } from "../store";
 
 function DeleteKey({
   keyToDelete,
@@ -11,7 +11,7 @@ function DeleteKey({
   onFinish: () => any;
 }) {
   const { t } = useTranslation();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
 
   return (
     <>
@@ -22,7 +22,7 @@ function DeleteKey({
         <button
           className="fill"
           onClick={() => {
-            vaultContext.deleteKey(keyToDelete);
+            keystoreContext.deleteKey(keyToDelete);
             onFinish();
           }}
         >
