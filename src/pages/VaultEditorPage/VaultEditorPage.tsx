@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { ICommitteeMember, IContract, IVaultDescription } from "types/types";
+import { ICommitteeMember, IVaultDescription } from "types/types";
 import Loading from "components/Shared/Loading";
 import CommmitteeMembers from "./CommitteeMembers/CommitteeMembers";
 import VaultDetails from "./VaultDetails/VaultDetails";
@@ -16,6 +16,7 @@ import { severities } from "./severities";
 import { uploadVaultDescription } from "./vaultService";
 import ContractsCovered from "./ContractsCovered/ContractsCovered";
 import "./index.scss";
+import { IContract } from "./types";
 
 const newMember: ICommitteeMember = {
   name: "",
@@ -55,7 +56,7 @@ const newVaultDescription: IVaultDescription = {
 const VaultEditorPage = () => {
   const { t } = useTranslation();
   const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription);
-  const [contracts, setContracts] = useState<IContract[]>([{ ...newContract }]);
+  const [contracts, setContracts] = useState<{ contracts: IContract[] }>({ contracts: [newContract] });
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
@@ -110,7 +111,7 @@ const VaultEditorPage = () => {
             ...severity["nft-metadata"],
             description: vaultName + severity["nft-metadata"].description,
           },
-          "contracts-covered": contracts
+          "contracts-covered": contracts.contracts
             .filter((contract) => {
               return contract.severities.includes(severity.name);
             })
@@ -195,7 +196,7 @@ const VaultEditorPage = () => {
   function addContract() {
     setContracts((prev) => {
       let newObject = { ...prev };
-      setPath(newObject, "contracts", [...prev, { ...newContract }]);
+      setPath(newObject, "contracts", [...prev.contracts, newContract]);
       return newObject;
     });
     setChanged(true);
@@ -238,7 +239,7 @@ const VaultEditorPage = () => {
         }
       });
     });
-    setContracts(contracts);
+    setContracts({ contracts });
   }
 
   async function saveToIpfs() {
@@ -326,7 +327,7 @@ const VaultEditorPage = () => {
             <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
             <div className="vault-editor__section-content">
               <ContractsCovered
-                contracts={contracts}
+                contracts={contracts.contracts}
                 severitiesOptions={vaultDescription.severities.map((severity) => ({
                   label: severity.name,
                   value: severity.name,

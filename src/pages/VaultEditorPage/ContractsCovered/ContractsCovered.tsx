@@ -1,6 +1,6 @@
 import React from "react";
 import { MultiselectOptions } from "components/Shared/MultiSelect/MultiSelect";
-import { IContract } from "types/types";
+import { IContract } from "../types";
 import ContractCoveredCard from "./ContractCoveredCard/ContractCoveredCard";
 
 type ContractsCoveredProps = {

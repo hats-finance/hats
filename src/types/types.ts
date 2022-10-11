@@ -68,13 +68,6 @@ export interface ICommitteeMember {
   "twitter-link": string
   "image-ipfs-link"?: string
 }
-
-export interface IContract {
-  name: string;
-  address: string;
-  severities: string[];
-}
-
 export interface ISeverity {
   "name": string
   "index": number
