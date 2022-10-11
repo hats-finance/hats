@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CopyIcon from "assets/icons/copy.icon.svg";
 
-export default function PgpKey({ onSelected }) {
+export function KeyManager({ onSelected }) {
   const [showSelectKeyModal, setShowSelectKeyModal] = useState(false);
   const [showSelectedKeyDetails, setShowSelectedKeyDetails] = useState(false);
   const [showCreateVault, setShowCreateVault] = useState(false);

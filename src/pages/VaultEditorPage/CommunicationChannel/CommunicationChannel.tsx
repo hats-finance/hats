@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { EditableContent } from "components";
 import classNames from "classnames";
 import Tooltip from "rc-tooltip";
+import { KeyManager } from "components/Keystore";
+
 import InfoIcon from "assets/icons/info.icon";
 import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
@@ -10,7 +12,6 @@ import {
     Colors,
     RC_TOOLTIP_OVERLAY_INNER_STYLE
 } from "../../../constants/constants";
-import PgpKey from "./PgpKey/PgpKey";
 import { readKey } from "openpgp";
 
 export default function CommunicationChannel({ communicationChannel, onChange, addPgpKey, removePgpKey }) {
@@ -89,7 +90,7 @@ export default function CommunicationChannel({ communicationChannel, onChange, a
 
                 <br></br>
             </p>
-            <PgpKey onSelected={selectedKey => {
+            <KeyManager onSelected={selectedKey => {
                 if (selectedKey) setPublicPgpKey(selectedKey.publicKey)
             }} />
             <div>
