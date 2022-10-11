@@ -1,127 +1,137 @@
 import { useState } from "react";
+import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
-import { EditableContent } from "components";
-import classNames from "classnames";
 import Tooltip from "rc-tooltip";
 import { KeyManager } from "components/Keystore";
-
+import { EditableContent } from "components";
 import InfoIcon from "assets/icons/info.icon";
 import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
-import {
-    Colors,
-    RC_TOOLTIP_OVERLAY_INNER_STYLE
-} from "../../../constants/constants";
-import { readKey } from "openpgp";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../../constants/constants";
+import { IVaultDescription } from "types/types";
+import { StyledCommunicationChannel, StyledHelper } from "./styles";
 
-export default function CommunicationChannel({ communicationChannel, onChange, addPgpKey, removePgpKey }) {
-    const { t } = useTranslation();
-    const [showMobileHint, setShowMobileHint] = useState<boolean>(false);
-    const [publicPgpKey, setPublicPgpKey] = useState<string>()
-    const [pgpError, setPgpError] = useState<string>()
-    const keys = communicationChannel["pgp-pk"]
-    const publicKeys = typeof keys === "string" ? keys === "" ? [] : [keys] : communicationChannel["pgp-pk"];
+const tooltipStyle = {
+  ...RC_TOOLTIP_OVERLAY_INNER_STYLE,
+  maxWidth: 500,
+};
 
-    const addPublicKey = async (publicPgpKey) => {
-        setPgpError(undefined)
-        if (publicPgpKey) {
-            try {
-                await readKey({ armoredKey: publicPgpKey })
-                if (publicKeys.includes(publicPgpKey)) {
-                    throw new Error("Key already added")
-                }
-                addPgpKey(publicPgpKey)
-            } catch (error: any) {
-                setPgpError(error.message)
-            }
+type CommunicationChannelProps = {
+  communicationChannel: IVaultDescription["communication-channel"];
+  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  addPgpKey: (key: string) => void;
+  removePgpKey: (index: number) => void;
+};
+
+export default function CommunicationChannel({
+  communicationChannel,
+  onChange,
+  addPgpKey,
+  removePgpKey,
+}: CommunicationChannelProps) {
+  const { t } = useTranslation();
+  const [showMobileHint, setShowMobileHint] = useState<boolean>(false);
+  const [publicPgpKey, setPublicPgpKey] = useState<string>();
+  const [pgpError, setPgpError] = useState<string>();
+
+  const keys = communicationChannel["pgp-pk"];
+  const publicKeys: string[] = typeof keys === "string" ? (keys === "" ? [] : [keys]) : keys;
+
+  const addPublicKey = async (publicPgpKey) => {
+    setPgpError(undefined);
+    if (publicPgpKey) {
+      try {
+        await readKey({ armoredKey: publicPgpKey });
+        if (publicKeys.includes(publicPgpKey)) {
+          throw new Error("Key already added");
         }
+        addPgpKey(publicPgpKey);
+      } catch (error: any) {
+        setPgpError(error.message);
+      }
     }
+  };
+
+  const getHelperComponent = () => {
+    const TooltipComponent = () => (
+      <>
+        {t("VaultEditor.pgp-key-hint-1")}
+        <Tooltip
+          placement="top"
+          overlayClassName="hint-tooltip"
+          overlayInnerStyle={tooltipStyle}
+          overlay={t("VaultEditor.pgp-key-hint-tooltip")}>
+          <InfoIcon className="onlyDesktop" width="15" height="15" fill={Colors.white} />
+        </Tooltip>
+        {t("VaultEditor.pgp-key-hint-2")}
+      </>
+    );
+
+    const HintComponent = () => (
+      <div className="onlyMobile">
+        <div className="hint-question" onClick={() => setShowMobileHint((old) => !old)}>
+          {t("VaultEditor.pgp-key-hint-question")}
+          {showMobileHint ? (
+            <img src={UpArrowIcon} alt="down arrow" width={12} />
+          ) : (
+            <img src={DownArrowIcon} alt="down arrow" width={12} />
+          )}
+        </div>
+
+        <div className={`hint-tooltip ${showMobileHint ? "show" : ""}`}>{t("VaultEditor.pgp-key-hint-tooltip")}</div>
+      </div>
+    );
 
     return (
-        <div className="pgp-key">
-            <div className="pgp-key__hint">
-                {t("VaultEditor.pgp-key-hint-1")}
-                <Tooltip
-                    placement="top"
-                    overlayClassName="tooltip"
-                    overlayInnerStyle={{
-                        ...RC_TOOLTIP_OVERLAY_INNER_STYLE,
-                        maxWidth: 500
-                    }}
-                    overlay={t("VaultEditor.pgp-key-hint-tooltip")}
-                >
-                    <span className="pgp-key__hint-desk-tooltip">
-                        <InfoIcon width="15" height="15" fill={Colors.white} />
-                    </span>
-                </Tooltip>
-                {t("VaultEditor.pgp-key-hint-2")}
-
-                <div className="mobile-only">
-                    <div
-                        className="pgp-key__hint-question"
-                        onClick={() => setShowMobileHint((old) => !old)}
-                    >
-                        {t("VaultEditor.pgp-key-hint-question")}
-                        {showMobileHint && (
-                            <img
-                                src={DownArrowIcon}
-                                alt="down arrow"
-                                width={12}
-                                height={12}
-                            />
-                        )}
-                        {!showMobileHint && (
-                            <img src={UpArrowIcon} alt="up arrow" width={12} height={12} />
-                        )}
-                    </div>
-
-                    <div
-                        className={classNames("pgp-key__hint-tooltip", {
-                            "pgp-key__hint-tooltip--show": showMobileHint
-                        })}
-                    >
-                        {t("VaultEditor.pgp-key-hint-tooltip")}
-                    </div>
-                </div>
-            </div>
-            <p className="vault-editor__section-description">
-                {t("VaultEditor.pgp-key-description")}
-                <br></br>
-
-                <br></br>
-            </p>
-            <KeyManager onSelected={selectedKey => {
-                if (selectedKey) setPublicPgpKey(selectedKey.publicKey)
-            }} />
-            <div>
-                <label>{t("VaultEditor.pgp-key")}</label>
-                <EditableContent
-                    name="communication-channel.pgp-pk"
-                    pastable
-                    colorable
-                    value={publicPgpKey}
-                    onChange={(e) => setPublicPgpKey(e.target.value)}
-                    placeholder={t("VaultEditor.pgp-key-placeholder")}
-                />
-            </div>
-
-            <div>
-                <button onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
-                {pgpError && <div>{pgpError}</div>}
-                {publicKeys.length > 0 && (
-                    <div className="pgp-key__list">
-                        {publicKeys.map((key, index) => (
-                            <div key={index} className="pgp-key__list-key">
-                                <div className="pgp-key__list-key-number">{index + 1}</div>
-                                <div className="pgp-key__list-key-content">
-                                    <span>{key.split("\n")[2].substring(0, 30) + "..."}</span>
-                                    <button onClick={() => removePgpKey(index)}>{t("VaultEditor.remove-pgp")}</button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
-        </div >
+      <StyledHelper>
+        <TooltipComponent />
+        <HintComponent />
+      </StyledHelper>
     );
+  };
+
+  return (
+    <StyledCommunicationChannel>
+      {getHelperComponent()}
+
+      <p className="description">{t("VaultEditor.pgp-key-description")}</p>
+
+      <KeyManager
+        onSelected={(selectedKey) => {
+          if (selectedKey) setPublicPgpKey(selectedKey.publicKey);
+        }}
+      />
+
+      <div>
+        <label>{t("VaultEditor.pgp-key")}</label>
+        <EditableContent
+          name="communication-channel.pgp-pk"
+          pastable
+          colorable
+          value={publicPgpKey}
+          onChange={(e) => setPublicPgpKey(e.target.value)}
+          placeholder={t("VaultEditor.pgp-key-placeholder")}
+        />
+      </div>
+
+      <div>
+        <button onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
+        {pgpError && <div>{pgpError}</div>}
+
+        {publicKeys.length > 0 && (
+          <div className="key-list">
+            {publicKeys.map((key, index) => (
+              <div key={index} className="key-card">
+                <div className="key-number">{index + 1}</div>
+                <div className="key-content">
+                  <span>{key.split("\n")[2].substring(0, 30) + "..."}</span>
+                  <button onClick={() => removePgpKey(index)}>{t("VaultEditor.remove-pgp")}</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </StyledCommunicationChannel>
+  );
 }
