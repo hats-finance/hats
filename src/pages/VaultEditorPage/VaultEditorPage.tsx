@@ -18,7 +18,6 @@ import { uploadVaultDescription } from "./vaultService";
 import ContractsCovered from "./ContractsCovered/ContractsCovered";
 import "./index.scss";
 
-
 const newMember: ICommitteeMember = {
   name: "",
   address: "",
@@ -327,16 +326,16 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
             <div className="vault-editor__section-content">
-                <ContractsCovered 
-                    contracts={contracts}
-                    severitiesOptions={vaultDescription.severities.map((severity) => ({
-                      label: severity.name,
-                      value: severity.name,
-                    }))}
-                    onChange={onContractChange}
-                    onRemove={removeContract}
-                    addContract={addContract}
-                />
+              <ContractsCovered
+                contracts={contracts}
+                severitiesOptions={vaultDescription.severities.map((severity) => ({
+                  label: severity.name,
+                  value: severity.name,
+                }))}
+                onChange={onContractChange}
+                onRemove={removeContract}
+                addContract={addContract}
+              />
             </div>
           </div>
         </section>
