@@ -32,6 +32,7 @@
         width: 124px;
         height: 124px;
         img {
+            object-fit: contain;
             box-sizing: border-box;
             border: 1px solid $turquoise;
             width: 100%;
