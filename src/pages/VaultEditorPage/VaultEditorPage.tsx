@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { ICommitteeMember, IVaultDescription } from "types/types";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import classNames from "classnames";
+import { ipfsTransformUri } from "utils";
+import { fixObject } from "hooks/useVaults";
+import { ICommitteeMember, IVaultDescription } from "types/types";
+import Loading from "components/Shared/Loading";
+import { VaultProvider } from "pages/CommitteeToolsPage/store";
 import CommmitteeMembers from "./CommitteeMembers/CommitteeMembers";
 import ContractCovered from "./ContractCovered/ContractCovered";
 import VaultDetails from "./VaultDetails/VaultDetails";
 import CommunicationChannel from "./CommunicationChannel/CommunicationChannel";
+import CommitteeDetails from "./CommitteeDetails/CommitteeDetails";
 import VaultReview from "./VaultReview/VaultReview";
-import "./index.scss";
 import { getPath, setPath } from "./objectUtils";
-import { useParams } from "react-router-dom";
-import { VaultProvider } from "pages/CommitteeToolsPage/store";
 import { severities } from "./severities";
-import Loading from "components/Shared/Loading";
 import { uploadVaultDescription } from "./vaultService";
-import { ipfsTransformUri } from "utils";
-import { fixObject } from "hooks/useVaults";
-import EditableContent from "components/EditableContent/EditableContent";
+import "./index.scss";
 
 interface IContract {
   name: string;
@@ -311,16 +311,7 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">2. {t("VaultEditor.committee-details")}</p>
             <div className="vault-editor__section-content">
-              <label>{t("VaultEditor.multisig-address")}</label>
-              <EditableContent
-                name="committee.multisig-address"
-                value={vaultDescription?.committee["multisig-address"] || ""}
-                pastable
-                textInput
-                colorable
-                onChange={onChange}
-                placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}
-              />
+              <CommitteeDetails committee={vaultDescription?.["committee"]} onChange={onChange} />
             </div>
           </div>
 
