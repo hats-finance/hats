@@ -1,6 +1,6 @@
 import React from "react";
 import { ICommitteeMember } from "types/types";
-import { CommmitteeMemberCard } from "./CommitteeMemberCard/CommitteeMemberCard";
+import CommmitteeMemberCard from "./CommitteeMemberCard/CommitteeMemberCard";
 
 type CommmitteeMembersProps = {
   members: ICommitteeMember[];
