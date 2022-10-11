@@ -6,7 +6,7 @@ export const StyledContractCoveredCard = styled.div`
     display: flex;
     align-items: flex-start;
 
-    &__number {
+    .index-number {
       flex-shrink: 0;
       color: var(--white);
       width: 40px;
@@ -21,35 +21,35 @@ export const StyledContractCoveredCard = styled.div`
       box-sizing: border-box;
     }
 
-    &__content {
+    .content {
       width: 65%;
 
       @media (max-width: ${breakpointsDefinition.mobile}) {
         width: 100%;
       }
-    }
 
-    &__subcontent {
-      display: flex;
-      justify-content: space-between;
-
-      @media (max-width: ${breakpointsDefinition.mobile}) {
-        flex-direction: column;
-      }
-
-      &__name {
-        width: 60%;
+      .subcontent {
+        display: flex;
+        justify-content: space-between;
 
         @media (max-width: ${breakpointsDefinition.mobile}) {
-          width: 100%;
+          flex-direction: column;
         }
-      }
 
-      &__severities {
-        width: 35%;
+        .name {
+          width: 60%;
 
-        @media (max-width: ${breakpointsDefinition.mobile}) {
-          width: 100%;
+          @media (max-width: ${breakpointsDefinition.mobile}) {
+            width: 100%;
+          }
+        }
+
+        .severities {
+          width: 35%;
+
+          @media (max-width: ${breakpointsDefinition.mobile}) {
+            width: 100%;
+          }
         }
       }
     }

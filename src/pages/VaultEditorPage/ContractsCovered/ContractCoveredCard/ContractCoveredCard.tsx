@@ -19,11 +19,11 @@ export default function ContractCoveredCard({
   return (
     <StyledContractCoveredCard>
       <div className="contract">
-        <div className="contract__number">{index + 1}</div>
+        <div className="index-number">{index + 1}</div>
 
-        <div className="contract__content">
-          <div className="contract__subcontent">
-            <div className="contract__subcontent__name">
+        <div className="content">
+          <div className="subcontent">
+            <div className="name">
               <label>{t("VaultEditor.contract-name")}</label>
               <EditableContent
                 textInput
@@ -34,7 +34,7 @@ export default function ContractCoveredCard({
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
-            <div className="contract__subcontent__severities">
+            <div className="severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
                 name={`${basePath}.severities`}

@@ -20,10 +20,10 @@ const CommmitteeMemberCard = ({ index, member, onChange, onRemove, membersCount,
   return (
     <StyledCommitteeMemberCard>
       <div className="member-details">
-        <div className="member-details__number">{index + 1}</div>
+        <div className="index-number">{index + 1}</div>
 
-        <div className="member-details__content">
-          <div className="member-details__inputs">
+        <div className="content">
+          <div className="inputs">
             <label>{t("VaultEditor.member-name")}</label>
             <EditableContent
               textInput

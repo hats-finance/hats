@@ -7,7 +7,7 @@ export const StyledCommitteeMemberCard = styled.div`
     display: flex;
     align-items: flex-start;
 
-    &__number {
+    .index-number {
       flex-shrink: 0;
       color: var(--white);
       width: 40px;
@@ -22,7 +22,7 @@ export const StyledCommitteeMemberCard = styled.div`
       box-sizing: border-box;
     }
 
-    &__content {
+    .content {
       flex: 1 0 0;
       display: flex;
       flex-wrap: wrap;
@@ -31,13 +31,13 @@ export const StyledCommitteeMemberCard = styled.div`
       @media (max-width: ${breakpointsDefinition.mobile}) {
         flex-direction: column;
       }
-    }
 
-    &__inputs {
-      width: 60%;
+      .inputs {
+        width: 60%;
 
-      @media (max-width: ${breakpointsDefinition.mobile}) {
-        width: 100%;
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          width: 100%;
+        }
       }
     }
   }
