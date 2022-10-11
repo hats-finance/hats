@@ -111,17 +111,17 @@
   }
 
   // preview vault
-  tr {
-    border-bottom: 2px solid $dark-blue;
-    td {
-      padding: 15px;
-      background-color: $strong-blue;
-      &.sub-row {
-        background-color: transparent;
-        padding: 0px;
-      }
-    }
-  }
+  // tr {
+  //   border-bottom: 2px solid $dark-blue;
+  //   td {
+  //     padding: 15px;
+  //     background-color: $strong-blue;
+  //     &.sub-row {
+  //       background-color: transparent;
+  //       padding: 0px;
+  //     }
+  //   }
+  // }
 
   .arrow {
     cursor: pointer;
@@ -205,12 +205,6 @@
       display: flex;
       justify-content: space-between;
     }
-  }
-
-  .preview-vault {
-    margin-bottom: 30px;
-    border: 1px solid $turquoise;
-    box-sizing: border-box;
   }
 
   @media only screen and (max-width: $mobile-breakpoint) {

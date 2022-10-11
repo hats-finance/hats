@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { IVault, IVaultDescription } from "types/types";
 import PreviewVault from "../../../components/Vault/Vault";
+import { StyledVaultReview } from "./styles";
 
 export default function VaultReview({ vaultDescription }) {
   const { t } = useTranslation();
@@ -40,7 +41,7 @@ export default function VaultReview({ vaultDescription }) {
         totalAllocPoints: "",
         createdAt: "",
         rewardsToken: "",
-        submittedClaim: []
+        submittedClaim: [],
       },
       numberOfApprovedClaims: "0",
       rewardsLevels: [
@@ -64,7 +65,7 @@ export default function VaultReview({ vaultDescription }) {
         "4000",
         "5000",
         "6000",
-        "8000"
+        "8000",
       ],
       totalRewardAmount: "0",
       liquidityPool: false,
@@ -87,23 +88,22 @@ export default function VaultReview({ vaultDescription }) {
   }
 
   return (
-    <>
-      <p className="vault-editor__section-description">
-        {t("VaultEditor.review-vault.description-1")}
-        <br></br>
-        {t("VaultEditor.review-vault.description-2")}
+    <StyledVaultReview>
+      <p className="description">
+        {t("VaultEditor.review-vault.description-1")} <br /> {t("VaultEditor.review-vault.description-2")}
       </p>
-      <p className="vault-editor__section-description">
-        {t("VaultEditor.review-vault.description-3")}
-      </p>
-      <label>{t("VaultEditor.preview-vault")}</label>
-      <div className="preview-vault honeypots-wrapper">
-        <table>
-          <tbody>
-            <PreviewVault expanded={true} data={getVault(vaultDescription)} preview />
-          </tbody>
-        </table>
+      <p className="description">{t("VaultEditor.review-vault.description-3")}</p>
+
+      <div>
+        <label>{t("VaultEditor.preview-vault")}</label>
+        <div className="preview-vault">
+          <table>
+            <tbody>
+              <PreviewVault expanded={true} data={getVault(vaultDescription)} preview />
+            </tbody>
+          </table>
+        </div>
       </div>
-    </>
+    </StyledVaultReview>
   );
 }

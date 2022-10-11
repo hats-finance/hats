@@ -15,8 +15,8 @@ import { getPath, setPath } from "./objectUtils";
 import { severities } from "./severities";
 import { uploadVaultDescription } from "./vaultService";
 import ContractsCovered from "./ContractsCovered/ContractsCovered";
-import "./index.scss";
 import { IContract } from "./types";
+import "./index.scss";
 
 const newMember: ICommitteeMember = {
   name: "",
@@ -378,23 +378,23 @@ const VaultEditorPage = () => {
           </button>
         </div>
 
-        {/* {
-                    !changed && ipfsHash && <>
-                        <section className={classNames({ 'desktop-only': pageNumber !== 6 })}>
-                            <div className="vault-editor__section">
-                                <p className="vault-editor__section-title">
-                                    7. {t("VaultEditor.review-vault.title")}
-                                </p>
-                                <div className="vault-editor__section-content">
-                                    <VaultSign message={""} onChange={null} signatures={[]} />
-                                </div>
-                            </div>
-                            <div className="vault-editor__button-container">
-                                <button onClick={sign} className="fill">{t("VaultEditor.sign-submit")}</button>
-                            </div>
-                        </section>
-                    </>
-                } */}
+        {/* {!changed && ipfsHash && (
+          <>
+            <section className={classNames({ "desktop-only": pageNumber !== 6 })}>
+              <div className="vault-editor__section">
+                <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
+                <div className="vault-editor__section-content">
+                  <VaultSign message={""} onChange={null} signatures={[]} />
+                </div>
+              </div>
+              <div className="vault-editor__button-container">
+                <button onClick={sign} className="fill">
+                  {t("VaultEditor.sign-submit")}
+                </button>
+              </div>
+            </section>
+          </>
+        )} */}
 
         <div className="vault-editor__next-preview">
           {pageNumber < 5 && (
