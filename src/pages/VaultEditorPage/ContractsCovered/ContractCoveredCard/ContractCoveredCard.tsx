@@ -1,29 +1,29 @@
 import { useTranslation } from "react-i18next";
-import MultiSelect, {
-  MultiselectOptions
-} from "components/Shared/MultiSelect/MultiSelect";
+import MultiSelect, { MultiselectOptions } from "components/Shared/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import EditableContent from "components/EditableContent/EditableContent";
+import { StyledContractCoveredCard } from "./styles";
 
-export default function ContractCovered({
+export default function ContractCoveredCard({
   index,
   contract,
   onChange,
   onRemove,
   severitiesOptions,
   contractsCount,
-  addContract
+  addContract,
 }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
 
   return (
-    <>
-      <div className="contracts-covered__contract">
-        <div className="contracts-covered__contract-number">{index + 1}</div>
-        <div className="contracts-covered__contract-content">
-          <div className="contracts-covered__contract-subcontent">
-            <div className="contracts-covered__contract-name">
+    <StyledContractCoveredCard>
+      <div className="contract">
+        <div className="contract__number">{index + 1}</div>
+
+        <div className="contract__content">
+          <div className="contract__subcontent">
+            <div className="contract__subcontent__name">
               <label>{t("VaultEditor.contract-name")}</label>
               <EditableContent
                 textInput
@@ -34,7 +34,7 @@ export default function ContractCovered({
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
-            <div className="contracts-covered__contract-severities">
+            <div className="contract__subcontent__severities">
               <label>{t("VaultEditor.contract-severities")}</label>
               <MultiSelect
                 name={`${basePath}.severities`}
@@ -44,19 +44,23 @@ export default function ContractCovered({
               />
             </div>
           </div>
-          <label>{t("VaultEditor.contract-address")}</label>
-          <EditableContent
-            textInput
-            pastable
-            colorable
-            name={`${basePath}.address`}
-            value={contract.address}
-            onChange={onChange}
-            placeholder={t("VaultEditor.contract-address-placeholder")}
-          />
+
+          <div>
+            <label>{t("VaultEditor.contract-address")}</label>
+            <EditableContent
+              textInput
+              pastable
+              colorable
+              name={`${basePath}.address`}
+              value={contract.address}
+              onChange={onChange}
+              placeholder={t("VaultEditor.contract-address-placeholder")}
+            />
+          </div>
         </div>
       </div>
-      <div className="contracts-covered__contract-buttons">
+
+      <div className="controller-buttons">
         {contractsCount > 1 && (
           <button className="fill" onClick={() => onRemove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
@@ -69,6 +73,6 @@ export default function ContractCovered({
           </button>
         )}
       </div>
-    </>
+    </StyledContractCoveredCard>
   );
 }

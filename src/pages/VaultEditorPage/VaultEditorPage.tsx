@@ -4,11 +4,10 @@ import { useParams } from "react-router-dom";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { ICommitteeMember, IVaultDescription } from "types/types";
+import { ICommitteeMember, IContract, IVaultDescription } from "types/types";
 import Loading from "components/Shared/Loading";
 import { VaultProvider } from "pages/CommitteeToolsPage/store";
 import CommmitteeMembers from "./CommitteeMembers/CommitteeMembers";
-import ContractCovered from "./ContractCovered/ContractCovered";
 import VaultDetails from "./VaultDetails/VaultDetails";
 import CommunicationChannel from "./CommunicationChannel/CommunicationChannel";
 import CommitteeDetails from "./CommitteeDetails/CommitteeDetails";
@@ -16,13 +15,9 @@ import VaultReview from "./VaultReview/VaultReview";
 import { getPath, setPath } from "./objectUtils";
 import { severities } from "./severities";
 import { uploadVaultDescription } from "./vaultService";
+import ContractsCovered from "./ContractsCovered/ContractsCovered";
 import "./index.scss";
 
-interface IContract {
-  name: string;
-  address: string;
-  severities: string[];
-}
 
 const newMember: ICommitteeMember = {
   name: "",
@@ -62,8 +57,8 @@ const newVaultDescription: IVaultDescription = {
 const VaultEditorPage = () => {
   const { t } = useTranslation();
   const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription);
+  const [contracts, setContracts] = useState<IContract[]>([{ ...newContract }]);
   const [pageNumber, setPageNumber] = useState<number>(1);
-  const [contracts, setContracts] = useState({ contracts: [{ ...newContract }] });
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const [changed, setChanged] = useState(false);
@@ -117,7 +112,7 @@ const VaultEditorPage = () => {
             ...severity["nft-metadata"],
             description: vaultName + severity["nft-metadata"].description,
           },
-          "contracts-covered": contracts.contracts
+          "contracts-covered": contracts
             .filter((contract) => {
               return contract.severities.includes(severity.name);
             })
@@ -202,7 +197,7 @@ const VaultEditorPage = () => {
   function addContract() {
     setContracts((prev) => {
       let newObject = { ...prev };
-      setPath(newObject, "contracts", [...prev.contracts, { ...newContract }]);
+      setPath(newObject, "contracts", [...prev, { ...newContract }]);
       return newObject;
     });
     setChanged(true);
@@ -245,7 +240,7 @@ const VaultEditorPage = () => {
         }
       });
     });
-    setContracts({ contracts });
+    setContracts(contracts);
   }
 
   async function saveToIpfs() {
@@ -332,23 +327,16 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
             <div className="vault-editor__section-content">
-              <div className="contracts-covered">
-                {(contracts.contracts || []).map((contract, index) => (
-                  <ContractCovered
-                    key={index}
-                    contract={contract}
+                <ContractsCovered 
+                    contracts={contracts}
                     severitiesOptions={vaultDescription.severities.map((severity) => ({
                       label: severity.name,
                       value: severity.name,
                     }))}
-                    index={index}
-                    contractsCount={(contracts.contracts || []).length}
                     onChange={onContractChange}
                     onRemove={removeContract}
                     addContract={addContract}
-                  />
-                ))}
-              </div>
+                />
             </div>
           </div>
         </section>
