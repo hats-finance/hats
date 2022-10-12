@@ -5,11 +5,16 @@ import {
   NotificationFeedProvider,
   NotificationBell
 } from "@wherever/react-notification-feed";
+import { useEthers } from "@usedapp/core";
 
 const PARTNER_KEY = "6bfd58ee-8fc8-4b5d-96f4-9562c7095e06";
 
 const WhereverWidget = () => {
-  console.log(process.env.NODE_ENV);
+  const { account } = useEthers();
+
+  if (!account) {
+    return null;
+  }
 
   return (
     <StyledWhereverWidget>
