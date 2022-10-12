@@ -1,6 +1,6 @@
 import React from "react";
 import { ICommitteeMember } from "types/types";
-import CommmitteeMemberCard from "./CommitteeMemberForm/CommitteeMemberForm";
+import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 
 type CommmitteeMembersProps = {
   members: ICommitteeMember[];
@@ -13,7 +13,7 @@ export function CommitteeMembersList({ members, onChange, onRemove, addMember }:
   return (
     <>
       {members.map((member, index) => (
-        <CommmitteeMemberCard
+        <CommitteeMemberForm
           key={index}
           member={member}
           index={index}
