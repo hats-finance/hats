@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Modal1 as Modal } from "components";
 import { KeystoreContext } from "../store";
 import "./index.scss";
-import { useTranslation } from "react-i18next";
 
 export function CreateKeystoreModal({ setShowModal }: { setShowModal: (show: boolean) => any; }) {
   const [password, setPasswordRef] = useState("");

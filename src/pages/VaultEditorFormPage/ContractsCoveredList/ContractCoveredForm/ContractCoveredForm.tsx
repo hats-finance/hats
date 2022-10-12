@@ -1,14 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { MultiSelect } from "components";
+import { MultiSelect, EditableContent } from "components";
+import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { EditableContent } from "components";
 import { StyledContractCoveredForm } from "./styles";
 
 export default function ContractCoveredForm({
   index,
   contract,
+  onChange,
+  onRemove,
   severitiesOptions,
   contractsCount,
+  addContract,
 }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
@@ -27,7 +30,7 @@ export default function ContractCoveredForm({
                 colorable
                 name={`${basePath}.name`}
                 value={contract.name}
-                onChange={() => { }}
+                onChange={onChange}
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
@@ -36,8 +39,8 @@ export default function ContractCoveredForm({
               <MultiSelect
                 name={`${basePath}.severities`}
                 value={contract.severities}
-                onChange={() => { }}
-                options={severitiesOptions}
+                onChange={onChange}
+                options={severitiesOptions as Array<MultiSelectOption>}
               />
             </div>
           </div>
@@ -50,7 +53,7 @@ export default function ContractCoveredForm({
               colorable
               name={`${basePath}.address`}
               value={contract.address}
-              onChange={() => { }}
+              onChange={onChange}
               placeholder={t("VaultEditor.contract-address-placeholder")}
             />
           </div>
@@ -59,13 +62,13 @@ export default function ContractCoveredForm({
 
       <div className="controller-buttons">
         {contractsCount > 1 && (
-          <button className="fill" onClick={() => { }}>
+          <button className="fill" onClick={() => onRemove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button className="fill" onClick={() => { }}>
+          <button className="fill" onClick={addContract}>
             {t("VaultEditor.add-member")}
           </button>
         )}

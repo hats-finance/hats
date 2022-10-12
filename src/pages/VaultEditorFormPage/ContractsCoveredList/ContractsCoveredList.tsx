@@ -1,7 +1,7 @@
 import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
 import React from "react";
 import { IContract } from "../types";
-import ContractCoveredCard from "./ContractCoveredForm/ContractCoveredForm";
+import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 
 type ContractsCoveredListProps = {
   contracts: IContract[];
@@ -21,7 +21,7 @@ export function ContractsCoveredList({
   return (
     <>
       {contracts.map((contract, index) => (
-        <ContractCoveredCard
+        <ContractCoveredForm
           index={index}
           key={index}
           contract={contract}

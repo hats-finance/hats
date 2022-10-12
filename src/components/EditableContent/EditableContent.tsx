@@ -1,4 +1,4 @@
-import { forwardRef, useRef, useState } from "react";
+import { ChangeEvent, forwardRef, useRef, useState } from "react";
 import classNames from "classnames";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
@@ -11,94 +11,63 @@ type Props = {
   removable?: boolean;
   colorable?: boolean;
   textInput?: boolean;
-} & React.DetailedHTMLProps<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  HTMLInputElement
-> &
-  React.DetailedHTMLProps<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    HTMLTextAreaElement
-  >;
+} & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
+  React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
-function EditableContentComponent(
-  { pastable, copyable, removable, textInput, colorable, ...props }: Props,
-  ref
-) {
+function EditableContentComponent({ pastable, copyable, removable, textInput, colorable, ...props }: Props, ref) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable;
   const [changed, setChanged] = useState(false);
+
+  const refToUse = ref || localRef;
+
+  const handleOnChange = (e: ChangeEvent<any>) => {
+    setChanged(true);
+    if (props.onChange) props.onChange(e);
+  };
+
+  const handleOnPaste = () => {
+    navigator.clipboard.readText().then((text) => (refToUse.current!.value = text));
+  };
+
+  const handleOnCopy = () => {
+    navigator.clipboard.writeText(refToUse.current!.value);
+  };
+
+  const handleOnClear = () => {
+    refToUse.current!.value = "";
+  };
 
   return (
     <div className="pastable-content">
       {textInput ? (
         <input
-          type="text"
-          ref={ref || localRef}
           {...props}
+          type="text"
+          ref={refToUse}
           className={classNames("pastable-content__input", {
-            "pastable-content__input--changed": changed && colorable
+            "pastable-content__input--changed": changed && colorable,
           })}
-          onChange={(e) => {
-            setChanged(true);
-            if (props.onChange) {
-              props.onChange(e);
-            }
-          }}
+          onChange={handleOnChange}
         />
       ) : (
         <textarea
-          ref={ref || localRef}
           {...props}
+          ref={refToUse}
           className={classNames("pastable-content__textarea", {
-            "pastable-content__textarea--changed": changed && colorable
+            "pastable-content__textarea--changed": changed && colorable,
           })}
-          onChange={(e) => {
-            setChanged(true);
-            if (props.onChange) {
-              props.onChange(e);
-            }
-          }}
+          onChange={handleOnChange}
         />
       )}
       {extraIcons && (
         <div
           className={classNames("pastable-content__extra-icons", {
-            "pastable-content__extra-icons--input": textInput
-          })}
-        >
-          {pastable && (
-            <img
-              alt="paste"
-              src={PasteIcon}
-              onClick={() => {
-                navigator.clipboard.readText().then((text) => {
-                  if (ref) ref.current!.value = text;
-                  else localRef.current!.value = text;
-                });
-              }}
-            />
-          )}
-          {copyable && (
-            <img
-              alt="copy"
-              src={CopyIcon}
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  ref ? ref.current!.value : localRef.current!.value
-                );
-              }}
-            />
-          )}
-          {removable && (
-            <img
-              alt="remove"
-              src={RemoveIcon}
-              onClick={() => {
-                if (ref) ref.current!.value = "";
-                else localRef.current!.value = "";
-              }}
-            />
-          )}
+            "pastable-content__extra-icons--input": textInput,
+          })}>
+          {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
+          {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
+          {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
         </div>
       )}
     </div>
