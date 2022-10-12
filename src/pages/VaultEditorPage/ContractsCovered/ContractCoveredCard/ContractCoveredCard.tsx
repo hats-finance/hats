@@ -7,11 +7,8 @@ import { StyledContractCoveredCard } from "./styles";
 export default function ContractCoveredCard({
   index,
   contract,
-  onChange,
-  onRemove,
   severitiesOptions,
   contractsCount,
-  addContract,
 }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
@@ -30,7 +27,7 @@ export default function ContractCoveredCard({
                 colorable
                 name={`${basePath}.name`}
                 value={contract.name}
-                onChange={onChange}
+                onChange={() => { }}
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
@@ -39,7 +36,7 @@ export default function ContractCoveredCard({
               <MultiSelect
                 name={`${basePath}.severities`}
                 value={contract.severities}
-                onChange={onChange}
+                onChange={() => { }}
                 options={severitiesOptions}
               />
             </div>
@@ -53,7 +50,7 @@ export default function ContractCoveredCard({
               colorable
               name={`${basePath}.address`}
               value={contract.address}
-              onChange={onChange}
+              onChange={() => { }}
               placeholder={t("VaultEditor.contract-address-placeholder")}
             />
           </div>
@@ -62,13 +59,13 @@ export default function ContractCoveredCard({
 
       <div className="controller-buttons">
         {contractsCount > 1 && (
-          <button className="fill" onClick={() => onRemove(index)}>
+          <button className="fill" onClick={() => { }}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button className="fill" onClick={addContract}>
+          <button className="fill" onClick={() => { }}>
             {t("VaultEditor.add-member")}
           </button>
         )}
