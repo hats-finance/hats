@@ -10,6 +10,7 @@ import CloseIcon from "../../assets/icons/close.icon";
 import WalletInfo from "../WalletInfo/WalletInfo";
 import { StyledHeader } from "./styles";
 import { WalletButton } from "components/WalletButton/WalletButton";
+import { WhereverWidget } from "components/WhereverWidget/WhereverWidget";
 
 const Header = () => {
   const location = useLocation();
@@ -22,9 +23,14 @@ const Header = () => {
       <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
       {account && <WalletInfo />}
 
+      <WhereverWidget />
+
       <WalletButton />
 
-      <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
+      <div
+        className="menu-button"
+        onClick={() => dispatch(toggleMenu(!showMenu))}
+      >
         {showMenu ? <CloseIcon /> : <MenuIcon />}
       </div>
     </StyledHeader>
