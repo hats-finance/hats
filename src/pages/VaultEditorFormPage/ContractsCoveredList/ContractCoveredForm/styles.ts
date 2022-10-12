@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledCommitteeMemberCard = styled.div`
-  .member-details {
+export const StyledContractCoveredForm = styled.div`
+  .contract {
     display: flex;
     align-items: flex-start;
 
@@ -23,30 +22,40 @@ export const StyledCommitteeMemberCard = styled.div`
     }
 
     .content {
-      flex: 1 0 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
+      width: 65%;
 
       @media (max-width: ${breakpointsDefinition.mobile}) {
-        flex-direction: column;
+        width: 100%;
       }
 
-      .inputs {
-        width: 60%;
+      .subcontent {
+        display: flex;
+        justify-content: space-between;
 
         @media (max-width: ${breakpointsDefinition.mobile}) {
-          width: 100%;
+          flex-direction: column;
+        }
+
+        .name {
+          width: 60%;
+
+          @media (max-width: ${breakpointsDefinition.mobile}) {
+            width: 100%;
+          }
+        }
+
+        .severities {
+          width: 35%;
+
+          @media (max-width: ${breakpointsDefinition.mobile}) {
+            width: 100%;
+          }
         }
       }
     }
   }
 
   .controller-buttons {
-    @media (max-width: ${breakpointsDefinition.mobile}) {
-      margin-top: ${getSpacing(3)};
-    }
-
     button {
       margin: 0;
       margin-left: 54px;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledVaultReview = styled.div`
+export const StyledVaultFormReview= styled.div`
   .description {
     color: var(--white);
   }

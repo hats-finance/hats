@@ -1,6 +1,6 @@
 import React from "react";
 import { ICommitteeMember } from "types/types";
-import CommmitteeMemberCard from "./CommitteeMemberCard/CommitteeMemberCard";
+import CommmitteeMemberCard from "./CommitteeMemberForm/CommitteeMemberForm";
 
 type CommmitteeMembersProps = {
   members: ICommitteeMember[];
@@ -9,7 +9,7 @@ type CommmitteeMembersProps = {
   addMember: () => void;
 };
 
-export function CommmitteeMembers({ members, onChange, onRemove, addMember }: CommmitteeMembersProps) {
+export function CommitteeMembersList({ members, onChange, onRemove, addMember }: CommmitteeMembersProps) {
   return (
     <>
       {members.map((member, index) => (

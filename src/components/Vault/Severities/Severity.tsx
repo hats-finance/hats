@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { ScreenSize, VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 import { RootState } from "../../../reducers";
-import { IVault, ISeverity } from "../../../types/types";
+import { IVault, IVulnerabilitySeverity } from "../../../types/types";
 import humanizeDuration from "humanize-duration";
 import { useState } from "react";
 import { Modal1 as Modal, NFTPrize, Media, ContractsCovered } from "components";
@@ -11,7 +11,7 @@ import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
 
 interface IProps {
-  severity: ISeverity
+  severity: IVulnerabilitySeverity
   vault: IVault
   severityIndex: number
   expanded: boolean

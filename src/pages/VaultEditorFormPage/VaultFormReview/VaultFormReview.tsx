@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { IVault, IVaultDescription } from "types/types";
-import { StyledVaultReview } from "./styles";
+import { StyledVaultFormReview } from "./styles";
 import { Vault } from "components";
 
-export function VaultReview({ vaultDescription }) {
+export function VaultFormReview({ vaultDescription }) {
   const { t } = useTranslation();
 
   function getVault(description: IVaultDescription): IVault {
@@ -88,7 +88,7 @@ export function VaultReview({ vaultDescription }) {
   }
 
   return (
-    <StyledVaultReview>
+    <StyledVaultFormReview>
       <p className="description">
         {t("VaultEditor.review-vault.description-1")} <br /> {t("VaultEditor.review-vault.description-2")}
       </p>
@@ -104,6 +104,6 @@ export function VaultReview({ vaultDescription }) {
           </table>
         </div>
       </div>
-    </StyledVaultReview>
+    </StyledVaultFormReview>
   );
 }

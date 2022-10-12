@@ -7,7 +7,7 @@ type VaultDetailsProps = {
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 };
 
-export function CommitteeDetails({ committee, onChange }: VaultDetailsProps) {
+export function CommitteeDetailsForm({ committee, onChange }: VaultDetailsProps) {
   const { t } = useTranslation();
 
   return (

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledCommunicationChannel = styled.div`
+export const StyledCommunicationChannelForm = styled.div`
   .description {
     color: var(--white);
   }

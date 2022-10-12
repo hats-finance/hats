@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 import { ICommitteeMember } from "types/types";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { EditableContent, IconEditor } from "components";
-import { StyledCommitteeMemberCard } from "./styles";
+import { StyledCommitteeMemberForm } from "./styles";
 
-type CommmitteeMemberCardProps = {
+type CommitteeMemberFormProps = {
   index: number;
   member: ICommitteeMember;
   membersCount: number;
@@ -13,12 +13,12 @@ type CommmitteeMemberCardProps = {
   addMember: () => void;
 };
 
-const CommmitteeMemberCard = ({ index, member, onChange, onRemove, membersCount, addMember }: CommmitteeMemberCardProps) => {
+const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, addMember }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
   const basePath = `committee.members.${index}`;
 
   return (
-    <StyledCommitteeMemberCard>
+    <StyledCommitteeMemberForm>
       <div className="member-details">
         <div className="index-number">{index + 1}</div>
 
@@ -74,7 +74,7 @@ const CommmitteeMemberCard = ({ index, member, onChange, onRemove, membersCount,
           </button>
         )}
       </div>
-    </StyledCommitteeMemberCard>
+    </StyledCommitteeMemberForm>
   );
 };
 

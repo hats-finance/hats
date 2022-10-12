@@ -54,7 +54,7 @@ export interface IVaultDescription {
     "multisig-address": string
     "members": Array<ICommitteeMember>
   }
-  "severities": Array<ISeverity>
+  "severities": Array<IVulnerabilitySeverity>
   "source": {
     name: string
     url: string
@@ -68,7 +68,7 @@ export interface ICommitteeMember {
   "twitter-link": string
   "image-ipfs-link"?: string
 }
-export interface ISeverity {
+export interface IVulnerabilitySeverity {
   "name": string
   "index": number
   "contracts-covered": { [key: string]: string }[]

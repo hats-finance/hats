@@ -7,7 +7,7 @@ type VaultDetailsProps = {
   projectMetaData: IVaultDescription["project-metadata"];
 }
 
-export function VaultDetails({ projectMetaData }: VaultDetailsProps) {
+export function VaultDetailsForm({ projectMetaData }: VaultDetailsProps) {
   const { t } = useTranslation();
 
   return (

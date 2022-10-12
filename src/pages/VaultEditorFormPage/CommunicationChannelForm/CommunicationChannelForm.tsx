@@ -9,7 +9,7 @@ import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../../constants/constants";
 import { IVaultDescription } from "types/types";
-import { StyledCommunicationChannel, StyledHelper } from "./styles";
+import { StyledCommunicationChannelForm, StyledHelper } from "./styles";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 const tooltipStyle = {
@@ -18,7 +18,7 @@ const tooltipStyle = {
 };
 
 
-export function CommunicationChannel() {
+export function CommunicationChannelForm() {
   const { t } = useTranslation();
   const [showMobileHint, setShowMobileHint] = useState<boolean>(false);
   const [publicPgpKey, setPublicPgpKey] = useState<string>();
@@ -86,7 +86,7 @@ const getHelperComponent = () => {
 };
 
 return (
-  <StyledCommunicationChannel>
+  <StyledCommunicationChannelForm>
     {getHelperComponent()}
 
     <p className="description">{t("VaultEditor.pgp-key-description")}</p>
@@ -127,6 +127,6 @@ return (
         </div>
       )}
     </div>
-  </StyledCommunicationChannel>
+  </StyledCommunicationChannelForm>
 );
 }

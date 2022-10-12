@@ -6,7 +6,7 @@ import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
 import { ICommitteeMember, IVaultDescription } from "types/types";
 import { Loading } from "components";
-import { ContractsCovered, VaultDetails, CommitteeDetails, CommmitteeMembers, VaultReview, CommunicationChannel } from ".";
+import { ContractsCoveredList, VaultDetailsForm, CommitteeDetailsForm, CommitteeMembersList, VaultFormReview, CommunicationChannelForm } from ".";
 import { FormProvider, useForm } from 'react-hook-form';
 import { IContract } from "./types";
 import "./index.scss";
@@ -47,7 +47,7 @@ const newVaultDescription: IVaultDescription = {
   },
 };
 
-const VaultEditorPage = () => {
+const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const [contracts, setContracts] = useState<{ contracts: IContract[] }>({ contracts: [newContract] });
   const [pageNumber, setPageNumber] = useState<number>(1);
@@ -200,7 +200,7 @@ const VaultEditorPage = () => {
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">1. {t("VaultEditor.vault-details.title")}</p>
               <div className="vault-editor__section-content">
-                <VaultDetails projectMetaData={vaultDescription?.["project-metadata"]} />
+                <VaultDetailsForm projectMetaData={vaultDescription?.["project-metadata"]} />
               </div>
             </div>
           </section>
@@ -209,14 +209,14 @@ const VaultEditorPage = () => {
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">2. {t("VaultEditor.committee-details")}</p>
               <div className="vault-editor__section-content">
-                <CommitteeDetails committee={vaultDescription?.["committee"]} />
+                <CommitteeDetailsForm committee={vaultDescription?.["committee"]} />
               </div>
             </div>
 
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">3. {t("VaultEditor.committee-members")}</p>
               <div className="vault-editor__section-content">
-                <CommmitteeMembers
+                <CommitteeMembersList
                   members={vaultDescription?.committee.members || []}
                   onChange={onChange}
                   onRemove={removeMember}
@@ -230,7 +230,7 @@ const VaultEditorPage = () => {
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
               <div className="vault-editor__section-content">
-                <ContractsCovered
+                <ContractsCoveredList
                   contracts={contracts.contracts}
                   severitiesOptions={vaultDescription.severities.map((severity) => ({
                     label: severity.name,
@@ -245,7 +245,7 @@ const VaultEditorPage = () => {
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">5. {t("VaultEditor.pgp-key")}</p>
               <div className="vault-editor__section-content">
-                <CommunicationChannel
+                <CommunicationChannelForm
 
                 />
               </div>
@@ -258,7 +258,7 @@ const VaultEditorPage = () => {
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">6. {t("VaultEditor.review-vault.title")}</p>
               <div className="vault-editor__section-content">
-                <VaultReview vaultDescription={vaultDescription} />
+                <VaultFormReview vaultDescription={vaultDescription} />
               </div>
             </div>
           </section>
@@ -312,4 +312,4 @@ const VaultEditorPage = () => {
   );
 };
 
-export { VaultEditorPage };
+export { VaultEditorFormPage };

@@ -2,9 +2,9 @@ import { useTranslation } from "react-i18next";
 import { MultiSelect } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { EditableContent } from "components";
-import { StyledContractCoveredCard } from "./styles";
+import { StyledContractCoveredForm } from "./styles";
 
-export default function ContractCoveredCard({
+export default function ContractCoveredForm({
   index,
   contract,
   severitiesOptions,
@@ -14,7 +14,7 @@ export default function ContractCoveredCard({
   const basePath = `contracts.${index}`;
 
   return (
-    <StyledContractCoveredCard>
+    <StyledContractCoveredForm>
       <div className="contract">
         <div className="index-number">{index + 1}</div>
 
@@ -70,6 +70,6 @@ export default function ContractCoveredCard({
           </button>
         )}
       </div>
-    </StyledContractCoveredCard>
+    </StyledContractCoveredForm>
   );
 }

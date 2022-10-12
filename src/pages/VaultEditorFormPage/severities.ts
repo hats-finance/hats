@@ -1,6 +1,6 @@
-import { ISeverity } from "types/types"
+import { IVulnerabilitySeverity } from "types/types"
 
-export const severities: ISeverity[] = [{
+export const severities: IVulnerabilitySeverity[] = [{
     "name": "low",
     "index": 7,
     "contracts-covered": [],

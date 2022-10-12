@@ -8,7 +8,7 @@ import {
   // VulnerabilityListPage,
   VulnerabilityFormPage,
   CommitteeToolsPage,
-  VaultEditorPage,
+  VaultEditorFormPage,
   AirdropMachinePage,
 } from "pages";
 
@@ -71,11 +71,11 @@ const routes: RouteObject[] = [
         children: [
           {
             path: "",
-            element: <VaultEditorPage />,
+            element: <VaultEditorFormPage />,
           },
           {
             path: ":ipfsHash",
-            element: <VaultEditorPage />,
+            element: <VaultEditorFormPage />,
           },
         ],
       },
