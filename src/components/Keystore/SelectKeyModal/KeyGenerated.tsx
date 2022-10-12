@@ -1,4 +1,4 @@
-import CopyToClipboard from "components/Shared/CopyToClipboard";
+import CopyToClipboard from "components/CopyToClipboard";
 import CheckboxIcon from "assets/icons/checkbox.svg";
 import { useState } from "react";
 import classNames from "classnames";

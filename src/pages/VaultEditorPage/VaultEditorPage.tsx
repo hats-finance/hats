@@ -5,18 +5,12 @@ import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
 import { ICommitteeMember, IVaultDescription } from "types/types";
-import Loading from "components/Shared/Loading";
-import CommmitteeMembers from "./CommitteeMembers/CommitteeMembers";
-import VaultDetails from "./VaultDetails/VaultDetails";
-import CommunicationChannel from "./CommunicationChannel/CommunicationChannel";
-import CommitteeDetails from "./CommitteeDetails/CommitteeDetails";
-import VaultReview from "./VaultReview/VaultReview";
-import { getPath, setPath } from "./objectUtils";
-import { severities } from "./severities";
-import { uploadVaultDescription } from "./vaultService";
-import ContractsCovered from "./ContractsCovered/ContractsCovered";
+import { Loading } from "components";
+import { ContractsCovered, VaultDetails, CommitteeDetails, CommmitteeMembers, VaultReview, CommunicationChannel } from ".";
+import { useForm } from 'react-hook-form';
 import { IContract } from "./types";
 import "./index.scss";
+import { uploadVaultDescription } from "./vaultService";
 
 const newMember: ICommitteeMember = {
   name: "",
@@ -46,7 +40,7 @@ const newVaultDescription: IVaultDescription = {
     "multisig-address": "",
     members: [{ ...newMember }],
   },
-  severities,
+  severities: [],
   source: {
     name: "",
     url: "",
@@ -63,6 +57,7 @@ const VaultEditorPage = () => {
   const [changed, setChanged] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
+  const { register } = useForm<IVaultDescription>({ defaultValues: newVaultDescription })
 
   const vaultName = vaultDescription["project-metadata"].name;
 
@@ -99,121 +94,29 @@ const VaultEditorPage = () => {
   }, [ipfsHash]);
 
   // Convert contracts state variable to severities of vault description
-  useEffect(() => {
-    setVaultDescription((prev) => {
-      let newObject = { ...prev };
-      setPath(
-        newObject,
-        "severities",
-        severities.map((severity) => ({
-          ...severity,
-          "nft-metadata": {
-            ...severity["nft-metadata"],
-            description: vaultName + severity["nft-metadata"].description,
-          },
-          "contracts-covered": contracts.contracts
-            .filter((contract) => {
-              return contract.severities.includes(severity.name);
-            })
-            .map((contract) => ({ [contract.name]: contract.address })),
-        }))
-      );
-      return newObject;
-    });
-  }, [contracts, vaultName]);
+  // useEffect(() => {
+  //   setVaultDescription((prev) => {
+  //     let newObject = { ...prev };
+  //     setPath(
+  //       newObject,
+  //       "severities",
+  //       severities.map((severity) => ({
+  //         ...severity,
+  //         "nft-metadata": {
+  //           ...severity["nft-metadata"],
+  //           description: vaultName + severity["nft-metadata"].description,
+  //         },
+  //         "contracts-covered": contracts.contracts
+  //           .filter((contract) => {
+  //             return contract.severities.includes(severity.name);
+  //           })
+  //           .map((contract) => ({ [contract.name]: contract.address })),
+  //       }))
+  //     );
+  //     return newObject;
+  //   });
+  // }, [contracts, vaultName]);
 
-  function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    let value;
-    if (e.target instanceof HTMLInputElement) {
-      if (e.target.files && e.target.files.length > 0) {
-        value = URL.createObjectURL(e.target.files[0]);
-      } else {
-        value = e.target.value;
-      }
-    } else if (e.target instanceof HTMLTextAreaElement) {
-      value = e.target.value;
-    }
-
-    setVaultDescription((prev) => {
-      let newObject = { ...prev };
-      setPath(newObject, e.target.name, value);
-      return newObject;
-    });
-    setChanged(true);
-  }
-
-  function removeFromArray(object, path: string, index: number, newItem?: object) {
-    let newArray = getPath(object, path);
-    newArray.splice(index, 1);
-    if (newArray.length < 1 && newItem) newArray = [{ ...(newItem || {}) }];
-    let newObject = { ...object };
-    setPath(newObject, path, newArray);
-    return newObject;
-  }
-
-  function addMember() {
-    setVaultDescription((prev) => {
-      let newObject = { ...prev };
-      setPath(newObject, "committee.members", [...prev.committee.members, { ...newMember }]);
-      return newObject;
-    });
-    setChanged(true);
-  }
-
-  function addPgpKey(pgpKey) {
-    setVaultDescription((prev) => {
-      let newObject = { ...prev };
-      const keys = prev["communication-channel"]["pgp-pk"];
-      const sureArray = typeof keys === "string" ? (keys === "" ? [] : [keys]) : keys;
-      setPath(newObject, "communication-channel.pgp-pk", [...sureArray, pgpKey]);
-      return newObject;
-    });
-    setChanged(true);
-  }
-
-  function removePgpKey(index: number) {
-    const path = "communication-channel.pgp-pk";
-    let value = getPath(vaultDescription, path);
-    if (typeof value === "string") {
-      setVaultDescription((prev) => {
-        let newObject = { ...prev };
-        setPath(newObject, path, "");
-        return newObject;
-      });
-    } else {
-      let newVaultDescription = removeFromArray(vaultDescription, "communication-channel.pgp-pk", index);
-      setVaultDescription(newVaultDescription);
-    }
-    setChanged(true);
-  }
-
-  function removeMember(index: number) {
-    let newVaultDescription = removeFromArray(vaultDescription, "committee.members", index, newMember);
-    setVaultDescription(newVaultDescription);
-    setChanged(true);
-  }
-
-  function addContract() {
-    setContracts((prev) => {
-      let newObject = { ...prev };
-      setPath(newObject, "contracts", [...prev.contracts, newContract]);
-      return newObject;
-    });
-    setChanged(true);
-  }
-
-  function removeContract(index: number) {
-    let newContracts = removeFromArray(contracts, "contracts", index, newContract);
-    setContracts(newContracts);
-  }
-
-  function onContractChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    setContracts((prev) => {
-      let newObject = { ...prev };
-      setPath(newObject, e.target.name, e.target.value);
-      return newObject;
-    });
-  }
 
   function severitiesToContracts(vaultDescription: IVaultDescription) {
     let contracts = [] as IContract[];
@@ -296,7 +199,7 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">1. {t("VaultEditor.vault-details.title")}</p>
             <div className="vault-editor__section-content">
-              <VaultDetails projectMetaData={vaultDescription?.["project-metadata"]} onChange={onChange} />
+              <VaultDetails projectMetaData={vaultDescription?.["project-metadata"]} />
             </div>
           </div>
         </section>
@@ -305,7 +208,7 @@ const VaultEditorPage = () => {
           <div className="vault-editor__section">
             <p className="vault-editor__section-title">2. {t("VaultEditor.committee-details")}</p>
             <div className="vault-editor__section-content">
-              <CommitteeDetails committee={vaultDescription?.["committee"]} onChange={onChange} />
+              <CommitteeDetails committee={vaultDescription?.["committee"]} />
             </div>
           </div>
 

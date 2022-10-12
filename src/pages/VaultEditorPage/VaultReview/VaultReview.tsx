@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { IVault, IVaultDescription } from "types/types";
-import PreviewVault from "../../../components/Vault/Vault";
 import { StyledVaultReview } from "./styles";
+import { Vault } from "components";
 
-export default function VaultReview({ vaultDescription }) {
+export function VaultReview({ vaultDescription }) {
   const { t } = useTranslation();
 
   function getVault(description: IVaultDescription): IVault {
@@ -99,7 +99,7 @@ export default function VaultReview({ vaultDescription }) {
         <div className="preview-vault">
           <table>
             <tbody>
-              <PreviewVault expanded={true} data={getVault(vaultDescription)} preview />
+              <Vault expanded={true} data={getVault(vaultDescription)} preview />
             </tbody>
           </table>
         </div>

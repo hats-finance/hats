@@ -1,13 +1,9 @@
 import { ChainId, shortenIfAddress, useEthers, useLookupAddress, useTransactions } from "@usedapp/core";
 import { useTranslation } from "react-i18next";
-// import Davatar from "@davatar/react"
 import { useVaults } from "hooks/useVaults";
-import { Colors } from "../../constants/constants";
+import { Colors } from "constants/constants";
 import useModal from "hooks/useModal";
-import TransactionInfo from "../TransactionInfo/TransactionInfo";
-import MyAccount from "components/MyAccount/MyAccount";
-import Dot from "components/Shared/Dot/Dot";
-import Modal from "components/Shared/Modal/Modal";
+import { Modal2 as Modal, Dot, MyAccount, TransactionInfo } from "components";
 import { StyledNetworkName, StyledWalletInfo, StyledWalletUser } from "./styles";
 
 export default function WalletInfo() {

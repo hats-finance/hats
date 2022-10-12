@@ -9,7 +9,7 @@ type CommmitteeMembersProps = {
   addMember: () => void;
 };
 
-export default function CommmitteeMembers({ members, onChange, onRemove, addMember }: CommmitteeMembersProps) {
+export function CommmitteeMembers({ members, onChange, onRemove, addMember }: CommmitteeMembersProps) {
   return (
     <>
       {members.map((member, index) => (

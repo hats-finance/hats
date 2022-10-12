@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { KeystoreContext } from "../store";
-import Modal from "components/Shared/Modal";
+import { Modal1 as Modal } from "components";
 import "./index.scss";
 
 export function UnlockKeystoreModal() {

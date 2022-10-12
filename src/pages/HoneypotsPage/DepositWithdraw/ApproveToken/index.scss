@@ -1,0 +1,75 @@
+@import "styles/constants.scss";
+
+.approve-token-backdrop {
+  position: fixed;
+  z-index: 5000;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $transparent-black;
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s;
+  .approve-token-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: $field-blue;
+    padding: 50px;
+    box-shadow: 0px 4px 4px $black-shadow;
+    position: relative;
+    color: $white;
+    max-width: 450px;
+    text-align: center;
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      cursor: pointer;
+      font-size: $moderate;
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+    .title {
+      font-size: $moderate;
+      font-weight: bold;
+      margin: 40px 0;
+    }
+    .unlimited-approval-button {
+      width: 100%;
+      background-color: $turquoise;
+      color: $field-blue;
+      font-weight: bold;
+      margin: 25px 0;
+    }
+    .sub-text {
+      font-size: $xxsmall;
+      text-align: center;
+      margin: 15px 0;
+      &.yellow {
+        color: $yellow;
+      }
+    }
+    .limited-approval-button {
+      background: transparent;
+      color: $white;
+      text-decoration: underline;
+      border: none;
+    }
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .approve-token-backdrop {
+    .approve-token-content {
+      height: 100%;
+      justify-content: center;
+      padding: $modal-element-padding-mobile;
+    }
+  }
+}

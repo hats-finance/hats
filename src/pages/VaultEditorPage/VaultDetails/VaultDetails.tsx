@@ -5,10 +5,9 @@ import { StyledVaultDetails } from "./styles";
 
 type VaultDetailsProps = {
   projectMetaData: IVaultDescription["project-metadata"];
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
 }
 
-export default function VaultDetails({ projectMetaData, onChange }: VaultDetailsProps) {
+export function VaultDetails({ projectMetaData }: VaultDetailsProps) {
   const { t } = useTranslation();
 
   return (
@@ -19,7 +18,6 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
           textInput
           name="project-metadata.name"
           value={projectMetaData.name}
-          onChange={onChange}
           colorable
           placeholder={t("VaultEditor.vault-details.name-placeholder")}
         />
@@ -28,7 +26,6 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
           textInput
           name="project-metadata.type"
           value={projectMetaData.type}
-          onChange={onChange}
           colorable
           placeholder={t("VaultEditor.vault-details.type-placeholder")}
         />
@@ -37,7 +34,6 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
           name="project-metadata.website"
           textInput
           value={projectMetaData.website}
-          onChange={onChange}
           colorable
           placeholder={t("VaultEditor.vault-details.website-placeholder")}
         />
@@ -49,7 +45,6 @@ export default function VaultDetails({ projectMetaData, onChange }: VaultDetails
           <IconEditor
             name="project-metadata.icon"
             value={projectMetaData?.icon}
-            onChange={onChange}
             colorable
           />
         </div>

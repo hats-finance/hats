@@ -1,5 +1,5 @@
 import { CHAINID } from "../../settings";
-import CopyToClipboard from "../Shared/CopyToClipboard";
+import CopyToClipboard from "../CopyToClipboard";
 import "./Multisig.scss";
 import { Chains } from "../../constants/constants";
 import { shortenIfAddress } from "@usedapp/core";
@@ -15,7 +15,7 @@ export default function Multisig(props: IProps) {
 
   return (
     <div className="multi-sig-address-wrapper">
-      <a 
+      <a
         {...defaultAnchorProps}
         href={chain?.getExplorerAddressLink(multisigAddress)}
         className="multi-sig-address">

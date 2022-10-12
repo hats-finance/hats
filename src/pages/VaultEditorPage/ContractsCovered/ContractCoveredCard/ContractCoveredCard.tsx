@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import MultiSelect, { MultiselectOptions } from "components/Shared/MultiSelect/MultiSelect";
+import { MultiSelect } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { EditableContent } from "components";
 import { StyledContractCoveredCard } from "./styles";
@@ -40,7 +40,7 @@ export default function ContractCoveredCard({
                 name={`${basePath}.severities`}
                 value={contract.severities}
                 onChange={onChange}
-                options={severitiesOptions as MultiselectOptions}
+                options={severitiesOptions}
               />
             </div>
           </div>

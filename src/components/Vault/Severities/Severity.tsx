@@ -4,14 +4,11 @@ import { RootState } from "../../../reducers";
 import { IVault, ISeverity } from "../../../types/types";
 import humanizeDuration from "humanize-duration";
 import { useState } from "react";
-import Modal from "../../Shared/Modal";
-import NFTPrize from "../../NFTPrize/NFTPrize";
-import ContractsCovered from "../ContractsCovered";
+import { Modal1 as Modal, NFTPrize, Media, ContractsCovered } from "components";
 import { formatNumber, ipfsTransformUri } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
 import "./Severity.scss";
-import Media from "components/Shared/Media/Media";
 
 interface IProps {
   severity: ISeverity

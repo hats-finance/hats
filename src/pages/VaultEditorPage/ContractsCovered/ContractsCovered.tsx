@@ -1,17 +1,17 @@
+import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
 import React from "react";
-import { MultiselectOptions } from "components/Shared/MultiSelect/MultiSelect";
 import { IContract } from "../types";
 import ContractCoveredCard from "./ContractCoveredCard/ContractCoveredCard";
 
 type ContractsCoveredProps = {
   contracts: IContract[];
-  severitiesOptions: MultiselectOptions;
+  severitiesOptions: Array<MultiSelectOption>;
   onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onRemove: (index: number) => void;
   addContract: () => void;
 };
 
-export default function ContractsCovered({
+export function ContractsCovered({
   contracts,
   severitiesOptions,
   onChange,

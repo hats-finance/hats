@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
 import { KeystoreContext } from "../store";
 import { KeyGenerated } from "./KeyGenerated";
-import Loading from "components/Shared/Loading";
+import { Loading } from "components";
 import { useTranslation } from "react-i18next";
 import { IStoredKey } from "../types";
 

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import Modal from "components/Shared/Modal";
+import { Modal1 as Modal } from "components";
 import { IStoredKey } from "../types";
 import { KeystoreContext } from "../store";
 import KeyDetails from "./KeyDetails";

@@ -1,13 +1,13 @@
 import { ipfsTransformUri } from "utils";
 import { ISeverity } from "../../types/types";
-import Media from "../Shared/Media/Media";
+import { Media } from "components";
 import "styles/NFTPrize.scss";
 
 interface IProps {
   data: ISeverity
 }
 
-export default function NFTPrize(props: IProps) {
+export function NFTPrize(props: IProps) {
   const severity = props.data;
 
   return (

@@ -6,11 +6,9 @@ import { useVaults } from "hooks/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
-import Loading from "../../components/Shared/Loading";
-import Modal from "../../components/Shared/Modal";
-import Vault from "../../components/Vault/Vault";
-import DepositWithdraw from "../../components/DepositWithdraw/DepositWithdraw";
-import SafePeriodBar from "../../components/SafePeriodBar/SafePeriodBar";
+import { Loading, Vault, Modal1 as Modal } from "components";
+import { DepositWithdraw } from "./DepositWithdraw";
+import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
 
 interface HoneypotsPageProps {

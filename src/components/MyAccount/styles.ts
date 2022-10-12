@@ -1,4 +1,4 @@
-import { breakpointsDefinition } from "./../../styles/breakpoints.styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 import styled from "styled-components";
 
 export const StyledMyAccountInfo = styled.div`

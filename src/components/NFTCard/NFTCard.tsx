@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import Media from "components/Shared/Media/Media";
+import { Media } from "components";
 import { INFTTokenInfoRedeemed } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -16,7 +16,7 @@ interface IProps {
   tokenInfo: INFTTokenInfoRedeemed
 }
 
-export default function NFTCard({ tokenInfo }: IProps) {
+export function NFTCard({ tokenInfo }: IProps) {
   const { metadata, isRedeemed, tokenId, isDeposit, isMerkleTree } = tokenInfo;
   const { chainId } = useEthers();
   const { t } = useTranslation();

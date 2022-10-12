@@ -13,7 +13,7 @@ import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { ForwardedRef, forwardRef } from "react";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
-import "../../styles/Vault/Vault.scss";
+import "styles/Vault/Vault.scss";
 
 interface IProps {
   data: IVault;
@@ -22,7 +22,7 @@ interface IProps {
   preview?: boolean;
 }
 
-const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
+const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -87,6 +87,6 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
       {props.expanded && <VaultExpanded data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />}
     </>
   );
-});
+};
 
-export default Vault;
+export const Vault = forwardRef(VaultComponent);

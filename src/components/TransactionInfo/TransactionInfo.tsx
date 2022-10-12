@@ -5,7 +5,7 @@ import { RootState } from "../../reducers";
 import { CHAINID } from "../../settings";
 import "./TransactionInfo.scss";
 
-export default function TransactionInfo() {
+export function TransactionInfo() {
   const chain = Chains[CHAINID];
   const currentTransaction = useTransactions().transactions.find(tx => !tx.receipt);
   const transactionHash = currentTransaction?.transaction?.hash

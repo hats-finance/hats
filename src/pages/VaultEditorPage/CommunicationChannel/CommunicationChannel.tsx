@@ -23,7 +23,7 @@ type CommunicationChannelProps = {
   removePgpKey: (index: number) => void;
 };
 
-export default function CommunicationChannel({
+export function CommunicationChannel({
   communicationChannel,
   onChange,
   addPgpKey,
