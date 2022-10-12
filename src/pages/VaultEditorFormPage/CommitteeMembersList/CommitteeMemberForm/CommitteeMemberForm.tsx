@@ -78,4 +78,4 @@ const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, 
   );
 };
 
-export default CommmitteeMemberCard;
+export default CommitteeMemberForm;
