@@ -1,10 +1,14 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { newContract } from "../utils";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 
 
 export function ContractsCoveredList() {
   const { control } = useFormContext();
   const { fields: contracts, append, remove } = useFieldArray({ control, name: "contracts-covered" });
+  const appendEmpty = () => {
+    append(newContract);
+  };
 
   return (
     <>
@@ -12,8 +16,7 @@ export function ContractsCoveredList() {
         <ContractCoveredForm
           index={index}
           key={index}
-          //          contractsCount={contracts.length}
-          append={append}
+          append={appendEmpty}
           remove={remove}
         />
       ))}

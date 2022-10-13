@@ -1,4 +1,5 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
+import { newMember } from "../utils";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 
 export function CommitteeMembersList() {
@@ -7,7 +8,7 @@ export function CommitteeMembersList() {
   const { fields, append, remove } = useFieldArray({ control, name: "committee.members" });
 
   const appendEmpty = () => {
-    append({ name: "", "twitter-link": "", address: "", "image-ipfs-link": "" });
+    append(newMember);
   }
 
   return (
