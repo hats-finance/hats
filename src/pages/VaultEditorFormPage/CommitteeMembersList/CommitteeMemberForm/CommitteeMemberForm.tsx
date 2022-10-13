@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { ICommitteeMember } from "types/types";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { EditableContent, IconEditor } from "components";
+import { HatsFormInput, IconEditor } from "components";
 import { StyledCommitteeMemberForm } from "./styles";
 
 type CommitteeMemberFormProps = {
@@ -25,8 +25,7 @@ const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, 
         <div className="content">
           <div className="inputs">
             <label>{t("VaultEditor.member-name")}</label>
-            <EditableContent
-              textInput
+            <HatsFormInput
               colorable
               name={`${basePath}.name`}
               value={member.name || ""}
@@ -34,8 +33,7 @@ const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, 
               placeholder={t("VaultEditor.member-name-placeholder")}
             />
             <label>{t("VaultEditor.member-twitter")}</label>
-            <EditableContent
-              textInput
+            <HatsFormInput
               pastable
               colorable
               name={`${basePath}.twitter-link`}
@@ -44,8 +42,7 @@ const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, 
               placeholder={t("VaultEditor.member-twitter-placeholder")}
             />
             <label>{t("VaultEditor.member-address")}</label>
-            <EditableContent
-              textInput
+            <HatsFormInput
               pastable
               colorable
               name={`${basePath}.address`}

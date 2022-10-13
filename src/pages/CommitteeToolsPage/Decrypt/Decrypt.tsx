@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
 import { readPrivateKeyFromStoredKey } from "components/Keystore/utils";
 import { KeystoreContext, SelectKeyModal } from "components/Keystore";
-import { EditableContent } from "components";
+import { HatsFormInput } from "components";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import "./index.scss";
 
@@ -150,7 +150,7 @@ export default function Decrypt() {
         <p className="decrypt-wrapper__textbox-title">
           {t("CommitteeTools.Decrypt.encrypted-message")}
         </p>
-        <EditableContent pastable ref={encryptedMessageRef} />
+        <HatsFormInput type="textarea" pastable ref={encryptedMessageRef} />
         {error && <div className="error-label">{error}</div>}
         <button onClick={_decrypt} className="fill decrypt-wrapper__button">
           {t("CommitteeTools.Decrypt.decrypt")}
@@ -161,7 +161,7 @@ export default function Decrypt() {
         <p className="decrypt-wrapper__textbox-title">
           {t("CommitteeTools.Decrypt.decrypted-message")}
         </p>
-        <EditableContent copyable ref={decryptedMessageRef} />
+        <HatsFormInput type="textarea" copyable ref={decryptedMessageRef} />
         <button onClick={_encrypt} className="fill decrypt-wrapper__button">
           {t("CommitteeTools.Decrypt.encrypt")}
         </button>

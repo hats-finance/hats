@@ -1,4 +1,4 @@
-import { EditableContent } from "components";
+import { HatsFormInput } from "components";
 import { useTranslation } from "react-i18next";
 
 export default function VaultSign({ signatures, onChange, message }) {
@@ -6,7 +6,7 @@ export default function VaultSign({ signatures, onChange, message }) {
   return (
     <>
       <label>{t("VaultEditor.sign-message")}</label>
-      <EditableContent onChange={onChange} value={message} removable name="sign_message" />
+      <HatsFormInput type="textarea" onChange={onChange} value={message} removable name="sign_message" />
       <label>{t("VaultEditor.signees")}</label>
       <div className="signees">
         {signatures.map((signature, index) => (

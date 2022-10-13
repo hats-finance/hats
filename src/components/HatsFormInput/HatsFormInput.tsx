@@ -1,25 +1,33 @@
 import { ChangeEvent, forwardRef, useRef, useState } from "react";
-import classNames from "classnames";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
-import "./index.scss";
+import { StyledHatsFormInput } from "./styles";
 
-type Props = {
+const DEFAULT_ROWS = 10;
+
+export type HatsFormInputType = "text" | "textarea";
+
+type HatsFormInputProps = {
+  type?: HatsFormInputType;
   pastable?: boolean;
   copyable?: boolean;
   removable?: boolean;
   colorable?: boolean;
-  textInput?: boolean;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
-function EditableContentComponent({ pastable, copyable, removable, textInput, colorable, ...props }: Props, ref) {
+function HatsFormInputComponent(
+  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, ...props }: HatsFormInputProps,
+  ref
+) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable;
   const [changed, setChanged] = useState(false);
 
   const refToUse = ref || localRef;
+
+  const areAvailableExtraIcons = type === "text" || type === "textarea";
 
   const handleOnChange = (e: ChangeEvent<any>) => {
     setChanged(true);
@@ -38,40 +46,27 @@ function EditableContentComponent({ pastable, copyable, removable, textInput, co
     refToUse.current!.value = "";
   };
 
+  const getMainComponent = () => {
+    if (type === "text") {
+      return <input {...props} type="text" ref={refToUse} onChange={handleOnChange} />;
+    } else {
+      return <textarea {...props} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
+    }
+  };
+
   return (
-    <div className="pastable-content">
-      {textInput ? (
-        <input
-          {...props}
-          type="text"
-          ref={refToUse}
-          className={classNames("pastable-content__input", {
-            "pastable-content__input--changed": changed && colorable,
-          })}
-          onChange={handleOnChange}
-        />
-      ) : (
-        <textarea
-          {...props}
-          ref={refToUse}
-          className={classNames("pastable-content__textarea", {
-            "pastable-content__textarea--changed": changed && colorable,
-          })}
-          onChange={handleOnChange}
-        />
-      )}
-      {extraIcons && (
-        <div
-          className={classNames("pastable-content__extra-icons", {
-            "pastable-content__extra-icons--input": textInput,
-          })}>
+    <StyledHatsFormInput isChanged={changed && colorable} type={type}>
+      {getMainComponent()}
+
+      {extraIcons && areAvailableExtraIcons && (
+        <div className="extra-icons">
           {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
           {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
           {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
         </div>
       )}
-    </div>
+    </StyledHatsFormInput>
   );
 }
 
-export const EditableContent = forwardRef(EditableContentComponent);
+export const HatsFormInput = forwardRef(HatsFormInputComponent);

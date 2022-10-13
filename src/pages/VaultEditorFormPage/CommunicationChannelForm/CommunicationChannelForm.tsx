@@ -3,7 +3,7 @@ import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { KeyManager } from "components/Keystore";
-import { EditableContent } from "components";
+import { HatsFormInput } from "components";
 import InfoIcon from "assets/icons/info.icon";
 import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
@@ -104,8 +104,9 @@ export function CommunicationChannelForm({
 
       <div>
         <label>{t("VaultEditor.pgp-key")}</label>
-        <EditableContent
+        <HatsFormInput
           name="communication-channel.pgp-pk"
+          type="textarea"
           pastable
           colorable
           value={publicPgpKey}

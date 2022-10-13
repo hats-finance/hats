@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { IVaultDescription } from "types/types";
-import { EditableContent } from "components";
+import { HatsFormInput } from "components";
 
 type VaultDetailsProps = {
   committee: IVaultDescription["committee"];
@@ -13,11 +13,10 @@ export function CommitteeDetailsForm({ committee, onChange }: VaultDetailsProps)
   return (
     <>
       <label>{t("VaultEditor.multisig-address")}</label>
-      <EditableContent
+      <HatsFormInput
         name="committee.multisig-address"
         value={committee["multisig-address"]}
         pastable
-        textInput
         colorable
         onChange={onChange}
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

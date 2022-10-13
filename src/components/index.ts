@@ -1,6 +1,6 @@
 export { Header } from './Header/Header';
 export { WalletButton } from './WalletButton/WalletButton';
-export { EditableContent } from './EditableContent/EditableContent';
+export { HatsFormInput } from './HatsFormInput/HatsFormInput';
 export { IconEditor } from './IconEditor/IconEditor';
 export { Vault } from './Vault/Vault';
 export { NFTCard } from './NFTCard/NFTCard';
