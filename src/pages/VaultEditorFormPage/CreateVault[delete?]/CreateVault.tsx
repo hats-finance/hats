@@ -21,7 +21,6 @@ export default function CreateVault({ descriptionHash }) {
 
   const handleAddPool: FormEventHandler<HTMLFormElement> = (e: SyntheticEvent) => {
     e.preventDefault();
-    console.log(e.target);
     sendAddPool()
   }
 

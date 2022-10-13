@@ -30,7 +30,6 @@ const VaultEditorFormPage = () => {
   const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
   const { handleSubmit, formState, reset, getValues } = methods;
 
-
   async function loadFromIpfs(ipfsHash: string) {
     try {
       setLoadingFromIpfs(true);

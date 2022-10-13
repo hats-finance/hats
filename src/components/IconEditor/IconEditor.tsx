@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from "react";
+import React, { ChangeEvent, forwardRef, useRef, useState } from "react";
 import classNames from "classnames";
 import AddIcon from "assets/icons/add.icon.svg";
 import "./IconEditor.scss";
@@ -14,16 +14,33 @@ function IconEditorComponent({ onChange, colorable, ...props }: IconEditorProps,
   const { t } = useTranslation();
   const [changed, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
+  const name = localRef.current?.name;
+  const value = localRef.current?.value;
+  const id = `icon-editor-${name}`;
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChanged(true);
-    onChange(e);
-    console.log(e.target.files);
+    const fr = new FileReader();
+    fr.readAsArrayBuffer(e.target.files![0])
+    fr.onload = function () {
+      // you can keep blob or save blob to another position
+      if (fr.result && localRef.current) {
+        const blob = new Blob([fr.result])
+        const url = URL.createObjectURL(blob);
+        localRef.current.value = url;
 
+        onChange({
+          ...e,
+          target: {
+            ...localRef.current,
+            value: url,
+            name: localRef.current.name,
+          },
+        })
+      }
+    }
   }
-  const value = localRef.current?.value;
 
-  const id = `icon-editor-x`;
   return (
     <>
       <div
@@ -35,13 +52,7 @@ function IconEditorComponent({ onChange, colorable, ...props }: IconEditorProps,
           (localRef as any).current = e;
         }} />
 
-        < input
-          // ref={(e) => {
-          //   ref(e);
-          //   if (e) {
-          //     localRef.current = e;
-          //   }
-          // }}
+        <input
           id={id}
           className="hide-file-input"
           accept="image/*"
