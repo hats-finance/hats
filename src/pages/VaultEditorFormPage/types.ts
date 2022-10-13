@@ -1,14 +1,15 @@
 import { ICommitteeMember, IVulnerabilitySeverity } from "types/types";
 
-export interface IContract {
-    name: string;
-    address: string;
-    severities: string[];
-}
 export interface ISeveritiesTemplate {
     severities: IVulnerabilitySeverity[]
     name: string
     indexArray: number[]
+}
+
+export interface IEditedContractCovered {
+    name: string,
+    address: string,
+    severities: string[] // IVulnerabilitySeverity.name
 }
 
 export interface IEditedVaultDescription {
@@ -29,11 +30,7 @@ export interface IEditedVaultDescription {
         "members": Array<ICommitteeMember>
     },
     "severitiesTemplate": ISeveritiesTemplate,
-    "contracts-covered": {
-        name: string,
-        address: string,
-        severities: string[] // IVulnerabilitySeverity.name
-    }[]
+    "contracts-covered": IEditedContractCovered[]
     "source": {
         name: string
         url: string

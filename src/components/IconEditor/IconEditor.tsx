@@ -1,26 +1,28 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import classNames from "classnames";
 import AddIcon from "assets/icons/add.icon.svg";
 import "./IconEditor.scss";
 import { ipfsTransformUri } from "utils";
 import { useTranslation } from "react-i18next";
+import { RefCallBack } from "react-hook-form";
 
-const IconEditorComponent = ({
-  value,
-  onChange,
-  name,
-  colorable,
-}: {
-  value?: string;
+interface IconEditorProps {
+  //ref: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  name?: string;
   colorable?: boolean;
-}, ref) => {
+}
+
+function IconEditorComponent({ onChange, colorable, ...props }: IconEditorProps, ref) {
   const { t } = useTranslation();
   const [changed, setChanged] = useState(false);
-  console.log("value", value);
 
+  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChanged(true);
+    onChange(e);
+  }
 
+  const value = ref?.current?.value
+  const name = ref?.current?.name
   return (
     <>
       <div
@@ -29,25 +31,21 @@ const IconEditorComponent = ({
         })}>
         <input
           ref={ref}
-          id={`icon-input-${name}`}
+          // id={`icon-input-${name}`}
           className="hide-file-input"
-          name={name}
           accept="image/*"
           type="file"
-          onChange={(e) => {
-            setChanged(true);
-            onChange(e);
-          }}
+          onChange={handleOnChange}
+          {...props}
         />
-        {!value && (
+        {value ? (
+          <label htmlFor={`icon-input-${name}`} className="preview">
+            <img src={ipfsTransformUri(value)} alt="Thumb" />
+          </label>
+        ) : (
           <label htmlFor={`icon-input-${name}`} className="add-icon">
             <img src={AddIcon} width={30} height={30} alt="Thumb" />
             <p>{t("VaultEditor.img-placeholder")}</p>
-          </label>
-        )}
-        {value && (
-          <label htmlFor={`icon-input-${name}`} className="preview">
-            <img src={ipfsTransformUri(value)} alt="Thumb" />
           </label>
         )}
       </div>

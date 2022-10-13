@@ -13,7 +13,7 @@ export default function ContractCoveredForm({
   remove
 }) {
   const { t } = useTranslation();
-  const basePath = `contracts.${index}`;
+  const basePath = `contracts-covered.${index}`;
   const { register, watch } = useFormContext();
   const severities = watch("severitiesTemplate.severities") as IVulnerabilitySeverity[];
   const contracts = watch("contracts-covered") as any[];

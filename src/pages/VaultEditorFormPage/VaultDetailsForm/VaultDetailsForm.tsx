@@ -26,9 +26,8 @@ export function VaultDetailsForm() {
         />
         <label>{t("VaultEditor.vault-details.website")}</label>
         <HatsFormInput
-          name="project-metadata.website"
+          {...register("project-metadata.website")}
           pastable
-          copyable
           colorable
           placeholder={t("VaultEditor.vault-details.website-placeholder")}
         />
