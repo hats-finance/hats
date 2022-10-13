@@ -58,19 +58,6 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
 
-  // Convert contracts state variable to severities of vault description
-  // useEffect(() => {
-  //   setVaultDescription((prev) => {
-  //     let newObject = { ...prev };
-  //     setPath(
-  //       newObject,
-  //       "severities",
-  //       }))
-  //     );
-  //     return newObject;
-  //   });
-  // }, [contracts, vaultName]);
-
   async function saveToIpfs(vaultDescription) {
     try {
       setSavingToIpfs(true);
@@ -163,16 +150,14 @@ const VaultEditorFormPage = () => {
                 </div>
               </section>
 
-              {/* <section className={classNames({ "desktop-only": pageNumber !== 4 })}>
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">5. {t("VaultEditor.pgp-key")}</p>
-              <div className="vault-editor__section-content">
-                <CommunicationChannelForm
-
-                />
-              </div>
-            </div>
-          </section> */}
+              <section className={classNames({ "desktop-only": pageNumber !== 4 })}>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">5. {t("VaultEditor.pgp-key")}</p>
+                  <div className="vault-editor__section-content">
+                    <CommunicationChannelForm />
+                  </div>
+                </div>
+              </section>
 
               <div className="vault-editor__divider desktop-only"></div>
 

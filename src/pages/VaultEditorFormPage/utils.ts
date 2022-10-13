@@ -71,12 +71,10 @@ export function descriptionToEdit(vaultDescription: IVaultDescription): IEditedV
         ...vaultDescription,
         "severitiesTemplate": {
             severities: vaultDescription.severities,
-            name: vaultDescription.severities[0].name,
+            name: "",
             indexArray: vaultDescription.severities.map((item) => item.index),
         },
         "contracts-covered": severitiesToContracts(vaultDescription.severities),
-        "source": vaultDescription.source,
-        "additional-vaults": vaultDescription["additional-vaults"],
     };
 }
 
