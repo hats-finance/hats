@@ -96,7 +96,6 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data, event) => {
-    console.log(data);
     saveToIpfs(editedToDescription(getValues()))
   }
 
