@@ -27,12 +27,13 @@ export interface IEditedVaultDescription {
     "committee": {
         "multisig-address": string
         "members": Array<ICommitteeMember>
-    }
+    },
+    "severitiesTemplate": ISeveritiesTemplate,
     "contracts-covered": {
-        contractAddress: string,
         name: string,
+        address: string,
         severities: string[] // IVulnerabilitySeverity.name
-    }
+    }[]
     "source": {
         name: string
         url: string

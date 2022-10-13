@@ -1,23 +1,25 @@
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import classNames from "classnames";
 import AddIcon from "assets/icons/add.icon.svg";
 import "./IconEditor.scss";
 import { ipfsTransformUri } from "utils";
 import { useTranslation } from "react-i18next";
 
-export const IconEditor = ({
+const IconEditorComponent = ({
   value,
   onChange,
   name,
   colorable,
 }: {
-  value: string | undefined;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   colorable?: boolean;
-}) => {
+}, ref) => {
   const { t } = useTranslation();
   const [changed, setChanged] = useState(false);
+  console.log("value", value);
+
 
   return (
     <>
@@ -26,6 +28,7 @@ export const IconEditor = ({
           "icon-input--changed": changed && colorable,
         })}>
         <input
+          ref={ref}
           id={`icon-input-${name}`}
           className="hide-file-input"
           name={name}
@@ -51,3 +54,5 @@ export const IconEditor = ({
     </>
   );
 };
+
+export const IconEditor = forwardRef(IconEditorComponent);

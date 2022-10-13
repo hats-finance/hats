@@ -1,5 +1,5 @@
 import { ISeveritiesTemplate } from "./types"
-export const severities: ISeveritiesTemplate = {
+export const severitiesTemplate: ISeveritiesTemplate = {
     name: "Default Template",
     indexArray: [0, 10, 20, 70, 150, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 6000, 8000],
     severities: [{

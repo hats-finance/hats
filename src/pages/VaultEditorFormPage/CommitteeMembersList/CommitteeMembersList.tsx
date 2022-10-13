@@ -1,26 +1,24 @@
-import React from "react";
-import { ICommitteeMember } from "types/types";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 
-type CommmitteeMembersProps = {
-  members: ICommitteeMember[];
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onRemove: (index: number) => void;
-  addMember: () => void;
-};
+export function CommitteeMembersList() {
 
-export function CommitteeMembersList({ members, onChange, onRemove, addMember }: CommmitteeMembersProps) {
+  const { control } = useFormContext();
+  const { fields, append, remove } = useFieldArray({ control, name: "committee.members" });
+
+  const appendEmpty = () => {
+    append({ name: "", "twitter-link": "", address: "", "image-ipfs-link": "" });
+  }
+
   return (
     <>
-      {members.map((member, index) => (
+      {fields.map((field, index) => (
         <CommitteeMemberForm
-          key={index}
-          member={member}
+          key={field.id}
           index={index}
-          membersCount={members.length}
-          onChange={onChange}
-          onRemove={onRemove}
-          addMember={addMember}
+          membersCount={fields.length}
+          append={appendEmpty}
+          remove={remove}
         />
       ))}
     </>

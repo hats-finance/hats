@@ -1,32 +1,24 @@
 import { useTranslation } from "react-i18next";
-import { IVaultDescription } from "types/types";
 import { HatsFormInput, IconEditor } from "components";
 import { StyledVaultDetails } from "./styles";
+import { useFormContext } from "react-hook-form";
 
-type VaultDetailsProps = {
-  projectMetaData: IVaultDescription["project-metadata"];
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-};
-
-export function VaultDetailsForm({ projectMetaData, onChange }: VaultDetailsProps) {
+export function VaultDetailsForm() {
   const { t } = useTranslation();
+  const { register } = useFormContext();
 
   return (
     <StyledVaultDetails>
       <div className="inputs">
         <label>{t("VaultEditor.vault-details.name")}</label>
         <HatsFormInput
-          name="project-metadata.name"
-          // value={projectMetaData.name}
-          onChange={onChange}
-          colorable
+          {...register("project-metadata.name")}
           placeholder={t("VaultEditor.vault-details.name-placeholder")}
         />
         <label>{t("VaultEditor.vault-details.type")}</label>
         <HatsFormInput
-          name="project-metadata.type"
+          {...register("project-metadata.type")}
           // value={projectMetaData.type}
-          onChange={onChange}
           pastable
           copyable
           colorable
@@ -34,10 +26,7 @@ export function VaultDetailsForm({ projectMetaData, onChange }: VaultDetailsProp
         />
         <label>{t("VaultEditor.vault-details.website")}</label>
         <HatsFormInput
-          type="textarea"
           name="project-metadata.website"
-          onChange={onChange}
-          // value={projectMetaData.website}
           pastable
           copyable
           colorable
@@ -48,11 +37,11 @@ export function VaultDetailsForm({ projectMetaData, onChange }: VaultDetailsProp
       <div className="icons">
         <div className="icons__input">
           <label>{t("VaultEditor.vault-details.icon")}</label>
-          <IconEditor name="project-metadata.icon" value={projectMetaData?.icon} onChange={onChange} colorable />
+          <IconEditor {...register("project-metadata.icon")} colorable />
         </div>
         <div className="icons__input">
           <label>{t("VaultEditor.vault-details.token-icon")}</label>
-          <IconEditor name="project-metadata.tokenIcon" value={projectMetaData?.tokenIcon} onChange={onChange} colorable />
+          <IconEditor {...register("project-metadata.tokenIcon")} colorable />
         </div>
       </div>
     </StyledVaultDetails>

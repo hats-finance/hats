@@ -15,9 +15,10 @@ import {
   CommunicationChannelForm,
 } from ".";
 import { FormProvider, useForm } from "react-hook-form";
-import { IContract } from "./types";
+import { IContract, IEditedVaultDescription } from "./types";
 import "./index.scss";
 import { uploadVaultDescription } from "./vaultService";
+import { severitiesTemplate } from "./severities";
 
 const newMember: ICommitteeMember = {
   name: "",
@@ -32,7 +33,7 @@ const newContract: IContract = {
   severities: [],
 };
 
-const newVaultDescription: IVaultDescription = {
+const newVaultDescription: IEditedVaultDescription = {
   "project-metadata": {
     name: "",
     icon: "",
@@ -47,7 +48,8 @@ const newVaultDescription: IVaultDescription = {
     "multisig-address": "",
     members: [{ ...newMember }],
   },
-  severities: [],
+  "contracts-covered": [{ ...newContract }],
+  "severitiesTemplate": severitiesTemplate,
   source: {
     name: "",
     url: "",
@@ -56,7 +58,6 @@ const newVaultDescription: IVaultDescription = {
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
-  const [vaultDescription, setVaultDescription] = useState<IVaultDescription>(newVaultDescription);
   const [contracts, setContracts] = useState<{ contracts: IContract[] }>({ contracts: [newContract] });
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
@@ -64,10 +65,9 @@ const VaultEditorFormPage = () => {
   const [changed, setChanged] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
-
-  // const { register, setValue: setVaultDescription } = useForm<IVaultDescription>({ defaultValues: newVaultDescription })
-
-  //const vaultName = vaultDescription["project-metadata"].name;
+  const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
+  const { handleSubmit, formState, watch } = methods;
+  const severities = watch("severitiesTemplate.severities");
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -80,17 +80,13 @@ const VaultEditorFormPage = () => {
       const newVaultDescription = await response.json();
       severitiesToContracts(fixObject(newVaultDescription));
 
-      setVaultDescription(newVaultDescription);
+      //setVaultDescription(newVaultDescription);
       setChanged(false);
     } catch (error) {
       console.error(error);
     } finally {
       setLoadingFromIpfs(false);
     }
-  }
-
-  function onChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
-    
   }
 
   useEffect(() => {
@@ -100,7 +96,7 @@ const VaultEditorFormPage = () => {
       })();
     } else {
       // convert severities of vault description to contracts state variable
-      severitiesToContracts(vaultDescription);
+      //severitiesToContracts(vaultDescription);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
@@ -156,16 +152,19 @@ const VaultEditorFormPage = () => {
     setContracts({ contracts });
   }
 
-  // async function saveToIpfs(vaultDescription) {
-  //   try {
-  //     setSavingToIpfs(true);
-  //     await uploadVaultDescription(vaultDescription);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setSavingToIpfs(false);
-  //   }
-  // }
+  async function saveToIpfs(vaultDescription) {
+    console.log("vaultDescription", vaultDescription);
+
+    return;
+    try {
+      setSavingToIpfs(true);
+      await uploadVaultDescription(vaultDescription);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setSavingToIpfs(false);
+    }
+  }
 
   // // Pagination in mobile
   // function nextPage() {
@@ -192,67 +191,69 @@ const VaultEditorFormPage = () => {
     return <Loading fixed />;
   }
 
+  const onSubmit = (data, event) => {
+    saveToIpfs(data)
+
+  }
+
   return (
     <>
-      <div className="content-wrapper vault-editor">
-        <div className="vault-editor__container">
-          <div className="vault-editor__title">{t("VaultEditor.create-vault")}</div>
+      <FormProvider {...methods}>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="content-wrapper vault-editor">
+            <div className="vault-editor__container">
+              <div className="vault-editor__title">{t("VaultEditor.create-vault")}</div>
 
-          <section className={classNames({ "desktop-only": pageNumber !== 1 })}>
-            <p className="vault-editor__description">{t("VaultEditor.create-vault-description")}</p>
-            {ipfsDate && (
-              <div className="vault-editor__last-saved-time">
-                {`${t("VaultEditor.last-saved-time")} `}
-                {ipfsDate.toLocaleString()}
-                {`(${t("VaultEditor.local-time")})`}
-              </div>
-            )}
+              <section className={classNames({ "desktop-only": pageNumber !== 1 })}>
+                <p className="vault-editor__description">{t("VaultEditor.create-vault-description")}</p>
+                {ipfsDate && (
+                  <div className="vault-editor__last-saved-time">
+                    {`${t("VaultEditor.last-saved-time")} `}
+                    {ipfsDate.toLocaleString()}
+                    {`(${t("VaultEditor.local-time")})`}
+                  </div>
+                )}
 
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">1. {t("VaultEditor.vault-details.title")}</p>
-              <div className="vault-editor__section-content">
-                <VaultDetailsForm projectMetaData={vaultDescription?.["project-metadata"]} onChange={onChange} />
-              </div>
-            </div>
-          </section>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">1. {t("VaultEditor.vault-details.title")}</p>
+                  <div className="vault-editor__section-content">
+                    <VaultDetailsForm />
+                  </div>
+                </div>
+              </section>
 
-          {/* <section className={classNames({ "desktop-only": pageNumber !== 2 })}>
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">2. {t("VaultEditor.committee-details")}</p>
-              <div className="vault-editor__section-content">
-                <CommitteeDetailsForm committee={vaultDescription?.["committee"]} />
-              </div>
-            </div>
+              <section className={classNames({ "desktop-only": pageNumber !== 2 })}>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">2. {t("VaultEditor.committee-details")}</p>
+                  <div className="vault-editor__section-content">
+                    <CommitteeDetailsForm />
+                  </div>
+                </div>
 
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">3. {t("VaultEditor.committee-members")}</p>
-              <div className="vault-editor__section-content">
-                <CommitteeMembersList
-                  members={vaultDescription?.committee.members || []}
-                  onChange={onChange}
-                  onRemove={removeMember}
-                  addMember={addMember}
-                />
-              </div>
-            </div>
-          </section> */}
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">3. {t("VaultEditor.committee-members")}</p>
+                  <div className="vault-editor__section-content">
+                    <CommitteeMembersList />
+                  </div>
+                </div>
+              </section>
 
-          {/* <section className={classNames({ "desktop-only": pageNumber !== 3 })}>
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
-              <div className="vault-editor__section-content">
-                <ContractsCoveredList
-                  contracts={contracts.contracts}
-                  severitiesOptions={vaultDescription.severities.map((severity) => ({
-                    label: severity.name,
-                    value: severity.name,
-                  }))}
-                />
-              </div>
-            </div>
-          </section> */}
+              <section className={classNames({ "desktop-only": pageNumber !== 3 })}>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">4. {t("VaultEditor.contracts-covered")}</p>
+                  <div className="vault-editor__section-content">
+                    <ContractsCoveredList
+                      contracts={contracts.contracts}
+                      severitiesOptions={severities.map((severity) => ({
+                        label: severity.name,
+                        value: severity.name,
+                      }))}
+                    />
+                  </div>
+                </div>
+              </section>
 
-          {/* <section className={classNames({ "desktop-only": pageNumber !== 4 })}>
+              {/* <section className={classNames({ "desktop-only": pageNumber !== 4 })}>
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">5. {t("VaultEditor.pgp-key")}</p>
               <div className="vault-editor__section-content">
@@ -263,9 +264,9 @@ const VaultEditorFormPage = () => {
             </div>
           </section> */}
 
-          <div className="vault-editor__divider desktop-only"></div>
+              <div className="vault-editor__divider desktop-only"></div>
 
-          {/* <section className={classNames({ "desktop-only": pageNumber !== 5 })}>
+              {/* <section className={classNames({ "desktop-only": pageNumber !== 5 })}>
             <div className="vault-editor__section">
               <p className="vault-editor__section-title">6. {t("VaultEditor.review-vault.title")}</p>
               <div className="vault-editor__section-content">
@@ -274,22 +275,23 @@ const VaultEditorFormPage = () => {
             </div>
           </section> */}
 
-          {/* Not uncomment */}
-          {/* <CreateVault descriptionHash={ipfsHash} /> */}
+              {/* Not uncomment */}
+              {/* <CreateVault descriptionHash={ipfsHash} /> */}
 
-          {/* <div className="vault-editor__button-container">
-            {changed && ipfsHash && (
-              <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">
-                {t("VaultEditor.reset-button")}
-              </button>
-            )}
-            <button onClick={saveToIpfs} className="fill" disabled={!changed}>
-              {t("VaultEditor.save-button")}
-            </button>
-          </div> */}
+              <div className="vault-editor__button-container">
+                {changed && ipfsHash && (
+                  <button onClick={() => loadFromIpfs(ipfsHash)} className="fill">
+                    {t("VaultEditor.reset-button")}
+                  </button>
+                )}
+                <button onClick={saveToIpfs} className="fill" disabled={!formState.isDirty}>
+                  {t("VaultEditor.save-button")}
+                </button>
+                <input type="submit" />
+              </div>
 
-          {/* Not uncomment */}
-          {/* {!changed && ipfsHash && (
+              {/* Not uncomment */}
+              {/* {!changed && ipfsHash && (
           <>
             <section className={classNames({ "desktop-only": pageNumber !== 6 })}>
               <div className="vault-editor__section">
@@ -307,7 +309,7 @@ const VaultEditorFormPage = () => {
           </>
         )} */}
 
-          {/* <div className="vault-editor__next-preview">
+              {/* <div className="vault-editor__next-preview">
             {pageNumber < 5 && (
               <div>
                 <button onClick={nextPage}>{t("VaultEditor.next")}</button>
@@ -319,8 +321,10 @@ const VaultEditorFormPage = () => {
               </div>
             )}
           </div> */}
-        </div>
-      </div>
+            </div>
+          </div>
+        </form>
+      </FormProvider>
     </>
   );
 };

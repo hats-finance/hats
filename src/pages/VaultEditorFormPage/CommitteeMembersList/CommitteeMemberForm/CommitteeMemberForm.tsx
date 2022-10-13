@@ -1,20 +1,19 @@
 import { useTranslation } from "react-i18next";
-import { ICommitteeMember } from "types/types";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { HatsFormInput, IconEditor } from "components";
 import { StyledCommitteeMemberForm } from "./styles";
+import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 
 type CommitteeMemberFormProps = {
   index: number;
-  member: ICommitteeMember;
   membersCount: number;
-  onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
-  onRemove: (index: number) => void;
-  addMember: () => void;
+  append: () => void;
+  remove: UseFieldArrayRemove;
 };
 
-const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, addMember }: CommitteeMemberFormProps) => {
+const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
+  const { register } = useFormContext();
   const basePath = `committee.members.${index}`;
 
   return (
@@ -27,46 +26,43 @@ const CommitteeMemberForm = ({ index, member, onChange, onRemove, membersCount, 
             <label>{t("VaultEditor.member-name")}</label>
             <HatsFormInput
               colorable
-              name={`${basePath}.name`}
-              value={member.name || ""}
-              onChange={onChange}
+              {...register(`${basePath}.name`)}
               placeholder={t("VaultEditor.member-name-placeholder")}
             />
             <label>{t("VaultEditor.member-twitter")}</label>
             <HatsFormInput
+              {...register(`${basePath}.twitter-link`)}
               pastable
               colorable
-              name={`${basePath}.twitter-link`}
-              value={member["twitter-link"] || ""}
-              onChange={onChange}
               placeholder={t("VaultEditor.member-twitter-placeholder")}
             />
             <label>{t("VaultEditor.member-address")}</label>
             <HatsFormInput
+              {...register(`${basePath}.address`)}
               pastable
               colorable
-              name={`${basePath}.address`}
-              value={member.address || ""}
-              onChange={onChange}
               placeholder={t("VaultEditor.member-address-placeholder")}
             />
           </div>
           <div>
             <label>{t("VaultEditor.member-image")}</label>
-            <IconEditor name={`${basePath}.image-ipfs-link`} colorable value={member?.["image-ipfs-link"]} onChange={onChange} />
+            <IconEditor
+              {...register(`${basePath}.image-ipfs-link`)}
+              colorable
+            />
           </div>
         </div>
       </div>
 
       <div className="controller-buttons">
         {membersCount > 1 && (
-          <button className="fill" onClick={() => onRemove(index)}>
+          <button className="fill" onClick={() => remove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === membersCount - 1 && (
-          <button className="fill" onClick={addMember}>
+          <button className="fill" onClick={append}>
             {t("VaultEditor.add-member")}
           </button>
         )}

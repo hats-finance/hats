@@ -3,18 +3,25 @@ import { MultiSelect, HatsFormInput } from "components";
 import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { StyledContractCoveredForm } from "./styles";
+import { useFormContext } from "react-hook-form";
+import { IVulnerabilitySeverity } from "types/types";
 
 export default function ContractCoveredForm({
   index,
-  contract,
-  onChange,
-  onRemove,
-  severitiesOptions,
-  contractsCount,
-  addContract,
+  //  contractsCount,
+  append,
+  remove
 }) {
   const { t } = useTranslation();
   const basePath = `contracts.${index}`;
+  const { register, watch } = useFormContext();
+  const severities = watch("severitiesTemplate.severities") as IVulnerabilitySeverity[];
+  const contracts = watch("contracts-covered") as any[];
+  const contractsCount = contracts.length;
+  const severitiesOptions = severities.map((severity, index) => ({
+    label: severity.name,
+    value: severity.name,
+  }));
 
   return (
     <StyledContractCoveredForm>
@@ -26,32 +33,27 @@ export default function ContractCoveredForm({
             <div className="name">
               <label>{t("VaultEditor.contract-name")}</label>
               <HatsFormInput
+                {...register(`${basePath}.name`)}
                 colorable
-                name={`${basePath}.name`}
-                value={contract.name}
-                onChange={onChange}
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
             <div className="severities">
               <label>{t("VaultEditor.contract-severities")}</label>
-              <MultiSelect
-                name={`${basePath}.severities`}
-                value={contract.severities}
-                onChange={onChange}
+              {/*               
+               <MultiSelect
+                {...register(`${basePath}.severities`)}
                 options={severitiesOptions as Array<MultiSelectOption>}
-              />
+              />  */}
             </div>
           </div>
 
           <div>
             <label>{t("VaultEditor.contract-address")}</label>
             <HatsFormInput
+              {...register(`${basePath}.address`)}
               pastable
               colorable
-              name={`${basePath}.address`}
-              value={contract.address}
-              onChange={onChange}
               placeholder={t("VaultEditor.contract-address-placeholder")}
             />
           </div>
@@ -60,13 +62,13 @@ export default function ContractCoveredForm({
 
       <div className="controller-buttons">
         {contractsCount > 1 && (
-          <button className="fill" onClick={() => onRemove(index)}>
+          <button className="fill" onClick={() => remove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button className="fill" onClick={addContract}>
+          <button className="fill" onClick={append}>
             {t("VaultEditor.add-member")}
           </button>
         )}
