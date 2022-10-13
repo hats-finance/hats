@@ -1,7 +1,7 @@
 export { Header } from './Header/Header';
 export { WalletButton } from './WalletButton/WalletButton';
-export { HatsFormInput } from './HatsFormInput/HatsFormInput';
-export { IconEditor } from './IconEditor/IconEditor';
+export { FormInput } from './FormInput/FormInput';
+export { FormIconInput } from './FormIconInput/FormIconInput';
 export { Vault } from './Vault/Vault';
 export { NFTCard } from './NFTCard/NFTCard';
 export { NFTPrize } from './NFTPrize/NFTPrize';

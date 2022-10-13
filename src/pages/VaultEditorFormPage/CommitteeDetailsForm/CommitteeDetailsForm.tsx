@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { HatsFormInput } from "components";
+import { FormInput } from "components";
 import { useFormContext } from "react-hook-form";
 
 export function CommitteeDetailsForm() {
@@ -9,7 +9,7 @@ export function CommitteeDetailsForm() {
   return (
     <>
       <label>{t("VaultEditor.multisig-address")}</label>
-      <HatsFormInput
+      <FormInput
         {...register("committee.multisig-address")}
         pastable
         colorable

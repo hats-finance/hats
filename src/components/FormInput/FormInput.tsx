@@ -2,14 +2,14 @@ import { ChangeEvent, forwardRef, useRef, useState } from "react";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
-import { StyledHatsFormInput } from "./styles";
+import { StyledFormInput } from "./styles";
 
 const DEFAULT_ROWS = 10;
 
-export type HatsFormInputType = "text" | "textarea";
+export type FormInputType = "text" | "textarea";
 
-type HatsFormInputProps = {
-  type?: HatsFormInputType;
+type FormInputProps = {
+  type?: FormInputType;
   pastable?: boolean;
   copyable?: boolean;
   removable?: boolean;
@@ -17,8 +17,8 @@ type HatsFormInputProps = {
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
-function HatsFormInputComponent(
-  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, ...props }: HatsFormInputProps,
+function FormInputComponent(
+  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, ...props }: FormInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
@@ -55,7 +55,7 @@ function HatsFormInputComponent(
   };
 
   return (
-    <StyledHatsFormInput isChanged={changed && colorable} type={type}>
+    <StyledFormInput isChanged={changed && colorable} type={type}>
       {getMainComponent()}
 
       {extraIcons && areAvailableExtraIcons && (
@@ -65,8 +65,8 @@ function HatsFormInputComponent(
           {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
         </div>
       )}
-    </StyledHatsFormInput>
+    </StyledFormInput>
   );
 }
 
-export const HatsFormInput = forwardRef(HatsFormInputComponent);
+export const FormInput = forwardRef(FormInputComponent);

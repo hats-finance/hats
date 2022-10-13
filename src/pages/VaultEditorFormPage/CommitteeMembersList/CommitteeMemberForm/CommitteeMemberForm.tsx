@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { HatsFormInput, IconEditor } from "components";
+import { FormInput, FormIconInput } from "components";
 import { StyledCommitteeMemberForm } from "./styles";
 import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
 
@@ -24,20 +24,20 @@ const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeM
         <div className="content">
           <div className="inputs">
             <label>{t("VaultEditor.member-name")}</label>
-            <HatsFormInput
+            <FormInput
               colorable
               {...register(`${basePath}.name`)}
               placeholder={t("VaultEditor.member-name-placeholder")}
             />
             <label>{t("VaultEditor.member-twitter")}</label>
-            <HatsFormInput
+            <FormInput
               {...register(`${basePath}.twitter-link`)}
               pastable
               colorable
               placeholder={t("VaultEditor.member-twitter-placeholder")}
             />
             <label>{t("VaultEditor.member-address")}</label>
-            <HatsFormInput
+            <FormInput
               {...register(`${basePath}.address`)}
               pastable
               colorable
@@ -46,7 +46,7 @@ const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeM
           </div>
           <div>
             <label>{t("VaultEditor.member-image")}</label>
-            <IconEditor
+            <FormIconInput
               {...register(`${basePath}.image-ipfs-link`)}
               colorable
             />

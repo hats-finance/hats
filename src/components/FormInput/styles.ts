@@ -1,13 +1,13 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
-import { HatsFormInputType } from "./HatsFormInput";
+import { FormInputType } from "./FormInput";
 
-type StyledHatsFormInputProps = {
+type StyledFormInputProps = {
   isChanged: boolean;
-  type: HatsFormInputType;
+  type: FormInputType;
 };
 
-export const StyledHatsFormInput = styled.div<StyledHatsFormInputProps>(
+export const StyledFormInput = styled.div<StyledFormInputProps>(
   ({ isChanged, type }) => css`
     position: relative;
     overflow: hidden;

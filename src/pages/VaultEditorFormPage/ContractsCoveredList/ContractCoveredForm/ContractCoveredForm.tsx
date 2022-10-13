@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { MultiSelect, HatsFormInput } from "components";
+import { MultiSelect, FormInput } from "components";
 import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { StyledContractCoveredForm } from "./styles";
@@ -31,7 +31,7 @@ export default function ContractCoveredForm({
           <div className="subcontent">
             <div className="name">
               <label>{t("VaultEditor.contract-name")}</label>
-              <HatsFormInput
+              <FormInput
                 {...register(`${basePath}.name`)}
                 colorable
                 placeholder={t("VaultEditor.contract-name-placeholder")}
@@ -49,7 +49,7 @@ export default function ContractCoveredForm({
 
           <div>
             <label>{t("VaultEditor.contract-address")}</label>
-            <HatsFormInput
+            <FormInput
               {...register(`${basePath}.address`)}
               pastable
               colorable

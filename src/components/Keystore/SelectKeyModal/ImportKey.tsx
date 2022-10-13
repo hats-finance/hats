@@ -1,7 +1,7 @@
 import { useContext, useRef, useState } from "react";
 import { KeystoreContext } from "../store";
 import { readPrivateKeyFromStoredKey } from "../utils";
-import { HatsFormInput } from "components";
+import { FormInput } from "components";
 import { useTranslation } from "react-i18next";
 import { IStoredKey } from "../types";
 
@@ -62,7 +62,7 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         placeholder={t("CommitteeTools.keymodal.passphrase")}
       />
       <label>{t("CommitteeTools.keymodal.private-key")}</label>
-      <HatsFormInput
+      <FormInput
         type="textarea"
         pastable
         ref={privateKeyRef}
