@@ -19,6 +19,7 @@ import { uploadVaultDescription } from "./vaultService";
 import { descriptionToEdit, editedToDescription, newVaultDescription } from "./utils";
 import "./index.scss";
 import { IVaultDescription } from "types/types";
+import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -158,11 +159,21 @@ const VaultEditorFormPage = () => {
                 </div>
               </section>
 
-              <div className="vault-editor__divider desktop-only"></div>
-
               <section className={classNames({ "desktop-only": pageNumber !== 5 })}>
                 <div className="vault-editor__section">
-                  <p className="vault-editor__section-title">6. {t("VaultEditor.review-vault.title")}</p>
+                  <p className="vault-editor__section-title">6. {t("VaultEditor.vulnerabilities")}</p>
+                  <div className="vault-editor__section-content">
+                    <VulnerabilitySeveritiesList />
+                  </div>
+                </div>
+              </section>
+
+
+              <div className="vault-editor__divider desktop-only"></div>
+
+              <section className={classNames({ "desktop-only": pageNumber !== 6 })}>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
                   <div className="vault-editor__section-content">
                     <VaultFormReview vaultDescription={editedToDescription(getValues())} />
                   </div>

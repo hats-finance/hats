@@ -331,6 +331,7 @@
       "committee-details": "Committee Details",
       "committee": "Committee",
       "pgp-key": "PGP Public Key",
+      "vulnerabilities": "Vulnerabilities",
       "pgp-key-placeholder": "Paste your public key here",
       "pgp-key-description": "Please Create A Vault And PGP Key-Pair On Our Dedicated Tool. It will only be stored on the browser's local storage.",
       "pgp-key-hint-1": "The Vault PGP Keys ",

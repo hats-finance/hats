@@ -8,7 +8,6 @@ import { IVulnerabilitySeverity } from "types/types";
 
 export default function ContractCoveredForm({
   index,
-  //  contractsCount,
   append,
   remove
 }) {

@@ -9,10 +9,24 @@ export const newMember: ICommitteeMember = {
     "image-ipfs-link": "",
 };
 
-const newContract: IEditedContractCovered = {
+export const newContract: IEditedContractCovered = {
     name: "",
     address: "",
     severities: [],
+};
+
+export const newSeverity: IVulnerabilitySeverity = {
+    name: "",
+    index: 0,
+    "contracts-covered": [],
+    "nft-metadata": {
+        name: "",
+        description: "",
+        animation_url: "",
+        image: "",
+        external_url: "",
+    },
+    description: "",
 };
 
 export const newVaultDescription: IEditedVaultDescription = {
