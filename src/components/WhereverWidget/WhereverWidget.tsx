@@ -29,7 +29,7 @@ const WhereverWidget = () => {
         partnerKey={PARTNER_KEY}
       >
         <NotificationFeed>
-          <NotificationBell />
+          <NotificationBell containerHeight={"100%"} containerWidth={"100%"} />
         </NotificationFeed>
       </NotificationFeedProvider>
     </StyledWhereverWidget>
