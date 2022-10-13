@@ -16,8 +16,9 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import { IEditedVaultDescription } from "./types";
 import { uploadVaultDescription } from "./vaultService";
-import { descriptionToEdit, newVaultDescription } from "./utils";
+import { descriptionToEdit, editedToDescription, newVaultDescription } from "./utils";
 import "./index.scss";
+import { IVaultDescription } from "types/types";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -27,7 +28,7 @@ const VaultEditorFormPage = () => {
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
   const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
-  const { handleSubmit, formState, reset } = methods;
+  const { handleSubmit, formState, reset, getValues } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -58,7 +59,7 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
 
-  async function saveToIpfs(vaultDescription) {
+  async function saveToIpfs(vaultDescription: IVaultDescription) {
     try {
       setSavingToIpfs(true);
       await uploadVaultDescription(vaultDescription);
@@ -95,8 +96,8 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data, event) => {
-    saveToIpfs(data)
-
+    console.log(data);
+    saveToIpfs(editedToDescription(getValues()))
   }
 
   return (
@@ -161,14 +162,14 @@ const VaultEditorFormPage = () => {
 
               <div className="vault-editor__divider desktop-only"></div>
 
-              {/* <section className={classNames({ "desktop-only": pageNumber !== 5 })}>
-            <div className="vault-editor__section">
-              <p className="vault-editor__section-title">6. {t("VaultEditor.review-vault.title")}</p>
-              <div className="vault-editor__section-content">
-                <VaultFormReview vaultDescription={vaultDescription} />
-              </div>
-            </div>
-          </section> */}
+              <section className={classNames({ "desktop-only": pageNumber !== 5 })}>
+                <div className="vault-editor__section">
+                  <p className="vault-editor__section-title">6. {t("VaultEditor.review-vault.title")}</p>
+                  <div className="vault-editor__section-content">
+                    <VaultFormReview vaultDescription={editedToDescription(getValues())} />
+                  </div>
+                </div>
+              </section>
 
               {/* Not uncomment */}
               {/* <CreateVault descriptionHash={ipfsHash} /> */}
@@ -179,10 +180,9 @@ const VaultEditorFormPage = () => {
                     {t("VaultEditor.reset-button")}
                   </button>
                 )}
-                <button onClick={saveToIpfs} className="fill" disabled={!formState.isDirty}>
+                <button onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
                   {t("VaultEditor.save-button")}
                 </button>
-                <input type="submit" />
               </div>
 
               {/* Not uncomment */}
