@@ -284,7 +284,7 @@ export const isDateBetween = (start: number | string | undefined, end: number | 
 }
 
 export const ipfsTransformUri = (uri: string | undefined) => {
-  if (!uri) {
+  if (!uri || typeof uri !== 'string') {
     return "";
   }
   if (uri.startsWith("ipfs")) {

@@ -30,6 +30,7 @@ const VaultEditorFormPage = () => {
   const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
   const { handleSubmit, formState, reset, getValues } = methods;
 
+
   async function loadFromIpfs(ipfsHash: string) {
     try {
       setLoadingFromIpfs(true);
@@ -106,7 +107,6 @@ const VaultEditorFormPage = () => {
           <div className="content-wrapper vault-editor">
             <div className="vault-editor__container">
               <div className="vault-editor__title">{t("VaultEditor.create-vault")}</div>
-
               <section className={classNames({ "desktop-only": pageNumber !== 1 })}>
                 <p className="vault-editor__description">{t("VaultEditor.create-vault-description")}</p>
                 {ipfsDate && (
