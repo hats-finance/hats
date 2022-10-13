@@ -27,8 +27,7 @@ const VaultEditorFormPage = () => {
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
   const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
-  const { handleSubmit, formState, reset, watch } = methods;
-  console.log("x", watch("project-metadata.w")))
+  const { handleSubmit, formState, reset } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
