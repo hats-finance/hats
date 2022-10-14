@@ -1,12 +1,19 @@
 import { useTranslation } from "react-i18next";
-import { IVault, IVaultDescription } from "types/types";
-import { StyledVaultFormReview } from "./styles";
+import { useFormContext } from "react-hook-form";
 import { Vault } from "components";
+import { IVault } from "types/types";
+import { IEditedVaultDescription } from "../types";
+import { editedToDescription } from "../utils";
+import { StyledVaultFormReview } from "./styles";
 
-export function VaultFormReview({ vaultDescription }) {
+export function VaultFormReview() {
   const { t } = useTranslation();
+  const { watch } = useFormContext<IEditedVaultDescription>();
+  const editedVaultDescriptionForm = watch();
 
-  function getVault(description: IVaultDescription): IVault {
+  function getVault(editedDescription: IEditedVaultDescription): IVault {
+    const description = editedToDescription(editedDescription);
+
     return {
       id: "",
       description,
@@ -99,7 +106,7 @@ export function VaultFormReview({ vaultDescription }) {
         <div className="preview-vault">
           <table>
             <tbody>
-              <Vault expanded={true} data={getVault(vaultDescription)} preview />
+              <Vault expanded={true} data={getVault(editedVaultDescriptionForm)} preview />
             </tbody>
           </table>
         </div>

@@ -1,26 +1,15 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { newMember } from "../utils";
+import { IEditedVaultDescription } from "../types";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 
 export function CommitteeMembersList() {
-
-  const { control } = useFormContext();
-  const { fields, append, remove } = useFieldArray({ control, name: "committee.members" });
-
-  const appendEmpty = () => {
-    append(newMember);
-  }
+  const { control } = useFormContext<IEditedVaultDescription>();
+  const { fields: members, append, remove } = useFieldArray({ control, name: "committee.members" });
 
   return (
     <>
-      {fields.map((field, index) => (
-        <CommitteeMemberForm
-          key={field.id}
-          index={index}
-          membersCount={fields.length}
-          append={appendEmpty}
-          remove={remove}
-        />
+      {members.map((member, index) => (
+        <CommitteeMemberForm key={member.id} index={index} append={append} remove={remove} />
       ))}
     </>
   );

@@ -1,20 +1,22 @@
 import { useTranslation } from "react-i18next";
-import RemoveIcon from "assets/icons/remove-member.svg";
-import { FormInput, FormIconInput } from "components";
-import { StyledCommitteeMemberForm } from "./styles";
 import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
+import { FormInput, FormIconInput } from "components";
+import RemoveIcon from "assets/icons/remove-member.svg";
+import { ICommitteeMember } from "types/types";
+import { StyledCommitteeMemberForm } from "./styles";
 
 type CommitteeMemberFormProps = {
   index: number;
-  membersCount: number;
-  append: () => void;
+  append: (data: any) => void;
   remove: UseFieldArrayRemove;
 };
 
-const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeMemberFormProps) => {
+const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
-  const { register } = useFormContext();
   const basePath = `committee.members.${index}`;
+  const { register, watch } = useFormContext();
+  const members = watch("committee.members") as ICommitteeMember[];
+  const membersCount = members.length;
 
   return (
     <StyledCommitteeMemberForm>
@@ -24,11 +26,7 @@ const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeM
         <div className="content">
           <div className="inputs">
             <label>{t("VaultEditor.member-name")}</label>
-            <FormInput
-              colorable
-              {...register(`${basePath}.name`)}
-              placeholder={t("VaultEditor.member-name-placeholder")}
-            />
+            <FormInput {...register(`${basePath}.name`)} colorable placeholder={t("VaultEditor.member-name-placeholder")} />
             <label>{t("VaultEditor.member-twitter")}</label>
             <FormInput
               {...register(`${basePath}.twitter-link`)}
@@ -46,10 +44,7 @@ const CommitteeMemberForm = ({ index, membersCount, append, remove }: CommitteeM
           </div>
           <div>
             <label>{t("VaultEditor.member-image")}</label>
-            <FormIconInput
-              {...register(`${basePath}.image-ipfs-link`)}
-              colorable
-            />
+            <FormIconInput {...register(`${basePath}.image-ipfs-link`)} colorable />
           </div>
         </div>
       </div>

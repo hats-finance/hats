@@ -1,24 +1,15 @@
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { newContract } from "../utils";
+import { IEditedVaultDescription } from "../types";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 
-
 export function ContractsCoveredList() {
-  const { control } = useFormContext();
+  const { control } = useFormContext<IEditedVaultDescription>();
   const { fields: contracts, append, remove } = useFieldArray({ control, name: "contracts-covered" });
-  const appendEmpty = () => {
-    append(newContract);
-  };
 
   return (
     <>
       {contracts.map((contract, index) => (
-        <ContractCoveredForm
-          index={index}
-          key={index}
-          append={appendEmpty}
-          remove={remove}
-        />
+        <ContractCoveredForm key={contract.id} index={index} append={append} remove={remove} />
       ))}
     </>
   );

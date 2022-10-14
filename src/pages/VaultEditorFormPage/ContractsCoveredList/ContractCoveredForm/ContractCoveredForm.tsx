@@ -6,11 +6,13 @@ import { StyledContractCoveredForm } from "./styles";
 import { useFormContext } from "react-hook-form";
 import { IVulnerabilitySeverity } from "types/types";
 
-export default function ContractCoveredForm({
-  index,
-  append,
-  remove
-}) {
+type ContractCoveredFormProps = {
+  index: number;
+  append: (data: any) => void;
+  remove: (index: number) => void;
+};
+
+export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
   const { t } = useTranslation();
   const basePath = `contracts-covered.${index}`;
   const { register, watch } = useFormContext();
@@ -31,11 +33,7 @@ export default function ContractCoveredForm({
           <div className="subcontent">
             <div className="name">
               <label>{t("VaultEditor.contract-name")}</label>
-              <FormInput
-                {...register(`${basePath}.name`)}
-                colorable
-                placeholder={t("VaultEditor.contract-name-placeholder")}
-              />
+              <FormInput {...register(`${basePath}.name`)} colorable placeholder={t("VaultEditor.contract-name-placeholder")} />
             </div>
             <div className="severities">
               <label>{t("VaultEditor.contract-severities")}</label>

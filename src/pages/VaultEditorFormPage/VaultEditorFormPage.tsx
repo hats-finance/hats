@@ -175,7 +175,7 @@ const VaultEditorFormPage = () => {
                 <div className="vault-editor__section">
                   <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
                   <div className="vault-editor__section-content">
-                    <VaultFormReview vaultDescription={editedToDescription(getValues())} />
+                    <VaultFormReview />
                   </div>
                 </div>
               </section>

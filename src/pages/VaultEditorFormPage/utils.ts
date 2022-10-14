@@ -92,7 +92,7 @@ export function descriptionToEdit(vaultDescription: IVaultDescription): IEditedV
     };
 }
 
-export function editedToDescription(editVaultDescription: IEditedVaultDescription) {
+export function editedToDescription(editVaultDescription: IEditedVaultDescription): IVaultDescription {
     const vaultName = editVaultDescription["project-metadata"].name;
     return {
         ...editVaultDescription,

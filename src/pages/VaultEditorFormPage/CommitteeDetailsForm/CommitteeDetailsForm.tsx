@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { FormInput } from "components";
 import { useFormContext } from "react-hook-form";
+import { IEditedVaultDescription } from "../types";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();
-  const { register } = useFormContext();
+  const { register } = useFormContext<IEditedVaultDescription>();
 
   return (
     <>
