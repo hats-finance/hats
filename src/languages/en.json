@@ -376,6 +376,8 @@
       "nft-name-placeholder": "NFT Name",
       "nft-description": "Description",
       "nft-description-placeholder": "NFT Description",
+      "severities-index-array": "Severities Index array",
+      "severities-index-array-placeholder": "Severities Index array",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
