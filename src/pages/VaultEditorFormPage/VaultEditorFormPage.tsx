@@ -106,7 +106,7 @@ const VaultEditorFormPage = () => {
     <>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Controller
+          {/* <Controller
             control={control}
             name="project-metadata.name"
             render={({ field: { ...configProps } }) => (
@@ -140,7 +140,7 @@ const VaultEditorFormPage = () => {
                 {...configProps}
               />
             )}
-          />
+          /> */}
 
           <div className="content-wrapper vault-editor">
             <div className="vault-editor__container">
