@@ -353,6 +353,7 @@
       "contract-name": "Contract Name",
       "contract-name-placeholder": "Contract Name",
       "contract-severities": "Severities",
+      "contract-severities-placeholder": "Select severities",
       "contract-address": "Address",
       "contract-address-placeholder": "Contract Address",
       "add-member": "+ Add",

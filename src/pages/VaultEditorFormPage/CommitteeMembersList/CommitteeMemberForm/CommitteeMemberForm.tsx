@@ -25,26 +25,32 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
 
         <div className="content">
           <div className="inputs">
-            <label>{t("VaultEditor.member-name")}</label>
-            <FormInput {...register(`${basePath}.name`)} colorable placeholder={t("VaultEditor.member-name-placeholder")} />
-            <label>{t("VaultEditor.member-twitter")}</label>
+            <FormInput
+              {...register(`${basePath}.name`)}
+              label={t("VaultEditor.member-name")}
+              colorable
+              placeholder={t("VaultEditor.member-name-placeholder")}
+            />
+
             <FormInput
               {...register(`${basePath}.twitter-link`)}
+              label={t("VaultEditor.member-twitter")}
               pastable
               colorable
               placeholder={t("VaultEditor.member-twitter-placeholder")}
             />
-            <label>{t("VaultEditor.member-address")}</label>
+
             <FormInput
               {...register(`${basePath}.address`)}
+              label={t("VaultEditor.member-address")}
               pastable
               colorable
               placeholder={t("VaultEditor.member-address-placeholder")}
             />
           </div>
+          
           <div>
-            <label>{t("VaultEditor.member-image")}</label>
-            <FormIconInput {...register(`${basePath}.image-ipfs-link`)} colorable />
+            <FormIconInput {...register(`${basePath}.image-ipfs-link`)} label={t("VaultEditor.member-image")} colorable />
           </div>
         </div>
       </div>

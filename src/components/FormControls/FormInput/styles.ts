@@ -44,6 +44,15 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       padding: ${getSpacing(1.5)} ${getSpacing(2)};
     }
 
+    label {
+      color: var(--white);
+      padding-bottom: ${getSpacing(1)};
+    }
+
+    .input-container {
+      position: relative;
+    }
+
     .extra-icons {
       bottom: 0;
       right: 2px;

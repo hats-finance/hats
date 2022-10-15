@@ -10,34 +10,36 @@ export function VaultDetailsForm() {
   return (
     <StyledVaultDetails>
       <div className="inputs">
-        <label>{t("VaultEditor.vault-details.name")}</label>
         <FormInput
           {...register("project-metadata.name")}
+          label={t("VaultEditor.vault-details.name")}
           colorable
           placeholder={t("VaultEditor.vault-details.name-placeholder")}
         />
-        <label>{t("VaultEditor.vault-details.type")}</label>
         <FormInput
           {...register("project-metadata.type")}
           colorable
           placeholder={t("VaultEditor.vault-details.type-placeholder")}
+          label={t("VaultEditor.vault-details.type")}
         />
-        <label>{t("VaultEditor.vault-details.website")}</label>
         <FormInput
           {...register("project-metadata.website")}
           colorable
           placeholder={t("VaultEditor.vault-details.website-placeholder")}
+          label={t("VaultEditor.vault-details.website")}
         />
       </div>
 
       <div className="icons">
         <div className="icons__input">
-          <label>{t("VaultEditor.vault-details.icon")}</label>
-          <FormIconInput {...register("project-metadata.icon")} colorable />
+          <FormIconInput {...register("project-metadata.icon")} colorable label={t("VaultEditor.vault-details.icon")} />
         </div>
         <div className="icons__input">
-          <label>{t("VaultEditor.vault-details.token-icon")}</label>
-          <FormIconInput {...register("project-metadata.tokenIcon")} colorable />
+          <FormIconInput
+            {...register("project-metadata.tokenIcon")}
+            colorable
+            label={t("VaultEditor.vault-details.token-icon")}
+          />
         </div>
       </div>
     </StyledVaultDetails>

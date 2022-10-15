@@ -4,6 +4,11 @@ import { getSpacing } from "styles";
 export const StyledFormSelectInput = styled.div`
   width: 100%;
   position: relative;
+
+  label {
+    color: var(--white);
+    padding-bottom: ${getSpacing(1)};
+  }
 `;
 
 export const SelectButton = styled.button<{ isChanged: boolean; isOpen: boolean }>(
@@ -12,7 +17,7 @@ export const SelectButton = styled.button<{ isChanged: boolean; isOpen: boolean 
     display: flex;
     align-items: center;
     text-align: left;
-    padding: ${getSpacing(1)} ${getSpacing(2)};
+    padding: ${getSpacing(1.1)} ${getSpacing(2)};
     margin-bottom: ${getSpacing(3)};
 
     ${isChanged &&
@@ -46,10 +51,11 @@ export const SelectButton = styled.button<{ isChanged: boolean; isOpen: boolean 
 );
 
 export const SelectMenuOptions = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   position: absolute;
+  top: calc(100% + ${getSpacing(1)});
   z-index: 2;
   background-color: var(--dark-blue);
-  left: 0px;
-  right: 0px;
-  top: 48px;
 `;

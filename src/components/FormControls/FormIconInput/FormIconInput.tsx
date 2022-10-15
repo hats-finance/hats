@@ -7,9 +7,10 @@ import { StyledFormIconInput } from "./styles";
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   colorable?: boolean;
+  label?: string;
 }
 
-function FormIconInputComponent({ onChange, colorable = false, ...props }: FormIconInputProps, ref) {
+function FormIconInputComponent({ onChange, colorable = false, label, ...props }: FormIconInputProps, ref) {
   const { t } = useTranslation();
   const [changed, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
@@ -21,14 +22,14 @@ function FormIconInputComponent({ onChange, colorable = false, ...props }: FormI
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setChanged(false);
     const fr = new FileReader();
-    
+
     fr.readAsArrayBuffer(e.target.files![0]);
     fr.onload = function () {
       if (fr.result && localRef.current) {
         const blob = new Blob([fr.result]);
         const url = URL.createObjectURL(blob);
         localRef.current.value = url;
-        
+
         setChanged(true);
         onChange({
           ...e,
@@ -53,6 +54,7 @@ function FormIconInputComponent({ onChange, colorable = false, ...props }: FormI
         }}
       />
 
+      {label && <label>{label}</label>}
       <input id={id} className="file-input" accept="image/*" type="file" onChange={handleOnChange} />
 
       {value ? (

@@ -93,8 +93,8 @@ export function CommunicationChannelForm() {
       />
 
       <div>
-        <label>{t("VaultEditor.pgp-key")}</label>
         <FormInput
+          label={t("VaultEditor.pgp-key")}
           name="communication-channel.pgp-pk"
           type="textarea"
           pastable

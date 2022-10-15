@@ -11,7 +11,7 @@ export const StyledContractCoveredForm = styled.div`
       color: var(--white);
       width: 40px;
       height: 40px;
-      margin-top: 24px;
+      margin-top: 28px;
       margin-right: 14px;
       margin-bottom: 24px;
       border: 1px solid var(--turquoise);

@@ -7,6 +7,11 @@ type StyledFormIconInputProps = {
 
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
   ({ isChanged }) => css`
+    label {
+      color: var(--white);
+      padding-bottom: ${getSpacing(1)};
+    }
+
     .file-input {
       position: absolute;
       opacity: 0;

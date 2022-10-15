@@ -10,6 +10,7 @@ export type FormInputType = "text" | "textarea";
 
 type FormInputProps = {
   type?: FormInputType;
+  label?: string;
   pastable?: boolean;
   copyable?: boolean;
   removable?: boolean;
@@ -18,7 +19,7 @@ type FormInputProps = {
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
 function FormInputComponent(
-  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, ...props }: FormInputProps,
+  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, label, ...props }: FormInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
@@ -56,15 +57,19 @@ function FormInputComponent(
 
   return (
     <StyledFormInput isChanged={changed && colorable} type={type}>
-      {getMainComponent()}
+      {label && <label htmlFor={props.name}>{label}</label>}
 
-      {extraIcons && areAvailableExtraIcons && (
-        <div className="extra-icons">
-          {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
-          {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
-          {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
-        </div>
-      )}
+      <div className="input-container">
+        {getMainComponent()}
+
+        {extraIcons && areAvailableExtraIcons && (
+          <div className="extra-icons">
+            {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
+            {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
+            {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
+          </div>
+        )}
+      </div>
     </StyledFormInput>
   );
 }

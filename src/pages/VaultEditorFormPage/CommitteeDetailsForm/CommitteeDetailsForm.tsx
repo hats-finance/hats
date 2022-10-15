@@ -9,9 +9,9 @@ export function CommitteeDetailsForm() {
 
   return (
     <>
-      <label>{t("VaultEditor.multisig-address")}</label>
       <FormInput
         {...register("committee.multisig-address")}
+        label={t("VaultEditor.multisig-address")}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

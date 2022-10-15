@@ -7,6 +7,7 @@ import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles
 
 interface FormSelectInputProps {
   name: string;
+  label?: string;
   placeholder?: string;
   multiple?: boolean;
   colorable?: boolean;
@@ -16,7 +17,7 @@ interface FormSelectInputProps {
 }
 
 export function FormSelectInputComponent(
-  { value, onChange, options, name, multiple = false, colorable = false, placeholder }: FormSelectInputProps,
+  { value, onChange, options, name, multiple = false, colorable = false, placeholder, label }: FormSelectInputProps,
   ref
 ) {
   const [isOpen, setOpen] = useState(false);
@@ -53,6 +54,7 @@ export function FormSelectInputComponent(
 
   return (
     <StyledFormSelectInput ref={menuRef}>
+      {label && <label>{label}</label>}
       <SelectButton onClick={handleOpenDropdown} isChanged={changed && colorable} isOpen={isOpen}>
         <span className="text">{getRenderValue()}</span>
         <span className="icon">
