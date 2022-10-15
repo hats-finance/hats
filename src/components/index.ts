@@ -1,7 +1,8 @@
 export { Header } from './Header/Header';
 export { WalletButton } from './WalletButton/WalletButton';
-export { FormInput } from './FormInput/FormInput';
-export { FormIconInput } from './FormIconInput/FormIconInput';
+export { FormInput } from './FormControls/FormInput/FormInput';
+export { FormIconInput } from './FormControls/FormIconInput/FormIconInput';
+export { FormSelectInput } from './FormControls/FormSelectInput/FormSelectInput';
 export { Vault } from './Vault/Vault';
 export { NFTCard } from './NFTCard/NFTCard';
 export { NFTPrize } from './NFTPrize/NFTPrize';
@@ -16,4 +17,3 @@ export { Dot } from "./Dot/Dot";
 export { MyAccount } from "./MyAccount/MyAccount";
 export { TransactionInfo } from "./TransactionInfo/TransactionInfo";
 export { SafePeriodBar } from "./SafePeriodBar/SafePeriodBar";
-export { MultiSelect } from './MultiSelect/MultiSelect';

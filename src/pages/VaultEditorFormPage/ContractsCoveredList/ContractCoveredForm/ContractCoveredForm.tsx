@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { MultiSelect, FormInput } from "components";
-import { MultiSelectOption } from "components/MultiSelect/MultiSelect";
+import { FormInput, FormSelectInput } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { StyledContractCoveredForm } from "./styles";
 import { useFormContext } from "react-hook-form";
@@ -37,10 +36,10 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
             </div>
             <div className="severities">
               <label>{t("VaultEditor.contract-severities")}</label>
-              {/*               
-               <MultiSelect
+                            
+               {/* <FormSelectInput
                 {...register(`${basePath}.severities`)}
-                options={severitiesOptions as Array<MultiSelectOption>}
+                options={severitiesOptions}
               />  */}
             </div>
           </div>

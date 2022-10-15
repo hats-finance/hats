@@ -22,29 +22,26 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       color: var(--turquoise);
       border: 1px solid var(--turquoise);
       resize: none;
+      border-radius: 0;
+      font-family: inherit;
 
       &::placeholder {
         color: var(--dirty-turquoise);
         font-family: RobotoMono;
       }
+
+      ${isChanged &&
+      css`
+        border-color: var(--yellow);
+      `}
     }
 
     textarea {
       padding: ${getSpacing(2)};
-
-      ${isChanged &&
-      css`
-        border-color: var(--yellow);
-      `}
     }
 
     input {
       padding: ${getSpacing(1.5)} ${getSpacing(2)};
-
-      ${isChanged &&
-      css`
-        border-color: var(--yellow);
-      `}
     }
 
     .extra-icons {
@@ -57,13 +54,13 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       background: var(--dark-blue);
       padding: ${getSpacing(1)};
 
-      ${type === 'text' &&
+      ${type === "text" &&
       css`
         top: 50%;
         transform: translateY(-50%);
       `}
 
-      ${type === 'textarea' &&
+      ${type === "textarea" &&
       css`
         bottom: 5px;
       `}
@@ -81,10 +78,9 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         &:hover {
           opacity: 0.7;
         }
-        
+
         &:active {
           opacity: 0.4;
-
         }
       }
     }

@@ -165,6 +165,7 @@ export const GlobalStyle = createGlobalStyle`
 
     /* Remove inputs border highlight */
     input:focus,
+    fieldset:focus,
     select:focus,
     textarea:focus,
     button:focus {

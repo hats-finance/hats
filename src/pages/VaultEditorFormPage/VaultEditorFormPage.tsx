@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { Loading } from "components";
+import { FormSelectInput, Loading } from "components";
 import {
   ContractsCoveredList,
   VaultDetailsForm,
@@ -13,13 +14,12 @@ import {
   VaultFormReview,
   CommunicationChannelForm,
 } from ".";
-import { FormProvider, useForm } from "react-hook-form";
 import { IEditedVaultDescription } from "./types";
 import { uploadVaultDescription } from "./vaultService";
 import { descriptionToEdit, editedToDescription, newVaultDescription } from "./utils";
-import "./index.scss";
 import { IVaultDescription } from "types/types";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
+import "./index.scss";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -29,9 +29,9 @@ const VaultEditorFormPage = () => {
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
   const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
-  const { handleSubmit, formState, reset, getValues } = methods;
+  const { handleSubmit, formState, reset, getValues, control } = methods;
 
-  console.log(getValues())
+  console.log(getValues());
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -99,13 +99,49 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data, event) => {
-    saveToIpfs(editedToDescription(getValues()))
-  }
+    saveToIpfs(editedToDescription(getValues()));
+  };
 
   return (
     <>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <Controller
+            control={control}
+            name="project-metadata.name"
+            render={({ field: { ...configProps } }) => (
+              <FormSelectInput
+                colorable
+                placeholder="Select a name"
+                options={[
+                  { label: "Angle", value: "Angle" },
+                  { label: "medium", value: "medium" },
+                  { label: "high", value: "high" },
+                  { label: "critical", value: "critical" },
+                ]}
+                {...configProps}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name="contracts-covered.0.severities"
+            render={({ field: { ...configProps } }) => (
+              <FormSelectInput
+                colorable
+                placeholder="Select a severity"
+                options={[
+                  { label: "low", value: "low" },
+                  { label: "medium", value: "medium" },
+                  { label: "high", value: "high" },
+                  { label: "critical", value: "critical" },
+                ]}
+                multiple
+                {...configProps}
+              />
+            )}
+          />
+
           <div className="content-wrapper vault-editor">
             <div className="vault-editor__container">
               <div className="vault-editor__title">{t("VaultEditor.create-vault")}</div>
@@ -169,7 +205,6 @@ const VaultEditorFormPage = () => {
                   </div>
                 </div>
               </section>
-
 
               <div className="vault-editor__divider desktop-only"></div>
 
