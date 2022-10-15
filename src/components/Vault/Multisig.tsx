@@ -4,6 +4,7 @@ import "./Multisig.scss";
 import { Chains } from "../../constants/constants";
 import { shortenIfAddress } from "@usedapp/core";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { isAddress } from "ethers/lib/utils";
 
 interface IProps {
   multisigAddress: string
@@ -19,7 +20,7 @@ export default function Multisig(props: IProps) {
         {...defaultAnchorProps}
         href={chain?.getExplorerAddressLink(multisigAddress)}
         className="multi-sig-address">
-        {shortenIfAddress(multisigAddress)}
+        {isAddress(multisigAddress) && shortenIfAddress(multisigAddress)}
       </a>
       <CopyToClipboard value={multisigAddress} />
     </div>
