@@ -3,31 +3,32 @@ import { useFormContext } from "react-hook-form";
 import { FormInput, FormIconInput } from "components";
 import { IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
+import useEnhancedFormContext from "hooks/useEnhancedFormContext";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { register, formState, getFieldState } = useFormContext<IEditedVaultDescription>();
+  const { register, formState, getFieldState } = useEnhancedFormContext<IEditedVaultDescription>();
 
   return (
     <StyledVaultDetails>
       <div className="inputs">
         <FormInput
           {...register("project-metadata.name")}
-          isDirty={getFieldState("project-metadata.name", formState).isDirty}
+          // isDirty={getFieldState("project-metadata.name", formState).isDirty}
           label={t("VaultEditor.vault-details.name")}
           colorable
           placeholder={t("VaultEditor.vault-details.name-placeholder")}
         />
         <FormInput
           {...register("project-metadata.type")}
-          isDirty={getFieldState("project-metadata.type", formState).isDirty}
+          // isDirty={getFieldState("project-metadata.type", formState).isDirty}
           colorable
           placeholder={t("VaultEditor.vault-details.type-placeholder")}
           label={t("VaultEditor.vault-details.type")}
         />
         <FormInput
           {...register("project-metadata.website")}
-          isDirty={getFieldState("project-metadata.website", formState).isDirty}
+          // isDirty={getFieldState("project-metadata.website", formState).isDirty}
           colorable
           placeholder={t("VaultEditor.vault-details.website-placeholder")}
           label={t("VaultEditor.vault-details.website")}
