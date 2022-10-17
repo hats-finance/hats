@@ -6,7 +6,7 @@ export const StyledVaultFormReview= styled.div`
   }
 
   .preview-vault {
-    margin-bottom: 30px;
+    margin-top: 10px;
     border: 1px solid var(--turquoise);
     box-sizing: border-box;
   }
