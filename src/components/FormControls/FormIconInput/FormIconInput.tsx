@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from "react";
+import React, { forwardRef, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import AddIcon from "assets/icons/add.icon.svg";
@@ -7,12 +7,12 @@ import { StyledFormIconInput } from "./styles";
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   colorable?: boolean;
+  isDirty?: boolean;
   label?: string;
 }
 
-function FormIconInputComponent({ onChange, colorable = false, label, ...props }: FormIconInputProps, ref) {
+function FormIconInputComponent({ onChange, colorable = false, isDirty = false, label, ...props }: FormIconInputProps, ref) {
   const { t } = useTranslation();
-  const [changed, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
 
   const name = localRef.current?.name;
@@ -20,7 +20,6 @@ function FormIconInputComponent({ onChange, colorable = false, label, ...props }
   const id = `icon-input-${name}`;
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setChanged(false);
     const fr = new FileReader();
 
     fr.readAsArrayBuffer(e.target.files![0]);
@@ -30,7 +29,6 @@ function FormIconInputComponent({ onChange, colorable = false, label, ...props }
         const url = URL.createObjectURL(blob);
         localRef.current.value = url;
 
-        setChanged(true);
         onChange({
           ...e,
           target: {
@@ -44,7 +42,7 @@ function FormIconInputComponent({ onChange, colorable = false, label, ...props }
   };
 
   return (
-    <StyledFormIconInput isChanged={changed && colorable}>
+    <StyledFormIconInput isDirty={isDirty && colorable}>
       <input
         {...props}
         type="hidden"

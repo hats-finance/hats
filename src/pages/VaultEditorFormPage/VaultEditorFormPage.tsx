@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
@@ -15,21 +15,24 @@ import {
   CommunicationChannelForm,
 } from ".";
 import { IEditedVaultDescription } from "./types";
-import { uploadVaultDescription } from "./vaultService";
+import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { IVaultDescription } from "types/types";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import "./index.scss";
+import { RoutePaths } from "navigation";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
+
   const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription() });
-  const { handleSubmit, formState, reset: handleReset, getValues } = methods;
+  const { handleSubmit, formState, reset: handleReset } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -63,7 +66,8 @@ const VaultEditorFormPage = () => {
   async function saveToIpfs(vaultDescription: IVaultDescription) {
     try {
       setSavingToIpfs(true);
-      await uploadVaultDescription(vaultDescription);
+      const ipfsHash = await uploadVaultDescriptionToIpfs(vaultDescription);
+      navigate(`${RoutePaths.vault_editor}/${ipfsHash}`);
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,49 +102,14 @@ const VaultEditorFormPage = () => {
 
   const onSubmit = (data: IEditedVaultDescription) => {
     console.log(data);
-    // saveToIpfs(editedToDescription(getValues()));
+    console.log(editedFormToDescription(data));
+    saveToIpfs(editedFormToDescription(data));
   };
 
   return (
     <>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Controller
-            control={control}
-            name="project-metadata.name"
-            render={({ field: { ...configProps } }) => (
-              <FormSelectInput
-                colorable
-                placeholder="Select a name"
-                options={[
-                  { label: "Angle", value: "Angle" },
-                  { label: "medium", value: "medium" },
-                  { label: "high", value: "high" },
-                  { label: "critical", value: "critical" },
-                ]}
-                {...configProps}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="contracts-covered.0.severities"
-            render={({ field: { ...configProps } }) => (
-              <FormSelectInput
-                colorable
-                placeholder="Select a severity"
-                options={[
-                  { label: "low", value: "low" },
-                  { label: "medium", value: "medium" },
-                  { label: "high", value: "high" },
-                  { label: "critical", value: "critical" },
-                ]}
-                multiple
-                {...configProps}
-              />
-            )}
-          /> */}
-
           <div className="content-wrapper vault-editor">
             <div className="vault-editor__container">
               <div className="vault-editor__title">{t("VaultEditor.create-vault")}</div>
@@ -232,32 +201,36 @@ const VaultEditorFormPage = () => {
 
               {/* Not uncomment */}
               {/* {!changed && ipfsHash && (
-          <>
-            <section className={classNames({ "desktop-only": pageNumber !== 6 })}>
-              <div className="vault-editor__section">
-                <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
-                <div className="vault-editor__section-content">
-                  <VaultSign message={""} onChange={null} signatures={[]} />
-                </div>
-              </div>
-              <div className="vault-editor__button-container">
-                <button type="button" onClick={sign} className="fill">
-                  {t("VaultEditor.sign-submit")}
-                </button>
-              </div>
-            </section>
-          </>
-        )} */}
+                <>
+                  <section className={classNames({ "desktop-only": pageNumber !== 6 })}>
+                    <div className="vault-editor__section">
+                      <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
+                      <div className="vault-editor__section-content">
+                        <VaultSign message={""} onChange={null} signatures={[]} />
+                      </div>
+                    </div>
+                    <div className="vault-editor__button-container">
+                      <button type="button" onClick={sign} className="fill">
+                        {t("VaultEditor.sign-submit")}
+                      </button>
+                    </div>
+                  </section>
+                </>
+              )} */}
 
               <div className="vault-editor__next-preview">
                 {pageNumber < 5 && (
                   <div>
-                    <button type="button" onClick={nextPage}>{t("VaultEditor.next")}</button>
+                    <button type="button" onClick={nextPage}>
+                      {t("VaultEditor.next")}
+                    </button>
                   </div>
                 )}
                 {pageNumber > 1 && (
                   <div>
-                    <button type="button" onClick={previousPage}>{t("VaultEditor.previous")}</button>
+                    <button type="button" onClick={previousPage}>
+                      {t("VaultEditor.previous")}
+                    </button>
                   </div>
                 )}
               </div>

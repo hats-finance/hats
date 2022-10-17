@@ -5,12 +5,13 @@ import { IEditedVaultDescription } from "../types";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();
-  const { register } = useFormContext<IEditedVaultDescription>();
+  const { register, formState, getFieldState } = useFormContext<IEditedVaultDescription>();
 
   return (
     <>
       <FormInput
         {...register("committee.multisig-address")}
+        isDirty={getFieldState("committee.multisig-address", formState).isDirty}
         label={t("VaultEditor.multisig-address")}
         pastable
         colorable

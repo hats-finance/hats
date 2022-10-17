@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
@@ -9,7 +10,6 @@ import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../../constants/constants";
 import { StyledCommunicationChannelForm, StyledHelper } from "./styles";
-import { useFieldArray, useFormContext } from "react-hook-form";
 
 const tooltipStyle = {
   ...RC_TOOLTIP_OVERLAY_INNER_STYLE,
@@ -23,9 +23,7 @@ export function CommunicationChannelForm() {
   const [pgpError, setPgpError] = useState<string>();
 
   const { control, watch } = useFormContext();
-  const basePath = "communication-channel.pgp-pk";
-  const { fields: keys, append, remove } = useFieldArray({ control, name: basePath });
-  //const publicKeys: string[] = typeof keys === "string" ? (keys === "" ? [] : [keys]) : keys;
+  const { fields: keys, append, remove } = useFieldArray({ control, name: 'communication-channel.pgp-pk' });
 
   const addPublicKey = async (publicPgpKey) => {
     setPgpError(undefined);
@@ -115,7 +113,7 @@ export function CommunicationChannelForm() {
               <div key={key.id} className="key-card">
                 <div className="key-number">{index + 1}</div>
                 <div className="key-content">
-                  <span>{watch(`${basePath}.${index}`)}</span>
+                  <span>{watch(`communication-channel.pgp-pk.${index}`)}</span>
                   <button type="button" onClick={() => remove(index)}>{t("VaultEditor.remove-pgp")}</button>
                 </div>
               </div>

@@ -2,11 +2,11 @@ import { getSpacing } from "styles";
 import styled, { css } from "styled-components";
 
 type StyledFormIconInputProps = {
-  isChanged: boolean;
+  isDirty: boolean;
 };
 
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
-  ({ isChanged }) => css`
+  ({ isDirty }) => css`
     label {
       display: block;
       color: var(--white);
@@ -36,7 +36,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       color: var(--dark-turquoise);
       padding: 0;
 
-      ${isChanged &&
+      ${isDirty &&
       css`
         border: 1px solid var(--yellow);
       `}

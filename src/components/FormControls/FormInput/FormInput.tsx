@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, useRef, useState } from "react";
+import { ChangeEvent, forwardRef, useRef } from "react";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
@@ -15,23 +15,22 @@ type FormInputProps = {
   copyable?: boolean;
   removable?: boolean;
   colorable?: boolean;
+  isDirty?: boolean;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
 function FormInputComponent(
-  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, label, ...props }: FormInputProps,
+  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, isDirty = false, label, ...props }: FormInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable;
-  const [changed, setChanged] = useState(false);
 
   const refToUse = ref || localRef;
 
   const areAvailableExtraIcons = type === "text" || type === "textarea";
 
   const handleOnChange = (e: ChangeEvent<any>) => {
-    setChanged(true);
     if (props.onChange) props.onChange(e);
   };
 
@@ -56,7 +55,7 @@ function FormInputComponent(
   };
 
   return (
-    <StyledFormInput isChanged={changed && colorable} type={type} withExtraicons={extraIcons}>
+    <StyledFormInput isDirty={isDirty && colorable} type={type} withExtraicons={extraIcons}>
       {label && <label htmlFor={props.name}>{label}</label>}
 
       <div className="input-container">

@@ -11,17 +11,17 @@ interface FormSelectInputProps {
   placeholder?: string;
   multiple?: boolean;
   colorable?: boolean;
+  isDirty?: boolean;
   value: string | string[];
   onChange: (event: Partial<React.ChangeEvent<any>>) => void;
   options: FormSelectInputOption[];
 }
 
 export function FormSelectInputComponent(
-  { value, onChange, options, name, multiple = false, colorable = false, placeholder, label }: FormSelectInputProps,
+  { value, onChange, options, name, multiple = false, colorable = false, isDirty = false, placeholder, label }: FormSelectInputProps,
   ref
 ) {
   const [isOpen, setOpen] = useState(false);
-  const [changed, setChanged] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(menuRef, () => setOpen(false));
@@ -30,7 +30,6 @@ export function FormSelectInputComponent(
     const newValue = multiple ? [...(value as string[]), val] : val;
 
     onChange({ target: { name, value: newValue } });
-    if (!changed) setChanged(true);
     if (!multiple) setOpen(false);
   };
 
@@ -39,7 +38,6 @@ export function FormSelectInputComponent(
     const newValue = multiple ? (value as string[]).filter((v) => v !== val) : value;
 
     onChange({ target: { name, value: newValue } });
-    if (!changed) setChanged(true);
   };
 
   const handleOpenDropdown = (event: React.FormEvent) => {
@@ -55,7 +53,7 @@ export function FormSelectInputComponent(
   return (
     <StyledFormSelectInput ref={menuRef}>
       {label && <label>{label}</label>}
-      <SelectButton onClick={handleOpenDropdown} isChanged={changed && colorable} isOpen={isOpen}>
+      <SelectButton onClick={handleOpenDropdown} isDirty={isDirty && colorable} isOpen={isOpen}>
         <span className="text">{getRenderValue()}</span>
         <span className="icon">
           <DropdownArrow />

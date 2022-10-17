@@ -3,13 +3,13 @@ import { getSpacing } from "styles";
 import { FormInputType } from "./FormInput";
 
 type StyledFormInputProps = {
-  isChanged: boolean;
+  isDirty: boolean;
   withExtraicons: boolean;
   type: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isChanged, type, withExtraicons }) => css`
+  ({ isDirty, type, withExtraicons }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${getSpacing(3)};
@@ -31,7 +31,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         font-family: RobotoMono;
       }
 
-      ${isChanged &&
+      ${isDirty &&
       css`
         border-color: var(--yellow);
       `}

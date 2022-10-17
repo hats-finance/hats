@@ -16,7 +16,7 @@ export const createNewCoveredContract = (severities?: IVulnerabilitySeverity[]):
   severities: severities?.map((s) => s.id) || [],
 });
 
-export const createNewSeverity = (): IVulnerabilitySeverity => ({
+export const createNewVulnerabilitySeverity = (): IVulnerabilitySeverity => ({
   id: uuid(),
   name: "",
   index: 0,
@@ -110,18 +110,18 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
   };
 }
 
-export function editedFormToDescription(editVaultDescription: IEditedVaultDescription): IVaultDescription {
-  const vaultName = editVaultDescription["project-metadata"].name;
+export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
+  const vaultName = editedVaultDescription["project-metadata"].name;
 
   return {
-    ...editVaultDescription,
-    severities: editVaultDescription["vulnerability-severities-spec"].severities.map((severity) => ({
+    ...editedVaultDescription,
+    severities: editedVaultDescription["vulnerability-severities-spec"].severities.map((severity) => ({
       ...severity,
       "nft-metadata": {
         ...severity["nft-metadata"],
         description: vaultName + severity["nft-metadata"].description,
       },
-      "contracts-covered": editVaultDescription["contracts-covered"]
+      "contracts-covered": editedVaultDescription["contracts-covered"]
         .filter((contract) => contract.severities?.includes(severity.id))
         .map((contract) => ({ [contract.name]: contract.address })),
     })),

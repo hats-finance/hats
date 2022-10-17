@@ -12,8 +12,8 @@ export const StyledFormSelectInput = styled.div`
   }
 `;
 
-export const SelectButton = styled.button<{ isChanged: boolean; isOpen: boolean }>(
-  ({ isChanged, isOpen }) => css`
+export const SelectButton = styled.button<{ isDirty: boolean; isOpen: boolean }>(
+  ({ isDirty, isOpen }) => css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -21,7 +21,7 @@ export const SelectButton = styled.button<{ isChanged: boolean; isOpen: boolean 
     padding: ${getSpacing(1.1)} ${getSpacing(2)};
     margin-bottom: ${getSpacing(3)};
 
-    ${isChanged &&
+    ${isDirty &&
     css`
       border: 1px solid var(--yellow);
     `}
