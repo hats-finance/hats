@@ -23,6 +23,7 @@ import Modal from "components/Shared/Modal/Modal";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { useTranslation } from "react-i18next";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 
 interface IProps {
   data: IVault

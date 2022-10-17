@@ -124,7 +124,7 @@ export function VaultsProvider({ children }) {
     const vaultsWithDescription = await (await getVaultsData(vaultsData))
       .filter(vault => {
         if (vault.description?.["project-metadata"].starttime &&
-          vault.description?.["project-metadata"].starttime < Date.now() / 1000)
+          vault.description?.["project-metadata"].starttime > Date.now() / 1000)
           return false;
         if (vault.description?.["project-metadata"].endtime &&
           vault.description?.["project-metadata"].endtime < Date.now() / 1000)

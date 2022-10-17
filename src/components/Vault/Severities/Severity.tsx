@@ -5,7 +5,7 @@ import { IVault, ISeverity } from "../../../types/types";
 import humanizeDuration from "humanize-duration";
 import { useState } from "react";
 import Modal from "../../Shared/Modal";
-import NFTPrize from "../../NFTPrize";
+import NFTPrize from "../../NFTPrize/NFTPrize";
 import ContractsCovered from "../ContractsCovered";
 import { formatNumber, ipfsTransformUri } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";

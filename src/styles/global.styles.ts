@@ -1,9 +1,10 @@
-import { breakpointsDefinition } from './breakpoints.styles';
-import { createGlobalStyle } from 'styled-components';
-import { variables } from './variables.styles';
+import { breakpointsDefinition, responsiveUtilityClasses } from "./breakpoints.styles";
+import { createGlobalStyle } from "styled-components";
+import { variables } from "./variables.styles";
 
 export const GlobalStyle = createGlobalStyle`
     ${variables}
+    ${responsiveUtilityClasses}
     
     *,
     *::before,
@@ -12,12 +13,11 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     html {
-        background-color: var(--dark-blue);
         color: var(--turquoise);
         font-size: var(--small);
         scrollbar-width: none;
         -ms-overflow-style: none;
-
+        
         
         @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
             font-size: var(--xsmall);
@@ -27,13 +27,14 @@ export const GlobalStyle = createGlobalStyle`
     -webkit-scrollbar {
         display: none;
     }
-
+    
     ::-webkit-scrollbar {
         width: 0;
         background: transparent;
     }
-
+    
     body {
+        background-color: var(--dark-blue);
         margin: 0;
         font-family: RobotoMono;
         -webkit-font-smoothing: antialiased;
@@ -138,6 +139,65 @@ export const GlobalStyle = createGlobalStyle`
         /* This goes with <br /> tag to break line only in mobile */
         .mobile-break {
             display: block;
+        }
+    }
+
+    input {
+        font-family: RobotoMono;
+        background-color: var(--purple-blue);
+        border: 1px solid var(--purple-blue);
+        color: var(--white);
+        text-indent: 20px;
+    }
+
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+    /* Remove inputs border highlight */
+    input:focus,
+    select:focus,
+    textarea:focus,
+    button:focus {
+        outline: none;
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes disabledFade {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0.5;
+        }
+    }
+
+    /* additional className added to popup overlay (rc-tooltip) */
+    .tooltip {
+        opacity: 1 !important;
+    }
+
+    @media only screen and (max-width: ${breakpointsDefinition.mobile}) {
+        /* Prevent auto-zooming when focusing on an input element */
+        input,
+        textarea {
+            font-size: var(--small);
         }
     }
 `;
