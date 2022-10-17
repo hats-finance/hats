@@ -57,13 +57,13 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
 
       <div className="controller-buttons">
         {membersCount > 1 && (
-          <button className="fill" onClick={() => remove(index)}>
+          <button type="button" className="fill" onClick={() => remove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === membersCount - 1 && (
-          <button className="fill" onClick={append}>
+          <button type="button" className="fill" onClick={append}>
             {t("VaultEditor.add-member")}
           </button>
         )}

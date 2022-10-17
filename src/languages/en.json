@@ -377,6 +377,10 @@
       "nft-name-placeholder": "NFT Name",
       "nft-description": "Description",
       "nft-description-placeholder": "NFT Description",
+      "nft-image": "Image",
+      "nft-image-placeholder": "NFT Image",
+      "nft-animation": "Animation",
+      "nft-animation-placeholder": "NFT Animation",
       "severities-index-array": "Severities Index array",
       "severities-index-array-placeholder": "Severities Index array",
       "review-vault": {

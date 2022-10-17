@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { FormSelectInput, Loading } from "components";
+import { Loading } from "components";
 import {
   ContractsCoveredList,
   VaultDetailsForm,
@@ -16,7 +16,7 @@ import {
 } from ".";
 import { IEditedVaultDescription } from "./types";
 import { uploadVaultDescription } from "./vaultService";
-import { descriptionToEdit, editedToDescription, newVaultDescription } from "./utils";
+import { descriptionToEdit, editedToDescription, createNewVaultDescription } from "./utils";
 import { IVaultDescription } from "types/types";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import "./index.scss";
@@ -28,10 +28,8 @@ const VaultEditorFormPage = () => {
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
-  const methods = useForm<IEditedVaultDescription>({ defaultValues: newVaultDescription });
-  const { handleSubmit, formState, reset, getValues, control } = methods;
-
-  console.log(getValues());
+  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription() });
+  const { handleSubmit, formState, reset: handleReset, getValues } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -42,7 +40,7 @@ const VaultEditorFormPage = () => {
         setIpfsDate(new Date(lastModified));
       }
       const newVaultDescription = await response.json();
-      reset(descriptionToEdit(fixObject(newVaultDescription)));
+      handleReset(descriptionToEdit(fixObject(newVaultDescription)));
     } catch (error) {
       console.error(error);
     } finally {
@@ -98,8 +96,9 @@ const VaultEditorFormPage = () => {
     return <Loading fixed />;
   }
 
-  const onSubmit = (data, event) => {
-    saveToIpfs(editedToDescription(getValues()));
+  const onSubmit = (data: IEditedVaultDescription) => {
+    console.log(data);
+    // saveToIpfs(editedToDescription(getValues()));
   };
 
   return (
@@ -222,11 +221,11 @@ const VaultEditorFormPage = () => {
 
               <div className="vault-editor__button-container">
                 {formState.isDirty && ipfsHash && (
-                  <button onClick={() => reset()} className="fill">
+                  <button type="button" onClick={() => handleReset()} className="fill">
                     {t("VaultEditor.reset-button")}
                   </button>
                 )}
-                <button onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
+                <button type="button" onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
                   {t("VaultEditor.save-button")}
                 </button>
               </div>
@@ -242,7 +241,7 @@ const VaultEditorFormPage = () => {
                 </div>
               </div>
               <div className="vault-editor__button-container">
-                <button onClick={sign} className="fill">
+                <button type="button" onClick={sign} className="fill">
                   {t("VaultEditor.sign-submit")}
                 </button>
               </div>
@@ -253,12 +252,12 @@ const VaultEditorFormPage = () => {
               <div className="vault-editor__next-preview">
                 {pageNumber < 5 && (
                   <div>
-                    <button onClick={nextPage}>{t("VaultEditor.next")}</button>
+                    <button type="button" onClick={nextPage}>{t("VaultEditor.next")}</button>
                   </div>
                 )}
                 {pageNumber > 1 && (
                   <div>
-                    <button onClick={previousPage}>{t("VaultEditor.previous")}</button>
+                    <button type="button" onClick={previousPage}>{t("VaultEditor.previous")}</button>
                   </div>
                 )}
               </div>

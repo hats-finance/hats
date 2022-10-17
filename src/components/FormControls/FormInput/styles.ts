@@ -4,11 +4,12 @@ import { FormInputType } from "./FormInput";
 
 type StyledFormInputProps = {
   isChanged: boolean;
+  withExtraicons: boolean;
   type: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isChanged, type }) => css`
+  ({ isChanged, type, withExtraicons }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${getSpacing(3)};
@@ -42,9 +43,15 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     input {
       padding: ${getSpacing(1.5)} ${getSpacing(2)};
+
+      ${withExtraicons &&
+      css`
+        padding-right: ${getSpacing(6)};
+      `}
     }
 
     label {
+      display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
     }

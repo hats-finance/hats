@@ -69,6 +69,7 @@ export interface ICommitteeMember {
   "image-ipfs-link"?: string
 }
 export interface IVulnerabilitySeverity {
+  "id": string
   "name": string
   "index": number
   "contracts-covered": { [key: string]: string }[]

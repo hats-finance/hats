@@ -1,9 +1,10 @@
+import { useEffect } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FormInput, FormSelectInput } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { StyledContractCoveredForm } from "./styles";
-import { Controller, useFormContext } from "react-hook-form";
 import { IVulnerabilitySeverity } from "types/types";
+import { StyledContractCoveredForm } from "./styles";
 
 type ContractCoveredFormProps = {
   index: number;
@@ -14,16 +15,28 @@ type ContractCoveredFormProps = {
 export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
   const { t } = useTranslation();
   const basePath = `contracts-covered.${index}`;
-  const { register, watch, control } = useFormContext();
-  const severities = watch("vulnerability-severities-spec.severities") as IVulnerabilitySeverity[];
+  const severitiesPath = `vulnerability-severities-spec.severities`;
+  const { register, watch, control, setValue, getValues } = useFormContext();
 
+  const severities = watch(severitiesPath) as IVulnerabilitySeverity[];
   const contracts = watch("contracts-covered") as any[];
   const contractsCount = contracts.length;
 
   const severitiesOptions = severities.map((severity, index) => ({
     label: severity.name,
-    value: severity.name,
+    value: severity.id,
   }));
+
+  useEffect(() => {
+    const severitiesFormIds = severities.map((sev) => sev.id);
+    const severitiesIdsInThisContract: string[] = getValues()["contracts-covered"][index].severities;
+    console.log(severitiesFormIds);
+    console.log(severitiesIdsInThisContract);
+
+    const filteredVulnerabilities = severitiesIdsInThisContract.filter((sevId) => severitiesFormIds.includes(sevId));
+    console.log(filteredVulnerabilities);
+    setValue(`contracts-covered.${index}.severities`, filteredVulnerabilities);
+  }, [severities, getValues, setValue, index]);
 
   return (
     <StyledContractCoveredForm>
@@ -72,13 +85,13 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
 
       <div className="controller-buttons">
         {contractsCount > 1 && (
-          <button className="fill" onClick={() => remove(index)}>
+          <button type="button" className="fill" onClick={() => remove(index)}>
             <img src={RemoveIcon} height={12} alt="remove-member" />
             {` ${t("VaultEditor.remove-member")}`}
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button className="fill" onClick={append}>
+          <button type="button" className="fill" onClick={append}>
             {t("VaultEditor.add-member")}
           </button>
         )}

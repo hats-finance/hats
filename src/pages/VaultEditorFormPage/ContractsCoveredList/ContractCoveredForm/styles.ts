@@ -22,7 +22,7 @@ export const StyledContractCoveredForm = styled.div`
     }
 
     .content {
-      width: 65%;
+      width: 75%;
 
       @media (max-width: ${breakpointsDefinition.mobile}) {
         width: 100%;

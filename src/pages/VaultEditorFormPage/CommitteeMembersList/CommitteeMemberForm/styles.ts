@@ -33,7 +33,7 @@ export const StyledCommitteeMemberForm = styled.div`
       }
 
       .inputs {
-        width: 60%;
+        width: 75%;
 
         @media (max-width: ${breakpointsDefinition.mobile}) {
           width: 100%;

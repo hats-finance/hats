@@ -106,7 +106,7 @@ export function CommunicationChannelForm() {
       </div>
 
       <div>
-        <button onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
+        <button type="button" onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
         {pgpError && <div>{pgpError}</div>}
 
         {keys.length > 0 && (
@@ -116,7 +116,7 @@ export function CommunicationChannelForm() {
                 <div className="key-number">{index + 1}</div>
                 <div className="key-content">
                   <span>{watch(`${basePath}.${index}`)}</span>
-                  <button onClick={() => remove(index)}>{t("VaultEditor.remove-pgp")}</button>
+                  <button type="button" onClick={() => remove(index)}>{t("VaultEditor.remove-pgp")}</button>
                 </div>
               </div>
             ))}

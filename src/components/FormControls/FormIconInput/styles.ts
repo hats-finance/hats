@@ -8,6 +8,7 @@ type StyledFormIconInputProps = {
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
   ({ isChanged }) => css`
     label {
+      display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
     }

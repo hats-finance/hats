@@ -22,7 +22,7 @@ export default function Multisig(props: IProps) {
         className="multi-sig-address">
         {isAddress(multisigAddress) && shortenIfAddress(multisigAddress)}
       </a>
-      <CopyToClipboard value={multisigAddress} />
+      {isAddress(multisigAddress) && <CopyToClipboard value={multisigAddress} />}
     </div>
   )
 }

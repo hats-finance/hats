@@ -13,10 +13,6 @@ interface IProps {
 export function Modal({ isShowing, hide, children, title }: IProps) {
   const inTransaction = useTransactions().transactions.some(tx => !tx.receipt);
 
-  useEffect(() => {
-    document.body.style.overflow = isShowing ? "hidden" : "initial";
-  }, [isShowing]);
-
   return (
     isShowing ? ReactDOM.createPortal(
       <>

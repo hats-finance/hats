@@ -56,7 +56,7 @@ function FormInputComponent(
   };
 
   return (
-    <StyledFormInput isChanged={changed && colorable} type={type}>
+    <StyledFormInput isChanged={changed && colorable} type={type} withExtraicons={extraIcons}>
       {label && <label htmlFor={props.name}>{label}</label>}
 
       <div className="input-container">

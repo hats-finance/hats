@@ -31,7 +31,7 @@ export function KeyManager({ onSelected }) {
           {keystoreContext.selectedKey && <img alt="copy" src={CopyIcon} onClick={() => setShowSelectedKeyDetails(true)} />}
         </div>
         
-        <button className="open-key-list fill" onClick={() => setShowSelectKeyModal(true)}>
+        <button type="button" className="open-key-list fill" onClick={() => setShowSelectKeyModal(true)}>
           {t("CommitteeTools.Decrypt.select-keypair")}
         </button>
       </StyledKeyManager>
@@ -51,7 +51,7 @@ export function KeyManager({ onSelected }) {
       )}
       {keystoreContext.isCreated && keystoreContext.isLocked && (
         <>
-          <button onClick={() => setShowUnlockVault(true)} className="fill">
+          <button type="button" onClick={() => setShowUnlockVault(true)} className="fill">
             {t("CommitteeTools.unlock-vault")}
           </button>
         </>
@@ -59,7 +59,7 @@ export function KeyManager({ onSelected }) {
 
       {!keystoreContext.isCreated && (
         <>
-          <button onClick={() => setShowCreateVault(true)} className="fill">
+          <button type="button" onClick={() => setShowCreateVault(true)} className="fill">
             {t("CommitteeTools.create-vault")}
           </button>
         </>

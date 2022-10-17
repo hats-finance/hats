@@ -3,11 +3,11 @@ import styled from "styled-components";
 
 export const StyledVaultDetails = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
 
-  .inputs,
-  .icons {
-    width: 50%;
+  .inputs {
+    width: 55%;
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
       width: 100%;
@@ -17,7 +17,7 @@ export const StyledVaultDetails = styled.div`
   .icons {
     display: flex;
     justify-content: flex-end;
-    
+
     @media (max-width: ${breakpointsDefinition.mobile}) {
       width: 100%;
     }
