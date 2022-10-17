@@ -13,11 +13,6 @@ export const StyledWhereverWidget = styled.div`
   justify-content: center;
   margin: 0 8px;
 
-  &:active {
-    background-color: var(--light-blue);
-    opacity: 1;
-  }
-
   @media (max-width: ${breakpointsDefinition.mobile}) {
     margin-left: auto;
   }

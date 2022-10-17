@@ -6,10 +6,7 @@ import {
   NotificationBell
 } from "@wherever/react-notification-feed";
 import { useEthers } from "@usedapp/core";
-
-// Partner key and env should be included in the env config file
-const PARTNER_KEY = "6bfd58ee-8fc8-4b5d-96f4-9562c7095e06";
-const ENV = "development";
+import { WHEREVER_SETTINGS } from "settings";
 
 const WhereverWidget = () => {
   const { account } = useEthers();
@@ -27,8 +24,8 @@ const WhereverWidget = () => {
           primaryColor: Colors.strongRed,
           fontFamily: '"RobotoMono", sans-serif'
         }}
-        env={ENV}
-        partnerKey={PARTNER_KEY}
+        env={WHEREVER_SETTINGS.env}
+        partnerKey={WHEREVER_SETTINGS.partnerKey}
       >
         <NotificationFeed>
           <NotificationBell containerHeight={"100%"} containerWidth={"100%"} />

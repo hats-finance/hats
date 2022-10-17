@@ -152,3 +152,18 @@ export enum Transactions {
   RedeemTreeNFTs = "Redeem Tree NFTs",
   RedeemDepositNFTs = "Redeem Deposit NFTs",
 }
+
+export const WhereverConfig = {
+  [ChainId.Mainnet]: {
+    partnerKey: "",
+    env: "production"
+  },
+  [ChainId.Rinkeby]: {
+    partnerKey: "",
+    env: "development"
+  },
+  [ChainId.Goerli]: {
+    partnerKey: "6bfd58ee-8fc8-4b5d-96f4-9562c7095e06",
+    env: "development"
+  }
+};

@@ -1,4 +1,4 @@
-import { Endpoints, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
+import { Endpoints, VaultService, Chains, DefaultBotAddress, WhereverConfig } from "./constants/constants";
 import { Chain, ChainId, Mainnet, Rinkeby } from '@usedapp/core';
 
 export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Goerli;
@@ -13,3 +13,5 @@ export const VAULT_SERVICE = process.env.REACT_APP_VAULT_SERVICE || VaultService
 export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddress;
 
 export const defaultChain: Chain = Chains[CHAINID];
+
+export const WHEREVER_SETTINGS = WhereverConfig[CHAINID];
