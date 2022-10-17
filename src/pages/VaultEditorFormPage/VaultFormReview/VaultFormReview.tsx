@@ -3,7 +3,7 @@ import { useFormContext } from "react-hook-form";
 import { Vault } from "components";
 import { IVault } from "types/types";
 import { IEditedVaultDescription } from "../types";
-import { editedToDescription } from "../utils";
+import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
 
 export function VaultFormReview() {
@@ -12,7 +12,7 @@ export function VaultFormReview() {
   const editedVaultDescriptionForm = watch();
 
   function getVault(editedDescription: IEditedVaultDescription): IVault {
-    const description = editedToDescription(editedDescription);
+    const description = editedFormToDescription(editedDescription);
 
     return {
       id: "",

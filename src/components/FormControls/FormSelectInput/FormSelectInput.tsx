@@ -67,7 +67,7 @@ export function FormSelectInputComponent(
           {options.map((option) => {
             return (
               <FormSelectInputItem
-                key={option.value}
+                key={`${name}-${option.value}`}
                 option={option}
                 currentValue={value}
                 multiple={multiple}

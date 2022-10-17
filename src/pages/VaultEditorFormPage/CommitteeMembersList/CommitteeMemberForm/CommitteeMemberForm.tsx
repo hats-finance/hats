@@ -4,6 +4,7 @@ import { FormInput, FormIconInput } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { ICommitteeMember } from "types/types";
 import { StyledCommitteeMemberForm } from "./styles";
+import { createNewCommitteeMember } from "pages/VaultEditorFormPage/utils";
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -63,7 +64,7 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
           </button>
         )}
         {index === membersCount - 1 && (
-          <button type="button" className="fill" onClick={append}>
+          <button type="button" className="fill" onClick={() => append(createNewCommitteeMember())}>
             {t("VaultEditor.add-member")}
           </button>
         )}

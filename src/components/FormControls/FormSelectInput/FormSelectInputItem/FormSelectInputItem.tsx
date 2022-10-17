@@ -12,7 +12,7 @@ interface MenuItemProps {
 
 const FormSelectInputItem = ({ currentValue, option, handleSelectedItem, handleUnselectedItem, multiple }: MenuItemProps) => {
   const isChecked = useMemo(
-    () => (multiple ? (currentValue as string[]).indexOf(option.value) > -1 : (currentValue as string) === option.value),
+    () => (multiple ? (currentValue as string[])?.indexOf(option.value) > -1 : (currentValue as string) === option.value),
     [currentValue, multiple, option]
   );
 

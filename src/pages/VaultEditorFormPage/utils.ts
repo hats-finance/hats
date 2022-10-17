@@ -1,4 +1,4 @@
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription, IVulnerabilitySeverity } from "types/types";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import { IEditedContractCovered, IEditedVaultDescription } from "./types";
@@ -10,10 +10,10 @@ export const createNewCommitteeMember = (): ICommitteeMember => ({
   "image-ipfs-link": "",
 });
 
-export const createNewCoveredContract = (): IEditedContractCovered => ({
+export const createNewCoveredContract = (severities?: IVulnerabilitySeverity[]): IEditedContractCovered => ({
   name: "",
   address: "",
-  severities: [],
+  severities: severities?.map((s) => s.id) || [],
 });
 
 export const createNewSeverity = (): IVulnerabilitySeverity => ({
@@ -31,74 +31,88 @@ export const createNewSeverity = (): IVulnerabilitySeverity => ({
   description: "",
 });
 
-export const createNewVaultDescription = (): IEditedVaultDescription => ({
-  "project-metadata": {
-    name: "",
-    icon: "",
-    tokenIcon: "",
-    website: "",
-    type: "",
-  },
-  "communication-channel": {
-    "pgp-pk": "",
-  },
-  committee: {
-    "multisig-address": "",
-    members: [{ ...createNewCommitteeMember() }],
-  },
-  "contracts-covered": [{ ...createNewCoveredContract() }],
-  "vulnerability-severities-spec": getVulnerabilitySeveritiesTemplate(),
-  source: {
-    name: "",
-    url: "",
-  },
-});
+export const createNewVaultDescription = (): IEditedVaultDescription => {
+  const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate();
 
-function severitiesToContracts(severities: IVulnerabilitySeverity[]): IEditedContractCovered[] {
-  let contracts = [] as IEditedContractCovered[];
+  return {
+    "project-metadata": {
+      name: "",
+      icon: "",
+      tokenIcon: "",
+      website: "",
+      type: "",
+    },
+    "communication-channel": {
+      "pgp-pk": "",
+    },
+    committee: {
+      "multisig-address": "",
+      members: [{ ...createNewCommitteeMember() }],
+    },
+    "contracts-covered": [{ ...createNewCoveredContract(vulnerabilitySeveritiesTemplate.severities) }],
+    "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
+    source: {
+      name: "",
+      url: "",
+    },
+  };
+};
+
+function severitiesToContractsCoveredForm(severities: IVulnerabilitySeverity[]): IEditedContractCovered[] {
+  let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
-    const contractsCovered =
-      severity["contracts-covered"]?.length === 0 ? [createNewCoveredContract()] : severity["contracts-covered"];
+    const contractsCovered = severity["contracts-covered"];
 
-    contractsCovered.forEach((item) => {
-      const name = Object.keys(item)[0];
-      const address = Object.values(item)[0] as string;
-      const contract = contracts.find((item) => item.name === name && item.address === address);
+    if (contractsCovered && contractsCovered.length > 0) {
+      contractsCovered.forEach((contractCovered) => {
+        const name = Object.keys(contractCovered)[0];
+        const address = Object.values(contractCovered)[0] as string;
+        const contract = contractsForm.find((c) => c.name === name && c.address === address);
 
-      if (contract) {
-        let contractIndex = contracts.indexOf(contract);
-        contracts[contractIndex] = {
-          name,
-          address,
-          severities: [...contract.severities, severity.name],
-        };
-      } else {
-        contracts.push({
-          name,
-          address,
-          severities: [severity.name],
-        });
-      }
-    });
+        if (contract) {
+          const contractIndex = contractsForm.indexOf(contract);
+          contractsForm[contractIndex] = {
+            name,
+            address,
+            severities: [...contract.severities, severity.id],
+          };
+        } else {
+          contractsForm.push({
+            name,
+            address,
+            severities: [severity.id],
+          });
+        }
+      });
+    } else {
+      contractsForm.push({
+        ...createNewCoveredContract(),
+        severities: [severity.id],
+      });
+    }
   });
-  return contracts;
+
+  return contractsForm;
 }
 
-export function descriptionToEdit(vaultDescription: IVaultDescription): IEditedVaultDescription {
+export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
+  const severitiesWithIds = vaultDescription.severities.map(sev => ({...sev, id: uuid()}));
+
   return {
     ...vaultDescription,
     "vulnerability-severities-spec": {
-      severities: vaultDescription.severities,
+      severities: severitiesWithIds,
       name: "",
       indexArray: vaultDescription.severities.map((item) => item.index),
     },
-    "contracts-covered": severitiesToContracts(vaultDescription.severities),
+    "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
   };
 }
 
-export function editedToDescription(editVaultDescription: IEditedVaultDescription): IVaultDescription {
+export function editedFormToDescription(editVaultDescription: IEditedVaultDescription): IVaultDescription {
   const vaultName = editVaultDescription["project-metadata"].name;
+
   return {
     ...editVaultDescription,
     severities: editVaultDescription["vulnerability-severities-spec"].severities.map((severity) => ({
@@ -108,9 +122,7 @@ export function editedToDescription(editVaultDescription: IEditedVaultDescriptio
         description: vaultName + severity["nft-metadata"].description,
       },
       "contracts-covered": editVaultDescription["contracts-covered"]
-        .filter((contract) => {
-          return contract.severities?.includes(severity.name);
-        })
+        .filter((contract) => contract.severities?.includes(severity.id))
         .map((contract) => ({ [contract.name]: contract.address })),
     })),
   };

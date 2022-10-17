@@ -68,6 +68,7 @@ export interface ICommitteeMember {
   "twitter-link": string
   "image-ipfs-link"?: string
 }
+
 export interface IVulnerabilitySeverity {
   "id": string
   "name": string

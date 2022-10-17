@@ -5,6 +5,7 @@ import { FormInput, FormSelectInput } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { IVulnerabilitySeverity } from "types/types";
 import { StyledContractCoveredForm } from "./styles";
+import { createNewCoveredContract } from "pages/VaultEditorFormPage/utils";
 
 type ContractCoveredFormProps = {
   index: number;
@@ -30,11 +31,8 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
   useEffect(() => {
     const severitiesFormIds = severities.map((sev) => sev.id);
     const severitiesIdsInThisContract: string[] = getValues()["contracts-covered"][index].severities;
-    console.log(severitiesFormIds);
-    console.log(severitiesIdsInThisContract);
 
-    const filteredVulnerabilities = severitiesIdsInThisContract.filter((sevId) => severitiesFormIds.includes(sevId));
-    console.log(filteredVulnerabilities);
+    const filteredVulnerabilities = severitiesIdsInThisContract?.filter((sevId) => severitiesFormIds.includes(sevId));
     setValue(`contracts-covered.${index}.severities`, filteredVulnerabilities);
   }, [severities, getValues, setValue, index]);
 
@@ -53,22 +51,24 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
-            <div className="severities">
-              <Controller
-                control={control}
-                name={`${basePath}.severities`}
-                render={({ field: { ...configProps } }) => (
-                  <FormSelectInput
-                    label={t("VaultEditor.contract-severities")}
-                    placeholder={t("VaultEditor.contract-severities-placeholder")}
-                    colorable
-                    options={severitiesOptions}
-                    multiple
-                    {...configProps}
-                  />
-                )}
-              />
-            </div>
+            {severities && (
+              <div className="severities">
+                <Controller
+                  control={control}
+                  name={`${basePath}.severities`}
+                  render={({ field: { ...configProps } }) => (
+                    <FormSelectInput
+                      label={t("VaultEditor.contract-severities")}
+                      placeholder={t("VaultEditor.contract-severities-placeholder")}
+                      colorable
+                      options={severitiesOptions}
+                      multiple
+                      {...configProps}
+                    />
+                  )}
+                />
+              </div>
+            )}
           </div>
 
           <div>
@@ -91,7 +91,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button type="button" className="fill" onClick={append}>
+          <button type="button" className="fill" onClick={() => append(createNewCoveredContract(severities))}>
             {t("VaultEditor.add-member")}
           </button>
         )}

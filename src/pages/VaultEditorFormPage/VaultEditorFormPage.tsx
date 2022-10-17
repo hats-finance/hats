@@ -16,7 +16,7 @@ import {
 } from ".";
 import { IEditedVaultDescription } from "./types";
 import { uploadVaultDescription } from "./vaultService";
-import { descriptionToEdit, editedToDescription, createNewVaultDescription } from "./utils";
+import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { IVaultDescription } from "types/types";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import "./index.scss";
@@ -40,7 +40,7 @@ const VaultEditorFormPage = () => {
         setIpfsDate(new Date(lastModified));
       }
       const newVaultDescription = await response.json();
-      handleReset(descriptionToEdit(fixObject(newVaultDescription)));
+      handleReset(descriptionToEditedForm(fixObject(newVaultDescription)));
     } catch (error) {
       console.error(error);
     } finally {
