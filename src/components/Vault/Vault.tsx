@@ -13,16 +13,16 @@ import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { ForwardedRef, forwardRef } from "react";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
-import "../../styles/Vault/Vault.scss";
+import "styles/Vault/Vault.scss";
 
 interface IProps {
-  data: IVault,
-  expanded: boolean,
-  setExpanded?: any,
-  preview?: boolean,
+  data: IVault;
+  expanded: boolean;
+  setExpanded?: any;
+  preview?: boolean;
 }
 
-const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
+const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -35,7 +35,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
       className={props.expanded ? "arrow open" : "arrow"}
       onClick={() => {
         if (props.setExpanded) {
-          props.setExpanded(props.expanded ? null : props.data)
+          props.setExpanded(props.expanded ? null : props.data);
         }
       }}>
       <ArrowIcon />
@@ -50,7 +50,7 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
       </div>
       {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
     </>
-  )
+  );
 
   return (
     <>
@@ -58,7 +58,9 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
           <div className="project-name-wrapper">
-            <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
+            {description?.["project-metadata"]?.icon && (
+              <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
+            )}
             <div className="name-source-wrapper">
               <div className="project-name">
                 {description?.["project-metadata"].name}
@@ -71,29 +73,20 @@ const Vault = forwardRef((props: IProps, ref: ForwardedRef<HTMLTableRowElement>)
 
         {screenSize === ScreenSize.Desktop && (
           <>
-            <td className="rewards-cell">
-              {maxRewards}
-            </td>
+            <td className="rewards-cell">{maxRewards}</td>
             <td>
               <VaultAPY vault={props.data} />
             </td>
             <td>
-              <VaultAction
-                data={props.data}
-                withdrawRequests={withdrawRequests}
-                preview={props.preview} />
+              <VaultAction data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />
             </td>
           </>
         )}
         {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
       </tr>
-      {props.expanded &&
-        <VaultExpanded
-          data={props.data}
-          withdrawRequests={withdrawRequests}
-          preview={props.preview} />}
+      {props.expanded && <VaultExpanded data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />}
     </>
-  )
-});
+  );
+};
 
-export default Vault;
+export const Vault = forwardRef(VaultComponent);

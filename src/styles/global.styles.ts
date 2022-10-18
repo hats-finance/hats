@@ -40,6 +40,7 @@ export const GlobalStyle = createGlobalStyle`
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         letter-spacing: 1px;
+        overflow: hidden;
     }
 
     .vaults-wrapper {
@@ -164,6 +165,7 @@ export const GlobalStyle = createGlobalStyle`
 
     /* Remove inputs border highlight */
     input:focus,
+    fieldset:focus,
     select:focus,
     textarea:focus,
     button:focus {

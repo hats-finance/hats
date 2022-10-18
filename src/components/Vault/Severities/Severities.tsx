@@ -1,16 +1,16 @@
 
 import { useState } from "react";
-import { IVault, ISeverity } from "types/types";
+import { IVault, IVulnerabilitySeverity } from "types/types";
 import Severity from "./Severity";
 
 interface IProps {
-  severities: Array<ISeverity>
+  severities: Array<IVulnerabilitySeverity>
   vault: IVault
 }
 
 export default function Severities(props: IProps) {
   const [expandedSeverityIndex, setExpandedSeverityIndex] = useState();
-  const severities = props.severities?.map((severity: ISeverity, index: number) => {
+  const severities = props.severities?.map((severity: IVulnerabilitySeverity, index: number) => {
     return (
       <Severity
         key={index}

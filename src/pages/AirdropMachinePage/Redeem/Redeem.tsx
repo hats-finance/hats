@@ -1,4 +1,4 @@
-import Loading from "components/Shared/Loading";
+import { Loading } from "components";
 import { useContext } from "react";
 import { AirdropMachineContext } from "../CheckEligibility/CheckEligibility";
 import Eligible from "./Eligible/Eligible";

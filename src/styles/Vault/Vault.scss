@@ -1,5 +1,10 @@
 @import "../constants.scss";
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 tr {
   scroll-margin-top: $header-height * 2;
   border-bottom: 2px solid $dark-blue;
@@ -26,6 +31,8 @@ tr {
 }
 
 .arrow {
+  display: flex;
+  justify-content: center;
   cursor: pointer;
   transform: rotate(0deg);
   transition: transform 0.1s linear;

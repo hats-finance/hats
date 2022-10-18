@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { breakpointsDefinition } from "./../../../../styles/breakpoints.styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledBalance = styled.div`
   display: flex;

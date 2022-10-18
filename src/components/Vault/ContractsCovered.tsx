@@ -8,7 +8,7 @@ interface IProps {
   contracts: Array<{}>
 }
 
-export default function ContractsCovered(props: IProps) {
+export function ContractsCovered(props: IProps) {
   const chain = Chains[CHAINID];
 
   return (

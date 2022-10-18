@@ -1,11 +1,10 @@
 import { useEthers } from "@usedapp/core";
-import Modal from "components/Shared/Modal/Modal";
 import useModal from "hooks/useModal";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
-import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
+import { RedeemNftSuccess, Modal2 as Modal } from "components";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";
 import classNames from "classnames";

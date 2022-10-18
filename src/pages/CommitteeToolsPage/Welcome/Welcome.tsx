@@ -1,12 +1,11 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { VaultContext } from "../store";
-import CreateVaultModal from "../CreateVaultModal/CreateVaultModal";
+import { KeystoreContext, CreateKeystoreModal } from "components/Keystore";
 import "./index.scss";
 
 const Welcome = () => {
   const { t } = useTranslation();
-  const vaultContext = useContext(VaultContext);
+  const keystoreContext = useContext(KeystoreContext);
   const [showCreateVault, setShowCreateVault] = useState(false);
 
   return (
@@ -39,14 +38,14 @@ const Welcome = () => {
         {t("CommitteeTools.Welcome.step-3-content")}
       </p>
       <div className="committee-welcome__button-container">
-        {vaultContext.isCreated ? (
+        {keystoreContext.isCreated ? (
           <button
             onClick={() => {
               if (
                 prompt(t("CommitteeTools.Welcome.delete-confirmation")) ===
                 t("CommitteeTools.Welcome.delete-yes")
               ) {
-                vaultContext.deleteVault();
+                keystoreContext.deleteKeystore();
               }
             }}
           >
@@ -59,7 +58,7 @@ const Welcome = () => {
         )}
       </div>
       {showCreateVault && (
-        <CreateVaultModal setShowModal={setShowCreateVault} />
+        <CreateKeystoreModal setShowModal={setShowCreateVault} />
       )}
     </div>
   );
