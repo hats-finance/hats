@@ -1,6 +1,8 @@
 import { useEffect } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { getPath } from "utils/objects.utils";
 import { FormInput, FormSelectInput } from "components";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { createNewCoveredContract } from "../../utils";
@@ -15,15 +17,15 @@ type ContractCoveredFormProps = {
 
 export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
   const { t } = useTranslation();
-  const { register, watch, control, setValue, getValues, getFieldState, formState } = useFormContext<IEditedVaultDescription>();
+  const { register, watch, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const contracts = watch("contracts-covered");
   const contractsCount = contracts.length;
-  
-  const severities = watch('vulnerability-severities-spec.severities');
-  const severitiesOptions = severities.map((severity, index) => ({
+
+  const severities = watch("vulnerability-severities-spec.severities");
+  const severitiesOptions = severities.map((severity) => ({
     label: severity.name,
-    value: severity.id,
+    value: severity.id as string,
   }));
 
   useEffect(() => {
@@ -44,7 +46,6 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
             <div className="name">
               <FormInput
                 {...register(`contracts-covered.${index}.name`)}
-                isDirty={getFieldState(`contracts-covered.${index}.name`, formState).isDirty}
                 label={t("VaultEditor.contract-name")}
                 colorable
                 placeholder={t("VaultEditor.contract-name-placeholder")}
@@ -55,15 +56,15 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
                 <Controller
                   control={control}
                   name={`contracts-covered.${index}.severities`}
-                  render={({ field: { ...configProps } }) => (
+                  render={({ field, formState }) => (
                     <FormSelectInput
-                      isDirty={getFieldState(`contracts-covered.${index}.severities`, formState).isDirty}
+                      isDirty={getPath(formState.dirtyFields, field.name)}
                       label={t("VaultEditor.contract-severities")}
                       placeholder={t("VaultEditor.contract-severities-placeholder")}
                       colorable
                       options={severitiesOptions}
                       multiple
-                      {...configProps}
+                      {...field}
                     />
                   )}
                 />
@@ -74,7 +75,6 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
           <div>
             <FormInput
               {...register(`contracts-covered.${index}.address`)}
-              isDirty={getFieldState(`contracts-covered.${index}.address`, formState).isDirty}
               label={t("VaultEditor.contract-address")}
               pastable
               colorable

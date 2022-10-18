@@ -14,4 +14,8 @@ export const StyledFormSelectInputItem = styled.label`
   &:hover {
     background-color: var(--moderate-blue);
   }
+
+  span {
+    padding-left: ${getSpacing(1)};
+  }
 `;

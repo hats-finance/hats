@@ -1,9 +1,10 @@
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray } from "react-hook-form";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultDescription } from "../types";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 
 export function CommitteeMembersList() {
-  const { control } = useFormContext<IEditedVaultDescription>();
+  const { control } = useEnhancedFormContext<IEditedVaultDescription>();
   const { fields: members, append, remove } = useFieldArray({ control, name: "committee.members" });
 
   return (

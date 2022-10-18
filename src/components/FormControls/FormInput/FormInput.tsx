@@ -3,6 +3,7 @@ import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
 import { StyledFormInput } from "./styles";
+import { parseIsDirty } from "../utils";
 
 const DEFAULT_ROWS = 10;
 
@@ -20,7 +21,16 @@ type FormInputProps = {
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
 function FormInputComponent(
-  { pastable = false, copyable = false, removable = false, type = "text", colorable = false, isDirty = false, label, ...props }: FormInputProps,
+  {
+    pastable = false,
+    copyable = false,
+    removable = false,
+    type = "text",
+    colorable = false,
+    isDirty = false,
+    label,
+    ...props
+  }: FormInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
@@ -55,7 +65,7 @@ function FormInputComponent(
   };
 
   return (
-    <StyledFormInput isDirty={isDirty && colorable} type={type} withExtraicons={extraIcons}>
+    <StyledFormInput isDirty={parseIsDirty(isDirty) && colorable} type={type} withExtraicons={extraIcons}>
       {label && <label htmlFor={props.name}>{label}</label>}
 
       <div className="input-container">

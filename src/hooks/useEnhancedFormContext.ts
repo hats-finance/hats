@@ -1,15 +1,15 @@
-import { FieldValues, useFormContext, UseFormReturn } from "react-hook-form";
+import { parseIsDirty } from "./../components/FormControls/utils";
+import { FieldValues, useFormContext, UseFormRegister, UseFormReturn } from "react-hook-form";
+import { getPath } from "utils/objects.utils";
 
 function useEnhancedFormContext<T extends FieldValues>(): UseFormReturn<T> {
   const context = useFormContext<T>();
 
-  const overriddenRegister = (name) => {
-    const isDirty = context.getFieldState(name, context.formState).isDirty;
-
-    return { ...context.register(name), isDirty };
+  const overriddenRegister: UseFormRegister<T> = (name) => {
+    return { ...context.register(name), isDirty: parseIsDirty(getPath(context.formState.dirtyFields, name)) };
   };
 
   return { ...context, register: overriddenRegister };
 }
 
-export default useEnhancedFormContext;
+export { useEnhancedFormContext };

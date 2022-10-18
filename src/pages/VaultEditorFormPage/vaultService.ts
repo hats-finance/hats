@@ -1,6 +1,6 @@
 import { IVaultDescription } from "types/types";
 import axios from "axios";
-import { getPath, setPath } from "./objectUtils";
+import { getPath, setPath } from "utils/objects.utils";
 import { VAULT_SERVICE } from "settings";
 
 function isBlob(uri: string) {

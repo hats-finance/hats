@@ -5,7 +5,7 @@ export const StyledFormSelectInput = styled.div`
   width: 100%;
   position: relative;
 
-  label {
+  label.input-label {
     display: block;
     color: var(--white);
     padding-bottom: ${getSpacing(1)};

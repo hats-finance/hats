@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription, IVulnerabilitySeverity } from "types/types";
+import { ICommitteeMember, IVaultDescription } from "types/types";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
-import { IEditedContractCovered, IEditedVaultDescription } from "./types";
+import { IEditedContractCovered, IEditedVaultDescription, IEditedVulnerabilitySeverity } from "./types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
   name: "",
@@ -10,13 +10,18 @@ export const createNewCommitteeMember = (): ICommitteeMember => ({
   "image-ipfs-link": "",
 });
 
-export const createNewCoveredContract = (severities?: IVulnerabilitySeverity[]): IEditedContractCovered => ({
-  name: "",
-  address: "",
-  severities: severities?.map((s) => s.id) || [],
-});
+export const createNewCoveredContract = (severities?: IEditedVulnerabilitySeverity[]): IEditedContractCovered => {
+  const severitiesIds = severities?.map((s) => s.id as string) || [];
+  severitiesIds.sort();
 
-export const createNewVulnerabilitySeverity = (): IVulnerabilitySeverity => ({
+  return {
+    name: "",
+    address: "",
+    severities: severitiesIds,
+  }
+};
+
+export const createNewVulnerabilitySeverity = (): IEditedVulnerabilitySeverity => ({
   id: uuid(),
   name: "",
   index: 0,
@@ -58,7 +63,7 @@ export const createNewVaultDescription = (): IEditedVaultDescription => {
   };
 };
 
-function severitiesToContractsCoveredForm(severities: IVulnerabilitySeverity[]): IEditedContractCovered[] {
+function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
   let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
@@ -75,20 +80,20 @@ function severitiesToContractsCoveredForm(severities: IVulnerabilitySeverity[]):
           contractsForm[contractIndex] = {
             name,
             address,
-            severities: [...contract.severities, severity.id],
+            severities: [...contract.severities, severity.id as string],
           };
         } else {
           contractsForm.push({
             name,
             address,
-            severities: [severity.id],
+            severities: [severity.id as string],
           });
         }
       });
     } else {
       contractsForm.push({
         ...createNewCoveredContract(),
-        severities: [severity.id],
+        severities: [severity.id as string],
       });
     }
   });
@@ -97,7 +102,7 @@ function severitiesToContractsCoveredForm(severities: IVulnerabilitySeverity[]):
 }
 
 export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
-  const severitiesWithIds = vaultDescription.severities.map(sev => ({...sev, id: uuid()}));
+  const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({ ...sev, id: uuid() }));
 
   return {
     ...vaultDescription,
@@ -115,15 +120,22 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
 
   return {
     ...editedVaultDescription,
-    severities: editedVaultDescription["vulnerability-severities-spec"].severities.map((severity) => ({
-      ...severity,
-      "nft-metadata": {
-        ...severity["nft-metadata"],
-        description: vaultName + severity["nft-metadata"].description,
-      },
-      "contracts-covered": editedVaultDescription["contracts-covered"]
-        .filter((contract) => contract.severities?.includes(severity.id))
-        .map((contract) => ({ [contract.name]: contract.address })),
-    })),
+    severities: editedVaultDescription["vulnerability-severities-spec"].severities.map((severity) => {
+      const newSeverity = { ...severity };
+
+      const severityId = newSeverity.id as string;
+      if (newSeverity.id) delete newSeverity.id;
+
+      return {
+        ...newSeverity,
+        "nft-metadata": {
+          ...newSeverity["nft-metadata"],
+          description: vaultName + newSeverity["nft-metadata"].description,
+        },
+        "contracts-covered": editedVaultDescription["contracts-covered"]
+          .filter((contract) => contract.severities?.includes(severityId))
+          .map((contract) => ({ [contract.name]: contract.address })),
+      };
+    }),
   };
 }

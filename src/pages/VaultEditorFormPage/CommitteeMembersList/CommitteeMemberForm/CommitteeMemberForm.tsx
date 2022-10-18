@@ -1,11 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { UseFieldArrayRemove, useFormContext } from "react-hook-form";
+import { UseFieldArrayRemove } from "react-hook-form";
 import { FormInput, FormIconInput } from "components";
+import {useEnhancedFormContext} from "hooks/useEnhancedFormContext";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { ICommitteeMember } from "types/types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";
+
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -15,7 +17,7 @@ type CommitteeMemberFormProps = {
 
 const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
-  const { register, watch, formState, getFieldState } = useFormContext<IEditedVaultDescription>();
+  const { register, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const members = watch("committee.members") as ICommitteeMember[];
   const membersCount = members.length;
@@ -29,7 +31,6 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
           <div className="inputs">
             <FormInput
               {...register(`committee.members.${index}.name`)}
-              isDirty={getFieldState(`committee.members.${index}.name`, formState).isDirty}
               label={t("VaultEditor.member-name")}
               colorable
               placeholder={t("VaultEditor.member-name-placeholder")}
@@ -37,7 +38,6 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
 
             <FormInput
               {...register(`committee.members.${index}.twitter-link`)}
-              isDirty={getFieldState(`committee.members.${index}.twitter-link`, formState).isDirty}
               label={t("VaultEditor.member-twitter")}
               pastable
               colorable
@@ -46,7 +46,6 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
 
             <FormInput
               {...register(`committee.members.${index}.address`)}
-              isDirty={getFieldState(`committee.members.${index}.address`, formState).isDirty}
               label={t("VaultEditor.member-address")}
               pastable
               colorable
@@ -57,7 +56,6 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
           <div>
             <FormIconInput
               {...register(`committee.members.${index}.image-ipfs-link`)}
-              isDirty={getFieldState(`committee.members.${index}.image-ipfs-link`, formState).isDirty}
               label={t("VaultEditor.member-image")}
               colorable
             />

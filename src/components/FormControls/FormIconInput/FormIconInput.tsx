@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import AddIcon from "assets/icons/add.icon.svg";
 import { StyledFormIconInput } from "./styles";
+import { parseIsDirty } from "../utils";
 
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -42,7 +43,7 @@ function FormIconInputComponent({ onChange, colorable = false, isDirty = false, 
   };
 
   return (
-    <StyledFormIconInput isDirty={isDirty && colorable}>
+    <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable}>
       <input
         {...props}
         type="hidden"

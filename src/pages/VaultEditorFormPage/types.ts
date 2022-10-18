@@ -1,7 +1,7 @@
 import { ICommitteeMember, IVulnerabilitySeverity } from "types/types";
 
 export interface IVulnerabilitySeveritiesTemplate {
-  severities: IVulnerabilitySeverity[];
+  severities: IEditedVulnerabilitySeverity[];
   name: string;
   indexArray: number[];
 }
@@ -11,6 +11,8 @@ export interface IEditedContractCovered {
   address: string;
   severities: string[]; // IVulnerabilitySeverity.name
 }
+
+export type IEditedVulnerabilitySeverity = IVulnerabilitySeverity & { id?: string };
 
 export interface IEditedVaultDescription {
   "project-metadata": {

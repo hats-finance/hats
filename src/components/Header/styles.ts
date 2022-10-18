@@ -10,7 +10,7 @@ export const StyledHeader = styled.header`
   justify-content: space-between;
   background-color: var(--dark-blue);
   align-items: center;
-  z-index: 1;
+  z-index: 3;
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
     padding: 10px;
