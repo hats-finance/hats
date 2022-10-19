@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSize, VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
+import humanizeDuration from "humanize-duration";
+import { HatsModal, NFTPrize, Media, ContractsCovered } from "components";
+import useModal from "hooks/useModal";
 import { RootState } from "../../../reducers";
 import { IVault, IVulnerabilitySeverity } from "../../../types/types";
-import humanizeDuration from "humanize-duration";
-import { useState } from "react";
-import { Modal1 as Modal, NFTPrize, Media, ContractsCovered } from "components";
 import { formatNumber, ipfsTransformUri } from "../../../utils";
 import ArrowIcon from "../../../assets/icons/arrow.icon";
 import { useSeverityReward } from "../hooks/useSeverityReward";
@@ -20,9 +21,9 @@ interface IProps {
 }
 
 export default function Severity(props: IProps) {
-  const [showNFTModal, setShowNFTModal] = useState(false);
+  const {isShowing: isShowingNFTModal, show: showNFTModal, hide: hideNFTModal} = useModal();
+  const {isShowing: isShowingContractsModal, show: showContractsModal, hide: hideContractsModal} = useModal();
   const [modalNFTData, setModalNFTData] = useState(null);
-  const [showContractsModal, setShowContractsModal] = useState(false);
   const [modalContractsData, setModalContractsData] = useState(null);
   const { description, rewardsLevels, hackerVestedRewardSplit, hackerRewardSplit,
     committeeRewardSplit, swapAndBurnSplit, governanceHatRewardSplit, hackerHatRewardSplit, vestingDuration, stakingTokenSymbol } = props.vault;
@@ -53,7 +54,7 @@ export default function Severity(props: IProps) {
           {severity?.["nft-metadata"] &&
             <div className="severity-data-item">
               <span className="vault-expanded-subtitle">NFT:</span>
-              <div className="nft-image-wrapper" onClick={() => { setShowNFTModal(true); setModalNFTData(severity as any); }}>
+              <div className="nft-image-wrapper" onClick={() => { showNFTModal(); setModalNFTData(severity as any); }}>
                 <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
                 <span className="view-more">
                   View NFT info
@@ -86,24 +87,20 @@ export default function Severity(props: IProps) {
                 </>
               )
             }
-            <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); setShowContractsModal(true); }}>
+            <span className="view-more" onClick={() => { setModalContractsData(severity?.["contracts-covered"] as any); showContractsModal(); }}>
               View Contracts Covered
             </span>
           </div>
         </div>
       )}
-      {
-        showNFTModal &&
-        <Modal title="NFT PRIZE" setShowModal={setShowNFTModal} maxWidth="600px" width="60%" height="fit-content">
-          <NFTPrize data={modalNFTData as any} />
-        </Modal>
-      }
-      {
-        showContractsModal &&
-        <Modal title="CONTRACTS COVERED" setShowModal={setShowContractsModal} height="fit-content">
-          <div className="contracts-covered-modal-wrapper"><ContractsCovered contracts={modalContractsData as any} /></div>
-        </Modal>
-      }
+
+      <HatsModal isShowing={isShowingNFTModal} title="NFT PRIZE" onHide={hideNFTModal} withTitleDivider>
+        <NFTPrize data={modalNFTData as any} />
+      </HatsModal>
+
+      <HatsModal isShowing={isShowingContractsModal} title="CONTRACTS COVERED" onHide={hideContractsModal} withTitleDivider >
+        <ContractsCovered contracts={modalContractsData as any} />
+      </HatsModal>
     </div>
   )
 }

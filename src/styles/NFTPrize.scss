@@ -2,19 +2,19 @@
 
 .nft-prize-wrapper {
   display: flex;
-  padding: $modal-element-padding;
   flex-direction: column;
   align-items: center;
-  border-top: 1px solid $dark-turquoise;
+  max-width: 500px;
+  
   .nft-name {
-    margin-bottom: 50px;
+    margin-bottom: 30px;
     color: $white;
     font-weight: bold;
     margin-right: auto;
   }
   .nft-info {
     margin-right: auto;
-    margin-top: 50px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
     color: $white;
@@ -25,16 +25,10 @@
     }
     .data {
       font-size: $xsmall;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
   }
   .nft-prize__video {
     max-height: 350px;
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .nft-prize-wrapper {
-    padding: $modal-element-padding-mobile;
   }
 }
