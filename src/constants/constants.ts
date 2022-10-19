@@ -160,10 +160,10 @@ export const WhereverConfig = {
   },
   [ChainId.Rinkeby]: {
     partnerKey: "",
-    env: "development"
+    env: "staging"
   },
   [ChainId.Goerli]: {
     partnerKey: "6bfd58ee-8fc8-4b5d-96f4-9562c7095e06",
-    env: "development"
+    env: "staging"
   }
 };
