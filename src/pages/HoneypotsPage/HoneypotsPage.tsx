@@ -16,7 +16,7 @@ interface HoneypotsPageProps {
   showDeposit?: boolean;
 }
 
-const HoneypotsPage = ({ showDeposit }: HoneypotsPageProps) => {
+const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
@@ -33,7 +33,7 @@ const HoneypotsPage = ({ showDeposit }: HoneypotsPageProps) => {
     [tokenPrices]
   );
 
-  const closeModal = () => navigate(`${RoutePaths.vaults}`);
+  const closeDeposit = () => navigate(`${RoutePaths.vaults}`);
 
   const scrollRef = (element) => {
     if (element) element.scrollIntoView();
@@ -116,16 +116,24 @@ const HoneypotsPage = ({ showDeposit }: HoneypotsPageProps) => {
           </tbody>
         </table>
       )}
-      {showDeposit && selectedVault && (
+      
+      {selectedVault && (
+        <HatsModal isShowing={showDeposit} title={selectedVault.description?.["project-metadata"].name!} titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)} onHide={closeDeposit} removeHorizontalPadding>
+          <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
+        </HatsModal>
+      )}
+
+      {/* {showDeposit && selectedVault && (
+
         <Modal
           title={selectedVault.description?.["project-metadata"].name!}
-          setShowModal={closeModal}
+          setShowModal={closeDeposit}
           height="fit-content"
           maxHeight="100vh"
           icon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}>
-          <DepositWithdraw data={selectedVault!} setShowModal={closeModal} />
+          <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
         </Modal>
-      )}
+      )} */}
     </StyledHoneypotsPage>
   );
 };

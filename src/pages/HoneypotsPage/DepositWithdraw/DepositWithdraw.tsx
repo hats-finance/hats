@@ -191,7 +191,9 @@ export function DepositWithdraw(props: IProps) {
         </div>
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
-      <Assets vault={props.data} />
+      <div>
+        <Assets vault={props.data} />
+      </div>
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
