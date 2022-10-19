@@ -4,10 +4,9 @@
   display: flex;
   flex-direction: column;
   color: $white;
-  padding: $modal-element-padding;
   white-space: pre-line;
-  max-width: 600px;
-  padding-top: 0px;
+  max-width: 450px;
+
   .embassy-nft-ticket__icon {
     width: 100px;
     align-self: center;
