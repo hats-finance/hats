@@ -1,25 +1,30 @@
+import { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { useTransactions } from "@usedapp/core";
+import ArrowIcon from "assets/icons/arrow.icon";
 import { StyledModal, ModalContainer } from "./styles";
-import { useCallback, useEffect, useState } from "react";
 
 interface HatsModalProps {
   isShowing: boolean;
-  onHide: () => void;
+  onHide?: () => void;
+  onBackButton?: () => void | null;
   children: React.ReactElement;
   title?: string;
   titleIcon?: string | React.ReactElement;
   withTitleDivider?: boolean;
   removeHorizontalPadding?: boolean;
   capitalizeTitle?: boolean;
+  disableClose?: boolean;
 }
 
 export function HatsModal({
   isShowing,
-  onHide,
+  onHide = () => {},
+  onBackButton,
   children,
   title,
   titleIcon,
+  disableClose = false,
   withTitleDivider = false,
   removeHorizontalPadding = false,
   capitalizeTitle = false,
@@ -28,11 +33,13 @@ export function HatsModal({
   const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
 
   const handleOnHide = useCallback(() => {
+    if (disableClose) return;
+
     if (!inTransaction) {
       setLocalShowModal(false);
       setTimeout(() => onHide(), 150);
     }
-  }, [inTransaction, onHide]);
+  }, [inTransaction, onHide, disableClose]);
 
   const escapeHandler = useCallback(
     (event: KeyboardEvent) => {
@@ -53,18 +60,26 @@ export function HatsModal({
         <StyledModal isShowing={localShowModal}>
           <div className="overlay" onClick={handleOnHide} />
           <ModalContainer
+            disableClose={disableClose}
             withIcon={!!titleIcon}
             withTitleDivider={withTitleDivider}
             removeHorizontalPadding={removeHorizontalPadding}
             capitalizeTitle={capitalizeTitle}>
             <div className="header">
               <div className="title">
+                {onBackButton && (
+                  <div className="back-button" onClick={onBackButton}>
+                    <ArrowIcon />
+                  </div>
+                )}
                 {titleIcon && typeof titleIcon === "string" ? <img src={titleIcon} alt="icon" /> : titleIcon}
                 <span>{title && <span>{title}</span>}</span>
               </div>
-              <button disabled={inTransaction} type="button" className="close" onClick={handleOnHide}>
-                <span aria-hidden="true">&times;</span>
-              </button>
+              {!disableClose && (
+                <button disabled={inTransaction} type="button" className="close" onClick={handleOnHide}>
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              )}
             </div>
             <div className="content">{children}</div>
           </ModalContainer>

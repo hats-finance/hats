@@ -40,8 +40,9 @@ export const ModalContainer = styled.div<{
   removeHorizontalPadding: boolean;
   capitalizeTitle: boolean;
   withIcon: boolean;
+  disableClose: boolean;
 }>(
-  ({ withTitleDivider, removeHorizontalPadding, capitalizeTitle, withIcon }) => css`
+  ({ withTitleDivider, removeHorizontalPadding, capitalizeTitle, withIcon, disableClose }) => css`
     position: relative;
     background: var(--field-blue);
     max-width: calc(100vw - ${getSpacing(6)});
@@ -69,6 +70,11 @@ export const ModalContainer = styled.div<{
       css`
         border-bottom: 1px solid var(--turquoise);
       `}
+        
+      ${disableClose &&
+      css`
+        padding: ${getSpacing(2.5)} ${getSpacing(4)};
+      `}
 
       .title {
         display: flex;
@@ -86,6 +92,21 @@ export const ModalContainer = styled.div<{
           height: 50px;
           border-radius: 50px;
           margin-right: ${getSpacing(2)};
+        }
+
+        .back-button {
+          cursor: pointer;
+          padding-right: ${getSpacing(2)};
+
+          span {
+            margin-left: ${getSpacing(1)};
+          }
+          
+          svg {
+            transform: rotate(180deg);
+            height: 15px;
+            width: 15px;
+          }
         }
       }
 

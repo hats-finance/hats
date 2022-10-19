@@ -18,7 +18,7 @@ export interface IKeystoreContext {
     addKey: (key: IStoredKey) => void
     removeKey: (key: IStoredKey) => void
     createKeystore: (password: string) => void
-    unlockKeystore: (password: string) => void
+    unlockKeystore: (password: string) => Promise<void>
     setSelectedAlias: (alias: string) => void
     deleteKeystore: () => void
     deleteKey: (key: IStoredKey) => void
