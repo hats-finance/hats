@@ -44,13 +44,14 @@ export const ModalContainer = styled.div<{
   ({ withTitleDivider, removeHorizontalPadding, capitalizeTitle, withIcon }) => css`
     position: relative;
     background: var(--field-blue);
-    max-width: 700px;
-    max-height: calc(100vh - ${getSpacing(4)});
+    max-width: calc(100vw - ${getSpacing(6)});
+    max-height: calc(100vh - ${getSpacing(6)});
     overflow: auto;
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
       max-width: unset;
-      width: calc(100vw - ${getSpacing(4)});
+      width: calc(100vw - ${getSpacing(2)});
+      max-height: calc(100vh - ${getSpacing(2)});
     }
 
     .header {
@@ -101,6 +102,10 @@ export const ModalContainer = styled.div<{
       ${!removeHorizontalPadding &&
       css`
         padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(3)};
+
+        @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(3)};
+        }
       `}
     }
   `

@@ -2,11 +2,11 @@
 
 .redeemed-wrapper {
   color: $white;
-  padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: 0;
+  max-width: 400px;
+
   .redeemed__redeemed-icon {
     width: 100px;
     align-self: center;

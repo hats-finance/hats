@@ -11,7 +11,7 @@ import Welcome from 'components/Welcome/Welcome';
 import Cookies from 'components/Cookies/Cookies';
 import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
-import { Modal2 as Modal } from 'components';
+import { HatsModal } from 'components';
 import AirdropPrompt from 'pages/AirdropMachinePage/AirdropPrompt/AirdropPrompt';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
 import { AppLayout, AppContent, ContentWrapper, StyledApp } from './styles';
@@ -20,7 +20,7 @@ const BasicLayout = (): JSX.Element => {
   const dispatch = useDispatch();
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
-  const { isShowing: showAirdropPrompt, toggle: toggleAirdropPrompt } = useModal();
+  const { isShowing, show, hide } = useModal();
   const { account } = useEthers();
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
@@ -28,7 +28,7 @@ const BasicLayout = (): JSX.Element => {
     dispatch(changeScreenSize(screenSize.matches ? ScreenSize.Desktop : ScreenSize.Mobile));
   });
 
-  useCheckRedeemableNfts(toggleAirdropPrompt);
+  useCheckRedeemableNfts(show);
 
   const getBannersAndModals = () => (
     <>
@@ -37,9 +37,9 @@ const BasicLayout = (): JSX.Element => {
       {hasSeenWelcomePage === '1' && <EmbassyNotificationBar />}
 
       {account && hasSeenWelcomePage === '1' && (
-        <Modal isShowing={showAirdropPrompt} hide={toggleAirdropPrompt}>
-          <AirdropPrompt closePrompt={toggleAirdropPrompt} />
-        </Modal>
+        <HatsModal isShowing={isShowing} onHide={hide}>
+          <AirdropPrompt closePrompt={hide} />
+        </HatsModal>
       )}
     </>
   );
