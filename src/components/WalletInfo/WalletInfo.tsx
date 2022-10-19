@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useVaults } from "hooks/useVaults";
 import { Colors } from "constants/constants";
 import useModal from "hooks/useModal";
-import { Dot, MyAccount, TransactionInfo, HatsModal } from "components";
+import { Dot, MyAccount, TransactionInfo, Modal } from "components";
 import { StyledNetworkName, StyledWalletInfo, StyledWalletUser } from "./styles";
 
 export default function WalletInfo() {
@@ -37,9 +37,9 @@ export default function WalletInfo() {
 
       <StyledNetworkName className="onlyDesktop">{ChainId[chainId!]}</StyledNetworkName>
 
-      <HatsModal isShowing={isShowing} onHide={hide}>
+      <Modal isShowing={isShowing} onHide={hide}>
         <MyAccount />
-      </HatsModal>
+      </Modal>
     </StyledWalletInfo>
   );
 }

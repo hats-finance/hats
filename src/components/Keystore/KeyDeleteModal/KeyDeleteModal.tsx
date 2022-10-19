@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { HatsModal } from "components";
+import { Modal } from "components";
 import { IStoredKey } from "../types";
 import { StyledKeyDeleteModal } from "./styles";
 import { useContext } from "react";
@@ -16,7 +16,7 @@ function KeyDeleteModal({ isShowing, onHide, keyToDelete }: KeyDeleteModalProps)
   const keystoreContext = useContext(KeystoreContext);
 
   return (
-    <HatsModal isShowing={isShowing} title={t("CommitteeTools.keymodal.delete-keypair")} onHide={onHide} withTitleDivider>
+    <Modal isShowing={isShowing} title={t("CommitteeTools.keymodal.delete-keypair")} onHide={onHide} withTitleDivider>
       <StyledKeyDeleteModal>
         <p className="description">{t("CommitteeTools.keymodal.delete-text")}</p>
         <div className="button-container">
@@ -33,7 +33,7 @@ function KeyDeleteModal({ isShowing, onHide, keyToDelete }: KeyDeleteModalProps)
           </button>
         </div>
       </StyledKeyDeleteModal>
-    </HatsModal>
+    </Modal>
   );
 }
 

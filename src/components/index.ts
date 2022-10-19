@@ -15,4 +15,4 @@ export { Dot } from "./Dot/Dot";
 export { MyAccount } from "./MyAccount/MyAccount";
 export { TransactionInfo } from "./TransactionInfo/TransactionInfo";
 export { SafePeriodBar } from "./SafePeriodBar/SafePeriodBar";
-export { HatsModal } from "./HatsModal/HatsModal";
+export { Modal } from "./Modal/Modal";

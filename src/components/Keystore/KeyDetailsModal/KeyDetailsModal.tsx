@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { HatsModal } from "components";
+import { Modal } from "components";
 import CopyToClipboard from "components/CopyToClipboard";
 import { IStoredKey } from "../types";
 import { StyledKeyDetailsModal } from "./styles";
@@ -14,7 +14,7 @@ function KeyDetailsModal({ isShowing, onHide, keyToShow }: KeyDetailsModalProps)
   const { t } = useTranslation();
 
   return (
-    <HatsModal isShowing={isShowing} title={t("CommitteeTools.KeyDetails.title")} onHide={onHide} withTitleDivider>
+    <Modal isShowing={isShowing} title={t("CommitteeTools.KeyDetails.title")} onHide={onHide} withTitleDivider>
       <StyledKeyDetailsModal>
         <p className="description">{t("CommitteeTools.KeyDetails.description")}</p>
         <div className="result__copy">
@@ -32,7 +32,7 @@ function KeyDetailsModal({ isShowing, onHide, keyToShow }: KeyDetailsModalProps)
           <CopyToClipboard value={keyToShow.publicKey} />
         </div>
       </StyledKeyDetailsModal>
-    </HatsModal>
+    </Modal>
   );
 }
 

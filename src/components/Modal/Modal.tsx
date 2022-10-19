@@ -4,7 +4,7 @@ import { useTransactions } from "@usedapp/core";
 import ArrowIcon from "assets/icons/arrow.icon";
 import { StyledModal, ModalContainer } from "./styles";
 
-interface HatsModalProps {
+interface ModalProps {
   isShowing: boolean;
   onHide?: () => void;
   onBackButton?: () => void | null;
@@ -17,7 +17,7 @@ interface HatsModalProps {
   disableClose?: boolean;
 }
 
-export function HatsModal({
+export function Modal({
   isShowing,
   onHide = () => {},
   onBackButton,
@@ -28,7 +28,7 @@ export function HatsModal({
   withTitleDivider = false,
   removeHorizontalPadding = false,
   capitalizeTitle = false,
-}: HatsModalProps) {
+}: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
   const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
 

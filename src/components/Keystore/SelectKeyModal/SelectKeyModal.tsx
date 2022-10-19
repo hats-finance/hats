@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { HatsModal } from "components";
+import { Modal } from "components";
 import { IStoredKey } from "../types";
 import { KeystoreContext } from "../store";
 import GenerateKey from "./GenerateKey/GenerateKey";
@@ -107,9 +107,9 @@ export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
   };
 
   return (
-    <HatsModal isShowing={isShowing} title={titleByAction()} onHide={handleOnFinish} onBackButton={handleOnBackButton()} withTitleDivider>
+    <Modal isShowing={isShowing} title={titleByAction()} onHide={handleOnFinish} onBackButton={handleOnBackButton()} withTitleDivider>
       <div className="select-key-modal-wrapper">{byAction(action)}</div>
-    </HatsModal>
+    </Modal>
   );
 }
 

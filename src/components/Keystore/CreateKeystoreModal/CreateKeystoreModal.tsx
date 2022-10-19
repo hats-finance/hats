@@ -1,6 +1,6 @@
-import { HatsModal } from "components/HatsModal/HatsModal";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal } from "components/Modal/Modal";
 import { KeystoreContext } from "../store";
 import "./index.scss";
 
@@ -25,7 +25,7 @@ export function CreateKeystoreModal({ isShowing, onHide = () => {} }: CreateKeys
   };
 
   return (
-    <HatsModal
+    <Modal
       isShowing={isShowing}
       title={t("CommitteeTools.Welcome.create-title")}
       onHide={onHide}
@@ -52,6 +52,6 @@ export function CreateKeystoreModal({ isShowing, onHide = () => {} }: CreateKeys
           {t("CommitteeTools.create-vault")}
         </button>
       </div>
-    </HatsModal>
+    </Modal>
   );
 }

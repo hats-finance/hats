@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../../utils";
-import { Loading, HatsModal } from "components";
+import { Loading, Modal } from "components";
 import { IVault } from "../../../types/types";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
@@ -240,11 +240,11 @@ export function DepositWithdraw(props: IProps) {
         </button>
       </div>
       {pendingWallet && <Loading zIndex={10000} />}
-      <HatsModal
+      <Modal
         isShowing={showEmbassyPrompt}
         onHide={toggleEmbassyPrompt}>
         <EmbassyNftTicketPrompt />
-      </HatsModal>
+      </Modal>
     </div>
   )
 }

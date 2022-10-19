@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSize, VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 import humanizeDuration from "humanize-duration";
-import { HatsModal, NFTPrize, Media, ContractsCovered } from "components";
+import { Modal, NFTPrize, Media, ContractsCovered } from "components";
 import useModal from "hooks/useModal";
 import { RootState } from "../../../reducers";
 import { IVault, IVulnerabilitySeverity } from "../../../types/types";
@@ -94,13 +94,13 @@ export default function Severity(props: IProps) {
         </div>
       )}
 
-      <HatsModal isShowing={isShowingNFTModal} title="NFT PRIZE" onHide={hideNFTModal} withTitleDivider>
+      <Modal isShowing={isShowingNFTModal} title="NFT PRIZE" onHide={hideNFTModal} withTitleDivider>
         <NFTPrize data={modalNFTData as any} />
-      </HatsModal>
+      </Modal>
 
-      <HatsModal isShowing={isShowingContractsModal} title="CONTRACTS COVERED" onHide={hideContractsModal} withTitleDivider >
+      <Modal isShowing={isShowingContractsModal} title="CONTRACTS COVERED" onHide={hideContractsModal} withTitleDivider >
         <ContractsCovered contracts={modalContractsData as any} />
-      </HatsModal>
+      </Modal>
     </div>
   )
 }

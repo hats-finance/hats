@@ -2,7 +2,7 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import { useEthers } from "@usedapp/core";
-import { RedeemNftSuccess, HatsModal } from "components";
+import { RedeemNftSuccess, Modal } from "components";
 import useModal from "hooks/useModal";
 import { useVaults } from "hooks/useVaults";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
@@ -98,7 +98,7 @@ export default function CheckEligibility() {
         </button>
       </div>
 
-      <HatsModal isShowing={isShowing} onHide={hide}>
+      <Modal isShowing={isShowing} onHide={hide}>
         {redeemed ? (
           <RedeemNftSuccess redeemed={redeemed!} />
         ) : (
@@ -107,7 +107,7 @@ export default function CheckEligibility() {
             <Redeem />
           </AirdropMachineContext.Provider>
         )}
-      </HatsModal>
+      </Modal>
     </div>
   );
 }

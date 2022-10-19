@@ -6,7 +6,7 @@ import { useVaults } from "hooks/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
-import { Loading, Vault, HatsModal } from "components";
+import { Loading, Vault, Modal } from "components";
 import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
@@ -109,9 +109,9 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
       )}
       
       {selectedVault && (
-        <HatsModal isShowing={showDeposit} title={selectedVault.description?.["project-metadata"].name!} titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)} onHide={closeDeposit} removeHorizontalPadding>
+        <Modal isShowing={showDeposit} title={selectedVault.description?.["project-metadata"].name!} titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)} onHide={closeDeposit} removeHorizontalPadding>
           <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
-        </HatsModal>
+        </Modal>
       )}
     </StyledHoneypotsPage>
   );

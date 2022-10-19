@@ -1,4 +1,4 @@
-import { HatsModal } from "components/HatsModal/HatsModal";
+import { Modal } from "components/Modal/Modal";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { KeystoreContext } from "../store";
@@ -26,7 +26,7 @@ export function UnlockKeystoreModal({ isShowing, onHide }: UnlockKeystoreModalPr
   };
 
   return (
-    <HatsModal isShowing={isShowing} title={t("CommitteeTools.Welcome.unlock-title")} onHide={onHide} withTitleDivider disableClose>
+    <Modal isShowing={isShowing} title={t("CommitteeTools.Welcome.unlock-title")} onHide={onHide} withTitleDivider disableClose>
       <div className="unlock-vault-modal-wrapper">
         <label className="unlock-vault__label">{t("CommitteeTools.Welcome.unlock-vault-description")}</label>
         <input
@@ -41,6 +41,6 @@ export function UnlockKeystoreModal({ isShowing, onHide }: UnlockKeystoreModalPr
           {t("CommitteeTools.Welcome.unlock")}
         </button>
       </div>
-    </HatsModal>
+    </Modal>
   );
 }

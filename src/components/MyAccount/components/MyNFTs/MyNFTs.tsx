@@ -7,7 +7,7 @@ import { useVaults } from "hooks/useVaults";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { INFTTokenInfoRedeemed } from "types/types";
-import { Loading, RedeemNftSuccess, HatsModal, NFTCard } from "components";
+import { Loading, RedeemNftSuccess, Modal, NFTCard } from "components";
 import useModal from "hooks/useModal";
 import { StyledMyNFT } from "./styles";
 import "swiper/css";
@@ -91,9 +91,9 @@ export default function MyNFTs() {
 
       {showLoader && <Loading />}
 
-      <HatsModal isShowing={showRedeemNftPrompt} onHide={hideNftPrompt}>
+      <Modal isShowing={showRedeemNftPrompt} onHide={hideNftPrompt}>
         <RedeemNftSuccess redeemed={redeemed!} />
-      </HatsModal>
+      </Modal>
     </StyledMyNFT>
   );
 }

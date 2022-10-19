@@ -11,7 +11,7 @@ import Welcome from 'components/Welcome/Welcome';
 import Cookies from 'components/Cookies/Cookies';
 import Sidebar from 'components/Sidebar/Sidebar';
 import useModal from 'hooks/useModal';
-import { HatsModal } from 'components';
+import { Modal } from 'components';
 import AirdropPrompt from 'pages/AirdropMachinePage/AirdropPrompt/AirdropPrompt';
 import EmbassyNotificationBar from 'components/EmbassyNotificationBar/EmbassyNotificationBar';
 import { AppLayout, AppContent, ContentWrapper, StyledApp } from './styles';
@@ -37,9 +37,9 @@ const BasicLayout = (): JSX.Element => {
       {hasSeenWelcomePage === '1' && <EmbassyNotificationBar />}
 
       {account && hasSeenWelcomePage === '1' && (
-        <HatsModal isShowing={isShowing} onHide={hide}>
+        <Modal isShowing={isShowing} onHide={hide}>
           <AirdropPrompt closePrompt={hide} />
-        </HatsModal>
+        </Modal>
       )}
     </>
   );
