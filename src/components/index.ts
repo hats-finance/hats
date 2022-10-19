@@ -7,8 +7,6 @@ export { Vault } from './Vault/Vault';
 export { NFTCard } from './NFTCard/NFTCard';
 export { NFTPrize } from './NFTPrize/NFTPrize';
 export { Loading } from "./Loading";
-export { Modal as Modal1 } from "./Modal";
-export { Modal as Modal2 } from "./Modal/Modal";
 export { Media } from "./Media/Media";
 export { Countdown } from './Countdown/Countdown';
 export { RedeemNftSuccess } from "./RedeemNftSuccess/RedeemNftSuccess";
