@@ -75,7 +75,7 @@ export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
           <p className="keymodal-main__list-title">{t("CommitteeTools.keymodal.your-keys")}</p>
           <div className="keymodal-main__keypair-list">
             {vault?.storedKeys.map((key) => (
-              <ExistentKeyCard keypair={key} onSelect={onHide} />
+              <ExistentKeyCard key={key.alias} keypair={key} onSelect={onHide} />
             ))}
           </div>
         </>
