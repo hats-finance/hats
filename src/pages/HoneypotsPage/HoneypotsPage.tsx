@@ -6,11 +6,10 @@ import { useVaults } from "hooks/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
-import { Loading, Vault, Modal1 as Modal, HatsModal } from "components";
+import { Loading, Vault, HatsModal } from "components";
 import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
-import useModal from "hooks/useModal";
 
 interface HoneypotsPageProps {
   showDeposit?: boolean;
@@ -58,16 +57,8 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return val.charAt(0).toUpperCase() + val.slice(1);
   }
 
-  const { isShowing, hide, show } = useModal();
-
   return (
     <StyledHoneypotsPage className="content-wrapper">
-      <button onClick={show}>asdasd</button>
-
-      <HatsModal isShowing={isShowing} onHide={hide} title="Title modal">
-        <>Test</>
-      </HatsModal>
-
       {vaults === undefined ? (
         <Loading fixed />
       ) : (
@@ -122,18 +113,6 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
           <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
         </HatsModal>
       )}
-
-      {/* {showDeposit && selectedVault && (
-
-        <Modal
-          title={selectedVault.description?.["project-metadata"].name!}
-          setShowModal={closeDeposit}
-          height="fit-content"
-          maxHeight="100vh"
-          icon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}>
-          <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
-        </Modal>
-      )} */}
     </StyledHoneypotsPage>
   );
 };
