@@ -49,7 +49,7 @@ export function CreateKeystoreModal({ isShowing, onHide = () => {} }: CreateKeys
         />
         {error && <div className="error-label">{error}</div>}
         <button disabled={!password || !passwordConfirm} onClick={createKeystore}>
-          {t("CommitteeTools.create-vault")}
+          {t("CommitteeTools.create-keystore")}
         </button>
       </div>
     </Modal>

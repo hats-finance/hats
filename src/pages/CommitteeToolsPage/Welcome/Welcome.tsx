@@ -31,7 +31,7 @@ const Welcome = () => {
             {t("CommitteeTools.Welcome.delete-vault")}
           </button>
         ) : (
-          <button onClick={showCreateKeystore}>{t("CommitteeTools.create-vault")}</button>
+          <button onClick={showCreateKeystore}>{t("CommitteeTools.create-keystore")}</button>
         )}
       </div>
 

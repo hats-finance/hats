@@ -43,13 +43,13 @@ export function KeyManager({ onSelected }) {
 
       {keystoreContext.isCreated && keystoreContext.isLocked && (
         <button type="button" onClick={showUnlockKeystore} className="fill">
-          {t("CommitteeTools.unlock-vault")}
+          {t("CommitteeTools.unlock-keystore")}
         </button>
       )}
 
       {!keystoreContext.isCreated && (
         <button type="button" onClick={showCreateKeystore} className="fill">
-          {t("CommitteeTools.create-vault")}
+          {t("CommitteeTools.create-keystore")}
         </button>
       )}
 

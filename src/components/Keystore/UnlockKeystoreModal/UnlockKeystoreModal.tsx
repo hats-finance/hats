@@ -28,7 +28,7 @@ export function UnlockKeystoreModal({ isShowing, onHide }: UnlockKeystoreModalPr
   return (
     <Modal isShowing={isShowing} title={t("CommitteeTools.Welcome.unlock-title")} onHide={onHide} withTitleDivider disableClose>
       <div className="unlock-vault-modal-wrapper">
-        <label className="unlock-vault__label">{t("CommitteeTools.Welcome.unlock-vault-description")}</label>
+        <label className="unlock-vault__label">{t("CommitteeTools.Welcome.unlock-keystore-description")}</label>
         <input
           className="unlock-vault__input"
           type="password"
