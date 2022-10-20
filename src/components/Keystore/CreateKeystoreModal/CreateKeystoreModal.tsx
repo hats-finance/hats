@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal } from "components/Modal/Modal";
+import { Modal } from "components";
 import { KeystoreContext } from "../store";
 import "./index.scss";
 
