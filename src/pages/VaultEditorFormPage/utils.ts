@@ -119,7 +119,10 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
   const vaultName = editedVaultDescription["project-metadata"].name;
 
   return {
-    ...editedVaultDescription,
+    "project-metadata": editedVaultDescription["project-metadata"],
+    "communication-channel": editedVaultDescription["communication-channel"],
+    committee: editedVaultDescription.committee,
+    source: editedVaultDescription.source,
     severities: editedVaultDescription["vulnerability-severities-spec"].severities.map((severity) => {
       const newSeverity = { ...severity };
 
