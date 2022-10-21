@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
+import { getSpacing } from 'styles';
 
 export const StyledCommunicationChannelForm = styled.div`
   .description {
@@ -32,9 +33,11 @@ export const StyledCommunicationChannelForm = styled.div`
         flex: 1 0;
         color: var(--white);
         word-break: break-all;
+        font-size: var(--xxsmall);
 
         button {
           margin-bottom: 0 !important;
+          margin-top: ${getSpacing(2)};
         }
 
         span {
