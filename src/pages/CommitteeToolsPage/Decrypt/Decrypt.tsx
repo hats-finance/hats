@@ -2,21 +2,20 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
-import useModal from "hooks/useModal";
-import { readPrivateKeyFromStoredKey } from "components/Keystore/utils";
-import { KeyDetailsModal, KeystoreContext, SelectKeyModal } from "components/Keystore";
 import { FormInput } from "components";
-import CopyIcon from "assets/icons/copy.icon.svg";
-import "./index.scss";
+import { KeyManager, KeystoreContext, SelectKeyModal } from "components/Keystore";
+import { readPrivateKeyFromStoredKey } from "components/Keystore/utils";
+import useModal from "hooks/useModal";
+import { StyledDecrypt } from "./styles";
 
 export default function Decrypt() {
   const keystoreContext = useContext(KeystoreContext);
-  const { isShowing: isShowingSelectKey, show: showSelectKey, hide: hideSelectKey } = useModal();
-  const { isShowing: isShowingKeyDetails, show: showKeyDetails, hide: hideKeyDetails } = useModal();
   const [error, setError] = useState<string>();
   const encryptedMessageRef = useRef<HTMLTextAreaElement>(null);
   const decryptedMessageRef = useRef<HTMLTextAreaElement>(null);
   const { t } = useTranslation();
+
+  const { isShowing: isShowingSelectKey, show: showSelectKey, hide: hideSelectKey } = useModal();
 
   const location = useLocation();
 
@@ -36,7 +35,8 @@ export default function Decrypt() {
     if (keystoreContext.keystore?.storedKeys.length === 0 || !keystoreContext.selectedKey === undefined) {
       showSelectKey();
     }
-  }, [keystoreContext.keystore, keystoreContext.selectedKey, showSelectKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keystoreContext.keystore, keystoreContext.selectedKey]);
 
   const _decrypt = useCallback(async () => {
     try {
@@ -77,6 +77,7 @@ export default function Decrypt() {
         showSelectKey();
         return;
       }
+
       const privateKey = await readPrivateKeyFromStoredKey(
         keystoreContext.selectedKey.privateKey,
         keystoreContext.selectedKey.passphrase
@@ -93,65 +94,33 @@ export default function Decrypt() {
         setError(error.message);
       }
     }
-  }, [keystoreContext.selectedKey, showSelectKey]);
-
-  const SelectedKeypair = () =>
-    keystoreContext && (
-      <>
-        <p className="decrypt-wrapper__selected-key-label">{t("CommitteeTools.Decrypt.selected-key-label")}</p>
-        <div className="decrypt-wrapper__selected-key">
-          <div className="box-with-copy">
-            <div className="selected-key">
-              <div className="selected-key__fish-eye" />
-              <span>
-                {keystoreContext.selectedKey ? keystoreContext.selectedKey.alias : t("CommitteeTools.Decrypt.no-key-selected")}
-              </span>
-            </div>
-            {keystoreContext.selectedKey && (
-              <img
-                alt="copy"
-                src={CopyIcon}
-                onClick={showKeyDetails}
-              />
-            )}
-          </div>
-          <button
-            className="open-key-list fill"
-            onClick={showSelectKey}>
-            {t("CommitteeTools.Decrypt.select-keypair")}
-          </button>
-        </div>
-      </>
-    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keystoreContext.selectedKey]);
 
   return (
-    <div className="decrypt-wrapper">
-      <h2 className="decrypt-wrapper__title">{t("CommitteeTools.Decrypt.decrypt-tool")}</h2>
-      <p className="decrypt-wrapper__description">{t("CommitteeTools.Decrypt.decrypt-description")}</p>
+    <StyledDecrypt>
+      <h2 className="title">{t("CommitteeTools.Decrypt.decrypt-tool")}</h2>
+      <p className="description">{t("CommitteeTools.Decrypt.decrypt-description")}</p>
 
-      <SelectedKeypair />
+      <KeyManager />
+      <SelectKeyModal isShowing={isShowingSelectKey} onHide={hideSelectKey} />
 
-      <div className="decrypt-wrapper__textbox-container">
-        <p className="decrypt-wrapper__textbox-title">{t("CommitteeTools.Decrypt.encrypted-message")}</p>
+      <div className="textbox-container">
+        <p className="textbox-title">{t("CommitteeTools.Decrypt.encrypted-message")}</p>
         <FormInput type="textarea" pastable ref={encryptedMessageRef} />
         {error && <div className="error-label">{error}</div>}
-        <button onClick={_decrypt} className="fill decrypt-wrapper__button">
+        <button onClick={_decrypt} className="fill button">
           {t("CommitteeTools.Decrypt.decrypt")}
         </button>
       </div>
 
-      <div className="decrypt-wrapper__textbox-container">
-        <p className="decrypt-wrapper__textbox-title">{t("CommitteeTools.Decrypt.decrypted-message")}</p>
+      <div className="textbox-container">
+        <p className="textbox-title">{t("CommitteeTools.Decrypt.decrypted-message")}</p>
         <FormInput type="textarea" copyable ref={decryptedMessageRef} />
-        <button onClick={_encrypt} className="fill decrypt-wrapper__button">
+        <button onClick={_encrypt} className="fill button">
           {t("CommitteeTools.Decrypt.encrypt")}
         </button>
       </div>
-
-      {keystoreContext.selectedKey && (
-        <KeyDetailsModal keyToShow={keystoreContext.selectedKey} isShowing={isShowingKeyDetails} onHide={hideKeyDetails} />
-      )}
-      <SelectKeyModal isShowing={isShowingSelectKey} onHide={hideSelectKey} />
-    </div>
+    </StyledDecrypt>
   );
 }

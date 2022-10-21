@@ -3,9 +3,14 @@ import { useTranslation } from "react-i18next";
 import { KeystoreContext, SelectKeyModal, UnlockKeystoreModal, CreateKeystoreModal, KeyDetailsModal } from "components/Keystore";
 import useModal from "hooks/useModal";
 import CopyIcon from "assets/icons/copy.icon.svg";
+import { IStoredKey } from "../types";
 import { StyledKeyManager } from "./styles";
 
-export function KeyManager({ onSelected }) {
+type KeyManagerProps = {
+  onSelectedKey?: (key: IStoredKey) => void;
+}
+
+export function KeyManager({ onSelectedKey }: KeyManagerProps) {
   const { isShowing: isShowingKeyDetails, show: showKeyDetails, hide: hideKeyDetails } = useModal();
   const { isShowing: isShowingSelectKey, show: showSelectKey, hide: hideSelectKey } = useModal();
   const { isShowing: isShowingUnlockKeystore, show: showUnlockKeystore, hide: hideUnlockKeystore } = useModal();
@@ -15,8 +20,10 @@ export function KeyManager({ onSelected }) {
   const { t } = useTranslation();
 
   useEffect(() => {
-    onSelected(keystoreContext.selectedKey);
-  }, [keystoreContext.selectedKey, onSelected]);
+    if (onSelectedKey && keystoreContext.selectedKey) {
+      onSelectedKey(keystoreContext.selectedKey);
+    }
+  }, [keystoreContext.selectedKey, onSelectedKey]);
 
   const SelectedKeypair = () =>
     keystoreContext && (

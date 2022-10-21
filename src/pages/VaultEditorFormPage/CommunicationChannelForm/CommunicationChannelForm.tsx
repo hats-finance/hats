@@ -85,7 +85,7 @@ export function CommunicationChannelForm() {
       <p className="description">{t("VaultEditor.pgp-key-description")}</p>
 
       <KeyManager
-        onSelected={(selectedKey) => {
+        onSelectedKey={(selectedKey) => {
           if (selectedKey) setPublicPgpKey(selectedKey.publicKey);
         }}
       />

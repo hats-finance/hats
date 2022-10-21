@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
+import { getSpacing } from "styles";
 
 export const StyledCommitteeToolsPage = styled.div`
   display: flex;
@@ -7,7 +8,7 @@ export const StyledCommitteeToolsPage = styled.div`
   justify-content: center;
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
-    padding: $element-padding-mobile;
+    padding: 0 ${getSpacing(3)};
   }
 
   .committee-tools-content {
