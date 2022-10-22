@@ -1,5 +1,5 @@
 import { Colors } from "constants/constants";
-import { StyledWhereverWidget } from "./styles";
+import { StyledWhereverWidget, StyledWhereverWidgetContainer } from "./styles";
 import {
   NotificationFeed,
   NotificationFeedProvider,
@@ -16,22 +16,24 @@ const WhereverWidget = () => {
   }
 
   return (
-    <StyledWhereverWidget>
+    <StyledWhereverWidgetContainer>
       <NotificationFeedProvider
         theme={{
           bellColor: Colors.turquoise,
           backgroundColor: Colors.fieldBlue,
-          primaryColor: Colors.strongRed,
+          primaryColor: Colors.turquoise,
           fontFamily: '"RobotoMono", sans-serif'
         }}
         env={WHEREVER_SETTINGS.env}
         partnerKey={WHEREVER_SETTINGS.partnerKey}
       >
         <NotificationFeed>
-          <NotificationBell containerHeight={"100%"} containerWidth={"100%"} />
+          <StyledWhereverWidget>
+            <NotificationBell />
+          </StyledWhereverWidget>
         </NotificationFeed>
       </NotificationFeedProvider>
-    </StyledWhereverWidget>
+    </StyledWhereverWidgetContainer>
   );
 };
 
