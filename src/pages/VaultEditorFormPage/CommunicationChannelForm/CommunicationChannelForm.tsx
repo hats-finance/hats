@@ -30,7 +30,8 @@ export function CommunicationChannelForm() {
     if (pgpKey) {
       try {
         await readKey({ armoredKey: pgpKey });
-        if (keys.includes(pgpKey)) {
+        const watchedKeys = watch('communication-channel.pgp-pk') as string[];
+        if (watchedKeys.includes(pgpKey)) {
           throw new Error("Key already added");
         }
         append(pgpKey);
