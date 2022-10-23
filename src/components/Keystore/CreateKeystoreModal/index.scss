@@ -1,9 +1,10 @@
 @import "styles/constants.scss";
 
 .create-vault-modal-wrapper {
-  padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
+  max-width: 500px;
+
   .create-vault {
     &__description {
       color: $white;
@@ -29,9 +30,8 @@
 
 @media only screen and (max-width: $mobile-breakpoint) {
   .create-vault-modal-wrapper {
-    padding: $modal-element-padding-mobile;
     height: 100%;
-    box-sizing: border-box;
+    
     button {
       margin-top: auto;
     }

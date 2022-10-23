@@ -100,6 +100,7 @@ export const variables = css`
     --spacing-25: 200px;
 
     /* others */
+    --small-mobile-breakpoint: 600px;
     --mobile-breakpoint: 1100px;
     --small-screen-breakpoint: 1600px;
     --black-shadow: 0 13px 32px rgb(0 0 0 / 30%); // for modal

@@ -1,10 +1,10 @@
 import { useContext, useState } from "react";
 import { generateKey } from "openpgp";
-import { KeystoreContext } from "../store";
-import { KeyGenerated } from "./KeyGenerated";
+import { KeystoreContext } from "../../store";
+import { KeyGenerated } from "../KeyGenerated/KeyGenerated";
 import { Loading } from "components";
 import { useTranslation } from "react-i18next";
-import { IStoredKey } from "../types";
+import { IStoredKey } from "../../types";
 
 export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   const { t } = useTranslation();
@@ -26,12 +26,11 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
         //curve: 'curve25519', // ECC curve name, defaults to curve25519
         userIDs: { name, email }, // { name: 'Jon Smith', email: 'jon@example.com' }], // you can pass multiple user IDs
         passphrase: passphrase, // protects the private key
-        format: "armored" // output key format, defaults to 'armored' (other options: 'binary' or 'object')
+        format: "armored", // output key format, defaults to 'armored' (other options: 'binary' or 'object')
       });
       const toAdd = { alias, privateKey, passphrase, publicKey };
       keystoreContext.addKey(toAdd);
-      if (keystoreContext.selectedKey === undefined)
-        keystoreContext.setSelectedAlias(alias);
+      if (keystoreContext.selectedKey === undefined) keystoreContext.setSelectedAlias(alias);
       setAddedKey(toAdd);
       setLoading(false);
     } catch (error) {
@@ -43,13 +42,11 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
   }
 
   if (addedKey) {
-    return <KeyGenerated addedKey={addedKey} onFinish={onFinish} />
+    return <KeyGenerated addedKey={addedKey} onFinish={onFinish} />;
   } else {
     return (
       <>
-        <p className="keymodal-generate__intro">
-          {t("CommitteeTools.keymodal.generate-message")}
-        </p>
+        <p className="keymodal-generate__intro">{t("CommitteeTools.keymodal.generate-message")}</p>
         <label>{t("CommitteeTools.keymodal.alias")}</label>
         <input
           className="keymodal-generate__input"
@@ -64,9 +61,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           value={passphrase}
           onChange={(e) => setPassphrase(e.target.value)}
           type="text"
-          placeholder={t(
-            "CommitteeTools.keymodal.enter-passphrase-placeholder"
-          )}
+          placeholder={t("CommitteeTools.keymodal.enter-passphrase-placeholder")}
         />
         <label>{t("CommitteeTools.keymodal.name")}</label>
         <input
@@ -84,10 +79,7 @@ export default function GenerateKey({ onFinish }: { onFinish: () => void }) {
           type="text"
           placeholder={t("CommitteeTools.keymodal.enter-email-placeholder")}
         />
-        <button
-          onClick={_handleClick}
-          disabled={loading || !alias}
-          className="keymodal-generate__button">
+        <button onClick={_handleClick} disabled={loading || !alias} className="keymodal-generate__button">
           {t("CommitteeTools.keymodal.generate-button")}
         </button>
         {loading && <Loading spinner />}

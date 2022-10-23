@@ -6,6 +6,12 @@
   display: flex;
   flex-direction: column;
   background-color: $field-blue;
+  width: 600px;
+  
+  @media only screen and (max-width: $small-mobile-breakpoint) {
+    width: 100%;
+  }
+
   .pool-wrapper {
     display: flex;
     align-items: center;
@@ -22,9 +28,10 @@
       }
     }
   }
-  > div {
+  > div, > table {
     padding: 0px $modal-element-padding;
   }
+
   .tabs-wrapper {
     display: flex;
     padding: 0;

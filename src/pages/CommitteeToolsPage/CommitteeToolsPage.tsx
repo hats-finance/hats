@@ -10,11 +10,11 @@ const CommitteeToolsPage = () => {
   return (
     <StyledCommitteeToolsPage className="content-wrapper">
       <div className="committee-tools-content">
-        {keystoreContext.isCreated && keystoreContext.isLocked && <UnlockKeystoreModal />}
+        <UnlockKeystoreModal isShowing={keystoreContext.isCreated && keystoreContext.isLocked} />
         {keystoreContext.isCreated ? <Decrypt /> : <Welcome />}
       </div>
     </StyledCommitteeToolsPage>
   );
-}
+};
 
 export { CommitteeToolsPage };

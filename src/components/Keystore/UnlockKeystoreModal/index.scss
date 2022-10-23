@@ -1,9 +1,15 @@
 @import "styles/constants.scss";
 
 .unlock-vault-modal-wrapper {
-  padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
+  min-width: 400px;
+
+  @media only screen and (max-width: $small-mobile-breakpoint) {
+    min-width: unset;
+    width: 100%;
+  }
+
   .unlock-vault {
     &__label {
       margin-bottom: 16px !important;
@@ -16,7 +22,7 @@
     height: 50px;
   }
   button {
-    margin: 50px 0 0;
+    margin: 30px 0 0;
   }
   .error-label {
     color: $red;
@@ -24,13 +30,3 @@
   }
 }
 
-@media only screen and (max-width: $mobile-breakpoint) {
-  .unlock-vault-modal-wrapper {
-    padding: $modal-element-padding-mobile;
-    height: 100%;
-    box-sizing: border-box;
-    button {
-      margin-top: auto;
-    }
-  }
-}

@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../../utils";
-import { Loading, Modal2 as Modal } from "components";
+import { Loading, Modal } from "components";
 import { IVault } from "../../../types/types";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
@@ -191,7 +191,9 @@ export function DepositWithdraw(props: IProps) {
         </div>
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
-      <Assets vault={props.data} />
+      <div>
+        <Assets vault={props.data} />
+      </div>
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
           <input type="checkbox" checked={termsOfUse} onChange={() => setTermsOfUse(!termsOfUse)} disabled={!userInput || userInput === "0"} />
@@ -240,7 +242,7 @@ export function DepositWithdraw(props: IProps) {
       {pendingWallet && <Loading zIndex={10000} />}
       <Modal
         isShowing={showEmbassyPrompt}
-        hide={toggleEmbassyPrompt}>
+        onHide={toggleEmbassyPrompt}>
         <EmbassyNftTicketPrompt />
       </Modal>
     </div>

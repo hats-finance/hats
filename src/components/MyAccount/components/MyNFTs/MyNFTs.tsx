@@ -7,7 +7,7 @@ import { useVaults } from "hooks/useVaults";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { INFTTokenInfoRedeemed } from "types/types";
-import { Loading, RedeemNftSuccess, Modal2 as Modal, NFTCard } from "components";
+import { Loading, RedeemNftSuccess, Modal, NFTCard } from "components";
 import useModal from "hooks/useModal";
 import { StyledMyNFT } from "./styles";
 import "swiper/css";
@@ -21,7 +21,7 @@ export default function MyNFTs() {
   const { nftData } = useVaults();
   const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
-  const { isShowing: showRedeemNftPrompt, toggle: toggleRedeemNftPrompt } = useModal();
+  const { isShowing: showRedeemNftPrompt, show: showNftPrompt, hide: hideNftPrompt } = useModal();
 
   const handleRedeem = useCallback(async () => {
     if (!nftData?.treeRedeemables || !nftData.proofRedeemables) return;
@@ -46,11 +46,11 @@ export default function MyNFTs() {
 
     if (redeemed?.length) {
       setRedeemed(redeemed);
-      toggleRedeemNftPrompt();
+      showNftPrompt();
     }
 
     setShowLoader(false);
-  }, [nftData, toggleRedeemNftPrompt]);
+  }, [nftData, showNftPrompt]);
 
   const eligible = nftData?.proofRedeemables?.length || (nftData?.treeRedeemablesCount ?? 0);
   const twoTransactions = (nftData?.proofRedeemables?.length ?? 0) > 0 && (nftData?.treeRedeemablesCount ?? 0) > 0;
@@ -91,7 +91,7 @@ export default function MyNFTs() {
 
       {showLoader && <Loading />}
 
-      <Modal isShowing={showRedeemNftPrompt} hide={toggleRedeemNftPrompt}>
+      <Modal isShowing={showRedeemNftPrompt} onHide={hideNftPrompt}>
         <RedeemNftSuccess redeemed={redeemed!} />
       </Modal>
     </StyledMyNFT>

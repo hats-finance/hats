@@ -1,9 +1,9 @@
 import { useContext, useRef, useState } from "react";
-import { KeystoreContext } from "../store";
-import { readPrivateKeyFromStoredKey } from "../utils";
+import { KeystoreContext } from "../../store";
+import { readPrivateKeyFromStoredKey } from "../../utils";
 import { FormInput } from "components";
 import { useTranslation } from "react-i18next";
-import { IStoredKey } from "../types";
+import { IStoredKey } from "../../types";
 
 export default function ImportKey({ onFinish }: { onFinish: () => any }) {
   const { t } = useTranslation();
@@ -19,8 +19,7 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
       const privateKey = privateKeyRef.current!.value!;
       const passphrase = passphraseRef.current!.value;
 
-      if (privateKey === "")
-        throw new Error(t("CommitteeTools.ImportKey.no-key-error"));
+      if (privateKey === "") throw new Error(t("CommitteeTools.ImportKey.no-key-error"));
       const readKey = await readPrivateKeyFromStoredKey(privateKey, passphrase);
       if (!readKey.isDecrypted()) {
         throw new Error(t("CommitteeTools.ImportKey.no-passphrase-error"));
@@ -29,7 +28,7 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         alias,
         privateKey,
         passphrase,
-        publicKey: readKey.toPublic().armor()
+        publicKey: readKey.toPublic().armor(),
       };
       keystoreContext.addKey(toAdd);
       keystoreContext.setSelectedAlias(toAdd.alias);
@@ -44,16 +43,9 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
 
   return (
     <>
-      <p className="keymodal-importkey__description">
-        {t("CommitteeTools.keymodal.import-text")}
-      </p>
+      <p className="keymodal-importkey__description">{t("CommitteeTools.keymodal.import-text")}</p>
       <label>{t("CommitteeTools.keymodal.alias")}</label>
-      <input
-        className="keymodal-importkey__input"
-        ref={aliasRef}
-        type="text"
-        placeholder={t("CommitteeTools.keymodal.alias")}
-      />
+      <input className="keymodal-importkey__input" ref={aliasRef} type="text" placeholder={t("CommitteeTools.keymodal.alias")} />
       <label>{t("CommitteeTools.keymodal.passphrase")}</label>
       <input
         className="keymodal-importkey__input"
@@ -62,18 +54,9 @@ export default function ImportKey({ onFinish }: { onFinish: () => any }) {
         placeholder={t("CommitteeTools.keymodal.passphrase")}
       />
       <label>{t("CommitteeTools.keymodal.private-key")}</label>
-      <FormInput
-        type="textarea"
-        pastable
-        ref={privateKeyRef}
-        placeholder={t("CommitteeTools.keymodal.paste-private-key")}
-      />
-      {error && error !== "" && (
-        <div className="error-label">{error}</div>
-      )}
-      <button onClick={addKey}>
-        {t("CommitteeTools.keymodal.import-keypair")}
-      </button>
+      <FormInput type="textarea" pastable ref={privateKeyRef} placeholder={t("CommitteeTools.keymodal.paste-private-key")} />
+      {error && error !== "" && <div className="error-label">{error}</div>}
+      <button onClick={addKey}>{t("CommitteeTools.keymodal.import-keypair")}</button>
     </>
   );
 }

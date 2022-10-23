@@ -4,8 +4,8 @@
   display: flex;
   flex-direction: column;
   color: $white;
-  padding: $modal-element-padding;
-  padding-top: 0;
+  text-align: center;
+  
   .airdrop-prompt__eligible-icon {
     width: 100px;
     align-self: center;
@@ -34,12 +34,5 @@
   }
   .airdrop-prompt__continue-btn {
     margin-top: 20px;
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .airdrop-prompt-wrapper {
-    padding: $modal-element-padding-mobile;
-    text-align: center;
   }
 }

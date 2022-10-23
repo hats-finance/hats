@@ -1,10 +1,15 @@
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Modal } from "components";
 import { KeystoreContext } from "../store";
-import { Modal1 as Modal } from "components";
 import "./index.scss";
 
-export function UnlockKeystoreModal() {
+type UnlockKeystoreModalProps = {
+  isShowing: boolean;
+  onHide?: () => void;
+};
+
+export function UnlockKeystoreModal({ isShowing, onHide }: UnlockKeystoreModalProps) {
   const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
@@ -21,16 +26,9 @@ export function UnlockKeystoreModal() {
   };
 
   return (
-    <Modal
-      title={t("CommitteeTools.Welcome.unlock-title")}
-      setShowModal={() => { }}
-      height="fit-content"
-      hideClose={true}
-    >
+    <Modal isShowing={isShowing} title={t("CommitteeTools.Welcome.unlock-title")} onHide={onHide} withTitleDivider disableClose>
       <div className="unlock-vault-modal-wrapper">
-        <label className="unlock-vault__label">
-          {t("CommitteeTools.Welcome.unlock-vault-description")}
-        </label>
+        <label className="unlock-vault__label">{t("CommitteeTools.Welcome.unlock-keystore-description")}</label>
         <input
           className="unlock-vault__input"
           type="password"

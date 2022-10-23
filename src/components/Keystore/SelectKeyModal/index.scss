@@ -1,10 +1,11 @@
 @import "styles/constants.scss";
 
 .select-key-modal-wrapper {
-  padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
   white-space: pre-line;
+  max-width: 550px;
+
   .error-label {
     color: $red;
     margin: 5px 0px;
@@ -17,9 +18,6 @@
     margin-bottom: 5px;
   }
   .keymodal-main {
-    &__intro {
-      margin-bottom: 36px;
-    }
 
     &__list-title {
       color: $turquoise;
@@ -28,59 +26,6 @@
     &__keypair-list {
       border: 1px solid $turquoise;
       padding: 8px 8px;
-
-      li {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        color: $turquoise;
-        padding: 8px;
-
-        .fish-eye {
-          width: 18px;
-          height: 18px;
-          border-radius: 50%;
-          background-color: $dark-turquoise;
-          margin: 3px;
-
-          &.selected {
-            position: relative;
-            background-color: $turquoise;
-
-            &:after {
-              content: "";
-              border: 1px solid $turquoise;
-              border-radius: 50%;
-              width: 23px;
-              height: 23px;
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-        }
-        a {
-          color: $turquoise;
-        }
-        .title {
-          flex: 1;
-          display: flex;
-          align-items: center;
-          span {
-            margin-left: 0.5em;
-          }
-        }
-        .copy {
-          margin-right: 15px;
-        }
-        .actions {
-          align-self: flex-end;
-          :not(:first-child) {
-            margin-left: 5px;
-          }
-        }
-      }
     }
 
     &__special-container {
@@ -211,46 +156,12 @@
     }
   }
 
-  .keymodal-keydetails {
-    &__description {
-      margin-bottom: 30px;
-    }
-    &__result {
-      &-copy {
-        display: flex;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-      &-label {
-        width: 150px;
-      }
-    }
-  }
-
   .keymodal-importkey {
     &__description {
       margin-bottom: 30px;
     }
     &__input {
       margin-bottom: 20px;
-    }
-  }
-
-  .keymodal-delete {
-    &__description {
-      margin-bottom: 50px;
-    }
-    &__button-container {
-      display: flex;
-      justify-content: space-between;
-      button {
-        width: 40%;
-      }
-    }
-    &__button-cancel {
-      background-color: transparent !important;
-      border: 1px solid $turquoise;
-      color: $turquoise;
     }
   }
   button {

@@ -1,56 +1,48 @@
 import { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import classNames from "classnames";
-import { Modal1 as Modal } from "components";
+import { Modal } from "components";
 import { IStoredKey } from "../types";
 import { KeystoreContext } from "../store";
-import KeyDetails from "./KeyDetails";
-import GenerateKey from "./GenerateKey";
-import ImportKey from "./ImportKey";
-import DeleteKey from "./DeleteKey";
+import GenerateKey from "./GenerateKey/GenerateKey";
+import ImportKey from "./ImportKey/ImportKey";
 import GenerateKeypairIcon from "assets/icons/create-keypair.svg";
 import ImportKeyapirIcon from "assets/icons/import-keypair.svg";
-import DeleteIcon from "assets/icons/delete.icon.svg";
-import CopyIcon from "assets/icons/copy.icon.svg";
+import { ExistentKeyCard } from "./ExistentKeyCard/ExistentKeyCard";
 import "./index.scss";
 
 enum ActionType {
   Generate,
   Import,
-  Delete,
-  Display,
-  None
+  None,
 }
 interface IAction {
   type: ActionType;
   key?: IStoredKey;
 }
 
-export function SelectKeyModal({
-  setShowModal,
-  showKey
-}: {
-  showKey?: IStoredKey; // used to show key details
-  setShowModal: (show: boolean) => any;
-}) {
+type SelectKeyModalProps = {
+  isShowing: boolean;
+  onHide: () => void;
+};
+
+export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
   const { t } = useTranslation();
+  const [action, setAction] = useState<IAction>({ type: ActionType.None });
   const keystoreContext = useContext(KeystoreContext);
-  const [action, setAction] = useState<IAction>(
-    showKey
-      ? { type: ActionType.Display, key: showKey }
-      : { type: ActionType.None }
-  );
   const vault = keystoreContext.keystore;
 
-  const onFinish = () => {
-    if (
-      action.type === ActionType.Generate ||
-      action.type === ActionType.Import
-    ) {
-      setShowModal(false);
-    }
+  const handleOnFinish = () => {
+    onHide();
     setAction({ type: ActionType.None });
+  };
+
+  // Going back to the main view
+  const handleOnBackButton = (): (() => void) | undefined => {
+    if (action.type !== ActionType.None) {
+      return () => setAction({ type: ActionType.None });
+    }
+
+    return undefined;
   };
 
   const SpecialButton = ({ src, title, text, ...props }) => (
@@ -63,9 +55,7 @@ export function SelectKeyModal({
 
   const mainView = () => (
     <>
-      <p className="keymodal-main__intro">
-        {t("CommitteeTools.keymodal.intro-text")}
-      </p>
+      <p className="keymodal-main__intro">{t("CommitteeTools.keymodal.intro-text")}</p>
       <div className="keymodal-main__special-container">
         <SpecialButton
           src={GenerateKeypairIcon}
@@ -82,64 +72,23 @@ export function SelectKeyModal({
       </div>
       {vault?.storedKeys.length !== 0 && (
         <>
-          <p className="keymodal-main__list-title">
-            {t("CommitteeTools.keymodal.your-keys")}
-          </p>
+          <p className="keymodal-main__list-title">{t("CommitteeTools.keymodal.your-keys")}</p>
           <div className="keymodal-main__keypair-list">
-            {vault?.storedKeys.map((key) => keyRow(key))}
+            {vault?.storedKeys.map((key) => (
+              <ExistentKeyCard key={key.alias} keypair={key} onSelect={onHide} />
+            ))}
           </div>
         </>
       )}
     </>
   );
 
-  const keyRow = (key: IStoredKey) => {
-    const selected = key.alias === keystoreContext.selectedKey?.alias;
-    return (
-      <li key={key.alias}>
-        <NavLink
-          to="#"
-          className="title"
-          onClick={() => {
-            keystoreContext.setSelectedAlias(key.alias);
-            setShowModal(false);
-          }}
-        >
-          <div className={classNames({ "fish-eye": true, selected })} />
-          <span>{key.alias}</span>
-        </NavLink>
-        <NavLink
-          to="#"
-          className="copy"
-          onClick={() => {
-            setAction({ type: ActionType.Display, key: key });
-          }}
-        >
-          <img src={CopyIcon} alt="display" />
-        </NavLink>
-        <NavLink
-          to="#"
-          className="delete"
-          onClick={() => {
-            setAction({ type: ActionType.Delete, key: key });
-          }}
-        >
-          <img src={DeleteIcon} alt="delete" />
-        </NavLink>
-      </li>
-    );
-  };
-
   const byAction = (action: IAction) => {
     switch (action.type) {
       case ActionType.Generate:
-        return <GenerateKey onFinish={onFinish} />;
+        return <GenerateKey onFinish={handleOnFinish} />;
       case ActionType.Import:
-        return <ImportKey onFinish={onFinish} />;
-      case ActionType.Delete:
-        return <DeleteKey keyToDelete={action.key!} onFinish={onFinish} />;
-      case ActionType.Display:
-        return <KeyDetails storedKey={action.key!} />;
+        return <ImportKey onFinish={handleOnFinish} />;
       case ActionType.None:
         return mainView();
     }
@@ -151,26 +100,15 @@ export function SelectKeyModal({
         return t("CommitteeTools.keymodal.create-keypair");
       case ActionType.Import:
         return t("CommitteeTools.keymodal.import-keypair");
-      case ActionType.Delete:
-        return t("CommitteeTools.keymodal.delete-keypair");
-      case ActionType.Display:
-        return t("CommitteeTools.KeyDetails.title");
       case ActionType.None:
-        if (vault?.storedKeys.length !== 0)
-          return t("CommitteeTools.keymodal.list-keypair");
+        if (vault?.storedKeys.length !== 0) return t("CommitteeTools.keymodal.list-keypair");
         else return t("CommitteeTools.keymodal.title");
     }
   };
 
   return (
-    <Modal
-      title={titleByAction()}
-      height="fit-content"
-      width="fit-content"
-      setShowModal={setShowModal}>
-      <div className="select-key-modal-wrapper">
-        {byAction(action)}
-      </div>
+    <Modal isShowing={isShowing} title={titleByAction()} onHide={handleOnFinish} onBackButton={handleOnBackButton()} withTitleDivider>
+      <div className="select-key-modal-wrapper">{byAction(action)}</div>
     </Modal>
   );
 }

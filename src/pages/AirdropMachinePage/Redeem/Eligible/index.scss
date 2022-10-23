@@ -2,11 +2,8 @@
 
 .eligible-wrapper {
   color: $white;
-  width: 900px;
-  max-height: 1000px;
-  padding: $modal-element-padding;
-  box-sizing: border-box;
-  padding-top: 0;
+  max-width: 550px;
+
   .eligible__header-wrapper {
     display: flex;
     flex-direction: column;

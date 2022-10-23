@@ -25,15 +25,15 @@ export function CommunicationChannelForm() {
   const { control, watch } = useFormContext();
   const { fields: keys, append, remove } = useFieldArray({ control, name: 'communication-channel.pgp-pk' });
 
-  const addPublicKey = async (publicPgpKey) => {
+  const addPublicKey = async (pgpKey) => {
     setPgpError(undefined);
-    if (publicPgpKey) {
+    if (pgpKey) {
       try {
-        await readKey({ armoredKey: publicPgpKey });
-        if (keys.includes(publicPgpKey)) {
+        await readKey({ armoredKey: pgpKey });
+        if (keys.includes(pgpKey)) {
           throw new Error("Key already added");
         }
-        append(publicPgpKey);
+        append(pgpKey);
       } catch (error: any) {
         setPgpError(error.message);
       }
@@ -85,7 +85,7 @@ export function CommunicationChannelForm() {
       <p className="description">{t("VaultEditor.pgp-key-description")}</p>
 
       <KeyManager
-        onSelected={(selectedKey) => {
+        onSelectedKey={(selectedKey) => {
           if (selectedKey) setPublicPgpKey(selectedKey.publicKey);
         }}
       />
