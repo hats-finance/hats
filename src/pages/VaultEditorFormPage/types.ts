@@ -25,7 +25,7 @@ export interface IEditedVaultDescription {
     starttime?: number;
   };
   "communication-channel": {
-    "pgp-pk": string | string[];
+    "pgp-pk": string[];
   };
   committee: {
     "multisig-address": string;

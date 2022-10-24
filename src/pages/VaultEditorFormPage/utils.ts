@@ -48,7 +48,7 @@ export const createNewVaultDescription = (): IEditedVaultDescription => {
       type: "",
     },
     "communication-channel": {
-      "pgp-pk": "",
+      "pgp-pk": [],
     },
     committee: {
       "multisig-address": "",
@@ -106,6 +106,11 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
 
   return {
     ...vaultDescription,
+    "communication-channel": {
+      "pgp-pk": Array.isArray(vaultDescription["communication-channel"]["pgp-pk"])
+        ? vaultDescription["communication-channel"]["pgp-pk"] :
+        [vaultDescription["communication-channel"]["pgp-pk"]],
+    },
     "vulnerability-severities-spec": {
       severities: severitiesWithIds,
       name: "",
