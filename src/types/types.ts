@@ -1,9 +1,8 @@
 import { BigNumber } from "ethers";
 
-export interface IVault {
+export interface IBaseVault {
   id: string;
   descriptionHash: string;
-  description: IVaultDescription | undefined;
   pid: string;
   stakingToken: string;
   stakingTokenDecimals: string;
@@ -14,11 +13,14 @@ export interface IVault {
   totalReward: string;
   totalRewardPaid: string;
   committee: string;
-  allocPoint: string;
+  allocPoint?: string;
   master: IMaster;
+  version: string;
+  arbitrator?: string;
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
-  rewardsLevels: Array<string>;
+  rewardsLevels?: Array<string>;
+  maxBounty: string;
   totalRewardAmount: string;
   liquidityPool: boolean;
   registered: boolean;
@@ -36,8 +38,21 @@ export interface IVault {
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
 }
+interface IVaultV1 extends IBaseVault {
+  version: "v1";
+  rewardsLevels: Array<string>;
+  allocPoint: string;
+  description: IVaultDescriptionV1;
+}
+interface IVaultV2 extends IBaseVault {
+  version: "v2";
+  description: IVaultDescriptionV2;
+}
 
-export interface IVaultDescription {
+export type IVault = IVaultV1 | IVaultV2;
+
+interface IBaseVaultDescription {
+  version: string;
   "project-metadata": {
     icon: string;
     website: string;
@@ -54,7 +69,6 @@ export interface IVaultDescription {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };
-  severities: Array<IVulnerabilitySeverity>;
   source: {
     name: string;
     url: string;
@@ -62,6 +76,17 @@ export interface IVaultDescription {
   "additional-vaults"?: string[];
 }
 
+interface IVaultDescriptionV1 extends IBaseVaultDescription {
+  version: "v1";
+  severities: Array<IVulnerabilitySeverityV1>;
+}
+interface IVaultDescriptionV2 extends IBaseVaultDescription {
+  version: "v2";
+  severities: Array<IVulnerabilitySeverityV2>;
+}
+
+export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
+export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
 export interface ICommitteeMember {
   name: string;
   address: string;
@@ -69,13 +94,19 @@ export interface ICommitteeMember {
   "image-ipfs-link"?: string;
 }
 
-export interface IVulnerabilitySeverity {
+export interface IBaseVulnerabilitySeverity {
   name: string;
-  index: number;
   "contracts-covered": { [key: string]: string }[];
   "nft-metadata": INFTMetaData;
   //  "reward-for": string
   description: string;
+}
+
+export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
+  index: number;
+}
+export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
+  percentage: number
 }
 
 export interface INFTMetaData {

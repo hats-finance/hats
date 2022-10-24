@@ -16,6 +16,7 @@ export const GET_VAULTS = gql`
     }
     vaults {
       id
+      version
       descriptionHash
       pid
       stakingToken

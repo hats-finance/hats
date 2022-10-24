@@ -103,6 +103,10 @@ export function VaultsProvider({ children }) {
         try {
           const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!)
           const object = await dataResponse.json()
+          console.log("vault", vault);
+
+          console.log(object);
+
           return fixObject(object)
         } catch (error) {
           console.error(error);

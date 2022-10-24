@@ -1,20 +1,24 @@
-import { ICommitteeMember, IVulnerabilitySeverity } from "types/types";
-
-export interface IVulnerabilitySeveritiesTemplate {
-  severities: IEditedVulnerabilitySeverity[];
-  name: string;
-  indexArray: number[];
-}
-
+import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "types/types";
 export interface IEditedContractCovered {
   name: string;
   address: string;
   severities: string[]; // IVulnerabilitySeverity.name
 }
 
-export type IEditedVulnerabilitySeverity = IVulnerabilitySeverity & { id?: string };
+export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
+export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
+export interface IVulnerabilitySeveritiesTemplateV1 {
+  severities: IEditedVulnerabilitySeverityV1[];
+  name: string;
+  indexArray: number[];
+}
+export interface IVulnerabilitySeveritiesTemplateV2 {
+  severities: IEditedVulnerabilitySeverityV2[];
+  name: string;
+}
 
-export interface IEditedVaultDescription {
+export interface IBaseEditedVaultDescription {
+  version: string;
   "project-metadata": {
     icon: string;
     website: string;
@@ -31,7 +35,6 @@ export interface IEditedVaultDescription {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };
-  "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplate;
   "contracts-covered": IEditedContractCovered[];
   source: {
     name: string;
@@ -39,3 +42,17 @@ export interface IEditedVaultDescription {
   };
   "additional-vaults"?: string[];
 }
+
+interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
+  version: "v1";
+  "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV1;
+}
+interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
+  version: "v2";
+  "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
+}
+
+export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
+
+
+

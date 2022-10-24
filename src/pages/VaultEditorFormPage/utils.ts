@@ -36,7 +36,7 @@ export const createNewVulnerabilitySeverity = (): IEditedVulnerabilitySeverity =
   description: "",
 });
 
-export const createNewVaultDescription = (): IEditedVaultDescription => {
+export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate();
 
   return {
@@ -102,17 +102,17 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
 }
 
 export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
-  const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({ ...sev, id: uuid() }));
 
+  const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({ ...sev, id: uuid() }));
   return {
     ...vaultDescription,
     "vulnerability-severities-spec": {
       severities: severitiesWithIds,
       name: "",
-      indexArray: vaultDescription.severities.map((item) => item.index),
+      indexArray: vaultDescription.severities.map((item) => item.index)
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-  };
+  }
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
