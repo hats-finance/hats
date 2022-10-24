@@ -15,7 +15,7 @@ export interface IBaseVault {
   committee: string;
   allocPoint?: string;
   master: IMaster;
-  version: string;
+  version: "v1" | "v2";
   arbitrator?: string;
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
@@ -37,22 +37,23 @@ export interface IBaseVault {
   depositPause: boolean;
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
+  description?: IVaultDescription;
 }
 interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
   allocPoint: string;
-  description: IVaultDescriptionV1;
+  description?: IVaultDescriptionV1;
 }
 interface IVaultV2 extends IBaseVault {
   version: "v2";
-  description: IVaultDescriptionV2;
+  description?: IVaultDescriptionV2;
 }
 
 export type IVault = IVaultV1 | IVaultV2;
 
 interface IBaseVaultDescription {
-  version: string;
+  version: "v1" | "v2";
   "project-metadata": {
     icon: string;
     website: string;
@@ -74,6 +75,7 @@ interface IBaseVaultDescription {
     url: string;
   };
   "additional-vaults"?: string[];
+  severities: Array<IVulnerabilitySeverity>;
 }
 
 interface IVaultDescriptionV1 extends IBaseVaultDescription {
@@ -84,9 +86,8 @@ interface IVaultDescriptionV2 extends IBaseVaultDescription {
   version: "v2";
   severities: Array<IVulnerabilitySeverityV2>;
 }
-
-export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
+
 export interface ICommitteeMember {
   name: string;
   address: string;
@@ -98,7 +99,6 @@ export interface IBaseVulnerabilitySeverity {
   name: string;
   "contracts-covered": { [key: string]: string }[];
   "nft-metadata": INFTMetaData;
-  //  "reward-for": string
   description: string;
 }
 
@@ -106,8 +106,10 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
   index: number;
 }
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
-  percentage: number
+  percentage: number;
 }
+
+export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
 
 export interface INFTMetaData {
   name: string;
