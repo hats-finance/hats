@@ -37,17 +37,17 @@ export interface IBaseVault {
   depositPause: boolean;
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
-  description?: IVaultDescription;
+  description: IVaultDescription;
 }
 interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
   allocPoint: string;
-  description?: IVaultDescriptionV1;
+  description: IVaultDescriptionV1;
 }
 interface IVaultV2 extends IBaseVault {
   version: "v2";
-  description?: IVaultDescriptionV2;
+  description: IVaultDescriptionV2;
 }
 
 export type IVault = IVaultV1 | IVaultV2;

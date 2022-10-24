@@ -7,15 +7,20 @@ export interface IEditedContractCovered {
 
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
 export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
-export interface IVulnerabilitySeveritiesTemplateV1 {
+
+export type IEditedVulnerabilitySeverity = IEditedVulnerabilitySeverityV1 | IEditedVulnerabilitySeverityV2;
+
+interface IVulnerabilitySeveritiesTemplateV1 {
   severities: IEditedVulnerabilitySeverityV1[];
   name: string;
   indexArray: number[];
 }
-export interface IVulnerabilitySeveritiesTemplateV2 {
+interface IVulnerabilitySeveritiesTemplateV2 {
   severities: IEditedVulnerabilitySeverityV2[];
   name: string;
 }
+
+export type IVulnerabilitySeveritiesTemplate = IVulnerabilitySeveritiesTemplateV1 | IVulnerabilitySeveritiesTemplateV2;
 
 export interface IBaseEditedVaultDescription {
   version: string;
