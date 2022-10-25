@@ -10,20 +10,22 @@ export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: s
 
 export type IEditedVulnerabilitySeverity = IEditedVulnerabilitySeverityV1 | IEditedVulnerabilitySeverityV2;
 
-interface IVulnerabilitySeveritiesTemplateV1 {
-  severities: IEditedVulnerabilitySeverityV1[];
+interface IBaseVulnerabilitySeveritiesTemplate {
   name: string;
-  indexArray: number[];
 }
-interface IVulnerabilitySeveritiesTemplateV2 {
+
+export interface IVulnerabilitySeveritiesTemplateV1 extends IBaseVulnerabilitySeveritiesTemplate {
+  indexArray: number[];
+  severities: IEditedVulnerabilitySeverityV1[];
+}
+export interface IVulnerabilitySeveritiesTemplateV2 extends IBaseVulnerabilitySeveritiesTemplate {
   severities: IEditedVulnerabilitySeverityV2[];
-  name: string;
 }
 
 export type IVulnerabilitySeveritiesTemplate = IVulnerabilitySeveritiesTemplateV1 | IVulnerabilitySeveritiesTemplateV2;
 
 export interface IBaseEditedVaultDescription {
-  version: string;
+  version: "v1" | "v2";
   "project-metadata": {
     icon: string;
     website: string;
@@ -48,16 +50,13 @@ export interface IBaseEditedVaultDescription {
   "additional-vaults"?: string[];
 }
 
-interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
+export interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
   version: "v1";
   "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV1;
 }
-interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
+export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
   version: "v2";
   "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
 }
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
-
-
-

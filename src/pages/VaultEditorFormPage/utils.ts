@@ -1,7 +1,14 @@
 import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription } from "types/types";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
-import { IEditedContractCovered, IEditedVaultDescription, IEditedVulnerabilitySeverity } from "./types";
+import {
+  IEditedContractCovered,
+  IEditedVaultDescription,
+  IEditedVaultDescriptionV1,
+  IEditedVulnerabilitySeverity,
+  IEditedVulnerabilitySeverityV1,
+  IEditedVulnerabilitySeverityV2,
+} from "./types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
   name: "",
@@ -18,7 +25,7 @@ export const createNewCoveredContract = (severities?: IEditedVulnerabilitySeveri
     name: "",
     address: "",
     severities: severitiesIds,
-  }
+  };
 };
 
 export const createNewVulnerabilitySeverity = (): IEditedVulnerabilitySeverity => ({
@@ -37,9 +44,10 @@ export const createNewVulnerabilitySeverity = (): IEditedVulnerabilitySeverity =
 });
 
 export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
-  const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate();
+  const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
 
   return {
+    version,
     "project-metadata": {
       name: "",
       icon: "",
@@ -60,7 +68,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       name: "",
       url: "",
     },
-  };
+  } as IEditedVaultDescription;
 };
 
 function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
@@ -102,17 +110,38 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
 }
 
 export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
+  if (vaultDescription.version === "v1" || !vaultDescription.version) {
+    const severitiesWithIds: IEditedVulnerabilitySeverityV1[] = vaultDescription.severities.map((sev) => ({
+      ...sev,
+      id: uuid(),
+    }));
 
-  const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({ ...sev, id: uuid() }));
-  return {
-    ...vaultDescription,
-    "vulnerability-severities-spec": {
-      severities: severitiesWithIds,
-      name: "",
-      indexArray: vaultDescription.severities.map((item) => item.index)
-    },
-    "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    return {
+      ...vaultDescription,
+      "vulnerability-severities-spec": {
+        severities: severitiesWithIds,
+        name: "",
+        indexArray: vaultDescription.indexArray ?? vaultDescription.severities.map((item) => item.index),
+      },
+      "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    } as IEditedVaultDescriptionV1;
+  } else {
+    const severitiesWithIds: IEditedVulnerabilitySeverityV2[] = vaultDescription.severities.map((sev) => ({
+      ...sev,
+      id: uuid(),
+    }));
+
+    return {
+      ...vaultDescription,
+      "vulnerability-severities-spec": {
+        severities: severitiesWithIds,
+        name: "",
+      },
+      "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    };
   }
+
+  return {} as IEditedVaultDescription;
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {

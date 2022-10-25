@@ -53,7 +53,7 @@ interface IVaultV2 extends IBaseVault {
 export type IVault = IVaultV1 | IVaultV2;
 
 interface IBaseVaultDescription {
-  version: "v1" | "v2";
+  version: "v1" | "v2" | undefined;
   "project-metadata": {
     icon: string;
     website: string;
@@ -79,13 +79,16 @@ interface IBaseVaultDescription {
 }
 
 interface IVaultDescriptionV1 extends IBaseVaultDescription {
-  version: "v1";
+  version: "v1" | undefined;
   severities: Array<IVulnerabilitySeverityV1>;
+  indexArray?: number[];
 }
+
 interface IVaultDescriptionV2 extends IBaseVaultDescription {
   version: "v2";
   severities: Array<IVulnerabilitySeverityV2>;
 }
+
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
 
 export interface ICommitteeMember {

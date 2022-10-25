@@ -30,8 +30,8 @@ const VaultEditorFormPage = () => {
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
-
-  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription() });
+  
+  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription('v2') });
   const { handleSubmit, formState, reset: handleReset } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
