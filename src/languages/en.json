@@ -384,6 +384,8 @@
       "nft-animation-placeholder": "NFT Animation",
       "severities-index-array": "Severities Index array",
       "severities-index-array-placeholder": "Severities Index array",
+      "percentage-bounty": "Percentage Bounty (0%-100%)", 
+      "percentage-bounty-placeholder": "Percentage Bounty",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
