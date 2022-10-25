@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, Controller } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { Loading } from "components";
+import { FormSelectInput, Loading } from "components";
 import { IVaultDescription } from "types/types";
 import {
   ContractsCoveredList,
@@ -21,6 +21,7 @@ import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm } from "./styles";
+import { getPath } from "utils/objects.utils";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -30,9 +31,9 @@ const VaultEditorFormPage = () => {
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
-  
+
   const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription('v2') });
-  const { handleSubmit, formState, reset: handleReset } = methods;
+  const { handleSubmit, formState, reset: handleReset, control } = methods;
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -104,6 +105,21 @@ const VaultEditorFormPage = () => {
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">{t("VaultEditor.create-vault")}</div>
 
+        <Controller
+          control={control}
+          name={`version`}
+          render={({ field, formState }) => (
+            <FormSelectInput
+              isDirty={getPath(formState.dirtyFields, field.name)}
+              label={t("version")}
+              placeholder={t("version")}
+              colorable
+              options={['v1', 'v2'].map(version =>
+                ({ label: version, value: version }))}
+              {...field}
+            />
+          )}
+        />
         <section className={classNames({ onlyDesktop: pageNumber !== 1 })}>
           <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
           {ipfsDate && (

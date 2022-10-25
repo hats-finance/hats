@@ -5,6 +5,7 @@ import {
   IEditedContractCovered,
   IEditedVaultDescription,
   IEditedVaultDescriptionV1,
+  IEditedVaultDescriptionV2,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
@@ -118,6 +119,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
 
     return {
       ...vaultDescription,
+      version: "v1",
       "vulnerability-severities-spec": {
         severities: severitiesWithIds,
         name: "",
@@ -125,23 +127,22 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     } as IEditedVaultDescriptionV1;
-  } else {
-    const severitiesWithIds: IEditedVulnerabilitySeverityV2[] = vaultDescription.severities.map((sev) => ({
-      ...sev,
-      id: uuid(),
-    }));
-
-    return {
-      ...vaultDescription,
-      "vulnerability-severities-spec": {
-        severities: severitiesWithIds,
-        name: "",
-      },
-      "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-    };
   }
 
-  return {} as IEditedVaultDescription;
+  const severitiesWithIds: IEditedVulnerabilitySeverityV2[] = vaultDescription.severities.map((sev) => ({
+    ...sev,
+    id: uuid(),
+  }));
+
+  return {
+    ...vaultDescription,
+    version: "v2",
+    "vulnerability-severities-spec": {
+      severities: severitiesWithIds,
+      name: "",
+    },
+    "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+  };
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
@@ -169,5 +170,5 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
           .map((contract) => ({ [contract.name]: contract.address })),
       };
     }),
-  };
+  } as IVaultDescription;
 }

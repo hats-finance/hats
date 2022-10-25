@@ -20,7 +20,6 @@ export interface IBaseVault {
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
   rewardsLevels?: Array<string>;
-  maxBounty: string;
   totalRewardAmount: string;
   liquidityPool: boolean;
   registered: boolean;
@@ -39,15 +38,16 @@ export interface IBaseVault {
   multipleVaults?: IVault[];
   description: IVaultDescription;
 }
-interface IVaultV1 extends IBaseVault {
+export interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
   allocPoint: string;
   description: IVaultDescriptionV1;
 }
-interface IVaultV2 extends IBaseVault {
+export interface IVaultV2 extends IBaseVault {
   version: "v2";
   description: IVaultDescriptionV2;
+  maxBounty: string;
 }
 
 export type IVault = IVaultV1 | IVaultV2;
@@ -78,13 +78,13 @@ interface IBaseVaultDescription {
   severities: Array<IVulnerabilitySeverity>;
 }
 
-interface IVaultDescriptionV1 extends IBaseVaultDescription {
+export interface IVaultDescriptionV1 extends IBaseVaultDescription {
   version: "v1" | undefined;
   severities: Array<IVulnerabilitySeverityV1>;
   indexArray?: number[];
 }
 
-interface IVaultDescriptionV2 extends IBaseVaultDescription {
+export interface IVaultDescriptionV2 extends IBaseVaultDescription {
   version: "v2";
   severities: Array<IVulnerabilitySeverityV2>;
 }

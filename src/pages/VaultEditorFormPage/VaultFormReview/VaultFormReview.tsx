@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { Vault } from "components";
-import { IVault } from "types/types";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2, IVaultV1 } from "types/types";
 import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
@@ -14,9 +14,8 @@ export function VaultFormReview() {
   function getVault(editedDescription: IEditedVaultDescription): IVault {
     const description = editedFormToDescription(editedDescription);
 
-    return {
+    const bothVersionsVault = {
       id: "",
-      description,
       descriptionHash: "",
       pid: "",
       stakingToken: "",
@@ -92,6 +91,23 @@ export function VaultFormReview() {
       approvedClaims: [],
       stakers: [],
     };
+
+    if (editedDescription.version === "v1") {
+      return {
+        ...bothVersionsVault,
+        version: editedDescription.version,
+        description: description as IVaultDescriptionV1,
+      };
+    } else {
+      return {
+        ...bothVersionsVault,
+        version: "v2",
+        description: description as IVaultDescriptionV2,
+        maxBounty: ""
+      }
+
+    }
+
   }
 
   return (
