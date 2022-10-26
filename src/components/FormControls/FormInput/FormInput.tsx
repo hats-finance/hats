@@ -56,13 +56,21 @@ function FormInputComponent(
     refToUse.current!.value = "";
   };
 
+  const removeNotNumber = (e: KeyboardEvent) => {
+    const notAllowedKeys = ["e", "+", "-"];
+    if (notAllowedKeys.includes(e.key)) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   const getMainComponent = () => {
     if (type === "text") {
       return <input {...props} type="text" ref={refToUse} onChange={handleOnChange} />;
     } else if (type === "textarea") {
       return <textarea {...props} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
     } else if (type === "number") {
-      return <input {...props} type={type} ref={refToUse} onChange={(e) => handleOnChange} />;
+      return <input {...props} type={type} ref={refToUse} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
     } else {
       return <input {...props} type={type} ref={refToUse} onChange={handleOnChange} />;
     }
