@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { FormProvider, useForm, Controller } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/useVaults";
-import { FormSelectInput, Loading } from "components";
+import { Loading } from "components";
 import { IVaultDescription } from "types/types";
 import {
   ContractsCoveredList,
@@ -21,7 +21,6 @@ import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm } from "./styles";
-import { getPath } from "utils/objects.utils";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -33,7 +32,7 @@ const VaultEditorFormPage = () => {
   const { ipfsHash } = useParams();
 
   const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription("v2") });
-  const { handleSubmit, formState, reset: handleReset, control, getValues, watch } = methods;
+  const { handleSubmit, formState, reset: handleReset, watch, setValue } = methods;
 
   const vaultVersion = watch("version");
 
@@ -68,7 +67,7 @@ const VaultEditorFormPage = () => {
       console.log(vaultVersion);
       handleReset(createNewVaultDescription(vaultVersion));
     } else {
-      // TODO: migrate description from one version to another 
+      // TODO: migrate description from one version to another
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
@@ -117,28 +116,22 @@ const VaultEditorFormPage = () => {
   return (
     <FormProvider {...methods}>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
-        <div className="editor-title">{t("VaultEditor.create-vault")}</div>
+        <div className="editor-title">
+          {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
+        </div>
 
-        <button type="button" onClick={() => console.log(getValues())}>
-          TEST
-        </button>
-
-        <Controller
-          control={control}
-          name={`version`}
-          render={({ field, formState }) => (
-            <FormSelectInput
-              isDirty={getPath(formState.dirtyFields, field.name)}
-              label={t("version")}
-              placeholder={t("version")}
-              colorable
-              options={["v1", "v2"].map((version) => ({ label: version, value: version }))}
-              {...field}
-            />
-          )}
-        />
         <section className={classNames({ onlyDesktop: pageNumber !== 1 })}>
           <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
+
+          {ipfsHash && vaultVersion === "v1" && (
+            <>
+              <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
+              <button className="migrate-button fill" type="button" onClick={() => setValue("version", "v2")}>
+                Migrate description to v2
+              </button>
+            </>
+          )}
+
           {ipfsDate && (
             <div className="last-saved-time">
               {`${t("VaultEditor.last-saved-time")} `}
