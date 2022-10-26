@@ -153,7 +153,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       name: "",
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-  } as IEditedVaultDescriptionV2;
+  };
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
