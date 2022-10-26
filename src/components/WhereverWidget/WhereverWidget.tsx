@@ -9,7 +9,7 @@ import { useEthers } from "@usedapp/core";
 import { WHEREVER_SETTINGS } from "settings";
 
 const WhereverWidget = () => {
-  const { account } = useEthers();
+  const { account, library } = useEthers();
 
   if (!account) {
     return null;
@@ -18,6 +18,7 @@ const WhereverWidget = () => {
   return (
     <StyledWhereverWidgetContainer>
       <NotificationFeedProvider
+        provider={library!}
         theme={{
           bellColor: Colors.turquoise,
           backgroundColor: Colors.fieldBlue,

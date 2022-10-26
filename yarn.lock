@@ -3579,10 +3579,10 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@wherever/react-notification-feed@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.6.tgz#da8db9f67e244bf07cc0a6277e94ae1def56a3ae"
-  integrity sha512-X2jRO+yFwqq6QcTKiC/zO1hNqI4oE6pH1Rbn4HfUm9UQUhk71vME8x6JCWnYlNMsqI1JLH1qaIypbBMCkQmEvw==
+"@wherever/react-notification-feed@^0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.10.tgz#91194254d21dce523aab48fae246a80648aa29c7"
+  integrity sha512-BpSPyyv4XmvEguP62nPfl7KU2VN4ydeMacyPiAnsCATtkSqlMFgqZdzEVawlsbAc6bsRoGTap65yerZ4Q+MQ/Q==
   dependencies:
     "@apollo/client" "^3.6.9"
     "@emotion-icons/octicons" "^3.27.0"
