@@ -104,10 +104,6 @@ export function VaultsProvider({ children }) {
         try {
           const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!);
           const object = await dataResponse.json();
-          console.log("vault", vault);
-
-          console.log(object);
-
           return fixObject(object);
         } catch (error) {
           console.error(error);
@@ -192,9 +188,9 @@ const addMultiVaults = (vaults: IVault[]) =>
   vaults.map((vault) =>
     vault.description?.["additional-vaults"]
       ? {
-          ...vault,
-          multipleVaults: [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])],
-        }
+        ...vault,
+        multipleVaults: [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])],
+      }
       : vault
   );
 
