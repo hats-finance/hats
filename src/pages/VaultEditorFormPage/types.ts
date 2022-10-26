@@ -1,4 +1,5 @@
 import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "types/types";
+
 export interface IEditedContractCovered {
   name: string;
   address: string;
@@ -10,13 +11,14 @@ export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: s
 
 export type IEditedVulnerabilitySeverity = IEditedVulnerabilitySeverityV1 | IEditedVulnerabilitySeverityV2;
 
-interface IBaseVulnerabilitySeveritiesTemplate {
+export interface IBaseVulnerabilitySeveritiesTemplate {
   name: string;
+  severities: IEditedVulnerabilitySeverity[];
 }
 
 export interface IVulnerabilitySeveritiesTemplateV1 extends IBaseVulnerabilitySeveritiesTemplate {
-  indexArray: number[];
   severities: IEditedVulnerabilitySeverityV1[];
+  indexArray: number[];
 }
 export interface IVulnerabilitySeveritiesTemplateV2 extends IBaseVulnerabilitySeveritiesTemplate {
   severities: IEditedVulnerabilitySeverityV2[];

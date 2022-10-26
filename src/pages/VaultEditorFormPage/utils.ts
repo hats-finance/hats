@@ -27,20 +27,33 @@ export const createNewCoveredContract = (severities?: IEditedVulnerabilitySeveri
   };
 };
 
-export const createNewVulnerabilitySeverity = (): IEditedVulnerabilitySeverity => ({
-  id: uuid(),
-  name: "",
-  index: 0,
-  "contracts-covered": [],
-  "nft-metadata": {
+export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVulnerabilitySeverity => {
+  const editedVulnerabilitySeverityBase = {
+    id: uuid(),
     name: "",
+    "contracts-covered": [],
+    "nft-metadata": {
+      name: "",
+      description: "",
+      animation_url: "",
+      image: "",
+      external_url: "",
+    },
     description: "",
-    animation_url: "",
-    image: "",
-    external_url: "",
-  },
-  description: "",
-});
+  };
+
+  if (version === "v1") {
+    return {
+      ...editedVulnerabilitySeverityBase,
+      index: 0,
+    } as IEditedVulnerabilitySeverityV1;
+  } else {
+    return {
+      ...editedVulnerabilitySeverityBase,
+      percentage: 0,
+    } as IEditedVulnerabilitySeverityV2;
+  }
+};
 
 export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
@@ -55,7 +68,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       type: "",
     },
     "communication-channel": {
-      "pgp-pk": "",
+      "pgp-pk": [],
     },
     committee: {
       "multisig-address": "",
@@ -140,7 +153,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       name: "",
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-  };
+  } as IEditedVaultDescriptionV2;
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {

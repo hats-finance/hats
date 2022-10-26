@@ -47,7 +47,7 @@ export interface IVaultV1 extends IBaseVault {
 export interface IVaultV2 extends IBaseVault {
   version: "v2";
   description: IVaultDescriptionV2;
-  maxBounty: string;
+  maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
 }
 
 export type IVault = IVaultV1 | IVaultV2;
@@ -109,7 +109,7 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
   index: number;
 }
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
-  percentage: number;
+  percentage: number; // percentage like 1000 (10%) or 8000 (80%)
 }
 
 export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;

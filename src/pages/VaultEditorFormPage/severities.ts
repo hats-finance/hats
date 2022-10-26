@@ -7,7 +7,7 @@ const convertVulnerabilitySeverityV1ToV2 = (severity: IEditedVulnerabilitySeveri
 
   return {
     ...newSeverity,
-    percentage: indexArray[severity.index] / 100 / 100,
+    percentage: indexArray[severity.index] / 100,
   };
 }
 
@@ -86,8 +86,11 @@ export const getVulnerabilitySeveritiesTemplate = (version: "v1" | "v2"): IVulne
   if (version === 'v1') {
     return baseTemplateV1;
   } else {
+    const baseTemplate = { ...baseTemplateV1 } as any;
+    delete baseTemplate.indexArray;
+
     const baseTemplateV2: IVulnerabilitySeveritiesTemplateV2 = {
-      ...baseTemplateV1,
+      ...baseTemplate as IVulnerabilitySeveritiesTemplateV2,
       severities: baseTemplateV1.severities.map((severity) => convertVulnerabilitySeverityV1ToV2(severity, indexArray)),
     };
 

@@ -32,8 +32,10 @@ const VaultEditorFormPage = () => {
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
 
-  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription('v2') });
-  const { handleSubmit, formState, reset: handleReset, control } = methods;
+  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription("v2") });
+  const { handleSubmit, formState, reset: handleReset, control, getValues, watch } = methods;
+
+  const vaultVersion = watch("version");
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
@@ -58,6 +60,18 @@ const VaultEditorFormPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
+
+  useEffect(() => {
+    const dirtyFields = Object.keys(formState.dirtyFields);
+
+    if (dirtyFields.length === 1 && dirtyFields[0] === "version") {
+      console.log(vaultVersion);
+      handleReset(createNewVaultDescription(vaultVersion));
+    } else {
+      // TODO: migrate description from one version to another 
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vaultVersion]);
 
   async function saveToIpfs(vaultDescription: IVaultDescription) {
     try {
@@ -105,6 +119,10 @@ const VaultEditorFormPage = () => {
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">{t("VaultEditor.create-vault")}</div>
 
+        <button type="button" onClick={() => console.log(getValues())}>
+          TEST
+        </button>
+
         <Controller
           control={control}
           name={`version`}
@@ -114,8 +132,7 @@ const VaultEditorFormPage = () => {
               label={t("version")}
               placeholder={t("version")}
               colorable
-              options={['v1', 'v2'].map(version =>
-                ({ label: version, value: version }))}
+              options={["v1", "v2"].map((version) => ({ label: version, value: version }))}
               {...field}
             />
           )}
