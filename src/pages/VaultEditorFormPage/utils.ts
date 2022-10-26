@@ -4,8 +4,6 @@ import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
   IEditedContractCovered,
   IEditedVaultDescription,
-  IEditedVaultDescriptionV1,
-  IEditedVaultDescriptionV2,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
@@ -139,7 +137,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
         indexArray: vaultDescription.indexArray ?? vaultDescription.severities.map((item) => item.index),
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-    } as IEditedVaultDescriptionV1;
+    };
   }
 
   const severitiesWithIds: IEditedVulnerabilitySeverityV2[] = vaultDescription.severities.map((sev) => ({
@@ -155,13 +153,14 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       name: "",
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-  } as IEditedVaultDescriptionV2;
+  };
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
   const vaultName = editedVaultDescription["project-metadata"].name;
 
   return {
+    version: editedVaultDescription.version,
     "project-metadata": editedVaultDescription["project-metadata"],
     "communication-channel": editedVaultDescription["communication-channel"],
     committee: editedVaultDescription.committee,
@@ -183,5 +182,5 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
           .map((contract) => ({ [contract.name]: contract.address })),
       };
     }),
-  } as IVaultDescription;
+  };
 }
