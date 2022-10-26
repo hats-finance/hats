@@ -32,7 +32,7 @@ const VaultEditorFormPage = () => {
   const { ipfsHash } = useParams();
 
   const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription("v2") });
-  const { handleSubmit, formState, reset: handleReset, watch, setValue } = methods;
+  const { handleSubmit, formState, reset: handleReset, watch, setValue, getValues } = methods;
 
   const vaultVersion = watch("version");
 
@@ -115,6 +115,7 @@ const VaultEditorFormPage = () => {
 
   return (
     <FormProvider {...methods}>
+      <button type="button" onClick={() => console.log(getValues())}>test</button>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>

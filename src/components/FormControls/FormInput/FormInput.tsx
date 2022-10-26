@@ -1,4 +1,4 @@
-import { ChangeEvent, forwardRef, useRef } from "react";
+import { ChangeEvent, forwardRef, KeyboardEvent, useRef } from "react";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
@@ -7,7 +7,7 @@ import { parseIsDirty } from "../utils";
 
 const DEFAULT_ROWS = 10;
 
-export type FormInputType = "text" | "textarea";
+export type FormInputType = "text" | "textarea" | "number";
 
 type FormInputProps = {
   type?: FormInputType;
@@ -59,8 +59,12 @@ function FormInputComponent(
   const getMainComponent = () => {
     if (type === "text") {
       return <input {...props} type="text" ref={refToUse} onChange={handleOnChange} />;
-    } else {
+    } else if (type === "textarea") {
       return <textarea {...props} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
+    } else if (type === "number") {
+      return <input {...props} type={type} ref={refToUse} onChange={(e) => handleOnChange} />;
+    } else {
+      return <input {...props} type={type} ref={refToUse} onChange={handleOnChange} />;
     }
   };
 
