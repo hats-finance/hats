@@ -22,9 +22,7 @@ export const GET_VAULTS = gql`
       stakingToken
       stakingTokenDecimals
       stakingTokenSymbol
-      totalStaking
       honeyPotBalance
-      totalReward
       totalRewardPaid
       committee
       allocPoint
@@ -41,7 +39,6 @@ export const GET_VAULTS = gql`
       }
       numberOfApprovedClaims
       rewardsLevels
-      totalRewardAmount
       liquidityPool
       registered
       withdrawRequests {

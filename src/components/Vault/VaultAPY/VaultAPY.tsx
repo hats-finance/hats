@@ -35,11 +35,13 @@ export default function VaultAPY({ vault }: IProps) {
           overlay={overlay}
           overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
           placement="top">
-          <span>{formatAPY(averagedAPY)}</span>
+          {/* <span>{formatAPY(averagedAPY)}</span> */}
+          <span>-</span>
         </Tooltip>
       );
     } else {
-      return formatAPY(apys[vault.stakingToken].apy);
+      return '-';
+      // return formatAPY(apys[vault.stakingToken].apy);
     }
   }
 

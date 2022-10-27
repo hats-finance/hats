@@ -8,9 +8,7 @@ export interface IBaseVault {
   stakingTokenDecimals: string;
   stakingTokenSymbol: string;
   stakers: Array<IStaker>;
-  totalStaking: string;
   honeyPotBalance: string;
-  totalReward: string;
   totalRewardPaid: string;
   committee: string;
   allocPoint?: string;
@@ -20,7 +18,6 @@ export interface IBaseVault {
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
   rewardsLevels?: Array<string>;
-  totalRewardAmount: string;
   liquidityPool: boolean;
   registered: boolean;
   withdrawRequests: Array<IPoolWithdrawRequest>;
@@ -138,8 +135,6 @@ export interface IMaster {
   id: string;
   address: string;
   governance: string;
-  totalStaking: string;
-  totalReward: string;
   totalRewardPaid: string;
   rewardPerBlock: string;
   startBlock: string;
