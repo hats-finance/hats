@@ -1,24 +1,16 @@
-import { breakpointsDefinition } from "./../../styles/breakpoints.styles";
 import styled from "styled-components";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledMyAccountInfo = styled.div`
   display: flex;
   flex-direction: column;
   color: var(--white);
-  padding: var(--modal-element-padding);
-  min-width: 600px;
-  max-width: 600px;
-  padding-top: 0px;
-  margin: auto;
-  max-height: 650px;
+  min-width: 500px;
 
-  @media (max-width: ${breakpointsDefinition.mobile}) {
-    padding: var(--modal-element-padding-mobile);
+  @media (max-width: ${breakpointsDefinition.smallMobile}) {
     min-width: unset;
-  }
-
-  @media (max-width: ${breakpointsDefinition.smallScreen}) {
-    max-height: 500px;
+    max-width: unset;
+    width: 100%;
   }
 
   .wallet {

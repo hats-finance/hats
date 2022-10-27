@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
-import Loading from "../Shared/Loading";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
 import { useCallback, useState } from "react";
@@ -11,8 +10,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import RedeemNftSuccess from "components/RedeemNftSuccess/RedeemNftSuccess";
-import NFTCard from "components/NFTCard/NFTCard";
+import { NFTCard, Loading, RedeemNftSuccess } from "components";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";

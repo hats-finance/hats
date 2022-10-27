@@ -6,7 +6,7 @@ import Tooltip from "rc-tooltip";
 import InfoIcon from "assets/icons/info.icon";
 import "styles/SafePeriodBar.scss";
 
-export default function SafePeriodBar() {
+export function SafePeriodBar() {
   const { withdrawSafetyPeriod } = useVaults();
   if (!withdrawSafetyPeriod) {
     return null;

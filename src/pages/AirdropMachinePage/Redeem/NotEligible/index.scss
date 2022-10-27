@@ -2,12 +2,11 @@
 
 .not-eligible-wrapper {
   color: $white;
-  padding: $modal-element-padding;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-width: 750px;
-  padding-top: 0;
+  min-width: 600px;
+
   .not-eligible__not-eligible-icon {
     width: 100px;
     align-self: center;

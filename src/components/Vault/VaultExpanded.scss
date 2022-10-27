@@ -1,4 +1,4 @@
-@import '../../styles/constants.scss';
+@import 'styles/constants.scss';
 
 .vault-expanded {
   display: flex;
@@ -189,7 +189,7 @@
       min-height: unset;
       overflow: auto;
       white-space: nowrap;
-      width: calc(100vw - 82px);
+      width: 100%;
     }
 
     .prize-division-wrapper {

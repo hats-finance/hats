@@ -3,5 +3,5 @@ export { GovPage } from "./GovPage/GovPage";
 export { VulnerabilityListPage } from "./VulnerabilityListPage/VulnerabilityListPage";
 export { VulnerabilityFormPage } from "./VulnerabilityFormPage/VulnerabilityFormPage";
 export { CommitteeToolsPage } from "./CommitteeToolsPage/CommitteeToolsPage";
-export { VaultEditorPage } from "./VaultEditorPage/VaultEditorPage";
+export { VaultEditorFormPage } from "./VaultEditorFormPage/VaultEditorFormPage";
 export { AirdropMachinePage } from "./AirdropMachinePage/AirdropMachinePage";

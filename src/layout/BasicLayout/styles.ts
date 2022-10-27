@@ -16,7 +16,7 @@ export const AppLayout = styled.div`
 `;
 
 export const AppContent = styled.section`
-  padding: ${getSpacing(6)};
+  padding: ${getSpacing(6)} ${getSpacing(6)} 0 ${getSpacing(6)};
 
   @media only screen and (max-width: ${breakpointsDefinition.mobile}) {
     padding: ${getSpacing(4)} ${getSpacing(2)};

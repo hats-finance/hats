@@ -3,16 +3,17 @@ import { isAddress } from "ethers/lib/utils";
 import { shortenAddress } from "@usedapp/core";
 import { Chains } from "../../constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import "./ContractsCovered.scss";
 
 interface IProps {
   contracts: Array<{}>
 }
 
-export default function ContractsCovered(props: IProps) {
+export function ContractsCovered(props: IProps) {
   const chain = Chains[CHAINID];
 
   return (
-    <>
+    <div className="contracts-covered-wrapper">
       {props.contracts.map((contract: { [key: string]: string; }, index: number) => {
         const contractName = Object.keys(contract)[0];
         const contractVaule = contract?.[contractName];
@@ -25,6 +26,6 @@ export default function ContractsCovered(props: IProps) {
           </a>
         )
       })}
-    </>
+    </div>
   )
 }

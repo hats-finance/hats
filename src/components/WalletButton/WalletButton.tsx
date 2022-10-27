@@ -1,7 +1,7 @@
 import { shortenIfAddress, useEthers, useTransactions } from "@usedapp/core";
 import { useWeb3Modal } from "hooks/useWeb3Modal";
 import { Colors } from "../../constants/constants";
-import Dot from "../Shared/Dot/Dot";
+import { Dot } from "components";
 import { StyledWalletButton } from "./styles";
 
 const WalletButton = () => {

@@ -1,5 +1,10 @@
 @import "../constants.scss";
 
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 tr {
   scroll-margin-top: $header-height * 2;
   border-bottom: 2px solid $dark-blue;
@@ -26,6 +31,8 @@ tr {
 }
 
 .arrow {
+  display: flex;
+  justify-content: center;
   cursor: pointer;
   transform: rotate(0deg);
   transition: transform 0.1s linear;
@@ -83,49 +90,12 @@ tr {
   font-weight: bold;
 }
 
-.contract-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  .contract-name {
-    color: $dark-turquoise;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    margin-right: 10px;
-  }
-  .contract-value {
-    max-width: 150px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-}
-
-.contracts-covered-modal-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 50px 0;
-  border-top: 1px solid $dark-turquoise;
-  > a {
-    width: 60%;
-    display: flex;
-    justify-content: space-between;
-  }
-}
-
 @media only screen and (max-width: $mobile-breakpoint) {
   .arrow {
     margin-left: unset;
   }
   .rewards-cell {
     width: 100%;
-  }
-  .contracts-covered-modal-wrapper {
-    padding: 40px 20px;
-    > a {
-      width: 100%;
-    }
   }
   .max-rewards-wrapper {
     flex-direction: row;

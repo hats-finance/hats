@@ -6,7 +6,7 @@ import MyNFTs from "./components/MyNFTs/MyNFTs";
 // import TotalStaked from "./components/TotalStaked/TotalStaked";
 import { StyledMyAccountInfo } from "./styles";
 
-export default function MyAccount() {
+export function MyAccount() {
   const { t } = useTranslation();
   const { account } = useEthers();
 
