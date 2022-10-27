@@ -1,13 +1,13 @@
 import { v4 as uuid } from 'uuid';
 import { IEditedVulnerabilitySeverityV1, IEditedVulnerabilitySeverityV2, IVulnerabilitySeveritiesTemplate, IVulnerabilitySeveritiesTemplateV1, IVulnerabilitySeveritiesTemplateV2 } from "./types";
 
-const convertVulnerabilitySeverityV1ToV2 = (severity: IEditedVulnerabilitySeverityV1, indexArray: number[]): IEditedVulnerabilitySeverityV2 => {
+export const convertVulnerabilitySeverityV1ToV2 = (severity: IEditedVulnerabilitySeverityV1, indexArray?: number[]): IEditedVulnerabilitySeverityV2 => {
   const newSeverity = { ...severity } as any;  
-  delete  newSeverity.index;
+  delete newSeverity.index;
 
   return {
     ...newSeverity,
-    percentage: indexArray[severity.index] / 100,
+    percentage: (indexArray && indexArray[severity.index]) ? indexArray[severity.index] / 100 : NaN,
   };
 }
 

@@ -16,11 +16,12 @@ import {
   VaultFormReview,
   CommunicationChannelForm,
 } from ".";
-import { IEditedVaultDescription } from "./types";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm } from "./styles";
+import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -54,20 +55,31 @@ const VaultEditorFormPage = () => {
   }
 
   useEffect(() => {
-    if (ipfsHash) {
-      loadFromIpfs(ipfsHash);
-    }
+    if (ipfsHash) loadFromIpfs(ipfsHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
+    if (!dirtyFields.includes("version")) return;
 
-    if (dirtyFields.length === 1 && dirtyFields[0] === "version") {
-      console.log(vaultVersion);
+    const onlyVersionDirty = dirtyFields.length === 1 && dirtyFields[0] === "version";
+
+    // If it's a new and clean form description in v1
+    if (!ipfsHash && onlyVersionDirty) {
       handleReset(createNewVaultDescription(vaultVersion));
-    } else {
-      // TODO: migrate description from one version to another
+    }
+
+    // Changing from v2 to v1 is not supported
+    if (vaultVersion === "v1") return;
+
+    // If it's not a clean form description
+    if (ipfsHash || (!ipfsHash && !onlyVersionDirty)) {
+      const indexArray = getValues("vulnerability-severities-spec.indexArray");
+      const currentSeverities = getValues("vulnerability-severities-spec.severities") as IEditedVulnerabilitySeverityV1[];
+
+      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2(s, indexArray));
+      setValue("vulnerability-severities-spec.severities", newSeverities, { shouldDirty: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
@@ -115,7 +127,14 @@ const VaultEditorFormPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <button type="button" onClick={() => console.log(getValues())}>test</button>
+      <button
+        type="button"
+        onClick={() => {
+          console.log(getValues());
+          console.log(editedFormToDescription(getValues()));
+        }}>
+        test
+      </button>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
@@ -127,7 +146,10 @@ const VaultEditorFormPage = () => {
           {ipfsHash && vaultVersion === "v1" && (
             <>
               <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
-              <button className="migrate-button fill" type="button" onClick={() => setValue("version", "v2")}>
+              <button
+                className="migrate-button fill"
+                type="button"
+                onClick={() => setValue("version", "v2", { shouldDirty: true })}>
                 Migrate description to v2
               </button>
             </>

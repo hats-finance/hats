@@ -18,7 +18,7 @@ export interface IBaseVulnerabilitySeveritiesTemplate {
 
 export interface IVulnerabilitySeveritiesTemplateV1 extends IBaseVulnerabilitySeveritiesTemplate {
   severities: IEditedVulnerabilitySeverityV1[];
-  indexArray: number[];
+  indexArray?: number[];
 }
 export interface IVulnerabilitySeveritiesTemplateV2 extends IBaseVulnerabilitySeveritiesTemplate {
   severities: IEditedVulnerabilitySeverityV2[];

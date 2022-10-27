@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { Vault } from "components";
-import { IVault, IVaultDescriptionV1, IVaultDescriptionV2, IVaultV1 } from "types/types";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types/types";
 import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";

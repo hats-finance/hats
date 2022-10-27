@@ -134,7 +134,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       "vulnerability-severities-spec": {
         severities: severitiesWithIds,
         name: "",
-        indexArray: vaultDescription.indexArray ?? vaultDescription.severities.map((item) => item.index),
+        indexArray: vaultDescription.indexArray,
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     };
