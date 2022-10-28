@@ -17,6 +17,7 @@ type FormInputProps = {
   removable?: boolean;
   colorable?: boolean;
   isDirty?: boolean;
+  error?: { message: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
@@ -29,6 +30,7 @@ function FormInputComponent(
     colorable = false,
     isDirty = false,
     label,
+    error,
     ...props
   }: FormInputProps,
   ref
@@ -77,7 +79,7 @@ function FormInputComponent(
   };
 
   return (
-    <StyledFormInput isDirty={parseIsDirty(isDirty) && colorable} type={type} withExtraicons={extraIcons}>
+    <StyledFormInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable} type={type} withExtraicons={extraIcons}>
       {label && <label htmlFor={props.name}>{label}</label>}
 
       <div className="input-container">
@@ -91,6 +93,8 @@ function FormInputComponent(
           </div>
         )}
       </div>
+
+      {error && <span className="error">{error.message}</span>}
     </StyledFormInput>
   );
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm } from "react-hook-form";
+import { DevTool } from "@hookform/devtools";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
@@ -16,7 +17,7 @@ import {
   VaultFormReview,
   CommunicationChannelForm,
 } from ".";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
+import { getEditedDescriptionYupResolver, IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
@@ -32,8 +33,11 @@ const VaultEditorFormPage = () => {
   const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
 
-  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription("v2") });
-  const { handleSubmit, formState, reset: handleReset, watch, setValue, getValues } = methods;
+  const methods = useForm<IEditedVaultDescription>({
+    defaultValues: createNewVaultDescription("v2"),
+    resolver: getEditedDescriptionYupResolver(t),
+  });
+  const { handleSubmit, formState, reset: handleReset, watch, setValue, getValues, control } = methods;
 
   const vaultVersion = watch("version");
 
@@ -122,6 +126,7 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data: IEditedVaultDescription) => {
+    console.log(data);
     saveToIpfs(editedFormToDescription(data));
   };
 
@@ -269,6 +274,10 @@ const VaultEditorFormPage = () => {
           )}
         </div>
       </VaultEditorForm>
+
+      <div className="form-devtool">
+        <DevTool control={control} />
+      </div>
     </FormProvider>
   );
 };

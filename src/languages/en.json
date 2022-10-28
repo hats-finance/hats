@@ -1,6 +1,7 @@
 {
   "translation": {
     "version": "Version",
+    "required": "Required",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

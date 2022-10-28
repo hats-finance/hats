@@ -4,12 +4,13 @@ import { FormInputType } from "./FormInput";
 
 type StyledFormInputProps = {
   isDirty: boolean;
+  hasError: boolean;
   withExtraicons: boolean;
   type: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons }) => css`
+  ({ isDirty, type, withExtraicons, hasError }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${getSpacing(3)};
@@ -35,6 +36,11 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       css`
         border-color: var(--yellow);
       `}
+
+      ${hasError &&
+      css`
+        border-color: var(--red);
+      `}
     }
 
     textarea {
@@ -54,6 +60,11 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
+
+      ${hasError &&
+      css`
+        color: var(--red);
+      `}
     }
 
     .input-container {
@@ -99,6 +110,14 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
           opacity: 0.4;
         }
       }
+    }
+
+    span.error {
+      display: block;
+      color: var(--red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
     }
   `
 );

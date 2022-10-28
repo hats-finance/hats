@@ -202,4 +202,14 @@ export const GlobalStyle = createGlobalStyle`
             font-size: var(--small);
         }
     }
+
+
+    /* React hook form devtools */
+    .form-devtool {
+        .css-vv52sx {
+            td {
+                max-width: unset !important;
+            }
+        }
+    }
 `;
