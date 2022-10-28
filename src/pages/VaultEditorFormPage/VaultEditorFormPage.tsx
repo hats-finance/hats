@@ -17,12 +17,13 @@ import {
   VaultFormReview,
   CommunicationChannelForm,
 } from ".";
-import { getEditedDescriptionYupResolver, IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm } from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
+import { getEditedDescriptionYupSchema } from "./formSchema";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -35,7 +36,7 @@ const VaultEditorFormPage = () => {
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
-    resolver: getEditedDescriptionYupResolver(t),
+    resolver: getEditedDescriptionYupSchema(t),
   });
   const { handleSubmit, formState, reset: handleReset, watch, setValue, getValues, control } = methods;
 
@@ -127,7 +128,9 @@ const VaultEditorFormPage = () => {
 
   const onSubmit = (data: IEditedVaultDescription) => {
     console.log(data);
-    saveToIpfs(editedFormToDescription(data));
+    if (formState.isValid) {
+      // saveToIpfs(editedFormToDescription(data));
+    }
   };
 
   return (

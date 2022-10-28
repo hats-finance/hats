@@ -2,6 +2,7 @@
   "translation": {
     "version": "Version",
     "required": "Required",
+    "invalid-address": "Invalid address",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

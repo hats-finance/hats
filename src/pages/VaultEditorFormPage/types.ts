@@ -1,6 +1,3 @@
-import { TFunction } from "react-i18next";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "types/types";
 
 export interface IEditedContractCovered {
@@ -40,12 +37,12 @@ export interface IBaseEditedVaultDescription {
     endtime?: number;
     starttime?: number;
   };
-  "communication-channel": {
-    "pgp-pk": string | string[];
-  };
   committee: {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
+  };
+  "communication-channel": {
+    "pgp-pk": string | string[];
   };
   "contracts-covered": IEditedContractCovered[];
   source: {
@@ -65,19 +62,3 @@ export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
 }
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
-
-export const getEditedDescriptionYupResolver = (intl: TFunction) => {
-  const schema = Yup.object().shape({
-    "project-metadata": Yup.object({
-      icon: Yup.string().required(intl('required')),
-      tokenIcon: Yup.string().required(intl('required')),
-      website: Yup.string().required(intl('required')),
-      name: Yup.string().required(intl('required')),
-      type: Yup.string(),
-      endtime: Yup.number(),
-      starttime: Yup.number(),
-    }),
-  });
-
-  return yupResolver(schema);
-}
