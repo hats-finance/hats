@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Controller } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
@@ -17,16 +17,16 @@ type ContractCoveredFormProps = {
 
 export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
   const { t } = useTranslation();
-  const { register, watch, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const contracts = watch("contracts-covered");
-  const contractsCount = contracts.length;
+  const contracts = useWatch({ control, name: "contracts-covered" });
+  const contractsCount = useMemo(() => contracts?.length, [contracts]);
 
-  const severities = watch("vulnerability-severities-spec.severities");
-  const severitiesOptions = severities.map((severity) => ({
-    label: severity.name,
-    value: severity.id as string,
-  }));
+  const severities = useWatch({ control, name: "vulnerability-severities-spec.severities" });
+  const severitiesOptions = useMemo(
+    () => severities.map((severity) => ({ label: severity.name, value: severity.id as string })),
+    [severities]
+  );
 
   useEffect(() => {
     const severitiesFormIds = severities.map((sev) => sev.id);
@@ -34,7 +34,8 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
 
     const filteredVulnerabilities = severitiesIdsInThisContract?.filter((sevId) => severitiesFormIds.includes(sevId));
     setValue(`contracts-covered.${index}.severities`, filteredVulnerabilities);
-  }, [severities, getValues, setValue, index]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [severities, index]);
 
   return (
     <StyledContractCoveredForm>

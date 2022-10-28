@@ -1,15 +1,17 @@
 import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { Vault } from "components";
 import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types/types";
 import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 
 export function VaultFormReview() {
   const { t } = useTranslation();
-  const { watch } = useFormContext<IEditedVaultDescription>();
-  const editedVaultDescriptionForm = watch();
+  const { control } = useEnhancedFormContext<IEditedVaultDescription>();
+  
+  const editedVaultDescriptionForm = useWatch({control}) as IEditedVaultDescription;
 
   function getVault(editedDescription: IEditedVaultDescription): IVault {
     const description = editedFormToDescription(editedDescription);
@@ -100,9 +102,7 @@ export function VaultFormReview() {
         description: description as IVaultDescriptionV2,
         maxBounty: ""
       }
-
     }
-
   }
 
   return (
