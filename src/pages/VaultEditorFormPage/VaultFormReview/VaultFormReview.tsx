@@ -6,15 +6,16 @@ import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useCallback } from "react";
 
 export function VaultFormReview() {
   const { t } = useTranslation();
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
-  
-  const editedVaultDescriptionForm = useWatch({control}) as IEditedVaultDescription;
 
-  function getVault(editedDescription: IEditedVaultDescription): IVault {
-    const description = editedFormToDescription(editedDescription);
+  const editedVaultDescriptionForm = useWatch({ control }) as IEditedVaultDescription;
+
+  const getVault = useCallback((): IVault => {
+    const description = editedFormToDescription(editedVaultDescriptionForm);
 
     const bothVersionsVault = {
       id: "",
@@ -89,10 +90,10 @@ export function VaultFormReview() {
       stakers: [],
     };
 
-    if (editedDescription.version === "v1") {
+    if (editedVaultDescriptionForm.version === "v1") {
       return {
         ...bothVersionsVault,
-        version: editedDescription.version,
+        version: editedVaultDescriptionForm.version,
         description: description as IVaultDescriptionV1,
       };
     } else {
@@ -100,10 +101,10 @@ export function VaultFormReview() {
         ...bothVersionsVault,
         version: "v2",
         description: description as IVaultDescriptionV2,
-        maxBounty: ""
-      }
+        maxBounty: "",
+      };
     }
-  }
+  }, [editedVaultDescriptionForm]);
 
   return (
     <StyledVaultFormReview>
@@ -117,7 +118,7 @@ export function VaultFormReview() {
         <div className="preview-vault">
           <table>
             <tbody>
-              <Vault expanded={true} data={getVault(editedVaultDescriptionForm)} preview />
+              <Vault expanded={true} data={getVault()} preview />
             </tbody>
           </table>
         </div>
