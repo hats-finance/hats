@@ -11,31 +11,25 @@ import { StyledContractCoveredForm } from "./styles";
 
 type ContractCoveredFormProps = {
   index: number;
+  contractsCount: number;
   append: (data: IEditedContractCovered) => void;
   remove: (index: number) => void;
 };
 
-export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
+export default function ContractCoveredForm({ index, append, remove, contractsCount }: ContractCoveredFormProps) {
   const { t } = useTranslation();
   const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const contracts = useWatch({ control, name: "contracts-covered" });
-  const contractsCount = useMemo(() => contracts?.length, [contracts]);
-
-  const severities = useWatch({ control, name: "vulnerability-severities-spec.severities" });
-  const severitiesOptions = useMemo(
-    () => severities.map((severity) => ({ label: severity.name, value: severity.id as string })),
-    [severities]
-  );
+  const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
+  const severitiesFormIds = useMemo(() => severitiesOptions ? severitiesOptions.map((sev) => sev.value) : [], [severitiesOptions])
 
   useEffect(() => {
-    const severitiesFormIds = severities.map((sev) => sev.id);
     const severitiesIdsInThisContract: string[] = getValues()["contracts-covered"][index].severities;
 
     const filteredVulnerabilities = severitiesIdsInThisContract?.filter((sevId) => severitiesFormIds.includes(sevId));
     setValue(`contracts-covered.${index}.severities`, filteredVulnerabilities);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [severities, index]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [severitiesOptions, index]);
 
   return (
     <StyledContractCoveredForm>
@@ -52,7 +46,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
-            {severities && (
+            {severitiesOptions && (
               <div className="severities">
                 <Controller
                   control={control}
@@ -93,7 +87,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button type="button" className="fill" onClick={() => append(createNewCoveredContract(severities))}>
+          <button type="button" className="fill" onClick={() => append(createNewCoveredContract(severitiesFormIds))}>
             {t("VaultEditor.add-member")}
           </button>
         )}

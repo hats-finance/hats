@@ -11,16 +11,14 @@ import { StyledCommitteeMemberForm } from "./styles";
 
 type CommitteeMemberFormProps = {
   index: number;
+  membersCount: number;
   append: (data: ICommitteeMember) => void;
   remove: UseFieldArrayRemove;
 };
 
-const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps) => {
+const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
-  const { register, watch } = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const members = watch("committee.members") as ICommitteeMember[];
-  const membersCount = members.length;
+  const { register } = useEnhancedFormContext<IEditedVaultDescription>();
 
   return (
     <StyledCommitteeMemberForm>

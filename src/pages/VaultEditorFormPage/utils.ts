@@ -16,8 +16,8 @@ export const createNewCommitteeMember = (): ICommitteeMember => ({
   "image-ipfs-link": "",
 });
 
-export const createNewCoveredContract = (severities?: IEditedVulnerabilitySeverity[]): IEditedContractCovered => {
-  const severitiesIds = severities?.map((s) => s.id as string) || [];
+export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {
+  const severitiesIds = sevIds ? [...sevIds] : [];
   severitiesIds.sort();
 
   return {
@@ -57,6 +57,13 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
 
 export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
+  const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
+  const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
+    (s: IEditedVulnerabilitySeverity) => ({
+      label: s.name,
+      value: s.id as string,
+    })
+  );
 
   return {
     version,
@@ -74,12 +81,13 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       "multisig-address": "",
       members: [{ ...createNewCommitteeMember() }],
     },
-    "contracts-covered": [{ ...createNewCoveredContract(vulnerabilitySeveritiesTemplate.severities) }],
+    "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
     source: {
       name: "",
       url: "",
     },
+    severitiesOptions: severitiesOptionsForContractsCovered,
   } as IEditedVaultDescription;
 };
 
@@ -122,37 +130,39 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
 }
 
 export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
-  if (vaultDescription.version === "v1" || !vaultDescription.version) {
-    const severitiesWithIds: IEditedVulnerabilitySeverityV1[] = vaultDescription.severities.map((sev) => ({
-      ...sev,
-      id: uuid(),
-    }));
+  const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({
+    ...sev,
+    id: uuid(),
+  }));
 
+  const severitiesOptions = severitiesWithIds.map((s) => ({
+    label: s.name,
+    value: s.id as string,
+  }));
+
+  if (vaultDescription.version === "v1" || !vaultDescription.version) {
     return {
       ...vaultDescription,
       version: "v1",
       "vulnerability-severities-spec": {
-        severities: severitiesWithIds,
+        severities: severitiesWithIds as IEditedVulnerabilitySeverityV1[],
         name: "",
         indexArray: vaultDescription.indexArray,
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+      severitiesOptions,
     };
   }
-
-  const severitiesWithIds: IEditedVulnerabilitySeverityV2[] = vaultDescription.severities.map((sev) => ({
-    ...sev,
-    id: uuid(),
-  }));
 
   return {
     ...vaultDescription,
     version: "v2",
     "vulnerability-severities-spec": {
-      severities: severitiesWithIds,
+      severities: severitiesWithIds as IEditedVulnerabilitySeverityV2[],
       name: "",
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    severitiesOptions,
   };
 }
 

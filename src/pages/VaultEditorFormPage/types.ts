@@ -50,6 +50,7 @@ export interface IBaseEditedVaultDescription {
     url: string;
   };
   "additional-vaults"?: string[];
+  severitiesOptions?: { label: string; value: string }[];
 }
 
 export interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
