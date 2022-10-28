@@ -1,15 +1,19 @@
+import { useState } from "react";
+import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { FormInput, FormIconInput } from "components";
 import { IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
-import { useState } from "react";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { register, watch, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const datesAreSelected = !!(watch("project-metadata.starttime") || watch("project-metadata.endtime"));
+  const startDate = useWatch({ control, name: "project-metadata.starttime" });
+  const endDate = useWatch({ control, name: "project-metadata.endtime" });
+
+  const datesAreSelected = !!(startDate || endDate);
   const [showDatesInputs, setShowDatesInputs] = useState<boolean>(datesAreSelected);
 
   const handleAddDatesChange = (e) => {
@@ -24,7 +28,7 @@ export function VaultDetailsForm() {
     }
 
     setShowDatesInputs(newValue);
-  }
+  };
 
   return (
     <StyledVaultDetails>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
@@ -38,9 +38,9 @@ const VaultEditorFormPage = () => {
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
   });
-  const { handleSubmit, formState, reset: handleReset, watch, setValue, getValues } = methods;
+  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
 
-  const vaultVersion = watch("version");
+  const vaultVersion = useWatch({control, name: "version"});
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
