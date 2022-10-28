@@ -278,9 +278,9 @@ const VaultEditorFormPage = () => {
         </div>
       </VaultEditorForm>
 
-      <div className="form-devtool">
+      {/* <div className="form-devtool">
         <DevTool control={control} />
-      </div>
+      </div> */}
     </FormProvider>
   );
 };
