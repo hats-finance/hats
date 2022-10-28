@@ -3,50 +3,91 @@ import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { FormInput, FormIconInput } from "components";
 import { IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
+import { useState } from "react";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { register } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, watch, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const datesAreSelected = !!(watch("project-metadata.starttime") || watch("project-metadata.endtime"));
+  const [showDatesInputs, setShowDatesInputs] = useState<boolean>(datesAreSelected);
+
+  const handleAddDatesChange = (e) => {
+    const newValue = e.target.checked;
+
+    if (newValue) {
+      resetField("project-metadata.starttime");
+      resetField("project-metadata.endtime");
+    } else {
+      setValue("project-metadata.starttime", undefined);
+      setValue("project-metadata.endtime", undefined);
+    }
+
+    setShowDatesInputs(newValue);
+  }
 
   return (
     <StyledVaultDetails>
-      <div className="inputs">
-        <FormInput
-          {...register("project-metadata.name")}
-          label={t("VaultEditor.vault-details.name")}
-          colorable
-          placeholder={t("VaultEditor.vault-details.name-placeholder")}
-        />
-        <FormInput
-          {...register("project-metadata.type")}
-          colorable
-          placeholder={t("VaultEditor.vault-details.type-placeholder")}
-          label={t("VaultEditor.vault-details.type")}
-        />
-        <FormInput
-          {...register("project-metadata.website")}
-          colorable
-          placeholder={t("VaultEditor.vault-details.website-placeholder")}
-          label={t("VaultEditor.vault-details.website")}
-        />
+      <div className="sub-container">
+        <div className="inputs">
+          <FormInput
+            {...register("project-metadata.name")}
+            label={t("VaultEditor.vault-details.name")}
+            colorable
+            placeholder={t("VaultEditor.vault-details.name-placeholder")}
+          />
+          <FormInput
+            {...register("project-metadata.type")}
+            colorable
+            placeholder={t("VaultEditor.vault-details.type-placeholder")}
+            label={t("VaultEditor.vault-details.type")}
+          />
+          <FormInput
+            {...register("project-metadata.website")}
+            colorable
+            placeholder={t("VaultEditor.vault-details.website-placeholder")}
+            label={t("VaultEditor.vault-details.website")}
+          />
+        </div>
+
+        <div className="icons">
+          <div className="icons__input">
+            <FormIconInput {...register("project-metadata.icon")} colorable label={t("VaultEditor.vault-details.icon")} />
+          </div>
+          <div className="icons__input">
+            <FormIconInput
+              {...register("project-metadata.tokenIcon")}
+              colorable
+              label={t("VaultEditor.vault-details.token-icon")}
+            />
+          </div>
+        </div>
       </div>
 
-      <div className="icons">
-        <div className="icons__input">
-          <FormIconInput
-            {...register("project-metadata.icon")}
+      <FormInput
+        checked={showDatesInputs}
+        onChange={handleAddDatesChange}
+        name="start-end-dates"
+        type="checkbox"
+        label={t("VaultEditor.addStartAndEndDate")}
+      />
+
+      {showDatesInputs && (
+        <div className="dates-container">
+          <FormInput
+            {...register("project-metadata.starttime")}
+            label={t("VaultEditor.vault-details.starttime")}
             colorable
-            label={t("VaultEditor.vault-details.icon")}
+            placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
+          />
+          <FormInput
+            {...register("project-metadata.endtime")}
+            label={t("VaultEditor.vault-details.endtime")}
+            colorable
+            placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
           />
         </div>
-        <div className="icons__input">
-          <FormIconInput
-            {...register("project-metadata.tokenIcon")}
-            colorable
-            label={t("VaultEditor.vault-details.token-icon")}
-          />
-        </div>
-      </div>
+      )}
     </StyledVaultDetails>
   );
 }

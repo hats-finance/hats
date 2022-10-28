@@ -6,14 +6,30 @@ type StyledFormInputProps = {
   isDirty: boolean;
   hasError: boolean;
   withExtraicons: boolean;
+  isCheckOrRadio: boolean;
   type: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${getSpacing(3)};
+    width: 100%;
+
+    ${isCheckOrRadio &&
+    css`
+      width: fit-content;
+
+      .main-container {
+        display: flex;
+        flex-direction: row-reverse;
+
+        label {
+          margin-left: ${getSpacing(1)};
+        }
+      }
+    `}
 
     input,
     textarea {

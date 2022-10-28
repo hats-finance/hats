@@ -327,7 +327,11 @@
         "token-icon": "Token Icon",
         "website": "Website",
         "website-placeholder": "Link website",
-        "multisig-address-placeholder": "Committee multisig address"
+        "multisig-address-placeholder": "Committee multisig address",
+        "starttime": "Start date",
+        "starttime-placeholder": "Enter start date",
+        "endtime": "End date",
+        "endtime-placeholder": "Enter end date"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
@@ -387,6 +391,7 @@
       "severities-index-array-placeholder": "Severities Index array",
       "percentage-bounty": "Percentage Bounty (0%-100%)", 
       "percentage-bounty-placeholder": "Percentage Bounty",
+      "addStartAndEndDate": "Add start and end date",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",

@@ -7,7 +7,7 @@ import { parseIsDirty } from "../utils";
 
 const DEFAULT_ROWS = 10;
 
-export type FormInputType = "text" | "textarea" | "number";
+export type FormInputType = "text" | "textarea" | "number" | "checkbox" | "radio";
 
 type FormInputProps = {
   type?: FormInputType;
@@ -41,6 +41,7 @@ function FormInputComponent(
   const refToUse = ref || localRef;
 
   const areAvailableExtraIcons = type === "text" || type === "textarea";
+  const isCheckOrRadio = type === "checkbox" || type === "radio";
 
   const handleOnChange = (e: ChangeEvent<any>) => {
     if (props.onChange) props.onChange(e);
@@ -68,30 +69,37 @@ function FormInputComponent(
 
   const getMainComponent = () => {
     if (type === "text") {
-      return <input {...props} type="text" ref={refToUse} onChange={handleOnChange} />;
+      return <input {...props} id={props.name} type="text" ref={refToUse} onChange={handleOnChange} />;
     } else if (type === "textarea") {
-      return <textarea {...props} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
+      return <textarea {...props} id={props.name} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
     } else if (type === "number") {
-      return <input {...props} type={type} ref={refToUse} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
+      return <input {...props} id={props.name} type={type} ref={refToUse} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
     } else {
-      return <input {...props} type={type} ref={refToUse} onChange={handleOnChange} />;
+      return <input {...props} id={props.name} type={type} ref={refToUse} onChange={handleOnChange} />;
     }
   };
 
   return (
-    <StyledFormInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable} type={type} withExtraicons={extraIcons}>
-      {label && <label htmlFor={props.name}>{label}</label>}
+    <StyledFormInput
+      isDirty={parseIsDirty(isDirty) && colorable}
+      isCheckOrRadio={isCheckOrRadio}
+      hasError={!!error && colorable}
+      type={type}
+      withExtraicons={extraIcons}>
+      <div className="main-container">
+        {label && <label htmlFor={props.name}>{label}</label>}
 
-      <div className="input-container">
-        {getMainComponent()}
+        <div className="input-container">
+          {getMainComponent()}
 
-        {extraIcons && areAvailableExtraIcons && (
-          <div className="extra-icons">
-            {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
-            {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
-            {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
-          </div>
-        )}
+          {extraIcons && areAvailableExtraIcons && (
+            <div className="extra-icons">
+              {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
+              {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
+              {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
+            </div>
+          )}
+        </div>
       </div>
 
       {error && <span className="error">{error.message}</span>}
