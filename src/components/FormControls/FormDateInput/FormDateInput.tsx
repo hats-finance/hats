@@ -22,7 +22,7 @@ export function FormDateInputComponent(
   };
 
   const getDateFromTimestamp = (timestampSeconds: number) => {
-
+    if (!timestampSeconds) return "";
     const date = new Date(0);
     date.setUTCSeconds(timestampSeconds);
 
