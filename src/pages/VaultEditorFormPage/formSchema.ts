@@ -11,10 +11,11 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       website: Yup.string().required(intl("required")),
       name: Yup.string().required(intl("required")),
       type: Yup.string(),
-      starttime: Yup.number().positive().required(intl("required")),
+      starttime: Yup.number().positive(intl("required")).required(intl("required")).typeError(intl("required")),
       endtime: Yup.number()
-        .positive()
+        .positive(intl("required"))
         .required(intl("required"))
+        .typeError(intl("required"))
         .when("starttime", (starttime: number, schema: any) => {
           if (starttime) return schema.min(starttime, intl("endtimeGreaterThanStarttime"));
         }),
