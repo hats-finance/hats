@@ -11,8 +11,13 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       website: Yup.string().required(intl("required")),
       name: Yup.string().required(intl("required")),
       type: Yup.string(),
-      endtime: Yup.number(),
-      starttime: Yup.number(),
+      starttime: Yup.number().positive().required(intl("required")),
+      endtime: Yup.number()
+        .positive()
+        .required(intl("required"))
+        .when("starttime", (starttime: number, schema: any) => {
+          if (starttime) return schema.min(starttime, intl("endtimeGreaterThanStarttime"));
+        }),
     }),
     committee: Yup.object({
       "multisig-address": Yup.string().required(intl("required")),

@@ -40,7 +40,7 @@ const VaultEditorFormPage = () => {
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
 
-  const vaultVersion = useWatch({control, name: "version"});
+  const vaultVersion = useWatch({ control, name: "version" });
 
   async function loadFromIpfs(ipfsHash: string) {
     try {

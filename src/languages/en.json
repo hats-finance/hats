@@ -3,6 +3,7 @@
     "version": "Version",
     "required": "Required",
     "invalid-address": "Invalid address",
+    "endtimeGreaterThanStarttime": "End time must be greater than start time",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
