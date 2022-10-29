@@ -10,9 +10,13 @@ interface FormIconInputProps {
   colorable?: boolean;
   isDirty?: boolean;
   label?: string;
+  error?: { message: string; type: string };
 }
 
-function FormIconInputComponent({ onChange, colorable = false, isDirty = false, label, ...props }: FormIconInputProps, ref) {
+function FormIconInputComponent(
+  { onChange, colorable = false, isDirty = false, label, error, ...props }: FormIconInputProps,
+  ref
+) {
   const [, setRefSetted] = useState(false);
   const { t } = useTranslation();
   const localRef = useRef<HTMLInputElement>();
@@ -44,7 +48,7 @@ function FormIconInputComponent({ onChange, colorable = false, isDirty = false, 
   };
 
   return (
-    <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable}>
+    <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
       <input
         {...props}
         type="hidden"
@@ -68,6 +72,8 @@ function FormIconInputComponent({ onChange, colorable = false, isDirty = false, 
           <p>{t("VaultEditor.img-placeholder")}</p>
         </label>
       )}
+
+      {error && <span className="error">{error.message}</span>}
     </StyledFormIconInput>
   );
 }

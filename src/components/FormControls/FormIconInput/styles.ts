@@ -3,14 +3,20 @@ import styled, { css } from "styled-components";
 
 type StyledFormIconInputProps = {
   isDirty: boolean;
+  hasError: boolean;
 };
 
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
-  ({ isDirty }) => css`
+  ({ isDirty, hasError }) => css`
     label {
       display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
+
+      ${hasError &&
+      css`
+        color: var(--red);
+      `}
     }
 
     .file-input {
@@ -40,6 +46,11 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       css`
         border: 1px solid var(--yellow);
       `}
+
+      ${hasError &&
+      css`
+        border-color: var(--red);
+      `}
     }
 
     .icon-add {
@@ -55,6 +66,14 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
         width: 100%;
         height: 100%;
       }
+    }
+
+    span.error {
+      display: block;
+      color: var(--red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
     }
   `
 );
