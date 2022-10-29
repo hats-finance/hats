@@ -5,9 +5,9 @@ import { FormInputType } from "./FormInput";
 type StyledFormInputProps = {
   isDirty: boolean;
   hasError: boolean;
-  withExtraicons: boolean;
-  isCheckOrRadio: boolean;
-  type: FormInputType;
+  withExtraicons?: boolean;
+  isCheckOrRadio?: boolean;
+  type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
@@ -42,6 +42,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       resize: none;
       border-radius: 0;
       font-family: inherit;
+      color-scheme: dark;
 
       &::placeholder {
         color: var(--dirty-turquoise);

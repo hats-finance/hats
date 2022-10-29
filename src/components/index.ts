@@ -2,6 +2,7 @@ export { Header } from './Header/Header';
 export { WalletButton } from './WalletButton/WalletButton';
 export { FormInput } from './FormControls/FormInput/FormInput';
 export { FormIconInput } from './FormControls/FormIconInput/FormIconInput';
+export { FormDateInput } from './FormControls/FormDateInput/FormDateInput';
 export { FormSelectInput } from './FormControls/FormSelectInput/FormSelectInput';
 export { Vault } from './Vault/Vault';
 export { NFTCard } from './NFTCard/NFTCard';

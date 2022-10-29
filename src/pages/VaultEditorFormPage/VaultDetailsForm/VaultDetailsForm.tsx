@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useWatch } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { FormInput, FormIconInput } from "components";
+import { getPath } from "utils/objects.utils";
+import { FormInput, FormIconInput, FormDateInput } from "components";
 import { IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
 
@@ -78,17 +79,33 @@ export function VaultDetailsForm() {
 
       {showDatesInputs && (
         <div className="dates-container">
-          <FormInput
-            {...register("project-metadata.starttime")}
-            label={t("VaultEditor.vault-details.starttime")}
-            colorable
-            placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
+          <Controller
+            control={control}
+            name={`project-metadata.starttime`}
+            render={({ field, formState }) => (
+              <FormDateInput
+                isDirty={getPath(formState.dirtyFields, field.name)}
+                error={getPath(formState.errors, field.name)}
+                label={t("VaultEditor.vault-details.starttime")}
+                placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
+                colorable
+                {...field}
+              />
+            )}
           />
-          <FormInput
-            {...register("project-metadata.endtime")}
-            label={t("VaultEditor.vault-details.endtime")}
-            colorable
-            placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
+          <Controller
+            control={control}
+            name={`project-metadata.endtime`}
+            render={({ field, formState }) => (
+              <FormDateInput
+                isDirty={getPath(formState.dirtyFields, field.name)}
+                error={getPath(formState.errors, field.name)}
+                label={t("VaultEditor.vault-details.endtime")}
+                placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
+                colorable
+                {...field}
+              />
+            )}
           />
         </div>
       )}

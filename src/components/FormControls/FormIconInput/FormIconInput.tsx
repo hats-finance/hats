@@ -13,15 +13,13 @@ interface FormIconInputProps {
 }
 
 function FormIconInputComponent({ onChange, colorable = false, isDirty = false, label, ...props }: FormIconInputProps, ref) {
-  const [_, setRefSetted] = useState(false);
+  const [, setRefSetted] = useState(false);
   const { t } = useTranslation();
   const localRef = useRef<HTMLInputElement>();
 
   const name = localRef.current?.name;
   const value = localRef.current?.value;
   const id = `icon-input-${name}`;
-
-  console.log(name);
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const fr = new FileReader();
