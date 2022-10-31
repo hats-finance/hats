@@ -107,10 +107,10 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
           </tbody>
         </table>
       )}
-      
+
       {selectedVault && (
         <Modal isShowing={showDeposit} title={selectedVault.description?.["project-metadata"].name!} titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)} onHide={closeDeposit} removeHorizontalPadding>
-          <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
+          <DepositWithdraw vault={selectedVault!} setShowModal={closeDeposit} />
         </Modal>
       )}
     </StyledHoneypotsPage>

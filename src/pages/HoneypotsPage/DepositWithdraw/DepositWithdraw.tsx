@@ -22,7 +22,7 @@ import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 
 interface IProps {
-  data: IVault
+  vault: IVault
   setShowModal: Function
 }
 
@@ -31,18 +31,17 @@ enum Tab {
   Withdraw
 }
 
-export function DepositWithdraw(props: IProps) {
+export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
-    committeeCheckedIn, depositPause } = props.data;
-  const { setShowModal } = props;
+    committeeCheckedIn, depositPause } = vault;
   const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const [tab, setTab] = useState(Tab.Deposit);
   const [userInput, setUserInput] = useState("");
   const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers();
   const [selectedPid, setSelectedPid] = useState<string>(pid);
-  const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : props.data;
+  const selectedVault = multipleVaults ? multipleVaults.find(vault => vault.pid === selectedPid)! : vault;
 
   const [termsOfUse, setTermsOfUse] = useState(false);
   const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
@@ -78,10 +77,10 @@ export function DepositWithdraw(props: IProps) {
   const allowance = useTokenAllowance(stakingToken, account!, master.address)
   const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
 
-  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(master.address);
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(vault);
   const handleDepositAndClaim = useCallback(async () => {
     setUserInput("");
-    await depositAndClaim(selectedPid, userInputValue);
+    await depositAndClaim(userInputValue);
     const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
     const newRedeemables = depositEligibility?.filter(nft => !nft.isRedeemed &&
       !nftData?.proofRedeemables?.find(r =>
@@ -180,7 +179,7 @@ export function DepositWithdraw(props: IProps) {
           <div className="input-wrapper">
             <div className="pool-token">
               <TokenSelect
-                vault={props.data}
+                vault={vault}
                 onSelect={pid => setSelectedPid(pid)} />
             </div>
             <input disabled={!committeeCheckedIn} placeholder="0.0" type="number" value={userInput} onChange={(e) => { isDigitsOnly(e.target.value) && setUserInput(e.target.value) }} min="0" onClick={(e) => (e.target as HTMLInputElement).select()} />
@@ -192,7 +191,7 @@ export function DepositWithdraw(props: IProps) {
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
       <div>
-        <Assets vault={props.data} />
+        <Assets vault={vault} />
       </div>
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>

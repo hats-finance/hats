@@ -1,6 +1,6 @@
 import { useContractFunction, useEthers } from "@usedapp/core";
 import { Contract } from "ethers";
-import vaultAbi from "data/abis/HATSVault.json";
+// import vaultAbi from "data/abis/HATSVault.json";
 import { useVaults } from "hooks/useVaults";
 import { FormEventHandler, SyntheticEvent, useState } from "react";
 import { Transactions } from "constants/constants";
@@ -14,19 +14,19 @@ export default function CreateVault({ descriptionHash }) {
   const levelCount = 6;
   //const [levelCount, setLevelCount] = useState<number>()
 
-  const { send: sendAddPool, state: addPoolState } = useContractFunction(
-    masterAddress ? new Contract(masterAddress, vaultAbi) : undefined, "addPool", { transactionName: Transactions.AddPool });
+  // const { send: sendAddPool, state: addPoolState } = useContractFunction(
+  //   masterAddress ? new Contract(masterAddress, vaultAbi) : undefined, "addPool", { transactionName: Transactions.AddPool });
 
   if (vault || !governedMasters) return <></>;
 
   const handleAddPool: FormEventHandler<HTMLFormElement> = (e: SyntheticEvent) => {
     e.preventDefault();
-    sendAddPool()
+    // sendAddPool()
   }
 
-  if (["Mining", "PendingSignature"].includes(addPoolState.status)) {
-    return <></>;
-  }
+  // if (["Mining", "PendingSignature"].includes(addPoolState.status)) {
+  //   return <></>;
+  // }
 
   return (
     <>

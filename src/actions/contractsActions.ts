@@ -1,7 +1,7 @@
 import { useEthers } from "@usedapp/core";
 import { BigNumber, Contract } from "ethers";
-import vaultAbi from "../data/abis/HATSVault.json";
-import HatsToken from "../data/abis/HatsToken.json";
+import vaultAbiV1 from "data/abis/HATSVaultV1.json";
+import HatsToken from "data/abis/HatsToken.json";
 
 export function useActions() {
   const { library } = useEthers();
@@ -23,7 +23,7 @@ export function useActions() {
    */
   const getPendingReward = async (address: string, pid: string, selectedAddress: string) => {
     try {
-      const contract = new Contract(address, vaultAbi, signer);
+      const contract = new Contract(address, vaultAbiV1, signer);
       return await contract.pendingReward(pid, selectedAddress);
     } catch (error) {
       console.error(error);
