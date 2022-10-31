@@ -31,6 +31,13 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
         })
       ),
     }),
+    "contracts-covered": Yup.array().of(
+      Yup.object({
+        name: Yup.string().required(intl("required")),
+        address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+        severities: Yup.array().min(1, intl("required")),
+      })
+    ),
   });
 
   return yupResolver(schema);
