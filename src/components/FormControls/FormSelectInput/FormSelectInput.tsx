@@ -16,6 +16,7 @@ interface FormSelectInputProps {
   value: string | string[];
   onChange: (data: string | string[]) => void;
   options: FormSelectInputOption[];
+  error?: { message: string; type: string };
 }
 
 export function FormSelectInputComponent(
@@ -27,6 +28,7 @@ export function FormSelectInputComponent(
     multiple = false,
     colorable = false,
     isDirty = false,
+    error,
     placeholder,
     label,
   }: FormSelectInputProps,
@@ -65,14 +67,21 @@ export function FormSelectInputComponent(
   };
 
   return (
-    <StyledFormSelectInput ref={menuRef}>
+    <StyledFormSelectInput ref={menuRef} hasError={!!error && colorable}>
       {label && <label className="input-label">{label}</label>}
-      <SelectButton onClick={handleOpenDropdown} isDirty={parseIsDirty(isDirty) && colorable} isOpen={isOpen}>
+
+      <SelectButton
+        onClick={handleOpenDropdown}
+        isDirty={parseIsDirty(isDirty) && colorable}
+        hasError={!!error && colorable}
+        isOpen={isOpen}>
         <span className="text">{getRenderValue()}</span>
         <span className="icon">
           <DropdownArrow />
         </span>
       </SelectButton>
+
+      {error && <span className="error">{error.message}</span>}
 
       {isOpen && (
         <SelectMenuOptions>

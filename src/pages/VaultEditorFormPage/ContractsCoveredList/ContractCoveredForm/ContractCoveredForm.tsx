@@ -21,7 +21,10 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
   const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
-  const severitiesFormIds = useMemo(() => severitiesOptions ? severitiesOptions.map((sev) => sev.value) : [], [severitiesOptions])
+  const severitiesFormIds = useMemo(
+    () => (severitiesOptions ? severitiesOptions.map((sev) => sev.value) : []),
+    [severitiesOptions]
+  );
 
   useEffect(() => {
     const severitiesIdsInThisContract: string[] = getValues()["contracts-covered"][index].severities;
@@ -54,6 +57,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
                   render={({ field, formState }) => (
                     <FormSelectInput
                       isDirty={getPath(formState.dirtyFields, field.name)}
+                      error={getPath(formState.errors, field.name)}
                       label={t("VaultEditor.contract-severities")}
                       placeholder={t("VaultEditor.contract-severities-placeholder")}
                       colorable
