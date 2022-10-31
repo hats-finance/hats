@@ -51,6 +51,7 @@ export interface IBaseEditedVaultDescription {
   };
   "additional-vaults"?: string[];
   severitiesOptions?: { label: string; value: string }[];
+  includesStartAndEndTime: boolean;
 }
 
 export interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {

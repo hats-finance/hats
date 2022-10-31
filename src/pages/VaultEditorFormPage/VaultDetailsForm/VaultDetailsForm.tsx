@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
@@ -11,25 +11,17 @@ export function VaultDetailsForm() {
   const { t } = useTranslation();
   const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const startDate = useWatch({ control, name: "project-metadata.starttime" });
-  const endDate = useWatch({ control, name: "project-metadata.endtime" });
+  const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
 
-  const datesAreSelected = !!(startDate || endDate);
-  const [showDatesInputs, setShowDatesInputs] = useState<boolean>(datesAreSelected);
-
-  const handleAddDatesChange = (e) => {
-    const newValue = e.target.checked;
-
-    if (newValue) {
+  useEffect(() => {
+    if (showDateInputs) {
       resetField("project-metadata.starttime");
       resetField("project-metadata.endtime");
     } else {
       setValue("project-metadata.starttime", undefined);
       setValue("project-metadata.endtime", undefined);
     }
-
-    setShowDatesInputs(newValue);
-  };
+  }, [showDateInputs, setValue, resetField]);
 
   return (
     <StyledVaultDetails>
@@ -69,15 +61,9 @@ export function VaultDetailsForm() {
         </div>
       </div>
 
-      <FormInput
-        checked={showDatesInputs}
-        onChange={handleAddDatesChange}
-        name="start-end-dates"
-        type="checkbox"
-        label={t("VaultEditor.addStartAndEndDate")}
-      />
+      <FormInput {...register("includesStartAndEndTime")} type="checkbox" label={t("VaultEditor.addStartAndEndDate")} />
 
-      {showDatesInputs && (
+      {showDateInputs && (
         <div className="dates-container">
           <Controller
             control={control}

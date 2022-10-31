@@ -128,6 +128,7 @@ const VaultEditorFormPage = () => {
 
   const onSubmit = (data: IEditedVaultDescription) => {
     console.log(data);
+    console.log(formState);
     if (formState.isValid) {
       // saveToIpfs(editedFormToDescription(data));
     }
@@ -140,6 +141,7 @@ const VaultEditorFormPage = () => {
         onClick={() => {
           console.log(getValues());
           console.log(editedFormToDescription(getValues()));
+          console.log(formState);
         }}>
         test
       </button>
@@ -278,9 +280,9 @@ const VaultEditorFormPage = () => {
         </div>
       </VaultEditorForm>
 
-      <div className="form-devtool">
+      {/* <div className="form-devtool">
         <DevTool control={control} />
-      </div>
+      </div> */}
     </FormProvider>
   );
 };

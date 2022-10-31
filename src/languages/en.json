@@ -4,6 +4,9 @@
     "required": "Required",
     "invalid-address": "Invalid address",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
+    "min0": "Min 0",
+    "max100": "Max 100",
+    "enterValidNumber": "Enter a valid number",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

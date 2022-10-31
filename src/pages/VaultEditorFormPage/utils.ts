@@ -88,6 +88,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       url: "",
     },
     severitiesOptions: severitiesOptionsForContractsCovered,
+    includesStartAndEndTime: true,
   } as IEditedVaultDescription;
 };
 
@@ -151,6 +152,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
       severitiesOptions,
+      includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
     };
   }
 
@@ -163,6 +165,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     severitiesOptions,
+    includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };
 }
 
