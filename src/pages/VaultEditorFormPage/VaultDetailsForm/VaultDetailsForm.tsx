@@ -84,6 +84,7 @@ export function VaultDetailsForm() {
             name={`project-metadata.starttime`}
             render={({ field, formState }) => (
               <FormDateInput
+                withTime
                 isDirty={getPath(formState.dirtyFields, field.name)}
                 error={getPath(formState.errors, field.name)}
                 label={t("VaultEditor.vault-details.starttime")}
@@ -98,6 +99,7 @@ export function VaultDetailsForm() {
             name={`project-metadata.endtime`}
             render={({ field, formState }) => (
               <FormDateInput
+                withTime
                 isDirty={getPath(formState.dirtyFields, field.name)}
                 error={getPath(formState.errors, field.name)}
                 label={t("VaultEditor.vault-details.endtime")}

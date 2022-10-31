@@ -7,13 +7,14 @@ type FormDateInputProps = {
   label?: string;
   placeholder?: string;
   colorable?: boolean;
+  withTime?: boolean;
   isDirty?: boolean | boolean[];
   error?: { message: string; type: string };
   onChange: (data: number) => void;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 export function FormDateInputComponent(
-  { value, onChange, name, colorable = false, isDirty = false, placeholder, error, label }: FormDateInputProps,
+  { value, onChange, name, colorable = false, isDirty = false, withTime = false, placeholder, error, label }: FormDateInputProps,
   ref
 ) {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,9 +27,19 @@ export function FormDateInputComponent(
     const date = new Date(0);
     date.setUTCSeconds(timestampSeconds);
 
-    const dd_mm_yyyy = date.toLocaleDateString();
-    const yyyy_mm_dd = dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1");
-    return yyyy_mm_dd;
+    if (withTime) {
+      const dd_mm_yyyy = date.toLocaleDateString();
+
+      const hh_mm_ss = date.toLocaleTimeString();
+      const hh_mm = hh_mm_ss.split(":").slice(0, 2).join(":");
+
+      const yyyy_mm_ddThh_mm = `${dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1")}T${hh_mm}`;
+      return yyyy_mm_ddThh_mm;
+    } else {
+      const dd_mm_yyyy = date.toLocaleDateString();
+      const yyyy_mm_dd = dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1");
+      return yyyy_mm_dd;
+    }
   };
 
   return (
@@ -40,7 +51,7 @@ export function FormDateInputComponent(
           name={name}
           id={name}
           value={getDateFromTimestamp(value as number)}
-          type="date"
+          type={withTime ? "datetime-local" : "date"}
           placeholder={placeholder}
           ref={ref}
           onChange={handleOnChange}
