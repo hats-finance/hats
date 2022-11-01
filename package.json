@@ -22,7 +22,7 @@
     "@types/uuid": "^8.3.4",
     "@types/yup": "^0.32.0",
     "@uiw/react-md-editor": "^3.14.1",
-    "@usedapp/core": "^1.1.5",
+    "@usedapp/core": "^1.2.0",
     "@walletconnect/web3-provider": "^1.7.8",
     "assert": "^2.0.0",
     "axios": "^0.27.2",
