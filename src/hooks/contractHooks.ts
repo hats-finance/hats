@@ -5,14 +5,19 @@ import { IVault } from "types/types";
 import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
+import { t } from "i18next";
 
-export function usePendingReward(address: string, pid: string, account: string): BigNumber | undefined {
+export function usePendingReward(
+  rewardControllerAddress: string,
+  vaultAddress: string,
+  account: string | undefined
+): BigNumber | undefined {
   return;
   const { value, error } =
     useCall({
-      contract: new Contract(address, vaultAbiV1),
-      method: "pendingReward",
-      args: [pid, account],
+      contract: new Contract(rewardControllerAddress, vaultAbiV1),
+      method: "getPendingReward",
+      args: [vaultAddress, account],
     }) ?? {};
   if (error) {
     return undefined;
@@ -20,13 +25,13 @@ export function usePendingReward(address: string, pid: string, account: string):
   return value?.[0];
 }
 
-export function useUserSharesPerVault(address: string, pid: string, account: string) {
+export function useUserSharesPerVault(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
   return;
   const { value, error } =
     useCall({
       contract: new Contract(address, vaultAbiV1),
       method: "userInfo",
-      args: [pid, account],
+      args: [vault.pid, account],
     }) ?? {};
   if (error) {
     return undefined;
@@ -34,10 +39,10 @@ export function useUserSharesPerVault(address: string, pid: string, account: str
   return value?.[0];
 }
 
-export function useWithdrawRequestInfo(address: string, pid: string, account: string): BigNumber | undefined {
+export function useWithdrawRequestInfo(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
   return;
   const { value, error } =
-    useCall({ contract: new Contract(address, vaultAbiV1), method: "withdrawRequests", args: [pid, account] }) ?? {};
+    useCall({ contract: new Contract(address, vaultAbiV1), method: "withdrawRequests", args: [vault.pid, account] }) ?? {};
   if (error) {
     return undefined;
   }

@@ -59,17 +59,16 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
 
-  const allowance = useTokenAllowance(stakingToken, account!, master.address);
-  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account);
-  const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-";
-  const pendingReward = usePendingReward(master.address, pid, account!);
-  const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
-  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault.pid, account!);
+  const allowance = useTokenAllowance(stakingToken, account!, master.address); // READY
+  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account); // READY
+  const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-"; // READY
+  const pendingReward = usePendingReward(master.address, pid, account!); // READY
+  const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-"; // READY
+  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault, account!); // READY
   const availableToWithdrawFormatted = availableToWithdraw
     ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
-    : "-";
-  const shares = availableToWithdraw?.toString();
-  const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault.pid, account!);
+    : "-"; // READY
+  const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault, account); // READY
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
   const endDate = moment
     .unix(withdrawRequestTime?.toNumber() ?? 0)
@@ -123,10 +122,10 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(selectedVault.pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
+    withdrawAndClaim(selectedVault.pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, availableToWithdraw));
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [availableToWithdraw, userInputValue, shares, selectedVault, withdrawAndClaim, master.address, nftData]);
+  }, [availableToWithdraw, userInputValue, selectedVault, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
