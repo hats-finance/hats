@@ -1,4 +1,4 @@
-import { useCall, useContractFunction } from "@usedapp/core";
+import { useCall, useContractFunction, useEthers } from "@usedapp/core";
 import { Transactions } from "constants/constants";
 import { BigNumber, Contract, ContractInterface } from "ethers";
 import { IVault } from "types/types";
@@ -64,12 +64,16 @@ export function useDepositAndClaim(vault: IVault) {
     transactionName: Transactions.DepositAndClaim,
   });
 
+  const { account } = useEthers();
+
   return {
     ...depositAndClaim,
     send: (amount: BigNumber) => {
       if (vault?.version === "v2") {
-        return depositAndClaim.send(amount);
+        // [params]: asset, receiver
+        return depositAndClaim.send(amount, account);
       } else {
+        // [params]: pid, amount
         return depositAndClaim.send(vault.pid, amount);
       }
     },

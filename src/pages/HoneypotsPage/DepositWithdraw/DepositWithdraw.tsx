@@ -45,17 +45,37 @@ enum Tab {
 export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
-  const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee, committeeCheckedIn, depositPause } = vault;
-  const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
-  const [tab, setTab] = useState(Tab.Deposit);
-  const [userInput, setUserInput] = useState("");
-  const [showApproveSpendingModal, setShowApproveSpendingModal] = useState(false);
   const { account } = useEthers();
-  const [selectedPid, setSelectedPid] = useState<string>(pid);
-  const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.pid === selectedPid)! : vault;
-
-  const [termsOfUse, setTermsOfUse] = useState(false);
   const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
+  const { id, pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee, committeeCheckedIn, depositPause } =
+    vault;
+
+  const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
+  const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
+
+  const [tab, setTab] = useState(Tab.Deposit);
+  const [termsOfUse, setTermsOfUse] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [selectedId, setSelectedId] = useState<string>(id);
+  const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
+
+  const allowance = useTokenAllowance(stakingToken, account!, master.address);
+  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account);
+  const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-";
+  const pendingReward = usePendingReward(master.address, pid, account!);
+  const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
+  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault.pid, account!);
+  const availableToWithdrawFormatted = availableToWithdraw
+    ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
+    : "-";
+  const shares = availableToWithdraw?.toString();
+  const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault.pid, account!);
+  const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
+  const endDate = moment
+    .unix(withdrawRequestTime?.toNumber() ?? 0)
+    .add(master.withdrawRequestEnablePeriod.toString(), "seconds")
+    .unix();
+  const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -64,41 +84,24 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     // TODO: do something
     // userInputValue = BigNumber.from(0);
   }
+
+  const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account);
-  const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
-  const pendingReward = usePendingReward(master.address, pid, account!);
-  const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
-  const availableToWithdraw = useUserSharesPerVault(master.address, selectedPid, account!);
-  const shares = availableToWithdraw?.toString();
-  const formatAvailableToWithdraw = availableToWithdraw
-    ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
-    : "-";
   const canWithdraw =
     availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
-  const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
-  const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  const endDate = moment
-    .unix(withdrawRequestTime?.toNumber() ?? 0)
-    .add(master.withdrawRequestEnablePeriod.toString(), "seconds")
-    .unix();
-  const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
+
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
     approveToken(master.address, amountToSpend ?? MAX_SPENDING);
   };
 
-  const allowance = useTokenAllowance(stakingToken, account!, master.address);
-  const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
-
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(vault);
   const handleDepositAndClaim = useCallback(async () => {
     if (!userInputValue) return;
 
-    setUserInput("");
     await depositAndClaim(userInputValue);
-    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
+    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
     const newRedeemables = depositEligibility?.filter(
       (nft) => !nft.isRedeemed && !nftData?.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
     );
@@ -107,37 +110,37 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     }
     setUserInput("");
     setTermsOfUse(false);
-  }, [selectedPid, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
+  }, [selectedVault, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
   const tryDeposit = useCallback(async () => {
     if (!hasAllowance) {
-      setShowApproveSpendingModal(true);
+      showApproveSpending();
     } else {
       handleDepositAndClaim();
     }
-  }, [setShowApproveSpendingModal, handleDepositAndClaim, hasAllowance]);
+  }, [showApproveSpending, handleDepositAndClaim, hasAllowance]);
 
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
+    withdrawAndClaim(selectedVault.pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
     // refresh deposit eligibility
-    await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
-  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
+    await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
+  }, [availableToWithdraw, userInputValue, shares, selectedVault, withdrawAndClaim, master.address, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
-    withdrawRequestCall(selectedPid);
+    withdrawRequestCall(selectedVault.pid);
   };
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
   const handleClaimReward = async () => {
-    claimReward(selectedPid);
+    claimReward(selectedVault.pid);
   };
 
   const { send: checkIn, state: checkInState } = useCheckIn(master.address);
   const handleCheckIn = () => {
-    checkIn(selectedPid);
+    checkIn(selectedVault.pid);
   };
 
   const transactionStates = [
@@ -187,7 +190,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
 
       <div className="balance-wrapper">
         {tab === Tab.Deposit &&
-          `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
+          `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalanceFormatted))} ${selectedVault?.stakingTokenSymbol}`}
         {tab === Tab.Withdraw &&
           `Balance to withdraw: ${
             !availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))
@@ -195,7 +198,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
         <button
           className="max-button"
           disabled={!committeeCheckedIn}
-          onClick={() => setUserInput(tab === Tab.Deposit ? formattedTokenBalance : formatAvailableToWithdraw)}>
+          onClick={() => setUserInput(tab === Tab.Deposit ? tokenBalanceFormatted : availableToWithdrawFormatted)}>
           (Max)
         </button>
       </div>
@@ -209,7 +212,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
           </div>
           <div className="input-wrapper">
             <div className="pool-token">
-              <TokenSelect vault={vault} onSelect={(pid) => setSelectedPid(pid)} />
+              <TokenSelect vault={vault} onSelect={(pid) => setSelectedId(pid)} />
             </div>
             <input
               disabled={!committeeCheckedIn}
@@ -264,14 +267,6 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
         <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>
       )}
       <div className="action-btn-wrapper">
-        {tab === Tab.Deposit && showApproveSpendingModal && (
-          <ApproveToken
-            approveToken={handleApproveToken}
-            userInput={userInput}
-            hideApproveSpending={() => setShowApproveSpendingModal(false)}
-            stakingTokenDecimals={stakingTokenDecimals}
-          />
-        )}
         {tab === Tab.Deposit && (
           <button
             disabled={
@@ -286,7 +281,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             }
             className="action-btn"
             onClick={async () => await tryDeposit()}>
-            {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
+            {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormatted} HATS`}`}
           </button>
         )}
         {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw && (
@@ -296,7 +291,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             }
             className="action-btn"
             onClick={async () => await handleWithdrawAndClaim()}>
-            {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormat} HATS`}`}
+            {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormatted} HATS`}`}
           </button>
         )}
         {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw && (
@@ -316,14 +311,18 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
           onClick={async () => await handleClaimReward()}
           disabled={!pendingReward || pendingReward.eq(0)}
           className="action-btn claim-btn fill">
-          {`CLAIM ${pendingRewardFormat} HATS`}
+          {`CLAIM ${pendingRewardFormatted} HATS`}
         </button>
       </div>
 
       {pendingWallet && <Loading zIndex={10000} />}
 
-      <Modal isShowing={showEmbassyPrompt} onHide={toggleEmbassyPrompt}>
+      <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
         <EmbassyNftTicketPrompt />
+      </Modal>
+
+      <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
+        <ApproveToken approveToken={handleApproveToken} userInput={userInput} stakingTokenDecimals={stakingTokenDecimals} />
       </Modal>
     </div>
   );

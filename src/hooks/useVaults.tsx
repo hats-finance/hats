@@ -113,6 +113,8 @@ export function VaultsProvider({ children }) {
       return undefined;
     };
 
+    console.log(vaultsData);
+
     const getVaultsData = async (vaults: IVault[]): Promise<IVault[]> =>
       Promise.all(
         vaults.map(async (vault) => {
@@ -185,14 +187,17 @@ export const fixObject = (description: any): IVaultDescription => {
 };
 
 const addMultiVaults = (vaults: IVault[]) =>
-  vaults.map((vault) =>
-    vault.description?.["additional-vaults"]
-      ? {
-        ...vault,
-        multipleVaults: [vault, ...fetchVaultsByPids(vaults, vault.description["additional-vaults"])],
-      }
-      : vault
-  );
+  vaults.map((vault) => {
+    const additionalVaults = vault.description?.["additional-vaults"] ?? [];
+    const vaultsIds = Array.isArray(additionalVaults) ? additionalVaults : [additionalVaults];
 
-const fetchVaultsByPids = (vaults: IVault[], pids: string[]) =>
-  pids.map((pid) => vaults.find((vault) => vault.pid === pid)).filter((vault) => vault) as IVault[];
+    return vault.description?.["additional-vaults"]
+      ? {
+          ...vault,
+          multipleVaults: [vault, ...fetchVaultsByIds(vaults, vaultsIds)],
+        }
+      : vault;
+  });
+
+const fetchVaultsByIds = (vaults: IVault[], ids: string[]) =>
+  ids.map((id) => vaults.find((vault) => vault.id === id)).filter((vault) => vault) as IVault[];

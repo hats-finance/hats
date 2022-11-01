@@ -9,6 +9,7 @@ interface ModalProps {
   onHide?: () => void;
   onBackButton?: () => void | null;
   children: React.ReactElement;
+  zIndex?: number;
   title?: string;
   titleIcon?: string | React.ReactElement;
   withTitleDivider?: boolean;
@@ -24,6 +25,7 @@ export function Modal({
   children,
   title,
   titleIcon,
+  zIndex = 0,
   disableClose = false,
   withTitleDivider = false,
   removeHorizontalPadding = false,
@@ -57,7 +59,7 @@ export function Modal({
 
   return isShowing
     ? ReactDOM.createPortal(
-        <StyledModal isShowing={localShowModal}>
+        <StyledModal isShowing={localShowModal} zIndex={zIndex}>
           <div className="overlay" onClick={handleOnHide} />
           <ModalContainer
             disableClose={disableClose}

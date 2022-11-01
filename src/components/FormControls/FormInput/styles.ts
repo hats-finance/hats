@@ -58,6 +58,12 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       css`
         border-color: var(--red);
       `}
+
+      ${isCheckOrRadio &&
+      css`
+        width: ${getSpacing(2.5)};
+        height: ${getSpacing(2.5)};
+      `}
     }
 
     textarea {

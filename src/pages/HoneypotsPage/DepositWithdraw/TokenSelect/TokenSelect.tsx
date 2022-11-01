@@ -1,12 +1,12 @@
-import Select from 'react-select';
-import { Colors } from 'constants/constants';
+import Select from "react-select";
+import { Colors } from "constants/constants";
 import { IVault } from "types/types";
 import "./index.scss";
-import { ipfsTransformUri } from 'utils';
+import { ipfsTransformUri } from "utils";
 
 interface IProps {
-  vault: IVault
-  onSelect: (pid: string) => void;
+  vault: IVault;
+  onSelect: (id: string) => void;
 }
 
 interface ITokenOptionProps {
@@ -20,14 +20,13 @@ const TokenOption = ({ symbol, icon }: ITokenOptionProps) => {
       <img src={icon} className="token-icon" alt="token icon" />
       <span>{symbol}</span>
     </div>
-  )
-}
+  );
+};
 
 export function TokenSelect({ vault, onSelect }: IProps) {
-
   const handleSelect = (e) => {
     onSelect(e.value);
-  }
+  };
 
   const selectStyles = {
     menu: (provided) => ({
@@ -44,7 +43,7 @@ export function TokenSelect({ vault, onSelect }: IProps) {
       display: "flex",
       "&:hover": {
         opacity: "0.8",
-      }
+      },
     }),
     control: () => ({
       border: `1px solid ${Colors.turquoise}`,
@@ -54,17 +53,20 @@ export function TokenSelect({ vault, onSelect }: IProps) {
     }),
     menuList: () => ({
       padding: "unset",
-    })
-  }
+    }),
+  };
 
-  const tokensOptions = vault.multipleVaults?.map(vault => {
-    return (
-      {
-        value: vault.pid,
-        label: <TokenOption symbol={vault.stakingTokenSymbol} icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} />
-      }
-    )
-  })
+  const tokensOptions = vault.multipleVaults?.map((vault) => {
+    return {
+      value: vault.id,
+      label: (
+        <TokenOption
+          symbol={vault.stakingTokenSymbol}
+          icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
+        />
+      ),
+    };
+  });
 
   return (
     <div className="token-select-wrapper">
@@ -76,13 +78,18 @@ export function TokenSelect({ vault, onSelect }: IProps) {
           isSearchable={false}
           className="select-tokens"
           onChange={handleSelect}
-          options={tokensOptions} />
+          options={tokensOptions}
+        />
       ) : (
         <div className="token-icon-wrapper">
-          <img src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} className="token-icon" alt="token icon" />
+          <img
+            src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
+            className="token-icon"
+            alt="token icon"
+          />
           {vault.stakingTokenSymbol}
         </div>
       )}
     </div>
-  )
+  );
 }

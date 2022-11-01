@@ -2,10 +2,10 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledModal = styled.div<{ isShowing: boolean }>(
-  ({ isShowing }) => css`
+export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
+  ({ isShowing, zIndex }) => css`
     position: fixed;
-    z-index: 1040;
+    z-index: ${1040 + zIndex};
     top: 0;
     left: 0;
     width: 100vw;
@@ -101,7 +101,7 @@ export const ModalContainer = styled.div<{
           span {
             margin-left: ${getSpacing(1)};
           }
-          
+
           svg {
             transform: rotate(180deg);
             height: 15px;
