@@ -18,5 +18,5 @@ export default function Balance() {
       <span className="value">{hatsBalanceString}</span>
       <span className="title">{t("Header.MyAccount.Balance.title")}</span>
     </StyledBalance>
-  )
+  );
 }

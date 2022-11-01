@@ -8,7 +8,7 @@ import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { isDateBefore, isDateBetween, isDigitsOnly } from "../../../utils";
 import { Loading, Modal } from "components";
 import { IVault } from "../../../types/types";
-import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING, Chains } from "../../../constants/constants";
+import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import {
   useCheckIn,
   useClaimReward,
@@ -30,6 +30,7 @@ import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNft
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
+import { useTranslation } from "react-i18next";
 
 interface IProps {
   vault: IVault;
@@ -42,6 +43,7 @@ enum Tab {
 }
 
 export function DepositWithdraw({ vault, setShowModal }: IProps) {
+  const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee, committeeCheckedIn, depositPause } = vault;
   const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
@@ -63,9 +65,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     // userInputValue = BigNumber.from(0);
   }
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  console.log(selectedVault?.stakingToken, account);
-  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account, { chainId: 5 });
-  console.log(tokenBalance);
+  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account);
   const formattedTokenBalance = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-";
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!);
@@ -167,26 +167,22 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
 
   const isCommitteMultisig = committee.toLowerCase() === account?.toLowerCase();
 
+  const changeTab = (tab: Tab) => {
+    setTab(tab);
+    setUserInput("");
+  };
+
   return (
     <div className={classNames("deposit-wrapper", { disabled: pendingWallet })}>
       <div className="tabs-wrapper">
-        <button
-          className={classNames("tab", { selected: tab === Tab.Deposit })}
-          onClick={() => {
-            setTab(Tab.Deposit);
-            setUserInput("");
-          }}>
-          DEPOSIT
+        <button className={classNames("tab", { selected: tab === Tab.Deposit })} onClick={() => changeTab(Tab.Deposit)}>
+          {t("deposit").toUpperCase()}
         </button>
-        <button
-          className={classNames("tab", { selected: tab === Tab.Withdraw })}
-          onClick={() => {
-            setTab(Tab.Withdraw);
-            setUserInput("");
-          }}>
-          WITHDRAW
+        <button className={classNames("tab", { selected: tab === Tab.Withdraw })} onClick={() => changeTab(Tab.Withdraw)}>
+          {t("withdraw").toUpperCase()}
         </button>
       </div>
+
       <div className="balance-wrapper">
         {tab === Tab.Deposit &&
           `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
@@ -321,7 +317,9 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
           {`CLAIM ${pendingRewardFormat} HATS`}
         </button>
       </div>
+
       {pendingWallet && <Loading zIndex={10000} />}
+
       <Modal isShowing={showEmbassyPrompt} onHide={toggleEmbassyPrompt}>
         <EmbassyNftTicketPrompt />
       </Modal>

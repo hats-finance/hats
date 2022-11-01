@@ -7,6 +7,8 @@
     "min0": "Min 0",
     "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
