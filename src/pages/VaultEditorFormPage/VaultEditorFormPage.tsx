@@ -136,7 +136,7 @@ const VaultEditorFormPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <button
+      {/* <button
         type="button"
         onClick={() => {
           console.log(getValues());
@@ -144,7 +144,7 @@ const VaultEditorFormPage = () => {
           console.log(formState);
         }}>
         test
-      </button>
+      </button> */}
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
