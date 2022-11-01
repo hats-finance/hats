@@ -16,14 +16,14 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       starttime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
-        .test("isRequired", intl("required"), (val, ctx: any) => !ctx.from[1].value.includesStartAndEndTime),
+        .test("isRequired", intl("required"), (val, ctx: any) => ctx.from[1].value.includesStartAndEndTime && val),
       endtime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
         .when("starttime", (starttime: number, schema: any) => {
           if (starttime) return schema.min(starttime, intl("endtimeGreaterThanStarttime"));
         })
-        .test("isRequired", intl("required"), (val, ctx: any) => !ctx.from[1].value.includesStartAndEndTime),
+        .test("isRequired", intl("required"), (val, ctx: any) => ctx.from[1].value.includesStartAndEndTime && val),
     }),
     committee: Yup.object({
       "multisig-address": Yup.string().required(intl("required")),
