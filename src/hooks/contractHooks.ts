@@ -1,21 +1,18 @@
 import { useCall, useContractFunction } from "@usedapp/core";
 import { Transactions } from "constants/constants";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, ContractInterface } from "ethers";
 import { IVault } from "types/types";
 import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
-import vaultAbiV2 from "data/abis/HATSVaultV2.json"
+import vaultAbiV2 from "data/abis/HATSVaultV2.json";
 
-export function usePendingReward(
-  address: string,
-  pid: string,
-  account: string
-): BigNumber | undefined {
+export function usePendingReward(address: string, pid: string, account: string): BigNumber | undefined {
+  return;
   const { value, error } =
     useCall({
       contract: new Contract(address, vaultAbiV1),
       method: "pendingReward",
-      args: [pid, account]
+      args: [pid, account],
     }) ?? {};
   if (error) {
     return undefined;
@@ -23,16 +20,14 @@ export function usePendingReward(
   return value?.[0];
 }
 
-export function useUserSharesPerVault(
-  address: string,
-  pid: string,
-  account: string
-) {
-  const { value, error } = useCall({
-    contract: new Contract(address, vaultAbiV1),
-    method: "userInfo",
-    args: [pid, account]
-  }) ?? {};
+export function useUserSharesPerVault(address: string, pid: string, account: string) {
+  return;
+  const { value, error } =
+    useCall({
+      contract: new Contract(address, vaultAbiV1),
+      method: "userInfo",
+      args: [pid, account],
+    }) ?? {};
   if (error) {
     return undefined;
   }
@@ -40,7 +35,9 @@ export function useUserSharesPerVault(
 }
 
 export function useWithdrawRequestInfo(address: string, pid: string, account: string): BigNumber | undefined {
-  const { value, error } = useCall({ contract: new Contract(address, vaultAbiV1), method: "withdrawRequests", args: [pid, account] }) ?? {};
+  return;
+  const { value, error } =
+    useCall({ contract: new Contract(address, vaultAbiV1), method: "withdrawRequests", args: [pid, account] }) ?? {};
   if (error) {
     return undefined;
   }
@@ -51,27 +48,32 @@ export function useTokenApprove(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: Transactions.Approve });
 }
 
-export function useDepositAndClaim(vault?: IVault) {
-  let address;
-  let vaultAbi;
-  if (vault?.version === "v1") {
-    address = vault.master.address;
-    vaultAbi = vaultAbiV1;
-  } else if (vault?.version === "v2") {
+export function useDepositAndClaim(vault: IVault) {
+  let address: string;
+  let vaultAbi: ContractInterface;
+
+  if (vault?.version === "v2") {
     address = vault.id;
     vaultAbi = vaultAbiV2;
+  } else {
+    address = vault.master.address;
+    vaultAbi = vaultAbiV1;
   }
-  const depositAndClaim = useContractFunction(new Contract(address, vaultAbi), "deposit", { transactionName: Transactions.DepositAndClaim });
-  return {
-    ...depositAndClaim, send: (amount) => {
-      if (vault?.version === "v1") {
-        depositAndClaim.send(vault.pid, amount);
-      } else if (vault?.version === "v2") {
-        depositAndClaim.send(amount);
-      }
-    }
-  };
 
+  const depositAndClaim = useContractFunction(new Contract(address, vaultAbi), "deposit", {
+    transactionName: Transactions.DepositAndClaim,
+  });
+
+  return {
+    ...depositAndClaim,
+    send: (amount: BigNumber) => {
+      if (vault?.version === "v2") {
+        return depositAndClaim.send(amount);
+      } else {
+        return depositAndClaim.send(vault.pid, amount);
+      }
+    },
+  };
 }
 
 export function useWithdrawAndClaim(address: string) {
@@ -79,11 +81,9 @@ export function useWithdrawAndClaim(address: string) {
 }
 
 export function useWithdrawRequest(address: string) {
-  return useContractFunction(
-    new Contract(address, vaultAbiV1),
-    "withdrawRequest",
-    { transactionName: Transactions.WithdrawRequest }
-  );
+  return useContractFunction(new Contract(address, vaultAbiV1), "withdrawRequest", {
+    transactionName: Transactions.WithdrawRequest,
+  });
 }
 
 export function useClaim(address?: string) {
