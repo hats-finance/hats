@@ -5,7 +5,7 @@ import { IVault } from "types/types";
 import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
-import rewardControllerAbi from "data/abis/rewardController.json";
+import rewardControllerAbi from "data/abis/RewardController.json";
 import { t } from "i18next";
 
 // TODO: NO VERSION 1 SUPPORT / ONLY V2 -> ALWAYS ZERO ON V1

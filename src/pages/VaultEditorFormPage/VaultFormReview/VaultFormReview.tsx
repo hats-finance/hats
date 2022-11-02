@@ -102,6 +102,13 @@ export function VaultFormReview() {
         version: "v2",
         description: description as IVaultDescriptionV2,
         maxBounty: "",
+        rewardController: {
+          id: "",
+          rewardToken: "",
+          rewardTokenDecimals: "18",
+          rewardTokenSymbol: "",
+          totalRewardPaid: "",
+        },
       };
     }
   }, [editedVaultDescriptionForm]);
