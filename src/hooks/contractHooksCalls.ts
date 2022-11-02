@@ -49,7 +49,7 @@ export function useWithdrawRequestInfo(address: string, vault: IVault, account: 
   return value?.[0];
 }
 
-export function useTokenApprove(tokenAddress: string) {
+export function useTokenApproveAllowance(tokenAddress: string) {
   return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: Transactions.Approve });
 }
 

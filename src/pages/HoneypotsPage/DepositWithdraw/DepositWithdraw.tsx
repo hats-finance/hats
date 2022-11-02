@@ -11,7 +11,7 @@ import {
   useCheckIn,
   useClaimReward,
   useDepositAndClaim,
-  useTokenApprove,
+  useTokenApproveAllowance,
   useWithdrawAndClaim,
   useWithdrawRequest,
 } from "hooks/contractHooksCalls";
@@ -98,9 +98,9 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
   const userHasBalanceToWithdraw = availableToWithdraw && availableToWithdraw.number >= Number(userInput);
 
-  const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
-  const handleApproveToken = async (amountToSpend?: BigNumber) => {
-    approveToken(master.address, amountToSpend ?? MAX_SPENDING);
+  const { send: approveTokenAllowance, state: approveTokenAllowanceState } = useTokenApproveAllowance(stakingToken);
+  const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
+    approveTokenAllowance(master.address, amountToSpend ?? MAX_SPENDING);
   };
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(vault);
@@ -119,16 +119,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     setTermsOfUse(false);
   }, [selectedVault, userInputValue, depositAndClaim, master.address, nftData, toggleEmbassyPrompt]);
 
-  const tryDeposit = useCallback(async () => {
-    if (!hasAllowance) {
-      showApproveSpending();
-    } else {
-      handleDepositAndClaim();
-    }
-  }, [showApproveSpending, handleDepositAndClaim, hasAllowance]);
-
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
-
   const handleWithdrawAndClaim = useCallback(async () => {
     withdrawAndClaim(
       selectedVault.pid,
@@ -149,7 +140,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const handleCheckIn = () => checkIn(selectedVault.pid);
 
   const transactionStates = [
-    approveTokenState,
+    approveTokenAllowanceState,
     depositAndClaimState,
     withdrawAndClaimState,
     withdrawRequestState,
@@ -157,23 +148,31 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     checkInState,
   ];
 
-  const keepModalOpen = [withdrawRequestState, approveTokenState, depositAndClaimState];
+  const keepModalOpen = [withdrawRequestState, approveTokenAllowanceState, depositAndClaimState];
   const inTransaction = transactionStates
     .filter((state) => !keepModalOpen.includes(state))
     .some((state) => state.status === "Mining");
   const pendingWallet = transactionStates.some((state) => state.status === "PendingSignature" || state.status === "Mining");
-  const prevApproveTokenState = usePrevious(approveTokenState);
+  const prevApproveTokenState = usePrevious(approveTokenAllowanceState);
 
   // after successful approve transaction immediatly call deposit and claim
   useEffect(() => {
-    if (approveTokenState.status === "Success" && prevApproveTokenState?.status !== approveTokenState.status) {
+    if (approveTokenAllowanceState.status === "Success" && prevApproveTokenState?.status !== approveTokenAllowanceState.status) {
       handleDepositAndClaim();
     }
-  }, [approveTokenState, prevApproveTokenState, handleDepositAndClaim]);
+  }, [approveTokenAllowanceState, prevApproveTokenState, handleDepositAndClaim]);
 
   useEffect(() => {
     if (inTransaction) setShowModal(false);
   }, [inTransaction, setShowModal]);
+
+  const handleDeposit = useCallback(async () => {
+    if (!hasAllowance) {
+      showApproveSpending();
+    } else {
+      handleDepositAndClaim();
+    }
+  }, [showApproveSpending, handleDepositAndClaim, hasAllowance]);
 
   const handleChangeTab = (tab: Tab) => {
     setTab(tab);
@@ -280,7 +279,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
               !isSupportedNetwork
             }
             className="action-btn"
-            onClick={async () => await tryDeposit()}>
+            onClick={async () => await handleDeposit()}>
             {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
           </button>
         )}
@@ -326,7 +325,11 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
       </Modal>
 
       <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
-        <ApproveToken approveToken={handleApproveToken} userInput={userInput} stakingTokenDecimals={stakingTokenDecimals} />
+        <ApproveToken
+          approveToken={handleApproveTokenAllowance}
+          userInput={userInput}
+          stakingTokenDecimals={stakingTokenDecimals}
+        />
       </Modal>
     </div>
   );
