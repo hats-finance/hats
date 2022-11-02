@@ -8,6 +8,7 @@ import vaultAbiV2 from "data/abis/HATSVaultV2.json";
 import rewardControllerAbi from "data/abis/rewardController.json";
 import { t } from "i18next";
 
+// TODO: NO VERSION 1 SUPPORT / ONLY V2 -> ALWAYS ZERO ON V1
 export function usePendingReward(
   rewardControllerAddress: string,
   vaultAddress: string,
@@ -26,6 +27,8 @@ export function usePendingReward(
   return value?.[0];
 }
 
+// V1 -> pid, account
+// v2 -> balanceOf (will return the shares) -> previewRedeem (converts shares to tokens)
 export function useUserSharesPerVault(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
   return;
   const { value, error } =
@@ -40,6 +43,8 @@ export function useUserSharesPerVault(address: string, vault: IVault, account: s
   return value?.[0];
 }
 
+// V1 -> pid, account => returns a time
+// v2 -> withdrawEnableStartTime (with user account) => returns a time
 export function useWithdrawRequestInfo(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
   return;
   const { value, error } =
@@ -107,7 +112,7 @@ export function useWithdrawAndClaim(vault: IVault) {
     ...withdrawAndClaim,
     send: (amount: BigNumber) => {
       if (vault?.version === "v2") {
-        // [params]: assets, receiver, owner
+        // [params]: assets (ammount in tokens), receiver, owner
         return withdrawAndClaim.send(amount, account, account);
       } else {
         // [params]: pid, shares
@@ -140,6 +145,8 @@ export function useWithdrawRequest(vault: IVault) {
   };
 }
 
+// v1 -> claim
+// v2 -> registry -> logClaim
 // TODO:[v2] add support to v2
 export function useClaim(address?: string) {
   return useContractFunction(address ? new Contract(address, vaultAbiV1) : null, "claim", { transactionName: "Claim" });
@@ -170,7 +177,7 @@ export function useClaimReward(vault: IVault) {
 }
 
 export function useCommitteeCheckIn(vault: IVault) {
-  const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
   const committeeCheckIn = useContractFunction(new Contract(contractAddress, vaultAbi), "committeeCheckIn", {
