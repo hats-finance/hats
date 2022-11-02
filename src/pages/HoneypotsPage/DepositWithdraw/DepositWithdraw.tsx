@@ -98,9 +98,9 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
   const userHasBalanceToWithdraw = availableToWithdraw && availableToWithdraw.number >= Number(userInput);
 
-  const { send: approveTokenAllowance, state: approveTokenAllowanceState } = useTokenApproveAllowance(stakingToken);
+  const { send: approveTokenAllowance, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
-    approveTokenAllowance(master.address, amountToSpend ?? MAX_SPENDING);
+    approveTokenAllowance(amountToSpend ?? MAX_SPENDING);
   };
 
   const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(vault);

@@ -49,8 +49,19 @@ export function useWithdrawRequestInfo(address: string, vault: IVault, account: 
   return value?.[0];
 }
 
-export function useTokenApproveAllowance(tokenAddress: string) {
-  return useContractFunction(new Contract(tokenAddress, erc20Abi), "approve", { transactionName: Transactions.Approve });
+export function useTokenApproveAllowance(vault: IVault) {
+  const allowedContractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const approveAllowance = useContractFunction(new Contract(vault.stakingToken, erc20Abi), "approve", {
+    transactionName: Transactions.Approve,
+  });
+
+  return {
+    ...approveAllowance,
+    send: (allowedAmount: BigNumber) => {
+      // [params]: allowedContract, allowedAmount
+      return approveAllowance.send(allowedContractAddress, allowedAmount);
+    },
+  };
 }
 
 export function useDepositAndClaim(vault: IVault) {
