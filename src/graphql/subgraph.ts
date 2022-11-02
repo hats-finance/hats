@@ -60,17 +60,24 @@ export const GET_VAULTS = gql`
       vestingPeriods
       depositPause
       committeeCheckedIn
+      rewardController {
+        id
+        rewardToken
+        rewardTokenSymbol
+        rewardTokenDecimals
+        totalRewardPaid
+      }
     }
   }
 `;
 
 export const GET_STAKER = gql`
-   query getStaker($address: Bytes!) {
-      stakers (where: {address: $address }) {
-        pid
-        master {
-          address
-        }
+  query getStaker($address: Bytes!) {
+    stakers(where: { address: $address }) {
+      pid
+      master {
+        address
       }
     }
-  `
+  }
+`;
