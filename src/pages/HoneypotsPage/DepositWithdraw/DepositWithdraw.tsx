@@ -1,25 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
-import moment from "moment";
 import millify from "millify";
 import classNames from "classnames";
-import { formatUnits, formatEther, parseUnits } from "@ethersproject/units";
-import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { isDateBefore, isDateBetween, isDigitsOnly } from "../../../utils";
+import { formatUnits, parseUnits } from "@ethersproject/units";
+import { isDigitsOnly } from "../../../utils";
 import { Loading, Modal } from "components";
 import { IVault } from "../../../types/types";
-import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
+import { TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import {
   useCheckIn,
   useClaimReward,
   useDepositAndClaim,
-  usePendingReward,
   useTokenApprove,
-  useUserSharesPerVault,
   useWithdrawAndClaim,
   useWithdrawRequest,
-  useWithdrawRequestInfo,
-} from "hooks/contractHooks";
+} from "hooks/contractHooksCalls";
 import Assets from "./Assets/Assets";
 import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
@@ -31,6 +26,7 @@ import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useTranslation } from "react-i18next";
+import { useVaultDepositWithdrawInfo } from "./hooks";
 
 interface IProps {
   vault: IVault;
@@ -45,10 +41,8 @@ enum Tab {
 export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
-  const { account } = useEthers();
   const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
-  const { id, pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee, committeeCheckedIn, depositPause } =
-    vault;
+  const { id, master, stakingToken, stakingTokenDecimals, multipleVaults, depositPause } = vault;
 
   const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
@@ -59,36 +53,50 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
 
-  const allowance = useTokenAllowance(stakingToken, account!, master.address); // READY
-  const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account); // READY
-  const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-"; // READY
-  const pendingReward = usePendingReward(master.address, pid, account!); // READY
-  const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-"; // READY
-  const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault, account!); // READY
-  const availableToWithdrawFormatted = availableToWithdraw
-    ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
-    : "-"; // READY
-  const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault, account); // READY
-  const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  const endDate = moment
-    .unix(withdrawRequestTime?.toNumber() ?? 0)
-    .add(master.withdrawRequestEnablePeriod.toString(), "seconds")
-    .unix();
-  const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
+  // const allowance = useTokenAllowance(stakingToken, account!, master.address); // READY
+  // const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account); // READY
+  // const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-"; // READY
+  // const pendingReward = usePendingReward(master.address, pid, account!); // READY
+  // const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-"; // READY
+  // const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault, account!); // READY
+  // const availableToWithdrawFormatted = availableToWithdraw
+  //   ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
+  //   : "-"; // READY
+  // const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault, account); // READY
+  // const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
+  // const endDate = moment
+  //   .unix(withdrawRequestTime?.toNumber() ?? 0)
+  //   .add(master.withdrawRequestEnablePeriod.toString(), "seconds")
+  //   .unix();
+  // const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
+
+  const {
+    tokenAllowanceAmount,
+    tokenBalance,
+    pendingReward,
+    availableToWithdraw,
+    isUserInQueueToWithdraw,
+    isUserOnTimeToWithdraw,
+    committeeCheckedIn,
+    userIsCommitteeAndCanCheckIn,
+    minimumDeposit,
+  } = useVaultDepositWithdrawInfo(vault, selectedVault);
+
+  console.log(minimumDeposit);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
     userInputValue = parseUnits(userInput!, selectedVault.stakingTokenDecimals);
   } catch {
     // TODO: do something
-    // userInputValue = BigNumber.from(0);
+    console.log("asdasd");
+    userInputValue = BigNumber.from(0);
   }
 
-  const hasAllowance = userInputValue ? allowance?.gte(userInputValue) : false;
-  const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(BigNumber.from(MINIMUM_DEPOSIT)) : false;
-  const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
-  const canWithdraw =
-    availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
+  const hasAllowance = userInputValue ? tokenAllowanceAmount?.gte(userInputValue) : false;
+  const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(minimumDeposit.bigNumber) : false;
+  const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
+  const userHasBalanceToWithdraw = availableToWithdraw && availableToWithdraw.number >= Number(userInput);
 
   const { send: approveToken, state: approveTokenState } = useTokenApprove(stakingToken);
   const handleApproveToken = async (amountToSpend?: BigNumber) => {
@@ -122,25 +130,23 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(selectedVault.pid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, availableToWithdraw));
+    withdrawAndClaim(
+      selectedVault.pid,
+      // TODO:[v2] check if this 'calculateActualWithdrawValue' function is correct
+      calculateActualWithdrawValue(availableToWithdraw?.bigNumber, userInputValue, availableToWithdraw?.bigNumber)
+    );
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [availableToWithdraw, userInputValue, selectedVault, withdrawAndClaim, master.address, nftData]);
+  }, [availableToWithdraw, userInputValue, selectedVault, withdrawAndClaim, master, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
-  const handleWithdrawRequest = async () => {
-    withdrawRequestCall(selectedVault.pid);
-  };
+  const handleWithdrawRequest = () => withdrawRequestCall(selectedVault.pid);
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
-  const handleClaimReward = async () => {
-    claimReward(selectedVault.pid);
-  };
+  const handleClaimReward = () => claimReward(selectedVault.pid);
 
   const { send: checkIn, state: checkInState } = useCheckIn(master.address);
-  const handleCheckIn = () => {
-    checkIn(selectedVault.pid);
-  };
+  const handleCheckIn = () => checkIn(selectedVault.pid);
 
   const transactionStates = [
     approveTokenState,
@@ -169,35 +175,31 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     if (inTransaction) setShowModal(false);
   }, [inTransaction, setShowModal]);
 
-  const isCommitteMultisig = committee.toLowerCase() === account?.toLowerCase();
-
-  const changeTab = (tab: Tab) => {
+  const handleChangeTab = (tab: Tab) => {
     setTab(tab);
     setUserInput("");
+  };
+
+  const handleMaxAmountButton = () => {
+    const maxAmount = tab === Tab.Deposit ? tokenBalance.number : availableToWithdraw.number;
+    setUserInput(`${maxAmount}`);
   };
 
   return (
     <div className={classNames("deposit-wrapper", { disabled: pendingWallet })}>
       <div className="tabs-wrapper">
-        <button className={classNames("tab", { selected: tab === Tab.Deposit })} onClick={() => changeTab(Tab.Deposit)}>
+        <button className={classNames("tab", { selected: tab === Tab.Deposit })} onClick={() => handleChangeTab(Tab.Deposit)}>
           {t("deposit").toUpperCase()}
         </button>
-        <button className={classNames("tab", { selected: tab === Tab.Withdraw })} onClick={() => changeTab(Tab.Withdraw)}>
+        <button className={classNames("tab", { selected: tab === Tab.Withdraw })} onClick={() => handleChangeTab(Tab.Withdraw)}>
           {t("withdraw").toUpperCase()}
         </button>
       </div>
 
       <div className="balance-wrapper">
-        {tab === Tab.Deposit &&
-          `Balance: ${!tokenBalance ? "-" : millify(Number(tokenBalanceFormatted))} ${selectedVault?.stakingTokenSymbol}`}
-        {tab === Tab.Withdraw &&
-          `Balance to withdraw: ${
-            !availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))
-          } ${selectedVault?.stakingTokenSymbol}`}
-        <button
-          className="max-button"
-          disabled={!committeeCheckedIn}
-          onClick={() => setUserInput(tab === Tab.Deposit ? tokenBalanceFormatted : availableToWithdrawFormatted)}>
+        {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted}`}
+        {tab === Tab.Withdraw && `Balance to withdraw: ${availableToWithdraw.formatted}`}
+        <button className="max-button" disabled={!committeeCheckedIn} onClick={handleMaxAmountButton}>
           (Max)
         </button>
       </div>
@@ -226,13 +228,12 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             />
           </div>
           {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && (
-            <span className="input-error">{`Minimum deposit is ${formatUnits(
-              String(MINIMUM_DEPOSIT),
-              stakingTokenDecimals
-            )}`}</span>
+            <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted}`}</span>
           )}
-          {tab === Tab.Deposit && notEnoughBalance && <span className="input-error">Insufficient funds</span>}
-          {tab === Tab.Withdraw && !canWithdraw && <span className="input-error">Can't withdraw more than available</span>}
+          {tab === Tab.Deposit && userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
+          {tab === Tab.Withdraw && !userHasBalanceToWithdraw && (
+            <span className="input-error">Can't withdraw more than available</span>
+          )}
         </div>
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
@@ -259,17 +260,17 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isWithdrawable && !pendingWithdraw && (
+      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
         <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>
       )}
-      {tab === Tab.Deposit && (isWithdrawable || pendingWithdraw) && (
+      {tab === Tab.Deposit && (isUserOnTimeToWithdraw || isUserInQueueToWithdraw) && (
         <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>
       )}
       <div className="action-btn-wrapper">
         {tab === Tab.Deposit && (
           <button
             disabled={
-              notEnoughBalance ||
+              userHasBalanceToDeposit ||
               !userInput ||
               userInput === "0" ||
               !termsOfUse ||
@@ -280,37 +281,41 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             }
             className="action-btn"
             onClick={async () => await tryDeposit()}>
-            {`DEPOSIT ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormatted} HATS`}`}
+            {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
           </button>
         )}
-        {tab === Tab.Withdraw && isWithdrawable && !pendingWithdraw && (
+        {tab === Tab.Withdraw && isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
           <button
             disabled={
-              !canWithdraw || !userInput || userInput === "0" || withdrawSafetyPeriod?.isSafetyPeriod || !committeeCheckedIn
+              !userHasBalanceToWithdraw ||
+              !userInput ||
+              userInput === "0" ||
+              withdrawSafetyPeriod?.isSafetyPeriod ||
+              !committeeCheckedIn
             }
             className="action-btn"
             onClick={async () => await handleWithdrawAndClaim()}>
-            {`WITHDRAW ${!pendingReward || pendingReward.eq(0) ? "" : `AND CLAIM ${pendingRewardFormatted} HATS`}`}
+            {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
           </button>
         )}
-        {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw && (
+        {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
           <button
-            disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
+            disabled={!userHasBalanceToWithdraw || availableToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>
             WITHDRAWAL REQUEST
           </button>
         )}
-        {isCommitteMultisig && !committeeCheckedIn && (
+        {userIsCommitteeAndCanCheckIn && (
           <button onClick={handleCheckIn} className="action-btn">
             CHECK IN
           </button>
         )}
         <button
           onClick={async () => await handleClaimReward()}
-          disabled={!pendingReward || pendingReward.eq(0)}
+          disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
           className="action-btn claim-btn fill">
-          {`CLAIM ${pendingRewardFormatted} HATS`}
+          {`CLAIM ${pendingReward?.formatted}`}
         </button>
       </div>
 
