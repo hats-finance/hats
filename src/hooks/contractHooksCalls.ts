@@ -52,6 +52,7 @@ export function useWithdrawRequestInfo(address: string, vault: IVault, account: 
 //READY -> supporting v1 and v2
 export function useTokenApproveAllowance(vault: IVault) {
   const allowedContractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+
   const approveAllowance = useContractFunction(new Contract(vault.stakingToken, erc20Abi), "approve", {
     transactionName: Transactions.Approve,
   });
@@ -68,7 +69,7 @@ export function useTokenApproveAllowance(vault: IVault) {
 //READY -> supporting v1 and v2
 export function useDeposit(vault: IVault) {
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
   const deposit = useContractFunction(new Contract(contractAddress, vaultAbi), "deposit", {
     transactionName: Transactions.Deposit,
@@ -90,11 +91,12 @@ export function useDeposit(vault: IVault) {
   };
 }
 
+//READY -> supporting v1 and v2
 export function useWithdrawAndClaim(vault: IVault) {
   const { account } = useEthers();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const contractFunctionName = vault.version === "v1" ? "withdraw" : "withdrawAndClaim";
-  const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
   const withdrawAndClaim = useContractFunction(new Contract(contractAddress, vaultAbi), contractFunctionName, {
     transactionName: Transactions.WithdrawAndClaim,
@@ -114,10 +116,27 @@ export function useWithdrawAndClaim(vault: IVault) {
   };
 }
 
-export function useWithdrawRequest(address: string) {
-  return useContractFunction(new Contract(address, vaultAbiV1), "withdrawRequest", {
+//READY -> supporting v1 and v2
+export function useWithdrawRequest(vault: IVault) {
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+
+  const withdrawRequest = useContractFunction(new Contract(contractAddress, vaultAbi), "withdrawRequest", {
     transactionName: Transactions.WithdrawRequest,
   });
+
+  return {
+    ...withdrawRequest,
+    send: () => {
+      if (vault?.version === "v2") {
+        // [params]: none
+        return withdrawRequest.send();
+      } else {
+        // [params]: pid
+        return withdrawRequest.send(vault.pid);
+      }
+    },
+  };
 }
 
 export function useClaim(address?: string) {

@@ -128,13 +128,13 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
   }, [userInputValue, selectedVault, withdrawAndClaim, master, nftData]);
 
-  const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
-  const handleWithdrawRequest = () => withdrawRequestCall(selectedVault.pid);
+  const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(selectedVault);
+  const handleWithdrawRequest = () => withdrawRequestCall();
 
-  const { send: claimReward, state: claimRewardState } = useClaimReward(master.address);
+  const { send: claimReward, state: claimRewardState } = useClaimReward(selectedVault);
   const handleClaimReward = () => claimReward(selectedVault.pid);
 
-  const { send: checkIn, state: checkInState } = useCheckIn(master.address);
+  const { send: checkIn, state: checkInState } = useCheckIn(selectedVault);
   const handleCheckIn = () => checkIn(selectedVault.pid);
 
   const transactionStates = [
