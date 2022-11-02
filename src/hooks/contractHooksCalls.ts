@@ -169,8 +169,26 @@ export function useClaimReward(vault: IVault) {
   };
 }
 
-export function useCheckIn(address: string) {
-  return useContractFunction(new Contract(address, vaultAbiV1), "checkIn", { transactionName: Transactions.CheckIn });
+export function useCommitteeCheckIn(vault: IVault) {
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+
+  const committeeCheckIn = useContractFunction(new Contract(contractAddress, vaultAbi), "committeeCheckIn", {
+    transactionName: Transactions.CheckIn,
+  });
+
+  return {
+    ...committeeCheckIn,
+    send: () => {
+      if (vault?.version === "v2") {
+        // [params]: none
+        return committeeCheckIn.send();
+      } else {
+        // [params]: pid
+        return committeeCheckIn.send(vault.pid);
+      }
+    },
+  };
 }
 
 // export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(

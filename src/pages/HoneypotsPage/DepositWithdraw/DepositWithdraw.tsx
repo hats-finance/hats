@@ -8,7 +8,7 @@ import { Loading, Modal } from "components";
 import { IVault } from "../../../types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import {
-  useCheckIn,
+  useCommitteeCheckIn,
   useClaimReward,
   useDeposit,
   useTokenApproveAllowance,
@@ -134,8 +134,8 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const { send: claimReward, state: claimRewardState } = useClaimReward(selectedVault);
   const handleClaimReward = () => claimReward();
 
-  const { send: checkIn, state: checkInState } = useCheckIn(selectedVault);
-  const handleCheckIn = () => checkIn(selectedVault.pid);
+  const { send: checkIn, state: checkInState } = useCommitteeCheckIn(selectedVault);
+  const handleCheckIn = () => checkIn();
 
   const transactionStates = [
     approveTokenAllowanceState,
