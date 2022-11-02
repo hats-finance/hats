@@ -49,6 +49,7 @@ export function useWithdrawRequestInfo(address: string, vault: IVault, account: 
   return value?.[0];
 }
 
+//READY -> supporting v1 and v2
 export function useTokenApproveAllowance(vault: IVault) {
   const allowedContractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const approveAllowance = useContractFunction(new Contract(vault.stakingToken, erc20Abi), "approve", {
@@ -64,11 +65,12 @@ export function useTokenApproveAllowance(vault: IVault) {
   };
 }
 
+//READY -> supporting v1 and v2
 export function useDeposit(vault: IVault) {
-  const address = vault.version === "v1" ? vault.master.address : vault.id;
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
-  const deposit = useContractFunction(new Contract(address, vaultAbi), "deposit", {
+  const deposit = useContractFunction(new Contract(contractAddress, vaultAbi), "deposit", {
     transactionName: Transactions.Deposit,
   });
 
@@ -88,8 +90,28 @@ export function useDeposit(vault: IVault) {
   };
 }
 
-export function useWithdrawAndClaim(address: string) {
-  return useContractFunction(new Contract(address, vaultAbiV1), "withdraw", { transactionName: Transactions.WithdrawAndClaim });
+export function useWithdrawAndClaim(vault: IVault) {
+  const { account } = useEthers();
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const contractFunctionName = vault.version === "v1" ? "withdraw" : "withdrawAndClaim";
+  const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+
+  const withdrawAndClaim = useContractFunction(new Contract(contractAddress, vaultAbi), contractFunctionName, {
+    transactionName: Transactions.WithdrawAndClaim,
+  });
+
+  return {
+    ...withdrawAndClaim,
+    send: (amount: BigNumber) => {
+      if (vault?.version === "v2") {
+        // [params]: assets, receiver, owner
+        return withdrawAndClaim.send(amount, account, account);
+      } else {
+        // [params]: pid, shares
+        return withdrawAndClaim.send(vault.pid, amount);
+      }
+    },
+  };
 }
 
 export function useWithdrawRequest(address: string) {

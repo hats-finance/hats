@@ -11,9 +11,7 @@ export const calculateActualWithdrawValue = (
   amountAvailableToWithdraw?: BigNumber,
   userInput?: BigNumber,
   userShares?: BigNumber
-) => {
+): BigNumber | undefined => {
   if (!amountAvailableToWithdraw || !userInput || !userShares) return undefined;
-  return userInput.mul(userShares)
-    .div(amountAvailableToWithdraw)
-    .toString();
+  return userInput.mul(userShares).div(amountAvailableToWithdraw);
 };

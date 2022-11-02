@@ -119,16 +119,14 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     setTermsOfUse(false);
   }, [selectedVault, userInputValue, deposit, master.address, nftData, toggleEmbassyPrompt]);
 
-  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
+  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(
-      selectedVault.pid,
-      // TODO:[v2] check if this 'calculateActualWithdrawValue' function is correct
-      calculateActualWithdrawValue(availableToWithdraw?.bigNumber, userInputValue, availableToWithdraw?.bigNumber)
-    );
+    if (!userInputValue) return;
+    withdrawAndClaim(userInputValue);
+
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [availableToWithdraw, userInputValue, selectedVault, withdrawAndClaim, master, nftData]);
+  }, [userInputValue, selectedVault, withdrawAndClaim, master, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = () => withdrawRequestCall(selectedVault.pid);
