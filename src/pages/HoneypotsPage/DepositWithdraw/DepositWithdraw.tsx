@@ -132,7 +132,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const handleWithdrawRequest = () => withdrawRequestCall();
 
   const { send: claimReward, state: claimRewardState } = useClaimReward(selectedVault);
-  const handleClaimReward = () => claimReward(selectedVault.pid);
+  const handleClaimReward = () => claimReward();
 
   const { send: checkIn, state: checkInState } = useCheckIn(selectedVault);
   const handleCheckIn = () => checkIn(selectedVault.pid);

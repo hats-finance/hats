@@ -1,10 +1,11 @@
 import { useCall, useContractFunction, useEthers } from "@usedapp/core";
 import { Transactions } from "constants/constants";
-import { BigNumber, Contract, ContractInterface } from "ethers";
+import { BigNumber, Contract } from "ethers";
 import { IVault } from "types/types";
 import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
+import rewardControllerAbi from "data/abis/rewardController.json";
 import { t } from "i18next";
 
 export function usePendingReward(
@@ -139,12 +140,33 @@ export function useWithdrawRequest(vault: IVault) {
   };
 }
 
+// TODO:[v2] add support to v2
 export function useClaim(address?: string) {
   return useContractFunction(address ? new Contract(address, vaultAbiV1) : null, "claim", { transactionName: "Claim" });
 }
 
-export function useClaimReward(address: string) {
-  return useContractFunction(new Contract(address, vaultAbiV1), "claimReward", { transactionName: Transactions.ClaimReward });
+//READY -> supporting v1 and v2
+export function useClaimReward(vault: IVault) {
+  const { account } = useEthers();
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
+  const abi = vault.version === "v1" ? vaultAbiV1 : rewardControllerAbi;
+
+  const claimReward = useContractFunction(new Contract(contractAddress, abi), "claimReward", {
+    transactionName: Transactions.ClaimReward,
+  });
+
+  return {
+    ...claimReward,
+    send: () => {
+      if (vault?.version === "v2") {
+        // [params]: vault, user
+        return claimReward.send(vault.id, account);
+      } else {
+        // [params]: pid
+        return claimReward.send(vault.pid);
+      }
+    },
+  };
 }
 
 export function useCheckIn(address: string) {
