@@ -65,16 +65,8 @@ export function useTokenApproveAllowance(vault: IVault) {
 }
 
 export function useDepositAndClaim(vault: IVault) {
-  let address: string;
-  let vaultAbi: ContractInterface;
-
-  if (vault?.version === "v2") {
-    address = vault.id;
-    vaultAbi = vaultAbiV2;
-  } else {
-    address = vault.master.address;
-    vaultAbi = vaultAbiV1;
-  }
+  const address = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
   const depositAndClaim = useContractFunction(new Contract(address, vaultAbi), "deposit", {
     transactionName: Transactions.DepositAndClaim,

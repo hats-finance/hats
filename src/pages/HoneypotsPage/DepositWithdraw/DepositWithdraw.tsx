@@ -103,7 +103,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     approveTokenAllowance(amountToSpend ?? MAX_SPENDING);
   };
 
-  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(vault);
+  const { send: depositAndClaim, state: depositAndClaimState } = useDepositAndClaim(selectedVault);
   const handleDepositAndClaim = useCallback(async () => {
     if (!userInputValue) return;
 
