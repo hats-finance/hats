@@ -64,25 +64,25 @@ export function useTokenApproveAllowance(vault: IVault) {
   };
 }
 
-export function useDepositAndClaim(vault: IVault) {
+export function useDeposit(vault: IVault) {
   const address = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi: ContractInterface = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
-  const depositAndClaim = useContractFunction(new Contract(address, vaultAbi), "deposit", {
-    transactionName: Transactions.DepositAndClaim,
+  const deposit = useContractFunction(new Contract(address, vaultAbi), "deposit", {
+    transactionName: Transactions.Deposit,
   });
 
   const { account } = useEthers();
 
   return {
-    ...depositAndClaim,
+    ...deposit,
     send: (amount: BigNumber) => {
       if (vault?.version === "v2") {
         // [params]: asset, receiver
-        return depositAndClaim.send(amount, account);
+        return deposit.send(amount, account);
       } else {
         // [params]: pid, amount
-        return depositAndClaim.send(vault.pid, amount);
+        return deposit.send(vault.pid, amount);
       }
     },
   };
