@@ -63,7 +63,7 @@ export const ModalContainer = styled.div<{
 
       ${withIcon &&
       css`
-        padding: ${getSpacing(1.5)} ${getSpacing(4)};
+        padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(1)};
       `}
 
       ${withTitleDivider &&
