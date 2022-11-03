@@ -20,7 +20,7 @@ export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawS
   const endDateInEpoch = withdrawRequestTime ? withdrawRequestTime + withdrawRequestEnablePeriod : null;
   const isWithdrawable = withdrawRequestTime && endDateInEpoch ? now > withdrawRequestTime &&
     now < endDateInEpoch : false;
-  const countdownValue = isWithdrawable && endDateInEpoch ? endDateInEpoch.toString() : withdrawRequestTime?.toString();
+  const countdownValue = isWithdrawable && endDateInEpoch ? endDateInEpoch : withdrawRequestTime;
 
   return (
     <>
