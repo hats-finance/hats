@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { BigNumber } from "@ethersproject/bignumber";
 import millify from "millify";
 import classNames from "classnames";
-import { formatUnits, parseUnits } from "@ethersproject/units";
+import { parseUnits } from "@ethersproject/units";
 import { isDigitsOnly } from "utils";
 import { Loading, Modal } from "components";
 import { IVault } from "types/types";
@@ -16,7 +16,6 @@ import {
   useWithdrawRequest,
 } from "hooks/contractHooksCalls";
 import Assets from "./Assets/Assets";
-import { calculateActualWithdrawValue } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
