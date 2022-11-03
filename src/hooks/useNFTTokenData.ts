@@ -8,7 +8,6 @@ import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata, INFTTo
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
-import moment from "moment";
 import { usePrevious } from "./usePrevious";
 import { useSupportedNetwork } from "./useSupportedNetwork";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -80,7 +79,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   const prevChainId = usePrevious(chainId);
   const [lastMerkleTree, setLastMerkleTree] = useState<MerkleTreeChanged>();
   const [merkleTree, setMerkleTree] = useState<AirdropMachineWallet[]>();
-  const isBeforeDeadline = lastMerkleTree?.deadline ? moment().unix() < Number(lastMerkleTree.deadline) : undefined;
+  const isBeforeDeadline = lastMerkleTree?.deadline ? Date.now() < Number(lastMerkleTree.deadline) : undefined;
 
   const addressInfo = merkleTree?.find(wallet => wallet.address.toLowerCase() === address?.toLowerCase());
   const treeRedeemables = withRedeemed?.filter(nft => nft.isMerkleTree && !nft.isRedeemed);

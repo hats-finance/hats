@@ -1,4 +1,3 @@
-import moment from "moment";
 import classNames from "classnames";
 import { useVaults } from "hooks/useVaults";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
@@ -12,7 +11,7 @@ export function SafePeriodBar() {
     return null;
   }
   const { isSafetyPeriod, saftyEndsAt, saftyStartsAt } = withdrawSafetyPeriod;
-  const safetyPeriodDate = moment.unix(isSafetyPeriod ? saftyEndsAt : saftyStartsAt).local().format('DD-MM-YYYY HH:mm');
+  const safetyPeriodDate = new Date(isSafetyPeriod ? saftyEndsAt : saftyStartsAt).toLocaleTimeString();
 
   return (
     <tr>

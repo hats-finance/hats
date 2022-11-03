@@ -1,5 +1,4 @@
 import axios from "axios";
-import moment from "moment";
 import millify from "millify";
 import { BigNumber } from "ethers";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
@@ -186,7 +185,7 @@ export const getWithdrawSafetyPeriod = (
     saftyEndsAt: 0,
     saftyStartsAt: 0
   };
-  const currentTimestamp = moment().unix();
+  const currentTimestamp = Date.now();
   const sum = Number(withdrawPeriod) + Number(safetyPeriod);
   withdrawSafetyPeriod.saftyEndsAt =
     sum * Math.floor(currentTimestamp / sum) + sum;
@@ -266,22 +265,6 @@ export const normalizeAddress = (address: string) => {
   return "";
 }
 
-/**
- * Checks whether a given date (in unix time) has passed.
- * @param {number | string | undefined} value
- */
-export const isDateBefore = (value: number | string | undefined): boolean => {
-  return moment().isBefore(moment.unix(Number(value)));
-}
-
-/**
- * Checks whether the current date is bwtween two given dates (in unix time).
- * @param {number | string | undefined} start
- * @param {number | string | undefined} end 
- */
-export const isDateBetween = (start: number | string | undefined, end: number | string | undefined): boolean => {
-  return moment().isAfter(moment.unix(Number(start))) && moment().isBefore(moment.unix(Number(end)));
-}
 
 export const ipfsTransformUri = (uri: string | undefined) => {
   if (!uri || typeof uri !== 'string') {

@@ -1,20 +1,17 @@
 
 import { useState, useEffect, useCallback } from "react";
-import moment from 'moment';
 import classNames from "classnames";
 import { Colors } from "../../constants/constants";
 import "./index.scss";
 
 interface IProps {
-  endDate: string
+  endDate: number // timestamp in milliseconds
   plainTextView?: boolean
   onEnd?: Function
   textColor?: Colors
 }
 
-export function Countdown(props: IProps) {
-  const { endDate, plainTextView, onEnd } = props;
-  const countdownDate = moment.unix(Number(endDate)).utc().valueOf();
+export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) {
   const [timer, setTimer] = useState({
     days: 0,
     hours: 0,
@@ -23,10 +20,10 @@ export function Countdown(props: IProps) {
   });
 
   const setNewTime = useCallback(() => {
-    if (countdownDate) {
-      const currentTime = new Date().getTime();
+    if (endDate) {
+      const currentTime = Date.now();
 
-      const distanceToDate = countdownDate - currentTime;
+      const distanceToDate = endDate - currentTime;
       if (distanceToDate < 0) {
         return;
       }
@@ -48,7 +45,7 @@ export function Countdown(props: IProps) {
 
       setTimer({ days: days, hours: hours, minutes: minutes, seconds: seconds });
     }
-  }, [countdownDate, onEnd]);
+  }, [endDate, onEnd]);
 
   // Run once at mounting to avoid 1000ms delay of the interval
   useEffect(() => {
@@ -63,7 +60,7 @@ export function Countdown(props: IProps) {
   }, [setNewTime]);
 
   return (
-    <div className="withdraw-countdown-wrapper" style={{ color: `${props.textColor}` }}>
+    <div className="withdraw-countdown-wrapper" style={{ color: `${textColor}` }}>
       {timer.days > 0 && (
         <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
           <span className="value">{String(timer.days).padStart(2, "0")}</span>
