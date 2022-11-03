@@ -4,7 +4,6 @@ import { formatEther, formatUnits } from "@ethersproject/units";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
 import { usePendingReward, useUserSharesPerVault, useWithdrawRequestInfo } from "hooks/contractHooksCalls";
 import { IVault } from "types/types";
-import { isDateBefore, isDateBetween } from "utils";
 import { MINIMUM_DEPOSIT } from "constants/constants";
 
 export const useVaultDepositWithdrawInfo = (mainVault: IVault, selectedVault: IVault) => {
@@ -24,8 +23,12 @@ export const useVaultDepositWithdrawInfo = (mainVault: IVault, selectedVault: IV
   const pendingReward = usePendingReward(contractAddress, contractAddress, account); // TODO:[v2] implement reward controller address
   const availableToWithdraw = useUserSharesPerVault(contractAddress, selectedVault, account); // TODO:[v2] implement this. LP token? 1:1?
   const withdrawStartTime = useWithdrawRequestInfo(contractAddress, selectedVault, account); // TODO:[v2] implement this.
-  const isUserInQueueToWithdraw = isDateBefore(withdrawStartTime?.toString());
-  const isUserOnTimeToWithdraw = isDateBetween(withdrawStartTime?.toString(), withdrawWindowTime);
+  const now = Date.now();
+  const isUserInQueueToWithdraw = now < (withdrawStartTime?.toNumber() ?? 0);
+  const isUserOnTimeToWithdraw = withdrawStartTime && withdrawWindowTime ?
+    now > withdrawStartTime.toNumber() &&
+    now < withdrawStartTime.toNumber() + BigNumber.from(withdrawWindowTime).toNumber() * 1000
+    : false;
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
