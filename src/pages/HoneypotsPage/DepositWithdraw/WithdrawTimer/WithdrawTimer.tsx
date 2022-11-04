@@ -1,5 +1,4 @@
-import { Countdown } from "components";
-import { Colors } from "constants/constants";
+import { CountdownTimer } from "components";
 import { useVaultDepositWithdrawInfo } from "../hooks";
 import { IVault } from "types/types";
 
@@ -21,10 +20,10 @@ export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawS
       {(isUserInQueueToWithdraw || isUserInTimeToWithdraw) && countdownValue ? (
         <>
           {showWithdrawState && <span>{isUserInQueueToWithdraw ? "Pending" : "Withdrawable"} </span>}
-          <Countdown
+          <CountdownTimer
             plainTextView={plainTextView}
             endDate={countdownValue * 1000}
-            textColor={isUserInQueueToWithdraw ? Colors.yellow : Colors.turquoise}
+            color={isUserInQueueToWithdraw ? "yellow" : "blue"}
           />
         </>
       ) : (
