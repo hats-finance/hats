@@ -11,7 +11,7 @@ import { IVault } from "../../../types/types";
 import { MINIMUM_DEPOSIT, TERMS_OF_USE, MAX_SPENDING } from "../../../constants/constants";
 import { useCheckIn, useClaimReward, useDepositAndClaim, usePendingReward, useTokenApprove, useUserSharesPerVault, useWithdrawAndClaim, useWithdrawRequest, useWithdrawRequestInfo } from "hooks/contractHooks";
 import Assets from "./Assets/Assets";
-import { calculateActualWithdrawValue } from "./utils";
+import { calculateWithdrawSharesValue, calculateSharesFromTokenAmount } from "./utils";
 import { useVaults } from "hooks/useVaults";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
@@ -34,7 +34,7 @@ enum Tab {
 export function DepositWithdraw(props: IProps) {
   const isSupportedNetwork = useSupportedNetwork();
   const { pid, master, stakingToken, stakingTokenDecimals, multipleVaults, committee,
-    committeeCheckedIn, depositPause } = props.data;
+    committeeCheckedIn, depositPause, honeyPotBalance, totalUsersShares } = props.data;
   const { setShowModal } = props;
   const { isShowing: showEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const [tab, setTab] = useState(Tab.Deposit);
@@ -60,10 +60,10 @@ export function DepositWithdraw(props: IProps) {
   const notEnoughBalance = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance) : false;
   const pendingReward = usePendingReward(master.address, pid, account!);
   const pendingRewardFormat = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-";
-  const availableToWithdraw = useUserSharesPerVault(master.address, selectedPid, account!);
-  const shares = availableToWithdraw?.toString();
-  const formatAvailableToWithdraw = availableToWithdraw ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals) : "-";
-  const canWithdraw = availableToWithdraw && Number(formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
+  const availableSharesToWithdraw = useUserSharesPerVault(master.address, selectedPid, account!);
+  const availableTokensToWithdraw = calculateWithdrawSharesValue(availableSharesToWithdraw, BigNumber.from(honeyPotBalance), BigNumber.from(totalUsersShares));
+  const availableTokensToWithdrawFormatted = availableTokensToWithdraw ? formatUnits(availableTokensToWithdraw, selectedVault?.stakingTokenDecimals) : "-";
+  const canWithdraw = availableTokensToWithdraw && Number(formatUnits(availableTokensToWithdraw, selectedVault?.stakingTokenDecimals)) >= Number(userInput);
   const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedPid, account!);
   const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
   const endDate = moment.unix(withdrawRequestTime?.toNumber() ?? 0).add(master.withdrawRequestEnablePeriod.toString(), "seconds").unix();
@@ -105,10 +105,11 @@ export function DepositWithdraw(props: IProps) {
   const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(master.address);
 
   const handleWithdrawAndClaim = useCallback(async () => {
-    withdrawAndClaim(selectedPid, calculateActualWithdrawValue(availableToWithdraw, userInputValue, shares));
+    const withdrawShares = calculateSharesFromTokenAmount(userInputValue, BigNumber.from(honeyPotBalance), BigNumber.from(totalUsersShares));
+    withdrawAndClaim(selectedPid, withdrawShares);
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedPid, masterAddress: master.address });
-  }, [availableToWithdraw, userInputValue, shares, selectedPid, withdrawAndClaim, master.address, nftData]);
+  }, [userInputValue, selectedPid, withdrawAndClaim, master, nftData, honeyPotBalance, totalUsersShares]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(master.address);
   const handleWithdrawRequest = async () => {
@@ -160,14 +161,14 @@ export function DepositWithdraw(props: IProps) {
       </div>
       <div className="balance-wrapper">
         {tab === Tab.Deposit && `Balance: ${!tokenBalance ? "-" : millify(Number(formattedTokenBalance))} ${selectedVault?.stakingTokenSymbol}`}
-        {tab === Tab.Withdraw && `Balance to withdraw: ${!availableToWithdraw ? "-" : millify(Number(formatUnits(availableToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
+        {tab === Tab.Withdraw && `Balance to withdraw: ${!availableTokensToWithdraw ? "-" : millify(Number(formatUnits(availableTokensToWithdraw, selectedVault.stakingTokenDecimals)))} ${selectedVault?.stakingTokenSymbol}`}
         <button
           className="max-button"
           disabled={!committeeCheckedIn}
           onClick={() => setUserInput(
             tab === Tab.Deposit ?
               formattedTokenBalance :
-              formatAvailableToWithdraw)}>
+              availableTokensToWithdrawFormatted)}>
           (Max)
         </button>
       </div>
@@ -228,7 +229,7 @@ export function DepositWithdraw(props: IProps) {
           </button>}
         {tab === Tab.Withdraw && !pendingWithdraw && !isWithdrawable && !pendingWithdraw &&
           <button
-            disabled={!canWithdraw || availableToWithdraw.eq(0) || !committeeCheckedIn}
+            disabled={!canWithdraw || availableTokensToWithdraw.eq(0) || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>WITHDRAWAL REQUEST</button>}
         {isCommitteMultisig && !committeeCheckedIn && <button onClick={handleCheckIn} className="action-btn">CHECK IN</button>}
