@@ -27,7 +27,7 @@ export function useVaults() {
 }
 
 export function VaultsProvider({ children }) {
-  const [vaults, setVaults] = useState<IVault[]>();
+  const [vaults, setVaults] = useState<IVault[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
   const { chainId, library, account } = useEthers();

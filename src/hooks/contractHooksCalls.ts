@@ -1,10 +1,11 @@
+import { BigNumber, Contract } from "ethers";
 import { useCall, useContractFunction, useEthers } from "@usedapp/core";
 import { Transactions } from "constants/constants";
-import { BigNumber, Contract } from "ethers";
 import { IVault } from "types/types";
 import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
+import vaultRegistryAbiV2 from "data/abis/HATSVaultsRegistry.json";
 import rewardControllerAbi from "data/abis/RewardController.json";
 
 /**
@@ -104,8 +105,6 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
   return { userSharesAvailable, userBalanceAvailable };
 }
 
-// V1 -> pid, account => returns a time
-// v2 -> withdrawEnableStartTime (with user account) => returns a time
 /**
  * Returns the starting time in seconds when the user can withdraw from the vault.
  *
@@ -135,7 +134,14 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
   return !error ? value?.[0] : undefined;
 }
 
-//READY -> supporting v1 and v2
+/**
+ * Returns a caller function to approve the vault to spend the user's staking token.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to give approval to spend the user's staking token
+ */
 export function useTokenApproveAllowance(vault: IVault) {
   const allowedContractAddress = vault.version === "v1" ? vault.master.address : vault.id;
 
@@ -152,7 +158,14 @@ export function useTokenApproveAllowance(vault: IVault) {
   };
 }
 
-//READY -> supporting v1 and v2
+/**
+ * Returns a caller function to deposit staking token to the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to deposit staking token
+ */
 export function useDeposit(vault: IVault) {
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -177,7 +190,15 @@ export function useDeposit(vault: IVault) {
   };
 }
 
-//READY -> supporting v1 and v2
+/**
+ * Returns a caller function to withdraw the user's staking token and claim the available rewards
+ * from the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to withdraw and claim the tokens from
+ */
 export function useWithdrawAndClaim(vault: IVault) {
   const { account } = useEthers();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
@@ -202,7 +223,14 @@ export function useWithdrawAndClaim(vault: IVault) {
   };
 }
 
-//READY -> supporting v1 and v2
+/**
+ * Returns a caller function to request a withdraw from the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to request a withdraw from
+ */
 export function useWithdrawRequest(vault: IVault) {
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -225,14 +253,14 @@ export function useWithdrawRequest(vault: IVault) {
   };
 }
 
-// v1 -> claim
-// v2 -> registry -> logClaim
-// TODO:[v2] add support to v2
-export function useClaim(address?: string) {
-  return useContractFunction(address ? new Contract(address, vaultAbiV1) : null, "claim", { transactionName: "Claim" });
-}
-
-//READY -> supporting v1 and v2
+/**
+ * Returns a caller function to claim the user's rewards from the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults. For v2 vaults, we are using the rewardController.
+ *
+ * @param vault - The selected vault to claim the user's rewards from
+ */
 export function useClaimReward(vault: IVault) {
   const { account } = useEthers();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
@@ -256,6 +284,14 @@ export function useClaimReward(vault: IVault) {
   };
 }
 
+/**
+ * Returns a caller function to checkin the committee to the vault
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to checkin the committee to
+ */
 export function useCommitteeCheckIn(vault: IVault) {
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -278,17 +314,21 @@ export function useCommitteeCheckIn(vault: IVault) {
   };
 }
 
-// export function useContract<T extends TypedContract, FN extends ContractFunctionNames<T>>(
-//   contract: T,
-//   functionName: FN,
-//   options?: TransactionOptions
-// ) {
-//   const dispatch = useDispatch();
-//   const { send: originalSend, state, events, resetState } = useContractFunction(contract, functionName, options);
-//   return {
-//     send: async (...args: Parameters<T['functions'][FN]>) => {
-//       dispatch(setCurrentTransactionState(state))
-//       return await originalSend(...args)
-//     }, state, events, resetState
-//   }
-// }
+/**
+ * Returns a caller function to log a claim on the registry
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults. In both version the logClaim function is
+ * inside the registry
+ *
+ * @param vault - The selected vault to send the claim
+ */
+export function useClaim(vault?: IVault) {
+  const contractAddress = vault?.master.address ?? "";
+  const vaultAbi = vault?.version === "v1" ? vaultAbiV1 : vaultRegistryAbiV2;
+  const method = vault?.version === "v1" ? "claim" : "logClaim";
+
+  return useContractFunction(vault ? new Contract(contractAddress, vaultAbi) : null, method, {
+    transactionName: "Claim",
+  });
+}
