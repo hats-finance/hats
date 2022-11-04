@@ -73,29 +73,27 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     tokenAllowanceAmount,
     tokenBalance,
     pendingReward,
-    availableToWithdraw,
+    availableBalanceToWithdraw,
+    availableSharesToWithdraw,
     isUserInQueueToWithdraw,
     isUserOnTimeToWithdraw,
     committeeCheckedIn,
     userIsCommitteeAndCanCheckIn,
     minimumDeposit,
-  } = useVaultDepositWithdrawInfo(vault, selectedVault);
-
-  console.log(minimumDeposit);
+  } = useVaultDepositWithdrawInfo(selectedVault);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
     userInputValue = parseUnits(userInput!, selectedVault.stakingTokenDecimals);
   } catch {
     // TODO: do something
-    console.log("asdasd");
     userInputValue = BigNumber.from(0);
   }
 
   const hasAllowance = userInputValue ? tokenAllowanceAmount?.gte(userInputValue) : false;
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(minimumDeposit.bigNumber) : false;
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
-  const userHasBalanceToWithdraw = availableToWithdraw && availableToWithdraw.number >= Number(userInput);
+  const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.number >= Number(userInput);
 
   const { send: approveTokenAllowance, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
@@ -177,7 +175,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   };
 
   const handleMaxAmountButton = () => {
-    const maxAmount = tab === Tab.Deposit ? tokenBalance.number : availableToWithdraw.number;
+    const maxAmount = tab === Tab.Deposit ? tokenBalance.number : availableBalanceToWithdraw.number;
     setUserInput(`${maxAmount}`);
   };
 
@@ -194,7 +192,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
 
       <div className="balance-wrapper">
         {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted}`}
-        {tab === Tab.Withdraw && `Balance to withdraw: ${availableToWithdraw.formatted}`}
+        {tab === Tab.Withdraw && `Balance to withdraw: ${availableBalanceToWithdraw.formatted}`}
         <button className="max-button" disabled={!committeeCheckedIn} onClick={handleMaxAmountButton}>
           (Max)
         </button>
@@ -296,7 +294,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
         )}
         {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
           <button
-            disabled={!userHasBalanceToWithdraw || availableToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
+            disabled={!userHasBalanceToWithdraw || availableBalanceToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
             className="action-btn"
             onClick={async () => await handleWithdrawRequest()}>
             WITHDRAWAL REQUEST

@@ -17,9 +17,8 @@ const TIER_PERCENTAGES = [10, 100, 1500];
 
 export function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
-  const { account } = useEthers();
   const { nftData } = useVaults();
-  const availableToWithdraw = useUserSharesPerVault(vault.master.address, vault, account!);
+  const availableToWithdraw = useUserSharesPerVault(vault);
   const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
 
   if (!nftData?.nftTokens || totalShares === 0) return null;
