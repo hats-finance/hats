@@ -106,14 +106,33 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
 
 // V1 -> pid, account => returns a time
 // v2 -> withdrawEnableStartTime (with user account) => returns a time
-export function useWithdrawRequestInfo(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
-  return;
+/**
+ * Returns the starting time in seconds when the user can withdraw from the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to get the user withdraw start time from
+ * @returns The user withdraw start time
+ */
+export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefined {
+  const { account } = useEthers();
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const method = vault.version === "v1" ? "withdrawRequests" : "withdrawEnableStartTime";
+  const args = vault.version === "v1" ? [vault.pid, account] : [account];
+
   const { value, error } =
-    useCall({ contract: new Contract(address, vaultAbiV1), method: "withdrawRequests", args: [vault.pid, account] }) ?? {};
-  if (error) {
-    return undefined;
-  }
-  return value?.[0];
+    useCall({
+      contract: new Contract(contractAddress, vaultAbi),
+      method: method,
+      args,
+    }) ?? {};
+
+  console.log(vault.version);
+  console.log(value);
+
+  return !error ? value?.[0] : undefined;
 }
 
 //READY -> supporting v1 and v2

@@ -61,7 +61,7 @@ export function TokenSelect({ vault, onSelect }: IProps) {
       value: vault.id,
       label: (
         <TokenOption
-          symbol={vault.stakingTokenSymbol}
+          symbol={`${vault.stakingTokenSymbol} (${vault.version})`}
           icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
         />
       ),

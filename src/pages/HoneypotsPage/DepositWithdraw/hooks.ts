@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { usePendingReward, useWithdrawRequestInfo, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
+import { usePendingReward, useWithdrawRequestStartTime, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
 import { IVault } from "types/types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
@@ -26,7 +26,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const tokenBalance = useTokenBalance(vaultToken, account);
   const { userSharesAvailable, userBalanceAvailable } = useUserSharesAndBalancePerVault(selectedVault);
   const pendingReward = usePendingReward(selectedVault);
-  const withdrawStartTime = useWithdrawRequestInfo(contractAddress, selectedVault, account); // TODO:[v2] implement this.
+  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault);
   const now = Date.now();
   const isUserInQueueToWithdraw = now < (withdrawStartTime?.toNumber() ?? 0);
   const isUserOnTimeToWithdraw =
