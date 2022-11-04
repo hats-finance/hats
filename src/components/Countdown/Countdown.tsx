@@ -23,19 +23,15 @@ export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) 
       const currentTime = Date.now();
 
       const distanceToDate = endDate - currentTime;
-      if (distanceToDate < 0) {
-        return;
-      }
+      if (distanceToDate < 0) return;
 
-      let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
-      let hours = Math.floor((distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      let minutes = Math.floor((distanceToDate % (1000 * 60 * 60)) / (1000 * 60));
-      let seconds = Math.floor((distanceToDate % (1000 * 60)) / 1000);
+      const days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distanceToDate % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distanceToDate % (1000 * 60)) / 1000);
 
       if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
-        if (onEnd) {
-          onEnd();
-        }
+        if (onEnd) onEnd();
       }
 
       setTimer({ days: days, hours: hours, minutes: minutes, seconds: seconds });

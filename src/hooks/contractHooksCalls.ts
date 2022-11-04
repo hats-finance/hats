@@ -94,8 +94,10 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
       const totalShares: BigNumber | undefined = value?.totalUsersAmount;
       const totalBalance: BigNumber | undefined = value?.balance;
 
-      if (totalShares && totalBalance) {
-        userBalanceAvailable = userSharesAvailable?.mul(totalBalance).div(totalShares);
+      if (totalShares && totalBalance && userSharesAvailable) {
+        if (!totalShares.eq(0)) {
+          userBalanceAvailable = userSharesAvailable?.mul(totalBalance).div(totalShares);
+        }
       }
     } else {
       userBalanceAvailable = value?.[0];

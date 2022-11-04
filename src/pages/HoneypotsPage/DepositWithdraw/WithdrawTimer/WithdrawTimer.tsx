@@ -14,17 +14,7 @@ export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawS
   const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
     useVaultDepositWithdrawInfo(vault);
 
-  // const withdrawRequestTime = useWithdrawRequestStartTime(vault)?.toNumber();
-  // const nowInSeconds = Date.now() / 1000;
-  // const pendingWithdraw = nowInSeconds < (withdrawRequestTime ?? 0);
-  // const withdrawRequestEnablePeriod = Number(vault.master.withdrawRequestEnablePeriod) * 1000;
-  // const endDateInEpoch = withdrawRequestTime ? withdrawRequestTime + withdrawRequestEnablePeriod : null;
-  // const isWithdrawable = withdrawRequestTime && endDateInEpoch ? nowInSeconds > withdrawRequestTime && nowInSeconds < endDateInEpoch : false;
-  const countdownValue = isUserInTimeToWithdraw ? withdrawEndTime : withdrawStartTime;
-
-  console.log("withdrawStartTime", withdrawStartTime);
-  console.log("withdrawEndTime", withdrawEndTime);
-  console.log("countdownValue", countdownValue);
+  const countdownValue = isUserInQueueToWithdraw ? withdrawStartTime : withdrawEndTime;
 
   return (
     <>
@@ -33,7 +23,7 @@ export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawS
           {showWithdrawState && <span>{isUserInQueueToWithdraw ? "Pending" : "Withdrawable"} </span>}
           <Countdown
             plainTextView={plainTextView}
-            endDate={countdownValue}
+            endDate={countdownValue * 1000}
             textColor={isUserInQueueToWithdraw ? Colors.yellow : Colors.turquoise}
           />
         </>
