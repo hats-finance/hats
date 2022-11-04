@@ -128,10 +128,10 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
       args,
     }) ?? {};
 
-  console.log(vault.version);
-  console.log(value);
+  if (error) return undefined;
 
-  return !error ? value?.[0] : undefined;
+  const startTimeNumber = value?.[0] ? (value[0] as BigNumber).toNumber() : 0;
+  return startTimeNumber !== 0 ? value?.[0] : undefined;
 }
 
 /**

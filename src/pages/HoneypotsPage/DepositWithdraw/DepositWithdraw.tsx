@@ -76,7 +76,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     availableBalanceToWithdraw,
     availableSharesToWithdraw,
     isUserInQueueToWithdraw,
-    isUserOnTimeToWithdraw,
+    isUserInTimeToWithdraw,
     committeeCheckedIn,
     userIsCommitteeAndCanCheckIn,
     minimumDeposit,
@@ -95,16 +95,16 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
   const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.number >= Number(userInput);
 
-  const { send: approveTokenAllowance, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
+  const { send: approveTokenAllowanceCall, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
-    approveTokenAllowance(amountToSpend ?? MAX_SPENDING);
+    approveTokenAllowanceCall(amountToSpend ?? MAX_SPENDING);
   };
 
-  const { send: deposit, state: depositState } = useDeposit(selectedVault);
+  const { send: depositCall, state: depositState } = useDeposit(selectedVault);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
 
-    await deposit(userInputValue);
+    await depositCall(userInputValue);
     const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
     const newRedeemables = depositEligibility?.filter(
       (nft) => !nft.isRedeemed && !nftData?.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
@@ -114,25 +114,25 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     }
     setUserInput("");
     setTermsOfUse(false);
-  }, [selectedVault, userInputValue, deposit, master.address, nftData, toggleEmbassyPrompt]);
+  }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
 
-  const { send: withdrawAndClaim, state: withdrawAndClaimState } = useWithdrawAndClaim(selectedVault);
+  const { send: withdrawAndClaimCall, state: withdrawAndClaimState } = useWithdrawAndClaim(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!userInputValue) return;
-    withdrawAndClaim(userInputValue);
+    withdrawAndClaimCall(userInputValue);
 
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [userInputValue, selectedVault, withdrawAndClaim, master, nftData]);
+  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, nftData]);
 
   const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(selectedVault);
-  const handleWithdrawRequest = () => withdrawRequestCall();
+  const handleWithdrawRequest = withdrawRequestCall;
 
-  const { send: claimReward, state: claimRewardState } = useClaimReward(selectedVault);
-  const handleClaimReward = () => claimReward();
+  const { send: claimRewardCall, state: claimRewardState } = useClaimReward(selectedVault);
+  const handleClaimReward = claimRewardCall;
 
-  const { send: checkIn, state: checkInState } = useCommitteeCheckIn(selectedVault);
-  const handleCheckIn = () => checkIn();
+  const { send: checkInCall, state: checkInState } = useCommitteeCheckIn(selectedVault);
+  const handleCheckIn = checkInCall;
 
   const transactionStates = [
     approveTokenAllowanceState,
@@ -254,10 +254,10 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
       )}
       {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
       {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
+      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
         <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>
       )}
-      {tab === Tab.Deposit && (isUserOnTimeToWithdraw || isUserInQueueToWithdraw) && (
+      {tab === Tab.Deposit && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
         <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>
       )}
       <div className="action-btn-wrapper">
@@ -278,7 +278,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
           </button>
         )}
-        {tab === Tab.Withdraw && isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
+        {tab === Tab.Withdraw && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
           <button
             disabled={
               !userHasBalanceToWithdraw ||
@@ -292,7 +292,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
             {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
           </button>
         )}
-        {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserOnTimeToWithdraw && !isUserInQueueToWithdraw && (
+        {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
           <button
             disabled={!userHasBalanceToWithdraw || availableBalanceToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
             className="action-btn"

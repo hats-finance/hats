@@ -1,5 +1,4 @@
 import { formatUnits } from "@ethersproject/units";
-import { useEthers } from "@usedapp/core";
 import { MAX_NFT_TIER } from "constants/constants";
 import { useUserSharesPerVault } from "hooks/contractHooksCalls";
 import { useVaults } from "hooks/useVaults";

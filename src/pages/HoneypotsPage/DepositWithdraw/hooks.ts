@@ -20,23 +20,22 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   // If v1 -> master address, if v2 -> vault id (contract address)
   const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
   // Amount of time the user has to withdraw the funds
-  const withdrawWindowTime = selectedVault.master.withdrawRequestEnablePeriod;
+  const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
 
   const tokenAllowanceAmount = useTokenAllowance(vaultToken, account, contractAddress);
   const tokenBalance = useTokenBalance(vaultToken, account);
   const { userSharesAvailable, userBalanceAvailable } = useUserSharesAndBalancePerVault(selectedVault);
   const pendingReward = usePendingReward(selectedVault);
-  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault);
-  const now = Date.now();
-  const isUserInQueueToWithdraw = now < (withdrawStartTime?.toNumber() ?? 0);
-  const isUserOnTimeToWithdraw =
-    withdrawStartTime && withdrawWindowTime
-      ? now > withdrawStartTime.toNumber() &&
-        now < withdrawStartTime.toNumber() + BigNumber.from(withdrawWindowTime).toNumber() * 1000
-      : false;
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
+
+  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault)?.toNumber();
+  const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
+  const nowInSeconds = Date.now() / 1000;
+  const isUserInQueueToWithdraw = nowInSeconds < (withdrawStartTime ?? 0);
+  const isUserInTimeToWithdraw =
+    withdrawStartTime && withdrawEndTime ? nowInSeconds > withdrawStartTime && nowInSeconds < withdrawEndTime : false;
 
   return {
     tokenAllowanceAmount,
@@ -46,8 +45,10 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     availableBalanceToWithdraw: new Amount(userBalanceAvailable, vaultTokenDecimals, vaultTokenSymbol),
     minimumDeposit: new Amount(minimumDeposit, vaultTokenDecimals, vaultTokenSymbol),
     isUserInQueueToWithdraw,
-    isUserOnTimeToWithdraw,
-    committeeCheckedIn,
+    isUserInTimeToWithdraw,
+    withdrawStartTime,
+    withdrawEndTime,
     userIsCommitteeAndCanCheckIn: isUserCommittee && !committeeCheckedIn,
+    committeeCheckedIn,
   };
 };

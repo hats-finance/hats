@@ -1,14 +1,13 @@
-
 import { useState, useEffect, useCallback } from "react";
 import classNames from "classnames";
 import { Colors } from "../../constants/constants";
 import "./index.scss";
 
 interface IProps {
-  endDate: number // timestamp in milliseconds
-  plainTextView?: boolean
-  onEnd?: Function
-  textColor?: Colors
+  endDate: number; // timestamp in milliseconds
+  plainTextView?: boolean;
+  onEnd?: Function;
+  textColor?: Colors;
 }
 
 export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) {
@@ -29,12 +28,8 @@ export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) 
       }
 
       let days = Math.floor(distanceToDate / (1000 * 60 * 60 * 24));
-      let hours = Math.floor(
-        (distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-      let minutes = Math.floor(
-        (distanceToDate % (1000 * 60 * 60)) / (1000 * 60),
-      );
+      let hours = Math.floor((distanceToDate % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      let minutes = Math.floor((distanceToDate % (1000 * 60 * 60)) / (1000 * 60));
       let seconds = Math.floor((distanceToDate % (1000 * 60)) / 1000);
 
       if (days === 0 && hours === 0 && minutes === 0 && seconds === 0) {
@@ -48,15 +43,11 @@ export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) 
   }, [endDate, onEnd]);
 
   // Run once at mounting to avoid 1000ms delay of the interval
-  useEffect(() => {
-    setNewTime();
-  }, [setNewTime])
+  useEffect(() => setNewTime(), [setNewTime]);
 
   useEffect(() => {
-    const interval = setInterval(() => setNewTime(), 1000);
-    return () => {
-      clearInterval(interval);
-    }
+    const interval = setInterval(setNewTime, 1000);
+    return () => clearInterval(interval);
   }, [setNewTime]);
 
   return (
@@ -66,7 +57,8 @@ export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) 
           <span className="value">{String(timer.days).padStart(2, "0")}</span>
           {plainTextView && ":"}
           {!plainTextView && <span className="type">DAYS</span>}
-        </div>)}
+        </div>
+      )}
       <div className={classNames("time-element", { "plain-text-view": plainTextView })}>
         <span className="value">{String(timer.hours).padStart(2, "0")}</span>
         {!plainTextView && <span className="type">HOURS</span>}
@@ -84,5 +76,5 @@ export function Countdown({ endDate, plainTextView, onEnd, textColor }: IProps) 
         </div>
       )}
     </div>
-  )
+  );
 }
