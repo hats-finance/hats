@@ -29,18 +29,74 @@ export function usePendingReward(
 
 // V1 -> pid, account
 // v2 -> balanceOf (will return the shares) -> previewRedeem (converts shares to tokens)
-export function useUserSharesPerVault(address: string, vault: IVault, account: string | undefined): BigNumber | undefined {
-  return;
+/**
+ * Returns the amount of shares the user has on the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to get the user shares from
+ * @returns The userShares
+ */
+export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
+  const { account } = useEthers();
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const method = vault.version === "v1" ? "userInfo" : "balanceOf";
+  const args = vault.version === "v1" ? [vault.pid, account] : [account];
+
   const { value, error } =
     useCall({
-      contract: new Contract(address, vaultAbiV1),
-      method: "userInfo",
-      args: [vault.pid, account],
+      contract: new Contract(contractAddress, vaultAbi),
+      method: method,
+      args,
     }) ?? {};
-  if (error) {
-    return undefined;
+
+  const userShares: BigNumber | undefined = !error ? value?.[0] : undefined;
+  return userShares;
+}
+
+/**
+ * Returns the amount of shares the user has and the value of those shares (balance) on staking token.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to get the user shares from
+ * @returns The userShares and the userBalance
+ */
+export function useUserSharesAndBalancePerVault(vault: IVault): {
+  userSharesAvailable: BigNumber | undefined;
+  userBalanceAvailable: BigNumber | undefined;
+} {
+  const userSharesAvailable = useUserSharesPerVault(vault);
+
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const method = vault.version === "v1" ? "poolInfo" : "previewRedeem";
+  const args = vault.version === "v1" ? [vault.pid] : [userSharesAvailable];
+
+  const { value, error } =
+    useCall({
+      contract: new Contract(contractAddress, vaultAbi),
+      method: method,
+      args,
+    }) ?? {};
+
+  let userBalanceAvailable: BigNumber | undefined = undefined;
+
+  if (!error) {
+    if (vault.version === "v1") {
+      const totalShares: BigNumber = value.totalUsersAmount;
+      const totalBalance: BigNumber = value.balance;
+
+      userBalanceAvailable = userSharesAvailable?.mul(totalBalance).div(totalShares);
+    } else {
+      userBalanceAvailable = value?.[0];
+    }
   }
-  return value?.[0];
+
+  return { userSharesAvailable, userBalanceAvailable };
 }
 
 // V1 -> pid, account => returns a time
