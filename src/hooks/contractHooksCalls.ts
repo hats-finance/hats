@@ -6,29 +6,33 @@ import erc20Abi from "data/abis/erc20.json";
 import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
 import rewardControllerAbi from "data/abis/RewardController.json";
-import { t } from "i18next";
 
-// TODO: NO VERSION 1 SUPPORT / ONLY V2 -> ALWAYS ZERO ON V1
-export function usePendingReward(
-  rewardControllerAddress: string,
-  vaultAddress: string,
-  account: string | undefined
-): BigNumber | undefined {
-  return;
+/**
+ * Returns the amount of pending reward to claim for a giver user
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to get the user pending reward from
+ * @returns The pending reward amount
+ */
+export function usePendingReward(vault: IVault): BigNumber | undefined {
+  const { account } = useEthers();
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : rewardControllerAbi;
+  const method = vault.version === "v1" ? "pendingReward" : "getPendingReward";
+  const args = vault.version === "v1" ? [vault.pid, account] : [vault.id, account];
+
   const { value, error } =
     useCall({
-      contract: new Contract(rewardControllerAddress, vaultAbiV1),
-      method: "getPendingReward",
-      args: [vaultAddress, account],
+      contract: new Contract(contractAddress, vaultAbi),
+      method: method,
+      args,
     }) ?? {};
-  if (error) {
-    return undefined;
-  }
-  return value?.[0];
+
+  return !error ? value?.[0] : undefined;
 }
 
-// V1 -> pid, account
-// v2 -> balanceOf (will return the shares) -> previewRedeem (converts shares to tokens)
 /**
  * Returns the amount of shares the user has on the vault.
  *
@@ -36,7 +40,7 @@ export function usePendingReward(
  * This method is supporting v1 and v2 vaults.
  *
  * @param vault - The selected vault to get the user shares from
- * @returns The userShares
+ * @returns The user shares amount
  */
 export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
   const { account } = useEthers();
@@ -52,8 +56,7 @@ export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
       args,
     }) ?? {};
 
-  const userShares: BigNumber | undefined = !error ? value?.[0] : undefined;
-  return userShares;
+  return !error ? value?.[0] : undefined;
 }
 
 /**
@@ -62,8 +65,8 @@ export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
  * @remarks
  * This method is supporting v1 and v2 vaults.
  *
- * @param vault - The selected vault to get the user shares from
- * @returns The userShares and the userBalance
+ * @param vault - The selected vault to get the user shares from and the balance of those shares
+ * @returns The user shares amount and the user balance
  */
 export function useUserSharesAndBalancePerVault(vault: IVault): {
   userSharesAvailable: BigNumber | undefined;
@@ -87,10 +90,12 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
 
   if (!error) {
     if (vault.version === "v1") {
-      const totalShares: BigNumber = value.totalUsersAmount;
-      const totalBalance: BigNumber = value.balance;
+      const totalShares: BigNumber | undefined = value?.totalUsersAmount;
+      const totalBalance: BigNumber | undefined = value?.balance;
 
-      userBalanceAvailable = userSharesAvailable?.mul(totalBalance).div(totalShares);
+      if (totalShares && totalBalance) {
+        userBalanceAvailable = userSharesAvailable?.mul(totalBalance).div(totalShares);
+      }
     } else {
       userBalanceAvailable = value?.[0];
     }

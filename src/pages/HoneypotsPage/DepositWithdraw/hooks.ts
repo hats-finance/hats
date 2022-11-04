@@ -25,7 +25,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const tokenAllowanceAmount = useTokenAllowance(vaultToken, account, contractAddress);
   const tokenBalance = useTokenBalance(vaultToken, account);
   const { userSharesAvailable, userBalanceAvailable } = useUserSharesAndBalancePerVault(selectedVault);
-  const pendingReward = usePendingReward(contractAddress, contractAddress, account); // TODO:[v2] implement reward controller address
+  const pendingReward = usePendingReward(selectedVault);
   const withdrawStartTime = useWithdrawRequestInfo(contractAddress, selectedVault, account); // TODO:[v2] implement this.
   const now = Date.now();
   const isUserInQueueToWithdraw = now < (withdrawStartTime?.toNumber() ?? 0);
