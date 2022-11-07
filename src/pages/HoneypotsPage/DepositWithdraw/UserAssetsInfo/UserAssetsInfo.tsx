@@ -15,7 +15,7 @@ const VaultAssetInfo = ({ vault }: IProps) => {
   const { availableBalanceToWithdraw } = useVaultDepositWithdrawInfo(vault);
 
   return (
-    <tr key={vault.id}>
+    <tr>
       <td className="token-symbol">{availableBalanceToWithdraw.symbol}</td>
       <td className="withdraw-status-data">
         <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
@@ -31,7 +31,7 @@ export default function UserAssetsInfo({ vault }: IProps) {
 
   const vaults = vault.multipleVaults ? vault.multipleVaults : [vault];
 
-  const listOfTokens = vaults.map((vault) => <VaultAssetInfo vault={vault} />);
+  const listOfTokens = vaults.map((vault) => <VaultAssetInfo key={vault.id} vault={vault} />);
 
   return (
     <StyledUserAssetsInfoTable>

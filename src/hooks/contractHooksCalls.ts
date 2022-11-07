@@ -43,7 +43,7 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
  * @param vault - The selected vault to get the user shares from
  * @returns The user shares amount
  */
-export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
+export function useUserSharesPerVault(vault: IVault): BigNumber {
   const { account } = useEthers();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -57,7 +57,7 @@ export function useUserSharesPerVault(vault: IVault): BigNumber | undefined {
       args,
     }) ?? {};
 
-  return !error ? value?.[0] : undefined;
+  return !error && value ? value?.[0] : BigNumber.from(0);
 }
 
 /**
@@ -180,13 +180,17 @@ export function useDeposit(vault: IVault) {
 
   return {
     ...deposit,
-    send: (amount: BigNumber) => {
+    /**
+     * Call the deposit function.
+     * @param amountInTokens - The amount in TOKENS (not shares) to deposit
+     */
+    send: (amountInTokens: BigNumber) => {
       if (vault?.version === "v2") {
         // [params]: asset, receiver
-        return deposit.send(amount, account);
+        return deposit.send(amountInTokens, account);
       } else {
         // [params]: pid, amount
-        return deposit.send(vault.pid, amount);
+        return deposit.send(vault.pid, amountInTokens);
       }
     },
   };
@@ -211,15 +215,38 @@ export function useWithdrawAndClaim(vault: IVault) {
     transactionName: Transactions.WithdrawAndClaim,
   });
 
+  const { value, error } =
+    useCall(
+      vault.version === "v1" && {
+        contract: new Contract(vault.master.address, vaultAbiV1),
+        method: "poolInfo",
+        args: [vault.pid],
+      }
+    ) ?? {};
+
   return {
     ...withdrawAndClaim,
-    send: (amount: BigNumber) => {
+    /**
+     * Call the withdrawAndClaim function.
+     * @param amountInTokens - The amount in TOKENS (not shares) to withdraw
+     */
+    send: (amountInTokens: BigNumber) => {
       if (vault?.version === "v2") {
-        // [params]: assets (ammount in tokens), receiver, owner
-        return withdrawAndClaim.send(amount, account, account);
+        // [params]: assets (amount in tokens), receiver, owner
+        return withdrawAndClaim.send(amountInTokens, account, account);
       } else {
-        // [params]: pid, shares
-        return withdrawAndClaim.send(vault.pid, amount);
+        const totalShares: BigNumber | undefined = value?.totalUsersAmount;
+        const totalBalance: BigNumber | undefined = value?.balance;
+        let amountInShares: BigNumber = BigNumber.from(0);
+
+        if (totalShares && totalBalance && amountInTokens && !error) {
+          if (!totalShares.eq(0)) {
+            amountInShares = amountInTokens?.mul(totalShares).div(totalBalance);
+          }
+        }
+
+        // [params]: pid, shares (amount in shares)
+        return withdrawAndClaim.send(vault.pid, amountInShares);
       }
     },
   };

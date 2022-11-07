@@ -25,7 +25,7 @@ export function EmbassyEligibility({ vault }: IProps) {
 
   const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
   if (maxRedeemedTier === MAX_NFT_TIER) return null;
-  const shares = availableToWithdraw ? Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals)) : 0;
+  const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
   const currentTiers = TIER_PERCENTAGES.map((tier_percentage) => tier_percentage / HUNDRED_PERCENT).map(
     (tierPercentage) => (totalShares * tierPercentage) / (1 - tierPercentage)
   );

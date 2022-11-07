@@ -29,7 +29,7 @@ import { useVaultDepositWithdrawInfo } from "./hooks";
 
 interface IProps {
   vault: IVault;
-  setShowModal: Function;
+  closeModal: Function;
 }
 
 enum Tab {
@@ -37,7 +37,7 @@ enum Tab {
   Withdraw,
 }
 
-export function DepositWithdraw({ vault, setShowModal }: IProps) {
+export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
@@ -85,11 +85,10 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   try {
     userInputValue = parseUnits(userInput!, selectedVault.stakingTokenDecimals);
   } catch {
-    // TODO: do something
     userInputValue = BigNumber.from(0);
   }
 
-  const hasAllowance = userInputValue ? tokenAllowanceAmount?.gte(userInputValue) : false;
+  const hasAllowance = userInputValue && tokenAllowanceAmount ? tokenAllowanceAmount.gte(userInputValue) : false;
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(minimumDeposit.bigNumber) : false;
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
   const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.number >= Number(userInput);
@@ -149,16 +148,17 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
   const pendingWallet = transactionStates.some((state) => state.status === "PendingSignature" || state.status === "Mining");
   const prevApproveTokenState = usePrevious(approveTokenAllowanceState);
 
-  // after successful approve transaction immediatly call deposit and claim
+  // After successful approve transaction immediatly call deposit and claim
   useEffect(() => {
     if (approveTokenAllowanceState.status === "Success" && prevApproveTokenState?.status !== approveTokenAllowanceState.status) {
+      hideApproveSpending();
       handleDeposit();
     }
-  }, [approveTokenAllowanceState, prevApproveTokenState, handleDeposit]);
+  }, [approveTokenAllowanceState, prevApproveTokenState, handleDeposit, hideApproveSpending]);
 
   useEffect(() => {
-    if (inTransaction) setShowModal(false);
-  }, [inTransaction, setShowModal]);
+    if (inTransaction) closeModal();
+  }, [inTransaction, closeModal]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {
