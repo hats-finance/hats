@@ -11,24 +11,27 @@ interface IProps {
   vault: IVault;
 }
 
+const VaultAssetInfo = ({ vault }: IProps) => {
+  const { availableBalanceToWithdraw } = useVaultDepositWithdrawInfo(vault);
+
+  return (
+    <tr key={vault.id}>
+      <td className="token-symbol">{availableBalanceToWithdraw.symbol}</td>
+      <td className="withdraw-status-data">
+        <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
+      </td>
+      <td>{availableBalanceToWithdraw.formattedWithoutSymbol}</td>
+      <td>-</td>
+    </tr>
+  );
+};
+
 export default function UserAssetsInfo({ vault }: IProps) {
   const { t } = useTranslation();
-  const { availableBalanceToWithdraw } = useVaultDepositWithdrawInfo(vault);
 
   const vaults = vault.multipleVaults ? vault.multipleVaults : [vault];
 
-  const listOfTokens = vaults.map((vault) => {
-    return (
-      <tr key={vault.id}>
-        <td className="token-symbol">{availableBalanceToWithdraw.symbol}</td>
-        <td className="withdraw-status-data">
-          <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
-        </td>
-        <td>{availableBalanceToWithdraw.formattedWithoutSymbol}</td>
-        <td>-</td>
-      </tr>
-    );
-  });
+  const listOfTokens = vaults.map((vault) => <VaultAssetInfo vault={vault} />);
 
   return (
     <StyledUserAssetsInfoTable>
