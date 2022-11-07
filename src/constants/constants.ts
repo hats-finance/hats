@@ -1,4 +1,4 @@
-import { ChainId, Goerli, Mainnet } from "@usedapp/core";
+import { ChainId, Goerli, Hardhat, Mainnet } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
@@ -23,6 +23,7 @@ export const MAX_NFT_TIER = 3;
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
   [ChainId.Goerli]: Goerli,
+  [ChainId.Hardhat]: Hardhat
 };
 
 export const VaultService = "https://vault-editor-service.herokuapp.com";
@@ -30,11 +31,13 @@ export const VaultService = "https://vault-editor-service.herokuapp.com";
 export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
   [ChainId.Goerli]: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
+  [ChainId.Hardhat]: "http://localhost:8545"
 };
 
 export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv6",
   [ChainId.Goerli]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsgoerli-v6",
+  [ChainId.Hardhat]: "http://localhost:8000/subgraphs/name/hats-nft"
 };
 
 export const NFTContractDataProxy = {
