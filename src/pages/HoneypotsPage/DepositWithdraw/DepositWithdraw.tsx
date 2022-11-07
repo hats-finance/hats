@@ -15,7 +15,7 @@ import {
   useWithdrawAndClaim,
   useWithdrawRequest,
 } from "hooks/contractHooksCalls";
-import Assets from "./Assets/Assets";
+import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/useVaults";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
@@ -74,7 +74,6 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
     tokenBalance,
     pendingReward,
     availableBalanceToWithdraw,
-    availableSharesToWithdraw,
     isUserInQueueToWithdraw,
     isUserInTimeToWithdraw,
     committeeCheckedIn,
@@ -232,7 +231,7 @@ export function DepositWithdraw({ vault, setShowModal }: IProps) {
       </div>
       {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
       <div>
-        <Assets vault={vault} />
+        <UserAssetsInfo vault={vault} />
       </div>
       {tab === Tab.Deposit && (
         <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>

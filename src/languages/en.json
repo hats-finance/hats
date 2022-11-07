@@ -9,6 +9,9 @@
     "enterValidNumber": "Enter a valid number",
     "deposit": "Deposit",
     "withdraw": "Withdraw",
+    "withdrawStatus": "Withdraw Status",
+    "balance": "Balance",
+    "assets": "Assets",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
@@ -396,7 +399,7 @@
       "nft-animation-placeholder": "NFT Animation",
       "severities-index-array": "Severities Index array",
       "severities-index-array-placeholder": "Severities Index array",
-      "percentage-bounty": "Percentage Bounty (0%-100%)", 
+      "percentage-bounty": "Percentage Bounty (0%-100%)",
       "percentage-bounty-placeholder": "Percentage Bounty",
       "addStartAndEndDate": "Add start and end date",
       "review-vault": {

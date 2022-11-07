@@ -20,8 +20,12 @@ export class Amount {
     return this.amount ? Number(formatUnits(this.amount, this.decimals)) : 0;
   }
 
+  get formattedWithoutSymbol() {
+    return `${this.amount ? formatUnits(this.amount, this.decimals) : "-"}`;
+  }
+
   get formatted() {
     const symbol = this.symbol ? ` ${this.symbol}` : "";
-    return `${this.amount ? formatUnits(this.amount, this.decimals) : "-"}${symbol}`;
+    return `${this.formattedWithoutSymbol}${symbol}`;
   }
 }
