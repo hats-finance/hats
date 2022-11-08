@@ -6,7 +6,7 @@ import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
 import { IPFS_PREFIX, LocalStorage } from "constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
-import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "types/types";
+import { CoinGeckoPriceResponse } from "types/types";
 
 /**
  * Adds commas to a given number
@@ -168,32 +168,6 @@ export const copyToClipboard = (value: string) => {
   tempInputElement.select();
   document.execCommand("copy");
   document.body.removeChild(tempInputElement);
-};
-
-/**
- * Given withdrawPeriod and safetyPeriod returns if safty period is in progress and when the safty starts or ends.
- * @param {string} withdrawPeriod
- * @param {string} safetyPeriod
- * @returns {IWithdrawSafetyPeriod | undefined}
- */
-export const getWithdrawSafetyPeriod = (
-  withdrawPeriod: string | undefined,
-  safetyPeriod: string | undefined
-) => {
-  const withdrawSafetyPeriod: IWithdrawSafetyPeriod = {
-    isSafetyPeriod: false,
-    saftyEndsAt: 0,
-    saftyStartsAt: 0
-  };
-  const currentTimestamp = Date.now();
-  const sum = Number(withdrawPeriod) + Number(safetyPeriod);
-  withdrawSafetyPeriod.saftyEndsAt =
-    sum * Math.floor(currentTimestamp / sum) + sum;
-  withdrawSafetyPeriod.saftyStartsAt =
-    sum * Math.floor(currentTimestamp / sum) + Number(withdrawPeriod);
-  withdrawSafetyPeriod.isSafetyPeriod =
-    currentTimestamp >= withdrawSafetyPeriod.saftyStartsAt;
-  return withdrawSafetyPeriod;
 };
 
 /**

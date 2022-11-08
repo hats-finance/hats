@@ -266,7 +266,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               !userHasBalanceToWithdraw ||
               !userInput ||
               userInput === "0" ||
-              withdrawSafetyPeriod?.isSafetyPeriod ||
+              //withdrawSafetyPeriod?.isSafetyPeriod ||
               !committeeCheckedIn
             }
             className="action-btn"

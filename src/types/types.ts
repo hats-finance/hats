@@ -193,10 +193,9 @@ export interface IPoolWithdrawRequest {
 
 export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean;
-  saftyStartsAt: number;
-  saftyEndsAt: number;
+  safetyStartsAt: number;
+  safetyEndsAt: number;
 }
-
 export type NFTAirdropET = { [key: string]: string };
 export type TokenAirdropET = { [key: string]: number };
 
