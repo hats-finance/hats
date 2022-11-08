@@ -21,11 +21,18 @@ export class Amount {
   }
 
   get formattedWithoutSymbol() {
-    return `${this.amount ? formatUnits(this.amount, this.decimals) : "-"}`;
+    return `${this.amount ? truncateNDecimalsFromString(formatUnits(this.amount, this.decimals), 3) : "-"}`;
   }
 
   get formatted() {
     const symbol = this.symbol ? ` ${this.symbol}` : "";
     return `${this.formattedWithoutSymbol}${symbol}`;
   }
+}
+
+function truncateNDecimalsFromString(str: string, n: number) {
+  const parts = str.split(".");
+  if (parts.length === 1) return str;
+
+  return parts[0] + "." + parts[1].substring(0, n);
 }

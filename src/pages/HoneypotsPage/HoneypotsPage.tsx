@@ -19,8 +19,8 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
-  const { pid } = useParams();
-  const selectedVault = pid ? vaults?.find((v) => v.pid === pid) : undefined;
+  const { vaultId } = useParams();
+  const selectedVault = vaultId ? vaults?.find((v) => v.id === vaultId) : undefined;
   const navigate = useNavigate();
 
   const vaultValue = useCallback(
@@ -95,7 +95,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
                     {vaults &&
                       vaults.map((vault) => (
                         <Vault
-                          ref={vault.pid === pid ? scrollRef : null}
+                          ref={vault.id === vaultId ? scrollRef : null}
                           expanded={expanded === vault}
                           setExpanded={setExpanded}
                           key={vault.id}

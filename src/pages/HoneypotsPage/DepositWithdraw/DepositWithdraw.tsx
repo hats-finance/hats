@@ -52,23 +52,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
 
-  // const allowance = useTokenAllowance(stakingToken, account!, master.address); // READY
-  // const tokenBalance = useTokenBalance(selectedVault?.stakingToken, account); // READY
-  // const tokenBalanceFormatted = tokenBalance ? formatUnits(tokenBalance, selectedVault?.stakingTokenDecimals) : "-"; // READY
-  // const pendingReward = usePendingReward(master.address, pid, account!); // READY
-  // const pendingRewardFormatted = pendingReward ? millify(Number(formatEther(pendingReward)), { precision: 3 }) : "-"; // READY
-  // const availableToWithdraw = useUserSharesPerVault(master.address, selectedVault, account!); // READY
-  // const availableToWithdrawFormatted = availableToWithdraw
-  //   ? formatUnits(availableToWithdraw, selectedVault?.stakingTokenDecimals)
-  //   : "-"; // READY
-  // const withdrawRequestTime = useWithdrawRequestInfo(master.address, selectedVault, account); // READY
-  // const pendingWithdraw = isDateBefore(withdrawRequestTime?.toString());
-  // const endDate = moment
-  //   .unix(withdrawRequestTime?.toNumber() ?? 0)
-  //   .add(master.withdrawRequestEnablePeriod.toString(), "seconds")
-  //   .unix();
-  // const isWithdrawable = isDateBetween(withdrawRequestTime?.toString(), endDate);
-
   const {
     tokenAllowanceAmount,
     tokenBalance,

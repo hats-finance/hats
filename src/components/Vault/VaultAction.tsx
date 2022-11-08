@@ -8,9 +8,9 @@ import "./VaultAction.scss";
 import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
 
 interface IProps {
-  data?: IVault
-  withdrawRequests?: IPoolWithdrawRequest[]
-  preview?: boolean
+  data?: IVault;
+  withdrawRequests?: IPoolWithdrawRequest[];
+  preview?: boolean;
 }
 
 export default function VaultAction(props: IProps) {
@@ -24,12 +24,12 @@ export default function VaultAction(props: IProps) {
       <button
         className="deposit-withdraw"
         onClick={() => {
-          navigate(`${RoutePaths.vaults}/${props.data?.pid}/deposit`)
+          navigate(`${RoutePaths.vaults}/${props.data?.id}/deposit`);
         }}
         disabled={props.preview || !account || !isSupportedNetwork}>
         {t("Vault.deposit-withdraw")}
       </button>
       {!props.data?.multipleVaults && !props.preview && <WithdrawTimer vault={props.data!} showWithdrawState={false} />}
-    </div >
-  )
+    </div>
+  );
 }
