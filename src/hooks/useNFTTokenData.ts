@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { TransactionStatus, useContractFunction, useEthers } from "@usedapp/core";
-import { HATVaultsNFTContract, MAX_NFT_TIER, NFTContractDataProxy, Transactions } from "constants/constants";
+import { MAX_NFT_TIER, NFTContractDataProxy, Transactions } from "constants/constants";
 import { Bytes, Contract } from "ethers";
 import { solidityKeccak256 } from "ethers/lib/utils";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -13,6 +13,7 @@ import { useSupportedNetwork } from "./useSupportedNetwork";
 import { TransactionReceipt } from "@ethersproject/providers";
 
 import { MerkleTree } from 'merkletreejs';
+import { CHAINS } from "settings";
 const keccak256 = require("keccak256");
 
 interface MerkleTreeChanged {
@@ -94,8 +95,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [address, prevAddress, chainId, prevChainId]);
 
   useEffect(() => {
-    if (chainId && isSupportedNetwork && chainId in HATVaultsNFTContract)
-      setActualContract(new Contract(HATVaultsNFTContract[chainId], hatVaultNftAbi, library));
+    if (chainId && isSupportedNetwork && CHAINS[chainId]?.vaultsNFTContract)
+      setActualContract(new Contract(CHAINS[chainId]?.vaultsNFTContract, hatVaultNftAbi, library));
   }, [library, chainId, isSupportedNetwork])
 
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(

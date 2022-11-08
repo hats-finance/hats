@@ -6,11 +6,11 @@ import { INFTTokenInfoRedeemed } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
-import { HATVaultsNFTContract } from "constants/constants";
 import { useEscapePressed } from "hooks/useKeyPress";
 import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { CHAINS } from "settings";
 
 interface IProps {
   tokenInfo: INFTTokenInfoRedeemed
@@ -32,12 +32,11 @@ export function NFTCard({ tokenInfo }: IProps) {
   }, [escapePressed])
 
   let openSeaUrl;
-  const nftContract = HATVaultsNFTContract[chainId!];
   if (chainId === 1) {
-    openSeaUrl = `https://opensea.io/assets/${nftContract}/${tokenId}`;
+    openSeaUrl = `https://opensea.io/assets/${CHAINS[chainId].vaultsNFTContract}/${tokenId}`;
   }
   else if (chainId === 4) {
-    openSeaUrl = `https://testnets.opensea.io/assets/${nftContract}/${tokenId}`;
+    openSeaUrl = `https://testnets.opensea.io/assets/${CHAINS[chainId].vaultsNFTContract}/${tokenId}`;
   }
 
   if (fullScreen) {

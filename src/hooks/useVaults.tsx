@@ -193,9 +193,9 @@ const addMultiVaults = (vaults: IVault[]) =>
 
     return vault.description?.["additional-vaults"]
       ? {
-          ...vault,
-          multipleVaults: [vault, ...fetchVaultsByIds(vaults, vaultsIds)],
-        }
+        ...vault,
+        multipleVaults: [vault, ...fetchVaultsByIds(vaults, vaultsIds)],
+      }
       : vault;
   });
 

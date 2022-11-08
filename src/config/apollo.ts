@@ -1,11 +1,11 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { UNISWAP_V3_SUBGRAPH } from "constants/constants";
-import { defaultChain, VAULT_SUBGRAPHS } from "settings";
+import { CHAINS, defaultChain } from "settings";
 
 const subgraphByChain = new ApolloLink(operation => {
     const { chainId } = operation.getContext();
-    const link = new HttpLink({ uri: VAULT_SUBGRAPHS[chainId || defaultChain.chainId] });
+    const link = new HttpLink({ uri: CHAINS[chainId || defaultChain.chainId].subgraph });
     return link.request(operation);
 });
 

@@ -1,7 +1,6 @@
-import { CHAINID } from "../../settings";
+import { CHAINID, CHAINS } from "../../settings";
 import { isAddress } from "ethers/lib/utils";
 import { shortenAddress } from "@usedapp/core";
-import { Chains } from "../../constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import "./ContractsCovered.scss";
 
@@ -10,7 +9,7 @@ interface IProps {
 }
 
 export function ContractsCovered(props: IProps) {
-  const chain = Chains[CHAINID];
+  const chain = CHAINS[CHAINID].chain;
 
   return (
     <div className="contracts-covered-wrapper">
