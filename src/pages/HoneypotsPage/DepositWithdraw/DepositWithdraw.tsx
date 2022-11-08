@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import millify from "millify";
 import classNames from "classnames";
 import { parseUnits } from "@ethersproject/units";
-import { isDigitsOnly } from "utils";
 import { Loading, Modal } from "components";
 import { IVault } from "types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";

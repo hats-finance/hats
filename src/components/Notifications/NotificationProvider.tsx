@@ -55,6 +55,10 @@ export const NotificationProvider: FC<Props> = ({ children }) => {
     }
   }, [error, prevError, addNotification])
 
+  console.log(notifications);
+  console.log(useNotifications());
+
+
   const useDappNotifications = useNotifications().notifications.map((notification): INotification => {
     switch (notification.type) {
       case "transactionStarted":
