@@ -73,8 +73,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   const hasAllowance = userInputValue && tokenAllowanceAmount ? tokenAllowanceAmount.gte(userInputValue) : false;
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(minimumDeposit.bigNumber) : false;
-  const userHasBalanceToDeposit = userInputValue && tokenBalance ? userInputValue.gt(tokenBalance.bigNumber) : false;
-  const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.number >= Number(userInput);
+  const userHasBalanceToDeposit = userInputValue && tokenBalance ? tokenBalance.bigNumber.gte(userInputValue) : false;
+  const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.bigNumber.gte(userInputValue);
 
   const { send: approveTokenAllowanceCall, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
@@ -157,7 +157,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   };
 
   const handleMaxAmountButton = () => {
-    const maxAmount = tab === Tab.Deposit ? tokenBalance.number : availableBalanceToWithdraw.number;
+    const maxAmount = tab === Tab.Deposit ? tokenBalance.string : availableBalanceToWithdraw.string;
     setUserInput(`${maxAmount}`);
   };
 
@@ -197,7 +197,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               type="number"
               value={userInput}
               onChange={(e) => {
-                isDigitsOnly(e.target.value) && setUserInput(e.target.value);
+                setUserInput(e.target.value);
               }}
               min="0"
               onClick={(e) => (e.target as HTMLInputElement).select()}
@@ -206,7 +206,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && (
             <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted}`}</span>
           )}
-          {tab === Tab.Deposit && userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
+          {tab === Tab.Deposit && !userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
           {tab === Tab.Withdraw && !userHasBalanceToWithdraw && (
             <span className="input-error">Can't withdraw more than available</span>
           )}
@@ -246,7 +246,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         {tab === Tab.Deposit && (
           <button
             disabled={
-              userHasBalanceToDeposit ||
+              !userHasBalanceToDeposit ||
               !userInput ||
               userInput === "0" ||
               !termsOfUse ||
@@ -266,7 +266,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               !userHasBalanceToWithdraw ||
               !userInput ||
               userInput === "0" ||
-              //withdrawSafetyPeriod?.isSafetyPeriod ||
+              withdrawSafetyPeriod?.isSafetyPeriod ||
               !committeeCheckedIn
             }
             className="action-btn"
