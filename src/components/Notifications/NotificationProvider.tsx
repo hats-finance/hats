@@ -23,7 +23,7 @@ interface Props {
   children: ReactElement
 }
 
-const NotificationProvider: FC<Props> = ({ children }) => {
+export const NotificationProvider: FC<Props> = ({ children }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const [lastId, setLastId] = useState(0);
   const { error } = useEthers();
@@ -88,5 +88,3 @@ const NotificationProvider: FC<Props> = ({ children }) => {
     </NotificationContext.Provider>
   );
 };
-
-export default NotificationProvider;

@@ -1,11 +1,11 @@
-import { ChainId, Goerli, Mainnet, Rinkeby } from "@usedapp/core";
+import { ChainId, Goerli, Mainnet } from "@usedapp/core";
 import { BigNumber } from "ethers";
 
 export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
-  PGPKeystore = "HATS_PGP_KEYSTORE"
+  Keystore = "HATS_PGP_KEYSTORE"
 }
 
 export enum ScreenSize {
@@ -13,18 +13,8 @@ export enum ScreenSize {
   Desktop = "DESKTOP"
 }
 
-export enum RoutePaths {
-  vaults = "/vaults",
-  gov = "/gov",
-  vulnerability = "/vulnerability",
-  vault_editor = "/vault-editor",
-  committee_tools = "/committee-tools",
-  airdrop_machine = "/airdrop_machine",
-}
-
 export const HATVaultsNFTContract = {
   [ChainId.Mainnet]: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
-  [ChainId.Rinkeby]: "0x9bcB0Fc30d564077F2dCCD1Dd658250F7Cdc98b8",
   [ChainId.Goerli]: "0x4bdDe617aB54C6E45b4Bf08963F008dFC5da92aD"
 }
 
@@ -32,7 +22,6 @@ export const MAX_NFT_TIER = 3;
 
 export const Chains = {
   [ChainId.Mainnet]: Mainnet,
-  [ChainId.Rinkeby]: Rinkeby,
   [ChainId.Goerli]: Goerli
 }
 
@@ -40,13 +29,11 @@ export const VaultService = "https://vault-editor-service.herokuapp.com"
 
 export const Endpoints = {
   [ChainId.Mainnet]: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-  [ChainId.Rinkeby]: "https://eth-rinkeby.alchemyapi.io/v2/BKrRf2b-clGp35PE4NPCa7NbMa9Aps3x",
   [ChainId.Goerli]: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd"
 }
 
 export const VaultSubgraphs = {
   [ChainId.Mainnet]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv6",
-  [ChainId.Rinkeby]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsrinkebyv6",
   [ChainId.Goerli]: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsgoerli-v6"
 };
 
@@ -65,9 +52,9 @@ export enum Pages {
   airdrop_machine = "Airdrop Machine",
 }
 
-export const SMALL_SCREEN_BREAKPOINT = "1000px";
+export const SMALL_SCREEN_BREAKPOINT = "1100px";
 
-export const DefaultBotAddress = "http://localhost:4000/broadcast-message";
+export const DefaultBotAddress = "https://hats-telegram-bot.herokuapp.com/broadcast-message";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 

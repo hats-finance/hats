@@ -10,12 +10,12 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import NFTCard from "components/NFTCard/NFTCard";
+import { NFTCard } from "components";
 import { RootState } from "reducers";
 import { useSelector } from "react-redux";
 import { INFTTokenInfoRedeemed } from "types/types";
 
-export default function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed[] }) {
+export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed[] }) {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
 

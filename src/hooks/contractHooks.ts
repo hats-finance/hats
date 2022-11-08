@@ -25,7 +25,7 @@ export function useUserSharesPerVault(
   address: string,
   pid: string,
   account: string
-) {
+): BigNumber | undefined {
   const { value, error } = useCall({
     contract: new Contract(address, vaultAbi),
     method: "userInfo",
@@ -65,8 +65,8 @@ export function useWithdrawRequest(address: string) {
   );
 }
 
-export function useClaim(address: string) {
-  return useContractFunction(new Contract(address, vaultAbi), "claim", { transactionName: Transactions.Claim });
+export function useClaim(address?: string) {
+  return useContractFunction(address ? new Contract(address, vaultAbi) : null, "claim", { transactionName: "Claim" });
 }
 
 export function useClaimReward(address: string) {

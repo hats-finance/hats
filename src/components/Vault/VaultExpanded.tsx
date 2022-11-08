@@ -3,7 +3,7 @@ import { setVulnerabilityProject } from "../../utils";
 import Members from "./Members";
 import Multisig from "./Multisig";
 import Severities from "./Severities/Severities";
-import { PieChartColors, RoutePaths, ScreenSize } from "../../constants/constants";
+import { PieChartColors, ScreenSize } from "../../constants/constants";
 import { PieChart } from "react-minimal-pie-chart";
 import { useState } from "react";
 import humanizeDuration from "humanize-duration";
@@ -15,6 +15,7 @@ import ArrowIcon from "../../assets/icons/arrow.icon";
 import "./VaultExpanded.scss";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { RoutePaths } from "navigation";
 
 interface IProps {
   data: IVault

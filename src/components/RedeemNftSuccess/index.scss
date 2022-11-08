@@ -4,12 +4,9 @@
   display: flex;
   flex-direction: column;
   color: $white;
-  padding: $modal-element-padding;
-  max-width: 600px;
-  margin: auto;
+  max-width: 450px;
   white-space: pre-line;
-  box-sizing: border-box;
-  padding-bottom: 0;
+
   .airdrop-redeem-success__icon {
     width: 100px;
     align-self: center;
@@ -57,9 +54,6 @@
     bottom: 0;
     background-color: $field-blue;
     z-index: 100;
-    margin: 0px -#{$modal-element-padding};
-    padding: 0px $modal-element-padding;
-    box-shadow: 0px -10px 30px rgb(0 0 0 / 80%);
     padding-top: 20px;
     .airdrop-redeem-success__join-embassy-btn {
       background-color: $strong-purple-2;

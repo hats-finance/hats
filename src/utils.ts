@@ -1,17 +1,13 @@
-import { IPFS_PREFIX, LocalStorage } from "./constants/constants";
-import {
-  ScreenSize,
-  SMALL_SCREEN_BREAKPOINT,
-  COIN_GECKO_ETHEREUM
-} from "./constants/constants";
+import axios from "axios";
+import moment from "moment";
+import millify from "millify";
 import { BigNumber } from "ethers";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
-import axios from "axios";
-import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "./types/types";
-import moment from "moment";
-import { VULNERABILITY_INIT_DATA } from "./components/Vulnerability/VulnerabilityAccordion";
-import millify from "millify";
-import { IVulnerabilityData } from "./components/Vulnerability/types";
+import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
+import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
+import { IPFS_PREFIX, LocalStorage } from "constants/constants";
+import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
+import { CoinGeckoPriceResponse, IWithdrawSafetyPeriod } from "types/types";
 
 /**
  * Adds commas to a given number
@@ -288,7 +284,7 @@ export const isDateBetween = (start: number | string | undefined, end: number | 
 }
 
 export const ipfsTransformUri = (uri: string | undefined) => {
-  if (!uri) {
+  if (!uri || typeof uri !== 'string') {
     return "";
   }
   if (uri.startsWith("ipfs")) {

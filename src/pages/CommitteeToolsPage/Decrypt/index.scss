@@ -1,0 +1,45 @@
+@import "styles/constants.scss";
+
+.decrypt-wrapper {
+  width: 100%;
+  margin-bottom: $spacing-4;
+
+  &__title {
+    color: $white;
+    font-size: $large;
+  }
+  &__description {
+    color: $white;
+    font-size: $small;
+    padding-bottom: 30px;
+  }
+  &__textbox {
+    &-container {
+      margin-bottom: $spacing-3;
+    }
+    &-title {
+      color: $white;
+      margin-bottom: $spacing-3;
+    }
+  }
+  &__button {
+    padding: 8px 30px;
+    font-size: 16px;
+    text-transform: uppercase;
+  }
+  &__selected-key-label {
+    color: $white;
+    margin-bottom: $spacing-3;
+  }
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    .decrypt-wrapper {
+      &__textbox-container {
+        button {
+          width: 100%;
+          margin: 20px 0 0;
+        }
+      }
+    }
+  }
+}

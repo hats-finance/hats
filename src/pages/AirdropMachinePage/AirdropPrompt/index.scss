@@ -1,0 +1,38 @@
+@import "styles/constants.scss";
+
+.airdrop-prompt-wrapper {
+  display: flex;
+  flex-direction: column;
+  color: $white;
+  text-align: center;
+  
+  .airdrop-prompt__eligible-icon {
+    width: 100px;
+    align-self: center;
+  }
+  .airdrop-prompt__title {
+    font-weight: bold;
+    font-size: $medium;
+    text-align: center;
+    margin: 20px 0;
+  }
+  .airdrop-prompt__text-1 {
+    text-align: center;
+  }
+  .airdrop-prompt__wallet-container {
+    display: flex;
+    flex-direction: column;
+    color: $dirty-turquoise;
+    margin: 40px 0;
+    .airdrop-prompt__wallet-address {
+      padding: 20px 0;
+      color: $turquoise;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: $medium;
+    }
+  }
+  .airdrop-prompt__continue-btn {
+    margin-top: 20px;
+  }
+}

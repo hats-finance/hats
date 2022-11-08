@@ -1,18 +1,19 @@
-@import "../../styles/constants.scss";
+@import 'styles/constants.scss';
 
 .vault-expanded {
   display: flex;
   flex-direction: column;
   text-align: left;
+
   .sub-title {
     font-weight: bold;
     background-color: $blue;
     padding: 10px 30px;
     color: $white;
-    height: 50px;
     line-height: 50px;
     font-size: $small;
   }
+
   .vault-details-wrapper {
     .vault-details-content {
       display: flex;
@@ -25,14 +26,17 @@
         flex: 0 0 auto;
         box-sizing: border-box;
       }
+
       .multi-sig-wrapper {
         margin-bottom: 20px;
       }
+
       .submit-vulnerability-button-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
         margin-top: 50px;
+
         button {
           background: transparent;
           color: $drak-green;
@@ -48,41 +52,51 @@
       flex-direction: column;
     }
   }
+
   .vault-expanded-subtitle {
     font-style: italic;
     color: $dark-turquoise;
     padding-bottom: 20px;
     display: flex;
   }
+
   .twitter-avatars-wrapper {
     display: flex;
     flex-wrap: wrap;
     max-height: 250px;
     overflow: scroll;
   }
+
   .severity-prize-division-wrapper {
     display: flex;
     flex-direction: column;
     color: $white;
     margin-bottom: auto;
+
     .division {
       border-left: 10px solid;
       padding: 10px 0 10px 15px;
+
       &.vested-token {
         border-left-color: $vested-token;
       }
+
       &.token {
         border-left-color: $token;
       }
+
       &.committee {
         border-left-color: $committee;
       }
+
       &.vested-hats {
         border-left-color: $vested-hats;
       }
+
       &.governance {
         border-left-color: $governance;
       }
+
       &.swap-and-burn {
         border-left-color: $swap-and-burn;
       }
@@ -92,33 +106,41 @@
   .prize-division-wrapper {
     display: flex;
     flex-direction: column;
+
     .pie-chart-wrapper {
       display: flex;
       align-items: center;
       height: 100%;
+
       .pie-chart-container {
         flex-shrink: 0;
+
         > svg {
           max-width: 120px;
           cursor: pointer;
           overflow: visible;
         }
+
         button {
           border: none;
         }
+
         button {
           border: none;
         }
       }
+
       span {
         color: $white;
       }
+
       .label-wrapper {
         margin-left: 40px;
         padding-left: 10px;
         display: flex;
         flex-direction: column;
         border-left: 7px solid;
+
         .value {
           font-weight: bold;
         }
@@ -130,6 +152,7 @@
     font-size: $medium;
     font-weight: bold;
     margin-bottom: 20px;
+
     .of-vault-text {
       color: $white;
       font-size: $xsmall;
@@ -143,11 +166,13 @@
       .vault-details-content {
         flex-direction: column;
         padding: 20px;
+
         > div {
           width: 100%;
           padding: unset;
           border: unset;
         }
+
         .submit-vulnerability-button-wrapper {
           button {
             width: 100%;
@@ -158,27 +183,33 @@
     .vault-expanded-subtitle {
       margin-top: 20px;
     }
+
     .twitter-avatars-wrapper {
       flex-wrap: unset;
       min-height: unset;
       overflow: auto;
       white-space: nowrap;
-      width: calc(100vw - 82px);
+      width: 100%;
     }
+
     .prize-division-wrapper {
       .pie-chart-wrapper {
         flex-direction: column;
+
         .pie-chart-container {
           display: flex;
           justify-content: space-between;
           width: 100%;
+
           svg {
             max-width: 200px;
           }
+
           button {
             background: none;
           }
         }
+
         .label-wrapper {
           margin-top: 20px;
           margin-left: unset;
