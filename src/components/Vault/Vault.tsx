@@ -63,7 +63,7 @@ const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) =
             )}
             <div className="name-source-wrapper">
               <div className="project-name">
-                {description?.["project-metadata"].name}
+                {description?.["project-metadata"].name}({props.data.version})
                 <TokensSymbols vault={props.data} />
               </div>
               {screenSize === ScreenSize.Mobile && maxRewards}
