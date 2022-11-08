@@ -8,9 +8,9 @@ import "styles/SafePeriodBar.scss";
 export function SafePeriodBar() {
   const { withdrawSafetyPeriod } = useVaults();
   if (!withdrawSafetyPeriod) return null;
+
   const { safetyEndsAt, safetyStartsAt, isSafetyPeriod } = withdrawSafetyPeriod;
   const safetyPeriodDate = new Date(isSafetyPeriod && safetyEndsAt ? safetyEndsAt : safetyStartsAt).toLocaleTimeString();
-
 
   return (
     <tr>
