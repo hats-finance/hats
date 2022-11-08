@@ -1,4 +1,4 @@
-import { Chain, ChainId, Goerli, Hardhat, Mainnet } from "@usedapp/core";
+import { Chain, ChainId, Goerli, /*Hardhat, */ Mainnet } from "@usedapp/core";
 
 interface IChainConfiguration {
     vaultsNFTContract: string;
