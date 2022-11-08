@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { DevTool } from "@hookform/devtools";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";

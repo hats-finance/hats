@@ -141,8 +141,9 @@ export function VaultsProvider({ children }) {
       return true;
     });
 
-    const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    setVaults(vaultsWithMultiVaults);
+    // TODO: remove this in order to support multiple vaults again
+    //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
+    setVaults(vaultsWithDescription);
   };
 
   useEffect(() => {
@@ -186,18 +187,18 @@ export const fixObject = (description: any): IVaultDescription => {
   return description;
 };
 
-const addMultiVaults = (vaults: IVault[]) =>
-  vaults.map((vault) => {
-    const additionalVaults = vault.description?.["additional-vaults"] ?? [];
-    const vaultsIds = Array.isArray(additionalVaults) ? additionalVaults : [additionalVaults];
+// const addMultiVaults = (vaults: IVault[]) =>
+//   vaults.map((vault) => {
+//     const additionalVaults = vault.description?.["additional-vaults"] ?? [];
+//     const vaultsIds = Array.isArray(additionalVaults) ? additionalVaults : [additionalVaults];
 
-    return vault.description?.["additional-vaults"]
-      ? {
-        ...vault,
-        multipleVaults: [vault, ...fetchVaultsByIds(vaults, vaultsIds)],
-      }
-      : vault;
-  });
+//     return vault.description?.["additional-vaults"]
+//       ? {
+//         ...vault,
+//         multipleVaults: [vault, ...fetchVaultsByIds(vaults, vaultsIds)],
+//       }
+//       : vault;
+//   });
 
-const fetchVaultsByIds = (vaults: IVault[], ids: string[]) =>
-  ids.map((id) => vaults.find((vault) => vault.id === id)).filter((vault) => vault) as IVault[];
+// const fetchVaultsByIds = (vaults: IVault[], ids: string[]) =>
+//   ids.map((id) => vaults.find((vault) => vault.id === id)).filter((vault) => vault) as IVault[];

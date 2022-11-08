@@ -23,12 +23,12 @@ export default function VaultAPY({ vault }: IProps) {
         )
       })
 
-      const sum = Object.values(apys).reduce((accumulator, object) => {
-        // TODO: if the APY is undefined should we consider it as 0?
-        return accumulator + (object.apy ?? 0);
-      }, 0);
+      // const sum = Object.values(apys).reduce((accumulator, object) => {
+      //   // TODO: if the APY is undefined should we consider it as 0?
+      //   return accumulator + (object.apy ?? 0);
+      // }, 0);
 
-      const averagedAPY = sum / Object.values.length;
+      //const averagedAPY = sum / Object.values.length;
 
       return (
         <Tooltip
