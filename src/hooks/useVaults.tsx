@@ -113,8 +113,6 @@ export function VaultsProvider({ children }) {
       return undefined;
     };
 
-    console.log(vaultsData);
-
     const getVaultsData = async (vaults: IVault[]): Promise<IVault[]> =>
       Promise.all(
         vaults.map(async (vault) => {
