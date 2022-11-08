@@ -1,4 +1,4 @@
-import { BigNumber } from "@ethersproject/bignumber";
+import { BigNumber } from "ethers";
 
 /**
  * Calculates the value we send to the contract when a user wants to withdraw

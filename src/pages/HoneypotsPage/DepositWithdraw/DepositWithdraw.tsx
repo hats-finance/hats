@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { BigNumber } from "@ethersproject/bignumber";
 import millify from "millify";
 import classNames from "classnames";
 import { parseUnits } from "@ethersproject/units";
@@ -26,6 +25,7 @@ import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useTranslation } from "react-i18next";
 import { useVaultDepositWithdrawInfo } from "./hooks";
+import { BigNumber } from "ethers";
 
 interface IProps {
   vault: IVault;

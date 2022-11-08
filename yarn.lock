@@ -2975,10 +2975,10 @@
   resolved "https://registry.npmjs.org/@uniswap/token-lists/-/token-lists-1.0.0-beta.30.tgz"
   integrity sha512-HwY2VvkQ8lNR6ks5NqQfAtg+4IZqz3KV1T8d2DlI8emIn9uMmaoFbIOg0nzjqAVKKnZSbMTRRtUoAh6mmjRvog==
 
-"@usedapp/core@^1.1.5":
-  version "1.1.5"
-  resolved "https://registry.npmjs.org/@usedapp/core/-/core-1.1.5.tgz"
-  integrity sha512-goX1/uqlUGhio5fO3Uhjxe4gLde9ZkwGSdSaSfUGfrsDO5tyKgLK9Tlw0BF/Dj9Dh+NrKrhus/i2dNkpbbbktA==
+"@usedapp/core@^1.2.0":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@usedapp/core/-/core-1.2.1.tgz#016752b228894ea610d75aec1d1d3bd57468b55c"
+  integrity sha512-2TH0PewtKhmX1ygSSxsywpV8GE2GvAB97zVTZYdjcKicrgBeGv5+QlvH5aHPMOS2lyEuzLHEW4rIBs8ul7fLSw==
   dependencies:
     "@metamask/detect-provider" "^1.2.0"
     "@uniswap/token-lists" "^1.0.0-beta.27"
@@ -9312,11 +9312,6 @@ mkdirp@~0.5.1:
   integrity sha512-FP+p8RB8OWpF3YZBCrP5gtADmtXApB5AMLn+vdyA+PyxCjrCs00mjyUozssO33cwDeT3wNGdLxJ5M//YqtHAJw==
   dependencies:
     minimist "^1.2.6"
-
-moment@^2.29.4:
-  version "2.29.4"
-  resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz"
-  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 mri@^1.1.0:
   version "1.2.0"
