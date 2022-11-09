@@ -36,7 +36,8 @@ tr {
   cursor: pointer;
   transform: rotate(0deg);
   transition: transform 0.1s linear;
-  margin-left: 20px;
+  margin-left: 30px;
+
   &.open {
     transform: rotate(90deg);
     transition: transform 0.1s linear;
@@ -88,6 +89,15 @@ tr {
 .honeypot-balance-value {
   color: $white;
   font-weight: bold;
+}
+
+.v2-flag {
+  position: absolute;
+  text-transform: uppercase;
+  background-color: $turquoise;
+  color: $strong-blue;
+  padding: 8px 5px;
+  border-radius: 0 0 15px 0;
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

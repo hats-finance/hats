@@ -33,11 +33,7 @@ const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) =
   const vaultExpand = (
     <div
       className={props.expanded ? "arrow open" : "arrow"}
-      onClick={() => {
-        if (props.setExpanded) {
-          props.setExpanded(props.expanded ? null : props.data);
-        }
-      }}>
+      onClick={() => props.setExpanded && props.setExpanded(props.expanded ? null : props.data)}>
       <ArrowIcon />
     </div>
   );
@@ -54,6 +50,7 @@ const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) =
 
   return (
     <>
+      {props.data.version === "v2" && <div className="v2-flag">{props.data.version}</div>}
       <tr ref={ref} className={description?.["project-metadata"]?.type}>
         {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
         <td>
@@ -63,7 +60,7 @@ const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) =
             )}
             <div className="name-source-wrapper">
               <div className="project-name">
-                {description?.["project-metadata"].name}({props.data.version})
+                {description?.["project-metadata"].name}
                 <TokensSymbols vault={props.data} />
               </div>
               {screenSize === ScreenSize.Mobile && maxRewards}
