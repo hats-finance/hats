@@ -19,6 +19,7 @@ function FormIconInputComponent(
 ) {
   const [, setRefSetted] = useState(false);
   const { t } = useTranslation();
+  const [, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
 
   const name = localRef.current?.name;
@@ -35,6 +36,7 @@ function FormIconInputComponent(
         const url = URL.createObjectURL(blob);
         localRef.current.value = url;
 
+        setChanged((prev) => !prev);
         onChange({
           ...e,
           target: {
@@ -54,6 +56,7 @@ function FormIconInputComponent(
         type="hidden"
         ref={(e) => {
           ref(e);
+          setChanged((prev) => !prev);
           (localRef as any).current = e;
           setRefSetted(true);
         }}

@@ -1,11 +1,7 @@
 import { BigNumber } from "ethers";
 
 /**
- * Calculates the value we send to the contract when a user wants to withdraw
- * @param {BigNumber} amountAvailableToWithdraw
- * @param {string} userInput The actual number the user insterted
- * @param {BigNumber} userShares
- * @param {string} decimals
+ * Calculates the value in tokens of a given amount of LP tokens
  */
 export const calculateActualWithdrawValue = (
   amountAvailableToWithdraw?: BigNumber,

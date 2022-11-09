@@ -41,6 +41,10 @@ export const GlobalStyle = createGlobalStyle`
         -moz-osx-font-smoothing: grayscale;
         letter-spacing: 1px;
         overflow: hidden;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
     }
 
     .vaults-wrapper {

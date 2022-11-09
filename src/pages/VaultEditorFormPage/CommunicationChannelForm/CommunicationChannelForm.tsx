@@ -24,7 +24,7 @@ export function CommunicationChannelForm() {
   const [publicPgpKey, setPublicPgpKey] = useState<string>();
   const [pgpError, setPgpError] = useState<string>();
 
-  const { control, formState } = useEnhancedFormContext();
+  const { control, formState, getValues } = useEnhancedFormContext();
   const { fields: keys, append, remove } = useFieldArray({ control, name: "communication-channel.pgp-pk" });
 
   const addPublicKey = async (pgpKey) => {
@@ -32,7 +32,8 @@ export function CommunicationChannelForm() {
     if (pgpKey) {
       try {
         await readKey({ armoredKey: pgpKey });
-        if (keys.includes(pgpKey)) {
+        const watchedKeys = getValues("communication-channel.pgp-pk") as string[];
+        if (watchedKeys.includes(pgpKey)) {
           throw new Error("Key already added");
         }
         append(pgpKey);
