@@ -99,7 +99,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
                           expanded={expanded === vault}
                           setExpanded={setExpanded}
                           key={vault.id}
-                          data={vault}
+                          vault={vault}
                         />
                       ))}
                   </React.Fragment>

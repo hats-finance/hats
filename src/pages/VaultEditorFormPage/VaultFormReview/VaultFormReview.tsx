@@ -125,7 +125,7 @@ export function VaultFormReview() {
         <div className="preview-vault">
           <table>
             <tbody>
-              <Vault expanded={true} data={getVault()} preview />
+              <Vault expanded={true} vault={getVault()} preview />
             </tbody>
           </table>
         </div>

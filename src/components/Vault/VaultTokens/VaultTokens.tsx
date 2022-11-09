@@ -3,14 +3,14 @@ import millify from "millify";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { IVault } from "types/types";
 import { formatWei } from "utils";
-import { useVaultsTotalPrices } from "../../hooks/useVaultsTotalPrices";
+import { useVaultsTotalPrices } from "../hooks/useVaultsTotalPrices";
 import "./index.scss";
 
 interface IProps {
   vault: IVault;
 }
 
-export default function TokensSymbols({ vault }: IProps) {
+export default function VaultTokens({ vault }: IProps) {
   const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ?? [vault]);
 
   const symbols = vault.multipleVaults ? (

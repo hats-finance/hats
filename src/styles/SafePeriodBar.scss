@@ -1,22 +1,21 @@
 @import "./constants.scss";
 
 .safe-period {
-  padding: 10px;
+  padding: 1px;
+  border-bottom: 2px solid $dark-blue;
+
   .text-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: $mobile-breakpoint) {
+      font-size: $xxsmall;
+    }
   }
+
   &.on {
     background-color: $yellow;
     color: $dark-blue;
-  }
-}
-
-@media only screen and (max-width: $mobile-breakpoint) {
-  .safe-period {
-    .text-wrapper {
-      font-size: $xxsmall;
-    }
   }
 }

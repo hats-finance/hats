@@ -1,87 +1,88 @@
 import { ForwardedRef, forwardRef } from "react";
-import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { formatUnits } from "ethers/lib/utils";
+import { BigNumber } from "ethers";
 import millify from "millify";
 import { IVault } from "types/types";
 import { ipfsTransformUri } from "utils";
 import ArrowIcon from "assets/icons/arrow.icon";
-import { RootState } from "reducers";
-import { ScreenSize } from "constants/constants";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultActions from "./VaultActions/VaultActions";
-import TokensSymbols from "./VaultExpanded/TokensSymbols/TokensSymbols";
+import VaultTokens from "./VaultTokens/VaultTokens";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
-import "styles/Vault/Vault.scss";
+import { Amount } from "utils/amounts.utils";
+import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
 
-interface IProps {
-  data: IVault;
+interface VaultComponentProps {
+  vault: IVault;
   expanded: boolean;
   setExpanded?: any;
   preview?: boolean;
 }
 
-const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) => {
+const VaultComponent = (
+  { vault, expanded, preview, setExpanded }: VaultComponentProps,
+  ref: ForwardedRef<HTMLTableRowElement>
+) => {
   const { t } = useTranslation();
-  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, multipleVaults } = props.data;
-  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const honeyPotBalanceValue = millify(Number(formatUnits(honeyPotBalance, stakingTokenDecimals)));
-  const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [props.data]);
-  const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
+  const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingTokenSymbol, multipleVaults } = vault;
+  const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
+  const valueOfAllVaults = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-  const vaultExpand = (
-    <div
-      className={props.expanded ? "arrow open" : "arrow"}
-      onClick={() => props.setExpanded && props.setExpanded(props.expanded ? null : props.data)}>
+  const vaultBalance = new Amount(BigNumber.from(honeyPotBalance), stakingTokenDecimals, stakingTokenSymbol)
+    .formattedWithoutSymbol;
+  const vaultType = description?.["project-metadata"]?.type?.toLowerCase();
+  const vaultIcon = description?.["project-metadata"]?.icon ?? "";
+  const vaultName = description?.["project-metadata"].name ?? "";
+
+  const vaultExpandAction = (
+    <StyledVaultExpandAction expanded={expanded} onClick={() => setExpanded && setExpanded(expanded ? null : vault)}>
       <ArrowIcon />
-    </div>
+    </StyledVaultExpandAction>
   );
 
-  const maxRewards = (
-    <>
-      <div className="max-rewards-wrapper">
-        {!multipleVaults && honeyPotBalanceValue}
-        <span className="honeypot-balance-value">&nbsp;{`≈ $${millify(sumTotalPrices)}`}</span>
+  const vaultBalanceAndValue = (
+    <div className="balance-information">
+      <div className="vault-balance-wrapper">
+        {!multipleVaults && vaultBalance}
+        <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>
       </div>
-      {screenSize === ScreenSize.Mobile && <span className="sub-label">{t("Vault.total-vault")}</span>}
-    </>
+      <span className="sub-label onlyMobile">{t("Vault.total-vault")}</span>
+    </div>
   );
 
   return (
     <>
-      {props.data.version === "v2" && <div className="v2-flag">{props.data.version}</div>}
-      <tr ref={ref} className={description?.["project-metadata"]?.type}>
-        {screenSize === ScreenSize.Desktop && <td>{vaultExpand}</td>}
+      {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
+      <StyledVault type={vaultType} ref={ref}>
+        <td className="onlyDesktop">{vaultExpandAction}</td>
+
         <td>
           <div className="project-name-wrapper">
-            {description?.["project-metadata"]?.icon && (
-              <img src={ipfsTransformUri(description?.["project-metadata"]?.icon ?? "")} alt="project logo" />
-            )}
+            {vaultIcon && <img src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
             <div className="name-source-wrapper">
               <div className="project-name">
-                {description?.["project-metadata"].name}
-                <TokensSymbols vault={props.data} />
+                {vaultName}
+                <VaultTokens vault={vault} />
               </div>
-              {screenSize === ScreenSize.Mobile && maxRewards}
+              <div className="onlyMobile">{vaultBalanceAndValue}</div>
             </div>
           </div>
         </td>
 
-        {screenSize === ScreenSize.Desktop && (
-          <>
-            <td className="rewards-cell">{maxRewards}</td>
-            <td>
-              <VaultAPY vault={props.data} />
-            </td>
-            <td>
-              <VaultActions data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />
-            </td>
-          </>
-        )}
-        {screenSize === ScreenSize.Mobile && <td>{vaultExpand}</td>}
-      </tr>
-      {props.expanded && <VaultExpanded data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />}
+        <>
+          <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
+          <td className="onlyDesktop">
+            <VaultAPY vault={vault} />
+          </td>
+          <td className="onlyDesktop">
+            <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />
+          </td>
+        </>
+
+        <td className="onlyMobile">{vaultExpandAction}</td>
+      </StyledVault>
+      {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
     </>
   );
 };
