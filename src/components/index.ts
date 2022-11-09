@@ -11,7 +11,6 @@ export { Loading } from "./Loading";
 export { Media } from "./Media/Media";
 export { CountdownTimer } from "./CountdownTimer/CountdownTimer";
 export { RedeemNftSuccess } from "./RedeemNftSuccess/RedeemNftSuccess";
-export { ContractsCovered } from "./Vault/ContractsCovered";
 export { Dot } from "./Dot/Dot";
 export { MyAccount } from "./MyAccount/MyAccount";
 export { TransactionInfo } from "./TransactionInfo/TransactionInfo";

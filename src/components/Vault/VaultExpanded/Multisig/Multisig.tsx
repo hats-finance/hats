@@ -1,12 +1,12 @@
-import { CHAINID, CHAINS } from "../../settings";
-import CopyToClipboard from "../CopyToClipboard";
-import "./Multisig.scss";
 import { shortenIfAddress } from "@usedapp/core";
-import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { isAddress } from "ethers/lib/utils";
+import { CHAINID, CHAINS } from "settings";
+import CopyToClipboard from "components/CopyToClipboard";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import "./Multisig.scss";
 
 interface IProps {
-  multisigAddress: string
+  multisigAddress: string;
 }
 
 export default function Multisig(props: IProps) {
@@ -15,13 +15,10 @@ export default function Multisig(props: IProps) {
 
   return (
     <div className="multi-sig-address-wrapper">
-      <a
-        {...defaultAnchorProps}
-        href={chain?.getExplorerAddressLink(multisigAddress)}
-        className="multi-sig-address">
+      <a {...defaultAnchorProps} href={chain?.getExplorerAddressLink(multisigAddress)} className="multi-sig-address">
         {isAddress(multisigAddress) && shortenIfAddress(multisigAddress)}
       </a>
       {isAddress(multisigAddress) && <CopyToClipboard value={multisigAddress} />}
     </div>
-  )
+  );
 }

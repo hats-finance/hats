@@ -1,16 +1,16 @@
-import { IVault } from "../../types/types";
-import { useSelector } from "react-redux";
-import millify from "millify";
-import { formatUnits } from "ethers/lib/utils";
-import { ipfsTransformUri } from "../../utils";
-import ArrowIcon from "../../assets/icons/arrow.icon";
-import { RootState } from "../../reducers";
-import { ScreenSize } from "../../constants/constants";
-import VaultExpanded from "./VaultExpanded";
-import VaultAction from "./VaultAction";
-import { useTranslation } from "react-i18next";
-import TokensSymbols from "./TokensSymbols/TokensSymbols";
 import { ForwardedRef, forwardRef } from "react";
+import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { formatUnits } from "ethers/lib/utils";
+import millify from "millify";
+import { IVault } from "types/types";
+import { ipfsTransformUri } from "utils";
+import ArrowIcon from "assets/icons/arrow.icon";
+import { RootState } from "reducers";
+import { ScreenSize } from "constants/constants";
+import VaultExpanded from "./VaultExpanded/VaultExpanded";
+import VaultActions from "./VaultActions/VaultActions";
+import TokensSymbols from "./VaultExpanded/TokensSymbols/TokensSymbols";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import "styles/Vault/Vault.scss";
@@ -75,7 +75,7 @@ const VaultComponent = (props: IProps, ref: ForwardedRef<HTMLTableRowElement>) =
               <VaultAPY vault={props.data} />
             </td>
             <td>
-              <VaultAction data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />
+              <VaultActions data={props.data} withdrawRequests={withdrawRequests} preview={props.preview} />
             </td>
           </>
         )}

@@ -42,6 +42,7 @@ tr {
     transform: rotate(90deg);
     transition: transform 0.1s linear;
   }
+
   :hover {
     opacity: 0.8;
   }
@@ -50,6 +51,11 @@ tr {
 .project-name-wrapper {
   display: flex;
   align-items: center;
+
+  @media only screen and (max-width: $mobile-breakpoint) {
+    margin-left: 30px;
+  }
+
   img {
     width: 40px;
     margin-right: 15px;

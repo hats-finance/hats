@@ -1,11 +1,11 @@
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useEthers } from "@usedapp/core";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { IPoolWithdrawRequest, IVault } from "types/types";
 import { RoutePaths } from "navigation";
-import "./VaultAction.scss";
 import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
+import "./VaultActions.scss";
 
 interface IProps {
   data?: IVault;
@@ -13,7 +13,7 @@ interface IProps {
   preview?: boolean;
 }
 
-export default function VaultAction(props: IProps) {
+export default function VaultActions(props: IProps) {
   const navigate = useNavigate();
   const isSupportedNetwork = useSupportedNetwork();
   const { t } = useTranslation();

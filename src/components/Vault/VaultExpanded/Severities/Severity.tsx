@@ -2,14 +2,15 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { ScreenSize } from "constants/constants";
 import humanizeDuration from "humanize-duration";
-import { Modal, NFTPrize, Media, ContractsCovered } from "components";
+import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
-import { RootState } from "../../../reducers";
-import { IVault, IVulnerabilitySeverity } from "../../../types/types";
-import { formatNumber, ipfsTransformUri } from "../../../utils";
-import ArrowIcon from "../../../assets/icons/arrow.icon";
-import { useSeverityReward } from "../hooks/useSeverityReward";
+import { RootState } from "reducers";
+import { IVault, IVulnerabilitySeverity } from "types/types";
+import { formatNumber, ipfsTransformUri } from "utils";
+import ArrowIcon from "assets/icons/arrow.icon";
+import { useSeverityReward } from "../../hooks/useSeverityReward";
 import "./Severity.scss";
+import { ContractsCovered } from "../ContractsCovered/ContractsCovered";
 
 interface IProps {
   severity: IVulnerabilitySeverity;
