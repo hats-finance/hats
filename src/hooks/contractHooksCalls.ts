@@ -35,6 +35,41 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
 }
 
 /**
+ * Returns the total amount of shares on the vault.
+ *
+ * @remarks
+ * This method is supporting v1 and v2 vaults.
+ *
+ * @param vault - The selected vault to get the total shares from
+ * @returns The total shares amount
+ */
+export function useTotalSharesPerVault(vault: IVault): BigNumber {
+  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
+  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const method = vault.version === "v1" ? "poolInfo" : "totalSupply";
+  const args = vault.version === "v1" ? [vault.pid] : [];
+
+  const { value, error } =
+    useCall({
+      contract: new Contract(contractAddress, vaultAbi),
+      method: method,
+      args,
+    }) ?? {};
+
+  let totalSharesAmount: BigNumber = BigNumber.from(0);
+
+  if (!error) {
+    if (vault.version === "v1") {
+      totalSharesAmount = value?.totalUsersAmount ?? BigNumber.from(0);
+    } else {
+      totalSharesAmount = value?.[0] ?? BigNumber.from(0);
+    }
+  }
+
+  return totalSharesAmount;
+}
+
+/**
  * Returns the amount of shares the user has on the vault.
  *
  * @remarks

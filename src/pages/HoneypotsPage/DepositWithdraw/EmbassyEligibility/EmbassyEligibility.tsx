@@ -1,6 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
-import { useUserSharesPerVault } from "hooks/contractHooksCalls";
+import { BigNumber } from "ethers";
+import { useTotalSharesPerVault, useUserSharesPerVault } from "hooks/contractHooksCalls";
 import { useVaults } from "hooks/useVaults";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
@@ -17,38 +18,47 @@ const TIER_PERCENTAGES = [10, 100, 1500];
 export function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
   const { nftData } = useVaults();
-  const availableToWithdraw = useUserSharesPerVault(vault);
-  const totalShares = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
+  const userShares = useUserSharesPerVault(vault);
+  const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
+  const totalShares = useTotalSharesPerVault(vault);
+  const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
 
-  if (!nftData?.nftTokens || totalShares === 0) return null;
-  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => Number(token.pid) === Number(vault.pid)) ?? [];
+  if (!nftData?.nftTokens || totalShares.eq(0)) return null;
 
+  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => +token.pid === +vault.pid) ?? [];
   const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
+
   if (maxRedeemedTier === MAX_NFT_TIER) return null;
-  const shares = Number(formatUnits(availableToWithdraw, vault.stakingTokenDecimals));
-  const currentTiers = TIER_PERCENTAGES.map((tier_percentage) => tier_percentage / HUNDRED_PERCENT).map(
-    (tierPercentage) => (totalShares * tierPercentage) / (1 - tierPercentage)
+
+  const sharesPercentageTiers = TIER_PERCENTAGES.map((tp) => tp / HUNDRED_PERCENT).map(
+    (tp) => (totalSharesNumber * tp) / (1 - tp)
   );
-  const nextTier = Math.max(maxRedeemedTier + 1, currentTiers.findIndex((tier) => tier > shares) + 1);
-  const minToNextTier = currentTiers[nextTier - 1] - shares;
+  const nextTier = Math.max(maxRedeemedTier + 1, sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier) + 1);
+  const minToNextTier = sharesPercentageTiers[nextTier - 1] - userSharesNumber;
   const minimum = millify(minToNextTier, { precision: 2 });
+
+  // console.log("----------");
+  // console.log("totalSharesNumber", totalSharesNumber);
+  // console.log("sharesPercentageTiers", sharesPercentageTiers);
+  // console.log("nextTier", nextTier);
+  // console.log("minToNextTier", minToNextTier);
 
   return (
     <div className="embassy-eligibility-wrapper">
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {nextTier === 1 && t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
+          {nextTier === 1 && minToNextTier > -1222 && (
+            <>
+              {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
+              <br />
+              <br />
+            </>
+          )}
           {(nextTier === 2 || nextTier === 3) &&
             t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum })}
         </span>
-        {nextTier > 0 && nextTier < 4 && (
-          <span>
-            <br />
-            <br />
-            {t("DepositWithdraw.EmbassyEligibility.after-deposit")}
-          </span>
-        )}
+        {nextTier > 0 && nextTier < 4 && <span>{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
       </div>
     </div>
   );
