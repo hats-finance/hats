@@ -111,7 +111,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
       {selectedVault && (
         <Modal
           isShowing={showDeposit}
-          title={selectedVault.description?.["project-metadata"].name! + "(" + selectedVault.version + ")"}
+          title={selectedVault.description?.["project-metadata"].name!}
           titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}
           onHide={closeDeposit}
           removeHorizontalPadding>
