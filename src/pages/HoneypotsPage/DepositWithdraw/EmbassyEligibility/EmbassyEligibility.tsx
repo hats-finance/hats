@@ -48,7 +48,7 @@ export function EmbassyEligibility({ vault }: IProps) {
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {nextTier === 1 && minToNextTier > -1222 && (
+          {nextTier === 1 && minToNextTier > 0 && (
             <>
               {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
               <br />

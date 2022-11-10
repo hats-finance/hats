@@ -7,7 +7,7 @@ export const StyledUserAssetsInfoTable = styled.table`
   margin: 30px 0;
   max-height: 200px;
   overflow-y: scroll;
-  padding: 0px 40px;
+  /* padding: 0px 40px; */
   white-space: nowrap;
 
   @media (max-width: ${breakpointsDefinition.mobile}) {

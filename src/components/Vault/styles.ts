@@ -14,6 +14,10 @@ export const StyledVault = styled.tr<StyledVaultProps>(
       padding: 15px;
       background-color: var(--strong-blue);
 
+      &:first-child {
+        position: relative;
+      }
+
       ${type === "gamification" &&
       css`
         background-color: var(--strong-purple);
@@ -72,8 +76,10 @@ export const StyledVault = styled.tr<StyledVaultProps>(
   `
 );
 
-export const StyledVersionFlag = styled.div`
+export const StyledVersionFlag = styled.span`
   position: absolute;
+  top: 0;
+  left: 0;
   text-transform: uppercase;
   background-color: var(--turquoise);
   color: var(--strong-blue);

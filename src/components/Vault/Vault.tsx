@@ -53,9 +53,12 @@ const VaultComponent = (
 
   return (
     <>
-      {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
+      {/* {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>} */}
       <StyledVault type={vaultType} ref={ref}>
-        <td className="onlyDesktop">{vaultExpandAction}</td>
+        <td className="onlyDesktop">
+          {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
+          {vaultExpandAction}
+        </td>
 
         <td>
           <div className="project-name-wrapper">
