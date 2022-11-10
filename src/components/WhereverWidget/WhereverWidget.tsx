@@ -6,7 +6,7 @@ import {
   NotificationBell
 } from "@wherever/react-notification-feed";
 import { useEthers } from "@usedapp/core";
-import { WHEREVER_SETTINGS } from "settings";
+import { WHEREVER_KEY } from "settings";
 
 const WhereverWidget = () => {
   const { account, library } = useEthers();
@@ -25,8 +25,7 @@ const WhereverWidget = () => {
           primaryColor: Colors.turquoise,
           fontFamily: '"RobotoMono", sans-serif'
         }}
-        env={WHEREVER_SETTINGS.env}
-        partnerKey={WHEREVER_SETTINGS.partnerKey}
+        partnerKey={WHEREVER_KEY}
       >
         <NotificationFeed>
           <StyledWhereverWidget>

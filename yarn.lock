@@ -3585,10 +3585,10 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@wherever/react-notification-feed@^0.0.11":
-  version "0.0.11"
-  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.11.tgz#b0b69a1ac28743446a4495168a6b24d9e4983949"
-  integrity sha512-40u9+/x4MvD5Kq5i2Lgf3vjU9KdPEqKDdARf6bpJQNoDS1JJwRqFVoXu9e1df8aq7ofL81tMjat5ti87fFJt+w==
+"@wherever/react-notification-feed@^0.0.12":
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.12.tgz#978b15bc4cb8ff73ef4632aa52c397a36982fc3b"
+  integrity sha512-UelVmmk/X0Aa6kobSDxBIhQkZrdLthSTqmnMnKHr8rGEWHmI5sUpzYNPH5ITeFH/Oi3HtxR8hEz9p5z/852tJQ==
   dependencies:
     "@apollo/client" "^3.6.9"
     "@emotion-icons/octicons" "^3.27.0"
@@ -3600,7 +3600,7 @@
     react-click-away-listener "^2.2.2"
     react-popper "^2.3.0"
     react-verification-input "^3.1.1"
-    rudder-js "^1.0.13"
+    rudder-sdk-js "^2.18.1"
     siwe "^1.1.6"
     styled-components "^5.3.5"
     wagmi "^0.7.7"
@@ -12121,10 +12121,10 @@ rpc-websockets@^7.5.0:
     bufferutil "^4.0.1"
     utf-8-validate "^5.0.2"
 
-rudder-js@^1.0.13:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/rudder-js/-/rudder-js-1.0.13.tgz#a481fbaefe57045728e36a80d58c322221e8262a"
-  integrity sha512-uQlviv/jsSweF5TzC1geNmCliWlj26+2Yh+AlqIDJjuWmp5kqxA3v40nTiH1UdsQ5+abbQ+HJvXdiP+I5fRlzg==
+rudder-sdk-js@^2.18.1:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/rudder-sdk-js/-/rudder-sdk-js-2.20.0.tgz#fa515c29bb3374cfa2a0751b97dd3671107c48ec"
+  integrity sha512-faYlnAZmmOMixghbQdLwwAGVAt250yxvtiZVFspqm/XqYqftOvj1CmzC/ELq2UYR2aUXviqww6LqcWV8AwDozw==
 
 run-parallel@^1.1.9:
   version "1.2.0"
