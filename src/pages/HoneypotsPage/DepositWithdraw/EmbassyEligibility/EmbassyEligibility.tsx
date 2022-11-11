@@ -35,7 +35,8 @@ export function EmbassyEligibility({ vault }: IProps) {
   );
   const nextTier = Math.max(maxRedeemedTier + 1, sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier) + 1);
   const minToNextTier = sharesPercentageTiers[nextTier - 1] - userSharesNumber;
-  const minimum = millify(minToNextTier, { precision: 2 });
+  const minimum = millify(minToNextTier, { precision: 4 });
+  const tokenSymbol = vault.stakingTokenSymbol;
 
   // console.log("----------");
   // console.log("totalSharesNumber", totalSharesNumber);
@@ -48,15 +49,28 @@ export function EmbassyEligibility({ vault }: IProps) {
       <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
       <div className="embassy-eligibility__content">
         <span className="embassy-eligibility__content__min-to-embassy">
-          {nextTier === 1 && minToNextTier > 0 && (
+          {minToNextTier > 0 && (
             <>
-              {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum })}
-              <br />
-              <br />
+              {nextTier === 1 && (
+                <>
+                  {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum, token: tokenSymbol })}
+                  <br />
+                  <br />
+                </>
+              )}
+              {(nextTier === 2 || nextTier === 3) && (
+                <>
+                  {t("DepositWithdraw.EmbassyEligibility.tier-middle", {
+                    secondOrThird: nextTier === 2 ? "second" : "third",
+                    minimum,
+                    token: tokenSymbol,
+                  })}
+                  <br />
+                  <br />
+                </>
+              )}
             </>
           )}
-          {(nextTier === 2 || nextTier === 3) &&
-            t("DepositWithdraw.EmbassyEligibility.tier-middle", { secondOrThird: nextTier === 2 ? "second" : "third", minimum })}
         </span>
         {nextTier > 0 && nextTier < 4 && <span>{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
       </div>

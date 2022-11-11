@@ -20,7 +20,7 @@ const VaultAssetInfo = ({ vault }: IProps) => {
       <td className="withdraw-status-data">
         <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
       </td>
-      <td>{availableBalanceToWithdraw.number}</td>
+      <td>{availableBalanceToWithdraw.formattedWithoutSymbol}</td>
       <td>-</td>
     </tr>
   );

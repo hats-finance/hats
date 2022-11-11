@@ -21,15 +21,22 @@ export class Amount {
   }
 
   get formattedWithoutSymbol() {
-    return `${this.amount ? Number(formatUnits(this.amount, this.decimals)) : "-"}`;
+    return `${this.amount ? this.truncateNDecimals(5) : "-"}`;
+  }
+
+  get formatted() {
+    const symbol = this.symbol ? ` ${this.symbol}` : "";
+    return `${this.formattedWithoutSymbol}${symbol}`;
   }
 
   get string() {
     return this.amount ? formatUnits(this.amount, this.decimals) : "0";
   }
 
-  get formatted() {
-    const symbol = this.symbol ? ` ${this.symbol}` : "";
-    return `${this.formattedWithoutSymbol}${symbol}`;
+  private truncateNDecimals(decimals: number) {
+    // truncate n decimals and remove trailing zeros
+    const [int, decimal] = this.string.split(".");
+    if (!decimal) return int;
+    return `${int}.${decimal.substring(0, decimals).replace(/0+$/, "")}`;
   }
 }
