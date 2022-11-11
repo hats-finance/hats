@@ -85,6 +85,9 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (!userInputValue) return;
 
     await depositCall(userInputValue);
+    setUserInput("");
+    setTermsOfUse(false);
+
     const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
     const newRedeemables = depositEligibility?.filter(
       (nft) => !nft.isRedeemed && !nftData?.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
@@ -92,8 +95,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (newRedeemables?.length) {
       toggleEmbassyPrompt();
     }
-    setUserInput("");
-    setTermsOfUse(false);
   }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
 
   const { send: withdrawAndClaimCall, state: withdrawAndClaimState } = useWithdrawAndClaim(selectedVault);
@@ -195,9 +196,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               placeholder="0.0"
               type="number"
               value={userInput}
-              onChange={(e) => {
-                setUserInput(e.target.value);
-              }}
+              onChange={(e) => setUserInput(e.target.value)}
               min="0"
               onClick={(e) => (e.target as HTMLInputElement).select()}
             />
