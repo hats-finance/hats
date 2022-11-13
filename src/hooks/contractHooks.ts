@@ -25,7 +25,7 @@ export function useUserSharesPerVault(
   address: string,
   pid: string,
   account: string
-) {
+): BigNumber | undefined {
   const { value, error } = useCall({
     contract: new Contract(address, vaultAbi),
     method: "userInfo",

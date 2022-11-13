@@ -51,6 +51,7 @@
       },
       "Assets": {
         "assets": "Assets",
+        "balance": "Balance",
         "withdraw": "Withdraw",
         "status": "Status",
         "deposited": "Deposited"
