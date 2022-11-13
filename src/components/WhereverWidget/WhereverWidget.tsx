@@ -20,10 +20,12 @@ const WhereverWidget = () => {
       <NotificationFeedProvider
         provider={library!}
         theme={{
+          buttonTextColor:Colors.black,
           bellColor: Colors.turquoise,
           backgroundColor: Colors.fieldBlue,
           primaryColor: Colors.turquoise,
-          fontFamily: '"RobotoMono", sans-serif'
+          borderRadius: 'none',
+          fontFamily: '"RobotoMono", sans-serif',
         }}
         partnerKey={WHEREVER_KEY}
       >
