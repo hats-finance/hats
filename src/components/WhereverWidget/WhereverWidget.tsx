@@ -20,7 +20,7 @@ const WhereverWidget = () => {
       <NotificationFeedProvider
         provider={library!}
         theme={{
-          buttonTextColor:Colors.black,
+          buttonTextColor: Colors.black,
           bellColor: Colors.turquoise,
           backgroundColor: Colors.fieldBlue,
           primaryColor: Colors.turquoise,
