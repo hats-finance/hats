@@ -131,7 +131,6 @@ const VaultEditorFormPage = () => {
     }
   };
 
-  console.log(ipfsDate);
   return (
     <FormProvider {...methods}>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
@@ -169,16 +168,16 @@ const VaultEditorFormPage = () => {
 
         <section className={classNames({ onlyDesktop: pageNumber !== 2 })}>
           <Section>
-            <p className="section-title">2. {t("VaultEditor.committee-details")}</p>
+            <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
             <div className="section-content">
-              <CommitteeDetailsForm />
+              <CommitteeMembersList />
             </div>
           </Section>
 
           <Section>
-            <p className="section-title">3. {t("VaultEditor.committee-members")}</p>
+            <p className="section-title">3. {t("VaultEditor.committee-details")}</p>
             <div className="section-content">
-              <CommitteeMembersList />
+              <CommitteeDetailsForm />
             </div>
           </Section>
         </section>
