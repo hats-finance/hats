@@ -5,6 +5,9 @@ import AddIcon from "assets/icons/add.icon.svg";
 import { StyledFormIconInput } from "./styles";
 import { parseIsDirty } from "../utils";
 
+const MAX_SIZE_ICON = 50000;
+const MAX_SIZE_IMAGE = 2000000;
+
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   colorable?: boolean;
@@ -18,7 +21,6 @@ function FormIconInputComponent(
   { onChange, colorable = false, isDirty = false, label, error, type = "icon", ...props }: FormIconInputProps,
   ref
 ) {
-  const [, setRefSetted] = useState(false);
   const { t } = useTranslation();
   const [, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
@@ -35,6 +37,10 @@ function FormIconInputComponent(
       if (fr.result && localRef.current) {
         const blob = new Blob([fr.result]);
         const url = URL.createObjectURL(blob);
+
+        const validSize = verifyBlobSize(blob.size);
+        if (!validSize) return;
+
         localRef.current.value = url;
 
         setChanged((prev) => !prev);
@@ -48,6 +54,15 @@ function FormIconInputComponent(
         });
       }
     };
+  };
+
+  const verifyBlobSize = (size: number) => {
+    if ((type === "icon" && size > MAX_SIZE_ICON) || (type === "image" && size > MAX_SIZE_IMAGE)) {
+      alert(t("fileTooBig"));
+      return false;
+    }
+
+    return true;
   };
 
   const getPlaceholder = () => {
@@ -65,9 +80,8 @@ function FormIconInputComponent(
         type="hidden"
         ref={(e) => {
           ref(e);
-          setChanged((prev) => !prev);
           (localRef as any).current = e;
-          setRefSetted(true);
+          setChanged((prev) => !prev);
         }}
       />
 

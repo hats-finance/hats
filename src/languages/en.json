@@ -12,6 +12,7 @@
     "withdrawStatus": "Withdraw Status",
     "balance": "Balance",
     "assets": "Assets",
+    "fileTooBig": "File too big",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
@@ -409,8 +410,8 @@
         "description-2": "Complete the transaction by authorized signer/s",
         "description-3": "You may be asked to add details to the vault by @hatsOfir"
       },
-      "img-placeholder": "SVG/PNG",
-      "icon-placeholder": "SVG"
+      "img-placeholder": "SVG/PNG \n (max 2MB)",
+      "icon-placeholder": "SVG \n (max 50KB)"
     },
     "Vault": {
       "vault-details": "Vault Details",

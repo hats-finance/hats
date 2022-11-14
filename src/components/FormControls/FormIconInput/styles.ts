@@ -12,6 +12,8 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+      text-align: center;
 
       ${hasError &&
       css`
