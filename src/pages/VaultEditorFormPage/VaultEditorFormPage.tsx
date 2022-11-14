@@ -131,6 +131,7 @@ const VaultEditorFormPage = () => {
     }
   };
 
+  console.log(ipfsDate);
   return (
     <FormProvider {...methods}>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
@@ -140,7 +141,6 @@ const VaultEditorFormPage = () => {
 
         <section className={classNames({ onlyDesktop: pageNumber !== 1 })}>
           <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
-
           {ipfsHash && vaultVersion === "v1" && (
             <>
               <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
@@ -152,15 +152,13 @@ const VaultEditorFormPage = () => {
               </button>
             </>
           )}
-
-          {ipfsDate && (
+          {/* {ipfsDate && (
             <div className="last-saved-time">
               {`${t("VaultEditor.last-saved-time")} `}
               {ipfsDate.toLocaleString()}
               {`(${t("VaultEditor.local-time")})`}
             </div>
-          )}
-
+          )} */}
           <Section>
             <p className="section-title">1. {t("VaultEditor.vault-details.title")}</p>
             <div className="section-content">
