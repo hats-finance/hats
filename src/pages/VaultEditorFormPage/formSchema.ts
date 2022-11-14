@@ -16,14 +16,22 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       starttime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
-        .test("isRequired", intl("required"), (val, ctx: any) => ctx.from[1].value.includesStartAndEndTime && val),
+        .test(
+          "isRequired",
+          intl("required"),
+          (val, ctx: any) => (ctx.from[1].value.includesStartAndEndTime && val) || !ctx.from[1].value.includesStartAndEndTime
+        ),
       endtime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
         .when("starttime", (starttime: number, schema: any) => {
           if (starttime) return schema.min(starttime, intl("endtimeGreaterThanStarttime"));
         })
-        .test("isRequired", intl("required"), (val, ctx: any) => ctx.from[1].value.includesStartAndEndTime && val),
+        .test(
+          "isRequired",
+          intl("required"),
+          (val, ctx: any) => (ctx.from[1].value.includesStartAndEndTime && val) || !ctx.from[1].value.includesStartAndEndTime
+        ),
     }),
     committee: Yup.object({
       "multisig-address": Yup.string().required(intl("required")),
@@ -44,7 +52,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       })
     ),
     "vulnerability-severities-spec": Yup.object({
-      name: Yup.string().required(intl("required")),
+      name: Yup.string(),
       severities: Yup.array().of(
         Yup.object({
           name: Yup.string().required(intl("required")),

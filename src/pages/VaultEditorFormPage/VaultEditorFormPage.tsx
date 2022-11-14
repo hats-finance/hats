@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
@@ -30,8 +30,10 @@ const VaultEditorFormPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
-  const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
+  const { pathname } = useLocation();
+
+  const isAdvancedMode = pathname.split("/")[2] === "advanced";
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
@@ -45,10 +47,6 @@ const VaultEditorFormPage = () => {
     try {
       setLoadingFromIpfs(true);
       const response = await fetch(ipfsTransformUri(ipfsHash));
-      const lastModified = response.headers.get("last-modified");
-      if (lastModified) {
-        setIpfsDate(new Date(lastModified));
-      }
       const newVaultDescription = await response.json();
       handleReset(descriptionToEditedForm(fixObject(newVaultDescription)));
     } catch (error) {
@@ -200,7 +198,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 5 })}>
+        <section style={!isAdvancedMode ? { display: "none" } : {}} className={classNames({ onlyDesktop: pageNumber !== 5 })}>
           <Section>
             <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
             <div className="section-content">
@@ -211,7 +209,7 @@ const VaultEditorFormPage = () => {
 
         <section className={classNames({ onlyDesktop: pageNumber !== 6 })}>
           <Section>
-            <p className="section-title">7. {t("VaultEditor.review-vault.title")}</p>
+            <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
             <div className="section-content">
               <VaultFormReview />
             </div>
