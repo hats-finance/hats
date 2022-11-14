@@ -9,12 +9,13 @@ interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   colorable?: boolean;
   isDirty?: boolean;
+  type?: "icon" | "image";
   label?: string;
   error?: { message: string; type: string };
 }
 
 function FormIconInputComponent(
-  { onChange, colorable = false, isDirty = false, label, error, ...props }: FormIconInputProps,
+  { onChange, colorable = false, isDirty = false, label, error, type = "icon", ...props }: FormIconInputProps,
   ref
 ) {
   const [, setRefSetted] = useState(false);
@@ -49,6 +50,14 @@ function FormIconInputComponent(
     };
   };
 
+  const getPlaceholder = () => {
+    if (type === "icon") {
+      return t("VaultEditor.icon-placeholder");
+    } else {
+      return t("VaultEditor.img-placeholder");
+    }
+  };
+
   return (
     <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
       <input
@@ -72,7 +81,7 @@ function FormIconInputComponent(
       ) : (
         <label htmlFor={id} className="icon-add">
           <img src={AddIcon} alt="add" />
-          <p>{t("VaultEditor.img-placeholder")}</p>
+          <p>{getPlaceholder()}</p>
         </label>
       )}
 
