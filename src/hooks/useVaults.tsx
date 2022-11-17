@@ -16,7 +16,7 @@ interface IVaultsContext {
   tokenPrices?: number[];
   masters?: IMaster[];
   nftData?: INFTTokenData;
-  withdrawSafetyPeriod?: IWithdrawSafetyPeriod
+  withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
 const DATA_REFRESH_TIME = 10000;
@@ -166,12 +166,13 @@ export function VaultsProvider({ children }) {
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
+  console.log(vaults);
   const context: IVaultsContext = {
     nftData,
     vaults,
     tokenPrices,
     masters: data?.masters,
-    withdrawSafetyPeriod
+    withdrawSafetyPeriod,
   };
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;

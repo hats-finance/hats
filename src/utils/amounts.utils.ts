@@ -37,6 +37,7 @@ export class Amount {
     // truncate n decimals and remove trailing zeros
     const [int, decimal] = this.string.split(".");
     if (!decimal) return int;
-    return `${int}.${decimal.substring(0, decimals).replace(/0+$/, "")}`;
+    const decimalPart = decimal.substring(0, decimals).replace(/0+$/, "");
+    return `${int}${decimalPart ? `.${decimalPart}` : ""}`;
   }
 }
