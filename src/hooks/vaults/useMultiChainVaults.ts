@@ -9,7 +9,7 @@ const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: CHAINS[ChainId.Mainnet], test: CHAINS[ChainId.Goerli] },
-  OPTIMISM: { prod: null, test: CHAINS[ChainId.OptimismGoerli] },
+  OPTIMISM: { prod: CHAINS[ChainId.Optimism], test: CHAINS[ChainId.OptimismGoerli] },
 };
 
 const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
