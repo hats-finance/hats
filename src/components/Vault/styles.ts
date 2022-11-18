@@ -9,6 +9,7 @@ export const StyledVault = styled.tr<StyledVaultProps>(
   ({ type }) => css`
     scroll-margin-top: var(--header-height) * 2;
     border-bottom: 2px solid var(--dark-blue);
+    position: relative;
 
     td {
       padding: 15px;
@@ -114,3 +115,17 @@ export const StyledVaultExpandAction = styled.div<{ expanded: boolean }>(
     `}
   `
 );
+
+export const DepositsPausedOverlay = styled.div`
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(13, 13, 13, 0.3);
+  backdrop-filter: blur(1.5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;

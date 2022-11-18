@@ -2,6 +2,7 @@ import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BigNumber } from "ethers";
 import millify from "millify";
+import PauseIcon from "assets/icons/pause-circle.svg";
 import { IVault } from "types/types";
 import { ipfsTransformUri } from "utils";
 import ArrowIcon from "assets/icons/arrow.icon";
@@ -11,7 +12,7 @@ import VaultTokens from "./VaultTokens/VaultTokens";
 import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
-import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
+import { StyledVault, StyledVersionFlag, StyledVaultExpandAction, DepositsPausedOverlay } from "./styles";
 
 interface VaultComponentProps {
   vault: IVault;
@@ -53,7 +54,6 @@ const VaultComponent = (
 
   return (
     <>
-      {/* {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>} */}
       <StyledVault type={vaultType} ref={ref}>
         <td className="onlyDesktop">
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
@@ -61,6 +61,11 @@ const VaultComponent = (
         </td>
 
         <td>
+          {vault.depositPause && (
+            <DepositsPausedOverlay>
+              <img src={PauseIcon} alt="Vault paused" />
+            </DepositsPausedOverlay>
+          )}
           <div className="project-name-wrapper">
             {vaultIcon && <img src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
             <div className="name-source-wrapper">
