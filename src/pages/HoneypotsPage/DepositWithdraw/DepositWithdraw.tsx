@@ -3,6 +3,7 @@ import millify from "millify";
 import classNames from "classnames";
 import { parseUnits } from "@ethersproject/units";
 import { Loading, Modal } from "components";
+import PauseIcon from "assets/icons/pause-circle.svg";
 import { IVault } from "types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import {
@@ -172,140 +173,148 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         </button>
       </div>
 
-      <div className="balance-wrapper">
-        {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted}`}
-        {tab === Tab.Withdraw && `Balance to withdraw: ${availableBalanceToWithdraw.formatted}`}
-        <button className="max-button" disabled={!committeeCheckedIn} onClick={handleMaxAmountButton}>
-          (Max)
-        </button>
-      </div>
-      <div>
-        <div className="amount-wrapper">
-          <div className="top">
-            <span>Vault token</span>
-            <span>
-              &#8776; {!tokenPrices?.[stakingToken] ? "-" : `$${millify(tokenPrices?.[stakingToken], { precision: 3 })}`}
-            </span>
+      <div className="content">
+        {selectedVault.depositPause && (
+          <div className="paused-overlay">
+            <img src={PauseIcon} alt="Vault paused" />
           </div>
-          <div className="input-wrapper">
-            <div className="pool-token">
-              <TokenSelect vault={vault} onSelect={(pid) => setSelectedId(pid)} />
+        )}
+
+        <div className="balance-wrapper">
+          {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted}`}
+          {tab === Tab.Withdraw && `Balance to withdraw: ${availableBalanceToWithdraw.formatted}`}
+          <button className="max-button" disabled={!committeeCheckedIn} onClick={handleMaxAmountButton}>
+            (Max)
+          </button>
+        </div>
+        <div>
+          <div className="amount-wrapper">
+            <div className="top">
+              <span>Vault token</span>
+              <span>
+                &#8776; {!tokenPrices?.[stakingToken] ? "-" : `$${millify(tokenPrices?.[stakingToken], { precision: 3 })}`}
+              </span>
             </div>
-            <input
-              disabled={!committeeCheckedIn}
-              placeholder="0.0"
-              type="number"
-              value={userInput}
-              onChange={(e) => setUserInput(e.target.value)}
-              min="0"
-              onClick={(e) => (e.target as HTMLInputElement).select()}
-            />
+            <div className="input-wrapper">
+              <div className="pool-token">
+                <TokenSelect vault={vault} onSelect={(pid) => setSelectedId(pid)} />
+              </div>
+              <input
+                disabled={!committeeCheckedIn}
+                placeholder="0.0"
+                type="number"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                min="0"
+                onClick={(e) => (e.target as HTMLInputElement).select()}
+              />
+            </div>
+            {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && (
+              <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted}`}</span>
+            )}
+            {tab === Tab.Deposit && !userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
+            {tab === Tab.Withdraw && !userHasBalanceToWithdraw && (
+              <span className="input-error">Can't withdraw more than available</span>
+            )}
           </div>
-          {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && (
-            <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted}`}</span>
-          )}
-          {tab === Tab.Deposit && !userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
-          {tab === Tab.Withdraw && !userHasBalanceToWithdraw && (
-            <span className="input-error">Can't withdraw more than available</span>
-          )}
         </div>
-      </div>
-      {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
-      <div>
-        <UserAssetsInfo vault={vault} />
-      </div>
-      {tab === Tab.Deposit && (
-        <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
-          <input
-            type="checkbox"
-            checked={termsOfUse}
-            onChange={() => setTermsOfUse(!termsOfUse)}
-            disabled={!userInput || userInput === "0"}
-          />
-          <label>
-            I UNDERSTAND AND AGREE TO THE{" "}
-            <u>
-              <a {...defaultAnchorProps} href={TERMS_OF_USE}>
-                TERMS OF USE
-              </a>
-            </u>
-          </label>
+        {tab === Tab.Deposit && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
+        <div>
+          <UserAssetsInfo vault={vault} />
         </div>
-      )}
-      {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
-      {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
-      {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
-        <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>
-      )}
-      {tab === Tab.Deposit && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
-        <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>
-      )}
-      <div className="action-btn-wrapper">
         {tab === Tab.Deposit && (
+          <div className={`terms-of-use-wrapper ${(!userInput || userInput === "0") && "disabled"}`}>
+            <input
+              type="checkbox"
+              checked={termsOfUse}
+              onChange={() => setTermsOfUse(!termsOfUse)}
+              disabled={!userInput || userInput === "0"}
+            />
+            <label>
+              I UNDERSTAND AND AGREE TO THE{" "}
+              <u>
+                <a {...defaultAnchorProps} href={TERMS_OF_USE}>
+                  TERMS OF USE
+                </a>
+              </u>
+            </label>
+          </div>
+        )}
+        {!committeeCheckedIn && <span className="extra-info-wrapper">COMMITTEE IS NOT CHECKED IN YET!</span>}
+        {depositPause && <span className="extra-info-wrapper">DEPOSIT PAUSE IS IN EFFECT!</span>}
+        {tab === Tab.Withdraw && withdrawSafetyPeriod?.isSafetyPeriod && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
+          <span className="extra-info-wrapper">SAFE PERIOD IS ON. WITHDRAWAL IS NOT AVAILABLE DURING SAFE PERIOD</span>
+        )}
+        {tab === Tab.Deposit && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
+          <span className="extra-info-wrapper">DEPOSIT WILL CANCEL THE WITHDRAWAL REQUEST</span>
+        )}
+        <div className="action-btn-wrapper">
+          {tab === Tab.Deposit && (
+            <button
+              disabled={
+                !userHasBalanceToDeposit ||
+                !userInput ||
+                userInput === "0" ||
+                !termsOfUse ||
+                !isAboveMinimumDeposit ||
+                !committeeCheckedIn ||
+                depositPause ||
+                !isSupportedNetwork
+              }
+              className="action-btn"
+              onClick={async () => await handleTryDeposit()}>
+              {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
+            </button>
+          )}
+          {tab === Tab.Withdraw && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
+            <button
+              disabled={
+                !userHasBalanceToWithdraw ||
+                !userInput ||
+                userInput === "0" ||
+                withdrawSafetyPeriod?.isSafetyPeriod ||
+                !committeeCheckedIn
+              }
+              className="action-btn"
+              onClick={async () => await handleWithdrawAndClaim()}>
+              {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
+            </button>
+          )}
+          {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
+            <button
+              disabled={!userHasBalanceToWithdraw || availableBalanceToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
+              className="action-btn"
+              onClick={async () => await handleWithdrawRequest()}>
+              WITHDRAWAL REQUEST
+            </button>
+          )}
+          {userIsCommitteeAndCanCheckIn && (
+            <button onClick={handleCheckIn} className="action-btn">
+              CHECK IN
+            </button>
+          )}
           <button
-            disabled={
-              !userHasBalanceToDeposit ||
-              !userInput ||
-              userInput === "0" ||
-              !termsOfUse ||
-              !isAboveMinimumDeposit ||
-              !committeeCheckedIn ||
-              depositPause ||
-              !isSupportedNetwork
-            }
-            className="action-btn"
-            onClick={async () => await handleTryDeposit()}>
-            {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
+            onClick={async () => await handleClaimReward()}
+            disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
+            className="action-btn claim-btn fill">
+            {`CLAIM ${pendingReward?.formatted}`}
           </button>
-        )}
-        {tab === Tab.Withdraw && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
-          <button
-            disabled={
-              !userHasBalanceToWithdraw ||
-              !userInput ||
-              userInput === "0" ||
-              withdrawSafetyPeriod?.isSafetyPeriod ||
-              !committeeCheckedIn
-            }
-            className="action-btn"
-            onClick={async () => await handleWithdrawAndClaim()}>
-            {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
-          </button>
-        )}
-        {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
-          <button
-            disabled={!userHasBalanceToWithdraw || availableBalanceToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
-            className="action-btn"
-            onClick={async () => await handleWithdrawRequest()}>
-            WITHDRAWAL REQUEST
-          </button>
-        )}
-        {userIsCommitteeAndCanCheckIn && (
-          <button onClick={handleCheckIn} className="action-btn">
-            CHECK IN
-          </button>
-        )}
-        <button
-          onClick={async () => await handleClaimReward()}
-          disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
-          className="action-btn claim-btn fill">
-          {`CLAIM ${pendingReward?.formatted}`}
-        </button>
+        </div>
+
+        {pendingWallet && <Loading zIndex={10000} />}
+
+        <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
+          <EmbassyNftTicketPrompt />
+        </Modal>
+
+        <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
+          <ApproveToken
+            approveToken={handleApproveTokenAllowance}
+            userInput={userInput}
+            stakingTokenDecimals={stakingTokenDecimals}
+          />
+        </Modal>
       </div>
-
-      {pendingWallet && <Loading zIndex={10000} />}
-
-      <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-        <EmbassyNftTicketPrompt />
-      </Modal>
-
-      <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
-        <ApproveToken
-          approveToken={handleApproveTokenAllowance}
-          userInput={userInput}
-          stakingTokenDecimals={stakingTokenDecimals}
-        />
-      </Modal>
     </div>
   );
 }

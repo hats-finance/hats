@@ -49,6 +49,29 @@
       }
     }
   }
+
+  .content {
+    position: relative;
+
+    .paused-overlay {
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(13, 13, 13, 0.3);
+      backdrop-filter: blur(1.2px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 60px;
+      }
+    }
+  }
+
   .balance-wrapper {
     position: relative;
     display: flex;
