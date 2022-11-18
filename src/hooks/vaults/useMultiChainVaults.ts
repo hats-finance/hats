@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { ChainId, useEthers } from "@usedapp/core";
-import { Chains } from "constants/chains";
 import { IMaster, IVault } from "types/types";
-import { IS_PROD } from "settings";
+import { CHAINS, IS_PROD } from "settings";
 import { useQuery } from "@apollo/client";
 import { GET_VAULTS } from "graphql/subgraph";
 
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
-  ETHEREUM: { prod: Chains[ChainId.Mainnet], test: Chains[ChainId.Goerli] },
-  OPTIMISM: { prod: null, test: Chains[ChainId.OptimismGoerli] },
+  ETHEREUM: { prod: CHAINS[ChainId.Mainnet], test: CHAINS[ChainId.Goerli] },
+  OPTIMISM: { prod: null, test: CHAINS[ChainId.OptimismGoerli] },
 };
 
 const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
@@ -29,7 +28,7 @@ const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "
 export const useMultiChainVaults = () => {
   const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>();
   const { chainId } = useEthers();
-  const connectedChain = chainId ? Chains[chainId] : null;
+  const connectedChain = chainId ? CHAINS[chainId] : null;
 
   const showTestnets = connectedChain ? connectedChain.chain.isTestChain : !IS_PROD;
   const networkEnv = showTestnets ? "test" : "prod";
