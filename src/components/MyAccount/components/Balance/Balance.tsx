@@ -1,7 +1,7 @@
 import { formatEther } from "@ethersproject/units";
 import { useEthers, useTokenBalance } from "@usedapp/core";
 import { useTranslation } from "react-i18next";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import WalletIcon from "assets/icons/balance.svg";
 import { StyledBalance } from "./styles";
 

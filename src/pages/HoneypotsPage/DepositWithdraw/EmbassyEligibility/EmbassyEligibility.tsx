@@ -2,7 +2,7 @@ import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
 import { useTotalSharesPerVault, useUserSharesPerVault } from "hooks/contractHooksCalls";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types/types";

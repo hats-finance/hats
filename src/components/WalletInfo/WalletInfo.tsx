@@ -1,6 +1,6 @@
 import { ChainId, shortenIfAddress, useEthers, useLookupAddress, useTransactions } from "@usedapp/core";
 import { useTranslation } from "react-i18next";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import { Colors } from "constants/constants";
 import useModal from "hooks/useModal";
 import { Dot, MyAccount, TransactionInfo, Modal } from "components";

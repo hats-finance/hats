@@ -1,7 +1,6 @@
-import { useApolloClient, useQuery } from "@apollo/client";
+import { useApolloClient } from "@apollo/client";
 import { useEthers } from "@usedapp/core";
 import { PROTECTED_TOKENS } from "data/vaults";
-import { GET_VAULTS } from "graphql/subgraph";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
@@ -9,7 +8,8 @@ import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types
 import { getTokensPrices, ipfsTransformUri } from "utils";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { blacklistedWallets } from "data/blacklistedWallets";
-import { useLiveSafetyPeriod } from "./useLiveSafetyPeriod";
+import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
+import { useMultiChainVaults } from "./useMultiChainVaults";
 
 interface IVaultsContext {
   vaults?: IVault[];
@@ -18,8 +18,6 @@ interface IVaultsContext {
   nftData?: INFTTokenData;
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
-
-const DATA_REFRESH_TIME = 10000;
 
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
@@ -38,12 +36,7 @@ export function VaultsProvider({ children }) {
     throw new Error("Blacklisted wallet");
   }
 
-  const { data } = useQuery<{ vaults: IVault[]; masters: IMaster[] }>(GET_VAULTS, {
-    variables: { chainId },
-    context: { chainId },
-    fetchPolicy: "network-only",
-    pollInterval: DATA_REFRESH_TIME,
-  });
+  const { data } = useMultiChainVaults();
 
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
@@ -147,12 +140,12 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults && chainId === 1)
+    if (vaults && chainId === 1) {
       getPrices(vaults).then((prices) => {
-        if (!cancelled) {
-          setTokenPrices(prices);
-        }
+        if (!cancelled) setTokenPrices(prices);
       });
+    }
+
     return () => {
       cancelled = true;
     };

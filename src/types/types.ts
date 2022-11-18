@@ -34,6 +34,7 @@ export interface IBaseVault {
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
   description: IVaultDescription;
+  chainId?: number;
 }
 export interface IVaultV1 extends IBaseVault {
   version: "v1";
@@ -159,6 +160,7 @@ export interface IMaster {
   withdrawRequestPendingPeriod: string;
   vestingHatDuration: string;
   vestingHatPeriods: string;
+  chainId?: number;
 }
 
 export interface ISubmittedClaim {

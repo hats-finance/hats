@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { useEthers } from "@usedapp/core";
 import { RedeemNftSuccess, Modal } from "components";
 import useModal from "hooks/useModal";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { isAddress } from "ethers/lib/utils";

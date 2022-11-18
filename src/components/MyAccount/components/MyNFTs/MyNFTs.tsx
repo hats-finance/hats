@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { INFTTokenInfoRedeemed } from "types/types";

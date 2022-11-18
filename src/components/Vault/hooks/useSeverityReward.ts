@@ -1,4 +1,4 @@
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import { IVault } from "types/types";
 import { useVaultsTotalPrices } from "./useVaultsTotalPrices";
 import { formatUnits } from "ethers/lib/utils";

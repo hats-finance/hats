@@ -15,7 +15,7 @@ import {
   useWithdrawRequest,
 } from "hooks/contractHooksCalls";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
-import { useVaults } from "hooks/useVaults";
+import { useVaults } from "hooks/vaults/useVaults";
 import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import "./index.scss";
