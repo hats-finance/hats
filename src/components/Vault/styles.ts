@@ -38,10 +38,44 @@ export const StyledVault = styled.tr<StyledVaultProps>(
         margin-left: 30px;
       }
 
-      img {
-        width: 45px;
-        margin-right: 15px;
-        border-radius: 100px;
+      .vault-icon {
+        position: relative;
+
+        img.logo {
+          width: 45px;
+          margin-right: 15px;
+          border-radius: 100px;
+        }
+
+        .chain-logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          bottom: 0px;
+          right: 8px;
+          width: 26px;
+          height: 26px;
+          border-radius: 100px;
+          background-color: var(--strong-blue);
+
+          ${type === "gamification" &&
+          css`
+            background-color: var(--strong-purple);
+          `}
+
+          ${type === "grants" &&
+          css`
+            background-color: var(--turquoise-2);
+          `}
+
+          img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            border-radius: 100px;
+          }
+        }
       }
 
       .name-source-wrapper {

@@ -67,7 +67,14 @@ const VaultComponent = (
             </DepositsPausedOverlay>
           )}
           <div className="project-name-wrapper">
-            {vaultIcon && <img src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
+            <div className="vault-icon">
+              {vaultIcon && <img className="logo" src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
+              {vault.chainId && (
+                <div className="chain-logo">
+                  <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={`${vaultName} logo`} />
+                </div>
+              )}
+            </div>
             <div className="name-source-wrapper">
               <div className="project-name">
                 {vaultName}
