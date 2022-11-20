@@ -37,10 +37,14 @@ const VaultComponent = (
   const vaultName = description?.["project-metadata"].name ?? "";
 
   const vaultExpandAction = (
-    <StyledVaultExpandAction expanded={expanded} onClick={() => setExpanded && setExpanded(expanded ? null : vault)}>
+    <StyledVaultExpandAction expanded={expanded}>
       <ArrowIcon />
     </StyledVaultExpandAction>
   );
+
+  const expandVault = () => {
+    setExpanded && setExpanded(expanded ? null : vault);
+  };
 
   const vaultBalanceAndValue = (
     <div className="balance-information">
@@ -55,7 +59,7 @@ const VaultComponent = (
   return (
     <>
       <StyledVault type={vaultType} ref={ref}>
-        <td className="onlyDesktop">
+        <td className="onlyDesktop" onClick={expandVault}>
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
           {vaultExpandAction}
         </td>
@@ -95,7 +99,9 @@ const VaultComponent = (
           </td>
         </>
 
-        <td className="onlyMobile">{vaultExpandAction}</td>
+        <td className="onlyMobile" onClick={expandVault}>
+          {vaultExpandAction}
+        </td>
       </StyledVault>
       {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
     </>

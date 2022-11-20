@@ -53,6 +53,8 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return groups;
   }, [] as IVault[][])!;
 
+  console.log(vaultsByGroup);
+
   function capitalizeFirstLetter(val: string) {
     return val.charAt(0).toUpperCase() + val.slice(1);
   }
@@ -87,13 +89,13 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
               Object.entries(vaultsByGroup)
                 .sort()
                 .reverse()
-                .map(([type, vaults]) => (
+                .map(([type, groupVaults]) => (
                   <React.Fragment key={type}>
                     <tr className="transparent-row">
                       <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
                     </tr>
-                    {vaults &&
-                      vaults.map((vault) => (
+                    {groupVaults &&
+                      groupVaults.map((vault) => (
                         <Vault
                           ref={vault.id === vaultId ? scrollRef : null}
                           expanded={expanded === vault}

@@ -159,7 +159,6 @@ export function VaultsProvider({ children }) {
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
-  console.log(vaults);
   const context: IVaultsContext = {
     nftData,
     vaults,
