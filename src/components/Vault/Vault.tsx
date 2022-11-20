@@ -81,7 +81,7 @@ const VaultComponent = (
             </div>
             <div className="name-source-wrapper">
               <div className="project-name">
-                {vaultName}
+                <span>{vaultName}</span>
                 <VaultTokens vault={vault} />
               </div>
               <div className="onlyMobile">{vaultBalanceAndValue}</div>

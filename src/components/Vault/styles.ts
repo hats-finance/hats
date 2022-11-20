@@ -87,6 +87,12 @@ export const StyledVault = styled.tr<StyledVaultProps>(
           display: flex;
           align-items: center;
           font-weight: bold;
+
+          @media (max-width: ${breakpointsDefinition.smallMobile}) {
+            flex-direction: column;
+            align-items: start;
+            margin-bottom: 5px;
+          }
         }
       }
     }
