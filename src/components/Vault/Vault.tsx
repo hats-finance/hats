@@ -59,9 +59,9 @@ const VaultComponent = (
   return (
     <>
       <StyledVault type={vaultType} ref={ref}>
-        <td onClick={expandVault}>
+        <td className="onlyDesktop" onClick={expandVault}>
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
-          <span className="onlyDesktop">{vaultExpandAction}</span>
+          <span>{vaultExpandAction}</span>
         </td>
 
         <td>
@@ -101,6 +101,7 @@ const VaultComponent = (
 
         <td className="onlyMobile" onClick={expandVault}>
           {vaultExpandAction}
+          {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
         </td>
       </StyledVault>
       {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}

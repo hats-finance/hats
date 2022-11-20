@@ -34,9 +34,9 @@ export const StyledVault = styled.tr<StyledVaultProps>(
       display: flex;
       align-items: center;
 
-      /* @media (max-width: ${breakpointsDefinition.mobile}) {
+      @media (max-width: ${breakpointsDefinition.mobile}) {
         margin-left: 30px;
-      } */
+      }
 
       .vault-icon {
         position: relative;
