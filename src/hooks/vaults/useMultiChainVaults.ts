@@ -26,7 +26,7 @@ const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "
 };
 
 export const useMultiChainVaults = () => {
-  const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>();
+  const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
   const { chainId } = useEthers();
   const connectedChain = chainId ? CHAINS[chainId] : null;
 
@@ -35,6 +35,8 @@ export const useMultiChainVaults = () => {
 
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphQuery("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphQuery("OPTIMISM", networkEnv);
+  console.log("ethereumData?.vaults", ethereumData?.vaults);
+  console.log("optimismData?.vaults", optimismData?.vaults);
 
   useEffect(() => {
     const allVaults = [
@@ -47,8 +49,6 @@ export const useMultiChainVaults = () => {
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
-    console.log("ethereumData?.vaults", ethereumData?.vaults);
-    console.log("optimismData?.vaults", optimismData?.vaults);
     console.log("allVaults", allVaults);
 
     setVaults({ vaults: allVaults, masters: allMasters });
