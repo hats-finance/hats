@@ -37,6 +37,7 @@ export function VaultsProvider({ children }) {
   }
 
   const { data } = useMultiChainVaults();
+  console.log("Fetching vaults", data);
 
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
@@ -107,9 +108,9 @@ export function VaultsProvider({ children }) {
       return undefined;
     };
 
-    const getVaultsData = async (vaults: IVault[]): Promise<IVault[]> =>
+    const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> =>
       Promise.all(
-        vaults.map(async (vault) => {
+        vaultsToFetch.map(async (vault) => {
           const description = (await loadVaultDescription(vault)) as IVaultDescription;
 
           return {

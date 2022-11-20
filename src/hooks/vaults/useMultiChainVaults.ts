@@ -47,6 +47,10 @@ export const useMultiChainVaults = () => {
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
+    console.log("ethereumData?.vaults", ethereumData?.vaults);
+    console.log("optimismData?.vaults", optimismData?.vaults);
+    console.log("allVaults", allVaults);
+
     setVaults({ vaults: allVaults, masters: allMasters });
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
 
