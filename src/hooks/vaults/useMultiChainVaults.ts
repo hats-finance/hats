@@ -15,6 +15,8 @@ const supportedChains = {
 const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const chainId = supportedChains[chainName][networkEnv]?.chain.chainId;
 
+  console.log("We are using the subgraph for chainId", chainId);
+
   const res = useQuery<{ vaults: IVault[]; masters: IMaster[] }>(GET_VAULTS, {
     variables: { chainId },
     context: { chainId },

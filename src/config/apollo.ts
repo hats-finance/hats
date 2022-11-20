@@ -6,6 +6,8 @@ import { CHAINS, defaultChain } from "settings";
 const subgraphByChain = new ApolloLink((operation) => {
   const { chainId } = operation.getContext();
   const link = new HttpLink({ uri: CHAINS[chainId || defaultChain.chainId].subgraph });
+  console.log("CHAIN on apollo config ", chainId);
+  console.log("LINK on apollo config ", link.options.uri);
   return link.request(operation);
 });
 
