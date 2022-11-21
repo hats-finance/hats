@@ -30,8 +30,11 @@ const VaultComponent = (
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
   const valueOfAllVaults = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-  const vaultBalance = new Amount(BigNumber.from(honeyPotBalance), stakingTokenDecimals, stakingTokenSymbol)
-    .formattedWithoutSymbol;
+  const vaultBalance = new Amount(
+    BigNumber.from(honeyPotBalance),
+    stakingTokenDecimals,
+    stakingTokenSymbol
+  ).formattedWithoutSymbol(3);
   const vaultType = description?.["project-metadata"]?.type?.toLowerCase();
   const vaultIcon = description?.["project-metadata"]?.icon ?? "";
   const vaultName = description?.["project-metadata"].name ?? "";
