@@ -25,11 +25,14 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
   const args = vault.version === "v1" ? [vault.pid, account] : [vault.id, account];
 
   const { value, error } =
-    useCall({
-      contract: new Contract(contractAddress, vaultAbi),
-      method: method,
-      args,
-    }) ?? {};
+    useCall(
+      {
+        contract: new Contract(contractAddress, vaultAbi),
+        method: method,
+        args,
+      },
+      { chainId: vault.chainId }
+    ) ?? {};
 
   return !error ? value?.[0] : undefined;
 }
@@ -50,11 +53,14 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
   const args = vault.version === "v1" ? [vault.pid] : [];
 
   const { value, error } =
-    useCall({
-      contract: new Contract(contractAddress, vaultAbi),
-      method: method,
-      args,
-    }) ?? {};
+    useCall(
+      {
+        contract: new Contract(contractAddress, vaultAbi),
+        method: method,
+        args,
+      },
+      { chainId: vault.chainId }
+    ) ?? {};
 
   let totalSharesAmount: BigNumber = BigNumber.from(0);
 
@@ -86,11 +92,14 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
   const { value, error } =
-    useCall({
-      contract: new Contract(contractAddress, vaultAbi),
-      method: method,
-      args,
-    }) ?? {};
+    useCall(
+      {
+        contract: new Contract(contractAddress, vaultAbi),
+        method: method,
+        args,
+      },
+      { chainId: vault.chainId }
+    ) ?? {};
 
   return !error && value ? value?.[0] : BigNumber.from(0);
 }
@@ -116,11 +125,14 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
   const args = vault.version === "v1" ? [vault.pid] : [userSharesAvailable];
 
   const { value, error } =
-    useCall({
-      contract: new Contract(contractAddress, vaultAbi),
-      method: method,
-      args,
-    }) ?? {};
+    useCall(
+      {
+        contract: new Contract(contractAddress, vaultAbi),
+        method: method,
+        args,
+      },
+      { chainId: vault.chainId }
+    ) ?? {};
 
   let userBalanceAvailable: BigNumber | undefined = undefined;
 
@@ -159,11 +171,14 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
   const { value, error } =
-    useCall({
-      contract: new Contract(contractAddress, vaultAbi),
-      method: method,
-      args,
-    }) ?? {};
+    useCall(
+      {
+        contract: new Contract(contractAddress, vaultAbi),
+        method: method,
+        args,
+      },
+      { chainId: vault.chainId }
+    ) ?? {};
 
   if (error) return undefined;
 
@@ -184,6 +199,7 @@ export function useTokenApproveAllowance(vault: IVault) {
 
   const approveAllowance = useContractFunction(new Contract(vault.stakingToken, erc20Abi), "approve", {
     transactionName: Transactions.Approve,
+    chainId: vault.chainId,
   });
 
   return {
@@ -209,6 +225,7 @@ export function useDeposit(vault: IVault) {
 
   const deposit = useContractFunction(new Contract(contractAddress, vaultAbi), "deposit", {
     transactionName: Transactions.Deposit,
+    chainId: vault.chainId,
   });
 
   const { account } = useEthers();
@@ -248,6 +265,7 @@ export function useWithdrawAndClaim(vault: IVault) {
 
   const withdrawAndClaim = useContractFunction(new Contract(contractAddress, vaultAbi), contractFunctionName, {
     transactionName: Transactions.WithdrawAndClaim,
+    chainId: vault.chainId,
   });
 
   const { value, error } =
@@ -301,6 +319,7 @@ export function useWithdrawRequest(vault: IVault) {
 
   const withdrawRequest = useContractFunction(new Contract(contractAddress, vaultAbi), "withdrawRequest", {
     transactionName: Transactions.WithdrawRequest,
+    chainId: vault.chainId,
   });
 
   return {
@@ -332,6 +351,7 @@ export function useClaimReward(vault: IVault) {
 
   const claimReward = useContractFunction(new Contract(contractAddress, abi), "claimReward", {
     transactionName: Transactions.ClaimReward,
+    chainId: vault.chainId,
   });
 
   return {
@@ -362,6 +382,7 @@ export function useCommitteeCheckIn(vault: IVault) {
 
   const committeeCheckIn = useContractFunction(new Contract(contractAddress, vaultAbi), "committeeCheckIn", {
     transactionName: Transactions.CheckIn,
+    chainId: vault.chainId,
   });
 
   return {
@@ -394,5 +415,6 @@ export function useClaim(vault?: IVault) {
 
   return useContractFunction(vault ? new Contract(contractAddress, vaultAbi) : null, method, {
     transactionName: "Claim",
+    chainId: vault?.chainId,
   });
 }
