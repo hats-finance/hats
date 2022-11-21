@@ -1,5 +1,5 @@
 import { CountdownTimer } from "components";
-import { useVaultDepositWithdrawInfo } from "../hooks";
+import { useVaultWithdrawTime } from "../hooks";
 import { IVault } from "types/types";
 
 interface IProps {
@@ -10,8 +10,7 @@ interface IProps {
 }
 
 export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawState = true }: IProps) {
-  const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
-    useVaultDepositWithdrawInfo(vault);
+  const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } = useVaultWithdrawTime(vault);
 
   const countdownValue = isUserInQueueToWithdraw ? withdrawStartTime : withdrawEndTime;
 
