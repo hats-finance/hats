@@ -17,7 +17,7 @@ export const Chains: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
     chain: Mainnet,
     endpoint: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hatsmainnetv6",
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
   },
   [ChainId.Goerli]: {
     vaultsNFTContract: "0x4bdDe617aB54C6E45b4Bf08963F008dFC5da92aD",
