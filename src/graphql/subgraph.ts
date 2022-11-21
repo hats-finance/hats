@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const GET_VAULTS = gql`
+export const GET_VAULTS = `
   query getVaults {
     masters {
       address
