@@ -19,23 +19,17 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : selectedVault.rewardController.rewardTokenSymbol;
   // If v1 -> master address, if v2 -> vault id (contract address)
   const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
-  // Amount of time the user has to withdraw the funds
-  const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
 
-  const tokenAllowanceAmount = useTokenAllowance(vaultToken, account, contractAddress);
-  const tokenBalance = useTokenBalance(vaultToken, account);
+  const tokenAllowanceAmount = useTokenAllowance(vaultToken, account, contractAddress, { chainId: selectedVault.chainId });
+  const tokenBalance = useTokenBalance(vaultToken, account, { chainId: selectedVault.chainId });
   const { userSharesAvailable, userBalanceAvailable } = useUserSharesAndBalancePerVault(selectedVault);
   const pendingReward = usePendingReward(selectedVault);
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
 
-  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault)?.toNumber();
-  const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
-  const nowInSeconds = Date.now() / 1000;
-  const isUserInQueueToWithdraw = nowInSeconds < (withdrawStartTime ?? 0);
-  const isUserInTimeToWithdraw =
-    withdrawStartTime && withdrawEndTime ? nowInSeconds > withdrawStartTime && nowInSeconds < withdrawEndTime : false;
+  const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
+    useVaultWithdrawTime(selectedVault);
 
   return {
     tokenAllowanceAmount,
@@ -50,5 +44,24 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     withdrawEndTime,
     userIsCommitteeAndCanCheckIn: isUserCommittee && !committeeCheckedIn,
     committeeCheckedIn,
+  };
+};
+
+export const useVaultWithdrawTime = (selectedVault: IVault) => {
+  // Amount of time the user has to withdraw the funds
+  const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
+
+  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault)?.toNumber();
+  const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
+  const nowInSeconds = Date.now() / 1000;
+  const isUserInQueueToWithdraw = nowInSeconds < (withdrawStartTime ?? 0);
+  const isUserInTimeToWithdraw =
+    withdrawStartTime && withdrawEndTime ? nowInSeconds > withdrawStartTime && nowInSeconds < withdrawEndTime : false;
+
+  return {
+    isUserInQueueToWithdraw,
+    isUserInTimeToWithdraw,
+    withdrawStartTime,
+    withdrawEndTime,
   };
 };
