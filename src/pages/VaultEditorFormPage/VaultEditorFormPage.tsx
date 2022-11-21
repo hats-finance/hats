@@ -33,7 +33,7 @@ const VaultEditorFormPage = () => {
   const { ipfsHash } = useParams();
   const { pathname } = useLocation();
 
-  const isAdvancedMode = pathname.split("/")[2] === "advanced";
+  const isAdvancedMode = true;
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),

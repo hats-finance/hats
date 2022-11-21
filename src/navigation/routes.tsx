@@ -70,30 +70,12 @@ const routes: RouteObject[] = [
         path: `${RoutePaths.vault_editor}`,
         children: [
           {
-            path: "basic",
-            children: [
-              {
-                path: "",
-                element: <VaultEditorFormPage />,
-              },
-              {
-                path: ":ipfsHash",
-                element: <VaultEditorFormPage />,
-              },
-            ],
+            path: "",
+            element: <VaultEditorFormPage />,
           },
           {
-            path: "advanced",
-            children: [
-              {
-                path: "",
-                element: <VaultEditorFormPage />,
-              },
-              {
-                path: ":ipfsHash",
-                element: <VaultEditorFormPage />,
-              },
-            ],
+            path: ":ipfsHash",
+            element: <VaultEditorFormPage />,
           },
         ],
       },
