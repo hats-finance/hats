@@ -181,8 +181,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         )}
 
         <div className="balance-wrapper">
-          {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted}`}
-          {tab === Tab.Withdraw && `Balance to withdraw: ${availableBalanceToWithdraw.formatted}`}
+          {tab === Tab.Deposit && `Balance: ${tokenBalance.formatted()}`}
+          {tab === Tab.Withdraw && `Balance to withdraw: ${availableBalanceToWithdraw.formatted()}`}
           <button className="max-button" disabled={!committeeCheckedIn} onClick={handleMaxAmountButton}>
             (Max)
           </button>
@@ -210,7 +210,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               />
             </div>
             {tab === Tab.Deposit && !isAboveMinimumDeposit && userInput && (
-              <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted}`}</span>
+              <span className="input-error">{`Minimum deposit is ${minimumDeposit.formatted()}`}</span>
             )}
             {tab === Tab.Deposit && !userHasBalanceToDeposit && <span className="input-error">Insufficient funds</span>}
             {tab === Tab.Withdraw && !userHasBalanceToWithdraw && (
@@ -277,7 +277,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               }
               className="action-btn"
               onClick={async () => await handleWithdrawAndClaim()}>
-              {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
+              {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted()}`}`}
             </button>
           )}
           {tab === Tab.Withdraw && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
@@ -297,7 +297,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
             onClick={async () => await handleClaimReward()}
             disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
             className="action-btn claim-btn fill">
-            {`CLAIM ${pendingReward?.formatted}`}
+            {`CLAIM ${pendingReward?.formatted()}`}
           </button>
         </div>
 

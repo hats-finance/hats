@@ -20,13 +20,13 @@ export class Amount {
     return this.amount ? Number(formatUnits(this.amount, this.decimals)) : 0;
   }
 
-  get formattedWithoutSymbol() {
-    return `${this.amount ? this.truncateNDecimals(5) : "-"}`;
+  formattedWithoutSymbol(decimals = 5) {
+    return `${this.amount ? this.truncateNDecimals(decimals) : "-"}`;
   }
 
-  get formatted() {
+  formatted(decimals = 5) {
     const symbol = this.symbol ? ` ${this.symbol}` : "";
-    return `${this.formattedWithoutSymbol}${symbol}`;
+    return `${this.formattedWithoutSymbol(decimals)}${symbol}`;
   }
 
   get string() {
