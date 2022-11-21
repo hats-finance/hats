@@ -37,7 +37,6 @@ export function VaultsProvider({ children }) {
   }
 
   const { data } = useMultiChainVaults();
-  console.log("Fetching vaults", data);
 
   const getPrices = useCallback(
     async (vaults: IVault[]) => {

@@ -11,21 +11,6 @@ const supportedChains = {
   OPTIMISM: { prod: CHAINS[ChainId.Optimism], test: CHAINS[ChainId.OptimismGoerli] },
 };
 
-// const useSubgraphQuery = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
-//   const chainId = supportedChains[chainName][networkEnv]?.chain.chainId;
-
-//   console.log("We are using the subgraph for chainId", chainId);
-
-//   const res = useQuery<{ vaults: IVault[]; masters: IMaster[] }>(GET_VAULTS, {
-//     variables: { chainId },
-//     context: { chainId },
-//     fetchPolicy: "no-cache",
-//     pollInterval: DATA_REFRESH_TIME,
-//   });
-
-//   return { ...res, chainId };
-// };
-
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const [data, setData] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
   const chainId = supportedChains[chainName][networkEnv]?.chain.chainId;
@@ -62,8 +47,6 @@ export const useMultiChainVaults = () => {
 
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
-  console.log("ethereumData?.vaults", ethereumData?.vaults);
-  console.log("optimismData?.vaults", optimismData?.vaults);
 
   useEffect(() => {
     const allVaults = [
@@ -75,8 +58,6 @@ export const useMultiChainVaults = () => {
       ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
-
-    console.log("allVaults", allVaults);
 
     setVaults({ vaults: allVaults, masters: allMasters });
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
