@@ -195,6 +195,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
  * @param vault - The selected vault to give approval to spend the user's staking token
  */
 export function useTokenApproveAllowance(vault: IVault) {
+  const { chainId, switchNetwork } = useEthers();
   const allowedContractAddress = vault.version === "v1" ? vault.master.address : vault.id;
 
   const approveAllowance = useContractFunction(new Contract(vault.stakingToken, erc20Abi), "approve", {
@@ -204,7 +205,9 @@ export function useTokenApproveAllowance(vault: IVault) {
 
   return {
     ...approveAllowance,
-    send: (allowedAmount: BigNumber) => {
+    send: async (allowedAmount: BigNumber) => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       // [params]: allowedContract, allowedAmount
       return approveAllowance.send(allowedContractAddress, allowedAmount);
     },
@@ -220,6 +223,8 @@ export function useTokenApproveAllowance(vault: IVault) {
  * @param vault - The selected vault to deposit staking token
  */
 export function useDeposit(vault: IVault) {
+  const { account, chainId, switchNetwork } = useEthers();
+
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
@@ -228,15 +233,15 @@ export function useDeposit(vault: IVault) {
     chainId: vault.chainId,
   });
 
-  const { account } = useEthers();
-
   return {
     ...deposit,
     /**
      * Call the deposit function.
      * @param amountInTokens - The amount in TOKENS (not shares) to deposit
      */
-    send: (amountInTokens: BigNumber) => {
+    send: async (amountInTokens: BigNumber) => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       if (vault?.version === "v2") {
         // [params]: asset, receiver
         return deposit.send(amountInTokens, account);
@@ -258,7 +263,8 @@ export function useDeposit(vault: IVault) {
  * @param vault - The selected vault to withdraw and claim the tokens from
  */
 export function useWithdrawAndClaim(vault: IVault) {
-  const { account } = useEthers();
+  const { account, chainId, switchNetwork } = useEthers();
+
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const contractFunctionName = vault.version === "v1" ? "withdraw" : "withdrawAndClaim";
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -274,7 +280,8 @@ export function useWithdrawAndClaim(vault: IVault) {
         contract: new Contract(vault.master.address, vaultAbiV1),
         method: "poolInfo",
         args: [vault.pid],
-      }
+      },
+      { chainId: vault.chainId }
     ) ?? {};
 
   return {
@@ -283,7 +290,9 @@ export function useWithdrawAndClaim(vault: IVault) {
      * Call the withdrawAndClaim function.
      * @param amountInTokens - The amount in TOKENS (not shares) to withdraw
      */
-    send: (amountInTokens: BigNumber) => {
+    send: async (amountInTokens: BigNumber) => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       if (vault?.version === "v2") {
         // [params]: assets (amount in tokens), receiver, owner
         return withdrawAndClaim.send(amountInTokens, account, account);
@@ -314,6 +323,8 @@ export function useWithdrawAndClaim(vault: IVault) {
  * @param vault - The selected vault to request a withdraw from
  */
 export function useWithdrawRequest(vault: IVault) {
+  const { chainId, switchNetwork } = useEthers();
+
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
@@ -324,7 +335,9 @@ export function useWithdrawRequest(vault: IVault) {
 
   return {
     ...withdrawRequest,
-    send: () => {
+    send: async () => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       if (vault?.version === "v2") {
         // [params]: none
         return withdrawRequest.send();
@@ -345,7 +358,7 @@ export function useWithdrawRequest(vault: IVault) {
  * @param vault - The selected vault to claim the user's rewards from
  */
 export function useClaimReward(vault: IVault) {
-  const { account } = useEthers();
+  const { account, chainId, switchNetwork } = useEthers();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
   const abi = vault.version === "v1" ? vaultAbiV1 : rewardControllerAbi;
 
@@ -356,7 +369,9 @@ export function useClaimReward(vault: IVault) {
 
   return {
     ...claimReward,
-    send: () => {
+    send: async () => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       if (vault?.version === "v2") {
         // [params]: vault, user
         return claimReward.send(vault.id, account);
@@ -377,6 +392,8 @@ export function useClaimReward(vault: IVault) {
  * @param vault - The selected vault to checkin the committee to
  */
 export function useCommitteeCheckIn(vault: IVault) {
+  const { chainId, switchNetwork } = useEthers();
+
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
 
@@ -387,7 +404,9 @@ export function useCommitteeCheckIn(vault: IVault) {
 
   return {
     ...committeeCheckIn,
-    send: () => {
+    send: async () => {
+      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
       if (vault?.version === "v2") {
         // [params]: none
         return committeeCheckIn.send();
@@ -409,12 +428,23 @@ export function useCommitteeCheckIn(vault: IVault) {
  * @param vault - The selected vault to send the claim
  */
 export function useClaim(vault?: IVault) {
+  const { chainId, switchNetwork } = useEthers();
+
   const contractAddress = vault?.master.address ?? "";
   const vaultAbi = vault?.version === "v1" ? vaultAbiV1 : vaultRegistryAbiV2;
   const method = vault?.version === "v1" ? "claim" : "logClaim";
 
-  return useContractFunction(vault ? new Contract(contractAddress, vaultAbi) : null, method, {
+  const claim = useContractFunction(vault ? new Contract(contractAddress, vaultAbi) : null, method, {
     transactionName: "Claim",
     chainId: vault?.chainId,
   });
+
+  return {
+    ...claim,
+    send: async (data: string) => {
+      if (vault && chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+
+      return claim.send(data);
+    },
+  };
 }
