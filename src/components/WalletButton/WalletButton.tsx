@@ -1,5 +1,4 @@
 import { shortenIfAddress, useEthers, useTransactions } from "@usedapp/core";
-// import { useWeb3Modal } from "hooks/useWeb3Modal";
 import { Colors } from "../../constants/constants";
 import { Dot } from "components";
 import { StyledWalletButton } from "./styles";
@@ -8,9 +7,12 @@ import { useEffect, useState } from "react";
 const WalletButton = () => {
   const [canReconnect, setCanReconnect] = useState(true);
   const { account, activateBrowserWallet, deactivate } = useEthers();
-  // const { activateProvider, deactivateProvider } = useWeb3Modal();
   const currentTransaction = useTransactions().transactions.find((tx) => !tx.receipt);
 
+  /**
+   * Sometimes when changing the network, the provider is deactivated. This is a workaround to
+   * reconnect the provider.
+   */
   useEffect(() => {
     if (!account && canReconnect) activateBrowserWallet();
   }, [account, canReconnect, activateBrowserWallet]);
