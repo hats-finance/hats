@@ -20,16 +20,16 @@ export const useWeb3Modal = () => {
             options: {
               chainId: chainId,
               rpc: Object.fromEntries(Object.entries(CHAINS).map(([chainId, config]) => [chainId, config.endpoint])),
-            }
-          }
+            },
+          },
         },
         theme: {
           background: "rgb(39, 49, 56)",
           main: "rgb(199, 199, 199)",
           secondary: "rgb(136, 136, 136)",
           border: "rgba(195, 195, 195, 0.14)",
-          hover: "rgb(16, 26, 32)"
-        }
+          hover: "rgb(16, 26, 32)",
+        },
       }),
     [chainId]
   );
@@ -53,13 +53,7 @@ export const useWeb3Modal = () => {
       activateProvider();
       setAutoLoaded(true);
     }
-  }, [
-    autoLoad,
-    autoLoaded,
-    activateProvider,
-    setAutoLoaded,
-    web3Modal.cachedProvider
-  ]);
+  }, [autoLoad, autoLoaded, activateProvider, setAutoLoaded, web3Modal.cachedProvider]);
 
   return { activateProvider, deactivateProvider };
 };

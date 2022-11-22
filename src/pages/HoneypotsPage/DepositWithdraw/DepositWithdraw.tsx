@@ -3,7 +3,6 @@ import millify from "millify";
 import classNames from "classnames";
 import { parseUnits } from "@ethersproject/units";
 import { Loading, Modal } from "components";
-import PauseIcon from "assets/icons/pause-circle.svg";
 import { IVault } from "types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import {
