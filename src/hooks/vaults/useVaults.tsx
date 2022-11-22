@@ -135,7 +135,7 @@ export function VaultsProvider({ children }) {
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    setVaults(vaultsWithDescription);
+    setVaults(vaultsWithDescription.map((v) => ({ ...v, depositPause: true })));
   };
 
   useEffect(() => {

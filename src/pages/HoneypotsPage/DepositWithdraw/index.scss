@@ -52,23 +52,18 @@
 
   .content {
     position: relative;
+  }
 
-    .paused-overlay {
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(13, 13, 13, 0.3);
-      backdrop-filter: blur(1.2px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
+  .info-banner {
+    padding: 0;
 
-      img {
-        width: 60px;
-      }
+    .extra-info-wrapper {
+      color: $dark-blue;
+      margin-top: 20px;
+      background-color: $yellow;
+      text-align: center;
+      line-height: 32px;
+      font-size: $xxsmall;
     }
   }
 
@@ -80,6 +75,11 @@
     color: $white;
     display: flex;
     align-items: center;
+
+    &.disabled {
+      opacity: 0.3;
+    }
+
     .max-button {
       color: $turquoise;
       background: none;
@@ -88,31 +88,42 @@
       border: none;
     }
   }
+
   .amount-wrapper {
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    background-color: $black;
+    padding: 25px 30px;
+    background-color: $dark-blue;
     border: 1px solid $field-blue;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .top {
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
     }
+
     .input-wrapper {
       display: flex;
       justify-content: space-between;
       font-size: $moderate;
       color: $white;
+
       .pool-token {
         display: flex;
         align-items: center;
         width: 100%;
       }
+
       span {
         margin-left: 10px;
         white-space: nowrap;
       }
+
       input {
         background-color: transparent;
         border: none;
@@ -123,6 +134,7 @@
         width: 100%;
       }
     }
+
     .input-error {
       align-self: flex-end;
       color: $red;
@@ -190,16 +202,6 @@
     &.disabled {
       opacity: 0.4;
     }
-  }
-  .extra-info-wrapper {
-    color: $dark-blue;
-    margin: 20px 0;
-    background-color: $yellow;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    font-size: $xxsmall;
-    display: block;
   }
   .action-btn-wrapper {
     display: flex;

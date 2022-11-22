@@ -32,6 +32,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     useVaultWithdrawTime(selectedVault);
 
   return {
+    depositPaused: selectedVault.depositPause,
     tokenAllowanceAmount,
     tokenBalance: new Amount(tokenBalance, vaultTokenDecimals, vaultTokenSymbol),
     pendingReward: new Amount(pendingReward, rewardTokenDecimals, rewardTokenSymbol),
