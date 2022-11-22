@@ -104,6 +104,7 @@ export function useNFTTokenData(address?: string): INFTTokenData {
     variables: { address },
     context: { chainId },
     pollInterval: DATA_REFRESH_TIME,
+    fetchPolicy: "no-cache"
   })
 
   const getPidsWithAddressees = (nfts: INFTTokenInfo[]) =>
