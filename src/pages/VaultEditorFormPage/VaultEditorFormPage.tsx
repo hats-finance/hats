@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useLocation, useSearchParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
@@ -31,9 +31,9 @@ const VaultEditorFormPage = () => {
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const { ipfsHash } = useParams();
-  const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
 
-  const isAdvancedMode = true;
+  const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
