@@ -3164,14 +3164,14 @@
     lodash.pickby "^4.6.0"
     nanoid "3.3.4"
 
-"@wagmi/core@^0.6.12":
-  version "0.6.12"
-  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.6.12.tgz#19d35424840a8c9f5396869e24464e2137ea8fc2"
-  integrity sha512-RYwjfzFlZ8cljrlZ6+monaWKmtVQYALutlrESP/CYklGg+3DAjwv7n95EU5gS7Y9mvZbiLKZxg4XjFB3mVohfA==
+"@wagmi/core@0.7.5":
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/@wagmi/core/-/core-0.7.5.tgz#ee80af944b503bcbfa2bf21ec99801f4150cdf17"
+  integrity sha512-4pODpOzfZ2Hg4/N8CdIgFvRA4bKTQegGwt+m6xz0EeV0LOXPU9tGiXim9mJ2NUm1bDt6tFxE437NgqPiqQ1xUg==
   dependencies:
-    abitype "^0.1.7"
+    abitype "^0.1.8"
     eventemitter3 "^4.0.7"
-    zustand "^4.1.1"
+    zustand "^4.1.4"
 
 "@walletconnect/browser-utils@^1.7.8":
   version "1.7.8"
@@ -3585,10 +3585,10 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@wherever/react-notification-feed@^0.0.13":
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.13.tgz#635f8bd4bad3f0bfdf80d093380d85a3919918ca"
-  integrity sha512-7J7es0TaeFuF6x4E/SLgEB5yqzH6jOiZRwdbIDNTVb5Z4KeZ75zw5lqIj2H/qkQf5uePEtkLfV+KgNJsYdSrSw==
+"@wherever/react-notification-feed@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.0.17.tgz#a94192b1a9992599d195a5d3c4e76f56dd4e2595"
+  integrity sha512-6olhM+mFniGxwev5XI8CnXiKC5ZYX81HlL1sQl1g8JyD5+MPiN2V0PKzmZEjtj4eTeQXrptk1sY6SWnmOSMf+Q==
   dependencies:
     "@apollo/client" "^3.6.9"
     "@emotion-icons/octicons" "^3.27.0"
@@ -3599,11 +3599,10 @@
     graphql "^16.6.0"
     react-click-away-listener "^2.2.2"
     react-popper "^2.3.0"
-    react-verification-input "^3.1.1"
     rudder-sdk-js "^2.18.1"
     siwe "^1.1.6"
     styled-components "^5.3.5"
-    wagmi "^0.7.7"
+    wagmi "^0.8.6"
 
 "@wry/context@^0.6.0":
   version "0.6.1"
@@ -3656,7 +3655,7 @@ abab@^2.0.3, abab@^2.0.5:
   resolved "https://registry.npmjs.org/abab/-/abab-2.0.6.tgz"
   integrity sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==
 
-abitype@^0.1.7:
+abitype@^0.1.7, abitype@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.1.8.tgz#f47d397b95d81a445a0d0ef2fdd7827131b3fd74"
   integrity sha512-2pde0KepTzdfu19ZrzYTYVIWo69+6UbBCY4B1RDiwWgo2XZtFSJhF6C+XThuRXbbZ823J0Rw1Y5cP0NXYVcCdQ==
@@ -11603,11 +11602,6 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-verification-input@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/react-verification-input/-/react-verification-input-3.1.1.tgz#018b58423b68e3ec7ef9a3c0589027b93c540163"
-  integrity sha512-uFCstwy6fM4VyWjIQjE70JzS4eg1rgogAbH6h8ujuJNB807VGDp7ycajjY8/ZatzOu7iwoZ27JVuLLAP7U8UOQ==
-
 react@^16.8.6:
   version "16.14.0"
   resolved "https://registry.npmjs.org/react/-/react-16.14.0.tgz"
@@ -13688,16 +13682,16 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wagmi@^0.7.7:
-  version "0.7.15"
-  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.7.15.tgz#da83c1e22641efb33899e203715f1ae4eb28f9b1"
-  integrity sha512-UGkcgL/bBg880uGEOTmKuWSxe+OtbPv0x1zKrDWi0McwB6o7W1trVVdZ1hCkHemB9HA2BN+svv3ALo9ZG4Xt8Q==
+wagmi@^0.8.6:
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.8.6.tgz#6d88cbee81dd690d9ccb93a7fa3696686f0ea7aa"
+  integrity sha512-60pQtwrT7qrXRr68rAJLdPlk9PhDuHvaT1A8cUdEU6bkUamk9F8DHeGQ52NJkBubLLaaUXmPMZw8vWoVheGxWA==
   dependencies:
     "@coinbase/wallet-sdk" "^3.5.3"
     "@tanstack/query-sync-storage-persister" "^4.14.5"
     "@tanstack/react-query" "^4.14.5"
     "@tanstack/react-query-persist-client" "^4.14.5"
-    "@wagmi/core" "^0.6.12"
+    "@wagmi/core" "0.7.5"
     "@walletconnect/ethereum-provider" "^1.8.0"
     abitype "^0.1.7"
     use-sync-external-store "^1.2.0"
@@ -14446,7 +14440,7 @@ zen-observable@0.8.15:
   resolved "https://registry.npmjs.org/zen-observable/-/zen-observable-0.8.15.tgz"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zustand@^4.1.1:
+zustand@^4.1.4:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-4.1.4.tgz#b0286da4cc9edd35e91c96414fa54bfa4652a54d"
   integrity sha512-k2jVOlWo8p4R83mQ+/uyB8ILPO2PCJOf+QVjcL+1PbMCk1w5OoPYpAIxy9zd93FSfmJqoH6lGdwzzjwqJIRU5A==
