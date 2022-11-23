@@ -48,8 +48,8 @@ export const useMultiChainVaults = () => {
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
 
-  console.log("ethereumData", ethereumData.vaults);
-  console.log("optimismData", optimismData.vaults);
+  // console.log("ethereumData", ethereumData.vaults);
+  // console.log("optimismData", optimismData.vaults);
 
   useEffect(() => {
     const allVaults = [
