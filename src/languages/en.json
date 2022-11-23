@@ -3,6 +3,7 @@
     "version": "Version",
     "required": "Required",
     "invalid-address": "Invalid address",
+    "invalid-address-or-url": "Invalid address or URL",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
     "min0": "Min 0",
     "max100": "Max 100",
