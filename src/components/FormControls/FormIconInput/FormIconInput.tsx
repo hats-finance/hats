@@ -22,6 +22,7 @@ function FormIconInputComponent(
   ref
 ) {
   const { t } = useTranslation();
+  const [isSVG, setIsSVG] = useState(false);
   const [, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
 
@@ -33,15 +34,32 @@ function FormIconInputComponent(
     const fr = new FileReader();
 
     fr.readAsArrayBuffer(e.target.files![0]);
-    fr.onload = function () {
+    fr.onload = async function () {
+      const fileTypes = ["jpg", "jpeg", "png", "gif", "svg"];
+
       if (fr.result && localRef.current) {
+        const extension = e.target.files![0].name.split(".").pop()?.toLowerCase();
+        const isSuccess = extension && fileTypes.indexOf(extension) > -1;
+
+        if (!isSuccess) {
+          alert(t("invalid-image-type"));
+          return;
+        }
+
         const blob = new Blob([fr.result]);
         const url = URL.createObjectURL(blob);
 
         const validSize = verifyBlobSize(blob.size);
         if (!validSize) return;
 
-        localRef.current.value = url;
+        if (extension === "svg") {
+          const svg = await e.target.files![0].text();
+          localRef.current.value = svg;
+          setIsSVG(true);
+        } else {
+          localRef.current.value = url;
+          setIsSVG(false);
+        }
 
         setChanged((prev) => !prev);
         onChange({
@@ -90,7 +108,7 @@ function FormIconInputComponent(
 
       {value ? (
         <label htmlFor={id} className="icon-preview">
-          <img src={ipfsTransformUri(value)} alt="thumbnail" />
+          {isSVG ? <div dangerouslySetInnerHTML={{ __html: value }} /> : <img src={ipfsTransformUri(value)} alt="thumbnail" />}
         </label>
       ) : (
         <label htmlFor={id} className="icon-add">
