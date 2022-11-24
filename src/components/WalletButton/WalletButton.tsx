@@ -24,14 +24,15 @@ const WalletButton = () => {
   const optionsRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(optionsRef, () => setShowOptions(false));
 
-  console.log(chain, chains);
-  console.log(connectors);
   /**
    * Sometimes when changing the network, the provider is deactivated. This is a workaround to
    * reconnect the provider.
    */
   useEffect(() => {
-    if (!account && canReconnect) connect({ connector: connectors[0] });
+    if (!account && canReconnect) {
+      const connectedConnectorId = localStorage.getItem("wagmi.wallet")?.replaceAll('"', "");
+      connect({ connector: connectors.find((c) => c.id === connectedConnectorId) });
+    }
   }, [account, canReconnect, connect, connectors]);
 
   const deactivateAccount = () => {
