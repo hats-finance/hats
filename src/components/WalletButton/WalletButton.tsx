@@ -1,29 +1,35 @@
-import { shortenIfAddress, useEthers, useTransactions } from "@usedapp/core";
-import { Colors } from "../../constants/constants";
-import { Dot } from "components";
-import { StyledWalletButton } from "./styles";
 import { useEffect, useState } from "react";
+import { useAccount, useConnect, useDisconnect, useTransaction } from "wagmi";
+import { shortenIfAddress } from "utils/addresses.utils";
+import { Dot } from "components";
+import { Colors } from "../../constants/constants";
+import { StyledWalletButton } from "./styles";
 
 const WalletButton = () => {
-  const [canReconnect, setCanReconnect] = useState(true);
-  const { account, activateBrowserWallet, deactivate } = useEthers();
-  const currentTransaction = useTransactions().transactions.find((tx) => !tx.receipt);
+  const [canReconnect, setCanReconnect] = useState(false);
+  const { address: account } = useAccount();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+  // TODO: [v2] verify if this works well
+  const { data: transaction } = useTransaction({ scopeKey: "hats" });
 
   /**
    * Sometimes when changing the network, the provider is deactivated. This is a workaround to
    * reconnect the provider.
    */
   useEffect(() => {
-    if (!account && canReconnect) activateBrowserWallet();
-  }, [account, canReconnect, activateBrowserWallet]);
+    if (!account && canReconnect) connect({ connector: connectors[0] });
+  }, [account, canReconnect, connect, connectors]);
+
+  console.log(account);
 
   const activateAccount = () => {
-    activateBrowserWallet();
+    connect({ connector: connectors[0] });
     setCanReconnect(true);
   };
 
   const deactivateAccount = () => {
-    deactivate();
+    disconnect();
     setCanReconnect(false);
   };
 
@@ -41,7 +47,7 @@ const WalletButton = () => {
   };
 
   return (
-    <StyledWalletButton onClick={account ? deactivateAccount : activateAccount} existsPendingTransaction={!!currentTransaction}>
+    <StyledWalletButton onClick={account ? deactivateAccount : activateAccount} existsPendingTransaction={!!transaction}>
       <Dot color={account ? Colors.turquoise : Colors.red} />
       {getButtonTitle()}
     </StyledWalletButton>
