@@ -1,10 +1,10 @@
-import { configureChains, createClient, chain } from "wagmi";
+import { configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { INFURA_API_KEY } from "settings";
+import { defaultChain, INFURA_API_KEY } from "settings";
 import { ChainsConfig } from "./chains";
 
 const { chains, provider } = configureChains(
@@ -17,7 +17,7 @@ const { chains, provider } = configureChains(
         const isSupportedChain = supportedChains.includes(`${selectedChain.id}`);
 
         if (isSupportedChain) return { http: ChainsConfig[selectedChain.id].endpoint };
-        return { http: ChainsConfig[chain.mainnet.id].endpoint };
+        return { http: defaultChain.endpoint };
       },
     }),
   ]

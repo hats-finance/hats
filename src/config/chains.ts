@@ -1,6 +1,6 @@
 import { Chain, chain } from "@wagmi/core";
 
-interface IChainConfiguration {
+export interface IChainConfiguration {
   vaultsNFTContract: string;
   chain: Chain;
   endpoint: string;

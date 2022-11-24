@@ -11,9 +11,8 @@ import { GET_STAKER } from "graphql/subgraph";
 import { usePrevious } from "./usePrevious";
 import { useSupportedNetwork } from "./useSupportedNetwork";
 import { TransactionReceipt } from "@ethersproject/providers";
-
 import { MerkleTree } from "merkletreejs";
-import { CHAINS } from "settings";
+import { ChainsConfig } from "config/chains";
 const keccak256 = require("keccak256");
 
 interface MerkleTreeChanged {
@@ -97,8 +96,8 @@ export function useNFTTokenData(address?: string): INFTTokenData {
   }, [address, prevAddress, chainId, prevChainId]);
 
   useEffect(() => {
-    // if (chainId && isSupportedNetwork && CHAINS[chainId]?.vaultsNFTContract)
-    //   setActualContract(new Contract(CHAINS[chainId]?.vaultsNFTContract, hatVaultNftAbi, library));
+    // if (chainId && isSupportedNetwork && ChainsConfig[chainId]?.vaultsNFTContract)
+    //   setActualContract(new Contract(ChainsConfig[chainId]?.vaultsNFTContract, hatVaultNftAbi, library));
   }, [library, chainId, isSupportedNetwork]);
 
   const { data: stakerData } = useQuery<{ stakers: IStaker[] }>(GET_STAKER, {
