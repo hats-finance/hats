@@ -5,12 +5,12 @@ import { Media } from "components";
 import { INFTTokenInfoRedeemed } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
-import { useEthers } from "@usedapp/core";
 import { useEscapePressed } from "hooks/useKeyPress";
 import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ChainsConfig } from "config/chains";
+import { useNetwork } from "wagmi";
 
 interface IProps {
   tokenInfo: INFTTokenInfoRedeemed;
@@ -18,7 +18,7 @@ interface IProps {
 
 export function NFTCard({ tokenInfo }: IProps) {
   const { metadata, isRedeemed, tokenId, isDeposit, isMerkleTree } = tokenInfo;
-  const { chainId } = useEthers();
+  const { chain } = useNetwork();
   const { t } = useTranslation();
   const [fullScreen, setFullScreen] = useState(false);
   const tier = metadata.attributes.find((attr) => attr.trait_type === "Trust Level")?.value;
@@ -31,11 +31,12 @@ export function NFTCard({ tokenInfo }: IProps) {
     }
   }, [escapePressed]);
 
+  // TODO: [v2] add opensea link to multichain
   let openSeaUrl;
-  if (chainId === 1) {
-    openSeaUrl = `https://opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
-  } else if (chainId === 4) {
-    openSeaUrl = `https://testnets.opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
+  if (chain?.id === 1) {
+    openSeaUrl = `https://opensea.io/assets/${ChainsConfig[chain.id].vaultsNFTContract}/${tokenId}`;
+  } else if (chain?.id === 4) {
+    openSeaUrl = `https://testnets.opensea.io/assets/${ChainsConfig[chain.id].vaultsNFTContract}/${tokenId}`;
   }
 
   if (fullScreen) {
