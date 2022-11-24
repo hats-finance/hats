@@ -148,3 +148,9 @@ export enum Transactions {
   RedeemTreeNFTs = "Redeem Tree NFTs",
   RedeemDepositNFTs = "Redeem Deposit NFTs",
 }
+
+export const WhereverPartnerKeys = {
+  [ChainId.Mainnet]: "",
+  [ChainId.Rinkeby]: "",
+  [ChainId.Goerli]: "6bfd58ee-8fc8-4b5d-96f4-9562c7095e06"
+};
