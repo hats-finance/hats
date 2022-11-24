@@ -11,7 +11,7 @@ interface IChainConfiguration {
  * Returns all the supported chains on the platform.
  * If you want to add a new chain, add it here and also on `useMultiChainVaults` hook.
  */
-export const Chains: { [index: number]: IChainConfiguration } = {
+export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [chain.mainnet.id]: {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
     chain: chain.mainnet,
