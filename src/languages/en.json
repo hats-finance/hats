@@ -15,6 +15,9 @@
     "balance": "Balance",
     "assets": "Assets",
     "fileTooBig": "File too big",
+    "unsupported-network": "Unsupported network",
+    "connect-wallet": "Connect Wallet",
+    "disconnect": "Disconnect",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

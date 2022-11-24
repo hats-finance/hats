@@ -1,6 +1,6 @@
 import { utils } from "ethers";
 
-export const shortenIfAddress = (address: string): string => {
+export const shortenIfAddress = (address?: string): string => {
   if (typeof address === "string" && address.length > 0) {
     return shortenAddress(address);
   }

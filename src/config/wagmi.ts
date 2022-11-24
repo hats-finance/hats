@@ -1,7 +1,7 @@
 import { configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
 import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
-import { InjectedConnector } from "wagmi/connectors/injected";
+// import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { defaultChain, INFURA_API_KEY } from "settings";
@@ -24,12 +24,12 @@ const { chains, provider } = configureChains(
 );
 
 const walletConnectors = [
-  new InjectedConnector({
-    chains,
-    options: {
-      name: (detectedName) => `Injected (${typeof detectedName === "string" ? detectedName : detectedName.join(", ")})`,
-    },
-  }),
+  // new InjectedConnector({
+  //   chains,
+  //   options: {
+  //     name: (detectedName) => `Injected (${typeof detectedName === "string" ? detectedName : detectedName.join(", ")})`,
+  //   },
+  // }),
   new MetaMaskConnector({ chains }),
   new WalletConnectConnector({ chains, options: { qrcode: true } }),
 ];

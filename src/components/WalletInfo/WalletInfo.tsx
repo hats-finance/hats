@@ -1,18 +1,17 @@
-import { ChainId, shortenIfAddress, useEthers, useLookupAddress, useTransactions } from "@usedapp/core";
 import { useTranslation } from "react-i18next";
+import { useTransaction } from "wagmi";
+import { Dot, MyAccount, TransactionInfo, Modal } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { Colors } from "constants/constants";
 import useModal from "hooks/useModal";
-import { Dot, MyAccount, TransactionInfo, Modal } from "components";
-import { StyledNetworkName, StyledWalletInfo, StyledWalletUser } from "./styles";
+import { StyledWalletInfo } from "./styles";
 
 export default function WalletInfo() {
   const { t } = useTranslation();
-  const { account, chainId } = useEthers();
-  const { ens } = useLookupAddress(account);
   const { nftData } = useVaults();
   const { isShowing, show, hide } = useModal();
-  const currentTransaction = useTransactions().transactions.find((tx) => !tx.receipt);
+  // TODO: [v2] verify if this works well
+  const { data: transaction } = useTransaction({ scopeKey: "hats" });
 
   return (
     <StyledWalletInfo>
@@ -24,18 +23,7 @@ export default function WalletInfo() {
         )}
       </button>
 
-      {currentTransaction ? (
-        <TransactionInfo />
-      ) : (
-        <StyledWalletUser className="onlyDesktop">
-          {/* <div className="davatar">
-            <Davatar size={20} address={account!} generatedAvatarType="jazzicon" />
-          </div> */}
-          <span>{ens || shortenIfAddress(account)}</span>
-        </StyledWalletUser>
-      )}
-
-      <StyledNetworkName className="onlyDesktop">{ChainId[chainId!]}</StyledNetworkName>
+      {transaction && <TransactionInfo />}
 
       <Modal isShowing={isShowing} onHide={hide}>
         <MyAccount />
