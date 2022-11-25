@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { ChainId, useEthers } from "@usedapp/core";
+import { useNetwork, chain as allChains } from "wagmi";
 import { IMaster, IVault } from "types/types";
 import { defaultChain, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -8,8 +8,8 @@ import { ChainsConfig } from "config/chains";
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
-  ETHEREUM: { prod: ChainsConfig[ChainId.Mainnet], test: ChainsConfig[ChainId.Goerli] },
-  OPTIMISM: { prod: ChainsConfig[ChainId.Optimism], test: ChainsConfig[ChainId.OptimismGoerli] },
+  ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
+  OPTIMISM: { prod: ChainsConfig[allChains.optimism.id], test: ChainsConfig[allChains.optimismGoerli.id] },
 };
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
@@ -40,11 +40,11 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 
 export const useMultiChainVaults = () => {
   const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
-  const { chainId } = useEthers();
-  const connectedChain = chainId ? ChainsConfig[chainId] : null;
+  const { chain } = useNetwork();
+  const connectedChain = chain ? ChainsConfig[chain.id] : null;
 
   const showTestnets = connectedChain ? connectedChain.chain.testnet : !IS_PROD;
-  const networkEnv = showTestnets ? "test" : "prod";
+  const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
@@ -66,5 +66,5 @@ export const useMultiChainVaults = () => {
     setVaults({ vaults: allVaults, masters: allMasters });
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
 
-  return { data: vaults };
+  return { data: vaults, networkEnv };
 };
