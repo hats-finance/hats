@@ -1,13 +1,12 @@
-import { useEffect, useRef, useState } from "react";
-import { useAccount, useConnect, useDisconnect, useEnsName, useNetwork, useTransaction } from "wagmi";
+import { useCallback, useEffect, useState } from "react";
+import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork, useTransaction } from "wagmi";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { Dot } from "components";
+import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";
-import { StyledWalletButton, StyledDropdownOptions, WalletButtonWrapper } from "./styles";
-import useOnClickOutside from "hooks/useOnClickOutside";
+import { StyledWalletButton, WalletButtonWrapper } from "./styles";
 
 const WalletButton = () => {
   const { t } = useTranslation();
@@ -17,28 +16,34 @@ const WalletButton = () => {
   const { chain, chains } = useNetwork();
   const { disconnect } = useDisconnect();
   const [canReconnect, setCanReconnect] = useState(!!account);
-  const [showOptions, setShowOptions] = useState(false);
+  const [showConnectors, setShowConnectors] = useState(false);
   // TODO: [v2] verify if this works well
   const { data: transaction } = useTransaction({ scopeKey: "hats" });
 
-  const optionsRef = useRef<HTMLDivElement>(null);
-  useOnClickOutside(optionsRef, () => setShowOptions(false));
+  const deactivateAccount = useCallback(() => {
+    disconnect();
+    setCanReconnect(false);
+    localStorage.removeItem("wagmi.wallet");
+  }, [disconnect]);
 
+  const activateAccount = useCallback(
+    (connector: Connector | undefined) => {
+      connect({ connector });
+      setCanReconnect(true);
+    },
+    [connect]
+  );
   /**
    * Sometimes when changing the network, the provider is deactivated. This is a workaround to
    * reconnect the provider.
    */
   useEffect(() => {
     if (!account && canReconnect) {
-      const connectedConnectorId = localStorage.getItem("wagmi.wallet")?.replaceAll('"', "");
-      connect({ connector: connectors.find((c) => c.id === connectedConnectorId) });
+      const preferredConnectorId = localStorage.getItem("wagmi.wallet")?.replaceAll('"', "");
+      preferredConnectorId && activateAccount(connectors.find((c) => c.id === preferredConnectorId));
     }
-  }, [account, canReconnect, connect, connectors]);
-
-  const deactivateAccount = () => {
-    disconnect();
-    setCanReconnect(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [account, canReconnect]);
 
   const getButtonTitle = () => {
     if (account) {
@@ -63,52 +68,56 @@ const WalletButton = () => {
     );
   };
 
-  const getDropdownOptions = () => {
-    const options = account
-      ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: "disconnect" }]
-      : [
-          {
-            label: "Metamask",
-            onClick: () => connect({ connector: connectors.find((c) => c.id === "metaMask") }),
-            icon: "metamask",
-          },
-          {
-            label: "WalletConnect",
-            onClick: () => connect({ connector: connectors.find((c) => c.id === "walletConnect") }),
-            icon: "wallet-connect",
-          },
-        ];
+  // const getProviderIcon = () => {
+  //   if (!connectedConnector) return null;
 
-    return (
-      <StyledDropdownOptions>
-        {options.map((opt) => {
-          const onClick = () => {
-            setShowOptions(false);
-            opt.onClick();
-          };
+  //   return (
+  //     <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={connectedConnector.name}>
+  //       <img src={require(`assets/icons/connectors/${connectedConnector.id}.png`)} alt={connectedConnector.name} />
+  //     </Tooltip>
+  //   );
+  // };
 
-          return (
-            <div className="connector-option" key={opt.label} onClick={onClick}>
-              <img src={require(`assets/icons/connectors/${opt.icon}.png`)} alt={opt.label} />
-              <span>{opt.label}</span>
-            </div>
-          );
-        })}
-      </StyledDropdownOptions>
-    );
-  };
+  const getConnectorsOptions = useCallback(
+    () =>
+      account
+        ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: "icons/connectors/disconnect.png" }]
+        : [
+            {
+              id: "metaMask",
+              label: "Metamask",
+              onClick: () => activateAccount(connectors.find((c) => c.id === "metaMask")),
+              icon: "icons/connectors/metaMask.png",
+            },
+            {
+              id: "coinbaseWallet",
+              label: "Coinbase Wallet",
+              onClick: () => activateAccount(connectors.find((c) => c.id === "coinbaseWallet")),
+              icon: "icons/connectors/coinbaseWallet.png",
+            },
+            {
+              id: "walletConnect",
+              label: "WalletConnect",
+              onClick: () => activateAccount(connectors.find((c) => c.id === "walletConnect")),
+              icon: "icons/connectors/walletConnect.png",
+            },
+          ],
+    [connectors, account, activateAccount, deactivateAccount, t]
+  );
 
   return (
-    <WalletButtonWrapper ref={optionsRef}>
+    <WalletButtonWrapper>
       <StyledWalletButton
-        onClick={() => setShowOptions((prev) => !prev)}
+        onClick={() => setShowConnectors((prev) => !prev)}
         connected={!!account}
         existsPendingTransaction={!!transaction}>
         {!account && <Dot color={Colors.red} />}
+        {/* {account && connectedConnector && <div className="provider-icon">{getProviderIcon()}</div>} */}
         {account && <div className="network-icon">{getNetworkIcon()}</div>}
         {getButtonTitle()}
       </StyledWalletButton>
-      {showOptions && getDropdownOptions()}
+
+      <DropdownSelector options={getConnectorsOptions()} show={showConnectors} onClose={() => setShowConnectors(false)} />
     </WalletButtonWrapper>
   );
 };

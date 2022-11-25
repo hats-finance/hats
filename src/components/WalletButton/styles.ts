@@ -27,6 +27,7 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     ${connected &&
     css`
       gap: ${getSpacing(1.5)};
+      /* padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(4)}; */
       padding: ${getSpacing(2)};
     `}
 
@@ -47,50 +48,25 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
       `}
     }
 
+    .provider-icon,
     .network-icon {
-      width: 25px;
-      height: 25px;
-
       img {
         width: 100%;
         height: 100%;
       }
     }
+
+    .provider-icon {
+      width: 35px;
+      height: 35px;
+      position: absolute;
+      transform: translateX(-60%);
+    }
+
+    .network-icon {
+      position: relative;
+      width: 25px;
+      height: 25px;
+    }
   `
 );
-
-export const StyledDropdownOptions = styled.div`
-  position: absolute;
-  z-index: 100;
-  padding: ${getSpacing(1)};
-  top: calc(100% + ${getSpacing(1)});
-  right: 0;
-  background-color: var(--blue);
-  width: 260px;
-  border-radius: 2px;
-
-  .connector-option {
-    padding: ${getSpacing(1)};
-    border-radius: 2px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: ${getSpacing(1.5)};
-
-    &:hover {
-      background-color: var(--light-blue);
-    }
-
-    &:active {
-      opacity: 0.7;
-    }
-
-    span {
-      color: var(--white);
-    }
-
-    img {
-      width: 20px;
-    }
-  }
-`;
