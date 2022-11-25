@@ -1,7 +1,6 @@
-import { ChainsConfig } from "config/chains";
-import { useEthers } from "@usedapp/core";
+import { useNetwork } from "wagmi";
 
 export function useSupportedNetwork() {
-  const { chainId } = useEthers();
-  return Object.keys(ChainsConfig).some((id) => Number(id) === chainId);
+  const { chain, chains } = useNetwork();
+  return chains.some((c) => c.id === chain?.id);
 }
