@@ -29,11 +29,7 @@ const VaultComponent = (
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
   const valueOfAllVaults = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-  const vaultBalance = new Amount(
-    BigNumber.from(honeyPotBalance),
-    stakingTokenDecimals,
-    stakingTokenSymbol
-  ).formattedWithoutSymbol(3);
+  const vaultBalance = new Amount(BigNumber.from(honeyPotBalance), stakingTokenDecimals, stakingTokenSymbol).number;
   const vaultType = description?.["project-metadata"]?.type?.toLowerCase();
   const vaultIcon = description?.["project-metadata"]?.icon ?? "";
   const vaultName = description?.["project-metadata"].name ?? "";
@@ -51,7 +47,7 @@ const VaultComponent = (
   const vaultBalanceAndValue = (
     <div className="balance-information">
       <div className="vault-balance-wrapper">
-        {!multipleVaults && vaultBalance}
+        {!multipleVaults && millify(vaultBalance)}
         <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>
       </div>
       <span className="sub-label onlyMobile">{t("Vault.total-vault")}</span>
