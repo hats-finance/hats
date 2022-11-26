@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useBalanceAmount } from "hooks";
+import { useTokenBalanceAmount } from "hooks";
 import { useVaults } from "hooks/vaults/useVaults";
 import WalletIcon from "assets/icons/balance.svg";
 import { StyledBalance } from "./styles";
@@ -9,7 +9,7 @@ export default function Balance() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { masters } = useVaults();
-  const hatsBalance = useBalanceAmount({ token: masters?.[0].rewardsToken, address: account, watch: true });
+  const hatsBalance = useTokenBalanceAmount({ token: masters?.[0].rewardsToken, address: account, watch: true });
 
   return (
     <StyledBalance>

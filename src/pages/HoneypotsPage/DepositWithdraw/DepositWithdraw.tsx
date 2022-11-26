@@ -52,7 +52,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
 
   const {
-    tokenAllowanceAmount,
+    tokenAllowance,
     tokenBalance,
     pendingReward,
     availableBalanceToWithdraw,
@@ -71,7 +71,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userInputValue = BigNumber.from(0);
   }
 
-  const hasAllowance = userInputValue && tokenAllowanceAmount ? tokenAllowanceAmount.gte(userInputValue) : false;
+  const hasAllowance = userInputValue && tokenAllowance ? tokenAllowance.gte(userInputValue) : false;
   const isAboveMinimumDeposit = userInputValue ? userInputValue.gte(minimumDeposit.bigNumber) : false;
   const userHasBalanceToDeposit = userInputValue && tokenBalance ? tokenBalance.bigNumber.gte(userInputValue) : false;
   const userHasBalanceToWithdraw = availableBalanceToWithdraw && availableBalanceToWithdraw.bigNumber.gte(userInputValue);
