@@ -3,6 +3,7 @@ import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwor
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";
@@ -13,7 +14,8 @@ const WalletButton = () => {
   const { address: account } = useAccount();
   const { connect, connectors } = useConnect();
   const { data: ens } = useEnsName({ address: account });
-  const { chain, chains } = useNetwork();
+  const { chain } = useNetwork();
+  const supportedNetwork = useSupportedNetwork();
   const { disconnect } = useDisconnect();
   const [canReconnect, setCanReconnect] = useState(!!account);
   const [showConnectors, setShowConnectors] = useState(false);
@@ -54,7 +56,6 @@ const WalletButton = () => {
   };
 
   const getNetworkIcon = () => {
-    const supportedNetwork = chains?.find((c) => c.id === chain?.id);
     const network = supportedNetwork && chain ? chain.name : t("unsupported-network");
 
     return (

@@ -1,7 +1,6 @@
-import { shortenIfAddress } from "@usedapp/core";
-import { isAddress } from "ethers/lib/utils";
 import CopyToClipboard from "components/CopyToClipboard";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { isAddress, shortenIfAddress } from "utils/addresses.utils";
 import "./Multisig.scss";
 
 interface IProps {
@@ -11,7 +10,7 @@ interface IProps {
 export default function Multisig(props: IProps) {
   const { multisigAddress } = props;
 
-  // TODO: [v2] add link to the multisig depending on chain
+  // TODO: [v2] add anchor link to the multisig depending on chain
 
   return (
     <div className="multi-sig-address-wrapper">

@@ -1,4 +1,7 @@
 import { utils } from "ethers";
+import { isAddress as isAddressEthers } from "ethers/lib/utils";
+
+export const isAddress = isAddressEthers;
 
 export const shortenIfAddress = (address?: string): string => {
   if (typeof address === "string" && address.length > 0) {
