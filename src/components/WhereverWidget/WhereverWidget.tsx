@@ -25,11 +25,12 @@ const WhereverWidget = () => {
           backgroundColor: Colors.fieldBlue,
           primaryColor: Colors.turquoise,
           borderRadius: 'none',
+          uppercasePageTitles: true,
           fontFamily: '"RobotoMono", sans-serif',
         }}
         partnerKey={WHEREVER_KEY}
       >
-        <NotificationFeed>
+        <NotificationFeed >
           <StyledWhereverWidget>
             <NotificationBell />
           </StyledWhereverWidget>
