@@ -22,7 +22,7 @@ export const DropdownSelector = ({ options, show, onClose }: DropdownSelectorPro
 
         return (
           <div className="option" key={opt.label} onClick={onClick}>
-            {opt.icon && <img src={require(`assets/${opt.icon}`)} alt={opt.label} />}
+            {opt.icon && <img src={opt.icon} alt={opt.label} />}
             <span>{opt.label}</span>
           </div>
         );
