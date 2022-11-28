@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
@@ -143,27 +143,26 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     [Action.checkIn]: checkInCall,
   };
 
-  const actionsStatus = useMemo(
-    () => ({
-      [Action.approveTokenAllowance]: approveTokenAllowanceCall.status,
-      [Action.deposit]: depositCall.status,
-      [Action.withdrawRequest]: withdrawRequestCall.status,
-      [Action.withdrawAndClaim]: withdrawAndClaimCall.status,
-      [Action.claimReward]: claimRewardCall.status,
-      [Action.checkIn]: checkInCall.status,
-    }),
-    [
-      approveTokenAllowanceCall.status,
-      depositCall.status,
-      withdrawRequestCall.status,
-      withdrawAndClaimCall.status,
-      claimRewardCall.status,
-      checkInCall.status,
-    ]
-  );
+  const actionsDescription = {
+    [Action.approveTokenAllowance]: t("approvingSpending"),
+    [Action.deposit]: t("depositing"),
+    [Action.withdrawRequest]: t("requestingWithdraw"),
+    [Action.withdrawAndClaim]: t("withdrawing"),
+    [Action.claimReward]: t("claimingReward"),
+    [Action.checkIn]: t("checkingIn"),
+  };
+
+  const actionsStatusString = [
+    approveTokenAllowanceCall.status,
+    depositCall.status,
+    withdrawRequestCall.status,
+    withdrawAndClaimCall.status,
+    claimRewardCall.status,
+    checkInCall.status,
+  ].join("|");
 
   useEffect(() => {
-    const currentAction = Object.entries(actionsStatus).find((action) => action[1] === "loading" || action[1] === "success");
+    const currentAction = Object.entries(actionsMap).find((action) => ["loading", "success"].includes(action[1].status));
 
     if (currentAction) {
       const action = +currentAction[0] as Action;
@@ -172,7 +171,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       setInProgressTransaction(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [actionsStatus]);
+  }, [actionsStatusString]);
 
   useEffect(() => {
     if (inProgressTransaction) {
@@ -212,6 +211,16 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const handleMaxAmountButton = () => {
     const maxAmount = isDepositing ? tokenBalance.string : availableBalanceToWithdraw.string;
     setUserInput(`${maxAmount}`);
+  };
+
+  const getLoaderInformation = () => {
+    if (inProgressTransaction) {
+      const { action, txHash } = inProgressTransaction;
+      if (!txHash) return t("pleaseConfirmTransaction");
+      return `${t(actionsDescription[action])}...`;
+    }
+
+    return "";
   };
 
   return (
@@ -275,7 +284,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && !inProgressTransaction && <EmbassyEligibility vault={selectedVault} />}
+        {isDepositing && !depositPaused && <EmbassyEligibility vault={selectedVault} />}
 
         <div>
           <UserAssetsInfo vault={vault} />
@@ -354,7 +363,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           )}
         </div>
 
-        {inProgressTransaction && <Loading zIndex={10000} />}
+        {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}
 
         <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
           <EmbassyNftTicketPrompt />
