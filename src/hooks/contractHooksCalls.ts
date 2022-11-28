@@ -193,6 +193,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
   const { data: res, isError } = useContractRead({
+    enabled: !!account,
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: method,
