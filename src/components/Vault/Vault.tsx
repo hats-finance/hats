@@ -41,7 +41,7 @@ const VaultComponent = (
   );
 
   const expandVault = () => {
-    setExpanded && setExpanded(expanded ? null : vault);
+    setExpanded && setExpanded(expanded ? null : vault.id);
   };
 
   const vaultBalanceAndValue = (

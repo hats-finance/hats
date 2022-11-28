@@ -191,9 +191,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inProgressTransaction]);
-
-  console.log(inProgressTransaction);
+  }, [inProgressTransaction, handleDeposit, hideApproveSpending]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {

@@ -14,6 +14,8 @@ export function WithdrawTimer({ vault, plainTextView, placeHolder, showWithdrawS
 
   const countdownValue = isUserInQueueToWithdraw ? withdrawStartTime : withdrawEndTime;
 
+  console.log(vault.id, (isUserInQueueToWithdraw || isUserInTimeToWithdraw) && countdownValue);
+
   return (
     <>
       {(isUserInQueueToWithdraw || isUserInTimeToWithdraw) && countdownValue ? (

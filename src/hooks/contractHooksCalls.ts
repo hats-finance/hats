@@ -31,7 +31,9 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
       functionName: method,
       scopeKey: "hats",
       chainId: vault.chainId,
-      watch: true,
+      watch: false,
+      cacheOnBlock: true,
+
       args,
     }) ?? {};
   const data = res as any;
@@ -66,7 +68,8 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
+    watch: false,
+    cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -106,7 +109,8 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
+    watch: false,
+    cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -151,6 +155,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: true,
+    cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -199,6 +204,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: true,
+    cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -230,7 +236,7 @@ export function useTokenApproveAllowance(vault: IVault) {
     address: vault.stakingToken,
     abi: erc20_abi as any,
     functionName: "approve",
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   return {
@@ -264,7 +270,7 @@ export function useDeposit(vault: IVault) {
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: "deposit",
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   return {
@@ -311,7 +317,7 @@ export function useWithdrawAndClaim(vault: IVault) {
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: contractFunctionName,
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   const { data: res, isError } = useContractRead({
@@ -373,7 +379,7 @@ export function useWithdrawRequest(vault: IVault) {
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: "withdrawRequest",
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   return {
@@ -412,7 +418,7 @@ export function useClaimReward(vault: IVault) {
     address: contractAddress,
     abi: abi as any,
     functionName: "claimReward",
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   return {
@@ -450,7 +456,7 @@ export function useCommitteeCheckIn(vault: IVault) {
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: "committeeCheckIn",
-    chainId: vault.chainId,
+    // chainId: vault.chainId,
   });
 
   return {
@@ -490,7 +496,7 @@ export function useClaim(vault?: IVault) {
     address: vault ? contractAddress : undefined,
     abi: registryAbi as any,
     functionName: method,
-    chainId: vault?.chainId,
+    // chainId: vault?.chainId,
   });
 
   return {

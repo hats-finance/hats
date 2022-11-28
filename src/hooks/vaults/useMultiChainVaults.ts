@@ -5,7 +5,7 @@ import { defaultChain, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
 
-const DATA_REFRESH_TIME = 10000;
+const DATA_REFRESH_TIME = 15000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
@@ -25,7 +25,10 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     });
     const dataJson = await res.json();
 
-    setData(dataJson.data);
+    if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
+      setData(dataJson.data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId]);
 
   useEffect(() => {
@@ -49,9 +52,6 @@ export const useMultiChainVaults = () => {
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
 
-  // console.log("ethereumData", ethereumData.vaults);
-  // console.log("optimismData", optimismData.vaults);
-
   useEffect(() => {
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
@@ -63,7 +63,13 @@ export const useMultiChainVaults = () => {
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
-    setVaults({ vaults: allVaults, masters: allMasters });
+    const newVaults = { vaults: allVaults, masters: allMasters };
+
+    if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
+      setVaults({ vaults: allVaults, masters: allMasters });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
 
   return { data: vaults, networkEnv };
