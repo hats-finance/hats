@@ -82,25 +82,25 @@ const WalletButton = () => {
   const getConnectorsOptions = useCallback(
     () =>
       account
-        ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: require("assets/icons/connectors/disconnect.png") }]
+        ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: require("../../assets/icons/connectors/disconnect.png") }]
         : [
             {
               id: "metaMask",
               label: "Metamask",
               onClick: () => activateAccount(connectors.find((c) => c.id === "metaMask")),
-              icon: require("assets/icons/connectors/metaMask.png"),
+              icon: require("../../assets/icons/connectors/metaMask.png"),
             },
             {
               id: "coinbaseWallet",
               label: "Coinbase Wallet",
               onClick: () => activateAccount(connectors.find((c) => c.id === "coinbaseWallet")),
-              icon: require("assets/icons/connectors/coinbaseWallet.png"),
+              icon: require("../../assets/icons/connectors/coinbaseWallet.png"),
             },
             {
               id: "walletConnect",
               label: "WalletConnect",
               onClick: () => activateAccount(connectors.find((c) => c.id === "walletConnect")),
-              icon: require("assets/icons/connectors/walletConnect.png"),
+              icon: require("../../assets/icons/connectors/walletConnect.png"),
             },
           ],
     [connectors, account, activateAccount, deactivateAccount, t]
