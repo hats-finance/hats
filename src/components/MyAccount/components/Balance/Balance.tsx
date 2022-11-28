@@ -9,7 +9,7 @@ export default function Balance() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { masters } = useVaults();
-  const hatsBalance = useTokenBalanceAmount({ token: masters?.[0].rewardsToken, address: account, watch: true });
+  const hatsBalance = useTokenBalanceAmount({ token: masters?.[0].rewardsToken, address: account });
 
   return (
     <StyledBalance>

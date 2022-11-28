@@ -9,6 +9,6 @@ type useTokenBalanceAmountArgs = Omit<FetchBalanceArgs, "token" | "address"> & {
 };
 
 export function useTokenBalanceAmount(args: useTokenBalanceAmountArgs): Amount {
-  const balanceRes = useBalance({ ...args, token: args.token as `0x${string}` }).data;
+  const balanceRes = useBalance({ ...args, watch: true, token: args.token as `0x${string}` }).data;
   return Amount.fromBalanceResult(balanceRes);
 }
