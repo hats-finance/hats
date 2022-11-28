@@ -1,3 +1,4 @@
+import { useAccount, useContractRead } from "wagmi";
 import { BigNumber, Contract } from "ethers";
 import { useCall, useContractFunction, useEthers } from "@usedapp/core";
 import { Transactions } from "constants/constants";
@@ -7,6 +8,9 @@ import vaultAbiV1 from "data/abis/HATSVaultV1.json";
 import vaultAbiV2 from "data/abis/HATSVaultV2.json";
 import vaultRegistryAbiV2 from "data/abis/HATSVaultsRegistry.json";
 import rewardControllerAbi from "data/abis/RewardController.json";
+import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
+import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
+import { RewardController_abi } from "data/abis/RewardController_abi";
 
 /**
  * Returns the amount of pending reward to claim for a giver user
@@ -18,23 +22,30 @@ import rewardControllerAbi from "data/abis/RewardController.json";
  * @returns The pending reward amount
  */
 export function usePendingReward(vault: IVault): BigNumber | undefined {
-  const { account } = useEthers();
+  const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
-  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : rewardControllerAbi;
+  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
   const method = vault.version === "v1" ? "pendingReward" : "getPendingReward";
   const args = vault.version === "v1" ? [vault.pid, account] : [vault.id, account];
 
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(contractAddress, vaultAbi),
-        method: method,
-        args,
-      },
-      { chainId: vault.chainId }
-    ) ?? {};
+  const { data: res, isError } =
+    useContractRead({
+      address: contractAddress,
+      abi: vaultAbi as any,
+      functionName: method,
+      scopeKey: "hats",
+      chainId: vault.chainId,
+      args,
+    }) ?? {};
+  const data = res as any;
 
-  return !error ? value?.[0] : undefined;
+  let pendingReward: BigNumber | undefined = undefined;
+
+  if (!isError && data) {
+    pendingReward = data ?? BigNumber.from(0);
+  }
+
+  return pendingReward;
 }
 
 /**
@@ -48,27 +59,27 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
  */
 export function useTotalSharesPerVault(vault: IVault): BigNumber {
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault.version === "v1" ? "poolInfo" : "totalSupply";
   const args = vault.version === "v1" ? [vault.pid] : [];
 
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(contractAddress, vaultAbi),
-        method: method,
-        args,
-      },
-      { chainId: vault.chainId }
-    ) ?? {};
+  const { data: res, isError } = useContractRead({
+    address: contractAddress,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault.chainId,
+    scopeKey: "hats",
+    args,
+  });
+  const data = res as any;
 
   let totalSharesAmount: BigNumber = BigNumber.from(0);
 
-  if (!error) {
+  if (!isError && data) {
     if (vault.version === "v1") {
-      totalSharesAmount = value?.totalUsersAmount ?? BigNumber.from(0);
+      totalSharesAmount = data.totalUsersAmount ?? BigNumber.from(0);
     } else {
-      totalSharesAmount = value?.[0] ?? BigNumber.from(0);
+      totalSharesAmount = data ?? BigNumber.from(0);
     }
   }
 
@@ -85,23 +96,33 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
  * @returns The user shares amount
  */
 export function useUserSharesPerVault(vault: IVault): BigNumber {
-  const { account } = useEthers();
+  const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault.version === "v1" ? "userInfo" : "balanceOf";
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(contractAddress, vaultAbi),
-        method: method,
-        args,
-      },
-      { chainId: vault.chainId }
-    ) ?? {};
+  const { data: res, isError } = useContractRead({
+    address: contractAddress,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault.chainId,
+    scopeKey: "hats",
+    args,
+  });
+  const data = res as any;
 
-  return !error && value ? value?.[0] : BigNumber.from(0);
+  let userSharesAmount: BigNumber = BigNumber.from(0);
+
+  if (!isError && data) {
+    if (vault.version === "v1") {
+      userSharesAmount = data.amount ?? BigNumber.from(0);
+    } else {
+      userSharesAmount = data ?? BigNumber.from(0);
+    }
+  }
+
+  return userSharesAmount;
 }
 
 /**
@@ -120,26 +141,26 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
   const userSharesAvailable = useUserSharesPerVault(vault);
 
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault.version === "v1" ? "poolInfo" : "previewRedeem";
   const args = vault.version === "v1" ? [vault.pid] : [userSharesAvailable];
 
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(contractAddress, vaultAbi),
-        method: method,
-        args,
-      },
-      { chainId: vault.chainId }
-    ) ?? {};
+  const { data: res, isError } = useContractRead({
+    address: contractAddress,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault.chainId,
+    scopeKey: "hats",
+    args,
+  });
+  const data = res as any;
 
   let userBalanceAvailable: BigNumber | undefined = undefined;
 
-  if (!error) {
+  if (!isError && data) {
     if (vault.version === "v1") {
-      const totalShares: BigNumber | undefined = value?.totalUsersAmount;
-      const totalBalance: BigNumber | undefined = value?.balance;
+      const totalShares: BigNumber | undefined = data.totalUsersAmount;
+      const totalBalance: BigNumber | undefined = data.balance;
 
       if (totalShares && totalBalance && userSharesAvailable) {
         if (!totalShares.eq(0)) {
@@ -147,7 +168,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
         }
       }
     } else {
-      userBalanceAvailable = value?.[0];
+      userBalanceAvailable = data;
     }
   }
 
@@ -164,26 +185,29 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
  * @returns The user withdraw start time
  */
 export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefined {
-  const { account } = useEthers();
+  const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
+  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault.version === "v1" ? "withdrawRequests" : "withdrawEnableStartTime";
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
-  const { value, error } =
-    useCall(
-      {
-        contract: new Contract(contractAddress, vaultAbi),
-        method: method,
-        args,
-      },
-      { chainId: vault.chainId }
-    ) ?? {};
+  const { data: res, isError } = useContractRead({
+    address: contractAddress,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault.chainId,
+    scopeKey: "hats",
+    args,
+  });
+  const data = res as any;
 
-  if (error) return undefined;
+  let startTimeNumber: BigNumber | undefined = undefined;
 
-  const startTimeNumber = value?.[0] ? (value[0] as BigNumber).toNumber() : 0;
-  return startTimeNumber !== 0 ? value?.[0] : undefined;
+  if (!isError && data) {
+    startTimeNumber = data ?? undefined;
+  }
+
+  return startTimeNumber && !startTimeNumber.eq(0) ? startTimeNumber : undefined;
 }
 
 /**
