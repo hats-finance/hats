@@ -6,10 +6,12 @@ export const switchNetworkAndValidate = async (currentChainId: number, desiredCh
       if (currentChainId !== desiredChainId) {
         await switchNetwork({ chainId: desiredChainId });
         resolve();
+      } else {
+        resolve();
       }
     } catch (error) {
       console.log(error);
-      alert(`Please switch the network to ${desiredChainId}`);
+      alert(`Please switch the network to ${desiredChainId} before proceeding.`);
       reject(error);
     }
   });
