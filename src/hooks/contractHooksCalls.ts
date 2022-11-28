@@ -11,6 +11,7 @@ import rewardControllerAbi from "data/abis/RewardController.json";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 import { RewardController_abi } from "data/abis/RewardController_abi";
+import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 
 /**
  * Returns the amount of pending reward to claim for a giver user
@@ -247,7 +248,7 @@ export function useTokenApproveAllowance(vault: IVault) {
  * @param vault - The selected vault to deposit staking token
  */
 export function useDeposit(vault: IVault) {
-  const { account, chainId, switchNetwork } = useEthers();
+  const { account, chainId } = useEthers();
 
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? vaultAbiV1 : vaultAbiV2;
@@ -264,7 +265,7 @@ export function useDeposit(vault: IVault) {
      * @param amountInTokens - The amount in TOKENS (not shares) to deposit
      */
     send: async (amountInTokens: BigNumber) => {
-      if (chainId !== vault.chainId) await switchNetwork(vault.chainId as number);
+      await switchNetworkAndValidate(chainId as number, vault.chainId as number);
 
       if (vault?.version === "v2") {
         // [params]: asset, receiver
