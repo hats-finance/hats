@@ -8,6 +8,8 @@ import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";
 import { StyledWalletButton, WalletButtonWrapper } from "./styles";
+import { connectorIcons } from "./connector.icons";
+import { chainIcons } from "./chains.icons";
 
 const WalletButton = () => {
   const { t } = useTranslation();
@@ -61,7 +63,7 @@ const WalletButton = () => {
     return (
       <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network}>
         {supportedNetwork && chain ? (
-          <img src={require(`assets/icons/chains/${chain.id}.png`)} alt={chain.name} />
+          <img src={chainIcons[chain.id]} alt={chain.name} />
         ) : (
           <img src={ErrorIcon} alt={t("unsupported-network")} />
         )}
@@ -82,25 +84,25 @@ const WalletButton = () => {
   const getConnectorsOptions = useCallback(
     () =>
       account
-        ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: require("../../assets/icons/connectors/disconnect.png") }]
+        ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: connectorIcons.disconnect }]
         : [
             {
               id: "metaMask",
               label: "Metamask",
               onClick: () => activateAccount(connectors.find((c) => c.id === "metaMask")),
-              icon: require("../../assets/icons/connectors/metaMask.png"),
+              icon: connectorIcons.metaMask,
             },
             {
               id: "coinbaseWallet",
               label: "Coinbase Wallet",
               onClick: () => activateAccount(connectors.find((c) => c.id === "coinbaseWallet")),
-              icon: require("../../assets/icons/connectors/coinbaseWallet.png"),
+              icon: connectorIcons.coinbaseWallet,
             },
             {
               id: "walletConnect",
               label: "WalletConnect",
               onClick: () => activateAccount(connectors.find((c) => c.id === "walletConnect")),
-              icon: require("../../assets/icons/connectors/walletConnect.png"),
+              icon: connectorIcons.walletConnect,
             },
           ],
     [connectors, account, activateAccount, deactivateAccount, t]
