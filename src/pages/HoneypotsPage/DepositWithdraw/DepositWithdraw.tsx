@@ -1,7 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { waitForTransaction } from "@wagmi/core";
+import { BigNumber } from "ethers";
+import { parseUnits } from "@ethersproject/units";
+import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
-import { parseUnits } from "@ethersproject/units";
 import { Loading, Modal } from "components";
 import { IVault } from "types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
@@ -15,16 +18,13 @@ import {
 } from "hooks/contractHooksCalls";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { usePrevious } from "hooks/usePrevious";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import "./index.scss";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
-import { useTranslation } from "react-i18next";
 import { useVaultDepositWithdrawInfo } from "./hooks";
-import { BigNumber } from "ethers";
+import "./index.scss";
 
 interface IProps {
   vault: IVault;
@@ -32,8 +32,22 @@ interface IProps {
 }
 
 enum Tab {
-  Deposit = 1,
+  Deposit,
   Withdraw,
+}
+
+enum Action {
+  approveTokenAllowance,
+  deposit,
+  withdrawRequest,
+  withdrawAndClaim,
+  claimReward,
+  checkIn,
+}
+
+interface InProgressAction {
+  action: Action;
+  txHash?: `0x${string}`;
 }
 
 export function DepositWithdraw({ vault, closeModal }: IProps) {
@@ -45,6 +59,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
 
+  const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
   const [tab, setTab] = useState(Tab.Deposit);
   const [termsOfUse, setTermsOfUse] = useState(false);
   const [userInput, setUserInput] = useState("");
@@ -79,16 +94,16 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const isDepositing = tab === Tab.Deposit;
   const isWithdrawing = tab === Tab.Withdraw;
 
-  const { send: approveTokenAllowanceCall, state: approveTokenAllowanceState } = useTokenApproveAllowance(selectedVault);
+  const approveTokenAllowanceCall = useTokenApproveAllowance(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
-    approveTokenAllowanceCall(amountToSpend ?? MAX_SPENDING);
+    approveTokenAllowanceCall.send(amountToSpend ?? MAX_SPENDING);
   };
 
-  const { send: depositCall, state: depositState } = useDeposit(selectedVault);
+  const depositCall = useDeposit(selectedVault);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
 
-    await depositCall(userInputValue);
+    await depositCall.send(userInputValue);
     setUserInput("");
     setTermsOfUse(false);
 
@@ -101,51 +116,85 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     }
   }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
 
-  const { send: withdrawAndClaimCall, state: withdrawAndClaimState } = useWithdrawAndClaim(selectedVault);
+  const withdrawAndClaimCall = useWithdrawAndClaim(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!userInputValue) return;
-    withdrawAndClaimCall(userInputValue);
+    withdrawAndClaimCall.send(userInputValue);
 
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
   }, [userInputValue, selectedVault, withdrawAndClaimCall, master, nftData]);
 
-  const { send: withdrawRequestCall, state: withdrawRequestState } = useWithdrawRequest(selectedVault);
-  const handleWithdrawRequest = withdrawRequestCall;
+  const withdrawRequestCall = useWithdrawRequest(selectedVault);
+  const handleWithdrawRequest = withdrawRequestCall.send;
 
-  const { send: claimRewardCall, state: claimRewardState } = useClaimReward(selectedVault);
-  const handleClaimReward = claimRewardCall;
+  const claimRewardCall = useClaimReward(selectedVault);
+  const handleClaimReward = claimRewardCall.send;
 
-  const { send: checkInCall, state: checkInState } = useCommitteeCheckIn(selectedVault);
-  const handleCheckIn = checkInCall;
+  const checkInCall = useCommitteeCheckIn(selectedVault);
+  const handleCheckIn = checkInCall.send;
 
-  const transactionStates = [
-    approveTokenAllowanceState,
-    depositState,
-    withdrawAndClaimState,
-    withdrawRequestState,
-    claimRewardState,
-    checkInState,
-  ];
+  const actionsMap = {
+    [Action.approveTokenAllowance]: approveTokenAllowanceCall,
+    [Action.deposit]: depositCall,
+    [Action.withdrawRequest]: withdrawRequestCall,
+    [Action.withdrawAndClaim]: withdrawAndClaimCall,
+    [Action.claimReward]: claimRewardCall,
+    [Action.checkIn]: checkInCall,
+  };
 
-  const keepModalOpen = [withdrawRequestState, approveTokenAllowanceState, depositState];
-  const inTransaction = transactionStates
-    .filter((state) => !keepModalOpen.includes(state))
-    .some((state) => state.status === "Mining");
-  const pendingWallet = transactionStates.some((state) => state.status === "PendingSignature" || state.status === "Mining");
-  const prevApproveTokenState = usePrevious(approveTokenAllowanceState);
+  const actionsStatus = useMemo(
+    () => ({
+      [Action.approveTokenAllowance]: approveTokenAllowanceCall.status,
+      [Action.deposit]: depositCall.status,
+      [Action.withdrawRequest]: withdrawRequestCall.status,
+      [Action.withdrawAndClaim]: withdrawAndClaimCall.status,
+      [Action.claimReward]: claimRewardCall.status,
+      [Action.checkIn]: checkInCall.status,
+    }),
+    [
+      approveTokenAllowanceCall.status,
+      depositCall.status,
+      withdrawRequestCall.status,
+      withdrawAndClaimCall.status,
+      claimRewardCall.status,
+      checkInCall.status,
+    ]
+  );
 
-  // After successful approve transaction immediatly call deposit and claim
   useEffect(() => {
-    if (approveTokenAllowanceState.status === "Success" && prevApproveTokenState?.status !== approveTokenAllowanceState.status) {
-      hideApproveSpending();
-      handleDeposit();
+    const currentAction = Object.entries(actionsStatus).find((action) => action[1] === "loading" || action[1] === "success");
+
+    if (currentAction) {
+      const action = +currentAction[0] as Action;
+      setInProgressTransaction({ action, txHash: actionsMap[action].data?.hash });
+    } else {
+      setInProgressTransaction(undefined);
     }
-  }, [approveTokenAllowanceState, prevApproveTokenState, handleDeposit, hideApproveSpending]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [actionsStatus]);
 
   useEffect(() => {
-    if (inTransaction) closeModal();
-  }, [inTransaction, closeModal]);
+    if (inProgressTransaction) {
+      const { action, txHash } = inProgressTransaction;
+
+      if (txHash) {
+        waitForTransaction({ hash: txHash }).finally(() => {
+          setInProgressTransaction(undefined);
+          actionsMap[action].reset();
+
+          // After token allowance approbal we call deposit
+          if (action === Action.approveTokenAllowance) {
+            hideApproveSpending();
+            handleDeposit();
+          }
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inProgressTransaction]);
+
+  console.log(inProgressTransaction);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -166,7 +215,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   };
 
   return (
-    <div className={classNames("deposit-wrapper", { disabled: pendingWallet })}>
+    <div className={classNames("deposit-wrapper", { disabled: inProgressTransaction })}>
       <div className="tabs-wrapper">
         <button className={classNames("tab", { selected: isDepositing })} onClick={() => handleChangeTab(Tab.Deposit)}>
           {t("deposit").toUpperCase()}
@@ -226,7 +275,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && !inTransaction && <EmbassyEligibility vault={selectedVault} />}
+        {isDepositing && !depositPaused && !inProgressTransaction && <EmbassyEligibility vault={selectedVault} />}
 
         <div>
           <UserAssetsInfo vault={vault} />
@@ -305,7 +354,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           )}
         </div>
 
-        {pendingWallet && <Loading zIndex={10000} />}
+        {inProgressTransaction && <Loading zIndex={10000} />}
 
         <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
           <EmbassyNftTicketPrompt />
