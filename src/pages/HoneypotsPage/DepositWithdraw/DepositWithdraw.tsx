@@ -120,6 +120,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!userInputValue) return;
     withdrawAndClaimCall.send(userInputValue);
+    setUserInput("");
 
     // refresh deposit eligibility
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });

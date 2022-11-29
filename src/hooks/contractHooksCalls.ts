@@ -7,6 +7,7 @@ import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 import { RewardController_abi } from "data/abis/RewardController_abi";
 import { HATSVaultsRegistry_abi } from "./../data/abis/HATSVaultsRegistry_abi";
 import { erc20_abi } from "data/abis/erc20_abi";
+import { useTabFocus } from "./useTabFocus";
 
 /**
  * Returns the amount of pending reward to claim for a giver user
@@ -18,6 +19,7 @@ import { erc20_abi } from "data/abis/erc20_abi";
  * @returns The pending reward amount
  */
 export function usePendingReward(vault: IVault): BigNumber | undefined {
+  const isTabFocused = useTabFocus();
   const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
   const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
@@ -26,6 +28,7 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
 
   const { data: res, isError } =
     useContractRead({
+      enabled: isTabFocused,
       address: contractAddress,
       abi: vaultAbi as any,
       functionName: method,
@@ -56,12 +59,14 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
  * @returns The total shares amount
  */
 export function useTotalSharesPerVault(vault: IVault): BigNumber {
+  const isTabFocused = useTabFocus();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault.version === "v1" ? "poolInfo" : "totalSupply";
   const args = vault.version === "v1" ? [vault.pid] : [];
 
   const { data: res, isError } = useContractRead({
+    enabled: isTabFocused,
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: method,
@@ -96,6 +101,7 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
  * @returns The user shares amount
  */
 export function useUserSharesPerVault(vault: IVault): BigNumber {
+  const isTabFocused = useTabFocus();
   const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
@@ -103,6 +109,7 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
   const { data: res, isError } = useContractRead({
+    enabled: isTabFocused,
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: method,
@@ -140,6 +147,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
   userSharesAvailable: BigNumber | undefined;
   userBalanceAvailable: BigNumber | undefined;
 } {
+  const isTabFocused = useTabFocus();
   const userSharesAvailable = useUserSharesPerVault(vault);
 
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
@@ -148,6 +156,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
   const args = vault.version === "v1" ? [vault.pid] : [userSharesAvailable];
 
   const { data: res, isError } = useContractRead({
+    enabled: isTabFocused,
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: method,
@@ -189,6 +198,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
  * @returns The user withdraw start time
  */
 export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefined {
+  const isTabFocused = useTabFocus();
   const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
@@ -196,7 +206,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
   const args = vault.version === "v1" ? [vault.pid, account] : [account];
 
   const { data: res, isError } = useContractRead({
-    enabled: !!account,
+    enabled: isTabFocused && !!account,
     address: contractAddress,
     abi: vaultAbi as any,
     functionName: method,

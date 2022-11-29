@@ -1,5 +1,6 @@
 import { BigNumber } from "ethers";
 import { erc20ABI, useContractRead } from "wagmi";
+import { useTabFocus } from "./useTabFocus";
 
 type UseTokenAllowanceParamsType = { chainId?: number };
 
@@ -9,7 +10,10 @@ export function useTokenAllowance(
   spenderAddress: string | undefined,
   params?: UseTokenAllowanceParamsType
 ) {
+  const isTabFocused = useTabFocus();
+
   const { data } = useContractRead({
+    enabled: isTabFocused,
     address: tokenAddress,
     abi: erc20ABI,
     functionName: "allowance",
