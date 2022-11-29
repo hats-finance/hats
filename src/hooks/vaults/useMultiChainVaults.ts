@@ -45,6 +45,10 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
   }, [chainId, isPageFocused]);
 
   useEffect(() => {
+    isPageFocused && fetchData();
+  }, [isPageFocused, fetchData]);
+
+  useEffect(() => {
     fetchData();
 
     const interval = setInterval(fetchData, DATA_REFRESH_TIME);
@@ -82,8 +86,6 @@ export const useMultiChainVaults = () => {
       })),
       masters: allMasters,
     };
-
-    console.log(newVaults);
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
       setVaults({ vaults: allVaults, masters: allMasters });
