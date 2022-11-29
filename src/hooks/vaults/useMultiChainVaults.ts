@@ -5,6 +5,7 @@ import { IMaster, IVault } from "types/types";
 import { defaultChain, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
+import { useTabFocus } from "hooks/useTabFocus";
 
 const DATA_REFRESH_TIME = 10000;
 
@@ -20,11 +21,14 @@ interface GraphVaultsData {
 }
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
+  const isPageFocused = useTabFocus();
   const { address: account } = useAccount();
   const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userWithdrawRequests: [] });
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
+    if (!isPageFocused) return;
+
     const subgraphUrl = ChainsConfig[chainId || defaultChain.chain.id].subgraph;
     const res = await fetch(subgraphUrl, {
       method: "POST",
@@ -38,7 +42,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
       setData(dataJson.data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId]);
+  }, [chainId, isPageFocused]);
 
   useEffect(() => {
     fetchData();
