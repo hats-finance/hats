@@ -35,7 +35,7 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
       scopeKey: "hats",
       chainId: vault.chainId,
       watch: false,
-      // cacheOnBlock: true,
+
       args,
     }) ?? {};
   const data = res as any;
@@ -72,8 +72,7 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
-    // cacheOnBlock: true,
+    watch: isTabFocused,
     args,
   });
   const data = res as any;
@@ -115,8 +114,7 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
-    // cacheOnBlock: true,
+    watch: isTabFocused,
     args,
   });
   const data = res as any;
@@ -162,8 +160,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
-    // cacheOnBlock: true,
+    watch: isTabFocused,
     args,
   });
   const data = res as any;
@@ -212,8 +209,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: true,
-    // cacheOnBlock: true,
+    watch: isTabFocused,
     args,
   });
   const data = res as any;
