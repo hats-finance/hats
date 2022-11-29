@@ -1,4 +1,3 @@
-import { HATSVaultsRegistry_abi } from "./../data/abis/HATSVaultsRegistry_abi";
 import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
 import { BigNumber } from "ethers";
 import { IVault } from "types/types";
@@ -6,6 +5,7 @@ import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 import { RewardController_abi } from "data/abis/RewardController_abi";
+import { HATSVaultsRegistry_abi } from "./../data/abis/HATSVaultsRegistry_abi";
 import { erc20_abi } from "data/abis/erc20_abi";
 
 /**
@@ -32,8 +32,7 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
       scopeKey: "hats",
       chainId: vault.chainId,
       watch: false,
-      cacheOnBlock: true,
-
+      // cacheOnBlock: true,
       args,
     }) ?? {};
   const data = res as any;
@@ -68,8 +67,8 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: false,
-    cacheOnBlock: true,
+    watch: true,
+    // cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -109,8 +108,8 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
     functionName: method,
     chainId: vault.chainId,
     scopeKey: "hats",
-    watch: false,
-    cacheOnBlock: true,
+    watch: true,
+    // cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -155,7 +154,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: true,
-    cacheOnBlock: true,
+    // cacheOnBlock: true,
     args,
   });
   const data = res as any;
@@ -204,7 +203,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: true,
-    cacheOnBlock: true,
+    // cacheOnBlock: true,
     args,
   });
   const data = res as any;

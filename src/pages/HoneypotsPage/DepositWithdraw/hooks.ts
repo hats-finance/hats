@@ -1,7 +1,7 @@
 import { useAccount } from "wagmi";
 import { BigNumber } from "ethers";
 import { useTokenAllowance, useTokenBalanceAmount } from "hooks";
-import { usePendingReward, useWithdrawRequestStartTime, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
+import { usePendingReward, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
 import { IVault } from "types/types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
@@ -53,7 +53,8 @@ export const useVaultWithdrawTime = (selectedVault: IVault) => {
   // Amount of time the user has to withdraw the funds
   const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
 
-  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault)?.toNumber();
+  let withdrawStartTime = selectedVault.userWithdrawRequest?.[0]?.withdrawEnableTime;
+  withdrawStartTime = withdrawStartTime ? +withdrawStartTime : undefined;
   const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
   const nowInSeconds = Date.now() / 1000;
   const isUserInQueueToWithdraw = nowInSeconds < (withdrawStartTime ?? 0);

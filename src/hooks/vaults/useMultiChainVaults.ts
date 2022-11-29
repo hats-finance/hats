@@ -1,27 +1,36 @@
+import { IWithdrawRequest } from "./../../types/types";
 import { useCallback, useEffect, useState } from "react";
-import { useNetwork, chain as allChains } from "wagmi";
+import { useNetwork, chain as allChains, useAccount } from "wagmi";
 import { IMaster, IVault } from "types/types";
 import { defaultChain, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
 
-const DATA_REFRESH_TIME = 15000;
+const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
   OPTIMISM: { prod: ChainsConfig[allChains.optimism.id], test: ChainsConfig[allChains.optimismGoerli.id] },
 };
 
+interface GraphVaultsData {
+  vaults: IVault[];
+  masters: IMaster[];
+  userWithdrawRequests: IWithdrawRequest[];
+}
+
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
-  const [data, setData] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
+  const { address: account } = useAccount();
+  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userWithdrawRequests: [] });
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
     const subgraphUrl = ChainsConfig[chainId || defaultChain.chain.id].subgraph;
     const res = await fetch(subgraphUrl, {
       method: "POST",
-      body: JSON.stringify({ query: GET_VAULTS, variables: {} }),
+      body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
+      cache: "default",
     });
     const dataJson = await res.json();
 
@@ -63,7 +72,14 @@ export const useMultiChainVaults = () => {
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
-    const newVaults = { vaults: allVaults, masters: allMasters };
+    const newVaults = {
+      vaults: allVaults.map((vault) => ({
+        ...vault,
+      })),
+      masters: allMasters,
+    };
+
+    console.log(newVaults);
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
       setVaults({ vaults: allVaults, masters: allMasters });

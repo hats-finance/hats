@@ -40,6 +40,8 @@ export function VaultsProvider({ children }) {
 
   const { data, networkEnv } = useMultiChainVaults();
 
+  // console.log(data);
+
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
       if (vaults) {
