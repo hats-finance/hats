@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { useTransaction } from "wagmi";
 import { Dot, MyAccount, TransactionInfo, Modal } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { Colors } from "constants/constants";
@@ -10,8 +9,8 @@ export default function WalletInfo() {
   const { t } = useTranslation();
   const { nftData } = useVaults();
   const { isShowing, show, hide } = useModal();
-  // TODO: [v2] verify if this works well
-  const { data: transaction } = useTransaction({ scopeKey: "hats" });
+  // TODO: [v2] re-implement this functionality (show ongoing transaction)
+  // const { data: transaction } = useTransaction({ scopeKey: "hats" });
 
   return (
     <StyledWalletInfo>
@@ -23,7 +22,7 @@ export default function WalletInfo() {
         )}
       </button>
 
-      {transaction && <TransactionInfo />}
+      {/* {transaction && <TransactionInfo />} */}
 
       <Modal isShowing={isShowing} onHide={hide}>
         <MyAccount />

@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useTransactions } from "@usedapp/core";
 import ArrowIcon from "assets/icons/arrow.icon";
 import { StyledModal, ModalContainer } from "./styles";
 
@@ -32,7 +31,9 @@ export function Modal({
   capitalizeTitle = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
-  const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
+  // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
+  // TODO: [v2] re-implement this functionality (show ongoing transaction)
+  const inTransaction = false;
 
   const handleOnHide = useCallback(() => {
     if (disableClose) return;

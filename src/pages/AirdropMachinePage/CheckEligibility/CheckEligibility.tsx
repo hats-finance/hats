@@ -1,7 +1,7 @@
 import { createContext, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import classNames from "classnames";
-import { useEthers } from "@usedapp/core";
 import { RedeemNftSuccess, Modal } from "components";
 import useModal from "hooks/useModal";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -24,7 +24,7 @@ export const AirdropMachineContext = createContext<IAirdropMachineContext>(undef
 
 export default function CheckEligibility() {
   const { t } = useTranslation();
-  const { account } = useEthers();
+  const { address: account } = useAccount();
   const [userInput, setUserInput] = useState("");
   const { isShowing, show, hide } = useModal();
   const inputError = userInput && !isAddress(userInput);
