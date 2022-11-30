@@ -14,7 +14,7 @@ import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
  * @param vault - The selected vault to get the user withdraw start time from
  * @returns The user withdraw start time
  */
-export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefined {
+export function useWithdrawRequestInfo(vault: IVault): BigNumber | undefined {
   const isTabFocused = useTabFocus();
   const { address: account } = useAccount();
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
