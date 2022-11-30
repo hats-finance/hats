@@ -1,3 +1,4 @@
+import { useElementOutsideScrreen } from "hooks/useElementOutsideScreen";
 import useOnClickOutside from "hooks/useOnClickOutside";
 import { useRef } from "react";
 import { StyledDropdownSelector } from "./styles";
@@ -10,23 +11,28 @@ type DropdownSelectorProps = {
 
 export const DropdownSelector = ({ options, show, onClose }: DropdownSelectorProps) => {
   const optionsRef = useRef<HTMLDivElement>(null);
+  const isOutsideScreen = useElementOutsideScrreen(optionsRef, show);
+
   useOnClickOutside(optionsRef, () => onClose());
 
-  return show ? (
-    <StyledDropdownSelector ref={optionsRef}>
-      {options.map((opt) => {
-        const onClick = () => {
-          onClose();
-          opt.onClick();
-        };
+  return (
+    <StyledDropdownSelector show={show} isOutsideScreen={isOutsideScreen}>
+      <div className="overlay" />
+      <div className="options" ref={optionsRef}>
+        {options.map((opt) => {
+          const onClick = () => {
+            onClose();
+            opt.onClick();
+          };
 
-        return (
-          <div className="option" key={opt.label} onClick={onClick}>
-            {opt.icon && <img src={opt.icon} alt={opt.label} />}
-            <span>{opt.label}</span>
-          </div>
-        );
-      })}
+          return (
+            <div className="option" key={opt.label} onClick={onClick}>
+              {opt.icon && <img src={opt.icon} alt={opt.label} />}
+              <span>{opt.label}</span>
+            </div>
+          );
+        })}
+      </div>
     </StyledDropdownSelector>
-  ) : null;
+  );
 };
