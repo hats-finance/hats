@@ -5,6 +5,21 @@ import { IVault } from "types/types";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { RewardController_abi } from "data/abis/RewardController_abi";
 
+export const getPendingRewardContractInfo = (vault?: IVault, account?: string | undefined) => {
+  const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardController.id;
+  const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
+  const method = vault?.version === "v1" ? "pendingReward" : "getPendingReward";
+  const args = vault?.version === "v1" ? [vault?.pid, account] : [vault?.id, account];
+
+  return {
+    address: vault ? contractAddress : undefined,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault?.chainId,
+    args,
+  };
+};
+
 /**
  * Returns the amount of pending reward to claim for a giver user
  *
@@ -14,25 +29,16 @@ import { RewardController_abi } from "data/abis/RewardController_abi";
  * @param vault - The selected vault to get the user pending reward from
  * @returns The pending reward amount
  */
-export function usePendingReward(vault: IVault): BigNumber | undefined {
+export function usePendingReward(vault?: IVault): BigNumber | undefined {
   const isTabFocused = useTabFocus();
   const { address: account } = useAccount();
-  const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardController.id;
-  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
-  const method = vault.version === "v1" ? "pendingReward" : "getPendingReward";
-  const args = vault.version === "v1" ? [vault.pid, account] : [vault.id, account];
 
   const { data: res, isError } =
     useContractRead({
+      ...getPendingRewardContractInfo(vault, account),
       enabled: isTabFocused,
-      address: contractAddress,
-      abi: vaultAbi as any,
-      functionName: method,
       scopeKey: "hats",
-      chainId: vault.chainId,
       watch: false,
-
-      args,
     }) ?? {};
   const data = res as any;
 

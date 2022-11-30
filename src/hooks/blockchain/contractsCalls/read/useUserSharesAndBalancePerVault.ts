@@ -6,6 +6,11 @@ import { useUserSharesPerVault } from "./useUserSharesPerVault";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 
+interface useUserSharesAndBalancePerVaultReturn {
+  userSharesAvailable: BigNumber | undefined;
+  userBalanceAvailable: BigNumber | undefined;
+}
+
 /**
  * Returns the amount of shares the user has and the value of those shares (balance) on staking token.
  *
@@ -15,12 +20,15 @@ import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
  * @param vault - The selected vault to get the user shares from and the balance of those shares
  * @returns The user shares amount and the user balance
  */
-export function useUserSharesAndBalancePerVault(vault: IVault): {
-  userSharesAvailable: BigNumber | undefined;
-  userBalanceAvailable: BigNumber | undefined;
-} {
+export function useUserSharesAndBalancePerVault(
+  vault: IVault,
+  userSharesAvailableCache?: BigNumber
+): useUserSharesAndBalancePerVaultReturn {
   const isTabFocused = useTabFocus();
-  const userSharesAvailable = useUserSharesPerVault(vault);
+
+  // If we are receiving userSharesAvailable from function, we dont need to call the contract
+  let userSharesAvailable = useUserSharesPerVault(userSharesAvailableCache ? undefined : vault);
+  userSharesAvailable = userSharesAvailableCache ?? userSharesAvailable;
 
   const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
   const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
