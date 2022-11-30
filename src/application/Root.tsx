@@ -1,12 +1,12 @@
+import { useEffect } from "react";
 import { ApolloProvider } from "@apollo/client";
 import { Provider } from "react-redux";
-import { DAppProvider } from "@usedapp/core";
-import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import HttpsRedirect from "react-https-redirect";
 import { BrowserRouter } from "react-router-dom";
-import { ethersConfig } from "config/ethers";
+import { WagmiConfig } from "wagmi";
 import { client } from "config/apollo";
+import { wagmiClient } from "config/wagmi";
 import { VaultsProvider } from "hooks/vaults/useVaults";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
@@ -23,7 +23,7 @@ function Root() {
   }, [i18n]);
 
   return (
-    <DAppProvider config={ethersConfig}>
+    <WagmiConfig client={wagmiClient}>
       <Provider store={store}>
         <ApolloProvider client={client}>
           <VaultsProvider>
@@ -40,7 +40,7 @@ function Root() {
           </VaultsProvider>
         </ApolloProvider>
       </Provider>
-    </DAppProvider>
+    </WagmiConfig>
   );
 }
 

@@ -35,7 +35,9 @@ export interface IBaseVault {
   multipleVaults?: IVault[];
   description: IVaultDescription;
   chainId?: number;
+  userWithdrawRequest?: IWithdrawRequest[];
 }
+
 export interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
@@ -50,6 +52,13 @@ export interface IVaultV2 extends IBaseVault {
 }
 
 export type IVault = IVaultV1 | IVaultV2;
+
+export interface IWithdrawRequest {
+  beneficiary: string;
+  withdrawEnableTime: number;
+  expiryTime: number;
+  vault: { id: string };
+}
 
 interface IBaseVaultDescription {
   version: "v1" | "v2" | undefined;

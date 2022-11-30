@@ -1,5 +1,5 @@
 import { useApolloClient } from "@apollo/client";
-import { useEthers } from "@usedapp/core";
+import { useAccount, useNetwork } from "wagmi";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
@@ -27,29 +27,31 @@ export function useVaults() {
 
 export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>([]);
+  const [allVaults, setAllVaults] = useState<IVault[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
-  const { chainId, library, account } = useEthers();
+  const { address: account } = useAccount();
+  const { chain } = useNetwork();
   const nftData = useNFTTokenData(account);
 
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");
   }
 
-  const { data } = useMultiChainVaults();
+  const { data, networkEnv } = useMultiChainVaults();
+
+  // console.log(data);
 
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
-      if (vaults && library) {
+      if (vaults) {
         const stakingTokens = Array.from(new Set(vaults?.map((vault) => vault.stakingToken.toLowerCase())));
         const newTokenPrices = Array<number>();
-        if (library) {
-          for (const token in tokenPriceFunctions) {
-            const getPriceFunction = tokenPriceFunctions[token];
-            if (getPriceFunction !== undefined) {
-              const price = await tokenPriceFunctions[token](library);
-              if (price && price > 0) newTokenPrices[token] = price;
-            }
+        for (const token in tokenPriceFunctions) {
+          const getPriceFunction = tokenPriceFunctions[token];
+          if (getPriceFunction !== undefined) {
+            const price = await getPriceFunction();
+            if (price && price > 0) newTokenPrices[token] = price;
           }
         }
 
@@ -89,7 +91,7 @@ export function VaultsProvider({ children }) {
         return newTokenPrices;
       }
     },
-    [apolloClient, library]
+    [apolloClient]
   );
 
   const setVaultsWithDetails = async (vaultsData: IVault[]) => {
@@ -110,7 +112,8 @@ export function VaultsProvider({ children }) {
     const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> =>
       Promise.all(
         vaultsToFetch.map(async (vault) => {
-          const description = (await loadVaultDescription(vault)) as IVaultDescription;
+          const existsDescription = allVaults.find((v) => v.id === vault.id)?.description;
+          const description = existsDescription ?? ((await loadVaultDescription(vault)) as IVaultDescription);
 
           return {
             ...vault,
@@ -122,7 +125,9 @@ export function VaultsProvider({ children }) {
         })
       );
 
-    const vaultsWithDescription = (await getVaultsData(vaultsData)).filter((vault) => {
+    const allVaultsData = await getVaultsData(vaultsData);
+
+    const vaultsWithDescription = allVaultsData.filter((vault) => {
       if (
         vault.description?.["project-metadata"].starttime &&
         vault.description?.["project-metadata"].starttime > Date.now() / 1000
@@ -133,6 +138,7 @@ export function VaultsProvider({ children }) {
       return true;
     });
 
+    setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
     setVaults(vaultsWithDescription);
@@ -140,7 +146,7 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults && chainId === 1) {
+    if (vaults && networkEnv === "prod") {
       getPrices(vaults).then((prices) => {
         if (!cancelled) setTokenPrices(prices);
       });
@@ -149,11 +155,12 @@ export function VaultsProvider({ children }) {
     return () => {
       cancelled = true;
     };
-  }, [vaults, getPrices, chainId]);
+  }, [vaults, getPrices, chain, networkEnv]);
 
   useEffect(() => {
     if (data?.vaults) setVaultsWithDetails(data?.vaults);
-  }, [data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.vaults]);
 
   const { safetyPeriod, withdrawPeriod } = data?.masters?.[0] || {};
 

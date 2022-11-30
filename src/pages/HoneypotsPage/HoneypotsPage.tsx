@@ -96,7 +96,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
                       groupVaults.map((vault) => (
                         <Vault
                           ref={vault.id === vaultId ? scrollRef : null}
-                          expanded={expanded === vault}
+                          expanded={expanded === vault.id}
                           setExpanded={setExpanded}
                           key={vault.id}
                           vault={vault}

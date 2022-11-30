@@ -1,12 +1,13 @@
+import { useAccount } from "wagmi";
 import { BigNumber } from "ethers";
-import { useEthers, useTokenAllowance, useTokenBalance } from "@usedapp/core";
-import { usePendingReward, useWithdrawRequestStartTime, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
+import { useTokenAllowance, useTokenBalanceAmount } from "hooks";
+import { usePendingReward, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
 import { IVault } from "types/types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
 
 export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
-  const { account } = useEthers();
+  const { address: account } = useAccount();
 
   // Token user wants to deposit/withdraw
   const vaultToken = selectedVault.stakingToken;
@@ -20,8 +21,8 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   // If v1 -> master address, if v2 -> vault id (contract address)
   const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
 
-  const tokenAllowanceAmount = useTokenAllowance(vaultToken, account, contractAddress, { chainId: selectedVault.chainId });
-  const tokenBalance = useTokenBalance(vaultToken, account, { chainId: selectedVault.chainId });
+  const tokenAllowance = useTokenAllowance(vaultToken, account, contractAddress, { chainId: selectedVault.chainId });
+  const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId });
   const { userSharesAvailable, userBalanceAvailable } = useUserSharesAndBalancePerVault(selectedVault);
   const pendingReward = usePendingReward(selectedVault);
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
@@ -33,8 +34,8 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
 
   return {
     depositPaused: selectedVault.depositPause,
-    tokenAllowanceAmount,
-    tokenBalance: new Amount(tokenBalance, vaultTokenDecimals, vaultTokenSymbol),
+    tokenAllowance,
+    tokenBalance: tokenBalanceAmount,
     pendingReward: new Amount(pendingReward, rewardTokenDecimals, rewardTokenSymbol),
     availableSharesToWithdraw: new Amount(userSharesAvailable, vaultTokenDecimals, "SHARES"),
     availableBalanceToWithdraw: new Amount(userBalanceAvailable, vaultTokenDecimals, vaultTokenSymbol),
@@ -52,7 +53,8 @@ export const useVaultWithdrawTime = (selectedVault: IVault) => {
   // Amount of time the user has to withdraw the funds
   const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
 
-  const withdrawStartTime = useWithdrawRequestStartTime(selectedVault)?.toNumber();
+  let withdrawStartTime = selectedVault.userWithdrawRequest?.[0]?.withdrawEnableTime;
+  withdrawStartTime = withdrawStartTime ? +withdrawStartTime : undefined;
   const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
   const nowInSeconds = Date.now() / 1000;
   const isUserInQueueToWithdraw = nowInSeconds < (withdrawStartTime ?? 0);

@@ -1,6 +1,5 @@
 import { shortenAddress } from "@usedapp/core";
 import { isAddress } from "ethers/lib/utils";
-import { CHAINID, CHAINS } from "settings";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import "./ContractsCovered.scss";
 
@@ -9,7 +8,7 @@ interface IProps {
 }
 
 export function ContractsCovered(props: IProps) {
-  const chain = CHAINS[CHAINID].chain;
+  // TODO: [v2] add link to contract depending on chain
 
   return (
     <div className="contracts-covered-wrapper">
@@ -19,11 +18,7 @@ export function ContractsCovered(props: IProps) {
         const isLink = isAddress(contractVaule) ? false : true;
 
         return (
-          <a
-            key={index}
-            {...defaultAnchorProps}
-            className="contract-wrapper"
-            href={isLink ? contractVaule : chain?.getExplorerAddressLink(contractVaule)}>
+          <a key={index} {...defaultAnchorProps} className="contract-wrapper" href={isLink ? contractVaule : ""}>
             <span title={contractName} className="contract-name">
               {contractName}
             </span>

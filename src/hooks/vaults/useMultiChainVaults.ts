@@ -1,31 +1,52 @@
+import { IWithdrawRequest } from "./../../types/types";
 import { useCallback, useEffect, useState } from "react";
-import { ChainId, useEthers } from "@usedapp/core";
+import { useNetwork, chain as allChains, useAccount } from "wagmi";
 import { IMaster, IVault } from "types/types";
-import { CHAINS, defaultChain, IS_PROD } from "settings";
+import { defaultChain, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
+import { ChainsConfig } from "config/chains";
+import { useTabFocus } from "hooks/useTabFocus";
 
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
-  ETHEREUM: { prod: CHAINS[ChainId.Mainnet], test: CHAINS[ChainId.Goerli] },
-  OPTIMISM: { prod: CHAINS[ChainId.Optimism], test: CHAINS[ChainId.OptimismGoerli] },
+  ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
+  OPTIMISM: { prod: ChainsConfig[allChains.optimism.id], test: ChainsConfig[allChains.optimismGoerli.id] },
 };
 
+interface GraphVaultsData {
+  vaults: IVault[];
+  masters: IMaster[];
+  userWithdrawRequests: IWithdrawRequest[];
+}
+
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
-  const [data, setData] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
-  const chainId = supportedChains[chainName][networkEnv]?.chain.chainId;
+  const isPageFocused = useTabFocus();
+  const { address: account } = useAccount();
+  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userWithdrawRequests: [] });
+  const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
-    const subgraphUrl = CHAINS[chainId || defaultChain.chainId].subgraph;
+    if (!isPageFocused) return;
+
+    const subgraphUrl = ChainsConfig[chainId || defaultChain.chain.id].subgraph;
     const res = await fetch(subgraphUrl, {
       method: "POST",
-      body: JSON.stringify({ query: GET_VAULTS, variables: {} }),
+      body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
+      cache: "default",
     });
     const dataJson = await res.json();
 
-    setData(dataJson.data);
-  }, [chainId]);
+    if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
+      setData(dataJson.data);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chainId, isPageFocused]);
+
+  useEffect(() => {
+    isPageFocused && fetchData();
+  }, [isPageFocused, fetchData]);
 
   useEffect(() => {
     fetchData();
@@ -39,17 +60,14 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 
 export const useMultiChainVaults = () => {
   const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
-  const { chainId } = useEthers();
-  const connectedChain = chainId ? CHAINS[chainId] : null;
+  const { chain } = useNetwork();
+  const connectedChain = chain ? ChainsConfig[chain.id] : null;
 
-  const showTestnets = connectedChain ? connectedChain.chain.isTestChain : !IS_PROD;
-  const networkEnv = showTestnets ? "test" : "prod";
+  const showTestnets = connectedChain ? connectedChain.chain.testnet : !IS_PROD;
+  const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
   const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
-
-  // console.log("ethereumData", ethereumData.vaults);
-  // console.log("optimismData", optimismData.vaults);
 
   useEffect(() => {
     const allVaults = [
@@ -62,8 +80,19 @@ export const useMultiChainVaults = () => {
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
-    setVaults({ vaults: allVaults, masters: allMasters });
+    const newVaults = {
+      vaults: allVaults.map((vault) => ({
+        ...vault,
+      })),
+      masters: allMasters,
+    };
+
+    if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
+      setVaults({ vaults: allVaults, masters: allMasters });
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
 
-  return { data: vaults };
+  return { data: vaults, networkEnv };
 };

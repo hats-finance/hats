@@ -1,6 +1,6 @@
-import { shortenIfAddress } from "@usedapp/core";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
+import { shortenIfAddress } from "utils/addresses.utils";
 import RadioButton from "assets/icons/radio-button.svg";
 import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
@@ -19,14 +19,14 @@ export default function NotEligible() {
       <div className="not-eligible__sub-title">{t("AirdropMachine.NotEligible.text-1")}</div>
       <div className="not-eligible__wallet-container">
         <span>{t("AirdropMachine.NotEligible.text-2")}</span>
-        <div className="not-eligible__wallet-address">
-          {shortenIfAddress(address)}
-        </div>
+        <div className="not-eligible__wallet-address">{shortenIfAddress(address)}</div>
       </div>
       <div className="not-eligible__criterias-wrapper">
         <div className="not-eligible__criterias-top">
           <b>{t("AirdropMachine.NotEligible.text-3")}</b>
-          <div onClick={() => window.open(EMBASSY_LEARN_MORE)} className="not-eligible__criterias-top__learn-more">{t("AirdropMachine.NotEligible.text-4")} <img src={OpenInNewTabIcon} alt="" /></div>
+          <div onClick={() => window.open(EMBASSY_LEARN_MORE)} className="not-eligible__criterias-top__learn-more">
+            {t("AirdropMachine.NotEligible.text-4")} <img src={OpenInNewTabIcon} alt="" />
+          </div>
         </div>
         <div className="not-eligible__criteria">
           <img src={RadioButton} alt="radio button" />
@@ -49,11 +49,9 @@ export default function NotEligible() {
           <span>{t("AirdropMachine.NotEligible.criteria-5")}</span>
         </div>
       </div>
-      <button
-        onClick={closeRedeemModal}
-        className="check-other-wallet-button fill">
+      <button onClick={closeRedeemModal} className="check-other-wallet-button fill">
         {t("AirdropMachine.NotEligible.button-text")}
       </button>
     </div>
-  )
+  );
 }

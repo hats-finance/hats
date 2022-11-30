@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_VAULTS = `
-  query getVaults {
+  query getVaults($account: String) {
     masters {
       address
       governance
@@ -41,6 +41,13 @@ export const GET_VAULTS = `
       rewardsLevels
       liquidityPool
       registered
+      userWithdrawRequest: withdrawRequests(where:{beneficiary: $account}) {
+        id
+        beneficiary
+        withdrawEnableTime
+        createdAt
+        expiryTime
+      }
       withdrawRequests {
         id
         beneficiary
