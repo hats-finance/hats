@@ -1,7 +1,7 @@
 import { useBalance } from "wagmi";
 import { Address, FetchBalanceArgs } from "@wagmi/core";
 import { Amount } from "utils/amounts.utils";
-import { useTabFocus } from "./useTabFocus";
+import { useTabFocus } from "../useTabFocus";
 
 type useTokenBalanceAmountArgs = Omit<FetchBalanceArgs, "token" | "address"> & {
   token: string | undefined;

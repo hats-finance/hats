@@ -15,10 +15,10 @@ import {
   useTokenApproveAllowance,
   useWithdrawAndClaim,
   useWithdrawRequest,
-} from "hooks/contractHooksCalls";
+} from "hooks/blockchain/contractsCalls";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { useSupportedNetwork } from "hooks/blockchain/useSupportedNetwork";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";

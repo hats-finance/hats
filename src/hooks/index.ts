@@ -1,3 +1,3 @@
-export { useTokenBalanceAmount } from "./useTokenBalanceAmount";
-export { useSupportedNetwork } from "./useSupportedNetwork";
-export { useTokenAllowance } from "./useTokenAllowance";
+export { useTokenBalanceAmount } from "./blockchain/useTokenBalanceAmount";
+export { useSupportedNetwork } from "./blockchain/useSupportedNetwork";
+export { useTokenAllowance } from "./blockchain/useTokenAllowance";

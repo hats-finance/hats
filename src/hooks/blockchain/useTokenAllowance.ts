@@ -1,6 +1,6 @@
 import { BigNumber } from "ethers";
 import { erc20ABI, useContractRead } from "wagmi";
-import { useTabFocus } from "./useTabFocus";
+import { useTabFocus } from "../useTabFocus";
 
 type UseTokenAllowanceParamsType = { chainId?: number };
 

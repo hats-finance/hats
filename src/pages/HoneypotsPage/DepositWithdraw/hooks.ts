@@ -1,7 +1,7 @@
 import { useAccount } from "wagmi";
 import { BigNumber } from "ethers";
 import { useTokenAllowance, useTokenBalanceAmount } from "hooks";
-import { usePendingReward, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
+import { usePendingReward, useUserSharesAndBalancePerVault } from "hooks/blockchain/contractsCalls";
 import { IVault } from "types/types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
