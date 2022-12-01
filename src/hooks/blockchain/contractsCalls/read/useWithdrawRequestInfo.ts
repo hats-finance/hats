@@ -23,6 +23,9 @@ export const getWithdrawRequestInfoContractInfo = (vault?: IVault, account?: str
 /**
  * Returns the starting time in seconds when the user can withdraw from the vault.
  *
+ * @warning
+ * This method is not being used because the value is being fetched from thegraph.
+ *
  * @remarks
  * This method is supporting v1 and v2 vaults.
  *
