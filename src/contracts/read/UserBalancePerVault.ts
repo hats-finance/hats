@@ -21,7 +21,7 @@ export class UserBalancePerVaultContract {
     };
   };
 
-  static mapResponseToData = (res: any, vault: IVault, userSharesAvailable: BigNumber): BigNumber | undefined => {
+  static mapResponseToData = (res: any, vault: IVault, userSharesAvailable: BigNumber | undefined): BigNumber | undefined => {
     const data = res.data as any;
 
     let userBalanceAvailable: BigNumber | undefined = undefined;
@@ -53,7 +53,7 @@ export class UserBalancePerVaultContract {
    * @param vault - The selected vault to get the user shares value from.
    * @returns The user shares value
    */
-  static hook = (vault: IVault, userSharesAvailable: BigNumber): BigNumber | undefined => {
+  static hook = (vault: IVault, userSharesAvailable: BigNumber | undefined): BigNumber | undefined => {
     const isTabFocused = useTabFocus();
 
     const res = useContractRead({

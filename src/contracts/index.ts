@@ -1,3 +1,4 @@
+export { DepositWithdrawDataMulticall } from "./read/multicalls/DepositDataMulticall";
 export { PendingRewardContract } from "./read/PendingReward";
 export { TokenAllowanceContract } from "./read/TokenAllowance";
 export { TotalSharesPerVaultContract } from "./read/TotalSharesPerVault";

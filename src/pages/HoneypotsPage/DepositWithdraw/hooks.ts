@@ -4,9 +4,7 @@ import { useTokenBalanceAmount } from "hooks/wagmi";
 import { IVault } from "types/types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
-import { TokenAllowanceContract } from "contracts/read/TokenAllowance";
-import { PendingRewardContract } from "contracts/read/PendingReward";
-import { UserSharesAndBalancePerVaultContract } from "contracts/read/UserSharesAndBalancePerVault";
+import { DepositWithdrawDataMulticall, UserBalancePerVaultContract } from "contracts";
 
 /**
  * This hook will fetch all the data needed for the deposit/withdraw page. In total we have to read 5 different contracts:
@@ -40,16 +38,13 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : selectedVault.rewardController.rewardTokenDecimals;
   const rewardTokenSymbol =
     selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : selectedVault.rewardController.rewardTokenSymbol;
-  // If v1 -> master address, if v2 -> vault id (contract address)
-  const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
 
-  const tokenAllowance = TokenAllowanceContract.hook(vaultToken, account, contractAddress, { chainId: selectedVault.chainId }); // PUT INSIDE MULTI_CALL
-  const pendingReward = PendingRewardContract.hook(selectedVault); // PUT INSIDE MULTI_CALL
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
 
-  const { userSharesAvailable, userBalanceAvailable } = UserSharesAndBalancePerVaultContract.hook(selectedVault); // Step (2.)
+  const { pendingReward, tokenAllowance, userSharesAvailable } = DepositWithdrawDataMulticall.hook(selectedVault); // Step (1.)
+  const userBalanceAvailable = UserBalancePerVaultContract.hook(selectedVault, userSharesAvailable); // Step (2.)
   const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (3.)
 
   const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =

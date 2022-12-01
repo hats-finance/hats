@@ -2,18 +2,18 @@ import { BigNumber } from "ethers";
 import { erc20ABI, useContractRead } from "wagmi";
 import { useTabFocus } from "hooks/useTabFocus";
 
-type UseTokenAllowanceParamsType = { chainId?: number };
-
 export class TokenAllowanceContract {
   static contractInfo = (
     tokenAddress: string | undefined,
     ownerAddress: string | undefined,
-    spenderAddress: string | undefined
+    spenderAddress: string | undefined,
+    chainId: number | undefined
   ) => {
     return {
       address: tokenAddress,
       abi: erc20ABI as any,
       functionName: "allowance",
+      chainId,
       args: [ownerAddress as `0x${string}`, spenderAddress as `0x${string}`],
     };
   };
@@ -26,14 +26,13 @@ export class TokenAllowanceContract {
     tokenAddress: string | undefined,
     ownerAddress: string | undefined,
     spenderAddress: string | undefined,
-    params?: UseTokenAllowanceParamsType
+    chainId: number | undefined
   ) => {
     const isTabFocused = useTabFocus();
 
     const res = useContractRead({
-      ...this.contractInfo(tokenAddress, ownerAddress, spenderAddress),
+      ...this.contractInfo(tokenAddress, ownerAddress, spenderAddress, chainId),
       enabled: isTabFocused,
-      ...params,
     });
 
     return this.mapResponseToData(res);
