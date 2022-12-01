@@ -5,7 +5,7 @@ import { IVault } from "types/types";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 
-export const getTotalSharesPerVaultContractInfo = (vault?: IVault, account?: string | undefined) => {
+export const getTotalSharesPerVaultContractInfo = (vault?: IVault) => {
   const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
   const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault?.version === "v1" ? "poolInfo" : "totalSupply";

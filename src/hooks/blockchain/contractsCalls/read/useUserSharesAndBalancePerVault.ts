@@ -11,6 +11,21 @@ interface useUserSharesAndBalancePerVaultReturn {
   userBalanceAvailable: BigNumber | undefined;
 }
 
+export const getUserSharesAndBalancePerVaultContractInfo = (vault?: IVault, userSharesAvailableCache?: BigNumber) => {
+  const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
+  const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+  const method = vault?.version === "v1" ? "poolInfo" : "previewRedeem";
+  const args = vault?.version === "v1" ? [vault?.pid] : [userSharesAvailableCache];
+
+  return {
+    address: vault ? contractAddress : undefined,
+    abi: vaultAbi as any,
+    functionName: method,
+    chainId: vault?.chainId,
+    args,
+  };
+};
+
 /**
  * Returns the amount of shares the user has and the value of those shares (balance) on staking token.
  *
@@ -30,20 +45,11 @@ export function useUserSharesAndBalancePerVault(
   let userSharesAvailable = useUserSharesPerVault(userSharesAvailableCache ? undefined : vault);
   userSharesAvailable = userSharesAvailableCache ?? userSharesAvailable;
 
-  const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-  const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
-  const method = vault.version === "v1" ? "poolInfo" : "previewRedeem";
-  const args = vault.version === "v1" ? [vault.pid] : [userSharesAvailable];
-
   const { data: res, isError } = useContractRead({
+    ...getUserSharesAndBalancePerVaultContractInfo(vault, userSharesAvailable),
     enabled: isTabFocused,
-    address: contractAddress,
-    abi: vaultAbi as any,
-    functionName: method,
-    chainId: vault.chainId,
     scopeKey: "hats",
     watch: isTabFocused,
-    args,
   });
   const data = res as any;
 

@@ -5,7 +5,7 @@ import { IVault } from "types/types";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 
-export const getithdrawRequestInfoContractInfo = (vault?: IVault, account?: string | undefined) => {
+export const getWithdrawRequestInfoContractInfo = (vault?: IVault, account?: string | undefined) => {
   const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
   const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
   const method = vault?.version === "v1" ? "withdrawRequests" : "withdrawEnableStartTime";
@@ -34,7 +34,7 @@ export function useWithdrawRequestInfo(vault: IVault): BigNumber | undefined {
   const { address: account } = useAccount();
 
   const { data: res, isError } = useContractRead({
-    ...getithdrawRequestInfoContractInfo(vault, account),
+    ...getWithdrawRequestInfoContractInfo(vault, account),
     enabled: isTabFocused && !!account,
     scopeKey: "hats",
     watch: isTabFocused,
