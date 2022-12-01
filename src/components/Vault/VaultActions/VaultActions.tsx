@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { RoutePaths } from "navigation";
 import { IPoolWithdrawRequest, IVault } from "types/types";
-import { useSupportedNetwork } from "hooks/blockchain/useSupportedNetwork";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
 import "./VaultActions.scss";
 

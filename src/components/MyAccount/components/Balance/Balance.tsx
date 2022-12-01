@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useTokenBalanceAmount } from "hooks";
+import { useTokenBalanceAmount } from "hooks/wagmi";
 import { useVaults } from "hooks/vaults/useVaults";
 import WalletIcon from "assets/icons/balance.svg";
 import { StyledBalance } from "./styles";

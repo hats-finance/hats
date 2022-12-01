@@ -1,6 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
-import { useTotalSharesPerVault, useUserSharesPerVault } from "hooks/blockchain/contractsCalls";
+import { TotalSharesPerVaultContract } from "contracts/read/TotalSharesPerVault";
+import { UserSharesPerVaultContract } from "contracts/read/UserSharesPerVault";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
@@ -17,9 +18,9 @@ const TIER_PERCENTAGES = [10, 100, 1500];
 export function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
   const { nftData } = useVaults();
-  const userShares = useUserSharesPerVault(vault);
+  const userShares = UserSharesPerVaultContract.hook(vault);
   const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
-  const totalShares = useTotalSharesPerVault(vault);
+  const totalShares = TotalSharesPerVaultContract.hook(vault);
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
 
   if (!nftData?.nftTokens || totalShares.eq(0)) return null;

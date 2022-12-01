@@ -6,7 +6,7 @@ import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { INFTTokenData, useNFTTokenData } from "hooks/blockchain/useNFTTokenData";
+import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";

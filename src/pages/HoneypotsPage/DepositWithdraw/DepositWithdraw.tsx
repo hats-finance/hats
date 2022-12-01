@@ -8,23 +8,23 @@ import classNames from "classnames";
 import { Loading, Modal } from "components";
 import { IVault } from "types/types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
-import {
-  useCommitteeCheckIn,
-  useClaimReward,
-  useDeposit,
-  useTokenApproveAllowance,
-  useWithdrawAndClaim,
-  useWithdrawRequest,
-} from "hooks/blockchain/contractsCalls";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSupportedNetwork } from "hooks/blockchain/useSupportedNetwork";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./hooks";
 import "./index.scss";
+import {
+  ClaimRewardContract,
+  CommitteeCheckInContract,
+  DepositContract,
+  TokenApproveAllowanceContract,
+  WithdrawAndClaimContract,
+  WithdrawRequestContract,
+} from "contracts";
 
 interface IProps {
   vault: IVault;
@@ -94,12 +94,12 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const isDepositing = tab === Tab.Deposit;
   const isWithdrawing = tab === Tab.Withdraw;
 
-  const approveTokenAllowanceCall = useTokenApproveAllowance(selectedVault);
+  const approveTokenAllowanceCall = TokenApproveAllowanceContract.hook(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
     approveTokenAllowanceCall.send(amountToSpend ?? MAX_SPENDING);
   };
 
-  const depositCall = useDeposit(selectedVault);
+  const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
 
@@ -116,7 +116,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     }
   }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
 
-  const withdrawAndClaimCall = useWithdrawAndClaim(selectedVault);
+  const withdrawAndClaimCall = WithdrawAndClaimContract.hook(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!userInputValue) return;
     withdrawAndClaimCall.send(userInputValue);
@@ -126,13 +126,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
   }, [userInputValue, selectedVault, withdrawAndClaimCall, master, nftData]);
 
-  const withdrawRequestCall = useWithdrawRequest(selectedVault);
+  const withdrawRequestCall = WithdrawRequestContract.hook(selectedVault);
   const handleWithdrawRequest = withdrawRequestCall.send;
 
-  const claimRewardCall = useClaimReward(selectedVault);
+  const claimRewardCall = ClaimRewardContract.hook(selectedVault);
   const handleClaimReward = claimRewardCall.send;
 
-  const checkInCall = useCommitteeCheckIn(selectedVault);
+  const checkInCall = CommitteeCheckInContract.hook(selectedVault);
   const handleCheckIn = checkInCall.send;
 
   const actionsMap = {

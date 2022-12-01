@@ -8,8 +8,8 @@ import { AirdropMachineWallet, IStaker, INFTTokenInfo, INFTTokenMetadata, INFTTo
 import { ipfsTransformUri } from "utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { GET_STAKER } from "graphql/subgraph";
-import { usePrevious } from "../usePrevious";
-import { useSupportedNetwork } from "./useSupportedNetwork";
+import { usePrevious } from "./usePrevious";
+import { useSupportedNetwork } from "./wagmi/useSupportedNetwork";
 import { TransactionReceipt } from "@ethersproject/providers";
 import { MerkleTree } from "merkletreejs";
 import { ChainsConfig } from "config/chains";
