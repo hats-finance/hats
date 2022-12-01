@@ -3,6 +3,7 @@ export { TokenAllowanceContract } from "./read/TokenAllowance";
 export { TotalSharesPerVaultContract } from "./read/TotalSharesPerVault";
 export { UserSharesAndBalancePerVaultContract } from "./read/UserSharesAndBalancePerVault";
 export { UserSharesPerVaultContract } from "./read/UserSharesPerVault";
+export { UserBalancePerVaultContract } from "./read/UserBalancePerVault";
 export { WithdrawRequestInfoContract } from "./read/WithdrawRequestInfo";
 export { ClaimRewardContract } from "./write/ClaimReward";
 export { CommitteeCheckInContract } from "./write/CommitteeCheckIn";

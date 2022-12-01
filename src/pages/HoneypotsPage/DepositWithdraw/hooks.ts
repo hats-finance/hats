@@ -44,12 +44,13 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
 
   const tokenAllowance = TokenAllowanceContract.hook(vaultToken, account, contractAddress, { chainId: selectedVault.chainId }); // PUT INSIDE MULTI_CALL
-  const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // PUT INSIDE MULTI_CALL
-  const { userSharesAvailable, userBalanceAvailable } = UserSharesAndBalancePerVaultContract.hook(selectedVault); // PUT INSIDE MULTI_CALL
   const pendingReward = PendingRewardContract.hook(selectedVault); // PUT INSIDE MULTI_CALL
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
+
+  const { userSharesAvailable, userBalanceAvailable } = UserSharesAndBalancePerVaultContract.hook(selectedVault); // Step (2.)
+  const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (3.)
 
   const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
     getVaultWithdrawTime(selectedVault);
