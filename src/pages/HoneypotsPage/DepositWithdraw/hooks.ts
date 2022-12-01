@@ -7,7 +7,17 @@ import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "con
 import { Amount } from "utils/amounts.utils";
 
 /**
- * This hook will fetch all the data needed for the deposit/withdraw page. In total we have to read
+ * This hook will fetch all the data needed for the deposit/withdraw page. In total we have to read 5 different contracts:
+ *   1. Token allowance: to check if the user has approved the vault to spend his tokens.
+ *   2. Token balance: to check how many staking tokens the user has in his wallet. (Tokens the user can deposit)
+ *   3. User shares: to check how many shares the user has in the vault. (Shares the user can witdraw)
+ *   4. User balance: value in tokens of the user shares. (In order to calculate this we need to call the user shares contract first)
+ *   5. Pending reward: to check how many pending rewards the user has in the vault.
+ *
+ * This method wont call all the contracts separately. The method is going to make three executions:
+ *   1. Multicall with [tokenAllowance(1.), userShares(3.), pendingReward(5.)].
+ *   2. Single call with [userBalance(4.)].
+ *   3. Single call with [tokenBalance(2.)].
  *
  * @remarks
  * This method is supporting v1 and v2 vaults.
