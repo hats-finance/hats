@@ -3,7 +3,7 @@ import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwor
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";

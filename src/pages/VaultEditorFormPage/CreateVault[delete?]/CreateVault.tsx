@@ -1,12 +1,12 @@
-import { useContractFunction, useEthers } from "@usedapp/core";
 import { Contract } from "ethers";
 // import vaultAbi from "data/abis/HATSVault.json";
 import { useVaults } from "hooks/vaults/useVaults";
 import { FormEventHandler, SyntheticEvent, useState } from "react";
 import { Transactions } from "constants/constants";
+import { useAccount } from "wagmi";
 
 export default function CreateVault({ descriptionHash }) {
-  const { account } = useEthers();
+  const { address: account } = useAccount();
   const { vaults, masters } = useVaults();
   const governedMasters = masters?.filter((master) => master.governance.toLowerCase() === account?.toLowerCase());
   const vault = vaults?.find((vault) => vault.descriptionHash === descriptionHash);

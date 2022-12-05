@@ -6,7 +6,7 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import classNames from "classnames";
 import { NFTCard } from "components";
-import { useSupportedNetwork } from "hooks";
+import { useSupportedNetwork } from "hooks/wagmi";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { AirdropMachineContext } from "pages/AirdropMachinePage/context";

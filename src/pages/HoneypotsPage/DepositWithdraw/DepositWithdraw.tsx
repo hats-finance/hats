@@ -8,23 +8,23 @@ import classNames from "classnames";
 import { Loading, Modal } from "components";
 import { IVault } from "types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
-import {
-  useCommitteeCheckIn,
-  useClaimReward,
-  useDeposit,
-  useTokenApproveAllowance,
-  useWithdrawAndClaim,
-  useWithdrawRequest,
-} from "hooks/contractHooksCalls";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSupportedNetwork } from "hooks/useSupportedNetwork";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./hooks";
 import "./index.scss";
+import {
+  ClaimRewardContract,
+  CommitteeCheckInContract,
+  DepositContract,
+  TokenApproveAllowanceContract,
+  WithdrawAndClaimContract,
+  WithdrawRequestContract,
+} from "contracts";
 
 interface IProps {
   vault: IVault;
@@ -62,6 +62,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
   const [tab, setTab] = useState(Tab.Deposit);
   const [termsOfUse, setTermsOfUse] = useState(false);
+  const [waitingForTransaction, setWaitingForTransaction] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
@@ -94,12 +95,12 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const isDepositing = tab === Tab.Deposit;
   const isWithdrawing = tab === Tab.Withdraw;
 
-  const approveTokenAllowanceCall = useTokenApproveAllowance(selectedVault);
+  const approveTokenAllowanceCall = TokenApproveAllowanceContract.hook(selectedVault);
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
     approveTokenAllowanceCall.send(amountToSpend ?? MAX_SPENDING);
   };
 
-  const depositCall = useDeposit(selectedVault);
+  const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
     if (!selectedVault.chainId) return;
@@ -117,7 +118,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     }
   }, [selectedVault, userInputValue, depositCall, master.address, depositTokensData, toggleEmbassyPrompt]);
 
-  const withdrawAndClaimCall = useWithdrawAndClaim(selectedVault);
+  const withdrawAndClaimCall = WithdrawAndClaimContract.hook(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!selectedVault.chainId) return;
     if (!userInputValue) return;
@@ -128,13 +129,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     await depositTokensData?.afterDeposit({ pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId });
   }, [userInputValue, selectedVault, withdrawAndClaimCall, master, depositTokensData]);
 
-  const withdrawRequestCall = useWithdrawRequest(selectedVault);
+  const withdrawRequestCall = WithdrawRequestContract.hook(selectedVault);
   const handleWithdrawRequest = withdrawRequestCall.send;
 
-  const claimRewardCall = useClaimReward(selectedVault);
+  const claimRewardCall = ClaimRewardContract.hook(selectedVault);
   const handleClaimReward = claimRewardCall.send;
 
-  const checkInCall = useCommitteeCheckIn(selectedVault);
+  const checkInCall = CommitteeCheckInContract.hook(selectedVault);
   const handleCheckIn = checkInCall.send;
 
   const actionsMap = {
@@ -180,8 +181,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (inProgressTransaction) {
       const { action, txHash } = inProgressTransaction;
 
-      if (txHash) {
+      if (txHash && !waitingForTransaction) {
+        setWaitingForTransaction(true);
+
         waitForTransaction({ hash: txHash }).finally(() => {
+          setWaitingForTransaction(false);
           setInProgressTransaction(undefined);
           actionsMap[action].reset();
 
@@ -194,7 +198,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inProgressTransaction, handleDeposit, hideApproveSpending]);
+  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {

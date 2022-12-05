@@ -1,8 +1,11 @@
+import { useNetwork } from "wagmi";
 import Select from "react-select";
-import { Colors } from "constants/constants";
-import { IVault } from "types";
-import "./index.scss";
+import Tooltip from "rc-tooltip";
 import { ipfsTransformUri } from "utils";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import { IVault } from "types/types";
+import { StyledVaultChainIcon } from "./styles";
+import "./index.scss";
 
 interface IProps {
   vault: IVault;
@@ -13,6 +16,21 @@ interface ITokenOptionProps {
   symbol: string;
   icon: string | undefined;
 }
+
+const VaultChainIcon = ({ vault }: { vault: IVault }) => {
+  const { chains } = useNetwork();
+  const network = chains.find((c) => c.id === vault.chainId);
+
+  return (
+    <StyledVaultChainIcon>
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+        <div className="chain-logo">
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
+        </div>
+      </Tooltip>
+    </StyledVaultChainIcon>
+  );
+};
 
 const TokenOption = ({ symbol, icon }: ITokenOptionProps) => {
   return (
@@ -82,11 +100,14 @@ export function TokenSelect({ vault, onSelect }: IProps) {
         />
       ) : (
         <div className="token-icon-wrapper">
-          <img
-            src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
-            className="token-icon"
-            alt="token icon"
-          />
+          <div className="icons-wrapper">
+            <img
+              src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
+              className="token-icon"
+              alt="token icon"
+            />
+            <VaultChainIcon vault={vault} />
+          </div>
           {vault.stakingTokenSymbol}
         </div>
       )}
