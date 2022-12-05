@@ -1,5 +1,3 @@
-import { gql } from "@apollo/client";
-
 export const GET_VAULTS = `
   query getVaults($account: String) {
     masters {
