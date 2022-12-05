@@ -15,7 +15,7 @@ export async function getDepositTokens(vaults: IVault[], nftContract: Contract, 
       const proxyAddress = NFTContractDataProxy[masterAddress.toLowerCase()];
       const tiers = await nftContract.getTierFromShares(proxyAddress, pid, address);
       const tokens: INFTToken[] = [];
-      for (let tier = 1; tier <= MAX_NFT_TIER || tier <= tiers; tier++) {
+      for (let tier = 1; tier <= Math.min(MAX_NFT_TIER, tiers); tier++) {
         tokens.push({
           ...vault,
           tier
