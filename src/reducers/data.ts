@@ -1,5 +1,3 @@
-import { UPDATE_AIRDROP_DATA } from "../constants/action-types";
-
 interface IDataReducer {
   rewardsToken: string;
   hatsPrice?: number;

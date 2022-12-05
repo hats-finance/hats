@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Dot, MyAccount, TransactionInfo, Modal } from "components";
+import { Dot, MyAccount, Modal } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { Colors } from "constants/constants";
 import useModal from "hooks/useModal";
