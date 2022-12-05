@@ -1,9 +1,12 @@
+import { useNetwork } from "wagmi";
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
+import Tooltip from "rc-tooltip";
 import { BigNumber } from "ethers";
 import millify from "millify";
 import { IVault } from "types/types";
 import { ipfsTransformUri } from "utils";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ArrowIcon from "assets/icons/arrow.icon";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultActions from "./VaultActions/VaultActions";
@@ -24,6 +27,7 @@ const VaultComponent = (
   { vault, expanded, preview, setExpanded }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
+  const { chains } = useNetwork();
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingTokenSymbol, multipleVaults } = vault;
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
@@ -42,6 +46,18 @@ const VaultComponent = (
 
   const expandVault = () => {
     setExpanded && setExpanded(expanded ? null : vault.id);
+  };
+
+  const getVaultChainIcon = () => {
+    const network = chains.find((c) => c.id === vault.chainId);
+
+    return (
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+        <div className="chain-logo">
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={`${vaultName} logo`} />
+        </div>
+      </Tooltip>
+    );
   };
 
   const vaultBalanceAndValue = (
@@ -66,11 +82,7 @@ const VaultComponent = (
           <div className="project-name-wrapper">
             <div className="vault-icon">
               {vaultIcon && <img className="logo" src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
-              {vault.chainId && (
-                <div className="chain-logo">
-                  <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={`${vaultName} logo`} />
-                </div>
-              )}
+              {vault.chainId && getVaultChainIcon()}
             </div>
             <div className="name-source-wrapper">
               <div className="project-name">
