@@ -62,6 +62,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
   const [tab, setTab] = useState(Tab.Deposit);
   const [termsOfUse, setTermsOfUse] = useState(false);
+  const [waitingForTransaction, setWaitingForTransaction] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
@@ -178,8 +179,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (inProgressTransaction) {
       const { action, txHash } = inProgressTransaction;
 
-      if (txHash) {
+      if (txHash && !waitingForTransaction) {
+        setWaitingForTransaction(true);
+
         waitForTransaction({ hash: txHash }).finally(() => {
+          setWaitingForTransaction(false);
           setInProgressTransaction(undefined);
           actionsMap[action].reset();
 
@@ -192,7 +196,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inProgressTransaction, handleDeposit, hideApproveSpending]);
+  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {

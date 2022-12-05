@@ -45,7 +45,6 @@ export class DepositWithdrawDataMulticall {
       }
     }
 
-    console.log(dataToReturn);
     return dataToReturn;
   };
 }
