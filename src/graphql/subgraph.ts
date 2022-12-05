@@ -78,7 +78,7 @@ export const GET_VAULTS = `
   }
 `;
 
-export const GET_STAKER = gql`
+export const GET_STAKER = `
   query getStaker($address: Bytes!) {
     stakers(where: { address: $address }) {
       pid
