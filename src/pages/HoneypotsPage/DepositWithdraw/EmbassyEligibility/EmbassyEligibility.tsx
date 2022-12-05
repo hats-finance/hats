@@ -1,11 +1,10 @@
 import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
-import { BigNumber } from "ethers";
 import { useTotalSharesPerVault, useUserSharesPerVault } from "hooks/contractHooksCalls";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import "./index.scss";
 
 interface IProps {
@@ -17,15 +16,15 @@ const TIER_PERCENTAGES = [10, 100, 1500];
 
 export function EmbassyEligibility({ vault }: IProps) {
   const { t } = useTranslation();
-  const { nftData } = useVaults();
+  const { depositTokensData } = useVaults();
   const userShares = useUserSharesPerVault(vault);
   const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
   const totalShares = useTotalSharesPerVault(vault);
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
 
-  if (!nftData?.nftTokens || totalShares.eq(0)) return null;
+  if (!depositTokensData?.depositTokens || totalShares.eq(0)) return null;
 
-  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => +token.pid === +vault.pid) ?? [];
+  const eligibleOrRedeemed = depositTokensData?.depositTokens?.filter((token) => +token.pid === +vault.pid) ?? [];
   const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
 
   if (maxRedeemedTier === MAX_NFT_TIER) return null;
@@ -37,12 +36,6 @@ export function EmbassyEligibility({ vault }: IProps) {
   const minToNextTier = sharesPercentageTiers[nextTier - 1] - userSharesNumber;
   const minimum = millify(minToNextTier, { precision: 4 });
   const tokenSymbol = vault.stakingTokenSymbol;
-
-  // console.log("----------");
-  // console.log("totalSharesNumber", totalSharesNumber);
-  // console.log("sharesPercentageTiers", sharesPercentageTiers);
-  // console.log("nextTier", nextTier);
-  // console.log("minToNextTier", minToNextTier);
 
   return (
     <div className="embassy-eligibility-wrapper">

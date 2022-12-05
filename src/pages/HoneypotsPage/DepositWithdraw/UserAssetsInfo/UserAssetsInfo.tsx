@@ -1,7 +1,7 @@
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import InfoIcon from "assets/icons/info.icon";
 import { useVaultDepositWithdrawInfo } from "../hooks";
 import { StyledUserAssetsInfoTable } from "./styles";

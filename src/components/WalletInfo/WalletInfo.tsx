@@ -8,7 +8,7 @@ import { StyledWalletInfo } from "./styles";
 
 export default function WalletInfo() {
   const { t } = useTranslation();
-  const { nftData } = useVaults();
+  const { depositTokensData } = useVaults();
   const { isShowing, show, hide } = useModal();
   // TODO: [v2] verify if this works well
   const { data: transaction } = useTransaction({ scopeKey: "hats" });
@@ -17,8 +17,8 @@ export default function WalletInfo() {
     <StyledWalletInfo>
       <button className="wallet-info__my-account-btn" onClick={show}>
         {t("Header.WalletInfo.my-account")}
-        {!nftData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />}
-        {(nftData?.withRedeemed?.filter((nft) => !nft.isRedeemed).length ?? 0) > 0 && (
+        {/* {!depositTokensData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />} */}
+        {depositTokensData?.depositTokens?.some((nft) => !nft.isRedeemed) && (
           <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />
         )}
       </button>

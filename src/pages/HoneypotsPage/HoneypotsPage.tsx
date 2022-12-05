@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatUnits } from "ethers/lib/utils";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { useVaults } from "hooks/vaults/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";

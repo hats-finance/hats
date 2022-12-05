@@ -1,4 +1,4 @@
-import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "types/types";
+import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "types";
 
 export interface IEditedContractCovered {
   name: string;

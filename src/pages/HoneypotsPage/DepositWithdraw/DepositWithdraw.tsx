@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
 import { Loading, Modal } from "components";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import {
   useCommitteeCheckIn,
@@ -53,7 +53,7 @@ interface InProgressAction {
 export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
-  const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
+  const { tokenPrices, withdrawSafetyPeriod, depositTokensData } = useVaults();
   const { id, master, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
   const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
@@ -102,29 +102,31 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const depositCall = useDeposit(selectedVault);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
+    if (!selectedVault.chainId) return;
 
     await depositCall.send(userInputValue);
     setUserInput("");
     setTermsOfUse(false);
 
-    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-    const newRedeemables = depositEligibility?.filter(
-      (nft) => !nft.isRedeemed && !nftData?.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
-    );
+    const newRedeemables = await depositTokensData?.afterDeposit({
+      pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId
+    });
+    // todo: set new redeemables
     if (newRedeemables?.length) {
       toggleEmbassyPrompt();
     }
-  }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
+  }, [selectedVault, userInputValue, depositCall, master.address, depositTokensData, toggleEmbassyPrompt]);
 
   const withdrawAndClaimCall = useWithdrawAndClaim(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
+    if (!selectedVault.chainId) return;
     if (!userInputValue) return;
     withdrawAndClaimCall.send(userInputValue);
     setUserInput("");
 
     // refresh deposit eligibility
-    await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, nftData]);
+    await depositTokensData?.afterDeposit({ pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId });
+  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, depositTokensData]);
 
   const withdrawRequestCall = useWithdrawRequest(selectedVault);
   const handleWithdrawRequest = withdrawRequestCall.send;
@@ -251,7 +253,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={depositPaused ? () => {} : handleMaxAmountButton}>
+            onClick={depositPaused ? () => { } : handleMaxAmountButton}>
             (Max)
           </button>
         </div>

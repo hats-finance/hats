@@ -1,6 +1,6 @@
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import Tooltip from "rc-tooltip";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { formatAPY } from "utils";
 import { useVaultsApy } from "../hooks/useVaultsApy";
 import "./index.scss";

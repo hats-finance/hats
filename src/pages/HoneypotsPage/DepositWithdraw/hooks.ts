@@ -2,7 +2,7 @@ import { useAccount } from "wagmi";
 import { BigNumber } from "ethers";
 import { useTokenAllowance, useTokenBalanceAmount } from "hooks";
 import { usePendingReward, useUserSharesAndBalancePerVault } from "hooks/contractHooksCalls";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
 
@@ -45,7 +45,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     withdrawStartTime,
     withdrawEndTime,
     userIsCommitteeAndCanCheckIn: isUserCommittee && !committeeCheckedIn,
-    committeeCheckedIn,
+    committeeCheckedIn
   };
 };
 
@@ -65,6 +65,6 @@ export const useVaultWithdrawTime = (selectedVault: IVault) => {
     isUserInQueueToWithdraw,
     isUserInTimeToWithdraw,
     withdrawStartTime,
-    withdrawEndTime,
+    withdrawEndTime
   };
 };

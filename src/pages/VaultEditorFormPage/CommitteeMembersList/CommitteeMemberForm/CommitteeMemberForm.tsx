@@ -3,7 +3,7 @@ import { UseFieldArrayRemove } from "react-hook-form";
 import { FormInput, FormIconInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { ICommitteeMember } from "types/types";
+import { ICommitteeMember } from "types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";

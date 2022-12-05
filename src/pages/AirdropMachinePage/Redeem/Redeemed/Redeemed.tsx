@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import TokenEligibilityInfo from "../TokenEligibilityInfo/TokenEligibilityInfo";
 import RedeemedWalletIcon from "assets/icons/wallet-nfts/wallet-redeemed.svg";
 import "./index.scss";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 
 export default function Redeemed() {
   const { t } = useTranslation();

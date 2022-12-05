@@ -2,7 +2,7 @@ import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import { BigNumber } from "ethers";
 import millify from "millify";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
 import ArrowIcon from "assets/icons/arrow.icon";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";

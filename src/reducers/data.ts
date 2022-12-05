@@ -1,25 +1,17 @@
-import { UPDATE_AIRDROP_DATA } from '../constants/action-types';
-import { IAirdropData } from '../types/types';
+import { UPDATE_AIRDROP_DATA } from "../constants/action-types";
 
 interface IDataReducer {
-  rewardsToken: string
-  hatsPrice?: number
-  airdrop: null | IAirdropData
+  rewardsToken: string;
+  hatsPrice?: number;
 }
 
 const initialState: IDataReducer = {
-  rewardsToken: "",
-  airdrop: null,
+  rewardsToken: ""
 };
 
 export const dataReducer = (state: IDataReducer = initialState, action: any): IDataReducer => {
   switch (action.type) {
-    case UPDATE_AIRDROP_DATA: {
-      return {
-        ...state,
-        airdrop: action.airdrop
-      }
-    }
-    default: return state;
+    default:
+      return state;
   }
 };

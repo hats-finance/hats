@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { RoutePaths } from "navigation";
-import { IPoolWithdrawRequest, IVault } from "types/types";
+import { IPoolWithdrawRequest, IVault } from "types";
 import { useSupportedNetwork } from "hooks/useSupportedNetwork";
 import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
 import "./VaultActions.scss";

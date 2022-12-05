@@ -1,5 +1,5 @@
 import { useVaults } from "hooks/vaults/useVaults";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { formatUnits } from "ethers/lib/utils";
 
 export function useVaultsTotalPrices(vaults: IVault[]) {

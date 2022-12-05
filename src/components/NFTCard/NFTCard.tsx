@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
 import { Media } from "components";
-import { INFTTokenInfoRedeemed } from "types/types";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useEscapePressed } from "hooks/useKeyPress";
@@ -11,6 +10,7 @@ import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ChainsConfig } from "config/chains";
 import { useNetwork } from "wagmi";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 interface IProps {
   tokenInfo: INFTTokenInfoRedeemed;

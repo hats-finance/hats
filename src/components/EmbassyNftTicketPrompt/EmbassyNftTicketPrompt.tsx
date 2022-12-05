@@ -14,31 +14,27 @@ import { NFTCard, Loading, RedeemNftSuccess } from "components";
 import { useSelector } from "react-redux";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
-import { INFTTokenInfoRedeemed } from "types/types";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 export default function EmbassyNftTicketPrompt() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData } = useVaults();
+  const { depositTokensData } = useVaults();
   const [loading, setLoading] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
 
   const showLoader = !redeemed && loading;
 
   const handleRedeem = useCallback(async () => {
-    if (!nftData?.proofRedeemables) return;
+    if (!depositTokensData?.depositTokens?.some(token => !token.isRedeemed)) return;
     setLoading(true);
-    const tx = await nftData?.redeemProof();
-    if (tx?.status) {
-      const refreshed = await nftData?.refreshRedeemed();
-      const redeemed = refreshed?.filter(
-        (nft) => nft.isRedeemed && nftData.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
-      );
+    const redeemed = await depositTokensData?.redeem();
+    if (redeemed?.length) {
       setRedeemed(redeemed);
     }
 
     setLoading(false);
-  }, [nftData]);
+  }, [depositTokensData]);
 
   if (redeemed) return <RedeemNftSuccess redeemed={redeemed} />;
   return (
@@ -54,7 +50,7 @@ export default function EmbassyNftTicketPrompt() {
         touchRatio={1.5}
         navigation
         effect={"flip"}>
-        {nftData?.proofRedeemables?.map((nftInfo, index) => (
+        {depositTokensData?.depositTokens?.map((nftInfo, index) => (
           <SwiperSlide key={index}>
             <NFTCard key={index} tokenInfo={nftInfo} />
           </SwiperSlide>

@@ -4063,11 +4063,6 @@ abitype@^0.1.7, abitype@^0.1.8:
   resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.1.8.tgz#f47d397b95d81a445a0d0ef2fdd7827131b3fd74"
   integrity sha512-2pde0KepTzdfu19ZrzYTYVIWo69+6UbBCY4B1RDiwWgo2XZtFSJhF6C+XThuRXbbZ823J0Rw1Y5cP0NXYVcCdQ==
 
-abitype@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/abitype/-/abitype-0.2.3.tgz#541fd70b2e8a6fb8f2cd17c4c5a3a5ae07f2d6f8"
-  integrity sha512-oHmWdmd4YNzhyfrwm2TOpj3FidTGmzT83PvangdLLN7kwA8eFN93WKN7RytxIneWKu4uZCUjKEQ6joezIy52AA==
-
 abstract-leveldown@~2.6.0:
   version "2.6.3"
   resolved "https://registry.npmjs.org/abstract-leveldown/-/abstract-leveldown-2.6.3.tgz"

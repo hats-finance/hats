@@ -4,18 +4,19 @@ import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
+import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
+import { useDepositTokens } from "hooks/nft/useDepositTokens";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";
+import { IDepositTokensData } from "hooks/nft/types";
 
 interface IVaultsContext {
   vaults?: IVault[];
   tokenPrices?: number[];
   masters?: IMaster[];
-  nftData?: INFTTokenData;
+  depositTokensData?: IDepositTokensData;
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -32,7 +33,7 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { address: account } = useAccount();
   const { chain } = useNetwork();
-  const nftData = useNFTTokenData(account);
+  const depositTokensData = useDepositTokens(account);
 
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");
@@ -167,7 +168,7 @@ export function VaultsProvider({ children }) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    nftData,
+    depositTokensData,
     vaults,
     tokenPrices,
     masters: data?.masters,

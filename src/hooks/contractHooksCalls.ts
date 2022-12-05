@@ -1,6 +1,6 @@
 import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
 import { BigNumber } from "ethers";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
@@ -36,7 +36,7 @@ export function usePendingReward(vault: IVault): BigNumber | undefined {
       chainId: vault.chainId,
       watch: false,
 
-      args,
+      args
     }) ?? {};
   const data = res as any;
 
@@ -73,7 +73,7 @@ export function useTotalSharesPerVault(vault: IVault): BigNumber {
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: isTabFocused,
-    args,
+    args
   });
   const data = res as any;
 
@@ -115,7 +115,7 @@ export function useUserSharesPerVault(vault: IVault): BigNumber {
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: isTabFocused,
-    args,
+    args
   });
   const data = res as any;
 
@@ -161,7 +161,7 @@ export function useUserSharesAndBalancePerVault(vault: IVault): {
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: isTabFocused,
-    args,
+    args
   });
   const data = res as any;
 
@@ -210,7 +210,7 @@ export function useWithdrawRequestStartTime(vault: IVault): BigNumber | undefine
     chainId: vault.chainId,
     scopeKey: "hats",
     watch: isTabFocused,
-    args,
+    args
   });
   const data = res as any;
 
@@ -240,7 +240,7 @@ export function useTokenApproveAllowance(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: vault.stakingToken,
     abi: erc20_abi as any,
-    functionName: "approve",
+    functionName: "approve"
     // chainId: vault.chainId,
   });
 
@@ -251,7 +251,7 @@ export function useTokenApproveAllowance(vault: IVault) {
 
       // [params]: allowedContract, allowedAmount
       return approveAllowance.write!({ recklesslySetUnpreparedArgs: [allowedContractAddress, allowedAmount] });
-    },
+    }
   };
 }
 
@@ -274,7 +274,7 @@ export function useDeposit(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: contractAddress,
     abi: vaultAbi as any,
-    functionName: "deposit",
+    functionName: "deposit"
     // chainId: vault.chainId,
   });
 
@@ -296,7 +296,7 @@ export function useDeposit(vault: IVault) {
           return deposit.write!({ recklesslySetUnpreparedArgs: [vault.pid, amountInTokens] });
         }
       } catch (error) {}
-    },
+    }
   };
 }
 
@@ -321,7 +321,7 @@ export function useWithdrawAndClaim(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: contractAddress,
     abi: vaultAbi as any,
-    functionName: contractFunctionName,
+    functionName: contractFunctionName
     // chainId: vault.chainId,
   });
 
@@ -331,7 +331,7 @@ export function useWithdrawAndClaim(vault: IVault) {
     functionName: "poolInfo",
     chainId: vault.chainId,
     scopeKey: "hats",
-    args: [vault.pid],
+    args: [vault.pid]
   });
   const poolInfoData = res as any;
 
@@ -361,7 +361,7 @@ export function useWithdrawAndClaim(vault: IVault) {
         // [params]: pid, shares (amount in shares)
         return withdrawAndClaim.write!({ recklesslySetUnpreparedArgs: [vault.pid, amountInShares] });
       }
-    },
+    }
   };
 }
 
@@ -383,7 +383,7 @@ export function useWithdrawRequest(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: contractAddress,
     abi: vaultAbi as any,
-    functionName: "withdrawRequest",
+    functionName: "withdrawRequest"
     // chainId: vault.chainId,
   });
 
@@ -399,7 +399,7 @@ export function useWithdrawRequest(vault: IVault) {
         // [params]: pid
         return withdrawRequest.write!({ recklesslySetUnpreparedArgs: [vault.pid] });
       }
-    },
+    }
   };
 }
 
@@ -422,7 +422,7 @@ export function useClaimReward(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: contractAddress,
     abi: abi as any,
-    functionName: "claimReward",
+    functionName: "claimReward"
     // chainId: vault.chainId,
   });
 
@@ -438,7 +438,7 @@ export function useClaimReward(vault: IVault) {
         // [params]: pid
         return claimReward.write!({ recklesslySetUnpreparedArgs: [vault.pid] });
       }
-    },
+    }
   };
 }
 
@@ -460,7 +460,7 @@ export function useCommitteeCheckIn(vault: IVault) {
     mode: "recklesslyUnprepared",
     address: contractAddress,
     abi: vaultAbi as any,
-    functionName: "committeeCheckIn",
+    functionName: "committeeCheckIn"
     // chainId: vault.chainId,
   });
 
@@ -476,7 +476,7 @@ export function useCommitteeCheckIn(vault: IVault) {
         // [params]: pid
         return committeeCheckIn.write!({ recklesslySetUnpreparedArgs: [vault.pid] });
       }
-    },
+    }
   };
 }
 
@@ -500,7 +500,7 @@ export function useClaim(vault?: IVault) {
     mode: "recklesslyUnprepared",
     address: vault ? contractAddress : undefined,
     abi: registryAbi as any,
-    functionName: method,
+    functionName: method
     // chainId: vault?.chainId,
   });
 
@@ -511,6 +511,6 @@ export function useClaim(vault?: IVault) {
       await switchNetworkAndValidate(chain!.id, vault!.chainId as number);
 
       return claim.write!({ recklesslySetUnpreparedArgs: [data] });
-    },
+    }
   };
 }

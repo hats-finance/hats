@@ -1,6 +1,6 @@
 import Select from "react-select";
 import { Colors } from "constants/constants";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import "./index.scss";
 import { ipfsTransformUri } from "utils";
 
