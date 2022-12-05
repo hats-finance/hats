@@ -66,8 +66,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const [selectedId, setSelectedId] = useState<string>(id);
   const selectedVault = multipleVaults ? multipleVaults.find((vault) => vault.id === selectedId)! : vault;
 
-  console.log(1);
-
   const {
     tokenAllowance,
     tokenBalance,

@@ -57,12 +57,12 @@ export class UserBalancePerVaultContract {
     const isTabFocused = useTabFocus();
 
     const res = useContractRead({
-      ...this.contractInfo(vault, userSharesAvailable),
+      ...this.contractInfo(vault, userSharesAvailable ?? BigNumber.from(0)),
       enabled: isTabFocused,
       scopeKey: "hats",
       watch: isTabFocused,
     });
 
-    return this.mapResponseToData(res, vault, userSharesAvailable);
+    return this.mapResponseToData(res, vault, userSharesAvailable ?? BigNumber.from(0));
   };
 }

@@ -35,10 +35,17 @@ export class DepositWithdrawDataMulticall {
     });
     const data = res as any;
 
+    let dataToReturn = { pendingReward: undefined, tokenAllowance: undefined, userSharesAvailable: undefined };
+
     if (!isError && data) {
-      return { tokenAllowance: data?.[0], userSharesAvailable: data?.[1], pendingReward: data?.[2] };
-    } else {
-      return { pendingReward: undefined, tokenAllowance: undefined, userSharesAvailable: undefined };
+      if (selectedVault.version === "v1") {
+        dataToReturn = { tokenAllowance: data?.[0], userSharesAvailable: data?.[1]?.[0], pendingReward: data?.[2] };
+      } else {
+        dataToReturn = { tokenAllowance: data?.[0], userSharesAvailable: data?.[1], pendingReward: data?.[2] };
+      }
     }
+
+    console.log(dataToReturn);
+    return dataToReturn;
   };
 }
