@@ -54,7 +54,7 @@ const VaultComponent = (
     return (
       <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
         <div className="chain-logo">
-          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={`${vaultName} logo`} />
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
         </div>
       </Tooltip>
     );
