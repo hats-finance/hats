@@ -78,7 +78,8 @@ const VaultComponent = (
           <span>{vaultExpandAction}</span>
         </td>
 
-        <td>
+        <td className="relative-column">
+          <div className="onlyMobile">{vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}</div>
           <div className="project-name-wrapper">
             <div className="vault-icon">
               {vaultIcon && <img className="logo" src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
@@ -106,7 +107,6 @@ const VaultComponent = (
 
         <td className="onlyMobile" onClick={expandVault}>
           {vaultExpandAction}
-          {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
         </td>
       </StyledVault>
       {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}

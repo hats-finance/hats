@@ -15,6 +15,10 @@ export const StyledVault = styled.tr<StyledVaultProps>(
       padding: 15px;
       background-color: var(--strong-blue);
 
+      &.relative-column {
+        position: relative;
+      }
+
       &:first-child {
         position: relative;
       }
@@ -86,7 +90,7 @@ export const StyledVault = styled.tr<StyledVaultProps>(
         .project-name {
           display: flex;
           align-items: center;
-          font-weight: bold;
+          font-weight: 500;
 
           @media (max-width: ${breakpointsDefinition.smallMobile}) {
             flex-direction: column;
@@ -105,7 +109,7 @@ export const StyledVault = styled.tr<StyledVaultProps>(
 
         .balance-value {
           color: var(--white);
-          font-weight: bold;
+          font-weight: 500;
         }
       }
 
