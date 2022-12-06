@@ -224,6 +224,13 @@
     pointer-events: none;
     animation: disabledFade 0.4s;
   }
+
+  .extra-status-info {
+    width: 90%;
+    text-align: center;
+    font-size: $xxsmall;
+    margin-top: 15px;
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

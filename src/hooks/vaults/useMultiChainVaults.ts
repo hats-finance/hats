@@ -93,8 +93,6 @@ export const useMultiChainVaults = () => {
     };
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
-      console.log("ethereumData", ethereumData);
-      console.log("optimismData", optimismData);
       setVaults({ vaults: allVaults, masters: allMasters });
     }
 

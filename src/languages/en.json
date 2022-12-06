@@ -25,6 +25,7 @@
     "claimingReward": "Claiming reward",
     "checkingIn": "Checking in",
     "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
+    "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
