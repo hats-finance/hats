@@ -27,7 +27,12 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
-    if (!isPageFocused || !chainId) return;
+    if (!isPageFocused) return;
+
+    if (!chainId) {
+      setData({ vaults: [], masters: [], userWithdrawRequests: [] });
+      return;
+    }
 
     const subgraphUrl = ChainsConfig[chainId].subgraph;
     const res = await fetch(subgraphUrl, {
@@ -88,6 +93,8 @@ export const useMultiChainVaults = () => {
     };
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
+      console.log("ethereumData", ethereumData);
+      console.log("optimismData", optimismData);
       setVaults({ vaults: allVaults, masters: allMasters });
     }
 
