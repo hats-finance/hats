@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 export interface IDepositTokensData {
   depositTokens?: INFTTokenInfoRedeemed[];
   redeem: () => Promise<INFTTokenInfoRedeemed[]>;
-  afterDeposit: (vault: IVault) => Promise<INFTTokenInfoRedeemed[]>;
+  afterDeposit: (vault: IVaultIdentifier) => Promise<INFTTokenInfoRedeemed[]>;
 }
 
 export interface IAirdropData {
@@ -38,13 +38,13 @@ export interface INFTTokenMetadata {
   attributes: Array<{ trait_type: string; value: string }>;
 }
 
-export interface IVault {
+export interface IVaultIdentifier {
   pid: string;
   masterAddress: string;
   chainId: number;
 }
 
-export interface INFTToken extends IVault {
+export interface INFTToken extends IVaultIdentifier {
   tier: number;
 }
 

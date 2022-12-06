@@ -2,7 +2,7 @@ import { NFTContractDataProxy } from "constants/constants";
 import { solidityKeccak256, keccak256 } from "ethers/lib/utils";
 import { MerkleTree } from "merkletreejs";
 import {} from "ethers/lib/utils";
-import { AirdropMachineWallet, INFTTokenInfo, IVault } from "./types";
+import { AirdropMachineWallet, INFTTokenInfo, IVaultIdentifier } from "./types";
 
 export const buildMerkleTree = (merkleTree: AirdropMachineWallet[]) =>
   new MerkleTree(
@@ -34,7 +34,7 @@ export function getPidsWithAddresses(nfts: INFTTokenInfo[]) {
       result.push({ pid: String(nft.pid), masterAddress: nft.masterAddress, chainId: nft.chainId });
     }
     return result;
-  }, [] as IVault[]);
+  }, [] as IVaultIdentifier[]);
 }
 
 export const groupBy = <T, K extends keyof T>(list: T[], key: K) =>

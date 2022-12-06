@@ -1,6 +1,6 @@
 import { MAX_NFT_TIER, NFTContractDataProxy } from "constants/constants";
 import { Contract } from "ethers";
-import { INFTToken, IVault } from "./types";
+import { INFTToken, IVaultIdentifier } from "./types";
 import { getTokenInfo } from "./getTokenInfo";
 
 /**
@@ -8,7 +8,7 @@ import { getTokenInfo } from "./getTokenInfo";
  * but we don't want to query all the vaults for that, so we check the graph to check which vaults
  * the user has deposited into and then we query those vaults for the NFTs using the contract
  */
-export async function getDepositTokens(vaults: IVault[], nftContract: Contract, address: string) {
+export async function getDepositTokens(vaults: IVaultIdentifier[], nftContract: Contract, address: string) {
   const eligibilitiesPerPid = await Promise.all(
     vaults.map(async (vault) => {
       const { pid, masterAddress } = vault;

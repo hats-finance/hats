@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { IDepositTokensData, INFTTokenInfoRedeemed, IVault } from "./types";
+import { IDepositTokensData, INFTTokenInfoRedeemed, IVaultIdentifier } from "./types";
 import { groupBy } from "./utils";
 import { redeemDepositNfts } from "./redeemDeposit";
 import { getDepositTokensForAllChains } from "./getDepositTokensForAllChains";
@@ -31,7 +31,7 @@ export function useDepositTokens(address?: string): IDepositTokensData {
     return [];
   }, [address, depositRedeemables]);
 
-  const afterDeposit = useCallback(async (vault: IVault): Promise<INFTTokenInfoRedeemed[]> => {
+  const afterDeposit = useCallback(async (vault: IVaultIdentifier): Promise<INFTTokenInfoRedeemed[]> => {
     return [];
   }, []);
 
