@@ -1,8 +1,8 @@
 import { IWithdrawRequest } from "types";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, chain as allChains, useAccount } from "wagmi";
-import { IMaster, IVault } from "types";
-import { defaultChain, IS_PROD } from "settings";
+import { IMaster, IVault } from "types/types";
+import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
 import { useTabFocus } from "hooks/useTabFocus";
@@ -11,7 +11,7 @@ const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
-  OPTIMISM: { prod: ChainsConfig[allChains.optimism.id], test: ChainsConfig[allChains.optimismGoerli.id] }
+  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] }
 };
 
 interface GraphVaultsData {
@@ -27,9 +27,9 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
-    if (!isPageFocused) return;
+    if (!isPageFocused || !chainId) return;
 
-    const subgraphUrl = ChainsConfig[chainId || defaultChain.chain.id].subgraph;
+    const subgraphUrl = ChainsConfig[chainId].subgraph;
     const res = await fetch(subgraphUrl, {
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),

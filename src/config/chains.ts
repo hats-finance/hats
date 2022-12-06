@@ -24,11 +24,11 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/goerli_v2_1"
   },
-  [chain.optimism.id]: {
-    chain: chain.optimism,
-    endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli"
-  },
+  // [chain.optimism.id]: {
+  //   chain: chain.optimism,
+  //   endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
+  //   subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
+  // },
   [chain.optimismGoerli.id]: {
     chain: chain.optimismGoerli,
     endpoint: "https://opt-goerli.g.alchemy.com/v2/sCQtpxEWIHKdIqHjde149TqzJZHsg0JT",
