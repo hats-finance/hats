@@ -8,7 +8,7 @@ export interface IChainConfiguration {
 }
 
 /**
- * Returns all the supported chains on the platform.
+ * Returns all the  supported chains on the platform.
  * If you want to add a new chain, add it here and also on `useMultiChainVaults` hook.
  */
 export const ChainsConfig: { [index: number]: IChainConfiguration } = {
