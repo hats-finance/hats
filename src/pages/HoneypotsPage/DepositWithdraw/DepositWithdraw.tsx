@@ -84,7 +84,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userIsCommitteeAndCanCheckIn,
     minimumDeposit,
     depositPaused,
+    tierFromShares,
+    userSharesAvailable,
+    totalSharesAvailable
   } = useVaultDepositWithdrawInfo(selectedVault);
+
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -310,7 +314,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && <EmbassyEligibility vault={selectedVault} />}
+        {isDepositing && !depositPaused && userSharesAvailable && totalSharesAvailable &&
+          <EmbassyEligibility
+            vault={selectedVault}
+            tierFromShares={tierFromShares ?? 0}
+            userShares={userSharesAvailable}
+            totalShares={totalSharesAvailable}
+          />}
 
         <div>
           <UserAssetsInfo vault={vault} />

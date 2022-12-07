@@ -1,8 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
-import { TotalSharesPerVaultContract } from "contracts/read/TotalSharesPerVault";
-import { UserSharesPerVaultContract } from "contracts/read/UserSharesPerVault";
-import { useVaults } from "hooks/vaults/useVaults";
+import { BigNumber } from "ethers";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
@@ -10,30 +8,26 @@ import "./index.scss";
 
 interface IProps {
   vault: IVault;
+  tierFromShares: number;
+  userShares: BigNumber;
+  totalShares: BigNumber;
 }
 
 const HUNDRED_PERCENT = 10000;
 const TIER_PERCENTAGES = [10, 100, 1500];
 
-export function EmbassyEligibility({ vault }: IProps) {
+export function EmbassyEligibility({ vault, tierFromShares, userShares, totalShares }: IProps) {
   const { t } = useTranslation();
-  const { depositTokensData } = useVaults();
-  const userShares = UserSharesPerVaultContract.hook(vault);
   const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
-  const totalShares = TotalSharesPerVaultContract.hook(vault);
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
 
-  if (!depositTokensData?.depositTokens || totalShares.eq(0)) return null;
-
-  const eligibleOrRedeemed = depositTokensData?.depositTokens?.filter((token) => +token.pid === +vault.pid) ?? [];
-  const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
-
-  if (maxRedeemedTier === MAX_NFT_TIER) return null;
+  //todo: show to the user the gratitude of having reached the max tier
+  if (tierFromShares === MAX_NFT_TIER) return null;
 
   const sharesPercentageTiers = TIER_PERCENTAGES.map((tp) => tp / HUNDRED_PERCENT).map(
     (tp) => (totalSharesNumber * tp) / (1 - tp)
   );
-  const nextTier = Math.max(maxRedeemedTier + 1, sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier) + 1);
+  const nextTier = Math.max(tierFromShares + 1, sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier) + 1);
   const minToNextTier = sharesPercentageTiers[nextTier - 1] - userSharesNumber;
   const minimum = millify(minToNextTier, { precision: 4 });
   const tokenSymbol = vault.stakingTokenSymbol;

@@ -144,7 +144,6 @@ export function VaultsProvider({ children }) {
     setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    console.log(vaultsWithDescription);
     setVaults(vaultsWithDescription);
   };
 

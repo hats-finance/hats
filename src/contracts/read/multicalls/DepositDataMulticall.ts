@@ -5,18 +5,14 @@ import { useAccount, useContractReads } from "wagmi";
 import { TokenAllowanceContract } from "../TokenAllowance";
 import { PendingRewardContract } from "../PendingReward";
 import { UserSharesPerVaultContract } from "../UserSharesPerVault";
-
-type DepositWithdrawDataMulticallReturn = {
-  tokenAllowance: BigNumber | undefined;
-  pendingReward: BigNumber | undefined;
-  userSharesAvailable: BigNumber | undefined;
-};
+import { DepositTierContract } from "../DepositTier";
+import { TotalSharesPerVaultContract } from "../TotalSharesPerVault";
 
 /**
  * This is a multicall with [tokenAllowance(1.), userShares(3.), pendingReward(5.)]. Used mainly on Deposit/Withdraw page.
  */
 export class DepositWithdrawDataMulticall {
-  static hook = (selectedVault: IVault): DepositWithdrawDataMulticallReturn => {
+  static hook = (selectedVault: IVault) => {
     const isTabFocused = useTabFocus();
     const { address: account } = useAccount();
 
@@ -31,20 +27,20 @@ export class DepositWithdrawDataMulticall {
         TokenAllowanceContract.contractInfo(vaultToken, account, contractAddress, selectedVault.chainId),
         UserSharesPerVaultContract.contractInfo(selectedVault, account),
         PendingRewardContract.contractInfo(selectedVault, account),
+        DepositTierContract.contractInfo(selectedVault, account),
+        TotalSharesPerVaultContract.contractInfo(selectedVault),
       ],
     });
     const data = res as any;
 
-    let dataToReturn = { pendingReward: undefined, tokenAllowance: undefined, userSharesAvailable: undefined };
-
-    if (!isError && data) {
-      if (selectedVault.version === "v1") {
-        dataToReturn = { tokenAllowance: data?.[0], userSharesAvailable: data?.[1]?.[0], pendingReward: data?.[2] };
-      } else {
-        dataToReturn = { tokenAllowance: data?.[0], userSharesAvailable: data?.[1], pendingReward: data?.[2] };
-      }
-    }
-
-    return dataToReturn;
+    return !isError && data
+      ? {
+          tokenAllowance: data?.[0] as BigNumber,
+          userSharesAvailable: selectedVault.version === "v1" ? (data?.[1]?.[0] as BigNumber) : (data?.[1] as BigNumber),
+          pendingReward: data?.[2] as BigNumber,
+          tierFromShares: data?.[3] as number,
+          totalSharesAvailable: selectedVault.version === "v1" ? (data?.[4]?.[0] as BigNumber) : (data?.[4] as BigNumber),
+        }
+      : {};
   };
 }

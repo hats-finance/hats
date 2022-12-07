@@ -43,7 +43,8 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
 
-  const { pendingReward, tokenAllowance, userSharesAvailable } = DepositWithdrawDataMulticall.hook(selectedVault); // Step (1.)
+  const { pendingReward, tokenAllowance, userSharesAvailable, tierFromShares, totalSharesAvailable } =
+    DepositWithdrawDataMulticall.hook(selectedVault); // Step (1.)
   const userBalanceAvailable = UserBalancePerVaultContract.hook(selectedVault, userSharesAvailable); // Step (2.)
   const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (3.)
 
@@ -63,7 +64,10 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     withdrawStartTime,
     withdrawEndTime,
     userIsCommitteeAndCanCheckIn: isUserCommittee && !committeeCheckedIn,
-    committeeCheckedIn
+    committeeCheckedIn,
+    userSharesAvailable,
+    totalSharesAvailable,
+    tierFromShares,
   };
 };
 
@@ -84,6 +88,6 @@ export const getVaultWithdrawTime = (selectedVault: IVault) => {
     isUserInQueueToWithdraw,
     isUserInTimeToWithdraw,
     withdrawStartTime,
-    withdrawEndTime
+    withdrawEndTime,
   };
 };
