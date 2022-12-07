@@ -26,7 +26,7 @@
     "checkingIn": "Checking in",
     "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
     "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
-    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please conitnue the process on your GnosisSafe wallet.",
+    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your GnosisSafe wallet.",
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",

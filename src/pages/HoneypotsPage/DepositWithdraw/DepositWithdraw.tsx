@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
+import { TransactionReceipt } from "@ethersproject/providers";
 import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
@@ -50,6 +51,7 @@ enum Action {
 interface InProgressAction {
   action: Action;
   txHash?: `0x${string}`;
+  txWait?: (confirmations?: number | undefined) => Promise<TransactionReceipt>;
 }
 
 export function DepositWithdraw({ vault, closeModal }: IProps) {
@@ -175,7 +177,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
     if (currentAction) {
       const action = +currentAction[0] as Action;
-      setInProgressTransaction({ action, txHash: actionsMap[action].data?.hash });
+      setInProgressTransaction({ action, txHash: actionsMap[action].data?.hash, txWait: actionsMap[action].data?.wait });
     } else {
       setInProgressTransaction(undefined);
     }
@@ -184,7 +186,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   useEffect(() => {
     if (inProgressTransaction) {
-      const { action, txHash } = inProgressTransaction;
+      const { action, txHash, txWait } = inProgressTransaction;
 
       const cleanUp = () => {
         setWaitingForTransaction(false);
@@ -195,20 +197,14 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       if (txHash && !waitingForTransaction) {
         setWaitingForTransaction(true);
 
-        // isAGnosisSafeTx(txHash, chain).then((isSafeTx) => {
-        //   console.log(isSafeTx);
-        //   if (isSafeTx) {
-        //     cleanUp();
-        //     alert(t("safeProposalCreatedSuccessfully"));
-        //     return;
-        //   }
+        isAGnosisSafeTx(txHash, chain).then((isSafeTx) => {
+          if (isSafeTx) {
+            cleanUp();
+            alert(t("safeProposalCreatedSuccessfully"));
+            return;
+          }
 
-        console.log(111, txHash);
-        waitForTransaction({ hash: txHash })
-          .then((a) => console.log(a))
-          .catch((a) => console.log(a))
-          .finally(() => {
-            console.log(222);
+          waitForTransaction({ wait: txWait }).finally(() => {
             cleanUp();
 
             // After token allowance approbal we call deposit
@@ -217,7 +213,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               handleDeposit();
             }
           });
-        // });
+        });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -245,7 +241,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (inProgressTransaction) {
       const { action, txHash } = inProgressTransaction;
       if (!txHash) return t("pleaseConfirmTransaction");
-      return `${t(actionsDescription[action])}...`;
+      return `${actionsDescription[action]}...`;
     }
 
     return "";
