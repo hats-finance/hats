@@ -1,10 +1,11 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import millify from "millify";
 import { BigNumber } from "ethers";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
-import { IPFS_PREFIX, LocalStorage } from "constants/constants";
+import { ChainsConfig } from "config/chains";
+import { COIN_GECKO, IPFS_PREFIX, LocalStorage } from "constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
 import { CoinGeckoPriceResponse } from "types";
 
@@ -108,13 +109,30 @@ export const getTokenPrice = async (tokenAddress: string) => {
  * @param {string[]} tokensAddresses
  * @returns the prices for each given token
  */
-export const getTokensPrices = async (tokensAddresses: string[]): Promise<CoinGeckoPriceResponse> => {
-  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
-    return {};
-  }
+export const getTokensPrices = async (tokens: { address: string; chain: number }[]): Promise<CoinGeckoPriceResponse> => {
+  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) return {};
+
   try {
-    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokensAddresses.join(",")}&vs_currencies=usd`);
-    return data.data;
+    // Separate tokens by chain
+    const tokensByChain = tokens.reduce((acc, token) => {
+      if (!acc[token.chain]) acc[token.chain] = [];
+      acc[token.chain].push(token.address);
+      return acc;
+    }, {} as { [chain: number]: string[] });
+
+    // Get prices for each chain
+    const allRequests: Promise<AxiosResponse>[] = [];
+    for (const chain in tokensByChain) {
+      const networkCoingeckoId = ChainsConfig[chain].coingeckoId;
+      const tokens = Array.from(new Set(tokensByChain[chain])).join(",");
+
+      if (networkCoingeckoId) {
+        allRequests.push(axios.get(`${COIN_GECKO}/${networkCoingeckoId}?contract_addresses=${tokens}&vs_currencies=usd`));
+      }
+    }
+
+    const data = await Promise.all(allRequests);
+    return data.reduce((acc, response) => ({ ...acc, ...response.data }), {} as CoinGeckoPriceResponse);
   } catch (err) {
     lastCoinGeckoError = Date.now();
     console.error(err);

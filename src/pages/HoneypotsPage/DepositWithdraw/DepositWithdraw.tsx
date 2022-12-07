@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { waitForTransaction } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
+import { TransactionReceipt } from "@ethersproject/providers";
 import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
@@ -25,6 +26,8 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
+import { useNetwork } from "wagmi";
+import { isAGnosisSafeTx } from "utils/gnosis.utils";
 
 interface IProps {
   vault: IVault;
@@ -48,11 +51,13 @@ enum Action {
 interface InProgressAction {
   action: Action;
   txHash?: `0x${string}`;
+  txWait?: (confirmations?: number | undefined) => Promise<TransactionReceipt>;
 }
 
 export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
+  const { chain } = useNetwork();
   const { tokenPrices, withdrawSafetyPeriod, depositTokensData } = useVaults();
   const { id, master, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
@@ -62,6 +67,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
   const [tab, setTab] = useState(Tab.Deposit);
   const [termsOfUse, setTermsOfUse] = useState(false);
+  const [requestingWithdraw, setRequestingWithdraw] = useState(false);
   const [waitingForTransaction, setWaitingForTransaction] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [selectedId, setSelectedId] = useState<string>(id);
@@ -121,16 +127,19 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const withdrawAndClaimCall = WithdrawAndClaimContract.hook(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
     if (!selectedVault.chainId) return;
-    if (!userInputValue) return;
+    if (!userInputValue || !isUserInTimeToWithdraw) return;
     withdrawAndClaimCall.send(userInputValue);
     setUserInput("");
 
     // refresh deposit eligibility
     await depositTokensData?.afterDeposit({ pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId });
-  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, depositTokensData]);
+  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, depositTokensData, isUserInTimeToWithdraw]);
 
   const withdrawRequestCall = WithdrawRequestContract.hook(selectedVault);
-  const handleWithdrawRequest = withdrawRequestCall.send;
+  const handleWithdrawRequest = useCallback(() => {
+    setRequestingWithdraw(true);
+    withdrawRequestCall.send();
+  }, [withdrawRequestCall]);
 
   const claimRewardCall = ClaimRewardContract.hook(selectedVault);
   const handleClaimReward = claimRewardCall.send;
@@ -170,7 +179,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
     if (currentAction) {
       const action = +currentAction[0] as Action;
-      setInProgressTransaction({ action, txHash: actionsMap[action].data?.hash });
+      setInProgressTransaction({ action, txHash: actionsMap[action].data?.hash, txWait: actionsMap[action].data?.wait });
     } else {
       setInProgressTransaction(undefined);
     }
@@ -179,26 +188,38 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   useEffect(() => {
     if (inProgressTransaction) {
-      const { action, txHash } = inProgressTransaction;
+      const { action, txHash, txWait } = inProgressTransaction;
+
+      const cleanUp = () => {
+        setWaitingForTransaction(false);
+        setInProgressTransaction(undefined);
+        actionsMap[action].reset();
+      };
 
       if (txHash && !waitingForTransaction) {
         setWaitingForTransaction(true);
 
-        waitForTransaction({ hash: txHash }).finally(() => {
-          setWaitingForTransaction(false);
-          setInProgressTransaction(undefined);
-          actionsMap[action].reset();
-
-          // After token allowance approbal we call deposit
-          if (action === Action.approveTokenAllowance) {
-            hideApproveSpending();
-            handleDeposit();
+        isAGnosisSafeTx(txHash, chain).then((isSafeTx) => {
+          if (isSafeTx) {
+            cleanUp();
+            alert(t("safeProposalCreatedSuccessfully"));
+            return;
           }
+
+          waitForTransaction({ wait: txWait }).finally(() => {
+            cleanUp();
+
+            // After token allowance approbal we call deposit
+            if (action === Action.approveTokenAllowance) {
+              hideApproveSpending();
+              handleDeposit();
+            }
+          });
         });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction]);
+  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction, chain]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {
@@ -222,7 +243,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (inProgressTransaction) {
       const { action, txHash } = inProgressTransaction;
       if (!txHash) return t("pleaseConfirmTransaction");
-      return `${t(actionsDescription[action])}...`;
+      return `${actionsDescription[action]}...`;
     }
 
     return "";
@@ -327,31 +348,37 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
                 !isSupportedNetwork
               }
               className="action-btn fill"
-              onClick={async () => await handleTryDeposit()}>
+              onClick={handleTryDeposit}>
               {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
             </button>
           )}
-          {isWithdrawing && isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
+          {isWithdrawing && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
             <button
               disabled={
                 !userHasBalanceToWithdraw ||
                 !userInput ||
                 userInput === "0" ||
                 withdrawSafetyPeriod?.isSafetyPeriod ||
-                !committeeCheckedIn
+                !committeeCheckedIn ||
+                isUserInQueueToWithdraw
               }
               className="action-btn fill"
-              onClick={async () => await handleWithdrawAndClaim()}>
+              onClick={handleWithdrawAndClaim}>
               {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted()}`}`}
             </button>
           )}
           {isWithdrawing && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
-            <button
-              disabled={!userHasBalanceToWithdraw || availableBalanceToWithdraw.bigNumber.eq(0) || !committeeCheckedIn}
-              className="action-btn fill"
-              onClick={async () => await handleWithdrawRequest()}>
-              WITHDRAWAL REQUEST
-            </button>
+            <>
+              <button
+                disabled={!userHasBalanceToWithdraw || !committeeCheckedIn || requestingWithdraw}
+                className="action-btn fill"
+                onClick={handleWithdrawRequest}>
+                WITHDRAWAL REQUEST
+              </button>
+              {requestingWithdraw && (
+                <span className="extra-status-info">{requestingWithdraw && t("weAreProcessingWithdrawRequest")}</span>
+              )}
+            </>
           )}
           {userIsCommitteeAndCanCheckIn && (
             <button onClick={handleCheckIn} className="action-btn fill">
@@ -360,7 +387,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           )}
           {pendingReward && !pendingReward.bigNumber.eq(0) && (
             <button
-              onClick={async () => await handleClaimReward()}
+              onClick={handleClaimReward}
               disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
               className="action-btn claim-btn">
               {`CLAIM ${pendingReward?.formatted()}`}

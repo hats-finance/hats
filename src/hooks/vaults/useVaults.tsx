@@ -41,12 +41,14 @@ export function VaultsProvider({ children }) {
 
   const { data, networkEnv } = useMultiChainVaults();
 
-  // console.log(data);
-
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
       if (vaults) {
-        const stakingTokens = Array.from(new Set(vaults?.map((vault) => vault.stakingToken.toLowerCase())));
+        const stakingTokens = vaults?.map((vault) => ({
+          address: vault.stakingToken.toLowerCase(),
+          chain: vault.chainId as number,
+        }));
+
         const newTokenPrices = Array<number>();
         for (const token in tokenPriceFunctions) {
           const getPriceFunction = tokenPriceFunctions[token];
@@ -58,13 +60,13 @@ export function VaultsProvider({ children }) {
 
         try {
           // get all tokens that did not have price from contract
-          const coinGeckoTokenPrices = await getTokensPrices(stakingTokens.filter((token) => !(token in newTokenPrices)));
+          const coinGeckoTokenPrices = await getTokensPrices(stakingTokens.filter((token) => !(token.address in newTokenPrices)));
           if (coinGeckoTokenPrices) {
             stakingTokens?.forEach((token) => {
-              if (coinGeckoTokenPrices.hasOwnProperty(token)) {
-                const price = coinGeckoTokenPrices?.[token]?.["usd"];
+              if (coinGeckoTokenPrices.hasOwnProperty(token.address)) {
+                const price = coinGeckoTokenPrices?.[token.address]?.["usd"];
                 if (price > 0) {
-                  newTokenPrices[token] = price;
+                  newTokenPrices[token.address] = price;
                 }
               }
             });
@@ -74,7 +76,7 @@ export function VaultsProvider({ children }) {
         }
 
         // get all tokens that are still without prices
-        const missingTokens = stakingTokens?.filter((token) => !newTokenPrices.hasOwnProperty(token));
+        const missingTokens = stakingTokens.filter((token) => !(token.address in newTokenPrices)).map((token) => token.address);
         if (missingTokens && missingTokens.length > 0) {
           const uniswapPrices = (
             await apolloClient.query<UniswapV3GetPrices>({
@@ -142,6 +144,7 @@ export function VaultsProvider({ children }) {
     setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
+    console.log(vaultsWithDescription);
     setVaults(vaultsWithDescription);
   };
 
