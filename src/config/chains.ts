@@ -5,6 +5,7 @@ export interface IChainConfiguration {
   chain: Chain;
   endpoint: string;
   subgraph: string;
+  coingeckoId?: string;
 }
 
 /**
@@ -17,23 +18,27 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: chain.mainnet,
     endpoint: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
+    coingeckoId: "ethereum",
   },
   [chain.goerli.id]: {
     vaultsNFTContract: "0x4bdDe617aB54C6E45b4Bf08963F008dFC5da92aD",
     chain: chain.goerli,
     endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/goerli_v2_1",
+    coingeckoId: undefined,
   },
   // [chain.optimism.id]: {
   //   chain: chain.optimism,
   //   endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   //   subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
+  //   coingeckoId: "optimistic-ethereum",
   // },
   [chain.optimismGoerli.id]: {
     vaultsNFTContract: "0x4bdDe617aB54C6E45b4Bf08963F008dFC5da92aD",
     chain: chain.optimismGoerli,
     endpoint: "https://opt-goerli.g.alchemy.com/v2/sCQtpxEWIHKdIqHjde149TqzJZHsg0JT",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
+    coingeckoId: undefined,
   },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {

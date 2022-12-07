@@ -14,9 +14,7 @@ export enum ScreenSize {
 
 export const MAX_NFT_TIER = 3;
 
-
 export const VaultService = "https://vault-editor-service.herokuapp.com";
-
 
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
@@ -68,6 +66,7 @@ export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
 
 export const COIN_GECKO_ETHEREUM = "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
+export const COIN_GECKO = "https://api.coingecko.com/api/v3/simple/token_price";
 
 export const EMBASSY_LEARN_MORE = "https://medium.com/@hatsfinance/proof-of-deposit-nft-powered-security-7c0456672539";
 
