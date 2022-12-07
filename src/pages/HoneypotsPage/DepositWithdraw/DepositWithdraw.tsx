@@ -25,7 +25,8 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
-import { useAccount } from "wagmi";
+import { useNetwork } from "wagmi";
+import { isAGnosisSafeTx } from "utils/gnosis.utils";
 
 interface IProps {
   vault: IVault;
@@ -54,6 +55,7 @@ interface InProgressAction {
 export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
+  const { chain } = useNetwork();
   const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
   const { id, master, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
@@ -103,7 +105,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   };
 
   const depositCall = DepositContract.hook(selectedVault);
-  console.log(depositCall);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
 
@@ -185,27 +186,42 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (inProgressTransaction) {
       const { action, txHash } = inProgressTransaction;
 
+      const cleanUp = () => {
+        setWaitingForTransaction(false);
+        setInProgressTransaction(undefined);
+        actionsMap[action].reset();
+      };
+
       if (txHash && !waitingForTransaction) {
         setWaitingForTransaction(true);
 
-        console.log("We'll wait for this tx -> ", txHash, " to finish");
-        console.log(inProgressTransaction);
-        waitForTransaction({ hash: txHash }).finally(() => {
-          console.log("Finished TX");
-          setWaitingForTransaction(false);
-          setInProgressTransaction(undefined);
-          actionsMap[action].reset();
+        // isAGnosisSafeTx(txHash, chain).then((isSafeTx) => {
+        //   console.log(isSafeTx);
+        //   if (isSafeTx) {
+        //     cleanUp();
+        //     alert(t("safeProposalCreatedSuccessfully"));
+        //     return;
+        //   }
 
-          // After token allowance approbal we call deposit
-          if (action === Action.approveTokenAllowance) {
-            hideApproveSpending();
-            handleDeposit();
-          }
-        });
+        console.log(111, txHash);
+        waitForTransaction({ hash: txHash })
+          .then((a) => console.log(a))
+          .catch((a) => console.log(a))
+          .finally(() => {
+            console.log(222);
+            cleanUp();
+
+            // After token allowance approbal we call deposit
+            if (action === Action.approveTokenAllowance) {
+              hideApproveSpending();
+              handleDeposit();
+            }
+          });
+        // });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction]);
+  }, [inProgressTransaction, handleDeposit, hideApproveSpending, waitingForTransaction, chain]);
 
   const handleTryDeposit = useCallback(async () => {
     if (!hasAllowance) {

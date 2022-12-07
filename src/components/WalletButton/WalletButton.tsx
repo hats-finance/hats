@@ -15,7 +15,6 @@ const WalletButton = () => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { connect, connectors } = useConnect();
-  console.log(connectors);
   const { data: ens } = useEnsName({ address: account });
   const { chain } = useNetwork();
   const supportedNetwork = useSupportedNetwork();
@@ -103,12 +102,6 @@ const WalletButton = () => {
               id: "walletConnect",
               label: "WalletConnect",
               onClick: () => activateAccount(connectors.find((c) => c.id === "walletConnect")),
-              icon: connectorIcons.walletConnect,
-            },
-            {
-              id: "safe",
-              label: "Safe",
-              onClick: () => activateAccount(connectors.find((c) => c.id === "safe")),
               icon: connectorIcons.walletConnect,
             },
           ],
