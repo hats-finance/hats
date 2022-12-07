@@ -26,6 +26,7 @@ export class DepositContract {
       address: contractAddress,
       abi: vaultAbi as any,
       functionName: "deposit",
+
       // chainId: vault.chainId,
     });
 

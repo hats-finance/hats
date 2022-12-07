@@ -4,6 +4,8 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
+import { InjectedConnector } from "wagmi/connectors/injected";
+import { SafeConnector } from "@gnosis.pm/safe-apps-wagmi";
 import { defaultChain, INFURA_API_KEY } from "settings";
 import { ChainsConfig } from "./chains";
 
@@ -24,12 +26,13 @@ const { chains, provider } = configureChains(
 );
 
 const walletConnectors = [
-  // new InjectedConnector({
-  //   chains,
-  //   options: {
-  //     name: (detectedName) => `Injected (${typeof detectedName === "string" ? detectedName : detectedName.join(", ")})`,
-  //   },
-  // }),
+  new InjectedConnector({
+    chains,
+    options: {
+      name: (detectedName) => `Injected (${typeof detectedName === "string" ? detectedName : detectedName.join(", ")})`,
+    },
+  }),
+  new SafeConnector({ chains }),
   new MetaMaskConnector({ chains }),
   new CoinbaseWalletConnector({ chains, options: { appName: "Hats.finance" } }),
   new WalletConnectConnector({ chains, options: { qrcode: true } }),

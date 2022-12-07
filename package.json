@@ -22,7 +22,7 @@
     "@types/uuid": "^8.3.4",
     "@uiw/react-md-editor": "^3.14.1",
     "@usedapp/core": "^1.2.2",
-    "@wagmi/core": "^0.7.5",
+    "@wagmi/core": "^0.7.9",
     "@walletconnect/web3-provider": "^1.7.8",
     "assert": "^2.0.0",
     "axios": "^0.27.2",
@@ -69,7 +69,7 @@
     "url": "^0.11.0",
     "util": "^0.12.4",
     "uuid": "^9.0.0",
-    "wagmi": "^0.8.6",
+    "wagmi": "^0.8.10",
     "web-vitals": "^2.1.2",
     "web3modal": "^1.9.7",
     "yup": "^0.32.11"
@@ -97,5 +97,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "dependencies": {
+    "@gnosis.pm/safe-apps-wagmi": "^1.2.0"
   }
 }

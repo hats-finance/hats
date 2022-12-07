@@ -25,6 +25,7 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
+import { useAccount } from "wagmi";
 
 interface IProps {
   vault: IVault;
@@ -102,6 +103,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   };
 
   const depositCall = DepositContract.hook(selectedVault);
+  console.log(depositCall);
   const handleDeposit = useCallback(async () => {
     if (!userInputValue) return;
 
@@ -186,7 +188,10 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       if (txHash && !waitingForTransaction) {
         setWaitingForTransaction(true);
 
+        console.log("We'll wait for this tx -> ", txHash, " to finish");
+        console.log(inProgressTransaction);
         waitForTransaction({ hash: txHash }).finally(() => {
+          console.log("Finished TX");
           setWaitingForTransaction(false);
           setInProgressTransaction(undefined);
           actionsMap[action].reset();
