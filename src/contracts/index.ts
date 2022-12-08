@@ -1,10 +1,11 @@
 export { DepositWithdrawDataMulticall } from "./read/multicalls/DepositDataMulticall";
+export { SharesToBalanceMulticall } from "./read/multicalls/SharesToBalanceMulticall";
 export { PendingRewardContract } from "./read/PendingReward";
 export { TokenAllowanceContract } from "./read/TokenAllowance";
 export { TotalSharesPerVaultContract } from "./read/TotalSharesPerVault";
 export { UserSharesAndBalancePerVaultContract } from "./read/UserSharesAndBalancePerVault";
 export { UserSharesPerVaultContract } from "./read/UserSharesPerVault";
-export { UserBalancePerVaultContract } from "./read/UserBalancePerVault";
+export { SharesToBalancePerVaultContract } from "./read/SharesToBalancePerVault";
 export { WithdrawRequestInfoContract } from "./read/WithdrawRequestInfo";
 export { ClaimRewardContract } from "./write/ClaimReward";
 export { CommitteeCheckInContract } from "./write/CommitteeCheckIn";

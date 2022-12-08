@@ -4,7 +4,7 @@ import { IVault } from "types";
 import { useTokenBalanceAmount } from "hooks/wagmi";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
-import { DepositWithdrawDataMulticall, UserBalancePerVaultContract } from "contracts";
+import { DepositWithdrawDataMulticall, SharesToBalancePerVaultContract, SharesToBalanceMulticall } from "contracts";
 import { useDepositTokens } from "hooks/nft/useDepositTokens";
 import { useVaultRegisteredNft } from "hooks/nft/useVaultRegistered";
 
@@ -15,11 +15,13 @@ import { useVaultRegisteredNft } from "hooks/nft/useVaultRegistered";
  *   3. User shares: to check how many shares the user has in the vault. (Shares the user can witdraw)
  *   4. User balance: value in tokens of the user shares. (In order to calculate this we need to call the user shares contract first)
  *   5. Pending reward: to check how many pending rewards the user has in the vault.
+ *   6. Total shares: to check how many shares the vault has in total.
+ *   7. Total balance: value in tokens of the total shares.
  *
  * This method wont call all the contracts separately. The method is going to make three executions:
- *   1. Multicall with [tokenAllowance(1.), userShares(3.), pendingReward(5.)].
- *   2. Single call with [userBalance(4.)].
- *   3. Single call with [tokenBalance(2.)].
+ *   1. Multicall with [tokenAllowance(1.), userShares(3.), pendingReward(5.), totalShares(6.)].
+ *   2. Single call with [tokenBalance(2.)].
+ *   3. Multicall with [userBalance(4.), totalBalance(7.)].
  *
  * @remarks
  * This method is supporting v1 and v2 vaults.
@@ -45,10 +47,14 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
 
-  const { pendingReward, tokenAllowance, userSharesAvailable, tierFromShares, totalSharesAvailable } =
+  const { pendingReward, tokenAllowance, userSharesAvailable, totalSharesAvailable, tierFromShares } =
     DepositWithdrawDataMulticall.hook(selectedVault); // Step (1.)
-  const userBalanceAvailable = UserBalancePerVaultContract.hook(selectedVault, userSharesAvailable); // Step (2.)
-  const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (3.)
+  const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (2.)
+  const { userBalanceAvailable, totalBalanceAvailable } = SharesToBalanceMulticall.hook(
+    selectedVault,
+    userSharesAvailable,
+    totalSharesAvailable
+  ); // Step (3.)
 
   const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
     getVaultWithdrawTime(selectedVault);
@@ -72,6 +78,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     committeeCheckedIn,
     userSharesAvailable,
     totalSharesAvailable,
+    totalBalanceAvailable,
     tierFromShares,
     depositTokens,
     vaultNftRegistered,

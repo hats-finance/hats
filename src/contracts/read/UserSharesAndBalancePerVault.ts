@@ -1,7 +1,7 @@
 import { BigNumber } from "ethers";
 import { IVault } from "types/types";
 import { UserSharesPerVaultContract } from "./UserSharesPerVault";
-import { UserBalancePerVaultContract } from "./UserBalancePerVault";
+import { SharesToBalancePerVaultContract } from "./SharesToBalancePerVault";
 
 interface useUserSharesAndBalancePerVaultReturn {
   userSharesAvailable: BigNumber | undefined;
@@ -20,7 +20,7 @@ export class UserSharesAndBalancePerVaultContract {
    */
   static hook = (vault: IVault): useUserSharesAndBalancePerVaultReturn => {
     const userSharesAvailable = UserSharesPerVaultContract.hook(vault);
-    const userBalanceAvailable = UserBalancePerVaultContract.hook(vault, userSharesAvailable);
+    const userBalanceAvailable = SharesToBalancePerVaultContract.hook(vault, userSharesAvailable);
 
     return { userSharesAvailable, userBalanceAvailable };
   };
