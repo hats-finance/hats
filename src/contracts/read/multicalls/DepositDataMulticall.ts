@@ -39,7 +39,8 @@ export class DepositWithdrawDataMulticall {
           userSharesAvailable: selectedVault.version === "v1" ? (data?.[1]?.[0] as BigNumber) : (data?.[1] as BigNumber),
           pendingReward: data?.[2] as BigNumber,
           tierFromShares: data?.[3] as number,
-          totalSharesAvailable: selectedVault.version === "v1" ? (data?.[4]?.[0] as BigNumber) : (data?.[4] as BigNumber),
+          totalSharesAvailable:
+            selectedVault.version === "v1" ? (data?.[4]?.totalUsersAmount as BigNumber) : (data?.[4] as BigNumber),
         }
       : {};
   };

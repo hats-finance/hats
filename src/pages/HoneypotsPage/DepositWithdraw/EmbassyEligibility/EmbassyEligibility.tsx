@@ -1,7 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
-import { INFTTokenInfo, INFTTokenInfoRedeemed } from "hooks/nft/types";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
