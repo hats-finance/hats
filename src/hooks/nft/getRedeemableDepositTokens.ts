@@ -15,7 +15,7 @@ export async function getRedeemableDepositTokens(
 ): Promise<INFTTokenInfoRedeemed[]> {
   const nftContract = {
     address: ChainsConfig[vault.chainId!].vaultsNFTContract!,
-    abi: HATVaultsNFT_abi,
+    abi: HATVaultsNFT_abi as any,
     chainId: vault.chainId!,
   };
 

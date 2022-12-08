@@ -17,8 +17,9 @@ import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 interface IProps {
   depositTokens: INFTTokenInfoRedeemed[]
+  handleRedeem?: () => void;
 }
-export default function EmbassyNftTicketPrompt({ depositTokens }: IProps) {
+export default function EmbassyNftTicketPrompt({ depositTokens, handleRedeem }: IProps) {
 
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
@@ -27,16 +28,15 @@ export default function EmbassyNftTicketPrompt({ depositTokens }: IProps) {
 
   const showLoader = !redeemed && loading;
 
-  const handleRedeem = useCallback(async () => {
-    if (depositTokens?.some(token => !token.isRedeemed)) return;
+  const handleRedeemAndShowRedeemed = useCallback(async () => {
+    if (!handleRedeem) return;
     setLoading(true);
-    // const redeemed = await de?.redeem();
-    // if (redeemed?.length) {
-    //   setRedeemed(redeemed);
-    // }
+
+    const res = await handleRedeem();
+    console.log(res);
 
     setLoading(false);
-  }, [depositTokens]);
+  }, [handleRedeem]);
 
   if (redeemed) return <RedeemNftSuccess redeemed={redeemed} />;
   return (
@@ -52,13 +52,13 @@ export default function EmbassyNftTicketPrompt({ depositTokens }: IProps) {
         touchRatio={1.5}
         navigation
         effect={"flip"}>
-        {depositTokens?.map((nftInfo, index) => (
+        {depositTokens.filter(token => !token.isRedeemed).map((nftInfo, index) => (
           <SwiperSlide key={index}>
             <NFTCard key={index} tokenInfo={nftInfo} />
           </SwiperSlide>
         ))}
       </Swiper>
-      <button onClick={handleRedeem} className="embassy-nft-ticket__redeem-btn fill">
+      <button onClick={handleRedeemAndShowRedeemed} className="embassy-nft-ticket__redeem-btn fill">
         {t("EmbassyNftTicketPrompt.button-text")}
       </button>
       {showLoader && <Loading />}

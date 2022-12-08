@@ -16,7 +16,7 @@ import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNft
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
-import { useVaultDepositWithdrawInfo } from "./hooks";
+import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
 import "./index.scss";
 import {
   ClaimRewardContract,
@@ -90,7 +90,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userSharesAvailable,
     totalSharesAvailable,
     depositTokens,
-    vaultNftRegistered
+    vaultNftRegistered,
+    redeem
   } = useVaultDepositWithdrawInfo(selectedVault);
 
 
@@ -277,13 +278,16 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       </div>
 
       <div className="content">
+        <div className="deposit-tokens-wrapper">
+          <title>nfts</title>
+          {depositTokens && depositTokens.map(depositToken => (
+            <div key={depositToken.tokenId.toString()}
+              className={`deposit-token ${depositToken.isRedeemed ? "redeemed" : "eligible"}`}>
+              <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
+            </div>))}
+          <button onClick={toggleEmbassyPrompt}>{t("DepositWithdraw.redeem")}</button>
+        </div>
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
-          <div className="deposit-tokens-wrapper">
-            {depositTokens && depositTokens.map(depositToken => (
-              <div key={depositToken.tokenId.toString()} className={`deposit-token ${depositToken.isRedeemed && "redeemed"}`}>
-                <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
-              </div>))}
-          </div>
           <span>{isDepositing && `Balance: ${tokenBalance.formatted()}`}</span>
           <span>{isWithdrawing && `Balance to withdraw: ${availableBalanceToWithdraw.formatted()}`}</span>
           <button
@@ -321,13 +325,16 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && userSharesAvailable && totalSharesAvailable && vaultNftRegistered && (
-          <EmbassyEligibility
-            vault={selectedVault}
-            tierFromShares={tierFromShares ?? 0}
-            userShares={userSharesAvailable}
-            totalShares={totalSharesAvailable}
-          />)}
+        {isDepositing && !depositPaused && userSharesAvailable &&
+          totalSharesAvailable && vaultNftRegistered && depositTokens && (
+            <EmbassyEligibility
+              vault={selectedVault}
+              tierFromShares={tierFromShares ?? 0}
+              userShares={userSharesAvailable}
+              totalShares={totalSharesAvailable}
+              depositTokens={depositTokens}
+              handleRedeem={toggleEmbassyPrompt}
+            />)}
 
         <div>
           <UserAssetsInfo vault={vault} />
@@ -416,7 +423,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
         {depositTokens &&
           <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-            <EmbassyNftTicketPrompt depositTokens={depositTokens} />
+            <EmbassyNftTicketPrompt depositTokens={depositTokens} handleRedeem={redeem} />
           </Modal>
         }
 

@@ -1,6 +1,6 @@
 import { CountdownTimer } from "components";
 import { IVault } from "types";
-import { getVaultWithdrawTime } from "../hooks";
+import { getVaultWithdrawTime } from "../useVaultDepositWithdrawInfo";
 
 interface IProps {
   vault: IVault;

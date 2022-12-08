@@ -13,13 +13,13 @@ export default function WalletInfo() {
 
   return (
     <StyledWalletInfo>
-      <button className="wallet-info__my-account-btn" onClick={show}>
-        {t("Header.WalletInfo.my-account")}
-        {/* {!depositTokensData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />} */}
-        {/* {depositTokensData?.depositTokens?.some((nft) => !nft.isRedeemed) && (
+      {/* <button className="wallet-info__my-account-btn" onClick={show}>
+        {t("Header.WalletInfo.my-account")} */}
+      {/* {!depositTokensData?.proofTokens && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />} */}
+      {/* {depositTokensData?.depositTokens?.some((nft) => !nft.isRedeemed) && (
           <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />
         )} */}
-      </button>
+      {/* </button> */}
 
       {/* {transaction && <TransactionInfo />} */}
 

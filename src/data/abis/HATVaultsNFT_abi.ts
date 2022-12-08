@@ -940,4 +940,4 @@ export const HATVaultsNFT_abi = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
