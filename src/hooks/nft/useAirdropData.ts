@@ -28,6 +28,6 @@ export function useAirdropData(address: string | undefined, chainId: number): IA
   return {
     airdropTokens,
     airdropInfo,
-    isBeforeDeadline: false
+    isBeforeDeadline: false,
   };
 }

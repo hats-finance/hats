@@ -18,32 +18,33 @@ import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 export default function MyNFTs() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { depositTokensData } = useVaults();
   const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
   const { isShowing: showRedeemNftPrompt, show: showNftPrompt, hide: hideNftPrompt } = useModal();
 
   const handleRedeem = useCallback(async () => {
-    if (!depositTokensData?.depositTokens) return;
+    // if (!depositTokensData?.depositTokens) return;
 
-    setShowLoader(true);
-    const redeemed = await depositTokensData.redeem();
-    if (redeemed?.length) {
-      setRedeemed(redeemed);
-      showNftPrompt();
-    }
+    // setShowLoader(true);
+    // const redeemed = await depositTokensData.redeem();
+    // if (redeemed?.length) {
+    //   setRedeemed(redeemed);
+    //   showNftPrompt();
+    // }
 
     setShowLoader(false);
-  }, [depositTokensData, showNftPrompt]);
+  }, []);
 
-  const eligible = depositTokensData?.depositTokens?.some((nft) => !nft.isRedeemed);
+  const depositTokens: INFTTokenInfoRedeemed[] = [];
+
+  const eligible = depositTokens?.some((nft) => !nft.isRedeemed);
 
   return (
     <StyledMyNFT disabled={showLoader}>
       <span className="title">NFTs</span>
 
       <div className="airdrop-nfts-container">
-        {depositTokensData?.depositTokens?.length === 0 ? (
+        {depositTokens?.length === 0 ? (
           <div className="no-nfts-text">{t("Header.MyAccount.MyNFTs.no-tree-nfts")}</div>
         ) : (
           <Swiper
@@ -54,7 +55,7 @@ export default function MyNFTs() {
             touchRatio={1.5}
             navigation
             effect={"flip"}>
-            {depositTokensData?.depositTokens?.map((nft, index) => (
+            {depositTokens?.map((nft, index) => (
               <SwiperSlide key={index} className="nfts-slide">
                 <NFTCard key={index} tokenInfo={nft} />
               </SwiperSlide>

@@ -5,6 +5,8 @@ import { useTokenBalanceAmount } from "hooks/wagmi";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
 import { DepositWithdrawDataMulticall, UserBalancePerVaultContract } from "contracts";
+import { useDepositTokens } from "hooks/nft/useDepositTokens";
+import { useVaultRegisteredNft } from "hooks/nft/useVaultRegistered";
 
 /**
  * This hook will fetch all the data needed for the deposit/withdraw page. In total we have to read 5 different contracts:
@@ -51,6 +53,9 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const { isUserInQueueToWithdraw, isUserInTimeToWithdraw, withdrawStartTime, withdrawEndTime } =
     getVaultWithdrawTime(selectedVault);
 
+  const vaultRegistered = useVaultRegisteredNft(selectedVault);
+  const depositTokens = useDepositTokens(selectedVault, vaultRegistered, tierFromShares, account);
+
   return {
     depositPaused: selectedVault.depositPause,
     tokenAllowance,
@@ -68,6 +73,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     userSharesAvailable,
     totalSharesAvailable,
     tierFromShares,
+    depositTokens,
   };
 };
 

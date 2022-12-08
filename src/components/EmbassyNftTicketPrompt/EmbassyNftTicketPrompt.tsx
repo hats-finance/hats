@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import classNames from "classnames";
-import { useVaults } from "hooks/vaults/useVaults";
 import { useCallback, useState } from "react";
 import RedeemWalletSuccessIcon from "assets/icons/wallet-nfts/wallet-redeem-success.svg";
 import "./index.scss";
@@ -16,25 +15,28 @@ import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
-export default function EmbassyNftTicketPrompt() {
+interface IProps {
+  depositTokens: INFTTokenInfoRedeemed[]
+}
+export default function EmbassyNftTicketPrompt({ depositTokens }: IProps) {
+
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { depositTokensData } = useVaults();
   const [loading, setLoading] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
 
   const showLoader = !redeemed && loading;
 
   const handleRedeem = useCallback(async () => {
-    if (!depositTokensData?.depositTokens?.some(token => !token.isRedeemed)) return;
+    if (depositTokens?.some(token => !token.isRedeemed)) return;
     setLoading(true);
-    const redeemed = await depositTokensData?.redeem();
-    if (redeemed?.length) {
-      setRedeemed(redeemed);
-    }
+    // const redeemed = await de?.redeem();
+    // if (redeemed?.length) {
+    //   setRedeemed(redeemed);
+    // }
 
     setLoading(false);
-  }, [depositTokensData]);
+  }, [depositTokens]);
 
   if (redeemed) return <RedeemNftSuccess redeemed={redeemed} />;
   return (
@@ -50,7 +52,7 @@ export default function EmbassyNftTicketPrompt() {
         touchRatio={1.5}
         navigation
         effect={"flip"}>
-        {depositTokensData?.depositTokens?.map((nftInfo, index) => (
+        {depositTokens?.map((nftInfo, index) => (
           <SwiperSlide key={index}>
             <NFTCard key={index} tokenInfo={nftInfo} />
           </SwiperSlide>

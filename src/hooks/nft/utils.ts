@@ -31,7 +31,12 @@ export function getPidsWithAddresses(nfts: INFTTokenInfo[]) {
         (pidWithAddress) => Number(pidWithAddress.pid) === Number(nft.pid) && pidWithAddress.masterAddress === nft.masterAddress
       )
     ) {
-      result.push({ pid: String(nft.pid), masterAddress: nft.masterAddress, chainId: nft.chainId });
+      result.push({
+        pid: String(nft.pid),
+        masterAddress: nft.masterAddress,
+        proxyAddress: nft.proxyAddress,
+        chainId: nft.chainId,
+      });
     }
     return result;
   }, [] as IVaultIdentifier[]);

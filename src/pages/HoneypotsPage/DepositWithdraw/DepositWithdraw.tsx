@@ -28,6 +28,8 @@ import {
 } from "contracts";
 import { useNetwork } from "wagmi";
 import { isAGnosisSafeTx } from "utils/gnosis.utils";
+import { useOnChange } from "hooks/usePrevious";
+import { ipfsTransformUri } from "utils";
 
 interface IProps {
   vault: IVault;
@@ -58,8 +60,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { chain } = useNetwork();
-  const { tokenPrices, withdrawSafetyPeriod, depositTokensData } = useVaults();
-  const { id, master, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
+  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { id, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
   const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
@@ -86,7 +88,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     depositPaused,
     tierFromShares,
     userSharesAvailable,
-    totalSharesAvailable
+    totalSharesAvailable,
+    depositTokens
   } = useVaultDepositWithdrawInfo(selectedVault);
 
 
@@ -110,23 +113,23 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     approveTokenAllowanceCall.send(amountToSpend ?? MAX_SPENDING);
   };
 
+  // when user gets to next tier
+  useOnChange(tierFromShares, (newTier, prevTier) => {
+    if (!newTier || !prevTier) return;
+    if (newTier > prevTier) {
+      toggleEmbassyPrompt();
+    }
+  });
+
+
   const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
-    if (!userInputValue) return;
-    if (!selectedVault.chainId) return;
+    if (!userInputValue || !selectedVault.chainId) return;
 
     await depositCall.send(userInputValue);
     setUserInput("");
     setTermsOfUse(false);
-
-    const newRedeemables = await depositTokensData?.afterDeposit({
-      pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId
-    });
-    // todo: set new redeemables
-    if (newRedeemables?.length) {
-      toggleEmbassyPrompt();
-    }
-  }, [selectedVault, userInputValue, depositCall, master.address, depositTokensData, toggleEmbassyPrompt]);
+  }, [selectedVault, userInputValue, depositCall]);
 
   const withdrawAndClaimCall = WithdrawAndClaimContract.hook(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
@@ -134,10 +137,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (!userInputValue || !isUserInTimeToWithdraw) return;
     withdrawAndClaimCall.send(userInputValue);
     setUserInput("");
-
-    // refresh deposit eligibility
-    await depositTokensData?.afterDeposit({ pid: selectedVault.pid, masterAddress: master.address, chainId: selectedVault.chainId });
-  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, depositTokensData, isUserInTimeToWithdraw]);
+  }, [userInputValue, selectedVault, withdrawAndClaimCall, isUserInTimeToWithdraw]);
 
   const withdrawRequestCall = WithdrawRequestContract.hook(selectedVault);
   const handleWithdrawRequest = useCallback(() => {
@@ -277,6 +277,12 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
       <div className="content">
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
+          <div className="deposit-tokens-wrapper">
+            {depositTokens && depositTokens.map(depositToken => (
+              <div className={`deposit-token ${depositToken.isRedeemed && "redeemed"}`}>
+                <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
+              </div>))}
+          </div>
           <span>{isDepositing && `Balance: ${tokenBalance.formatted()}`}</span>
           <span>{isWithdrawing && `Balance to withdraw: ${availableBalanceToWithdraw.formatted()}`}</span>
           <button
@@ -407,9 +413,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
         {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}
 
-        <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-          <EmbassyNftTicketPrompt />
-        </Modal>
+        {depositTokens &&
+          <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
+            <EmbassyNftTicketPrompt depositTokens={depositTokens} />
+          </Modal>
+        }
 
         <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
           <ApproveToken

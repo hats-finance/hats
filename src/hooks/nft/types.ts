@@ -41,6 +41,7 @@ export interface INFTTokenMetadata {
 export interface IVaultIdentifier {
   pid: string;
   masterAddress: string;
+  proxyAddress: string;
   chainId: number;
 }
 
@@ -51,8 +52,8 @@ export interface INFTToken extends IVaultIdentifier {
 export interface INFTTokenInfo extends INFTToken {
   tokenId: BigNumber;
   metadata: INFTTokenMetadata;
-  isMerkleTree: boolean;
-  isDeposit: boolean;
+  // isMerkleTree: boolean;
+  // isDeposit: boolean;
 }
 
 export interface INFTTokenInfoRedeemed extends INFTTokenInfo {

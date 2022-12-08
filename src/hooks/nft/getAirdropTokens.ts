@@ -1,8 +1,8 @@
 import { AirdropMachineWallet, INFTToken, INFTTokenInfo } from "./types";
 import { Contract } from "ethers";
-import { getTokenInfo } from "./getTokenInfo";
+import { NFTContractDataProxy } from "constants/constants";
 
-// get latest merkletree
+//get latest merkletree
 export async function getAirdropTokens(
   chainId: number,
   addressInfo: AirdropMachineWallet,
@@ -13,22 +13,25 @@ export async function getAirdropTokens(
     nft_elegebility.map(async (nft) => {
       const { pid, tier: tiers, masterAddress } = nft;
       const tokens: INFTToken[] = [];
-      for (let tier = 1; tier <= tiers; tier++) {
-        tokens.push({
-          chainId,
-          masterAddress,
-          pid: String(pid),
-          tier
-        });
-      }
-      return Promise.all(tokens.map((token) => getTokenInfo(token, nftContract)));
+      return tokens;
+
+      // for (let tier = 1; tier <= tiers; tier++) {
+      //   tokens.push({
+      //     chainId,
+      //     masterAddress,
+      //     proxyAddress: NFTContractDataProxy[masterAddress.toLowerCase()],
+      //     pid: String(pid),
+      //     tier,
+      //   });
+      // }
+      // return Promise.all(tokens.map((token) => getTokenInfo(token, nftContract)));
     })
   );
   const nested = airdropTokens?.filter((nfts) => nfts !== null) as INFTTokenInfo[][];
   return nested.flat();
 }
 
-/// this is a fix we did for the tree we probably don't need it anymore but i am leaving it here for now
+// this is a fix we did for the tree we probably don't need it anymore but i am leaving it here for now
 
 // for (const wallet in ipfsContent) {
 //   const nft_elegebility = ipfsContent[wallet].nft_elegebility as NFTEligibilityElement[];
@@ -47,4 +50,4 @@ export async function getAirdropTokens(
 //       filtered.push(nft);
 //   });
 //   tree.push({ address: wallet, ...ipfsContent[wallet], nft_elegebility: filtered });
-//}
+// }
