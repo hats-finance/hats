@@ -280,7 +280,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
           <div className="deposit-tokens-wrapper">
             {depositTokens && depositTokens.map(depositToken => (
-              <div className={`deposit-token ${depositToken.isRedeemed && "redeemed"}`}>
+              <div key={depositToken.tokenId.toString()} className={`deposit-token ${depositToken.isRedeemed && "redeemed"}`}>
                 <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
               </div>))}
           </div>
