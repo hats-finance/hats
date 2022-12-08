@@ -89,7 +89,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     tierFromShares,
     userSharesAvailable,
     totalSharesAvailable,
-    depositTokens
+    depositTokens,
+    vaultNftRegistered
   } = useVaultDepositWithdrawInfo(selectedVault);
 
 
@@ -320,13 +321,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && userSharesAvailable && totalSharesAvailable &&
+        {isDepositing && !depositPaused && userSharesAvailable && totalSharesAvailable && vaultNftRegistered && (
           <EmbassyEligibility
             vault={selectedVault}
             tierFromShares={tierFromShares ?? 0}
             userShares={userSharesAvailable}
             totalShares={totalSharesAvailable}
-          />}
+          />)}
 
         <div>
           <UserAssetsInfo vault={vault} />
