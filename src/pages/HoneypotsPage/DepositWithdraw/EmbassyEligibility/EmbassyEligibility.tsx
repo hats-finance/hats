@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { Modal } from "components";
+import { Button, Modal } from "components";
 import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 import { IVault } from "types";
 import "./index.scss";
 
-interface IProps {
+interface EmbassyEligibilityProps {
   vault: IVault;
   tierFromShares: number;
   userShares: BigNumber;
@@ -32,7 +32,7 @@ export function EmbassyEligibility({
   totalBalance,
   depositTokens,
   handleRedeem,
-}: IProps) {
+}: EmbassyEligibilityProps) {
   const { t } = useTranslation();
   const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
@@ -54,8 +54,12 @@ export function EmbassyEligibility({
     sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier)
   );
 
-  // when user gets to next tier
+  const userHasTokensToRedeem = maxRedeemed < currentTier && depositTokens.length > 0;
+  const isAvailableNextTier = currentTier < MAX_NFT_TIER;
+
+  // When the user deposit and gets a new possible tier
   useOnChange(tierFromShares, (newTier, prevTier) => {
+    console.log("CHANGE", tierFromShares);
     if (!newTier || !prevTier) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
@@ -69,43 +73,49 @@ export function EmbassyEligibility({
     const minToNextTierInShares = sharesPercentageTiers[currentTier] - userSharesNumber;
     const minToNextTierTokens = (minToNextTierInShares * totalBalanceNumber) / totalSharesNumber;
 
-    const minimum = millify(minToNextTierTokens, { precision: 4 });
+    const minimumInBalance = millify(minToNextTierTokens, { precision: 4 });
     const tokenSymbol = vault.stakingTokenSymbol;
-    return (
-      minToNextTierTokens > 0 && (
+
+    if (minToNextTierTokens <= 0) return null;
+
+    const afterDepositText = t("embassyEligibility.afterDeposit");
+    if (nextTier === 1) {
+      return (
         <>
-          {nextTier === 1 && (
-            <>
-              {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum, token: tokenSymbol })}
-              <br />
-              <br />
-            </>
-          )}
-          {(nextTier === 2 || nextTier === 3) && (
-            <>
-              {t("DepositWithdraw.EmbassyEligibility.tier-middle", {
-                secondOrThird: nextTier === 2 ? "second" : "third",
-                minimum,
-                token: tokenSymbol,
-              })}
-              <br />
-              <br />
-            </>
-          )}
-          {nextTier > 0 && nextTier < 4 && <span>{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
+          <span>{t("embassyEligibility.minToEnter", { minimum: minimumInBalance, token: tokenSymbol })}</span>
+          <br />
+          <br />
+          <span>{afterDepositText}</span>
         </>
-      )
-    );
+      );
+    } else if (nextTier <= 3) {
+      return (
+        <>
+          <span>{t(`embassyEligibility.middleTier_${nextTier}`, { minimum: minimumInBalance, token: tokenSymbol })}</span>
+          <br />
+          <br />
+          <span>{afterDepositText}</span>
+        </>
+      );
+    } else {
+      return null;
+    }
   };
 
-  const eligibleToRedeemNfts = () => {
-    if (maxRedeemed < currentTier && depositTokens.length > 0)
-      return (
-        <span>
-          You are currently eligible for tier {currentTier}, please <button onClick={handleRedeem}>redeem</button>
-        </span>
-      );
-  };
+  const eligibleToRedeemNfts = () => (
+    <>
+      {isAvailableNextTier && (
+        <>
+          <br /> <br />
+        </>
+      )}
+      {t("embassyEligibility.currentlyEligible", { tier: currentTier })}
+      <Button onClick={handleRedeem} styleType="text">
+        {t("redeemNFT", { tier: currentTier })}
+      </Button>
+      {/* <button className="btn-link">Redeem tier 1</button> */}
+    </>
+  );
 
   return (
     <>
@@ -113,8 +123,8 @@ export function EmbassyEligibility({
         <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
         <div className="embassy-eligibility__content">
           <span className="embassy-eligibility__content__min-to-embassy">
-            {currentTier < MAX_NFT_TIER && minimumToNextTierParagraph()}
-            {eligibleToRedeemNfts()}
+            {isAvailableNextTier && minimumToNextTierParagraph()}
+            {userHasTokensToRedeem && eligibleToRedeemNfts()}
           </span>
         </div>
       </div>

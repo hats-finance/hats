@@ -32,7 +32,6 @@ export default function EmbassyNftTicketPrompt({ depositTokens, handleRedeem }: 
     setLoading(true);
     const redeemedNfts = await handleRedeem();
 
-    console.log(redeemedNfts);
     setRedeemed(redeemedNfts);
     setLoading(false);
   }, [handleRedeem]);

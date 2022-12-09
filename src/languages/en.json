@@ -27,6 +27,14 @@
     "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
     "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
     "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your GnosisSafe wallet.",
+    "redeemNFT": "Redeem NFT",
+    "embassyEligibility": {
+      "minToEnter": "The minimum requirement to enter an Embassy is {{minimum}} {{token}}.",
+      "afterDeposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy.",
+      "middleTier_2": "The minimum requirement for the second level of trust of the Protector NFT is {{minimum}} {{token}}.",
+      "middleTier_3": "The minimum requirement for the third level of trust of the Protector NFT is {{minimum}} {{token}}.",
+      "currentlyEligible": "You are currently eligible for tier {{tier}}."
+    },
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
