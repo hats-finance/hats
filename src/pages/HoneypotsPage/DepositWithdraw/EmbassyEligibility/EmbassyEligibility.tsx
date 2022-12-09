@@ -9,7 +9,7 @@ import { useOnChange } from "hooks/usePrevious";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
-import "./index.scss";
+import { StyledEmbassyEligibility } from "./styles";
 
 interface EmbassyEligibilityProps {
   vault: IVault;
@@ -83,8 +83,6 @@ export function EmbassyEligibility({
       return (
         <>
           <span>{t("embassyEligibility.minToEnter", { minimum: minimumInBalance, token: tokenSymbol })}</span>
-          <br />
-          <br />
           <span>{afterDepositText}</span>
         </>
       );
@@ -92,8 +90,6 @@ export function EmbassyEligibility({
       return (
         <>
           <span>{t(`embassyEligibility.middleTier_${nextTier}`, { minimum: minimumInBalance, token: tokenSymbol })}</span>
-          <br />
-          <br />
           <span>{afterDepositText}</span>
         </>
       );
@@ -119,15 +115,13 @@ export function EmbassyEligibility({
 
   return (
     <>
-      <div className="embassy-eligibility-wrapper">
-        <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
-        <div className="embassy-eligibility__content">
-          <span className="embassy-eligibility__content__min-to-embassy">
-            {isAvailableNextTier && minimumToNextTierParagraph()}
-            {userHasTokensToRedeem && eligibleToRedeemNfts()}
-          </span>
+      <StyledEmbassyEligibility>
+        <div className="title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
+        <div className="content">
+          {isAvailableNextTier && minimumToNextTierParagraph()}
+          {userHasTokensToRedeem && eligibleToRedeemNfts()}
         </div>
-      </div>
+      </StyledEmbassyEligibility>
 
       {depositTokens && (
         <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
