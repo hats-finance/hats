@@ -4,7 +4,7 @@ import { IVault } from "types";
 import { useTokenBalanceAmount } from "hooks/wagmi";
 import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
 import { Amount } from "utils/amounts.utils";
-import { DepositWithdrawDataMulticall, SharesToBalancePerVaultContract, SharesToBalanceMulticall } from "contracts";
+import { DepositWithdrawDataMulticall, SharesToBalanceMulticall } from "contracts";
 import { useDepositTokens } from "hooks/nft/useDepositTokens";
 import { useVaultRegisteredNft } from "hooks/nft/useVaultRegistered";
 

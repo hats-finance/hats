@@ -13,7 +13,7 @@ export class SharesToBalancePerVaultContract {
     const args = vault?.version === "v1" ? [vault?.pid] : [shares];
 
     return {
-      address: vault ? contractAddress : undefined,
+      address: vault && shares ? contractAddress : undefined,
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

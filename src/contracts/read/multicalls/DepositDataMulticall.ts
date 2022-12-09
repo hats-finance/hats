@@ -1,7 +1,6 @@
-import { BigNumber } from "ethers";
-import { IVault } from "./../../../types/types";
 import { useTabFocus } from "hooks/useTabFocus";
 import { useAccount, useContractReads } from "wagmi";
+import { IVault } from "types";
 import { TokenAllowanceContract } from "../TokenAllowance";
 import { PendingRewardContract } from "../PendingReward";
 import { UserSharesPerVaultContract } from "../UserSharesPerVault";
@@ -35,12 +34,11 @@ export class DepositWithdrawDataMulticall {
 
     return !isError && data
       ? {
-          tokenAllowance: data?.[0] as BigNumber,
-          userSharesAvailable: selectedVault.version === "v1" ? (data?.[1]?.[0] as BigNumber) : (data?.[1] as BigNumber),
-          pendingReward: data?.[2] as BigNumber,
-          tierFromShares: data?.[3] as number,
-          totalSharesAvailable:
-            selectedVault.version === "v1" ? (data?.[4]?.totalUsersAmount as BigNumber) : (data?.[4] as BigNumber),
+          tokenAllowance: TokenAllowanceContract.mapResponseToData({ data: data?.[0] }),
+          userSharesAvailable: UserSharesPerVaultContract.mapResponseToData({ data: data?.[1] }),
+          pendingReward: PendingRewardContract.mapResponseToData({ data: data?.[2] }),
+          tierFromShares: DepositTierContract.mapResponseToData({ data: data?.[3] }),
+          totalSharesAvailable: TotalSharesPerVaultContract.mapResponseToData({ data: data?.[4] }),
         }
       : {};
   };

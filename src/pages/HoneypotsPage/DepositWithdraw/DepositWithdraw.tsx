@@ -89,11 +89,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     tierFromShares,
     userSharesAvailable,
     totalSharesAvailable,
+    totalBalanceAvailable,
     depositTokens,
     vaultNftRegistered,
-    redeem
+    redeem,
   } = useVaultDepositWithdrawInfo(selectedVault);
-
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -117,12 +117,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   // when user gets to next tier
   useOnChange(tierFromShares, (newTier, prevTier) => {
+    console.log("ON CHANGE", tierFromShares, newTier, prevTier);
     if (!newTier || !prevTier) return;
     if (newTier > prevTier) {
+      console.log("ON CHANGE", tierFromShares, newTier, prevTier);
       toggleEmbassyPrompt();
     }
   });
-
 
   const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
@@ -280,11 +281,13 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       <div className="content">
         <div className="deposit-tokens-wrapper">
           <title>nfts</title>
-          {depositTokens && depositTokens.map(depositToken => (
-            <div key={depositToken.tokenId.toString()}
+          {depositTokens.map((depositToken) => (
+            <div
+              key={depositToken.tokenId.toString()}
               className={`deposit-token ${depositToken.isRedeemed ? "redeemed" : "eligible"}`}>
               <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
-            </div>))}
+            </div>
+          ))}
           <button onClick={toggleEmbassyPrompt}>{t("DepositWithdraw.redeem")}</button>
         </div>
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
@@ -293,7 +296,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={depositPaused ? () => { } : handleMaxAmountButton}>
+            onClick={depositPaused ? () => {} : handleMaxAmountButton}>
             (Max)
           </button>
         </div>
@@ -325,16 +328,23 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && userSharesAvailable &&
-          totalSharesAvailable && vaultNftRegistered && depositTokens && (
+        {isDepositing &&
+          !depositPaused &&
+          userSharesAvailable &&
+          totalSharesAvailable &&
+          totalBalanceAvailable &&
+          vaultNftRegistered &&
+          depositTokens && (
             <EmbassyEligibility
               vault={selectedVault}
               tierFromShares={tierFromShares ?? 0}
               userShares={userSharesAvailable}
               totalShares={totalSharesAvailable}
+              totalBalance={totalBalanceAvailable}
               depositTokens={depositTokens}
               handleRedeem={toggleEmbassyPrompt}
-            />)}
+            />
+          )}
 
         <div>
           <UserAssetsInfo vault={vault} />
@@ -421,11 +431,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
         {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}
 
-        {depositTokens &&
+        {depositTokens && (
           <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
             <EmbassyNftTicketPrompt depositTokens={depositTokens} handleRedeem={redeem} />
           </Modal>
-        }
+        )}
 
         <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
           <ApproveToken

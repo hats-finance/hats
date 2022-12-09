@@ -8,7 +8,7 @@ import { ipfsTransformUri } from "utils";
 import { readContracts } from "wagmi";
 import { INFTToken, INFTTokenInfoRedeemed, INFTTokenMetadata, IVaultIdentifier } from "./types";
 
-export async function getRedeemableDepositTokens(
+export async function getDepositTokensWithRedeemState(
   vault: IVault,
   tiers: number,
   address: string

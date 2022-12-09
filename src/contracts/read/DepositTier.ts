@@ -14,4 +14,8 @@ export class DepositTierContract {
       args: [proxyAddress, vault?.pid, account],
     };
   };
+
+  static mapResponseToData = (res: any): number | undefined => {
+    return res.data as number | undefined;
+  };
 }
