@@ -25,9 +25,9 @@ export class DepositWithdrawDataMulticall {
       contracts: [
         TokenAllowanceContract.contractInfo(vaultToken, account, contractAddress, selectedVault.chainId),
         UserSharesPerVaultContract.contractInfo(selectedVault, account),
+        TotalSharesPerVaultContract.contractInfo(selectedVault),
         PendingRewardContract.contractInfo(selectedVault, account),
         DepositTierContract.contractInfo(selectedVault, account),
-        TotalSharesPerVaultContract.contractInfo(selectedVault),
       ],
     });
     const data = res as any;
@@ -35,10 +35,10 @@ export class DepositWithdrawDataMulticall {
     return !isError && data
       ? {
           tokenAllowance: TokenAllowanceContract.mapResponseToData({ data: data?.[0] }),
-          userSharesAvailable: UserSharesPerVaultContract.mapResponseToData({ data: data?.[1] }),
-          pendingReward: PendingRewardContract.mapResponseToData({ data: data?.[2] }),
-          tierFromShares: DepositTierContract.mapResponseToData({ data: data?.[3] }),
-          totalSharesAvailable: TotalSharesPerVaultContract.mapResponseToData({ data: data?.[4] }),
+          userSharesAvailable: UserSharesPerVaultContract.mapResponseToData({ data: data?.[1] }, selectedVault),
+          totalSharesAvailable: TotalSharesPerVaultContract.mapResponseToData({ data: data?.[2] }, selectedVault),
+          pendingReward: PendingRewardContract.mapResponseToData({ data: data?.[3] }),
+          tierFromShares: DepositTierContract.mapResponseToData({ data: data?.[4] }),
         }
       : {};
   };

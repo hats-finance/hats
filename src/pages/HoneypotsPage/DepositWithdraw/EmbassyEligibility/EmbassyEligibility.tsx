@@ -52,16 +52,11 @@ export function EmbassyEligibility({
     sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier)
   );
 
-  // console.log("currentTier", currentTier);
-
   const minimumToNextTierParagraph = () => {
     const nextTier = currentTier + 1;
-    // console.log("sharesPercentageTiers", sharesPercentageTiers);
 
     const minToNextTierInShares = sharesPercentageTiers[currentTier] - userSharesNumber;
     const minToNextTierTokens = (minToNextTierInShares * totalBalanceNumber) / totalSharesNumber;
-    // console.log("minToNextTierInShares", minToNextTierInShares);
-    // console.log("minToNextTierTokens", minToNextTierTokens);
 
     const minimum = millify(minToNextTierTokens, { precision: 4 });
     const tokenSymbol = vault.stakingTokenSymbol;

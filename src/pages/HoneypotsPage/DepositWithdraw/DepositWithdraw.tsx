@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNetwork } from "wagmi";
 import { waitForTransaction } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
@@ -17,7 +18,9 @@ import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
-import "./index.scss";
+import { isAGnosisSafeTx } from "utils/gnosis.utils";
+import { useOnChange } from "hooks/usePrevious";
+import { ipfsTransformUri } from "utils";
 import {
   ClaimRewardContract,
   CommitteeCheckInContract,
@@ -26,10 +29,7 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
-import { useNetwork } from "wagmi";
-import { isAGnosisSafeTx } from "utils/gnosis.utils";
-import { useOnChange } from "hooks/usePrevious";
-import { ipfsTransformUri } from "utils";
+import "./index.scss";
 
 interface IProps {
   vault: IVault;
@@ -117,7 +117,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   // when user gets to next tier
   useOnChange(tierFromShares, (newTier, prevTier) => {
-    console.log("ON CHANGE", tierFromShares, newTier, prevTier);
     if (!newTier || !prevTier) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);

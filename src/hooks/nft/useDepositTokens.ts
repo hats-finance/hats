@@ -23,26 +23,6 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
 
   const proxyAddress = NFTContractDataProxy[vault.master.address]! as `0x${string}`;
 
-  // const redeemHook = useContractWrite({
-  //   mode: "recklesslyUnprepared",
-  //   address: vault?.chainId ? ChainsConfig[vault.chainId].vaultsNFTContract : undefined,
-  //   abi: HATVaultsNFT_abi,
-  //   functionName: "redeemMultipleFromShares",
-  //   chainId: vault?.chainId,
-  //   args: [[proxyAddress], [BigNumber.from(vault?.pid)], account as `0x${string}`],
-  // });
-
-  // const redeem = useCallback(async () => {
-  //   if (!redeemHook?.write) return;
-  //   if (!depositTokens || !depositTokens.length) return;
-  //   redeemHook?.write();
-  //   const tx = await redeemHook?.data?.wait();
-  //   console.log(tx);
-  //   return depositTokens
-  //     .filter((depositToken) => tx?.logs.find((log) => BigNumber.from(log.topics[3]).eq(depositToken.tokenId)))
-  //     .map((token) => ({ ...token, isRedeemed: true }));
-  // }, [redeemHook, depositTokens]);
-
   const redeem = useCallback(async () => {
     if (!depositTokens || !depositTokens.length) return;
 
