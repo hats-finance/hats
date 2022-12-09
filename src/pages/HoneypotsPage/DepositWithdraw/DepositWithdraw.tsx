@@ -13,13 +13,11 @@ import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
 import { isAGnosisSafeTx } from "utils/gnosis.utils";
-import { useOnChange } from "hooks/usePrevious";
 import { ipfsTransformUri } from "utils";
 import {
   ClaimRewardContract,
@@ -63,7 +61,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { tokenPrices, withdrawSafetyPeriod } = useVaults();
   const { id, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
-  const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
 
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
@@ -86,12 +83,12 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userIsCommitteeAndCanCheckIn,
     minimumDeposit,
     depositPaused,
-    tierFromShares,
     userSharesAvailable,
     totalSharesAvailable,
     totalBalanceAvailable,
     depositTokens,
     vaultNftRegistered,
+    tierFromShares,
     redeem,
   } = useVaultDepositWithdrawInfo(selectedVault);
 
@@ -114,15 +111,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const handleApproveTokenAllowance = (amountToSpend?: BigNumber) => {
     approveTokenAllowanceCall.send(amountToSpend ?? MAX_SPENDING);
   };
-
-  // when user gets to next tier
-  useOnChange(tierFromShares, (newTier, prevTier) => {
-    if (!newTier || !prevTier) return;
-    if (newTier > prevTier) {
-      console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      toggleEmbassyPrompt();
-    }
-  });
 
   const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
@@ -287,7 +275,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
             </div>
           ))}
-          <button onClick={toggleEmbassyPrompt}>{t("DepositWithdraw.redeem")}</button>
         </div>
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
           <span>{isDepositing && `Balance: ${tokenBalance.formatted()}`}</span>
@@ -341,7 +328,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               totalShares={totalSharesAvailable}
               totalBalance={totalBalanceAvailable}
               depositTokens={depositTokens}
-              handleRedeem={toggleEmbassyPrompt}
+              handleRedeem={redeem}
             />
           )}
 
@@ -429,12 +416,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         </div>
 
         {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}
-
-        {depositTokens && (
-          <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-            <EmbassyNftTicketPrompt depositTokens={depositTokens} handleRedeem={redeem} />
-          </Modal>
-        )}
 
         <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
           <ApproveToken

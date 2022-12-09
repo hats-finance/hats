@@ -1,7 +1,11 @@
 import { formatUnits } from "@ethersproject/units";
+import { Modal } from "components";
+import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
 import { INFTTokenInfoRedeemed } from "hooks/nft/types";
+import useModal from "hooks/useModal";
+import { useOnChange } from "hooks/usePrevious";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
@@ -14,7 +18,7 @@ interface IProps {
   totalShares: BigNumber;
   totalBalance: BigNumber;
   depositTokens: INFTTokenInfoRedeemed[];
-  handleRedeem: () => void;
+  handleRedeem: () => Promise<INFTTokenInfoRedeemed[] | undefined>;
 }
 
 const HUNDRED_PERCENT = 10000;
@@ -34,14 +38,12 @@ export function EmbassyEligibility({
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
   const totalBalanceNumber = +formatUnits(totalBalance, vault.stakingTokenDecimals);
 
-  // console.log("depositTokens", depositTokens);
-  // console.log("tierFromShares", tierFromShares);
+  const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
 
   const maxRedeemed = depositTokens
     .filter((token) => token.isRedeemed)
     .map((token) => token.tier)
     .reduce((max, tier) => Math.max(max, tier), 0);
-  // console.log("maxRedeemed", maxRedeemed);
 
   const sharesPercentageTiers = TIER_PERCENTAGES.map((tp) => tp / HUNDRED_PERCENT).map(
     (tp) => (totalSharesNumber * tp) / (1 - tp)
@@ -51,6 +53,15 @@ export function EmbassyEligibility({
     tierFromShares,
     sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier)
   );
+
+  // when user gets to next tier
+  useOnChange(tierFromShares, (newTier, prevTier) => {
+    if (!newTier || !prevTier) return;
+    if (newTier > prevTier) {
+      console.log("ON CHANGE", tierFromShares, newTier, prevTier);
+      toggleEmbassyPrompt();
+    }
+  });
 
   const minimumToNextTierParagraph = () => {
     const nextTier = currentTier + 1;
@@ -97,14 +108,22 @@ export function EmbassyEligibility({
   };
 
   return (
-    <div className="embassy-eligibility-wrapper">
-      <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
-      <div className="embassy-eligibility__content">
-        <span className="embassy-eligibility__content__min-to-embassy">
-          {currentTier < MAX_NFT_TIER && minimumToNextTierParagraph()}
-          {eligibleToRedeemNfts()}
-        </span>
+    <>
+      <div className="embassy-eligibility-wrapper">
+        <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
+        <div className="embassy-eligibility__content">
+          <span className="embassy-eligibility__content__min-to-embassy">
+            {currentTier < MAX_NFT_TIER && minimumToNextTierParagraph()}
+            {eligibleToRedeemNfts()}
+          </span>
+        </div>
       </div>
-    </div>
+
+      {depositTokens && (
+        <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
+          <EmbassyNftTicketPrompt depositTokens={depositTokens} handleRedeem={handleRedeem} />
+        </Modal>
+      )}
+    </>
   );
 }
