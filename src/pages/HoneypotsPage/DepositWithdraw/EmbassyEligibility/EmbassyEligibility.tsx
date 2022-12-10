@@ -57,13 +57,15 @@ export function EmbassyEligibility({
   const userHasTokensToRedeem = maxRedeemed < currentTier && depositTokens.length > 0;
   const isAvailableNextTier = currentTier < MAX_NFT_TIER;
 
+  console.log("tierFromShares", tierFromShares);
   // When the user deposit and gets a new possible tier
   useOnChange(tierFromShares, (newTier, prevTier) => {
     console.log("CHANGE", tierFromShares);
+    console.log(`newTier: ${newTier}, prevTier: ${prevTier}`);
     if (!newTier || !prevTier) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      toggleEmbassyPrompt();
+      setTimeout(() => toggleEmbassyPrompt(), 3000);
     }
   });
 
@@ -106,10 +108,9 @@ export function EmbassyEligibility({
         </>
       )}
       {t("embassyEligibility.currentlyEligible", { tier: currentTier })}
-      <Button onClick={handleRedeem} styleType="text">
+      <Button onClick={toggleEmbassyPrompt} styleType="text">
         {t("redeemNFT", { tier: currentTier })}
       </Button>
-      {/* <button className="btn-link">Redeem tier 1</button> */}
     </>
   );
 
