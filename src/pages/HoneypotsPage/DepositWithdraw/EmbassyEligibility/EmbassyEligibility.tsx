@@ -1,6 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { Button, Modal } from "components";
-import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
+import EmbassyNftRedeem from "components/EmbassyNftRedeem/EmbassyNftRedeem";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
 import { INFTTokenInfoRedeemed } from "hooks/nft/types";
@@ -38,7 +38,7 @@ export function EmbassyEligibility({
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
   const totalBalanceNumber = +formatUnits(totalBalance, vault.stakingTokenDecimals);
 
-  const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
+  const { isShowing: isShowingRedeemEmbassyNfts, toggle: toggleRedeemEmbassyNfts } = useModal();
 
   const maxRedeemed = depositTokens
     .filter((token) => token.isRedeemed)
@@ -65,7 +65,7 @@ export function EmbassyEligibility({
     if (!newTier || !prevTier) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      setTimeout(() => toggleEmbassyPrompt(), 3000);
+      setTimeout(() => toggleRedeemEmbassyNfts(), 3000);
     }
   });
 
@@ -108,7 +108,7 @@ export function EmbassyEligibility({
         </>
       )}
       {t("embassyEligibility.currentlyEligible", { tier: currentTier })}
-      <Button onClick={toggleEmbassyPrompt} styleType="text">
+      <Button onClick={toggleRedeemEmbassyNfts} styleType="text">
         {t("redeemNFT", { tier: currentTier })}
       </Button>
     </>
@@ -125,8 +125,8 @@ export function EmbassyEligibility({
       </StyledEmbassyEligibility>
 
       {depositTokens && (
-        <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-          <EmbassyNftTicketPrompt depositTokens={depositTokens} handleRedeem={handleRedeem} />
+        <Modal isShowing={isShowingRedeemEmbassyNfts} onHide={toggleRedeemEmbassyNfts}>
+          <EmbassyNftRedeem depositTokens={depositTokens} handleRedeem={handleRedeem} />
         </Modal>
       )}
     </>

@@ -19,7 +19,7 @@ interface IProps {
   depositTokens: INFTTokenInfoRedeemed[];
   handleRedeem?: () => Promise<INFTTokenInfoRedeemed[] | undefined>;
 }
-export default function EmbassyNftTicketPrompt({ depositTokens, handleRedeem }: IProps) {
+export default function EmbassyNftRedeem({ depositTokens, handleRedeem }: IProps) {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const [loading, setLoading] = useState(false);
