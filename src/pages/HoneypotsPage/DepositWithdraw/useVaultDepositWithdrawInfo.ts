@@ -60,7 +60,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     getVaultWithdrawTime(selectedVault);
 
   const vaultNftRegistered = useVaultRegisteredNft(selectedVault);
-  const { depositTokens, redeem } = useDepositTokens(selectedVault, vaultNftRegistered, tierFromShares, account);
+  const { availableNftsByDeposit, redeem } = useDepositTokens(selectedVault, vaultNftRegistered, tierFromShares, account);
 
   return {
     depositPaused: selectedVault.depositPause,
@@ -80,7 +80,7 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     totalSharesAvailable,
     totalBalanceAvailable,
     tierFromShares,
-    depositTokens,
+    availableNftsByDeposit,
     vaultNftRegistered,
     redeem,
   };

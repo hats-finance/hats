@@ -17,7 +17,7 @@ interface EmbassyEligibilityProps {
   userShares: BigNumber;
   totalShares: BigNumber;
   totalBalance: BigNumber;
-  depositTokens: INFTTokenInfoRedeemed[];
+  availableNftsByDeposit: INFTTokenInfoRedeemed[];
   handleRedeem: () => Promise<INFTTokenInfoRedeemed[] | undefined>;
 }
 
@@ -30,7 +30,7 @@ export function EmbassyEligibility({
   userShares,
   totalShares,
   totalBalance,
-  depositTokens,
+  availableNftsByDeposit,
   handleRedeem,
 }: EmbassyEligibilityProps) {
   const { t } = useTranslation();
@@ -40,7 +40,7 @@ export function EmbassyEligibility({
 
   const { isShowing: isShowingRedeemEmbassyNfts, toggle: toggleRedeemEmbassyNfts } = useModal();
 
-  const maxRedeemed = depositTokens
+  const maxRedeemed = availableNftsByDeposit
     .filter((token) => token.isRedeemed)
     .map((token) => token.tier)
     .reduce((max, tier) => Math.max(max, tier), 0);
@@ -54,7 +54,7 @@ export function EmbassyEligibility({
     sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier)
   );
 
-  const userHasTokensToRedeem = maxRedeemed < currentTier && depositTokens.length > 0;
+  const userHasTokensToRedeem = maxRedeemed < currentTier && availableNftsByDeposit.length > 0;
   const isAvailableNextTier = currentTier < MAX_NFT_TIER;
 
   console.log("tierFromShares", tierFromShares);
@@ -62,7 +62,7 @@ export function EmbassyEligibility({
   useOnChange(tierFromShares, (newTier, prevTier) => {
     console.log("CHANGE", tierFromShares);
     console.log(`newTier: ${newTier}, prevTier: ${prevTier}`);
-    if (!newTier || !prevTier) return;
+    if (newTier === undefined || prevTier === undefined) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
       setTimeout(() => toggleRedeemEmbassyNfts(), 3000);
@@ -124,9 +124,9 @@ export function EmbassyEligibility({
         </div>
       </StyledEmbassyEligibility>
 
-      {depositTokens && (
+      {availableNftsByDeposit && (
         <Modal isShowing={isShowingRedeemEmbassyNfts} onHide={toggleRedeemEmbassyNfts}>
-          <EmbassyNftRedeem depositTokens={depositTokens} handleRedeem={handleRedeem} />
+          <EmbassyNftRedeem availableNftsByDeposit={availableNftsByDeposit} handleRedeem={handleRedeem} />
         </Modal>
       )}
     </>

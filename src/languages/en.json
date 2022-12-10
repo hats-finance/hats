@@ -28,6 +28,7 @@
     "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
     "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your GnosisSafe wallet.",
     "redeemNFT": "Redeem NFT",
+    "redeemingNft": "Redeeming NFT",
     "embassyEligibility": {
       "minToEnter": "The minimum requirement to enter an Embassy is {{minimum}} {{token}}. \n\n",
       "afterDeposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy.",
@@ -240,7 +241,7 @@
     },
     "EmbassyNftTicketPrompt": {
       "title": "EMBASSY NFT",
-      "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
+      "text": "Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
       "button-text": "REDEEM"
     },
     "NFTCard": {

@@ -8,23 +8,23 @@ import { IVault } from "types";
 import { getDepositTokensWithRedeemState } from "./getRedeemableDepositTokens";
 import { INFTTokenInfoRedeemed } from "./types";
 
-export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, tiers?: number, account?: string) {
-  const [depositTokens, setDepositTokens] = useState<INFTTokenInfoRedeemed[]>([]);
+export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, tierFromShares?: number, account?: string) {
+  const [availableNftsByDeposit, setAvailableNftsByDeposit] = useState<INFTTokenInfoRedeemed[]>([]);
 
   useEffect(() => {
-    if (!vault || !tiers || !account || !vaultNftRegistered) return;
+    if (!vault || tierFromShares === undefined || !account || !vaultNftRegistered) return;
 
     const load = async () => {
-      const redeemableDepositTokens = await getDepositTokensWithRedeemState(vault, tiers, account);
-      setDepositTokens(redeemableDepositTokens);
+      const redeemableDepositTokens = await getDepositTokensWithRedeemState(vault, tierFromShares, account);
+      setAvailableNftsByDeposit(redeemableDepositTokens);
     };
     load();
-  }, [vault, tiers, account, vaultNftRegistered]);
+  }, [vault, tierFromShares, account, vaultNftRegistered]);
 
   const proxyAddress = NFTContractDataProxy[vault.master.address]! as `0x${string}`;
 
   const redeem = useCallback(async () => {
-    if (!depositTokens || !depositTokens.length) return;
+    if (!availableNftsByDeposit || !availableNftsByDeposit.length) return;
 
     const nftInterface = new ethers.utils.Interface(HATVaultsNFT_abi);
     const nftContract = vault?.chainId ? ChainsConfig[vault.chainId].vaultsNFTContract : undefined;
@@ -39,10 +39,10 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
     const { wait } = await writeContract(config);
     const tx = await wait();
 
-    console.log("depositTokens", depositTokens);
+    console.log("depositTokens", availableNftsByDeposit);
     console.log("TX Redemed", tx);
 
-    const currentRedeemedNfts: INFTTokenInfoRedeemed[] = depositTokens
+    const currentRedeemedNfts: INFTTokenInfoRedeemed[] = availableNftsByDeposit
       .filter((depositToken) =>
         tx?.logs.find((log) => {
           const parsedLog = nftInterface.parseLog(log);
@@ -55,14 +55,14 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
       )
       .map((token) => ({ ...token, isRedeemed: true }));
 
-    setDepositTokens(
-      depositTokens.map(
+    setAvailableNftsByDeposit(
+      availableNftsByDeposit.map(
         (depositToken) => currentRedeemedNfts.find((redeemedNft) => redeemedNft.tokenId.eq(depositToken.tokenId)) || depositToken
       )
     );
 
     return currentRedeemedNfts;
-  }, [account, depositTokens, proxyAddress, vault.chainId, vault?.pid]);
+  }, [account, availableNftsByDeposit, proxyAddress, vault.chainId, vault?.pid]);
 
-  return { depositTokens, redeem };
+  return { availableNftsByDeposit, redeem };
 }

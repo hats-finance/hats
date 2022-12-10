@@ -86,11 +86,14 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userSharesAvailable,
     totalSharesAvailable,
     totalBalanceAvailable,
-    depositTokens,
+    availableNftsByDeposit,
     vaultNftRegistered,
     tierFromShares,
     redeem,
   } = useVaultDepositWithdrawInfo(selectedVault);
+
+  console.log("tierFromShares DepositWithdraw", tierFromShares);
+  console.log(availableNftsByDeposit);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -117,6 +120,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (!userInputValue || !selectedVault.chainId) return;
 
     await depositCall.send(userInputValue);
+    setRequestingWithdraw(false);
     setUserInput("");
     setTermsOfUse(false);
   }, [selectedVault, userInputValue, depositCall]);
@@ -126,6 +130,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     if (!selectedVault.chainId) return;
     if (!userInputValue || !isUserInTimeToWithdraw) return;
     withdrawAndClaimCall.send(userInputValue);
+    setRequestingWithdraw(false);
     setUserInput("");
   }, [userInputValue, selectedVault, withdrawAndClaimCall, isUserInTimeToWithdraw]);
 
@@ -268,11 +273,11 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       <div className="content">
         <div className="deposit-tokens-wrapper">
           <title>nfts</title>
-          {depositTokens.map((depositToken) => (
+          {availableNftsByDeposit.map((availableNft) => (
             <div
-              key={depositToken.tokenId.toString()}
-              className={`deposit-token ${depositToken.isRedeemed ? "redeemed" : "eligible"}`}>
-              <img alt={"tier " + depositToken.tier} src={ipfsTransformUri(depositToken.metadata.image)} />
+              key={availableNft.tokenId.toString()}
+              className={`deposit-token ${availableNft.isRedeemed ? "redeemed" : "eligible"}`}>
+              <img alt={"tier " + availableNft.tier} src={ipfsTransformUri(availableNft.metadata.image)} />
             </div>
           ))}
         </div>
@@ -320,14 +325,14 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           totalSharesAvailable &&
           totalBalanceAvailable &&
           vaultNftRegistered &&
-          depositTokens && (
+          availableNftsByDeposit && (
             <EmbassyEligibility
               vault={selectedVault}
               tierFromShares={tierFromShares ?? 0}
               userShares={userSharesAvailable}
               totalShares={totalSharesAvailable}
               totalBalance={totalBalanceAvailable}
-              depositTokens={depositTokens}
+              availableNftsByDeposit={availableNftsByDeposit}
               handleRedeem={redeem}
             />
           )}

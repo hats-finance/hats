@@ -16,10 +16,10 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 
 interface IProps {
-  depositTokens: INFTTokenInfoRedeemed[];
+  availableNftsByDeposit: INFTTokenInfoRedeemed[];
   handleRedeem?: () => Promise<INFTTokenInfoRedeemed[] | undefined>;
 }
-export default function EmbassyNftRedeem({ depositTokens, handleRedeem }: IProps) {
+export default function EmbassyNftRedeem({ availableNftsByDeposit, handleRedeem }: IProps) {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const [loading, setLoading] = useState(false);
@@ -51,7 +51,7 @@ export default function EmbassyNftRedeem({ depositTokens, handleRedeem }: IProps
         touchRatio={1.5}
         navigation
         effect={"flip"}>
-        {depositTokens
+        {availableNftsByDeposit
           .filter((token) => !token.isRedeemed)
           .map((nftInfo, index) => (
             <SwiperSlide key={index}>
@@ -62,7 +62,7 @@ export default function EmbassyNftRedeem({ depositTokens, handleRedeem }: IProps
       <button onClick={handleRedeemAndShowRedeemed} className="embassy-nft-ticket__redeem-btn fill">
         {t("EmbassyNftTicketPrompt.button-text")}
       </button>
-      {showLoader && <Loading />}
+      {showLoader && <Loading extraText={`${t("redeemingNft")}...`} />}
     </div>
   );
 }
