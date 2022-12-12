@@ -271,8 +271,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       </div>
 
       <div className="content">
-        <div className="deposit-tokens-wrapper">
-          <title>nfts</title>
+        {/* <div className="deposit-tokens-wrapper">
           {availableNftsByDeposit.map((availableNft) => (
             <div
               key={availableNft.tokenId.toString()}
@@ -280,7 +279,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               <img alt={"tier " + availableNft.tier} src={ipfsTransformUri(availableNft.metadata.image)} />
             </div>
           ))}
-        </div>
+        </div> */}
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
           <span>{isDepositing && `Balance: ${tokenBalance.formatted()}`}</span>
           <span>{isWithdrawing && `Balance to withdraw: ${availableBalanceToWithdraw.formatted()}`}</span>

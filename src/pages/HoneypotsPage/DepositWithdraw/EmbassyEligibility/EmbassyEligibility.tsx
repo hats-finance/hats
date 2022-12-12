@@ -40,10 +40,10 @@ export function EmbassyEligibility({
 
   const { isShowing: isShowingRedeemEmbassyNfts, toggle: toggleRedeemEmbassyNfts } = useModal();
 
-  const maxRedeemed = availableNftsByDeposit
-    .filter((token) => token.isRedeemed)
-    .map((token) => token.tier)
-    .reduce((max, tier) => Math.max(max, tier), 0);
+  const availableNftsToRedeem = availableNftsByDeposit.filter((token) => !token.isRedeemed);
+  const nftsRedeemed = availableNftsByDeposit.filter((token) => token.isRedeemed);
+
+  const maxRedeemed = nftsRedeemed.map((token) => token.tier).reduce((max, tier) => Math.max(max, tier), 0);
 
   const sharesPercentageTiers = TIER_PERCENTAGES.map((tp) => tp / HUNDRED_PERCENT).map(
     (tp) => (totalSharesNumber * tp) / (1 - tp)
@@ -56,6 +56,7 @@ export function EmbassyEligibility({
 
   const userHasTokensToRedeem = maxRedeemed < currentTier && availableNftsByDeposit.length > 0;
   const isAvailableNextTier = currentTier < MAX_NFT_TIER;
+  const userHoldAllTiers = maxRedeemed === MAX_NFT_TIER;
 
   console.log("tierFromShares", tierFromShares);
   // When the user deposit and gets a new possible tier
@@ -63,9 +64,9 @@ export function EmbassyEligibility({
     console.log("CHANGE", tierFromShares);
     console.log(`newTier: ${newTier}, prevTier: ${prevTier}`);
     if (newTier === undefined || prevTier === undefined) return;
-    if (newTier > prevTier) {
+    if (newTier > prevTier && availableNftsToRedeem.length > 0) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      setTimeout(() => toggleRedeemEmbassyNfts(), 1000);
+      setTimeout(toggleRedeemEmbassyNfts, 1000);
     }
   });
 
@@ -116,6 +117,8 @@ export function EmbassyEligibility({
     </>
   );
 
+  const redeemedAllTiers = () => <>{t("embassyEligibility.youHoldAllTiers")}</>;
+
   return (
     <>
       <StyledEmbassyEligibility>
@@ -123,12 +126,13 @@ export function EmbassyEligibility({
         <div className="content">
           {isAvailableNextTier && minimumToNextTierParagraph()}
           {userHasTokensToRedeem && eligibleToRedeemNfts()}
+          {userHoldAllTiers && redeemedAllTiers()}
         </div>
       </StyledEmbassyEligibility>
 
-      {availableNftsByDeposit && (
+      {availableNftsToRedeem && (
         <Modal isShowing={isShowingRedeemEmbassyNfts} onHide={toggleRedeemEmbassyNfts}>
-          <EmbassyNftRedeem availableNftsByDeposit={availableNftsByDeposit} handleRedeem={handleRedeem} />
+          <EmbassyNftRedeem availableNftsToRedeem={availableNftsToRedeem} handleRedeem={handleRedeem} />
         </Modal>
       )}
     </>
