@@ -16,5 +16,9 @@ export const StyledEmbassyEligibility = styled.div`
   .content {
     border: 1px solid var(--blue-3);
     padding: ${getSpacing(2)};
+
+    .blue {
+      color: var(--turquoise);
+    }
   }
 `;

@@ -65,7 +65,7 @@ export function EmbassyEligibility({
     if (newTier === undefined || prevTier === undefined) return;
     if (newTier > prevTier) {
       console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      setTimeout(() => toggleRedeemEmbassyNfts(), 3000);
+      setTimeout(() => toggleRedeemEmbassyNfts(), 1000);
     }
   });
 
@@ -84,14 +84,16 @@ export function EmbassyEligibility({
     if (nextTier === 1) {
       return (
         <>
-          <span>{t("embassyEligibility.minToEnter", { minimum: minimumInBalance, token: tokenSymbol })}</span>
+          <span className="blue">{t("embassyEligibility.minToEnter", { minimum: minimumInBalance, token: tokenSymbol })}</span>
           <span>{afterDepositText}</span>
         </>
       );
     } else if (nextTier <= 3) {
       return (
         <>
-          <span>{t(`embassyEligibility.middleTier_${nextTier}`, { minimum: minimumInBalance, token: tokenSymbol })}</span>
+          <span className="blue">
+            {t(`embassyEligibility.middleTier_${nextTier}`, { minimum: minimumInBalance, token: tokenSymbol })}
+          </span>
           <span>{afterDepositText}</span>
         </>
       );
@@ -108,8 +110,8 @@ export function EmbassyEligibility({
         </>
       )}
       {t("embassyEligibility.currentlyEligible", { tier: currentTier })}
-      <Button onClick={toggleRedeemEmbassyNfts} styleType="text">
-        {t("redeemNFT", { tier: currentTier })}
+      <Button onClick={toggleRedeemEmbassyNfts} styleType="text" lowercase>
+        {t("here", { tier: currentTier })}
       </Button>
     </>
   );
