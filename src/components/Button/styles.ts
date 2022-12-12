@@ -6,14 +6,15 @@ type StyledButtonProps = {
   styleType: ButtonProps["styleType"];
   size: ButtonProps["size"];
   expanded: ButtonProps["expanded"];
+  lowercase: ButtonProps["lowercase"];
 };
 
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, size, expanded }) => css`
+  ({ styleType, size, expanded, lowercase }) => css`
     display: block;
     width: ${expanded ? "100%" : "fit-content"};
     padding: ${getSpacing(1.2)} ${getSpacing(2)};
-    text-transform: uppercase;
+    text-transform: ${lowercase ? "lowercase" : "uppercase"};
     font-weight: 600;
 
     ${size === "small" &&
