@@ -1,9 +1,9 @@
+import { useContractRead } from "wagmi";
+import { BigNumber } from "ethers";
+import { IVault } from "types";
 import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
 import { HATVaultsNFT_abi } from "data/abis/HATVaultsNFT_abi";
-import { BigNumber } from "ethers";
-import { IVault } from "types";
-import { useContractRead } from "wagmi";
 
 export function useVaultRegisteredNft(vault: IVault) {
   const nftContract = {
@@ -13,6 +13,7 @@ export function useVaultRegisteredNft(vault: IVault) {
     scopeKey: "hats",
     watch: false,
   };
+
   const { data: vaultId } = useContractRead({
     ...nftContract,
     functionName: "getVaultId",
@@ -23,6 +24,7 @@ export function useVaultRegisteredNft(vault: IVault) {
     ...nftContract,
     functionName: "vaultsRegistered",
     args: [vaultId as `0x${string}`],
+    enabled: !!vaultId,
   });
 
   return vaultRegistered as boolean | undefined;
