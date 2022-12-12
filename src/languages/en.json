@@ -34,7 +34,8 @@
       "afterDeposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy.",
       "middleTier_2": "The minimum requirement for the second level of trust of the Protector NFT is {{minimum}} {{token}}. \n\n",
       "middleTier_3": "The minimum requirement for the third level of trust of the Protector NFT is {{minimum}} {{token}}. \n\n",
-      "currentlyEligible": "You are already eligible to the vault's level {{tier}} of trust NFT. Redeem your NFT"
+      "currentlyEligible": "You are already eligible to the vault's level {{tier}} of trust NFT. Redeem your NFT",
+      "youHoldAllTiers": "You hold all levels of trust of the Protector NFT."
     },
     "Shared": {
       "yes": "YES",
