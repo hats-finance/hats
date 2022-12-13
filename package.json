@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "@apollo/client": "^3.7.1",
+    "@craco/craco": "^7.0.0",
     "@davatar/react": "^1.10.3",
     "@ethersproject/contracts": "^5.6.2",
     "@ethersproject/providers": "^5.6.2",
@@ -75,10 +76,9 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "jest --watch --verbose --maxWorkers=25%",
-    "eject": "react-app-rewired eject"
+    "start": "craco start",
+    "build": "craco build",
+    "test": "jest --watch --verbose --maxWorkers=25%"
   },
   "eslintConfig": {
     "extends": [
