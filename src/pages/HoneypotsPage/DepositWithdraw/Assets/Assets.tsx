@@ -12,7 +12,7 @@ import { formatAPY } from "utils";
 import "./index.scss";
 
 interface IProps {
-  vault: IVault
+  vault: IVault;
 }
 
 export default function Assets({ vault }: IProps) {
@@ -20,27 +20,33 @@ export default function Assets({ vault }: IProps) {
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { apys } = useVaultsApy(vault.multipleVaults ?? [vault]);
 
-  const additionalTokens = vault.multipleVaults ? vault.multipleVaults.map((vault, index) => {
-    return (
-      <tr key={index}>
-        <td className="token-symbol">{vault.stakingTokenSymbol}</td>
-        <td className="withdraw-status-data">
-          <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
-        </td>
-        <td><DepositAmount vault={vault} /></td>
-        <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
-      </tr>
-    )
-  }) : (
+  const additionalTokens = vault.multipleVaults ? (
+    vault.multipleVaults.map((vault, index) => {
+      return (
+        <tr key={index}>
+          <td className="token-symbol">{vault.stakingTokenSymbol}</td>
+          <td className="withdraw-status-data">
+            <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
+          </td>
+          <td>
+            <DepositAmount vault={vault} />
+          </td>
+          <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
+        </tr>
+      );
+    })
+  ) : (
     <tr>
       <td className="token-symbol">{vault.stakingTokenSymbol}</td>
       <td className="withdraw-status-data">
         <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
       </td>
-      <td><DepositAmount vault={vault} /></td>
+      <td>
+        <DepositAmount vault={vault} />
+      </td>
       <td>{formatAPY(apys[vault.stakingToken].apy)}</td>
     </tr>
-  )
+  );
 
   return (
     <table className="assets-table">
@@ -54,7 +60,7 @@ export default function Assets({ vault }: IProps) {
             {t("DepositWithdraw.Assets.withdraw")}
             {screenSize === ScreenSize.Desktop && <span>&nbsp;{t("DepositWithdraw.Assets.status")}</span>}
           </th>
-          <th>{t("DepositWithdraw.Assets.deposited")}</th>
+          <th>{t("DepositWithdraw.Assets.balance")}</th>
           <th>
             <div className="apy-column">
               <span>APY</span>
@@ -62,15 +68,15 @@ export default function Assets({ vault }: IProps) {
                 overlayClassName="tooltip"
                 overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
                 overlay={t("Shared.apy-explain")}>
-                <div className="info-icon"><InfoIcon fill={Colors.white} /></div>
+                <div className="info-icon">
+                  <InfoIcon fill={Colors.white} />
+                </div>
               </Tooltip>
             </div>
           </th>
         </tr>
       </thead>
-      <tbody>
-        {additionalTokens}
-      </tbody>
+      <tbody>{additionalTokens}</tbody>
     </table>
-  )
+  );
 }

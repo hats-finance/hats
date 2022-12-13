@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import AddIcon from "assets/icons/add.icon.svg";
@@ -14,6 +14,7 @@ interface FormIconInputProps {
 
 function FormIconInputComponent({ onChange, colorable = false, isDirty = false, label, ...props }: FormIconInputProps, ref) {
   const { t } = useTranslation();
+  const [, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
 
   const name = localRef.current?.name;
@@ -30,6 +31,7 @@ function FormIconInputComponent({ onChange, colorable = false, isDirty = false, 
         const url = URL.createObjectURL(blob);
         localRef.current.value = url;
 
+        setChanged((prev) => !prev);
         onChange({
           ...e,
           target: {
@@ -49,6 +51,7 @@ function FormIconInputComponent({ onChange, colorable = false, isDirty = false, 
         type="hidden"
         ref={(e) => {
           ref(e);
+          setChanged((prev) => !prev);
           (localRef as any).current = e;
         }}
       />
