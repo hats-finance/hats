@@ -207,66 +207,7 @@ export interface IWithdrawSafetyPeriod {
   safetyStartsAt: number;
   safetyEndsAt: number;
 }
-export type NFTAirdropET = { [key: string]: string };
-export type TokenAirdropET = { [key: string]: number };
-
-export interface IAirdropData {
-  nft: NFTAirdropET;
-  token: TokenAirdropET;
-}
-export interface INFTAirdropElement {
-  description: string;
-  external_url: string;
-  image: string;
-  name: string;
-  attributes: Array<any>;
-}
-export interface GeneralParameters {
-  withdrawRequestEnablePeriod: number;
-  withdrawPeriod: number;
-  safetyPeriod: number;
-}
 
 export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined; tokenSymbol: string } };
-
-export interface NFTEligibilityElement {
-  pid: number | string;
-  tier: number;
-  masterAddress: string;
-}
-
-export interface AirdropMachineWallet {
-  address: string;
-  token_eligibility: {
-    committee_member: string;
-    depositor: string;
-    crow: string;
-    coder: string;
-    early_contributor: string;
-  };
-  nft_elegebility: NFTEligibilityElement[];
-}
-
-export interface INFTTokenMetadata {
-  name: string;
-  description: string;
-  image: string;
-  animation_url: string;
-  attributes: Array<{ trait_type: string; value: string }>;
-}
-
-export interface INFTTokenInfo {
-  pid: number;
-  tier: number;
-  tokenId: BigNumber;
-  metadata: INFTTokenMetadata;
-  masterAddress: string;
-  isMerkleTree: boolean;
-  isDeposit: boolean;
-}
-
-export interface INFTTokenInfoRedeemed extends INFTTokenInfo {
-  isRedeemed: boolean;
-}

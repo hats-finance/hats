@@ -7,7 +7,7 @@ import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
 import { ChainsConfig } from "config/chains";
 import { COIN_GECKO, IPFS_PREFIX, LocalStorage } from "constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
-import { CoinGeckoPriceResponse } from "types/types";
+import { CoinGeckoPriceResponse } from "types";
 
 /**
  * Adds commas to a given number
@@ -51,7 +51,7 @@ export const formatWei = (value: string | number | BigNumber | undefined, precis
   }
 
   const formattedValue = millify(Number(formatUnits(String(value), decimals)), {
-    precision: precision,
+    precision: precision
   });
 
   if (typeof value === "string") {
@@ -229,7 +229,7 @@ export const setVulnerabilityProject = (projectName: string, projectId: string, 
     verified: true,
     projectName: projectName,
     projectId: projectId,
-    contractAddress: contractAddress,
+    contractAddress: contractAddress
   };
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 };

@@ -67,6 +67,28 @@
     }
   }
 
+  .deposit-tokens-wrapper {
+    display: flex;
+    margin-top: 10px;
+    .deposit-token {
+      display: flex;
+      align-items: center;
+      opacity: 0.3;
+      &.redeemed {        
+        opacity: 1;
+      }
+      &.eligible {
+        opacity: .3;
+        border: dashed 1px $turquoise;
+      }
+      img {
+        width: 30px;
+        height: 30px;
+      }
+      margin-right: 10px;
+    }
+  }
+
   .balance-wrapper {
     position: relative;
     display: flex;
@@ -87,6 +109,7 @@
       padding: 0;
       border: none;
     }
+
   }
 
   .amount-wrapper {

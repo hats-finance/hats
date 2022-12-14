@@ -5,11 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 import classNames from "classnames";
-import { Loading, NFTCard } from "components";
+import { NFTCard } from "components";
 import { useSupportedNetwork } from "hooks/wagmi";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -19,12 +19,12 @@ import "./index.scss";
 export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData, handleRedeem, showLoader } = useContext(AirdropMachineContext);
+  const { airdropData, handleRedeem } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
   const { address: account } = useAccount();
 
   return (
-    <div className={classNames("nft-airdrop-wrapper", { disabled: showLoader })}>
+    <div className={classNames("nft-airdrop-wrapper")}>
       <span>{t("AirdropMachine.NFTAirdrop.text-1")}</span>
       <section>
         <b>{t("AirdropMachine.NFTAirdrop.text-2")}</b>
@@ -39,7 +39,7 @@ export default function NFTAirdrop() {
           touchRatio={1.5}
           navigation
           effect={"flip"}>
-          {nftData?.treeRedeemables?.map((nftInfo, index) => (
+          {airdropData?.airdropTokens?.map((nftInfo, index) => (
             <SwiperSlide key={index} className="swiper-slide">
               <NFTCard key={index} tokenInfo={nftInfo} />
             </SwiperSlide>
@@ -52,7 +52,6 @@ export default function NFTAirdrop() {
           {t("AirdropMachine.NFTAirdrop.button-text")}
         </button>
       </div>
-      {showLoader && <Loading />}
     </div>
   );
 }

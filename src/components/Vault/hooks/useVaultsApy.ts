@@ -2,7 +2,7 @@
 // import { useSelector } from "react-redux";
 // import { RootState } from "reducers";
 // import { formatUnits } from "ethers/lib/utils";
-import { VaultApys, IVault } from "types/types";
+import { VaultApys, IVault } from "types";
 
 export function useVaultsApy(vaults: IVault[]) {
   // const { dataReducer: { hatsPrice } } = useSelector((state: RootState) => state);

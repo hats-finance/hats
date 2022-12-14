@@ -1,4 +1,4 @@
-import { IWithdrawRequest } from "./../../types/types";
+import { IWithdrawRequest } from "types";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, chain as allChains, useAccount } from "wagmi";
 import { IMaster, IVault } from "types/types";
@@ -10,7 +10,7 @@ const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
-  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] },
+  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] }
 };
 
 interface GraphVaultsData {
@@ -35,7 +35,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
-      cache: "default",
+      cache: "default"
     });
     const dataJson = await res.json();
 
@@ -69,19 +69,19 @@ export const useMultiChainVaults = () => {
   useEffect(() => {
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || [])
     ];
 
     const allMasters = [
       ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || [])
     ];
 
     const newVaults = {
       vaults: allVaults.map((vault) => ({
-        ...vault,
+        ...vault
       })),
-      masters: allMasters,
+      masters: allMasters
     };
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {

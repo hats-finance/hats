@@ -4,9 +4,8 @@ import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types/types";
+import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
-import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";
@@ -15,7 +14,6 @@ interface IVaultsContext {
   vaults?: IVault[];
   tokenPrices?: number[];
   masters?: IMaster[];
-  nftData?: INFTTokenData;
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -32,7 +30,6 @@ export function VaultsProvider({ children }) {
   const apolloClient = useApolloClient();
   const { address: account } = useAccount();
   const { chain } = useNetwork();
-  const nftData = useNFTTokenData(account);
 
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");
@@ -143,7 +140,6 @@ export function VaultsProvider({ children }) {
     setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    console.log(vaultsWithDescription);
     setVaults(vaultsWithDescription);
   };
 
@@ -170,7 +166,6 @@ export function VaultsProvider({ children }) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    nftData,
     vaults,
     tokenPrices,
     masters: data?.masters,

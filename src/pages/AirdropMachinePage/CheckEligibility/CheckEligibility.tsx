@@ -1,41 +1,28 @@
-import { createContext, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
 import classNames from "classnames";
 import { RedeemNftSuccess, Modal } from "components";
 import useModal from "hooks/useModal";
-import { useVaults } from "hooks/vaults/useVaults";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import { INFTTokenData, useNFTTokenData } from "hooks/useNFTTokenData";
-import { isAddress } from "ethers/lib/utils";
-import { INFTTokenInfoRedeemed } from "types/types";
 import Redeem from "../Redeem/Redeem";
 import "./index.scss";
-
-export interface IAirdropMachineContext {
-  nftData: INFTTokenData;
-  closeRedeemModal: () => void;
-  address: string | undefined;
-  handleRedeem: () => Promise<void>;
-  showLoader: boolean;
-}
-
-export const AirdropMachineContext = createContext<IAirdropMachineContext>(undefined as any);
+import { chain, useAccount } from "wagmi";
+import { isAddress } from "ethers/lib/utils.js";
+import { AirdropMachineContext } from "../context";
+import { useAirdropData } from "hooks/nft/useAirdropData";
 
 export default function CheckEligibility() {
+  const { address } = useAccount();
   const { t } = useTranslation();
-  const { address: account } = useAccount();
   const [userInput, setUserInput] = useState("");
   const { isShowing, show, hide } = useModal();
   const inputError = userInput && !isAddress(userInput);
-  const address = isAddress(userInput) ? userInput : undefined;
   const isSupportedNetwork = useSupportedNetwork();
-  const [showLoader, setShowLoader] = useState(false);
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
   const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
-  const nftDataToCheck = useNFTTokenData(addressToCheck);
-  const { nftData: vaultsNftData } = useVaults();
-  const nftData = account === address && vaultsNftData ? vaultsNftData : nftDataToCheck;
+  const airdropData = useAirdropData(addressToCheck, chain.mainnet.id); // mainnet only
+  const { isBeforeDeadline } = airdropData;
 
   const handleCloseRedeemModal = useCallback(() => {
     hide();
@@ -50,21 +37,21 @@ export default function CheckEligibility() {
   }, [address, show]);
 
   useEffect(() => {
-    setUserInput(account ?? "");
-  }, [setUserInput, account]);
+    setUserInput(address ?? "");
+  }, [setUserInput, address]);
 
   const handleRedeem = useCallback(async () => {
-    if (!nftData?.treeRedeemables) return;
-    setShowLoader(true);
-    const tx = await nftData?.redeemTree();
-    if (tx?.status) {
-      const refreshed = await nftData?.refreshRedeemed();
-      if (refreshed) {
-        setRedeemed(refreshed.filter((nft) => nft.isRedeemed && nftData.treeRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))));
-      }
-    }
-    setShowLoader(false);
-  }, [nftData]);
+    // if (!nftData?.treeRedeemables) return;
+    // setShowLoader(true);
+    // const tx = await nftData?.redeemTree();
+    // if (tx?.status) {
+    //   const refreshed = await nftData?.refreshRedeemed();
+    //   if (refreshed) {
+    //     setRedeemed(refreshed.filter((nft) => nft.isRedeemed && nftData.treeRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))));
+    //   }
+    // }
+    // setShowLoader(false);
+  }, []);
 
   return (
     <div className="check-eligibility-wrapper">
@@ -84,15 +71,15 @@ export default function CheckEligibility() {
         </div>
 
         {inputError && <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.input-error")}</span>}
-        {nftData?.isBeforeDeadline === false && (
+        {isBeforeDeadline === false && (
           <span className="check-eligibility__error-label">{t("AirdropMachine.CheckEligibility.deadline")}</span>
         )}
         {!isSupportedNetwork && <span className="check-eligibility__error-label">{t("Shared.network-not-supported")}</span>}
         <button
           className="check-eligibility__check-button fill"
           onClick={handleCheck}
-          disabled={!isSupportedNetwork || !nftData?.isBeforeDeadline || inputError || !userInput}>
-          {nftData === vaultsNftData && nftData.treeRedeemablesCount > 0
+          disabled={!isSupportedNetwork || !isBeforeDeadline || inputError || !userInput}>
+          {airdropData?.airdropTokens?.some((t) => !t.isRedeemed)
             ? t("AirdropMachine.CheckEligibility.button-text-1")
             : t("AirdropMachine.CheckEligibility.button-text-0")}
         </button>
@@ -103,7 +90,7 @@ export default function CheckEligibility() {
           <RedeemNftSuccess redeemed={redeemed!} />
         ) : (
           <AirdropMachineContext.Provider
-            value={{ address, nftData, closeRedeemModal: handleCloseRedeemModal, handleRedeem, showLoader }}>
+            value={{ address, airdropData, closeRedeemModal: handleCloseRedeemModal, handleRedeem }}>
             <Redeem />
           </AirdropMachineContext.Provider>
         )}

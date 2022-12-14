@@ -5,7 +5,7 @@ import RadioButton from "assets/icons/radio-button.svg";
 import NotEligibleWalletIcon from "assets/icons/wallet-nfts/wallet-not-eligible.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { EMBASSY_LEARN_MORE } from "constants/constants";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 import "./index.scss";
 
 export default function NotEligible() {

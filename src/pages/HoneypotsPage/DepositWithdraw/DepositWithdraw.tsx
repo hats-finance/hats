@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useNetwork } from "wagmi";
 import { waitForTransaction } from "@wagmi/core";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
@@ -7,17 +8,17 @@ import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
 import { Loading, Modal } from "components";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import EmbassyNftTicketPrompt from "components/EmbassyNftTicketPrompt/EmbassyNftTicketPrompt";
 import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
-import { useVaultDepositWithdrawInfo } from "./hooks";
-import "./index.scss";
+import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
+import { isAGnosisSafeTx } from "utils/gnosis.utils";
+import { ipfsTransformUri } from "utils";
 import {
   ClaimRewardContract,
   CommitteeCheckInContract,
@@ -26,8 +27,7 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
-import { useNetwork } from "wagmi";
-import { isAGnosisSafeTx } from "utils/gnosis.utils";
+import "./index.scss";
 
 interface IProps {
   vault: IVault;
@@ -58,10 +58,9 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { chain } = useNetwork();
-  const { tokenPrices, withdrawSafetyPeriod, nftData } = useVaults();
-  const { id, master, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
+  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { id, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
-  const { isShowing: isShowingEmbassyPrompt, toggle: toggleEmbassyPrompt } = useModal();
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
 
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
@@ -84,7 +83,17 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     userIsCommitteeAndCanCheckIn,
     minimumDeposit,
     depositPaused,
+    userSharesAvailable,
+    totalSharesAvailable,
+    totalBalanceAvailable,
+    availableNftsByDeposit,
+    vaultNftRegistered,
+    tierFromShares,
+    redeem,
   } = useVaultDepositWithdrawInfo(selectedVault);
+
+  console.log("tierFromShares DepositWithdraw", tierFromShares);
+  console.log(availableNftsByDeposit);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {
@@ -108,30 +117,22 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   const depositCall = DepositContract.hook(selectedVault);
   const handleDeposit = useCallback(async () => {
-    if (!userInputValue) return;
+    if (!userInputValue || !selectedVault.chainId) return;
 
     await depositCall.send(userInputValue);
+    setRequestingWithdraw(false);
     setUserInput("");
     setTermsOfUse(false);
-
-    const depositEligibility = await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-    const newRedeemables = depositEligibility?.filter(
-      (nft) => !nft.isRedeemed && !nftData?.proofRedeemables?.find((r) => r.tokenId.eq(nft.tokenId))
-    );
-    if (newRedeemables?.length) {
-      toggleEmbassyPrompt();
-    }
-  }, [selectedVault, userInputValue, depositCall, master.address, nftData, toggleEmbassyPrompt]);
+  }, [selectedVault, userInputValue, depositCall]);
 
   const withdrawAndClaimCall = WithdrawAndClaimContract.hook(selectedVault);
   const handleWithdrawAndClaim = useCallback(async () => {
+    if (!selectedVault.chainId) return;
     if (!userInputValue || !isUserInTimeToWithdraw) return;
     withdrawAndClaimCall.send(userInputValue);
+    setRequestingWithdraw(false);
     setUserInput("");
-
-    // refresh deposit eligibility
-    await nftData?.refreshProofAndRedeemed({ pid: selectedVault.pid, masterAddress: master.address });
-  }, [userInputValue, selectedVault, withdrawAndClaimCall, master, nftData, isUserInTimeToWithdraw]);
+  }, [userInputValue, selectedVault, withdrawAndClaimCall, isUserInTimeToWithdraw]);
 
   const withdrawRequestCall = WithdrawRequestContract.hook(selectedVault);
   const handleWithdrawRequest = useCallback(() => {
@@ -270,6 +271,15 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       </div>
 
       <div className="content">
+        {/* <div className="deposit-tokens-wrapper">
+          {availableNftsByDeposit.map((availableNft) => (
+            <div
+              key={availableNft.tokenId.toString()}
+              className={`deposit-token ${availableNft.isRedeemed ? "redeemed" : "eligible"}`}>
+              <img alt={"tier " + availableNft.tier} src={ipfsTransformUri(availableNft.metadata.image)} />
+            </div>
+          ))}
+        </div> */}
         <div className={`balance-wrapper ${isDepositing && depositPaused ? "disabled" : ""}`}>
           <span>{isDepositing && `Balance: ${tokenBalance.formatted()}`}</span>
           <span>{isWithdrawing && `Balance to withdraw: ${availableBalanceToWithdraw.formatted()}`}</span>
@@ -308,7 +318,23 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           {isWithdrawing && !userHasBalanceToWithdraw && <span className="input-error">Can't withdraw more than available</span>}
         </div>
 
-        {isDepositing && !depositPaused && <EmbassyEligibility vault={selectedVault} />}
+        {isDepositing &&
+          !depositPaused &&
+          userSharesAvailable &&
+          totalSharesAvailable &&
+          totalBalanceAvailable &&
+          vaultNftRegistered &&
+          availableNftsByDeposit && (
+            <EmbassyEligibility
+              vault={selectedVault}
+              tierFromShares={tierFromShares ?? 0}
+              userShares={userSharesAvailable}
+              totalShares={totalSharesAvailable}
+              totalBalance={totalBalanceAvailable}
+              availableNftsByDeposit={availableNftsByDeposit}
+              handleRedeem={redeem}
+            />
+          )}
 
         <div>
           <UserAssetsInfo vault={vault} />
@@ -394,10 +420,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
         </div>
 
         {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}
-
-        <Modal isShowing={isShowingEmbassyPrompt} onHide={toggleEmbassyPrompt}>
-          <EmbassyNftTicketPrompt />
-        </Modal>
 
         <Modal isShowing={isShowingApproveSpending} onHide={hideApproveSpending} zIndex={1}>
           <ApproveToken

@@ -19,7 +19,8 @@ export const VaultService = "https://vault-editor-service.herokuapp.com";
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
   ["0x571f39d351513146248AcafA9D0509319A327C4D".toLowerCase()]: "0xe127be2bc276142039bc16251bb04e15b2b34f25",
-  "0x18a82fd0e4f64f0f3be455319c8609771e49d58f": "0x57f6936a48dfe792ef7dba5415a1f34cf405bad7",
+  "0x18a82fd0e4f64f0f3be455319c8609771e49d58f": "0x63CACDa852A1Efc63Dc7988750d9e1BA77c5FB68",
+  ["0xbf5A12c4dD49f81cF5827290Ac9d94470C0E7759".toLowerCase()]: "0x5E32BF5A465A881E217Ef816506D7ecddB53F48F",
 };
 
 export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";

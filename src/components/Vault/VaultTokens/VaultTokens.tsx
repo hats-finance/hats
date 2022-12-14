@@ -1,7 +1,7 @@
 import Tooltip from "rc-tooltip";
 import millify from "millify";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { formatWei } from "utils";
 import { useVaultsTotalPrices } from "../hooks/useVaultsTotalPrices";
 import "./index.scss";

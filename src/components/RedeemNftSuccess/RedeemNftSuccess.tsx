@@ -13,7 +13,7 @@ import "swiper/css/scrollbar";
 import { NFTCard } from "components";
 import { RootState } from "reducers";
 import { useSelector } from "react-redux";
-import { INFTTokenInfoRedeemed } from "types/types";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed[] }) {
   const { t } = useTranslation();

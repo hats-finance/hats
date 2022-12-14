@@ -7,7 +7,7 @@ import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
 import { Loading } from "components";
-import { IVaultDescription } from "types/types";
+import { IVaultDescription } from "types";
 import {
   ContractsCoveredList,
   VaultDetailsForm,

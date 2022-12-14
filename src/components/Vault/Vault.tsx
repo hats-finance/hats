@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { BigNumber } from "ethers";
 import millify from "millify";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ArrowIcon from "assets/icons/arrow.icon";

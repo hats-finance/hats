@@ -9,14 +9,15 @@ import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import RadioButton from "assets/icons/radio-button.svg";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { EMBASSY_LEARN_MORE } from "constants/constants";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
 import "./index.scss";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 
 export default function TokenEligibilityInfo() {
   const { t } = useTranslation();
-  const { nftData, address } = useContext(AirdropMachineContext);
-  if (!nftData?.addressInfo) return <></>;
-  const { token_eligibility } = nftData?.addressInfo;
+  const { airdropData, address } = useContext(AirdropMachineContext);
+  const { airdropInfo } = airdropData;
+  if (!airdropInfo) return null;
+  const { token_eligibility } = airdropInfo;
 
   const totalHatsEligibility = Object.values(token_eligibility).reduce((a, b) => a.add(b), BigNumber.from(0));
   return (
