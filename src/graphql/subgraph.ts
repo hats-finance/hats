@@ -12,6 +12,16 @@ export const GET_VAULTS = `
       vestingHatPeriods
       rewardsToken
     }
+    userNfts: owners(where: { address: $account }) {
+      id
+      balance
+      nft {
+        id
+        tokenURI
+        tokenId
+        nftMaster
+      }
+    }
     vaults {
       id
       version
@@ -39,7 +49,7 @@ export const GET_VAULTS = `
       rewardsLevels
       liquidityPool
       registered
-      userWithdrawRequest: withdrawRequests(where:{beneficiary: $account}) {
+      userWithdrawRequest: withdrawRequests( where: { beneficiary: $account }) {
         id
         beneficiary
         withdrawEnableTime
@@ -65,7 +75,7 @@ export const GET_VAULTS = `
       vestingPeriods
       depositPause
       committeeCheckedIn
-      rewardController {
+      rewardControllers {
         id
         rewardToken
         rewardTokenSymbol

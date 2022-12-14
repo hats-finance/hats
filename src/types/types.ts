@@ -1,5 +1,3 @@
-import { BigNumber } from "ethers";
-
 export interface IBaseVault {
   id: string;
   descriptionHash: string;
@@ -48,7 +46,7 @@ export interface IVaultV2 extends IBaseVault {
   version: "v2";
   description: IVaultDescriptionV2;
   maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
-  rewardController: IRewardController;
+  rewardControllers: IRewardController[];
 }
 
 export type IVault = IVaultV1 | IVaultV2;
@@ -58,6 +56,16 @@ export interface IWithdrawRequest {
   withdrawEnableTime: number;
   expiryTime: number;
   vault: { id: string };
+}
+
+export interface IUserNft {
+  id: string;
+  balance: string;
+  nft: {
+    id: string;
+    tokenURI: string;
+    tokenId: string;
+  };
 }
 
 interface IBaseVaultDescription {
