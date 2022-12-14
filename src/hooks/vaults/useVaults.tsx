@@ -4,7 +4,7 @@ import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IMaster, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types";
+import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
@@ -14,6 +14,7 @@ interface IVaultsContext {
   vaults?: IVault[];
   tokenPrices?: number[];
   masters?: IMaster[];
+  userNfts?: IUserNft[];
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -169,6 +170,7 @@ export function VaultsProvider({ children }) {
     vaults,
     tokenPrices,
     masters: data?.masters,
+    userNfts: data?.userNfts,
     withdrawSafetyPeriod,
   };
 

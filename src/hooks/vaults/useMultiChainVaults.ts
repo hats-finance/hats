@@ -1,7 +1,7 @@
 import { IWithdrawRequest } from "types";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, chain as allChains, useAccount } from "wagmi";
-import { IMaster, IVault } from "types/types";
+import { IMaster, IUserNft, IVault } from "types/types";
 import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
@@ -10,23 +10,23 @@ const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
-  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] }
+  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] },
 };
 
 interface GraphVaultsData {
   vaults: IVault[];
   masters: IMaster[];
-  userWithdrawRequests: IWithdrawRequest[];
+  userNfts: IUserNft[];
 }
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const { address: account } = useAccount();
-  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userWithdrawRequests: [] });
+  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
     if (!chainId) {
-      setData({ vaults: [], masters: [], userWithdrawRequests: [] });
+      setData({ vaults: [], masters: [], userNfts: [] });
       return;
     }
 
@@ -35,7 +35,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
-      cache: "default"
+      cache: "default",
     });
     const dataJson = await res.json();
 
@@ -56,7 +56,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 };
 
 export const useMultiChainVaults = () => {
-  const [vaults, setVaults] = useState<{ vaults: IVault[]; masters: IMaster[] }>({ vaults: [], masters: [] });
+  const [vaults, setVaults] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
   const { chain } = useNetwork();
   const connectedChain = chain ? ChainsConfig[chain.id] : null;
 
@@ -69,23 +69,29 @@ export const useMultiChainVaults = () => {
   useEffect(() => {
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || [])
+      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
     const allMasters = [
       ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || [])
+      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+    ];
+
+    const allUserNfts = [
+      ...(ethereumData?.userNfts?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
+      ...(optimismData?.userNfts?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
     ];
 
     const newVaults = {
       vaults: allVaults.map((vault) => ({
-        ...vault
+        ...vault,
       })),
-      masters: allMasters
+      masters: allMasters,
+      userNfts: allUserNfts,
     };
 
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
-      setVaults({ vaults: allVaults, masters: allMasters });
+      setVaults({ vaults: allVaults, masters: allMasters, userNfts: allUserNfts });
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

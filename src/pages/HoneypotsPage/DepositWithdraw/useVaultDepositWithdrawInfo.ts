@@ -39,9 +39,9 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const vaultTokenSymbol = selectedVault.stakingTokenSymbol;
   // Reward token
   const rewardTokenDecimals =
-    selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : selectedVault.rewardController.rewardTokenDecimals;
+    selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : selectedVault.rewardControllers[0].rewardTokenDecimals;
   const rewardTokenSymbol =
-    selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : selectedVault.rewardController.rewardTokenSymbol;
+    selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : selectedVault.rewardControllers[0].rewardTokenSymbol;
 
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;

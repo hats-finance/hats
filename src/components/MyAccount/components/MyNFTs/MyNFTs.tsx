@@ -7,20 +7,18 @@ import { useVaults } from "hooks/vaults/useVaults";
 import { RootState } from "reducers";
 import { ScreenSize } from "constants/constants";
 import { Loading, RedeemNftSuccess, Modal, NFTCard } from "components";
-import useModal from "hooks/useModal";
 import { StyledMyNFT } from "./styles";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const [showLoader, setShowLoader] = useState(false);
-  const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
-  const { isShowing: showRedeemNftPrompt, show: showNftPrompt, hide: hideNftPrompt } = useModal();
+  const { userNfts } = useVaults();
 
   const handleRedeem = useCallback(async () => {
     // if (!depositTokensData?.depositTokens) return;
@@ -72,12 +70,6 @@ export default function MyNFTs() {
         {t("Header.MyAccount.MyNFTs.redeem")}
         {/* {!nftData?.isBeforeDeadline && <span>&nbsp; ({t("Header.MyAccount.MyNFTs.after-deadline")})</span>} */}
       </button>
-
-      {showLoader && <Loading />}
-
-      <Modal isShowing={showRedeemNftPrompt} onHide={hideNftPrompt}>
-        <RedeemNftSuccess redeemed={redeemed!} />
-      </Modal>
     </StyledMyNFT>
   );
 }
