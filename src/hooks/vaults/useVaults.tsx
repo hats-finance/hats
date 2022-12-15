@@ -9,6 +9,7 @@ import { getTokensPrices, ipfsTransformUri } from "utils";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";
+import { INFTTokenMetadata } from "hooks/nft/types";
 
 interface IVaultsContext {
   vaults?: IVault[];
@@ -27,6 +28,7 @@ export function useVaults() {
 export function VaultsProvider({ children }) {
   const [vaults, setVaults] = useState<IVault[]>([]);
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
+  const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
   const apolloClient = useApolloClient();
   const { address: account } = useAccount();
@@ -127,6 +129,8 @@ export function VaultsProvider({ children }) {
 
     const allVaultsData = await getVaultsData(vaultsData);
 
+    console.log(allVaultsData);
+
     const vaultsWithDescription = allVaultsData.filter((vault) => {
       if (
         vault.description?.["project-metadata"].starttime &&
@@ -138,10 +142,42 @@ export function VaultsProvider({ children }) {
       return true;
     });
 
+    console.log(vaultsWithDescription);
+
     setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
     setVaults(vaultsWithDescription);
+  };
+
+  const setUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
+    const loadNftMetadata = async (userNft: IUserNft): Promise<INFTTokenMetadata | undefined> => {
+      if (userNft.nft.tokenURI && userNft.nft.tokenURI !== "") {
+        try {
+          const dataResponse = await fetch(ipfsTransformUri(userNft.nft.tokenURI));
+          const object = await dataResponse.json();
+          return object;
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    const getNftsMetadata = async (nftsToFetch: IUserNft[]): Promise<IUserNft[]> =>
+      Promise.all(
+        nftsToFetch.map(async (nft) => {
+          const existsMetadata = userNfts.find((v) => v.id === nft.id)?.metadata;
+          const metadata = existsMetadata ?? ((await loadNftMetadata(nft)) as INFTTokenMetadata);
+
+          return { ...nft, metadata } as IUserNft;
+        })
+      );
+
+    const nftsWithData = await getNftsMetadata(userNftsData);
+
+    setUserNfts(nftsWithData);
   };
 
   useEffect(() => {
@@ -158,9 +194,11 @@ export function VaultsProvider({ children }) {
   }, [vaults, getPrices, chain, networkEnv]);
 
   useEffect(() => {
-    if (data?.vaults) setVaultsWithDetails(data?.vaults);
+    if (data?.vaults) setVaultsWithDetails(data.vaults);
+    if (data?.userNfts) setUserNftsWithMetadata(data.userNfts);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data.vaults]);
+  }, [data.vaults, data.userNfts]);
 
   const { safetyPeriod, withdrawPeriod } = data?.masters?.[0] || {};
 
@@ -168,9 +206,9 @@ export function VaultsProvider({ children }) {
 
   const context: IVaultsContext = {
     vaults,
+    userNfts,
     tokenPrices,
     masters: data?.masters,
-    userNfts: data?.userNfts,
     withdrawSafetyPeriod,
   };
 

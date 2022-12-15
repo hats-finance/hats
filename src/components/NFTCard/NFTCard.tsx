@@ -1,6 +1,6 @@
+import { useNetwork } from "wagmi";
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import "./index.scss";
 import { Media } from "components";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -9,20 +9,22 @@ import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ChainsConfig } from "config/chains";
-import { useNetwork } from "wagmi";
-import { INFTTokenInfoRedeemed } from "hooks/nft/types";
+import { INFTTokenMetadata } from "hooks/nft/types";
+import "./index.scss";
 
 interface IProps {
-  tokenInfo: INFTTokenInfoRedeemed;
+  tokenId: string;
+  chainId?: number;
+  isRedeemed?: boolean;
+  tokenMetadata?: INFTTokenMetadata;
 }
 
-export function NFTCard({ tokenInfo }: IProps) {
-  const { metadata, isRedeemed, tokenId } = tokenInfo;
+export function NFTCard({ tokenId, tokenMetadata, isRedeemed = true, chainId }: IProps) {
   const { chain } = useNetwork();
   const { t } = useTranslation();
   const [fullScreen, setFullScreen] = useState(false);
-  const tier = metadata.attributes.find((attr) => attr.trait_type === "Trust Level")?.value;
-  const vaultName = metadata.attributes.find((attr) => attr.trait_type === "Vault")?.value;
+  const tier = tokenMetadata?.attributes.find((attr) => attr.trait_type === "Trust Level")?.value;
+  const vaultName = tokenMetadata?.attributes.find((attr) => attr.trait_type === "Vault")?.value;
   const escapePressed = useEscapePressed();
 
   useEffect(() => {
@@ -31,12 +33,15 @@ export function NFTCard({ tokenInfo }: IProps) {
     }
   }, [escapePressed]);
 
-  // TODO: [v2] add opensea link to multichain
-  let openSeaUrl;
-  if (chain?.id === 1) {
-    openSeaUrl = `https://opensea.io/assets/${ChainsConfig[chain.id].vaultsNFTContract}/${tokenId}`;
-  } else if (chain?.id === 4) {
-    openSeaUrl = `https://testnets.opensea.io/assets/${ChainsConfig[chain.id].vaultsNFTContract}/${tokenId}`;
+  if (!tokenMetadata) return null;
+
+  let openSeaUrl = "";
+  if (chainId) {
+    if (chain?.testnet) {
+      openSeaUrl = `https://testnets.opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
+    } else {
+      openSeaUrl = `https://opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
+    }
   }
 
   if (fullScreen) {
@@ -47,8 +52,8 @@ export function NFTCard({ tokenInfo }: IProps) {
         </button>
         <div className="nft-card-full-screen__container">
           <Media
-            link={ipfsTransformUri(metadata.animation_url)}
-            poster={ipfsTransformUri(metadata.image)}
+            link={ipfsTransformUri(tokenMetadata.animation_url)}
+            poster={ipfsTransformUri(tokenMetadata.image)}
             className="nft-card-full-screen__video"
           />
           {isRedeemed && (
@@ -62,10 +67,9 @@ export function NFTCard({ tokenInfo }: IProps) {
     );
   }
 
-
   return (
     <div className={classNames("nft-card-wrapper", { "not-redeemed": !isRedeemed })} onClick={() => setFullScreen(true)}>
-      <Media link={ipfsTransformUri(metadata.image)} />
+      <Media link={ipfsTransformUri(tokenMetadata.image)} />
       <div className="nft-card__info-container">
         {/* <div className="nft-card__info-title">{roleName}</div> */}
         <div className="nft-card__info-element">

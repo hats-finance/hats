@@ -53,7 +53,13 @@ export default function EmbassyNftRedeem({ availableNftsToRedeem, handleRedeem }
         effect={"flip"}>
         {availableNftsToRedeem.map((nftInfo, index) => (
           <SwiperSlide key={index}>
-            <NFTCard key={index} tokenInfo={nftInfo} />
+            <NFTCard
+              key={index}
+              chainId={nftInfo.chainId}
+              tokenId={nftInfo.tokenId.toHexString()}
+              isRedeemed={nftInfo.isRedeemed}
+              tokenMetadata={nftInfo.metadata}
+            />
           </SwiperSlide>
         ))}
       </Swiper>

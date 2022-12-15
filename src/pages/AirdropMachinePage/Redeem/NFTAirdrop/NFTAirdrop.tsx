@@ -41,7 +41,13 @@ export default function NFTAirdrop() {
           effect={"flip"}>
           {airdropData?.airdropTokens?.map((nftInfo, index) => (
             <SwiperSlide key={index} className="swiper-slide">
-              <NFTCard key={index} tokenInfo={nftInfo} />
+              <NFTCard
+                key={index}
+                chainId={nftInfo.chainId}
+                tokenId={nftInfo.tokenId.toHexString()}
+                isRedeemed={nftInfo.isRedeemed}
+                tokenMetadata={nftInfo.metadata}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

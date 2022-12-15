@@ -1,4 +1,3 @@
-import { IWithdrawRequest } from "types";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, chain as allChains, useAccount } from "wagmi";
 import { IMaster, IUserNft, IVault } from "types/types";

@@ -1,3 +1,5 @@
+import { INFTTokenMetadata } from "hooks/nft/types";
+
 export interface IBaseVault {
   id: string;
   descriptionHash: string;
@@ -66,6 +68,8 @@ export interface IUserNft {
     tokenURI: string;
     tokenId: string;
   };
+  chainId?: number;
+  metadata?: INFTTokenMetadata;
 }
 
 interface IBaseVaultDescription {
