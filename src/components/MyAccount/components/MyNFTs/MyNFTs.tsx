@@ -17,8 +17,6 @@ export default function MyNFTs() {
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
   const { userNfts } = useVaults();
 
-  console.log(userNfts);
-
   return (
     <StyledMyNFT>
       <span className="title">NFTs</span>

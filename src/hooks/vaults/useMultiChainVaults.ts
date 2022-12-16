@@ -42,7 +42,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
       setData(dataJson.data);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId]);
+  }, [chainId, account]);
 
   useEffect(() => {
     fetchData();
