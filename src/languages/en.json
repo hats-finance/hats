@@ -73,7 +73,7 @@
           "depsoit-nfts": "Deposit",
           "redeem": "REDEEM ALL",
           "after-deadline": "Deadline has passed",
-          "no-tree-nfts": "No airdrop NFTs yet",
+          "no-tree-nfts": "No NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
           "two-transactions": "In order to redeem the NFTs from both the Airdrop Machine and your deposit.You will be asked to sign two transactions on your wallet"
         }
