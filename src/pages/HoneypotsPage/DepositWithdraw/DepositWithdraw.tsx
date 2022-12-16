@@ -18,7 +18,6 @@ import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
 import { isAGnosisSafeTx } from "utils/gnosis.utils";
-import { ipfsTransformUri } from "utils";
 import {
   ClaimRewardContract,
   CommitteeCheckInContract,
@@ -91,9 +90,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     tierFromShares,
     redeem,
   } = useVaultDepositWithdrawInfo(selectedVault);
-
-  console.log("tierFromShares DepositWithdraw", tierFromShares);
-  console.log(availableNftsByDeposit);
 
   let userInputValue: BigNumber | undefined = undefined;
   try {

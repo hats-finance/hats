@@ -7,6 +7,7 @@ import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
 import millify from "millify";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
 import { StyledEmbassyEligibility } from "./styles";
@@ -38,6 +39,8 @@ export function EmbassyEligibility({
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
   const totalBalanceNumber = +formatUnits(totalBalance, vault.stakingTokenDecimals);
 
+  const [tierHasIncreased, setTierHasIncreased] = useState(false);
+
   const { isShowing: isShowingRedeemEmbassyNfts, toggle: toggleRedeemEmbassyNfts } = useModal();
 
   const availableNftsToRedeem = availableNftsByDeposit.filter((token) => !token.isRedeemed);
@@ -58,17 +61,20 @@ export function EmbassyEligibility({
   const isAvailableNextTier = currentTier < MAX_NFT_TIER;
   const userHoldAllTiers = maxRedeemed === MAX_NFT_TIER;
 
-  console.log("tierFromShares", tierFromShares);
   // When the user deposit and gets a new possible tier
   useOnChange(tierFromShares, (newTier, prevTier) => {
-    console.log("CHANGE", tierFromShares);
-    console.log(`newTier: ${newTier}, prevTier: ${prevTier}`);
     if (newTier === undefined || prevTier === undefined) return;
-    if (newTier > prevTier && availableNftsToRedeem.length > 0) {
-      console.log("ON CHANGE", tierFromShares, newTier, prevTier);
-      setTimeout(toggleRedeemEmbassyNfts, 1000);
+    if (newTier > prevTier) {
+      setTierHasIncreased(true);
     }
   });
+
+  useEffect(() => {
+    if (tierHasIncreased && availableNftsToRedeem.length > 0) {
+      setTimeout(toggleRedeemEmbassyNfts, 1000);
+      setTierHasIncreased(false);
+    }
+  }, [availableNftsToRedeem, tierHasIncreased, toggleRedeemEmbassyNfts]);
 
   const minimumToNextTierParagraph = () => {
     const nextTier = currentTier + 1;

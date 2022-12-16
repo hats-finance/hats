@@ -39,9 +39,6 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
     const { wait } = await writeContract(config);
     const tx = await wait();
 
-    console.log("depositTokens", availableNftsByDeposit);
-    console.log("TX Redemed", tx);
-
     const currentRedeemedNfts: INFTTokenInfoRedeemed[] = availableNftsByDeposit
       .filter((depositToken) =>
         tx?.logs.find((log) => {

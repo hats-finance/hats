@@ -129,8 +129,6 @@ export function VaultsProvider({ children }) {
 
     const allVaultsData = await getVaultsData(vaultsData);
 
-    console.log(allVaultsData);
-
     const vaultsWithDescription = allVaultsData.filter((vault) => {
       if (
         vault.description?.["project-metadata"].starttime &&
@@ -141,8 +139,6 @@ export function VaultsProvider({ children }) {
         return false;
       return true;
     });
-
-    console.log(vaultsWithDescription);
 
     setAllVaults(allVaultsData);
     // TODO: remove this in order to support multiple vaults again
