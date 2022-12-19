@@ -21,7 +21,7 @@
     "@uiw/react-md-editor": "^3.14.1",
     "@usedapp/core": "^1.1.5",
     "@walletconnect/web3-provider": "^1.7.8",
-    "@wherever/react-notification-feed": "^0.0.25",
+    "@wherever/react-notification-feed": "^0.0.26",
     "assert": "^2.0.0",
     "axios": "^0.27.2",
     "browser-passworder": "^2.0.3",
