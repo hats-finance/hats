@@ -1,5 +1,5 @@
 import { Chain } from "@wagmi/core";
-import { mainnet, goerli, optimismGoerli } from "@wagmi/core/chains";
+import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;

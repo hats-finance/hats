@@ -2,7 +2,7 @@ import { useAirdropData } from "hooks/nft/useAirdropData";
 import { usePrevious } from "hooks/usePrevious";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { mainnet } from "@wagmi/core/chains";
+import { mainnet } from "wagmi/chains";
 
 export const useCheckRedeemableNfts = async (toggleAirdropPrompt: () => void) => {
   const [shown, setShown] = useState(false);

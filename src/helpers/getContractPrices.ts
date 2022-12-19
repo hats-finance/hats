@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { mainnet } from "@wagmi/core/chains";
+import { mainnet } from "wagmi/chains";
 import GoodDollarABI from "data/abis/GoodDollar.json";
 import InsureDaoABI from "data/abis/insure-dao.json";
 import { readContract } from "@wagmi/core";

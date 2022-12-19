@@ -1,4 +1,4 @@
-import { mainnet } from "@wagmi/core/chains";
+import { mainnet } from "wagmi/chains";
 import { VaultService, DefaultBotAddress, StagingBotAddress } from "./constants/constants";
 import { ChainsConfig, IChainConfiguration } from "config/chains";
 
