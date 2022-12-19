@@ -183,7 +183,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
 
   useEffect(() => {
     if (inProgressTransaction) {
-      const { action, txHash, txWait } = inProgressTransaction;
+      const { action, txHash } = inProgressTransaction;
 
       const cleanUp = () => {
         setWaitingForTransaction(false);
@@ -201,7 +201,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
             return;
           }
 
-          waitForTransaction({ wait: txWait }).finally(() => {
+          waitForTransaction({ hash: txHash }).finally(() => {
             cleanUp();
 
             // After token allowance approbal we call deposit

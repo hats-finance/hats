@@ -1,4 +1,4 @@
-import { chain } from "wagmi";
+import { mainnet } from "@wagmi/core/chains";
 import { VaultService, DefaultBotAddress, StagingBotAddress } from "./constants/constants";
 import { ChainsConfig, IChainConfiguration } from "config/chains";
 
@@ -9,4 +9,4 @@ export const IS_PROD = prodHosts.includes(window.location.hostname);
 export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || (!IS_PROD && StagingBotAddress) || DefaultBotAddress;
 export const INFURA_API_KEY = process.env.REACT_APP_INFURA_API_KEY ?? "";
 
-export const defaultChain: IChainConfiguration = ChainsConfig[chain.mainnet.id];
+export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];

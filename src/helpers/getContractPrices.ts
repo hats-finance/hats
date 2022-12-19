@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { chain } from "wagmi";
+import { mainnet } from "@wagmi/core/chains";
 import GoodDollarABI from "data/abis/GoodDollar.json";
 import InsureDaoABI from "data/abis/insure-dao.json";
 import { readContract } from "@wagmi/core";
@@ -14,7 +14,7 @@ export const getGoodDollarPriceMainnet = async () => {
     address: GoodDollarPriceContractMainnet,
     abi: GoodDollarABI,
     functionName: "currentPriceDAI",
-    chainId: chain.mainnet.id,
+    chainId: mainnet.id,
   });
   const goodDollarPrice = res as BigNumber;
 
@@ -26,7 +26,7 @@ export const getInsureDAOPriceMainnet = async () => {
     address: InsureDAOTokenMainnet,
     abi: InsureDaoABI,
     functionName: "rate",
-    chainId: chain.mainnet.id,
+    chainId: mainnet.id,
   });
   const insureDaoPrice = res as BigNumber;
 

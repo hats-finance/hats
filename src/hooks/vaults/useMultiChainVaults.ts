@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNetwork, chain as allChains, useAccount } from "wagmi";
+import { useNetwork, useAccount } from "wagmi";
+import { mainnet, goerli, optimismGoerli } from "@wagmi/core/chains";
 import { IMaster, IUserNft, IVault } from "types/types";
 import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -8,8 +9,8 @@ import { ChainsConfig } from "config/chains";
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
-  ETHEREUM: { prod: ChainsConfig[allChains.mainnet.id], test: ChainsConfig[allChains.goerli.id] },
-  OPTIMISM: { prod: null, test: ChainsConfig[allChains.optimismGoerli.id] },
+  ETHEREUM: { prod: ChainsConfig[mainnet.id], test: ChainsConfig[goerli.id] },
+  OPTIMISM: { prod: null, test: ChainsConfig[optimismGoerli.id] },
 };
 
 interface GraphVaultsData {

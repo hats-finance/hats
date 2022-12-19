@@ -1,4 +1,5 @@
-import { Chain, chain } from "@wagmi/core";
+import { Chain } from "@wagmi/core";
+import { mainnet, goerli, optimismGoerli } from "@wagmi/core/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;
@@ -13,28 +14,28 @@ export interface IChainConfiguration {
  * If you want to add a new chain, add it here and also on `useMultiChainVaults` hook.
  */
 export const ChainsConfig: { [index: number]: IChainConfiguration } = {
-  [chain.mainnet.id]: {
+  [mainnet.id]: {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
-    chain: chain.mainnet,
+    chain: mainnet,
     endpoint: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
   },
-  [chain.goerli.id]: {
+  [goerli.id]: {
     vaultsNFTContract: "0x0196EdC0b3C81B79486E5D99e7D748955EE650D3",
-    chain: chain.goerli,
+    chain: goerli,
     endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/goerli_v2_1",
     coingeckoId: undefined,
   },
-  // [chain.optimism.id]: {
-  //   chain: chain.optimism,
+  // [optimism.id]: {
+  //   chain: optimism,
   //   endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   //   subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
   //   coingeckoId: "optimistic-ethereum",
   // },
-  [chain.optimismGoerli.id]: {
-    chain: chain.optimismGoerli,
+  [optimismGoerli.id]: {
+    chain: optimismGoerli,
     endpoint: "https://opt-goerli.g.alchemy.com/v2/sCQtpxEWIHKdIqHjde149TqzJZHsg0JT",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
     coingeckoId: undefined,

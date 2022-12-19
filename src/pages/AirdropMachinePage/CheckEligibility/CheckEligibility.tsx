@@ -1,3 +1,4 @@
+import { mainnet, useAccount } from "wagmi";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
@@ -6,11 +7,10 @@ import useModal from "hooks/useModal";
 import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import Redeem from "../Redeem/Redeem";
-import "./index.scss";
-import { chain, useAccount } from "wagmi";
 import { isAddress } from "ethers/lib/utils.js";
 import { AirdropMachineContext } from "../context";
 import { useAirdropData } from "hooks/nft/useAirdropData";
+import "./index.scss";
 
 export default function CheckEligibility() {
   const { address } = useAccount();
@@ -21,7 +21,7 @@ export default function CheckEligibility() {
   const isSupportedNetwork = useSupportedNetwork();
   const [redeemed, setRedeemed] = useState<INFTTokenInfoRedeemed[] | undefined>();
   const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
-  const airdropData = useAirdropData(addressToCheck, chain.mainnet.id); // mainnet only
+  const airdropData = useAirdropData(addressToCheck, mainnet.id); // mainnet only
   const { isBeforeDeadline } = airdropData;
 
   const handleCloseRedeemModal = useCallback(() => {
