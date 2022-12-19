@@ -31,11 +31,11 @@ export class LogClaimContract {
 
     return {
       ...claim,
-      send: async (data: string) => {
+      sendAsync: async (data: string) => {
         if (!vault) return;
         await switchNetworkAndValidate(chain!.id, vault!.chainId as number);
 
-        return claim.write!({ recklesslySetUnpreparedArgs: [data] });
+        return claim.writeAsync!({ recklesslySetUnpreparedArgs: [data] });
       },
     };
   };
