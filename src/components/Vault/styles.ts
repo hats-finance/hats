@@ -3,17 +3,30 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 type StyledVaultProps = {
   type?: string;
+  selectionMode?: boolean;
+  selected?: boolean;
 };
 
 export const StyledVault = styled.tr<StyledVaultProps>(
-  ({ type }) => css`
+  ({ type, selectionMode, selected }) => css`
     scroll-margin-top: var(--header-height) * 2;
     border-bottom: 2px solid var(--dark-blue);
     position: relative;
 
+    ${selectionMode &&
+    css`
+      transition: 0.3s;
+      cursor: ${selectionMode ? "pointer" : "default"};
+
+      &:hover {
+        opacity: 0.7;
+      }
+    `}
+
     td {
       padding: 15px;
-      background-color: var(--strong-blue);
+      background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-blue)`};
+      filter: ${selected ? `contrast(0.9)` : `contrast(1)`};
 
       &.relative-column {
         position: relative;
@@ -61,16 +74,16 @@ export const StyledVault = styled.tr<StyledVaultProps>(
           width: 26px;
           height: 26px;
           border-radius: 100px;
-          background-color: var(--strong-blue);
+          background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-blue)`};
 
           ${type === "gamification" &&
           css`
-            background-color: var(--strong-purple);
+            background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-purple)`};
           `}
 
           ${type === "grants" &&
           css`
-            background-color: var(--turquoise-2);
+            background-color: ${selectionMode ? `var(--field-blue)` : `var(--turquoise-2)`};
           `}
 
           img {

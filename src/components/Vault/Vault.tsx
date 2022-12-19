@@ -21,10 +21,12 @@ interface VaultComponentProps {
   expanded: boolean;
   setExpanded?: any;
   preview?: boolean;
+  selected?: boolean;
+  onSelect?: Function;
 }
 
 const VaultComponent = (
-  { vault, expanded, preview, setExpanded }: VaultComponentProps,
+  { vault, expanded, preview, setExpanded, onSelect, selected = false }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
   const { chains } = useNetwork();
@@ -72,10 +74,15 @@ const VaultComponent = (
 
   return (
     <>
-      <StyledVault type={vaultType} ref={ref}>
+      <StyledVault
+        type={vaultType}
+        ref={ref}
+        selectionMode={!!onSelect}
+        selected={selected}
+        onClick={onSelect ? () => onSelect() : undefined}>
         <td className="onlyDesktop" onClick={expandVault}>
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
-          <span>{vaultExpandAction}</span>
+          {!onSelect && <span>{vaultExpandAction}</span>}
         </td>
 
         <td className="relative-column">
@@ -95,15 +102,17 @@ const VaultComponent = (
           </div>
         </td>
 
-        <>
-          <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
+        <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
+        {!onSelect && (
           <td className="onlyDesktop">
             <VaultAPY vault={vault} />
           </td>
+        )}
+        {!onSelect && (
           <td className="onlyDesktop">
             <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />
           </td>
-        </>
+        )}
 
         <td className="onlyMobile" onClick={expandVault}>
           {vaultExpandAction}
