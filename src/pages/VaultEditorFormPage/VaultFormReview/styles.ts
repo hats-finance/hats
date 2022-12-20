@@ -12,6 +12,7 @@ export const StyledVaultFormReview = styled.div`
 
     table {
       width: 100%;
+      border-collapse: collapse;
     }
   }
 `;
