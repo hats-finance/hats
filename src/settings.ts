@@ -1,12 +1,12 @@
-import { Endpoints, VaultService, Chains, DefaultBotAddress } from "./constants/constants";
-import { Chain, ChainId, Mainnet } from '@usedapp/core';
+import { mainnet } from "wagmi/chains";
+import { VaultService, DefaultBotAddress, StagingBotAddress } from "./constants/constants";
+import { ChainsConfig, IChainConfiguration } from "config/chains";
 
-export const CHAINID: ChainId = process.env.REACT_APP_CHAINID ? parseInt(process.env.REACT_APP_CHAINID) as ChainId : undefined || ChainId.Goerli;
-export const ENDPOINTS = Endpoints
-if (process.env.REACT_APP_ENDPOINT_MAINNET) {
-    ENDPOINTS[Mainnet.chainId] = process.env.REACT_APP_ENDPOINT_MAINNET;
-}
+const prodHosts = ["app.hats.finance"];
+
 export const VAULT_SERVICE = process.env.REACT_APP_VAULT_SERVICE || VaultService;
-export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || DefaultBotAddress;
+export const IS_PROD = prodHosts.includes(window.location.hostname);
+export const DEFAULT_BOT = process.env.REACT_APP_DEFAULT_BOT || (!IS_PROD && StagingBotAddress) || DefaultBotAddress;
+export const INFURA_API_KEY = process.env.REACT_APP_INFURA_API_KEY ?? "";
 
-export const defaultChain: Chain = Chains[CHAINID];
+export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];

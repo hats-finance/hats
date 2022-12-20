@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { useTransactions } from "@usedapp/core";
 import ArrowIcon from "assets/icons/arrow.icon";
 import { StyledModal, ModalContainer } from "./styles";
 
@@ -9,6 +8,7 @@ interface ModalProps {
   onHide?: () => void;
   onBackButton?: () => void | null;
   children: React.ReactElement;
+  zIndex?: number;
   title?: string;
   titleIcon?: string | React.ReactElement;
   withTitleDivider?: boolean;
@@ -24,13 +24,16 @@ export function Modal({
   children,
   title,
   titleIcon,
+  zIndex = 0,
   disableClose = false,
   withTitleDivider = false,
   removeHorizontalPadding = false,
   capitalizeTitle = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
-  const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
+  // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
+  // TODO: [v2] re-implement this functionality (show ongoing transaction)
+  const inTransaction = false;
 
   const handleOnHide = useCallback(() => {
     if (disableClose) return;
@@ -57,7 +60,7 @@ export function Modal({
 
   return isShowing
     ? ReactDOM.createPortal(
-        <StyledModal isShowing={localShowModal}>
+        <StyledModal isShowing={localShowModal} zIndex={zIndex}>
           <div className="overlay" onClick={handleOnHide} />
           <ModalContainer
             disableClose={disableClose}

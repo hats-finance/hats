@@ -1,25 +1,23 @@
-import { BigNumber } from "ethers";
+import { INFTTokenMetadata } from "hooks/nft/types";
 
-export interface IVault {
+export interface IBaseVault {
   id: string;
   descriptionHash: string;
-  description: IVaultDescription | undefined;
   pid: string;
   stakingToken: string;
   stakingTokenDecimals: string;
   stakingTokenSymbol: string;
   stakers: Array<IStaker>;
-  totalStaking: string;
   honeyPotBalance: string;
-  totalReward: string;
   totalRewardPaid: string;
   committee: string;
-  allocPoint: string;
+  allocPoint?: string;
   master: IMaster;
+  version: "v1" | "v2";
+  arbitrator?: string;
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
-  rewardsLevels: Array<string>;
-  totalRewardAmount: string;
+  rewardsLevels?: Array<string>;
   liquidityPool: boolean;
   registered: boolean;
   withdrawRequests: Array<IPoolWithdrawRequest>;
@@ -35,9 +33,47 @@ export interface IVault {
   depositPause: boolean;
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
+  description: IVaultDescription;
+  chainId?: number;
+  userWithdrawRequest?: IWithdrawRequest[];
 }
 
-export interface IVaultDescription {
+export interface IVaultV1 extends IBaseVault {
+  version: "v1";
+  rewardsLevels: Array<string>;
+  allocPoint: string;
+  description: IVaultDescriptionV1;
+}
+export interface IVaultV2 extends IBaseVault {
+  version: "v2";
+  description: IVaultDescriptionV2;
+  maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
+  rewardControllers: IRewardController[];
+}
+
+export type IVault = IVaultV1 | IVaultV2;
+
+export interface IWithdrawRequest {
+  beneficiary: string;
+  withdrawEnableTime: number;
+  expiryTime: number;
+  vault: { id: string };
+}
+
+export interface IUserNft {
+  id: string;
+  balance: string;
+  nft: {
+    id: string;
+    tokenURI: string;
+    tokenId: string;
+  };
+  chainId?: number;
+  metadata?: INFTTokenMetadata;
+}
+
+interface IBaseVaultDescription {
+  version: "v1" | "v2" | undefined;
   "project-metadata": {
     icon: string;
     website: string;
@@ -54,13 +90,26 @@ export interface IVaultDescription {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };
-  severities: Array<IVulnerabilitySeverity>;
   source: {
     name: string;
     url: string;
   };
   "additional-vaults"?: string[];
+  severities: Array<IVulnerabilitySeverity>;
 }
+
+export interface IVaultDescriptionV1 extends IBaseVaultDescription {
+  version: "v1" | undefined;
+  severities: Array<IVulnerabilitySeverityV1>;
+  indexArray?: number[];
+}
+
+export interface IVaultDescriptionV2 extends IBaseVaultDescription {
+  version: "v2";
+  severities: Array<IVulnerabilitySeverityV2>;
+}
+
+export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
 
 export interface ICommitteeMember {
   name: string;
@@ -69,14 +118,21 @@ export interface ICommitteeMember {
   "image-ipfs-link"?: string;
 }
 
-export interface IVulnerabilitySeverity {
+export interface IBaseVulnerabilitySeverity {
   name: string;
-  index: number;
   "contracts-covered": { [key: string]: string }[];
   "nft-metadata": INFTMetaData;
-  //  "reward-for": string
   description: string;
 }
+
+export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
+  index: number;
+}
+export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
+  percentage: number; // percentage like 1000 (10%) or 8000 (80%)
+}
+
+export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
 
 export interface INFTMetaData {
   name: string;
@@ -98,12 +154,18 @@ export interface IStaker {
   master: IMaster;
 }
 
+export interface IRewardController {
+  id: string;
+  rewardToken: string;
+  rewardTokenSymbol: string;
+  rewardTokenDecimals: string;
+  totalRewardPaid: string;
+}
+
 export interface IMaster {
   id: string;
   address: string;
   governance: string;
-  totalStaking: string;
-  totalReward: string;
   totalRewardPaid: string;
   rewardPerBlock: string;
   startBlock: string;
@@ -119,6 +181,7 @@ export interface IMaster {
   withdrawRequestPendingPeriod: string;
   vestingHatDuration: string;
   vestingHatPeriods: string;
+  chainId?: number;
 }
 
 export interface ISubmittedClaim {
@@ -153,70 +216,10 @@ export interface IPoolWithdrawRequest {
 
 export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean;
-  saftyStartsAt: number;
-  saftyEndsAt: number;
-}
-
-export type NFTAirdropET = { [key: string]: string };
-export type TokenAirdropET = { [key: string]: number };
-
-export interface IAirdropData {
-  nft: NFTAirdropET;
-  token: TokenAirdropET;
-}
-export interface INFTAirdropElement {
-  description: string;
-  external_url: string;
-  image: string;
-  name: string;
-  attributes: Array<any>;
-}
-export interface GeneralParameters {
-  withdrawRequestEnablePeriod: number;
-  withdrawPeriod: number;
-  safetyPeriod: number;
+  safetyStartsAt: number;
+  safetyEndsAt: number;
 }
 
 export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined; tokenSymbol: string } };
-
-export interface NFTEligibilityElement {
-  pid: number | string;
-  tier: number;
-  masterAddress: string;
-}
-
-export interface AirdropMachineWallet {
-  address: string;
-  token_eligibility: {
-    committee_member: string;
-    depositor: string;
-    crow: string;
-    coder: string;
-    early_contributor: string;
-  };
-  nft_elegebility: NFTEligibilityElement[];
-}
-
-export interface INFTTokenMetadata {
-  name: string;
-  description: string;
-  image: string;
-  animation_url: string;
-  attributes: Array<{ trait_type: string; value: string }>;
-}
-
-export interface INFTTokenInfo {
-  pid: number;
-  tier: number;
-  tokenId: BigNumber;
-  metadata: INFTTokenMetadata;
-  masterAddress: string;
-  isMerkleTree: boolean;
-  isDeposit: boolean;
-}
-
-export interface INFTTokenInfoRedeemed extends INFTTokenInfo {
-  isRedeemed: boolean;
-}

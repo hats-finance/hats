@@ -4,15 +4,32 @@ import { FormInputType } from "./FormInput";
 
 type StyledFormInputProps = {
   isDirty: boolean;
-  withExtraicons: boolean;
-  type: FormInputType;
+  hasError: boolean;
+  withExtraicons?: boolean;
+  isCheckOrRadio?: boolean;
+  type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${getSpacing(3)};
+    width: 100%;
+
+    ${isCheckOrRadio &&
+    css`
+      width: fit-content;
+
+      .main-container {
+        display: flex;
+        flex-direction: row-reverse;
+
+        label {
+          margin-left: ${getSpacing(1)};
+        }
+      }
+    `}
 
     input,
     textarea {
@@ -25,6 +42,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       resize: none;
       border-radius: 0;
       font-family: inherit;
+      color-scheme: dark;
 
       &::placeholder {
         color: var(--dirty-turquoise);
@@ -34,6 +52,17 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       ${isDirty &&
       css`
         border-color: var(--yellow);
+      `}
+
+      ${hasError &&
+      css`
+        border-color: var(--red);
+      `}
+
+      ${isCheckOrRadio &&
+      css`
+        width: ${getSpacing(2.5)};
+        height: ${getSpacing(2.5)};
       `}
     }
 
@@ -54,6 +83,11 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       display: block;
       color: var(--white);
       padding-bottom: ${getSpacing(1)};
+
+      ${hasError &&
+      css`
+        color: var(--red);
+      `}
     }
 
     .input-container {
@@ -99,6 +133,14 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
           opacity: 0.4;
         }
       }
+    }
+
+    span.error {
+      display: block;
+      color: var(--red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
     }
   `
 );

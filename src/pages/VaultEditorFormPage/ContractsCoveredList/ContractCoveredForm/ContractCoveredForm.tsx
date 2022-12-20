@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Controller } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
@@ -11,30 +11,28 @@ import { StyledContractCoveredForm } from "./styles";
 
 type ContractCoveredFormProps = {
   index: number;
+  contractsCount: number;
   append: (data: IEditedContractCovered) => void;
   remove: (index: number) => void;
 };
 
-export default function ContractCoveredForm({ index, append, remove }: ContractCoveredFormProps) {
+export default function ContractCoveredForm({ index, append, remove, contractsCount }: ContractCoveredFormProps) {
   const { t } = useTranslation();
-  const { register, watch, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const contracts = watch("contracts-covered");
-  const contractsCount = contracts.length;
-
-  const severities = watch("vulnerability-severities-spec.severities");
-  const severitiesOptions = severities.map((severity) => ({
-    label: severity.name,
-    value: severity.id as string,
-  }));
+  const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
+  const severitiesFormIds = useMemo(
+    () => (severitiesOptions ? severitiesOptions.map((sev) => sev.value) : []),
+    [severitiesOptions]
+  );
 
   useEffect(() => {
-    const severitiesFormIds = severities.map((sev) => sev.id);
     const severitiesIdsInThisContract: string[] = getValues()["contracts-covered"][index].severities;
 
     const filteredVulnerabilities = severitiesIdsInThisContract?.filter((sevId) => severitiesFormIds.includes(sevId));
     setValue(`contracts-covered.${index}.severities`, filteredVulnerabilities);
-  }, [severities, getValues, setValue, index]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [severitiesOptions, index]);
 
   return (
     <StyledContractCoveredForm>
@@ -51,7 +49,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
                 placeholder={t("VaultEditor.contract-name-placeholder")}
               />
             </div>
-            {severities && (
+            {severitiesOptions && (
               <div className="severities">
                 <Controller
                   control={control}
@@ -59,6 +57,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
                   render={({ field, formState }) => (
                     <FormSelectInput
                       isDirty={getPath(formState.dirtyFields, field.name)}
+                      error={getPath(formState.errors, field.name)}
                       label={t("VaultEditor.contract-severities")}
                       placeholder={t("VaultEditor.contract-severities-placeholder")}
                       colorable
@@ -92,7 +91,7 @@ export default function ContractCoveredForm({ index, append, remove }: ContractC
           </button>
         )}
         {index === contractsCount - 1 && (
-          <button type="button" className="fill" onClick={() => append(createNewCoveredContract(severities))}>
+          <button type="button" className="fill" onClick={() => append(createNewCoveredContract(severitiesFormIds))}>
             {t("VaultEditor.add-member")}
           </button>
         )}

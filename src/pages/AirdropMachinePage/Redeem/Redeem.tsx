@@ -1,27 +1,24 @@
 import { Loading } from "components";
 import { useContext } from "react";
-import { AirdropMachineContext } from "../CheckEligibility/CheckEligibility";
+import { AirdropMachineContext } from "../context";
 import Eligible from "./Eligible/Eligible";
 import NotEligible from "./NotEligible/NotEligible";
 import Redeemed from "./Redeemed/Redeemed";
 
 export default function Redeem() {
-  const { nftData } = useContext(AirdropMachineContext);
+  const { airdropData } = useContext(AirdropMachineContext);
 
-  if (nftData.merkleTree) {
-    if (nftData.treeTokens) {
-      if (nftData.treeRedeemablesCount === 0 && (nftData.treeTokens?.length ?? 0) > 0) {
+  if (airdropData.airdropTokens !== undefined) {
+    if ((airdropData.airdropTokens?.length ?? 0) > 0) {
+      if (airdropData.airdropTokens?.every(t => t.isRedeemed)) {
         return <Redeemed />;
-      }
-      if (nftData.treeTokens.length === 0 || nftData.treeRedeemablesCount > 0) {
+      } else {
         return <Eligible />;
       }
-    }
-    if (!nftData.addressInfo) {
+    } else {
       return <NotEligible />;
     }
   }
-
   return <Loading />;
 }
 

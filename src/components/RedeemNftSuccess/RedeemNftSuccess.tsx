@@ -13,7 +13,7 @@ import "swiper/css/scrollbar";
 import { NFTCard } from "components";
 import { RootState } from "reducers";
 import { useSelector } from "react-redux";
-import { INFTTokenInfoRedeemed } from "types/types";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
 
 export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed[] }) {
   const { t } = useTranslation();
@@ -21,14 +21,20 @@ export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed
 
   const vaultsNames = new Set();
   const nfts = redeemed.map((nft, index) => {
-    const vaultName = nft.metadata.attributes.find(attr => attr.trait_type === "Vault")?.value;
-    vaultsNames.add(vaultName)
+    const vaultName = nft.metadata.attributes.find((attr) => attr.trait_type === "Vault")?.value;
+    vaultsNames.add(vaultName);
     return (
       <SwiperSlide key={index} className="swiper-slide">
-        <NFTCard key={index} tokenInfo={nft} />
+        <NFTCard
+          key={index}
+          tokenMetadata={nft.metadata}
+          tokenId={nft.tokenId.toHexString()}
+          isRedeemed={nft.isRedeemed}
+          chainId={nft.chainId}
+        />
       </SwiperSlide>
-    )
-  })
+    );
+  });
 
   return (
     <div className="airdrop-redeem-success-wrapper">
@@ -36,10 +42,14 @@ export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed
       <div className="airdrop-redeem-success__title">{t("RedeemNftSuccess.title")}</div>
       <span className="airdrop-redeem-success__sub-title">{t("RedeemNftSuccess.sub-title")}</span>
       <span className="airdrop-redeem-success__projects">
-        {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames).join(', ').replace(/,(?!.*,)/gmi, ` ${t("RedeemNftSuccess.text-8")}`)} ${vaultsNames.size === 1 ? t("RedeemNftSuccess.text-9") : t("RedeemNftSuccess.text-10")} ${t("RedeemNftSuccess.text-2")}`}
+        {`${t("RedeemNftSuccess.text-1")} ${Array.from(vaultsNames)
+          .join(", ")
+          .replace(/,(?!.*,)/gim, ` ${t("RedeemNftSuccess.text-8")}`)} ${
+          vaultsNames.size === 1 ? t("RedeemNftSuccess.text-9") : t("RedeemNftSuccess.text-10")
+        } ${t("RedeemNftSuccess.text-2")}`}
         {t("RedeemNftSuccess.text-3")}
       </span>
-      <b  >{t("RedeemNftSuccess.text-4")}</b>
+      <b>{t("RedeemNftSuccess.text-4")}</b>
       <div className="airdrop-redeem-success__features-wrapper">
         <div className="airdrop-redeem-success__feature">
           <img src={RadioButtonChecked} alt="radio button" />
@@ -74,5 +84,5 @@ export function RedeemNftSuccess({ redeemed }: { redeemed: INFTTokenInfoRedeemed
         </button>
       </div>
     </div>
-  )
+  );
 }

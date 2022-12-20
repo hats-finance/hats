@@ -1,0 +1,40 @@
+@import "styles/constants.scss";
+
+.tokens-symbols-wrapper {
+  display: flex;
+  margin-left: 20px;
+
+  .token-symbol {
+    margin-left: 5px;
+    padding: 2px 11px;
+    background-color: $vault-blue;
+    text-transform: uppercase;
+    font-size: $xxsmall;
+    white-space: nowrap;
+  }
+  .token-symbol:first-child {
+    margin-left: unset;
+  }
+}
+
+@media only screen and (max-width: $mobile-breakpoint) {
+  .tokens-symbols-wrapper {
+    flex-wrap: wrap;
+    margin-left: 10px;
+
+    .token-symbol {
+      font-size: $tiny;
+      margin: 2px;
+    }
+
+    .token-symbol:first-child {
+      margin-left: 2px;
+    }
+  }
+}
+
+@media only screen and (max-width: $small-mobile-breakpoint) {
+  .tokens-symbols-wrapper {
+    margin-left: 0;
+  }
+}

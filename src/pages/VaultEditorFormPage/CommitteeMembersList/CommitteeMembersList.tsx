@@ -10,7 +10,7 @@ export function CommitteeMembersList() {
   return (
     <>
       {members.map((member, index) => (
-        <CommitteeMemberForm key={member.id} index={index} append={append} remove={remove} />
+        <CommitteeMemberForm key={member.id} index={index} append={append} remove={remove} membersCount={members.length} />
       ))}
     </>
   );

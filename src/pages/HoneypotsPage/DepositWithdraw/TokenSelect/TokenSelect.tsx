@@ -1,12 +1,15 @@
-import Select from 'react-select';
-import { Colors } from 'constants/constants';
+import { useNetwork } from "wagmi";
+import Select from "react-select";
+import Tooltip from "rc-tooltip";
+import { ipfsTransformUri } from "utils";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { IVault } from "types/types";
+import { StyledVaultChainIcon } from "./styles";
 import "./index.scss";
-import { ipfsTransformUri } from 'utils';
 
 interface IProps {
-  vault: IVault
-  onSelect: (pid: string) => void;
+  vault: IVault;
+  onSelect: (id: string) => void;
 }
 
 interface ITokenOptionProps {
@@ -14,20 +17,34 @@ interface ITokenOptionProps {
   icon: string | undefined;
 }
 
+const VaultChainIcon = ({ vault }: { vault: IVault }) => {
+  const { chains } = useNetwork();
+  const network = chains.find((c) => c.id === vault.chainId);
+
+  return (
+    <StyledVaultChainIcon>
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+        <div className="chain-logo">
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
+        </div>
+      </Tooltip>
+    </StyledVaultChainIcon>
+  );
+};
+
 const TokenOption = ({ symbol, icon }: ITokenOptionProps) => {
   return (
     <div className="token-option-wrapper">
       <img src={icon} className="token-icon" alt="token icon" />
       <span>{symbol}</span>
     </div>
-  )
-}
+  );
+};
 
 export function TokenSelect({ vault, onSelect }: IProps) {
-
   const handleSelect = (e) => {
     onSelect(e.value);
-  }
+  };
 
   const selectStyles = {
     menu: (provided) => ({
@@ -44,7 +61,7 @@ export function TokenSelect({ vault, onSelect }: IProps) {
       display: "flex",
       "&:hover": {
         opacity: "0.8",
-      }
+      },
     }),
     control: () => ({
       border: `1px solid ${Colors.turquoise}`,
@@ -54,17 +71,20 @@ export function TokenSelect({ vault, onSelect }: IProps) {
     }),
     menuList: () => ({
       padding: "unset",
-    })
-  }
+    }),
+  };
 
-  const tokensOptions = vault.multipleVaults?.map(vault => {
-    return (
-      {
-        value: vault.pid,
-        label: <TokenOption symbol={vault.stakingTokenSymbol} icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} />
-      }
-    )
-  })
+  const tokensOptions = vault.multipleVaults?.map((vault) => {
+    return {
+      value: vault.id,
+      label: (
+        <TokenOption
+          symbol={`${vault.stakingTokenSymbol} (${vault.version})`}
+          icon={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
+        />
+      ),
+    };
+  });
 
   return (
     <div className="token-select-wrapper">
@@ -76,13 +96,21 @@ export function TokenSelect({ vault, onSelect }: IProps) {
           isSearchable={false}
           className="select-tokens"
           onChange={handleSelect}
-          options={tokensOptions} />
+          options={tokensOptions}
+        />
       ) : (
         <div className="token-icon-wrapper">
-          <img src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)} className="token-icon" alt="token icon" />
+          <div className="icons-wrapper">
+            <img
+              src={ipfsTransformUri(vault.description?.["project-metadata"].tokenIcon)}
+              className="token-icon"
+              alt="token icon"
+            />
+            <VaultChainIcon vault={vault} />
+          </div>
           {vault.stakingTokenSymbol}
         </div>
       )}
     </div>
-  )
+  );
 }
