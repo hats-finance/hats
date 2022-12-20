@@ -1,4 +1,4 @@
-import { IVaultDescription } from "types/types";
+import { IVaultDescription } from "types";
 import axios from "axios";
 import { getPath, setPath } from "utils/objects.utils";
 import { VAULT_SERVICE } from "settings";
@@ -16,8 +16,8 @@ async function pinFile(fileContents: any) {
       "Content-Type": "multipart/form-data",
       chain: "rinkeby",
       safeaddress: "0x50e074Fe043b926aaA2aDA51AD282eE76081C318",
-      address: "0x8F402318BB49776f5017d2FB12c90D0B0acAAaE8",
-    },
+      address: "0x8F402318BB49776f5017d2FB12c90D0B0acAAaE8"
+    }
   });
 
   return response.data.IpfsHash;
@@ -29,8 +29,8 @@ async function pinJson(object: any) {
       "Content-Type": "application/json",
       chain: "rinkeby",
       safeaddress: "0x50e074Fe043b926aaA2aDA51AD282eE76081C318",
-      address: "0x8F402318BB49776f5017d2FB12c90D0B0acAAaE8",
-    },
+      address: "0x8F402318BB49776f5017d2FB12c90D0B0acAAaE8"
+    }
   });
   return response.data.IpfsHash;
 }
@@ -67,8 +67,8 @@ export async function signIpfs(ipfsHash: string, address: string, message: strin
     {
       headers: {
         "Content-Type": "application/json",
-        address: address,
-      },
+        address: address
+      }
     }
   );
   return response.data;

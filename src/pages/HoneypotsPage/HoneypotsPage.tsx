@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatUnits } from "ethers/lib/utils";
-import { IVault } from "types/types";
-import { useVaults } from "hooks/useVaults";
+import { IVault } from "types";
+import { useVaults } from "hooks/vaults/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
@@ -87,16 +87,16 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
               Object.entries(vaultsByGroup)
                 .sort()
                 .reverse()
-                .map(([type, vaults]) => (
+                .map(([type, groupVaults]) => (
                   <React.Fragment key={type}>
                     <tr className="transparent-row">
                       <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
                     </tr>
-                    {vaults &&
-                      vaults.map((vault) => (
+                    {groupVaults &&
+                      groupVaults.map((vault) => (
                         <Vault
                           ref={vault.id === vaultId ? scrollRef : null}
-                          expanded={expanded === vault}
+                          expanded={expanded === vault.id}
                           setExpanded={setExpanded}
                           key={vault.id}
                           vault={vault}
@@ -111,7 +111,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
       {selectedVault && (
         <Modal
           isShowing={showDeposit}
-          title={selectedVault.description?.["project-metadata"].name!}
+          title={`${selectedVault.description?.["project-metadata"].name!} ${selectedVault.version === "v2" ? "(v2)" : ""}`}
           titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}
           onHide={closeDeposit}
           removeHorizontalPadding>

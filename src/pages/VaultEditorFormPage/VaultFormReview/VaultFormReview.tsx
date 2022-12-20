@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useWatch } from "react-hook-form";
 import { Vault } from "components";
-import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types/types";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
 import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
@@ -102,13 +102,7 @@ export function VaultFormReview() {
         version: "v2",
         description: description as IVaultDescriptionV2,
         maxBounty: "",
-        rewardController: {
-          id: "",
-          rewardToken: "",
-          rewardTokenDecimals: "18",
-          rewardTokenSymbol: "",
-          totalRewardPaid: "",
-        },
+        rewardControllers: [],
       };
     }
   }, [editedVaultDescriptionForm]);

@@ -6,7 +6,7 @@ import { PieChart } from "react-minimal-pie-chart";
 import humanizeDuration from "humanize-duration";
 import { RoutePaths } from "navigation";
 import { isMobile } from "web3modal";
-import { IPoolWithdrawRequest, IVault, IVaultDescription } from "types/types";
+import { IPoolWithdrawRequest, IVault, IVaultDescription } from "types";
 import { setVulnerabilityProject } from "utils";
 import { PieChartColors, ScreenSize } from "constants/constants";
 import { RootState } from "reducers";

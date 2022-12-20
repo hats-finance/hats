@@ -3,16 +3,34 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 type StyledVaultProps = {
   type?: string;
+  selectionMode?: boolean;
+  selected?: boolean;
 };
 
 export const StyledVault = styled.tr<StyledVaultProps>(
-  ({ type }) => css`
+  ({ type, selectionMode, selected }) => css`
     scroll-margin-top: var(--header-height) * 2;
     border-bottom: 2px solid var(--dark-blue);
+    position: relative;
+
+    ${selectionMode &&
+    css`
+      transition: 0.3s;
+      cursor: ${selectionMode ? "pointer" : "default"};
+
+      &:hover {
+        opacity: 0.7;
+      }
+    `}
 
     td {
       padding: 15px;
-      background-color: var(--strong-blue);
+      background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-blue)`};
+      filter: ${selected ? `contrast(0.9)` : `contrast(1)`};
+
+      &.relative-column {
+        position: relative;
+      }
 
       &:first-child {
         position: relative;
@@ -37,10 +55,44 @@ export const StyledVault = styled.tr<StyledVaultProps>(
         margin-left: 30px;
       }
 
-      img {
-        width: 45px;
-        margin-right: 15px;
-        border-radius: 100px;
+      .vault-icon {
+        position: relative;
+
+        img.logo {
+          width: 45px;
+          margin-right: 15px;
+          border-radius: 100px;
+        }
+
+        .chain-logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          bottom: 0px;
+          right: 8px;
+          width: 26px;
+          height: 26px;
+          border-radius: 100px;
+          background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-blue)`};
+
+          ${type === "gamification" &&
+          css`
+            background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-purple)`};
+          `}
+
+          ${type === "grants" &&
+          css`
+            background-color: ${selectionMode ? `var(--field-blue)` : `var(--turquoise-2)`};
+          `}
+
+          img {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            border-radius: 100px;
+          }
+        }
       }
 
       .name-source-wrapper {
@@ -51,7 +103,13 @@ export const StyledVault = styled.tr<StyledVaultProps>(
         .project-name {
           display: flex;
           align-items: center;
-          font-weight: bold;
+          font-weight: 500;
+
+          @media (max-width: ${breakpointsDefinition.smallMobile}) {
+            flex-direction: column;
+            align-items: start;
+            margin-bottom: 5px;
+          }
         }
       }
     }
@@ -64,7 +122,7 @@ export const StyledVault = styled.tr<StyledVaultProps>(
 
         .balance-value {
           color: var(--white);
-          font-weight: bold;
+          font-weight: 500;
         }
       }
 

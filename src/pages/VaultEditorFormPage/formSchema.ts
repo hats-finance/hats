@@ -1,7 +1,7 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getTestWalletAddress } from "utils/yup.utils";
+import { getTestAddressOrUrl } from "utils/yup.utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) => {
   const schema = Yup.object().shape({
@@ -34,11 +34,11 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
         ),
     }),
     committee: Yup.object({
-      "multisig-address": Yup.string().required(intl("required")),
+      "multisig-address": Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
       members: Yup.array().of(
         Yup.object({
           name: Yup.string().required(intl("required")),
-          address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+          address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
           "twitter-link": Yup.string().required(intl("required")),
           "image-ipfs-link": Yup.string(),
         })
@@ -47,7 +47,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
     "contracts-covered": Yup.array().of(
       Yup.object({
         name: Yup.string().required(intl("required")),
-        address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+        address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
         severities: Yup.array().min(1, intl("required")),
       })
     ),

@@ -1,19 +1,19 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "types/types";
+import { ICommitteeMember, IVaultDescription } from "types";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
   IEditedContractCovered,
   IEditedVaultDescription,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
-  IEditedVulnerabilitySeverityV2,
+  IEditedVulnerabilitySeverityV2
 } from "./types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
   name: "",
   address: "",
   "twitter-link": "",
-  "image-ipfs-link": "",
+  "image-ipfs-link": ""
 });
 
 export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {
@@ -23,7 +23,7 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
   return {
     name: "",
     address: "",
-    severities: severitiesIds,
+    severities: severitiesIds
   };
 };
 
@@ -37,20 +37,20 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
       description: "",
       animation_url: "",
       image: "",
-      external_url: "",
+      external_url: ""
     },
-    description: "",
+    description: ""
   };
 
   if (version === "v1") {
     return {
       ...editedVulnerabilitySeverityBase,
-      index: 0,
+      index: 0
     } as IEditedVulnerabilitySeverityV1;
   } else {
     return {
       ...editedVulnerabilitySeverityBase,
-      percentage: 0,
+      percentage: 0
     } as IEditedVulnerabilitySeverityV2;
   }
 };
@@ -61,7 +61,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
     (s: IEditedVulnerabilitySeverity) => ({
       label: s.name,
-      value: s.id as string,
+      value: s.id as string
     })
   );
 
@@ -72,23 +72,23 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       icon: "",
       tokenIcon: "",
       website: "",
-      type: "",
+      type: ""
     },
     "communication-channel": {
-      "pgp-pk": [],
+      "pgp-pk": []
     },
     committee: {
       "multisig-address": "",
-      members: [{ ...createNewCommitteeMember() }],
+      members: [{ ...createNewCommitteeMember() }]
     },
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
     source: {
       name: "",
-      url: "",
+      url: ""
     },
     severitiesOptions: severitiesOptionsForContractsCovered,
-    includesStartAndEndTime: true,
+    includesStartAndEndTime: true
   } as IEditedVaultDescription;
 };
 
@@ -109,20 +109,20 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
           contractsForm[contractIndex] = {
             name,
             address,
-            severities: [...contract.severities, severity.id as string],
+            severities: [...contract.severities, severity.id as string]
           };
         } else {
           contractsForm.push({
             name,
             address,
-            severities: [severity.id as string],
+            severities: [severity.id as string]
           });
         }
       });
     } else {
       contractsForm.push({
         ...createNewCoveredContract(),
-        severities: [severity.id as string],
+        severities: [severity.id as string]
       });
     }
   });
@@ -133,12 +133,12 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
 export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
   const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({
     ...sev,
-    id: uuid(),
+    id: uuid()
   }));
 
   const severitiesOptions = severitiesWithIds.map((s) => ({
     label: s.name,
-    value: s.id as string,
+    value: s.id as string
   }));
 
   if (vaultDescription.version === "v1" || !vaultDescription.version) {
@@ -148,11 +148,11 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       "vulnerability-severities-spec": {
         severities: severitiesWithIds as IEditedVulnerabilitySeverityV1[],
         name: "",
-        indexArray: vaultDescription.indexArray,
+        indexArray: vaultDescription.indexArray
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
       severitiesOptions,
-      includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
+      includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime
     };
   }
 
@@ -161,11 +161,11 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     version: "v2",
     "vulnerability-severities-spec": {
       severities: severitiesWithIds as IEditedVulnerabilitySeverityV2[],
-      name: "",
+      name: ""
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     severitiesOptions,
-    includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
+    includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime
   };
 }
 
@@ -188,12 +188,12 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         ...newSeverity,
         "nft-metadata": {
           ...newSeverity["nft-metadata"],
-          description: vaultName + newSeverity["nft-metadata"].description,
+          description: vaultName + newSeverity["nft-metadata"].description
         },
         "contracts-covered": editedVaultDescription["contracts-covered"]
           .filter((contract) => contract.severities?.includes(severityId))
-          .map((contract) => ({ [contract.name]: contract.address })),
+          .map((contract) => ({ [contract.name]: contract.address }))
       };
-    }),
+    })
   };
 }

@@ -1,7 +1,5 @@
-import { gql } from "@apollo/client";
-
-export const GET_VAULTS = gql`
-  query getVaults {
+export const GET_VAULTS = `
+  query getVaults($account: String) {
     masters {
       address
       governance
@@ -13,6 +11,16 @@ export const GET_VAULTS = gql`
       vestingHatDuration
       vestingHatPeriods
       rewardsToken
+    }
+    userNfts: owners(where: { address: $account }) {
+      id
+      balance
+      nft {
+        id
+        tokenURI
+        tokenId
+        nftMaster
+      }
     }
     vaults {
       id
@@ -41,6 +49,13 @@ export const GET_VAULTS = gql`
       rewardsLevels
       liquidityPool
       registered
+      userWithdrawRequest: withdrawRequests( where: { beneficiary: $account }) {
+        id
+        beneficiary
+        withdrawEnableTime
+        createdAt
+        expiryTime
+      }
       withdrawRequests {
         id
         beneficiary
@@ -60,7 +75,7 @@ export const GET_VAULTS = gql`
       vestingPeriods
       depositPause
       committeeCheckedIn
-      rewardController {
+      rewardControllers {
         id
         rewardToken
         rewardTokenSymbol
@@ -71,7 +86,7 @@ export const GET_VAULTS = gql`
   }
 `;
 
-export const GET_STAKER = gql`
+export const GET_STAKER = `
   query getStaker($address: Bytes!) {
     stakers(where: { address: $address }) {
       pid

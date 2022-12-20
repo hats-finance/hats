@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { useEthers } from "@usedapp/core";
-import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import { IPoolWithdrawRequest, IVault } from "types/types";
+import { useAccount } from "wagmi";
 import { RoutePaths } from "navigation";
+import { IPoolWithdrawRequest, IVault } from "types";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
 import "./VaultActions.scss";
 
@@ -17,7 +17,7 @@ export default function VaultActions(props: IProps) {
   const navigate = useNavigate();
   const isSupportedNetwork = useSupportedNetwork();
   const { t } = useTranslation();
-  const { account } = useEthers();
+  const { address: account } = useAccount();
 
   return (
     <div className="vault-action-wrapper">

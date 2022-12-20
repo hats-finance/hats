@@ -17,6 +17,12 @@
   .token-icon-wrapper {
     display: flex;
     align-items: center;
+    position: relative;
+
+    .icons-wrapper {
+      position: relative;
+    }
+
     .token-icon {
       border-radius: 100px;
       width: 30px;

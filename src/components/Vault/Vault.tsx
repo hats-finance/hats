@@ -1,9 +1,12 @@
+import { useNetwork } from "wagmi";
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
+import Tooltip from "rc-tooltip";
 import { BigNumber } from "ethers";
 import millify from "millify";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ArrowIcon from "assets/icons/arrow.icon";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultActions from "./VaultActions/VaultActions";
@@ -18,33 +21,51 @@ interface VaultComponentProps {
   expanded: boolean;
   setExpanded?: any;
   preview?: boolean;
+  selected?: boolean;
+  onSelect?: Function;
 }
 
 const VaultComponent = (
-  { vault, expanded, preview, setExpanded }: VaultComponentProps,
+  { vault, expanded, preview, setExpanded, onSelect, selected = false }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
+  const { chains } = useNetwork();
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingTokenSymbol, multipleVaults } = vault;
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
   const valueOfAllVaults = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
 
-  const vaultBalance = new Amount(BigNumber.from(honeyPotBalance), stakingTokenDecimals, stakingTokenSymbol)
-    .formattedWithoutSymbol;
+  const vaultBalance = new Amount(BigNumber.from(honeyPotBalance), stakingTokenDecimals, stakingTokenSymbol).number;
   const vaultType = description?.["project-metadata"]?.type?.toLowerCase();
   const vaultIcon = description?.["project-metadata"]?.icon ?? "";
   const vaultName = description?.["project-metadata"].name ?? "";
 
   const vaultExpandAction = (
-    <StyledVaultExpandAction expanded={expanded} onClick={() => setExpanded && setExpanded(expanded ? null : vault)}>
+    <StyledVaultExpandAction expanded={expanded}>
       <ArrowIcon />
     </StyledVaultExpandAction>
   );
 
+  const expandVault = () => {
+    setExpanded && setExpanded(expanded ? null : vault.id);
+  };
+
+  const getVaultChainIcon = () => {
+    const network = chains.find((c) => c.id === vault.chainId);
+
+    return (
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+        <div className="chain-logo">
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
+        </div>
+      </Tooltip>
+    );
+  };
+
   const vaultBalanceAndValue = (
     <div className="balance-information">
       <div className="vault-balance-wrapper">
-        {!multipleVaults && vaultBalance}
+        {!multipleVaults && millify(vaultBalance)}
         <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>
       </div>
       <span className="sub-label onlyMobile">{t("Vault.total-vault")}</span>
@@ -53,19 +74,27 @@ const VaultComponent = (
 
   return (
     <>
-      {/* {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>} */}
-      <StyledVault type={vaultType} ref={ref}>
-        <td className="onlyDesktop">
+      <StyledVault
+        type={vaultType}
+        ref={ref}
+        selectionMode={!!onSelect}
+        selected={selected}
+        onClick={onSelect ? () => onSelect() : undefined}>
+        <td className="onlyDesktop" onClick={expandVault}>
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
-          {vaultExpandAction}
+          {!onSelect && <span>{vaultExpandAction}</span>}
         </td>
 
-        <td>
+        <td className="relative-column">
+          <div className="onlyMobile">{vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}</div>
           <div className="project-name-wrapper">
-            {vaultIcon && <img src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
+            <div className="vault-icon">
+              {vaultIcon && <img className="logo" src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
+              {vault.chainId && getVaultChainIcon()}
+            </div>
             <div className="name-source-wrapper">
               <div className="project-name">
-                {vaultName}
+                <span>{vaultName}</span>
                 <VaultTokens vault={vault} />
               </div>
               <div className="onlyMobile">{vaultBalanceAndValue}</div>
@@ -73,17 +102,21 @@ const VaultComponent = (
           </div>
         </td>
 
-        <>
-          <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
+        <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
+        {!onSelect && (
           <td className="onlyDesktop">
             <VaultAPY vault={vault} />
           </td>
+        )}
+        {!onSelect && (
           <td className="onlyDesktop">
             <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />
           </td>
-        </>
+        )}
 
-        <td className="onlyMobile">{vaultExpandAction}</td>
+        <td className="onlyMobile" onClick={expandVault}>
+          {vaultExpandAction}
+        </td>
       </StyledVault>
       {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
     </>

@@ -16,3 +16,5 @@ export { MyAccount } from "./MyAccount/MyAccount";
 export { TransactionInfo } from "./TransactionInfo/TransactionInfo";
 export { SafePeriodBar } from "./SafePeriodBar/SafePeriodBar";
 export { Modal } from "./Modal/Modal";
+export { DropdownSelector } from "./DropdownSelector/DropdownSelector";
+export { Button } from "./Button/Button";

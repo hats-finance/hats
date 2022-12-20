@@ -65,18 +65,3 @@ export const StyledWalletInfo = styled.div`
     }
   }
 `;
-
-export const StyledNetworkName = styled.span`
-  padding-left: 10px;
-  border-left: 1px solid;
-  margin-left: 10px;
-`;
-
-export const StyledWalletUser = styled.div`
-  display: flex;
-  align-items: center;
-
-  .davatar {
-    margin-right: 8px;
-  }
-`;

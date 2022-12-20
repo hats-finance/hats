@@ -1,9 +1,9 @@
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import InfoIcon from "assets/icons/info.icon";
-import { useVaultDepositWithdrawInfo } from "../hooks";
+import { useVaultDepositWithdrawInfo } from "../useVaultDepositWithdrawInfo";
 import { StyledUserAssetsInfoTable } from "./styles";
 import { WithdrawTimer } from "..";
 
@@ -20,7 +20,7 @@ const VaultAssetInfo = ({ vault }: IProps) => {
       <td className="withdraw-status-data">
         <WithdrawTimer vault={vault} plainTextView placeHolder="-" />
       </td>
-      <td>{availableBalanceToWithdraw.formattedWithoutSymbol}</td>
+      <td>{availableBalanceToWithdraw.formattedWithoutSymbol()}</td>
       <td>-</td>
     </tr>
   );

@@ -1,14 +1,19 @@
 import { BigNumber } from "ethers";
 import { formatUnits } from "@ethersproject/units";
+import { FetchBalanceResult } from "@wagmi/core";
 
 export class Amount {
   amount: BigNumber | undefined;
-  decimals: string;
+  decimals: number;
   symbol: string | undefined;
 
-  constructor(amount: BigNumber | undefined, decimals: string, symbol?: string) {
+  static fromBalanceResult(balanceRes: FetchBalanceResult | undefined): Amount {
+    return new this(balanceRes?.value ?? BigNumber.from(0), balanceRes?.decimals ?? 18, balanceRes?.symbol);
+  }
+
+  constructor(amount: BigNumber | undefined, decimals: number | string, symbol?: string) {
     this.amount = amount;
-    this.decimals = decimals;
+    this.decimals = +decimals;
     this.symbol = symbol;
   }
 
@@ -20,13 +25,13 @@ export class Amount {
     return this.amount ? Number(formatUnits(this.amount, this.decimals)) : 0;
   }
 
-  get formattedWithoutSymbol() {
-    return `${this.amount ? this.truncateNDecimals(5) : "-"}`;
+  formattedWithoutSymbol(decimals = 5) {
+    return `${this.amount ? this.truncateNDecimals(decimals) : "-"}`;
   }
 
-  get formatted() {
+  formatted(decimals = 5) {
     const symbol = this.symbol ? ` ${this.symbol}` : "";
-    return `${this.formattedWithoutSymbol}${symbol}`;
+    return `${this.formattedWithoutSymbol(decimals)}${symbol}`;
   }
 
   get string() {

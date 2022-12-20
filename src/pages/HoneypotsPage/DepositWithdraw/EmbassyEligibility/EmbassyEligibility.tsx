@@ -1,79 +1,146 @@
 import { formatUnits } from "@ethersproject/units";
+import { Button, Modal } from "components";
+import EmbassyNftRedeem from "components/EmbassyNftRedeem/EmbassyNftRedeem";
 import { MAX_NFT_TIER } from "constants/constants";
 import { BigNumber } from "ethers";
-import { useTotalSharesPerVault, useUserSharesPerVault } from "hooks/contractHooksCalls";
-import { useVaults } from "hooks/useVaults";
+import { INFTTokenInfoRedeemed } from "hooks/nft/types";
+import useModal from "hooks/useModal";
+import { useOnChange } from "hooks/usePrevious";
 import millify from "millify";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IVault } from "types/types";
-import "./index.scss";
+import { IVault } from "types";
+import { StyledEmbassyEligibility } from "./styles";
 
-interface IProps {
+interface EmbassyEligibilityProps {
   vault: IVault;
+  tierFromShares: number;
+  userShares: BigNumber;
+  totalShares: BigNumber;
+  totalBalance: BigNumber;
+  availableNftsByDeposit: INFTTokenInfoRedeemed[];
+  handleRedeem: () => Promise<INFTTokenInfoRedeemed[] | undefined>;
 }
 
 const HUNDRED_PERCENT = 10000;
 const TIER_PERCENTAGES = [10, 100, 1500];
 
-export function EmbassyEligibility({ vault }: IProps) {
+export function EmbassyEligibility({
+  vault,
+  tierFromShares,
+  userShares,
+  totalShares,
+  totalBalance,
+  availableNftsByDeposit,
+  handleRedeem,
+}: EmbassyEligibilityProps) {
   const { t } = useTranslation();
-  const { nftData } = useVaults();
-  const userShares = useUserSharesPerVault(vault);
   const userSharesNumber = +formatUnits(userShares, vault.stakingTokenDecimals);
-  const totalShares = useTotalSharesPerVault(vault);
   const totalSharesNumber = +formatUnits(totalShares, vault.stakingTokenDecimals);
+  const totalBalanceNumber = +formatUnits(totalBalance, vault.stakingTokenDecimals);
 
-  if (!nftData?.nftTokens || totalShares.eq(0)) return null;
+  const [tierHasIncreased, setTierHasIncreased] = useState(false);
 
-  const eligibleOrRedeemed = nftData?.nftTokens?.filter((token) => +token.pid === +vault.pid) ?? [];
-  const maxRedeemedTier = eligibleOrRedeemed.length === 0 ? 0 : Math.max(...eligibleOrRedeemed.map((token) => token.tier));
+  const { isShowing: isShowingRedeemEmbassyNfts, toggle: toggleRedeemEmbassyNfts } = useModal();
 
-  if (maxRedeemedTier === MAX_NFT_TIER) return null;
+  const availableNftsToRedeem = availableNftsByDeposit.filter((token) => !token.isRedeemed);
+  const nftsRedeemed = availableNftsByDeposit.filter((token) => token.isRedeemed);
+
+  const maxRedeemed = nftsRedeemed.map((token) => token.tier).reduce((max, tier) => Math.max(max, tier), 0);
 
   const sharesPercentageTiers = TIER_PERCENTAGES.map((tp) => tp / HUNDRED_PERCENT).map(
     (tp) => (totalSharesNumber * tp) / (1 - tp)
   );
-  const nextTier = Math.max(maxRedeemedTier + 1, sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier) + 1);
-  const minToNextTier = sharesPercentageTiers[nextTier - 1] - userSharesNumber;
-  const minimum = millify(minToNextTier, { precision: 4 });
-  const tokenSymbol = vault.stakingTokenSymbol;
 
-  // console.log("----------");
-  // console.log("totalSharesNumber", totalSharesNumber);
-  // console.log("sharesPercentageTiers", sharesPercentageTiers);
-  // console.log("nextTier", nextTier);
-  // console.log("minToNextTier", minToNextTier);
+  const currentTier = Math.max(
+    tierFromShares,
+    sharesPercentageTiers.findIndex((tier) => userSharesNumber < tier)
+  );
+
+  const userHasTokensToRedeem = maxRedeemed < currentTier && availableNftsByDeposit.length > 0;
+  const isAvailableNextTier = currentTier < MAX_NFT_TIER;
+  const userHoldAllTiers = maxRedeemed === MAX_NFT_TIER;
+
+  // When the user deposit and gets a new possible tier
+  useOnChange(tierFromShares, (newTier, prevTier) => {
+    if (newTier === undefined || prevTier === undefined) return;
+    if (newTier > prevTier) {
+      setTierHasIncreased(true);
+    }
+  });
+
+  useEffect(() => {
+    if (tierHasIncreased && availableNftsToRedeem.length > 0) {
+      setTimeout(toggleRedeemEmbassyNfts, 1000);
+      setTierHasIncreased(false);
+    }
+  }, [availableNftsToRedeem, tierHasIncreased, toggleRedeemEmbassyNfts]);
+
+  const minimumToNextTierParagraph = () => {
+    const nextTier = currentTier + 1;
+
+    const minToNextTierInShares = sharesPercentageTiers[currentTier] - userSharesNumber;
+    const minToNextTierTokens = (minToNextTierInShares * totalBalanceNumber) / totalSharesNumber;
+
+    const minimumInBalance = millify(minToNextTierTokens, { precision: 4 });
+    const tokenSymbol = vault.stakingTokenSymbol;
+
+    if (minToNextTierTokens <= 0) return null;
+
+    const afterDepositText = t("embassyEligibility.afterDeposit");
+    if (nextTier === 1) {
+      return (
+        <>
+          <span className="blue">{t("embassyEligibility.minToEnter", { minimum: minimumInBalance, token: tokenSymbol })}</span>
+          <span>{afterDepositText}</span>
+        </>
+      );
+    } else if (nextTier <= 3) {
+      return (
+        <>
+          <span className="blue">
+            {t(`embassyEligibility.middleTier_${nextTier}`, { minimum: minimumInBalance, token: tokenSymbol })}
+          </span>
+          <span>{afterDepositText}</span>
+        </>
+      );
+    } else {
+      return null;
+    }
+  };
+
+  const eligibleToRedeemNfts = () => (
+    <>
+      {isAvailableNextTier && (
+        <>
+          <br /> <br />
+        </>
+      )}
+      {t("embassyEligibility.currentlyEligible", { tier: currentTier })}
+      <Button onClick={toggleRedeemEmbassyNfts} styleType="text" lowercase>
+        {t("here", { tier: currentTier })}
+      </Button>
+    </>
+  );
+
+  const redeemedAllTiers = () => <>{t("embassyEligibility.youHoldAllTiers")}</>;
 
   return (
-    <div className="embassy-eligibility-wrapper">
-      <div className="embassy-eligibility__title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
-      <div className="embassy-eligibility__content">
-        <span className="embassy-eligibility__content__min-to-embassy">
-          {minToNextTier > 0 && (
-            <>
-              {nextTier === 1 && (
-                <>
-                  {t("DepositWithdraw.EmbassyEligibility.tier-minimum", { minimum, token: tokenSymbol })}
-                  <br />
-                  <br />
-                </>
-              )}
-              {(nextTier === 2 || nextTier === 3) && (
-                <>
-                  {t("DepositWithdraw.EmbassyEligibility.tier-middle", {
-                    secondOrThird: nextTier === 2 ? "second" : "third",
-                    minimum,
-                    token: tokenSymbol,
-                  })}
-                  <br />
-                  <br />
-                </>
-              )}
-            </>
-          )}
-        </span>
-        {nextTier > 0 && nextTier < 4 && <span>{t("DepositWithdraw.EmbassyEligibility.after-deposit")}</span>}
-      </div>
-    </div>
+    <>
+      <StyledEmbassyEligibility>
+        <div className="title">{t("DepositWithdraw.EmbassyEligibility.title")}</div>
+        <div className="content">
+          {isAvailableNextTier && minimumToNextTierParagraph()}
+          {userHasTokensToRedeem && eligibleToRedeemNfts()}
+          {userHoldAllTiers && redeemedAllTiers()}
+        </div>
+      </StyledEmbassyEligibility>
+
+      {availableNftsToRedeem && (
+        <Modal isShowing={isShowingRedeemEmbassyNfts} onHide={toggleRedeemEmbassyNfts}>
+          <EmbassyNftRedeem availableNftsToRedeem={availableNftsToRedeem} handleRedeem={handleRedeem} />
+        </Modal>
+      )}
+    </>
   );
 }
