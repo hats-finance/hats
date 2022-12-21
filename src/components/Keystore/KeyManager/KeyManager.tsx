@@ -8,7 +8,7 @@ import { StyledKeyManager } from "./styles";
 
 type KeyManagerProps = {
   onSelectedKey?: (key: IStoredKey) => void;
-}
+};
 
 export function KeyManager({ onSelectedKey }: KeyManagerProps) {
   const { isShowing: isShowingKeyDetails, show: showKeyDetails, hide: hideKeyDetails } = useModal();
