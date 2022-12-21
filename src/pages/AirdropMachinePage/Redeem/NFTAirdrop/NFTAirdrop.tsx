@@ -1,30 +1,30 @@
+import { useContext } from "react";
+import { useAccount } from "wagmi";
+import { useSelector } from "react-redux";
 import { useTranslation } from "react-i18next";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Swiper, SwiperSlide } from "swiper/react";
 import classNames from "classnames";
-import { Loading, NFTCard } from "components";
-import { useSupportedNetwork } from "hooks/useSupportedNetwork";
-import { useEthers } from "@usedapp/core";
+import { NFTCard } from "components";
+import { useSupportedNetwork } from "hooks/wagmi";
+import { RootState } from "reducers";
+import { ScreenSize } from "constants/constants";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import "./index.scss";
-import { useContext } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "reducers";
-import { ScreenSize } from "constants/constants";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
 
 export default function NFTAirdrop() {
   const { t } = useTranslation();
   const { screenSize } = useSelector((state: RootState) => state.layoutReducer);
-  const { nftData, handleRedeem, showLoader } = useContext(AirdropMachineContext);
+  const { airdropData, handleRedeem } = useContext(AirdropMachineContext);
   const isSupportedNetwork = useSupportedNetwork();
-  const { account } = useEthers();
+  const { address: account } = useAccount();
 
   return (
-    <div className={classNames("nft-airdrop-wrapper", { "disabled": showLoader })}>
+    <div className={classNames("nft-airdrop-wrapper")}>
       <span>{t("AirdropMachine.NFTAirdrop.text-1")}</span>
       <section>
         <b>{t("AirdropMachine.NFTAirdrop.text-2")}</b>
@@ -39,18 +39,25 @@ export default function NFTAirdrop() {
           touchRatio={1.5}
           navigation
           effect={"flip"}>
-          {nftData?.treeRedeemables?.map((nftInfo, index) =>
+          {airdropData?.airdropTokens?.map((nftInfo, index) => (
             <SwiperSlide key={index} className="swiper-slide">
-              <NFTCard key={index} tokenInfo={nftInfo} />
+              <NFTCard
+                key={index}
+                chainId={nftInfo.chainId}
+                tokenId={nftInfo.tokenId.toHexString()}
+                isRedeemed={nftInfo.isRedeemed}
+                tokenMetadata={nftInfo.metadata}
+              />
             </SwiperSlide>
-          )}
+          ))}
         </Swiper>
       </div>
       <div className="nft-airdrop__button-container">
         {(!account || !isSupportedNetwork) && <span className="nft-airdrop__error">{t("Shared.wallet-not-connected")}</span>}
-        <button onClick={handleRedeem} disabled={!account || !isSupportedNetwork} className="fill">{t("AirdropMachine.NFTAirdrop.button-text")}</button>
+        <button onClick={handleRedeem} disabled={!account || !isSupportedNetwork} className="fill">
+          {t("AirdropMachine.NFTAirdrop.button-text")}
+        </button>
       </div>
-      {showLoader && <Loading />}
     </div>
-  )
+  );
 }

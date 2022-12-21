@@ -15,7 +15,11 @@ export const VaultEditorForm = styled.form`
   .editor-description {
     color: var(--white);
     font-size: var(--small);
-    margin-bottom: ${getSpacing(10)};
+    margin-bottom: ${getSpacing(4)};
+  }
+
+  .migrate-button {
+    margin-bottom: ${getSpacing(4)};
   }
 
   .last-saved-time {

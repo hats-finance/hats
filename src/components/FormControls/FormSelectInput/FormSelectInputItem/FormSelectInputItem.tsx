@@ -26,7 +26,7 @@ const FormSelectInputItem = ({ currentValue, option, handleSelectedItem, handleU
 
   return (
     <StyledFormSelectInputItem htmlFor={`option-${option.value}`}>
-      <input id={`option-${option.value}`} checked={isChecked} onChange={handleOnChange} type="checkbox" />
+      <input id={`option-${option.value}`} checked={isChecked} onChange={handleOnChange} type={multiple ? 'checkbox' : 'radio'} />
       <span>{option.label || '---'}</span>
     </StyledFormSelectInputItem>
   );

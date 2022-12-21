@@ -1,6 +1,6 @@
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import Tooltip from "rc-tooltip";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { formatAPY } from "utils";
 import { useVaultsApy } from "../hooks/useVaultsApy";
 import "./index.scss";
@@ -23,23 +23,25 @@ export default function VaultAPY({ vault }: IProps) {
         )
       })
 
-      const sum = Object.values(apys).reduce((accumulator, object) => {
-        // TODO: if the APY is undefined should we consider it as 0?
-        return accumulator + (object.apy ?? 0);
-      }, 0);
+      // const sum = Object.values(apys).reduce((accumulator, object) => {
+      //   // TODO: if the APY is undefined should we consider it as 0?
+      //   return accumulator + (object.apy ?? 0);
+      // }, 0);
 
-      const averagedAPY = sum / Object.values.length;
+      //const averagedAPY = sum / Object.values.length;
 
       return (
         <Tooltip
           overlay={overlay}
           overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
           placement="top">
-          <span>{formatAPY(averagedAPY)}</span>
+          {/* <span>{formatAPY(averagedAPY)}</span> */}
+          <span>-</span>
         </Tooltip>
       );
     } else {
-      return formatAPY(apys[vault.stakingToken].apy);
+      return '-';
+      // return formatAPY(apys[vault.stakingToken].apy);
     }
   }
 

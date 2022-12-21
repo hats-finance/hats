@@ -7,7 +7,7 @@
   flex-direction: column;
   background-color: $field-blue;
   width: 600px;
-  
+
   @media only screen and (max-width: $small-mobile-breakpoint) {
     width: 100%;
   }
@@ -28,7 +28,8 @@
       }
     }
   }
-  > div, > table {
+  > div,
+  > table {
     padding: 0px $modal-element-padding;
   }
 
@@ -48,6 +49,46 @@
       }
     }
   }
+
+  .content {
+    position: relative;
+  }
+
+  .info-banner {
+    padding: 0;
+
+    .extra-info-wrapper {
+      color: $dark-blue;
+      margin-top: 20px;
+      background-color: $yellow;
+      text-align: center;
+      line-height: 32px;
+      font-size: $xxsmall;
+    }
+  }
+
+  .deposit-tokens-wrapper {
+    display: flex;
+    margin-top: 10px;
+    .deposit-token {
+      display: flex;
+      align-items: center;
+      opacity: 0.3;
+      &.redeemed {        
+        opacity: 1;
+      }
+      &.eligible {
+        opacity: .3;
+        border: dashed 1px $turquoise;
+      }
+      img {
+        width: 30px;
+        height: 30px;
+      }
+      margin-right: 10px;
+    }
+  }
+
   .balance-wrapper {
     position: relative;
     display: flex;
@@ -56,6 +97,11 @@
     color: $white;
     display: flex;
     align-items: center;
+
+    &.disabled {
+      opacity: 0.3;
+    }
+
     .max-button {
       color: $turquoise;
       background: none;
@@ -63,32 +109,44 @@
       padding: 0;
       border: none;
     }
+
   }
+
   .amount-wrapper {
     display: flex;
     flex-direction: column;
-    padding: 20px;
-    background-color: $black;
+    padding: 25px 30px;
+    background-color: $dark-blue;
     border: 1px solid $field-blue;
+
+    &.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .top {
       display: flex;
       justify-content: space-between;
       margin-bottom: 10px;
     }
+
     .input-wrapper {
       display: flex;
       justify-content: space-between;
       font-size: $moderate;
       color: $white;
+
       .pool-token {
         display: flex;
         align-items: center;
         width: 100%;
       }
+
       span {
         margin-left: 10px;
         white-space: nowrap;
       }
+
       input {
         background-color: transparent;
         border: none;
@@ -99,10 +157,12 @@
         width: 100%;
       }
     }
+
     .input-error {
       align-self: flex-end;
       color: $red;
       font-size: $xsmall;
+      margin-top: 10px;
     }
   }
   .percentage-btn {
@@ -166,15 +226,6 @@
       opacity: 0.4;
     }
   }
-  .extra-info-wrapper {
-    color: $dark-blue;
-    margin: 20px 0;
-    background-color: $yellow;
-    height: 32px;
-    text-align: center;
-    line-height: 32px;
-    font-size: $xxsmall;
-  }
   .action-btn-wrapper {
     display: flex;
     flex-direction: column;
@@ -195,6 +246,13 @@
     opacity: 0.5;
     pointer-events: none;
     animation: disabledFade 0.4s;
+  }
+
+  .extra-status-info {
+    width: 90%;
+    text-align: center;
+    font-size: $xxsmall;
+    margin-top: 15px;
   }
 }
 

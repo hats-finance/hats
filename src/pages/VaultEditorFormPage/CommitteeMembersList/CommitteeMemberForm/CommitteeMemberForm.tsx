@@ -1,26 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { UseFieldArrayRemove } from "react-hook-form";
 import { FormInput, FormIconInput } from "components";
-import {useEnhancedFormContext} from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import RemoveIcon from "assets/icons/remove-member.svg";
-import { ICommitteeMember } from "types/types";
+import { ICommitteeMember } from "types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";
 
-
 type CommitteeMemberFormProps = {
   index: number;
+  membersCount: number;
   append: (data: ICommitteeMember) => void;
   remove: UseFieldArrayRemove;
 };
 
-const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps) => {
+const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
-  const { register, watch } = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const members = watch("committee.members") as ICommitteeMember[];
-  const membersCount = members.length;
+  const { register } = useEnhancedFormContext<IEditedVaultDescription>();
 
   return (
     <StyledCommitteeMemberForm>
@@ -57,6 +54,7 @@ const CommitteeMemberForm = ({ index, append, remove }: CommitteeMemberFormProps
             <FormIconInput
               {...register(`committee.members.${index}.image-ipfs-link`)}
               label={t("VaultEditor.member-image")}
+              type="image"
               colorable
             />
           </div>

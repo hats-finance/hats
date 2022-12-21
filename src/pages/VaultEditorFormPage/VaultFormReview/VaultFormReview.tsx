@@ -1,30 +1,30 @@
 import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { Vault } from "components";
-import { IVault } from "types/types";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
 import { IEditedVaultDescription } from "../types";
 import { editedFormToDescription } from "../utils";
 import { StyledVaultFormReview } from "./styles";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useCallback } from "react";
 
 export function VaultFormReview() {
   const { t } = useTranslation();
-  const { watch } = useFormContext<IEditedVaultDescription>();
-  const editedVaultDescriptionForm = watch();
+  const { control } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  function getVault(editedDescription: IEditedVaultDescription): IVault {
-    const description = editedFormToDescription(editedDescription);
+  const editedVaultDescriptionForm = useWatch({ control }) as IEditedVaultDescription;
 
-    return {
+  const getVault = useCallback((): IVault => {
+    const description = editedFormToDescription(editedVaultDescriptionForm);
+
+    const bothVersionsVault = {
       id: "",
-      description,
       descriptionHash: "",
       pid: "",
       stakingToken: "",
       stakingTokenDecimals: "18",
       stakingTokenSymbol: "",
-      totalStaking: "",
       honeyPotBalance: "0",
-      totalReward: "0",
       totalRewardPaid: "0",
       committee: "",
       allocPoint: "0",
@@ -39,8 +39,6 @@ export function VaultFormReview() {
         vestingHatPeriods: "",
         id: "",
         governance: "",
-        totalStaking: "",
-        totalReward: "",
         totalRewardPaid: "",
         rewardPerBlock: "",
         startBlock: "",
@@ -74,7 +72,6 @@ export function VaultFormReview() {
         "6000",
         "8000",
       ],
-      totalRewardAmount: "0",
       liquidityPool: false,
       registered: true,
       withdrawRequests: [],
@@ -92,7 +89,23 @@ export function VaultFormReview() {
       approvedClaims: [],
       stakers: [],
     };
-  }
+
+    if (editedVaultDescriptionForm.version === "v1") {
+      return {
+        ...bothVersionsVault,
+        version: editedVaultDescriptionForm.version,
+        description: description as IVaultDescriptionV1,
+      };
+    } else {
+      return {
+        ...bothVersionsVault,
+        version: "v2",
+        description: description as IVaultDescriptionV2,
+        maxBounty: "",
+        rewardControllers: [],
+      };
+    }
+  }, [editedVaultDescriptionForm]);
 
   return (
     <StyledVaultFormReview>
@@ -106,7 +119,7 @@ export function VaultFormReview() {
         <div className="preview-vault">
           <table>
             <tbody>
-              <Vault expanded={true} data={getVault(editedVaultDescriptionForm)} preview />
+              <Vault expanded={true} vault={getVault()} preview />
             </tbody>
           </table>
         </div>

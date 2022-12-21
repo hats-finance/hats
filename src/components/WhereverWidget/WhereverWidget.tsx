@@ -1,36 +1,32 @@
-import { Colors } from "constants/constants";
+import { Colors, WhereverPartnerKeys } from "constants/constants";
 import { StyledWhereverWidget, StyledWhereverWidgetContainer } from "./styles";
-import {
-  NotificationFeed,
-  NotificationFeedProvider,
-  NotificationBell
-} from "@wherever/react-notification-feed";
-import { useEthers } from "@usedapp/core";
-import { WHEREVER_KEY } from "settings";
+import { NotificationFeed, NotificationFeedProvider, NotificationBell } from "@wherever/react-notification-feed";
+import { useAccount, useNetwork } from "wagmi";
+import { useSupportedNetwork } from "hooks/wagmi";
 
 const WhereverWidget = () => {
-  const { account, library } = useEthers();
+  // const { library } = useEthers();
+  const { address: account } = useAccount();
+  const { chain } = useNetwork();
+  const isSupportedChain = useSupportedNetwork();
 
-  if (!account) {
-    return null;
-  }
+  if (!account || !chain || !isSupportedChain) return null;
 
   return (
     <StyledWhereverWidgetContainer>
       <NotificationFeedProvider
-        provider={library!}
+        // provider={library!}
         theme={{
           buttonTextColor: Colors.black,
           bellColor: Colors.turquoise,
           backgroundColor: Colors.fieldBlue,
           primaryColor: Colors.turquoise,
-          borderRadius: 'none',
+          borderRadius: "none",
           uppercasePageTitles: true,
           fontFamily: '"RobotoMono", sans-serif',
         }}
-        partnerKey={WHEREVER_KEY}
-      >
-        <NotificationFeed >
+        partnerKey={WhereverPartnerKeys[chain.id]}>
+        <NotificationFeed>
           <StyledWhereverWidget>
             <NotificationBell />
           </StyledWhereverWidget>
