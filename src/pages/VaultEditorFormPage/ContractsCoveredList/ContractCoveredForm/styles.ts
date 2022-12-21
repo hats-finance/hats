@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledContractCoveredForm = styled.div`
@@ -24,20 +25,21 @@ export const StyledContractCoveredForm = styled.div`
     .content {
       width: 75%;
 
-      @media (max-width: ${breakpointsDefinition.mobile}) {
+      @media (max-width: ${breakpointsDefinition.smallScreen}) {
         width: 100%;
       }
 
       .subcontent {
         display: flex;
         justify-content: space-between;
+        gap: ${getSpacing(3)};
 
         @media (max-width: ${breakpointsDefinition.mobile}) {
           flex-direction: column;
         }
 
         .name {
-          width: 60%;
+          width: 55%;
 
           @media (max-width: ${breakpointsDefinition.mobile}) {
             width: 100%;
@@ -45,7 +47,7 @@ export const StyledContractCoveredForm = styled.div`
         }
 
         .severities {
-          width: 35%;
+          width: 45%;
 
           @media (max-width: ${breakpointsDefinition.mobile}) {
             width: 100%;

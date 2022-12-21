@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatUnits } from "ethers/lib/utils";
-import { IVault } from "types/types";
-import { useVaults } from "hooks/useVaults";
+import { IVault } from "types";
+import { useVaults } from "hooks/vaults/useVaults";
 import { ipfsTransformUri } from "utils";
 import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
@@ -19,8 +19,8 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
-  const { pid } = useParams();
-  const selectedVault = pid ? vaults?.find((v) => v.pid === pid) : undefined;
+  const { vaultId } = useParams();
+  const selectedVault = vaultId ? vaults?.find((v) => v.id === vaultId) : undefined;
   const navigate = useNavigate();
 
   const vaultValue = useCallback(
@@ -87,19 +87,19 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
               Object.entries(vaultsByGroup)
                 .sort()
                 .reverse()
-                .map(([type, vaults]) => (
+                .map(([type, groupVaults]) => (
                   <React.Fragment key={type}>
                     <tr className="transparent-row">
                       <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
                     </tr>
-                    {vaults &&
-                      vaults.map((vault) => (
+                    {groupVaults &&
+                      groupVaults.map((vault) => (
                         <Vault
-                          ref={vault.pid === pid ? scrollRef : null}
-                          expanded={expanded === vault}
+                          ref={vault.id === vaultId ? scrollRef : null}
+                          expanded={expanded === vault.id}
                           setExpanded={setExpanded}
                           key={vault.id}
-                          data={vault}
+                          vault={vault}
                         />
                       ))}
                   </React.Fragment>
@@ -107,10 +107,15 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
           </tbody>
         </table>
       )}
-      
+
       {selectedVault && (
-        <Modal isShowing={showDeposit} title={selectedVault.description?.["project-metadata"].name!} titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)} onHide={closeDeposit} removeHorizontalPadding>
-          <DepositWithdraw data={selectedVault!} setShowModal={closeDeposit} />
+        <Modal
+          isShowing={showDeposit}
+          title={`${selectedVault.description?.["project-metadata"].name!} ${selectedVault.version === "v2" ? "(v2)" : ""}`}
+          titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}
+          onHide={closeDeposit}
+          removeHorizontalPadding>
+          <DepositWithdraw vault={selectedVault} closeModal={closeDeposit} />
         </Modal>
       )}
     </StyledHoneypotsPage>

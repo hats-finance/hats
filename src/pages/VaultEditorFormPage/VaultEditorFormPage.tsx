@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
-import { FormProvider, useForm } from "react-hook-form";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
-import { fixObject } from "hooks/useVaults";
+import { fixObject } from "hooks/vaults/useVaults";
 import { Loading } from "components";
-import { IVaultDescription } from "types/types";
+import { IVaultDescription } from "types";
 import {
   ContractsCoveredList,
   VaultDetailsForm,
@@ -16,11 +16,13 @@ import {
   VaultFormReview,
   CommunicationChannelForm,
 } from ".";
-import { IEditedVaultDescription } from "./types";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm } from "./styles";
+import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
+import { getEditedDescriptionYupSchema } from "./formSchema";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -28,20 +30,23 @@ const VaultEditorFormPage = () => {
   const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
-  const [ipfsDate, setIpfsDate] = useState<Date | undefined>();
   const { ipfsHash } = useParams();
+  const [searchParams] = useSearchParams();
 
-  const methods = useForm<IEditedVaultDescription>({ defaultValues: createNewVaultDescription() });
-  const { handleSubmit, formState, reset: handleReset } = methods;
+  const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
+
+  const methods = useForm<IEditedVaultDescription>({
+    defaultValues: createNewVaultDescription("v2"),
+    resolver: getEditedDescriptionYupSchema(t),
+  });
+  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
+
+  const vaultVersion = useWatch({ control, name: "version" });
 
   async function loadFromIpfs(ipfsHash: string) {
     try {
       setLoadingFromIpfs(true);
       const response = await fetch(ipfsTransformUri(ipfsHash));
-      const lastModified = response.headers.get("last-modified");
-      if (lastModified) {
-        setIpfsDate(new Date(lastModified));
-      }
       const newVaultDescription = await response.json();
       handleReset(descriptionToEditedForm(fixObject(newVaultDescription)));
     } catch (error) {
@@ -52,11 +57,34 @@ const VaultEditorFormPage = () => {
   }
 
   useEffect(() => {
-    if (ipfsHash) {
-      loadFromIpfs(ipfsHash);
-    }
+    if (ipfsHash) loadFromIpfs(ipfsHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ipfsHash]);
+
+  useEffect(() => {
+    const dirtyFields = Object.keys(formState.dirtyFields);
+    if (!dirtyFields.includes("version")) return;
+
+    const onlyVersionDirty = dirtyFields.length === 1 && dirtyFields[0] === "version";
+
+    // If it's a new and clean form description in v1
+    if (!ipfsHash && onlyVersionDirty) {
+      handleReset(createNewVaultDescription(vaultVersion));
+    }
+
+    // Changing from v2 to v1 is not supported
+    if (vaultVersion === "v1") return;
+
+    // If it's not a clean form description
+    if (ipfsHash || (!ipfsHash && !onlyVersionDirty)) {
+      const indexArray = getValues("vulnerability-severities-spec.indexArray");
+      const currentSeverities = getValues("vulnerability-severities-spec.severities") as IEditedVulnerabilitySeverityV1[];
+
+      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2(s, indexArray));
+      setValue("vulnerability-severities-spec.severities", newSeverities, { shouldDirty: true });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vaultVersion]);
 
   async function saveToIpfs(vaultDescription: IVaultDescription) {
     try {
@@ -96,24 +124,38 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data: IEditedVaultDescription) => {
-    saveToIpfs(editedFormToDescription(data));
+    if (formState.isValid) {
+      saveToIpfs(editedFormToDescription(data));
+    }
   };
 
   return (
     <FormProvider {...methods}>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
-        <div className="editor-title">{t("VaultEditor.create-vault")}</div>
+        <div className="editor-title">
+          {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
+        </div>
 
         <section className={classNames({ onlyDesktop: pageNumber !== 1 })}>
           <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
-          {ipfsDate && (
+          {ipfsHash && vaultVersion === "v1" && (
+            <>
+              <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
+              <button
+                className="migrate-button fill"
+                type="button"
+                onClick={() => setValue("version", "v2", { shouldDirty: true })}>
+                Migrate description to v2
+              </button>
+            </>
+          )}
+          {/* {ipfsDate && (
             <div className="last-saved-time">
               {`${t("VaultEditor.last-saved-time")} `}
               {ipfsDate.toLocaleString()}
               {`(${t("VaultEditor.local-time")})`}
             </div>
-          )}
-
+          )} */}
           <Section>
             <p className="section-title">1. {t("VaultEditor.vault-details.title")}</p>
             <div className="section-content">
@@ -124,16 +166,16 @@ const VaultEditorFormPage = () => {
 
         <section className={classNames({ onlyDesktop: pageNumber !== 2 })}>
           <Section>
-            <p className="section-title">2. {t("VaultEditor.committee-details")}</p>
+            <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
             <div className="section-content">
-              <CommitteeDetailsForm />
+              <CommitteeMembersList />
             </div>
           </Section>
 
           <Section>
-            <p className="section-title">3. {t("VaultEditor.committee-members")}</p>
+            <p className="section-title">3. {t("VaultEditor.committee-details")}</p>
             <div className="section-content">
-              <CommitteeMembersList />
+              <CommitteeDetailsForm />
             </div>
           </Section>
         </section>
@@ -156,7 +198,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 5 })}>
+        <section style={!isAdvancedMode ? { display: "none" } : {}} className={classNames({ onlyDesktop: pageNumber !== 5 })}>
           <Section>
             <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
             <div className="section-content">
@@ -167,7 +209,7 @@ const VaultEditorFormPage = () => {
 
         <section className={classNames({ onlyDesktop: pageNumber !== 6 })}>
           <Section>
-            <p className="section-title">7. {t("VaultEditor.review-vault.title")}</p>
+            <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
             <div className="section-content">
               <VaultFormReview />
             </div>
@@ -220,6 +262,10 @@ const VaultEditorFormPage = () => {
           )}
         </div>
       </VaultEditorForm>
+
+      {/* <div className="form-devtool">
+        <DevTool control={control} />
+      </div> */}
     </FormProvider>
   );
 };

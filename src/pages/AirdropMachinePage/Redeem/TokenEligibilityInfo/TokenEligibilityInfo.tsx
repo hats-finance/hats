@@ -1,49 +1,54 @@
-import { formatUnits } from "@ethersproject/units";
-import { shortenIfAddress } from "@usedapp/core";
+import { useContext } from "react";
 import { BigNumber } from "ethers";
 import millify from "millify";
+import { formatUnits } from "@ethersproject/units";
 import { useTranslation } from "react-i18next";
+import { shortenIfAddress } from "utils/addresses.utils";
 import HatsLogo from "assets/icons/hats-logo-circle.svg";
 import RadioButtonChecked from "assets/icons/radio-button-checked.svg";
 import RadioButton from "assets/icons/radio-button.svg";
-import "./index.scss";
-import { useContext } from "react";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { EMBASSY_LEARN_MORE } from "constants/constants";
-import { AirdropMachineContext } from "pages/AirdropMachinePage/CheckEligibility/CheckEligibility";
+import "./index.scss";
+import { AirdropMachineContext } from "pages/AirdropMachinePage/context";
 
 export default function TokenEligibilityInfo() {
   const { t } = useTranslation();
-  const { nftData, address } = useContext(AirdropMachineContext)
-  if (!nftData?.addressInfo) return <></>;
-  const { token_eligibility } = nftData?.addressInfo;
+  const { airdropData, address } = useContext(AirdropMachineContext);
+  const { airdropInfo } = airdropData;
+  if (!airdropInfo) return null;
+  const { token_eligibility } = airdropInfo;
 
-
-  const totalHatsEligibility = Object.values(token_eligibility)
-    .reduce((a, b) => a.add(b), BigNumber.from(0));
+  const totalHatsEligibility = Object.values(token_eligibility).reduce((a, b) => a.add(b), BigNumber.from(0));
   return (
     <div>
       <div className="token-eligibility-info__total-hats-container">
-        <span className="token-eligibility-info__address">{`${shortenIfAddress(address)} ${t("AirdropMachine.TokenEligibilityInfo.text-2")}`}</span>
+        <span className="token-eligibility-info__address">{`${shortenIfAddress(address)} ${t(
+          "AirdropMachine.TokenEligibilityInfo.text-2"
+        )}`}</span>
         <div className="token-eligibility-info__total-hats">
           <img className="token-eligibility-info__hats-logo" src={HatsLogo} alt="hats logo" />
           <span className="token-eligibility-info__value">{millify(Number(formatUnits(totalHatsEligibility)))} HATS</span>
         </div>
       </div>
       <div className="token-eligibility-info__breakdown-wrapper">
-
         <div className="token-eligibility-info__breakdown-element">
           <div className="token-eligibility-info__breakdown_element-name">
             <b>{t("AirdropMachine.TokenEligibilityInfo.text-3")}</b>
           </div>
-          <div onClick={() => window.open(EMBASSY_LEARN_MORE)} className="token-eligibility-info__breakdown_element-value learn-more">
+          <div
+            onClick={() => window.open(EMBASSY_LEARN_MORE)}
+            className="token-eligibility-info__breakdown_element-value learn-more">
             {t("AirdropMachine.TokenEligibilityInfo.text-4")} <img src={OpenInNewTabIcon} alt="" />
           </div>
         </div>
 
         <div className="token-eligibility-info__breakdown-element">
           <div className="token-eligibility-info__breakdown_element-name">
-            <img src={BigNumber.from(token_eligibility.committee_member).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img
+              src={BigNumber.from(token_eligibility.committee_member).gt(0) ? RadioButtonChecked : RadioButton}
+              alt="radio button"
+            />
             {t("AirdropMachine.TokenEligibilityInfo.text-5")}
           </div>
           <div className="token-eligibility-info__breakdown_element-value">
@@ -81,10 +86,12 @@ export default function TokenEligibilityInfo() {
           </div>
         </div>
 
-
         <div className="token-eligibility-info__breakdown-element">
           <div className="token-eligibility-info__breakdown_element-name">
-            <img src={BigNumber.from(token_eligibility.early_contributor).gt(0) ? RadioButtonChecked : RadioButton} alt="radio button" />
+            <img
+              src={BigNumber.from(token_eligibility.early_contributor).gt(0) ? RadioButtonChecked : RadioButton}
+              alt="radio button"
+            />
             {t("AirdropMachine.TokenEligibilityInfo.text-9")}
           </div>
           <div className="token-eligibility-info__breakdown_element-value">
@@ -92,16 +99,13 @@ export default function TokenEligibilityInfo() {
           </div>
         </div>
 
-
         <div className="token-eligibility-info__breakdown-element total">
-          <div className="token-eligibility-info__breakdown_element-name">
-            {t("AirdropMachine.TokenEligibilityInfo.text-10")}
-          </div>
+          <div className="token-eligibility-info__breakdown_element-name">{t("AirdropMachine.TokenEligibilityInfo.text-10")}</div>
           <div className="token-eligibility-info__breakdown_element-value">
             {millify(Number(formatUnits(totalHatsEligibility)))} HATS
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

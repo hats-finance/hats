@@ -28,11 +28,11 @@ const routes: RouteObject[] = [
             element: <HoneypotsPage />,
           },
           {
-            path: ":pid",
+            path: ":vaultId",
             element: <HoneypotsPage />,
           },
           {
-            path: ":pid/deposit",
+            path: ":vaultId/deposit",
             element: <HoneypotsPage showDeposit={true} />,
           },
         ],

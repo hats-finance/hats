@@ -50,6 +50,7 @@ export const StyledHoneypotsPage = styled.div`
       td {
         background-color: transparent;
         text-align: left;
+        padding: 15px;
         padding-left: 0;
 
         @media (max-width: ${breakpointsDefinition.mobile}) {

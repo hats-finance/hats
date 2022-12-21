@@ -6,19 +6,11 @@ import { render } from "@testing-library/react";
 
 // Redux
 import { Provider } from "react-redux";
-import { createStore, compose, applyMiddleware } from "redux";
-import createSagaMiddleware from "redux-saga";
-import rootSaga from "../../src/sagas/index";
+import { createStore } from "redux";
 import reducers from "../../src/reducers";
 
 const renderConnected = (component) => {
-  const sagaMiddleware = createSagaMiddleware();
-  const composeEnhancer = compose;
-  const store = createStore(
-    reducers,
-    composeEnhancer(applyMiddleware(sagaMiddleware))
-  );
-  sagaMiddleware.run(rootSaga);
+  const store = createStore(reducers);
 
   return render(
     <Provider store={store}>

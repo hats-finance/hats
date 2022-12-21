@@ -1,5 +1,42 @@
 {
   "translation": {
+    "version": "Version",
+    "required": "Required",
+    "invalid-address": "Invalid address",
+    "invalid-address-or-url": "Invalid address or URL",
+    "invalid-image-type": "Invalid image type, only supported: 'jpg', 'jpeg', 'png', 'gif' or 'svg'",
+    "endtimeGreaterThanStarttime": "End time must be greater than start time",
+    "min0": "Min 0",
+    "max100": "Max 100",
+    "enterValidNumber": "Enter a valid number",
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "withdrawStatus": "Withdraw Status",
+    "balance": "Balance",
+    "assets": "Assets",
+    "fileTooBig": "File too big",
+    "unsupported-network": "Unsupported network",
+    "connect-wallet": "Connect Wallet",
+    "disconnect": "Disconnect",
+    "approvingSpending": "Approving spending",
+    "depositing": "Depositing",
+    "requestingWithdraw": "Requesting withdraw",
+    "withdrawing": "Withdrawing",
+    "claimingReward": "Claiming reward",
+    "checkingIn": "Checking in",
+    "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
+    "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
+    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your GnosisSafe wallet.",
+    "here": "Here",
+    "redeemingNft": "Redeeming NFT",
+    "embassyEligibility": {
+      "minToEnter": "The minimum requirement to enter an Embassy is {{minimum}} {{token}}. \n\n",
+      "afterDeposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy.",
+      "middleTier_2": "The minimum requirement for the second level of trust of the Protector NFT is {{minimum}} {{token}}. \n\n",
+      "middleTier_3": "The minimum requirement for the third level of trust of the Protector NFT is {{minimum}} {{token}}. \n\n",
+      "currentlyEligible": "You are already eligible to the vault's level {{tier}} of trust NFT. Redeem your NFT",
+      "youHoldAllTiers": "You hold all levels of trust of the Protector NFT."
+    },
     "Shared": {
       "yes": "YES",
       "cancel": "CANCEL",
@@ -36,17 +73,18 @@
           "depsoit-nfts": "Deposit",
           "redeem": "REDEEM ALL",
           "after-deadline": "Deadline has passed",
-          "no-tree-nfts": "No airdrop NFTs yet",
+          "no-tree-nfts": "No NFTs yet",
           "no-deposit-nfts": "No depsoit NFTs yet",
           "two-transactions": "In order to redeem the NFTs from both the Airdrop Machine and your deposit.You will be asked to sign two transactions on your wallet"
         }
       }
     },
     "DepositWithdraw": {
+      "redeem": "Redeem",
       "EmbassyEligibility": {
         "title": "NEW! Embassy eligibility",
-        "tier-minimum": "The minimum requirement to enter an Embassy is {{minimum}} (Staked token) \n\n",
-        "tier-middle": "The minimum requirement for the {{secondOrThird}} level of trust of the Protector NFT is {{minimum}}",
+        "tier-minimum": "The minimum requirement to enter an Embassy is {{minimum}} {{token}} \n\n",
+        "tier-middle": "The minimum requirement for the {{secondOrThird}} level of trust of the Protector NFT is {{minimum}} {{token}}",
         "after-deposit": "After deposit confirmation, you will be eligible to redeem a Chain Protector NFT. In turn, this NFT will grant access to the Vault's Embassy."
       },
       "Assets": {
@@ -204,7 +242,7 @@
     },
     "EmbassyNftTicketPrompt": {
       "title": "EMBASSY NFT",
-      "text": "You are part of the Chain Protectors! \n\n Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
+      "text": "Redeem your NFT and join the vault's Embassy on Discord to continue to make a difference to protocol security.",
       "button-text": "REDEEM"
     },
     "NFTCard": {
@@ -326,7 +364,11 @@
         "token-icon": "Token Icon",
         "website": "Website",
         "website-placeholder": "Link website",
-        "multisig-address-placeholder": "Committee multisig address"
+        "multisig-address-placeholder": "Committee multisig address",
+        "starttime": "Start date",
+        "starttime-placeholder": "Enter start date",
+        "endtime": "End date",
+        "endtime-placeholder": "Enter end date"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
@@ -384,13 +426,17 @@
       "nft-animation-placeholder": "NFT Animation",
       "severities-index-array": "Severities Index array",
       "severities-index-array-placeholder": "Severities Index array",
+      "percentage-bounty": "Percentage Bounty (0%-100%)",
+      "percentage-bounty-placeholder": "Percentage Bounty",
+      "addStartAndEndDate": "Add start and end date",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
         "description-2": "Complete the transaction by authorized signer/s",
         "description-3": "You may be asked to add details to the vault by @hatsOfir"
       },
-      "img-placeholder": "SVG/PNG"
+      "img-placeholder": "SVG/PNG \n (max 2MB)",
+      "icon-placeholder": "SVG \n (max 50KB)"
     },
     "Vault": {
       "vault-details": "Vault Details",

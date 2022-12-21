@@ -1,29 +1,49 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledFormSelectInput = styled.div`
-  width: 100%;
-  position: relative;
+export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
+  ({ hasError }) => css`
+    width: 100%;
+    position: relative;
+    margin-bottom: ${getSpacing(3)};
 
-  label.input-label {
-    display: block;
-    color: var(--white);
-    padding-bottom: ${getSpacing(1)};
-  }
-`;
+    label.input-label {
+      display: block;
+      color: var(--white);
+      padding-bottom: ${getSpacing(1)};
 
-export const SelectButton = styled.button<{ isDirty: boolean; isOpen: boolean }>(
-  ({ isDirty, isOpen }) => css`
+      ${hasError &&
+      css`
+        color: var(--red);
+      `}
+    }
+
+    span.error {
+      display: block;
+      color: var(--red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+    }
+  `
+);
+
+export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean; isOpen: boolean }>(
+  ({ isDirty, isOpen, hasError }) => css`
     width: 100%;
     display: flex;
     align-items: center;
     text-align: left;
     padding: ${getSpacing(1.1)} ${getSpacing(2)};
-    margin-bottom: ${getSpacing(3)};
 
     ${isDirty &&
     css`
       border: 1px solid var(--yellow);
+    `}
+
+    ${hasError &&
+    css`
+      border-color: var(--red);
     `}
 
     .text {

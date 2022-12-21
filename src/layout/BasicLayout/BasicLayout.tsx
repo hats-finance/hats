@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom";
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
+import { useAccount } from "wagmi";
 import { useDispatch } from "react-redux";
-import { useEthers } from "@usedapp/core";
 import { changeScreenSize } from "actions/index";
 import { LocalStorage, ScreenSize, SMALL_SCREEN_BREAKPOINT } from "constants/constants";
 import { useCheckRedeemableNfts } from "pages/AirdropMachinePage/useCheckRedeemableNfts";
@@ -22,7 +22,7 @@ const BasicLayout = (): JSX.Element => {
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState("1");
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
   const { isShowing, show, hide } = useModal();
-  const { account } = useEthers();
+  const { address: account } = useAccount();
 
   const screenSize = window.matchMedia(`(min-width: ${SMALL_SCREEN_BREAKPOINT})`);
   screenSize.addEventListener("change", (screenSize) => {

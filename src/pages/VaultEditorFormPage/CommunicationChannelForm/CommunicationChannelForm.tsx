@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, Controller } from "react-hook-form";
 import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
@@ -10,6 +10,8 @@ import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../../constants/constants";
 import { StyledCommunicationChannelForm, StyledHelper } from "./styles";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { getPath } from "utils/objects.utils";
 
 const tooltipStyle = {
   ...RC_TOOLTIP_OVERLAY_INNER_STYLE,
@@ -22,15 +24,15 @@ export function CommunicationChannelForm() {
   const [publicPgpKey, setPublicPgpKey] = useState<string>();
   const [pgpError, setPgpError] = useState<string>();
 
-  const { control, watch } = useFormContext();
-  const { fields: keys, append, remove } = useFieldArray({ control, name: 'communication-channel.pgp-pk' });
+  const { control, formState, getValues } = useEnhancedFormContext();
+  const { fields: keys, append, remove } = useFieldArray({ control, name: "communication-channel.pgp-pk" });
 
   const addPublicKey = async (pgpKey) => {
     setPgpError(undefined);
     if (pgpKey) {
       try {
         await readKey({ armoredKey: pgpKey });
-        const watchedKeys = watch('communication-channel.pgp-pk') as string[];
+        const watchedKeys = getValues("communication-channel.pgp-pk") as string[];
         if (watchedKeys.includes(pgpKey)) {
           throw new Error("Key already added");
         }
@@ -95,6 +97,7 @@ export function CommunicationChannelForm() {
         <FormInput
           label={t("VaultEditor.pgp-key")}
           name="communication-channel.pgp-pk"
+          error={getPath(formState.errors, "communication-channel.pgp-pk")}
           type="textarea"
           pastable
           colorable
@@ -105,7 +108,9 @@ export function CommunicationChannelForm() {
       </div>
 
       <div>
-        <button type="button" onClick={() => addPublicKey(publicPgpKey)}>{t("VaultEditor.add-pgp")}</button>
+        <button type="button" onClick={() => addPublicKey(publicPgpKey)}>
+          {t("VaultEditor.add-pgp")}
+        </button>
         {pgpError && <div>{pgpError}</div>}
 
         {keys.length > 0 && (
@@ -114,8 +119,14 @@ export function CommunicationChannelForm() {
               <div key={key.id} className="key-card">
                 <div className="key-number">{index + 1}</div>
                 <div className="key-content">
-                  <span>{watch(`communication-channel.pgp-pk.${index}`)}</span>
-                  <button type="button" onClick={() => remove(index)}>{t("VaultEditor.remove-pgp")}</button>
+                  <Controller
+                    control={control}
+                    name={`communication-channel.pgp-pk.${index}`}
+                    render={({ field, formState }) => <span>{field.value}</span>}
+                  />
+                  <button type="button" onClick={() => remove(index)}>
+                    {t("VaultEditor.remove-pgp")}
+                  </button>
                 </div>
               </div>
             ))}

@@ -5,7 +5,7 @@ export const StyledMyAccountInfo = styled.div`
   display: flex;
   flex-direction: column;
   color: var(--white);
-  min-width: 500px;
+  width: 500px;
 
   @media (max-width: ${breakpointsDefinition.smallMobile}) {
     min-width: unset;
