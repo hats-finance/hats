@@ -15,6 +15,7 @@ interface ModalProps {
   removeHorizontalPadding?: boolean;
   capitalizeTitle?: boolean;
   disableClose?: boolean;
+  overflowVisible?: boolean;
 }
 
 export function Modal({
@@ -29,6 +30,7 @@ export function Modal({
   withTitleDivider = false,
   removeHorizontalPadding = false,
   capitalizeTitle = false,
+  overflowVisible = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
   // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
@@ -65,8 +67,10 @@ export function Modal({
           <ModalContainer
             disableClose={disableClose}
             withIcon={!!titleIcon}
-            withTitleDivider={withTitleDivider}
+            withTitleDivider={!!title && withTitleDivider}
+            removeTopPadding={!title}
             removeHorizontalPadding={removeHorizontalPadding}
+            overflowVisible={overflowVisible}
             capitalizeTitle={capitalizeTitle}>
             <div className="header">
               <div className="title">

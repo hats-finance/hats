@@ -7,11 +7,13 @@ type StyledButtonProps = {
   size: ButtonProps["size"];
   expanded: ButtonProps["expanded"];
   lowercase: ButtonProps["lowercase"];
+  textColor: ButtonProps["textColor"];
 };
 
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, size, expanded, lowercase }) => css`
-    display: block;
+  ({ styleType, size, expanded, lowercase, textColor }) => css`
+    display: flex;
+    align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
     padding: ${getSpacing(1.2)} ${getSpacing(2)};
     text-transform: ${lowercase ? "lowercase" : "uppercase"};
@@ -29,7 +31,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(0.5)};
       margin: 0;
       text-decoration: underline;
-      color: var(--turquoise);
+      color: ${textColor === "primary" ? "var(--turquoise)" : `var(--${textColor})`};} ;
     `}
 
     ${styleType === "filled" &&

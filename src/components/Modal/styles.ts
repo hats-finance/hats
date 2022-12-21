@@ -38,16 +38,26 @@ export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
 export const ModalContainer = styled.div<{
   withTitleDivider: boolean;
   removeHorizontalPadding: boolean;
+  removeTopPadding: boolean;
   capitalizeTitle: boolean;
   withIcon: boolean;
   disableClose: boolean;
+  overflowVisible: boolean;
 }>(
-  ({ withTitleDivider, removeHorizontalPadding, capitalizeTitle, withIcon, disableClose }) => css`
+  ({
+    withTitleDivider,
+    removeHorizontalPadding,
+    capitalizeTitle,
+    withIcon,
+    disableClose,
+    removeTopPadding,
+    overflowVisible,
+  }) => css`
     position: relative;
     background: var(--field-blue);
     max-width: calc(100vw - ${getSpacing(6)});
     max-height: calc(100vh - ${getSpacing(6)});
-    overflow: auto;
+    overflow: ${overflowVisible ? "visible" : "auto"};
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
       max-width: unset;
@@ -127,6 +137,11 @@ export const ModalContainer = styled.div<{
         @media (max-width: ${breakpointsDefinition.smallMobile}) {
           padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(3)};
         }
+      `}
+
+      ${removeTopPadding &&
+      css`
+        margin-top: -${getSpacing(5)};
       `}
     }
   `

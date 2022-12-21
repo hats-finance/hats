@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import { useLocation } from "react-router-dom";
-import { WalletButton } from "components";
+import { WalletButton, WhereverWidget } from "components";
 import { toggleMenu } from "actions/index";
 import { getMainPath } from "utils";
 import { RootState } from "reducers";
@@ -10,7 +10,6 @@ import MenuIcon from "assets/icons/hamburger.icon";
 import CloseIcon from "assets/icons/close.icon";
 import WalletInfo from "../WalletInfo/WalletInfo";
 import { StyledHeader } from "./styles";
-import { WhereverWidget } from "components/WhereverWidget/WhereverWidget";
 
 const Header = () => {
   const location = useLocation();
