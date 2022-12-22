@@ -103,10 +103,6 @@ export const useMultiChainVaults = () => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ethereumData, optimismData, ethereumChainId, optimismChainId, isEthereumFetched, isOptimismFetched]);
-<<<<<<< Updated upstream
-=======
 
-  console.log(vaults);
->>>>>>> Stashed changes
   return { data: vaults, networkEnv };
 };
