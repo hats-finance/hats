@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useAccount } from "wagmi";
 import { useLocation } from "react-router-dom";
-import { WalletButton } from "components";
+import { WalletButton, WhereverWidget } from "components";
 import { toggleMenu } from "actions/index";
 import { getMainPath } from "utils";
 import { RootState } from "reducers";
@@ -21,6 +21,8 @@ const Header = () => {
     <StyledHeader data-testid="Header">
       <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
       {account && <WalletInfo />}
+
+      <WhereverWidget />
 
       <WalletButton />
 

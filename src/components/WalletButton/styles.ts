@@ -40,6 +40,7 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     }
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
+      padding: 0 10px;
       margin-left: auto;
 
       ${existsPendingTransaction &&

@@ -5,6 +5,7 @@ export enum LocalStorage {
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
   Keystore = "HATS_PGP_KEYSTORE",
+  ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
 }
 
 export enum ScreenSize {

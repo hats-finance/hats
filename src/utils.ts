@@ -51,7 +51,7 @@ export const formatWei = (value: string | number | BigNumber | undefined, precis
   }
 
   const formattedValue = millify(Number(formatUnits(String(value), decimals)), {
-    precision: precision
+    precision: precision,
   });
 
   if (typeof value === "string") {
@@ -229,7 +229,7 @@ export const setVulnerabilityProject = (projectName: string, projectId: string, 
     verified: true,
     projectName: projectName,
     projectId: projectId,
-    contractAddress: contractAddress
+    contractAddress: contractAddress,
   };
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 };

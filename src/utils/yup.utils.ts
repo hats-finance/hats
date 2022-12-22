@@ -4,8 +4,12 @@ import { isAddress } from "ethers/lib/utils";
 export const getTestWalletAddress = (intl) => {
   return {
     name: "is-address",
-    test: (value: string | undefined, ctx: Yup.TestContext) =>
-      isAddress(value ?? "") ? true : ctx.createError({ message: intl("invalid-address") }),
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const isAdd = isAddress(value ?? "");
+      const isEmpty = value === "";
+
+      return isAdd || isEmpty ? true : ctx.createError({ message: intl("invalid-address") });
+    },
   };
 };
 
@@ -17,8 +21,9 @@ export const getTestAddressOrUrl = (intl) => {
 
       const isAdd = isAddress(value ?? "");
       const isUrl = urlRegex.test(value ?? "");
+      const isEmpty = value === "";
 
-      return isAdd || isUrl ? true : ctx.createError({ message: intl("invalid-address-or-url") });
+      return isAdd || isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-address-or-url") });
     },
   };
 };
