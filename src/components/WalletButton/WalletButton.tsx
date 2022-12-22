@@ -19,7 +19,7 @@ const WalletButton = () => {
   const { chain } = useNetwork();
   const supportedNetwork = useSupportedNetwork();
   const { disconnect } = useDisconnect();
-  const [canReconnect, setCanReconnect] = useState(!!account);
+  const [canReconnect, setCanReconnect] = useState(false);
   const [showConnectors, setShowConnectors] = useState(false);
   // TODO: [v2] verify if this works well
   const { data: transaction } = useTransaction({ scopeKey: "hats" });
@@ -37,10 +37,12 @@ const WalletButton = () => {
     },
     [connect]
   );
+
   /**
    * Sometimes when changing the network, the provider is deactivated. This is a workaround to
    * reconnect the provider.
    */
+  useEffect(() => setCanReconnect(!!account), [account]);
   useEffect(() => {
     if (!account && canReconnect) {
       const preferredConnectorId = localStorage.getItem("wagmi.wallet")?.replaceAll('"', "");
