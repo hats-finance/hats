@@ -22,6 +22,7 @@ interface GraphVaultsData {
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const { address: account } = useAccount();
   const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
+  const [isFetched, setIsFetched] = useState(false);
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
@@ -41,6 +42,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 
     if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
       setData(dataJson.data);
+      setIsFetched(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, account]);
@@ -52,7 +54,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  return { data, chainId };
+  return { data, chainId, isFetched };
 };
 
 export const useMultiChainVaults = () => {
@@ -63,10 +65,15 @@ export const useMultiChainVaults = () => {
   const showTestnets = connectedChain ? connectedChain.chain.testnet : !IS_PROD;
   const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
-  const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
-  const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
+  const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
+  const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
 
   useEffect(() => {
+    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched];
+    const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
+
+    if (!areAllNetworksFetched) return;
+
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
@@ -95,7 +102,11 @@ export const useMultiChainVaults = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
+  }, [ethereumData, optimismData, ethereumChainId, optimismChainId, isEthereumFetched, isOptimismFetched]);
+<<<<<<< Updated upstream
+=======
 
+  console.log(vaults);
+>>>>>>> Stashed changes
   return { data: vaults, networkEnv };
 };
