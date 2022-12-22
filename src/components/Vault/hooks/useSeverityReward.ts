@@ -33,7 +33,7 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
     const projectType = vault.description?.["project-metadata"].type ?? "normal";
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.index).sort((a, b) => a - b);
-    const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType];
+    const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType] ?? VAULTS_TYPE_SEVERITIES_COLORS["normal"];
     const rewardColor = severitiesColors[orderedSeverities.indexOf(severity.index) ?? 0];
 
     return { rewardPrice, rewardPercentage, rewardColor };
