@@ -6,6 +6,8 @@ import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
 
+const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
+
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
@@ -21,13 +23,13 @@ interface GraphVaultsData {
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const { address: account } = useAccount();
-  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
+  const [data, setData] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const [isFetched, setIsFetched] = useState(false);
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
     if (!chainId) {
-      setData({ vaults: [], masters: [], userNfts: [] });
+      setData(INITIAL_VAULTS_DATA);
       return;
     }
 
@@ -54,11 +56,11 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  return { data, chainId, isFetched };
+  return chainId ? { data, chainId, isFetched } : { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
 };
 
 export const useMultiChainVaults = () => {
-  const [vaults, setVaults] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
+  const [vaults, setVaults] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const { chain } = useNetwork();
   const connectedChain = chain ? ChainsConfig[chain.id] : null;
 
