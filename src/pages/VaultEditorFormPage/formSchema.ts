@@ -38,7 +38,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       members: Yup.array().of(
         Yup.object({
           name: Yup.string().required(intl("required")),
-          address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
+          address: Yup.string().test(getTestAddressOrUrl(intl)),
           "twitter-link": Yup.string().required(intl("required")),
           "image-ipfs-link": Yup.string(),
         })
