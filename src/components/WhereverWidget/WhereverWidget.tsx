@@ -1,10 +1,11 @@
-import { Colors, WhereverPartnerKeys } from "constants/constants";
+import { Colors } from "constants/constants";
 import { StyledWhereverWidget, StyledWhereverWidgetContainer } from "./styles";
 import { NotificationFeed, NotificationFeedProvider, NotificationBell } from "@wherever/react-notification-feed";
 import { useAccount, useNetwork, useProvider } from "wagmi";
 import { useSupportedNetwork } from "hooks/wagmi";
 import { Button } from "../Button/Button";
 import { useTranslation } from "react-i18next";
+import { WhereverPartnerKeys } from "config/wherever";
 
 type WhereverWidgetProps = {
   type?: "bell" | "subscribe";
