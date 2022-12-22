@@ -6,6 +6,8 @@ import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 import { ChainsConfig } from "config/chains";
 
+const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
+
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
@@ -21,12 +23,13 @@ interface GraphVaultsData {
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
   const { address: account } = useAccount();
-  const [data, setData] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
+  const [data, setData] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
+  const [isFetched, setIsFetched] = useState(false);
   const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
   const fetchData = useCallback(async () => {
     if (!chainId) {
-      setData({ vaults: [], masters: [], userNfts: [] });
+      setData(INITIAL_VAULTS_DATA);
       return;
     }
 
@@ -41,6 +44,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 
     if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
       setData(dataJson.data);
+      setIsFetched(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chainId, account]);
@@ -52,21 +56,27 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  return { data, chainId };
+  if (chainId) return { data, chainId, isFetched };
+  return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
 };
 
 export const useMultiChainVaults = () => {
-  const [vaults, setVaults] = useState<GraphVaultsData>({ vaults: [], masters: [], userNfts: [] });
+  const [vaults, setVaults] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const { chain } = useNetwork();
   const connectedChain = chain ? ChainsConfig[chain.id] : null;
 
   const showTestnets = connectedChain ? connectedChain.chain.testnet : !IS_PROD;
   const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
-  const { data: ethereumData, chainId: ethereumChainId } = useSubgraphFetch("ETHEREUM", networkEnv);
-  const { data: optimismData, chainId: optimismChainId } = useSubgraphFetch("OPTIMISM", networkEnv);
+  const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
+  const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
 
   useEffect(() => {
+    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched];
+    const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
+
+    if (!areAllNetworksFetched) return;
+
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
@@ -95,7 +105,7 @@ export const useMultiChainVaults = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ethereumData, optimismData, ethereumChainId, optimismChainId]);
+  }, [ethereumData, optimismData, ethereumChainId, optimismChainId, isEthereumFetched, isOptimismFetched]);
 
   return { data: vaults, networkEnv };
 };
