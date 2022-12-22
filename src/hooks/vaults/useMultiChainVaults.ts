@@ -56,7 +56,8 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  return chainId ? { data, chainId, isFetched } : { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
+  if (chainId) return { data, chainId, isFetched };
+  return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
 };
 
 export const useMultiChainVaults = () => {
