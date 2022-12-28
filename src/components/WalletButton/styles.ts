@@ -27,7 +27,6 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     ${connected &&
     css`
       gap: ${getSpacing(1.5)};
-      /* padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(4)}; */
       padding: ${getSpacing(2)};
     `}
 
@@ -40,7 +39,6 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     }
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
-      padding: 0 10px;
       margin-left: auto;
 
       ${existsPendingTransaction &&
