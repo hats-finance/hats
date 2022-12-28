@@ -1,24 +1,28 @@
-import { isAddress } from "ethers/lib/utils";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import { shortenIfAddress } from "utils/addresses.utils";
+import { isAddress, shortenIfAddress } from "utils/addresses.utils";
+import { IVault } from "types";
+import { ChainsConfig } from "config/chains";
 import "./ContractsCovered.scss";
 
-interface IProps {
+interface ContractsCoveredProps {
   contracts: Array<{}>;
+  vault: IVault;
 }
 
-export function ContractsCovered(props: IProps) {
-  // TODO: [v2] add link (on the anchor) to contract depending on chain
+export function ContractsCovered({ contracts, vault }: ContractsCoveredProps) {
+  const vaultChain = vault.chainId ? ChainsConfig[vault.chainId] : undefined;
+  const blockExplorer = vaultChain?.chain.blockExplorers?.etherscan.url;
 
   return (
     <div className="contracts-covered-wrapper">
-      {props.contracts.map((contract: { [key: string]: string }, index: number) => {
+      {contracts.map((contract: { [key: string]: string }, index: number) => {
         const contractName = Object.keys(contract)[0];
         const contractValue = contract?.[contractName];
         const isLink = isAddress(contractValue) ? false : true;
+        const blockExplorerLink = !isLink ? `${blockExplorer}/address/${contractValue}` : null;
 
         return (
-          <a key={index} {...defaultAnchorProps} className="contract-wrapper" href={isLink ? contractValue : ""}>
+          <a key={index} {...defaultAnchorProps} className="contract-wrapper" href={blockExplorerLink ?? contractValue}>
             <span title={contractName} className="contract-name">
               {contractName}
             </span>
