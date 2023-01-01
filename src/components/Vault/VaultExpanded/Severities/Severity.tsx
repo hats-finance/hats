@@ -92,16 +92,18 @@ export default function Severity(props: IProps) {
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="severity-prize-division-wrapper">
                   {Number(hackerVestedRewardSplit) / 100 > 0 && (
-                    <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100
-                      }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
-                        units: ["d", "h", "m"],
-                      })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    <span className="division vested-token">{`${
+                      Number(hackerVestedRewardSplit) / 100
+                    }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
+                      units: ["d", "h", "m"],
+                    })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
                   )}
                   {Number(hackerRewardSplit) / 100 > 0 && (
-                    <span className="division token">{`${Number(hackerRewardSplit) / 100
-                      }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
-                        (Number(hackerRewardSplit) / 10000) * rewardPrice
-                      )}`}</span>
+                    <span className="division token">{`${
+                      Number(hackerRewardSplit) / 100
+                    }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
+                      (Number(hackerRewardSplit) / 10000) * rewardPrice
+                    )}`}</span>
                   )}
                   {Number(committeeRewardSplit) / 100 > 0 && (
                     <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber(
@@ -109,16 +111,18 @@ export default function Severity(props: IProps) {
                     )}`}</span>
                   )}
                   {Number(hackerHatRewardSplit) / 100 > 0 && (
-                    <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100
-                      }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
-                        units: ["d", "h", "m"],
-                      })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
-                        (Number(hackerHatRewardSplit) / 10000) * rewardPrice
-                      )}`}</span>
+                    <span className="division vested-hats">{`${
+                      Number(hackerHatRewardSplit) / 100
+                    }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
+                      units: ["d", "h", "m"],
+                    })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
+                      (Number(hackerHatRewardSplit) / 10000) * rewardPrice
+                    )}`}</span>
                   )}
                   {Number(governanceHatRewardSplit) / 100 > 0 && (
-                    <span className="division governance">{`${Number(governanceHatRewardSplit) / 100
-                      }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    <span className="division governance">{`${
+                      Number(governanceHatRewardSplit) / 100
+                    }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
                   )}
                   {Number(swapAndBurnSplit) / 100 > 0 && (
                     <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${formatNumber(
@@ -145,7 +149,7 @@ export default function Severity(props: IProps) {
       </Modal>
 
       <Modal isShowing={isShowingContractsModal} title="CONTRACTS COVERED" onHide={hideContractsModal} withTitleDivider>
-        <ContractsCovered contracts={modalContractsData as any} />
+        <ContractsCovered contracts={modalContractsData as any} vault={props.vault} />
       </Modal>
     </div>
   );

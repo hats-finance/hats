@@ -1,4 +1,3 @@
-import { useNetwork } from "wagmi";
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
@@ -15,6 +14,7 @@ import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
 import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
+import { ChainsConfig } from "config/chains";
 
 interface VaultComponentProps {
   vault: IVault;
@@ -29,7 +29,6 @@ const VaultComponent = (
   { vault, expanded, preview, setExpanded, onSelect, selected = false }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
-  const { chains } = useNetwork();
   const { t } = useTranslation();
   const { description, honeyPotBalance, withdrawRequests, stakingTokenDecimals, stakingTokenSymbol, multipleVaults } = vault;
   const { totalPrices } = useVaultsTotalPrices(multipleVaults ?? [vault]);
@@ -51,12 +50,12 @@ const VaultComponent = (
   };
 
   const getVaultChainIcon = () => {
-    const network = chains.find((c) => c.id === vault.chainId);
+    const network = vault.chainId ? ChainsConfig[vault.chainId] : null;
 
     return (
-      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.chain.name}>
         <div className="chain-logo">
-          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
+          <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.chain.name} />
         </div>
       </Tooltip>
     );
