@@ -124,9 +124,7 @@ const VaultEditorFormPage = () => {
   }
 
   const onSubmit = (data: IEditedVaultDescription) => {
-    if (formState.isValid) {
-      saveToIpfs(editedFormToDescription(data));
-    }
+    saveToIpfs(editedFormToDescription(data));
   };
 
   return (
