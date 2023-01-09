@@ -11,13 +11,12 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
     label {
       display: block;
       color: var(--white);
-      padding-bottom: ${getSpacing(1)};
       font-size: var(--xxsmall);
       text-align: center;
 
       ${hasError &&
       css`
-        color: var(--red);
+        color: var(--error-red);
       `}
     }
 
@@ -38,11 +37,11 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       height: ${getSpacing(15)};
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: space-between;
       align-items: center;
-      border: 1px solid var(--turquoise);
-      color: var(--dark-turquoise);
-      padding: 0;
+      border: 1px dashed var(--grey-500);
+      color: var(--grey-400);
+      padding: ${getSpacing(2)} 0;
 
       ${isDirty &&
       css`
@@ -56,9 +55,12 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
     }
 
     .icon-add {
+      font-size: var(--tiny);
+
       img {
-        width: ${getSpacing(3.5)};
-        height: ${getSpacing(3.5)};
+        filter: grayscale(1);
+        width: ${getSpacing(3)};
+        height: ${getSpacing(3)};
       }
     }
 
