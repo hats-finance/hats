@@ -35,14 +35,14 @@ function FormIconInputComponent(
 
     fr.readAsArrayBuffer(e.target.files![0]);
     fr.onload = async function () {
-      const fileTypes = ["jpg", "jpeg", "png", "gif", "svg"];
+      const fileTypes = type === "icon" ? ["svg"] : ["jpg", "jpeg", "png", "gif", "svg"];
 
       if (fr.result && localRef.current) {
         const extension = e.target.files![0].name.split(".").pop()?.toLowerCase();
         const isSuccess = extension && fileTypes.indexOf(extension) > -1;
 
         if (!isSuccess) {
-          alert(t("invalid-image-type"));
+          alert(t("invalid-image-type", { types: fileTypes.join(", ") }));
           return;
         }
 
@@ -103,7 +103,6 @@ function FormIconInputComponent(
         }}
       />
 
-      {label && <label>{label}</label>}
       <input id={id} className="file-input" accept="image/*" type="file" onChange={handleOnChange} />
 
       {value ? (
@@ -113,6 +112,7 @@ function FormIconInputComponent(
       ) : (
         <label htmlFor={id} className="icon-add">
           <img src={AddIcon} alt="add" />
+          {label && <label>{label}</label>}
           <p>{getPlaceholder()}</p>
         </label>
       )}
