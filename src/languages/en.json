@@ -364,9 +364,9 @@
       "reset-button": "Reset",
       "vault-details": {
         "title": "Vault Details",
-        "name": "Name",
+        "name": "Vault name",
         "name-placeholder": "Enter vault name",
-        "type": "Type",
+        "type": "Vault type",
         "type-placeholder": "Enter vault type(gamification, grants...)",
         "icon": "Vault Logo",
         "token-icon": "Token Icon",
