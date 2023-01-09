@@ -71,7 +71,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     }
 
     textarea {
-      padding: ${getSpacing(2)};
+      padding: ${getSpacing(3.8)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)};
     }
 
     input {
@@ -98,7 +98,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         font-size: var(--xxsmall);
         position: absolute;
         top: 10px;
-        left: 16px;
+        left: 17px;
       `}
     }
 
