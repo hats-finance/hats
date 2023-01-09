@@ -37,26 +37,30 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       margin: 0;
       text-indent: 0;
       background-color: transparent;
-      color: var(--turquoise);
-      border: 1px solid var(--turquoise);
+      color: var(--white);
+      border: 1px solid var(--grey-500);
       resize: none;
       border-radius: 0;
       font-family: inherit;
       color-scheme: dark;
 
       &::placeholder {
-        color: var(--dirty-turquoise);
+        color: var(--grey-500);
         font-family: RobotoMono;
+      }
+
+      &:focus {
+        border-color: var(--turquoise);
       }
 
       ${isDirty &&
       css`
-        border-color: var(--yellow);
+        border-color: var(--warning-yellow);
       `}
 
       ${hasError &&
       css`
-        border-color: var(--red);
+        border-color: var(--error-red);
       `}
 
       ${isCheckOrRadio &&
@@ -71,7 +75,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     }
 
     input {
-      padding: ${getSpacing(1.5)} ${getSpacing(2)};
+      padding: ${getSpacing(3.6)} ${getSpacing(2)} ${getSpacing(1.2)};
 
       ${withExtraicons &&
       css`
@@ -81,12 +85,20 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     label {
       display: block;
-      color: var(--white);
+      color: var(--grey-400);
       padding-bottom: ${getSpacing(1)};
 
       ${hasError &&
       css`
-        color: var(--red);
+        color: var(--error-red);
+      `}
+
+      ${!isCheckOrRadio &&
+      css`
+        font-size: var(--xxsmall);
+        position: absolute;
+        top: 10px;
+        left: 16px;
       `}
     }
 
@@ -137,7 +149,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     span.error {
       display: block;
-      color: var(--red);
+      color: var(--error-red);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);
