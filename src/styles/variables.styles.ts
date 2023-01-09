@@ -1,4 +1,4 @@
-import { css } from 'styled-components';
+import { css } from "styled-components";
 
 export const variables = css`
   :root {
@@ -49,6 +49,12 @@ export const variables = css`
     --purple: #4f72eb;
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
+
+    /* Inputs colors */
+    --grey-400: #b3b9c4;
+    --grey-500: #667085;
+    --error-red: #ff6464;
+    --warning-yellow: #f2c94c;
 
     /* pie chart colors */
     --vested-token: #15686b;
