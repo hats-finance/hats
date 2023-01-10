@@ -56,6 +56,10 @@ const VaultEditorFormPage = () => {
     }
   }
 
+  const test = () => {
+    console.log(getValues());
+  };
+
   useEffect(() => {
     if (ipfsHash) loadFromIpfs(ipfsHash);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -129,6 +133,7 @@ const VaultEditorFormPage = () => {
 
   return (
     <FormProvider {...methods}>
+      <button onClick={test}>Show form</button>
       <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
         <div className="editor-title">
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>

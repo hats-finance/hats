@@ -9,8 +9,11 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
 
     label.input-label {
       display: block;
-      color: var(--white);
-      padding-bottom: ${getSpacing(1)};
+      color: var(--grey-400);
+      font-size: var(--xxsmall);
+      position: absolute;
+      top: 10px;
+      left: 17px;
 
       ${hasError &&
       css`
@@ -34,7 +37,17 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
     display: flex;
     align-items: center;
     text-align: left;
-    padding: ${getSpacing(1.1)} ${getSpacing(2)};
+    padding: ${getSpacing(3.4)} ${getSpacing(2)} ${getSpacing(0.6)};
+    border: 1px solid var(--grey-500);
+
+    ${isOpen &&
+    css`
+      border-color: var(--turquoise);
+    `}
+
+    &:hover {
+      opacity: 1;
+    }
 
     ${isDirty &&
     css`
@@ -52,7 +65,7 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
       text-overflow: ellipsis;
       white-space: nowrap;
       flex-basis: 100%;
-      font-size: var(--xsmall);
+      color: var(--white);
     }
 
     .icon {
@@ -62,10 +75,12 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
       justify-content: center;
       align-items: center;
       transition: 0.2s;
+      filter: grayscale(1);
+      transform: translateY(-40%);
 
       ${isOpen &&
       css`
-        transform: rotateX(180deg);
+        transform: translateY(-40%) rotateX(180deg);
       `}
     }
   `
@@ -76,6 +91,7 @@ export const SelectMenuOptions = styled.div`
   flex-direction: column;
   width: 100%;
   position: absolute;
+  border: 1px solid var(--turquoise);
   top: calc(100% + ${getSpacing(1)});
   z-index: 2;
   background-color: var(--dark-blue);
