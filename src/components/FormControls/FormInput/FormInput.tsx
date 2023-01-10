@@ -38,8 +38,6 @@ function FormInputComponent(
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable;
 
-  const refToUse = ref || localRef;
-
   const areAvailableExtraIcons = type === "text" || type === "textarea";
   const isCheckOrRadio = type === "checkbox" || type === "radio";
 
@@ -48,15 +46,15 @@ function FormInputComponent(
   };
 
   const handleOnPaste = () => {
-    navigator.clipboard.readText().then((text) => (refToUse.current!.value = text));
+    navigator.clipboard.readText().then((text) => (localRef.current!.value = text));
   };
 
   const handleOnCopy = () => {
-    navigator.clipboard.writeText(refToUse.current!.value);
+    navigator.clipboard.writeText(localRef.current!.value);
   };
 
   const handleOnClear = () => {
-    refToUse.current!.value = "";
+    localRef.current!.value = "";
   };
 
   const removeNotNumber = (e: KeyboardEvent) => {
@@ -68,14 +66,19 @@ function FormInputComponent(
   };
 
   const getMainComponent = () => {
+    const setRef = (r: any) => {
+      if (ref) ref(r);
+      localRef.current = r;
+    };
+
     if (type === "text") {
-      return <input {...props} id={props.name} type="text" ref={refToUse} onChange={handleOnChange} />;
+      return <input {...props} id={props.name} type="text" ref={setRef} onChange={handleOnChange} />;
     } else if (type === "textarea") {
-      return <textarea {...props} id={props.name} ref={refToUse} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
+      return <textarea {...props} id={props.name} ref={setRef} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
     } else if (type === "number") {
-      return <input {...props} id={props.name} type={type} ref={refToUse} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
+      return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
     } else {
-      return <input {...props} id={props.name} type={type} ref={refToUse} onChange={handleOnChange} />;
+      return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
     }
   };
 
