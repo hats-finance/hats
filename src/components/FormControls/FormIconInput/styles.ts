@@ -13,11 +13,6 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       color: var(--white);
       font-size: var(--xxsmall);
       text-align: center;
-
-      ${hasError &&
-      css`
-        color: var(--error-red);
-      `}
     }
 
     .file-input {
@@ -50,7 +45,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
 
       ${hasError &&
       css`
-        border-color: var(--red);
+        border-color: var(--error-red);
       `}
     }
 
@@ -79,7 +74,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
 
     span.error {
       display: block;
-      color: var(--red);
+      color: var(--error-red);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);

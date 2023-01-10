@@ -17,13 +17,13 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
 
       ${hasError &&
       css`
-        color: var(--red);
+        color: var(--error-red);
       `}
     }
 
     span.error {
       display: block;
-      color: var(--red);
+      color: var(--error-red);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);
@@ -40,11 +40,6 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
     padding: ${getSpacing(3.4)} ${getSpacing(2)} ${getSpacing(0.6)};
     border: 1px solid var(--grey-500);
 
-    ${isOpen &&
-    css`
-      border-color: var(--turquoise);
-    `}
-
     &:hover {
       opacity: 1;
     }
@@ -54,9 +49,14 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
       border: 1px solid var(--yellow);
     `}
 
+    ${isOpen &&
+    css`
+      border-color: var(--turquoise);
+    `}
+
     ${hasError &&
     css`
-      border-color: var(--red);
+      border-color: var(--error-red);
     `}
 
     .text {

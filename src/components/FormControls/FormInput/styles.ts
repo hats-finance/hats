@@ -88,11 +88,6 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       color: var(--grey-400);
       padding-bottom: ${getSpacing(1)};
 
-      ${hasError &&
-      css`
-        color: var(--error-red);
-      `}
-
       ${!isCheckOrRadio &&
       css`
         font-size: var(--xxsmall);
