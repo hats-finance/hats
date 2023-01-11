@@ -12,6 +12,7 @@ export type FormInputType = "text" | "textarea" | "number" | "checkbox" | "radio
 type FormInputProps = {
   type?: FormInputType;
   label?: string;
+  rows?: number;
   pastable?: boolean;
   copyable?: boolean;
   removable?: boolean;
@@ -29,6 +30,7 @@ function FormInputComponent(
     type = "text",
     colorable = false,
     isDirty = false,
+    rows = DEFAULT_ROWS,
     label,
     error,
     ...props
@@ -74,7 +76,7 @@ function FormInputComponent(
     if (type === "text") {
       return <input {...props} id={props.name} type="text" ref={setRef} onChange={handleOnChange} />;
     } else if (type === "textarea") {
-      return <textarea {...props} id={props.name} ref={setRef} rows={DEFAULT_ROWS} onChange={handleOnChange} />;
+      return <textarea {...props} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
     } else if (type === "number") {
       return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
     } else {
