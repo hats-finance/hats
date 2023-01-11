@@ -67,7 +67,7 @@ function FormInputComponent(
 
   const getMainComponent = () => {
     const setRef = (r: any) => {
-      if (ref) ref(r);
+      if (ref && typeof ref === "function") ref(r);
       localRef.current = r;
     };
 
