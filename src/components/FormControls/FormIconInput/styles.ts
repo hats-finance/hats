@@ -35,7 +35,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       justify-content: space-between;
       align-items: center;
       border: 1px dashed var(--grey-500);
-      color: var(--grey-400);
+      color: var(--grey-500);
       padding: ${getSpacing(2)} 0;
 
       ${isDirty &&

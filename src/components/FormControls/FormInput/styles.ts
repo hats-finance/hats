@@ -45,7 +45,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       color-scheme: dark;
 
       &::placeholder {
-        color: var(--grey-500);
+        color: var(--grey-600);
         font-family: RobotoMono;
       }
 
@@ -85,7 +85,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     label {
       display: block;
-      color: var(--grey-400);
+      color: var(--grey-500);
       padding-bottom: ${getSpacing(1)};
 
       ${!isCheckOrRadio &&
