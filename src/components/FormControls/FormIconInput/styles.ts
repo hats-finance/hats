@@ -66,9 +66,14 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
         height: 100%;
       }
 
-      svg {
+      div {
         width: 100%;
         height: 100%;
+
+        svg {
+          width: 100%;
+          height: 100%;
+        }
       }
     }
 
