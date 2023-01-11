@@ -27,7 +27,6 @@ import { getEditedDescriptionYupSchema } from "./formSchema";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [pageNumber, setPageNumber] = useState<number>(1);
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const { ipfsHash } = useParams();
@@ -102,27 +101,6 @@ const VaultEditorFormPage = () => {
     }
   }
 
-  // Pagination in mobile
-  function nextPage() {
-    if (pageNumber >= 6) return;
-    setPageNumber(pageNumber + 1);
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }
-
-  function previousPage() {
-    if (pageNumber <= 1) return;
-    setPageNumber((oldPage) => oldPage - 1);
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
-  }
-
   if (loadingFromIpfs || savingToIpfs) {
     return <Loading fixed />;
   }
@@ -139,7 +117,7 @@ const VaultEditorFormPage = () => {
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
         </div>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 1 })}>
+        <section>
           <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
           {ipfsHash && vaultVersion === "v1" && (
             <>
@@ -167,7 +145,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 2 })}>
+        <section>
           <Section>
             <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
             <div className="section-content">
@@ -183,7 +161,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 3 })}>
+        <section>
           <Section>
             <p className="section-title">4. {t("VaultEditor.contracts-covered")}</p>
             <div className="section-content">
@@ -192,7 +170,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 4 })}>
+        <section>
           <Section>
             <p className="section-title">5. {t("VaultEditor.pgp-key")}</p>
             <div className="section-content">
@@ -201,7 +179,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section style={!isAdvancedMode ? { display: "none" } : {}} className={classNames({ onlyDesktop: pageNumber !== 5 })}>
+        <section style={!isAdvancedMode ? { display: "none" } : {}}>
           <Section>
             <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
             <div className="section-content">
@@ -210,7 +188,7 @@ const VaultEditorFormPage = () => {
           </Section>
         </section>
 
-        <section className={classNames({ onlyDesktop: pageNumber !== 6 })}>
+        <section>
           <Section>
             <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
             <div className="section-content">
@@ -251,19 +229,6 @@ const VaultEditorFormPage = () => {
                   </section>
                 </>
               )} */}
-
-        <div className="mobile-buttons-container onlyMobile">
-          {pageNumber > 1 && (
-            <button type="button" onClick={previousPage}>
-              {t("VaultEditor.previous")}
-            </button>
-          )}
-          {pageNumber < 6 && (
-            <button type="button" onClick={nextPage}>
-              {t("VaultEditor.next")}
-            </button>
-          )}
-        </div>
       </VaultEditorForm>
 
       {/* <div className="form-devtool">
