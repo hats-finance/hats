@@ -39,19 +39,18 @@ export function VaultDetailsForm() {
             placeholder={t("VaultEditor.vault-details.type-placeholder")}
             label={t("VaultEditor.vault-details.type")}
           />
+        </div>
+
+        <div className="inputs col-sm">
           <FormInput
             {...register("project-metadata.website")}
             colorable
             placeholder={t("VaultEditor.vault-details.website-placeholder")}
             label={t("VaultEditor.vault-details.website")}
           />
-        </div>
 
-        <div className="icons">
-          <div className="icons__input">
+          <div className="icons">
             <FormIconInput {...register("project-metadata.icon")} colorable label={t("VaultEditor.vault-details.icon")} />
-          </div>
-          <div className="icons__input">
             <FormIconInput
               {...register("project-metadata.tokenIcon")}
               colorable
@@ -61,10 +60,12 @@ export function VaultDetailsForm() {
         </div>
       </div>
 
+      <br />
+
       <FormInput {...register("includesStartAndEndTime")} type="checkbox" label={t("VaultEditor.addStartAndEndDate")} />
 
       {showDateInputs && (
-        <div className="dates-container">
+        <div className="inputs">
           <Controller
             control={control}
             name={`project-metadata.starttime`}

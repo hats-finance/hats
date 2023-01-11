@@ -37,7 +37,7 @@ export function CommunicationChannelForm() {
           throw new Error("Key already added");
         }
         append(pgpKey);
-        trigger();
+        trigger("communication-channel.pgp-pk");
       } catch (error: any) {
         setPgpError(error.message);
       }
@@ -123,7 +123,7 @@ export function CommunicationChannelForm() {
                   <Controller
                     control={control}
                     name={`communication-channel.pgp-pk.${index}`}
-                    render={({ field, formState }) => <span>{field.value}</span>}
+                    render={({ field }) => <span>{field.value}</span>}
                   />
                   <button type="button" onClick={() => remove(index)}>
                     {t("VaultEditor.remove-pgp")}

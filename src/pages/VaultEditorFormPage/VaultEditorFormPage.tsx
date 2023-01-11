@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
-import classNames from "classnames";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
 import { Loading } from "components";
@@ -31,6 +30,22 @@ const VaultEditorFormPage = () => {
   const [savingToIpfs, setSavingToIpfs] = useState(false);
   const { ipfsHash } = useParams();
   const [searchParams] = useSearchParams();
+
+  const editorSteps = {
+    setup: {
+      name: "Vault Description",
+      steps: [
+        { name: "Details", component: VaultDetailsForm },
+        { name: "Committee", component: CommitteeDetailsForm },
+        { name: "Members", component: CommitteeMembersList },
+        { name: "Severities", component: VulnerabilitySeveritiesList },
+        { name: "Contracts", component: ContractsCoveredList },
+      ],
+    },
+    deployment: {
+      0: { name: "Details" },
+    },
+  };
 
   const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
 
@@ -117,88 +132,85 @@ const VaultEditorFormPage = () => {
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
         </div>
 
-        <section>
-          <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
-          {ipfsHash && vaultVersion === "v1" && (
-            <>
-              <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
-              <button
-                className="migrate-button fill"
-                type="button"
-                onClick={() => setValue("version", "v2", { shouldDirty: true })}>
-                Migrate description to v2
-              </button>
-            </>
-          )}
-          {/* {ipfsDate && (
+        <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
+        {ipfsHash && vaultVersion === "v1" && (
+          <>
+            <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
+            <button
+              className="migrate-button fill"
+              type="button"
+              onClick={() => setValue("version", "v2", { shouldDirty: true })}>
+              Migrate description to v2
+            </button>
+          </>
+        )}
+        {/* {ipfsDate && (
             <div className="last-saved-time">
               {`${t("VaultEditor.last-saved-time")} `}
               {ipfsDate.toLocaleString()}
               {`(${t("VaultEditor.local-time")})`}
             </div>
           )} */}
-          <Section>
-            <p className="section-title">1. {t("VaultEditor.vault-details.title")}</p>
+
+        {editorSteps.setup.steps.map((step, index) => (
+          <Section key={index}>
+            <p className="section-title">
+              {index + 1}. {step.name}
+            </p>
             <div className="section-content">
-              <VaultDetailsForm />
+              <step.component />
             </div>
           </Section>
-        </section>
+        ))}
 
-        <section>
-          <Section>
-            <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
-            <div className="section-content">
-              <CommitteeMembersList />
-            </div>
-          </Section>
+        {/* <Section>
+          <p className="section-title">1. {t("VaultEditor.vault-details.title")}</p>
+          <div className="section-content">
+            <VaultDetailsForm />
+          </div>
+        </Section>
 
-          <Section>
-            <p className="section-title">3. {t("VaultEditor.committee-details")}</p>
-            <div className="section-content">
-              <CommitteeDetailsForm />
-            </div>
-          </Section>
-        </section>
+        <Section>
+          <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
+          <div className="section-content">
+            <CommitteeMembersList />
+          </div>
+        </Section>
 
-        <section>
-          <Section>
-            <p className="section-title">4. {t("VaultEditor.contracts-covered")}</p>
-            <div className="section-content">
-              <ContractsCoveredList />
-            </div>
-          </Section>
-        </section>
+        <Section>
+          <p className="section-title">3. {t("VaultEditor.committee-details")}</p>
+          <div className="section-content">
+            <CommitteeDetailsForm />
+          </div>
+        </Section>
 
-        <section>
-          <Section>
-            <p className="section-title">5. {t("VaultEditor.pgp-key")}</p>
-            <div className="section-content">
-              <CommunicationChannelForm />
-            </div>
-          </Section>
-        </section>
+        <Section>
+          <p className="section-title">4. {t("VaultEditor.contracts-covered")}</p>
+          <div className="section-content">
+            <ContractsCoveredList />
+          </div>
+        </Section>
 
-        <section style={!isAdvancedMode ? { display: "none" } : {}}>
-          <Section>
-            <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
-            <div className="section-content">
-              <VulnerabilitySeveritiesList />
-            </div>
-          </Section>
-        </section>
+        <Section>
+          <p className="section-title">5. {t("VaultEditor.pgp-key")}</p>
+          <div className="section-content">
+            <CommunicationChannelForm />
+          </div>
+        </Section>
 
-        <section>
-          <Section>
-            <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
-            <div className="section-content">
-              <VaultFormReview />
-            </div>
-          </Section>
-        </section>
+        <Section>
+          <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
+          <div className="section-content">
+            <VulnerabilitySeveritiesList />
+          </div>
+        </Section>
 
-        {/* Not uncomment */}
-        {/* <CreateVault descriptionHash={ipfsHash} /> */}
+        <Section>
+          <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
+          <div className="section-content">
+            <VaultFormReview />
+          </div>
+        </Section> */}
 
         <div className="buttons-container">
           {formState.isDirty && ipfsHash && (
@@ -210,25 +222,6 @@ const VaultEditorFormPage = () => {
             {t("VaultEditor.save-button")}
           </button>
         </div>
-
-        {/* Not uncomment */}
-        {/* {!changed && ipfsHash && (
-                <>
-                  <section className={classNames({ "onlyDesktop": pageNumber !== 6 })}>
-                    <div className="vault-editor__section">
-                      <p className="vault-editor__section-title">7. {t("VaultEditor.review-vault.title")}</p>
-                      <div className="vault-editor__section-content">
-                        <VaultSign message={""} onChange={null} signatures={[]} />
-                      </div>
-                    </div>
-                    <div className="vault-editor__button-container">
-                      <button type="button" onClick={sign} className="fill">
-                        {t("VaultEditor.sign-submit")}
-                      </button>
-                    </div>
-                  </section>
-                </>
-              )} */}
       </VaultEditorForm>
 
       {/* <div className="form-devtool">
