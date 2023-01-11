@@ -4,7 +4,7 @@ import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { KeyManager } from "components/Keystore";
-import { FormInput } from "components";
+import { FormInput, FormPgpPublicKeyInput } from "components";
 import InfoIcon from "assets/icons/info.icon";
 import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
@@ -108,10 +108,11 @@ export function CommunicationChannelForm() {
         />
       </div>
 
+      <button type="button" onClick={() => addPublicKey(publicPgpKey)}>
+        {t("VaultEditor.add-pgp")}
+      </button>
+
       <div>
-        <button type="button" onClick={() => addPublicKey(publicPgpKey)}>
-          {t("VaultEditor.add-pgp")}
-        </button>
         {pgpError && <div>{pgpError}</div>}
 
         {keys.length > 0 && (
@@ -134,6 +135,19 @@ export function CommunicationChannelForm() {
           </div>
         )}
       </div>
+
+      <Controller
+        control={control}
+        name={`project-metadata.name`}
+        render={({ field }) => (
+          <FormPgpPublicKeyInput
+            isDirty={getPath(formState.dirtyFields, field.name)}
+            error={getPath(formState.errors, field.name)}
+            colorable
+            {...field}
+          />
+        )}
+      />
     </StyledCommunicationChannelForm>
   );
 }

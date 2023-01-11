@@ -4,6 +4,7 @@ export { FormInput } from "./FormControls/FormInput/FormInput";
 export { FormIconInput } from "./FormControls/FormIconInput/FormIconInput";
 export { FormDateInput } from "./FormControls/FormDateInput/FormDateInput";
 export { FormSelectInput } from "./FormControls/FormSelectInput/FormSelectInput";
+export { FormPgpPublicKeyInput } from "./FormControls/FormPgpPublicKeyInput/FormPgpPublicKeyInput";
 export { Vault } from "./Vault/Vault";
 export { NFTCard } from "./NFTCard/NFTCard";
 export { NFTPrize } from "./NFTPrize/NFTPrize";

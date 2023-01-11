@@ -18,6 +18,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     padding: ${getSpacing(1.2)} ${getSpacing(2)};
     text-transform: ${lowercase ? "lowercase" : "uppercase"};
     font-weight: 600;
+    justify-content: ${expanded ? "center" : "unset"};
 
     ${size === "small" &&
     css`
