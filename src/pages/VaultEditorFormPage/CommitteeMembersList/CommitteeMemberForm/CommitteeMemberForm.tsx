@@ -22,35 +22,29 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
   return (
     <StyledCommitteeMemberForm>
       <div className="member-details">
-        <div className="index-number">{index + 1}</div>
-
         <div className="content">
-          <div className="inputs">
-            <FormInput
-              {...register(`committee.members.${index}.name`)}
-              label={t("VaultEditor.member-name")}
-              colorable
-              placeholder={t("VaultEditor.member-name-placeholder")}
-            />
+          <FormInput
+            {...register(`committee.members.${index}.name`)}
+            label={t("VaultEditor.member-name")}
+            colorable
+            placeholder={t("VaultEditor.member-name-placeholder", { index: index + 1 })}
+          />
+          <FormInput
+            {...register(`committee.members.${index}.address`)}
+            label={t("VaultEditor.member-address")}
+            pastable
+            colorable
+            placeholder={t("VaultEditor.member-address-placeholder", { index: index + 1 })}
+          />
 
+          <div className="inputs">
             <FormInput
               {...register(`committee.members.${index}.twitter-link`)}
               label={t("VaultEditor.member-twitter")}
               pastable
               colorable
-              placeholder={t("VaultEditor.member-twitter-placeholder")}
+              placeholder={t("VaultEditor.member-twitter-placeholder", { index: index + 1 })}
             />
-
-            <FormInput
-              {...register(`committee.members.${index}.address`)}
-              label={t("VaultEditor.member-address")}
-              pastable
-              colorable
-              placeholder={t("VaultEditor.member-address-placeholder")}
-            />
-          </div>
-
-          <div>
             <FormIconInput
               {...register(`committee.members.${index}.image-ipfs-link`)}
               label={t("VaultEditor.member-image")}

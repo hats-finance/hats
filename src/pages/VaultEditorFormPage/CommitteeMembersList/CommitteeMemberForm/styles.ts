@@ -33,10 +33,12 @@ export const StyledCommitteeMemberForm = styled.div`
       }
 
       .inputs {
-        width: 75%;
+        width: 100%;
+        display: flex;
+        gap: 0 ${getSpacing(2)};
 
-        @media (max-width: ${breakpointsDefinition.mobile}) {
-          width: 100%;
+        @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          flex-direction: column;
         }
       }
     }

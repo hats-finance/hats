@@ -1,7 +1,7 @@
 import { useFieldArray } from "react-hook-form";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "../types";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
+import { IEditedVaultDescription } from "../types";
 
 export function CommitteeMembersList() {
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
