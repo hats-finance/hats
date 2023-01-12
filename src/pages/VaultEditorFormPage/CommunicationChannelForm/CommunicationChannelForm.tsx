@@ -148,6 +148,18 @@ export function CommunicationChannelForm() {
           />
         )}
       />
+      <Controller
+        control={control}
+        name={`project-metadata.type`}
+        render={({ field }) => (
+          <FormPgpPublicKeyInput
+            isDirty={getPath(formState.dirtyFields, field.name)}
+            error={getPath(formState.errors, field.name)}
+            colorable
+            {...field}
+          />
+        )}
+      />
     </StyledCommunicationChannelForm>
   );
 }

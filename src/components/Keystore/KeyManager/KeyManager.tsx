@@ -23,7 +23,8 @@ export function KeyManager({ onSelectedKey }: KeyManagerProps) {
     if (onSelectedKey && keystoreContext.selectedKey) {
       onSelectedKey(keystoreContext.selectedKey);
     }
-  }, [keystoreContext.selectedKey, onSelectedKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [keystoreContext.selectedKey]);
 
   const SelectedKeypair = () =>
     keystoreContext && (

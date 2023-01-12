@@ -21,7 +21,6 @@ export function FormPgpPublicKeyInputComponent(
 ) {
   const { t } = useTranslation();
   const { isShowing: isShowingPgpKeyInput, show: showPgpKeyInput, hide: hidePgpKeyInput } = useModal();
-  console.log(value);
 
   const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[0]} \n ${pgpKey.split("\n\n")[1].slice(0, 50)}...`;
 

@@ -33,10 +33,14 @@ export const PgpPublicKeyInputModal = ({ isShowing, onHide, onPgpKeySelected }: 
         onHide();
         setPublicPgpKey(undefined);
         setPgpError(undefined);
+        if (localRef.current) localRef.current!.value = "";
+
         onPgpKeySelected(pgpKey);
       } catch (error: any) {
         setPgpError(error.message);
       }
+    } else {
+      setPgpError(t("required"));
     }
   };
 
@@ -53,8 +57,8 @@ export const PgpPublicKeyInputModal = ({ isShowing, onHide, onPgpKeySelected }: 
         <KeyManager
           onSelectedKey={(selectedKey) => {
             if (selectedKey) {
+              setPgpError(undefined);
               setPublicPgpKey(selectedKey.publicKey);
-              console.log(localRef);
               localRef.current!.value = selectedKey.publicKey;
             }
           }}
@@ -68,7 +72,6 @@ export const PgpPublicKeyInputModal = ({ isShowing, onHide, onPgpKeySelected }: 
           name="communication-channel.pgp-pk"
           error={pgpError ? { message: pgpError, type: "error" } : undefined}
           type="textarea"
-          pastable={!publicPgpKey}
           colorable
           onChange={(e) => setPublicPgpKey(e.target.value)}
           placeholder={t("VaultEditor.pgp-key-placeholder")}
