@@ -39,6 +39,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
         Yup.object({
           name: Yup.string().required(intl("required")),
           address: Yup.string().test(getTestAddressOrUrl(intl)),
+          "pgp-keys": Yup.array().of(Yup.string()).min(1, intl("required")).required(intl("required")),
           "twitter-link": Yup.string().required(intl("required")),
           "image-ipfs-link": Yup.string(),
         })
@@ -78,9 +79,9 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
         })
       ),
     }),
-    "communication-channel": Yup.object({
-      "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
-    }).required(intl("required")),
+    // "communication-channel": Yup.object({
+    //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
+    // }).required(intl("required")),
   });
 
   return yupResolver(schema);

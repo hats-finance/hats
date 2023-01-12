@@ -116,6 +116,7 @@ export interface ICommitteeMember {
   address: string;
   "twitter-link": string;
   "image-ipfs-link"?: string;
+  "pgp-keys": string[];
 }
 
 export interface IBaseVulnerabilitySeverity {

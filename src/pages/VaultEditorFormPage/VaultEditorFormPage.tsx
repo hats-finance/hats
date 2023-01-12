@@ -41,6 +41,7 @@ const VaultEditorFormPage = () => {
         { name: "Members", component: CommitteeMembersList },
         { name: "Severities", component: VulnerabilitySeveritiesList },
         { name: "Contracts", component: ContractsCoveredList },
+        { name: "Review", component: VaultFormReview },
       ],
     },
     deployment: {

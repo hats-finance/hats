@@ -14,6 +14,7 @@ export const createNewCommitteeMember = (): ICommitteeMember => ({
   address: "",
   "twitter-link": "",
   "image-ipfs-link": "",
+  "pgp-keys": [""],
 });
 
 export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {
@@ -73,9 +74,6 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       tokenIcon: "",
       website: "",
       type: "",
-    },
-    "communication-channel": {
-      "pgp-pk": [],
     },
     committee: {
       "multisig-address": "",
