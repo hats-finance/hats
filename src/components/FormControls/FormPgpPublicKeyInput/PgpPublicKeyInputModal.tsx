@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { forwardRef, useRef, useState } from "react";
 import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, Modal } from "components";
@@ -12,7 +12,7 @@ type PgpPublicKeyInputModalProps = {
   ref: any;
 };
 
-export const PgpPublicKeyInputModal = ({ isShowing, onHide, onPgpKeySelected }: PgpPublicKeyInputModalProps, ref) => {
+const PgpPublicKeyInputModalComponent = ({ isShowing, onHide, onPgpKeySelected }: PgpPublicKeyInputModalProps, ref) => {
   const { t } = useTranslation();
   const localRef = useRef<HTMLInputElement>();
 
@@ -84,3 +84,5 @@ export const PgpPublicKeyInputModal = ({ isShowing, onHide, onPgpKeySelected }: 
     </Modal>
   );
 };
+
+export const PgpPublicKeyInputModal = forwardRef(PgpPublicKeyInputModalComponent);
