@@ -37,7 +37,7 @@ const VaultEditorFormPage = () => {
       steps: [
         { name: "Details", component: VaultDetailsForm },
         { name: "Committee", component: CommitteeDetailsForm },
-        { name: "PGP", component: CommunicationChannelForm },
+        // { name: "PGP", component: CommunicationChannelForm },
         { name: "Members", component: CommitteeMembersList },
         { name: "Severities", component: VulnerabilitySeveritiesList },
         { name: "Contracts", component: ContractsCoveredList },

@@ -18,7 +18,7 @@ export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDir
       border-radius: 0;
       font-family: inherit;
       color-scheme: dark;
-      padding: ${getSpacing(1.5)} ${getSpacing(2)};
+      padding: ${getSpacing(1)} ${getSpacing(2)};
       cursor: pointer;
 
       ${isDirty &&

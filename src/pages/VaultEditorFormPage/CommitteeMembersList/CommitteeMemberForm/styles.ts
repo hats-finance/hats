@@ -36,6 +36,7 @@ export const StyledCommitteeMemberForm = styled.div`
         width: 100%;
         display: flex;
         gap: 0 ${getSpacing(2)};
+        margin-bottom: ${getSpacing(3)};
 
         @media (max-width: ${breakpointsDefinition.smallMobile}) {
           flex-direction: column;

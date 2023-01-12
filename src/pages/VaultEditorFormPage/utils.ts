@@ -14,7 +14,7 @@ export const createNewCommitteeMember = (): ICommitteeMember => ({
   address: "",
   "twitter-link": "",
   "image-ipfs-link": "",
-  "pgp-keys": [""],
+  "pgp-keys": [{ publicKey: "" }],
 });
 
 export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {

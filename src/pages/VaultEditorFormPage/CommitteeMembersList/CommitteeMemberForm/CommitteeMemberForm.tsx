@@ -1,12 +1,13 @@
 import { useTranslation } from "react-i18next";
-import { UseFieldArrayRemove } from "react-hook-form";
-import { FormInput, FormIconInput } from "components";
+import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form";
+import { FormInput, FormIconInput, FormPgpPublicKeyInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import RemoveIcon from "assets/icons/remove-member.svg";
 import { ICommitteeMember } from "types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";
+import { getPath } from "utils/objects.utils";
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -17,7 +18,13 @@ type CommitteeMemberFormProps = {
 
 const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
-  const { register } = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
+  const {
+    fields: pgpPublicKeys,
+    append: appendKey,
+    remove: removeKey,
+  } = useFieldArray({ control, name: `committee.members.${index}.pgp-keys` });
 
   return (
     <StyledCommitteeMemberForm>
@@ -52,6 +59,22 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
               colorable
             />
           </div>
+
+          {pgpPublicKeys.map((pgpKey, keyIndex) => (
+            <Controller
+              key={pgpKey.id}
+              control={control}
+              name={`committee.members.${index}.pgp-keys.${keyIndex}.publicKey`}
+              render={({ field, formState }) => (
+                <FormPgpPublicKeyInput
+                  isDirty={getPath(formState.dirtyFields, field.name)}
+                  error={getPath(formState.errors, field.name)}
+                  colorable
+                  {...field}
+                />
+              )}
+            />
+          ))}
         </div>
       </div>
 
