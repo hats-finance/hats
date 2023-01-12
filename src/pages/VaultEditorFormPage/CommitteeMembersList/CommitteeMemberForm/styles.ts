@@ -3,6 +3,15 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledCommitteeMemberForm = styled.div`
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 4px;
+  padding: ${getSpacing(2.5)};
+
+  &:not(:last-child) {
+    padding-bottom: ${getSpacing(3)};
+    margin-bottom: ${getSpacing(3)};
+  }
+
   .member-details {
     display: flex;
     align-items: flex-start;
@@ -46,16 +55,11 @@ export const StyledCommitteeMemberForm = styled.div`
   }
 
   .controller-buttons {
+    display: flex;
+    gap: ${getSpacing(2)};
+
     @media (max-width: ${breakpointsDefinition.mobile}) {
       margin-top: ${getSpacing(3)};
-    }
-
-    button {
-      margin: 0;
-      margin-left: 54px;
-      margin-bottom: 30px;
-      padding-left: 25px;
-      padding-right: 25px;
     }
   }
 `;

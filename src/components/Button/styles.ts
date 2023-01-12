@@ -16,7 +16,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
     padding: ${getSpacing(1.2)} ${getSpacing(2)};
-    text-transform: ${lowercase ? "lowercase" : "uppercase"};
+    text-transform: ${lowercase ? "lowercase" : "none"};
     font-weight: 600;
     justify-content: ${expanded ? "center" : "unset"};
 
@@ -45,6 +45,13 @@ export const StyledButton = styled.button<StyledButtonProps>(
     css`
       background-color: transparent;
       border: 1px solid var(--turquoise);
+      color: var(--turquoise);
+    `}
+      
+    ${styleType === "invisible" &&
+    css`
+      background-color: transparent;
+      border: none;
       color: var(--turquoise);
     `}
   `

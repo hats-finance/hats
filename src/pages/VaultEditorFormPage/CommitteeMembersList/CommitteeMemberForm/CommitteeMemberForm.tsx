@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form";
-import { FormInput, FormIconInput, FormPgpPublicKeyInput } from "components";
+import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import RemoveIcon from "assets/icons/remove-member.svg";
+import RemoveIcon from "assets/icons/trash.svg";
+import AddIcon from "assets/icons/add.svg";
 import { ICommitteeMember } from "types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
@@ -60,11 +61,11 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
             />
           </div>
 
-          {pgpPublicKeys.map((pgpKey, keyIndex) => (
+          {pgpPublicKeys.map((pgpKey, pgpKeyIndex) => (
             <Controller
               key={pgpKey.id}
               control={control}
-              name={`committee.members.${index}.pgp-keys.${keyIndex}.publicKey`}
+              name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
               render={({ field, formState }) => (
                 <FormPgpPublicKeyInput
                   isDirty={getPath(formState.dirtyFields, field.name)}
@@ -79,16 +80,17 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
       </div>
 
       <div className="controller-buttons">
-        {membersCount > 1 && (
-          <button type="button" className="fill" onClick={() => remove(index)}>
-            <img src={RemoveIcon} height={12} alt="remove-member" />
-            {` ${t("VaultEditor.remove-member")}`}
-          </button>
-        )}
         {index === membersCount - 1 && (
-          <button type="button" className="fill" onClick={() => append(createNewCommitteeMember())}>
-            {t("VaultEditor.add-member")}
-          </button>
+          <Button styleType="filled" onClick={() => append(createNewCommitteeMember())}>
+            <img className="mr-2" src={AddIcon} width={12} alt="add-member" />
+            <p>{t("addMember")}</p>
+          </Button>
+        )}
+        {membersCount > 1 && (
+          <Button styleType="filled" onClick={() => remove(index)}>
+            <img className="mr-2" src={RemoveIcon} width={12} alt="remove-member" />
+            <p>{t("removeMember")}</p>
+          </Button>
         )}
       </div>
     </StyledCommitteeMemberForm>

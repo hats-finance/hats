@@ -1,10 +1,12 @@
-import { breakpointsDefinition, responsiveUtilityClasses } from "./breakpoints.styles";
 import { createGlobalStyle } from "styled-components";
+import { breakpointsDefinition, responsiveUtilityClasses } from "./breakpoints.styles";
 import { variables } from "./variables.styles";
+import { utilityClasses } from "./utilities.styles";
 
 export const GlobalStyle = createGlobalStyle`
     ${variables}
     ${responsiveUtilityClasses}
+    ${utilityClasses}
     
     *,
     *::before,

@@ -108,7 +108,6 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       display: flex;
       justify-content: center;
       align-items: center;
-      background: var(--dark-blue);
       padding: ${getSpacing(1)};
 
       ${type === "text" &&

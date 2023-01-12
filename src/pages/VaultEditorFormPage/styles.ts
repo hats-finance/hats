@@ -68,7 +68,8 @@ export const Section = styled.div`
 
   .section-content {
     border: 1px solid var(--vault-editor-border-2);
-    padding: ${getSpacing(5)};
+    padding: ${getSpacing(2.5)};
     margin-bottom: ${getSpacing(5)};
+    background: var(--background-clear-blue);
   }
 `;

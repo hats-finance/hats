@@ -50,7 +50,7 @@ export const variables = css`
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
 
-    /* Inputs colors */
+    --background-clear-blue: #161b2f;
     --grey-400: #b3b9c4;
     --grey-500: #667085;
     --grey-600: #424751;
