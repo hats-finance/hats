@@ -2,13 +2,13 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import RemoveIcon from "assets/icons/trash.svg";
-import AddIcon from "assets/icons/add.svg";
 import { ICommitteeMember } from "types";
 import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";
 import { getPath } from "utils/objects.utils";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -82,13 +82,13 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
       <div className="controller-buttons">
         {index === membersCount - 1 && (
           <Button styleType="filled" onClick={() => append(createNewCommitteeMember())}>
-            <img className="mr-2" src={AddIcon} width={12} alt="add-member" />
+            <AddIcon />
             <p>{t("addMember")}</p>
           </Button>
         )}
         {membersCount > 1 && (
           <Button styleType="filled" onClick={() => remove(index)}>
-            <img className="mr-2" src={RemoveIcon} width={12} alt="remove-member" />
+            <DeleteIcon />
             <p>{t("removeMember")}</p>
           </Button>
         )}
