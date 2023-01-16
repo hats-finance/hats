@@ -74,6 +74,7 @@ export function FormSelectInputComponent(
         onClick={handleOpenDropdown}
         isDirty={parseIsDirty(isDirty) && colorable}
         hasError={!!error && colorable}
+        isFilled={!!value}
         isOpen={isOpen}>
         <span className="text">{getRenderValue()}</span>
         <span className="icon">

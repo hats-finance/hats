@@ -31,8 +31,8 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
   `
 );
 
-export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean; isOpen: boolean }>(
-  ({ isDirty, isOpen, hasError }) => css`
+export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean; isOpen: boolean; isFilled: boolean }>(
+  ({ isDirty, isOpen, hasError, isFilled }) => css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -65,7 +65,7 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
       text-overflow: ellipsis;
       white-space: nowrap;
       flex-basis: 100%;
-      color: var(--white);
+      color: ${isFilled ? "var(--white)" : "var(--grey-500)"};
     }
 
     .icon {
