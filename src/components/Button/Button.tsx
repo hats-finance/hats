@@ -1,9 +1,10 @@
 import { StyledButton } from "./styles";
 
 export type ButtonProps = {
-  styleType?: "filled" | "outlined" | "invisible" | "text";
+  styleType?: "filled" | "outlined" | "invisible" | "icon" | "text";
   size?: "normal" | "small";
   textColor?: "white" | "primary";
+  className?: string;
   expanded?: boolean;
   lowercase?: boolean;
   onClick?: () => void;
@@ -18,6 +19,7 @@ export const Button = ({
   onClick,
   children,
   textColor,
+  ...props
 }: ButtonProps) => {
   return (
     <StyledButton
@@ -27,7 +29,8 @@ export const Button = ({
       expanded={expanded}
       onClick={onClick}
       lowercase={lowercase}
-      textColor={textColor}>
+      textColor={textColor}
+      {...props}>
       {children}
     </StyledButton>
   );
