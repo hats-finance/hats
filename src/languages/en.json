@@ -37,8 +37,8 @@
     "addPgpPublicKey": "Add a PGP Public Key",
     "remove": "Remove",
     "add": "Add",
-    "addMember": "Add Member",
-    "removeMember": "Remove Member",
+    "addMember": "Add new member",
+    "removeMember": "Remove member",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

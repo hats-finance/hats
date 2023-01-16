@@ -68,6 +68,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
               name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
               render={({ field, formState }) => (
                 <FormPgpPublicKeyInput
+                  noMargin
                   isDirty={getPath(formState.dirtyFields, field.name)}
                   error={getPath(formState.errors, field.name)}
                   colorable
@@ -76,19 +77,18 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
               )}
             />
           ))}
+
+          <Button styleType="invisible" onClick={() => append(createNewCommitteeMember())}>
+            <AddIcon className="mr-1" />
+            <p>{t("addMember")}</p>
+          </Button>
         </div>
       </div>
 
       <div className="controller-buttons">
-        {index === membersCount - 1 && (
-          <Button styleType="filled" onClick={() => append(createNewCommitteeMember())}>
-            <AddIcon />
-            <p>{t("addMember")}</p>
-          </Button>
-        )}
         {membersCount > 1 && (
           <Button styleType="filled" onClick={() => remove(index)}>
-            <DeleteIcon />
+            <DeleteIcon className="mr-1" />
             <p>{t("removeMember")}</p>
           </Button>
         )}
