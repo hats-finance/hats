@@ -7,21 +7,15 @@ import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
 import { Loading } from "components";
 import { IVaultDescription } from "types";
-import {
-  ContractsCoveredList,
-  VaultDetailsForm,
-  CommitteeDetailsForm,
-  CommitteeMembersList,
-  VaultFormReview,
-  CommunicationChannelForm,
-} from ".";
+import { ContractsCoveredList, VaultDetailsForm, CommitteeDetailsForm, CommitteeMembersList } from ".";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
-import { Section, VaultEditorForm } from "./styles";
+import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
+import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -35,19 +29,20 @@ const VaultEditorFormPage = () => {
     setup: {
       name: "Vault Description",
       steps: [
-        { name: "Details", component: VaultDetailsForm },
-        { name: "Committee", component: CommitteeDetailsForm },
-        // { name: "PGP", component: CommunicationChannelForm },
-        { name: "Members", component: CommitteeMembersList },
-        { name: "Severities", component: VulnerabilitySeveritiesList },
-        { name: "Contracts", component: ContractsCoveredList },
-        { name: "Review", component: VaultFormReview },
+        { name: "Details", title: "Vault description", component: VaultDetailsForm },
+        { name: "Committee", title: "Committee details", component: CommitteeDetailsForm },
+        { name: "Members", title: "Committee members and Encryption keys", component: CommitteeMembersList },
+        { name: "Severities", title: "Bugs severities", component: VulnerabilitySeveritiesList },
+        { name: "Contracts", title: "Contracts/Assets covered", component: ContractsCoveredList },
+        // { name: "Review", title: "Vault review", component: VaultFormReview },
       ],
     },
     deployment: {
       0: { name: "Details" },
     },
   };
+
+  const actualStep = editorSteps.setup;
 
   const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
 
@@ -128,14 +123,16 @@ const VaultEditorFormPage = () => {
 
   return (
     <FormProvider {...methods}>
-      <button onClick={test}>Show form</button>
-      <VaultEditorForm className="content-wrapper vault-editor" onSubmit={handleSubmit(onSubmit)}>
-        <div className="editor-title">
+      <button className="mb-5" onClick={test}>
+        Show form
+      </button>
+      <VaultEditorForm className="content-wrapper" onSubmit={handleSubmit(onSubmit)}>
+        {/* <div className="editor-title">
           {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
-        </div>
+        </div> */}
+        {/* <p className="editor-description">{t("VaultEditor.create-vault-description")}</p> */}
 
-        <p className="editor-description">{t("VaultEditor.create-vault-description")}</p>
-        {ipfsHash && vaultVersion === "v1" && (
+        {/* {ipfsHash && vaultVersion === "v1" && (
           <>
             <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
             <button
@@ -145,20 +142,27 @@ const VaultEditorFormPage = () => {
               Migrate description to v2
             </button>
           </>
-        )}
-        {/* {ipfsDate && (
-            <div className="last-saved-time">
-              {`${t("VaultEditor.last-saved-time")} `}
-              {ipfsDate.toLocaleString()}
-              {`(${t("VaultEditor.local-time")})`}
-            </div>
-          )} */}
+        )} */}
 
-        {editorSteps.setup.steps.map((step, index) => (
+        <div className="editor-title">
+          <ArrowBackIcon />
+          <p>
+            {t("vaultCreator")}
+            <span>/{actualStep.name}</span>
+          </p>
+        </div>
+
+        <VaultEditorStepper>
+          {actualStep.steps.map((step, index) => (
+            <VaultEditorStep active={index === 1} passed={index === 0}>
+              {index + 1}.{step.name}
+            </VaultEditorStep>
+          ))}
+        </VaultEditorStepper>
+
+        {actualStep.steps.map((step, index) => (
           <Section key={index}>
-            <p className="section-title">
-              {index + 1}. {step.name}
-            </p>
+            <p className="section-title">{step.title}</p>
             <div className="section-content">
               <step.component />
             </div>

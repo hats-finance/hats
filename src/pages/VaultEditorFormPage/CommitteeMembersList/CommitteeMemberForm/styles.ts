@@ -3,7 +3,7 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledCommitteeMemberForm = styled.div`
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--background-clearer-blue);
   border-radius: 4px;
   padding: ${getSpacing(2.5)};
 
@@ -51,12 +51,29 @@ export const StyledCommitteeMemberForm = styled.div`
           flex-direction: column;
         }
       }
+
+      .pgp-keys {
+        width: 100%;
+        margin-bottom: ${getSpacing(3)};
+
+        &__item {
+          display: flex;
+          align-items: center;
+
+          &:not(:last-of-type) {
+            margin-bottom: ${getSpacing(3)};
+          }
+        }
+      }
     }
   }
 
   .controller-buttons {
     display: flex;
+    justify-content: flex-end;
     gap: ${getSpacing(2)};
+    border-top: 1px solid var(--grey-600);
+    padding-top: ${getSpacing(2)};
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
       margin-top: ${getSpacing(3)};

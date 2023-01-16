@@ -1,20 +1,25 @@
-import { forwardRef, useRef, useState } from "react";
+import { forwardRef, useContext, useRef, useState } from "react";
 import { readKey } from "openpgp";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, Modal } from "components";
-import { KeyManager } from "components/Keystore";
+import { KeyManager, KeystoreContext } from "components/Keystore";
 import { StyledPgpPublicKeyInputModal } from "./styles";
 
 type PgpPublicKeyInputModalProps = {
   isShowing: boolean;
   onHide: () => void;
   onPgpKeySelected: (pgpKey: string) => void;
+  notAllowedKeys: string[];
   ref: any;
 };
 
-const PgpPublicKeyInputModalComponent = ({ isShowing, onHide, onPgpKeySelected }: PgpPublicKeyInputModalProps, ref) => {
+const PgpPublicKeyInputModalComponent = (
+  { isShowing, onHide, onPgpKeySelected, notAllowedKeys }: PgpPublicKeyInputModalProps,
+  ref
+) => {
   const { t } = useTranslation();
   const localRef = useRef<HTMLInputElement>();
+  const keystoreContext = useContext(KeystoreContext);
 
   const [publicPgpKey, setPublicPgpKey] = useState<string>();
   const [pgpError, setPgpError] = useState<string>();
@@ -25,17 +30,17 @@ const PgpPublicKeyInputModalComponent = ({ isShowing, onHide, onPgpKeySelected }
     if (pgpKey) {
       try {
         await readKey({ armoredKey: pgpKey });
-        // const watchedKeys = getValues("communication-channel.pgp-pk") as string[];
-        // if (watchedKeys.includes(pgpKey)) {
-        //   throw new Error("Key already added");
-        // }
-        // append(pgpKey);
+        if (notAllowedKeys.includes(pgpKey)) {
+          throw new Error(t("keyAlreadyAdded"));
+        }
+
         onHide();
         setPublicPgpKey(undefined);
         setPgpError(undefined);
         if (localRef.current) localRef.current!.value = "";
 
         onPgpKeySelected(pgpKey);
+        keystoreContext.setSelectedAlias("");
       } catch (error: any) {
         setPgpError(error.message);
       }
@@ -50,7 +55,7 @@ const PgpPublicKeyInputModalComponent = ({ isShowing, onHide, onPgpKeySelected }
   };
 
   return (
-    <Modal isShowing={isShowing} title="Create PGP key" onHide={onHide} withTitleDivider>
+    <Modal isShowing={isShowing} title={t("createPgpKey")} onHide={onHide} withTitleDivider>
       <StyledPgpPublicKeyInputModal>
         <p className="description">{t("VaultEditor.pgp-key-description")}</p>
 
@@ -69,7 +74,6 @@ const PgpPublicKeyInputModalComponent = ({ isShowing, onHide, onPgpKeySelected }
         <FormInput
           ref={setRef}
           label={t("VaultEditor.pgp-key")}
-          name="communication-channel.pgp-pk"
           error={pgpError ? { message: pgpError, type: "error" } : undefined}
           type="textarea"
           colorable

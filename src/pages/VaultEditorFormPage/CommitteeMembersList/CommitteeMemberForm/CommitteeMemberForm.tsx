@@ -3,7 +3,6 @@ import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form"
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { ICommitteeMember } from "types";
-import { createNewCommitteeMember } from "../../utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeMemberForm } from "./styles";
 import { getPath } from "utils/objects.utils";
@@ -26,6 +25,10 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
     append: appendKey,
     remove: removeKey,
   } = useFieldArray({ control, name: `committee.members.${index}.pgp-keys` });
+
+  const getAlreadyAddedPgpKeys = (toFilter: string) => {
+    return pgpPublicKeys.map((key) => key.publicKey).filter((key) => key !== toFilter);
+  };
 
   return (
     <StyledCommitteeMemberForm>
@@ -61,27 +64,38 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
             />
           </div>
 
-          {pgpPublicKeys.map((pgpKey, pgpKeyIndex) => (
-            <Controller
-              key={pgpKey.id}
-              control={control}
-              name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
-              render={({ field, formState }) => (
-                <FormPgpPublicKeyInput
-                  noMargin
-                  isDirty={getPath(formState.dirtyFields, field.name)}
-                  error={getPath(formState.errors, field.name)}
-                  colorable
-                  {...field}
-                />
-              )}
-            />
-          ))}
+          <div className="pgp-keys">
+            {pgpPublicKeys.map((pgpKey, pgpKeyIndex) => (
+              <Controller
+                key={pgpKey.id}
+                control={control}
+                name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
+                render={({ field, formState }) => (
+                  <div className="pgp-keys__item">
+                    <FormPgpPublicKeyInput
+                      noMargin
+                      isDirty={getPath(formState.dirtyFields, field.name)}
+                      error={getPath(formState.errors, field.name)}
+                      notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
+                      colorable
+                      {...field}
+                    />
+                    {pgpPublicKeys.length > 1 && (
+                      <Button styleType="invisible" onClick={() => removeKey(pgpKeyIndex)}>
+                        <DeleteIcon className="mr-2" />
+                        <span>{t("remove")}</span>
+                      </Button>
+                    )}
+                  </div>
+                )}
+              />
+            ))}
 
-          <Button styleType="invisible" onClick={() => append(createNewCommitteeMember())}>
-            <AddIcon className="mr-1" />
-            <p>{t("addMember")}</p>
-          </Button>
+            <Button styleType="invisible" onClick={() => appendKey({ publicKey: "" })}>
+              <AddIcon className="mr-1" />
+              <p>{t("addPgpKey")}</p>
+            </Button>
+          </div>
         </div>
       </div>
 

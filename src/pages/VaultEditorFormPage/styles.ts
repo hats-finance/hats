@@ -1,31 +1,26 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 import { getSpacing } from "styles";
 
 export const VaultEditorForm = styled.form`
-  @media (max-width: ${breakpointsDefinition.mobile}) {
-    padding: 0 ${getSpacing(3)};
-  }
+  background: var(--background-clear-blue);
+  padding: ${getSpacing(3)} ${getSpacing(4)};
+  border-radius: ${getSpacing(0.5)};
 
   .editor-title {
-    font-size: var(--large);
+    display: flex;
+    align-items: center;
     color: var(--white);
-  }
-
-  .editor-description {
-    color: var(--white);
-    font-size: var(--small);
-    margin-bottom: ${getSpacing(4)};
-  }
-
-  .migrate-button {
-    margin-bottom: ${getSpacing(4)};
-  }
-
-  .last-saved-time {
+    font-size: var(--moderate);
     margin-bottom: ${getSpacing(5)};
-    padding-bottom: ${getSpacing(2)};
-    border-bottom: 1px solid var(--vault-editor-border);
+
+    p {
+      margin-left: ${getSpacing(1)};
+
+      span {
+        font-weight: 700;
+      }
+    }
   }
 
   .buttons-container {
@@ -47,29 +42,50 @@ export const VaultEditorForm = styled.form`
       }
     }
   }
-
-  .mobile-buttons-container {
-    display: flex;
-    justify-content: space-between;
-    gap: ${getSpacing(3)};
-
-    button {
-      width: 100%;
-    }
-  }
 `;
+
+export const VaultEditorStepper = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: ${getSpacing(4)};
+  border-bottom: 1px solid var(--grey-600);
+  color: var(--white);
+`;
+
+export const VaultEditorStep = styled.div<{ active: boolean; passed: boolean }>(
+  ({ active, passed }) => css`
+    padding-bottom: ${getSpacing(4)};
+    border-bottom: 1px solid transparent;
+    cursor: pointer;
+
+    ${active &&
+    css`
+      border-bottom-color: var(--turquoise);
+    `}
+
+    ${passed &&
+    css`
+      color: var(--turquoise);
+    `}
+
+    &:hover {
+      opacity: 0.7;
+    }
+  `
+);
 
 export const Section = styled.div`
   .section-title {
     color: var(--white);
     font-size: var(--small);
     text-transform: uppercase;
+    font-weight: 700;
+    margin-bottom: ${getSpacing(2)};
+    padding-bottom: ${getSpacing(2)};
+    border-bottom: 1px solid var(--grey-600);
   }
 
   .section-content {
-    border: 1px solid var(--vault-editor-border-2);
-    padding: ${getSpacing(2.5)};
-    margin-bottom: ${getSpacing(5)};
-    background: var(--background-clear-blue);
+    margin-bottom: ${getSpacing(20)};
   }
 `;

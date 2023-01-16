@@ -7,11 +7,13 @@ import { PgpPublicKeyInputModal } from "./PgpPublicKeyInputModal";
 
 interface FormPgpPublicKeyInputProps {
   label?: string;
+  name?: string;
   placeholder?: string;
   colorable?: boolean;
   noMargin?: boolean;
   isDirty?: boolean;
   value: string;
+  notAllowedKeys?: string[];
   onChange: (data: string) => void;
   error?: { message: string; type: string };
 }
@@ -20,9 +22,11 @@ export function FormPgpPublicKeyInputComponent(
   {
     value,
     onChange,
+    name,
     colorable = false,
     isDirty = false,
     noMargin = false,
+    notAllowedKeys = [],
     error,
     placeholder,
     label,
@@ -47,7 +51,14 @@ export function FormPgpPublicKeyInputComponent(
 
       {error && <span className="error">{error.message}</span>}
 
-      <PgpPublicKeyInputModal isShowing={isShowingPgpKeyInput} onHide={hidePgpKeyInput} onPgpKeySelected={onChange} ref={ref} />
+      <PgpPublicKeyInputModal
+        key={name}
+        isShowing={isShowingPgpKeyInput}
+        onHide={hidePgpKeyInput}
+        onPgpKeySelected={onChange}
+        notAllowedKeys={notAllowedKeys}
+        ref={ref}
+      />
     </StyledFormPgpPublicKeyInput>
   );
 }
