@@ -3,7 +3,7 @@ import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { FormInput, FormIconInput, FormDateInput } from "components";
+import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
 import { IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
 
@@ -12,6 +12,12 @@ export function VaultDetailsForm() {
   const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
+
+  const vaultTypes = [
+    { label: t("bugBountyProgram"), value: "normal" },
+    { label: t("auditCompetition"), value: "audit" },
+    { label: t("grant"), value: "grants" },
+  ];
 
   useEffect(() => {
     if (showDateInputs) {
@@ -33,12 +39,28 @@ export function VaultDetailsForm() {
             colorable
             placeholder={t("VaultEditor.vault-details.name-placeholder")}
           />
-          <FormInput
+          <Controller
+            control={control}
+            name={`project-metadata.type`}
+            render={({ field, formState }) => (
+              <FormSelectInput
+                isDirty={getPath(formState.dirtyFields, field.name)}
+                error={getPath(formState.errors, field.name)}
+                label={t("VaultEditor.vault-details.type")}
+                placeholder={t("VaultEditor.vault-details.type-placeholder")}
+                colorable
+                options={vaultTypes}
+                {...field}
+                value={field.value ?? ""}
+              />
+            )}
+          />
+          {/* <FormInput
             {...register("project-metadata.type")}
             colorable
             placeholder={t("VaultEditor.vault-details.type-placeholder")}
             label={t("VaultEditor.vault-details.type")}
-          />
+          /> */}
         </div>
 
         <div className="inputs col-sm">

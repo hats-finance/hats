@@ -44,6 +44,9 @@
     "keyAlreadyAdded": "This key was already added",
     "vaultCreator": "Vault Creator",
     "vaultEditorCommitteeMembersSafeExplanation": "<strong>Fill the information for each committee member and create PGP key-pair on Hats dedicated tool or any other trusted tool.</strong> \n\n <ul><li>The PGP keys will give permission to decrypt submissions. Share this page to committee members in order to generate their own set of keys.</li> \n <li><strong>Please be aware</strong> you can decrypt submissions on the browser you created the keys on. You can open as many keys as you wish on multiple browser & devices.</li></ul>",
+    "bugBountyProgram": "Bug Bounty Program",
+    "auditCompetition": "Audit Competition",
+    "grant": "Grant",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
@@ -378,7 +381,7 @@
         "name": "Vault name",
         "name-placeholder": "Enter vault name",
         "type": "Vault type",
-        "type-placeholder": "Enter vault type(gamification, grants...)",
+        "type-placeholder": "Enter vault type",
         "icon": "Vault Logo",
         "token-icon": "Token Icon",
         "website": "Website",
