@@ -1,4 +1,4 @@
-import { getSpacing } from "styles";
+import { getSpacing } from "./utils.styles";
 import { css } from "styled-components";
 
 export const utilityClasses = css`
