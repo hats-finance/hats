@@ -54,5 +54,14 @@ export const StyledButton = styled.button<StyledButtonProps>(
       border: none;
       color: var(--turquoise);
     `}
+      
+    ${styleType === "icon" &&
+    css`
+      padding: ${getSpacing(1.5)} ${getSpacing(1.5)};
+      background-color: var(--grey-700);
+      border: none;
+      border-radius: ${getSpacing(0.5)};
+      color: var(--turquoise);
+    `}
   `
 );
