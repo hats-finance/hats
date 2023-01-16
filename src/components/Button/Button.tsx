@@ -21,6 +21,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <StyledButton
+      type="button"
       styleType={styleType}
       size={size}
       expanded={expanded}

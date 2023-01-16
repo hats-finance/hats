@@ -18,6 +18,7 @@ type FormInputProps = {
   removable?: boolean;
   colorable?: boolean;
   isDirty?: boolean;
+  noMargin?: boolean;
   error?: { message: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
@@ -29,6 +30,7 @@ function FormInputComponent(
     removable = false,
     type = "text",
     colorable = false,
+    noMargin = false,
     isDirty = false,
     rows = DEFAULT_ROWS,
     label,
@@ -90,6 +92,7 @@ function FormInputComponent(
       isCheckOrRadio={isCheckOrRadio}
       hasError={!!error && colorable}
       type={type}
+      noMargin={noMargin}
       withExtraicons={extraIcons}>
       <div className="main-container">
         {label && <label htmlFor={props.name}>{label}</label>}

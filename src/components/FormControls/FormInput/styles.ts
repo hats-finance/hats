@@ -5,16 +5,17 @@ import { FormInputType } from "./FormInput";
 type StyledFormInputProps = {
   isDirty: boolean;
   hasError: boolean;
+  noMargin?: boolean;
   withExtraicons?: boolean;
   isCheckOrRadio?: boolean;
   type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin }) => css`
     position: relative;
     overflow: hidden;
-    margin-bottom: ${getSpacing(3)};
+    margin-bottom: ${noMargin ? 0 : getSpacing(3)};
     width: 100%;
 
     ${isCheckOrRadio &&
@@ -45,7 +46,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       color-scheme: dark;
 
       &::placeholder {
-        color: var(--grey-600);
+        color: var(--grey-500);
         font-family: RobotoMono;
       }
 
@@ -85,7 +86,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     label {
       display: block;
-      color: var(--grey-500);
+      color: var(--grey-400);
       padding-bottom: ${getSpacing(1)};
 
       ${!isCheckOrRadio &&

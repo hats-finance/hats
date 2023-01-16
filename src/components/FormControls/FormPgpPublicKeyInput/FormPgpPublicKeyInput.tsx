@@ -9,6 +9,7 @@ interface FormPgpPublicKeyInputProps {
   label?: string;
   placeholder?: string;
   colorable?: boolean;
+  noMargin?: boolean;
   isDirty?: boolean;
   value: string;
   onChange: (data: string) => void;
@@ -16,7 +17,16 @@ interface FormPgpPublicKeyInputProps {
 }
 
 export function FormPgpPublicKeyInputComponent(
-  { value, onChange, colorable = false, isDirty = false, error, placeholder, label }: FormPgpPublicKeyInputProps,
+  {
+    value,
+    onChange,
+    colorable = false,
+    isDirty = false,
+    noMargin = false,
+    error,
+    placeholder,
+    label,
+  }: FormPgpPublicKeyInputProps,
   ref
 ) {
   const { t } = useTranslation();
@@ -25,7 +35,7 @@ export function FormPgpPublicKeyInputComponent(
   const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[0]} \n ${pgpKey.split("\n\n")[1]?.slice(0, 50)}...`;
 
   return (
-    <StyledFormPgpPublicKeyInput hasError={!!error && colorable} isDirty={parseIsDirty(isDirty) && colorable}>
+    <StyledFormPgpPublicKeyInput hasError={!!error && colorable} isDirty={parseIsDirty(isDirty) && colorable} noMargin={noMargin}>
       <div className="select-button" onClick={showPgpKeyInput}>
         <label>{label ?? t("pgpPublicKey")}</label>
         {value ? (

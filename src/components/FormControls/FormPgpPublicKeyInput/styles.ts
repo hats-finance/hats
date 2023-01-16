@@ -1,11 +1,11 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDirty: boolean }>(
-  ({ hasError, isDirty }) => css`
+export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDirty: boolean; noMargin: boolean }>(
+  ({ hasError, isDirty, noMargin }) => css`
     width: 100%;
     position: relative;
-    margin-bottom: ${getSpacing(3)};
+    margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
     .select-button {
       width: 100%;
