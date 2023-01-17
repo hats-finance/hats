@@ -49,6 +49,8 @@
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
+    "newEmail": "New email",
+    "verify": "Verify",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
@@ -392,7 +394,9 @@
         "starttime": "Start date",
         "starttime-placeholder": "Enter start date",
         "endtime": "End date",
-        "endtime-placeholder": "Enter end date"
+        "endtime-placeholder": "Enter end date",
+        "email": "Email address",
+        "email-placeholder": "Enter email address"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",

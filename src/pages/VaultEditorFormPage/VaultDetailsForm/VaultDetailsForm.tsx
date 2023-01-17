@@ -1,15 +1,25 @@
 import { useEffect } from "react";
-import { Controller, useWatch } from "react-hook-form";
+import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
-import { IEditedVaultDescription } from "../types";
+import { isEmailAddress } from "utils/emails.utils";
+import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
+import { IEditedCommunicationEmail, IEditedVaultDescription } from "../types";
 import { StyledVaultDetails } from "./styles";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import VerifyEmailIcon from "@mui/icons-material/ForwardToInboxOutlined";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
+
   const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+  const {
+    fields: emails,
+    append: appendEmail,
+    remove: removeEmail,
+  } = useFieldArray({ control, name: `project-metadata.emails` });
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
 
@@ -28,6 +38,46 @@ export function VaultDetailsForm() {
       setValue("project-metadata.endtime", undefined);
     }
   }, [showDateInputs, setValue, resetField]);
+
+  const getEmailActionButton = (emailData: IEditedCommunicationEmail, value: string, emailIndex: number) => {
+    const isValidEmail = isEmailAddress(value);
+
+    const removeButton = (
+      <Button styleType="invisible" onClick={() => removeEmail(emailIndex)}>
+        <DeleteIcon className="mr-2" />
+        <span>{t("remove")}</span>
+      </Button>
+    );
+
+    const verifyButton = (
+      <Button styleType="invisible" onClick={() => console.log("test verify")}>
+        <VerifyEmailIcon className="mr-2" />
+        <span>{t("verify")}</span>
+      </Button>
+    );
+
+    const verifyAndRemoveButton = (
+      <div className="multiple-buttons">
+        {verifyButton}
+        <Button noPadding styleType="invisible" onClick={() => removeEmail(emailIndex)}>
+          <DeleteIcon className="mr-2" />
+        </Button>
+      </div>
+    );
+
+    const moreThanOneEmail = emails.length > 1;
+
+    if (emailData.status === "unverified") {
+      if (isValidEmail && moreThanOneEmail) return verifyAndRemoveButton;
+      if (isValidEmail && !moreThanOneEmail) return verifyButton;
+      if (moreThanOneEmail) return removeButton;
+      return <></>;
+    } else if (emailData.status === "verified") {
+      if (moreThanOneEmail) return removeButton;
+    } else {
+      return verifyAndRemoveButton;
+    }
+  };
 
   return (
     <StyledVaultDetails>
@@ -55,6 +105,37 @@ export function VaultDetailsForm() {
               />
             )}
           />
+        </div>
+
+        <div className="emails">
+          {emails.map((email, emailIndex) => (
+            <Controller
+              key={email.id}
+              control={control}
+              name={`project-metadata.emails.${emailIndex}.address`}
+              render={({ field, formState }) => (
+                <div className="emails__item">
+                  <FormInput
+                    isDirty={getPath(formState.dirtyFields, field.name)}
+                    error={getPath(formState.errors, field.name)}
+                    disabled={email.status === "verified" || email.status === "verifying"}
+                    noMargin
+                    colorable
+                    placeholder={t("VaultEditor.vault-details.email-placeholder")}
+                    label={t("VaultEditor.vault-details.email")}
+                    {...field}
+                    onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
+                  />
+                  <>{getEmailActionButton(email, field.value, emailIndex)}</>
+                </div>
+              )}
+            />
+          ))}
+
+          <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
+            <AddIcon className="mr-2" />
+            <span>{t("newEmail")}</span>
+          </Button>
         </div>
 
         <div className="inputs col-sm">

@@ -6,6 +6,11 @@ export interface IEditedContractCovered {
   severities: string[]; // IVulnerabilitySeverity.name
 }
 
+export interface IEditedCommunicationEmail {
+  address: string;
+  status: "verified" | "unverified" | "verifying";
+}
+
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
 export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
 
@@ -36,7 +41,7 @@ export interface IBaseEditedVaultDescription {
     type?: string;
     endtime?: number;
     starttime?: number;
-    emails: { address: string; status: "verified" | "unverified" | "verifying" }[];
+    emails: IEditedCommunicationEmail[];
   };
   committee: {
     "multisig-address": string;
