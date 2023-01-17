@@ -32,7 +32,7 @@ const VaultEditorFormPage = () => {
         { name: "Details", title: "Vault description", component: VaultDetailsForm },
         { name: "Committee", title: "Committee details", component: CommitteeDetailsForm },
         { name: "Members", title: "Committee members and Encryption keys", component: CommitteeMembersList },
-        { name: "Severities", title: "Bugs severities", component: VulnerabilitySeveritiesList },
+        { name: "Severities", title: "Severities", component: VulnerabilitySeveritiesList },
         { name: "Contracts", title: "Contracts/Assets covered", component: ContractsCoveredList },
         // { name: "Review", title: "Vault review", component: VaultFormReview },
       ],

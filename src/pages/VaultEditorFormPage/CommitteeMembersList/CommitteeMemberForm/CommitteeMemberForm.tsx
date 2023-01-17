@@ -93,7 +93,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
 
             <Button styleType="invisible" onClick={() => appendKey({ publicKey: "" })}>
               <AddIcon className="mr-1" />
-              <p>{t("addPgpKey")}</p>
+              <span>{t("addPgpKey")}</span>
             </Button>
           </div>
         </div>
@@ -103,7 +103,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
         {membersCount > 1 && (
           <Button styleType="filled" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />
-            <p>{t("removeMember")}</p>
+            <span>{t("removeMember")}</span>
           </Button>
         )}
       </div>

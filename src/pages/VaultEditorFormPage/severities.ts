@@ -31,7 +31,7 @@ export const getVulnerabilitySeveritiesTemplate = (version: "v1" | "v2"): IVulne
     severities: [
       {
         id: uuid(),
-        name: "low",
+        name: "Low Severity",
         index: 7,
         "contracts-covered": [],
         "nft-metadata": {
@@ -46,7 +46,7 @@ export const getVulnerabilitySeveritiesTemplate = (version: "v1" | "v2"): IVulne
       },
       {
         id: uuid(),
-        name: "medium",
+        name: "Medium Severity",
         index: 14,
         "contracts-covered": [],
         "nft-metadata": {
@@ -62,7 +62,7 @@ export const getVulnerabilitySeveritiesTemplate = (version: "v1" | "v2"): IVulne
       },
       {
         id: uuid(),
-        name: "high",
+        name: "High Severity",
         index: 16,
         "contracts-covered": [],
         "nft-metadata": {
@@ -78,7 +78,7 @@ export const getVulnerabilitySeveritiesTemplate = (version: "v1" | "v2"): IVulne
       },
       {
         id: uuid(),
-        name: "critical",
+        name: "Critical Severity",
         index: 20,
         "contracts-covered": [],
         "nft-metadata": {

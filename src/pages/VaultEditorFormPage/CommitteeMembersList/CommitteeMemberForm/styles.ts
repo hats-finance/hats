@@ -74,9 +74,5 @@ export const StyledCommitteeMemberForm = styled.div`
     gap: ${getSpacing(2)};
     border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
-
-    @media (max-width: ${breakpointsDefinition.mobile}) {
-      margin-top: ${getSpacing(3)};
-    }
   }
 `;
