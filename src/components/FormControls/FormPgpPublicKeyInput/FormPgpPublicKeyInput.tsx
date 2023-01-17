@@ -36,7 +36,7 @@ export function FormPgpPublicKeyInputComponent(
   const { t } = useTranslation();
   const { isShowing: isShowingPgpKeyInput, show: showPgpKeyInput, hide: hidePgpKeyInput } = useModal();
 
-  const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[0]} \n ${pgpKey.split("\n\n")[1]?.slice(0, 50)}...`;
+  const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[1]?.slice(0, 50)}...`;
 
   return (
     <StyledFormPgpPublicKeyInput hasError={!!error && colorable} isDirty={parseIsDirty(isDirty) && colorable} noMargin={noMargin}>
