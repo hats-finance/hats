@@ -39,9 +39,13 @@ export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDir
         cursor: pointer;
       }
 
-      p.placeholder {
-        color: var(--grey-600);
-        font-family: RobotoMono;
+      p {
+        margin: 0;
+
+        &.placeholder {
+          color: var(--grey-600);
+          font-family: RobotoMono;
+        }
       }
     }
 
