@@ -9,6 +9,8 @@ export function CommitteeDetailsForm() {
 
   return (
     <>
+      <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCommitteeDetailsSafeExplanation") }} />
+
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}

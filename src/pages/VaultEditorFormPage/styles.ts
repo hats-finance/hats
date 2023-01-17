@@ -42,6 +42,15 @@ export const VaultEditorForm = styled.form`
       }
     }
   }
+
+  .helper-text {
+    color: var(--white);
+    margin-bottom: ${getSpacing(5)};
+
+    ul {
+      padding-left: ${getSpacing(3)};
+    }
+  }
 `;
 
 export const VaultEditorStepper = styled.div`
