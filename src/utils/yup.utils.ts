@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { isAddress } from "ethers/lib/utils";
+import { isEmailAddress } from "./emails.utils";
 
 export const getTestWalletAddress = (intl) => {
   return {
@@ -32,14 +33,10 @@ export const getTestEmailAddress = (intl) => {
   return {
     name: "is-email-address",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
-      const emailRegex = new RegExp(
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-      );
-
-      const isEmailAddress = value?.toLowerCase().match(emailRegex);
+      const isValidEmail = isEmailAddress(value);
       const isEmpty = value === "";
 
-      return isEmailAddress || isEmpty ? true : ctx.createError({ message: intl("invalid-email-address") });
+      return isValidEmail || isEmpty ? true : ctx.createError({ message: intl("invalid-email-address") });
     },
   };
 };
