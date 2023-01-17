@@ -10,6 +10,7 @@ import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import VerifyEmailIcon from "@mui/icons-material/ForwardToInboxOutlined";
+import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
@@ -116,6 +117,7 @@ export function VaultDetailsForm() {
               render={({ field, formState }) => (
                 <div className="emails__item">
                   <FormInput
+                    prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
                     isDirty={getPath(formState.dirtyFields, field.name)}
                     error={getPath(formState.errors, field.name)}
                     disabled={email.status === "verified" || email.status === "verifying"}
