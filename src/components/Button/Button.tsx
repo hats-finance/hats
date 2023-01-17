@@ -6,6 +6,7 @@ export type ButtonProps = {
   textColor?: "white" | "primary";
   className?: string;
   expanded?: boolean;
+  noPadding?: boolean;
   lowercase?: boolean;
   onClick?: () => void;
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export const Button = ({
   styleType = "filled",
   size = "normal",
   lowercase,
+  noPadding,
   expanded,
   onClick,
   children,
@@ -26,6 +28,7 @@ export const Button = ({
       type="button"
       styleType={styleType}
       size={size}
+      noPadding={noPadding}
       expanded={expanded}
       onClick={onClick}
       lowercase={lowercase}

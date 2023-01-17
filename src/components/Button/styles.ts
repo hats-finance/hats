@@ -5,13 +5,14 @@ import { ButtonProps } from "./Button";
 type StyledButtonProps = {
   styleType: ButtonProps["styleType"];
   size: ButtonProps["size"];
+  noPadding: ButtonProps["noPadding"];
   expanded: ButtonProps["expanded"];
   lowercase: ButtonProps["lowercase"];
   textColor: ButtonProps["textColor"];
 };
 
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, size, expanded, lowercase, textColor }) => css`
+  ({ styleType, size, expanded, lowercase, textColor, noPadding }) => css`
     display: flex;
     align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
@@ -62,6 +63,11 @@ export const StyledButton = styled.button<StyledButtonProps>(
       border: none;
       border-radius: ${getSpacing(0.5)};
       color: var(--turquoise);
+    `}
+      
+    ${noPadding &&
+    css`
+      padding: 0;
     `}
   `
 );
