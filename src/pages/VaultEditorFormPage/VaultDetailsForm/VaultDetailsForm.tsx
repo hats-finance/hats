@@ -55,12 +55,6 @@ export function VaultDetailsForm() {
               />
             )}
           />
-          {/* <FormInput
-            {...register("project-metadata.type")}
-            colorable
-            placeholder={t("VaultEditor.vault-details.type-placeholder")}
-            label={t("VaultEditor.vault-details.type")}
-          /> */}
         </div>
 
         <div className="inputs col-sm">

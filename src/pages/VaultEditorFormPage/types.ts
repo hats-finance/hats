@@ -36,6 +36,7 @@ export interface IBaseEditedVaultDescription {
     type?: string;
     endtime?: number;
     starttime?: number;
+    emails: { address: string; status: "verified" | "unverified" | "verifying" }[];
   };
   committee: {
     "multisig-address": string;

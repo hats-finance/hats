@@ -1,7 +1,7 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { getTestAddressOrUrl } from "utils/yup.utils";
+import { getTestAddressOrUrl, getTestEmailAddress } from "utils/yup.utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) => {
   const schema = Yup.object().shape({
@@ -32,6 +32,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
           intl("required"),
           (val, ctx: any) => (ctx.from[1].value.includesStartAndEndTime && val) || !ctx.from[1].value.includesStartAndEndTime
         ),
+      emails: Yup.array()
+        .of(Yup.object({ address: Yup.string().test(getTestEmailAddress(intl)).required(intl("required")) }))
+        .min(1, intl("required"))
+        .required(intl("required")),
     }),
     committee: Yup.object({
       "multisig-address": Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),

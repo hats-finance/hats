@@ -27,3 +27,19 @@ export const getTestAddressOrUrl = (intl) => {
     },
   };
 };
+
+export const getTestEmailAddress = (intl) => {
+  return {
+    name: "is-email-address",
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const emailRegex = new RegExp(
+        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      );
+
+      const isEmailAddress = value?.toLowerCase().match(emailRegex);
+      const isEmpty = value === "";
+
+      return isEmailAddress || isEmpty ? true : ctx.createError({ message: intl("invalid-email-address") });
+    },
+  };
+};

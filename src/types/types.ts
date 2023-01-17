@@ -82,6 +82,7 @@ interface IBaseVaultDescription {
     type?: string;
     endtime?: number;
     starttime?: number;
+    emails: { address: string; status: "verified" | "unverified" | "verifying" }[];
   };
   "communication-channel": {
     "pgp-pk": string | string[];

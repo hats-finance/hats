@@ -5,6 +5,7 @@
     "invalid-address": "Invalid address",
     "invalid-address-or-url": "Invalid address or URL",
     "invalid-image-type": "Invalid image type, only supported: {{types}}",
+    "invalid-email-address": "Invalid email address",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
     "min0": "Min 0",
     "max100": "Max 100",

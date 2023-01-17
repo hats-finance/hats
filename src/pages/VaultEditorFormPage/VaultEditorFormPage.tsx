@@ -154,7 +154,7 @@ const VaultEditorFormPage = () => {
 
         <VaultEditorStepper>
           {actualStep.steps.map((step, index) => (
-            <VaultEditorStep active={index === 1} passed={index === 0}>
+            <VaultEditorStep key={step.name} active={index === 1} passed={index === 0}>
               {index + 1}.{step.name}
             </VaultEditorStep>
           ))}
