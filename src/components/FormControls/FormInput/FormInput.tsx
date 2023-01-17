@@ -19,6 +19,7 @@ type FormInputProps = {
   colorable?: boolean;
   isDirty?: boolean;
   noMargin?: boolean;
+  prefixIcon?: JSX.Element;
   error?: { message: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
@@ -35,6 +36,7 @@ function FormInputComponent(
     rows = DEFAULT_ROWS,
     label,
     error,
+    prefixIcon,
     ...props
   }: FormInputProps,
   ref
@@ -93,11 +95,13 @@ function FormInputComponent(
       hasError={!!error && colorable}
       type={type}
       noMargin={noMargin}
+      withPrefixIcon={!!prefixIcon}
       withExtraicons={extraIcons}>
       <div className="main-container">
         {label && <label htmlFor={props.name}>{label}</label>}
 
         <div className="input-container">
+          {prefixIcon && <div className="prefix-icon">{prefixIcon}</div>}
           {getMainComponent()}
 
           {extraIcons && areAvailableExtraIcons && (

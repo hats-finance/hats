@@ -7,12 +7,13 @@ type StyledFormInputProps = {
   hasError: boolean;
   noMargin?: boolean;
   withExtraicons?: boolean;
+  withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
   type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -82,6 +83,11 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       css`
         padding-right: ${getSpacing(6)};
       `}
+
+      ${withPrefixIcon &&
+      css`
+        padding-left: ${getSpacing(5.5)};
+      `}
     }
 
     label {
@@ -94,12 +100,18 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         font-size: var(--xxsmall);
         position: absolute;
         top: 10px;
-        left: 17px;
+        left: ${withPrefixIcon ? "45px" : "17px"};
       `}
     }
 
     .input-container {
       position: relative;
+
+      .prefix-icon {
+        position: absolute;
+        top: 50%;
+        transform: translate(14px, -50%);
+      }
     }
 
     .extra-icons {
