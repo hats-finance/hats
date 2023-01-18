@@ -18,4 +18,8 @@ export const StyledFormSelectInputItem = styled.label`
   span {
     padding-left: ${getSpacing(1)};
   }
+
+  input {
+    display: none;
+  }
 `;
