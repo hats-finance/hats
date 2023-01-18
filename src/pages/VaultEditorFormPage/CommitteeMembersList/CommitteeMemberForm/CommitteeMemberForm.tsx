@@ -99,14 +99,14 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
         </div>
       </div>
 
-      <div className="controller-buttons">
-        {membersCount > 1 && (
+      {membersCount > 1 && (
+        <div className="controller-buttons">
           <Button styleType="filled" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />
             <span>{t("removeMember")}</span>
           </Button>
-        )}
-      </div>
+        </div>
+      )}
     </StyledCommitteeMemberForm>
   );
 };

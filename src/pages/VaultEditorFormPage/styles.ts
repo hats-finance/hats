@@ -45,10 +45,23 @@ export const VaultEditorForm = styled.form`
 
   .helper-text {
     color: var(--white);
-    margin-bottom: ${getSpacing(5)};
+    margin-bottom: ${getSpacing(4)};
 
     ul {
       padding-left: ${getSpacing(3)};
+    }
+  }
+
+  .controller-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: ${getSpacing(2)};
+    border-top: 1px solid var(--grey-600);
+    padding-top: ${getSpacing(2)};
+
+    &.no-line {
+      padding-top: 0;
+      border-top-color: transparent;
     }
   }
 `;

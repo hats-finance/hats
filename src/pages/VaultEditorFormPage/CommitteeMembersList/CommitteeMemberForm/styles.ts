@@ -67,12 +67,4 @@ export const StyledCommitteeMemberForm = styled.div`
       }
     }
   }
-
-  .controller-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: ${getSpacing(2)};
-    border-top: 1px solid var(--grey-600);
-    padding-top: ${getSpacing(2)};
-  }
 `;

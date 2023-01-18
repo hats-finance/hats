@@ -1,69 +1,24 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledContractCoveredForm = styled.div`
-  .contract {
-    display: flex;
-    align-items: flex-start;
+  background: var(--background-clearer-blue);
+  border-radius: 4px;
+  padding: ${getSpacing(2.5)};
+  margin-bottom: ${getSpacing(3)};
 
-    .index-number {
-      flex-shrink: 0;
-      color: var(--white);
-      width: 40px;
-      height: 40px;
-      margin-top: 28px;
-      margin-right: 14px;
-      margin-bottom: 24px;
-      border: 1px solid var(--turquoise);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-sizing: border-box;
-    }
-
-    .content {
-      width: 75%;
-
-      @media (max-width: ${breakpointsDefinition.smallScreen}) {
-        width: 100%;
-      }
-
-      .subcontent {
-        display: flex;
-        justify-content: space-between;
-        gap: ${getSpacing(3)};
-
-        @media (max-width: ${breakpointsDefinition.mobile}) {
-          flex-direction: column;
-        }
-
-        .name {
-          width: 55%;
-
-          @media (max-width: ${breakpointsDefinition.mobile}) {
-            width: 100%;
-          }
-        }
-
-        .severities {
-          width: 45%;
-
-          @media (max-width: ${breakpointsDefinition.mobile}) {
-            width: 100%;
-          }
-        }
-      }
-    }
+  &:not(:last-child) {
+    padding-bottom: ${getSpacing(3)};
+    margin-bottom: ${getSpacing(3)};
   }
 
-  .controller-buttons {
-    button {
-      margin: 0;
-      margin-left: 54px;
-      margin-bottom: 30px;
-      padding-left: 25px;
-      padding-right: 25px;
+  .contract {
+    width: 100%;
+
+    .subcontent {
+      display: flex;
+      justify-content: space-between;
+      gap: ${getSpacing(3)};
     }
   }
 `;
