@@ -6,6 +6,7 @@ type StyledFormInputProps = {
   isDirty: boolean;
   hasError: boolean;
   noMargin?: boolean;
+  isChecked?: boolean;
   withExtraicons?: boolean;
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
@@ -13,7 +14,7 @@ type StyledFormInputProps = {
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -88,6 +89,11 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       css`
         padding-left: ${getSpacing(5.5)};
       `}
+
+      ${isCheckOrRadio &&
+      css`
+        display: none;
+      `}
     }
 
     label {
@@ -101,6 +107,45 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         position: absolute;
         top: 10px;
         left: ${withPrefixIcon ? "45px" : "17px"};
+      `}
+
+      ${isCheckOrRadio &&
+      css`
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(1.5)};
+        cursor: pointer;
+
+        .checkbox-inner {
+          position: relative;
+          display: block;
+          width: ${getSpacing(5)};
+          height: ${getSpacing(3)};
+          border-radius: 100px;
+          background: var(--grey-500);
+
+          ${isChecked &&
+          css`
+            background: var(--teal);
+          `}
+
+          .checkbox-switch {
+            top: 50%;
+            transform: translateY(-50%);
+            position: absolute;
+            height: ${getSpacing(2.3)};
+            width: ${getSpacing(2.3)};
+            background: var(--white);
+            border-radius: 100px;
+            left: 4px;
+            transition: ease-in-out 0.2s;
+
+            ${isChecked &&
+            css`
+              left: ${getSpacing(2.2)};
+            `}
+          }
+        }
       `}
     }
 

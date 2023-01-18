@@ -18,6 +18,7 @@ export const variables = css`
     --dark-blue: #000723;
     --moderate-blue: #000930;
     --strong-blue: #001571;
+    --teal: #00a1a3;
     --blue: #000c3b;
     --blue-2: #101b4e;
     --blue-3: #1c2c74;

@@ -47,6 +47,8 @@ function FormInputComponent(
   const areAvailableExtraIcons = type === "text" || type === "textarea";
   const isCheckOrRadio = type === "checkbox" || type === "radio";
 
+  const isChecked = type === "checkbox" || type === "radio" ? (localRef.current as any)?.checked : undefined;
+
   const handleOnChange = (e: ChangeEvent<any>) => {
     if (props.onChange) props.onChange(e);
   };
@@ -92,13 +94,22 @@ function FormInputComponent(
     <StyledFormInput
       isDirty={parseIsDirty(isDirty) && colorable}
       isCheckOrRadio={isCheckOrRadio}
+      isChecked={isChecked}
       hasError={!!error && colorable}
       type={type}
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
       withExtraicons={extraIcons}>
       <div className="main-container">
-        {label && <label htmlFor={props.name}>{label}</label>}
+        {label && (
+          <label htmlFor={props.name}>
+            <span className="checkbox-inner">
+              <span className="checkbox-switch" />
+            </span>
+
+            {label}
+          </label>
+        )}
 
         <div className="input-container">
           {prefixIcon && <div className="prefix-icon">{prefixIcon}</div>}
