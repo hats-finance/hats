@@ -254,6 +254,7 @@ export const ipfsTransformUri = (uri: string | undefined) => {
   if (!uri || typeof uri !== "string") {
     return "";
   }
+
   if (uri.startsWith("ipfs")) {
     let ipfs;
     if (uri.startsWith("ipfs://ipfs/")) {

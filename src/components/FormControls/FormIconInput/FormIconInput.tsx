@@ -22,7 +22,6 @@ function FormIconInputComponent(
   ref
 ) {
   const { t } = useTranslation();
-  const [isSVG, setIsSVG] = useState(false);
   const [, setChanged] = useState(false);
   const localRef = useRef<HTMLInputElement>();
 
@@ -46,20 +45,14 @@ function FormIconInputComponent(
           return;
         }
 
-        const blob = new Blob([fr.result]);
+        const isSvg = extension === "svg";
+        const blob = isSvg ? new Blob([fr.result], { type: "image/svg+xml" }) : new Blob([fr.result]);
         const url = URL.createObjectURL(blob);
 
         const validSize = verifyBlobSize(blob.size);
         if (!validSize) return;
 
-        if (extension === "svg") {
-          const svg = await e.target.files![0].text();
-          localRef.current.value = svg;
-          setIsSVG(true);
-        } else {
-          localRef.current.value = url;
-          setIsSVG(false);
-        }
+        localRef.current.value = url;
 
         setChanged((prev) => !prev);
         onChange({
@@ -107,7 +100,7 @@ function FormIconInputComponent(
 
       {value ? (
         <label htmlFor={id} className="icon-preview">
-          {isSVG ? <div dangerouslySetInnerHTML={{ __html: value }} /> : <img src={ipfsTransformUri(value)} alt="thumbnail" />}
+          <img src={ipfsTransformUri(value)} alt="thumbnail" />
         </label>
       ) : (
         <label htmlFor={id} className="icon-add">
