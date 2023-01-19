@@ -5,7 +5,7 @@ import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { isEmailAddress } from "utils/emails.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
-import { IEditedCommunicationEmail, IEditedVaultDescription } from "../types";
+import { IEditedCommunicationEmail, IEditedVaultDescription } from "../../types";
 import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";

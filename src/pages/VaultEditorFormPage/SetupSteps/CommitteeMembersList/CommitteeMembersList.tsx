@@ -3,8 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "../types";
-import { createNewCommitteeMember } from "../utils";
+import { IEditedVaultDescription } from "../../types";
+import { createNewCommitteeMember } from "../../utils";
 import AddIcon from "@mui/icons-material/Add";
 
 export function CommitteeMembersList() {

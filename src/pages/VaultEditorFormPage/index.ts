@@ -1,7 +1,7 @@
-export { CommitteeMembersList } from "./CommitteeMembersList/CommitteeMembersList";
-export { VaultDetailsForm } from "./VaultDetailsForm/VaultDetailsForm";
-export { CommunicationChannelForm } from "./CommunicationChannelForm/CommunicationChannelForm";
-export { ContractsCoveredList } from './ContractsCoveredList/ContractsCoveredList';
-export { CommitteeDetailsForm } from "./CommitteeDetailsForm/CommitteeDetailsForm";
+export { CommitteeMembersList } from "./SetupSteps/CommitteeMembersList/CommitteeMembersList";
+export { VaultDetailsForm } from "./SetupSteps/VaultDetailsForm/VaultDetailsForm";
+export { CommunicationChannelForm } from "./SetupSteps/CommunicationChannelForm/CommunicationChannelForm";
+export { ContractsCoveredList } from "./SetupSteps/ContractsCoveredList/ContractsCoveredList";
+export { CommitteeDetailsForm } from "./SetupSteps/CommitteeDetailsForm/CommitteeDetailsForm";
+export { VulnerabilitySeveritiesList } from "./SetupSteps/VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 export { VaultFormReview } from "./VaultFormReview/VaultFormReview";
-

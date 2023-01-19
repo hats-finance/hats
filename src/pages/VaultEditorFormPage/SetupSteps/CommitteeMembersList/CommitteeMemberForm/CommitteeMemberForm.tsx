@@ -3,7 +3,7 @@ import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form"
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { ICommitteeMember } from "types";
-import { IEditedVaultDescription } from "../../types";
+import { IEditedVaultDescription } from "../../../types";
 import { StyledCommitteeMemberForm } from "./styles";
 import { getPath } from "utils/objects.utils";
 import AddIcon from "@mui/icons-material/Add";

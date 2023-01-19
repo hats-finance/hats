@@ -7,15 +7,15 @@ import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
 import { Loading } from "components";
 import { IVaultDescription } from "types";
-import { ContractsCoveredList, VaultDetailsForm, CommitteeDetailsForm, CommitteeMembersList } from ".";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
-import { VulnerabilitySeveritiesList } from "./VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
+import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import CheckIcon from "@mui/icons-material/Check";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -25,33 +25,15 @@ const VaultEditorFormPage = () => {
   const { ipfsHash } = useParams();
   const [searchParams] = useSearchParams();
 
-  const editorSteps = {
-    setup: {
-      name: "Vault Description",
-      steps: [
-        { name: "Details", title: "Vault description", component: VaultDetailsForm },
-        { name: "Committee", title: "Committee details", component: CommitteeDetailsForm },
-        { name: "Members", title: "Committee members and Encryption keys", component: CommitteeMembersList },
-        { name: "Severities", title: "Severities", component: VulnerabilitySeveritiesList },
-        { name: "Contracts", title: "Contracts/Assets covered", component: ContractsCoveredList },
-        // { name: "Review", title: "Vault review", component: VaultFormReview },
-      ],
-    },
-    deployment: {
-      0: { name: "Details" },
-    },
-  };
-
-  const actualStep = editorSteps.setup;
-
-  const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
-
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
+    mode: "onChange",
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues, trigger } = methods;
+  const { steps, maxStep, currentStepInfo, onChangeCurrentStepNumber } = useVaultEditorSteps(methods);
 
+  const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
   const vaultVersion = useWatch({ control, name: "version" });
 
   async function loadFromIpfs(ipfsHash: string) {
@@ -113,13 +95,11 @@ const VaultEditorFormPage = () => {
     }
   }
 
-  if (loadingFromIpfs || savingToIpfs) {
-    return <Loading fixed />;
-  }
-
   const onSubmit = (data: IEditedVaultDescription) => {
     saveToIpfs(editedFormToDescription(data));
   };
+
+  if (loadingFromIpfs || savingToIpfs) return <Loading fixed />;
 
   return (
     <FormProvider {...methods}>
@@ -127,41 +107,33 @@ const VaultEditorFormPage = () => {
         Show form
       </button>
       <VaultEditorForm className="content-wrapper" onSubmit={handleSubmit(onSubmit)}>
-        {/* <div className="editor-title">
-          {t("VaultEditor.create-vault")} <small>({vaultVersion})</small>
-        </div> */}
-        {/* <p className="editor-description">{t("VaultEditor.create-vault-description")}</p> */}
-
-        {/* {ipfsHash && vaultVersion === "v1" && (
-          <>
-            <p>We will stop supporting v1 vaults, please migrate your vault to v2</p>
-            <button
-              className="migrate-button fill"
-              type="button"
-              onClick={() => setValue("version", "v2", { shouldDirty: true })}>
-              Migrate description to v2
-            </button>
-          </>
-        )} */}
-
+        {/* Title */}
         <div className="editor-title">
           <ArrowBackIcon />
           <p>
             {t("vaultCreator")}
-            <span>/{actualStep.name}</span>
+            <span>/{currentStepInfo.name}</span>
           </p>
         </div>
 
+        {/* Steps control */}
         <VaultEditorStepper>
-          {actualStep.steps.map((step, index) => (
-            <VaultEditorStep key={step.name} active={index === 1} passed={index === 0}>
+          {steps.map((step, index) => (
+            <VaultEditorStep
+              key={step.id}
+              disabled={index > maxStep}
+              active={step.id === currentStepInfo.id}
+              passed={!!step.isValid}
+              onClick={() => onChangeCurrentStepNumber(index)}>
               {index + 1}.{step.name}
+              {step.isValid && <CheckIcon className="ml-2" />}
             </VaultEditorStep>
           ))}
         </VaultEditorStepper>
 
-        {actualStep.steps.map((step, index) => (
-          <Section key={index}>
+        {/* Section */}
+        {steps.map((step) => (
+          <Section key={step.id} visible={step.id === currentStepInfo.id}>
             <p className="section-title">{step.title}</p>
             <div className="section-content">
               <step.component />
@@ -169,55 +141,7 @@ const VaultEditorFormPage = () => {
           </Section>
         ))}
 
-        {/* <Section>
-          <p className="section-title">1. {t("VaultEditor.vault-details.title")}</p>
-          <div className="section-content">
-            <VaultDetailsForm />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">2. {t("VaultEditor.committee-members")}</p>
-          <div className="section-content">
-            <CommitteeMembersList />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">3. {t("VaultEditor.committee-details")}</p>
-          <div className="section-content">
-            <CommitteeDetailsForm />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">4. {t("VaultEditor.contracts-covered")}</p>
-          <div className="section-content">
-            <ContractsCoveredList />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">5. {t("VaultEditor.pgp-key")}</p>
-          <div className="section-content">
-            <CommunicationChannelForm />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">6. {t("VaultEditor.vulnerabilities")}</p>
-          <div className="section-content">
-            <VulnerabilitySeveritiesList />
-          </div>
-        </Section>
-
-        <Section>
-          <p className="section-title">{t("VaultEditor.review-vault.title")}</p>
-          <div className="section-content">
-            <VaultFormReview />
-          </div>
-        </Section> */}
-
+        {/* Action buttons */}
         <div className="buttons-container">
           {formState.isDirty && ipfsHash && (
             <button type="button" onClick={() => handleReset()} className="fill">
@@ -229,10 +153,6 @@ const VaultEditorFormPage = () => {
           </button>
         </div>
       </VaultEditorForm>
-
-      {/* <div className="form-devtool">
-        <DevTool control={control} />
-      </div> */}
     </FormProvider>
   );
 };

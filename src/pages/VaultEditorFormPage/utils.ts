@@ -87,7 +87,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       url: "",
     },
     severitiesOptions: severitiesOptionsForContractsCovered,
-    includesStartAndEndTime: true,
+    includesStartAndEndTime: false,
   } as IEditedVaultDescription;
 };
 

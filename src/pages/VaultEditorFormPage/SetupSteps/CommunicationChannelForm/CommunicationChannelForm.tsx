@@ -8,7 +8,7 @@ import { FormInput, FormPgpPublicKeyInput } from "components";
 import InfoIcon from "assets/icons/info.icon";
 import DownArrowIcon from "assets/icons/down-arrow.icon.svg";
 import UpArrowIcon from "assets/icons/up-arrow.icon.svg";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "../../../constants/constants";
+import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { StyledCommunicationChannelForm, StyledHelper } from "./styles";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
