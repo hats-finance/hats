@@ -50,7 +50,7 @@ const VaultEditorFormPage = () => {
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
   });
-  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
+  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues, trigger } = methods;
 
   const vaultVersion = useWatch({ control, name: "version" });
 

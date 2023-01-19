@@ -12,7 +12,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
       tokenIcon: Yup.string().required(intl("required")),
       website: Yup.string().required(intl("required")),
       name: Yup.string().required(intl("required")),
-      type: Yup.string(),
+      type: Yup.string().required(intl("required")),
       starttime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
