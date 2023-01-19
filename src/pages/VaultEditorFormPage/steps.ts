@@ -18,6 +18,7 @@ export type IEditorSectionsStep = {
   name: string;
   title: string;
   isValid?: boolean;
+  isChecked?: boolean;
   formFields: string[];
   component: React.FC;
 };

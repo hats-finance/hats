@@ -69,12 +69,12 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   return {
     version,
     "project-metadata": {
-      name: "",
-      icon: "",
-      tokenIcon: "",
-      website: "",
-      type: "",
-      emails: [{ address: "", status: "unverified" }],
+      name: "asd",
+      icon: "asd",
+      tokenIcon: "asd",
+      website: "asd",
+      type: "asd",
+      emails: [{ address: "asd@asd.com", status: "unverified" }],
     },
     committee: {
       "multisig-address": "",

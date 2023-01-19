@@ -74,7 +74,7 @@ export const VaultEditorStepper = styled.div`
   color: var(--white);
 `;
 
-export const VaultEditorStep = styled.div<{ active: boolean; passed: boolean; disabled: boolean }>(
+export const VaultEditorStep = styled.div<{ active?: boolean; passed?: boolean; disabled?: boolean }>(
   ({ active, passed, disabled }) => css`
     display: flex;
     align-items: center;

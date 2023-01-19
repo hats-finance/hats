@@ -121,7 +121,7 @@ const VaultEditorFormPage = () => {
           {steps.map((step, index) => (
             <VaultEditorStep
               key={step.id}
-              disabled={index > maxStep}
+              // disabled={index > maxStep}
               active={step.id === currentStepInfo.id}
               passed={!!step.isValid}
               onClick={() => onChangeCurrentStepNumber(index)}>
