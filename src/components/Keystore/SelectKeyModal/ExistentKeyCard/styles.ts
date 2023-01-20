@@ -7,7 +7,7 @@ export const StyledExistentKeyCard = styled.li`
   color: var(--turquoise);
   padding: 8px;
 
-  p {
+  span {
     cursor: pointer;
     transition: 0.2s;
 

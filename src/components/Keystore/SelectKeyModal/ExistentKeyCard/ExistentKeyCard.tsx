@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import { NavLink } from "react-router-dom";
 import classNames from "classnames";
 import useModal from "hooks/useModal";
 import DeleteIcon from "assets/icons/delete.icon.svg";
@@ -24,7 +23,7 @@ const ExistentKeyCard = ({ keypair, onSelect }: KeyRowProps) => {
 
   return (
     <StyledExistentKeyCard key={keypair.alias}>
-      <p
+      <span
         className="title"
         onClick={() => {
           keystoreContext.setSelectedAlias(keypair.alias);
@@ -32,13 +31,13 @@ const ExistentKeyCard = ({ keypair, onSelect }: KeyRowProps) => {
         }}>
         <div className={classNames({ "fish-eye": true, selected })} />
         <span>{keypair.alias}</span>
-      </p>
-      <p className="copy" onClick={showKeyDetails}>
+      </span>
+      <span className="copy" onClick={showKeyDetails}>
         <img src={CopyIcon} alt="display" />
-      </p>
-      <p className="delete" onClick={showKeyDelete}>
+      </span>
+      <span className="delete" onClick={showKeyDelete}>
         <img src={DeleteIcon} alt="delete" />
-      </p>
+      </span>
 
       <KeyDetailsModal keyToShow={keypair} isShowing={isShowingKeyDetails} onHide={hideKeyDetails} />
       <KeyDeleteModal keyToDelete={keypair} isShowing={isShowingKeyDelete} onHide={hideKeyDelete} />
