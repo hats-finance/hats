@@ -7,13 +7,11 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
   const [editorSteps, setEditorSteps] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
   const [currentStepNumber, setCurrentStepNumber] = useState<number>(0);
-  const [maxStep, setMaxStep] = useState<number>(0);
 
   const currentSectionInfo = editorSteps[currentSection];
   const currentStepInfo = currentSectionInfo["steps"][currentStepNumber];
 
   useEffect(() => {
-    console.log(1);
     initFormSteps();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -50,7 +48,6 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
 
     setCurrentSection(firstInvalidStep.section);
     setCurrentStepNumber(firstInvalidStep.index);
-    setMaxStep(firstInvalidStep.index);
 
     // Reset the form in order to delete all the validations made by the trigger
     formMethods.reset();
@@ -104,6 +101,5 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     steps: currentSectionInfo.steps,
     currentStepInfo,
     onChangeCurrentStepNumber,
-    maxStep,
   };
 };

@@ -9,16 +9,21 @@ export const VaultEditorForm = styled.form`
 
   .editor-title {
     display: flex;
-    align-items: center;
-    color: var(--white);
-    font-size: var(--moderate);
-    margin-bottom: ${getSpacing(5)};
+    justify-content: space-between;
 
-    p {
-      margin-left: ${getSpacing(1)};
+    .title {
+      display: flex;
+      align-items: center;
+      color: var(--white);
+      font-size: var(--moderate);
+      margin-bottom: ${getSpacing(5)};
 
-      span {
-        font-weight: 700;
+      p {
+        margin-left: ${getSpacing(1)};
+
+        span {
+          font-weight: 700;
+        }
       }
     }
   }

@@ -59,6 +59,7 @@
     "verify": "Verify",
     "editNft": "Edit NFT",
     "totalAmountOfContracts": "Total amount of contracts added",
+    "advancedMode": "Advanced Mode",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

@@ -5,7 +5,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
-import { Loading } from "components";
+import { FormInput, Loading } from "components";
 import { IVaultDescription } from "types";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
@@ -22,18 +22,18 @@ const VaultEditorFormPage = () => {
   const navigate = useNavigate();
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
+  const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   const { ipfsHash } = useParams();
-  const [searchParams] = useSearchParams();
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
     mode: "onChange",
   });
-  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues, trigger } = methods;
-  const { steps, maxStep, currentStepInfo, onChangeCurrentStepNumber } = useVaultEditorSteps(methods);
+  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
+  const { steps, currentStepInfo, onChangeCurrentStepNumber } = useVaultEditorSteps(methods);
 
-  const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
+  // const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
   const vaultVersion = useWatch({ control, name: "version" });
 
   async function loadFromIpfs(ipfsHash: string) {
@@ -109,11 +109,20 @@ const VaultEditorFormPage = () => {
       <VaultEditorForm className="content-wrapper" onSubmit={handleSubmit(onSubmit)}>
         {/* Title */}
         <div className="editor-title">
-          <ArrowBackIcon />
-          <p>
-            {t("vaultCreator")}
-            <span>/{currentStepInfo.name}</span>
-          </p>
+          <div className="title">
+            <ArrowBackIcon />
+            <p>
+              {t("vaultCreator")}
+              <span>/{currentStepInfo.name}</span>
+            </p>
+          </div>
+          <FormInput
+            name={`isAdvancedMode`}
+            value={`${isAdvancedMode}`}
+            type="checkbox"
+            label={t("advancedMode")}
+            onChange={(e) => setIsAdvancedMode(e.target.checked)}
+          />
         </div>
 
         {/* Steps control */}
