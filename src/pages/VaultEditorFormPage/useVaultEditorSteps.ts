@@ -1,10 +1,13 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { IEditedVaultDescription } from "./types";
 
 export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescription>) => {
+  const { t } = useTranslation();
+
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
   const [isLoaded, setIsLoaded] = useState(false);
@@ -54,6 +57,20 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     return steps;
   }, [editorSections]);
 
+  const editStepStatus = useCallback(
+    async (
+      property: "isValid" | "isChecked",
+      value: boolean = true,
+      step: number = currentStepNumber,
+      section: keyof typeof editorSections = currentSection
+    ) => {
+      const newSteps = { ...editorSections };
+      newSteps[section]["steps"][step][property] = value;
+      setEditorSections(newSteps);
+    },
+    [currentSection, currentStepNumber, editorSections]
+  );
+
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = async () => {
     let firstInvalidStep = allSteps.slice(-1)[0];
@@ -76,17 +93,6 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
 
     // Reset the form in order to delete all the validations made by the trigger
     formMethods.reset();
-  };
-
-  const editStepStatus = async (
-    property: "isValid" | "isChecked",
-    value: boolean = true,
-    step: number = currentStepNumber,
-    section: keyof typeof editorSections = currentSection
-  ) => {
-    const newSteps = { ...editorSections };
-    newSteps[section]["steps"][step][property] = value;
-    setEditorSections(newSteps);
   };
 
   const onGoToStep = async (stepNumber: number) => {
@@ -121,7 +127,7 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     }
   };
 
-  const onGoBack = (): Function | undefined => {
+  const onGoBack = useMemo((): { go: Function; text: string } | undefined => {
     const sectionsNames = Object.keys(editorSections);
     const currentSectionIndex = sectionsNames.indexOf(`${currentSection}`);
     const isInFirstSection = currentSectionIndex === 0;
@@ -136,23 +142,78 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
       const previousSectionSteps = editorSections[previousSection]["steps"];
       const previousSectionLastStepIndex = previousSectionSteps.length - 1;
 
-      return () => {
-        setCurrentSection(previousSection);
-        setCurrentStepNumber(previousSectionLastStepIndex);
+      return {
+        go: async () => {
+          const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
+          editStepStatus("isValid", isStepValid);
+
+          setCurrentSection(previousSection);
+          setCurrentStepNumber(previousSectionLastStepIndex);
+        },
+        text: t("back"),
       };
     }
 
     // If the user is in any other step, go back to the previous step
-    return () => {
-      setCurrentStepNumber(currentStepNumber - 1);
+    return {
+      go: async () => {
+        const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
+        editStepStatus("isValid", isStepValid);
+
+        setCurrentStepNumber(currentStepNumber - 1);
+      },
+      text: t("back"),
     };
-  };
+  }, [currentSection, currentStepInfo.formFields, currentStepNumber, editStepStatus, editorSections, formMethods, t]);
 
-  const onGoNext = (): Function | undefined => {
-    return;
-  };
+  const onGoNext = useMemo((): { go: Function; text: string } => {
+    const sectionsNames = Object.keys(editorSections);
+    const currentSectionIndex = sectionsNames.indexOf(`${currentSection}`);
+    const isInLastSection = currentSectionIndex === sectionsNames.length - 1;
+    const isInLastStep = currentStepNumber === currentSectionInfo["steps"].length - 1;
+    const currentStep = currentSectionInfo["steps"][currentStepNumber];
 
-  const getNextButtonInfo = () => {};
+    // If the user is in the last step of the last section, submit the form
+    if (isInLastSection && isInLastStep) {
+      return {
+        go: () => {},
+        text: t(currentStep.nextButtonTextKey ?? "next"),
+      };
+    }
+
+    // If the user is in the last step of a section, go to the next section
+    if (isInLastStep) {
+      const nextSection = sectionsNames[currentSectionIndex + 1];
+
+      return {
+        go: async () => {
+          const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
+          if (isStepValid) {
+            editStepStatus("isValid", true);
+            editStepStatus("isChecked", true, 0, nextSection);
+
+            setCurrentSection(nextSection);
+            setCurrentStepNumber(0);
+          }
+        },
+        text: t(currentStep.nextButtonTextKey ?? "next"),
+      };
+    }
+
+    // If the user is in any other step, go to the next step
+    return {
+      go: async () => {
+        const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
+        if (isStepValid) {
+          editStepStatus("isValid", true);
+          editStepStatus("isChecked", true, currentStepNumber + 1);
+
+          setCurrentStepNumber(currentStepNumber + 1);
+        }
+      },
+      text: t(currentStep.nextButtonTextKey ?? "next"),
+    };
+  }, [currentSection, currentStepNumber, editorSections, currentSectionInfo, currentStepInfo, formMethods, editStepStatus, t]);
 
   return {
     steps: currentSectionInfo.steps,
@@ -160,6 +221,5 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     onGoToStep,
     onGoBack,
     onGoNext,
-    getNextButtonInfo,
   };
 };

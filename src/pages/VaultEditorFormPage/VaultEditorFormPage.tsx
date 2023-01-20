@@ -33,7 +33,7 @@ const VaultEditorFormPage = () => {
     mode: "onChange",
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onGoToStep, onGoBack } = useVaultEditorSteps(methods);
+  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(methods);
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -148,12 +148,12 @@ const VaultEditorFormPage = () => {
 
         {/* Action buttons */}
         <div className="buttons-container">
-          <Button>
-            {t("next")} <NextIcon className="ml-2" />
+          <Button onClick={() => onGoNext.go()}>
+            {onGoNext.text} <NextIcon className="ml-2" />
           </Button>
-          {onGoBack() && (
-            <Button styleType="invisible" onClick={() => onGoBack()!()}>
-              <BackIcon className="mr-2" /> {t("back")}
+          {onGoBack && (
+            <Button styleType="invisible" onClick={() => onGoBack.go()}>
+              <BackIcon className="mr-2" /> {onGoBack.text}
             </Button>
           )}
         </div>

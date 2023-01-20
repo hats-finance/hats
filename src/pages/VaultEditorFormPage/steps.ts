@@ -18,6 +18,7 @@ export type IEditorSectionsStep = {
   id: string;
   name: string;
   title: string;
+  nextButtonTextKey?: string;
   isAdvanced?: boolean;
   isInvisible?: boolean;
   isValid?: boolean;
@@ -73,6 +74,7 @@ export const AllEditorSections: IEditorSections = {
         isInvisible: true,
         component: SetupReview,
         formFields: undefined,
+        nextButtonTextKey: "continueToVaultCreation",
       },
       // { name: "Review", title: "Vault review", component: VaultFormReview },
     ],
