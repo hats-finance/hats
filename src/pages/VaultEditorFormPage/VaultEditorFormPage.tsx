@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
-import { FormInput, Loading } from "components";
+import { Loading } from "components";
 import { IVaultDescription } from "types";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
@@ -19,13 +19,11 @@ import CheckIcon from "@mui/icons-material/Check";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
-  const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const { ipfsHash } = useParams();
-  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
+  const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
-  const [isAdvancedMode, setIsAdvancedMode] = useState(() => searchParams.get("mode")?.includes("advanced") ?? false);
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
@@ -117,13 +115,6 @@ const VaultEditorFormPage = () => {
               <span>/{currentStepInfo.name}</span>
             </p>
           </div>
-          <FormInput
-            name={`isAdvancedMosdfde`}
-            checked={isAdvancedMode}
-            type="checkbox"
-            label={t("advancedMode")}
-            onChange={(e) => setIsAdvancedMode(e.target.checked)}
-          />
         </div>
 
         {/* Steps control */}

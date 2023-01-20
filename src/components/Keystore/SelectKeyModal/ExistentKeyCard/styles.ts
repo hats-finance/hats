@@ -7,6 +7,15 @@ export const StyledExistentKeyCard = styled.li`
   color: var(--turquoise);
   padding: 8px;
 
+  p {
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
   .fish-eye {
     width: 18px;
     height: 18px;

@@ -17,15 +17,14 @@ type KeyRowProps = {
 const ExistentKeyCard = ({ keypair, onSelect }: KeyRowProps) => {
   const keystoreContext = useContext(KeystoreContext);
 
-  const {isShowing: isShowingKeyDetails, show: showKeyDetails, hide: hideKeyDetails} = useModal();
-  const {isShowing: isShowingKeyDelete, show: showKeyDelete, hide: hideKeyDelete} = useModal();
+  const { isShowing: isShowingKeyDetails, show: showKeyDetails, hide: hideKeyDetails } = useModal();
+  const { isShowing: isShowingKeyDelete, show: showKeyDelete, hide: hideKeyDelete } = useModal();
 
   const selected = keypair.alias === keystoreContext.selectedKey?.alias;
 
   return (
     <StyledExistentKeyCard key={keypair.alias}>
-      <NavLink
-        to="#"
+      <p
         className="title"
         onClick={() => {
           keystoreContext.setSelectedAlias(keypair.alias);
@@ -33,19 +32,13 @@ const ExistentKeyCard = ({ keypair, onSelect }: KeyRowProps) => {
         }}>
         <div className={classNames({ "fish-eye": true, selected })} />
         <span>{keypair.alias}</span>
-      </NavLink>
-      <NavLink
-        to="#"
-        className="copy"
-        onClick={showKeyDetails}>
+      </p>
+      <p className="copy" onClick={showKeyDetails}>
         <img src={CopyIcon} alt="display" />
-      </NavLink>
-      <NavLink
-        to="#"
-        className="delete"
-        onClick={showKeyDelete}>
+      </p>
+      <p className="delete" onClick={showKeyDelete}>
         <img src={DeleteIcon} alt="delete" />
-      </NavLink>
+      </p>
 
       <KeyDetailsModal keyToShow={keypair} isShowing={isShowingKeyDetails} onHide={hideKeyDetails} />
       <KeyDeleteModal keyToDelete={keypair} isShowing={isShowingKeyDelete} onHide={hideKeyDelete} />

@@ -7,7 +7,7 @@ export const StyledCommitteeMemberForm = styled.div`
   border-radius: 4px;
   padding: ${getSpacing(2.5)};
 
-  &:not(:last-child) {
+  &:not(:last-of-type) {
     padding-bottom: ${getSpacing(3)};
     margin-bottom: ${getSpacing(3)};
   }

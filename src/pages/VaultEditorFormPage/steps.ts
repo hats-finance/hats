@@ -17,6 +17,7 @@ export type IEditorSectionsStep = {
   id: string;
   name: string;
   title: string;
+  isAdvanced?: boolean;
   isValid?: boolean;
   isChecked?: boolean;
   formFields: string[];
@@ -54,6 +55,7 @@ export const AllEditorSections: IEditorSections = {
         title: "Severities",
         component: VulnerabilitySeveritiesList,
         formFields: ["vulnerability-severities-spec"],
+        isAdvanced: true,
       },
       {
         id: "contracts",
