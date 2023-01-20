@@ -89,7 +89,7 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     setEditorSections(newSteps);
   };
 
-  const onChangeCurrentStepNumber = async (stepNumber: number) => {
+  const onGoToStep = async (stepNumber: number) => {
     const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
 
     // If the user is going back or is going to a valid step, continue
@@ -108,7 +108,6 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
         } else {
           // If the user is going to a step that is not the next one, we need to check the previous steps
           const previousSteps = editorSections[currentSection]["steps"].slice(0, stepNumber);
-          console.log(previousSteps);
           const previousStepsValid = previousSteps.every((step) => step.isValid);
           const previousStepsChecked = previousSteps.every((step) => step.isChecked);
 
@@ -122,9 +121,45 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     }
   };
 
+  const onGoBack = (): Function | undefined => {
+    const sectionsNames = Object.keys(editorSections);
+    const currentSectionIndex = sectionsNames.indexOf(`${currentSection}`);
+    const isInFirstSection = currentSectionIndex === 0;
+    const isInFirstStep = currentStepNumber === 0;
+
+    // If the user is in the first step of the first section, cant go back
+    if (isInFirstSection && isInFirstStep) return undefined;
+
+    // If the user is in the first step of a section, go back to the previous section
+    if (isInFirstStep) {
+      const previousSection = sectionsNames[currentSectionIndex - 1];
+      const previousSectionSteps = editorSections[previousSection]["steps"];
+      const previousSectionLastStepIndex = previousSectionSteps.length - 1;
+
+      return () => {
+        setCurrentSection(previousSection);
+        setCurrentStepNumber(previousSectionLastStepIndex);
+      };
+    }
+
+    // If the user is in any other step, go back to the previous step
+    return () => {
+      setCurrentStepNumber(currentStepNumber - 1);
+    };
+  };
+
+  const onGoNext = (): Function | undefined => {
+    return;
+  };
+
+  const getNextButtonInfo = () => {};
+
   return {
     steps: currentSectionInfo.steps,
     currentStepInfo,
-    onChangeCurrentStepNumber,
+    onGoToStep,
+    onGoBack,
+    onGoNext,
+    getNextButtonInfo,
   };
 };

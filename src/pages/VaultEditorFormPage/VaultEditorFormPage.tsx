@@ -5,7 +5,7 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { RoutePaths } from "navigation";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
-import { Loading } from "components";
+import { Button, Loading } from "components";
 import { IVaultDescription } from "types";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
@@ -15,6 +15,8 @@ import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import BackIcon from "@mui/icons-material/ArrowBack";
+import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
 
 const VaultEditorFormPage = () => {
@@ -31,7 +33,7 @@ const VaultEditorFormPage = () => {
     mode: "onChange",
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onChangeCurrentStepNumber } = useVaultEditorSteps(methods);
+  const { steps, currentStepInfo, onGoToStep, onGoBack } = useVaultEditorSteps(methods);
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -127,7 +129,7 @@ const VaultEditorFormPage = () => {
                 // disabled={index > maxStep}
                 active={step.id === currentStepInfo.id}
                 passed={!!step.isValid}
-                onClick={() => onChangeCurrentStepNumber(index)}>
+                onClick={() => onGoToStep(index)}>
                 {index + 1}.{step.name}
                 {step.isValid && <CheckIcon className="ml-2" />}
               </VaultEditorStep>
@@ -146,6 +148,16 @@ const VaultEditorFormPage = () => {
 
         {/* Action buttons */}
         <div className="buttons-container">
+          <Button>
+            {t("next")} <NextIcon className="ml-2" />
+          </Button>
+          {onGoBack() && (
+            <Button styleType="invisible" onClick={() => onGoBack()!()}>
+              <BackIcon className="mr-2" /> {t("back")}
+            </Button>
+          )}
+        </div>
+        {/* <div className="buttons-container">
           {formState.isDirty && ipfsHash && (
             <button type="button" onClick={() => handleReset()} className="fill">
               {t("VaultEditor.reset-button")}
@@ -154,7 +166,7 @@ const VaultEditorFormPage = () => {
           <button type="button" onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
             {t("VaultEditor.save-button")}
           </button>
-        </div>
+        </div> */}
       </VaultEditorForm>
     </FormProvider>
   );

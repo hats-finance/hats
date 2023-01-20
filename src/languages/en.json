@@ -63,6 +63,8 @@
     "advancedMode": "Advanced Mode",
     "nextStep": "Next Step",
     "deployVault": "Deploy Vault On-Chain",
+    "back": "Back",
+    "next": "Next",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

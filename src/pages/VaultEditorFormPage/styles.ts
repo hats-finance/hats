@@ -30,22 +30,8 @@ export const VaultEditorForm = styled.form`
 
   .buttons-container {
     display: flex;
-    justify-content: flex-end;
-    gap: ${getSpacing(3)};
-    margin-bottom: ${getSpacing(5)};
-
-    @media (max-width: ${breakpointsDefinition.mobile}) {
-      flex-direction: column;
-    }
-
-    button {
-      min-width: 30%;
-      text-transform: uppercase;
-
-      @media (max-width: ${breakpointsDefinition.mobile}) {
-        width: 100%;
-      }
-    }
+    flex-direction: row-reverse;
+    justify-content: space-between;
   }
 
   .helper-text {
