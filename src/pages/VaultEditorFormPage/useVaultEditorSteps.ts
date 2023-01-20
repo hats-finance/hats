@@ -49,7 +49,7 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     }
 
     return steps;
-  }, [editorSections, isAdvancedMode]);
+  }, [editorSections]);
 
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = async () => {
