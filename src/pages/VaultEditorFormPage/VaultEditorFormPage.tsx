@@ -21,9 +21,11 @@ const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
-  const [savingToIpfs, setSavingToIpfs] = useState(false);
-  const [isAdvancedMode, setIsAdvancedMode] = useState(false);
   const { ipfsHash } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const [savingToIpfs, setSavingToIpfs] = useState(false);
+  const [isAdvancedMode, setIsAdvancedMode] = useState(() => searchParams.get("mode")?.includes("advanced") ?? false);
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
@@ -33,7 +35,6 @@ const VaultEditorFormPage = () => {
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
   const { steps, currentStepInfo, onChangeCurrentStepNumber } = useVaultEditorSteps(methods);
 
-  // const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
   const vaultVersion = useWatch({ control, name: "version" });
 
   async function loadFromIpfs(ipfsHash: string) {
@@ -117,8 +118,8 @@ const VaultEditorFormPage = () => {
             </p>
           </div>
           <FormInput
-            name={`isAdvancedMode`}
-            value={`${isAdvancedMode}`}
+            name={`isAdvancedMosdfde`}
+            checked={isAdvancedMode}
             type="checkbox"
             label={t("advancedMode")}
             onChange={(e) => setIsAdvancedMode(e.target.checked)}
