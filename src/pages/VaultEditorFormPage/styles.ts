@@ -123,7 +123,7 @@ export const Section = styled.div<{ visible: boolean }>(
     }
 
     .section-content {
-      margin-bottom: ${getSpacing(20)};
+      margin-bottom: ${getSpacing(5)};
     }
   `
 );

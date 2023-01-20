@@ -10,11 +10,11 @@ import {
 } from "./types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
-  name: "",
+  name: "asd",
   address: "",
-  "twitter-link": "",
+  "twitter-link": "asd",
   "image-ipfs-link": "",
-  "pgp-keys": [{ publicKey: "" }],
+  "pgp-keys": [{ publicKey: "asd" }],
 });
 
 export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {
@@ -23,7 +23,7 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
 
   return {
     name: "",
-    address: "",
+    address: "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6",
     severities: severitiesIds,
   };
 };
@@ -77,7 +77,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       emails: [{ address: "asd@asd.com", status: "unverified" }],
     },
     committee: {
-      "multisig-address": "",
+      "multisig-address": "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6",
       members: [{ ...createNewCommitteeMember() }],
     },
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],

@@ -7,6 +7,7 @@ import { IEditedVaultDescription } from "./types";
 export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescription>) => {
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const [editorSections, setEditorSections] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
@@ -14,11 +15,6 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
 
   const currentSectionInfo = editorSections[currentSection];
   const currentStepInfo = currentSectionInfo["steps"][currentStepNumber];
-
-  useEffect(() => {
-    initFormSteps();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   useEffect(() => {
     // Remove advanced steps if not in advanced mode
@@ -35,7 +31,14 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
         return sections;
       });
     }
+
+    setIsLoaded(true);
   }, [isAdvancedMode]);
+
+  useEffect(() => {
+    if (isLoaded) initFormSteps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoaded]);
 
   const allSteps = useMemo(() => {
     // Get all the fields from all the sections (setup/deploy)

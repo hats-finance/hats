@@ -52,6 +52,7 @@
     "vaultEditorCommitteeDetailsSafeExplanation": "<strong>Add Gnosis-Safe committee multi-sig address.</strong> \n Don't have a Safe? open <a href='https://app.safe.global/welcome'>here</a>. \n\n The committee members of your vault will automatically be added in the next page. \n\n <strong>Committee requirements:</strong> \n <ul><li>Minimum amount for a committee members is 3.</li> <li>Minimum amount of signers is 2.</li></ul>",
     "vaultEditorSeveritiesExplanation": "Set the severities for the vault.\nThe description of the severity level will serve as the primary criterion for determining whether the report aligns with this level of severity. \n\n This part of the form is pre-filled with a template.",
     "vaultEditorContractsCoveredExplanation": "<strong>Fill the information for each contract or asset covered. You need to fill the address/url to the asset and the possible severities.</strong>",
+    "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault.",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -60,6 +61,8 @@
     "editNft": "Edit NFT",
     "totalAmountOfContracts": "Total amount of contracts added",
     "advancedMode": "Advanced Mode",
+    "nextStep": "Next Step",
+    "deployVault": "Deploy Vault On-Chain",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

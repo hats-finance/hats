@@ -119,17 +119,19 @@ const VaultEditorFormPage = () => {
 
         {/* Steps control */}
         <VaultEditorStepper>
-          {steps.map((step, index) => (
-            <VaultEditorStep
-              key={step.id}
-              // disabled={index > maxStep}
-              active={step.id === currentStepInfo.id}
-              passed={!!step.isValid}
-              onClick={() => onChangeCurrentStepNumber(index)}>
-              {index + 1}.{step.name}
-              {step.isValid && <CheckIcon className="ml-2" />}
-            </VaultEditorStep>
-          ))}
+          {steps
+            .filter((step) => !step.isInvisible)
+            .map((step, index) => (
+              <VaultEditorStep
+                key={step.id}
+                // disabled={index > maxStep}
+                active={step.id === currentStepInfo.id}
+                passed={!!step.isValid}
+                onClick={() => onChangeCurrentStepNumber(index)}>
+                {index + 1}.{step.name}
+                {step.isValid && <CheckIcon className="ml-2" />}
+              </VaultEditorStep>
+            ))}
         </VaultEditorStepper>
 
         {/* Section */}

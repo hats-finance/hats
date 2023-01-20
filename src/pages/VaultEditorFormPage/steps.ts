@@ -5,6 +5,7 @@ import {
   VaultDetailsForm,
   VulnerabilitySeveritiesList,
 } from ".";
+import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
 export type IEditorSections = {
   [key: string]: {
@@ -18,9 +19,10 @@ export type IEditorSectionsStep = {
   name: string;
   title: string;
   isAdvanced?: boolean;
+  isInvisible?: boolean;
   isValid?: boolean;
   isChecked?: boolean;
-  formFields: string[];
+  formFields?: string[];
   component: React.FC;
 };
 
@@ -63,6 +65,14 @@ export const AllEditorSections: IEditorSections = {
         title: "Contracts/Assets covered",
         component: ContractsCoveredList,
         formFields: ["contracts-covered"],
+      },
+      {
+        id: "setupReview",
+        name: "Setup Review",
+        title: "Vault description",
+        isInvisible: true,
+        component: SetupReview,
+        formFields: undefined,
       },
       // { name: "Review", title: "Vault review", component: VaultFormReview },
     ],
