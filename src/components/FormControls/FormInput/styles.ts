@@ -119,8 +119,8 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         .checkbox-inner {
           position: relative;
           display: block;
-          width: ${getSpacing(5)};
-          height: ${getSpacing(3)};
+          width: ${getSpacing(4.4)};
+          height: ${getSpacing(2.4)};
           border-radius: 100px;
           background: var(--grey-500);
 
@@ -133,16 +133,16 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
             top: 50%;
             transform: translateY(-50%);
             position: absolute;
-            height: ${getSpacing(2.3)};
-            width: ${getSpacing(2.3)};
+            height: ${getSpacing(1.8)};
+            width: ${getSpacing(1.8)};
             background: var(--white);
             border-radius: 100px;
-            left: 4px;
+            left: 3px;
             transition: ease-in-out 0.2s;
 
             ${isChecked &&
             css`
-              left: ${getSpacing(2.2)};
+              left: ${getSpacing(2.1)};
             `}
           }
         }
