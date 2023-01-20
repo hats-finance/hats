@@ -79,7 +79,6 @@ export const AllEditorSections: IEditorSections = {
         formFields: undefined,
         nextButtonTextKey: "continueToVaultCreation",
       },
-      // { name: "Review", title: "Vault review", component: VaultFormReview },
     ],
   },
   deploy: {
