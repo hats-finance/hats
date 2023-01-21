@@ -5,12 +5,13 @@ import humanizeDuration from "humanize-duration";
 import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
 import { RootState } from "reducers";
-import { IVault, IVulnerabilitySeverity } from "types";
+import { IVault } from "types";
 import { formatNumber, ipfsTransformUri } from "utils";
 import ArrowIcon from "assets/icons/arrow.icon";
 import { useSeverityReward } from "../../hooks/useSeverityReward";
 import "./Severity.scss";
 import { ContractsCovered } from "../ContractsCovered/ContractsCovered";
+import { IVulnerabilitySeverity } from "@shared/types";
 
 interface IProps {
   severity: IVulnerabilitySeverity;
@@ -92,18 +93,16 @@ export default function Severity(props: IProps) {
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="severity-prize-division-wrapper">
                   {Number(hackerVestedRewardSplit) / 100 > 0 && (
-                    <span className="division vested-token">{`${
-                      Number(hackerVestedRewardSplit) / 100
-                    }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
-                      units: ["d", "h", "m"],
-                    })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    <span className="division vested-token">{`${Number(hackerVestedRewardSplit) / 100
+                      }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
+                        units: ["d", "h", "m"],
+                      })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
                   )}
                   {Number(hackerRewardSplit) / 100 > 0 && (
-                    <span className="division token">{`${
-                      Number(hackerRewardSplit) / 100
-                    }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
-                      (Number(hackerRewardSplit) / 10000) * rewardPrice
-                    )}`}</span>
+                    <span className="division token">{`${Number(hackerRewardSplit) / 100
+                      }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
+                        (Number(hackerRewardSplit) / 10000) * rewardPrice
+                      )}`}</span>
                   )}
                   {Number(committeeRewardSplit) / 100 > 0 && (
                     <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber(
@@ -111,18 +110,16 @@ export default function Severity(props: IProps) {
                     )}`}</span>
                   )}
                   {Number(hackerHatRewardSplit) / 100 > 0 && (
-                    <span className="division vested-hats">{`${
-                      Number(hackerHatRewardSplit) / 100
-                    }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
-                      units: ["d", "h", "m"],
-                    })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
-                      (Number(hackerHatRewardSplit) / 10000) * rewardPrice
-                    )}`}</span>
+                    <span className="division vested-hats">{`${Number(hackerHatRewardSplit) / 100
+                      }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
+                        units: ["d", "h", "m"],
+                      })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
+                        (Number(hackerHatRewardSplit) / 10000) * rewardPrice
+                      )}`}</span>
                   )}
                   {Number(governanceHatRewardSplit) / 100 > 0 && (
-                    <span className="division governance">{`${
-                      Number(governanceHatRewardSplit) / 100
-                    }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    <span className="division governance">{`${Number(governanceHatRewardSplit) / 100
+                      }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
                   )}
                   {Number(swapAndBurnSplit) / 100 > 0 && (
                     <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${formatNumber(

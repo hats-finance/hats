@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "../../types";
+import { IEditedVaultDescription } from "@shared/types";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();

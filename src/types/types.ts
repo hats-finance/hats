@@ -1,5 +1,5 @@
 import { INFTTokenMetadata } from "hooks/nft/types";
-
+import { ICommitteeMember, IVulnerabilitySeverity, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@shared/types";
 export interface IBaseVault {
   id: string;
   descriptionHash: string;
@@ -111,38 +111,6 @@ export interface IVaultDescriptionV2 extends IBaseVaultDescription {
 }
 
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
-
-export interface ICommitteeMember {
-  name: string;
-  address: string;
-  "twitter-link": string;
-  "image-ipfs-link"?: string;
-  "pgp-keys": Array<{ publicKey: string }>;
-}
-
-export interface IBaseVulnerabilitySeverity {
-  name: string;
-  "contracts-covered": { [key: string]: string }[];
-  "nft-metadata": INFTMetaData;
-  description: string;
-}
-
-export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
-  index: number;
-}
-export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
-  percentage: number; // percentage like 1000 (10%) or 8000 (80%)
-}
-
-export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
-
-export interface INFTMetaData {
-  name: string;
-  description: string;
-  animation_url: string;
-  image: string;
-  external_url: string;
-}
 
 export interface IStaker {
   id: string;

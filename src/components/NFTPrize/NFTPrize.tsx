@@ -1,5 +1,5 @@
 import { ipfsTransformUri } from "utils";
-import { IVulnerabilitySeverity } from "types";
+import { IVulnerabilitySeverity } from "@shared/types";
 import { Media } from "components";
 import "styles/NFTPrize.scss";
 

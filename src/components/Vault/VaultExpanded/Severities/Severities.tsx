@@ -1,6 +1,8 @@
 
+import { IVulnerabilitySeverity } from "@shared/types";
 import { useState } from "react";
-import { IVault, IVulnerabilitySeverity } from "types";
+import { IVault } from "types";
+
 import Severity from "./Severity";
 
 interface IProps {

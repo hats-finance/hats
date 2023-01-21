@@ -5,7 +5,7 @@ import {
   IVulnerabilitySeveritiesTemplate,
   IVulnerabilitySeveritiesTemplateV1,
   IVulnerabilitySeveritiesTemplateV2,
-} from "./types";
+} from "@shared/types";
 
 export const convertVulnerabilitySeverityV1ToV2 = (
   severity: IEditedVulnerabilitySeverityV1,

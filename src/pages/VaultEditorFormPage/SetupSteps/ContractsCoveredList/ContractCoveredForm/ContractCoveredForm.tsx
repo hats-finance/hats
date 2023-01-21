@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, FormInput, FormSelectInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { IEditedVaultDescription, IEditedContractCovered } from "../../../types";
+import { IEditedVaultDescription, IEditedContractCovered } from "@shared/types";
 import { StyledContractCoveredForm } from "./styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 

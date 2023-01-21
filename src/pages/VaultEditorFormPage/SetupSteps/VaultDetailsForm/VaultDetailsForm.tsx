@@ -5,7 +5,7 @@ import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { isEmailAddress } from "utils/emails.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
-import { IEditedCommunicationEmail, IEditedVaultDescription } from "../../types";
+import { IEditedCommunicationEmail, IEditedVaultDescription } from "@shared/types";
 import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -126,7 +126,7 @@ export function VaultDetailsForm() {
                     placeholder={t("VaultEditor.vault-details.email-placeholder")}
                     label={t("VaultEditor.vault-details.email")}
                     {...field}
-                    onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
+                    onChange={email.status === "verified" || email.status === "verifying" ? () => { } : field.onChange}
                   />
                   <>{getEmailActionButton(email, field.value, emailIndex)}</>
                 </div>

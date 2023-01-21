@@ -1,13 +1,14 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "types";
+import { IVaultDescription } from "types";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
+  ICommitteeMember,
   IEditedContractCovered,
   IEditedVaultDescription,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
-} from "./types";
+} from "@shared/types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
   name: "asd",

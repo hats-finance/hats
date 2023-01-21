@@ -1,7 +1,7 @@
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ipfsTransformUri } from "utils";
 import TwitterImageIcon from "assets/icons/twitterImage.icon";
-import { ICommitteeMember } from "types";
+import { ICommitteeMember } from "@shared/types";
 import "./Members.scss";
 
 interface IProps {

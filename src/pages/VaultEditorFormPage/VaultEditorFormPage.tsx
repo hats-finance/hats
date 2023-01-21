@@ -7,7 +7,7 @@ import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
 import { Button, Loading } from "components";
 import { IVaultDescription } from "types";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "@shared/types";
 import { uploadVaultDescriptionToIpfs } from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
