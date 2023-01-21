@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
 import { ipfsTransformUri } from "utils";
 import { fixObject } from "hooks/vaults/useVaults";
@@ -29,7 +30,7 @@ const VaultEditorFormPage = () => {
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
-    resolver: getEditedDescriptionYupSchema(t),
+    resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
