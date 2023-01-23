@@ -9,7 +9,7 @@ import { fixObject } from "hooks/vaults/useVaults";
 import { Button, Loading } from "components";
 import { IVaultDescription } from "types";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
-import { uploadVaultDescriptionToIpfs } from "./vaultService";
+import * as VaultService from "./vaultService";
 import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
 import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
@@ -22,11 +22,13 @@ import CheckIcon from "@mui/icons-material/Check";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
-  const { ipfsHash } = useParams();
+  const { editSessionId } = useParams();
   const navigate = useNavigate();
 
-  const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
+  const [loadingEditSession, setLoadingEditSession] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
+
+  const test = () => console.log(getValues());
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
@@ -37,35 +39,31 @@ const VaultEditorFormPage = () => {
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
   const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(
     methods,
-    (data: IEditedVaultDescription) => {
-      console.log(data);
-      saveToIpfs(editedFormToDescription(data));
+    async (data: IEditedVaultDescription) => {
+      const sessionId = await VaultService.updateEditSession(data);
+      navigate(`${RoutePaths.vault_editor}/${sessionId}`);
     }
   );
 
   const vaultVersion = useWatch({ control, name: "version" });
 
-  async function loadFromIpfs(ipfsHash: string) {
+  async function loadEditSessionData(editSessionId: string) {
     try {
-      setLoadingFromIpfs(true);
-      const response = await fetch(ipfsTransformUri(ipfsHash));
-      const newVaultDescription = await response.json();
-      handleReset(descriptionToEditedForm(fixObject(newVaultDescription)));
+      setLoadingEditSession(true);
+
+      const editSessionData = await VaultService.getEditSessionData(editSessionId);
+      handleReset(editSessionData);
     } catch (error) {
       console.error(error);
     } finally {
-      setLoadingFromIpfs(false);
+      setLoadingEditSession(false);
     }
   }
 
-  const test = () => {
-    console.log(getValues());
-  };
-
   useEffect(() => {
-    if (ipfsHash) loadFromIpfs(ipfsHash);
+    if (editSessionId) loadEditSessionData(editSessionId);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ipfsHash]);
+  }, [editSessionId]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -74,7 +72,7 @@ const VaultEditorFormPage = () => {
     const onlyVersionDirty = dirtyFields.length === 1 && dirtyFields[0] === "version";
 
     // If it's a new and clean form description in v1
-    if (!ipfsHash && onlyVersionDirty) {
+    if (!editSessionId && onlyVersionDirty) {
       handleReset(createNewVaultDescription(vaultVersion));
     }
 
@@ -82,7 +80,7 @@ const VaultEditorFormPage = () => {
     if (vaultVersion === "v1") return;
 
     // If it's not a clean form description
-    if (ipfsHash || (!ipfsHash && !onlyVersionDirty)) {
+    if (editSessionId || (!editSessionId && !onlyVersionDirty)) {
       const indexArray = getValues("vulnerability-severities-spec.indexArray");
       const currentSeverities = getValues("vulnerability-severities-spec.severities") as IEditedVulnerabilitySeverityV1[];
 
@@ -92,19 +90,19 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
 
-  async function saveToIpfs(vaultDescription: IVaultDescription) {
-    try {
-      setSavingToIpfs(true);
-      const ipfsHash = await uploadVaultDescriptionToIpfs(vaultDescription);
-      navigate(`${RoutePaths.vault_editor}/${ipfsHash}`);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setSavingToIpfs(false);
-    }
-  }
+  // async function saveToIpfs(vaultDescription: IVaultDescription) {
+  //   try {
+  //     setSavingToIpfs(true);
+  //     const ipfsHash = await VaultService.uploadVaultDescriptionToIpfs(vaultDescription);
+  //     navigate(`${RoutePaths.vault_editor}/${ipfsHash}`);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setSavingToIpfs(false);
+  //   }
+  // }
 
-  if (loadingFromIpfs || savingToIpfs) return <Loading fixed />;
+  if (loadingEditSession || savingToIpfs) return <Loading fixed />;
 
   return (
     <FormProvider {...methods}>

@@ -74,7 +74,7 @@ const routes: RouteObject[] = [
             element: <VaultEditorFormPage />,
           },
           {
-            path: ":ipfsHash",
+            path: ":editSessionId",
             element: <VaultEditorFormPage />,
           },
         ],

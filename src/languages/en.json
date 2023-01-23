@@ -68,6 +68,7 @@
     "next": "Next",
     "continueToVaultCreation": "Continue to Vault Creation",
     "assetsInVault": "Assets in Vault",
+    "submit": "Submit",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

@@ -88,7 +88,9 @@ const VaultComponent = (
           <div className="onlyMobile">{vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}</div>
           <div className="project-name-wrapper">
             <div className="vault-icon">
-              {vaultIcon && <img className="logo" src={ipfsTransformUri(vaultIcon)} alt={`${vaultName} logo`} />}
+              {vaultIcon && (
+                <img className="logo" src={ipfsTransformUri(vaultIcon, { isPinned: !preview })} alt={`${vaultName} logo`} />
+              )}
               {vault.chainId && getVaultChainIcon()}
             </div>
             <div className="name-source-wrapper">

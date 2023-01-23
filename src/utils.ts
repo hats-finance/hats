@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import millify from "millify";
 import { BigNumber } from "ethers";
+import { VAULT_SERVICE } from "settings";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
@@ -250,10 +251,10 @@ export const normalizeAddress = (address: string) => {
   return "";
 };
 
-export const ipfsTransformUri = (uri: string | undefined) => {
-  if (!uri || typeof uri !== "string") {
-    return "";
-  }
+export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPinned: true }) => {
+  if (!uri || typeof uri !== "string") return "";
+
+  const ipfsPrefix = isPinned ? IPFS_PREFIX : `${VAULT_SERVICE}/ipfs`;
 
   if (uri.startsWith("ipfs")) {
     let ipfs;
@@ -264,13 +265,13 @@ export const ipfsTransformUri = (uri: string | undefined) => {
     } else if (uri.startsWith("ipfs://")) {
       ipfs = uri.slice(7);
     }
-    return `${IPFS_PREFIX}/${ipfs}`;
+    return `${ipfsPrefix}/${ipfs}`;
   } else if (uri.startsWith("http")) {
     return uri;
   } else if (uri.startsWith("blob")) {
     return uri;
   }
-  return `${IPFS_PREFIX}/${uri}`;
+  return `${ipfsPrefix}/${uri}`;
 };
 
 export const formatAPY = (apy: number | undefined): string => {

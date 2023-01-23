@@ -100,7 +100,7 @@ function FormIconInputComponent(
 
       {value ? (
         <label htmlFor={id} className="icon-preview">
-          <img src={ipfsTransformUri(value)} alt="thumbnail" />
+          <img src={ipfsTransformUri(value, { isPinned: false })} alt="thumbnail" />
         </label>
       ) : (
         <label htmlFor={id} className="icon-add">

@@ -59,8 +59,8 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
   severitiesIds.sort();
 
   return {
-    name: "Test contract",
-    address: "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6",
+    name: "",
+    address: "",
     severities: severitiesIds,
   };
 };
@@ -106,15 +106,15 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   return {
     version,
     "project-metadata": {
-      name: "Test vault",
-      icon: "https://ipfs.io/ipfs/QmdgiFXy9SJ5hhnADNfgLhGreb97j2r3RttLF7uGxv2NWk/TempelDAO%20logo%20.jpeg",
-      tokenIcon: "https://ipfs.io/ipfs/QmdgiFXy9SJ5hhnADNfgLhGreb97j2r3RttLF7uGxv2NWk/TempelDAO%20logo%20.jpeg",
-      website: "test.com",
-      type: "normal",
-      emails: [{ address: "carlos@test.com", status: "unverified" }],
+      name: "",
+      icon: "",
+      tokenIcon: "",
+      website: "",
+      type: "",
+      emails: [{ address: "", status: "unverified" }],
     },
     committee: {
-      "multisig-address": "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6",
+      "multisig-address": "",
       members: [{ ...createNewCommitteeMember() }],
     },
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],

@@ -80,7 +80,6 @@ export const useVaultEditorSteps = (
 
     for (const step of allSteps) {
       const isValid = await formMethods.trigger(step.formFields as any);
-      console.log(step.name, step.formFields, isValid);
 
       if (!isValid) {
         firstInvalidStep = step;
@@ -91,8 +90,6 @@ export const useVaultEditorSteps = (
         editStepStatus("isChecked", true, step.index, step.section);
       }
     }
-
-    console.log(firstInvalidStep);
 
     setCurrentSection(firstInvalidStep.section);
     setCurrentStepNumber(firstInvalidStep.index);
@@ -184,7 +181,6 @@ export const useVaultEditorSteps = (
       return {
         go: () => {
           formMethods.handleSubmit(onSubmit)();
-          console.log(2);
         },
         text: t(currentStep.nextButtonTextKey ?? "next"),
       };
