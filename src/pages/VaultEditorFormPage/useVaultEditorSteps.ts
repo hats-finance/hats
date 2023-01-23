@@ -219,7 +219,17 @@ export const useVaultEditorSteps = (
       },
       text: t(currentStep.nextButtonTextKey ?? "next"),
     };
-  }, [currentSection, currentStepNumber, editorSections, currentSectionInfo, currentStepInfo, formMethods, editStepStatus, t]);
+  }, [
+    currentSection,
+    currentStepNumber,
+    editorSections,
+    currentSectionInfo,
+    currentStepInfo,
+    formMethods,
+    editStepStatus,
+    onSubmit,
+    t,
+  ]);
 
   return {
     steps: currentSectionInfo.steps,

@@ -1,5 +1,4 @@
 import styled, { css } from "styled-components";
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 import { getSpacing } from "styles";
 
 export const VaultEditorForm = styled.form`

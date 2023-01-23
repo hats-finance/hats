@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { ICommitteeMember } from "types";
 import { IEditedVaultDescription } from "../../../types";
 import { StyledCommitteeMemberForm } from "./styles";
@@ -70,12 +70,12 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount }: CommitteeM
                 key={pgpKey.id}
                 control={control}
                 name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
-                render={({ field, formState }) => (
+                render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
                   <div className="pgp-keys__item">
                     <FormPgpPublicKeyInput
                       noMargin
-                      isDirty={getPath(formState.dirtyFields, field.name)}
-                      error={getPath(formState.errors, field.name)}
+                      isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                      error={getPath(errors, field.name)}
                       notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
                       colorable
                       {...field}

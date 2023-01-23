@@ -10,11 +10,11 @@ import {
 } from "./types";
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
-  name: "asd",
+  name: "",
   address: "",
-  "twitter-link": "asd",
+  "twitter-link": "",
   "image-ipfs-link": "",
-  "pgp-keys": [{ publicKey: "asd" }],
+  "pgp-keys": [{ publicKey: "" }],
 });
 
 export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCovered => {
@@ -69,12 +69,12 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   return {
     version,
     "project-metadata": {
-      name: "asd",
-      icon: "asd",
-      tokenIcon: "asd",
-      website: "asd",
-      type: "asd",
-      emails: [{ address: "asd@asd.com", status: "unverified" }],
+      name: "",
+      icon: "",
+      tokenIcon: "",
+      website: "",
+      type: "",
+      emails: [{ address: "", status: "unverified" }],
     },
     committee: {
       "multisig-address": "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { isEmailAddress } from "utils/emails.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
@@ -93,10 +93,10 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.type`}
-            render={({ field, formState }) => (
+            render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
               <FormSelectInput
-                isDirty={getPath(formState.dirtyFields, field.name)}
-                error={getPath(formState.errors, field.name)}
+                isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                error={getPath(errors, field.name)}
                 label={t("VaultEditor.vault-details.type")}
                 placeholder={t("VaultEditor.vault-details.type-placeholder")}
                 colorable
@@ -114,12 +114,12 @@ export function VaultDetailsForm() {
               key={email.id}
               control={control}
               name={`project-metadata.emails.${emailIndex}.address`}
-              render={({ field, formState }) => (
+              render={({ field, formState: { dirtyFields, defaultValues, errors } }) => (
                 <div className="emails__item">
                   <FormInput
                     prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
-                    isDirty={getPath(formState.dirtyFields, field.name)}
-                    error={getPath(formState.errors, field.name)}
+                    isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                    error={getPath(errors, field.name)}
                     disabled={email.status === "verified" || email.status === "verifying"}
                     noMargin
                     colorable
@@ -168,11 +168,11 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.starttime`}
-            render={({ field, formState }) => (
+            render={({ field, formState: { errors, defaultValues, dirtyFields } }) => (
               <FormDateInput
                 withTime
-                isDirty={getPath(formState.dirtyFields, field.name)}
-                error={getPath(formState.errors, field.name)}
+                isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                error={getPath(errors, field.name)}
                 label={t("VaultEditor.vault-details.starttime")}
                 placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
                 colorable
@@ -183,11 +183,11 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.endtime`}
-            render={({ field, formState }) => (
+            render={({ field, formState: { errors, defaultValues, dirtyFields } }) => (
               <FormDateInput
                 withTime
-                isDirty={getPath(formState.dirtyFields, field.name)}
-                error={getPath(formState.errors, field.name)}
+                isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                error={getPath(errors, field.name)}
                 label={t("VaultEditor.vault-details.endtime")}
                 placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
                 colorable
