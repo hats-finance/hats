@@ -27,18 +27,20 @@ const VaultEditorFormPage = () => {
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
 
-  const onSubmit = (data: IEditedVaultDescription) => {
-    console.log(data);
-    saveToIpfs(editedFormToDescription(data));
-  };
-
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
     mode: "onChange",
   });
-  const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(methods, onSubmit);
+
+  const { formState, reset: handleReset, control, setValue, getValues } = methods;
+  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(
+    methods,
+    (data: IEditedVaultDescription) => {
+      console.log(data);
+      saveToIpfs(editedFormToDescription(data));
+    }
+  );
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -108,7 +110,7 @@ const VaultEditorFormPage = () => {
       <button className="mb-5" onClick={test}>
         Show form
       </button>
-      <VaultEditorForm className="content-wrapper" onSubmit={handleSubmit(onSubmit)}>
+      <VaultEditorForm className="content-wrapper">
         {/* Title */}
         <div className="editor-title">
           <div className="title">
