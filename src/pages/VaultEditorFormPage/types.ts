@@ -11,6 +11,11 @@ export interface IEditedCommunicationEmail {
   status: "verified" | "unverified" | "verifying";
 }
 
+export interface IEditedVaultAsset {
+  address: string;
+  chainId: string;
+}
+
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
 export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
 
@@ -43,6 +48,7 @@ export interface IBaseEditedVaultDescription {
     starttime?: number;
     emails: IEditedCommunicationEmail[];
   };
+  assets: IEditedVaultAsset[];
   committee: {
     "multisig-address": string;
     members: Array<ICommitteeMember>;

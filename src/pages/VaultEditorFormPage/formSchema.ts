@@ -1,6 +1,6 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
-import { getTestAddressOrUrl, getTestEmailAddress } from "utils/yup.utils";
+import { getTestAddressOrUrl, getTestEmailAddress, getTestWalletAddress } from "utils/yup.utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
@@ -85,6 +85,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         })
       ),
     }),
+    assets: Yup.array().of(
+      Yup.object({
+        address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+        chainId: Yup.string().required(intl("required")),
+      })
+    ),
     // "communication-channel": Yup.object({
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
     // }).required(intl("required")),

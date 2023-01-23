@@ -53,6 +53,7 @@
     "vaultEditorSeveritiesExplanation": "Set the severities for the vault.\nThe description of the severity level will serve as the primary criterion for determining whether the report aligns with this level of severity. \n\n This part of the form is pre-filled with a template.",
     "vaultEditorContractsCoveredExplanation": "<strong>Fill the information for each contract or asset covered. You need to fill the address/url to the asset and the possible severities.</strong>",
     "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault.",
+    "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. \n\n Once done you will be requested to execute a transaction that will create a vault on-chain.",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -66,6 +67,7 @@
     "back": "Back",
     "next": "Next",
     "continueToVaultCreation": "Continue to Vault Creation",
+    "assetsInVault": "Assets in Vault",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
@@ -478,6 +480,12 @@
         "description-1": "In order to submit the form for review by hats team.",
         "description-2": "Complete the transaction by authorized signer/s",
         "description-3": "You may be asked to add details to the vault by @hatsOfir"
+      },
+      "vault-assets": {
+        "address": "Asset/token address",
+        "address-placeholder": "Enter asset/token address",
+        "chain": "Asset/token chain",
+        "chain-placeholder": "Select asset/token chain"
       },
       "img-placeholder": "SVG/PNG \n Max(2MB)",
       "icon-placeholder": "SVG \n Max(50KB)"

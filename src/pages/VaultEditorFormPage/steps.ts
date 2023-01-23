@@ -26,7 +26,7 @@ export type IEditorSectionsStep = {
   isInvisible?: boolean;
   isValid?: boolean;
   isChecked?: boolean;
-  formFields?: string[];
+  formFields: string[];
   component: React.FC;
 };
 
@@ -76,7 +76,7 @@ export const AllEditorSections: IEditorSections = {
         title: "Vault description",
         isInvisible: true,
         component: SetupReview,
-        formFields: undefined,
+        formFields: [],
         nextButtonTextKey: "continueToVaultCreation",
       },
     ],
@@ -89,21 +89,21 @@ export const AllEditorSections: IEditorSections = {
         name: "Assets",
         title: "Create a Vault on-chain",
         component: VaultAssetsList,
-        formFields: [""],
+        formFields: ["assets"],
       },
       {
         id: "params",
         name: "Parameters",
         title: "Vault parameters",
         component: VaultParametersForm,
-        formFields: [""],
+        formFields: [],
       },
       {
         id: "preview",
         name: "Preview",
         title: "Preview Vault",
         component: VaultFormReview,
-        formFields: [""],
+        formFields: [],
         nextButtonTextKey: "submit",
       },
     ],
