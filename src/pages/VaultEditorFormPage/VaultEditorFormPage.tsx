@@ -27,13 +27,18 @@ const VaultEditorFormPage = () => {
   const [loadingFromIpfs, setLoadingFromIpfs] = useState<boolean>(false);
   const [savingToIpfs, setSavingToIpfs] = useState(false);
 
+  const onSubmit = (data: IEditedVaultDescription) => {
+    console.log(data);
+    saveToIpfs(editedFormToDescription(data));
+  };
+
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
     resolver: getEditedDescriptionYupSchema(t),
     mode: "onChange",
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(methods);
+  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(methods, onSubmit);
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -96,10 +101,6 @@ const VaultEditorFormPage = () => {
     }
   }
 
-  const onSubmit = (data: IEditedVaultDescription) => {
-    saveToIpfs(editedFormToDescription(data));
-  };
-
   if (loadingFromIpfs || savingToIpfs) return <Loading fixed />;
 
   return (
@@ -130,8 +131,9 @@ const VaultEditorFormPage = () => {
                 active={step.id === currentStepInfo.id}
                 passed={!!step.isValid}
                 onClick={() => onGoToStep(index)}>
-                {index + 1}.{step.name}
                 {step.isValid && <CheckIcon className="ml-2" />}
+                {step.isValid ? "" : `${index + 1}.`}
+                {step.name}
               </VaultEditorStep>
             ))}
         </VaultEditorStepper>

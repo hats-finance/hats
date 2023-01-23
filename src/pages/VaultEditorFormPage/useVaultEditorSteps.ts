@@ -5,7 +5,10 @@ import { useSearchParams } from "react-router-dom";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { IEditedVaultDescription } from "./types";
 
-export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescription>) => {
+export const useVaultEditorSteps = (
+  formMethods: UseFormReturn<IEditedVaultDescription>,
+  onSubmit: (data: IEditedVaultDescription) => void
+) => {
   const { t } = useTranslation();
 
   const [searchParams] = useSearchParams();
@@ -176,7 +179,10 @@ export const useVaultEditorSteps = (formMethods: UseFormReturn<IEditedVaultDescr
     // If the user is in the last step of the last section, submit the form
     if (isInLastSection && isInLastStep) {
       return {
-        go: () => {},
+        go: () => {
+          formMethods.handleSubmit(onSubmit)();
+          console.log(2);
+        },
         text: t(currentStep.nextButtonTextKey ?? "next"),
       };
     }

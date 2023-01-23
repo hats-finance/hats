@@ -104,6 +104,7 @@ export const AllEditorSections: IEditorSections = {
         title: "Preview Vault",
         component: VaultFormReview,
         formFields: [""],
+        nextButtonTextKey: "submit",
       },
     ],
   },
