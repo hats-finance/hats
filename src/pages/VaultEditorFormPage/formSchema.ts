@@ -1,10 +1,9 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { getTestAddressOrUrl, getTestEmailAddress } from "utils/yup.utils";
 
-export const getEditedDescriptionYupSchema = (intl: TFunction) => {
-  const schema = Yup.object().shape({
+export const getEditedDescriptionYupSchema = (intl: TFunction) =>
+  Yup.object().shape({
     version: Yup.string(),
     includesStartAndEndTime: Yup.boolean(),
     "project-metadata": Yup.object({
@@ -90,6 +89,3 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) => {
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
     // }).required(intl("required")),
   });
-
-  return yupResolver(schema);
-};
