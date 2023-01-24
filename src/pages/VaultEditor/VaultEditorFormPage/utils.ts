@@ -4,10 +4,15 @@ import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
   IEditedContractCovered,
   IEditedVaultDescription,
+  IEditedVaultParameters,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
 } from "./types";
+
+export const COMMITTEE_CONTROLLED_SPLIT = 85;
+export const HATS_GOV_SPLIT = 10;
+export const HATS_REWARD_SPLIT = 5;
 
 export const createNewCommitteeMember = (): ICommitteeMember => ({
   name: "Carlos Fontes",
@@ -93,6 +98,18 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
   }
 };
 
+const getDefaultVaultParameters = (): IEditedVaultParameters => {
+  return {
+    fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
+    fixedHatsGovPercetange: HATS_GOV_SPLIT,
+    fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
+    committeePercentage: 5,
+    immediatePercentage: 35,
+    vestedPercentage: 60,
+    maxBountyPercentage: 90,
+  };
+};
+
 export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
   const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
@@ -120,6 +137,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
     assets: [{ address: "", chainId: "" }],
+    parameters: getDefaultVaultParameters(),
     source: {
       name: "",
       url: "",
@@ -189,6 +207,15 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
       },
       "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
       assets: [],
+      parameters: {
+        fixedCommitteeControlledPercetange: 0,
+        fixedHatsGovPercetange: 0,
+        fixedHatsRewardPercetange: 0,
+        committeePercentage: 0,
+        immediatePercentage: 0,
+        vestedPercentage: 0,
+        maxBountyPercentage: 0,
+      },
       severitiesOptions,
       includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
     };
@@ -203,6 +230,15 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     assets: [],
+    parameters: {
+      fixedCommitteeControlledPercetange: 0,
+      fixedHatsGovPercetange: 0,
+      fixedHatsRewardPercetange: 0,
+      committeePercentage: 0,
+      immediatePercentage: 0,
+      vestedPercentage: 0,
+      maxBountyPercentage: 0,
+    },
     severitiesOptions,
     includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };

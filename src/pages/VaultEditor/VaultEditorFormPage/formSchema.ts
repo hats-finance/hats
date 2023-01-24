@@ -1,6 +1,7 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
-import { getTestAddressOrUrl, getTestEmailAddress, getTestWalletAddress } from "utils/yup.utils";
+import { getTestAddressOrUrl, getTestEmailAddress, getTestNumberInBetween, getTestWalletAddress } from "utils/yup.utils";
+import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "./utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
@@ -91,6 +92,16 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         chainId: Yup.string().required(intl("required")),
       })
     ),
+    parameters: Yup.object({
+      fixedCommitteeControlledPercetange: Yup.number().oneOf([COMMITTEE_CONTROLLED_SPLIT], intl("cantChangeThisValue")),
+      fixedHatsGovPercetange: Yup.number().oneOf([HATS_GOV_SPLIT], intl("cantChangeThisValue")),
+      fixedHatsRewardPercetange: Yup.number().oneOf([HATS_REWARD_SPLIT], intl("cantChangeThisValue")),
+      maxBountyPercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 90, true)).required(intl("required")),
+      // The sum of the following 3 parameters should be 100
+      committeePercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 10, true)).required(intl("required")),
+      immediatePercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)).required(intl("required")),
+      vestedPercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)).required(intl("required")),
+    }),
     // "communication-channel": Yup.object({
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
     // }).required(intl("required")),

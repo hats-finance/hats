@@ -16,6 +16,17 @@ export interface IEditedVaultAsset {
   chainId: string;
 }
 
+export interface IEditedVaultParameters {
+  fixedCommitteeControlledPercetange: number;
+  fixedHatsGovPercetange: number;
+  fixedHatsRewardPercetange: number;
+  // Editable
+  maxBountyPercentage: number;
+  immediatePercentage: number;
+  vestedPercentage: number;
+  committeePercentage: number;
+}
+
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
 export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
 
@@ -48,7 +59,6 @@ export interface IBaseEditedVaultDescription {
     starttime?: number;
     emails: IEditedCommunicationEmail[];
   };
-  assets: IEditedVaultAsset[];
   committee: {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
@@ -57,6 +67,8 @@ export interface IBaseEditedVaultDescription {
     "pgp-pk": string | string[];
   };
   "contracts-covered": IEditedContractCovered[];
+  assets: IEditedVaultAsset[];
+  parameters: IEditedVaultParameters;
   source: {
     name: string;
     url: string;

@@ -40,3 +40,22 @@ export const getTestEmailAddress = (intl) => {
     },
   };
 };
+
+export const getTestNumberInBetween = (intl, first: number, second: number, isPercentage: boolean) => {
+  return {
+    name: `is-${isPercentage ? "percentage" : "number"}-between-${first}-and-${second}`,
+    test: (value: number | undefined, ctx: Yup.TestContext) => {
+      const valueToUse = value ?? 0;
+      const isBetween = valueToUse >= first && valueToUse <= second;
+
+      return isBetween
+        ? true
+        : ctx.createError({
+            message: intl("valueShouldBeBetween", {
+              first: `${!isPercentage ? first : `${first}%`}`,
+              second: `${!isPercentage ? second : `${second}%`}`,
+            }),
+          });
+    },
+  };
+};

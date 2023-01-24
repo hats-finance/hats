@@ -2,6 +2,8 @@
   "translation": {
     "version": "Version",
     "required": "Required",
+    "cantChangeThisValue": "You can't change this value",
+    "valueShouldBeBetween": "Should be between {{first}} and {{second}}",
     "invalid-address": "Invalid address",
     "invalid-address-or-url": "Invalid address or URL",
     "invalid-image-type": "Invalid image type, only supported: {{types}}",
@@ -54,6 +56,8 @@
     "vaultEditorContractsCoveredExplanation": "<strong>Fill the information for each contract or asset covered. You need to fill the address/url to the asset and the possible severities.</strong>",
     "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault.",
     "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. \n\n Once done you will be requested to execute a transaction that will create a vault on-chain.",
+    "vaultEditorMaxBountyExplanation": "The max bounty will set the max percent of a bounty that can be paid from the vault. The max bounty allowed is 90%, you can't pay the <strong>100%</strong> of the vault within one bounty. \n\n <strong>Example:</strong> \n\n If a vault has <strong>100K</strong> deposited and the max bounty is set to <strong>90%</strong> in the case of a critical severity the max pay-out will be <strong>90K</strong>. \n\n <strong>Set the max bounty (max 90%)</strong>",
+    "vaultEditorBountySplitExplanation": "The bounty split will set the way a bounty will be splitted when a pay-out occurs. \n\n <strong>Set committee controlled split (the total should be 100%)</strong>",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -94,6 +98,7 @@
     "selectVault": "Select Vault",
     "statusPage": "Status Page",
     "editVault": "Edit Vault",
+    "bountySplit": "Bounty Split",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
@@ -512,6 +517,10 @@
         "address-placeholder": "Enter asset/token address",
         "chain": "Asset/token chain",
         "chain-placeholder": "Select asset/token chain"
+      },
+      "vault-parameters": {
+        "maxBountyPercentage": "Max bounty (max 90%)",
+        "maxBountyPercentage-placeholder": "Max bounty (max 90%)"
       },
       "img-placeholder": "SVG/PNG \n Max(2MB)",
       "icon-placeholder": "SVG \n Max(50KB)"
