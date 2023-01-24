@@ -26,6 +26,11 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0.8)} ${getSpacing(1.4)};
     `}
 
+    ${size === "big" &&
+    css`
+      padding: ${getSpacing(1.8)} ${getSpacing(1.4)};
+    `}
+
     ${styleType === "text" &&
     css`
       display: inline;

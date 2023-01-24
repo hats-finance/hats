@@ -2,7 +2,7 @@ import { StyledButton } from "./styles";
 
 export type ButtonProps = {
   styleType?: "filled" | "outlined" | "invisible" | "icon" | "text";
-  size?: "normal" | "small";
+  size?: "normal" | "small" | "big";
   textColor?: "white" | "primary";
   className?: string;
   expanded?: boolean;
