@@ -48,7 +48,10 @@ const VaultEditorFormPage = () => {
 
   const saveEditSessionData = async () => {
     const data: IEditedVaultDescription = getValues();
-    const sessionIdOrSession = await VaultService.upsertEditSession(data, editSessionId);
+    const sessionIdOrSession = await VaultService.upsertEditSession(
+      data,
+      editSessionId === "new-vault" ? undefined : editSessionId
+    );
 
     if (typeof sessionIdOrSession === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`);
@@ -76,7 +79,13 @@ const VaultEditorFormPage = () => {
   }, [loadingEditSession]);
 
   useEffect(() => {
-    if (editSessionId) loadEditSessionData(editSessionId);
+    if (editSessionId) {
+      if (editSessionId === "new-vault") {
+        saveEditSessionData();
+      } else {
+        loadEditSessionData(editSessionId);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSessionId]);
 

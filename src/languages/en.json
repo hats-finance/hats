@@ -86,6 +86,14 @@
     "preview": "Preview",
     "vaultDeployment": "Vault Deployment",
     "vaultSetup": "Vault Setup",
+    "welcomeVaultEditorHome": "Welcome to the Vault Creator,",
+    "createNewVault": "Create New Vault",
+    "or": "or",
+    "editExistingVaultExplanation": "Connect with a committee member wallet to edit an existing vault or view it's status ",
+    "vault": "Vault",
+    "selectVault": "Select Vault",
+    "statusPage": "Status Page",
+    "editVault": "Edit Vault",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
