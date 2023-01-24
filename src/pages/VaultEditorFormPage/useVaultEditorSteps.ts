@@ -90,6 +90,24 @@ export const useVaultEditorSteps = (
     formMethods.reset();
   };
 
+  const onGoToSection = async (sectionId: keyof typeof AllEditorSections) => {
+    const currentSectionIdx = Object.keys(editorSections).indexOf(`${currentSection}`);
+    const desiredSectionIdx = Object.keys(editorSections).indexOf(`${sectionId}`);
+
+    // If the user is going back or is going to a valid step, continue
+    if (currentSectionIdx >= desiredSectionIdx) {
+      setCurrentSection(sectionId);
+      setCurrentStepNumber(0);
+    } else {
+      const isCurrentSectionValid = currentSectionInfo.steps.every((step) => step.isValid);
+
+      if (isCurrentSectionValid) {
+        setCurrentSection(sectionId);
+        setCurrentStepNumber(0);
+      }
+    }
+  };
+
   const onGoToStep = async (stepNumber: number) => {
     const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
 
@@ -224,10 +242,13 @@ export const useVaultEditorSteps = (
 
   return {
     steps: currentSectionInfo.steps,
+    sections: Object.values(editorSections),
+    currentSectionInfo,
     currentStepInfo,
     onGoToStep,
     onGoBack,
     onGoNext,
+    onGoToSection,
     initFormSteps,
   };
 };

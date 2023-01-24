@@ -12,6 +12,8 @@ import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
 export type IEditorSections = {
   [key: string]: {
+    id: string;
+    title: string;
     name: string;
     steps: IEditorSectionsStep[];
   };
@@ -32,48 +34,50 @@ export type IEditorSectionsStep = {
 
 export const AllEditorSections: IEditorSections = {
   setup: {
-    name: "Vault Description",
+    id: "setup",
+    title: "vaultDescription",
+    name: "vaultSetup",
     steps: [
       {
         id: "details",
-        name: "Details",
-        title: "Vault description",
+        name: "details",
+        title: "vaultDescription",
         component: VaultDetailsForm,
         formFields: ["project-metadata"],
       },
       {
         id: "committee",
-        name: "Committee",
-        title: "Committee details",
+        name: "committee",
+        title: "committeeDetails",
         component: CommitteeDetailsForm,
         formFields: ["committee.multisig-address"],
       },
       {
         id: "members",
-        name: "Members",
-        title: "Committee members and Encryption keys",
+        name: "members",
+        title: "committeeMembersAndEncryption",
         component: CommitteeMembersList,
         formFields: ["committee.members"],
       },
       {
         id: "severities",
-        name: "Severities",
-        title: "Severities",
+        name: "severities",
+        title: "severities",
         component: VulnerabilitySeveritiesList,
         formFields: ["vulnerability-severities-spec"],
         isAdvanced: true,
       },
       {
         id: "contracts",
-        name: "Contracts",
-        title: "Contracts/Assets covered",
+        name: "contracts",
+        title: "contractsAssetsCovered",
         component: ContractsCoveredList,
         formFields: ["contracts-covered"],
       },
       {
         id: "setupReview",
-        name: "Setup Review",
-        title: "Vault description",
+        name: "setupReview",
+        title: "vaultDescription",
         isInvisible: true,
         component: SetupReview,
         formFields: [],
@@ -82,26 +86,28 @@ export const AllEditorSections: IEditorSections = {
     ],
   },
   deploy: {
-    name: "Create a Vault",
+    id: "deploy",
+    title: "vaultCreator",
+    name: "vaultDeployment",
     steps: [
       {
         id: "assets",
-        name: "Assets",
-        title: "Create a Vault on-chain",
+        name: "assets",
+        title: "createVaultOnChain",
         component: VaultAssetsList,
         formFields: ["assets"],
       },
       {
         id: "params",
-        name: "Parameters",
-        title: "Vault parameters",
+        name: "parameters",
+        title: "vaultParameters",
         component: VaultParametersForm,
         formFields: [],
       },
       {
         id: "preview",
-        name: "Preview",
-        title: "Preview Vault",
+        name: "preview",
+        title: "vaultPreview",
         component: VaultFormReview,
         formFields: [],
         nextButtonTextKey: "submit",

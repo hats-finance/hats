@@ -8,11 +8,17 @@ import { Button, Loading } from "components";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import * as VaultService from "./vaultService";
 import { createNewVaultDescription } from "./utils";
-import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
+import {
+  Section,
+  VaultEditorForm,
+  VaultEditorStepController,
+  VaultEditorSectionController,
+  VaultEditorStepper,
+  StyledVaultEditorContainer,
+} from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
-import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
@@ -34,9 +40,8 @@ const VaultEditorFormPage = () => {
   });
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext, initFormSteps } = useVaultEditorSteps(
-    methods,
-    async (data: IEditedVaultDescription) => {
+  const { steps, sections, currentStepInfo, currentSectionInfo, onGoToStep, onGoBack, onGoNext, onGoToSection, initFormSteps } =
+    useVaultEditorSteps(methods, async (data: IEditedVaultDescription) => {
       setSavingToServer(true);
       const sessionIdOrSession = await VaultService.upsertEditSession(data, editSessionId);
 
@@ -46,8 +51,7 @@ const VaultEditorFormPage = () => {
       } else {
         handleReset(sessionIdOrSession);
       }
-    }
-  );
+    });
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -114,62 +118,75 @@ const VaultEditorFormPage = () => {
   if (loadingEditSession || savingToServer) return <Loading fixed />;
 
   return (
-    <FormProvider {...methods}>
-      <button className="mb-5" onClick={test}>
-        Show form
-      </button>
-      <VaultEditorForm className="content-wrapper">
-        {/* Title */}
-        <div className="editor-title">
-          <div className="title">
-            <ArrowBackIcon />
-            <p>
-              {t("vaultCreator")}
-              <span>/{currentStepInfo.name}</span>
-            </p>
-          </div>
+    <StyledVaultEditorContainer>
+      <FormProvider {...methods}>
+        <button className="mb-5" onClick={test}>
+          Show form
+        </button>
+
+        <div className="sections-controller">
+          {sections.map((section, idx) => (
+            <VaultEditorSectionController
+              key={section.id}
+              onClick={() => onGoToSection(section.id)}
+              active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}>
+              <p>{t(section.name)}</p>
+              {idx < sections.length - 1 && <span>&gt;</span>}
+            </VaultEditorSectionController>
+          ))}
         </div>
 
-        {/* Steps control */}
-        <VaultEditorStepper>
-          {steps
-            .filter((step) => !step.isInvisible)
-            .map((step, index) => (
-              <VaultEditorStep
-                key={step.id}
-                // disabled={index > maxStep}
-                active={step.id === currentStepInfo.id}
-                passed={!!step.isValid}
-                onClick={() => onGoToStep(index)}>
-                {step.isValid && <CheckIcon className="ml-2" />}
-                {step.isValid ? "" : `${index + 1}.`}
-                {step.name}
-              </VaultEditorStep>
-            ))}
-        </VaultEditorStepper>
-
-        {/* Section */}
-        {steps.map((step) => (
-          <Section key={step.id} visible={step.id === currentStepInfo.id}>
-            <p className="section-title">{step.title}</p>
-            <div className="section-content">
-              <step.component />
+        <VaultEditorForm className="content-wrapper">
+          {/* Title */}
+          <div className="editor-title">
+            <div className="title">
+              {/* <ArrowBackIcon /> */}
+              <p>
+                {t(currentSectionInfo.title)}
+                <span>/{t(currentStepInfo.name)}</span>
+              </p>
             </div>
-          </Section>
-        ))}
+          </div>
 
-        {/* Action buttons */}
-        <div className="buttons-container">
-          <Button onClick={() => onGoNext.go()}>
-            {onGoNext.text} <NextIcon className="ml-2" />
-          </Button>
-          {onGoBack && (
-            <Button styleType="invisible" onClick={() => onGoBack.go()}>
-              <BackIcon className="mr-2" /> {onGoBack.text}
+          {/* Steps control */}
+          <VaultEditorStepper>
+            {steps
+              .filter((step) => !step.isInvisible)
+              .map((step, index) => (
+                <VaultEditorStepController
+                  key={step.id}
+                  active={step.id === currentStepInfo.id}
+                  passed={!!step.isValid}
+                  onClick={() => onGoToStep(index)}>
+                  {step.isValid && <CheckIcon className="ml-2" />}
+                  {step.isValid ? "" : `${index + 1}.`}
+                  {t(step.name)}
+                </VaultEditorStepController>
+              ))}
+          </VaultEditorStepper>
+
+          {/* Section */}
+          {steps.map((step) => (
+            <Section key={step.id} visible={step.id === currentStepInfo.id}>
+              <p className="section-title">{t(step.title)}</p>
+              <div className="section-content">
+                <step.component />
+              </div>
+            </Section>
+          ))}
+
+          {/* Action buttons */}
+          <div className="buttons-container">
+            <Button onClick={() => onGoNext.go()}>
+              {onGoNext.text} <NextIcon className="ml-2" />
             </Button>
-          )}
-        </div>
-        {/* <div className="buttons-container">
+            {onGoBack && (
+              <Button styleType="invisible" onClick={() => onGoBack.go()}>
+                <BackIcon className="mr-2" /> {onGoBack.text}
+              </Button>
+            )}
+          </div>
+          {/* <div className="buttons-container">
           {formState.isDirty && ipfsHash && (
             <button type="button" onClick={() => handleReset()} className="fill">
               {t("VaultEditor.reset-button")}
@@ -179,8 +196,9 @@ const VaultEditorFormPage = () => {
             {t("VaultEditor.save-button")}
           </button>
         </div> */}
-      </VaultEditorForm>
-    </FormProvider>
+        </VaultEditorForm>
+      </FormProvider>
+    </StyledVaultEditorContainer>
   );
 };
 

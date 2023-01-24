@@ -1,10 +1,18 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
+export const StyledVaultEditorContainer = styled.div`
+  .sections-controller {
+    display: flex;
+    gap: ${getSpacing(2)};
+  }
+`;
+
 export const VaultEditorForm = styled.form`
   background: var(--background-clear-blue);
   padding: ${getSpacing(3)} ${getSpacing(4)};
   border-radius: ${getSpacing(0.5)};
+  margin-bottom: ${getSpacing(8)};
 
   .editor-title {
     display: flex;
@@ -64,13 +72,14 @@ export const VaultEditorStepper = styled.div`
   color: var(--white);
 `;
 
-export const VaultEditorStep = styled.div<{ active?: boolean; passed?: boolean; disabled?: boolean }>(
+export const VaultEditorStepController = styled.div<{ active?: boolean; passed?: boolean; disabled?: boolean }>(
   ({ active, passed, disabled }) => css`
     display: flex;
     align-items: center;
     padding-bottom: ${getSpacing(4)};
     border-bottom: 1px solid transparent;
     cursor: pointer;
+    transition: 0.2s;
 
     ${active &&
     css`
@@ -81,10 +90,35 @@ export const VaultEditorStep = styled.div<{ active?: boolean; passed?: boolean; 
     css`
       color: var(--turquoise);
     `}
-
-    ${disabled &&
+      
+      ${disabled &&
     css`
       color: var(--grey-600);
+    `}
+      
+      &:hover {
+      opacity: 0.7;
+    }
+  `
+);
+
+export const VaultEditorSectionController = styled.div<{ active?: boolean }>(
+  ({ active }) => css`
+    display: flex;
+    align-items: center;
+    color: var(--grey-400);
+    margin-bottom: ${getSpacing(2)};
+    cursor: pointer;
+    transition: 0.2s;
+
+    p {
+      margin-right: ${getSpacing(2)};
+    }
+
+    ${active &&
+    css`
+      font-weight: 700;
+      color: var(--turquoise);
     `}
 
     &:hover {
