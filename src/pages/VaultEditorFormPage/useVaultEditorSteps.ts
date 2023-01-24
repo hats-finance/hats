@@ -7,7 +7,9 @@ import { IEditedVaultDescription } from "./types";
 
 export const useVaultEditorSteps = (
   formMethods: UseFormReturn<IEditedVaultDescription>,
-  onSubmit: (data: IEditedVaultDescription) => void
+  options: {
+    saveData: () => Promise<void>;
+  }
 ) => {
   const { t } = useTranslation();
 
@@ -94,17 +96,12 @@ export const useVaultEditorSteps = (
     const currentSectionIdx = Object.keys(editorSections).indexOf(`${currentSection}`);
     const desiredSectionIdx = Object.keys(editorSections).indexOf(`${sectionId}`);
 
-    // If the user is going back or is going to a valid step, continue
-    if (currentSectionIdx >= desiredSectionIdx) {
+    const userWantsToGoBack = desiredSectionIdx < currentSectionIdx;
+    const isCurrentSectionValid = currentSectionInfo.steps.every((step) => step.isValid);
+
+    if (isCurrentSectionValid || userWantsToGoBack) {
       setCurrentSection(sectionId);
       setCurrentStepNumber(0);
-    } else {
-      const isCurrentSectionValid = currentSectionInfo.steps.every((step) => step.isValid);
-
-      if (isCurrentSectionValid) {
-        setCurrentSection(sectionId);
-        setCurrentStepNumber(0);
-      }
     }
   };
 
@@ -119,6 +116,8 @@ export const useVaultEditorSteps = (
       const userWantsToGoToNextStep = currentStepNumber + 1 === stepNumber;
 
       if (isStepValid) {
+        options.saveData();
+
         if (userWantsToGoToNextStep) {
           editStepStatus("isValid", true);
           editStepStatus("isChecked", true, stepNumber);
@@ -190,7 +189,7 @@ export const useVaultEditorSteps = (
     if (isInLastSection && isInLastStep) {
       return {
         go: () => {
-          formMethods.handleSubmit(onSubmit)();
+          formMethods.handleSubmit(options.saveData)();
         },
         text: t(currentStep.nextButtonTextKey ?? "next"),
       };
@@ -204,6 +203,8 @@ export const useVaultEditorSteps = (
         go: async () => {
           const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
           if (isStepValid) {
+            options.saveData();
+
             editStepStatus("isValid", true);
             editStepStatus("isChecked", true, 0, nextSection);
 
@@ -220,6 +221,8 @@ export const useVaultEditorSteps = (
       go: async () => {
         const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
         if (isStepValid) {
+          options.saveData();
+
           editStepStatus("isValid", true);
           editStepStatus("isChecked", true, currentStepNumber + 1);
 
@@ -236,7 +239,7 @@ export const useVaultEditorSteps = (
     currentStepInfo,
     formMethods,
     editStepStatus,
-    onSubmit,
+    options,
     t,
   ]);
 

@@ -29,7 +29,6 @@ const VaultEditorFormPage = () => {
   const navigate = useNavigate();
 
   const [loadingEditSession, setLoadingEditSession] = useState(false);
-  const [savingToServer, setSavingToServer] = useState(false);
 
   const test = () => console.log(getValues());
 
@@ -41,19 +40,22 @@ const VaultEditorFormPage = () => {
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
   const { steps, sections, currentStepInfo, currentSectionInfo, onGoToStep, onGoBack, onGoNext, onGoToSection, initFormSteps } =
-    useVaultEditorSteps(methods, async (data: IEditedVaultDescription) => {
-      setSavingToServer(true);
-      const sessionIdOrSession = await VaultService.upsertEditSession(data, editSessionId);
-
-      setSavingToServer(false);
-      if (typeof sessionIdOrSession === "string") {
-        navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`);
-      } else {
-        handleReset(sessionIdOrSession);
-      }
+    useVaultEditorSteps(methods, {
+      saveData: () => saveEditSessionData(),
     });
 
   const vaultVersion = useWatch({ control, name: "version" });
+
+  const saveEditSessionData = async () => {
+    const data: IEditedVaultDescription = getValues();
+    const sessionIdOrSession = await VaultService.upsertEditSession(data, editSessionId);
+
+    if (typeof sessionIdOrSession === "string") {
+      navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`);
+    } else {
+      handleReset(sessionIdOrSession, { keepDefaultValues: true });
+    }
+  };
 
   async function loadEditSessionData(editSessionId: string) {
     try {
@@ -115,7 +117,7 @@ const VaultEditorFormPage = () => {
   //   }
   // }
 
-  if (loadingEditSession || savingToServer) return <Loading fixed />;
+  if (loadingEditSession) return <Loading fixed />;
 
   return (
     <StyledVaultEditorContainer>
