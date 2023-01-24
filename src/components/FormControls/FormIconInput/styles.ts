@@ -27,6 +27,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
 
     .icon-add,
     .icon-preview {
+      position: relative;
       cursor: pointer;
       width: ${getSpacing(15)};
       height: ${getSpacing(15)};
@@ -47,6 +48,10 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       css`
         border-color: var(--error-red);
       `}
+
+      label {
+        cursor: pointer;
+      }
     }
 
     .icon-add {
@@ -60,6 +65,17 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
     }
 
     .icon-preview {
+      padding: ${getSpacing(1)};
+
+      label {
+        position: absolute;
+        top: ${getSpacing(1)};
+        background: black;
+        opacity: 0.5;
+        padding: ${getSpacing(0.2)} ${getSpacing(0.6)};
+        border-radius: 4px;
+      }
+
       img {
         object-fit: contain;
         width: 100%;

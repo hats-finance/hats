@@ -100,12 +100,13 @@ function FormIconInputComponent(
 
       {value ? (
         <label htmlFor={id} className="icon-preview">
+          {label && <label htmlFor={id}>{label}</label>}
           <img src={ipfsTransformUri(value, { isPinned: false })} alt="thumbnail" />
         </label>
       ) : (
         <label htmlFor={id} className="icon-add">
           <img src={AddIcon} alt="add" />
-          {label && <label>{label}</label>}
+          {label && <label htmlFor={id}>{label}</label>}
           <p>{getPlaceholder()}</p>
         </label>
       )}
