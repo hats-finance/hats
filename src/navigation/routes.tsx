@@ -10,6 +10,7 @@ import {
   CommitteeToolsPage,
   VaultEditorFormPage,
   AirdropMachinePage,
+  VaultEditorHome,
 } from "pages";
 
 const routes: RouteObject[] = [
@@ -71,7 +72,7 @@ const routes: RouteObject[] = [
         children: [
           {
             path: "",
-            element: <VaultEditorFormPage />,
+            element: <VaultEditorHome />,
           },
           {
             path: ":editSessionId",
