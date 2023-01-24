@@ -14,11 +14,6 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
       position: absolute;
       top: 10px;
       left: 17px;
-
-      ${hasError &&
-      css`
-        color: var(--error-red);
-      `}
     }
 
     span.error {
