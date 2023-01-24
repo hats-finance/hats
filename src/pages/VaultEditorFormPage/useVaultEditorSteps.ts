@@ -13,7 +13,6 @@ export const useVaultEditorSteps = (
 
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const [editorSections, setEditorSections] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
@@ -37,14 +36,7 @@ export const useVaultEditorSteps = (
         return sections;
       });
     }
-
-    setIsLoaded(true);
   }, [isAdvancedMode]);
-
-  useEffect(() => {
-    if (isLoaded) initFormSteps();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded]);
 
   const allSteps = useMemo(() => {
     // Get all the fields from all the sections (setup/deploy)
@@ -236,5 +228,6 @@ export const useVaultEditorSteps = (
     onGoToStep,
     onGoBack,
     onGoNext,
+    initFormSteps,
   };
 };

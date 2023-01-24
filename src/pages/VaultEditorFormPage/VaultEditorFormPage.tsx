@@ -4,13 +4,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
-import { ipfsTransformUri } from "utils";
-import { fixObject } from "hooks/vaults/useVaults";
 import { Button, Loading } from "components";
-import { IVaultDescription } from "types";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import * as VaultService from "./vaultService";
-import { descriptionToEditedForm, editedFormToDescription, createNewVaultDescription } from "./utils";
+import { createNewVaultDescription } from "./utils";
 import { Section, VaultEditorForm, VaultEditorStep, VaultEditorStepper } from "./styles";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
@@ -25,8 +22,8 @@ const VaultEditorFormPage = () => {
   const { editSessionId } = useParams();
   const navigate = useNavigate();
 
-  const [loadingEditSession, setLoadingEditSession] = useState<boolean>(false);
-  const [savingToIpfs, setSavingToIpfs] = useState(false);
+  const [loadingEditSession, setLoadingEditSession] = useState(false);
+  const [savingToServer, setSavingToServer] = useState(false);
 
   const test = () => console.log(getValues());
 
@@ -37,11 +34,18 @@ const VaultEditorFormPage = () => {
   });
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext } = useVaultEditorSteps(
+  const { steps, currentStepInfo, onGoToStep, onGoBack, onGoNext, initFormSteps } = useVaultEditorSteps(
     methods,
     async (data: IEditedVaultDescription) => {
-      const sessionId = await VaultService.updateEditSession(data);
-      navigate(`${RoutePaths.vault_editor}/${sessionId}`);
+      setSavingToServer(true);
+      const sessionIdOrSession = await VaultService.upsertEditSession(data, editSessionId);
+
+      setSavingToServer(false);
+      if (typeof sessionIdOrSession === "string") {
+        navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`);
+      } else {
+        handleReset(sessionIdOrSession);
+      }
     }
   );
 
@@ -59,6 +63,11 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(false);
     }
   }
+
+  useEffect(() => {
+    initFormSteps();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loadingEditSession]);
 
   useEffect(() => {
     if (editSessionId) loadEditSessionData(editSessionId);
@@ -102,7 +111,7 @@ const VaultEditorFormPage = () => {
   //   }
   // }
 
-  if (loadingEditSession || savingToIpfs) return <Loading fixed />;
+  if (loadingEditSession || savingToServer) return <Loading fixed />;
 
   return (
     <FormProvider {...methods}>

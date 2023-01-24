@@ -80,7 +80,10 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
   return response.data;
 }
 
-export async function updateEditSession(editSession: IEditedVaultDescription, editSessionId?: string): Promise<string> {
+export async function upsertEditSession(
+  editSession: IEditedVaultDescription,
+  editSessionId?: string
+): Promise<string | IEditedVaultDescription> {
   const iconsPaths = ["project-metadata.icon", "project-metadata.tokenIcon"];
   editSession.committee.members.map((_, index) => iconsPaths.push(`committee.members.${index}.image-ipfs-link`));
 
@@ -98,11 +101,11 @@ export async function updateEditSession(editSession: IEditedVaultDescription, ed
 
   formData.append("editSession", JSON.stringify(editSession));
 
-  const response = await axios.post(`${VAULT_SERVICE}/edit-session`, formData, {
+  const response = await axios.post(`${VAULT_SERVICE}/edit-session/${editSessionId ?? ""}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
   });
 
-  return response.headers["x-new-id"];
+  return response.headers["x-new-id"] ?? (response.data as IEditedVaultDescription);
 }
