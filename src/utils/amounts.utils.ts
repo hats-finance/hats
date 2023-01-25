@@ -46,3 +46,7 @@ export class Amount {
     return `${int}${decimalPart ? `.${decimalPart}` : ""}`;
   }
 }
+
+export function toFixedIfNecessary(value: string | number, dp: number) {
+  return +parseFloat(`${value}`).toFixed(dp);
+}
