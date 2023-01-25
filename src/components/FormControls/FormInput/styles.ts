@@ -64,7 +64,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       ${hasError &&
       css`
-        border-color: var(--error-red);
+        border-color: var(--error-red) !important;
       `}
 
       ${isCheckOrRadio &&
