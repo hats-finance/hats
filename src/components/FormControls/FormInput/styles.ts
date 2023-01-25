@@ -7,6 +7,7 @@ type StyledFormInputProps = {
   hasError: boolean;
   noMargin?: boolean;
   isChecked?: boolean;
+  noLabel?: boolean;
   withExtraicons?: boolean;
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
@@ -14,7 +15,7 @@ type StyledFormInputProps = {
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked, noLabel }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -78,7 +79,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     }
 
     input {
-      padding: ${getSpacing(3.6)} ${getSpacing(2)} ${getSpacing(1.2)};
+      padding: ${getSpacing(noLabel ? 1.2 : 3.6)} ${getSpacing(noLabel ? 1.5 : 2)} ${getSpacing(1.2)};
 
       ${withExtraicons &&
       css`

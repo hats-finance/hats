@@ -99,6 +99,7 @@ function FormInputComponent(
       isDirty={parseIsDirty(isDirty) && colorable}
       isCheckOrRadio={isCheckOrRadio}
       isChecked={isChecked}
+      noLabel={!label}
       hasError={!!error && colorable}
       type={type}
       noMargin={noMargin}
