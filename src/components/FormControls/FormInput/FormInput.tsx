@@ -14,6 +14,7 @@ type FormInputProps = {
   label?: string;
   rows?: number;
   pastable?: boolean;
+  noErrorLabel?: boolean;
   copyable?: boolean;
   removable?: boolean;
   colorable?: boolean;
@@ -29,6 +30,7 @@ function FormInputComponent(
     pastable = false,
     copyable = false,
     removable = false,
+    noErrorLabel = false,
     type = "text",
     colorable = false,
     noMargin = false,
@@ -130,7 +132,7 @@ function FormInputComponent(
         </div>
       </div>
 
-      {error && <span className="error">{error.message}</span>}
+      {error && !noErrorLabel && <span className="error">{error.message}</span>}
     </StyledFormInput>
   );
 }
