@@ -7,7 +7,7 @@ import { parseIsDirty } from "../utils";
 
 const DEFAULT_ROWS = 10;
 
-export type FormInputType = "text" | "textarea" | "number" | "checkbox" | "radio";
+export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "checkbox" | "radio";
 
 type FormInputProps = {
   type?: FormInputType;
@@ -66,7 +66,7 @@ function FormInputComponent(
   };
 
   const removeNotNumber = (e: KeyboardEvent) => {
-    const notAllowedKeys = ["e", "+", "-"];
+    const notAllowedKeys = type === "number" ? ["e", "+", "-"] : ["e", "+", "-", ".", ","];
     if (notAllowedKeys.includes(e.key)) {
       e.preventDefault();
       e.stopPropagation();
@@ -85,6 +85,10 @@ function FormInputComponent(
       return <textarea {...props} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
     } else if (type === "number") {
       return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
+    } else if (type === "whole-number") {
+      return (
+        <input {...props} id={props.name} type="number" ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />
+      );
     } else {
       return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
     }
