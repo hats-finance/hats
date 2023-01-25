@@ -102,7 +102,7 @@ export const AllEditorSections: IEditorSections = {
         name: "parameters",
         title: "vaultParameters",
         component: VaultParametersForm,
-        formFields: [],
+        formFields: ["parameters"],
       },
       {
         id: "preview",
