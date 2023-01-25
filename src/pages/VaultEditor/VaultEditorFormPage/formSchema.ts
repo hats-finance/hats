@@ -96,11 +96,35 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       fixedCommitteeControlledPercetange: Yup.number().oneOf([COMMITTEE_CONTROLLED_SPLIT], intl("cantChangeThisValue")),
       fixedHatsGovPercetange: Yup.number().oneOf([HATS_GOV_SPLIT], intl("cantChangeThisValue")),
       fixedHatsRewardPercetange: Yup.number().oneOf([HATS_REWARD_SPLIT], intl("cantChangeThisValue")),
-      maxBountyPercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 90, true)).required(intl("required")),
+      maxBountyPercentage: Yup.number()
+        .test(getTestNumberInBetween(intl, 10, 90, true))
+        .required(intl("required"))
+        .typeError(intl("required")),
       // The sum of the following 3 parameters should be 100
-      committeePercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 10, true)).required(intl("required")),
-      immediatePercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)).required(intl("required")),
-      vestedPercentage: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)).required(intl("required")),
+      immediatePercentage: Yup.number()
+        .test(getTestNumberInBetween(intl, 0, 100, true))
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .test("max-100", "max-100", function (immediatePercentage) {
+          const { vestedPercentage, committeePercentage } = this.parent;
+          return immediatePercentage + vestedPercentage + committeePercentage === 100;
+        }),
+      vestedPercentage: Yup.number()
+        .test(getTestNumberInBetween(intl, 0, 100, true))
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .test("max-100", "max-100", function (vestedPercentage) {
+          const { immediatePercentage, committeePercentage } = this.parent;
+          return immediatePercentage + vestedPercentage + committeePercentage === 100;
+        }),
+      committeePercentage: Yup.number()
+        .test(getTestNumberInBetween(intl, 0, 10, true))
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .test("max-100", "max-100", function (committeePercentage) {
+          const { immediatePercentage, vestedPercentage } = this.parent;
+          return immediatePercentage + vestedPercentage + committeePercentage === 100;
+        }),
     }),
     // "communication-channel": Yup.object({
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
