@@ -6,6 +6,7 @@ import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultDescription } from "../../types";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
+import { toFixedIfNecessary } from "utils/amounts.utils";
 
 export const VaultParametersForm = () => {
   const { t } = useTranslation();
@@ -101,7 +102,7 @@ export const VaultParametersForm = () => {
                 <div className="previewDapp">
                   <FormInput
                     disabled
-                    value={immediatePercentagePreview + "%"}
+                    value={toFixedIfNecessary(immediatePercentagePreview, 2) + "%"}
                     readOnly
                     noErrorLabel
                     noMargin
@@ -128,7 +129,14 @@ export const VaultParametersForm = () => {
                   />
                 </div>
                 <div className="previewDapp">
-                  <FormInput disabled value={vestedPercentagePreview + "%"} readOnly noErrorLabel noMargin placeholder="-- (%)" />
+                  <FormInput
+                    disabled
+                    value={toFixedIfNecessary(vestedPercentagePreview, 2) + "%"}
+                    readOnly
+                    noErrorLabel
+                    noMargin
+                    placeholder="-- (%)"
+                  />
                 </div>
               </div>
             </div>
@@ -154,7 +162,7 @@ export const VaultParametersForm = () => {
                 <div className="previewDapp">
                   <FormInput
                     disabled
-                    value={committeePercentagePreview + "%"}
+                    value={toFixedIfNecessary(committeePercentagePreview, 2) + "%"}
                     readOnly
                     noErrorLabel
                     noMargin
