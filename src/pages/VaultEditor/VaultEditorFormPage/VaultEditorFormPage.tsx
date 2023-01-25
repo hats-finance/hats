@@ -56,7 +56,7 @@ const VaultEditorFormPage = () => {
     if (typeof sessionIdOrSession === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`, { replace: true });
     } else {
-      handleReset(sessionIdOrSession, { keepDefaultValues: true });
+      handleReset(sessionIdOrSession, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
     }
   };
 
