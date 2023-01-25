@@ -70,7 +70,7 @@ export const useVaultEditorSteps = (
 
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = async () => {
-    let firstInvalidStep = allSteps.slice(-1)[0];
+    let firstInvalidStep = allSteps[0];
 
     for (const step of allSteps) {
       const isValid = await formMethods.trigger(step.formFields as any);
