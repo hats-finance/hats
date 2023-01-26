@@ -1181,7 +1181,7 @@
     core-js-pure "^3.25.1"
     regenerator-runtime "^0.13.11"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.14.0", "@babel/runtime@^7.15.4":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.15.4":
   version "7.20.1"
   resolved "https://registry.npmjs.org/@babel/runtime/-/runtime-7.20.1.tgz"
   integrity sha512-mrzLkl6U9YLF8qpqI7TB82PESyEGjm/0Ly91jG575eVxMMlb8fYfOXFZIJ8XfLrJZQbm7dlKry2bJmXBUEkdFg==
@@ -1450,21 +1450,6 @@
     color "^3.2.1"
     mersenne-twister "^1.1.0"
     react-blockies "^1.4.1"
-
-"@emotion-icons/emotion-icon@4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@emotion-icons/emotion-icon/-/emotion-icon-4.1.0.tgz#587667e92a72dc3b271713eed4b72c6bf3b22df1"
-  integrity sha512-bOUbWj8DPjUK5MtRx2ApMudOnh/tasqJwa+sdRbqsZD0g0hYf0jCsTDNs/57VvGOJH2PfWDKD1jbLjwajAYT9A==
-  dependencies:
-    "@babel/runtime" "^7.14.0"
-
-"@emotion-icons/octicons@^3.27.0":
-  version "3.27.0"
-  resolved "https://registry.yarnpkg.com/@emotion-icons/octicons/-/octicons-3.27.0.tgz#bd3fbdf5fc9781997e0bcc582415b66201388741"
-  integrity sha512-O9PNyFrN2Zr/a0wCzNND4Fy2FC02J5FKNlDoFc36EsMbUrvGfUW7T2fECb6WmEAoLiL5rC2sJSZcHb6ieJugCQ==
-  dependencies:
-    "@babel/runtime" "^7.15.4"
-    "@emotion-icons/emotion-icon" "4.1.0"
 
 "@emotion/babel-plugin@^11.10.5":
   version "11.10.5"
@@ -3152,6 +3137,21 @@
     "@stablelib/random" "^1.0.2"
     "@stablelib/wipe" "^1.0.1"
 
+"@styled-icons/octicons@^10.47.0":
+  version "10.47.0"
+  resolved "https://registry.yarnpkg.com/@styled-icons/octicons/-/octicons-10.47.0.tgz#a062f275730c1bf70df0b19fe41e9f0db9c24f5d"
+  integrity sha512-JOqEbwbh23u/AdaINod8ZeVN5MEcOvkSeMTwGIPaPgz5PNuWRj/+1LpixmBeZjAr/WhB0pxZBBwA+e91BelQCA==
+  dependencies:
+    "@babel/runtime" "^7.20.7"
+    "@styled-icons/styled-icon" "^10.7.0"
+
+"@styled-icons/styled-icon@^10.7.0":
+  version "10.7.0"
+  resolved "https://registry.yarnpkg.com/@styled-icons/styled-icon/-/styled-icon-10.7.0.tgz#d6960e719b8567c8d0d3a87c40fb6f5b4952a228"
+  integrity sha512-SCrhCfRyoY8DY7gUkpz+B0RqUg/n1Zaqrr2+YKmK/AyeNfCcoHuP4R9N4H0p/NA1l7PTU10ZkAWSLi68phnAjw==
+  dependencies:
+    "@babel/runtime" "^7.19.0"
+
 "@surma/rollup-plugin-off-main-thread@^2.2.3":
   version "2.2.3"
   resolved "https://registry.yarnpkg.com/@surma/rollup-plugin-off-main-thread/-/rollup-plugin-off-main-thread-2.2.3.tgz#ee34985952ca21558ab0d952f00298ad2190c053"
@@ -4701,15 +4701,15 @@
     "@webassemblyjs/ast" "1.11.1"
     "@xtuc/long" "4.2.2"
 
-"@wherever/react-notification-feed@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.2.11.tgz#1c966809957fc052031cd15456849d851173d81d"
-  integrity sha512-6MXyqX9fCHBsYJA2tdX00UpD6hhcs74pYt3+dDzalivitYkDibkHFgheI5rpQ8ct8cIuFZMLgKlj1FEiaFkFrg==
+"@wherever/react-notification-feed@^0.2.13":
+  version "0.2.13"
+  resolved "https://registry.yarnpkg.com/@wherever/react-notification-feed/-/react-notification-feed-0.2.13.tgz#e9ee805cadd1f8d39cb5ef60dba37d86fcfdcdb1"
+  integrity sha512-Nk7D8tx1pk3Pn0ZsK6PhYZyB8fcUS5EG4ivcB8MvTZq1tCiQHp55PlZCynckm/HLL9fUILC1PmaZ/Hd6khG+Dw==
   dependencies:
     "@apollo/client" "^3.6.9"
-    "@emotion-icons/octicons" "^3.27.0"
     "@epnsproject/sdk-restapi" "^0.1.20"
     "@popperjs/core" "^2.11.6"
+    "@styled-icons/octicons" "^10.47.0"
     dayjs "^1.11.5"
     ethers "^5.6.9"
     graphql "^16.6.0"
