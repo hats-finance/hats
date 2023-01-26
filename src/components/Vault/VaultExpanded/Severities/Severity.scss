@@ -1,4 +1,4 @@
-@import 'styles/constants.scss';
+@import "styles/constants.scss";
 
 .severity-wrapper {
   display: flex;
@@ -45,7 +45,7 @@
       flex-direction: column;
       flex: auto;
       border-right: 1px solid $purple-blue;
-      padding: 20px 40px 35px;
+      padding: 20px;
       flex: 1 1 0px;
 
       .vault-expanded-subtitle {
@@ -118,7 +118,7 @@
 
         .nft-media-wrapper {
           padding: 0 0 30px;
-          
+
           span,
           img,
           video {
