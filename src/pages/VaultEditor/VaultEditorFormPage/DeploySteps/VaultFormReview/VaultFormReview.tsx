@@ -109,21 +109,19 @@ export function VaultFormReview() {
 
   return (
     <StyledVaultFormReview>
-      <p className="description">
-        {t("VaultEditor.review-vault.description-1")} <br /> {t("VaultEditor.review-vault.description-2")}
-      </p>
-      <p className="description">{t("VaultEditor.review-vault.description-3")}</p>
+      <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorVaultPreviewExplanation") }} />
 
-      <div>
-        <label>{t("VaultEditor.preview-vault")}</label>
-        <div className="preview-vault">
-          <table>
-            <tbody>
-              <Vault expanded={true} vault={getVault()} preview />
-            </tbody>
-          </table>
-        </div>
+      <div className="preview-vault">
+        <table>
+          <tbody>
+            <Vault expanded={true} vault={getVault()} preview />
+          </tbody>
+        </table>
       </div>
+
+      <p className="section-title mt-5">{t("pleaseNote")}</p>
+
+      <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorFinalStepExplanation") }} />
     </StyledVaultFormReview>
   );
 }
