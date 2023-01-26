@@ -3,10 +3,11 @@ import Tooltip from "rc-tooltip";
 import { useWatch } from "react-hook-form";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { FormInput } from "components";
+import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultDescription } from "../../types";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
-import { toFixedIfNecessary } from "utils/amounts.utils";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 export const VaultParametersForm = () => {
   const { t } = useTranslation();
@@ -83,7 +84,12 @@ export const VaultParametersForm = () => {
               </div>
             </div>
             <div className="split">
-              <p>{t("immediate")}</p>
+              {renderWithTooltip(
+                t("nonEditable"),
+                <p>
+                  {t("immediate")} <InfoIcon fontSize="small" className="ml-2" />
+                </p>
+              )}
               <div className="inputsContainer">
                 <div className="formInput">
                   <FormInput
@@ -112,7 +118,12 @@ export const VaultParametersForm = () => {
               </div>
             </div>
             <div className="split">
-              <p>{t("vested")}</p>
+              {renderWithTooltip(
+                t("nonEditable"),
+                <p>
+                  {t("vested")} <InfoIcon fontSize="small" className="ml-2" />
+                </p>
+              )}
               <div className="inputsContainer">
                 <div className="formInput">
                   <FormInput
@@ -141,9 +152,12 @@ export const VaultParametersForm = () => {
               </div>
             </div>
             <div className="split">
-              <p>
-                {t("committee")} <br /> (0%-10%)
-              </p>
+              {renderWithTooltip(
+                t("nonEditable"),
+                <p>
+                  {t("committee")} <br /> (0%-10%) <InfoIcon fontSize="small" className="ml-2" />
+                </p>
+              )}
               <div className="inputsContainer">
                 <div className="formInput">
                   <FormInput

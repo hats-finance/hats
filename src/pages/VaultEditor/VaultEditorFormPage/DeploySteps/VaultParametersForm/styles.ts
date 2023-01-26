@@ -29,6 +29,8 @@ export const StyledVaultParametersForm = styled.div`
           align-items: center;
 
           p {
+            display: flex;
+            align-items: center;
             flex: 1;
           }
 
