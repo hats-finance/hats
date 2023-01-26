@@ -58,6 +58,8 @@
     "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. \n\n Once done you will be requested to execute a transaction that will create a vault on-chain.",
     "vaultEditorMaxBountyExplanation": "The max bounty will set the max percent of a bounty that can be paid from the vault. The max bounty allowed is 90%, you can't pay the <strong>100%</strong> of the vault within one bounty. \n\n <strong>Example:</strong> \n\n If a vault has <strong>100K</strong> deposited and the max bounty is set to <strong>90%</strong> in the case of a critical severity the max pay-out will be <strong>90K</strong>. \n\n <strong>Set the max bounty (max 90%)</strong>",
     "vaultEditorBountySplitExplanation": "The bounty split will set the way a bounty will be splitted when a pay-out occurs. \n\n <strong>Set committee controlled split (the total should be 100%)</strong>",
+    "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
+    "vaultEditorFinalStepExplanation": "Create vault by completing the on-chain transaction. \n A vault will be created on chain. \n\n The vault description may be edited at any time, changes will be require Hat gov approval.",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -108,6 +110,7 @@
     "dApp": "DApp view",
     "immediate": "Immediate",
     "vested": "Vested",
+    "pleaseNote": "Please note",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
