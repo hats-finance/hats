@@ -126,8 +126,10 @@ export const useVaultEditorSteps = (
       const userWantsToGoToNextStep = currentStepNumber + 1 === stepNumber;
 
       if (isStepValid) {
-        if (options.saveData) options.saveData();
-        if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+        if (options.saveData)
+          options.saveData().then(() => {
+            if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+          });
 
         if (userWantsToGoToNextStep) {
           editStepStatus("isValid", true);
@@ -142,7 +144,6 @@ export const useVaultEditorSteps = (
 
           if (previousStepsValid && previousStepsChecked) {
             editStepStatus("isChecked", true, stepNumber);
-
             setCurrentStepNumber(stepNumber);
           }
         }
@@ -214,8 +215,10 @@ export const useVaultEditorSteps = (
         go: async () => {
           const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
           if (isStepValid) {
-            if (options.saveData) options.saveData();
-            if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+            if (options.saveData)
+              options.saveData().then(() => {
+                if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+              });
 
             editStepStatus("isValid", true);
             editStepStatus("isChecked", true, 0, nextSection);
@@ -233,8 +236,10 @@ export const useVaultEditorSteps = (
       go: async () => {
         const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
         if (isStepValid) {
-          if (options.saveData) options.saveData();
-          if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+          if (options.saveData)
+            options.saveData().then(() => {
+              if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+            });
 
           editStepStatus("isValid", true);
           editStepStatus("isChecked", true, currentStepNumber + 1);

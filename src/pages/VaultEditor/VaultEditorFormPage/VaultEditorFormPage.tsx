@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
-import { createNewVaultDescription } from "./utils";
+import { createNewCommitteeMember, createNewVaultDescription } from "./utils";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
@@ -23,6 +23,8 @@ import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
 import { AllEditorSections } from "./steps";
+import { getGnosisSafeInfo } from "utils/gnosis.utils";
+import { VaultEditorFormContext } from "./store";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -33,8 +35,9 @@ const VaultEditorFormPage = () => {
   const [loadingEditSession, setLoadingEditSession] = useState(false);
 
   const test = () => {
+    // removeMembers();
+    committeeMembersFieldArray.append(createNewCommitteeMember());
     console.log(getValues());
-    console.log(formState);
   };
 
   const methods = useForm<IEditedVaultDescription>({
@@ -44,6 +47,8 @@ const VaultEditorFormPage = () => {
   });
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
+  const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
+
   const {
     steps,
     sections,
@@ -55,7 +60,6 @@ const VaultEditorFormPage = () => {
     onGoToSection,
     initFormSteps,
     loadingSteps,
-    revalidateStep,
   } = useVaultEditorSteps(methods, {
     saveData: () => saveEditSessionData(),
     executeOnSaved: (sectionId, stepNumber) => {
@@ -139,21 +143,26 @@ const VaultEditorFormPage = () => {
 
   const recalculateCommitteeMembers = async (sectionId: string, stepNumber: number) => {
     const committeeSafeAddress = getValues("committee.multisig-address");
+    const committeeSafeAddressChainId = getValues("committee.chainId");
     if (!committeeSafeAddress) return;
 
+    const multisigInfo = await getGnosisSafeInfo(
+      committeeSafeAddress,
+      committeeSafeAddressChainId ? +committeeSafeAddressChainId : undefined
+    );
+
     const committeeMembers = [...getValues("committee.members")];
-    const areMembersEmpty = !committeeMembers.some((member) => !!member.linkedMultisig);
-    console.log(committeeMembers);
-    console.log(areMembersEmpty);
+    const haveToChangeMembers = !committeeMembers.some((member) => member.linkedMultisigAddress === committeeSafeAddress);
 
-    // const membersToAdd =
+    if (haveToChangeMembers) {
+      const membersToAdd = multisigInfo.owners.map((owner) => createNewCommitteeMember(owner, committeeSafeAddress));
+      // Remove members linked to the previous multisig
+      const membersOutsideMultisig = committeeMembers.filter((member) => !member.linkedMultisigAddress);
 
-    // if (areMembersEmpty) {
-
-    // } else {
-    // }
-
-    // revalidateStep(stepNumber, sectionId);
+      console.log([...membersToAdd, ...membersOutsideMultisig]);
+      committeeMembersFieldArray.remove();
+      committeeMembersFieldArray.append([...membersToAdd, ...membersOutsideMultisig]);
+    }
   };
 
   // async function saveToIpfs(vaultDescription: IVaultDescription) {
@@ -170,88 +179,92 @@ const VaultEditorFormPage = () => {
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
+  const vaultEditorFormContext = { committeeMembersFieldArray };
+
   return (
-    <StyledVaultEditorContainer>
-      <FormProvider {...methods}>
-        <button className="mb-5" onClick={test}>
-          Show form
-        </button>
+    <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
+      <StyledVaultEditorContainer>
+        <FormProvider {...methods}>
+          <button className="mb-5" onClick={test}>
+            Show form
+          </button>
 
-        <div className="sections-controller">
-          {sections.map((section, idx) => (
-            <VaultEditorSectionController
-              key={section.id}
-              onClick={() => onGoToSection(section.id)}
-              active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}>
-              <p>{t(section.name)}</p>
-              {idx < sections.length - 1 && <span>&gt;</span>}
-            </VaultEditorSectionController>
-          ))}
-        </div>
-
-        <VaultEditorForm className="content-wrapper">
-          {/* Title */}
-          <div className="editor-title">
-            <div className="title">
-              {/* <ArrowBackIcon /> */}
-              <p>
-                {t(currentSectionInfo.title)}
-                <span>/{t(currentStepInfo.name)}</span>
-              </p>
-            </div>
+          <div className="sections-controller">
+            {sections.map((section, idx) => (
+              <VaultEditorSectionController
+                key={section.id}
+                onClick={() => onGoToSection(section.id)}
+                active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}>
+                <p>{t(section.name)}</p>
+                {idx < sections.length - 1 && <span>&gt;</span>}
+              </VaultEditorSectionController>
+            ))}
           </div>
 
-          {/* Steps control */}
-          <VaultEditorStepper>
-            {steps
-              .filter((step) => !step.isInvisible)
-              .map((step, index) => (
-                <VaultEditorStepController
-                  key={step.id}
-                  active={step.id === currentStepInfo.id}
-                  passed={!!step.isValid}
-                  onClick={() => onGoToStep(index)}>
-                  {step.isValid && <CheckIcon className="ml-2" />}
-                  {step.isValid ? "" : `${index + 1}.`}
-                  {t(step.name)}
-                </VaultEditorStepController>
-              ))}
-          </VaultEditorStepper>
-
-          {/* Section */}
-          {steps.map((step) => (
-            <Section key={step.id} visible={step.id === currentStepInfo.id}>
-              <p className="section-title">{t(step.title)}</p>
-              <div className="section-content">
-                <step.component />
+          <VaultEditorForm className="content-wrapper">
+            {/* Title */}
+            <div className="editor-title">
+              <div className="title">
+                {/* <ArrowBackIcon /> */}
+                <p>
+                  {t(currentSectionInfo.title)}
+                  <span>/{t(currentStepInfo.name)}</span>
+                </p>
               </div>
-            </Section>
-          ))}
+            </div>
 
-          {/* Action buttons */}
-          <div className="buttons-container">
-            <Button onClick={() => onGoNext.go()}>
-              {onGoNext.text} <NextIcon className="ml-2" />
-            </Button>
-            {onGoBack && (
-              <Button styleType="invisible" onClick={() => onGoBack.go()}>
-                <BackIcon className="mr-2" /> {onGoBack.text}
+            {/* Steps control */}
+            <VaultEditorStepper>
+              {steps
+                .filter((step) => !step.isInvisible)
+                .map((step, index) => (
+                  <VaultEditorStepController
+                    key={step.id}
+                    active={step.id === currentStepInfo.id}
+                    passed={!!step.isValid}
+                    onClick={() => onGoToStep(index)}>
+                    {step.isValid && <CheckIcon className="ml-2" />}
+                    {step.isValid ? "" : `${index + 1}.`}
+                    {t(step.name)}
+                  </VaultEditorStepController>
+                ))}
+            </VaultEditorStepper>
+
+            {/* Section */}
+            {steps.map((step) => (
+              <Section key={step.id} visible={step.id === currentStepInfo.id}>
+                <p className="section-title">{t(step.title)}</p>
+                <div className="section-content">
+                  <step.component />
+                </div>
+              </Section>
+            ))}
+
+            {/* Action buttons */}
+            <div className="buttons-container">
+              <Button onClick={() => onGoNext.go()}>
+                {onGoNext.text} <NextIcon className="ml-2" />
               </Button>
-            )}
-          </div>
-          {/* <div className="buttons-container">
+              {onGoBack && (
+                <Button styleType="invisible" onClick={() => onGoBack.go()}>
+                  <BackIcon className="mr-2" /> {onGoBack.text}
+                </Button>
+              )}
+            </div>
+            {/* <div className="buttons-container">
           {formState.isDirty && ipfsHash && (
             <button type="button" onClick={() => handleReset()} className="fill">
-              {t("VaultEditor.reset-button")}
+            {t("VaultEditor.reset-button")}
             </button>
           )}
           <button type="button" onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
-            {t("VaultEditor.save-button")}
+          {t("VaultEditor.save-button")}
           </button>
         </div> */}
-        </VaultEditorForm>
-      </FormProvider>
-    </StyledVaultEditorContainer>
+          </VaultEditorForm>
+        </FormProvider>
+      </StyledVaultEditorContainer>
+    </VaultEditorFormContext.Provider>
   );
 };
 

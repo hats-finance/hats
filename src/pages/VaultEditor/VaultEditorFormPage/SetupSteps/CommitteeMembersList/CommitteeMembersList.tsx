@@ -1,17 +1,16 @@
-import { useFieldArray } from "react-hook-form";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "../../types";
 import { createNewCommitteeMember } from "../../utils";
+import { VaultEditorFormContext } from "../../store";
 import AddIcon from "@mui/icons-material/Add";
 
 export function CommitteeMembersList() {
   const { t } = useTranslation();
 
-  const methods = useEnhancedFormContext<IEditedVaultDescription>();
-  const { fields: members, append, remove } = useFieldArray({ control: methods.control, name: "committee.members" });
+  const { committeeMembersFieldArray } = useContext(VaultEditorFormContext);
+  const { fields: members, append, remove } = committeeMembersFieldArray;
 
   return (
     <>

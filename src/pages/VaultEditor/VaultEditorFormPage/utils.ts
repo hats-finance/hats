@@ -14,10 +14,10 @@ export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
 export const HATS_REWARD_SPLIT = 5;
 
-export const createNewCommitteeMember = (linkedMultisig?: string): ICommitteeMember => ({
+export const createNewCommitteeMember = (owner?: string, linkedMultisig?: string): ICommitteeMember => ({
   name: "",
-  address: "",
-  linkedMultisig,
+  address: owner ?? "",
+  linkedMultisigAddress: linkedMultisig ?? "",
   "twitter-link": "",
   "image-ipfs-link": "",
   "pgp-keys": [{ publicKey: "" }],
@@ -97,7 +97,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     committee: {
       chainId: "",
       "multisig-address": "",
-      members: [{ ...createNewCommitteeMember() }],
+      members: [] as ICommitteeMember[],
     },
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,

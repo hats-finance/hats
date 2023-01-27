@@ -116,7 +116,7 @@ export interface ICommitteeMember {
   address: string;
   "twitter-link": string;
   "image-ipfs-link"?: string;
-  linkedMultisig?: string;
+  linkedMultisigAddress?: string;
   "pgp-keys": Array<{ publicKey: string }>;
 }
 
