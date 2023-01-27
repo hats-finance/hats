@@ -51,8 +51,9 @@ export const getGnosisSafeInfo = async (
   try {
     if (!chainId) throw new Error("Please provide chainId");
 
-    const res = await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId));
-    const data = res.data;
+    const safeInfoStorage = JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
+    const data = safeInfoStorage ?? (await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId))).data;
+    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
 
@@ -63,10 +64,13 @@ export const getGnosisSafeInfo = async (
     };
   } catch (error) {
     console.log(error);
-    return {
+    const defaultData = {
       isSafeAddress: false,
       owners: [],
       threshold: 0,
     };
+
+    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+    return defaultData;
   }
 };

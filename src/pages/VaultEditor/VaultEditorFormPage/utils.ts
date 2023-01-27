@@ -14,10 +14,10 @@ export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
 export const HATS_REWARD_SPLIT = 5;
 
-export const createNewCommitteeMember = (isSafeMember?: boolean): ICommitteeMember => ({
+export const createNewCommitteeMember = (linkedMultisig?: string): ICommitteeMember => ({
   name: "",
   address: "",
-  isSafeMember: isSafeMember || false,
+  linkedMultisig,
   "twitter-link": "",
   "image-ipfs-link": "",
   "pgp-keys": [{ publicKey: "" }],

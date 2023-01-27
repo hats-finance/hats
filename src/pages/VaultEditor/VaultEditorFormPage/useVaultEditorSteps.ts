@@ -8,7 +8,8 @@ import { IEditedVaultDescription } from "./types";
 export const useVaultEditorSteps = (
   formMethods: UseFormReturn<IEditedVaultDescription>,
   options: {
-    saveData: () => Promise<void>;
+    saveData?: () => Promise<void>;
+    executeOnSaved?: (section: keyof typeof AllEditorSections, step: number) => void;
   }
 ) => {
   const { t } = useTranslation();
@@ -95,6 +96,11 @@ export const useVaultEditorSteps = (
     setLoadingSteps(false);
   };
 
+  const revalidateStep = async (stepNumber: number, section: keyof typeof AllEditorSections) => {
+    const isStepValid = await formMethods.trigger(editorSections[section].steps[stepNumber].formFields as any);
+    editStepStatus("isValid", isStepValid, stepNumber, section);
+  };
+
   const onGoToSection = async (sectionId: keyof typeof AllEditorSections) => {
     const currentSectionIdx = Object.keys(editorSections).indexOf(`${currentSection}`);
     const desiredSectionIdx = Object.keys(editorSections).indexOf(`${sectionId}`);
@@ -110,6 +116,7 @@ export const useVaultEditorSteps = (
 
   const onGoToStep = async (stepNumber: number) => {
     const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
+    // const isStepValid = true;
 
     // If the user is going back or is going to a valid step, continue
     if (currentStepNumber >= stepNumber) {
@@ -119,7 +126,8 @@ export const useVaultEditorSteps = (
       const userWantsToGoToNextStep = currentStepNumber + 1 === stepNumber;
 
       if (isStepValid) {
-        options.saveData();
+        if (options.saveData) options.saveData();
+        if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
 
         if (userWantsToGoToNextStep) {
           editStepStatus("isValid", true);
@@ -192,7 +200,7 @@ export const useVaultEditorSteps = (
     if (isInLastSection && isInLastStep) {
       return {
         go: () => {
-          formMethods.handleSubmit(options.saveData)();
+          if (options.saveData) formMethods.handleSubmit(options.saveData)();
         },
         text: t(currentStep.nextButtonTextKey ?? "next"),
       };
@@ -206,7 +214,8 @@ export const useVaultEditorSteps = (
         go: async () => {
           const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
           if (isStepValid) {
-            options.saveData();
+            if (options.saveData) options.saveData();
+            if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
 
             editStepStatus("isValid", true);
             editStepStatus("isChecked", true, 0, nextSection);
@@ -224,7 +233,8 @@ export const useVaultEditorSteps = (
       go: async () => {
         const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
         if (isStepValid) {
-          options.saveData();
+          if (options.saveData) options.saveData();
+          if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
 
           editStepStatus("isValid", true);
           editStepStatus("isChecked", true, currentStepNumber + 1);
@@ -257,5 +267,6 @@ export const useVaultEditorSteps = (
     onGoToSection,
     initFormSteps,
     loadingSteps,
+    revalidateStep,
   };
 };

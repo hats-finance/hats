@@ -8,6 +8,9 @@ import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { createNewVaultDescription } from "./utils";
+import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
+import { getEditedDescriptionYupSchema } from "./formSchema";
+import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import {
   Section,
   VaultEditorForm,
@@ -16,12 +19,10 @@ import {
   VaultEditorStepper,
   StyledVaultEditorContainer,
 } from "./styles";
-import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
-import { getEditedDescriptionYupSchema } from "./formSchema";
-import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import { AllEditorSections } from "./steps";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -54,8 +55,16 @@ const VaultEditorFormPage = () => {
     onGoToSection,
     initFormSteps,
     loadingSteps,
+    revalidateStep,
   } = useVaultEditorSteps(methods, {
     saveData: () => saveEditSessionData(),
+    executeOnSaved: (sectionId, stepNumber) => {
+      const committeeSectionId = "setup";
+      const committeeStepId = "committee";
+      const committeeStepNumber = AllEditorSections[committeeSectionId].steps.findIndex((step) => step.id === committeeStepId);
+
+      if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
+    },
   });
 
   const vaultVersion = useWatch({ control, name: "version" });
@@ -127,6 +136,25 @@ const VaultEditorFormPage = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
+
+  const recalculateCommitteeMembers = async (sectionId: string, stepNumber: number) => {
+    const committeeSafeAddress = getValues("committee.multisig-address");
+    if (!committeeSafeAddress) return;
+
+    const committeeMembers = [...getValues("committee.members")];
+    const areMembersEmpty = !committeeMembers.some((member) => !!member.linkedMultisig);
+    console.log(committeeMembers);
+    console.log(areMembersEmpty);
+
+    // const membersToAdd =
+
+    // if (areMembersEmpty) {
+
+    // } else {
+    // }
+
+    // revalidateStep(stepNumber, sectionId);
+  };
 
   // async function saveToIpfs(vaultDescription: IVaultDescription) {
   //   try {

@@ -10,8 +10,8 @@ import AddIcon from "@mui/icons-material/Add";
 export function CommitteeMembersList() {
   const { t } = useTranslation();
 
-  const { control } = useEnhancedFormContext<IEditedVaultDescription>();
-  const { fields: members, append, remove } = useFieldArray({ control, name: "committee.members" });
+  const methods = useEnhancedFormContext<IEditedVaultDescription>();
+  const { fields: members, append, remove } = useFieldArray({ control: methods.control, name: "committee.members" });
 
   return (
     <>
