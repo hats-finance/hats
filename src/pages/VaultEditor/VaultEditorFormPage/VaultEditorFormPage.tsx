@@ -159,7 +159,6 @@ const VaultEditorFormPage = () => {
       // Remove members linked to the previous multisig
       const membersOutsideMultisig = committeeMembers.filter((member) => !member.linkedMultisigAddress);
 
-      console.log([...membersToAdd, ...membersOutsideMultisig]);
       committeeMembersFieldArray.remove();
       committeeMembersFieldArray.append([...membersToAdd, ...membersOutsideMultisig]);
     }
