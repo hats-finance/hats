@@ -47,8 +47,11 @@ export const getTestCommitteeMultisigForVault = (intl) => {
       if (!isAdd) return ctx.createError({ message: intl("invalid-address") });
 
       // Get the safe info
-      const { isSafeAddress, owners, threshold } = await getGnosisSafeInfo(value, +chainId);
-      console.log(isSafeAddress, owners, threshold);
+      const safeInfoStorage = JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${value}`) ?? "null");
+      const safeInfo = safeInfoStorage ?? (await getGnosisSafeInfo(value, +chainId));
+      sessionStorage.setItem(`safeInfo-${chainId}-${value}`, JSON.stringify(safeInfo));
+
+      const { isSafeAddress, owners, threshold } = safeInfo;
 
       if (!isSafeAddress) return ctx.createError({ message: intl("not-safe-address") });
       if (owners.length < MIN_COMMITTEE_MEMBERS) {
