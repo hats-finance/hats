@@ -12,6 +12,7 @@ interface FormSelectInputProps {
   placeholder?: string;
   multiple?: boolean;
   colorable?: boolean;
+  disabled?: boolean;
   isDirty?: boolean | boolean[];
   value: string | string[];
   onChange: (data: string | string[]) => void;
@@ -27,6 +28,7 @@ export function FormSelectInputComponent(
     name,
     multiple = false,
     colorable = false,
+    disabled = false,
     isDirty = false,
     error,
     placeholder,
@@ -71,7 +73,8 @@ export function FormSelectInputComponent(
       {label && <label className="input-label">{label}</label>}
 
       <SelectButton
-        onClick={handleOpenDropdown}
+        disabled={disabled}
+        onClick={disabled ? undefined : handleOpenDropdown}
         isDirty={parseIsDirty(isDirty) && colorable}
         hasError={!!error && colorable}
         isFilled={!!value}

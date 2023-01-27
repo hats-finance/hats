@@ -26,8 +26,14 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
   `
 );
 
-export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean; isOpen: boolean; isFilled: boolean }>(
-  ({ isDirty, isOpen, hasError, isFilled }) => css`
+export const SelectButton = styled.div<{
+  isDirty: boolean;
+  hasError: boolean;
+  isOpen: boolean;
+  isFilled: boolean;
+  disabled: boolean;
+}>(
+  ({ isDirty, isOpen, hasError, isFilled, disabled }) => css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -38,6 +44,23 @@ export const SelectButton = styled.button<{ isDirty: boolean; hasError: boolean;
     &:hover {
       opacity: 1;
     }
+
+    ${disabled &&
+    css`
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--grey-700);
+        opacity: 0.4;
+        z-index: 1;
+        cursor: not-allowed;
+      }
+    `}
 
     ${isDirty &&
     css`
