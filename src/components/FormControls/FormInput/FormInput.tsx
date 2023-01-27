@@ -16,6 +16,7 @@ type FormInputProps = {
   pastable?: boolean;
   noErrorLabel?: boolean;
   copyable?: boolean;
+  disabled?: boolean;
   removable?: boolean;
   colorable?: boolean;
   isDirty?: boolean;
@@ -33,6 +34,7 @@ function FormInputComponent(
     noErrorLabel = false,
     type = "text",
     colorable = false,
+    disabled = false,
     noMargin = false,
     isDirty = false,
     rows = DEFAULT_ROWS,
@@ -82,14 +84,32 @@ function FormInputComponent(
     };
 
     if (type === "text") {
-      return <input {...props} id={props.name} type="text" ref={setRef} onChange={handleOnChange} />;
+      return <input {...props} disabled={disabled} id={props.name} type="text" ref={setRef} onChange={handleOnChange} />;
     } else if (type === "textarea") {
-      return <textarea {...props} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
+      return <textarea {...props} disabled={disabled} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
     } else if (type === "number") {
-      return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />;
+      return (
+        <input
+          {...props}
+          disabled={disabled}
+          id={props.name}
+          type={type}
+          ref={setRef}
+          onChange={handleOnChange}
+          onKeyDown={removeNotNumber}
+        />
+      );
     } else if (type === "whole-number") {
       return (
-        <input {...props} id={props.name} type="number" ref={setRef} onChange={handleOnChange} onKeyDown={removeNotNumber} />
+        <input
+          {...props}
+          disabled={disabled}
+          id={props.name}
+          type="number"
+          ref={setRef}
+          onChange={handleOnChange}
+          onKeyDown={removeNotNumber}
+        />
       );
     } else {
       return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
@@ -104,6 +124,7 @@ function FormInputComponent(
       noLabel={!label}
       hasError={!!error && colorable}
       type={type}
+      disabled={disabled}
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
       withExtraicons={extraIcons}>

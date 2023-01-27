@@ -11,11 +11,12 @@ type StyledFormInputProps = {
   withExtraicons?: boolean;
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
+  disabled?: boolean;
   type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked, noLabel }) => css`
+  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked, noLabel, disabled }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -32,6 +33,23 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         label {
           margin-left: ${getSpacing(1)};
         }
+      }
+    `}
+
+    ${disabled &&
+    css`
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--grey-700);
+        opacity: 0.4;
+        z-index: 1;
+        cursor: not-allowed;
       }
     `}
 
@@ -108,6 +126,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         position: absolute;
         top: 10px;
         left: ${withPrefixIcon ? "45px" : "17px"};
+        z-index: 1;
       `}
 
       ${isCheckOrRadio &&
