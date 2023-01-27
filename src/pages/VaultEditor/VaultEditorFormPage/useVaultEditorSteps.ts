@@ -19,6 +19,7 @@ export const useVaultEditorSteps = (
   const [editorSections, setEditorSections] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
   const [currentStepNumber, setCurrentStepNumber] = useState<number>(0);
+  const [loadingSteps, setLoadingSteps] = useState(false);
 
   const currentSectionInfo = editorSections[currentSection];
   const currentStepInfo = currentSectionInfo["steps"][currentStepNumber];
@@ -70,6 +71,7 @@ export const useVaultEditorSteps = (
 
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = async () => {
+    setLoadingSteps(true);
     let firstInvalidStep = allSteps[0];
 
     for (const step of allSteps) {
@@ -90,6 +92,7 @@ export const useVaultEditorSteps = (
 
     // Reset the form in order to delete all the validations made by the trigger
     formMethods.reset();
+    setLoadingSteps(false);
   };
 
   const onGoToSection = async (sectionId: keyof typeof AllEditorSections) => {
@@ -253,5 +256,6 @@ export const useVaultEditorSteps = (
     onGoNext,
     onGoToSection,
     initFormSteps,
+    loadingSteps,
   };
 };

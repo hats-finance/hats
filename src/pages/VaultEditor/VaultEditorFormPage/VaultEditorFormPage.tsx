@@ -5,8 +5,8 @@ import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import * as VaultService from "./vaultService";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
 import { createNewVaultDescription } from "./utils";
 import {
   Section,
@@ -26,11 +26,15 @@ import CheckIcon from "@mui/icons-material/Check";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { editSessionId } = useParams();
+
   const navigate = useNavigate();
 
   const [loadingEditSession, setLoadingEditSession] = useState(false);
 
-  const test = () => console.log(getValues());
+  const test = () => {
+    console.log(getValues());
+    console.log(formState);
+  };
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
@@ -39,10 +43,20 @@ const VaultEditorFormPage = () => {
   });
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
-  const { steps, sections, currentStepInfo, currentSectionInfo, onGoToStep, onGoBack, onGoNext, onGoToSection, initFormSteps } =
-    useVaultEditorSteps(methods, {
-      saveData: () => saveEditSessionData(),
-    });
+  const {
+    steps,
+    sections,
+    currentStepInfo,
+    currentSectionInfo,
+    onGoToStep,
+    onGoBack,
+    onGoNext,
+    onGoToSection,
+    initFormSteps,
+    loadingSteps,
+  } = useVaultEditorSteps(methods, {
+    saveData: () => saveEditSessionData(),
+  });
 
   const vaultVersion = useWatch({ control, name: "version" });
 
@@ -126,7 +140,7 @@ const VaultEditorFormPage = () => {
   //   }
   // }
 
-  if (loadingEditSession) return <Loading fixed />;
+  if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
   return (
     <StyledVaultEditorContainer>

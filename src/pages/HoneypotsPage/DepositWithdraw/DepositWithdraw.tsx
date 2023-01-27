@@ -194,7 +194,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
       if (txHash && !waitingForTransaction) {
         setWaitingForTransaction(true);
 
-        isAGnosisSafeTx(txHash, chain).then((isSafeTx) => {
+        isAGnosisSafeTx(txHash, chain?.id).then((isSafeTx) => {
           if (isSafeTx) {
             cleanUp();
             alert(t("safeProposalCreatedSuccessfully"));

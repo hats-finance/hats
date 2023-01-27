@@ -57,6 +57,7 @@ export const variables = css`
     --grey-500: #667085;
     --grey-600: #424751;
     --grey-700: #343841;
+    --grey-800: #282c33;
     --error-red: #ff6464;
     --warning-yellow: #f2c94c;
 

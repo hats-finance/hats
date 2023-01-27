@@ -1,6 +1,12 @@
 import { TFunction } from "react-i18next";
 import * as Yup from "yup";
-import { getTestAddressOrUrl, getTestEmailAddress, getTestNumberInBetween, getTestWalletAddress } from "utils/yup.utils";
+import {
+  getTestAddressOrUrl,
+  getTestEmailAddress,
+  getTestNumberInBetween,
+  getTestWalletAddress,
+  getTestCommitteeMultisigForVault,
+} from "utils/yup.utils";
 import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "./utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
@@ -38,7 +44,8 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         .required(intl("required")),
     }),
     committee: Yup.object({
-      "multisig-address": Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
+      chainId: Yup.string().required(intl("required")),
+      "multisig-address": Yup.string().test(getTestCommitteeMultisigForVault(intl)).required(intl("required")),
       members: Yup.array().of(
         Yup.object({
           name: Yup.string().required(intl("required")),

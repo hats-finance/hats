@@ -13,7 +13,6 @@ export interface IEditedCommunicationEmail {
 
 export interface IEditedVaultAsset {
   address: string;
-  chainId: string;
 }
 
 export interface IEditedVaultParameters {
@@ -60,6 +59,7 @@ export interface IBaseEditedVaultDescription {
     emails: IEditedCommunicationEmail[];
   };
   committee: {
+    chainId?: string;
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };

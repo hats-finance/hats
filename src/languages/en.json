@@ -9,6 +9,10 @@
     "invalid-image-type": "Invalid image type, only supported: {{types}}",
     "invalid-email-address": "Invalid email address",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
+    "not-safe-address": "Not a multisig address (check address or network)",
+    "select-chain-first": "Please select the network first",
+    "not-enough-safe-members": "Not enough members (minimum is {{min}} and now is only {{now}})",
+    "not-enough-safe-signers": "Not enough multisig signers (minimum is {{min}} and now is only {{now}})",
     "min0": "Min 0",
     "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
@@ -111,6 +115,7 @@
     "immediate": "Immediate",
     "vested": "Vested",
     "pleaseNote": "Please note",
+    "loadingVaultEditor": "Loading Vault Editor",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
@@ -451,6 +456,8 @@
         "website": "Website",
         "website-placeholder": "Link website",
         "multisig-address-placeholder": "Committee multisig address",
+        "chain": "Multisig-address chain",
+        "chain-placeholder": "Select multisig-address chain",
         "starttime": "Start date",
         "starttime-placeholder": "Enter start date",
         "endtime": "End date",

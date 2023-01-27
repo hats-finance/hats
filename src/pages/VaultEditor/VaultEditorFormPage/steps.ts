@@ -50,7 +50,7 @@ export const AllEditorSections: IEditorSections = {
         name: "committee",
         title: "committeeDetails",
         component: CommitteeDetailsForm,
-        formFields: ["committee.multisig-address"],
+        formFields: ["committee.chainId", "committee.multisig-address"],
       },
       {
         id: "members",

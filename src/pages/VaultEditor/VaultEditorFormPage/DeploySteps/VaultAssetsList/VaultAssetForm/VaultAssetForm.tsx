@@ -1,8 +1,6 @@
-import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FormInput, FormSelectInput } from "components";
-import { getPath } from "utils/objects.utils";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
+import { FormInput } from "components";
+import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultAsset, IEditedVaultDescription } from "../../../types";
 import { StyledVaultAssetForm } from "./styles";
 
@@ -15,9 +13,7 @@ type VaultAssetFormProps = {
 
 export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAssetFormProps) {
   const { t } = useTranslation();
-  const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const supportedNetworksOptions = [{ label: "Ethereum", value: "1" }];
+  const { register } = useEnhancedFormContext<IEditedVaultDescription>();
 
   return (
     <StyledVaultAssetForm>
@@ -32,7 +28,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
           placeholder={t("VaultEditor.vault-assets.address-placeholder")}
           colorable
         />
-        <Controller
+        {/* <Controller
           control={control}
           name={`assets.${index}.chainId`}
           render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
@@ -47,7 +43,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
               value={field.value ?? ""}
             />
           )}
-        />
+        /> */}
       </div>
     </StyledVaultAssetForm>
   );
