@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Controller, useFieldArray, UseFieldArrayRemove } from "react-hook-form";
+import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { ICommitteeMember } from "types";
@@ -31,9 +31,12 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
     return pgpPublicKeys.map((key) => key.publicKey).filter((key) => key !== toFilter);
   };
 
+  const linkedMultisigAddress = useWatch({ control, name: `committee.members.${index}.linkedMultisigAddress` });
+
   return (
     <>
       <StyledCommitteeMemberForm>
+        {linkedMultisigAddress && <div className="linkedMultisig">{linkedMultisigAddress}</div>}
         <div className="member-details">
           <div className="content">
             <FormInput
