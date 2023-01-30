@@ -60,6 +60,8 @@ export const StyledVault = styled.tr<StyledVaultProps>(
 
         img.logo {
           width: 45px;
+          height: 45px;
+          object-fit: contain;
           margin-right: 15px;
           border-radius: 100px;
         }
