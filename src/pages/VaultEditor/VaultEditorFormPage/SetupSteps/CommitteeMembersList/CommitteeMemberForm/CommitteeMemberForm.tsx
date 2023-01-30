@@ -36,7 +36,12 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
   return (
     <>
       <StyledCommitteeMemberForm>
-        {linkedMultisigAddress && <div className="linkedMultisig">{linkedMultisigAddress}</div>}
+        {linkedMultisigAddress && (
+          <div className="linkedMultisig">
+            {t("memberOfMultisig")}: {linkedMultisigAddress}
+          </div>
+        )}
+        {!linkedMultisigAddress && <div className="linkedMultisig outside">{t("notMemberOfMultisig")}</div>}
         <div className="member-details">
           <div className="content">
             <FormInput

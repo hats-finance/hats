@@ -166,6 +166,8 @@ const VaultEditorFormPage = () => {
     committeeMembersFieldArray.append([
       ...newAddressesToAdd.map((address) => createNewCommitteeMember(address, committeeSafeAddress)),
     ]);
+
+    saveEditSessionData();
   };
 
   // async function saveToIpfs(vaultDescription: IVaultDescription) {

@@ -3,6 +3,7 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledCommitteeMemberForm = styled.div`
+  position: relative;
   background: var(--background-clearer-blue);
   border-radius: 4px;
   padding: ${getSpacing(2.5)};
@@ -10,6 +11,25 @@ export const StyledCommitteeMemberForm = styled.div`
   &:not(:last-of-type) {
     padding-bottom: ${getSpacing(3)};
     margin-bottom: ${getSpacing(3)};
+  }
+
+  .linkedMultisig {
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--grey-600);
+    color: var(--grey-400);
+    font-size: var(--tiny);
+    border-radius: 100px;
+    padding: ${getSpacing(0.5)} ${getSpacing(2)};
+    position: absolute;
+    transform: translateY(-50%);
+    top: 0;
+
+    &.outside {
+      color: var(--red);
+    }
   }
 
   .member-details {

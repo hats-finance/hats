@@ -118,6 +118,8 @@
     "pleaseNote": "Please note",
     "loadingVaultEditor": "Loading Vault Editor",
     "committeeMembersOutsideMultisig": "Members outside multisig",
+    "memberOfMultisig": "Multisig member",
+    "notMemberOfMultisig": "Not a multisig member",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
