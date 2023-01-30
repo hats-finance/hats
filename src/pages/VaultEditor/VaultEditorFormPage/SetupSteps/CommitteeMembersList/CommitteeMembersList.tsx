@@ -14,8 +14,6 @@ export function CommitteeMembersList() {
 
   const lastMultisigMemberIdx = members.length - 1 - [...members].reverse().findIndex((member) => member.linkedMultisigAddress);
 
-  console.log(lastMultisigMemberIdx);
-
   return (
     <>
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCommitteeMembersSafeExplanation") }} />
