@@ -5,7 +5,7 @@ import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { FormInput } from "components";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "../../types";
+import { IEditedVaultDescription } from "types";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 

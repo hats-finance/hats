@@ -3,7 +3,7 @@ import Select from "react-select";
 import Tooltip from "rc-tooltip";
 import { ipfsTransformUri } from "utils";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { StyledVaultChainIcon } from "./styles";
 import "./index.scss";
 

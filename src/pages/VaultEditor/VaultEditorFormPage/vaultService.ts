@@ -2,7 +2,7 @@ import { IVaultDescription } from "types";
 import axios from "axios";
 import { getPath, setPath } from "utils/objects.utils";
 import { VAULT_SERVICE } from "settings";
-import { IEditedVaultDescription } from "./types";
+import { IEditedVaultDescription } from "types";
 
 function isBlob(uri: string) {
   return uri.startsWith("blob:");

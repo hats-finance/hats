@@ -1,4 +1,4 @@
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
 import { HATVaultsNFT_abi } from "data/abis/HATVaultsNFT_abi";

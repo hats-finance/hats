@@ -3,7 +3,7 @@ import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { IEditedVaultDescription } from "./types";
+import { IEditedVaultDescription } from "types";
 
 export const useVaultEditorSteps = (
   formMethods: UseFormReturn<IEditedVaultDescription>,

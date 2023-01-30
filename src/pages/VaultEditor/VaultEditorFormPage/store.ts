@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import { UseFieldArrayReturn } from "react-hook-form";
-import { IEditedVaultDescription } from "./types";
+import { IEditedVaultDescription } from "types";
 
 interface IVaultEditorFormContext {
   committeeMembersFieldArray: UseFieldArrayReturn<IEditedVaultDescription, "committee.members">;

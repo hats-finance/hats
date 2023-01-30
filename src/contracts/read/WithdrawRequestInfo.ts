@@ -1,7 +1,7 @@
 import { useAccount, useContractRead } from "wagmi";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
 import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
 

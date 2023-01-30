@@ -8,7 +8,7 @@ import {
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
-} from "./types";
+} from "types";
 
 export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;

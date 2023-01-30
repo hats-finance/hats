@@ -1,5 +1,5 @@
 import { BigNumber } from "ethers";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { UserSharesPerVaultContract } from "./UserSharesPerVault";
 import { SharesToBalancePerVaultContract } from "./SharesToBalancePerVault";
 
