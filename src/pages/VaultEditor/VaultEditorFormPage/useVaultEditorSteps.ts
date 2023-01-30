@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { IEditedVaultDescription } from "types";
 
@@ -14,6 +14,7 @@ export const useVaultEditorSteps = (
 ) => {
   const { t } = useTranslation();
 
+  const { editSessionId } = useParams();
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
 
@@ -40,7 +41,7 @@ export const useVaultEditorSteps = (
         return sections;
       });
     }
-  }, [isAdvancedMode]);
+  }, [isAdvancedMode, editSessionId]);
 
   const allSteps = useMemo(() => {
     // Get all the fields from all the sections (setup/deploy)
@@ -73,20 +74,29 @@ export const useVaultEditorSteps = (
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = async () => {
     setLoadingSteps(true);
-    let firstInvalidStep = allSteps[0];
+    let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
 
     for (const step of allSteps) {
       const isValid = await formMethods.trigger(step.formFields as any);
 
+      if (firstInvalidStep) {
+        editStepStatus("isChecked", false, step.index, step.section);
+        editStepStatus("isValid", false, step.index, step.section);
+        continue;
+      }
+
       if (!isValid) {
         firstInvalidStep = step;
         editStepStatus("isChecked", true, step.index, step.section);
-        break;
+        editStepStatus("isValid", false, step.index, step.section);
+        continue;
       } else {
         editStepStatus("isValid", true, step.index, step.section);
         editStepStatus("isChecked", true, step.index, step.section);
       }
     }
+
+    if (!firstInvalidStep) firstInvalidStep = allSteps[0];
 
     setCurrentSection(firstInvalidStep.section);
     setCurrentStepNumber(firstInvalidStep.index);
