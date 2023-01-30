@@ -1,4 +1,6 @@
 import React, { ChangeEvent, forwardRef } from "react";
+import { useTranslation } from "react-i18next";
+import { ErrorMessage } from "../ErrorMessage";
 import { StyledFormInput } from "../FormInput/styles";
 import { parseIsDirty } from "../utils";
 
@@ -57,8 +59,7 @@ export function FormDateInputComponent(
           onChange={handleOnChange}
         />
       </div>
-
-      {error && <span className="error">{error.message}</span>}
+      {error && <ErrorMessage error={error} />}
     </StyledFormInput>
   );
 }

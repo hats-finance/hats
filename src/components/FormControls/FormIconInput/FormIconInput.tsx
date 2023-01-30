@@ -4,6 +4,7 @@ import { ipfsTransformUri } from "utils";
 import AddIcon from "assets/icons/add.icon.svg";
 import { StyledFormIconInput } from "./styles";
 import { parseIsDirty } from "../utils";
+import { ErrorMessage } from "../ErrorMessage";
 
 const MAX_SIZE_ICON = 50000;
 const MAX_SIZE_IMAGE = 2000000;
@@ -111,7 +112,7 @@ function FormIconInputComponent(
         </label>
       )}
 
-      {error && <span className="error">{error.message}</span>}
+      {error && <ErrorMessage error={error} />}
     </StyledFormIconInput>
   );
 }

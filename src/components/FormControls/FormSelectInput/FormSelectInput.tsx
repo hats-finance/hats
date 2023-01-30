@@ -5,6 +5,7 @@ import { FormSelectInputItem } from "./FormSelectInputItem/FormSelectInputItem";
 import { FormSelectInputOption } from "./types";
 import { parseIsDirty } from "../utils";
 import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles";
+import { ErrorMessage } from "../ErrorMessage";
 
 interface FormSelectInputProps {
   name: string;
@@ -85,7 +86,7 @@ export function FormSelectInputComponent(
         </span>
       </SelectButton>
 
-      {error && <span className="error">{error.message}</span>}
+      {error && <ErrorMessage error={error} />}
 
       {isOpen && (
         <SelectMenuOptions>

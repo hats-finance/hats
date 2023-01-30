@@ -4,6 +4,7 @@ import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
 import { StyledFormInput } from "./styles";
 import { parseIsDirty } from "../utils";
+import { ErrorMessage } from "../ErrorMessage";
 
 const DEFAULT_ROWS = 10;
 
@@ -153,7 +154,7 @@ function FormInputComponent(
         </div>
       </div>
 
-      {error && !noErrorLabel && <span className="error">{error.message}</span>}
+      {error && !noErrorLabel && <ErrorMessage error={error} />}
     </StyledFormInput>
   );
 }

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { parseIsDirty } from "../utils";
 import useModal from "hooks/useModal";
 import { PgpPublicKeyInputModal } from "./PgpPublicKeyInputModal";
+import { ErrorMessage } from "../ErrorMessage";
 
 interface FormPgpPublicKeyInputProps {
   label?: string;
@@ -49,7 +50,7 @@ export function FormPgpPublicKeyInputComponent(
         )}
       </div>
 
-      {error && <span className="error">{error.message}</span>}
+      {error && <ErrorMessage error={error} />}
 
       <PgpPublicKeyInputModal
         key={name}

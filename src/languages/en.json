@@ -1,5 +1,28 @@
 {
   "translation": {
+    "validation": {
+      "mixed": {
+        "required": "required"
+      },
+      "string" : {
+        "required": "required",
+        "email":"invalid-email-address",
+        "url":"invalid-address-or-url"
+      },
+      "number": {
+        "required": "Required",
+        "endtimeGreaterThanStarttime": "End time must be greater than start time",
+        "integer": "Should be an integer",
+        "min": "Should be greater than {{min}}",
+        "max": "Should be less than {{max}}",
+        "positive": "Should be positive",
+        "negative": "Should be negative",
+        "lessThan": "Should be less than {{less}}",
+        "moreThan": "Should be more than {{more}}",
+        "notEqual": "Should not be equal to {{notEqual}}",
+        "typeError": "Should be a number"
+      }
+    },
     "version": "Version",
     "required": "Required",
     "cantChangeThisValue": "You can't change this value",
@@ -13,8 +36,6 @@
     "select-chain-first": "Please select the network first",
     "not-enough-safe-members": "Not enough members (minimum is {{min}} and now is only {{now}})",
     "not-enough-safe-signers": "Not enough multisig signers (minimum is {{min}} and now is only {{now}})",
-    "min0": "Min 0",
-    "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
     "deposit": "Deposit",
     "withdraw": "Withdraw",

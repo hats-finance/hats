@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
@@ -25,10 +24,16 @@ import CheckIcon from "@mui/icons-material/Check";
 import { AllEditorSections } from "./steps";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { VaultEditorFormContext } from "./store";
+import { setLocale } from "yup";
+import i18n from "i18n";
+import { yupResolver } from "./yupResolver";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { editSessionId } = useParams();
+
+
+  setLocale(i18n.t("validation", { returnObjects: true }))
 
   const navigate = useNavigate();
 
@@ -42,7 +47,7 @@ const VaultEditorFormPage = () => {
 
   const methods = useForm<IEditedVaultDescription>({
     defaultValues: createNewVaultDescription("v2"),
-    resolver: yupResolver(getEditedDescriptionYupSchema(t)),
+    resolver: yupResolver(getEditedDescriptionYupSchema()),
     mode: "onChange",
   });
 
