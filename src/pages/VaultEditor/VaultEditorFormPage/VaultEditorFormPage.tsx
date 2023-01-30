@@ -36,7 +36,7 @@ const VaultEditorFormPage = () => {
 
   const test = () => {
     // removeMembers();
-    committeeMembersFieldArray.append(createNewCommitteeMember());
+    // committeeMembersFieldArray.append(createNewCommitteeMember());
     console.log(getValues());
   };
 
@@ -152,16 +152,20 @@ const VaultEditorFormPage = () => {
     );
 
     const committeeMembers = [...getValues("committee.members")];
-    const haveToChangeMembers = !committeeMembers.some((member) => member.linkedMultisigAddress === committeeSafeAddress);
+    const newAddressesToAdd = multisigInfo.owners.filter((owner) => !committeeMembers.some((member) => member.address === owner));
 
-    if (haveToChangeMembers) {
-      const membersToAdd = multisigInfo.owners.map((owner) => createNewCommitteeMember(owner, committeeSafeAddress));
-      // Remove members linked to the previous multisig
-      const membersOutsideMultisig = committeeMembers.filter((member) => !member.linkedMultisigAddress);
-
-      committeeMembersFieldArray.remove();
-      committeeMembersFieldArray.append([...membersToAdd, ...membersOutsideMultisig]);
+    for (const [idx, member] of committeeMembers.entries()) {
+      if (multisigInfo.owners.includes(member.address)) {
+        committeeMembersFieldArray.update(idx, { ...member, linkedMultisigAddress: committeeSafeAddress });
+        committeeMembersFieldArray.move(idx, 0);
+      } else {
+        committeeMembersFieldArray.update(idx, { ...member, linkedMultisigAddress: "" });
+      }
     }
+
+    committeeMembersFieldArray.append([
+      ...newAddressesToAdd.map((address) => createNewCommitteeMember(address, committeeSafeAddress)),
+    ]);
   };
 
   // async function saveToIpfs(vaultDescription: IVaultDescription) {
@@ -184,7 +188,7 @@ const VaultEditorFormPage = () => {
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
-          <button className="mb-5" onClick={test}>
+          <button type="button" className="mb-5" onClick={test}>
             Show form
           </button>
 
