@@ -12,6 +12,7 @@ export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "c
 type FormInputProps = {
   type?: FormInputType;
   label?: string;
+  helper?: string;
   rows?: number;
   pastable?: boolean;
   noErrorLabel?: boolean;
@@ -41,6 +42,7 @@ function FormInputComponent(
     label,
     error,
     prefixIcon,
+    helper,
     ...props
   }: FormInputProps,
   ref
@@ -154,6 +156,7 @@ function FormInputComponent(
       </div>
 
       {error && !noErrorLabel && <span className="error">{error.message}</span>}
+      {!error && helper && <span className="helper">{helper}</span>}
     </StyledFormInput>
   );
 }

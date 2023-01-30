@@ -226,5 +226,13 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);
     }
+
+    span.helper {
+      display: block;
+      color: var(--turquoise);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+    }
   `
 );
