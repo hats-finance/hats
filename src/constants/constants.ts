@@ -40,7 +40,7 @@ export const StagingBotAddress = "https://stagingbot.herokuapp.com/broadcast-mes
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 
-/** The maximum amount to allow spending from the user wallet in BigNumber */
+/**  The maximum amount to allow spending from the user wallet in BigNumber */
 export const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNumber.from(1));
 
 /** The minimum amount to deposit in WEI units */
