@@ -4,8 +4,8 @@ import {
   getTestAddressOrUrl,
   getTestEmailAddress,
   getTestNumberInBetween,
-  getTestWalletAddress,
   getTestCommitteeMultisigForVault,
+  getTestTokenAddress,
 } from "utils/yup.utils";
 import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "./utils";
 
@@ -97,8 +97,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     }),
     assets: Yup.array().of(
       Yup.object({
-        address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
-        chainId: Yup.string().required(intl("required")),
+        address: Yup.string().test(getTestTokenAddress(intl)).required(intl("required")),
       })
     ),
     parameters: Yup.object({

@@ -2,6 +2,7 @@ import * as Yup from "yup";
 import { isAddress } from "ethers/lib/utils";
 import { isEmailAddress } from "./emails.utils";
 import { getGnosisSafeInfo } from "./gnosis.utils";
+import { getTokenInfo } from "./tokens.utils";
 
 export const getTestWalletAddress = (intl) => {
   return {
@@ -60,6 +61,35 @@ export const getTestCommitteeMultisigForVault = (intl) => {
       }
 
       return true;
+    },
+  };
+};
+
+export const getTestTokenAddress = (intl) => {
+  return {
+    name: "is-token-address",
+    test: async (value: string | undefined, ctx: any) => {
+      const isAdd = isAddress(value ?? "");
+      const isEmpty = value === "" || value === undefined;
+      const { chainId } = ctx.from[1].value.committee;
+
+      if (!chainId) return ctx.createError({ message: intl("required") });
+
+      if (isEmpty) return true;
+      if (!isAdd) return ctx.createError({ message: intl("invalid-address") });
+
+      try {
+        // Get the safe info
+        const tokeninfo = await getTokenInfo(value, chainId);
+        const { isValidToken } = tokeninfo;
+
+        if (!isValidToken) return ctx.createError({ message: intl("address-is-not-token") });
+
+        return true;
+      } catch (error) {
+        console.log(error);
+        return ctx.createError({ message: intl("address-is-not-token") });
+      }
     },
   };
 };
