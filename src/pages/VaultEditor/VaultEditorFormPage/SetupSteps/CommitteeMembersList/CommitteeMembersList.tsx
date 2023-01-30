@@ -12,12 +12,23 @@ export function CommitteeMembersList() {
   const { committeeMembersFieldArray } = useContext(VaultEditorFormContext);
   const { fields: members, append, remove } = committeeMembersFieldArray;
 
+  const lastMultisigMemberIdx = members.length - 1 - [...members].reverse().findIndex((member) => member.linkedMultisigAddress);
+
+  console.log(lastMultisigMemberIdx);
+
   return (
     <>
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCommitteeMembersSafeExplanation") }} />
 
       {members.map((member, index) => (
-        <CommitteeMemberForm key={member.id} index={index} append={append} remove={remove} membersCount={members.length} />
+        <CommitteeMemberForm
+          key={member.id}
+          index={index}
+          append={append}
+          remove={remove}
+          membersCount={members.length}
+          isLastMultisigMember={index === lastMultisigMemberIdx}
+        />
       ))}
 
       <Button styleType="invisible" onClick={() => append(createNewCommitteeMember())}>

@@ -64,6 +64,7 @@
     "vaultEditorBountySplitExplanation": "The bounty split will set the way a bounty will be splitted when a pay-out occurs. \n\n <strong>Set committee controlled split (the total should be 100%)</strong>",
     "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
     "vaultEditorFinalStepExplanation": "Create vault by completing the on-chain transaction. \n A vault will be created on chain. \n\n The vault description may be edited at any time, changes will be require Hat gov approval.",
+    "committeeMembersOutsideMultisigExplanation": "<strong>You can add committee members who are not part of Gnosis Safe.</strong> \n\n <strong>Please note,</strong> \n those committee members will not have permission to sign on pay-outs. They can only <strong>decrypt</strong> vulnerabilities sent to the vault.",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -116,6 +117,7 @@
     "vested": "Vested",
     "pleaseNote": "Please note",
     "loadingVaultEditor": "Loading Vault Editor",
+    "committeeMembersOutsideMultisig": "Members outside multisig",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
