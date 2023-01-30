@@ -46,18 +46,20 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     committee: Yup.object({
       chainId: Yup.string().required(intl("required")),
       "multisig-address": Yup.string().test(getTestCommitteeMultisigForVault(intl)).required(intl("required")),
-      members: Yup.array().of(
-        Yup.object({
-          name: Yup.string().required(intl("required")),
-          address: Yup.string().test(getTestAddressOrUrl(intl)),
-          "pgp-keys": Yup.array()
-            .of(Yup.object({ publicKey: Yup.string().required(intl("required")) }))
-            .min(1, intl("required"))
-            .required(intl("required")),
-          "twitter-link": Yup.string().required(intl("required")),
-          "image-ipfs-link": Yup.string(),
-        })
-      ),
+      members: Yup.array()
+        .of(
+          Yup.object({
+            name: Yup.string().required(intl("required")),
+            address: Yup.string().test(getTestAddressOrUrl(intl)),
+            "pgp-keys": Yup.array()
+              .of(Yup.object({ publicKey: Yup.string().required(intl("required")) }))
+              .min(1, intl("required"))
+              .required(intl("required")),
+            "twitter-link": Yup.string().required(intl("required")),
+            "image-ipfs-link": Yup.string(),
+          })
+        )
+        .min(1, intl("required")),
     }),
     "contracts-covered": Yup.array().of(
       Yup.object({
