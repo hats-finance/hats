@@ -3,7 +3,7 @@ import { FormInput, FormSelectInput } from "components";
 import { Controller, useWatch } from "react-hook-form";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { IEditedVaultDescription } from "../../types";
+import { IEditedVaultDescription } from "types";
 import { StyledCommitteeDetailsForm } from "./styles";
 import { useEffect } from "react";
 import { ChainsConfig } from "config/chains";

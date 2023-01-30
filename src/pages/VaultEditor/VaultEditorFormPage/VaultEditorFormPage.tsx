@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "./types";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
 import { createNewCommitteeMember, createNewVaultDescription } from "./utils";
 import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
 import { getEditedDescriptionYupSchema } from "./formSchema";

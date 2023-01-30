@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
-import { IEditedVaultDescription } from "../../types";
+import { IEditedVaultDescription } from "types";
 import { createNewCoveredContract } from "../../utils";
 import AddIcon from "@mui/icons-material/Add";
 

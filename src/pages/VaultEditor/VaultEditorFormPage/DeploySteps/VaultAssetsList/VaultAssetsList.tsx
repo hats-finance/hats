@@ -1,6 +1,6 @@
 import { useFieldArray } from "react-hook-form";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription } from "pages/VaultEditor/VaultEditorFormPage/types";
+import { IEditedVaultDescription } from "types";
 import { VaultAssetForm } from "./VaultAssetForm/VaultAssetForm";
 
 export const VaultAssetsList = () => {

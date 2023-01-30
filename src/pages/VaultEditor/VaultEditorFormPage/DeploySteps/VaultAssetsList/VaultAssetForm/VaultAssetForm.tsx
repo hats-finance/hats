@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultAsset, IEditedVaultDescription } from "../../../types";
+import { IEditedVaultAsset, IEditedVaultDescription } from "types";
 import { StyledVaultAssetForm } from "./styles";
 
 type VaultAssetFormProps = {
