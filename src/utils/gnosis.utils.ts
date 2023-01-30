@@ -58,7 +58,7 @@ export const getGnosisSafeInfo = async (
     if (!data) throw new Error("No data");
 
     return {
-      isSafeAddress: true,
+      isSafeAddress: data.isSafeAddress ?? true,
       owners: data.owners,
       threshold: data.threshold,
     };
