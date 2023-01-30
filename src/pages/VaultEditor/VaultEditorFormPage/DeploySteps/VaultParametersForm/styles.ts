@@ -72,6 +72,7 @@ export const StyledVaultParametersForm = styled.div`
 
       p {
         font-weight: 700;
+        margin: 0;
         margin-bottom: ${getSpacing(0.6)};
         font-size: var(--small);
       }
