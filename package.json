@@ -81,6 +81,7 @@
     "build": "react-app-rewired build",
     "test": "jest --watch --verbose --maxWorkers=25%"
   },
+  "workspaces": ["shared"],
   "eslintConfig": {
     "extends": [
       "react-app",

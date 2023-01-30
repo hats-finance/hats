@@ -1,5 +1,3 @@
-import { INFTTokenMetadata } from "hooks/nft/types";
-
 export interface IBaseVault {
   id: string;
   descriptionHash: string;
@@ -142,6 +140,14 @@ export interface INFTMetaData {
   animation_url: string;
   image: string;
   external_url: string;
+}
+
+export interface INFTTokenMetadata {
+  name: string;
+  description: string;
+  image: string;
+  animation_url: string;
+  attributes: Array<{ trait_type: string; value: string }>;
 }
 
 export interface IStaker {

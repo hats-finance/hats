@@ -1,6 +1,6 @@
 import { useContractWrite, useNetwork } from "wagmi";
 import { BigNumber } from "ethers";
-import { IVault } from "types/types";
+import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { erc20_abi } from "data/abis/erc20_abi";
 
