@@ -1,21 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { FormInput, FormSelectInput } from "components";
 import { Controller, useWatch } from "react-hook-form";
-import { useNetwork } from "wagmi";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { IEditedVaultDescription } from "../../types";
 import { StyledCommitteeDetailsForm } from "./styles";
 import { useEffect } from "react";
+import { ChainsConfig } from "config/chains";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();
-  const { chains } = useNetwork();
 
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const committeeChainId = useWatch({ control, name: "committee.chainId" });
 
-  const supportedNetworksOptions = chains.map((chain) => ({ label: chain.name, value: `${chain.id}` }));
+  const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
+    label: chainConf.chain.name,
+    value: `${chainConf.chain.id}`,
+  }));
 
   useEffect(() => {
     if (committeeChainId) trigger("committee.multisig-address");
