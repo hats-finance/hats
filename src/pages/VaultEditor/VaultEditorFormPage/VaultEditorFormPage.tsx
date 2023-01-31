@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
@@ -11,6 +12,8 @@ import { createNewCommitteeMember, createNewVaultDescription } from "@hats-finan
 import { convertVulnerabilitySeverityV1ToV2 } from "@hats-finance/shared";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
+import { AllEditorSections } from "./steps";
+import { VaultEditorFormContext } from "./store";
 import {
   Section,
   VaultEditorForm,
@@ -22,16 +25,16 @@ import {
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
-import { AllEditorSections } from "./steps";
-import { getGnosisSafeInfo } from "utils/gnosis.utils";
-import { VaultEditorFormContext } from "./store";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { editSessionId } = useParams();
-
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
+
+  const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
   const [loadingEditSession, setLoadingEditSession] = useState(false);
 
   const test = () => {
@@ -82,13 +85,14 @@ const VaultEditorFormPage = () => {
       editSessionId === "new-vault" ? undefined : editSessionId
     );
 
-    setLoadingEditSession(false);
-
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
     } else {
+      setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
       handleReset(sessionIdOrSessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
     }
+
+    setLoadingEditSession(false);
   };
 
   async function loadEditSessionData(editSessionId: string) {
@@ -96,6 +100,8 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
+
+      setDescriptionHash(editSessionResponse.descriptionHash);
       handleReset(editSessionResponse.editedDescription);
     } catch (error) {
       console.error(error);
@@ -212,6 +218,11 @@ const VaultEditorFormPage = () => {
 
           <VaultEditorForm className="content-wrapper">
             {/* Title */}
+            {descriptionHash && isAdvancedMode && (
+              <p className="descriptionHash">
+                <strong>{t("descriptionHash")}:</strong> {descriptionHash}
+              </p>
+            )}
             <div className="editor-title">
               <div className="title">
                 {/* <ArrowBackIcon /> */}
@@ -221,7 +232,6 @@ const VaultEditorFormPage = () => {
                 </p>
               </div>
             </div>
-
             {/* Steps control */}
             <VaultEditorStepper>
               {steps
@@ -238,7 +248,6 @@ const VaultEditorFormPage = () => {
                   </VaultEditorStepController>
                 ))}
             </VaultEditorStepper>
-
             {/* Section */}
             {steps.map((step) => (
               <Section key={step.id} visible={step.id === currentStepInfo.id}>
@@ -248,7 +257,6 @@ const VaultEditorFormPage = () => {
                 </div>
               </Section>
             ))}
-
             {/* Action buttons */}
             <div className="buttons-container">
               <Button onClick={() => onGoNext.go()}>

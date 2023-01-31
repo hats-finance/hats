@@ -9,6 +9,7 @@ export const StyledVaultEditorContainer = styled.div`
 `;
 
 export const VaultEditorForm = styled.form`
+  position: relative;
   background: var(--background-clear-blue);
   padding: ${getSpacing(3)} ${getSpacing(4)};
   border-radius: ${getSpacing(0.5)};
@@ -32,6 +33,24 @@ export const VaultEditorForm = styled.form`
           font-weight: 700;
         }
       }
+    }
+  }
+
+  .descriptionHash {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    color: var(--grey-400);
+    background: var(--grey-600);
+    font-size: var(--xxsmall);
+    padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+    border-radius: 5px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
     }
   }
 
