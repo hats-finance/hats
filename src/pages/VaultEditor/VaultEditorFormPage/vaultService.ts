@@ -99,7 +99,7 @@ export async function upsertEditSession(
     }
   }
 
-  formData.append("editSession", JSON.stringify(editSession));
+  formData.append("editedDescription", JSON.stringify(editSession));
 
   const response = await axios.post(`${VAULT_SERVICE}/edit-session/${editSessionId ?? ""}`, formData, {
     headers: {
