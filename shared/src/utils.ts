@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription } from "./";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
+  IEditedCommunicationEmail,
   IEditedContractCovered,
   IEditedVaultDescription,
   IEditedVaultParameters,
@@ -96,7 +97,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       tokenIcon: "",
       website: "",
       type: "",
-      emails: [{ address: "", status: "unverified" }],
+      emails: [] as IEditedCommunicationEmail[],
     },
     committee: {
       chainId: "",
