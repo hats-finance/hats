@@ -4,6 +4,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
+import { VAULT_SERVICE } from "settings";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
@@ -180,17 +181,9 @@ const VaultEditorFormPage = () => {
     saveEditSessionData();
   };
 
-  // async function saveToIpfs(vaultDescription: IVaultDescription) {
-  //   try {
-  //     setSavingToIpfs(true);
-  //     const ipfsHash = await VaultService.uploadVaultDescriptionToIpfs(vaultDescription);
-  //     navigate(`${RoutePaths.vault_editor}/${ipfsHash}`);
-  //   } catch (error) {
-  //     console.error(error);
-  //   } finally {
-  //     setSavingToIpfs(false);
-  //   }
-  // }
+  const goToDescriptionHash = () => {
+    window.open(`${VAULT_SERVICE}/ipfs/${descriptionHash}`, "_blank");
+  };
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
@@ -219,7 +212,7 @@ const VaultEditorFormPage = () => {
           <VaultEditorForm className="content-wrapper">
             {/* Title */}
             {descriptionHash && isAdvancedMode && (
-              <p className="descriptionHash">
+              <p className="descriptionHash" onClick={goToDescriptionHash}>
                 <strong>{t("descriptionHash")}:</strong> {descriptionHash}
               </p>
             )}
