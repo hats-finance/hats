@@ -5,7 +5,7 @@ import { Button } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 import { IEditedVaultDescription } from "types";
-import { createNewCoveredContract } from "../../utils";
+import { createNewCoveredContract } from "@hats-finance/shared";
 import AddIcon from "@mui/icons-material/Add";
 
 export function ContractsCoveredList() {

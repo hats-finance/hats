@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
-import { createNewCommitteeMember } from "../../utils";
+import { createNewCommitteeMember } from "@hats-finance/shared";
 import { VaultEditorFormContext } from "../../store";
 import AddIcon from "@mui/icons-material/Add";
 

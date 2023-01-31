@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "types";
+import { ICommitteeMember, IVaultDescription } from "./";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
   IEditedContractCovered,
@@ -8,7 +8,11 @@ import {
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
-} from "types";
+  IVulnerabilitySeveritiesTemplate,
+  IVulnerabilitySeverity,
+  IVulnerabilitySeverityV1,
+  IVulnerabilitySeverityV2,
+} from "./types";
 
 export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
@@ -217,25 +221,63 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
   };
 }
 
+function editedSeveritiesToSeverities(severities: IEditedVulnerabilitySeverityV1[], contractsCovered: IEditedContractCovered[]) {
+  return severities.map((severity) => {
+    const newSeverity = { ...severity };
+
+    const severityId = newSeverity.id as string;
+    if (newSeverity.id) delete newSeverity.id;
+    return {
+      ...newSeverity,
+      "contracts-covered": contractsCovered
+        .filter((contract) => contract.severities?.includes(severityId))
+        .map((contract) => ({ [contract.name]: contract.address })),
+    };
+  }) as IVulnerabilitySeverityV1[];
+}
+
+function editedSeveritiesToSeveritiesv2(
+  severities: IEditedVulnerabilitySeverityV2[],
+  contractsCovered: IEditedContractCovered[]
+) {
+  return severities.map((severity) => {
+    const newSeverity = { ...severity };
+
+    const severityId = newSeverity.id as string;
+    if (newSeverity.id) delete newSeverity.id;
+    return {
+      ...newSeverity,
+      "contracts-covered": contractsCovered
+        .filter((contract) => contract.severities?.includes(severityId))
+        .map((contract) => ({ [contract.name]: contract.address })),
+    };
+  }) as IVulnerabilitySeverityV2[];
+}
+
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
-  return {
-    version: editedVaultDescription.version,
-    "project-metadata": editedVaultDescription["project-metadata"],
-    "communication-channel": editedVaultDescription["communication-channel"],
-    committee: editedVaultDescription.committee,
-    source: editedVaultDescription.source,
-    severities: editedVaultDescription["vulnerability-severities-spec"].severities.map((severity) => {
-      const newSeverity = { ...severity };
-
-      const severityId = newSeverity.id as string;
-      if (newSeverity.id) delete newSeverity.id;
-
-      return {
-        ...newSeverity,
-        "contracts-covered": editedVaultDescription["contracts-covered"]
-          .filter((contract) => contract.severities?.includes(severityId))
-          .map((contract) => ({ [contract.name]: contract.address })),
-      };
-    }),
-  };
+  if (editedVaultDescription.version === "v1") {
+    return {
+      version: editedVaultDescription.version,
+      "project-metadata": editedVaultDescription["project-metadata"],
+      "communication-channel": editedVaultDescription["communication-channel"],
+      committee: editedVaultDescription.committee,
+      source: editedVaultDescription.source,
+      severities: editedSeveritiesToSeverities(
+        editedVaultDescription["vulnerability-severities-spec"].severities,
+        editedVaultDescription["contracts-covered"]
+      ),
+    };
+  } else {
+    return {
+      version: editedVaultDescription.version,
+      "project-metadata": editedVaultDescription["project-metadata"],
+      "communication-channel": editedVaultDescription["communication-channel"],
+      committee: editedVaultDescription.committee,
+      source: editedVaultDescription.source,
+      severities: editedSeveritiesToSeveritiesv2(
+        editedVaultDescription["vulnerability-severities-spec"].severities,
+        editedVaultDescription["contracts-covered"]
+      ),
+    };
+  }
 }

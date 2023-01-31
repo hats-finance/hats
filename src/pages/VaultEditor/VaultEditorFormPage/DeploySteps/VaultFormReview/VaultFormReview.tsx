@@ -3,7 +3,7 @@ import { useWatch } from "react-hook-form";
 import { Vault } from "components";
 import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
 import { IEditedVaultDescription } from "types";
-import { editedFormToDescription } from "../../utils";
+import { editedFormToDescription } from "@hats-finance/shared";
 import { StyledVaultFormReview } from "./styles";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { useCallback } from "react";

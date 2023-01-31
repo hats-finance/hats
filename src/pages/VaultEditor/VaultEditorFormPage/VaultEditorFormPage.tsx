@@ -7,8 +7,8 @@ import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
-import { createNewCommitteeMember, createNewVaultDescription } from "./utils";
-import { convertVulnerabilitySeverityV1ToV2 } from "./severities";
+import { createNewCommitteeMember, createNewVaultDescription } from "@hats-finance/shared";
+import { convertVulnerabilitySeverityV1ToV2 } from "@hats-finance/shared";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import {

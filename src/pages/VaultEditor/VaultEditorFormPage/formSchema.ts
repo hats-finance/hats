@@ -7,7 +7,7 @@ import {
   getTestCommitteeMultisigForVault,
   getTestTokenAddress,
 } from "utils/yup.utils";
-import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "./utils";
+import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "@hats-finance/shared";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
