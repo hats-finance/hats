@@ -74,11 +74,15 @@ const VaultEditorFormPage = () => {
   const vaultVersion = useWatch({ control, name: "version" });
 
   const saveEditSessionData = async () => {
+    if (editSessionId === "new-vault") setLoadingEditSession(true);
+
     const data: IEditedVaultDescription = getValues();
     const sessionIdOrSessionResponse = await VaultService.upsertEditSession(
       data,
       editSessionId === "new-vault" ? undefined : editSessionId
     );
+
+    setLoadingEditSession(false);
 
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
