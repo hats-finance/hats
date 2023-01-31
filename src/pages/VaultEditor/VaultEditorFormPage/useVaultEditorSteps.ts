@@ -207,7 +207,7 @@ export const useVaultEditorSteps = (
       },
       text: t("back"),
     };
-  }, [currentSection, currentStepInfo.formFields, currentStepNumber, editStepStatus, editorSections, formMethods, t]);
+  }, [currentSection, currentStepInfo.formFields, currentStepNumber, editStepStatus, editorSections, formMethods, options, t]);
 
   const onGoNext = useMemo((): { go: Function; text: string } => {
     const sectionsNames = Object.keys(editorSections);
