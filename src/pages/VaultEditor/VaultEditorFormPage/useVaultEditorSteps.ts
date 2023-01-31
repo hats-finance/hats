@@ -126,12 +126,16 @@ export const useVaultEditorSteps = (
 
   const onGoToStep = async (stepNumber: number) => {
     const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
-    // const isStepValid = true;
 
-    // If the user is going back or is going to a valid step, continue
+    // If the user is going back, continue
     if (currentStepNumber >= stepNumber) {
       editStepStatus("isValid", isStepValid);
       setCurrentStepNumber(stepNumber);
+
+      if (options.saveData)
+        options.saveData().then(() => {
+          if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+        });
     } else {
       const userWantsToGoToNextStep = currentStepNumber + 1 === stepNumber;
 
@@ -180,6 +184,11 @@ export const useVaultEditorSteps = (
         go: async () => {
           const isStepValid = await formMethods.trigger(currentStepInfo.formFields as any);
           editStepStatus("isValid", isStepValid);
+
+          if (options.saveData)
+            options.saveData().then(() => {
+              if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+            });
 
           setCurrentSection(previousSection);
           setCurrentStepNumber(previousSectionLastStepIndex);
