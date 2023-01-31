@@ -10,6 +10,7 @@ import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import VerifyEmailIcon from "@mui/icons-material/ForwardToInboxOutlined";
+import ReverifyEmailIcon from "@mui/icons-material/Replay";
 import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 export function VaultDetailsForm() {
@@ -57,9 +58,25 @@ export function VaultDetailsForm() {
       </Button>
     );
 
+    const reverifyButton = (
+      <Button styleType="invisible" onClick={() => console.log("test reverify")}>
+        <ReverifyEmailIcon className="mr-2" />
+        <span>{t("reverify")}</span>
+      </Button>
+    );
+
     const verifyAndRemoveButton = (
       <div className="multiple-buttons">
         {verifyButton}
+        <Button noPadding styleType="invisible" onClick={() => removeEmail(emailIndex)}>
+          <DeleteIcon className="mr-2" />
+        </Button>
+      </div>
+    );
+
+    const reverifyAndRemoveButton = (
+      <div className="multiple-buttons">
+        {reverifyButton}
         <Button noPadding styleType="invisible" onClick={() => removeEmail(emailIndex)}>
           <DeleteIcon className="mr-2" />
         </Button>
@@ -76,7 +93,8 @@ export function VaultDetailsForm() {
     } else if (emailData.status === "verified") {
       if (moreThanOneEmail) return removeButton;
     } else {
-      return verifyAndRemoveButton;
+      if (moreThanOneEmail) return reverifyAndRemoveButton;
+      return reverifyButton;
     }
   };
 
@@ -126,7 +144,7 @@ export function VaultDetailsForm() {
                     placeholder={t("VaultEditor.vault-details.email-placeholder")}
                     label={t("VaultEditor.vault-details.email")}
                     {...field}
-                    onChange={email.status === "verified" || email.status === "verifying" ? () => { } : field.onChange}
+                    onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
                   />
                   <>{getEmailActionButton(email, field.value, emailIndex)}</>
                 </div>
