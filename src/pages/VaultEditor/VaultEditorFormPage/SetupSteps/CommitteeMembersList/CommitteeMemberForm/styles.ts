@@ -21,8 +21,8 @@ export const StyledCommitteeMemberForm = styled.div`
     background: var(--grey-600);
     color: var(--grey-400);
     font-size: var(--tiny);
-    border-radius: 100px;
-    padding: ${getSpacing(0.5)} ${getSpacing(2)};
+    border-radius: 5px;
+    padding: ${getSpacing(0.4)} ${getSpacing(1.4)};
     position: absolute;
     transform: translateY(-50%);
     top: 0;
