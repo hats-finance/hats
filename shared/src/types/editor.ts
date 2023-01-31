@@ -88,3 +88,8 @@ export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
 }
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
+
+export interface IEditedSessionResponse {
+  editedDescription: IEditedVaultDescription;
+  descriptionHash: string;
+}
