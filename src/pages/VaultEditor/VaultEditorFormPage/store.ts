@@ -4,6 +4,7 @@ import { IEditedVaultDescription } from "types";
 
 interface IVaultEditorFormContext {
   committeeMembersFieldArray: UseFieldArrayReturn<IEditedVaultDescription, "committee.members">;
+  saveEditSessionData: () => Promise<void>;
 }
 
 export const VaultEditorFormContext = createContext<IVaultEditorFormContext>(undefined as any);

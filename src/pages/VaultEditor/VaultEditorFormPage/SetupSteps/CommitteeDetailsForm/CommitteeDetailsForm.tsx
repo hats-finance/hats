@@ -1,12 +1,12 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { FormInput, FormSelectInput } from "components";
 import { Controller, useWatch } from "react-hook-form";
+import { FormInput, FormSelectInput } from "components";
+import { ChainsConfig } from "config/chains";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { IEditedVaultDescription } from "types";
 import { StyledCommitteeDetailsForm } from "./styles";
-import { useEffect } from "react";
-import { ChainsConfig } from "config/chains";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();

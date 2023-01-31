@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
@@ -6,6 +6,7 @@ import { getPath } from "utils/objects.utils";
 import { isEmailAddress } from "utils/emails.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
 import { IEditedCommunicationEmail, IEditedVaultDescription } from "types";
+import { VaultEditorFormContext } from "../../store";
 import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -15,6 +16,7 @@ import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
+  const { saveEditSessionData } = useContext(VaultEditorFormContext);
 
   const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
@@ -44,10 +46,16 @@ export function VaultDetailsForm() {
   const getEmailActionButton = (emailData: IEditedCommunicationEmail, value: string, emailIndex: number) => {
     const isValidEmail = isEmailAddress(value);
 
-    const removeButton = (
-      <Button styleType="invisible" onClick={() => removeEmail(emailIndex)}>
+    const removeButton = (withText = true, saveForm = false) => (
+      <Button
+        styleType="invisible"
+        noPadding={!withText}
+        onClick={() => {
+          removeEmail(emailIndex);
+          if (saveForm) saveEditSessionData();
+        }}>
         <DeleteIcon className="mr-2" />
-        <span>{t("remove")}</span>
+        {withText && <span>{t("remove")}</span>}
       </Button>
     );
 
@@ -68,18 +76,14 @@ export function VaultDetailsForm() {
     const verifyAndRemoveButton = (
       <div className="multiple-buttons">
         {verifyButton}
-        <Button noPadding styleType="invisible" onClick={() => removeEmail(emailIndex)}>
-          <DeleteIcon className="mr-2" />
-        </Button>
+        {removeButton(false)}
       </div>
     );
 
     const reverifyAndRemoveButton = (
       <div className="multiple-buttons">
         {reverifyButton}
-        <Button noPadding styleType="invisible" onClick={() => removeEmail(emailIndex)}>
-          <DeleteIcon className="mr-2" />
-        </Button>
+        {removeButton(false, true)}
       </div>
     );
 
@@ -88,10 +92,10 @@ export function VaultDetailsForm() {
     if (emailData.status === "unverified") {
       if (isValidEmail && moreThanOneEmail) return verifyAndRemoveButton;
       if (isValidEmail && !moreThanOneEmail) return verifyButton;
-      if (moreThanOneEmail) return removeButton;
+      if (moreThanOneEmail) return removeButton();
       return <></>;
     } else if (emailData.status === "verified") {
-      if (moreThanOneEmail) return removeButton;
+      if (moreThanOneEmail) return removeButton(true, true);
     } else {
       if (moreThanOneEmail) return reverifyAndRemoveButton;
       return reverifyButton;

@@ -187,7 +187,7 @@ const VaultEditorFormPage = () => {
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
-  const vaultEditorFormContext = { committeeMembersFieldArray };
+  const vaultEditorFormContext = { committeeMembersFieldArray, saveEditSessionData };
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
