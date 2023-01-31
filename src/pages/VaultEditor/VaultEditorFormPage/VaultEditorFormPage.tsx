@@ -4,7 +4,7 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
-import { VAULT_SERVICE } from "settings";
+import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
@@ -182,7 +182,7 @@ const VaultEditorFormPage = () => {
   };
 
   const goToDescriptionHash = () => {
-    window.open(`${VAULT_SERVICE}/ipfs/${descriptionHash}`, "_blank");
+    window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
   };
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;

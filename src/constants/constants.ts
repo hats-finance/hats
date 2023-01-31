@@ -15,7 +15,8 @@ export enum ScreenSize {
 
 export const MAX_NFT_TIER = 3;
 
-export const VaultService = "https://stagingbot.herokuapp.com";
+export const stagingServiceUrl = "https://stagingbot.herokuapp.com";
+export const prodServiceUrl = "https://hats-telegram-bot.herokuapp.com";
 
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
@@ -34,9 +35,6 @@ export enum Pages {
 }
 
 export const SMALL_SCREEN_BREAKPOINT = "1100px";
-
-export const DefaultBotAddress = "https://hats-telegram-bot.herokuapp.com/broadcast-message";
-export const StagingBotAddress = "https://stagingbot.herokuapp.com/broadcast-message";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
 

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import millify from "millify";
 import { BigNumber } from "ethers";
-import { VAULT_SERVICE } from "settings";
+import { BASE_SERVICE_URL } from "settings";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
@@ -254,7 +254,7 @@ export const normalizeAddress = (address: string) => {
 export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPinned: true }) => {
   if (!uri || typeof uri !== "string") return "";
 
-  const ipfsPrefix = isPinned ? IPFS_PREFIX : `${VAULT_SERVICE}/ipfs`;
+  const ipfsPrefix = isPinned ? IPFS_PREFIX : `${BASE_SERVICE_URL}/ipfs`;
 
   if (uri.startsWith("ipfs")) {
     let ipfs;
