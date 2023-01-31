@@ -75,15 +75,15 @@ const VaultEditorFormPage = () => {
 
   const saveEditSessionData = async () => {
     const data: IEditedVaultDescription = getValues();
-    const sessionIdOrSession = await VaultService.upsertEditSession(
+    const sessionIdOrSessionResponse = await VaultService.upsertEditSession(
       data,
       editSessionId === "new-vault" ? undefined : editSessionId
     );
 
-    if (typeof sessionIdOrSession === "string") {
-      navigate(`${RoutePaths.vault_editor}/${sessionIdOrSession}`, { replace: true });
+    if (typeof sessionIdOrSessionResponse === "string") {
+      navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
     } else {
-      handleReset(sessionIdOrSession, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+      handleReset(sessionIdOrSessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
     }
   };
 
@@ -91,8 +91,8 @@ const VaultEditorFormPage = () => {
     try {
       setLoadingEditSession(true);
 
-      const editSessionData = await VaultService.getEditSessionData(editSessionId);
-      handleReset(editSessionData);
+      const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
+      handleReset(editSessionResponse.editedDescription);
     } catch (error) {
       console.error(error);
     } finally {

@@ -2,7 +2,7 @@ import { IVaultDescription } from "types";
 import axios from "axios";
 import { getPath, setPath } from "utils/objects.utils";
 import { VAULT_SERVICE } from "settings";
-import { IEditedVaultDescription } from "types";
+import { IEditedSessionResponse, IEditedVaultDescription } from "types";
 
 function isBlob(uri: string) {
   return uri.startsWith("blob:");
@@ -75,7 +75,7 @@ export async function signIpfs(ipfsHash: string, address: string, message: strin
   return response.data;
 }
 
-export async function getEditSessionData(editSessionId: string): Promise<IEditedVaultDescription> {
+export async function getEditSessionData(editSessionId: string): Promise<IEditedSessionResponse> {
   const response = await axios.get(`${VAULT_SERVICE}/edit-session/${editSessionId}`);
   return response.data;
 }
@@ -83,7 +83,7 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
 export async function upsertEditSession(
   editSession: IEditedVaultDescription,
   editSessionId?: string
-): Promise<string | IEditedVaultDescription> {
+): Promise<string | IEditedSessionResponse> {
   const iconsPaths = ["project-metadata.icon", "project-metadata.tokenIcon"];
   editSession.committee.members.map((_, index) => iconsPaths.push(`committee.members.${index}.image-ipfs-link`));
 
@@ -107,5 +107,5 @@ export async function upsertEditSession(
     },
   });
 
-  return response.headers["x-new-id"] ?? (response.data as IEditedVaultDescription);
+  return response.headers["x-new-id"] ?? (response.data as IEditedSessionResponse);
 }
