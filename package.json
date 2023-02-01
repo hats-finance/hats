@@ -2,10 +2,11 @@
   "name": "hats-frontend",
   "private": true,
   "scripts": {
-    "dev": "cd apps/shared && yarn build && cd ../.. && cd apps/web && yarn start",
-    "publish:shared": "cd apps/shared && yarn run publish"
+    "dev": "cd packages/shared && yarn build && cd ../.. && cd packages/web && yarn start",
+    "build": "cd packages/web && yarn build",
+    "publish:shared": "cd packages/shared && yarn run publish"
   },
   "workspaces": [
-    "apps/*"
+    "packages/*"
   ]
 }

@@ -1,6 +1,6 @@
 import { FieldValues, useFormContext, UseFormRegister, UseFormReturn, useFormState, UseFormStateReturn } from "react-hook-form";
 import { getPath } from "utils/objects.utils";
-import { parseIsDirty } from "./../components/FormControls/utils";
+import { parseIsDirty } from "../components/FormControls/utils";
 
 function getCustomIsDirty<T extends FieldValues>(
   name: string,
