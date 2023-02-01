@@ -1,11 +1,10 @@
-import { readContract } from "@wagmi/core";
+import { readContract, readContracts } from "@wagmi/core";
 import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
 import { HATVaultsNFT_abi } from "data/abis/HATVaultsNFT_abi";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
-import { readContracts } from "wagmi";
 import { INFTToken, INFTTokenInfoRedeemed, INFTTokenMetadata, IVaultIdentifier } from "./types";
 
 export async function getDepositTokensWithRedeemState(
@@ -34,19 +33,25 @@ export async function getDepositTokensWithRedeemState(
       : [];
 
   const tokensIds = (await readContracts({
-    contracts: tokens.map(({ proxyAddress, pid, tier }) => ({
-      ...nftContract,
-      functionName: "getTokenId",
-      args: [proxyAddress, Number(pid), tier],
-    })),
+    contracts: tokens.map(
+      ({ proxyAddress, pid, tier }) =>
+        ({
+          ...nftContract,
+          functionName: "getTokenId",
+          args: [proxyAddress, Number(pid), tier],
+        } as any)
+    ),
   })) as BigNumber[];
 
   const tokensUris = (await readContracts({
-    contracts: tokensIds.map((id) => ({
-      ...nftContract,
-      functionName: "uri",
-      args: [id],
-    })),
+    contracts: tokensIds.map(
+      (id) =>
+        ({
+          ...nftContract,
+          functionName: "uri",
+          args: [id],
+        } as any)
+    ),
   })) as string[];
 
   const tokensMetadata = await Promise.all(
@@ -59,7 +64,7 @@ export async function getDepositTokensWithRedeemState(
     ...nftContract,
     functionName: "balanceOfBatch",
     args: [tokensIds.map(() => address), tokensIds.map((id) => id)],
-  })) as BigNumber[];
+  } as any)) as BigNumber[];
 
   return tokens.map((token, i) => ({
     ...token,

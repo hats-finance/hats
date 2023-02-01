@@ -31,7 +31,7 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
     if (!nftContract) return;
 
     const config = await prepareWriteContract({
-      address: nftContract,
+      address: nftContract as `0x${string}`,
       abi: HATVaultsNFT_abi,
       functionName: "redeemMultipleFromShares",
       args: [[proxyAddress], [BigNumber.from(vault?.pid)], account as `0x${string}`],

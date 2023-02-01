@@ -21,10 +21,10 @@ export async function redeemAirdrop(chainId: number, airdropTree: AirdropMachine
 
   const response = await writeContract({
     mode: "recklesslyUnprepared",
-    address: vaultsNFTContract,
+    address: vaultsNFTContract as `0x${string}`,
     abi: hatVaultNftAbi,
     functionName: "redeemMultipleFromTree",
-    args: [hatVaults, pids, tiers, redeemableProofs]
+    args: [hatVaults, pids, tiers, redeemableProofs],
   });
   return response.wait();
 }

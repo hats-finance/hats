@@ -1,4 +1,4 @@
-import { Chain } from "@wagmi/core";
+import { Chain } from "wagmi";
 import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
 
 export interface IChainConfiguration {

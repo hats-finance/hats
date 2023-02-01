@@ -5,13 +5,18 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "publish": "yarn run build && npm publish"
   },
   "keywords": [],
   "author": "leviyehonatan",
   "license": "ISC",
   "private": false,
   "devDependencies": {
+    "@types/uuid": "^9.0.0",
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "uuid": "^9.0.0"
   }
 }

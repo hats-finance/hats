@@ -15,10 +15,10 @@ export async function redeemDepositNfts(chainId: number, address: string, deposi
 
   const response = await writeContract({
     mode: "recklesslyUnprepared",
-    address: vaultsNFTContract,
+    address: vaultsNFTContract as `0x${string}`,
     abi: hatVaultNftAbi,
     functionName: "redeemMultipleFromShares",
-    args: [hatVaults, pids, address]
+    args: [hatVaults, pids, address],
   });
   return await response.wait();
 }

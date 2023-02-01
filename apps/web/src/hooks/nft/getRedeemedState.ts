@@ -10,14 +10,14 @@ export async function getRedeemedState(
   nfts: INFTTokenInfo[]
 ): Promise<INFTTokenInfoRedeemed[]> {
   const redeemedPerNft = (await readContract({
-    address: nftContract.address,
+    address: nftContract.address as `0x${string}`,
     abi: hatVaultNftAbi,
     chainId,
     functionName: "balanceOfBatch",
-    args: [nfts.map((_) => address), nfts.map((nft) => nft.tokenId)]
+    args: [nfts.map((_) => address), nfts.map((nft) => nft.tokenId)],
   })) as any;
   return redeemedPerNft.map((redeemed, index) => ({
     ...nfts[index],
-    redeemed: redeemed.toNumber() > 0
+    redeemed: redeemed.toNumber() > 0,
   }));
 }
