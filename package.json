@@ -75,7 +75,11 @@
     "web-vitals": "^2.1.2",
     "web3modal": "^1.9.7",
     "yup": "^0.32.11",
-    "moment": "^2.29.4"
+    "moment": "^2.29.4",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4"
   },
   "scripts": {
     "start": "react-app-rewired start",
@@ -100,11 +104,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "dependencies": {
-    "@emotion/react": "^11.10.5",
-    "@emotion/styled": "^11.10.5",
-    "@mui/icons-material": "^5.11.0",
-    "@mui/material": "^5.11.4"
   }
 }
