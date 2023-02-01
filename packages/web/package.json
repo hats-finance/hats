@@ -80,11 +80,10 @@
   },
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "preinstall": "yarn config set ignore-engines true"
+    "build": "react-app-rewired build"
   },
   "eslintConfig": {
-    "extends": [
+    "extends": [ 
       "react-app"
     ]
   },

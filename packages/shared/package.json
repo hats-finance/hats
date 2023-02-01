@@ -6,8 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "publish": "yarn run build && npm publish",
-    "preinstall": "yarn config set ignore-engines true"
+    "publish": "yarn run build && npm publish"
   },
   "keywords": [],
   "author": "leviyehonatan",
