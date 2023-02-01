@@ -40,7 +40,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         ),
       emails: Yup.array()
         .of(Yup.object({ address: Yup.string().test(getTestEmailAddress(intl)).required(intl("required")) }))
-        .min(1, intl("required"))
+        .min(1, intl("at-least-one-email"))
         .required(intl("required")),
     }),
     committee: Yup.object({
