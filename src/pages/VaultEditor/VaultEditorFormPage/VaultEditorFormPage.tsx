@@ -162,21 +162,35 @@ const VaultEditorFormPage = () => {
       committeeSafeAddressChainId ? +committeeSafeAddressChainId : undefined
     );
 
-    const committeeMembers = [...getValues("committee.members")];
+    let committeeMembers = [...getValues("committee.members")];
     const newAddressesToAdd = multisigInfo.owners.filter((owner) => !committeeMembers.some((member) => member.address === owner));
 
+    // Update linkedMultisigAddress based on the new multisig owners. And save the members that are not part of the multisig
+    // anymore to move them to the end of the list
+    const indexesToMoveToTheEnd: number[] = [];
     for (const [idx, member] of committeeMembers.entries()) {
       if (multisigInfo.owners.includes(member.address)) {
         committeeMembersFieldArray.update(idx, { ...member, linkedMultisigAddress: committeeSafeAddress });
-        committeeMembersFieldArray.move(idx, 0);
       } else {
         committeeMembersFieldArray.update(idx, { ...member, linkedMultisigAddress: "" });
+        indexesToMoveToTheEnd.push(idx);
       }
     }
 
-    committeeMembersFieldArray.append([
-      ...newAddressesToAdd.map((address) => createNewCommitteeMember(address, committeeSafeAddress)),
-    ]);
+    // Add new members to the list
+    if (newAddressesToAdd.length > 0) {
+      committeeMembersFieldArray.prepend(
+        [...newAddressesToAdd.map((address) => createNewCommitteeMember(address, committeeSafeAddress))],
+        { shouldFocus: false }
+      );
+    }
+
+    // Move members that are not part of the multisig anymore to the end of the list
+    let moved = 0;
+    for (const idx of indexesToMoveToTheEnd) {
+      committeeMembersFieldArray.move(idx - moved, committeeMembers.length - 1);
+      moved++;
+    }
 
     saveEditSessionData();
   };
