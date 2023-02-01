@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "cd packages/shared && yarn build && cd ../.. && cd packages/web && yarn start",
-    "build": "cd packages/web && yarn build",
+    "build": "cd packages/web && yarn build --skip-integrity-check",
     "publish:shared": "cd packages/shared && yarn run publish"
   },
   "workspaces": [
