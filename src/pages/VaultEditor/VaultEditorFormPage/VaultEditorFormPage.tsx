@@ -181,7 +181,7 @@ const VaultEditorFormPage = () => {
     saveEditSessionData();
   };
 
-  const goToDescriptionHash = () => {
+  const goToDescriptionHashContent = () => {
     window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
   };
 
@@ -212,7 +212,7 @@ const VaultEditorFormPage = () => {
           <VaultEditorForm className="content-wrapper">
             {/* Title */}
             {descriptionHash && isAdvancedMode && (
-              <p className="descriptionHash" onClick={goToDescriptionHash}>
+              <p className="descriptionHash" onClick={goToDescriptionHashContent}>
                 <strong>{t("descriptionHash")}:</strong> {descriptionHash}
               </p>
             )}
