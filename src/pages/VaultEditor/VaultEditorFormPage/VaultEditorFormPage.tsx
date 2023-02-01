@@ -3,13 +3,13 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { createNewCommitteeMember, createNewVaultDescription, IEditedSessionResponse } from "@hats-finance/shared";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
-import { createNewCommitteeMember, createNewVaultDescription } from "@hats-finance/shared";
 import { convertVulnerabilitySeverityV1ToV2 } from "@hats-finance/shared";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
@@ -45,7 +45,7 @@ const VaultEditorFormPage = () => {
   };
 
   const methods = useForm<IEditedVaultDescription>({
-    defaultValues: createNewVaultDescription("v2"),
+    // defaultValues: createNewVaultDescription("v2"),
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
   });
@@ -80,11 +80,14 @@ const VaultEditorFormPage = () => {
   const saveEditSessionData = async () => {
     if (editSessionId === "new-vault") setLoadingEditSession(true);
 
-    const data: IEditedVaultDescription = getValues();
-    const sessionIdOrSessionResponse = await VaultService.upsertEditSession(
-      data,
-      editSessionId === "new-vault" ? undefined : editSessionId
-    );
+    let sessionIdOrSessionResponse: string | IEditedSessionResponse;
+
+    if (editSessionId === "new-vault") {
+      sessionIdOrSessionResponse = await VaultService.upsertEditSession(undefined, undefined);
+    } else {
+      const data: IEditedVaultDescription = getValues();
+      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId);
+    }
 
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
