@@ -6,8 +6,5 @@
     "build": "cd packages/web && yarn build --skip-integrity-check",
     "publish:shared": "cd packages/shared && yarn run publish",
     "preinstall": "yarn config set ignore-engines true"
-  },
-  "workspaces": [
-    "packages/*"
-  ]
+  }
 }
