@@ -18,7 +18,13 @@ export function VaultDetailsForm() {
   const { t } = useTranslation();
   const { saveEditSessionData } = useContext(VaultEditorFormContext);
 
-  const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+  const {
+    register,
+    control,
+    resetField,
+    setValue,
+    formState: { errors },
+  } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
     fields: emails,
     append: appendEmail,
@@ -155,6 +161,10 @@ export function VaultDetailsForm() {
               )}
             />
           ))}
+
+          {getPath(errors, "project-metadata.emails") && (
+            <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
+          )}
 
           <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
             <AddIcon className="mr-2" />

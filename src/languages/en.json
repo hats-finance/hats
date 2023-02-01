@@ -8,6 +8,7 @@
     "invalid-address-or-url": "Invalid address or URL",
     "invalid-image-type": "Invalid image type, only supported: {{types}}",
     "invalid-email-address": "Invalid email address",
+    "at-least-one-email": "At least one email is required",
     "address-is-not-token": "The address is not a token",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
     "not-safe-address": "Not a multisig address (check address or network)",

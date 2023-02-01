@@ -69,6 +69,12 @@ export const VaultEditorForm = styled.form`
     }
   }
 
+  .field-error {
+    color: var(--error-red);
+    margin-top: ${getSpacing(1)};
+    font-size: var(--xxsmall);
+  }
+
   .controller-buttons {
     display: flex;
     justify-content: flex-end;

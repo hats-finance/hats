@@ -3,14 +3,19 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { createNewCommitteeMember, createNewVaultDescription, IEditedSessionResponse } from "@hats-finance/shared";
+import {
+  createNewCommitteeMember,
+  createNewVaultDescription,
+  IEditedSessionResponse,
+  convertVulnerabilitySeverityV1ToV2,
+} from "@hats-finance/shared";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
+import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
-import { convertVulnerabilitySeverityV1ToV2 } from "@hats-finance/shared";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections } from "./steps";
@@ -65,7 +70,7 @@ const VaultEditorFormPage = () => {
     initFormSteps,
     loadingSteps,
   } = useVaultEditorSteps(methods, {
-    saveData: () => saveEditSessionData(),
+    saveData: () => createOrSaveEditSession(),
     executeOnSaved: (sectionId, stepNumber) => {
       const committeeSectionId = "setup";
       const committeeStepId = "committee";
@@ -77,13 +82,17 @@ const VaultEditorFormPage = () => {
 
   const vaultVersion = useWatch({ control, name: "version" });
 
-  const saveEditSessionData = async () => {
-    if (editSessionId === "new-vault") setLoadingEditSession(true);
+  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
+    if (isCreation) setLoadingEditSession(true);
 
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
 
-    if (editSessionId === "new-vault") {
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(undefined, undefined);
+    if (isCreation) {
+      sessionIdOrSessionResponse = await VaultService.upsertEditSession(
+        undefined,
+        undefined,
+        withIpfsHash ? editSessionId : undefined
+      );
     } else {
       const data: IEditedVaultDescription = getValues();
       sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId);
@@ -122,9 +131,14 @@ const VaultEditorFormPage = () => {
   useEffect(() => {
     if (editSessionId) {
       if (editSessionId === "new-vault") {
-        saveEditSessionData();
+        createOrSaveEditSession(true);
       } else {
-        loadEditSessionData(editSessionId);
+        const isIpfsHash = isValidIpfsHash(editSessionId);
+        if (isIpfsHash) {
+          createOrSaveEditSession(true, isIpfsHash);
+        } else {
+          loadEditSessionData(editSessionId);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -195,7 +209,7 @@ const VaultEditorFormPage = () => {
       moved++;
     }
 
-    saveEditSessionData();
+    createOrSaveEditSession();
   };
 
   const goToDescriptionHashContent = () => {
@@ -204,7 +218,7 @@ const VaultEditorFormPage = () => {
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
-  const vaultEditorFormContext = { committeeMembersFieldArray, saveEditSessionData };
+  const vaultEditorFormContext = { committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
