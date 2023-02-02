@@ -1,4 +1,5 @@
 import React, { ChangeEvent, forwardRef } from "react";
+import moment from "moment";
 import { StyledFormInput } from "../FormInput/styles";
 import { parseIsDirty } from "../utils";
 
@@ -27,17 +28,13 @@ export function FormDateInputComponent(
     const date = new Date(0);
     date.setUTCSeconds(timestampSeconds);
 
+    const momentDate = moment(date);
+
     if (withTime) {
-      const dd_mm_yyyy = date.toLocaleDateString();
-
-      const hh_mm_ss = date.toLocaleTimeString();
-      const hh_mm = hh_mm_ss.split(":").slice(0, 2).join(":");
-
-      const yyyy_mm_ddThh_mm = `${dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1")}T${hh_mm}`;
+      const yyyy_mm_ddThh_mm = momentDate.format("YYYY-MM-DDTHH:mm");
       return yyyy_mm_ddThh_mm;
     } else {
-      const dd_mm_yyyy = date.toLocaleDateString();
-      const yyyy_mm_dd = dd_mm_yyyy.replace(/(\d+)\/(\d+)\/(\d+)/g, "$3-$2-$1");
+      const yyyy_mm_dd = momentDate.format("YYYY-MM-DD");
       return yyyy_mm_dd;
     }
   };
