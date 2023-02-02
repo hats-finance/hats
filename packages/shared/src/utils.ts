@@ -256,10 +256,13 @@ function editedSeveritiesToSeveritiesv2(
 }
 
 export function editedFormToDescription(editedVaultDescription: IEditedVaultDescription): IVaultDescription {
+  // remove emails
+  const { emails, ...projectMetadata } = editedVaultDescription["project-metadata"];
   if (editedVaultDescription.version === "v1") {
     return {
       version: editedVaultDescription.version,
-      "project-metadata": editedVaultDescription["project-metadata"],
+
+      "project-metadata": projectMetadata,
       "communication-channel": editedVaultDescription["communication-channel"],
       committee: editedVaultDescription.committee,
       source: editedVaultDescription.source,
@@ -271,7 +274,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
   } else {
     return {
       version: editedVaultDescription.version,
-      "project-metadata": editedVaultDescription["project-metadata"],
+      "project-metadata": projectMetadata,
       "communication-channel": editedVaultDescription["communication-channel"],
       committee: editedVaultDescription.committee,
       source: editedVaultDescription.source,
