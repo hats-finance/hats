@@ -7,6 +7,7 @@ import { IEditedVaultAsset, IEditedVaultDescription } from "types";
 import { StyledVaultAssetForm } from "./styles";
 import { ChainsConfig } from "config/chains";
 import { getTokenInfo } from "utils/tokens.utils";
+import { isAddress } from "utils/addresses.utils";
 
 type VaultAssetFormProps = {
   index: number;
@@ -29,13 +30,17 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   const tokenAddress = useWatch({ control, name: `assets.${index}.address` });
 
   useEffect(() => {
-    if (tokenAddress && vaultChainId)
+    if (tokenAddress && vaultChainId) {
+      const isAdd = isAddress(tokenAddress);
+      if (!isAdd) return setAssetInfo(undefined);
+
       getTokenInfo(tokenAddress, +vaultChainId)
         .then((tokenInfo) => {
           if (tokenInfo.isValidToken) setAssetInfo(`${tokenInfo.name} (${tokenInfo.symbol})`);
           else setAssetInfo(undefined);
         })
         .catch(() => setAssetInfo(undefined));
+    }
   }, [tokenAddress, vaultChainId]);
 
   return (
