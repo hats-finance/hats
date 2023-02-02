@@ -31,8 +31,10 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
 
   useEffect(() => {
     if (tokenAddress && vaultChainId) {
+      setAssetInfo(undefined);
+
       const isAdd = isAddress(tokenAddress);
-      if (!isAdd) return setAssetInfo(undefined);
+      if (!isAdd) return;
 
       getTokenInfo(tokenAddress, +vaultChainId)
         .then((tokenInfo) => {
