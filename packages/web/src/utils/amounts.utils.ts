@@ -1,13 +1,12 @@
 import { BigNumber } from "ethers";
 import { formatUnits } from "@ethersproject/units";
-import { FetchBalanceResult } from "@wagmi/core";
 
 export class Amount {
   amount: BigNumber | undefined;
   decimals: number;
   symbol: string | undefined;
 
-  static fromBalanceResult(balanceRes: FetchBalanceResult | undefined): Amount {
+  static fromBalanceResult(balanceRes: any | undefined): Amount {
     return new this(balanceRes?.value ?? BigNumber.from(0), balanceRes?.decimals ?? 18, balanceRes?.symbol);
   }
 

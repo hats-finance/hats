@@ -24,7 +24,6 @@
     "@types/uuid": "^8.3.4",
     "@uiw/react-md-editor": "^3.14.1",
     "@usedapp/core": "^1.2.2",
-    "@wagmi/core": "^0.8.4",
     "@walletconnect/web3-provider": "^1.7.8",
     "@wherever/react-notification-feed": "^0.2.13",
     "assert": "^2.0.0",
@@ -83,7 +82,7 @@
     "build": "react-app-rewired build"
   },
   "eslintConfig": {
-    "extends": [ 
+    "extends": [
       "react-app"
     ]
   },

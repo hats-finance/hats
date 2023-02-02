@@ -1,4 +1,4 @@
-import { switchNetwork } from "@wagmi/core";
+import { switchNetwork } from "wagmi/actions";
 
 export const switchNetworkAndValidate = async (currentChainId: number, desiredChainId: number): Promise<void> => {
   try {

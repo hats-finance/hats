@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNetwork } from "wagmi";
-import { waitForTransaction } from "@wagmi/core";
+import { waitForTransaction } from "wagmi/actions";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -282,7 +282,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           <button
             className="max-button"
             disabled={!committeeCheckedIn}
-            onClick={depositPaused ? () => {} : handleMaxAmountButton}>
+            onClick={depositPaused ? () => {} : handleMaxAmountButton}
+          >
             (Max)
           </button>
         </div>
@@ -368,7 +369,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
                 !isSupportedNetwork
               }
               className="action-btn fill"
-              onClick={handleTryDeposit}>
+              onClick={handleTryDeposit}
+            >
               {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
             </button>
           )}
@@ -383,7 +385,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
                 isUserInQueueToWithdraw
               }
               className="action-btn fill"
-              onClick={handleWithdrawAndClaim}>
+              onClick={handleWithdrawAndClaim}
+            >
               {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted()}`}`}
             </button>
           )}
@@ -392,7 +395,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               <button
                 disabled={!userHasBalanceToWithdraw || !committeeCheckedIn || requestingWithdraw}
                 className="action-btn fill"
-                onClick={handleWithdrawRequest}>
+                onClick={handleWithdrawRequest}
+              >
                 WITHDRAWAL REQUEST
               </button>
               {requestingWithdraw && (
@@ -409,7 +413,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
             <button
               onClick={handleClaimReward}
               disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
-              className="action-btn claim-btn">
+              className="action-btn claim-btn"
+            >
               {`CLAIM ${pendingReward?.formatted()}`}
             </button>
           )}

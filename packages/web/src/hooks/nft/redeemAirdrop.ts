@@ -1,4 +1,4 @@
-import { writeContract } from "@wagmi/core";
+import { writeContract } from "wagmi/actions";
 import { NFTContractDataProxy } from "constants/constants";
 import { buildMerkleTree, hashToken } from "./utils";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";

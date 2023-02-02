@@ -1,4 +1,4 @@
-import { readContract, readContracts } from "@wagmi/core";
+import { readContract, readContracts } from "wagmi/actions";
 import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
 import { HATVaultsNFT_abi } from "data/abis/HATVaultsNFT_abi";

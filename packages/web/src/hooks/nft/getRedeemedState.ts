@@ -1,4 +1,4 @@
-import { readContract } from "@wagmi/core";
+import { readContract } from "wagmi/actions";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
 import { Contract } from "ethers";
 import { INFTTokenInfo, INFTTokenInfoRedeemed } from "./types";

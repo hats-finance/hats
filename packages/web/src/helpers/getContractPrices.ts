@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { mainnet } from "wagmi/chains";
 import GoodDollarABI from "data/abis/GoodDollar.json";
 import InsureDaoABI from "data/abis/insure-dao.json";
-import { readContract } from "@wagmi/core";
+import { readContract } from "wagmi/actions";
 import { formatUnits } from "@ethersproject/units";
 
 const InsureDAOTokenMainnet = "0x22453153978D0C25f86010c0fd405527feD9764b";

@@ -1,4 +1,4 @@
-import { fetchToken } from "@wagmi/core";
+import { fetchToken } from "wagmi/actions";
 
 export const getTokenInfo = async (
   address: string,

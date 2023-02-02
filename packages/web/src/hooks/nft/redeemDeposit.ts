@@ -1,4 +1,4 @@
-import { writeContract } from "@wagmi/core";
+import { writeContract } from "wagmi/actions";
 import { ChainsConfig } from "config/chains";
 import { INFTTokenInfo } from "./types";
 import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";

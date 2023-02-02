@@ -1,5 +1,5 @@
-import { useBalance } from "wagmi";
-import { Address, FetchBalanceArgs } from "@wagmi/core";
+import { useBalance, Address } from "wagmi";
+import { FetchBalanceArgs } from "wagmi/actions";
 import { Amount } from "utils/amounts.utils";
 import { useTabFocus } from "../useTabFocus";
 
