@@ -282,3 +282,14 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
     };
   }
 }
+
+export function fixObject(description: any): IVaultDescription {
+  if ("Project-metadata" in description) {
+    description["project-metadata"] = description["Project-metadata"];
+    delete description["Project-metadata"];
+  }
+  if ("gamification" in description["project-metadata"] && description["project-metadata"].gamification) {
+    description["project-metadata"].type = "gamification";
+  }
+  return description;
+}

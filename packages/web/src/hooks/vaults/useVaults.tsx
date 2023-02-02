@@ -10,6 +10,7 @@ import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { fixObject } from "@hats-finance/shared"
 
 interface IVaultsContext {
   vaults?: IVault[];
@@ -210,18 +211,6 @@ export function VaultsProvider({ children }) {
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;
 }
-
-export const fixObject = (description: any): IVaultDescription => {
-  if ("Project-metadata" in description) {
-    description["project-metadata"] = description["Project-metadata"];
-    delete description["Project-metadata"];
-  }
-  if ("gamification" in description["project-metadata"] && description["project-metadata"].gamification) {
-    description["project-metadata"].type = "gamification";
-  }
-  return description;
-};
-
 // const addMultiVaults = (vaults: IVault[]) =>
 //   vaults.map((vault) => {
 //     const additionalVaults = vault.description?.["additional-vaults"] ?? [];
