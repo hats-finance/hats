@@ -10,6 +10,8 @@ import {
 } from ".";
 import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
+type IEditorStepDisabledOption = "needsAccount";
+
 export type IEditorSections = {
   [key: string]: {
     id: string;
@@ -29,6 +31,7 @@ export type IEditorSectionsStep = {
   isValid?: boolean;
   isChecked?: boolean;
   formFields: string[];
+  disabledOptions?: IEditorStepDisabledOption[];
   component: React.FC;
 };
 
@@ -111,6 +114,7 @@ export const AllEditorSections: IEditorSections = {
         component: VaultFormReview,
         formFields: [],
         nextButtonTextKey: "createVaultOnChain",
+        disabledOptions: ["needsAccount"],
       },
     ],
   },

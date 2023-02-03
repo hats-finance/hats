@@ -58,6 +58,18 @@ export const VaultEditorForm = styled.form`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-between;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+
+      span {
+        margin-top: ${getSpacing(1)};
+        font-size: var(--xsmall);
+        color: var(--error-red);
+      }
+    }
   }
 
   .helper-text {
