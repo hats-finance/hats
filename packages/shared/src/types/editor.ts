@@ -13,6 +13,7 @@ export interface IEditedCommunicationEmail {
 
 export interface IEditedVaultAsset {
   address: string;
+  symbol: string;
 }
 
 export interface IEditedVaultParameters {

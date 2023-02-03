@@ -106,7 +106,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     },
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
-    assets: [{ address: "" }],
+    assets: [{ address: "", symbol: "" }],
     parameters: getDefaultVaultParameters(),
     source: {
       name: "",
