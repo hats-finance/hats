@@ -3,6 +3,7 @@ import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;
+  vaultsCreatorContract?: string;
   chain: Chain;
   endpoint: string;
   subgraph: string;
@@ -22,6 +23,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: "ethereum",
   },
   [goerli.id]: {
+    vaultsCreatorContract: "0x86a57E0f0e22D5eC40DE1ec990757Ae5A397A19b",
     vaultsNFTContract: "0x0196EdC0b3C81B79486E5D99e7D748955EE650D3",
     chain: goerli,
     endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
