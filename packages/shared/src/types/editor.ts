@@ -60,7 +60,7 @@ export interface IBaseEditedVaultDescription {
     emails: IEditedCommunicationEmail[];
   };
   committee: {
-    chainId?: string;
+    chainId: string;
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };
@@ -92,5 +92,21 @@ export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDe
 
 export interface IEditedSessionResponse {
   editedDescription: IEditedVaultDescription;
+  descriptionHash: string;
+}
+
+export interface ICreateVaultOnChainCall {
+  chainId: number;
+  name: string;
+  symbol: string;
+  rewardController: string;
+  vestingDuration: number;
+  vestingPeriods: number;
+  maxBounty: number;
+  bountySplit: [number, number, number];
+  asset: string;
+  owner: string;
+  committee: string;
+  isPaused: boolean;
   descriptionHash: string;
 }

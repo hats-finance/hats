@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription } from "./";
 import { getVulnerabilitySeveritiesTemplate } from "./severities";
 import {
+  ICreateVaultOnChainCall,
   IEditedCommunicationEmail,
   IEditedContractCovered,
   IEditedVaultDescription,
@@ -174,6 +175,10 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
         ...vaultDescription["project-metadata"],
         emails: [],
       },
+      committee: {
+        ...vaultDescription.committee,
+        chainId: "",
+      },
       "vulnerability-severities-spec": {
         severities: severitiesWithIds as IEditedVulnerabilitySeverityV1[],
         name: "",
@@ -201,6 +206,10 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     "project-metadata": {
       ...vaultDescription["project-metadata"],
       emails: [],
+    },
+    committee: {
+      ...vaultDescription.committee,
+      chainId: "",
     },
     "vulnerability-severities-spec": {
       severities: severitiesWithIds as IEditedVulnerabilitySeverityV2[],
@@ -295,4 +304,38 @@ export function fixObject(description: any): IVaultDescription {
     description["project-metadata"].type = "gamification";
   }
   return description;
+}
+
+export function editedFormToCreateVaultOnChainCall(
+  editedVaultDescription: IEditedVaultDescription,
+  descriptionHash: string
+): ICreateVaultOnChainCall {
+  const convertStringToSlug = (str: string) =>
+    str
+      .toLowerCase()
+      .replace(/ /g, "-")
+      .replace(/[^\w-]+/g, "");
+  const formatPercentage = (percentage: number) => +(percentage.toString().split(".")[0] + "00");
+
+  const { maxBountyPercentage, immediatePercentage, vestedPercentage, committeePercentage } = editedVaultDescription.parameters;
+
+  return {
+    chainId: +editedVaultDescription.committee.chainId,
+    asset: editedVaultDescription.assets[0].address,
+    name: convertStringToSlug(editedVaultDescription["project-metadata"].name),
+    symbol: convertStringToSlug(editedVaultDescription["project-metadata"].name),
+    committee: editedVaultDescription.committee["multisig-address"],
+    owner: editedVaultDescription.committee["multisig-address"],
+    rewardController: "0x0000000000000000000000000000000000000000",
+    maxBounty: formatPercentage(maxBountyPercentage),
+    bountySplit: [
+      formatPercentage(vestedPercentage),
+      formatPercentage(immediatePercentage),
+      formatPercentage(committeePercentage),
+    ],
+    vestingDuration: 2592000,
+    vestingPeriods: 30,
+    isPaused: false,
+    descriptionHash,
+  } as ICreateVaultOnChainCall;
 }
