@@ -182,6 +182,9 @@ const VaultEditorFormPage = () => {
     let committeeMembers = [...getValues("committee.members")];
     const newAddressesToAdd = multisigInfo.owners.filter((owner) => !committeeMembers.some((member) => member.address === owner));
 
+    const isANewMultisig = !committeeMembers.some((member) => member.linkedMultisigAddress === committeeSafeAddress);
+    if (!isANewMultisig) return;
+
     // Update linkedMultisigAddress based on the new multisig owners. And save the members that are not part of the multisig
     // anymore to move them to the end of the list
     const indexesToMoveToTheEnd: number[] = [];
