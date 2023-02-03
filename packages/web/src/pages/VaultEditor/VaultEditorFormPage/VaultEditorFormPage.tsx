@@ -218,7 +218,7 @@ const VaultEditorFormPage = () => {
 
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
-  const vaultEditorFormContext = { committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
+  const vaultEditorFormContext = { editSessionId, committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
@@ -233,7 +233,8 @@ const VaultEditorFormPage = () => {
               <VaultEditorSectionController
                 key={section.id}
                 onClick={() => onGoToSection(section.id)}
-                active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}>
+                active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}
+              >
                 <p>{t(section.name)}</p>
                 {idx < sections.length - 1 && <span>&gt;</span>}
               </VaultEditorSectionController>
@@ -265,7 +266,8 @@ const VaultEditorFormPage = () => {
                     key={step.id}
                     active={step.id === currentStepInfo.id}
                     passed={!!step.isValid}
-                    onClick={() => onGoToStep(index)}>
+                    onClick={() => onGoToStep(index)}
+                  >
                     {step.isValid && <CheckIcon className="ml-2" />}
                     {step.isValid ? "" : `${index + 1}.`}
                     {t(step.name)}

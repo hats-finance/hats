@@ -7,6 +7,7 @@ import { isEmailAddress } from "utils/emails.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput, Button } from "components";
 import { IEditedCommunicationEmail, IEditedVaultDescription } from "types";
 import { VaultEditorFormContext } from "../../store";
+import * as VaultService from "../../vaultService";
 import { StyledVaultDetails } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -16,7 +17,7 @@ import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { saveEditSessionData } = useContext(VaultEditorFormContext);
+  const { saveEditSessionData, editSessionId } = useContext(VaultEditorFormContext);
 
   const {
     register,
@@ -49,6 +50,18 @@ export function VaultDetailsForm() {
     }
   }, [showDateInputs, setValue, resetField]);
 
+  const resendVerificationEmail = async (email: string) => {
+    if (editSessionId) {
+      const resOk = await VaultService.resendVerificationEmail(editSessionId, email);
+
+      if (resOk) {
+        alert(t("email-verification-sent"));
+      } else {
+        alert(t("email-verification-error"));
+      }
+    }
+  };
+
   const getEmailActionButton = (emailData: IEditedCommunicationEmail, value: string, emailIndex: number) => {
     const isValidEmail = isEmailAddress(value);
 
@@ -59,21 +72,22 @@ export function VaultDetailsForm() {
         onClick={() => {
           removeEmail(emailIndex);
           if (saveForm) saveEditSessionData();
-        }}>
+        }}
+      >
         <DeleteIcon className="mr-2" />
         {withText && <span>{t("remove")}</span>}
       </Button>
     );
 
     const verifyButton = (
-      <Button styleType="invisible" onClick={() => console.log("test verify")}>
+      <Button styleType="invisible" onClick={saveEditSessionData}>
         <VerifyEmailIcon className="mr-2" />
         <span>{t("verify")}</span>
       </Button>
     );
 
     const reverifyButton = (
-      <Button styleType="invisible" onClick={() => console.log("test reverify")}>
+      <Button styleType="invisible" onClick={() => resendVerificationEmail(value)}>
         <ReverifyEmailIcon className="mr-2" />
         <span>{t("reverify")}</span>
       </Button>

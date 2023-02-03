@@ -40,3 +40,12 @@ export async function upsertEditSession(
 
   return response.headers["x-new-id"] ?? (response.data as IEditedSessionResponse);
 }
+
+export async function resendVerificationEmail(editSessionId: string, email: string): Promise<boolean> {
+  try {
+    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/resend-verification-email?address=${email}`);
+    return res.status === 200 ? true : false;
+  } catch (error) {
+    return false;
+  }
+}

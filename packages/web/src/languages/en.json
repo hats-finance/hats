@@ -15,6 +15,8 @@
     "select-chain-first": "Please select the network first",
     "not-enough-safe-members": "Not enough members (minimum is {{min}} and now is only {{now}})",
     "not-enough-safe-signers": "Not enough multisig signers (minimum is {{min}} and now is only {{now}})",
+    "email-verification-sent": "Verification email sent",
+    "email-verification-error": "Error sending verification email",
     "min0": "Min 0",
     "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
