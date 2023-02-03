@@ -1,3 +1,4 @@
+import { ChainsConfig } from "config/chains";
 import * as Yup from "yup";
 import { isAddress } from "ethers/lib/utils";
 import { isEmailAddress } from "./emails.utils";
@@ -35,14 +36,14 @@ export const getTestCommitteeMultisigForVault = (intl) => {
   return {
     name: "is-multisig-valid-for-vault",
     test: async (value: string | undefined, ctx: Yup.TestContext) => {
-      const MIN_COMMITTEE_MEMBERS = 3;
-      const MIN_SIGNERS = 2;
-
       const isAdd = isAddress(value ?? "");
       const isEmpty = value === "" || value === undefined;
       const { chainId } = ctx.parent;
 
       if (!chainId) return ctx.createError({ message: intl("required") });
+      const isTesnet = ChainsConfig[chainId].chain.testnet;
+      const MIN_COMMITTEE_MEMBERS = isTesnet ? 1 : 3;
+      const MIN_SIGNERS = isTesnet ? 1 : 2;
 
       if (isEmpty) return true;
       if (!isAdd) return ctx.createError({ message: intl("invalid-address") });
