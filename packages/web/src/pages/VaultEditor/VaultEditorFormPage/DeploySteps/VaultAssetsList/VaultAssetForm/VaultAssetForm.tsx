@@ -19,7 +19,7 @@ type VaultAssetFormProps = {
 export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAssetFormProps) {
   const { t } = useTranslation();
   const [assetInfo, setAssetInfo] = useState<string | undefined>(undefined);
-  const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
     label: chainConf.chain.name,
@@ -32,18 +32,27 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   useEffect(() => {
     if (tokenAddress && vaultChainId) {
       setAssetInfo(undefined);
+      setValue(`assets.${index}.symbol`, "");
 
       const isAdd = isAddress(tokenAddress);
       if (!isAdd) return;
 
       getTokenInfo(tokenAddress, +vaultChainId)
         .then((tokenInfo) => {
-          if (tokenInfo.isValidToken) setAssetInfo(`${tokenInfo.name} (${tokenInfo.symbol})`);
-          else setAssetInfo(undefined);
+          if (tokenInfo.isValidToken) {
+            setAssetInfo(`${tokenInfo.name} (${tokenInfo.symbol})`);
+            setValue(`assets.${index}.symbol`, tokenInfo.symbol);
+          } else {
+            setAssetInfo(undefined);
+            setValue(`assets.${index}.symbol`, "");
+          }
         })
-        .catch(() => setAssetInfo(undefined));
+        .catch(() => {
+          setAssetInfo(undefined);
+          setValue(`assets.${index}.symbol`, "");
+        });
     }
-  }, [tokenAddress, vaultChainId]);
+  }, [tokenAddress, vaultChainId, index, setValue]);
 
   return (
     <StyledVaultAssetForm>
