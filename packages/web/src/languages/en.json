@@ -60,7 +60,7 @@
     "vaultCreator": "Vault Creator",
     "vaultEditorCommitteeMembersSafeExplanation": "<strong>Fill the information for each committee member and create PGP key-pair on Hats dedicated tool or any other trusted tool.</strong> \n\n <ul><li>The PGP keys will give permission to decrypt submissions. Share this page to committee members in order to generate their own set of keys.</li> \n <li><strong>Please be aware</strong> you can decrypt submissions on the browser you created the keys on. You can open as many keys as you wish on multiple browser & devices.</li></ul>",
     "vaultEditorCommitteeDetailsSafeExplanation": "<strong>Add Gnosis-Safe committee multi-sig address.</strong> \n Don't have a Safe? open <a href='https://app.safe.global/welcome'>here</a>. \n\n The committee members of your vault will automatically be added in the next page. \n\n <strong>Committee requirements:</strong> \n <ul><li>Minimum amount for a committee members is 3.</li> <li>Minimum amount of signers is 2.</li></ul>",
-    "vaultEditorSeveritiesExplanation": "<strong>Set the severities for the vault or use an existing vaults severities as a template.</strong> \n\n <ul><li>The description of the severity level will serve as the primary criteria for determining whether the report aligns with this level of severity.</li> \n <li>The max severity reward (%) will indicate the reward pay-out of each severity taking into account the available for bounty payments (The max bounty of vault field).</li> \n <li>On the dApp will appear the max severity reward based on the available for bounty payments (the multiplication between max severity reward (%) and max bounty of vault (%))</li> </ul>",
+    "vaultEditorSeveritiesExplanation": "<strong>Set the severities for the vault or use an existing vaults severities as a template.</strong> \n\n <ul><li>The description of the severity level will serve as the primary criteria for determining whether the report aligns with this level of severity.</li> \n <li>The max severity reward (%) will indicate the reward pay-out of each severity taking into account the available % allocated for bounties (the max bounty field below).</li> \n <li>On the dApp will appear the max severity reward based on the available for bounties (the multiplication between max severity reward (%) and max bounty of the vault (%)). Basically it's the max % of the whole vault allocated fot that severity.</li> </ul>",
     "vaultEditorContractsCoveredExplanation": "<strong>Fill the information for each contract or asset covered. You need to fill the address/url to the asset and the possible severities.</strong>",
     "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault.",
     "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. \n\n Once done you will be requested to execute a transaction that will create a vault on-chain.",
@@ -69,6 +69,7 @@
     "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
     "vaultEditorFinalStepExplanation": "Create vault by completing the on-chain transaction. \n A vault will be created on chain. \n\n The vault description may be edited at any time, changes will be require Hat gov approval.",
     "committeeMembersOutsideMultisigExplanation": "<strong>You can add committee members who are not part of Gnosis Safe.</strong> \n\n <strong>Please note,</strong> \n those committee members will not have permission to sign on pay-outs. They can only <strong>decrypt</strong> vulnerabilities sent to the vault.",
+    "setMaxBountyHelper": "Set the max % of the vault allocated for bounties",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
     "grant": "Grant",
@@ -548,8 +549,8 @@
         "chain-placeholder": "Select asset/token chain"
       },
       "vault-parameters": {
-        "maxBountyPercentage": "Max bounty (max 90%)",
-        "maxBountyPercentage-placeholder": "Max bounty (max 90%)"
+        "maxBountyPercentage": "Max bounty (10%-90%)",
+        "maxBountyPercentage-placeholder": "Max bounty (10%-90%)"
       },
       "img-placeholder": "SVG/PNG \n Max(2MB)",
       "icon-placeholder": "SVG \n Max(50KB)"
