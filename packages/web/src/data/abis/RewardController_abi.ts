@@ -1,6 +1,14 @@
 export const RewardController_abi = [
-  { inputs: [], name: "EpochLengthZero", type: "error" },
-  { inputs: [], name: "NotEnoughRewardsToTransferToUser", type: "error" },
+  {
+    inputs: [],
+    name: "EpochLengthZero",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "NotEnoughRewardsToTransferToUser",
+    type: "error",
+  },
   {
     anonymous: false,
     inputs: [
@@ -63,6 +71,68 @@ export const RewardController_abi = [
     inputs: [
       {
         indexed: false,
+        internalType: "address",
+        name: "_rewardToken",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_governance",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_startBlock",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_epochLength",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256[24]",
+        name: "_epochRewardPerBlock",
+        type: "uint256[24]",
+      },
+    ],
+    name: "RewardControllerCreated",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_prevAllocPoint",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_allocPoint",
+        type: "uint256",
+      },
+    ],
+    name: "SetAllocPoint",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
         internalType: "uint256[24]",
         name: "_epochRewardPerBlock",
         type: "uint256[24]",
@@ -72,23 +142,99 @@ export const RewardController_abi = [
     type: "event",
   },
   {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_unclaimedReward",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_rewardDebt",
+        type: "uint256",
+      },
+    ],
+    name: "UserBalanceCommitted",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_rewardPerShare",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_lastProcessedVaultUpdate",
+        type: "uint256",
+      },
+    ],
+    name: "VaultUpdated",
+    type: "event",
+  },
+  {
     inputs: [],
     name: "NUMBER_OF_EPOCHS",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "REWARD_PRECISION",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "address", name: "_vault", type: "address" },
-      { internalType: "address", name: "_user", type: "address" },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
     ],
     name: "claimReward",
     outputs: [],
@@ -97,9 +243,21 @@ export const RewardController_abi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "_user", type: "address" },
-      { internalType: "uint256", name: "_sharesChange", type: "uint256" },
-      { internalType: "bool", name: "_isDeposit", type: "bool" },
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_sharesChange",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "_isDeposit",
+        type: "bool",
+      },
     ],
     name: "commitUserBalance",
     outputs: [],
@@ -109,39 +267,89 @@ export const RewardController_abi = [
   {
     inputs: [],
     name: "epochLength",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     name: "epochRewardPerBlock",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "getGlobalVaultsUpdatesLength",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "address", name: "_vault", type: "address" },
-      { internalType: "address", name: "_user", type: "address" },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_user",
+        type: "address",
+      },
     ],
     name: "getPendingReward",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "uint256", name: "_fromBlock", type: "uint256" },
-      { internalType: "uint256", name: "_toBlock", type: "uint256" },
-      { internalType: "uint256", name: "_allocPoint", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "_fromBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_toBlock",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_allocPoint",
+        type: "uint256",
+      },
       {
         internalType: "uint256",
         name: "_totalAllocPoint",
@@ -149,25 +357,55 @@ export const RewardController_abi = [
       },
     ],
     name: "getRewardForBlocksRange",
-    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "reward",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "address", name: "_vault", type: "address" },
-      { internalType: "uint256", name: "_fromBlock", type: "uint256" },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_fromBlock",
+        type: "uint256",
+      },
     ],
     name: "getVaultReward",
-    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "reward",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     name: "globalVaultsUpdates",
     outputs: [
-      { internalType: "uint256", name: "blockNumber", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "blockNumber",
+        type: "uint256",
+      },
       {
         internalType: "uint256",
         name: "totalAllocPoint",
@@ -179,10 +417,14 @@ export const RewardController_abi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "_rewardToken", type: "address" },
       {
         internalType: "address",
-        name: "_hatsGovernance",
+        name: "_rewardToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_governance",
         type: "address",
       },
       {
@@ -190,7 +432,11 @@ export const RewardController_abi = [
         name: "_startRewardingBlock",
         type: "uint256",
       },
-      { internalType: "uint256", name: "_epochLength", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "_epochLength",
+        type: "uint256",
+      },
       {
         internalType: "uint256[24]",
         name: "_epochRewardPerBlock",
@@ -205,7 +451,13 @@ export const RewardController_abi = [
   {
     inputs: [],
     name: "owner",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -218,11 +470,25 @@ export const RewardController_abi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "", type: "address" },
-      { internalType: "address", name: "", type: "address" },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
     name: "rewardDebt",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -241,8 +507,16 @@ export const RewardController_abi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "_vault", type: "address" },
-      { internalType: "uint256", name: "_allocPoint", type: "uint256" },
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_allocPoint",
+        type: "uint256",
+      },
     ],
     name: "setAllocPoint",
     outputs: [],
@@ -265,7 +539,13 @@ export const RewardController_abi = [
   {
     inputs: [],
     name: "startBlock",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
@@ -276,7 +556,11 @@ export const RewardController_abi = [
         name: "_token",
         type: "address",
       },
-      { internalType: "uint256", name: "_amount", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "_amount",
+        type: "uint256",
+      },
     ],
     name: "sweepToken",
     outputs: [],
@@ -284,7 +568,13 @@ export const RewardController_abi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -292,23 +582,49 @@ export const RewardController_abi = [
   },
   {
     inputs: [
-      { internalType: "address", name: "", type: "address" },
-      { internalType: "address", name: "", type: "address" },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
     ],
     name: "unclaimedReward",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "_vault", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "_vault",
+        type: "address",
+      },
+    ],
     name: "updateVault",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     name: "vaultInfo",
     outputs: [
       {
@@ -326,7 +642,11 @@ export const RewardController_abi = [
         name: "lastRewardBlock",
         type: "uint256",
       },
-      { internalType: "uint256", name: "allocPoint", type: "uint256" },
+      {
+        internalType: "uint256",
+        name: "allocPoint",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",

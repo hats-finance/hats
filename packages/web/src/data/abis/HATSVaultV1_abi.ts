@@ -1,21 +1,13 @@
 export const HATSVaultV1_abi = [
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "_rewardsToken",
-        type: "address",
-      },
+      { internalType: "address", name: "_rewardsToken", type: "address" },
       {
         internalType: "uint256",
         name: "_rewardPerBlock",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "_startBlock",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_startBlock", type: "uint256" },
       {
         internalType: "uint256",
         name: "_multiplierPeriod",
@@ -744,98 +736,50 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "HAT",
-    outputs: [
-      {
-        internalType: "contract HATToken",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "contract HATToken", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "MINIMUM_DEPOSIT",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "MULTIPLIER_PERIOD",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "REWARD_PER_BLOCK",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "START_BLOCK",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "TIME_LOCK_DELAY",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_allocPoint",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_lpToken",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_committee",
-        type: "address",
-      },
+      { internalType: "uint256", name: "_allocPoint", type: "uint256" },
+      { internalType: "address", name: "_lpToken", type: "address" },
+      { internalType: "address", name: "_committee", type: "address" },
       {
         internalType: "uint256[]",
         name: "_rewardsLevels",
@@ -895,13 +839,7 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "approveClaim",
     outputs: [],
     stateMutability: "nonpayable",
@@ -909,16 +847,8 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_severity",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_severity", type: "uint256" },
     ],
     name: "calcClaimRewards",
     outputs: [
@@ -965,16 +895,8 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_from",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_from", type: "uint256" },
       {
         internalType: "uint256",
         name: "_lastPoolUpdate",
@@ -982,86 +904,42 @@ export const HATSVaultV1_abi = [
       },
     ],
     name: "calcPoolReward",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "reward",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "string",
-        name: "_descriptionHash",
-        type: "string",
-      },
-    ],
+    inputs: [{ internalType: "string", name: "_descriptionHash", type: "string" }],
     name: "claim",
     outputs: [],
     stateMutability: "payable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "claimReward",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "committeeCheckIn",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "committees",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_amount", type: "uint256" },
     ],
     name: "deposit",
     outputs: [],
@@ -1069,26 +947,14 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "dismissPendingApprovalClaim",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "emergencyWithdraw",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1113,11 +979,7 @@ export const HATSVaultV1_abi = [
         name: "withdrawPeriod",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "safetyPeriod",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "safetyPeriod", type: "uint256" },
       {
         internalType: "uint256",
         name: "setRewardsLevelsDelay",
@@ -1133,11 +995,7 @@ export const HATSVaultV1_abi = [
         name: "withdrawRequestPendingPeriod",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "claimFee",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "claimFee", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -1190,48 +1048,22 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "getGlobalPoolUpdatesLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_from",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_to",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_from", type: "uint256" },
+      { internalType: "uint256", name: "_to", type: "uint256" },
     ],
     name: "getMultiplier",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "result",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "result", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "getPoolRewards",
     outputs: [
       {
@@ -1303,41 +1135,17 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "getPoolRewardsLevels",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
+    outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_from",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_to",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_allocPoint",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_from", type: "uint256" },
+      { internalType: "uint256", name: "_to", type: "uint256" },
+      { internalType: "uint256", name: "_allocPoint", type: "uint256" },
       {
         internalType: "uint256",
         name: "_totalAllocPoint",
@@ -1345,74 +1153,32 @@ export const HATSVaultV1_abi = [
       },
     ],
     name: "getRewardForBlocksRange",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "reward",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "reward", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid1",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid1", type: "uint256" }],
     name: "getRewardPerBlock",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "address", name: "_user", type: "address" },
     ],
     name: "getStakedAmount",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "globalPoolUpdates",
     outputs: [
-      {
-        internalType: "uint256",
-        name: "blockNumber",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "blockNumber", type: "uint256" },
       {
         internalType: "uint256",
         name: "totalAllocPoint",
@@ -1425,84 +1191,38 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "governance",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "governanceHatRewards",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "governancePending",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+      { internalType: "address", name: "", type: "address" },
+      { internalType: "address", name: "", type: "address" },
     ],
     name: "hackersHatRewards",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_fromPid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_toPid",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_fromPid", type: "uint256" },
+      { internalType: "uint256", name: "_toPid", type: "uint256" },
     ],
     name: "massUpdatePools",
     outputs: [],
@@ -1511,21 +1231,9 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_beneficiary",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_severity",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "address", name: "_beneficiary", type: "address" },
+      { internalType: "uint256", name: "_severity", type: "uint256" },
     ],
     name: "pendingApprovalClaim",
     outputs: [],
@@ -1533,123 +1241,49 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "pendingApprovals",
     outputs: [
-      {
-        internalType: "address",
-        name: "beneficiary",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "severity",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "approver",
-        type: "address",
-      },
+      { internalType: "address", name: "beneficiary", type: "address" },
+      { internalType: "uint256", name: "severity", type: "uint256" },
+      { internalType: "address", name: "approver", type: "address" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_user",
-        type: "address",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "address", name: "_user", type: "address" },
     ],
     name: "pendingReward",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "pendingRewardsLevels",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "timestamp", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "poolDepositPause",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "poolId1",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "poolInfo",
     outputs: [
       {
@@ -1657,11 +1291,7 @@ export const HATSVaultV1_abi = [
         name: "lpToken",
         type: "address",
       },
-      {
-        internalType: "uint256",
-        name: "allocPoint",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "allocPoint", type: "uint256" },
       {
         internalType: "uint256",
         name: "lastRewardBlock",
@@ -1682,11 +1312,7 @@ export const HATSVaultV1_abi = [
         name: "lastProcessedTotalAllocPoint",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "balance",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "balance", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
@@ -1694,28 +1320,14 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "poolLength",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_amount",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_amount", type: "uint256" },
     ],
     name: "rewardDepositors",
     outputs: [],
@@ -1723,13 +1335,7 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_fee",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_fee", type: "uint256" }],
     name: "setClaimFee",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1737,16 +1343,8 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_committee",
-        type: "address",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "address", name: "_committee", type: "address" },
     ],
     name: "setCommittee",
     outputs: [],
@@ -1756,28 +1354,14 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "setGovernancePendingAt",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_duration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_periods",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_duration", type: "uint256" },
+      { internalType: "uint256", name: "_periods", type: "uint256" },
     ],
     name: "setHatVestingParams",
     outputs: [],
@@ -1785,13 +1369,7 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_newGovernance",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "_newGovernance", type: "address" }],
     name: "setPendingGovernance",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1799,11 +1377,7 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
       {
         internalType: "uint256[]",
         name: "_rewardsLevels",
@@ -1817,31 +1391,11 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_allocPoint",
-        type: "uint256",
-      },
-      {
-        internalType: "bool",
-        name: "_registered",
-        type: "bool",
-      },
-      {
-        internalType: "bool",
-        name: "_depositPause",
-        type: "bool",
-      },
-      {
-        internalType: "string",
-        name: "_descriptionHash",
-        type: "string",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_allocPoint", type: "uint256" },
+      { internalType: "bool", name: "_registered", type: "bool" },
+      { internalType: "bool", name: "_depositPause", type: "bool" },
+      { internalType: "string", name: "_descriptionHash", type: "string" },
     ],
     name: "setPool",
     outputs: [],
@@ -1849,26 +1403,14 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "setRewardsLevels",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_delay",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_delay", type: "uint256" }],
     name: "setRewardsLevelsDelay",
     outputs: [],
     stateMutability: "nonpayable",
@@ -1876,11 +1418,7 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
       {
         components: [
           {
@@ -1926,21 +1464,9 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_duration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_periods",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_duration", type: "uint256" },
+      { internalType: "uint256", name: "_periods", type: "uint256" },
     ],
     name: "setVestingParams",
     outputs: [],
@@ -1972,11 +1498,7 @@ export const HATSVaultV1_abi = [
         name: "_withdrawPeriod",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "_safetyPeriod",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_safetyPeriod", type: "uint256" },
     ],
     name: "setWithdrawSafetyPeriod",
     outputs: [],
@@ -1984,46 +1506,22 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "", type: "address" }],
     name: "swapAndBurns",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "_beneficiary",
-        type: "address",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "address", name: "_beneficiary", type: "address" },
       {
         internalType: "uint256",
         name: "_amountOutMinimum",
         type: "uint256",
       },
-      {
-        internalType: "uint24[2]",
-        name: "_fees",
-        type: "uint24[2]",
-      },
+      { internalType: "uint24[2]", name: "_fees", type: "uint24[2]" },
     ],
     name: "swapBurnSend",
     outputs: [],
@@ -2053,24 +1551,12 @@ export const HATSVaultV1_abi = [
   {
     inputs: [],
     name: "uniSwapRouter",
-    outputs: [
-      {
-        internalType: "contract ISwapRouter",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "contract ISwapRouter", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "updatePool",
     outputs: [],
     stateMutability: "nonpayable",
@@ -2078,45 +1564,21 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
     ],
     name: "userInfo",
     outputs: [
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "rewardDebt",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+      { internalType: "uint256", name: "rewardDebt", type: "uint256" },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_shares",
-        type: "uint256",
-      },
+      { internalType: "uint256", name: "_pid", type: "uint256" },
+      { internalType: "uint256", name: "_shares", type: "uint256" },
     ],
     name: "withdraw",
     outputs: [],
@@ -2124,13 +1586,7 @@ export const HATSVaultV1_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_pid",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "_pid", type: "uint256" }],
     name: "withdrawRequest",
     outputs: [],
     stateMutability: "nonpayable",
@@ -2138,25 +1594,11 @@ export const HATSVaultV1_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
     ],
     name: "withdrawRequests",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },

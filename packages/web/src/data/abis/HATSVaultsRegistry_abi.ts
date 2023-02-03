@@ -13,18 +13,23 @@ export const HATSVaultsRegistry_abi = [
       },
       {
         internalType: "address",
+        name: "_defaultArbitrator",
+        type: "address",
+      },
+      {
+        internalType: "address",
         name: "_HAT",
         type: "address",
       },
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_bountyGovernanceHAT",
-        type: "uint256",
+        type: "uint16",
       },
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_bountyHackerHATVested",
-        type: "uint256",
+        type: "uint16",
       },
       {
         internalType: "contract ITokenLockFactory",
@@ -63,6 +68,11 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [],
     name: "ChallengeTimeOutPeriodTooShort",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ClaimFeeTransferFailed",
     type: "error",
   },
   {
@@ -161,6 +171,121 @@ export const HATSVaultsRegistry_abi = [
       },
     ],
     name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_hatVaultImplementation",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_HAT",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_tokenLockFactory",
+        type: "address",
+      },
+      {
+        components: [
+          {
+            internalType: "uint32",
+            name: "hatVestingDuration",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "hatVestingPeriods",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "withdrawPeriod",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "safetyPeriod",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "withdrawRequestEnablePeriod",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "withdrawRequestPendingPeriod",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "setMaxBountyDelay",
+            type: "uint32",
+          },
+          {
+            internalType: "uint256",
+            name: "claimFee",
+            type: "uint256",
+          },
+        ],
+        indexed: false,
+        internalType: "struct IHATVaultsRegistry.GeneralParameters",
+        name: "_generalParameters",
+        type: "tuple",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_bountyGovernanceHAT",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_bountyHackerHATVested",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_hatGovernance",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "address",
+        name: "_defaultArbitrator",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_defaultChallengePeriod",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "_defaultChallengeTimeOutPeriod",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "bool",
+        name: "_defaultArbitratorCanChangeBounty",
+        type: "bool",
+      },
+    ],
+    name: "RegistryCreated",
     type: "event",
   },
   {
@@ -311,6 +436,19 @@ export const HATSVaultsRegistry_abi = [
       {
         indexed: true,
         internalType: "address",
+        name: "_swapToken",
+        type: "address",
+      },
+    ],
+    name: "SetSwapToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
         name: "_vault",
         type: "address",
       },
@@ -403,75 +541,89 @@ export const HATSVaultsRegistry_abi = [
         type: "address",
       },
       {
-        indexed: true,
-        internalType: "address",
-        name: "_asset",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "address",
-        name: "_committee",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "contract IRewardController",
-        name: "_rewardController",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "_maxBounty",
-        type: "uint256",
-      },
-      {
         components: [
           {
-            internalType: "uint256",
-            name: "hackerVested",
-            type: "uint256",
+            internalType: "string",
+            name: "name",
+            type: "string",
           },
           {
-            internalType: "uint256",
-            name: "hacker",
-            type: "uint256",
+            internalType: "string",
+            name: "symbol",
+            type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "contract IRewardController[]",
+            name: "rewardControllers",
+            type: "address[]",
+          },
+          {
+            internalType: "uint32",
+            name: "vestingDuration",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "vestingPeriods",
+            type: "uint32",
+          },
+          {
+            internalType: "uint16",
+            name: "maxBounty",
+            type: "uint16",
+          },
+          {
+            components: [
+              {
+                internalType: "uint16",
+                name: "hackerVested",
+                type: "uint16",
+              },
+              {
+                internalType: "uint16",
+                name: "hacker",
+                type: "uint16",
+              },
+              {
+                internalType: "uint16",
+                name: "committee",
+                type: "uint16",
+              },
+            ],
+            internalType: "struct IHATVault.BountySplit",
+            name: "bountySplit",
+            type: "tuple",
+          },
+          {
+            internalType: "contract IERC20",
+            name: "asset",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "address",
             name: "committee",
-            type: "uint256",
+            type: "address",
+          },
+          {
+            internalType: "bool",
+            name: "isPaused",
+            type: "bool",
+          },
+          {
+            internalType: "string",
+            name: "descriptionHash",
+            type: "string",
           },
         ],
         indexed: false,
-        internalType: "struct IHATVault.BountySplit",
-        name: "_bountySplit",
+        internalType: "struct IHATVault.VaultInitParams",
+        name: "_params",
         type: "tuple",
-      },
-      {
-        indexed: false,
-        internalType: "string",
-        name: "_descriptionHash",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "_bountyVestingDuration",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "_bountyVestingPeriods",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "_isPaused",
-        type: "bool",
       },
     ],
     name: "VaultCreated",
@@ -495,9 +647,9 @@ export const HATSVaultsRegistry_abi = [
     name: "HUNDRED_PERCENT",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     stateMutability: "view",
@@ -508,9 +660,9 @@ export const HATSVaultsRegistry_abi = [
     name: "MAX_HAT_SPLIT",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     stateMutability: "view",
@@ -547,71 +699,88 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "contract IERC20",
-        name: "_asset",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_owner",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "_committee",
-        type: "address",
-      },
-      {
-        internalType: "contract IRewardController",
-        name: "_rewardController",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "_maxBounty",
-        type: "uint256",
-      },
-      {
         components: [
           {
-            internalType: "uint256",
-            name: "hackerVested",
-            type: "uint256",
+            internalType: "string",
+            name: "name",
+            type: "string",
           },
           {
-            internalType: "uint256",
-            name: "hacker",
-            type: "uint256",
+            internalType: "string",
+            name: "symbol",
+            type: "string",
           },
           {
-            internalType: "uint256",
+            internalType: "contract IRewardController[]",
+            name: "rewardControllers",
+            type: "address[]",
+          },
+          {
+            internalType: "uint32",
+            name: "vestingDuration",
+            type: "uint32",
+          },
+          {
+            internalType: "uint32",
+            name: "vestingPeriods",
+            type: "uint32",
+          },
+          {
+            internalType: "uint16",
+            name: "maxBounty",
+            type: "uint16",
+          },
+          {
+            components: [
+              {
+                internalType: "uint16",
+                name: "hackerVested",
+                type: "uint16",
+              },
+              {
+                internalType: "uint16",
+                name: "hacker",
+                type: "uint16",
+              },
+              {
+                internalType: "uint16",
+                name: "committee",
+                type: "uint16",
+              },
+            ],
+            internalType: "struct IHATVault.BountySplit",
+            name: "bountySplit",
+            type: "tuple",
+          },
+          {
+            internalType: "contract IERC20",
+            name: "asset",
+            type: "address",
+          },
+          {
+            internalType: "address",
+            name: "owner",
+            type: "address",
+          },
+          {
+            internalType: "address",
             name: "committee",
-            type: "uint256",
+            type: "address",
+          },
+          {
+            internalType: "bool",
+            name: "isPaused",
+            type: "bool",
+          },
+          {
+            internalType: "string",
+            name: "descriptionHash",
+            type: "string",
           },
         ],
-        internalType: "struct IHATVault.BountySplit",
-        name: "_bountySplit",
+        internalType: "struct IHATVault.VaultInitParams",
+        name: "_params",
         type: "tuple",
-      },
-      {
-        internalType: "string",
-        name: "_descriptionHash",
-        type: "string",
-      },
-      {
-        internalType: "uint256",
-        name: "_bountyVestingDuration",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_bountyVestingPeriods",
-        type: "uint256",
-      },
-      {
-        internalType: "bool",
-        name: "_isPaused",
-        type: "bool",
       },
     ],
     name: "createVault",
@@ -656,9 +825,9 @@ export const HATSVaultsRegistry_abi = [
     name: "defaultBountyGovernanceHAT",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     stateMutability: "view",
@@ -669,9 +838,9 @@ export const HATSVaultsRegistry_abi = [
     name: "defaultBountyHackerHATVested",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     stateMutability: "view",
@@ -682,9 +851,9 @@ export const HATSVaultsRegistry_abi = [
     name: "defaultChallengePeriod",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     stateMutability: "view",
@@ -695,9 +864,9 @@ export const HATSVaultsRegistry_abi = [
     name: "defaultChallengeTimeOutPeriod",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     stateMutability: "view",
@@ -721,39 +890,39 @@ export const HATSVaultsRegistry_abi = [
     name: "generalParameters",
     outputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "hatVestingDuration",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "hatVestingPeriods",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "withdrawPeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "safetyPeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "withdrawRequestEnablePeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "withdrawRequestPendingPeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "setMaxBountyDelay",
-        type: "uint256",
+        type: "uint32",
       },
       {
         internalType: "uint256",
@@ -766,54 +935,12 @@ export const HATSVaultsRegistry_abi = [
   },
   {
     inputs: [],
-    name: "getGeneralParameters",
+    name: "getNumberOfVaults",
     outputs: [
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "hatVestingDuration",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "hatVestingPeriods",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "withdrawPeriod",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "safetyPeriod",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "withdrawRequestEnablePeriod",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "withdrawRequestPendingPeriod",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "setMaxBountyDelay",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "claimFee",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct IHATVaultsRegistry.GeneralParameters",
+        internalType: "uint256",
         name: "",
-        type: "tuple",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -821,7 +948,59 @@ export const HATSVaultsRegistry_abi = [
   },
   {
     inputs: [],
-    name: "getNumberOfVaults",
+    name: "getSafetyPeriod",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getSetMaxBountyDelay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getWithdrawPeriod",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getWithdrawRequestEnablePeriod",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getWithdrawRequestPendingPeriod",
     outputs: [
       {
         internalType: "uint256",
@@ -1014,9 +1193,9 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_defaultChallengePeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setDefaultChallengePeriod",
@@ -1027,9 +1206,9 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_defaultChallengeTimeOutPeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setDefaultChallengeTimeOutPeriod",
@@ -1040,14 +1219,14 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_defaultBountyGovernanceHAT",
-        type: "uint256",
+        type: "uint16",
       },
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_defaultBountyHackerHATVested",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     name: "setDefaultHATBountySplit",
@@ -1084,14 +1263,14 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_duration",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_periods",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setHatVestingParams",
@@ -1102,12 +1281,25 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_delay",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setMaxBountyDelay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_swapToken",
+        type: "address",
+      },
+    ],
+    name: "setSwapToken",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -1133,14 +1325,14 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_withdrawRequestPendingPeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_withdrawRequestEnablePeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setWithdrawRequestParams",
@@ -1151,14 +1343,14 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_withdrawPeriod",
-        type: "uint256",
+        type: "uint32",
       },
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_safetyPeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "setWithdrawSafetyPeriod",
@@ -1228,9 +1420,9 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_challengePeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "validateChallengePeriod",
@@ -1241,9 +1433,9 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint32",
         name: "_challengeTimeOutPeriod",
-        type: "uint256",
+        type: "uint32",
       },
     ],
     name: "validateChallengeTimeOutPeriod",
@@ -1254,14 +1446,14 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_bountyGovernanceHAT",
-        type: "uint256",
+        type: "uint16",
       },
       {
-        internalType: "uint256",
+        internalType: "uint16",
         name: "_bountyHackerHATVested",
-        type: "uint256",
+        type: "uint16",
       },
     ],
     name: "validateHATSplit",
