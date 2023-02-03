@@ -21,7 +21,7 @@ export function VaultFormReview() {
       id: "",
       descriptionHash: "",
       pid: "",
-      stakingToken: "",
+      stakingToken: `${editedVaultDescriptionForm.assets[0].address ?? ""}`,
       stakingTokenDecimals: "18",
       stakingTokenSymbol: `${editedVaultDescriptionForm.assets[0].symbol ?? ""}`,
       honeyPotBalance: "100000000000000000000000",

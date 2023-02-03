@@ -154,7 +154,11 @@ export default function VaultExpanded(props: IProps) {
           <div className="severity-prizes-wrapper">
             <div className="sub-title">{isNormalVault ? t("Vault.severity-prizes") : t("Vault.prizes")}</div>
             <div className="severity-prizes-content">
-              <Severities severities={(description as IVaultDescription)?.severities} vault={props.data} />
+              <Severities
+                preview={props.preview ?? false}
+                severities={(description as IVaultDescription)?.severities}
+                vault={props.data}
+              />
             </div>
           </div>
         </div>

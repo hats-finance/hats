@@ -1,11 +1,11 @@
-
 import { useState } from "react";
 import { IVault, IVulnerabilitySeverity } from "types";
 import Severity from "./Severity";
 
 interface IProps {
-  severities: Array<IVulnerabilitySeverity>
-  vault: IVault
+  severities: Array<IVulnerabilitySeverity>;
+  vault: IVault;
+  preview: boolean;
 }
 
 export default function Severities(props: IProps) {
@@ -14,18 +14,16 @@ export default function Severities(props: IProps) {
     return (
       <Severity
         key={index}
+        preview={props.preview}
         severity={severity}
         vault={props.vault}
         severityIndex={index}
         expanded={expandedSeverityIndex === index}
         expandedSeverityIndex={expandedSeverityIndex}
-        setExpandedSeverityIndex={setExpandedSeverityIndex} />
-    )
-  })
+        setExpandedSeverityIndex={setExpandedSeverityIndex}
+      />
+    );
+  });
 
-  return (
-    <>
-      {severities?.reverse()}
-    </>
-  )
+  return <>{severities?.reverse()}</>;
 }

@@ -16,6 +16,7 @@ interface IProps {
   severity: IVulnerabilitySeverity;
   vault: IVault;
   severityIndex: number;
+  preview: boolean;
   expanded: boolean;
   expandedSeverityIndex: number | undefined;
   setExpandedSeverityIndex: Function;
@@ -33,7 +34,7 @@ export default function Severity(props: IProps) {
     vestingDuration,
     stakingTokenSymbol,
   } = props.vault;
-  const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
+  const { severityIndex, severity, expanded, expandedSeverityIndex, preview } = props;
 
   const { isShowing: isShowingNFTModal, show: showNFTModal, hide: hideNFTModal } = useModal();
   const { isShowing: isShowingContractsModal, show: showContractsModal, hide: hideContractsModal } = useModal();
@@ -49,7 +50,8 @@ export default function Severity(props: IProps) {
       <div
         className="severity-top-wrapper"
         style={{ backgroundColor: rewardColor }}
-        onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}>
+        onClick={() => props.setExpandedSeverityIndex(severityIndex === expandedSeverityIndex ? undefined : severityIndex)}
+      >
         <div className="severity-title">
           {`${severity?.name.toUpperCase()}`}
           {isNormalVault && " SEVERITY"}{" "}
@@ -74,7 +76,8 @@ export default function Severity(props: IProps) {
                 onClick={() => {
                   showNFTModal();
                   setModalNFTData(severity as any);
-                }}>
+                }}
+              >
                 <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
                 <span className="view-more">View NFT info</span>
               </div>
@@ -85,9 +88,9 @@ export default function Severity(props: IProps) {
             <span className="vault-prize">
               <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b>
               <span className="of-vault-text">&nbsp;of vault&nbsp;</span>
-              &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
+              {!preview && <span>&#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;</span>}
             </span>
-            {screenSize === ScreenSize.Desktop && rewardPrice && (
+            {screenSize === ScreenSize.Desktop && !!rewardPrice && (
               <>
                 <span className="vault-expanded-subtitle">Prize Content Division:</span>
                 <div className="severity-prize-division-wrapper">
@@ -137,7 +140,8 @@ export default function Severity(props: IProps) {
               onClick={() => {
                 setModalContractsData(severity?.["contracts-covered"] as any);
                 showContractsModal();
-              }}>
+              }}
+            >
               View Contracts Covered
             </span>
           </div>
