@@ -127,6 +127,7 @@
     "notMemberOfMultisig": "Not a multisig member",
     "descriptionHash": "Description hash",
     "createVaultOnChain": "Create Vault on-chain",
+    "youNeedToConnectToAWallet": "You need to be connected to your wallet",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

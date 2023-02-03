@@ -328,11 +328,11 @@ export function editedFormToCreateVaultOnChainCall(
     owner: editedVaultDescription.committee["multisig-address"],
     rewardController: "0x0000000000000000000000000000000000000000",
     maxBounty: formatPercentage(maxBountyPercentage),
-    bountySplit: [
-      formatPercentage(vestedPercentage),
-      formatPercentage(immediatePercentage),
-      formatPercentage(committeePercentage),
-    ],
+    bountySplit: {
+      committee: formatPercentage(committeePercentage),
+      hacker: formatPercentage(immediatePercentage),
+      hackerVested: formatPercentage(vestedPercentage),
+    },
     vestingDuration: 2592000,
     vestingPeriods: 30,
     isPaused: false,

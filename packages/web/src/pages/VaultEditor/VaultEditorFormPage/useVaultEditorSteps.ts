@@ -10,6 +10,7 @@ export const useVaultEditorSteps = (
   options: {
     saveData?: () => Promise<void>;
     executeOnSaved?: (section: keyof typeof AllEditorSections, step: number) => void;
+    onFinalSubmit?: () => void;
   }
 ) => {
   const { t } = useTranslation();
@@ -220,7 +221,7 @@ export const useVaultEditorSteps = (
     if (isInLastSection && isInLastStep) {
       return {
         go: () => {
-          if (options.saveData) formMethods.handleSubmit(options.saveData)();
+          if (options.onFinalSubmit) formMethods.handleSubmit(options.onFinalSubmit)();
         },
         text: t(currentStep.nextButtonTextKey ?? "next"),
       };

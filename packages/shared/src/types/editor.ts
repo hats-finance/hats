@@ -103,7 +103,11 @@ export interface ICreateVaultOnChainCall {
   vestingDuration: number;
   vestingPeriods: number;
   maxBounty: number;
-  bountySplit: [number, number, number];
+  bountySplit: {
+    hacker: number;
+    hackerVested: number;
+    committee: number;
+  };
   asset: string;
   owner: string;
   committee: string;

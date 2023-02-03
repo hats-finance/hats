@@ -8,7 +8,9 @@ import {
   createNewVaultDescription,
   IEditedSessionResponse,
   convertVulnerabilitySeverityV1ToV2,
+  editedFormToCreateVaultOnChainCall,
 } from "@hats-finance/shared";
+import { CreateVaultContract } from "contracts";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
@@ -31,9 +33,12 @@ import {
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import { useAccount } from "wagmi";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
+  const { address } = useAccount();
+
   const { editSessionId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -50,13 +55,13 @@ const VaultEditorFormPage = () => {
   };
 
   const methods = useForm<IEditedVaultDescription>({
-    // defaultValues: createNewVaultDescription("v2"),
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
   });
 
   const { formState, reset: handleReset, control, setValue, getValues } = methods;
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
+  const vaultVersion = useWatch({ control, name: "version" });
 
   const {
     steps,
@@ -71,6 +76,7 @@ const VaultEditorFormPage = () => {
     loadingSteps,
   } = useVaultEditorSteps(methods, {
     saveData: () => createOrSaveEditSession(),
+    onFinalSubmit: () => createVaultOnChain(),
     executeOnSaved: (sectionId, stepNumber) => {
       const committeeSectionId = "setup";
       const committeeStepId = "committee";
@@ -79,8 +85,6 @@ const VaultEditorFormPage = () => {
       if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
     },
   });
-
-  const vaultVersion = useWatch({ control, name: "version" });
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     if (isCreation) setLoadingEditSession(true);
@@ -122,6 +126,17 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(false);
     }
   }
+
+  const createVaultOnChain = async () => {
+    if (!descriptionHash) return;
+
+    const data: IEditedVaultDescription = getValues();
+    const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
+
+    const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
+    console.log(vaultOnChainCall);
+    console.log(createdVaultData);
+  };
 
   useEffect(() => {
     initFormSteps();
@@ -219,6 +234,23 @@ const VaultEditorFormPage = () => {
     window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
   };
 
+  const getNextButtonDisabled = () => {
+    const { disabledOptions } = currentStepInfo;
+
+    if (disabledOptions?.includes("needsAccount")) {
+      if (!address) return t("youNeedToConnectToAWallet");
+      return false;
+    }
+    return false;
+  };
+
+  const getNextButtonAction = () => {
+    const isDisabled = getNextButtonDisabled();
+
+    if (isDisabled) return () => {};
+    return () => onGoNext.go();
+  };
+
   if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
 
   const vaultEditorFormContext = { editSessionId, committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
@@ -288,25 +320,18 @@ const VaultEditorFormPage = () => {
             ))}
             {/* Action buttons */}
             <div className="buttons-container">
-              <Button onClick={() => onGoNext.go()}>
-                {onGoNext.text} <NextIcon className="ml-2" />
-              </Button>
+              <div>
+                <Button disabled={!!getNextButtonDisabled()} onClick={getNextButtonAction()}>
+                  {onGoNext.text} <NextIcon className="ml-2" />
+                </Button>
+                <span>{getNextButtonDisabled()}</span>
+              </div>
               {onGoBack && (
                 <Button styleType="invisible" onClick={() => onGoBack.go()}>
                   <BackIcon className="mr-2" /> {onGoBack.text}
                 </Button>
               )}
             </div>
-            {/* <div className="buttons-container">
-          {formState.isDirty && ipfsHash && (
-            <button type="button" onClick={() => handleReset()} className="fill">
-            {t("VaultEditor.reset-button")}
-            </button>
-          )}
-          <button type="button" onClick={handleSubmit(onSubmit)} className="fill" disabled={!formState.isDirty}>
-          {t("VaultEditor.save-button")}
-          </button>
-        </div> */}
           </VaultEditorForm>
         </FormProvider>
       </StyledVaultEditorContainer>
