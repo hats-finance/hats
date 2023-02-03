@@ -96,7 +96,6 @@
     "contractsAssetsCovered": "Contracts/Assets Covered",
     "contracts": "Contracts",
     "setupReview": "Setup Review",
-    "createVaultOnChain": "Create Vault on-chain",
     "vaultParameters": "Vault Parameters",
     "parameters": "Parameters",
     "vaultPreview": "Vault Preview",
@@ -127,6 +126,7 @@
     "memberOfMultisig": "Multisig member",
     "notMemberOfMultisig": "Not a multisig member",
     "descriptionHash": "Description hash",
+    "createVaultOnChain": "Create Vault on-chain",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

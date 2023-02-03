@@ -110,7 +110,7 @@ export const AllEditorSections: IEditorSections = {
         title: "vaultPreview",
         component: VaultFormReview,
         formFields: [],
-        nextButtonTextKey: "submit",
+        nextButtonTextKey: "createVaultOnChain",
       },
     ],
   },
