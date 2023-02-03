@@ -140,11 +140,13 @@
       .label-wrapper {
         width: 90%;
         height: 40px;
-        margin-left: 40px;
+        margin: 0 50px;
         padding-left: 10px;
-        display: flex;
-        flex-direction: column;
         border-left: 7px solid;
+
+        span {
+          display: block;
+        }
 
         .value {
           font-weight: bold;

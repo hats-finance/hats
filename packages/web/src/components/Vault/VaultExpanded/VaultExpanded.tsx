@@ -109,7 +109,8 @@ export default function VaultExpanded(props: IProps) {
                       setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
                       navigate(RoutePaths.vulnerability);
                     }}
-                    disabled={props.preview}>
+                    disabled={props.preview}
+                  >
                     {t("Vault.submit-vulnerability")}
                   </button>
                 </div>

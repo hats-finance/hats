@@ -65,7 +65,7 @@ const VaultComponent = (
     <div className="balance-information">
       <div className="vault-balance-wrapper">
         {!multipleVaults && millify(vaultBalance)}
-        <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>
+        {!preview && <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>}
       </div>
       <span className="sub-label onlyMobile">{t("Vault.total-vault")}</span>
     </div>
@@ -78,7 +78,8 @@ const VaultComponent = (
         ref={ref}
         selectionMode={!!onSelect}
         selected={selected}
-        onClick={onSelect ? () => onSelect() : undefined}>
+        onClick={onSelect ? () => onSelect() : undefined}
+      >
         <td className="onlyDesktop" onClick={expandVault}>
           {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
           {!onSelect && <span>{vaultExpandAction}</span>}
@@ -104,7 +105,7 @@ const VaultComponent = (
         </td>
 
         <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
-        {!onSelect && (
+        {!onSelect && !preview && (
           <td className="onlyDesktop">
             <VaultAPY vault={vault} />
           </td>

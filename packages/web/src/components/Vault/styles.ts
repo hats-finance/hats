@@ -24,7 +24,7 @@ export const StyledVault = styled.tr<StyledVaultProps>(
     `}
 
     td {
-      padding: 15px;
+      padding: 10px;
       background-color: ${selectionMode ? `var(--field-blue)` : `var(--strong-blue)`};
       filter: ${selected ? `contrast(0.9)` : `contrast(1)`};
 
