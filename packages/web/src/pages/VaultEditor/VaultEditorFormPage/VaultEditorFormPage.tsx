@@ -47,6 +47,7 @@ const VaultEditorFormPage = () => {
 
   const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
   const [loadingEditSession, setLoadingEditSession] = useState(false);
+  const [creatingVault, setCreatingVault] = useState(false);
 
   const test = () => {
     // removeMembers();
@@ -128,14 +129,26 @@ const VaultEditorFormPage = () => {
   }
 
   const createVaultOnChain = async () => {
-    if (!descriptionHash) return;
+    try {
+      const data: IEditedVaultDescription = getValues();
+      if (!descriptionHash) return;
+      if (!data.committee.chainId) return;
 
-    const data: IEditedVaultDescription = getValues();
-    const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
+      setCreatingVault(true);
+      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
 
-    const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
-    console.log(vaultOnChainCall);
-    console.log(createdVaultData);
+      const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
+      console.log(createdVaultData);
+
+      if (createdVaultData) {
+        const vaultAddress = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
+        console.log(vaultAddress);
+        setCreatingVault(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setCreatingVault(false);
+    }
   };
 
   useEffect(() => {
@@ -251,7 +264,7 @@ const VaultEditorFormPage = () => {
     return () => onGoNext.go();
   };
 
-  if (loadingEditSession || loadingSteps) return <Loading fixed extraText={t("loadingVaultEditor")} />;
+  if (loadingEditSession || loadingSteps) return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
 
   const vaultEditorFormContext = { editSessionId, committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
 
@@ -335,6 +348,7 @@ const VaultEditorFormPage = () => {
           </VaultEditorForm>
         </FormProvider>
       </StyledVaultEditorContainer>
+      {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
     </VaultEditorFormContext.Provider>
   );
 };

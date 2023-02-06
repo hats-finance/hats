@@ -15,13 +15,14 @@ export class CreateVaultContract {
    */
   static send = async (vaultData: ICreateVaultOnChainCall) => {
     const { chain } = getNetwork();
-    if (!chain) return;
+    if (!chain) return null;
 
     const registryAddress = ChainsConfig[vaultData.chainId].vaultsCreatorContract;
     const registryAbi = HATSVaultsRegistry_abi;
 
     if (!registryAddress) {
-      return alert(`No registry address found for this chain ${vaultData.chainId}. Please contact the devs.`);
+      alert(`No registry address found for this chain ${vaultData.chainId}. Please contact the devs.`);
+      return null;
     }
 
     await switchNetworkAndValidate(chain!.id, vaultData.chainId);

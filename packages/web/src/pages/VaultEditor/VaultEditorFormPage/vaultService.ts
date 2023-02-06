@@ -49,3 +49,12 @@ export async function resendVerificationEmail(editSessionId: string, email: stri
     return false;
   }
 }
+
+export async function onVaultCreated(txHash: string, chainId: number): Promise<{ vaultAddress: string } | null> {
+  try {
+    const res = await axios.post(`${BASE_SERVICE_URL}/vault-created`, { txHash, chainId });
+    return res.status === 200 ? res.data : null;
+  } catch (error) {
+    return null;
+  }
+}
