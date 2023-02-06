@@ -10,7 +10,7 @@ import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaults } from "./useMultiChainVaults";
 import { INFTTokenMetadata } from "hooks/nft/types";
-import { fixObject } from "@hats-finance/shared"
+import { fixObject } from "@hats-finance/shared";
 
 interface IVaultsContext {
   vaults?: IVault[];
@@ -102,8 +102,11 @@ export function VaultsProvider({ children }) {
       if (vault.descriptionHash && vault.descriptionHash !== "") {
         try {
           const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!);
-          const object = await dataResponse.json();
-          return fixObject(object);
+          if (dataResponse.status === 200) {
+            const object = await dataResponse.json();
+            return fixObject(object);
+          }
+          return undefined;
         } catch (error) {
           console.error(error);
           return undefined;
