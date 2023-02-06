@@ -5,6 +5,7 @@ export const StyledVaultEditorContainer = styled.div`
   .sections-controller {
     display: flex;
     gap: ${getSpacing(2)};
+    margin-bottom: ${getSpacing(1)};
   }
 `;
 
