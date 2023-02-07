@@ -20,3 +20,4 @@ export { Modal } from "./Modal/Modal";
 export { DropdownSelector } from "./DropdownSelector/DropdownSelector";
 export { WhereverWidget } from "./WhereverWidget/WhereverWidget";
 export { Button } from "./Button/Button";
+export { Pill } from "./Pill/Pill";
