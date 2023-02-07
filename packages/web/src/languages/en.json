@@ -129,6 +129,13 @@
     "createVaultOnChain": "Create Vault on-chain",
     "youNeedToConnectToAWallet": "You need to be connected to your wallet",
     "cretingVaultOnChain": "Creating vault on-chain",
+    "vaultStatus": "Vault Status",
+    "congrats": "Congrats!",
+    "yourVaultWasCreated": "Your vault was created on-chain.",
+    "followingStepsVaultStatus": "In order for your vault to appear on Hats live dApp please finish the following steps.",
+    "setup": "Setup",
+    "setupCompleted": "Setup completed",
+    "completed": "Completed",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
