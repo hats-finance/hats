@@ -80,6 +80,10 @@ const routes: RouteObject[] = [
             element: <VaultEditorFormPage />,
           },
           {
+            path: "status",
+            element: <Navigate to={RoutePaths.vault_editor} replace={true} />,
+          },
+          {
             path: "status/:vaultAddress",
             element: <VaultStatusPage />,
           },
