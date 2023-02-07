@@ -11,6 +11,7 @@ import {
   VaultEditorFormPage,
   AirdropMachinePage,
   VaultEditorHome,
+  VaultStatusPage,
 } from "pages";
 
 const routes: RouteObject[] = [
@@ -77,6 +78,10 @@ const routes: RouteObject[] = [
           {
             path: ":editSessionId",
             element: <VaultEditorFormPage />,
+          },
+          {
+            path: "status/:vaultAddress",
+            element: <VaultStatusPage />,
           },
         ],
       },

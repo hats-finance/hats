@@ -5,4 +5,5 @@ export { VulnerabilityFormPage } from "./VulnerabilityFormPage/VulnerabilityForm
 export { CommitteeToolsPage } from "./CommitteeToolsPage/CommitteeToolsPage";
 export { VaultEditorFormPage } from "./VaultEditor/VaultEditorFormPage/VaultEditorFormPage";
 export { VaultEditorHome } from "./VaultEditor/VaultEditorHome/VaultEditorHome";
+export { VaultStatusPage } from "./VaultEditor/VaultStatusPage/VaultStatusPage";
 export { AirdropMachinePage } from "./AirdropMachinePage/AirdropMachinePage";
