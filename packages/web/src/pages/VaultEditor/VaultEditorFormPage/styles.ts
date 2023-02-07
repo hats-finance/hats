@@ -12,7 +12,7 @@ export const StyledVaultEditorContainer = styled.div`
 export const VaultEditorForm = styled.form`
   position: relative;
   background: var(--background-clear-blue);
-  padding: ${getSpacing(3)} ${getSpacing(4)};
+  padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(8)} !important;
 
