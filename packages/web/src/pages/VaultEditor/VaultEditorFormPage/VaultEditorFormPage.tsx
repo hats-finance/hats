@@ -49,12 +49,6 @@ const VaultEditorFormPage = () => {
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
 
-  const test = () => {
-    // removeMembers();
-    // committeeMembersFieldArray.append(createNewCommitteeMember());
-    console.log(getValues());
-  };
-
   const methods = useForm<IEditedVaultDescription>({
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
@@ -272,10 +266,6 @@ const VaultEditorFormPage = () => {
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
-          <button type="button" className="mb-5" onClick={test}>
-            Show form
-          </button>
-
           <div className="sections-controller">
             {sections.map((section, idx) => (
               <VaultEditorSectionController
