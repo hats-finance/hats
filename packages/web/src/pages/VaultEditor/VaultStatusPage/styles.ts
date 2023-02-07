@@ -30,6 +30,8 @@ export const StyledVaultStatusPage = styled.div`
     color: var(--white);
 
     .status-card {
+      display: flex;
+      flex-direction: column;
       background: var(--background-clearer-blue);
       border-radius: 4px;
       padding: ${getSpacing(2)};
@@ -39,11 +41,19 @@ export const StyledVaultStatusPage = styled.div`
         text-transform: uppercase;
         font-weight: 700;
         font-size: var(--small);
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
       }
 
       &__text {
         margin-bottom: ${getSpacing(1)};
         line-height: ${getSpacing(2.5)};
+      }
+
+      &__button {
+        margin-top: ${getSpacing(3)};
+        align-self: flex-end;
       }
     }
   }
