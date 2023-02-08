@@ -24,7 +24,7 @@ export function VaultFormReview() {
       stakingToken: `${editedVaultDescriptionForm.assets[0].address ?? ""}`,
       stakingTokenDecimals: "18",
       stakingTokenSymbol: `${editedVaultDescriptionForm.assets[0].symbol ?? ""}`,
-      honeyPotBalance: "100000000000000000000000",
+      honeyPotBalance: "0",
       totalRewardPaid: "0",
       committee: "",
       allocPoint: "0",
