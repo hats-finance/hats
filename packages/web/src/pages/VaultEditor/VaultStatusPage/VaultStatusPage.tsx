@@ -36,14 +36,14 @@ export const VaultStatusPage = () => {
 
   const loadVaultData = async (address: string, vaultChainId: number) => {
     const vaultInfo = await VaultStatusService.getVaultInformation(address, vaultChainId);
-    console.log(vaultInfo);
     setVaultData(vaultInfo);
+    console.log(vaultInfo);
   };
 
   if (!vaultAddress || !vaultChainId) return null;
   if (!vaultData) return <Loading fixed extraText={`${t("loadingVaultData")}...`} />;
 
-  const vaultStatusContext = { vaultData, vaultAddress, vaultChainId: +vaultChainId };
+  const vaultStatusContext = { vaultData, loadVaultData, vaultAddress, vaultChainId: +vaultChainId };
 
   return (
     <StyledVaultStatusPage className="content-wrapper">

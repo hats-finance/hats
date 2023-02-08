@@ -50,6 +50,12 @@ export const StyledVaultStatusPage = styled.div`
         line-height: ${getSpacing(2.5)};
       }
 
+      &__error {
+        margin-top: ${getSpacing(1)};
+        font-size: var(--xxsmall);
+        color: var(--error-red);
+      }
+
       &__button {
         margin-top: ${getSpacing(3)};
         align-self: flex-end;

@@ -37,7 +37,7 @@
     "checkingIn": "Checking in",
     "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
     "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
-    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your GnosisSafe wallet.",
+    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your Gnosis Safe wallet.",
     "here": "Here",
     "redeemingNft": "Redeeming NFT",
     "vulnerabilitySubmitted": "Your report was successfully submitted to the committee!",
@@ -131,7 +131,7 @@
     "cretingVaultOnChain": "Creating vault on-chain",
     "vaultStatus": "Vault Status",
     "congrats": "Congrats!",
-    "yourVaultWasCreated": "Your vault was created on-chain.",
+    "yourVaultWasCreated": "Your vault '{{vaultName}}' was created on-chain.",
     "followingStepsVaultStatus": "In order for your vault to appear on Hats live dApp please finish the following steps.",
     "setup": "Setup",
     "setupCompleted": "Setup completed.",
@@ -151,6 +151,8 @@
     "live": "Live",
     "vautlLiveExplanation": "Your vault is live on Hats dApp.",
     "loadingVaultData": "Loading vault data",
+    "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Gnosis safe.",
+    "approveTheTransactionOnSafeApp": "Approve the transaction on the Gnosis safe app",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
