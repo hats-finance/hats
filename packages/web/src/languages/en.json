@@ -150,6 +150,7 @@
     "pendingApproval": "Pending approval",
     "live": "Live",
     "vautlLiveExplanation": "Your vault is live on Hats dApp.",
+    "loadingVaultData": "Loading vault data",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
