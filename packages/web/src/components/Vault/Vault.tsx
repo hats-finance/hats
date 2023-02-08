@@ -64,7 +64,7 @@ const VaultComponent = (
   const vaultBalanceAndValue = (
     <div className="balance-information">
       <div className="vault-balance-wrapper">
-        {!multipleVaults && millify(vaultBalance)}
+        {!multipleVaults && (vaultBalance > 0 ? millify(vaultBalance) : "-")}
         {!preview && <span className="balance-value">&nbsp;{`≈ $${millify(valueOfAllVaults)}`}</span>}
       </div>
       <span className="sub-label onlyMobile">{t("Vault.total-vault")}</span>
