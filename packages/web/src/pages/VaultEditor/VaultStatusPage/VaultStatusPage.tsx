@@ -1,13 +1,21 @@
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { StyledVaultStatusPage } from "./styles";
-import { CongratsStatusCard } from "./VaultStatusCards/CongratsStatusCard";
-import { EditVaultStatusCard } from "./VaultStatusCards/EditVaultStatusCard";
+import {
+  OnChainDataStatusCard,
+  CongratsStatusCard,
+  EditVaultStatusCard,
+  CheckInStatusCard,
+  DepositStatusCard,
+  GovApprovalStatusCard,
+} from "./VaultStatusCards";
 
 export const VaultStatusPage = () => {
   const { t } = useTranslation();
   const { vaultAddress } = useParams();
   if (!vaultAddress) return null;
+
+  console.log(vaultAddress);
 
   return (
     <StyledVaultStatusPage className="content-wrapper">
@@ -19,6 +27,10 @@ export const VaultStatusPage = () => {
       <div className="status-cards">
         <CongratsStatusCard />
         <EditVaultStatusCard />
+        <OnChainDataStatusCard />
+        <CheckInStatusCard />
+        <DepositStatusCard />
+        <GovApprovalStatusCard />
       </div>
     </StyledVaultStatusPage>
   );

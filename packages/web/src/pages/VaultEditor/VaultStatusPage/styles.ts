@@ -13,9 +13,8 @@ export const StyledVaultStatusPage = styled.div`
     align-items: center;
     color: var(--white);
     font-size: var(--moderate);
-    margin-bottom: ${getSpacing(5)};
-    margin-left: ${getSpacing(1)};
-    padding-bottom: ${getSpacing(6)};
+    margin-bottom: ${getSpacing(2)};
+    padding-bottom: ${getSpacing(4)};
     border-bottom: 1px solid var(--grey-600);
 
     span {
@@ -26,7 +25,7 @@ export const StyledVaultStatusPage = styled.div`
   .status-cards {
     display: flex;
     flex-direction: column;
-    gap: ${getSpacing(2)};
+    gap: ${getSpacing(2.5)};
     color: var(--white);
 
     .status-card {
