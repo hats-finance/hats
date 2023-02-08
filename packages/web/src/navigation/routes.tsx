@@ -84,7 +84,7 @@ const routes: RouteObject[] = [
             element: <Navigate to={RoutePaths.vault_editor} replace={true} />,
           },
           {
-            path: "status/:vaultAddress",
+            path: "status/:vaultChainId/:vaultAddress",
             element: <VaultStatusPage />,
           },
         ],
