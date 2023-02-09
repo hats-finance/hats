@@ -1,7 +1,6 @@
 import { BigNumber } from "ethers";
 import { mainnet } from "wagmi/chains";
-import GoodDollarABI from "data/abis/GoodDollar.json";
-import InsureDaoABI from "data/abis/insure-dao.json";
+import { GoodDollar_abi, InsureDao_abi } from "@hats-finance/shared";
 import { readContract } from "wagmi/actions";
 import { formatUnits } from "@ethersproject/units";
 
@@ -12,7 +11,7 @@ const GoodDollarTokenMainnet = "0x67c5870b4a41d4ebef24d2456547a03f1f3e094b";
 export const getGoodDollarPriceMainnet = async () => {
   const res = await readContract({
     address: GoodDollarPriceContractMainnet,
-    abi: GoodDollarABI,
+    abi: GoodDollar_abi,
     functionName: "currentPriceDAI",
     chainId: mainnet.id,
   });
@@ -24,7 +23,7 @@ export const getGoodDollarPriceMainnet = async () => {
 export const getInsureDAOPriceMainnet = async () => {
   const res = await readContract({
     address: InsureDAOTokenMainnet,
-    abi: InsureDaoABI,
+    abi: InsureDao_abi,
     functionName: "rate",
     chainId: mainnet.id,
   });

@@ -1,6 +1,6 @@
 import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
-import { HATVaultsNFT_abi } from "data/abis/HATVaultsNFT_abi";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { INFTToken } from "hooks/nft/types";
 
 export class NFTTokenIdContract {

@@ -1,10 +1,8 @@
 import { getContract, getProvider } from "wagmi/actions";
-import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
-import { HATSVaultsRegistry_abi } from "data/abis/HATSVaultsRegistry_abi";
 import { ChainsConfig } from "config/chains";
 import { IVaultStatusData } from "./types";
 import { ipfsTransformUri } from "utils";
-import { IVaultDescription } from "@hats-finance/shared";
+import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
 
 export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
   const vaultContract = getContract({

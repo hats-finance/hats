@@ -1,8 +1,7 @@
 import { useContractWrite, useNetwork } from "wagmi";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultsRegistry_abi } from "data/abis/HATSVaultsRegistry_abi";
-import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
+import { HATSVaultsRegistry_abi, HATSVaultV1_abi } from "@hats-finance/shared";
 
 export class LogClaimContract {
   /**

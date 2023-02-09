@@ -2,8 +2,7 @@ import { useAccount, useContractRead } from "wagmi";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
-import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
-import { RewardController_abi } from "data/abis/RewardController_abi";
+import { RewardController_abi, HATSVaultV1_abi } from "@hats-finance/shared";
 
 export class PendingRewardContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {

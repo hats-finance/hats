@@ -2,8 +2,7 @@ import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
-import { HATSVaultV2_abi } from "data/abis/HATSVaultV2_abi";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 
 export class WithdrawAndClaimContract {
   /**

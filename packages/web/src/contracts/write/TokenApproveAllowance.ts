@@ -1,8 +1,7 @@
-import { useContractWrite, useNetwork } from "wagmi";
+import { useContractWrite, useNetwork, erc20ABI } from "wagmi";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { erc20_abi } from "data/abis/erc20_abi";
 
 export class TokenApproveAllowanceContract {
   /**
@@ -21,7 +20,7 @@ export class TokenApproveAllowanceContract {
     const approveAllowance = useContractWrite({
       mode: "recklesslyUnprepared",
       address: vault.stakingToken,
-      abi: erc20_abi as any,
+      abi: erc20ABI,
       functionName: "approve",
       // chainId: vault.chainId,
     });
@@ -32,7 +31,7 @@ export class TokenApproveAllowanceContract {
         await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
         // [params]: allowedContract, allowedAmount
-        return approveAllowance.write!({ recklesslySetUnpreparedArgs: [allowedContractAddress, allowedAmount] });
+        return approveAllowance.write!({ recklesslySetUnpreparedArgs: [allowedContractAddress as `0x${string}`, allowedAmount] });
       },
     };
   };

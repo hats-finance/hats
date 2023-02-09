@@ -1,7 +1,7 @@
 import { getNetwork, writeContract } from "wagmi/actions";
 import { ICreateVaultOnChainCall } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultsRegistry_abi } from "data/abis/HATSVaultsRegistry_abi";
+import { HATSVaultsRegistry_abi } from "@hats-finance/shared";
 import { ChainsConfig } from "config/chains";
 
 export class CreateVaultContract {

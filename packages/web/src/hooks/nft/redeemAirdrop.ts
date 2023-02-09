@@ -1,7 +1,7 @@
 import { writeContract } from "wagmi/actions";
 import { NFTContractDataProxy } from "constants/constants";
 import { buildMerkleTree, hashToken } from "./utils";
-import hatVaultNftAbi from "data/abis/HATVaultsNFT.json";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { ChainsConfig } from "config/chains";
 import { AirdropMachineWallet } from "./types";
 
@@ -22,7 +22,7 @@ export async function redeemAirdrop(chainId: number, airdropTree: AirdropMachine
   const response = await writeContract({
     mode: "recklesslyUnprepared",
     address: vaultsNFTContract as `0x${string}`,
-    abi: hatVaultNftAbi,
+    abi: HATVaultsNFT_abi as any,
     functionName: "redeemMultipleFromTree",
     args: [hatVaults, pids, tiers, redeemableProofs],
   });

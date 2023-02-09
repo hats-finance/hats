@@ -1,8 +1,7 @@
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultV1_abi } from "data/abis/HATSVaultV1_abi";
-import { RewardController_abi } from "data/abis/RewardController_abi";
+import { HATSVaultV1_abi, RewardController_abi } from "@hats-finance/shared";
 
 export class ClaimRewardContract {
   /**
