@@ -82,6 +82,7 @@ function FormInputComponent(
   const getMainComponent = () => {
     const setRef = (r: any) => {
       if (ref && typeof ref === "function") ref(r);
+      else if (ref && typeof ref === "object") ref.current = r;
       localRef.current = r;
     };
 
@@ -129,7 +130,8 @@ function FormInputComponent(
       disabled={disabled}
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
-      withExtraicons={extraIcons}>
+      withExtraicons={extraIcons}
+    >
       <div className="main-container">
         {label && (
           <label htmlFor={props.name}>

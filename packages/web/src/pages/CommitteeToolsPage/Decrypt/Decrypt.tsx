@@ -2,7 +2,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
-import { FormInput } from "components";
+import { Button, FormInput } from "components";
 import { KeyManager, KeystoreContext, SelectKeyModal } from "components/Keystore";
 import { readPrivateKeyFromStoredKey } from "components/Keystore/utils";
 import useModal from "hooks/useModal";
@@ -63,6 +63,7 @@ export default function Decrypt() {
       });
       decryptedMessageRef.current!.value = decrypted as string;
     } catch (error) {
+      console.log(error);
       if (error instanceof Error) {
         setError(error.message);
       }
@@ -105,21 +106,27 @@ export default function Decrypt() {
       <KeyManager />
       <SelectKeyModal isShowing={isShowingSelectKey} onHide={hideSelectKey} />
 
-      <div className="textbox-container">
-        <p className="textbox-title">{t("CommitteeTools.Decrypt.encrypted-message")}</p>
-        <FormInput type="textarea" pastable ref={encryptedMessageRef} />
-        {error && <div className="error-label">{error}</div>}
-        <button onClick={_decrypt} className="fill button">
-          {t("CommitteeTools.Decrypt.decrypt")}
-        </button>
+      <div className="textbox-container mt-4">
+        <FormInput
+          type="textarea"
+          label={t("CommitteeTools.Decrypt.encrypted-message")}
+          placeholder={t("CommitteeTools.Decrypt.encrypted-message-placeholder")}
+          pastable
+          error={error ? { message: error, type: "error" } : undefined}
+          ref={encryptedMessageRef}
+        />
+        <Button onClick={_decrypt}>{t("CommitteeTools.Decrypt.decrypt")}</Button>
       </div>
 
-      <div className="textbox-container">
-        <p className="textbox-title">{t("CommitteeTools.Decrypt.decrypted-message")}</p>
-        <FormInput type="textarea" copyable ref={decryptedMessageRef} />
-        <button onClick={_encrypt} className="fill button">
-          {t("CommitteeTools.Decrypt.encrypt")}
-        </button>
+      <div className="textbox-container mt-4">
+        <FormInput
+          type="textarea"
+          label={t("CommitteeTools.Decrypt.decrypted-message")}
+          placeholder={t("CommitteeTools.Decrypt.decrypted-message-placeholder")}
+          pastable
+          ref={decryptedMessageRef}
+        />
+        <Button onClick={_encrypt}>{t("CommitteeTools.Decrypt.encrypt")}</Button>
       </div>
     </StyledDecrypt>
   );
