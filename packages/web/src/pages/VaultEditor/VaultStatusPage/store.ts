@@ -6,6 +6,7 @@ interface IVaultStatusContext {
   vaultChainId: number;
   vaultData: IVaultStatusData;
   loadVaultData: (vaultAddress: string, chainId: number) => Promise<void>;
+  refreshVaultData: () => Promise<void>;
 }
 
 export const VaultStatusContext = createContext<IVaultStatusContext>(undefined as any);

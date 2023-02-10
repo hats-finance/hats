@@ -34,6 +34,7 @@ import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
 import { useAccount } from "wagmi";
+import { ChainsConfig } from "config/chains";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -127,16 +128,22 @@ const VaultEditorFormPage = () => {
       const data: IEditedVaultDescription = getValues();
       if (!descriptionHash) return;
       if (!data.committee.chainId) return;
+      if (!address) return;
+
+      const rewardController = ChainsConfig[+data.committee.chainId].rewardController;
+      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
+
+      const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);
+      if (gnosisInfo.isSafeAddress) return alert(t("youCantExecuteThisTxWithMultisig"));
 
       setCreatingVault(true);
-      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
-
       const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
       console.log(createdVaultData);
 
       if (createdVaultData) {
         const vaultAddress = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
         console.log(vaultAddress);
+        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
         setCreatingVault(false);
       }
     } catch (error) {

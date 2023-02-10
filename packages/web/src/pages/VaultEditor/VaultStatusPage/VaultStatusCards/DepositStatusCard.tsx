@@ -14,7 +14,7 @@ export const DepositStatusCard = () => {
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const { vaults } = useVaults();
-  const selectedVault = vaultAddress ? vaults?.find((v) => v.id === vaultAddress) : undefined;
+  const selectedVault = vaultAddress ? vaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase()) : undefined;
 
   const isVaultDeposited = vaultData.depositedAmount.gt(0);
 

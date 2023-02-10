@@ -34,16 +34,23 @@ export const VaultStatusPage = () => {
     }
   }, [vaultAddress, vaultChainId, navigate]);
 
-  const loadVaultData = async (address: string, vaultChainId: number) => {
-    const vaultInfo = await VaultStatusService.getVaultInformation(address, vaultChainId);
+  const loadVaultData = async (address: string, chainId: number) => {
+    const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);
     setVaultData(vaultInfo);
     console.log(vaultInfo);
+  };
+
+  const refreshVaultData = async () => {
+    if (!vaultAddress || !vaultChainId) return;
+
+    const vaultInfo = await VaultStatusService.getVaultInformation(vaultAddress, +vaultChainId);
+    setVaultData(vaultInfo);
   };
 
   if (!vaultAddress || !vaultChainId) return null;
   if (!vaultData) return <Loading fixed extraText={`${t("loadingVaultData")}...`} />;
 
-  const vaultStatusContext = { vaultData, loadVaultData, vaultAddress, vaultChainId: +vaultChainId };
+  const vaultStatusContext = { vaultData, loadVaultData, refreshVaultData, vaultAddress, vaultChainId: +vaultChainId };
 
   return (
     <StyledVaultStatusPage className="content-wrapper">

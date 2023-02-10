@@ -20,7 +20,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const { vaultId } = useParams();
-  const selectedVault = vaultId ? vaults?.find((v) => v.id === vaultId) : undefined;
+  const selectedVault = vaultId ? vaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
   const navigate = useNavigate();
 
   const vaultValue = useCallback(
@@ -114,7 +114,8 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
           title={`${selectedVault.description?.["project-metadata"].name!} ${selectedVault.version === "v2" ? "(v2)" : ""}`}
           titleIcon={ipfsTransformUri(selectedVault.description?.["project-metadata"].icon!)}
           onHide={closeDeposit}
-          removeHorizontalPadding>
+          removeHorizontalPadding
+        >
           <DepositWithdraw vault={selectedVault} closeModal={closeDeposit} />
         </Modal>
       )}

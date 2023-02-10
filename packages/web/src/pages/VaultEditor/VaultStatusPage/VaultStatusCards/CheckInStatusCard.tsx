@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { Button, Loading, Pill } from "components";
@@ -10,7 +10,9 @@ export const CheckInStatusCard = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
 
-  const { vaultData, vaultAddress, vaultChainId, loadVaultData } = useContext(VaultStatusContext);
+  const [isBeingExecuted, setIsBeingExecuted] = useState(false);
+
+  const { vaultData, vaultAddress, vaultChainId, refreshVaultData } = useContext(VaultStatusContext);
   const { isCommitteeCheckedIn, committeeMulsitigAddress } = vaultData;
 
   const isMultisigConnected = address === committeeMulsitigAddress;
@@ -26,10 +28,11 @@ export const CheckInStatusCard = () => {
     if (!txHash) return;
 
     isAGnosisSafeTx(txHash, vaultChainId).then((isSafeTx) => {
-      if (isSafeTx) alert(t("safeProposalCreatedSuccessfully"));
-      setTimeout(() => loadVaultData(vaultAddress, vaultChainId), 2000);
+      if (isSafeTx) setIsBeingExecuted(true);
+      setTimeout(() => refreshVaultData(), 2000);
     });
-  }, [checkInCall.data, loadVaultData, vaultAddress, vaultChainId, t]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkInCall.data]);
 
   return (
     <div className="status-card">
@@ -45,6 +48,7 @@ export const CheckInStatusCard = () => {
           <p className="status-card__text">{t("checkInExpanation")}</p>
           {!isMultisigConnected && <p className="status-card__error">{t("connectWithMultisigOrCheckInOnGnosis")}</p>}
           {checkInCall.error && <p className="status-card__error">{checkInCall.error.message}</p>}
+          {isBeingExecuted && !checkInCall.error && <p className="status-card__error">{t("safeProposalCreatedSuccessfully")}</p>}
           <Button disabled={!isMultisigConnected} onClick={handleCheckIn} className="status-card__button">
             {t("checkIn")}
           </Button>

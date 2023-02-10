@@ -308,7 +308,8 @@ export function fixObject(description: any): IVaultDescription {
 
 export function editedFormToCreateVaultOnChainCall(
   editedVaultDescription: IEditedVaultDescription,
-  descriptionHash: string
+  descriptionHash: string,
+  rewardController: string | undefined
 ): ICreateVaultOnChainCall {
   const convertStringToSlug = (str: string) =>
     str
@@ -326,7 +327,7 @@ export function editedFormToCreateVaultOnChainCall(
     symbol: convertStringToSlug(editedVaultDescription["project-metadata"].name),
     committee: editedVaultDescription.committee["multisig-address"],
     owner: editedVaultDescription.committee["multisig-address"],
-    rewardController: "0x0000000000000000000000000000000000000000",
+    rewardController: rewardController ?? "0x0000000000000000000000000000000000000000",
     maxBounty: formatPercentage(maxBountyPercentage),
     bountySplit: {
       committee: formatPercentage(committeePercentage),

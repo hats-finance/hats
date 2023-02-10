@@ -1,10 +1,14 @@
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Pill } from "components";
+import { VaultStatusContext } from "../store";
 
 export const GovApprovalStatusCard = () => {
   const { t } = useTranslation();
 
-  const isApprovedByGov = false;
+  const { vaultData } = useContext(VaultStatusContext);
+
+  const isApprovedByGov = vaultData.isRegistered;
 
   return (
     <div className="status-card">

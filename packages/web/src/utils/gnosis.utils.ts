@@ -32,7 +32,6 @@ export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): 
     if (!chainId) throw new Error("Please provide chainId");
 
     const res = await axios.get(getGnosisTxsApiEndpoint(tx, chainId));
-
     return !!res.data?.safeTxHash;
   } catch (error) {
     return false;
