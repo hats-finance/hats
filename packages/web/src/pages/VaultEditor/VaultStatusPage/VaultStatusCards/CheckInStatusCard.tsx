@@ -21,8 +21,6 @@ export const CheckInStatusCard = () => {
     checkInCall.send();
   };
 
-  console.log(checkInCall);
-
   useEffect(() => {
     const txHash = checkInCall.data?.hash;
     if (!txHash) return;

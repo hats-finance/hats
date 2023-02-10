@@ -12,7 +12,7 @@ export class PendingRewardContract {
     const args = vault?.version === "v1" ? [vault?.pid, account] : [vault?.id, account];
 
     return {
-      address: vault ? contractAddress : undefined,
+      address: contractAddress ?? "0x0000000000000000000000000000000000000000",
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

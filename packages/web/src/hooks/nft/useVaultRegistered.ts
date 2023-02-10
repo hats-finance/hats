@@ -14,10 +14,12 @@ export function useVaultRegisteredNft(vault: IVault) {
     watch: false,
   };
 
+  const nftContractDataProxyAddress = NFTContractDataProxy[vault.master.address] ?? "0x0000000000000000000000000000000000000000";
+
   const { data: vaultId } = useContractRead({
     ...nftContract,
     functionName: "getVaultId",
-    args: [NFTContractDataProxy[vault.master.address] as `0x${string}`, BigNumber.from(vault.pid)],
+    args: [nftContractDataProxyAddress as `0x${string}`, BigNumber.from(vault.pid)],
   });
 
   const { data: vaultRegistered } = useContractRead({
