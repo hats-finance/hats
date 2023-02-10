@@ -27,6 +27,8 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     vaultContract.getBountyHackerHATVested(), // hatsRewardSplit
     vaultContract.getBountyGovernanceHAT(), // hatsGovernanceSplit
     vaultContract.maxBounty(), // maxBounty
+    vaultContract.asset(), // asset
+    vaultContract.decimals(), // asset
   ]);
 
   const [
@@ -39,6 +41,8 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     hatsRewardSplit,
     hatsGovernanceSplit,
     maxBounty,
+    assetToken,
+    tokenDecimals,
   ] = promisesData;
 
   const descriptionHash = descriptions[descriptions.length - 1].args?._descriptionHash;
@@ -60,6 +64,8 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     isCommitteeCheckedIn,
     isRegistered,
     depositedAmount,
+    assetToken,
+    tokenDecimals,
     parameters: {
       bountySplitImmediate,
       bountySplitVested,

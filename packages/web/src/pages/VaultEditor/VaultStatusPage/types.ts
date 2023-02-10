@@ -8,6 +8,8 @@ export interface IVaultStatusData {
   isCommitteeCheckedIn: boolean;
   isRegistered: boolean;
   depositedAmount: BigNumber;
+  assetToken: string;
+  tokenDecimals: number;
   parameters: {
     bountySplitImmediate: number;
     bountySplitVested: number;

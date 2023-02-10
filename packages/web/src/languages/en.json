@@ -157,6 +157,8 @@
     "vaultWithoutDescriptionError": "Your vault doesn't have a description. Please contact Hats support.",
     "committeeMustCheckInFirst": "Committee must check-in first",
     "youCantExecuteThisTxWithMultisig": "You can't execute this transaction with the committee multisig. Please use your personal wallet.",
+    "depositedAsset": "Deposited asset",
+    "amount": "Amount",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

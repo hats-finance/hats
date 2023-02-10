@@ -66,6 +66,39 @@ export const StyledVaultStatusPage = styled.div`
         }
       }
 
+      &__deposited {
+        display: flex;
+        gap: ${getSpacing(3)};
+        margin-top: ${getSpacing(2)};
+
+        .field {
+          width: 100%;
+
+          .title {
+            color: var(--grey-500);
+          }
+
+          .value {
+            padding: ${getSpacing(1)} ${getSpacing(2.5)};
+            height: ${getSpacing(7)};
+            border: 1px solid var(--grey-600);
+            display: flex;
+            align-items: center;
+            gap: ${getSpacing(1.5)};
+            margin-top: ${getSpacing(1.5)};
+
+            img {
+              width: ${getSpacing(3.5)};
+              height: ${getSpacing(3.5)};
+            }
+
+            p {
+              font-weight: 700;
+            }
+          }
+        }
+      }
+
       &__text {
         margin-bottom: ${getSpacing(1)};
         line-height: ${getSpacing(2.5)};
