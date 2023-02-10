@@ -111,7 +111,8 @@ export const StyledVaultStatusPage = styled.div`
       }
 
       &__alert {
-        width: 70%;
+        width: fit-content;
+        max-width: 90%;
         margin-top: ${getSpacing(1)};
         font-size: var(--xxsmall);
         color: var(--black);
