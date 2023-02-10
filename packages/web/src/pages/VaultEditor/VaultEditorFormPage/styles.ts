@@ -9,98 +9,100 @@ export const StyledVaultEditorContainer = styled.div`
   }
 `;
 
-export const VaultEditorForm = styled.form`
-  position: relative;
-  background: var(--background-clear-blue);
-  padding: ${getSpacing(3)};
-  border-radius: ${getSpacing(0.5)};
-  margin-bottom: ${getSpacing(8)} !important;
+export const StyledVaultEditorForm = styled.form<{ withoutMargin?: boolean }>(
+  ({ withoutMargin }) => css`
+    position: relative;
+    background: var(--background-clear-blue);
+    padding: ${getSpacing(3)};
+    border-radius: ${getSpacing(0.5)};
+    margin-bottom: ${withoutMargin ? "0" : `${getSpacing(6)} !important`};
 
-  .editor-title {
-    display: flex;
-    justify-content: space-between;
-
-    .title {
+    .editor-title {
       display: flex;
-      align-items: center;
-      color: var(--white);
-      font-size: var(--moderate);
-      margin-bottom: ${getSpacing(5)};
+      justify-content: space-between;
 
-      p {
-        margin-left: ${getSpacing(1)};
+      .title {
+        display: flex;
+        align-items: center;
+        color: var(--white);
+        font-size: var(--moderate);
+        margin-bottom: ${getSpacing(5)};
 
-        span {
-          font-weight: 700;
+        p {
+          margin-left: ${getSpacing(1)};
+
+          span {
+            font-weight: 700;
+          }
         }
       }
     }
-  }
 
-  .descriptionHash {
-    position: absolute;
-    margin: 0;
-    top: 0;
-    color: var(--grey-400);
-    background: var(--grey-600);
-    font-size: var(--xxsmall);
-    padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
-    border-radius: 5px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    transition: 0.2s;
+    .descriptionHash {
+      position: absolute;
+      margin: 0;
+      top: 0;
+      color: var(--grey-400);
+      background: var(--grey-600);
+      font-size: var(--xxsmall);
+      padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+      border-radius: 5px;
+      transform: translateY(-50%);
+      cursor: pointer;
+      transition: 0.2s;
 
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-
-  .buttons-container {
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-
-    div {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-
-      span {
-        margin-top: ${getSpacing(1)};
-        font-size: var(--xsmall);
-        color: var(--error-red);
+      &:hover {
+        opacity: 0.8;
       }
     }
-  }
 
-  .helper-text {
-    color: var(--white);
-    margin-bottom: ${getSpacing(4)};
+    .buttons-container {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: space-between;
 
-    ul {
-      padding-left: ${getSpacing(3)};
+      div {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+
+        span {
+          margin-top: ${getSpacing(1)};
+          font-size: var(--xsmall);
+          color: var(--error-red);
+        }
+      }
     }
-  }
 
-  .field-error {
-    color: var(--error-red);
-    margin-top: ${getSpacing(1)};
-    font-size: var(--xxsmall);
-  }
+    .helper-text {
+      color: var(--white);
+      margin-bottom: ${getSpacing(4)};
 
-  .controller-buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: ${getSpacing(2)};
-    border-top: 1px solid var(--grey-600);
-    padding-top: ${getSpacing(2)};
-
-    &.no-line {
-      padding-top: 0;
-      border-top-color: transparent;
+      ul {
+        padding-left: ${getSpacing(3)};
+      }
     }
-  }
-`;
+
+    .field-error {
+      color: var(--error-red);
+      margin-top: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+    }
+
+    .controller-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: ${getSpacing(2)};
+      border-top: 1px solid var(--grey-600);
+      padding-top: ${getSpacing(2)};
+
+      &.no-line {
+        padding-top: 0;
+        border-top-color: transparent;
+      }
+    }
+  `
+);
 
 export const VaultEditorStepper = styled.div`
   display: flex;

@@ -24,7 +24,7 @@ import { AllEditorSections } from "./steps";
 import { VaultEditorFormContext } from "./store";
 import {
   Section,
-  VaultEditorForm,
+  StyledVaultEditorForm,
   VaultEditorStepController,
   VaultEditorSectionController,
   VaultEditorStepper,
@@ -284,7 +284,7 @@ const VaultEditorFormPage = () => {
             ))}
           </div>
 
-          <VaultEditorForm className="content-wrapper">
+          <StyledVaultEditorForm className="content-wrapper">
             {/* Title */}
             {descriptionHash && isAdvancedMode && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>
@@ -340,7 +340,7 @@ const VaultEditorFormPage = () => {
                 </Button>
               )}
             </div>
-          </VaultEditorForm>
+          </StyledVaultEditorForm>
         </FormProvider>
       </StyledVaultEditorContainer>
       {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}

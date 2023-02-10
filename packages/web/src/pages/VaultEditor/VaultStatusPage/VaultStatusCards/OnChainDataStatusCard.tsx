@@ -1,11 +1,34 @@
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, FormInput, Pill } from "components";
-import { useState } from "react";
+import { FormInput, Pill } from "components";
+import { IEditedVaultParameters } from "types";
+import { VaultParametersForm } from "pages/VaultEditor/VaultEditorFormPage";
+import { VaultStatusContext } from "../store";
 
 export const OnChainDataStatusCard = () => {
   const { t } = useTranslation();
 
+  const { vaultData } = useContext(VaultStatusContext);
   const [editVaultParameters, setEditVaultParameters] = useState(false);
+  const [defaultVaultParametersData, setDefaultVaultParametersData] = useState<{ parameters: IEditedVaultParameters }>();
+
+  useEffect(() => {
+    setDefaultVaultParametersData({
+      parameters: {
+        maxBountyPercentage: vaultData.parameters.maxBounty / 100,
+        committeePercentage: vaultData.parameters.bountySplitCommittee / 100,
+        immediatePercentage: vaultData.parameters.bountySplitImmediate / 100,
+        vestedPercentage: vaultData.parameters.bountySplitVested / 100,
+        fixedCommitteeControlledPercetange: vaultData.parameters.committeeControlledSplit / 100,
+        fixedHatsGovPercetange: vaultData.parameters.hatsGovernanceSplit / 100,
+        fixedHatsRewardPercetange: vaultData.parameters.hatsRewardSplit / 100,
+      },
+    });
+  }, [vaultData.parameters]);
+
+  const onChangeOnChainData = (data: { parameters: IEditedVaultParameters }) => {
+    console.log(data);
+  };
 
   return (
     <div className="status-card">
@@ -26,8 +49,7 @@ export const OnChainDataStatusCard = () => {
 
       {editVaultParameters && (
         <>
-          <div>FORM</div>
-          <Button className="status-card__button">{t("changeVaultParameters")}</Button>
+          <VaultParametersForm statusCardFormDefaultData={defaultVaultParametersData} onSubmit={onChangeOnChainData} />
         </>
       )}
     </div>
