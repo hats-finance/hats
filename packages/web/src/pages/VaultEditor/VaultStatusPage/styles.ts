@@ -62,4 +62,14 @@ export const StyledVaultStatusPage = styled.div`
       }
     }
   }
+
+  .vault-error {
+    padding: ${getSpacing(0.5)} ${getSpacing(1)};
+    border-radius: 4px;
+    color: var(--white);
+    background: var(--error-red);
+    opacity: 0.8;
+    width: fit-content;
+    font-size: var(--xxsmall);
+  }
 `;

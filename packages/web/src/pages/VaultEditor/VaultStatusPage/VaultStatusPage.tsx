@@ -52,6 +52,8 @@ export const VaultStatusPage = () => {
         <span>/{t("vaultStatus")}</span>
       </div>
 
+      {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}
+
       <div className="status-cards">
         <VaultStatusContext.Provider value={vaultStatusContext}>
           <CongratsStatusCard />

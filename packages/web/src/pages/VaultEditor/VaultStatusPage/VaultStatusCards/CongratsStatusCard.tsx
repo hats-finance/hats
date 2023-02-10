@@ -11,7 +11,13 @@ export const CongratsStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">{t("congrats")}</div>
       <p className="status-card__text">
-        <strong>{t("yourVaultWasCreated", { vaultName: vaultData.description?.["project-metadata"].name })}</strong>
+        {vaultData.description ? (
+          <strong>
+            {t("yourVaultWasCreatedWithVaultName", { vaultName: vaultData.description?.["project-metadata"].name })}
+          </strong>
+        ) : (
+          <strong>{t("yourVaultWasCreated")}</strong>
+        )}
       </p>
       <p className="status-card__text">{t("followingStepsVaultStatus")}</p>
     </div>

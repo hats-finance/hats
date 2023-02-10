@@ -131,7 +131,8 @@
     "cretingVaultOnChain": "Creating vault on-chain",
     "vaultStatus": "Vault Status",
     "congrats": "Congrats!",
-    "yourVaultWasCreated": "Your vault '{{vaultName}}' was created on-chain.",
+    "yourVaultWasCreated": "Your vault was created on-chain.",
+    "yourVaultWasCreatedWithVaultName": "Your vault '{{vaultName}}' was created on-chain.",
     "followingStepsVaultStatus": "In order for your vault to appear on Hats live dApp please finish the following steps.",
     "setup": "Setup",
     "setupCompleted": "Setup completed.",
@@ -153,6 +154,7 @@
     "loadingVaultData": "Loading vault data",
     "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Gnosis safe.",
     "approveTheTransactionOnSafeApp": "Approve the transaction on the Gnosis safe app",
+    "vaultWithoutDescriptionError": "Your vault doesn't have a description. Please contact Hats support.",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
