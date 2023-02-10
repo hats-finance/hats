@@ -155,6 +155,7 @@
     "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Gnosis safe.",
     "approveTheTransactionOnSafeApp": "Approve the transaction on the Gnosis safe app",
     "vaultWithoutDescriptionError": "Your vault doesn't have a description. Please contact Hats support.",
+    "committeeMustCheckInFirst": "Committee must check-in first",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

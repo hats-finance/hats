@@ -30,10 +30,22 @@ export const DepositStatusCard = () => {
           <p className="status-card__text">Assets deposited:</p>
         ) : (
           <>
-            <p className="status-card__text">{t("depositOnVaultExplanation")}</p>
-            <Button className="status-card__button" onClick={showDepositModal}>
-              {t("deposit")}
-            </Button>
+            {vaultData.isCommitteeCheckedIn ? (
+              <>
+                <p className="status-card__text">{t("depositOnVaultExplanation")}</p>
+                <Button className="status-card__button" onClick={showDepositModal}>
+                  {t("deposit")}
+                </Button>
+              </>
+            ) : (
+              <>
+                <p className="status-card__text">{t("depositOnVaultExplanation")}</p>
+                <p className="status-card__error">{t("committeeMustCheckInFirst")}</p>
+                <Button disabled className="status-card__button">
+                  {t("deposit")}
+                </Button>
+              </>
+            )}
           </>
         )}
       </div>
