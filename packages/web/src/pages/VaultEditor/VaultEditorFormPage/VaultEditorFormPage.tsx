@@ -141,9 +141,9 @@ const VaultEditorFormPage = () => {
       console.log(createdVaultData);
 
       if (createdVaultData) {
-        const vaultAddress = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
-        console.log(vaultAddress);
-        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
+        const vaultInfo = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
+        console.log(vaultInfo);
+        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultInfo?.vaultAddress}`);
         setCreatingVault(false);
       }
     } catch (error) {

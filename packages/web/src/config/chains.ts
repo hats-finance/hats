@@ -25,7 +25,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: "ethereum",
   },
   [goerli.id]: {
-    vaultsCreatorContract: "0x86a57E0f0e22D5eC40DE1ec990757Ae5A397A19b",
+    vaultsCreatorContract: "0x8C95B3077A9FE4df7669929478B1Da6BC7378147",
     rewardController: "0x2BC5B4b9d32a3020FC75659A08d14AF755143E50",
     vaultsNFTContract: "0x0196EdC0b3C81B79486E5D99e7D748955EE650D3",
     chain: goerli,
