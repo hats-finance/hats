@@ -150,6 +150,12 @@ export const HATSVaultsRegistry_abi = [
   },
   {
     anonymous: false,
+    inputs: [{ indexed: true, internalType: "address", name: "_swapToken", type: "address" }],
+    name: "SetSwapToken",
+    type: "event",
+  },
+  {
+    anonymous: false,
     inputs: [
       { indexed: true, internalType: "address", name: "_vault", type: "address" },
       { indexed: true, internalType: "bool", name: "_visible", type: "bool" },
@@ -194,7 +200,7 @@ export const HATSVaultsRegistry_abi = [
         components: [
           { internalType: "string", name: "name", type: "string" },
           { internalType: "string", name: "symbol", type: "string" },
-          { internalType: "contract IRewardController", name: "rewardController", type: "address" },
+          { internalType: "contract IRewardController[]", name: "rewardControllers", type: "address[]" },
           { internalType: "uint32", name: "vestingDuration", type: "uint32" },
           { internalType: "uint32", name: "vestingPeriods", type: "uint32" },
           { internalType: "uint16", name: "maxBounty", type: "uint16" },
@@ -262,7 +268,7 @@ export const HATSVaultsRegistry_abi = [
         components: [
           { internalType: "string", name: "name", type: "string" },
           { internalType: "string", name: "symbol", type: "string" },
-          { internalType: "contract IRewardController", name: "rewardController", type: "address" },
+          { internalType: "contract IRewardController[]", name: "rewardControllers", type: "address[]" },
           { internalType: "uint32", name: "vestingDuration", type: "uint32" },
           { internalType: "uint32", name: "vestingPeriods", type: "uint32" },
           { internalType: "uint16", name: "maxBounty", type: "uint16" },
@@ -531,6 +537,13 @@ export const HATSVaultsRegistry_abi = [
   {
     inputs: [{ internalType: "uint32", name: "_delay", type: "uint32" }],
     name: "setMaxBountyDelay",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "_swapToken", type: "address" }],
+    name: "setSwapToken",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
