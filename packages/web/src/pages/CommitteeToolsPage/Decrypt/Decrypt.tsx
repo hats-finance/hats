@@ -98,6 +98,8 @@ export default function Decrypt() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [keystoreContext.selectedKey]);
 
+  const areActionsBlocked = !keystoreContext.isCreated || keystoreContext.isLocked || !keystoreContext.selectedKey;
+
   return (
     <StyledDecrypt>
       <h2 className="title">{t("CommitteeTools.Decrypt.decrypt-tool")}</h2>
@@ -115,7 +117,9 @@ export default function Decrypt() {
           error={error ? { message: error, type: "error" } : undefined}
           ref={encryptedMessageRef}
         />
-        <Button onClick={_decrypt}>{t("CommitteeTools.Decrypt.decrypt")}</Button>
+        <Button disabled={areActionsBlocked} onClick={_decrypt}>
+          {t("CommitteeTools.Decrypt.decrypt")}
+        </Button>
       </div>
 
       <div className="textbox-container mt-4">
@@ -126,7 +130,9 @@ export default function Decrypt() {
           pastable
           ref={decryptedMessageRef}
         />
-        <Button onClick={_encrypt}>{t("CommitteeTools.Decrypt.encrypt")}</Button>
+        <Button disabled={areActionsBlocked} onClick={_encrypt}>
+          {t("CommitteeTools.Decrypt.encrypt")}
+        </Button>
       </div>
     </StyledDecrypt>
   );

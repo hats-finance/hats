@@ -107,7 +107,13 @@ export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
   };
 
   return (
-    <Modal isShowing={isShowing} title={titleByAction()} onHide={handleOnFinish} onBackButton={handleOnBackButton()} withTitleDivider>
+    <Modal
+      isShowing={isShowing}
+      title={titleByAction()}
+      onHide={handleOnFinish}
+      onBackButton={handleOnBackButton()}
+      withTitleDivider
+    >
       <div className="select-key-modal-wrapper">{byAction(action)}</div>
     </Modal>
   );
