@@ -41,8 +41,29 @@ export const StyledVaultStatusPage = styled.div`
         font-weight: 700;
         font-size: var(--small);
         display: flex;
+        justify-content: space-between;
         align-items: center;
         gap: ${getSpacing(2)};
+
+        .leftSide {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(2)};
+        }
+
+        .reload {
+          cursor: pointer;
+          transition: 0.2s;
+          transform-origin: center;
+
+          &:hover {
+            opacity: 0.8;
+          }
+
+          &:active {
+            transform: rotate(-180deg);
+          }
+        }
       }
 
       &__text {
@@ -54,6 +75,16 @@ export const StyledVaultStatusPage = styled.div`
         margin-top: ${getSpacing(1)};
         font-size: var(--xxsmall);
         color: var(--error-red);
+      }
+
+      &__alert {
+        width: 70%;
+        margin-top: ${getSpacing(1)};
+        font-size: var(--xxsmall);
+        color: var(--black);
+        background-color: var(--warning-yellow);
+        border-radius: 5px;
+        padding: ${getSpacing(0.8)} ${getSpacing(1.5)};
       }
 
       &__button {

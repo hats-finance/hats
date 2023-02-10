@@ -10,8 +10,10 @@ export const OnChainDataStatusCard = () => {
   return (
     <div className="status-card">
       <div className="status-card__title">
-        <span>{t("deployOnChain")}</span>
-        <Pill color="blue" text={t("completed")} />
+        <div className="leftSide">
+          <span>{t("deployOnChain")}</span>
+          <Pill color="blue" text={t("completed")} />
+        </div>
       </div>
 
       <FormInput

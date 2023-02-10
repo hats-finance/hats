@@ -13,8 +13,10 @@ export const GovApprovalStatusCard = () => {
   return (
     <div className="status-card">
       <div className="status-card__title">
-        <span>{t("govApproval")}</span>
-        <Pill color={isApprovedByGov ? "blue" : "red"} text={isApprovedByGov ? t("live") : t("pendingApproval")} />
+        <div className="leftSide">
+          <span>{t("govApproval")}</span>
+          <Pill color={isApprovedByGov ? "blue" : "red"} text={isApprovedByGov ? t("live") : t("pendingApproval")} />
+        </div>
       </div>
 
       {isApprovedByGov ? (

@@ -5,6 +5,7 @@ import { Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
 import { VaultStatusContext } from "../store";
 import { isAGnosisSafeTx } from "utils/gnosis.utils";
+import SyncIcon from "@mui/icons-material/Sync";
 
 export const CheckInStatusCard = () => {
   const { t } = useTranslation();
@@ -37,8 +38,16 @@ export const CheckInStatusCard = () => {
   return (
     <div className="status-card">
       <div className="status-card__title">
-        <span>{t("checkIn")}</span>
-        <Pill color={isCommitteeCheckedIn ? "blue" : "red"} text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")} />
+        <div className="leftSide">
+          <span>{t("checkIn")}</span>
+          <Pill
+            color={isCommitteeCheckedIn ? "blue" : "red"}
+            text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")}
+          />
+        </div>
+        <div className="reload" onClick={refreshVaultData}>
+          <SyncIcon />
+        </div>
       </div>
 
       {isCommitteeCheckedIn ? (
@@ -48,8 +57,8 @@ export const CheckInStatusCard = () => {
           <p className="status-card__text">{t("checkInExpanation")}</p>
           {!isMultisigConnected && <p className="status-card__error">{t("connectWithMultisigOrCheckInOnGnosis")}</p>}
           {checkInCall.error && <p className="status-card__error">{checkInCall.error.message}</p>}
-          {isBeingExecuted && !checkInCall.error && <p className="status-card__error">{t("safeProposalCreatedSuccessfully")}</p>}
-          <Button disabled={!isMultisigConnected} onClick={handleCheckIn} className="status-card__button">
+          {isBeingExecuted && !checkInCall.error && <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>}
+          <Button disabled={!isMultisigConnected || isBeingExecuted} onClick={handleCheckIn} className="status-card__button">
             {t("checkIn")}
           </Button>
         </>

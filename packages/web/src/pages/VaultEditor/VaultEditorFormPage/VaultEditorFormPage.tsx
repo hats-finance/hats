@@ -138,13 +138,11 @@ const VaultEditorFormPage = () => {
 
       setCreatingVault(true);
       const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
-      console.log(createdVaultData);
 
       if (createdVaultData) {
         const vaultInfo = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
-        console.log(vaultInfo);
-        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultInfo?.vaultAddress}`);
         setCreatingVault(false);
+        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultInfo?.vaultAddress}`);
       }
     } catch (error) {
       console.error(error);

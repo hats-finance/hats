@@ -37,7 +37,7 @@
     "checkingIn": "Checking in",
     "pleaseConfirmTransaction": "Please confirm the transaction in your wallet",
     "weAreProcessingWithdrawRequest": "We are processing your withdrawal request. In a couple of seconds you will see the status of your request.",
-    "safeProposalCreatedSuccessfully": "The GnosisSafe proposal was created successfully. Please continue the process on your Gnosis Safe wallet.",
+    "safeProposalCreatedSuccessfully": "The Gnosis Safe proposal was created successfully. Please continue the process on your Gnosis Safe wallet. \n\n You can go back and click on the refresh button when you execute the transaction.",
     "here": "Here",
     "redeemingNft": "Redeeming NFT",
     "vulnerabilitySubmitted": "Your report was successfully submitted to the committee!",
