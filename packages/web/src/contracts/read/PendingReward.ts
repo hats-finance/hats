@@ -6,7 +6,7 @@ import { RewardController_abi, HATSVaultV1_abi } from "@hats-finance/shared";
 
 export class PendingRewardContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {
-    const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardControllers[0].id;
+    const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardControllers[0]?.id;
     const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
     const method = vault?.version === "v1" ? "pendingReward" : "getPendingReward";
     const args = vault?.version === "v1" ? [vault?.pid, account] : [vault?.id, account];

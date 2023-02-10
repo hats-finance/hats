@@ -46,7 +46,7 @@ export interface IVaultV2 extends IBaseVault {
   version: "v2";
   description: IVaultDescriptionV2;
   maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
-  rewardControllers: IRewardController[];
+  rewardControllers: (IRewardController | undefined)[];
 }
 
 export type IVault = IVaultV1 | IVaultV2;
