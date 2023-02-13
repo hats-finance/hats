@@ -80,7 +80,7 @@ export function VaultDetailsForm() {
     );
 
     const verifyButton = (
-      <Button styleType="invisible" onClick={saveEditSessionData}>
+      <Button styleType="invisible" onClick={() => saveEditSessionData()}>
         <VerifyEmailIcon className="mr-2" />
         <span>{t("verify")}</span>
       </Button>
