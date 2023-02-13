@@ -14,6 +14,7 @@ export class CommitteeCheckInContract {
    */
   static hook = (vault?: IVault, extraDataV2?: { address: string; chainId: number }) => {
     const { chain } = useNetwork();
+    if (!chain) return null;
 
     const contractAddress = extraDataV2?.address ?? (vault?.version === "v1" ? vault?.master.address : vault?.id);
     const vaultAbi = vault?.version === "v2" || extraDataV2 ? HATSVaultV2_abi : HATSVaultV1_abi;
@@ -29,7 +30,7 @@ export class CommitteeCheckInContract {
     return {
       ...committeeCheckIn,
       send: async () => {
-        await switchNetworkAndValidate(chain!.id, extraDataV2?.chainId ?? (vault?.chainId as number));
+        await switchNetworkAndValidate(chain.id, extraDataV2?.chainId ?? (vault?.chainId as number));
 
         if (vault?.version === "v2" || extraDataV2) {
           // [params]: none
