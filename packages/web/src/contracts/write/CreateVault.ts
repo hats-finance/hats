@@ -11,7 +11,7 @@ export class CreateVaultContract {
    * @remarks
    * This method is only for v2 vaults.
    *
-   * @param vault - The selected vault to deposit staking token
+   * @param vaultData - The data for creating the new vault
    */
   static send = async (vaultData: ICreateVaultOnChainCall) => {
     const { chain } = getNetwork();
