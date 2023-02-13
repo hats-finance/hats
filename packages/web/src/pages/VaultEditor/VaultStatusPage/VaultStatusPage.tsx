@@ -37,7 +37,6 @@ export const VaultStatusPage = () => {
   const loadVaultData = async (address: string, chainId: number) => {
     const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);
     setVaultData(vaultInfo);
-    console.log(vaultInfo);
   };
 
   const refreshVaultData = async () => {

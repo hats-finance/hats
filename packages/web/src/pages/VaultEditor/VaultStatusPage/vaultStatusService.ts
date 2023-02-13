@@ -1,5 +1,7 @@
+import axios from "axios";
 import { getContract, getProvider } from "wagmi/actions";
 import { ChainsConfig } from "config/chains";
+import { BASE_SERVICE_URL } from "settings";
 import { IVaultStatusData } from "./types";
 import { ipfsTransformUri } from "utils";
 import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
@@ -78,4 +80,9 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
   };
 
   return vaultData;
+}
+
+export async function editOffChainVault(vaultAddress: string, chainId: number): Promise<string> {
+  const response = await axios.post(`${BASE_SERVICE_URL}/edit-session`, { vaultAddress, chainId });
+  return response.headers["x-new-id"];
 }

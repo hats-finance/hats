@@ -167,6 +167,7 @@
     "areYouSureYouWantToChangeBothVaultParameters": "Are you sure you want to change the bounty split and max bounty percentage? \n\n * You will need to sign a transaction with your connected wallet.",
     "cancel": "Cancel",
     "confirm": "Confirm",
+    "loading": "Loading",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
