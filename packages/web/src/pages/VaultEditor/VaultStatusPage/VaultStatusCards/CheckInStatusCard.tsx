@@ -21,11 +21,11 @@ export const CheckInStatusCard = () => {
   const checkInCall = CommitteeCheckInContract.hook(undefined, { address: vaultAddress, chainId: vaultChainId });
   const handleCheckIn = () => {
     if (isCommitteeCheckedIn || !isMultisigConnected) return;
-    checkInCall.send();
+    checkInCall?.send();
   };
 
   useEffect(() => {
-    const txHash = checkInCall.data?.hash;
+    const txHash = checkInCall?.data?.hash;
     if (!txHash) return;
 
     isAGnosisSafeTx(txHash, vaultChainId).then((isSafeTx) => {
@@ -33,7 +33,7 @@ export const CheckInStatusCard = () => {
       setTimeout(() => refreshVaultData(), 2000);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkInCall.data]);
+  }, [checkInCall]);
 
   return (
     <div className="status-card">
@@ -56,15 +56,15 @@ export const CheckInStatusCard = () => {
         <>
           <p className="status-card__text">{t("checkInExpanation")}</p>
           {!isMultisigConnected && <p className="status-card__error">{t("connectWithMultisigOrCheckInOnGnosis")}</p>}
-          {checkInCall.error && <p className="status-card__error">{checkInCall.error.message}</p>}
-          {isBeingExecuted && !checkInCall.error && <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>}
+          {checkInCall?.error && <p className="status-card__error">{checkInCall?.error.message}</p>}
+          {isBeingExecuted && !checkInCall?.error && <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>}
           <Button disabled={!isMultisigConnected || isBeingExecuted} onClick={handleCheckIn} className="status-card__button">
             {t("checkIn")}
           </Button>
         </>
       )}
 
-      {checkInCall.isLoading && <Loading fixed extraText={`${t("approveTheTransactionOnSafeApp")}`} />}
+      {checkInCall?.isLoading && <Loading fixed extraText={`${t("approveTheTransactionOnSafeApp")}`} />}
     </div>
   );
 };
