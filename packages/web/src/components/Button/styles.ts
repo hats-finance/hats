@@ -38,7 +38,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(0.5)};
       margin: 0;
       text-decoration: underline;
-      color: ${textColor === "primary" ? "var(--turquoise)" : `var(--${textColor})`};} ;
+      color: ${textColor === "primary" ? "var(--turquoise)" : `var(--${textColor})`}};
     `}
 
     ${styleType === "filled" &&
@@ -58,7 +58,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     css`
       background-color: transparent;
       border: none;
-      color: var(--turquoise);
+      color: ${textColor === "primary" || !textColor ? "var(--turquoise)" : `var(--${textColor})`}};
     `}
       
     ${styleType === "icon" &&
