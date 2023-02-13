@@ -15,3 +15,4 @@ export { TokenApproveAllowanceContract } from "./write/TokenApproveAllowance";
 export { WithdrawAndClaimContract } from "./write/WithdrawAndClaim";
 export { WithdrawRequestContract } from "./write/WithdrawRequest";
 export { CreateVaultContract } from "./write/CreateVault";
+export { VaultBountySplitEditionContract } from "./write/VaultParametersEdition";

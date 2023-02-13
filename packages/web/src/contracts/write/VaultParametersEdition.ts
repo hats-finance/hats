@@ -11,7 +11,7 @@ export class VaultBountySplitEditionContract {
    *
    * @param vault - The selected vault to deposit staking token
    */
-  static send = async (params: IEditedVaultParameters, vaultData: { address: string; chainId: number }) => {
+  static hook = (vaultData: { address: string; chainId: number }) => {
     const { chain } = useNetwork();
     if (!chain) return null;
 
@@ -28,7 +28,7 @@ export class VaultBountySplitEditionContract {
 
     return {
       ...editBountySplit,
-      send: async () => {
+      send: async (params: IEditedVaultParameters) => {
         await switchNetworkAndValidate(chain.id, vaultData.chainId);
 
         return editBountySplit.write!({

@@ -39,10 +39,12 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
     if (onSubmit && isValid) onSubmit(data);
   };
 
+  const disabled = !methodsOnlyParameters.formState.isDirty;
+
   return (
     <FormProvider {...methodsOnlyParameters}>
-      <VaultParametersFormShared />
-      <Button className="status-card__button" onClick={submitForm}>
+      <VaultParametersFormShared blockMaxBounty />
+      <Button disabled={disabled} className="status-card__button" onClick={submitForm}>
         {t("changeVaultParameters")}
       </Button>
     </FormProvider>
@@ -53,7 +55,7 @@ const VaultParametersFormOnVaultEditor = () => {
   return <VaultParametersFormShared />;
 };
 
-function VaultParametersFormShared() {
+function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolean }) {
   const { t } = useTranslation();
   const methodsToUse = useEnhancedFormContext<FormType>();
 
@@ -101,6 +103,7 @@ function VaultParametersFormShared() {
         <div className="input">
           <FormInput
             {...methodsToUse.register(`parameters.maxBountyPercentage`)}
+            disabled={blockMaxBounty}
             type="whole-number"
             label={t("VaultEditor.vault-parameters.maxBountyPercentage")}
             placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder")}
