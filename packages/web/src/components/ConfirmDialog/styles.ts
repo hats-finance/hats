@@ -1,7 +1,7 @@
 import { getSpacing } from "styles";
 import styled from "styled-components";
 
-export const StyledDialog = styled.div`
+export const StyledConfirmDialog = styled.div`
   max-width: 400px;
   width: 100%;
   color: var(--white);

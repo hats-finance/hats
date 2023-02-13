@@ -1,23 +1,23 @@
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "components";
-import { StyledDialog } from "./styles";
+import { StyledConfirmDialog } from "./styles";
 
-type DialogProps = {
+type ConfirmDialogProps = {
   isShowing: boolean;
   onCancel?: () => void;
-  onSuccess: () => void;
+  onSuccess?: () => void;
   confirmText?: string;
   cancelText?: string;
   title?: string;
-  description: string;
+  description?: string;
 };
 
-function Dialog({ isShowing, onCancel, onSuccess, confirmText, cancelText, title, description }: DialogProps) {
+function ConfirmDialog({ isShowing, onCancel, onSuccess, confirmText, cancelText, title, description }: ConfirmDialogProps) {
   const { t } = useTranslation();
 
   return (
     <Modal isShowing={isShowing} title={title} onHide={onCancel} withTitleDivider={!!title}>
-      <StyledDialog>
+      <StyledConfirmDialog>
         <p className="description">{description}</p>
         <div className="button-container">
           <Button onClick={onCancel} styleType="invisible">
@@ -25,9 +25,9 @@ function Dialog({ isShowing, onCancel, onSuccess, confirmText, cancelText, title
           </Button>
           <Button onClick={onSuccess}>{confirmText ?? t("confirm")}</Button>
         </div>
-      </StyledDialog>
+      </StyledConfirmDialog>
     </Modal>
   );
 }
 
-export { Dialog };
+export { ConfirmDialog, type ConfirmDialogProps };

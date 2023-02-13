@@ -8,6 +8,7 @@ import { WagmiConfig } from "wagmi";
 import { client } from "config/apollo";
 import { wagmiClient } from "config/wagmi";
 import { VaultsProvider } from "hooks/vaults/useVaults";
+import { ConfirmDialogProvider } from "hooks/useConfirm";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
 import { NotificationProvider } from "components/Notifications/NotificationProvider";
@@ -32,7 +33,9 @@ function Root() {
                 <GlobalStyle />
                 <NotificationProvider>
                   <KeystoreProvider>
-                    <App />
+                    <ConfirmDialogProvider>
+                      <App />
+                    </ConfirmDialogProvider>
                   </KeystoreProvider>
                 </NotificationProvider>
               </BrowserRouter>
