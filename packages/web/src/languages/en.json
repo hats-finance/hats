@@ -161,6 +161,8 @@
     "depositedAsset": "Deposited asset",
     "amount": "Amount",
     "changeTheVaultParametersOnChain": "Change the vault parameters on-chain.",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
