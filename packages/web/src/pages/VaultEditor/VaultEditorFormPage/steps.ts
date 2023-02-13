@@ -18,6 +18,7 @@ export type IEditorSections = {
     title: string;
     name: string;
     steps: IEditorSectionsStep[];
+    onlyInCreation?: boolean;
   };
 };
 
@@ -92,6 +93,7 @@ export const AllEditorSections: IEditorSections = {
     id: "deploy",
     title: "vaultCreator",
     name: "vaultDeployment",
+    onlyInCreation: true,
     steps: [
       {
         id: "assets",

@@ -19,6 +19,8 @@ export const useVaultEditorSteps = (
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
 
+  const [isEditingVault, setIsEditingVault] = useState(false);
+
   const [editorSections, setEditorSections] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
   const [currentStepNumber, setCurrentStepNumber] = useState<number>(0);
@@ -42,15 +44,34 @@ export const useVaultEditorSteps = (
         return sections;
       });
     }
-  }, [isAdvancedMode, editSessionId]);
+
+    // Remove only creator sections if editing an existing vault
+    if (isEditingVault) {
+      setEditorSections((currentSections) => {
+        const sections = { ...currentSections };
+        const newSections = {};
+
+        for (const section in sections) {
+          if (!sections[section].onlyInCreation) newSections[section] = { ...sections[section] };
+        }
+
+        return newSections;
+      });
+    }
+  }, [isAdvancedMode, editSessionId, isEditingVault]);
 
   const allSteps = useMemo(() => {
     // Get all the fields from all the sections (setup/deploy)
-    const steps: (IEditorSectionsStep & { section: string; index: number })[] = [];
+    const steps: (IEditorSectionsStep & { section: string; index: number; onlyCreation: boolean })[] = [];
 
     for (const section in editorSections) {
       const sectionSteps = editorSections[section]["steps"];
-      const sectionStepsWithExtraData = sectionSteps.map((step, index) => ({ ...step, section, index }));
+      const sectionStepsWithExtraData = sectionSteps.map((step, index) => ({
+        ...step,
+        section,
+        index,
+        onlyCreation: editorSections[section].onlyInCreation ?? false,
+      }));
 
       steps.push(...sectionStepsWithExtraData);
     }
@@ -73,7 +94,8 @@ export const useVaultEditorSteps = (
   );
 
   // This function will go through all the steps and check if they are valid or not
-  const initFormSteps = async () => {
+  const initFormSteps = async (isEditingExistingVault?: boolean) => {
+    setIsEditingVault(isEditingExistingVault ?? false);
     setLoadingSteps(true);
     let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
 

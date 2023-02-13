@@ -32,6 +32,8 @@ export function VaultDetailsForm() {
     remove: removeEmail,
   } = useFieldArray({ control, name: `project-metadata.emails` });
 
+  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
 
   const vaultTypes = [
@@ -150,41 +152,43 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        <div className="emails">
-          {emails.map((email, emailIndex) => (
-            <Controller
-              key={email.id}
-              control={control}
-              name={`project-metadata.emails.${emailIndex}.address`}
-              render={({ field, formState: { dirtyFields, defaultValues, errors } }) => (
-                <div className="emails__item">
-                  <FormInput
-                    prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
-                    isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                    error={getPath(errors, field.name)}
-                    disabled={email.status === "verified" || email.status === "verifying"}
-                    noMargin
-                    colorable
-                    placeholder={t("VaultEditor.vault-details.email-placeholder")}
-                    label={t("VaultEditor.vault-details.email")}
-                    {...field}
-                    onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
-                  />
-                  <>{getEmailActionButton(email, field.value, emailIndex)}</>
-                </div>
-              )}
-            />
-          ))}
+        {!isEditingVault && (
+          <div className="emails">
+            {emails.map((email, emailIndex) => (
+              <Controller
+                key={email.id}
+                control={control}
+                name={`project-metadata.emails.${emailIndex}.address`}
+                render={({ field, formState: { dirtyFields, defaultValues, errors } }) => (
+                  <div className="emails__item">
+                    <FormInput
+                      prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
+                      isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                      error={getPath(errors, field.name)}
+                      disabled={email.status === "verified" || email.status === "verifying"}
+                      noMargin
+                      colorable
+                      placeholder={t("VaultEditor.vault-details.email-placeholder")}
+                      label={t("VaultEditor.vault-details.email")}
+                      {...field}
+                      onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
+                    />
+                    <>{getEmailActionButton(email, field.value, emailIndex)}</>
+                  </div>
+                )}
+              />
+            ))}
 
-          {getPath(errors, "project-metadata.emails") && (
-            <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
-          )}
+            {getPath(errors, "project-metadata.emails") && (
+              <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
+            )}
 
-          <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
-            <AddIcon className="mr-2" />
-            <span>{t("newEmail")}</span>
-          </Button>
-        </div>
+            <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
+              <AddIcon className="mr-2" />
+              <span>{t("newEmail")}</span>
+            </Button>
+          </div>
+        )}
 
         <div className="inputs col-sm">
           <FormInput

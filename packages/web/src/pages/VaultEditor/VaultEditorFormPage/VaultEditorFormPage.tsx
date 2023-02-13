@@ -59,6 +59,9 @@ const VaultEditorFormPage = () => {
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
+  const vaultCreatedAddress = useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+  const vaultCreatedChainId = useWatch({ control, name: "vaultCreatedInfo.chainId" });
+
   const {
     steps,
     sections,
@@ -113,9 +116,16 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
+      console.log(`EditSession id: ${editSessionId}}: `, editSessionResponse);
 
       setDescriptionHash(editSessionResponse.descriptionHash);
-      handleReset(editSessionResponse.editedDescription);
+      handleReset({
+        ...editSessionResponse.editedDescription,
+        vaultCreatedInfo: {
+          vaultAddress: editSessionResponse.vaultAddress,
+          chainId: editSessionResponse.chainId,
+        },
+      });
     } catch (error) {
       console.error(error);
     } finally {
@@ -150,8 +160,12 @@ const VaultEditorFormPage = () => {
     }
   };
 
+  const help = () => {
+    console.log(formState.errors);
+  };
+
   useEffect(() => {
-    initFormSteps();
+    initFormSteps(!!vaultCreatedAddress);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadingEditSession]);
 
@@ -269,6 +283,9 @@ const VaultEditorFormPage = () => {
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
+      <button onClick={help} type="button">
+        asdsd
+      </button>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
           <div className="sections-controller">
