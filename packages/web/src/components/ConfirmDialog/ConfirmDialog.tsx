@@ -16,7 +16,7 @@ function ConfirmDialog({ isShowing, onCancel, onSuccess, confirmText, cancelText
   const { t } = useTranslation();
 
   return (
-    <Modal isShowing={isShowing} title={title} onHide={onCancel} withTitleDivider={!!title}>
+    <Modal isShowing={isShowing} title={title} onHide={onCancel} withTitleDivider={!!title} disableClose>
       <StyledConfirmDialog>
         <p className="description">{description}</p>
         <div className="button-container">
