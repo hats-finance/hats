@@ -87,6 +87,7 @@ interface IBaseVaultDescription {
   committee: {
     "multisig-address": string;
     members: Array<ICommitteeMember>;
+    chainId?: string;
   };
   source: {
     name: string;

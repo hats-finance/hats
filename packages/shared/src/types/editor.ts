@@ -49,6 +49,10 @@ export type IVulnerabilitySeveritiesTemplate = IVulnerabilitySeveritiesTemplateV
 
 export interface IBaseEditedVaultDescription {
   version: "v1" | "v2";
+  vaultCreatedInfo?: {
+    vaultAddress: string;
+    chainId: number;
+  };
   "project-metadata": {
     icon: string;
     website: string;
@@ -60,7 +64,7 @@ export interface IBaseEditedVaultDescription {
     emails: IEditedCommunicationEmail[];
   };
   committee: {
-    chainId: string;
+    chainId?: string;
     "multisig-address": string;
     members: Array<ICommitteeMember>;
   };
@@ -93,6 +97,8 @@ export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDe
 export interface IEditedSessionResponse {
   editedDescription: IEditedVaultDescription;
   descriptionHash: string;
+  chainId?: number;
+  vaultAddress?: string;
 }
 
 export interface ICreateVaultOnChainCall {

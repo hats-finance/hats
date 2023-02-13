@@ -175,10 +175,6 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
         ...vaultDescription["project-metadata"],
         emails: [],
       },
-      committee: {
-        ...vaultDescription.committee,
-        chainId: "",
-      },
       "vulnerability-severities-spec": {
         severities: severitiesWithIds as IEditedVulnerabilitySeverityV1[],
         name: "",
@@ -206,10 +202,6 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     "project-metadata": {
       ...vaultDescription["project-metadata"],
       emails: [],
-    },
-    committee: {
-      ...vaultDescription.committee,
-      chainId: "",
     },
     "vulnerability-severities-spec": {
       severities: severitiesWithIds as IEditedVulnerabilitySeverityV2[],
@@ -321,7 +313,7 @@ export function editedFormToCreateVaultOnChainCall(
   const { maxBountyPercentage, immediatePercentage, vestedPercentage, committeePercentage } = editedVaultDescription.parameters;
 
   return {
-    chainId: +editedVaultDescription.committee.chainId,
+    chainId: +(editedVaultDescription.committee.chainId ?? "1"),
     asset: editedVaultDescription.assets[0].address,
     name: convertStringToSlug(editedVaultDescription["project-metadata"].name),
     symbol: convertStringToSlug(editedVaultDescription["project-metadata"].name),
