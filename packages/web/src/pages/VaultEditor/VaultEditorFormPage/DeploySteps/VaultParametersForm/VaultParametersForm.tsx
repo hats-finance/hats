@@ -11,6 +11,7 @@ import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { StyledVaultEditorForm } from "../../styles";
+import { useEffect } from "react";
 
 type VaultParametersFormProps = {
   statusCardFormDefaultData?: { parameters: IEditedVaultParameters };
@@ -31,6 +32,10 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
   });
+
+  useEffect(() => {
+    methodsOnlyParameters.reset(statusCardFormDefaultData);
+  }, [statusCardFormDefaultData, methodsOnlyParameters]);
 
   const submitForm = async () => {
     const data = methodsOnlyParameters.getValues();

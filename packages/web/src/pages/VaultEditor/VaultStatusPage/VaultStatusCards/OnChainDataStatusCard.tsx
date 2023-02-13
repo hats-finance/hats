@@ -27,7 +27,7 @@ export const OnChainDataStatusCard = () => {
   const editBountySplitCall = VaultBountySplitEditionContract.hook({ address: vaultAddress, chainId: vaultChainId });
   const handleEditBountySplit = (params: IEditedVaultParameters) => {
     if (!isMultisigConnected) return;
-    editBountySplitCall?.send(params);
+    editBountySplitCall.send(params);
   };
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const OnChainDataStatusCard = () => {
       setTimeout(() => refreshVaultData(), 2000);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editBountySplitCall]);
+  }, [editBountySplitCall.data]);
 
   useEffect(() => {
     setDefaultVaultParametersData({
@@ -53,7 +53,7 @@ export const OnChainDataStatusCard = () => {
         fixedHatsRewardPercetange: vaultData.parameters.hatsRewardSplit / 100,
       },
     });
-  }, [vaultData.parameters]);
+  }, [vaultData.parameters, isBeingExecuted]);
 
   const onChangeOnChainData = async (data: { parameters: IEditedVaultParameters }) => {
     if (!isMultisigConnected) return;
@@ -130,7 +130,7 @@ export const OnChainDataStatusCard = () => {
       <div className="mt-4">
         {editBountySplitCall?.error && <p className="status-card__error">{editBountySplitCall?.error.message}</p>}
         {isBeingExecuted && !editBountySplitCall?.error && (
-          <p className="status-card__alert">{t("safeProposalCreatedSuccessfullyWithoutGoBack")}</p>
+          <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>
         )}
       </div>
 

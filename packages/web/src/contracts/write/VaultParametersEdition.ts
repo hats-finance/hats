@@ -13,7 +13,6 @@ export class VaultBountySplitEditionContract {
    */
   static hook = (vaultData: { address: string; chainId: number }) => {
     const { chain } = useNetwork();
-    if (!chain) return null;
 
     const contractAddress = vaultData?.address;
     const vaultAbi = HATSVaultV2_abi;
@@ -29,7 +28,7 @@ export class VaultBountySplitEditionContract {
     return {
       ...editBountySplit,
       send: async (params: IEditedVaultParameters) => {
-        await switchNetworkAndValidate(chain.id, vaultData.chainId);
+        await switchNetworkAndValidate(chain!.id, vaultData.chainId);
 
         return editBountySplit.write!({
           recklesslySetUnpreparedArgs: [
