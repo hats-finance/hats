@@ -59,8 +59,7 @@ const VaultEditorFormPage = () => {
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
-  const vaultCreatedAddress = useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
-  const vaultCreatedChainId = useWatch({ control, name: "vaultCreatedInfo.chainId" });
+  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
 
   const {
     steps,
@@ -73,6 +72,7 @@ const VaultEditorFormPage = () => {
     onGoToSection,
     initFormSteps,
     loadingSteps,
+    presetIsEditingVault,
   } = useVaultEditorSteps(methods, {
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
@@ -165,9 +165,9 @@ const VaultEditorFormPage = () => {
   };
 
   useEffect(() => {
-    initFormSteps(!!vaultCreatedAddress);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loadingEditSession]);
+    presetIsEditingVault(isEditingVault);
+    initFormSteps();
+  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingVault]);
 
   useEffect(() => {
     if (editSessionId) {
@@ -261,9 +261,7 @@ const VaultEditorFormPage = () => {
   };
 
   const getNextButtonDisabled = () => {
-    const { disabledOptions } = currentStepInfo;
-
-    if (disabledOptions?.includes("needsAccount")) {
+    if (currentStepInfo?.disabledOptions?.includes("needsAccount")) {
       if (!address) return t("youNeedToConnectToAWallet");
       return false;
     }
@@ -277,7 +275,9 @@ const VaultEditorFormPage = () => {
     return () => onGoNext.go();
   };
 
-  if (loadingEditSession || loadingSteps) return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
+  if (loadingEditSession || loadingSteps || !currentStepInfo || !currentSectionInfo) {
+    return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
+  }
 
   const vaultEditorFormContext = { editSessionId, committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
 

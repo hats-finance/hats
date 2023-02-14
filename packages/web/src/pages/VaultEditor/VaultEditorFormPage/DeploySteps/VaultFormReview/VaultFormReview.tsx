@@ -21,9 +21,9 @@ export function VaultFormReview() {
       id: "",
       descriptionHash: "",
       pid: "",
-      stakingToken: `${editedVaultDescriptionForm.assets[0].address ?? ""}`,
+      stakingToken: `${editedVaultDescriptionForm.assets[0]?.address ?? ""}`,
       stakingTokenDecimals: "18",
-      stakingTokenSymbol: `${editedVaultDescriptionForm.assets[0].symbol ?? ""}`,
+      stakingTokenSymbol: `${editedVaultDescriptionForm.assets[0]?.symbol ?? ""}`,
       honeyPotBalance: "0",
       totalRewardPaid: "0",
       committee: "",
@@ -106,6 +106,8 @@ export function VaultFormReview() {
       };
     }
   }, [editedVaultDescriptionForm]);
+
+  if (editedVaultDescriptionForm.assets.length === 0) return null;
 
   return (
     <StyledVaultFormReview>

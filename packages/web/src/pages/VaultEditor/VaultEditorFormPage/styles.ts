@@ -9,7 +9,7 @@ export const StyledVaultEditorContainer = styled.div`
   }
 `;
 
-export const StyledVaultEditorForm = styled.form<{ withoutMargin?: boolean }>(
+export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
   ({ withoutMargin }) => css`
     position: relative;
     background: var(--background-clear-blue);

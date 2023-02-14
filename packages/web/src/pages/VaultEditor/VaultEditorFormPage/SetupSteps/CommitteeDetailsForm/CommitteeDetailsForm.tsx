@@ -19,8 +19,6 @@ export function CommitteeDetailsForm() {
     value: `${chainConf.chain.id}`,
   }));
 
-  console.log(supportedNetworksOptions);
-
   useEffect(() => {
     if (committeeChainId) trigger("committee.multisig-address");
   }, [committeeChainId, trigger]);
@@ -34,7 +32,6 @@ export function CommitteeDetailsForm() {
           control={control}
           name={`committee.chainId`}
           render={({ field, formState: { errors, dirtyFields, defaultValues } }) => {
-            console.log(field.value);
             return (
               <FormSelectInput
                 isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
