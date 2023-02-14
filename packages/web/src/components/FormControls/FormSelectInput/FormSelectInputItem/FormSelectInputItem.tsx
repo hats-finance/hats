@@ -5,6 +5,7 @@ import CheckboxCheckedIcon from "@mui/icons-material/CheckBox";
 import CheckboxUncheckedIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import RadioCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import RadioUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import { ipfsTransformUri } from "utils";
 
 interface MenuItemProps {
   currentValue: string | string[];
@@ -40,7 +41,10 @@ const FormSelectInputItem = ({ currentValue, option, handleSelectedItem, handleU
 
   return (
     <StyledFormSelectInputItem htmlFor={`option-${option.value}`}>
-      <span>{option.label || "---"}</span>
+      <div className="info">
+        {option.icon && <img src={ipfsTransformUri(option.icon)} alt="logo" />}
+        <span>{option.label || "---"}</span>
+      </div>
       {getIcon()}
       <input id={`option-${option.value}`} checked={isChecked} onChange={handleOnChange} type={multiple ? "checkbox" : "radio"} />
     </StyledFormSelectInputItem>

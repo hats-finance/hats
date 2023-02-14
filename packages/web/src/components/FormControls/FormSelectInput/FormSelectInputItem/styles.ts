@@ -15,8 +15,20 @@ export const StyledFormSelectInputItem = styled.label`
     background-color: var(--moderate-blue);
   }
 
-  span {
-    padding-left: ${getSpacing(1)};
+  .info {
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(1)};
+
+    img {
+      width: ${getSpacing(3)};
+      height: ${getSpacing(3)};
+      object-fit: contain;
+    }
+
+    span {
+      padding-left: ${getSpacing(1)};
+    }
   }
 
   input {
