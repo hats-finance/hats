@@ -161,6 +161,7 @@ const VaultEditorFormPage = () => {
   };
 
   const help = () => {
+    console.log(getValues());
     console.log(formState.errors);
   };
 

@@ -14,6 +14,8 @@ export function CommitteeDetailsForm() {
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const committeeChainId = useWatch({ control, name: "committee.chainId" });
 
+  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+
   const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
     label: chainConf.chain.name,
     value: `${chainConf.chain.id}`,
@@ -39,6 +41,7 @@ export function CommitteeDetailsForm() {
                 label={t("VaultEditor.vault-details.chain")}
                 placeholder={t("VaultEditor.vault-details.chain-placeholder")}
                 colorable
+                disabled={isEditingVault}
                 options={supportedNetworksOptions}
                 {...field}
                 value={field.value ?? ""}

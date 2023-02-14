@@ -1,10 +1,10 @@
 import axios from "axios";
 import { getContract, getProvider } from "wagmi/actions";
+import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
 import { ChainsConfig } from "config/chains";
 import { BASE_SERVICE_URL } from "settings";
 import { IVaultStatusData } from "./types";
 import { ipfsTransformUri } from "utils";
-import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
 
 export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
   const vaultContract = getContract({
