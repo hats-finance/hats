@@ -132,12 +132,19 @@ export const useVaultEditorSteps = (
     const currentSectionIdx = Object.keys(editorSections).indexOf(`${currentSection}`);
     const desiredSectionIdx = Object.keys(editorSections).indexOf(`${sectionId}`);
 
+    if (currentSectionIdx === desiredSectionIdx) return;
+
     const userWantsToGoBack = desiredSectionIdx < currentSectionIdx;
     const isCurrentSectionValid = currentSectionInfo?.steps.every((step) => step.isValid);
 
     if (isCurrentSectionValid || userWantsToGoBack) {
       setCurrentSection(sectionId);
       setCurrentStepNumber(0);
+
+      if (options.saveData)
+        options.saveData().then(() => {
+          if (options.executeOnSaved) options.executeOnSaved(currentSection, currentStepNumber);
+        });
     }
   };
 
