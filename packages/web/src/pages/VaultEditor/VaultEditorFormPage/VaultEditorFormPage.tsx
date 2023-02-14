@@ -116,7 +116,7 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
-      console.log(`EditSession id: ${editSessionId}}: `, editSessionResponse);
+      console.log(`EditSession: `, editSessionResponse);
 
       setDescriptionHash(editSessionResponse.descriptionHash);
       handleReset({
