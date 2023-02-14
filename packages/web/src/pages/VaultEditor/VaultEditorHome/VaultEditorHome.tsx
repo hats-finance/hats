@@ -1,18 +1,55 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { IVault } from "types";
 import { Button, FormSelectInput } from "components";
-import { StyledVaultEditorHome } from "./styles";
 import { RoutePaths } from "navigation";
+import { useVaults } from "hooks/vaults/useVaults";
+import { StyledVaultEditorHome } from "./styles";
 
 export const VaultEditorHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { address } = useAccount();
+  const { vaults } = useVaults();
 
-  const [selectedEditSessionId, setselectedEditSessionId] = useState("");
+  const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
+  const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
+
+  const populateVaultsOptions = useCallback(() => {
+    if (!address || !vaults) return;
+    const userVaults = [] as IVault[];
+
+    for (const vault of vaults) {
+      const isMultisig = vault.committee === address;
+      const isCommitteeMember = vault.description?.committee.members.map((member) => member.address).includes(address);
+
+      if ((isMultisig || isCommitteeMember) && vault.version === "v2") userVaults.push(vault);
+    }
+
+    setVaultsOptions(
+      userVaults.map((vault) => ({
+        label: vault.description?.["project-metadata"].name ?? vault.name,
+        value: vault.id,
+        icon: vault.description?.["project-metadata"].icon,
+      }))
+    );
+  }, [address, vaults]);
+
+  useEffect(() => {
+    populateVaultsOptions();
+  }, [populateVaultsOptions]);
 
   const createNewVault = () => {
     navigate(`${RoutePaths.vault_editor}/new-vault`);
+  };
+
+  const goToStatusPage = () => {
+    const selectedVault = vaults?.find((vault) => vault.id === selectedVaultAddress);
+    if (!selectedVault || !selectedVault.chainId) return;
+
+    navigate(`${RoutePaths.vault_editor}/status/${selectedVault.chainId}/${selectedVault.id}`);
   };
 
   return (
@@ -36,16 +73,16 @@ export const VaultEditorHome = () => {
             label={t("vault")}
             placeholder={t("selectVault")}
             name="editSessionId"
-            value={selectedEditSessionId}
-            onChange={(e) => setselectedEditSessionId(e as string)}
-            options={[{ label: "Test", value: "test" }]}
+            value={selectedVaultAddress}
+            onChange={(e) => setSelectedVaultAddress(e as string)}
+            options={vaultsOptions}
           />
 
           <div className="options">
-            <Button disabled={!selectedEditSessionId} styleType="outlined">
+            <Button disabled={!selectedVaultAddress} onClick={goToStatusPage}>
               {t("statusPage")}
             </Button>
-            <Button disabled={!selectedEditSessionId}>{t("editVault")}</Button>
+            {/* <Button styleType="outlined" disabled={!selectedVaultAddress}>{t("editVault")}</Button> */}
           </div>
         </div>
       </div>

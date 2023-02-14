@@ -27,6 +27,7 @@ export const GET_VAULTS = `
       version
       descriptionHash
       pid
+      name
       stakingToken
       stakingTokenDecimals
       stakingTokenSymbol

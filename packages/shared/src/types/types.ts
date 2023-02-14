@@ -1,5 +1,6 @@
 export interface IBaseVault {
   id: string;
+  name: string;
   descriptionHash: string;
   pid: string;
   stakingToken: string;
@@ -31,7 +32,7 @@ export interface IBaseVault {
   depositPause: boolean;
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
-  description: IVaultDescription;
+  description?: IVaultDescription;
   chainId?: number;
   userWithdrawRequest?: IWithdrawRequest[];
 }
@@ -40,11 +41,11 @@ export interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
   allocPoint: string;
-  description: IVaultDescriptionV1;
+  description?: IVaultDescriptionV1;
 }
 export interface IVaultV2 extends IBaseVault {
   version: "v2";
-  description: IVaultDescriptionV2;
+  description?: IVaultDescriptionV2;
   maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
   rewardControllers: (IRewardController | undefined)[];
 }

@@ -19,6 +19,7 @@ export function VaultFormReview() {
 
     const bothVersionsVault = {
       id: "",
+      name: "",
       descriptionHash: "",
       pid: "",
       stakingToken: `${editedVaultDescriptionForm.assets[0]?.address ?? ""}`,
