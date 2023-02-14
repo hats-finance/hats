@@ -62,88 +62,92 @@ export default function Severity(props: IProps) {
       </div>
       {expanded && (
         <div className="severity-data">
-          {severity?.description && (
+          <div className="row">
+            {severity?.description && (
+              <div className="severity-data-item">
+                <span className="vault-expanded-subtitle">{isNormalVault && "Severity "} Description:</span>
+                <span style={{ color: "white" }}>{severity.description}</span>
+              </div>
+            )}
+          </div>
+          <div className="row">
+            {severity?.["nft-metadata"] && (
+              <div className="severity-data-item">
+                <span className="vault-expanded-subtitle">NFT:</span>
+                <div
+                  className="nft-image-wrapper"
+                  onClick={() => {
+                    showNFTModal();
+                    setModalNFTData(severity as any);
+                  }}
+                >
+                  <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
+                  <span className="view-more">View NFT info</span>
+                </div>
+              </div>
+            )}
             <div className="severity-data-item">
-              <span className="vault-expanded-subtitle">{isNormalVault && "Severity "} Description:</span>
-              <span style={{ color: "white" }}>{severity.description}</span>
-            </div>
-          )}
-          {severity?.["nft-metadata"] && (
-            <div className="severity-data-item">
-              <span className="vault-expanded-subtitle">NFT:</span>
-              <div
-                className="nft-image-wrapper"
+              <span className="vault-expanded-subtitle">Max Prize:</span>
+              <span className="vault-prize">
+                <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b>
+                <span className="of-vault-text">&nbsp;of vault&nbsp;</span>
+                &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
+              </span>
+              {screenSize === ScreenSize.Desktop && rewardPrice && (
+                <>
+                  <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                  <div className="severity-prize-division-wrapper">
+                    {Number(hackerVestedRewardSplit) / 100 > 0 && (
+                      <span className="division vested-token">{`${
+                        Number(hackerVestedRewardSplit) / 100
+                      }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
+                        units: ["d", "h", "m"],
+                      })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    )}
+                    {Number(hackerRewardSplit) / 100 > 0 && (
+                      <span className="division token">{`${
+                        Number(hackerRewardSplit) / 100
+                      }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
+                        (Number(hackerRewardSplit) / 10000) * rewardPrice
+                      )}`}</span>
+                    )}
+                    {Number(committeeRewardSplit) / 100 > 0 && (
+                      <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber(
+                        (Number(committeeRewardSplit) / 10000) * rewardPrice
+                      )}`}</span>
+                    )}
+                    {Number(hackerHatRewardSplit) / 100 > 0 && (
+                      <span className="division vested-hats">{`${
+                        Number(hackerHatRewardSplit) / 100
+                      }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
+                        units: ["d", "h", "m"],
+                      })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
+                        (Number(hackerHatRewardSplit) / 10000) * rewardPrice
+                      )}`}</span>
+                    )}
+                    {Number(governanceHatRewardSplit) / 100 > 0 && (
+                      <span className="division governance">{`${
+                        Number(governanceHatRewardSplit) / 100
+                      }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
+                    )}
+                    {Number(swapAndBurnSplit) / 100 > 0 && (
+                      <span className="division swap-and-burn">{`${
+                        Number(swapAndBurnSplit) / 100
+                      }% Swap and Burn ≈ $${formatNumber((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>
+                    )}
+                  </div>
+                </>
+              )}
+              <span
+                className="view-more"
                 onClick={() => {
-                  showNFTModal();
-                  setModalNFTData(severity as any);
+                  setModalContractsData(severity?.["contracts-covered"] as any);
+                  showContractsModal();
                 }}
               >
-                <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
-                <span className="view-more">View NFT info</span>
-              </div>
+                View Contracts Covered
+              </span>
             </div>
-          )}
-          <div className="severity-data-item">
-            <span className="vault-expanded-subtitle">Max Prize:</span>
-            <span className="vault-prize">
-              <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b>
-              <span className="of-vault-text">&nbsp;of vault&nbsp;</span>
-              {!preview && <span>&#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;</span>}
-            </span>
-            {screenSize === ScreenSize.Desktop && !!rewardPrice && (
-              <>
-                <span className="vault-expanded-subtitle">Prize Content Division:</span>
-                <div className="severity-prize-division-wrapper">
-                  {Number(hackerVestedRewardSplit) / 100 > 0 && (
-                    <span className="division vested-token">{`${
-                      Number(hackerVestedRewardSplit) / 100
-                    }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
-                      units: ["d", "h", "m"],
-                    })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
-                  )}
-                  {Number(hackerRewardSplit) / 100 > 0 && (
-                    <span className="division token">{`${
-                      Number(hackerRewardSplit) / 100
-                    }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
-                      (Number(hackerRewardSplit) / 10000) * rewardPrice
-                    )}`}</span>
-                  )}
-                  {Number(committeeRewardSplit) / 100 > 0 && (
-                    <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber(
-                      (Number(committeeRewardSplit) / 10000) * rewardPrice
-                    )}`}</span>
-                  )}
-                  {Number(hackerHatRewardSplit) / 100 > 0 && (
-                    <span className="division vested-hats">{`${
-                      Number(hackerHatRewardSplit) / 100
-                    }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
-                      units: ["d", "h", "m"],
-                    })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
-                      (Number(hackerHatRewardSplit) / 10000) * rewardPrice
-                    )}`}</span>
-                  )}
-                  {Number(governanceHatRewardSplit) / 100 > 0 && (
-                    <span className="division governance">{`${
-                      Number(governanceHatRewardSplit) / 100
-                    }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
-                  )}
-                  {Number(swapAndBurnSplit) / 100 > 0 && (
-                    <span className="division swap-and-burn">{`${Number(swapAndBurnSplit) / 100}% Swap and Burn ≈ $${formatNumber(
-                      (Number(swapAndBurnSplit) / 10000) * rewardPrice
-                    )}`}</span>
-                  )}
-                </div>
-              </>
-            )}
-            <span
-              className="view-more"
-              onClick={() => {
-                setModalContractsData(severity?.["contracts-covered"] as any);
-                showContractsModal();
-              }}
-            >
-              View Contracts Covered
-            </span>
           </div>
         </div>
       )}

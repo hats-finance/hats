@@ -36,20 +36,25 @@
   .severity-data {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     border-right: 1px solid $purple-blue;
     border-left: 1px solid $purple-blue;
     border-bottom: 1px solid $purple-blue;
+
+    .row {
+      display: flex;
+    }
 
     .severity-data-item {
       display: flex;
       flex-direction: column;
       flex: auto;
       border-right: 1px solid $purple-blue;
-      padding: 20px;
+      padding: 20px 40px 35px;
       flex: 1 1 0px;
 
       .vault-expanded-subtitle {
-        padding-bottom: 30px;
+        padding-bottom: 20px;
       }
 
       .view-more {
@@ -58,6 +63,7 @@
         text-decoration: underline;
         margin-top: auto;
         width: 100%;
+        padding-top: 30px;
 
         &:hover {
           opacity: 0.9;
