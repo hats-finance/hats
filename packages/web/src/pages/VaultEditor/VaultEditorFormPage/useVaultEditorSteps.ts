@@ -11,6 +11,7 @@ export const useVaultEditorSteps = (
     saveData?: () => Promise<void>;
     executeOnSaved?: (section: keyof typeof AllEditorSections, step: number) => void;
     onFinalSubmit?: () => void;
+    onFinalEditSubmit?: () => void;
   }
 ) => {
   const { t } = useTranslation();
@@ -246,9 +247,13 @@ export const useVaultEditorSteps = (
     if (isInLastSection && isInLastStep) {
       return {
         go: () => {
-          if (options.onFinalSubmit) formMethods.handleSubmit(options.onFinalSubmit)();
+          if (isEditingVault) {
+            if (options.onFinalEditSubmit) options.onFinalEditSubmit();
+          } else {
+            if (options.onFinalSubmit) formMethods.handleSubmit(options.onFinalSubmit)();
+          }
         },
-        text: t(currentStep.nextButtonTextKey ?? "next"),
+        text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
       };
     }
 
@@ -272,7 +277,7 @@ export const useVaultEditorSteps = (
             setCurrentStepNumber(0);
           }
         },
-        text: t(currentStep.nextButtonTextKey ?? "next"),
+        text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
       };
     }
 
@@ -292,7 +297,7 @@ export const useVaultEditorSteps = (
           setCurrentStepNumber(currentStepNumber + 1);
         }
       },
-      text: t(currentStep.nextButtonTextKey ?? "next"),
+      text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
     };
   }, [
     currentSection,
@@ -302,6 +307,7 @@ export const useVaultEditorSteps = (
     currentStepInfo,
     formMethods,
     editStepStatus,
+    isEditingVault,
     options,
     t,
   ]);

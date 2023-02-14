@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -16,6 +17,8 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import { Button, Loading } from "components";
+import { ChainsConfig } from "config/chains";
+import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
@@ -33,8 +36,6 @@ import {
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
-import { useAccount } from "wagmi";
-import { ChainsConfig } from "config/chains";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -43,6 +44,7 @@ const VaultEditorFormPage = () => {
   const { editSessionId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
 
@@ -76,6 +78,7 @@ const VaultEditorFormPage = () => {
   } = useVaultEditorSteps(methods, {
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
+    onFinalEditSubmit: () => finishVaultEdition(),
     executeOnSaved: (sectionId, stepNumber) => {
       const committeeSectionId = "setup";
       const committeeStepId = "committee";
@@ -158,6 +161,16 @@ const VaultEditorFormPage = () => {
       console.error(error);
       setCreatingVault(false);
     }
+  };
+
+  const finishVaultEdition = async () => {
+    console.log(methods.formState.isDirty);
+    // const wantsToEdit = await confirm({
+    //   confirmText: t("requestApproval"),
+    //   description: t("areYouSureYouWantToEditThisVault"),
+    // });
+
+    // console.log(wantsToEdit);
   };
 
   const help = () => {

@@ -64,6 +64,7 @@
     "vaultEditorSeveritiesExplanation": "<strong>Set the severities for the vault or use an existing vaults severities as a template.</strong> \n\n <ul><li>The description of the severity level will serve as the primary criteria for determining whether the report aligns with this level of severity.</li> \n <li>The max severity reward (%) will indicate the reward pay-out of each severity taking into account the available % allocated for bounties (the max bounty field below).</li> \n <li>On the dApp will appear the max severity reward based on the available for bounties (the multiplication between max severity reward (%) and max bounty of the vault (%)). Basically it's the max % of the whole vault allocated fot that severity.</li> </ul>",
     "vaultEditorContractsCoveredExplanation": "<strong>Fill the information for each contract or asset covered. You need to fill the address/url to the asset and the possible severities.</strong>",
     "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault.",
+    "vaultEditorFinishedEditionExplanation": "You have finished editing the vault. Now you can send this form to governance for approval.",
     "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. \n\n Once done you will be requested to execute a transaction that will create a vault on-chain.",
     "vaultEditorMaxBountyExplanation": "The max bounty will set the max percent of a bounty that can be paid from the vault. The max bounty allowed is 90%, you can't pay the <strong>100%</strong> of the vault within one bounty. \n\n <strong>Example:</strong> \n\n If a vault has <strong>100K</strong> deposited and the max bounty is set to <strong>90%</strong> in the case of a critical severity the max pay-out will be <strong>90K</strong>. \n\n <strong>Set the max bounty (max 90%)</strong>",
     "vaultEditorBountySplitExplanation": "The bounty split will set the way a bounty will be splitted when a pay-out occurs. \n\n <strong>Set committee controlled split (the total should be 100%)</strong>",
@@ -85,6 +86,7 @@
     "back": "Back",
     "next": "Next",
     "continueToVaultCreation": "Continue to Vault Creation",
+    "sendToGovernanceApproval": "Send to governance approval",
     "assetsInVault": "Assets in Vault",
     "submit": "Submit",
     "vaultDescription": "Vault Description",
@@ -168,6 +170,11 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "loading": "Loading",
+    "sendToGovernanceApproval": "Send to governance approval",
+    "waitForApproval": "Wait for approval",
+    "weWillNotifyYouWhenEditionIsApproved": "We will notify you when the edition is approved.",
+    "requestApproval": "Request approval",
+    "areYouSureYouWantToEditThisVault": "Are you sure you want request governance to edit vault's information?",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
