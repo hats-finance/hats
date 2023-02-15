@@ -10,6 +10,7 @@ import {
   createNewVaultDescription,
   convertVulnerabilitySeverityV1ToV2,
   editedFormToCreateVaultOnChainCall,
+  nonEditableEditionStatus,
 } from "@hats-finance/shared";
 import { CreateVaultContract } from "contracts";
 import { getGnosisSafeInfo } from "utils/gnosis.utils";
@@ -71,6 +72,8 @@ const VaultEditorFormPage = () => {
 
   const [isVaultCreated, setIsVaultCreated] = useState(false);
   const [isEditingExitingVault, setIsEditingExitingVault] = useState(false);
+  const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>();
+  const isNonEditableStatus = editingExitingVaultStatus ? nonEditableEditionStatus.includes(editingExitingVaultStatus) : false;
   const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
 
   const {
@@ -99,7 +102,8 @@ const VaultEditorFormPage = () => {
   });
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false, vaultEditionStatus?: IVaultEditionStatus) => {
-    if (isVaultCreated) return; // If vault is already created, edition is blocked
+    // If vault is already created or is isNonEditableStatus, edition is blocked
+    if (isVaultCreated || (editingExitingVaultStatus && isNonEditableStatus)) return;
     if (isCreation) setLoadingEditSession(true);
 
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
@@ -122,6 +126,7 @@ const VaultEditorFormPage = () => {
     } else {
       setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
       setLastModifedOn(sessionIdOrSessionResponse.updatedAt);
+      setEditingExitingVaultStatus(sessionIdOrSessionResponse.vaultEditionStatus);
       handleReset(sessionIdOrSessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
     }
 
@@ -147,6 +152,7 @@ const VaultEditorFormPage = () => {
 
       setDescriptionHash(editSessionResponse.descriptionHash);
       setLastModifedOn(editSessionResponse.updatedAt);
+      setEditingExitingVaultStatus(editSessionResponse.vaultEditionStatus);
       handleReset({
         ...editSessionResponse.editedDescription,
         vaultCreatedInfo: {
@@ -188,7 +194,7 @@ const VaultEditorFormPage = () => {
     }
   };
 
-  const finishVaultEdition = async () => {
+  const finishVaultEdition = async (desiredStatus: IVaultEditionStatus = "pendingApproval") => {
     if (!wasEditedSinceCreated) return;
 
     const wantsToEdit = await confirm({
@@ -196,7 +202,26 @@ const VaultEditorFormPage = () => {
       description: t("areYouSureYouWantToEditThisVault"),
     });
 
-    if (wantsToEdit) createOrSaveEditSession(false, false, "pendingApproval");
+    if (wantsToEdit) createOrSaveEditSession(false, false, desiredStatus);
+  };
+
+  const cancelApprovalRequest = async () => {
+    if (!editSessionId) return;
+
+    const wantsToCancel = await confirm({
+      confirmText: t("cancelApprovalRequest"),
+      description: t("areYouSureYouWantToCancelApprovalRequest"),
+    });
+
+    if (wantsToCancel) {
+      const sessionResponse = await VaultService.cancelApprovalRequest(editSessionId);
+      if (sessionResponse) {
+        setDescriptionHash(sessionResponse.descriptionHash);
+        setLastModifedOn(sessionResponse.updatedAt);
+        setEditingExitingVaultStatus(sessionResponse.vaultEditionStatus);
+        handleReset(sessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+      }
+    }
   };
 
   // Getting descriptionHash that is deployed onChain
@@ -232,8 +257,8 @@ const VaultEditorFormPage = () => {
   }, [editSessionId]);
 
   useEffect(() => {
-    setAllFormDisabled(isVaultCreated);
-  }, [isVaultCreated]);
+    setAllFormDisabled(isVaultCreated || isNonEditableStatus);
+  }, [isVaultCreated, isNonEditableStatus]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -342,6 +367,74 @@ const VaultEditorFormPage = () => {
     return () => onGoNext.go();
   };
 
+  const getEditingExistingVaultAlert = () => {
+    if (!isEditingExitingVault) return null;
+
+    if (isNonEditableStatus && editingExitingVaultStatus) {
+      if (editingExitingVaultStatus === "pendingApproval") {
+        return <Alert content={t("youCantEditBecauseIsPendingApproval")} type="warning" />;
+      } else {
+        return (
+          <Alert content={t("youCantEditBecauseIsStatus", { status: t(`${editingExitingVaultStatus}_status`) })} type="warning" />
+        );
+      }
+    }
+
+    if (wasEditedSinceCreated) {
+      return <Alert content={t("doneEditingTheExistingVault")} type="warning" />;
+    } else {
+      return <Alert content={t("youAreEditingAnExistingVault")} type="warning" />;
+    }
+  };
+
+  const getEditingExistingVaultButtons = () => {
+    if (!isEditingExitingVault) return null;
+
+    if (isNonEditableStatus && editingExitingVaultStatus) {
+      if (editingExitingVaultStatus === "pendingApproval") {
+        return (
+          <div className="buttons">
+            <Button onClick={goToStatusPage} styleType="outlined">
+              <BackIcon className="mr-2" /> {t("goToStatusPage")}
+            </Button>
+            <Button onClick={cancelApprovalRequest} filledColor="error">
+              {t("cancelApprovalRequest")}
+            </Button>
+          </div>
+        );
+      } else {
+        return (
+          <div className="buttons">
+            <Button onClick={goToStatusPage} styleType="outlined">
+              <BackIcon className="mr-2" /> {t("goToStatusPage")}
+            </Button>
+          </div>
+        );
+      }
+    }
+
+    if (wasEditedSinceCreated) {
+      return (
+        <div className="buttons">
+          <Button onClick={goToStatusPage} styleType="outlined">
+            <BackIcon className="mr-2" /> {t("goToStatusPage")}
+          </Button>
+          <Button onClick={() => finishVaultEdition()}>
+            {t("sendToGovernanceApproval")} <NextIcon className="ml-2" />
+          </Button>
+        </div>
+      );
+    } else {
+      return (
+        <div className="buttons">
+          <Button onClick={goToStatusPage} styleType="outlined">
+            <BackIcon className="mr-2" /> {t("goToStatusPage")}
+          </Button>
+        </div>
+      );
+    }
+  };
+
   if (loadingEditSession || loadingSteps || !currentStepInfo || !currentSectionInfo) {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
   }
@@ -443,29 +536,8 @@ const VaultEditorFormPage = () => {
             {/* Editing existing vault action button */}
             {isEditingExitingVault && (
               <div className="editing-existing-buttons">
-                {!wasEditedSinceCreated && (
-                  <>
-                    <Alert content={t("youAreEditingAnExistingVault")} type="warning" />
-                    <div className="buttons">
-                      <Button onClick={goToStatusPage} styleType="outlined">
-                        <BackIcon className="mr-2" /> {t("goToStatusPage")}
-                      </Button>
-                    </div>
-                  </>
-                )}
-                {wasEditedSinceCreated && (
-                  <>
-                    <Alert content={t("doneEditingTheExistingVault")} type="warning" />
-                    <div className="buttons">
-                      <Button onClick={goToStatusPage} styleType="outlined">
-                        <BackIcon className="mr-2" /> {t("goToStatusPage")}
-                      </Button>
-                      <Button onClick={finishVaultEdition}>
-                        {t("sendToGovernanceApproval")} <NextIcon className="ml-2" />
-                      </Button>
-                    </div>
-                  </>
-                )}
+                {getEditingExistingVaultAlert()}
+                {getEditingExistingVaultButtons()}
               </div>
             )}
           </StyledVaultEditorForm>

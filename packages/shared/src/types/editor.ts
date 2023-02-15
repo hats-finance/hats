@@ -95,6 +95,7 @@ export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
 
 export type IVaultEditionStatus = "editing" | "pendingApproval" | "approved" | "rejected";
+export const nonEditableEditionStatus: IVaultEditionStatus[] = ["pendingApproval", "approved", "rejected"];
 
 export interface IEditedSessionResponse {
   editedDescription: IEditedVaultDescription;

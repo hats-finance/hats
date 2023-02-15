@@ -76,3 +76,13 @@ export async function onVaultCreated(txHash: string, chainId: number): Promise<{
     return null;
   }
 }
+
+export async function cancelApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
+  try {
+    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
+    console.log(res);
+    return res.status === 200 ? res.data : null;
+  } catch (error) {
+    return null;
+  }
+}
