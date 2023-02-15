@@ -115,7 +115,7 @@ function FormInputComponent(
         />
       );
     } else {
-      return <input {...props} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
+      return <input {...props} disabled={disabled} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
     }
   };
 
