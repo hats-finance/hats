@@ -1,21 +1,18 @@
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useWatch } from "react-hook-form";
-import { IEditedVaultDescription } from "types";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { StyledSetupReview } from "./styles";
+import { VaultEditorFormContext } from "../../store";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export function SetupReview() {
   const { t } = useTranslation();
 
-  const { control } = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+  const { isEditingExitingVault } = useContext(VaultEditorFormContext);
 
   return (
     <StyledSetupReview>
       <div className="helper-text">
-        {isEditingVault ? t("vaultEditorFinishedEditionExplanation") : t("vaultEditorFinishedSetupExplanation")}
+        {isEditingExitingVault ? t("vaultEditorFinishedEditionExplanation") : t("vaultEditorFinishedSetupExplanation")}
       </div>
 
       <p className="section-title">{t("nextStep")}</p>

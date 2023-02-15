@@ -17,7 +17,7 @@ import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { saveEditSessionData, editSessionId } = useContext(VaultEditorFormContext);
+  const { saveEditSessionData, editSessionId, isEditingExitingVault, isVaultCreated } = useContext(VaultEditorFormContext);
 
   const {
     register,
@@ -31,8 +31,6 @@ export function VaultDetailsForm() {
     append: appendEmail,
     remove: removeEmail,
   } = useFieldArray({ control, name: `project-metadata.emails` });
-
-  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
 
@@ -132,6 +130,7 @@ export function VaultDetailsForm() {
             {...register("project-metadata.name")}
             label={t("VaultEditor.vault-details.name")}
             colorable
+            disabled={isVaultCreated}
             placeholder={t("VaultEditor.vault-details.name-placeholder")}
           />
           <Controller
@@ -144,6 +143,7 @@ export function VaultDetailsForm() {
                 label={t("VaultEditor.vault-details.type")}
                 placeholder={t("VaultEditor.vault-details.type-placeholder")}
                 colorable
+                disabled={isVaultCreated}
                 options={vaultTypes}
                 {...field}
                 value={field.value ?? ""}
@@ -152,7 +152,7 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        {!isEditingVault && (
+        {!isEditingExitingVault && (
           <div className="emails">
             {emails.map((email, emailIndex) => (
               <Controller
@@ -165,7 +165,7 @@ export function VaultDetailsForm() {
                       prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
                       isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
                       error={getPath(errors, field.name)}
-                      disabled={email.status === "verified" || email.status === "verifying"}
+                      disabled={email.status === "verified" || email.status === "verifying" || isVaultCreated}
                       noMargin
                       colorable
                       placeholder={t("VaultEditor.vault-details.email-placeholder")}
@@ -173,7 +173,7 @@ export function VaultDetailsForm() {
                       {...field}
                       onChange={email.status === "verified" || email.status === "verifying" ? () => {} : field.onChange}
                     />
-                    <>{getEmailActionButton(email, field.value, emailIndex)}</>
+                    {!isVaultCreated && <>{getEmailActionButton(email, field.value, emailIndex)}</>}
                   </div>
                 )}
               />
@@ -183,10 +183,12 @@ export function VaultDetailsForm() {
               <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
             )}
 
-            <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
-              <AddIcon className="mr-2" />
-              <span>{t("newEmail")}</span>
-            </Button>
+            {!isVaultCreated && (
+              <Button styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
+                <AddIcon className="mr-2" />
+                <span>{t("newEmail")}</span>
+              </Button>
+            )}
           </div>
         )}
 
@@ -194,14 +196,21 @@ export function VaultDetailsForm() {
           <FormInput
             {...register("project-metadata.website")}
             colorable
+            disabled={isVaultCreated}
             placeholder={t("VaultEditor.vault-details.website-placeholder")}
             label={t("VaultEditor.vault-details.website")}
           />
 
           <div className="icons">
-            <FormIconInput {...register("project-metadata.icon")} colorable label={t("VaultEditor.vault-details.icon")} />
+            <FormIconInput
+              {...register("project-metadata.icon")}
+              disabled={isVaultCreated}
+              colorable
+              label={t("VaultEditor.vault-details.icon")}
+            />
             <FormIconInput
               {...register("project-metadata.tokenIcon")}
+              disabled={isVaultCreated}
               colorable
               label={t("VaultEditor.vault-details.token-icon")}
             />
@@ -211,7 +220,12 @@ export function VaultDetailsForm() {
 
       <br />
 
-      <FormInput {...register("includesStartAndEndTime")} type="checkbox" label={t("VaultEditor.addStartAndEndDate")} />
+      <FormInput
+        {...register("includesStartAndEndTime")}
+        disabled={isVaultCreated}
+        type="checkbox"
+        label={t("VaultEditor.addStartAndEndDate")}
+      />
 
       {showDateInputs && (
         <div className="inputs">
@@ -226,6 +240,7 @@ export function VaultDetailsForm() {
                 label={t("VaultEditor.vault-details.starttime")}
                 placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
                 colorable
+                disabled={isVaultCreated}
                 {...field}
               />
             )}
@@ -241,6 +256,7 @@ export function VaultDetailsForm() {
                 label={t("VaultEditor.vault-details.endtime")}
                 placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
                 colorable
+                disabled={isVaultCreated}
                 {...field}
               />
             )}

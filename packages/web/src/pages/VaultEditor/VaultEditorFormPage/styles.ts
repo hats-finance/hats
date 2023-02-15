@@ -38,10 +38,12 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
       }
     }
 
-    .descriptionHash {
+    .descriptionHash,
+    .lastModifiedOn {
       position: absolute;
       margin: 0;
       top: 0;
+      left: ${getSpacing(2)};
       color: var(--grey-400);
       background: var(--grey-600);
       font-size: var(--xxsmall);
@@ -53,6 +55,16 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
 
       &:hover {
         opacity: 0.8;
+      }
+    }
+
+    .lastModifiedOn {
+      cursor: default;
+      left: unset;
+      right: ${getSpacing(2)};
+
+      &:hover {
+        opacity: 1;
       }
     }
 

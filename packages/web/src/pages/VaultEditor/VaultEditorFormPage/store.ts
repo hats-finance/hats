@@ -6,6 +6,8 @@ interface IVaultEditorFormContext {
   editSessionId: string | undefined;
   committeeMembersFieldArray: UseFieldArrayReturn<IEditedVaultDescription, "committee.members">;
   saveEditSessionData: () => Promise<void>;
+  isVaultCreated: boolean;
+  isEditingExitingVault: boolean;
 }
 
 export const VaultEditorFormContext = createContext<IVaultEditorFormContext>(undefined as any);

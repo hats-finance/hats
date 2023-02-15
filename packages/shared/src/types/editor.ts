@@ -101,6 +101,7 @@ export interface IEditedSessionResponse {
   vaultAddress?: string;
   createdAt?: Date;
   updatedAt?: Date;
+  editingExistingVault?: boolean;
 }
 
 export interface ICreateVaultOnChainCall {

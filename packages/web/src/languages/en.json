@@ -174,7 +174,8 @@
     "waitForApproval": "Wait for approval",
     "weWillNotifyYouWhenEditionIsApproved": "We will notify you when the edition is approved",
     "requestApproval": "Request approval",
-    "areYouSureYouWantToEditThisVault": "Are you sure you want request governance to edit vault's information?",
+    "areYouSureYouWantToEditThisVault": "Are you sure you want to request governance to edit vault's information?",
+    "saved": "Saved",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
