@@ -72,6 +72,7 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
       display: flex;
       flex-direction: row-reverse;
       justify-content: space-between;
+      margin-top: ${getSpacing(3)};
 
       div {
         display: flex;

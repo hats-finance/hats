@@ -71,6 +71,7 @@
     "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
     "vaultEditorFinalStepExplanation": "Create vault by completing the on-chain transaction. \n A vault will be created on chain. \n\n The vault description may be edited at any time, changes will be require Hat gov approval.",
     "committeeMembersOutsideMultisigExplanation": "<strong>You can add committee members who are not part of Gnosis Safe.</strong> \n\n <strong>Please note,</strong> \n those committee members will not have permission to sign on pay-outs. They can only <strong>decrypt</strong> vulnerabilities sent to the vault.",
+    "vaultBlockedBecauseIsCreated": "This vault can't be edited because it's already created on-chain. This is read-only mode. If you want to edit it, please go to the status page and do it there.",
     "setMaxBountyHelper": "Set the max % of the vault allocated for bounties",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",

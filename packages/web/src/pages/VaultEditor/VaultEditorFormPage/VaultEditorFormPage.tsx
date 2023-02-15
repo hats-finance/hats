@@ -17,7 +17,7 @@ import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
-import { Button, Loading } from "components";
+import { Alert, Button, Loading } from "components";
 import { ChainsConfig } from "config/chains";
 import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
@@ -304,6 +304,13 @@ const VaultEditorFormPage = () => {
     window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
   };
 
+  const goToStatusPage = () => {
+    const { vaultCreatedInfo } = getValues();
+    if (!vaultCreatedInfo) return;
+
+    navigate(`${RoutePaths.vault_editor}/status/${vaultCreatedInfo.chainId}/${vaultCreatedInfo.vaultAddress}`);
+  };
+
   const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
     if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
       if (isVaultCreated) return t("thisVaultIsAlredyCreated");
@@ -380,6 +387,7 @@ const VaultEditorFormPage = () => {
                 </p>
               </div>
             </div>
+
             {/* Steps control */}
             <VaultEditorStepper>
               {steps
@@ -397,6 +405,7 @@ const VaultEditorFormPage = () => {
                   </VaultEditorStepController>
                 ))}
             </VaultEditorStepper>
+
             {/* Section */}
             {steps.map((step) => (
               <Section key={step.id} visible={step.id === currentStepInfo.id}>
@@ -406,6 +415,10 @@ const VaultEditorFormPage = () => {
                 </div>
               </Section>
             ))}
+
+            {/* Alert section */}
+            {isVaultCreated && <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+
             {/* Action buttons */}
             <div className="buttons-container">
               <div>
