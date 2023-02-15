@@ -8,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   createNewCommitteeMember,
   createNewVaultDescription,
-  IEditedSessionResponse,
   convertVulnerabilitySeverityV1ToV2,
   editedFormToCreateVaultOnChainCall,
 } from "@hats-finance/shared";
@@ -21,12 +20,12 @@ import { Alert, Button, Loading } from "components";
 import { ChainsConfig } from "config/chains";
 import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
+import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
+import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionStatus, IEditedSessionResponse } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { VaultEditorFormContext } from "./store";
-import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
 import {
   Section,
   StyledVaultEditorForm,
@@ -55,8 +54,6 @@ const VaultEditorFormPage = () => {
   // Vault description hash deployed onChain (only for existing vaults edition)
   const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
-
-  console.log("wasEditedSinceCreated", wasEditedSinceCreated);
 
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
@@ -100,7 +97,7 @@ const VaultEditorFormPage = () => {
     },
   });
 
-  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
+  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false, vaultEditionStatus?: IVaultEditionStatus) => {
     if (isVaultCreated) return; // If vault is already created, edition is blocked
     if (isCreation) setLoadingEditSession(true);
 
@@ -114,11 +111,13 @@ const VaultEditorFormPage = () => {
       );
     } else {
       const data: IEditedVaultDescription = getValues();
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId);
+      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId, undefined, vaultEditionStatus);
     }
 
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
+    } else if (vaultEditionStatus !== undefined) {
+      goToStatusPage();
     } else {
       setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
       setLastModifedOn(sessionIdOrSessionResponse.updatedAt);
@@ -190,12 +189,13 @@ const VaultEditorFormPage = () => {
 
   const finishVaultEdition = async () => {
     if (!wasEditedSinceCreated) return;
+
     const wantsToEdit = await confirm({
       confirmText: t("requestApproval"),
       description: t("areYouSureYouWantToEditThisVault"),
     });
 
-    console.log(wantsToEdit);
+    if (wantsToEdit) createOrSaveEditSession(false, false, "pendingApproval");
   };
 
   // Getting descriptionHash that is deployed onChain
@@ -312,7 +312,6 @@ const VaultEditorFormPage = () => {
   };
 
   const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
-    console.log(currentStep);
     if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
       if (isVaultCreated) return t("thisVaultIsAlredyCreated");
       return false;
@@ -455,7 +454,7 @@ const VaultEditorFormPage = () => {
                       <Button onClick={goToStatusPage} styleType="outlined">
                         <BackIcon className="mr-2" /> {t("goToStatusPage")}
                       </Button>
-                      <Button disabled={!!getNextButtonDisabled(currentStepInfo)} onClick={getNextButtonAction(currentStepInfo)}>
+                      <Button onClick={finishVaultEdition}>
                         {t("sendToGovernanceApproval")} <NextIcon className="ml-2" />
                       </Button>
                     </div>

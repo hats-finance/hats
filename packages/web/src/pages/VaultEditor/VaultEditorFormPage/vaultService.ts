@@ -4,7 +4,7 @@ import { HATSVaultV2_abi } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { BASE_SERVICE_URL } from "settings";
-import { IEditedSessionResponse, IEditedVaultDescription } from "types";
+import { IEditedSessionResponse, IEditedVaultDescription, IVaultEditionStatus } from "types";
 
 export async function getEditSessionData(editSessionId: string): Promise<IEditedSessionResponse> {
   const response = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
@@ -28,7 +28,8 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
 export async function upsertEditSession(
   editSession: IEditedVaultDescription | undefined,
   editSessionId: string | undefined,
-  ipfsDescriptionHash?: string | undefined
+  ipfsDescriptionHash?: string | undefined,
+  vaultEditionStatus?: IVaultEditionStatus
 ): Promise<string | IEditedSessionResponse> {
   const iconsPaths = ["project-metadata.icon", "project-metadata.tokenIcon"];
   editSession?.committee.members.map((_, index) => iconsPaths.push(`committee.members.${index}.image-ipfs-link`));
@@ -47,6 +48,7 @@ export async function upsertEditSession(
 
   if (editSession) formData.append("editedDescription", JSON.stringify(editSession));
   if (ipfsDescriptionHash) formData.append("ipfsDescriptionHash", ipfsDescriptionHash);
+  if (vaultEditionStatus) formData.append("vaultEditionStatus", vaultEditionStatus);
 
   const response = await axios.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId ?? ""}`, formData, {
     headers: {
