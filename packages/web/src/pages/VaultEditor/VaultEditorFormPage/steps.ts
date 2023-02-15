@@ -10,7 +10,7 @@ import {
 } from ".";
 import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
-type IEditorStepDisabledOption = "needsAccount" | "editingFormDirty";
+type IEditorStepDisabledOption = "needsAccount" | "editingFormDirty" | "onlyIfVaultNotCreated";
 
 export type IEditorSections = {
   [key: string]: {
@@ -117,7 +117,7 @@ export const AllEditorSections: IEditorSections = {
         component: VaultFormReview,
         formFields: [],
         nextButtonTextKey: { creation: "createVaultOnChain", editing: "" },
-        disabledOptions: ["needsAccount"],
+        disabledOptions: ["needsAccount", "onlyIfVaultNotCreated"],
       },
     ],
   },

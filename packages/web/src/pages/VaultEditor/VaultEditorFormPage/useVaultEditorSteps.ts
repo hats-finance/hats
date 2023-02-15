@@ -20,7 +20,7 @@ export const useVaultEditorSteps = (
   const [searchParams] = useSearchParams();
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
 
-  const [isEditingVault, setIsEditingVault] = useState(false);
+  const [isEditingExistingVault, setIsEditingExistingVault] = useState(false);
 
   const [editorSections, setEditorSections] = useState(AllEditorSections);
   const [currentSection, setCurrentSection] = useState<keyof typeof AllEditorSections>("setup");
@@ -45,7 +45,7 @@ export const useVaultEditorSteps = (
     }
 
     // Remove only creator sections if editing an existing vault
-    if (isEditingVault) {
+    if (isEditingExistingVault) {
       setEditorSections((currentSections) => {
         const newSections = {};
 
@@ -56,7 +56,7 @@ export const useVaultEditorSteps = (
         return newSections;
       });
     }
-  }, [isAdvancedMode, editSessionId, isEditingVault]);
+  }, [isAdvancedMode, editSessionId, isEditingExistingVault]);
 
   const allSteps = useMemo(() => {
     // Get all the fields from all the sections (setup/deploy)
@@ -247,13 +247,15 @@ export const useVaultEditorSteps = (
     if (isInLastSection && isInLastStep) {
       return {
         go: () => {
-          if (isEditingVault) {
+          if (isEditingExistingVault) {
             if (options.onFinalEditSubmit) options.onFinalEditSubmit();
           } else {
             if (options.onFinalSubmit) formMethods.handleSubmit(options.onFinalSubmit)();
           }
         },
-        text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
+        text: t(
+          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+        ),
       };
     }
 
@@ -277,7 +279,9 @@ export const useVaultEditorSteps = (
             setCurrentStepNumber(0);
           }
         },
-        text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
+        text: t(
+          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+        ),
       };
     }
 
@@ -297,7 +301,9 @@ export const useVaultEditorSteps = (
           setCurrentStepNumber(currentStepNumber + 1);
         }
       },
-      text: t((isEditingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"),
+      text: t(
+        (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+      ),
     };
   }, [
     currentSection,
@@ -307,7 +313,7 @@ export const useVaultEditorSteps = (
     currentStepInfo,
     formMethods,
     editStepStatus,
-    isEditingVault,
+    isEditingExistingVault,
     options,
     t,
   ]);
@@ -315,7 +321,7 @@ export const useVaultEditorSteps = (
   return {
     steps: currentSectionInfo?.steps ?? [],
     sections: Object.values(editorSections),
-    presetIsEditingVault: setIsEditingVault,
+    presetIsEditingExistingVault: setIsEditingExistingVault,
     currentSectionInfo,
     currentStepInfo,
     onGoToStep,

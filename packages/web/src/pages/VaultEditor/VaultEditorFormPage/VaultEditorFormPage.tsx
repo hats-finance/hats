@@ -24,7 +24,7 @@ import * as VaultService from "./vaultService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1 } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
-import { AllEditorSections } from "./steps";
+import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { VaultEditorFormContext } from "./store";
 import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
 import {
@@ -83,7 +83,7 @@ const VaultEditorFormPage = () => {
     onGoToSection,
     initFormSteps,
     loadingSteps,
-    presetIsEditingVault,
+    presetIsEditingExistingVault,
   } = useVaultEditorSteps(methods, {
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
@@ -96,6 +96,8 @@ const VaultEditorFormPage = () => {
       if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
     },
   });
+
+  console.log(currentStepInfo);
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     if (isVaultCreated) return; // If vault is already created, edition is blocked
@@ -206,10 +208,10 @@ const VaultEditorFormPage = () => {
   }, [getValues]);
 
   useEffect(() => {
-    presetIsEditingVault(isEditingExitingVault);
+    presetIsEditingExistingVault(isEditingExitingVault);
     initFormSteps();
     if (isEditingExitingVault) getOriginalVaultDescriptionHash();
-  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
+  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
 
   useEffect(() => {
     if (editSessionId) {
@@ -302,13 +304,18 @@ const VaultEditorFormPage = () => {
     window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
   };
 
-  const getNextButtonDisabled = () => {
-    if (currentStepInfo?.disabledOptions?.includes("needsAccount")) {
+  const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
+    if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
+      if (isVaultCreated) return t("thisVaultIsAlredyCreated");
+      return false;
+    }
+
+    if (currentStep?.disabledOptions?.includes("needsAccount")) {
       if (!address) return t("youNeedToConnectToAWallet");
       return false;
     }
 
-    if (currentStepInfo?.disabledOptions?.includes("editingFormDirty")) {
+    if (currentStep?.disabledOptions?.includes("editingFormDirty")) {
       if (isVaultCreated && !wasEditedSinceCreated) return t("editSessionIsNotDirty");
       return false;
     }
@@ -316,8 +323,8 @@ const VaultEditorFormPage = () => {
     return false;
   };
 
-  const getNextButtonAction = () => {
-    const isDisabled = getNextButtonDisabled();
+  const getNextButtonAction = (currentStep: IEditorSectionsStep) => {
+    const isDisabled = getNextButtonDisabled(currentStep);
 
     if (isDisabled) return () => {};
     return () => onGoNext.go();
@@ -402,10 +409,10 @@ const VaultEditorFormPage = () => {
             {/* Action buttons */}
             <div className="buttons-container">
               <div>
-                <Button disabled={!!getNextButtonDisabled()} onClick={getNextButtonAction()}>
+                <Button disabled={!!getNextButtonDisabled(currentStepInfo)} onClick={getNextButtonAction(currentStepInfo)}>
                   {onGoNext.text} <NextIcon className="ml-2" />
                 </Button>
-                <span>{getNextButtonDisabled()}</span>
+                <span>{getNextButtonDisabled(currentStepInfo)}</span>
               </div>
               {onGoBack && (
                 <Button styleType="invisible" onClick={() => onGoBack.go()}>
