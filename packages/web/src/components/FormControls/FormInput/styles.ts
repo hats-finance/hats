@@ -37,6 +37,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     `}
 
     ${disabled &&
+    !isCheckOrRadio &&
     css`
       &::after {
         content: "";

@@ -8,6 +8,7 @@ type FormDateInputProps = {
   label?: string;
   placeholder?: string;
   colorable?: boolean;
+  disabled?: boolean;
   withTime?: boolean;
   isDirty?: boolean | boolean[];
   error?: { message: string; type: string };
@@ -15,7 +16,18 @@ type FormDateInputProps = {
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 export function FormDateInputComponent(
-  { value, onChange, name, colorable = false, isDirty = false, withTime = false, placeholder, error, label }: FormDateInputProps,
+  {
+    value,
+    onChange,
+    name,
+    colorable = false,
+    isDirty = false,
+    withTime = false,
+    disabled = false,
+    placeholder,
+    error,
+    label,
+  }: FormDateInputProps,
   ref
 ) {
   const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +52,7 @@ export function FormDateInputComponent(
   };
 
   return (
-    <StyledFormInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
+    <StyledFormInput disabled={disabled} isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
       <div className="main-container">
         {label && <label htmlFor={name}>{label}</label>}
 
@@ -50,6 +62,7 @@ export function FormDateInputComponent(
           value={getDateFromTimestamp(value as number)}
           type={withTime ? "datetime-local" : "date"}
           placeholder={placeholder}
+          disabled={disabled}
           ref={ref}
           onChange={handleOnChange}
         />
