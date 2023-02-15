@@ -12,7 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 export function ContractsCoveredList() {
   const { t } = useTranslation();
 
-  const { isVaultCreated } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
   const { fields: contracts, append, remove } = useFieldArray<IEditedVaultDescription>({ control, name: "contracts-covered" });
@@ -31,7 +31,7 @@ export function ContractsCoveredList() {
         <ContractCoveredForm key={contract.id} index={index} append={append} remove={remove} contractsCount={contracts.length} />
       ))}
 
-      {!isVaultCreated && (
+      {!allFormDisabled && (
         <Button styleType="invisible" onClick={() => append(createNewCoveredContract(severitiesFormIds))}>
           <AddIcon className="mr-1" />
           <span>{t("addContractAsset")}</span>

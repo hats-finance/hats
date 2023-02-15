@@ -22,7 +22,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   const [assetInfo, setAssetInfo] = useState<string | undefined>(undefined);
   const { register, control, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const { isVaultCreated } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
     label: chainConf.chain.name,
@@ -77,7 +77,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
         </div>
         <FormInput
           {...register(`assets.${index}.address`)}
-          disabled={isVaultCreated}
+          disabled={allFormDisabled}
           label={t("VaultEditor.vault-assets.address")}
           placeholder={t("VaultEditor.vault-assets.address-placeholder")}
           colorable

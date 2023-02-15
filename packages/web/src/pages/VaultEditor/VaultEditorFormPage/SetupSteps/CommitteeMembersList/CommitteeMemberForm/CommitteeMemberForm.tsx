@@ -24,7 +24,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
   const { t } = useTranslation();
   const confirm = useConfirm();
 
-  const { isVaultCreated } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
@@ -61,14 +61,14 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
           <div className="content">
             <FormInput
               {...register(`committee.members.${index}.name`)}
-              disabled={isVaultCreated}
+              disabled={allFormDisabled}
               label={t("VaultEditor.member-name")}
               colorable
               placeholder={t("VaultEditor.member-name-placeholder", { index: index + 1 })}
             />
             <FormInput
               {...register(`committee.members.${index}.address`)}
-              disabled={isVaultCreated}
+              disabled={allFormDisabled}
               label={t("VaultEditor.member-address")}
               pastable
               colorable
@@ -78,7 +78,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
             <div className="inputs">
               <FormInput
                 {...register(`committee.members.${index}.twitter-link`)}
-                disabled={isVaultCreated}
+                disabled={allFormDisabled}
                 label={t("VaultEditor.member-twitter")}
                 pastable
                 colorable
@@ -86,7 +86,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
               />
               <FormIconInput
                 {...register(`committee.members.${index}.image-ipfs-link`)}
-                disabled={isVaultCreated}
+                disabled={allFormDisabled}
                 label={t("VaultEditor.member-image")}
                 type="image"
                 colorable
@@ -103,14 +103,14 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
                     <div className="pgp-keys__item">
                       <FormPgpPublicKeyInput
                         noMargin
-                        disabled={isVaultCreated}
+                        disabled={allFormDisabled}
                         isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
                         error={getPath(errors, field.name)}
                         notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
                         colorable
                         {...field}
                       />
-                      {!isVaultCreated && pgpPublicKeys.length > 1 && (
+                      {!allFormDisabled && pgpPublicKeys.length > 1 && (
                         <Button styleType="invisible" onClick={() => removeKey(pgpKeyIndex)}>
                           <DeleteIcon className="mr-2" />
                           <span>{t("remove")}</span>
@@ -121,7 +121,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
                 />
               ))}
 
-              {!isVaultCreated && (
+              {!allFormDisabled && (
                 <Button styleType="invisible" onClick={() => appendKey({ publicKey: "" })}>
                   <AddIcon className="mr-1" />
                   <span>{t("addPgpKey")}</span>

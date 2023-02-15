@@ -8,6 +8,7 @@ interface IVaultEditorFormContext {
   saveEditSessionData: () => Promise<void>;
   isVaultCreated: boolean;
   isEditingExitingVault: boolean;
+  allFormDisabled: boolean;
 }
 
 export const VaultEditorFormContext = createContext<IVaultEditorFormContext>(undefined as any);

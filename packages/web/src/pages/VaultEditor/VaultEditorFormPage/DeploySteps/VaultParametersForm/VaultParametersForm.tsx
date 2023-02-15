@@ -58,9 +58,9 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 };
 
 const VaultParametersFormOnVaultEditor = () => {
-  const { isVaultCreated } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
-  return <VaultParametersFormShared disabled={isVaultCreated} />;
+  return <VaultParametersFormShared disabled={allFormDisabled} />;
 };
 
 function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { blockMaxBounty?: boolean; disabled?: boolean }) {

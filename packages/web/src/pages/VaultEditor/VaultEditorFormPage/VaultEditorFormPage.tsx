@@ -58,6 +58,7 @@ const VaultEditorFormPage = () => {
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
+  const [allFormDisabled, setAllFormDisabled] = useState<boolean>(false);
 
   const methods = useForm<IEditedVaultDescription>({
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
@@ -231,6 +232,10 @@ const VaultEditorFormPage = () => {
   }, [editSessionId]);
 
   useEffect(() => {
+    setAllFormDisabled(isVaultCreated);
+  }, [isVaultCreated]);
+
+  useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
     if (!dirtyFields.includes("version")) return;
 
@@ -347,6 +352,7 @@ const VaultEditorFormPage = () => {
     saveEditSessionData: createOrSaveEditSession,
     isVaultCreated,
     isEditingExitingVault,
+    allFormDisabled,
   };
 
   return (

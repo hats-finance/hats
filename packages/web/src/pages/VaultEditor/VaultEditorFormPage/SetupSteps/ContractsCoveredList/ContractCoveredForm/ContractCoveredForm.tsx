@@ -20,7 +20,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
   const { t } = useTranslation();
   const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const { isVaultCreated } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
   const severitiesFormIds = useMemo(
@@ -42,7 +42,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
         <div className="subcontent">
           <FormInput
             {...register(`contracts-covered.${index}.name`)}
-            disabled={isVaultCreated}
+            disabled={allFormDisabled}
             label={t("VaultEditor.contract-name")}
             colorable
             placeholder={t("VaultEditor.contract-name-placeholder")}
@@ -53,7 +53,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
               name={`contracts-covered.${index}.severities`}
               render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
                 <FormSelectInput
-                  disabled={isVaultCreated}
+                  disabled={allFormDisabled}
                   isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
                   error={getPath(errors, field.name)}
                   label={t("VaultEditor.contract-severities")}
@@ -70,7 +70,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
 
         <FormInput
           {...register(`contracts-covered.${index}.address`)}
-          disabled={isVaultCreated}
+          disabled={allFormDisabled}
           label={t("VaultEditor.contract-address")}
           pastable
           colorable
@@ -78,7 +78,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
         />
       </div>
 
-      {!isVaultCreated && contractsCount > 1 && (
+      {!allFormDisabled && contractsCount > 1 && (
         <div className="controller-buttons no-line">
           <Button styleType="filled" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />

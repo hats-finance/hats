@@ -9,7 +9,7 @@ import AddIcon from "@mui/icons-material/Add";
 export function CommitteeMembersList() {
   const { t } = useTranslation();
 
-  const { committeeMembersFieldArray, isVaultCreated } = useContext(VaultEditorFormContext);
+  const { committeeMembersFieldArray, allFormDisabled } = useContext(VaultEditorFormContext);
   const { fields: members, append, remove } = committeeMembersFieldArray;
 
   const lastMultisigMemberIdx = members.length - 1 - [...members].reverse().findIndex((member) => member.linkedMultisigAddress);
@@ -29,7 +29,7 @@ export function CommitteeMembersList() {
         />
       ))}
 
-      {!isVaultCreated && (
+      {!allFormDisabled && (
         <Button styleType="invisible" onClick={() => append(createNewCommitteeMember())}>
           <AddIcon className="mr-1" />
           <span>{t("addMember")}</span>
