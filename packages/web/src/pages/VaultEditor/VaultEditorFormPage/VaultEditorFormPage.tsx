@@ -71,6 +71,7 @@ const VaultEditorFormPage = () => {
 
   const [isVaultCreated, setIsVaultCreated] = useState(false);
   const [isEditingExitingVault, setIsEditingExitingVault] = useState(false);
+  const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
 
   const {
     steps,
@@ -199,10 +200,10 @@ const VaultEditorFormPage = () => {
 
   // Getting descriptionHash that is deployed onChain
   const getOriginalVaultDescriptionHash = useCallback(async () => {
-    const { vaultCreatedInfo } = getValues();
+    const createdVaultInfo = getValues("vaultCreatedInfo");
 
-    if (vaultCreatedInfo) {
-      const vaultInfo = await VaultStatusService.getVaultInformation(vaultCreatedInfo.vaultAddress, vaultCreatedInfo.chainId);
+    if (createdVaultInfo) {
+      const vaultInfo = await VaultStatusService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
       setOriginalDescriptionHash(vaultInfo.descriptionHash);
     }
   }, [getValues]);
@@ -305,7 +306,6 @@ const VaultEditorFormPage = () => {
   };
 
   const goToStatusPage = () => {
-    const { vaultCreatedInfo } = getValues();
     if (!vaultCreatedInfo) return;
 
     navigate(`${RoutePaths.vault_editor}/status/${vaultCreatedInfo.chainId}/${vaultCreatedInfo.vaultAddress}`);
@@ -417,7 +417,9 @@ const VaultEditorFormPage = () => {
             ))}
 
             {/* Alert section */}
-            {isVaultCreated && <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+            {isVaultCreated && vaultCreatedInfo && (
+              <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />
+            )}
 
             {/* Action buttons */}
             <div className="buttons-container">
