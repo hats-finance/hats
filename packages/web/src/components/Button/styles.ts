@@ -4,6 +4,7 @@ import { ButtonProps } from "./Button";
 
 type StyledButtonProps = {
   styleType: ButtonProps["styleType"];
+  filledColor: ButtonProps["filledColor"];
   size: ButtonProps["size"];
   noPadding: ButtonProps["noPadding"];
   expanded: ButtonProps["expanded"];
@@ -11,8 +12,19 @@ type StyledButtonProps = {
   textColor: ButtonProps["textColor"];
 };
 
+const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
+  switch (filledColor) {
+    case "primary":
+      return { backgound: "--turquoise", text: "--dark-blue" };
+    case "error":
+      return { backgound: "--error-red", text: "--white" };
+    default:
+      return { backgound: "--turquoise", text: "--dark-blue" };
+  }
+};
+
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, size, expanded, lowercase, textColor, noPadding }) => css`
+  ({ styleType, filledColor, size, expanded, lowercase, textColor, noPadding }) => css`
     display: flex;
     align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
@@ -43,8 +55,9 @@ export const StyledButton = styled.button<StyledButtonProps>(
 
     ${styleType === "filled" &&
     css`
-      background-color: var(--turquoise);
-      color: var(--dark-blue);
+      background-color: var(${getVariableByFilledColor(filledColor).backgound});
+      color: var(${getVariableByFilledColor(filledColor).text});
+      border-color: var(${getVariableByFilledColor(filledColor).backgound});
     `}
       
     ${styleType === "outlined" &&

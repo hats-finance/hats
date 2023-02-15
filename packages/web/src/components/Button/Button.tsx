@@ -2,6 +2,7 @@ import { StyledButton } from "./styles";
 
 export type ButtonProps = {
   styleType?: "filled" | "outlined" | "invisible" | "icon" | "text";
+  filledColor?: "primary" | "error";
   size?: "normal" | "small" | "big";
   textColor?: "white" | "primary";
   className?: string;
@@ -15,6 +16,7 @@ export type ButtonProps = {
 
 export const Button = ({
   styleType = "filled",
+  filledColor = "primary",
   size = "normal",
   disabled = false,
   lowercase,
@@ -29,6 +31,7 @@ export const Button = ({
     <StyledButton
       type="button"
       styleType={styleType}
+      filledColor={filledColor}
       size={size}
       noPadding={noPadding}
       expanded={expanded}
@@ -36,7 +39,8 @@ export const Button = ({
       onClick={disabled ? () => {} : onClick}
       lowercase={lowercase}
       textColor={textColor}
-      {...props}>
+      {...props}
+    >
       {children}
     </StyledButton>
   );
