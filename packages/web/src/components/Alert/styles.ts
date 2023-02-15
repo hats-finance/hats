@@ -16,6 +16,7 @@ export const StyledAlert = styled.div<StyledAlertProps>(
     border: 1px solid var(${alertColors[type]});
     padding: ${getSpacing(1.5)};
     font-size: var(--xsmall);
+    color: var(--white);
 
     .icon-container {
       display: flex;
