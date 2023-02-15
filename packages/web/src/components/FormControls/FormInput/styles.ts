@@ -22,6 +22,10 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
     width: 100%;
 
+    .main-container {
+      position: relative;
+    }
+
     ${isCheckOrRadio &&
     css`
       width: fit-content;
@@ -39,7 +43,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     ${disabled &&
     !isCheckOrRadio &&
     css`
-      &::after {
+      .main-container::after {
         content: "";
         display: block;
         position: absolute;
