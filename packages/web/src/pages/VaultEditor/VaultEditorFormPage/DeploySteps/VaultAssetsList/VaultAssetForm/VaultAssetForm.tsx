@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FormInput, FormSelectInput } from "components";
@@ -8,6 +8,7 @@ import { StyledVaultAssetForm } from "./styles";
 import { ChainsConfig } from "config/chains";
 import { getTokenInfo } from "utils/tokens.utils";
 import { isAddress } from "utils/addresses.utils";
+import { VaultEditorFormContext } from "../../../store";
 
 type VaultAssetFormProps = {
   index: number;
@@ -20,6 +21,8 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   const { t } = useTranslation();
   const [assetInfo, setAssetInfo] = useState<string | undefined>(undefined);
   const { register, control, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const { isVaultCreated } = useContext(VaultEditorFormContext);
 
   const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
     label: chainConf.chain.name,
@@ -74,6 +77,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
         </div>
         <FormInput
           {...register(`assets.${index}.address`)}
+          disabled={isVaultCreated}
           label={t("VaultEditor.vault-assets.address")}
           placeholder={t("VaultEditor.vault-assets.address-placeholder")}
           colorable

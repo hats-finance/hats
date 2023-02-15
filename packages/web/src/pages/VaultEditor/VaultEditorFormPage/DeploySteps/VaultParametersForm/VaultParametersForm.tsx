@@ -1,3 +1,4 @@
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
@@ -7,11 +8,11 @@ import { Button, FormInput } from "components";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultDescription, IEditedVaultParameters } from "types";
-import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
+import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledVaultEditorForm } from "../../styles";
-import { useEffect } from "react";
+import { VaultEditorFormContext } from "../../store";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 type VaultParametersFormProps = {
   statusCardFormDefaultData?: { parameters: IEditedVaultParameters };
@@ -57,10 +58,12 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 };
 
 const VaultParametersFormOnVaultEditor = () => {
-  return <VaultParametersFormShared />;
+  const { isVaultCreated } = useContext(VaultEditorFormContext);
+
+  return <VaultParametersFormShared disabled={isVaultCreated} />;
 };
 
-function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolean }) {
+function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { blockMaxBounty?: boolean; disabled?: boolean }) {
   const { t } = useTranslation();
   const methodsToUse = useEnhancedFormContext<FormType>();
 
@@ -108,7 +111,7 @@ function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolea
         <div className="input">
           <FormInput
             {...methodsToUse.register(`parameters.maxBountyPercentage`)}
-            disabled={blockMaxBounty}
+            disabled={blockMaxBounty || disabled}
             type="whole-number"
             label={t("VaultEditor.vault-parameters.maxBountyPercentage")}
             placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder")}
@@ -149,6 +152,7 @@ function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolea
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.immediatePercentage")}
+                      disabled={disabled}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="whole-number"
@@ -183,6 +187,7 @@ function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolea
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.vestedPercentage")}
+                      disabled={disabled}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="whole-number"
@@ -217,6 +222,7 @@ function VaultParametersFormShared({ blockMaxBounty }: { blockMaxBounty?: boolea
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.committeePercentage")}
+                      disabled={disabled}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="whole-number"
