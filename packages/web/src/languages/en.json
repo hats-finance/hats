@@ -178,6 +178,7 @@
     "weWillNotifyYouWhenEditionIsApproved": "We will notify you when the edition is approved",
     "requestApproval": "Request approval",
     "areYouSureYouWantToEditThisVault": "Are you sure you want to request governance to edit vault's information?",
+    "areYouSureYouWantToRemoveThisMember": "Are you sure you want to remove this member?",
     "saved": "Saved",
     "thisVaultIsAlredyCreated": "This vault is already created on-chain.",
     "note": "Note",

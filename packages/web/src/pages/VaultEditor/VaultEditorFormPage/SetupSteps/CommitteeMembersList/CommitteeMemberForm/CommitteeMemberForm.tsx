@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import useConfirm from "hooks/useConfirm";
 import { ICommitteeMember } from "types";
 import { IEditedVaultDescription } from "types";
 import { StyledCommitteeMemberForm } from "./styles";
@@ -21,6 +22,7 @@ type CommitteeMemberFormProps = {
 
 const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultisigMember }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
 
   const { isVaultCreated } = useContext(VaultEditorFormContext);
 
@@ -36,6 +38,15 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
   };
 
   const linkedMultisigAddress = useWatch({ control, name: `committee.members.${index}.linkedMultisigAddress` });
+
+  const handleRemoveMember = async () => {
+    const wantsToDelete = await confirm({
+      confirmText: t("remove"),
+      description: t("areYouSureYouWantToRemoveThisMember"),
+    });
+
+    if (wantsToDelete) remove(index);
+  };
 
   return (
     <>
@@ -121,7 +132,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
         </div>
         {membersCount > 1 && (
           <div className="controller-buttons">
-            <Button styleType="filled" onClick={() => remove(index)}>
+            <Button styleType="filled" onClick={handleRemoveMember}>
               <DeleteIcon className="mr-1" />
               <span>{t("removeMember")}</span>
             </Button>
