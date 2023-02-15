@@ -195,11 +195,6 @@ const VaultEditorFormPage = () => {
     console.log(wantsToEdit);
   };
 
-  const help = () => {
-    console.log(getValues());
-    console.log(formState.errors);
-  };
-
   // Getting descriptionHash that is deployed onChain
   const getOriginalVaultDescriptionHash = useCallback(async () => {
     const { vaultCreatedInfo } = getValues();
@@ -342,9 +337,6 @@ const VaultEditorFormPage = () => {
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
-      <button onClick={help} type="button">
-        asdsd
-      </button>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
           <div className="sections-controller">
