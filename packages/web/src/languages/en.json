@@ -170,9 +170,9 @@
     "cancel": "Cancel",
     "confirm": "Confirm",
     "loading": "Loading",
-    "sendToGovernanceApproval": "Send to governance approval",
+    "editSessionIsNotDirty": "You haven't made any changes to the vault description.",
     "waitForApproval": "Wait for approval",
-    "weWillNotifyYouWhenEditionIsApproved": "We will notify you when the edition is approved.",
+    "weWillNotifyYouWhenEditionIsApproved": "We will notify you when the edition is approved",
     "requestApproval": "Request approval",
     "areYouSureYouWantToEditThisVault": "Are you sure you want request governance to edit vault's information?",
     "whereverModal": {

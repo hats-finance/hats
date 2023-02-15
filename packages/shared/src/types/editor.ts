@@ -99,6 +99,8 @@ export interface IEditedSessionResponse {
   descriptionHash: string;
   chainId?: number;
   vaultAddress?: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface ICreateVaultOnChainCall {

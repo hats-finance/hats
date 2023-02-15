@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
@@ -25,6 +25,7 @@ import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections } from "./steps";
 import { VaultEditorFormContext } from "./store";
+import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
 import {
   Section,
   StyledVaultEditorForm,
@@ -48,7 +49,12 @@ const VaultEditorFormPage = () => {
 
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
 
+  // Current edition description hash
   const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
+  // Vault description hash deployed onChain (only for existing vaults edition)
+  const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
+  const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
+
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
 
@@ -164,7 +170,7 @@ const VaultEditorFormPage = () => {
   };
 
   const finishVaultEdition = async () => {
-    console.log(methods.formState.isDirty);
+    if (!wasEditedSinceCreated) return;
     // const wantsToEdit = await confirm({
     //   confirmText: t("requestApproval"),
     //   description: t("areYouSureYouWantToEditThisVault"),
@@ -178,10 +184,21 @@ const VaultEditorFormPage = () => {
     console.log(formState.errors);
   };
 
+  // Getting descriptionHash that is deployed onChain
+  const getOriginalVaultDescriptionHash = useCallback(async () => {
+    const { vaultCreatedInfo } = getValues();
+
+    if (vaultCreatedInfo) {
+      const vaultInfo = await VaultStatusService.getVaultInformation(vaultCreatedInfo.vaultAddress, vaultCreatedInfo.chainId);
+      setOriginalDescriptionHash(vaultInfo.descriptionHash);
+    }
+  }, [getValues]);
+
   useEffect(() => {
     presetIsEditingVault(isEditingVault);
     initFormSteps();
-  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingVault]);
+    if (isEditingVault) getOriginalVaultDescriptionHash();
+  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingVault, getOriginalVaultDescriptionHash]);
 
   useEffect(() => {
     if (editSessionId) {
@@ -279,6 +296,12 @@ const VaultEditorFormPage = () => {
       if (!address) return t("youNeedToConnectToAWallet");
       return false;
     }
+
+    if (currentStepInfo?.disabledOptions?.includes("editingFormDirty")) {
+      if (isEditingVault && !wasEditedSinceCreated) return t("editSessionIsNotDirty");
+      return false;
+    }
+
     return false;
   };
 

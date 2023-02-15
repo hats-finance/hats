@@ -10,7 +10,7 @@ import {
 } from ".";
 import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
-type IEditorStepDisabledOption = "needsAccount";
+type IEditorStepDisabledOption = "needsAccount" | "editingFormDirty";
 
 export type IEditorSections = {
   [key: string]: {
@@ -86,6 +86,7 @@ export const AllEditorSections: IEditorSections = {
         component: SetupReview,
         formFields: [],
         nextButtonTextKey: { creation: "continueToVaultCreation", editing: "sendToGovernanceApproval" },
+        disabledOptions: ["editingFormDirty"],
       },
     ],
   },
