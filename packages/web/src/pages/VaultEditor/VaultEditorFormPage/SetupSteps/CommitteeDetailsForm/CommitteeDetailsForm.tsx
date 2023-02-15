@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
@@ -6,6 +6,7 @@ import { ChainsConfig } from "config/chains";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { IEditedVaultDescription } from "types";
+import { VaultEditorFormContext } from "../../store";
 import { StyledCommitteeDetailsForm } from "./styles";
 
 export function CommitteeDetailsForm() {
@@ -14,7 +15,7 @@ export function CommitteeDetailsForm() {
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const committeeChainId = useWatch({ control, name: "committee.chainId" });
 
-  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+  const { isEditingExitingVault, isVaultCreated } = useContext(VaultEditorFormContext);
 
   const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
     label: chainConf.chain.name,
@@ -41,7 +42,7 @@ export function CommitteeDetailsForm() {
                 label={t("VaultEditor.vault-details.chain")}
                 placeholder={t("VaultEditor.vault-details.chain-placeholder")}
                 colorable
-                disabled={isEditingVault}
+                disabled={isEditingExitingVault || isVaultCreated}
                 options={supportedNetworksOptions}
                 {...field}
                 value={field.value ?? ""}
@@ -54,7 +55,7 @@ export function CommitteeDetailsForm() {
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}
-        disabled={!committeeChainId}
+        disabled={!committeeChainId || isVaultCreated}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

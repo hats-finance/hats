@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
+import moment from "moment";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -57,6 +58,7 @@ const VaultEditorFormPage = () => {
 
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
+  const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
 
   const methods = useForm<IEditedVaultDescription>({
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
@@ -67,7 +69,8 @@ const VaultEditorFormPage = () => {
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
-  const isEditingVault = !!useWatch({ control, name: "vaultCreatedInfo.vaultAddress" });
+  const [isVaultCreated, setIsVaultCreated] = useState(false);
+  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false);
 
   const {
     steps,
@@ -95,6 +98,7 @@ const VaultEditorFormPage = () => {
   });
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
+    if (isVaultCreated) return; // If vault is already created, edition is blocked
     if (isCreation) setLoadingEditSession(true);
 
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
@@ -114,6 +118,7 @@ const VaultEditorFormPage = () => {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
     } else {
       setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
+      setLastModifedOn(sessionIdOrSessionResponse.updatedAt);
       handleReset(sessionIdOrSessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
     }
 
@@ -121,13 +126,24 @@ const VaultEditorFormPage = () => {
   };
 
   async function loadEditSessionData(editSessionId: string) {
+    if (isVaultCreated) return; // If vault is already created, creation is blocked
+
     try {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
       console.log(`EditSession: `, editSessionResponse);
 
+      if (editSessionResponse.vaultAddress) {
+        if (editSessionResponse.editingExistingVault) {
+          setIsEditingExitingVault(true);
+        } else {
+          setIsVaultCreated(true);
+        }
+      }
+
       setDescriptionHash(editSessionResponse.descriptionHash);
+      setLastModifedOn(editSessionResponse.updatedAt);
       handleReset({
         ...editSessionResponse.editedDescription,
         vaultCreatedInfo: {
@@ -171,12 +187,12 @@ const VaultEditorFormPage = () => {
 
   const finishVaultEdition = async () => {
     if (!wasEditedSinceCreated) return;
-    // const wantsToEdit = await confirm({
-    //   confirmText: t("requestApproval"),
-    //   description: t("areYouSureYouWantToEditThisVault"),
-    // });
+    const wantsToEdit = await confirm({
+      confirmText: t("requestApproval"),
+      description: t("areYouSureYouWantToEditThisVault"),
+    });
 
-    // console.log(wantsToEdit);
+    console.log(wantsToEdit);
   };
 
   const help = () => {
@@ -195,10 +211,10 @@ const VaultEditorFormPage = () => {
   }, [getValues]);
 
   useEffect(() => {
-    presetIsEditingVault(isEditingVault);
+    presetIsEditingVault(isEditingExitingVault);
     initFormSteps();
-    if (isEditingVault) getOriginalVaultDescriptionHash();
-  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingVault, getOriginalVaultDescriptionHash]);
+    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
+  }, [loadingEditSession, initFormSteps, presetIsEditingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
 
   useEffect(() => {
     if (editSessionId) {
@@ -298,7 +314,7 @@ const VaultEditorFormPage = () => {
     }
 
     if (currentStepInfo?.disabledOptions?.includes("editingFormDirty")) {
-      if (isEditingVault && !wasEditedSinceCreated) return t("editSessionIsNotDirty");
+      if (isVaultCreated && !wasEditedSinceCreated) return t("editSessionIsNotDirty");
       return false;
     }
 
@@ -316,7 +332,13 @@ const VaultEditorFormPage = () => {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
   }
 
-  const vaultEditorFormContext = { editSessionId, committeeMembersFieldArray, saveEditSessionData: createOrSaveEditSession };
+  const vaultEditorFormContext = {
+    editSessionId,
+    committeeMembersFieldArray,
+    saveEditSessionData: createOrSaveEditSession,
+    isVaultCreated,
+    isEditingExitingVault,
+  };
 
   return (
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
@@ -342,7 +364,12 @@ const VaultEditorFormPage = () => {
             {/* Title */}
             {descriptionHash && isAdvancedMode && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>
-                <strong>{t("descriptionHash")}:</strong> {descriptionHash}
+                {descriptionHash}
+              </p>
+            )}
+            {lastModifedOn && (
+              <p className="lastModifiedOn">
+                <strong>{t("saved")}</strong> {moment(lastModifedOn).fromNow()}
               </p>
             )}
             <div className="editor-title">
