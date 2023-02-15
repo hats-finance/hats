@@ -177,6 +177,7 @@
     "areYouSureYouWantToEditThisVault": "Are you sure you want to request governance to edit vault's information?",
     "saved": "Saved",
     "thisVaultIsAlredyCreated": "This vault is already created on-chain.",
+    "note": "Note",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
