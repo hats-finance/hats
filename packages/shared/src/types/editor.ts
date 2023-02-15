@@ -94,6 +94,8 @@ export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
 
+export type IVaultEditionStatus = "editing" | "pendingApproval" | "approved" | "rejected";
+
 export interface IEditedSessionResponse {
   editedDescription: IEditedVaultDescription;
   descriptionHash: string;
@@ -102,6 +104,7 @@ export interface IEditedSessionResponse {
   createdAt?: Date;
   updatedAt?: Date;
   editingExistingVault?: boolean;
+  vaultEditionStatus?: IVaultEditionStatus;
 }
 
 export interface ICreateVaultOnChainCall {
