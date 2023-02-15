@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
-import { FormInput, Loading, Pill } from "components";
+import { Alert, FormInput, Loading, Pill } from "components";
 import { VaultBountySplitEditionContract } from "contracts";
 import useConfirm from "hooks/useConfirm";
 import { IEditedVaultParameters } from "types";
@@ -107,7 +107,7 @@ export const OnChainDataStatusCard = () => {
       </div>
 
       <p className="status-card__text mb-5">{t("changeTheVaultParametersOnChain")}</p>
-      {!isMultisigConnected && <p className="status-card__alert">{t("connectWithCommitteeMultisig")}</p>}
+      {!isMultisigConnected && <Alert content={t("connectWithCommitteeMultisig")} type="warning" />}
 
       {isMultisigConnected && (
         <>
@@ -130,7 +130,7 @@ export const OnChainDataStatusCard = () => {
       <div className="mt-4">
         {editBountySplitCall?.error && <p className="status-card__error">{editBountySplitCall?.error.message}</p>}
         {isBeingExecuted && !editBountySplitCall?.error && (
-          <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>
+          <Alert content={t("safeProposalCreatedSuccessfully")} type="warning" />
         )}
       </div>
 

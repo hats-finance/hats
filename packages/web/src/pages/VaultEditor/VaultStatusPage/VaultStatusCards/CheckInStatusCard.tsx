@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
-import { Button, Loading, Pill } from "components";
+import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
 import { VaultStatusContext } from "../store";
 import { isAGnosisSafeTx } from "utils/gnosis.utils";
@@ -57,7 +57,7 @@ export const CheckInStatusCard = () => {
           <p className="status-card__text">{t("checkInExpanation")}</p>
           {!isMultisigConnected && <p className="status-card__error">{t("connectWithMultisigOrCheckInOnGnosis")}</p>}
           {checkInCall?.error && <p className="status-card__error">{checkInCall?.error.message}</p>}
-          {isBeingExecuted && !checkInCall?.error && <p className="status-card__alert">{t("safeProposalCreatedSuccessfully")}</p>}
+          {isBeingExecuted && !checkInCall?.error && <Alert content={t("safeProposalCreatedSuccessfully")} type="warning" />}
           <Button disabled={!isMultisigConnected || isBeingExecuted} onClick={handleCheckIn} className="status-card__button">
             {t("checkIn")}
           </Button>
