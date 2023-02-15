@@ -87,6 +87,21 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
       }
     }
 
+    .editing-existing-buttons {
+      margin-top: ${getSpacing(7)};
+      padding-top: ${getSpacing(4)};
+      display: flex;
+      flex-direction: column;
+      border-top: 2px solid var(--grey-600);
+
+      .buttons {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: ${getSpacing(2)};
+      }
+    }
+
     .helper-text {
       color: var(--white);
       margin-bottom: ${getSpacing(4)};

@@ -56,6 +56,8 @@ const VaultEditorFormPage = () => {
   const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
 
+  console.log("wasEditedSinceCreated", wasEditedSinceCreated);
+
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
@@ -97,8 +99,6 @@ const VaultEditorFormPage = () => {
       if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
     },
   });
-
-  console.log(currentStepInfo);
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     if (isVaultCreated) return; // If vault is already created, edition is blocked
@@ -312,18 +312,19 @@ const VaultEditorFormPage = () => {
   };
 
   const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
+    console.log(currentStep);
     if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
       if (isVaultCreated) return t("thisVaultIsAlredyCreated");
       return false;
     }
 
-    if (currentStep?.disabledOptions?.includes("needsAccount")) {
-      if (!address) return t("youNeedToConnectToAWallet");
+    if (currentStep?.disabledOptions?.includes("editingFormDirty")) {
+      if (!wasEditedSinceCreated) return t("editSessionIsNotDirty");
       return false;
     }
 
-    if (currentStep?.disabledOptions?.includes("editingFormDirty")) {
-      if (isVaultCreated && !wasEditedSinceCreated) return t("editSessionIsNotDirty");
+    if (currentStep?.disabledOptions?.includes("needsAccount")) {
+      if (!address) return t("youNeedToConnectToAWallet");
       return false;
     }
 
@@ -417,9 +418,7 @@ const VaultEditorFormPage = () => {
             ))}
 
             {/* Alert section */}
-            {isVaultCreated && vaultCreatedInfo && (
-              <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />
-            )}
+            {isVaultCreated && <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
 
             {/* Action buttons */}
             <div className="buttons-container">
@@ -435,6 +434,35 @@ const VaultEditorFormPage = () => {
                 </Button>
               )}
             </div>
+
+            {/* Editing existing vault action button */}
+            {isEditingExitingVault && (
+              <div className="editing-existing-buttons">
+                {!wasEditedSinceCreated && (
+                  <>
+                    <Alert content={t("youAreEditingAnExistingVault")} type="warning" />
+                    <div className="buttons">
+                      <Button onClick={goToStatusPage} styleType="outlined">
+                        <BackIcon className="mr-2" /> {t("goToStatusPage")}
+                      </Button>
+                    </div>
+                  </>
+                )}
+                {wasEditedSinceCreated && (
+                  <>
+                    <Alert content={t("doneEditingTheExistingVault")} type="warning" />
+                    <div className="buttons">
+                      <Button onClick={goToStatusPage} styleType="outlined">
+                        <BackIcon className="mr-2" /> {t("goToStatusPage")}
+                      </Button>
+                      <Button disabled={!!getNextButtonDisabled(currentStepInfo)} onClick={getNextButtonAction(currentStepInfo)}>
+                        {t("sendToGovernanceApproval")} <NextIcon className="ml-2" />
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </StyledVaultEditorForm>
         </FormProvider>
       </StyledVaultEditorContainer>
