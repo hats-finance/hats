@@ -147,7 +147,7 @@ function FormInputComponent(
           {prefixIcon && <div className="prefix-icon">{prefixIcon}</div>}
           {getMainComponent()}
 
-          {extraIcons && areAvailableExtraIcons && (
+          {!disabled && extraIcons && areAvailableExtraIcons && (
             <div className="extra-icons">
               {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
               {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}

@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
@@ -6,6 +7,7 @@ import { ICommitteeMember } from "types";
 import { IEditedVaultDescription } from "types";
 import { StyledCommitteeMemberForm } from "./styles";
 import { getPath } from "utils/objects.utils";
+import { VaultEditorFormContext } from "../../../store";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
@@ -19,6 +21,8 @@ type CommitteeMemberFormProps = {
 
 const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultisigMember }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
+
+  const { isVaultCreated } = useContext(VaultEditorFormContext);
 
   const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
@@ -46,12 +50,14 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
           <div className="content">
             <FormInput
               {...register(`committee.members.${index}.name`)}
+              disabled={isVaultCreated}
               label={t("VaultEditor.member-name")}
               colorable
               placeholder={t("VaultEditor.member-name-placeholder", { index: index + 1 })}
             />
             <FormInput
               {...register(`committee.members.${index}.address`)}
+              disabled={isVaultCreated}
               label={t("VaultEditor.member-address")}
               pastable
               colorable
@@ -61,6 +67,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
             <div className="inputs">
               <FormInput
                 {...register(`committee.members.${index}.twitter-link`)}
+                disabled={isVaultCreated}
                 label={t("VaultEditor.member-twitter")}
                 pastable
                 colorable
@@ -68,6 +75,7 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
               />
               <FormIconInput
                 {...register(`committee.members.${index}.image-ipfs-link`)}
+                disabled={isVaultCreated}
                 label={t("VaultEditor.member-image")}
                 type="image"
                 colorable
@@ -84,13 +92,14 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
                     <div className="pgp-keys__item">
                       <FormPgpPublicKeyInput
                         noMargin
+                        disabled={isVaultCreated}
                         isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
                         error={getPath(errors, field.name)}
                         notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
                         colorable
                         {...field}
                       />
-                      {pgpPublicKeys.length > 1 && (
+                      {!isVaultCreated && pgpPublicKeys.length > 1 && (
                         <Button styleType="invisible" onClick={() => removeKey(pgpKeyIndex)}>
                           <DeleteIcon className="mr-2" />
                           <span>{t("remove")}</span>
@@ -101,10 +110,12 @@ const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultis
                 />
               ))}
 
-              <Button styleType="invisible" onClick={() => appendKey({ publicKey: "" })}>
-                <AddIcon className="mr-1" />
-                <span>{t("addPgpKey")}</span>
-              </Button>
+              {!isVaultCreated && (
+                <Button styleType="invisible" onClick={() => appendKey({ publicKey: "" })}>
+                  <AddIcon className="mr-1" />
+                  <span>{t("addPgpKey")}</span>
+                </Button>
+              )}
             </div>
           </div>
         </div>

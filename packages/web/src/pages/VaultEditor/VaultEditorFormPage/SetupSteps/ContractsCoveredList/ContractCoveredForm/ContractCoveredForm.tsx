@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, FormSelectInput } from "components";
@@ -6,6 +6,7 @@ import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormC
 import { getPath } from "utils/objects.utils";
 import { IEditedVaultDescription, IEditedContractCovered } from "types";
 import { StyledContractCoveredForm } from "./styles";
+import { VaultEditorFormContext } from "../../../store";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
 type ContractCoveredFormProps = {
@@ -18,6 +19,8 @@ type ContractCoveredFormProps = {
 export default function ContractCoveredForm({ index, append, remove, contractsCount }: ContractCoveredFormProps) {
   const { t } = useTranslation();
   const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const { isVaultCreated } = useContext(VaultEditorFormContext);
 
   const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
   const severitiesFormIds = useMemo(
@@ -39,6 +42,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
         <div className="subcontent">
           <FormInput
             {...register(`contracts-covered.${index}.name`)}
+            disabled={isVaultCreated}
             label={t("VaultEditor.contract-name")}
             colorable
             placeholder={t("VaultEditor.contract-name-placeholder")}
@@ -49,6 +53,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
               name={`contracts-covered.${index}.severities`}
               render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
                 <FormSelectInput
+                  disabled={isVaultCreated}
                   isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
                   error={getPath(errors, field.name)}
                   label={t("VaultEditor.contract-severities")}
@@ -65,6 +70,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
 
         <FormInput
           {...register(`contracts-covered.${index}.address`)}
+          disabled={isVaultCreated}
           label={t("VaultEditor.contract-address")}
           pastable
           colorable
@@ -72,7 +78,7 @@ export default function ContractCoveredForm({ index, append, remove, contractsCo
         />
       </div>
 
-      {contractsCount > 1 && (
+      {!isVaultCreated && contractsCount > 1 && (
         <div className="controller-buttons no-line">
           <Button styleType="filled" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />

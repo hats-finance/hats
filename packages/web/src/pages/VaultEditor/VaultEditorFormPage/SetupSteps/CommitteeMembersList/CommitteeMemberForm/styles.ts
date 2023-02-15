@@ -64,6 +64,7 @@ export const StyledCommitteeMemberForm = styled.div`
       .inputs {
         width: 100%;
         display: flex;
+        align-items: flex-start;
         gap: 0 ${getSpacing(2)};
         margin-bottom: ${getSpacing(3)};
 

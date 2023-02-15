@@ -1,8 +1,13 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDirty: boolean; noMargin: boolean }>(
-  ({ hasError, isDirty, noMargin }) => css`
+export const StyledFormPgpPublicKeyInput = styled.div<{
+  hasError: boolean;
+  isDirty: boolean;
+  noMargin: boolean;
+  disabled: boolean;
+}>(
+  ({ hasError, isDirty, noMargin, disabled }) => css`
     width: 100%;
     position: relative;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -20,6 +25,23 @@ export const StyledFormPgpPublicKeyInput = styled.div<{ hasError: boolean; isDir
       color-scheme: dark;
       padding: ${getSpacing(1)} ${getSpacing(2)};
       cursor: pointer;
+
+      ${disabled &&
+      css`
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: calc(100% - ${hasError ? "20px" : "0px"});
+          background-color: var(--grey-700);
+          opacity: 0.4;
+          z-index: 1;
+          cursor: not-allowed;
+        }
+      `}
 
       ${isDirty &&
       css`
