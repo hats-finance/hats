@@ -12,13 +12,14 @@ interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   colorable?: boolean;
   isDirty?: boolean;
+  disabled?: boolean;
   type?: "icon" | "image";
   label?: string;
   error?: { message: string; type: string };
 }
 
 function FormIconInputComponent(
-  { onChange, colorable = false, isDirty = false, label, error, type = "icon", ...props }: FormIconInputProps,
+  { onChange, colorable = false, isDirty = false, label, error, type = "icon", disabled = false, ...props }: FormIconInputProps,
   ref
 ) {
   const { t } = useTranslation();
@@ -30,6 +31,8 @@ function FormIconInputComponent(
   const id = `icon-input-${name}`;
 
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (disabled) return;
+
     const fr = new FileReader();
 
     fr.readAsArrayBuffer(e.target.files![0]);
@@ -85,9 +88,10 @@ function FormIconInputComponent(
   };
 
   return (
-    <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
+    <StyledFormIconInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable} disabled={disabled}>
       <input
         {...props}
+        disabled={disabled}
         type="hidden"
         ref={(e) => {
           ref(e);
@@ -96,7 +100,7 @@ function FormIconInputComponent(
         }}
       />
 
-      <input id={id} className="file-input" accept="image/*" type="file" onChange={handleOnChange} />
+      <input disabled={disabled} id={id} className="file-input" accept="image/*" type="file" onChange={handleOnChange} />
 
       {value ? (
         <label htmlFor={id} className="icon-preview">

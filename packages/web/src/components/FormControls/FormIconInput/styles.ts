@@ -4,16 +4,36 @@ import styled, { css } from "styled-components";
 type StyledFormIconInputProps = {
   isDirty: boolean;
   hasError: boolean;
+  disabled: boolean;
 };
 
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
-  ({ isDirty, hasError }) => css`
+  ({ isDirty, hasError, disabled }) => css`
+    position: relative;
+
     label {
       display: block;
       color: var(--white);
       font-size: var(--xxsmall);
       text-align: center;
     }
+
+    ${disabled &&
+    css`
+      &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100% - ${hasError ? "20px" : "0px"});
+        background-color: var(--grey-700);
+        opacity: 0.4;
+        z-index: 1;
+        cursor: not-allowed;
+      }
+    `}
 
     .file-input {
       position: absolute;
