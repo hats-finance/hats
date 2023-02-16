@@ -98,6 +98,7 @@ export type IVaultEditionStatus = "editing" | "pendingApproval" | "approved" | "
 export const nonEditableEditionStatus: IVaultEditionStatus[] = ["pendingApproval", "approved", "rejected"];
 
 export interface IEditedSessionResponse {
+  _id?: string;
   editedDescription: IEditedVaultDescription;
   descriptionHash: string;
   chainId?: number;

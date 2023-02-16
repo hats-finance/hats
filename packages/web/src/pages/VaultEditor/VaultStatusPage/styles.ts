@@ -110,6 +110,13 @@ export const StyledVaultStatusPage = styled.div`
         color: var(--error-red);
       }
 
+      &__buttons {
+        margin-top: ${getSpacing(3)};
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
       &__button {
         margin-top: ${getSpacing(3)};
         align-self: flex-end;

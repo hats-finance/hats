@@ -110,6 +110,23 @@ export async function createEditSessionOffChain(vaultAddress: string, chainId: n
 }
 
 /**
+ * Get the current valid edit session, the edit session associated to the vault descriptionHash
+ *
+ * @param descriptionHash - The vault description hash
+ * @param chainId - The chain id of the vault
+ */
+export async function getCurrentValidEditSession(
+  descriptionHash: string,
+  vaultAddress: string,
+  chainId: number
+): Promise<IEditedSessionResponse> {
+  const response = await axios.get(
+    `${BASE_SERVICE_URL}/edit-session/description-hash/${chainId}/${descriptionHash}/${vaultAddress}`
+  );
+  return response.data;
+}
+
+/**
  * Gets all the edit sessions that were created for editing an existing vault
  *
  * @param vaultAddress - The vault address
@@ -117,5 +134,5 @@ export async function createEditSessionOffChain(vaultAddress: string, chainId: n
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
   const response = await axios.get(`${BASE_SERVICE_URL}/edit-sessions/${chainId}/${vaultAddress}`);
-  return response.data;
+  return response.data ?? [];
 }

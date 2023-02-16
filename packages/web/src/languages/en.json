@@ -191,6 +191,7 @@
     "pendingApproval_status": "pending for governance approval",
     "approved_status": "approved",
     "rejected_status": "rejected",
+    "viewCurrentDescription": "View current description",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
