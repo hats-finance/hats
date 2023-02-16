@@ -13,20 +13,22 @@ const getVarColor = (color: PillProps["color"]) => {
   }
 };
 
-export const StyledPill = styled.div`
-  color: var(--turquoise);
-  font-size: var(--xxsmall);
-  text-transform: none;
-  font-weight: 400;
-  display: flex;
-  align-items: center;
-  gap: ${getSpacing(0.8)};
-  background: var(--dark-blue);
-  padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
-  border-radius: 100px;
-  width: fit-content;
-  border: 1px solid var(--grey-600);
-`;
+export const StyledPill = styled.div<{ transparent: boolean }>(
+  ({ transparent }) => css`
+    color: ${transparent ? "var(--white)" : "var(--turquoise)"};
+    font-size: var(--xxsmall);
+    text-transform: none;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(0.8)};
+    background: ${transparent ? "transparent" : "var(--dark-blue)"};
+    padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+    border-radius: 100px;
+    width: fit-content;
+    border: 1px solid var(--grey-600);
+  `
+);
 
 export const StyledCircle = styled.div<{ color: PillProps["color"] }>(
   ({ color }) => css`
