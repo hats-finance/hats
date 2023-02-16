@@ -21,5 +21,6 @@ export { DropdownSelector } from "./DropdownSelector/DropdownSelector";
 export { WhereverWidget } from "./WhereverWidget/WhereverWidget";
 export { Button } from "./Button/Button";
 export { Alert } from "./Alert/Alert";
+export { WithTooltip } from "./WithTooltip/WithTooltip";
 export { Pill, type PillProps } from "./Pill/Pill";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
