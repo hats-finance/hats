@@ -64,6 +64,13 @@ export const StyledVaultStatusPage = styled.div`
             transform: rotate(-180deg);
           }
         }
+
+        .chain-logo {
+          img {
+            width: ${getSpacing(3)};
+            height: ${getSpacing(3)};
+          }
+        }
       }
 
       &__deposited {
