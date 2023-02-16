@@ -23,14 +23,13 @@ export const EditVaultStatusCard = () => {
   const [editSessions, setEditSessions] = useState<IEditedSessionResponse[]>([]);
   const [deployedEditSession, setDeployedEditSession] = useState<IEditedSessionResponse>();
 
-  const lastEditSession = editSessions.length > 0 && isMemberOrMultisig ? editSessions[0] : undefined;
+  const lastEditSession = editSessions.length > 0 ? editSessions[0] : undefined;
   const lastEditionIsWaitingApproval = lastEditSession?.vaultEditionStatus === "pendingApproval";
   const lastEditionIsEditing = lastEditSession?.vaultEditionStatus === "editing";
 
   useEffect(() => {
-    if (!isMemberOrMultisig) return;
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);
-  }, [vaultAddress, vaultChainId, vaultData.descriptionHash, isMemberOrMultisig]);
+  }, [vaultAddress, vaultChainId, vaultData.descriptionHash]);
 
   const fetchEditSessions = async (vaultAddress: string, vaultChainId: number, descriptionHash: string) => {
     const editSessions = await VaultStatusService.getEditionEditSessions(vaultAddress, vaultChainId);
@@ -84,12 +83,7 @@ export const EditVaultStatusCard = () => {
 
   const getInfoText = (isLastPendingApproval: boolean) => {
     if (!isMemberOrMultisig) {
-      return (
-        <>
-          <p className="status-card__text mb-5">{t("setupCompleted")}</p>
-          <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="warning" />
-        </>
-      );
+      return <p className="status-card__text mb-5">{t("setupCompleted")}</p>;
     }
 
     if (editSessions.length === 0) {
@@ -150,7 +144,9 @@ export const EditVaultStatusCard = () => {
 
       {getInfoText(lastEditionIsWaitingApproval)}
 
-      {isMemberOrMultisig && getEditSessions()}
+      {getEditSessions()}
+
+      {!isMemberOrMultisig && <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="warning" />}
 
       {isMemberOrMultisig && (
         <div className="status-card__buttons">
