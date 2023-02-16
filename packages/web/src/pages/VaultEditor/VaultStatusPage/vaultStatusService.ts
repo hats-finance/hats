@@ -1,7 +1,7 @@
-import { IEditedSessionResponse } from "types";
 import axios from "axios";
-import { getContract, getProvider } from "wagmi/actions";
-import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
+import { getContract, getProvider, readContracts } from "wagmi/actions";
+import { IEditedSessionResponse, IVaultDescription } from "types";
+import { HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
 import { ChainsConfig } from "config/chains";
 import { BASE_SERVICE_URL } from "settings";
 import { IVaultStatusData } from "./types";
@@ -14,34 +14,43 @@ import { ipfsTransformUri } from "utils";
  * @param chainId - The chain id of the vault
  */
 export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
-  const vaultContract = getContract({
+  const vaultContractInfo = {
     address: vaultAddress,
     abi: HATSVaultV2_abi,
-    signerOrProvider: getProvider({ chainId }),
-  });
+    chainId,
+  };
 
-  const registryContract = getContract({
+  const registryContractInfo = {
     address: ChainsConfig[chainId].vaultsCreatorContract ?? "",
     abi: HATSVaultsRegistry_abi,
+    chainId,
+  };
+
+  const vaultContract = getContract({
+    ...vaultContractInfo,
     signerOrProvider: getProvider({ chainId }),
   });
 
-  const promisesData = await Promise.all([
-    vaultContract.queryFilter(vaultContract.filters.SetVaultDescription(null)), // All the descriptionHashes
-    vaultContract.committee(), // Committee multisig address
-    vaultContract.committeeCheckedIn(), // Is committee checked in
-    registryContract.isVaultVisible(vaultAddress as `0x${string}`), // Is registered
-    vaultContract.totalSupply(), // Deposited amount
-    vaultContract.bountySplit(), // bountySplit
-    vaultContract.getBountyHackerHATVested(), // hatsRewardSplit
-    vaultContract.getBountyGovernanceHAT(), // hatsGovernanceSplit
-    vaultContract.maxBounty(), // maxBounty
-    vaultContract.asset(), // asset
-    vaultContract.decimals(), // asset
-  ]);
+  const allDescriptionsHashesPromise = vaultContract.queryFilter(vaultContract.filters.SetVaultDescription(null));
+  const allContractCallsPromises = readContracts({
+    contracts: [
+      { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
+      { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
+      { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
+      { ...vaultContractInfo, functionName: "totalSupply" }, // Deposited amount
+      { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
+      { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
+      { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
+      { ...vaultContractInfo, functionName: "maxBounty" }, // maxBounty
+      { ...vaultContractInfo, functionName: "asset" }, // asset
+      { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
+    ],
+  });
 
+  const promisesData = await Promise.all([allDescriptionsHashesPromise, allContractCallsPromises]);
+
+  const [descriptions, contractCalls] = promisesData;
   const [
-    descriptions,
     committeeMulsitigAddress,
     isCommitteeCheckedIn,
     isRegistered,
@@ -52,7 +61,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     maxBounty,
     assetToken,
     tokenDecimals,
-  ] = promisesData;
+  ] = contractCalls;
 
   const descriptionHash = descriptions[descriptions.length - 1].args?._descriptionHash;
   let description: IVaultDescription | undefined = undefined;
