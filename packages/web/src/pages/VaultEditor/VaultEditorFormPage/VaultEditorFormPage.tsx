@@ -497,7 +497,7 @@ const VaultEditorFormPage = () => {
 
           <StyledVaultEditorForm className="content-wrapper">
             {/* Title */}
-            {descriptionHash && isAdvancedMode && (
+            {descriptionHash && (isAdvancedMode || isEditingExitingVault) && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>
                 {descriptionHash}
               </p>
