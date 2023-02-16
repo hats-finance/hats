@@ -1,6 +1,6 @@
 import { IVaultStatusData } from "./types";
 
-export function checkIfAddressIsPartOfComitte(address: string | undefined, vaultData: IVaultStatusData): boolean {
+export function checkIfAddressIsPartOfComitteOnStatus(address: string | undefined, vaultData: IVaultStatusData): boolean {
   if (!address) return false;
 
   const isMultisig = address === vaultData.committeeMulsitigAddress;

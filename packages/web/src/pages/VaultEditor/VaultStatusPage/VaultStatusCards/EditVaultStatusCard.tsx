@@ -6,7 +6,7 @@ import moment from "moment";
 import { Alert, Button, Loading, Pill, PillProps } from "components";
 import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
-import { checkIfAddressIsPartOfComitte } from "../utils";
+import { checkIfAddressIsPartOfComitteOnStatus } from "../utils";
 import { VaultStatusContext } from "../store";
 import * as VaultStatusService from "../vaultStatusService";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
@@ -15,16 +15,15 @@ export const EditVaultStatusCard = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
   const navigate = useNavigate();
-
   const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
 
-  const isMemberOrMultisig = checkIfAddressIsPartOfComitte(address, vaultData);
+  const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
 
   const [loading, setLoading] = useState(false);
   const [editSessions, setEditSessions] = useState<IEditedSessionResponse[]>([]);
   const [deployedEditSession, setDeployedEditSession] = useState<IEditedSessionResponse>();
 
-  const lastEditSession = editSessions.length > 0 ? editSessions[0] : undefined;
+  const lastEditSession = editSessions.length > 0 && isMemberOrMultisig ? editSessions[0] : undefined;
   const lastEditionIsWaitingApproval = lastEditSession?.vaultEditionStatus === "pendingApproval";
   const lastEditionIsEditing = lastEditSession?.vaultEditionStatus === "editing";
 
@@ -151,7 +150,7 @@ export const EditVaultStatusCard = () => {
 
       {getInfoText(lastEditionIsWaitingApproval)}
 
-      {getEditSessions()}
+      {isMemberOrMultisig && getEditSessions()}
 
       {isMemberOrMultisig && (
         <div className="status-card__buttons">

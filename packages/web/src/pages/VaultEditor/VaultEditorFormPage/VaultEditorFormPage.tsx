@@ -26,6 +26,7 @@ import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionS
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
+import { checkIfAddressIsPartOfComitteOnForm } from "./utils";
 import { VaultEditorFormContext } from "./store";
 import {
   Section,
@@ -56,6 +57,7 @@ const VaultEditorFormPage = () => {
   const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
 
+  const [userHasNoPermissions, setUserHasNoPermissions] = useState(false);
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
@@ -103,7 +105,7 @@ const VaultEditorFormPage = () => {
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false, vaultEditionStatus?: IVaultEditionStatus) => {
     // If vault is already created or is isNonEditableStatus, edition is blocked
-    if (isVaultCreated || (editingExitingVaultStatus && isNonEditableStatus)) return;
+    if (allFormDisabled) return;
     if (isCreation) setLoadingEditSession(true);
 
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
@@ -168,6 +170,8 @@ const VaultEditorFormPage = () => {
   }
 
   const createVaultOnChain = async () => {
+    if (allFormDisabled) return;
+
     try {
       const data: IEditedVaultDescription = getValues();
       if (!descriptionHash) return;
@@ -195,6 +199,7 @@ const VaultEditorFormPage = () => {
   };
 
   const finishVaultEdition = async (desiredStatus: IVaultEditionStatus = "pendingApproval") => {
+    if (allFormDisabled) return;
     if (!wasEditedSinceCreated) return;
 
     const wantsToEdit = await confirm({
@@ -206,6 +211,7 @@ const VaultEditorFormPage = () => {
   };
 
   const cancelApprovalRequest = async () => {
+    if (userHasNoPermissions) return;
     if (!editSessionId) return;
 
     const wantsToCancel = await confirm({
@@ -257,8 +263,17 @@ const VaultEditorFormPage = () => {
   }, [editSessionId]);
 
   useEffect(() => {
-    setAllFormDisabled(isVaultCreated || isNonEditableStatus);
-  }, [isVaultCreated, isNonEditableStatus]);
+    const editData = getValues();
+    const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnForm(address, editData);
+
+    if (isEditingExitingVault && !isMemberOrMultisig) {
+      setUserHasNoPermissions(true);
+      setAllFormDisabled(true);
+    } else {
+      setUserHasNoPermissions(false);
+      setAllFormDisabled(isVaultCreated || isNonEditableStatus);
+    }
+  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, address, getValues]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -355,9 +370,8 @@ const VaultEditorFormPage = () => {
     }
 
     const isLastStep = currentStep?.id === steps[steps.length - 1].id;
-    if (isNonEditableStatus && isEditingExitingVault && isLastStep) {
-      return true;
-    }
+    if (isEditingExitingVault && isLastStep && userHasNoPermissions) return true;
+    if (isNonEditableStatus && isEditingExitingVault && isLastStep) return true;
 
     return false;
   };
@@ -371,6 +385,10 @@ const VaultEditorFormPage = () => {
 
   const getEditingExistingVaultAlert = () => {
     if (!isEditingExitingVault) return null;
+
+    if (userHasNoPermissions) {
+      return <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="error" />;
+    }
 
     if (isNonEditableStatus && editingExitingVaultStatus) {
       if (editingExitingVaultStatus === "pendingApproval") {
@@ -392,6 +410,16 @@ const VaultEditorFormPage = () => {
   const getEditingExistingVaultButtons = () => {
     if (!isEditingExitingVault) return null;
 
+    if (userHasNoPermissions) {
+      return (
+        <div className="buttons">
+          <Button onClick={goToStatusPage} styleType="outlined">
+            <BackIcon className="mr-2" /> {t("goToStatusPage")}
+          </Button>
+        </div>
+      );
+    }
+
     if (isNonEditableStatus && editingExitingVaultStatus) {
       if (editingExitingVaultStatus === "pendingApproval") {
         return (
@@ -399,7 +427,7 @@ const VaultEditorFormPage = () => {
             <Button onClick={goToStatusPage} styleType="outlined">
               <BackIcon className="mr-2" /> {t("goToStatusPage")}
             </Button>
-            <Button onClick={cancelApprovalRequest} filledColor="error">
+            <Button disabled={userHasNoPermissions} onClick={cancelApprovalRequest} filledColor="error">
               {t("cancelApprovalRequest")}
             </Button>
           </div>
