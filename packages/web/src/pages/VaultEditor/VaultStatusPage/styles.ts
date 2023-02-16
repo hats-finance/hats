@@ -121,6 +121,41 @@ export const StyledVaultStatusPage = styled.div`
         margin-top: ${getSpacing(3)};
         align-self: flex-end;
       }
+
+      &__edit-sessions {
+        display: flex;
+        flex-direction: column;
+        gap: ${getSpacing(2)};
+        margin-bottom: ${getSpacing(3)};
+        margin-top: ${getSpacing(2)};
+        border-top: 1px solid var(--grey-600);
+
+        .edit-sessions-title {
+          font-weight: 700;
+          margin-top: ${getSpacing(2)};
+        }
+
+        .edit-session {
+          width: 100%;
+          display: grid;
+          align-items: center;
+          grid-template-columns: 1fr 1fr 1fr;
+
+          .box {
+            text-align: left;
+
+            .createdAt {
+              font-size: var(--tiny);
+            }
+          }
+
+          .status,
+          .actions {
+            display: flex;
+            justify-content: end;
+          }
+        }
+      }
     }
   }
 
