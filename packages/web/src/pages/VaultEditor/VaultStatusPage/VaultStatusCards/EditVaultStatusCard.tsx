@@ -15,7 +15,7 @@ export const EditVaultStatusCard = () => {
 
   const handleEditVault = async () => {
     setLoading(true);
-    const editSessionId = await VaultStatusService.editOffChainVault(vaultAddress, vaultChainId);
+    const editSessionId = await VaultStatusService.createEditSessionOffChain(vaultAddress, vaultChainId);
     navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
     setLoading(false);
   };

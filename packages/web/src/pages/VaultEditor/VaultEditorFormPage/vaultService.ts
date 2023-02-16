@@ -6,6 +6,10 @@ import { isBlob } from "utils/files.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { IEditedSessionResponse, IEditedVaultDescription, IVaultEditionStatus } from "types";
 
+/**
+ * Gets an edit session data
+ * @param editSessionId - The edit session id
+ */
 export async function getEditSessionData(editSessionId: string): Promise<IEditedSessionResponse> {
   const response = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
   const isExistingVault = response.data.vaultAddress !== undefined;
@@ -25,6 +29,14 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
   return response.data;
 }
 
+/**
+ * Creates or update an edit session
+ *
+ * @param editSession - The edit session data (undefined for creation)
+ * @param editSessionId - The edit session id (undefined for creation)
+ * @param ipfsDescriptionHash - The ipfs description hash if you want to create a edit session from an existing ipfs (for v1)
+ * @param vaultEditionStatus - The vault edition status, if you are editing an exising vault and want to change the edition status
+ */
 export async function upsertEditSession(
   editSession: IEditedVaultDescription | undefined,
   editSessionId: string | undefined,
@@ -59,6 +71,12 @@ export async function upsertEditSession(
   return response.headers["x-new-id"] ?? (response.data as IEditedSessionResponse);
 }
 
+/**
+ * Resends the verification email to and specific email
+ *
+ * @param editSessionId - The edit session id
+ * @param email - The email to send the verification email
+ */
 export async function resendVerificationEmail(editSessionId: string, email: string): Promise<boolean> {
   try {
     const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/resend-verification-email?address=${email}`);
@@ -69,15 +87,16 @@ export async function resendVerificationEmail(editSessionId: string, email: stri
 }
 
 export async function onVaultCreated(txHash: string, chainId: number): Promise<{ vaultAddress: string } | null> {
-  try {
-    const res = await axios.post(`${BASE_SERVICE_URL}/vault-created`, { txHash, chainId });
-    return res.status === 200 ? res.data : null;
-  } catch (error) {
-    return null;
-  }
+  console.error("This method is deprecated, please change the implementation");
+  return null;
 }
 
-export async function cancelApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
+/**
+ * Put back to 'editing' a vault that was in 'pendingApproval' status
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function cancelEditionApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
     const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
     console.log(res);

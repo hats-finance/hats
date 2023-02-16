@@ -214,7 +214,7 @@ const VaultEditorFormPage = () => {
     });
 
     if (wantsToCancel) {
-      const sessionResponse = await VaultService.cancelApprovalRequest(editSessionId);
+      const sessionResponse = await VaultService.cancelEditionApprovalRequest(editSessionId);
       if (sessionResponse) {
         setDescriptionHash(sessionResponse.descriptionHash);
         setLastModifedOn(sessionResponse.updatedAt);

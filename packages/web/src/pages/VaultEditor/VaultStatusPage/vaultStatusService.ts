@@ -1,3 +1,4 @@
+import { IEditedSessionResponse } from "types";
 import axios from "axios";
 import { getContract, getProvider } from "wagmi/actions";
 import { IVaultDescription, HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
@@ -6,6 +7,12 @@ import { BASE_SERVICE_URL } from "settings";
 import { IVaultStatusData } from "./types";
 import { ipfsTransformUri } from "utils";
 
+/**
+ * Gets all the information of a vault for showing it on the status page, includes off-chain and on-chain data
+ *
+ * @param vaultAddress - The vault address
+ * @param chainId - The chain id of the vault
+ */
 export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
   const vaultContract = getContract({
     address: vaultAddress,
@@ -82,7 +89,24 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
   return vaultData;
 }
 
-export async function editOffChainVault(vaultAddress: string, chainId: number): Promise<string> {
+/**
+ * Creates a new edit session for an existing vault
+ *
+ * @param vaultAddress - The vault address
+ * @param chainId - The chain id of the vault
+ */
+export async function createEditSessionOffChain(vaultAddress: string, chainId: number): Promise<string> {
   const response = await axios.post(`${BASE_SERVICE_URL}/edit-session`, { vaultAddress, chainId });
   return response.headers["x-new-id"];
+}
+
+/**
+ * Gets all the edit sessions that were created for editing an existing vault
+ *
+ * @param vaultAddress - The vault address
+ * @param chainId - The chain id of the vault
+ */
+export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
+  const response = await axios.get(`${BASE_SERVICE_URL}/edit-sessions/${chainId}/${vaultAddress}`);
+  return response.data;
 }
