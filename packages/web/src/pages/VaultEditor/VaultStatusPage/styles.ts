@@ -11,14 +11,17 @@ export const StyledVaultStatusPage = styled.div`
   .status-title {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     color: var(--white);
     font-size: var(--moderate);
     margin-bottom: ${getSpacing(2)};
     padding-bottom: ${getSpacing(4)};
     border-bottom: 1px solid var(--grey-600);
 
-    span {
-      font-weight: 700;
+    .title {
+      span {
+        font-weight: 700;
+      }
     }
   }
 

@@ -301,11 +301,6 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
 
-  const handleCopyEditorLink = () => {
-    const url = document.location.href;
-    navigator.clipboard.writeText(url);
-  };
-
   const recalculateCommitteeMembers = async (sectionId: string, stepNumber: number) => {
     const committeeSafeAddress = getValues("committee.multisig-address");
     const committeeSafeAddressChainId = getValues("committee.chainId");
@@ -521,7 +516,7 @@ const VaultEditorFormPage = () => {
                 </p>
               </div>
 
-              <CopyToClipboard valueToCopy="asd" overlayText={t("copyEditorLink")} />
+              <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyEditorLink")} />
             </div>
 
             {/* Steps control */}

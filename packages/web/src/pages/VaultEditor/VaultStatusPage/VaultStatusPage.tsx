@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { isAddress } from "utils/addresses.utils";
-import { Loading } from "components";
+import { CopyToClipboard, Loading } from "components";
 import {
   OnChainDataStatusCard,
   CongratsStatusCard,
@@ -54,8 +54,11 @@ export const VaultStatusPage = () => {
   return (
     <StyledVaultStatusPage className="content-wrapper">
       <div className="status-title">
-        {t("vaultCreator")}
-        <span>/{t("vaultStatus")}</span>
+        <div className="title">
+          {t("vaultCreator")}
+          <span>/{t("vaultStatus")}</span>
+        </div>
+        <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyVaultLink")} />
       </div>
 
       {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}

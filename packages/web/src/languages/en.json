@@ -206,6 +206,7 @@
     "copyEditorLink": "Copy editor link",
     "copyToClipboard": "Copy to clipboard",
     "copied": "Copied",
+    "copyVaultLink": "Copy vault link",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
