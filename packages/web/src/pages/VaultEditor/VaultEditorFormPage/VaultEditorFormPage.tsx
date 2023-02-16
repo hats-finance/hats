@@ -17,7 +17,7 @@ import { getGnosisSafeInfo } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
-import { Alert, Button, Loading } from "components";
+import { Alert, Button, CopyToClipboard, Loading } from "components";
 import { ChainsConfig } from "config/chains";
 import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
@@ -39,6 +39,7 @@ import {
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -300,6 +301,11 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [vaultVersion]);
 
+  const handleCopyEditorLink = () => {
+    const url = document.location.href;
+    navigator.clipboard.writeText(url);
+  };
+
   const recalculateCommitteeMembers = async (sectionId: string, stepNumber: number) => {
     const committeeSafeAddress = getValues("committee.multisig-address");
     const committeeSafeAddressChainId = getValues("committee.chainId");
@@ -509,12 +515,13 @@ const VaultEditorFormPage = () => {
             )}
             <div className="editor-title">
               <div className="title">
-                {/* <ArrowBackIcon /> */}
                 <p>
                   {t(currentSectionInfo.title)}
                   <span>/{t(currentStepInfo.name)}</span>
                 </p>
               </div>
+
+              <CopyToClipboard valueToCopy="asd" overlayText={t("copyEditorLink")} />
             </div>
 
             {/* Steps control */}

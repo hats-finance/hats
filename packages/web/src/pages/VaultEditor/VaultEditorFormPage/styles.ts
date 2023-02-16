@@ -20,10 +20,12 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
     .editor-title {
       display: flex;
       justify-content: space-between;
+      margin-top: ${getSpacing(2)};
 
       .title {
         display: flex;
         align-items: center;
+
         color: var(--white);
         font-size: var(--moderate);
         margin-bottom: ${getSpacing(5)};

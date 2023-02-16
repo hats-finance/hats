@@ -203,6 +203,9 @@
     "rejected_status": "rejected",
     "viewCurrentDescription": "View current description",
     "youVaultIsLive": "Your vault is live on-chain",
+    "copyEditorLink": "Copy editor link",
+    "copyToClipboard": "Copy to clipboard",
+    "copied": "Copied",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

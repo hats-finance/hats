@@ -1,4 +1,4 @@
-import CopyToClipboard from "components/CopyToClipboard";
+import { CopyToClipboard } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { isAddress, shortenIfAddress } from "utils/addresses.utils";
 import "./Multisig.scss";
@@ -17,7 +17,7 @@ export default function Multisig(props: IProps) {
       <a {...defaultAnchorProps} className="multi-sig-address">
         {isAddress(multisigAddress) && shortenIfAddress(multisigAddress)}
       </a>
-      {isAddress(multisigAddress) && <CopyToClipboard value={multisigAddress} />}
+      {isAddress(multisigAddress) && <CopyToClipboard valueToCopy={multisigAddress} />}
     </div>
   );
 }

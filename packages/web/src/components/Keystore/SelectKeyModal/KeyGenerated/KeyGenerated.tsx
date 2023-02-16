@@ -1,8 +1,8 @@
-import CopyToClipboard from "components/CopyToClipboard";
-import CheckboxIcon from "assets/icons/checkbox.svg";
 import { useState } from "react";
+import { CopyToClipboard } from "components";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
+import CheckboxIcon from "assets/icons/checkbox.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { IStoredKey } from "../../types";
 
@@ -14,17 +14,17 @@ export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey; onF
       <p className="keymodal-generate__intro">{t("CommitteeTools.keymodal.generated-success")}</p>
       <div className="keymodal-generate__result-copy">
         <span className="keymodal-generate__result-label">{t("CommitteeTools.keymodal.private-key")}</span>
-        <CopyToClipboard value={addedKey.privateKey} />
+        <CopyToClipboard valueToCopy={addedKey.privateKey} />
       </div>
       {addedKey.passphrase && (
         <div className="keymodal-generate__result-copy">
           <span className="keymodal-generate__result-label">{t("CommitteeTools.keymodal.passphrase")}</span>
-          <CopyToClipboard value={addedKey.passphrase} />
+          <CopyToClipboard valueToCopy={addedKey.passphrase} />
         </div>
       )}
       <div className="keymodal-generate__result-copy">
         <span className="keymodal-generate__result-label">{t("CommitteeTools.keymodal.public-key")}</span>
-        <CopyToClipboard value={addedKey.publicKey} />
+        <CopyToClipboard valueToCopy={addedKey.publicKey} />
       </div>
       <p>
         {t("CommitteeTools.keymodal.generated-notice-1")}
@@ -36,7 +36,8 @@ export function KeyGenerated({ addedKey, onFinish }: { addedKey: IStoredKey; onF
       <div
         className={classNames("keymodal-generate__confirm", {
           "keymodal-generate__confirm--checked": sentPublicChecked,
-        })}>
+        })}
+      >
         <label htmlFor="didSharePublic" className="keymodal-generate__confirm-icon">
           <input type="checkbox" id="didSharePublic" onChange={(e) => setSentPublicChecked(e.currentTarget.checked)} />
           <span>

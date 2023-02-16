@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Modal } from "components";
-import CopyToClipboard from "components/CopyToClipboard";
+import { Modal, CopyToClipboard } from "components";
 import { IStoredKey } from "../types";
 import { StyledKeyDetailsModal } from "./styles";
 
@@ -19,17 +18,17 @@ function KeyDetailsModal({ isShowing, onHide, keyToShow }: KeyDetailsModalProps)
         <p className="description">{t("CommitteeTools.KeyDetails.description")}</p>
         <div className="result__copy">
           <span className="result__label">{t("CommitteeTools.KeyDetails.private-key")}</span>
-          <CopyToClipboard value={keyToShow.privateKey} />
+          <CopyToClipboard valueToCopy={keyToShow.privateKey} />
         </div>
         {keyToShow.passphrase && (
           <div className="result__copy">
             <span className="result__label">{t("CommitteeTools.KeyDetails.passphrase")}</span>
-            <CopyToClipboard value={keyToShow.passphrase} />
+            <CopyToClipboard valueToCopy={keyToShow.passphrase} />
           </div>
         )}
         <div className="result__copy">
           <span className="result__label">{t("CommitteeTools.KeyDetails.public-key")}</span>
-          <CopyToClipboard value={keyToShow.publicKey} />
+          <CopyToClipboard valueToCopy={keyToShow.publicKey} />
         </div>
       </StyledKeyDetailsModal>
     </Modal>
