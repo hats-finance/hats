@@ -344,17 +344,19 @@ const VaultEditorFormPage = () => {
   const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
     if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
       if (isVaultCreated) return t("thisVaultIsAlredyCreated");
-      return false;
     }
 
     if (currentStep?.disabledOptions?.includes("editingFormDirty")) {
       if (!wasEditedSinceCreated) return t("editSessionIsNotDirty");
-      return false;
     }
 
     if (currentStep?.disabledOptions?.includes("needsAccount")) {
       if (!address) return t("youNeedToConnectToAWallet");
-      return false;
+    }
+
+    const isLastStep = currentStep?.id === steps[steps.length - 1].id;
+    if (isNonEditableStatus && isEditingExitingVault && isLastStep) {
+      return true;
     }
 
     return false;

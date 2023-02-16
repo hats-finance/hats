@@ -172,6 +172,7 @@
     "areYouSureYouWantToChangeBothVaultParameters": "Are you sure you want to change the bounty split and max bounty percentage? \n\n * You will need to sign a transaction with your connected wallet.",
     "youCantEditBecauseIsPendingApproval": "You can't edit this vault because it's <strong>pending for governance approval</strong>. In order to edit this vault you need to cancel the current request clicking in the button below.",
     "youCantEditBecauseIsStatus": "You can't edit this vault because it's <strong>{{status}}</strong>. If you want to edit this vault, please go to the status page and request a new edition.",
+    "youCantEditBecauseIsStatusShort": "You can't edit this vault because it's {{status}}.",
     "cancelApprovalRequest": "Cancel approval request",
     "cancel": "Cancel",
     "confirm": "Confirm",
