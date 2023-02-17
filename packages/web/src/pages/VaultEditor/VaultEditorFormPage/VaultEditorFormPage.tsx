@@ -39,7 +39,6 @@ import {
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
-import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -189,9 +188,17 @@ const VaultEditorFormPage = () => {
       const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
 
       if (createdVaultData) {
-        const vaultInfo = await VaultService.onVaultCreated(createdVaultData.hash, +data.committee.chainId);
+        const txReceipt = await createdVaultData.wait();
         setCreatingVault(false);
-        navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultInfo?.vaultAddress}`);
+        console.log(txReceipt);
+        const vaultAddress = txReceipt.logs[0].address;
+
+        if (vaultAddress) {
+          navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
+        } else {
+          alert("Vault is being created. We'll send you an email when it's ready.");
+          navigate(`${RoutePaths.vault_editor}`);
+        }
       }
     } catch (error) {
       console.error(error);
