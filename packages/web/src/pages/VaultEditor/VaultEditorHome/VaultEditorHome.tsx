@@ -18,7 +18,7 @@ export const VaultEditorHome = () => {
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
   const populateVaultsOptions = useCallback(() => {
-    if (!address || !vaults) return;
+    if (!address || !vaults) return setVaultsOptions([]);
     const userVaults = [] as IVault[];
 
     for (const vault of vaults) {
@@ -59,7 +59,6 @@ export const VaultEditorHome = () => {
         <Button expanded size="big" onClick={createNewVault}>
           {t("createNewVault")}
         </Button>
-
         <div className="divider">
           <div />
           <p>{t("or")}</p>
@@ -68,23 +67,27 @@ export const VaultEditorHome = () => {
 
         <p>{t("editExistingVaultExplanation")}</p>
 
-        <div className="vault-selection">
-          <FormSelectInput
-            label={t("vault")}
-            placeholder={t("selectVault")}
-            name="editSessionId"
-            value={selectedVaultAddress}
-            onChange={(e) => setSelectedVaultAddress(e as string)}
-            options={vaultsOptions}
-          />
+        {address && (
+          <>
+            <div className="vault-selection">
+              <FormSelectInput
+                label={t("vault")}
+                emptyState={t("youHaveNoVaults")}
+                placeholder={t("selectVault")}
+                name="editSessionId"
+                value={selectedVaultAddress}
+                onChange={(e) => setSelectedVaultAddress(e as string)}
+                options={vaultsOptions}
+              />
 
-          <div className="options">
-            <Button disabled={!selectedVaultAddress} onClick={goToStatusPage}>
-              {t("statusPage")}
-            </Button>
-            {/* <Button styleType="outlined" disabled={!selectedVaultAddress}>{t("editVault")}</Button> */}
-          </div>
-        </div>
+              <div className="options">
+                <Button disabled={!selectedVaultAddress} onClick={goToStatusPage}>
+                  {t("statusPage")}
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </StyledVaultEditorHome>
   );

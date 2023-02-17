@@ -254,7 +254,8 @@ export const useVaultEditorSteps = (
           }
         },
         text: t(
-          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ??
+            "saveAndNext"
         ),
       };
     }
@@ -280,7 +281,8 @@ export const useVaultEditorSteps = (
           }
         },
         text: t(
-          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+          (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ??
+            "saveAndNext"
         ),
       };
     }
@@ -302,7 +304,8 @@ export const useVaultEditorSteps = (
         }
       },
       text: t(
-        (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ?? "next"
+        (isEditingExistingVault ? currentStep.nextButtonTextKey?.editing : currentStep.nextButtonTextKey?.creation) ??
+          "saveAndNext"
       ),
     };
   }, [

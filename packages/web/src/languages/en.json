@@ -207,6 +207,9 @@
     "copyToClipboard": "Copy to clipboard",
     "copied": "Copied",
     "copyVaultLink": "Copy vault link",
+    "saveAndNext": "Save and next",
+    "youHaveNoVaults": "You have no vaults",
+    "noOptions": "No options",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

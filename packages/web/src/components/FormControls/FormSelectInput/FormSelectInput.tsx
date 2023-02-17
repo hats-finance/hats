@@ -5,11 +5,13 @@ import { FormSelectInputItem } from "./FormSelectInputItem/FormSelectInputItem";
 import { FormSelectInputOption } from "./types";
 import { parseIsDirty } from "../utils";
 import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles";
+import { t } from "i18next";
 
 interface FormSelectInputProps {
   name: string;
   label?: string;
   placeholder?: string;
+  emptyState?: string;
   multiple?: boolean;
   colorable?: boolean;
   disabled?: boolean;
@@ -30,6 +32,7 @@ export function FormSelectInputComponent(
     colorable = false,
     disabled = false,
     isDirty = false,
+    emptyState,
     error,
     placeholder,
     label,
@@ -78,7 +81,8 @@ export function FormSelectInputComponent(
         isDirty={parseIsDirty(isDirty) && colorable}
         hasError={!!error && colorable}
         isFilled={!!value}
-        isOpen={isOpen}>
+        isOpen={isOpen}
+      >
         <span className="text">{getRenderValue()}</span>
         <span className="icon">
           <DropdownArrow />
@@ -89,6 +93,18 @@ export function FormSelectInputComponent(
 
       {isOpen && (
         <SelectMenuOptions>
+          {options.length === 0 && (
+            <FormSelectInputItem
+              key={`empty`}
+              option={{ label: emptyState ?? t("noOptions"), value: "" }}
+              nonSelectable
+              currentValue={value}
+              multiple={multiple}
+              handleUnselectedItem={handleUnselectedItem}
+              handleSelectedItem={handleSelectedItem}
+            />
+          )}
+
           {options.map((option) => {
             return (
               <FormSelectInputItem

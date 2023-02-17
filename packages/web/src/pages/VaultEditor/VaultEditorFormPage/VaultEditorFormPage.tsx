@@ -483,7 +483,7 @@ const VaultEditorFormPage = () => {
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
-          <div className="sections-controller">
+          <div className="sections-controller content-wrapper">
             {sections.map((section, idx) => (
               <VaultEditorSectionController
                 key={section.id}

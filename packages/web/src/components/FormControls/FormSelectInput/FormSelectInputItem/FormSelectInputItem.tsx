@@ -11,11 +11,19 @@ interface MenuItemProps {
   currentValue: string | string[];
   option: FormSelectInputOption;
   multiple: boolean;
+  nonSelectable?: boolean;
   handleSelectedItem: (val: string) => void;
   handleUnselectedItem: (val: string) => void;
 }
 
-const FormSelectInputItem = ({ currentValue, option, handleSelectedItem, handleUnselectedItem, multiple }: MenuItemProps) => {
+const FormSelectInputItem = ({
+  currentValue,
+  option,
+  handleSelectedItem,
+  handleUnselectedItem,
+  multiple,
+  nonSelectable = false,
+}: MenuItemProps) => {
   const isChecked = useMemo(
     () => (multiple ? (currentValue as string[])?.indexOf(option.value) > -1 : (currentValue as string) === option.value),
     [currentValue, multiple, option]
@@ -45,8 +53,17 @@ const FormSelectInputItem = ({ currentValue, option, handleSelectedItem, handleU
         {option.icon && <img src={ipfsTransformUri(option.icon)} alt="logo" />}
         <span>{option.label || "---"}</span>
       </div>
-      {getIcon()}
-      <input id={`option-${option.value}`} checked={isChecked} onChange={handleOnChange} type={multiple ? "checkbox" : "radio"} />
+      {!nonSelectable && (
+        <>
+          {getIcon()}
+          <input
+            id={`option-${option.value}`}
+            checked={isChecked}
+            onChange={handleOnChange}
+            type={multiple ? "checkbox" : "radio"}
+          />
+        </>
+      )}
     </StyledFormSelectInputItem>
   );
 };
