@@ -13,7 +13,7 @@ import {
   nonEditableEditionStatus,
 } from "@hats-finance/shared";
 import { CreateVaultContract } from "contracts";
-import { getGnosisSafeInfo } from "utils/gnosis.utils";
+import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
@@ -93,7 +93,7 @@ const VaultEditorFormPage = () => {
   } = useVaultEditorSteps(methods, {
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
-    onFinalEditSubmit: () => finishVaultEdition(),
+    onFinalEditSubmit: () => sendEditionToGovApproval(),
     executeOnSaved: (sectionId, stepNumber) => {
       const committeeSectionId = "setup";
       const committeeStepId = "committee";
@@ -103,7 +103,7 @@ const VaultEditorFormPage = () => {
     },
   });
 
-  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false, vaultEditionStatus?: IVaultEditionStatus) => {
+  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     // If vault is already created or is isNonEditableStatus, edition is blocked
     if (allFormDisabled) return;
     if (isCreation) setLoadingEditSession(true);
@@ -118,13 +118,11 @@ const VaultEditorFormPage = () => {
       );
     } else {
       const data: IEditedVaultDescription = getValues();
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId, undefined, vaultEditionStatus);
+      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId, undefined);
     }
 
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
-    } else if (vaultEditionStatus !== undefined) {
-      goToStatusPage();
     } else {
       setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
       setLastModifedOn(sessionIdOrSessionResponse.updatedAt);
@@ -189,16 +187,16 @@ const VaultEditorFormPage = () => {
 
       if (createdVaultData) {
         const txReceipt = await createdVaultData.wait();
-        setCreatingVault(false);
-        console.log(txReceipt);
-        const vaultAddress = txReceipt.logs[0].address;
+        const isGnosisTx = await isAGnosisSafeTx(txReceipt.transactionHash, +data.committee.chainId);
+        // const vaultAddress = txReceipt.logs[0].address;
 
-        if (vaultAddress) {
-          navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
-        } else {
-          alert("Vault is being created. We'll send you an email when it's ready.");
-          navigate(`${RoutePaths.vault_editor}`);
-        }
+        setCreatingVault(false);
+        navigate(`${RoutePaths.vault_editor}?vaultReady=true${isGnosisTx ? "&gnosisTx=true" : ""}`, { replace: true });
+        // if (vaultAddress) {
+        //   navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
+        // } else {
+        //   alert("Vault is being created. We'll send you an email when it's ready.");
+        // }
       }
     } catch (error) {
       console.error(error);
@@ -206,16 +204,22 @@ const VaultEditorFormPage = () => {
     }
   };
 
-  const finishVaultEdition = async (desiredStatus: IVaultEditionStatus = "pendingApproval") => {
+  const sendEditionToGovApproval = async () => {
     if (allFormDisabled) return;
     if (!wasEditedSinceCreated) return;
+    if (!editSessionId) return;
 
     const wantsToEdit = await confirm({
       confirmText: t("requestApproval"),
       description: t("areYouSureYouWantToEditThisVault"),
     });
 
-    if (wantsToEdit) createOrSaveEditSession(false, false, desiredStatus);
+    if (wantsToEdit) {
+      await createOrSaveEditSession(false, false);
+      await VaultService.sendEditionToGovApproval(editSessionId);
+
+      goToStatusPage();
+    }
   };
 
   const cancelApprovalRequest = async () => {
@@ -457,7 +461,7 @@ const VaultEditorFormPage = () => {
           <Button onClick={goToStatusPage} styleType="outlined">
             <BackIcon className="mr-2" /> {t("goToStatusPage")}
           </Button>
-          <Button onClick={() => finishVaultEdition()}>
+          <Button onClick={() => sendEditionToGovApproval()}>
             {t("sendToGovernanceApproval")} <NextIcon className="ml-2" />
           </Button>
         </div>

@@ -4,7 +4,7 @@ import { HATSVaultV2_abi } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { BASE_SERVICE_URL } from "settings";
-import { IEditedSessionResponse, IEditedVaultDescription, IVaultEditionStatus } from "types";
+import { IEditedSessionResponse, IEditedVaultDescription } from "types";
 
 /**
  * Gets an edit session data
@@ -35,13 +35,11 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
  * @param editSession - The edit session data (undefined for creation)
  * @param editSessionId - The edit session id (undefined for creation)
  * @param ipfsDescriptionHash - The ipfs description hash if you want to create a edit session from an existing ipfs (for v1)
- * @param vaultEditionStatus - The vault edition status, if you are editing an exising vault and want to change the edition status
  */
 export async function upsertEditSession(
   editSession: IEditedVaultDescription | undefined,
   editSessionId: string | undefined,
-  ipfsDescriptionHash?: string | undefined,
-  vaultEditionStatus?: IVaultEditionStatus
+  ipfsDescriptionHash?: string | undefined
 ): Promise<string | IEditedSessionResponse> {
   const iconsPaths = ["project-metadata.icon", "project-metadata.tokenIcon"];
   editSession?.committee.members.map((_, index) => iconsPaths.push(`committee.members.${index}.image-ipfs-link`));
@@ -60,7 +58,6 @@ export async function upsertEditSession(
 
   if (editSession) formData.append("editedDescription", JSON.stringify(editSession));
   if (ipfsDescriptionHash) formData.append("ipfsDescriptionHash", ipfsDescriptionHash);
-  if (vaultEditionStatus) formData.append("vaultEditionStatus", vaultEditionStatus);
 
   const response = await axios.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId ?? ""}`, formData, {
     headers: {
@@ -99,6 +96,21 @@ export async function onVaultCreated(txHash: string, chainId: number): Promise<{
 export async function cancelEditionApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
     const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
+    console.log(res);
+    return res.status === 200 ? res.data : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Put in 'pendingApproval' a vault that was in 'editing' status
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function sendEditionToGovApproval(editSessionId: string): Promise<IEditedSessionResponse | null> {
+  try {
+    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/send-to-gov-approval`);
     console.log(res);
     return res.status === 200 ? res.data : null;
   } catch (error) {

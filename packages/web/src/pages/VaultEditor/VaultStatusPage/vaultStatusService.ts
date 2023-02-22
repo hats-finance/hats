@@ -123,6 +123,7 @@ export async function getCurrentValidEditSession(
   const response = await axios.get(
     `${BASE_SERVICE_URL}/edit-session/description-hash/${chainId}/${descriptionHash}/${vaultAddress}`
   );
+  console.log(response.data);
   return response.data;
 }
 

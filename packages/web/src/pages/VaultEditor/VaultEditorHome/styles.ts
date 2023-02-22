@@ -44,3 +44,9 @@ export const StyledVaultEditorHome = styled.div`
     }
   }
 `;
+
+export const CreatingVaultModal = styled.div`
+  max-width: 400px;
+  color: var(--white);
+  text-align: center;
+`;

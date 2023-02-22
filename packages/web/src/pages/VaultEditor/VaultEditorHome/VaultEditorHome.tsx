@@ -1,18 +1,22 @@
 import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { IVault } from "types";
-import { Button, FormSelectInput } from "components";
+import { Button, FormSelectInput, Modal } from "components";
 import { RoutePaths } from "navigation";
 import { useVaults } from "hooks/vaults/useVaults";
-import { StyledVaultEditorHome } from "./styles";
+import { StyledVaultEditorHome, CreatingVaultModal } from "./styles";
 
 export const VaultEditorHome = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { address } = useAccount();
   const { vaults } = useVaults();
+
+  const isVaultCreated = !!searchParams.get("vaultReady");
+  const isGnosisTx = !!searchParams.get("gnosisTx");
 
   const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
@@ -89,6 +93,17 @@ export const VaultEditorHome = () => {
           </>
         )}
       </div>
+
+      <Modal
+        isShowing={isVaultCreated}
+        title={t("finishingVaultCreation")}
+        withTitleDivider
+        onHide={() => navigate(RoutePaths.vault_editor)}
+      >
+        <CreatingVaultModal>
+          <p>{isGnosisTx ? t("executeTxOnGnosisForCreatingVault") : t("weAreFinishingTheCreationOfVault")}</p>
+        </CreatingVaultModal>
+      </Modal>
     </StyledVaultEditorHome>
   );
 };
