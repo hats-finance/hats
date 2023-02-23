@@ -381,6 +381,12 @@ const VaultEditorFormPage = () => {
       if (!address) return t("youNeedToConnectToAWallet");
     }
 
+    if (currentStep?.disabledOptions?.includes("allEmailsVerified")) {
+      const emails = getValues("project-metadata.emails");
+      if (!emails || emails.length === 0) return t("at-least-one-email");
+      if (emails.some((email) => email.status !== "verified")) return t("pleaseVerifyAllEmails");
+    }
+
     const isLastStep = currentStep?.id === steps[steps.length - 1].id;
     if (isEditingExitingVault && isLastStep && userHasNoPermissions) return true;
     if (isNonEditableStatus && isEditingExitingVault && isLastStep) return true;

@@ -25,6 +25,16 @@ export const StyledVaultDetails = styled.div`
     }
   }
 
+  .icons {
+    display: flex;
+    justify-content: center;
+    gap: ${getSpacing(2)};
+  }
+`;
+
+export const StyledVaultEmailsForm = styled.div`
+  width: 80%;
+
   .emails {
     width: 100%;
     margin-bottom: ${getSpacing(2)};
@@ -51,11 +61,5 @@ export const StyledVaultDetails = styled.div`
         gap: ${getSpacing(1)};
       }
     }
-  }
-
-  .icons {
-    display: flex;
-    justify-content: center;
-    gap: ${getSpacing(2)};
   }
 `;

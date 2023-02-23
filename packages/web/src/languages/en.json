@@ -71,6 +71,7 @@
     "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
     "vaultEditorFinalStepExplanation": "Create vault by completing the on-chain transaction. \n A vault will be created on chain. \n\n The vault description may be edited at any time, changes will be require Hat gov approval.",
     "committeeMembersOutsideMultisigExplanation": "<strong>You can add committee members who are not part of Gnosis Safe.</strong> \n\n <strong>Please note,</strong> \n those committee members will not have permission to sign on pay-outs. They can only <strong>decrypt</strong> vulnerabilities sent to the vault.",
+    "emailsNotVerifiedExplanation": "In order to create the vault you have to verify the email address. The following email/s wasn't verified.",
     "vaultBlockedBecauseIsCreated": "This vault can't be edited because it's already created on-chain. This is read-only mode. If you want to edit it, please go to the status page and do it there.",
     "doneEditingTheExistingVault": "Done editing the vault? \n Click on <i>'Send to governance approval'</i> and Hats team will be notified to review the changed and update your vault.",
     "youAreEditingAnExistingVault": "You are editing an existing vault. When you are done editing the vault, you can send it to governance approval.",
@@ -214,6 +215,8 @@
     "weAreFinishingTheCreationOfVault": " Thanks for creating a new vault in Hats! \n\n We are finishing the creation of your vault. We need a couple more minutes. \n\n We will notify you via email you when the vault is created.",
     "executeTxOnGnosisForCreatingVault": " Thanks for creating a new vault in Hats! \n\n You just create the proposal for creating the vault in gnosis safe. Please approve and execute the transaction on the gnosis app. \n\n We will notify you via email you when the vault is created.",
     "loadingInformation": "Loading information",
+    "pleaseVerifyAllEmails": "Please verify all communication emails",
+    "communication": "Communication",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

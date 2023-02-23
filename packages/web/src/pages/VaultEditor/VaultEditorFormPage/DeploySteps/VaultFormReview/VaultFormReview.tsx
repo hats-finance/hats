@@ -7,12 +7,15 @@ import { editedFormToDescription } from "@hats-finance/shared";
 import { StyledVaultFormReview } from "./styles";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { useCallback } from "react";
+import { VaultEmailsForm } from "../../SetupSteps/VaultDetailsForm/VaultEmailsForm";
 
 export function VaultFormReview() {
   const { t } = useTranslation();
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const editedVaultDescriptionForm = useWatch({ control }) as IEditedVaultDescription;
+  const emails = useWatch({ control, name: "project-metadata.emails" });
+  const missingVerificationEmails = emails?.filter((email) => email.status !== "verified");
 
   const getVault = useCallback((): IVault => {
     const description = editedFormToDescription(editedVaultDescriptionForm);
@@ -123,8 +126,15 @@ export function VaultFormReview() {
       </div>
 
       <p className="section-title mt-5">{t("pleaseNote")}</p>
-
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorFinalStepExplanation") }} />
+
+      {missingVerificationEmails?.length > 0 && (
+        <>
+          <p className="section-title mt-5">{t("communication")}</p>
+          <div className="helper-text">{t("emailsNotVerifiedExplanation")}</div>
+          <VaultEmailsForm onlyNotVerifiedEmails />
+        </>
+      )}
     </StyledVaultFormReview>
   );
 }
