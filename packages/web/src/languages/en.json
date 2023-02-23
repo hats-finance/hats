@@ -213,6 +213,7 @@
     "finishingVaultCreation": "Finishing vault creation",
     "weAreFinishingTheCreationOfVault": " Thanks for creating a new vault in Hats! \n\n We are finishing the creation of your vault. We need a couple more minutes. \n\n We will notify you via email you when the vault is created.",
     "executeTxOnGnosisForCreatingVault": " Thanks for creating a new vault in Hats! \n\n You just create the proposal for creating the vault in gnosis safe. Please approve and execute the transaction on the gnosis app. \n\n We will notify you via email you when the vault is created.",
+    "loadingInformation": "Loading information",
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
