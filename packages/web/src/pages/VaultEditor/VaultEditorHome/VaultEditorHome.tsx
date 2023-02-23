@@ -6,7 +6,8 @@ import { IVault } from "types";
 import { Button, FormSelectInput, Modal } from "components";
 import { RoutePaths } from "navigation";
 import { useVaults } from "hooks/vaults/useVaults";
-import { StyledVaultEditorHome, CreatingVaultModal } from "./styles";
+import { StyledVaultEditorHome } from "./styles";
+import { VaultReadyModal } from "./VaultReadyModal";
 
 export const VaultEditorHome = () => {
   const { t } = useTranslation();
@@ -16,7 +17,6 @@ export const VaultEditorHome = () => {
   const { vaults } = useVaults();
 
   const isVaultCreated = !!searchParams.get("vaultReady");
-  const isGnosisTx = !!searchParams.get("gnosisTx");
 
   const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
@@ -94,15 +94,8 @@ export const VaultEditorHome = () => {
         )}
       </div>
 
-      <Modal
-        isShowing={isVaultCreated}
-        title={t("finishingVaultCreation")}
-        withTitleDivider
-        onHide={() => navigate(RoutePaths.vault_editor)}
-      >
-        <CreatingVaultModal>
-          <p>{isGnosisTx ? t("executeTxOnGnosisForCreatingVault") : t("weAreFinishingTheCreationOfVault")}</p>
-        </CreatingVaultModal>
+      <Modal isShowing={isVaultCreated} onHide={() => navigate(RoutePaths.vault_editor)} disableOnOverlayClose>
+        <VaultReadyModal closeModal={() => navigate(RoutePaths.vault_editor)} />
       </Modal>
     </StyledVaultEditorHome>
   );

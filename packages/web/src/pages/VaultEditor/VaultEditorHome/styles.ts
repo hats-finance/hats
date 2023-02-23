@@ -1,5 +1,6 @@
-import { getSpacing } from "styles";
 import styled from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultEditorHome = styled.div`
   display: flex;
@@ -45,8 +46,38 @@ export const StyledVaultEditorHome = styled.div`
   }
 `;
 
-export const CreatingVaultModal = styled.div`
-  max-width: 400px;
+export const StyledVaultReadyModal = styled.div`
+  max-width: 670px;
   color: var(--white);
   text-align: center;
+
+  img {
+    width: ${getSpacing(20)};
+    margin-bottom: ${getSpacing(2)};
+  }
+
+  .info {
+    background: var(--strong-blue);
+    font-size: var(--small);
+    line-height: 1.6;
+    border-radius: ${getSpacing(1)};
+    padding: ${getSpacing(4)};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      padding: ${getSpacing(3)};
+    }
+
+    .title {
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: ${getSpacing(3)};
+    }
+
+    .description {
+      margin-bottom: ${getSpacing(5)};
+    }
+  }
 `;

@@ -22,6 +22,27 @@ const getGnosisChainNameByChainId = (chainId: number): string => {
   }
 };
 
+export const getGnosisChainPrefixByChainId = (chainId: number): string => {
+  switch (chainId) {
+    case mainnet.id:
+      return "eth";
+    case goerli.id:
+      return "gor";
+    case arbitrum.id:
+      return "arb1";
+    case optimism.id:
+      return "oeth";
+    case polygon.id:
+      return "matic";
+    case avalanche.id:
+      return "avax";
+    case bsc.id:
+      return "bnb";
+    default:
+      throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
+  }
+};
+
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {
   if (!chainId) return "";
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;

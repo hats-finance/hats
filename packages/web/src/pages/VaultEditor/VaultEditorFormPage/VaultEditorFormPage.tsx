@@ -191,7 +191,12 @@ const VaultEditorFormPage = () => {
         // const vaultAddress = txReceipt.logs[0].address;
 
         setCreatingVault(false);
-        navigate(`${RoutePaths.vault_editor}?vaultReady=true${isGnosisTx ? "&gnosisTx=true" : ""}`, { replace: true });
+        navigate(
+          `${RoutePaths.vault_editor}?vaultReady=true${
+            isGnosisTx ? `&gnosisMultisig=${data.committee.chainId}:${data.committee["multisig-address"]}` : ""
+          }`,
+          { replace: true }
+        );
         // if (vaultAddress) {
         //   navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
         // } else {

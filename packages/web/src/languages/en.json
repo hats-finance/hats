@@ -217,6 +217,14 @@
     "loadingInformation": "Loading information",
     "pleaseVerifyAllEmails": "Please verify all communication emails",
     "communication": "Communication",
+    "goToGnosisSafe": "Go to Gnosis safe",
+    "gotIt": "Got it",
+    "vaultCreatedModal": {
+      "titleMultisig": "Please sign the vault creation request on Gnosis safe",
+      "titleNoMultisig": "Hold on while we are creating your vault on chain. This might take few minutes",
+      "descriptionMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps.",
+      "descriptionNoMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps."
+    },
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"
