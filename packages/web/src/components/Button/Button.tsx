@@ -8,6 +8,7 @@ export type ButtonProps = {
   className?: string;
   expanded?: boolean;
   disabled?: boolean;
+  bigHorizontalPadding?: boolean;
   noPadding?: boolean;
   lowercase?: boolean;
   onClick?: () => void;
@@ -19,6 +20,7 @@ export const Button = ({
   filledColor = "primary",
   size = "normal",
   disabled = false,
+  bigHorizontalPadding = false,
   lowercase,
   noPadding,
   expanded,
@@ -34,6 +36,7 @@ export const Button = ({
       filledColor={filledColor}
       size={size}
       noPadding={noPadding}
+      bigHorizontalPadding={bigHorizontalPadding}
       expanded={expanded}
       disabled={disabled}
       onClick={disabled ? () => {} : onClick}

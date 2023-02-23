@@ -8,6 +8,7 @@ type StyledButtonProps = {
   size: ButtonProps["size"];
   noPadding: ButtonProps["noPadding"];
   expanded: ButtonProps["expanded"];
+  bigHorizontalPadding: ButtonProps["bigHorizontalPadding"];
   lowercase: ButtonProps["lowercase"];
   textColor: ButtonProps["textColor"];
 };
@@ -24,7 +25,7 @@ const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
 };
 
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, filledColor, size, expanded, lowercase, textColor, noPadding }) => css`
+  ({ styleType, filledColor, size, expanded, lowercase, textColor, noPadding, bigHorizontalPadding }) => css`
     display: flex;
     align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
@@ -86,6 +87,12 @@ export const StyledButton = styled.button<StyledButtonProps>(
     ${noPadding &&
     css`
       padding: 0;
+    `}
+      
+    ${bigHorizontalPadding &&
+    css`
+      padding-left: ${getSpacing(8)};
+      padding-right: ${getSpacing(8)};
     `}
   `
 );
