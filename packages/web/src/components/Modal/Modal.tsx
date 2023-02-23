@@ -15,6 +15,7 @@ interface ModalProps {
   removeHorizontalPadding?: boolean;
   capitalizeTitle?: boolean;
   disableClose?: boolean;
+  disableOnOverlayClose?: boolean;
   overflowVisible?: boolean;
 }
 
@@ -27,6 +28,7 @@ export function Modal({
   titleIcon,
   zIndex = 0,
   disableClose = false,
+  disableOnOverlayClose = false,
   withTitleDivider = false,
   removeHorizontalPadding = false,
   capitalizeTitle = false,
@@ -63,7 +65,7 @@ export function Modal({
   return isShowing
     ? ReactDOM.createPortal(
         <StyledModal isShowing={localShowModal} zIndex={zIndex}>
-          <div className="overlay" onClick={handleOnHide} />
+          <div className="overlay" onClick={disableOnOverlayClose ? () => {} : handleOnHide} />
           <ModalContainer
             disableClose={disableClose}
             withIcon={!!titleIcon}
@@ -71,7 +73,8 @@ export function Modal({
             removeTopPadding={!title}
             removeHorizontalPadding={removeHorizontalPadding}
             overflowVisible={overflowVisible}
-            capitalizeTitle={capitalizeTitle}>
+            capitalizeTitle={capitalizeTitle}
+          >
             <div className="header">
               <div className="title">
                 {onBackButton && (
