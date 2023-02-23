@@ -126,6 +126,7 @@ export const ModalContainer = styled.div<{
         cursor: pointer;
         font-size: var(--medium-2);
         margin-left: ${getSpacing(10)};
+        color: var(--white);
       }
     }
 
