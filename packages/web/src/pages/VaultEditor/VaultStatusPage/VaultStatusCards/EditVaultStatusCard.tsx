@@ -20,6 +20,7 @@ export const EditVaultStatusCard = () => {
   const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
 
   const [loading, setLoading] = useState(false);
+  const [loadingEditSessions, setLoadingEditSessions] = useState(false);
   const [editSessions, setEditSessions] = useState<IEditedSessionResponse[]>([]);
   const [deployedEditSession, setDeployedEditSession] = useState<IEditedSessionResponse>();
 
@@ -32,11 +33,13 @@ export const EditVaultStatusCard = () => {
   }, [vaultAddress, vaultChainId, vaultData.descriptionHash]);
 
   const fetchEditSessions = async (vaultAddress: string, vaultChainId: number, descriptionHash: string) => {
+    setLoadingEditSessions(true);
     const editSessions = await VaultStatusService.getEditionEditSessions(vaultAddress, vaultChainId);
     setEditSessions(editSessions);
 
     const currentEditSession = await VaultStatusService.getCurrentValidEditSession(descriptionHash, vaultAddress, vaultChainId);
     setDeployedEditSession(currentEditSession);
+    setLoadingEditSessions(false);
   };
 
   const handleEditVault = async () => {
@@ -144,7 +147,7 @@ export const EditVaultStatusCard = () => {
 
       {getInfoText(lastEditionIsWaitingApproval)}
 
-      {getEditSessions()}
+      {loadingEditSessions ? <p>{t("loadingInformation")}...</p> : getEditSessions()}
 
       {!isMemberOrMultisig && <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="warning" />}
 
