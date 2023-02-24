@@ -7,7 +7,7 @@ import { editedFormToDescription } from "@hats-finance/shared";
 import { StyledVaultFormReview } from "./styles";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { useCallback } from "react";
-import { VaultEmailsForm } from "../../SetupSteps/VaultEmailsList/VaultEmailsList";
+import { VaultEmailsForm } from "../../SetupSteps/shared/VaultEmailsList/VaultEmailsList";
 
 export function VaultFormReview() {
   const { t } = useTranslation();

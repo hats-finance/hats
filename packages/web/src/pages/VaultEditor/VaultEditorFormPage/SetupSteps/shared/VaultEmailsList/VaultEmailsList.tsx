@@ -6,7 +6,7 @@ import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { Button } from "components";
 import { IEditedVaultDescription } from "types";
 import { getPath } from "utils/objects.utils";
-import { VaultEditorFormContext } from "../../store";
+import { VaultEditorFormContext } from "../../../store";
 import { StyledVaultEmailsForm } from "./styles";
 import AddIcon from "@mui/icons-material/Add";
 
