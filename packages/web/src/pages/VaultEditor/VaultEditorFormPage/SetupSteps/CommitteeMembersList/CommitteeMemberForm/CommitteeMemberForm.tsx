@@ -4,7 +4,6 @@ import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import useConfirm from "hooks/useConfirm";
-import { ICommitteeMember } from "types";
 import { IEditedVaultDescription } from "types";
 import { StyledCommitteeMemberForm } from "./styles";
 import { getPath } from "utils/objects.utils";
@@ -16,11 +15,10 @@ type CommitteeMemberFormProps = {
   index: number;
   membersCount: number;
   isLastMultisigMember: boolean;
-  append: (data: ICommitteeMember) => void;
   remove: UseFieldArrayRemove;
 };
 
-const CommitteeMemberForm = ({ index, append, remove, membersCount, isLastMultisigMember }: CommitteeMemberFormProps) => {
+const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember }: CommitteeMemberFormProps) => {
   const { t } = useTranslation();
   const confirm = useConfirm();
 

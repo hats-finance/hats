@@ -28,7 +28,7 @@ export function ContractsCoveredList() {
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorContractsCoveredExplanation") }} />
 
       {contracts.map((contract, index) => (
-        <ContractCoveredForm key={contract.id} index={index} append={append} remove={remove} contractsCount={contracts.length} />
+        <ContractCoveredForm key={contract.id} index={index} remove={remove} contractsCount={contracts.length} />
       ))}
 
       {!allFormDisabled && (

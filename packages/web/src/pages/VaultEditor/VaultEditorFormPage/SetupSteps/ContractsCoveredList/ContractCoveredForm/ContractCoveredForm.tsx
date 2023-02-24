@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Button, FormInput, FormSelectInput } from "components";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { IEditedVaultDescription, IEditedContractCovered } from "types";
+import { IEditedVaultDescription } from "types";
 import { StyledContractCoveredForm } from "./styles";
 import { VaultEditorFormContext } from "../../../store";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -12,11 +12,10 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 type ContractCoveredFormProps = {
   index: number;
   contractsCount: number;
-  append: (data: IEditedContractCovered) => void;
   remove: (index: number) => void;
 };
 
-export default function ContractCoveredForm({ index, append, remove, contractsCount }: ContractCoveredFormProps) {
+export default function ContractCoveredForm({ index, remove, contractsCount }: ContractCoveredFormProps) {
   const { t } = useTranslation();
   const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 

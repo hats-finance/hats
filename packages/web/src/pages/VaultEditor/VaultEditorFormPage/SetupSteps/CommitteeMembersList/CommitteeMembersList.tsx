@@ -22,7 +22,6 @@ export function CommitteeMembersList() {
         <CommitteeMemberForm
           key={member.id}
           index={index}
-          append={append}
           remove={remove}
           membersCount={members.length}
           isLastMultisigMember={index === lastMultisigMemberIdx}

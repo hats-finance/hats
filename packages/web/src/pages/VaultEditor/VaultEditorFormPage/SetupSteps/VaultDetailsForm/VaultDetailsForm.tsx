@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
-import { VaultEmailsForm } from "./VaultEmailsForm";
+import { VaultEmailsForm } from "../VaultEmailsList/VaultEmailsList";
 import { IEditedVaultDescription } from "types";
 import { VaultEditorFormContext } from "../../store";
 import { StyledVaultDetails } from "./styles";
