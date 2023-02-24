@@ -113,4 +113,6 @@ export const SelectMenuOptions = styled.div`
   top: calc(100% + ${getSpacing(1)});
   z-index: 2;
   background-color: var(--dark-blue);
+  max-height: ${getSpacing(39)};
+  overflow: auto;
 `;
