@@ -6,6 +6,7 @@ import {
   getTestNumberInBetween,
   getTestCommitteeMultisigForVault,
   getTestTokenAddress,
+  getTestUrl,
 } from "utils/yup.utils";
 import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "@hats-finance/shared";
 
@@ -16,7 +17,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     "project-metadata": Yup.object({
       icon: Yup.string().required(intl("required")),
       tokenIcon: Yup.string().required(intl("required")),
-      website: Yup.string().required(intl("required")),
+      website: Yup.string().test(getTestUrl(intl)).required(intl("required")),
       name: Yup.string().required(intl("required")),
       type: Yup.string().required(intl("required")),
       starttime: Yup.number()

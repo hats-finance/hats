@@ -17,6 +17,20 @@ export const getTestWalletAddress = (intl) => {
   };
 };
 
+export const getTestUrl = (intl) => {
+  return {
+    name: "is-url",
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const urlRegex = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
+
+      const isUrl = urlRegex.test(value ?? "");
+      const isEmpty = value === "";
+
+      return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
+    },
+  };
+};
+
 export const getTestAddressOrUrl = (intl) => {
   return {
     name: "is-address-or-url",
