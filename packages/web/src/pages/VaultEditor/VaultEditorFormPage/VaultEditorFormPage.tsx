@@ -62,6 +62,7 @@ const VaultEditorFormPage = () => {
   const [userHasNoPermissions, setUserHasNoPermissions] = useState(false);
   const [loadingEditSession, setLoadingEditSession] = useState(false);
   const [creatingVault, setCreatingVault] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
   const [allFormDisabled, setAllFormDisabled] = useState<boolean>(false);
 
@@ -222,8 +223,10 @@ const VaultEditorFormPage = () => {
     });
 
     if (wantsToEdit) {
+      setLoading(true);
       await createOrSaveEditSession(false, false);
       await VaultService.sendEditionToGovApproval(editSessionId);
+      setLoading(false);
 
       goToStatusPage();
     }
@@ -239,7 +242,9 @@ const VaultEditorFormPage = () => {
     });
 
     if (wantsToCancel) {
+      setLoading(true);
       const sessionResponse = await VaultService.cancelEditionApprovalRequest(editSessionId);
+      setLoading(false);
       if (sessionResponse) {
         setDescriptionHash(sessionResponse.descriptionHash);
         setLastModifedOn(sessionResponse.updatedAt);
@@ -605,6 +610,7 @@ const VaultEditorFormPage = () => {
       </StyledVaultEditorContainer>
 
       {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
+      {loading && <Loading fixed extraText={`${t("loading")}...`} />}
 
       <Modal isShowing={showVerifiedEmailModal} onHide={goBackToVaultEditor} disableOnOverlayClose>
         <VerifiedEmailModal closeModal={goBackToVaultEditor} />
