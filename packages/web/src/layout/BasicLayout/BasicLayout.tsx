@@ -21,6 +21,9 @@ const BasicLayout = (): JSX.Element => {
   // const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState(localStorage.getItem(LocalStorage.WelcomePage));
   const [hasSeenWelcomePage, setHasSeenWelcomePage] = useState("1");
   const [acceptedCookies, setAcceptedCookies] = useState(localStorage.getItem(LocalStorage.Cookies));
+  const [hasSeenEmbassyNotification, setHasSeenEmbassyNotification] = useState(
+    localStorage.getItem(LocalStorage.EmbassyNotification)
+  );
   const { isShowing, show, hide } = useModal();
   const { address: account } = useAccount();
 
@@ -35,7 +38,9 @@ const BasicLayout = (): JSX.Element => {
     <>
       {hasSeenWelcomePage && acceptedCookies !== "1" && <Cookies setAcceptedCookies={setAcceptedCookies} />}
       {hasSeenWelcomePage !== "1" && <Welcome setHasSeenWelcomePage={setHasSeenWelcomePage} />}
-      {hasSeenWelcomePage === "1" && <EmbassyNotificationBar />}
+      {hasSeenEmbassyNotification !== "1" && (
+        <EmbassyNotificationBar setHasSeenEmbassyNotification={() => setHasSeenEmbassyNotification("1")} />
+      )}
 
       {account && hasSeenWelcomePage === "1" && (
         <Modal isShowing={isShowing} onHide={hide}>

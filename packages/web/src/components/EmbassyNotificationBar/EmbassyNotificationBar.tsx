@@ -1,21 +1,28 @@
-import { EMBASSY_LEARN_MORE } from "constants/constants";
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { EMBASSY_LEARN_MORE, LocalStorage } from "constants/constants";
 import "./index.scss";
 
-export default function EmbassyNotificationBar() {
+type EmbassyNotificationBarProps = {
+  setHasSeenEmbassyNotification: () => void;
+};
+
+export default function EmbassyNotificationBar({ setHasSeenEmbassyNotification }: EmbassyNotificationBarProps) {
   const { t } = useTranslation();
-  const [toggle, setToggle] = useState(true);
+
+  const handleClose = () => {
+    localStorage.setItem(LocalStorage.EmbassyNotification, "1");
+    setHasSeenEmbassyNotification();
+  };
 
   return (
-    <>
-      {toggle ? (
-        <div className="embassy-notification-bar-wrapper">
-          <span className="embassy-notification-bar__title">{t("EmbassyNotificationBar.title")}</span>
-          <button onClick={() => window.open(EMBASSY_LEARN_MORE)} className="fill embassy-notification-bar__learn-more-btn">{t("EmbassyNotificationBar.learn-more")}</button>
-          <button onClick={() => setToggle(false)} className="embassy-notification-bar__close-btn">&times;</button>
-        </div>
-      ) : null}
-    </>
-  )
+    <div className="embassy-notification-bar-wrapper">
+      <span className="embassy-notification-bar__title">{t("EmbassyNotificationBar.title")}</span>
+      <button onClick={() => window.open(EMBASSY_LEARN_MORE)} className="fill embassy-notification-bar__learn-more-btn">
+        {t("EmbassyNotificationBar.learn-more")}
+      </button>
+      <button onClick={handleClose} className="embassy-notification-bar__close-btn">
+        &times;
+      </button>
+    </div>
+  );
 }

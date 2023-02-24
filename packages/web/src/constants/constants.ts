@@ -3,6 +3,7 @@ import { BigNumber } from "ethers";
 export enum LocalStorage {
   Cookies = "HATS_ACCEPTED_COOKIES",
   WelcomePage = "HATS_HAS_SEEN_WELCOME_PAGE",
+  EmbassyNotification = "HATS_HAS_SEEN_EMBASSY_NOTIFICATION",
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
   Keystore = "HATS_PGP_KEYSTORE",
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
