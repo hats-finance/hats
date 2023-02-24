@@ -17,13 +17,14 @@ import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
-import { Alert, Button, CopyToClipboard, Loading } from "components";
+import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { ChainsConfig } from "config/chains";
 import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
 import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionStatus, IEditedSessionResponse } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
+import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
 import { checkIfAddressIsPartOfComitteOnForm } from "./utils";
@@ -50,6 +51,7 @@ const VaultEditorFormPage = () => {
   const confirm = useConfirm();
 
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
+  const showVerifiedEmailModal = !!searchParams.get("verifiedEmail") || !!searchParams.get("unverifiedEmail");
 
   // Current edition description hash
   const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
@@ -373,6 +375,10 @@ const VaultEditorFormPage = () => {
     navigate(`${RoutePaths.vault_editor}/status/${vaultCreatedInfo.chainId}/${vaultCreatedInfo.vaultAddress}`);
   };
 
+  const goBackToVaultEditor = () => {
+    navigate(`${RoutePaths.vault_editor}/${editSessionId}${isAdvancedMode ? "?mode=advanced" : ""}`);
+  };
+
   const getNextButtonDisabled = (currentStep: IEditorSectionsStep) => {
     if (currentStep?.disabledOptions?.includes("onlyIfVaultNotCreated")) {
       if (isVaultCreated) return t("thisVaultIsAlredyCreated");
@@ -597,7 +603,12 @@ const VaultEditorFormPage = () => {
           </StyledVaultEditorForm>
         </FormProvider>
       </StyledVaultEditorContainer>
+
       {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
+
+      <Modal isShowing={showVerifiedEmailModal} onHide={goBackToVaultEditor} disableOnOverlayClose>
+        <VerifiedEmailModal closeModal={goBackToVaultEditor} />
+      </Modal>
     </VaultEditorFormContext.Provider>
   );
 };

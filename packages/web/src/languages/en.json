@@ -225,6 +225,12 @@
       "descriptionMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps.",
       "descriptionNoMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps."
     },
+    "emailVerificationModal": {
+      "titleSuccess": "Email verified",
+      "titleError": "Email verification error",
+      "descriptionSuccess": "Your email ({{email}}) has been verified successfully.",
+      "descriptionError": "Your verification link for verifying your email ({{email}}) is expired, please request a new one."
+    },
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
       "description": "Subscribe to receive vault updates and security news before everyone else!"

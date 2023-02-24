@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultEditorContainer = styled.div`
   .sections-controller {
@@ -213,6 +214,44 @@ export const Section = styled.div<{ visible: boolean }>(
 
     .section-content {
       margin-bottom: ${getSpacing(5)};
+    }
+  `
+);
+
+export const StyledVerifiedEmailModal = styled.div<{ error: boolean }>(
+  ({ error }) => css`
+    max-width: 670px;
+    color: var(--white);
+    text-align: center;
+
+    .info {
+      background: var(--strong-blue);
+      font-size: var(--small);
+      line-height: 1.6;
+      border-radius: ${getSpacing(1)};
+      padding: ${getSpacing(4)};
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: ${getSpacing(3)};
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        padding: ${getSpacing(3)};
+      }
+
+      .title {
+        text-transform: uppercase;
+        font-weight: 700;
+        margin-bottom: ${getSpacing(3)};
+        display: flex;
+        align-items: center;
+        color: ${error ? "var(--error-red)" : "var(--turquoise)"};
+        font-size: var(--moderate);
+      }
+
+      .description {
+        margin-bottom: ${getSpacing(5)};
+      }
     }
   `
 );
