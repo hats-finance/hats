@@ -34,9 +34,11 @@ const VaultEditorFormPage = () => {
   const [searchParams] = useSearchParams();
 
   const isAdvancedMode = searchParams.get("mode") && searchParams.get("mode")?.includes("advanced");
+  const useAuditTemplate = searchParams.get("template") ? !!searchParams.get("template")?.includes("audit") : false;
+  console.log(useAuditTemplate);
 
   const methods = useForm<IEditedVaultDescription>({
-    defaultValues: createNewVaultDescription("v2"),
+    defaultValues: createNewVaultDescription("v2", useAuditTemplate),
     resolver: getEditedDescriptionYupSchema(t),
   });
   const { handleSubmit, formState, reset: handleReset, control, setValue, getValues } = methods;
