@@ -223,6 +223,7 @@
     "emailSent": "Email sent",
     "sendVerificationEmail": "Send verification email",
     "resendVerificationEmail": "Resend verification email",
+    "weRecommendToAddAtLeastTwoMembers": "We recommend to add at least two members to your vault.",
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
       "titleNoMultisig": "Hold on while we are creating your vault on chain. This might take few minutes",

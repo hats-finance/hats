@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "components";
+import { Alert, Button } from "components";
 import CommitteeMemberForm from "./CommitteeMemberForm/CommitteeMemberForm";
 import { createNewCommitteeMember } from "@hats-finance/shared";
 import { VaultEditorFormContext } from "../../store";
@@ -17,7 +17,6 @@ export function CommitteeMembersList() {
   return (
     <>
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCommitteeMembersSafeExplanation") }} />
-
       {members.map((member, index) => (
         <CommitteeMemberForm
           key={member.id}
@@ -34,6 +33,8 @@ export function CommitteeMembersList() {
           <span>{t("addMember")}</span>
         </Button>
       )}
+
+      {members.length < 2 && <Alert className="mt-5" content={t("weRecommendToAddAtLeastTwoMembers")} type="warning" />}
     </>
   );
 }
