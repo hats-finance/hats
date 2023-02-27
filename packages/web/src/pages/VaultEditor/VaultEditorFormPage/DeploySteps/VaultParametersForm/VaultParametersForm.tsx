@@ -106,6 +106,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   return (
     <StyledVaultEditorForm withoutMargin>
       <StyledVaultParametersForm>
+        <p className="section-title">{t("maxBounty")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation") }} />
 
         <div className="input">
@@ -120,7 +121,6 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
         </div>
 
         <p className="section-title">{t("bountySplit")}</p>
-
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
 
         <div className="bountySplitContainer">
@@ -143,7 +143,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
               </div>
               <div className="split">
                 {renderWithTooltip(
-                  t("nonEditable"),
+                  t("immediateSplitExplanation"),
                   <p>
                     {t("immediate")} <InfoIcon fontSize="small" className="ml-2" />
                   </p>
@@ -178,7 +178,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
               </div>
               <div className="split">
                 {renderWithTooltip(
-                  t("nonEditable"),
+                  t("vestedSplitExplanation"),
                   <p>
                     {t("vested")} <InfoIcon fontSize="small" className="ml-2" />
                   </p>
@@ -213,7 +213,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
               </div>
               <div className="split">
                 {renderWithTooltip(
-                  t("nonEditable"),
+                  t("committeeSplitExplanation"),
                   <p>
                     {t("committee")} <br /> (0%-10%) <InfoIcon fontSize="small" className="ml-2" />
                   </p>

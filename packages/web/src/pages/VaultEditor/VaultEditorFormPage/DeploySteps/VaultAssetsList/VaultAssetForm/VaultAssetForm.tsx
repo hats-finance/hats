@@ -81,6 +81,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
           label={t("VaultEditor.vault-assets.address")}
           placeholder={t("VaultEditor.vault-assets.address-placeholder")}
           colorable
+          pastable
           helper={assetInfo}
         />
       </div>

@@ -67,7 +67,7 @@ export const StyledVaultParametersForm = styled.div`
 
     .splitFixedValue {
       width: 100%;
-      border: 1px solid var(--grey-500);
+      border: 1px solid var(--grey-700);
       padding: ${getSpacing(1.2)} ${getSpacing(1.6)};
 
       p {

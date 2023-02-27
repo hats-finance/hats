@@ -88,6 +88,13 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
           color: var(--error-red);
         }
       }
+
+      div.backButton {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: ${getSpacing(2)};
+      }
     }
 
     .editing-existing-buttons {
@@ -106,7 +113,7 @@ export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
     }
 
     .helper-text {
-      color: var(--white);
+      color: var(--grey-400);
       margin-bottom: ${getSpacing(4)};
 
       ul {

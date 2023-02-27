@@ -581,7 +581,7 @@ const VaultEditorFormPage = () => {
             ))}
 
             {/* Alert section */}
-            {isVaultCreated && <Alert onClick={goToStatusPage} content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+            {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
 
             {/* Action buttons */}
             <div className="buttons-container">
@@ -591,11 +591,18 @@ const VaultEditorFormPage = () => {
                 </Button>
                 <span>{getNextButtonDisabled(currentStepInfo)}</span>
               </div>
-              {onGoBack && (
-                <Button styleType="invisible" onClick={() => onGoBack.go()}>
-                  <BackIcon className="mr-2" /> {onGoBack.text}
-                </Button>
-              )}
+              <div className="backButton">
+                {onGoBack && (
+                  <Button styleType="invisible" onClick={() => onGoBack.go()}>
+                    <BackIcon className="mr-2" /> {onGoBack.text}
+                  </Button>
+                )}
+                {isVaultCreated && (
+                  <Button onClick={goToStatusPage} styleType="outlined">
+                    {t("goToStatusPage")}
+                  </Button>
+                )}
+              </div>
             </div>
 
             {/* Editing existing vault action button */}

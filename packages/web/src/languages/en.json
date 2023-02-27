@@ -225,9 +225,13 @@
     "resendVerificationEmail": "Resend verification email",
     "weRecommendToAddAtLeastTwoMembers": "We recommend to add at least two members to your vault.",
     "backToVaultDescription": "Back to vault description",
+    "maxBounty": "Max bounty",
+    "immediateSplitExplanation": "Funds sent immediately to beneficiary's wallet",
+    "vestedSplitExplanation": "Funds vested 30 days, then sent to beneficiary's wallet.",
+    "committeeSplitExplanation": "Determine the committee reward percentage",
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
-      "titleNoMultisig": "Hold on while we are creating your vault on chain. This might take few minutes",
+      "titleNoMultisig": "We are creating your vault on chain. This might take a few minutes",
       "descriptionMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps.",
       "descriptionNoMultisig": "After completing the process, you will receive an email with a link to the vault status and next steps."
     },

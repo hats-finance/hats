@@ -4,7 +4,6 @@ import { AlertProps } from "./Alert";
 
 type StyledAlertProps = {
   type: AlertProps["type"];
-  onClick: AlertProps["onClick"];
 };
 
 const alertColors = {
@@ -13,16 +12,11 @@ const alertColors = {
 };
 
 export const StyledAlert = styled.div<StyledAlertProps>(
-  ({ type, onClick }) => css`
+  ({ type }) => css`
     border: 1px solid var(${alertColors[type]});
     padding: ${getSpacing(1.5)};
     font-size: var(--xsmall);
     color: var(--white);
-
-    ${onClick &&
-    css`
-      cursor: pointer;
-    `}
 
     .icon-container {
       display: flex;
