@@ -81,6 +81,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
         filter: grayscale(1);
         width: ${getSpacing(3)};
         height: ${getSpacing(3)};
+        margin-bottom: ${getSpacing(0.5)};
       }
     }
 
