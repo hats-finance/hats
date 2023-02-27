@@ -55,8 +55,8 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
   }
 };
 
-export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
-  const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
+export const createNewVaultDescription = (version: "v1" | "v2", useAuditTemplate = false): IEditedVaultDescription => {
+  const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version, useAuditTemplate);
   const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
   const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
     (s: IEditedVulnerabilitySeverity) => ({
