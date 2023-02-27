@@ -191,10 +191,13 @@ export const useVaultEditorSteps = (
   };
 
   const onGoBack = useMemo((): { go: Function; text: string } | undefined => {
+    if (!currentSectionInfo) return { go: () => {}, text: "" };
+
     const sectionsNames = Object.keys(editorSections);
     const currentSectionIndex = sectionsNames.indexOf(`${currentSection}`);
     const isInFirstSection = currentSectionIndex === 0;
     const isInFirstStep = currentStepNumber === 0;
+    const currentStep = currentSectionInfo["steps"][currentStepNumber];
 
     // If the user is in the first step of the first section, cant go back
     if (isInFirstSection && isInFirstStep) return undefined;
@@ -218,7 +221,9 @@ export const useVaultEditorSteps = (
           setCurrentSection(previousSection);
           setCurrentStepNumber(previousSectionLastStepIndex);
         },
-        text: t("back"),
+        text: t(
+          (isEditingExistingVault ? currentStep.backButtonTextKey?.editing : currentStep.backButtonTextKey?.creation) ?? "back"
+        ),
       };
     }
 
@@ -230,9 +235,22 @@ export const useVaultEditorSteps = (
 
         setCurrentStepNumber(currentStepNumber - 1);
       },
-      text: t("back"),
+      text: t(
+        (isEditingExistingVault ? currentStep.backButtonTextKey?.editing : currentStep.backButtonTextKey?.creation) ?? "back"
+      ),
     };
-  }, [currentSection, currentStepInfo?.formFields, currentStepNumber, editStepStatus, editorSections, formMethods, options, t]);
+  }, [
+    currentSection,
+    currentStepInfo?.formFields,
+    currentStepNumber,
+    editStepStatus,
+    editorSections,
+    formMethods,
+    options,
+    currentSectionInfo,
+    isEditingExistingVault,
+    t,
+  ]);
 
   const onGoNext = useMemo((): { go: Function; text: string } => {
     if (!currentSectionInfo) return { go: () => {}, text: "" };
