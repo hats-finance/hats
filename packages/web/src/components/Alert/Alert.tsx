@@ -7,9 +7,10 @@ export type AlertProps = {
   type: "warning" | "error" | "success";
   content: string;
   onClick?: () => void;
+  className?: string;
 };
 
-export const Alert = ({ type, content, onClick }: AlertProps) => {
+export const Alert = ({ type, content, onClick, ...props }: AlertProps) => {
   const { t } = useTranslation();
 
   const getAlertIcon = () => {
@@ -33,7 +34,7 @@ export const Alert = ({ type, content, onClick }: AlertProps) => {
   };
 
   return (
-    <StyledAlert type={type} onClick={onClick}>
+    <StyledAlert type={type} onClick={onClick} {...props}>
       <div className="icon-container">
         <div className="icon">{getAlertIcon()}</div> <span>{getAlertTitle()}</span>
       </div>
