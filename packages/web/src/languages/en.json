@@ -47,7 +47,7 @@
     "joinUsDiscord": "Join us on Discord",
     "skip": "Skip",
     "pgpPublicKey": "PGP Public Key",
-    "addPgpPublicKey": "Add a PGP Public Key",
+    "addPgpPublicKey": "Press to open PGP key store",
     "remove": "Remove",
     "add": "Add",
     "addMember": "Add new member",
