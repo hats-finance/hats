@@ -1,7 +1,7 @@
 import { ChainsConfig } from "@hats-finance/shared";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, useAccount } from "wagmi";
-import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
+import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
 import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -12,7 +12,8 @@ const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
   ETHEREUM: { prod: ChainsConfig[mainnet.id], test: ChainsConfig[goerli.id] },
-  OPTIMISM: { prod: null, test: ChainsConfig[optimismGoerli.id] },
+  OPTIMISM: { prod: ChainsConfig[optimism.id], test: ChainsConfig[optimismGoerli.id] },
+  ARBITRUM: { prod: ChainsConfig[arbitrum.id], test: null },
 };
 
 interface GraphVaultsData {
@@ -70,9 +71,10 @@ export const useMultiChainVaults = () => {
 
   const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
+  const { data: arbitrumData, chainId: arbitrumChainId, isFetched: isArbitrumFetched } = useSubgraphFetch("ARBITRUM", networkEnv);
 
   useEffect(() => {
-    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched];
+    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched];
     const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
 
     if (!areAllNetworksFetched) return;
@@ -80,16 +82,19 @@ export const useMultiChainVaults = () => {
     const allVaults = [
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+      ...(arbitrumData?.vaults?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
     ];
 
     const allMasters = [
       ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+      ...(arbitrumData?.masters?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
     ];
 
     const allUserNfts = [
       ...(ethereumData?.userNfts?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.userNfts?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
+      ...(arbitrumData?.userNfts?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
     ];
 
     const newVaults = {
@@ -103,9 +108,18 @@ export const useMultiChainVaults = () => {
     if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
       setVaults({ vaults: allVaults, masters: allMasters, userNfts: allUserNfts });
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ethereumData, optimismData, ethereumChainId, optimismChainId, isEthereumFetched, isOptimismFetched]);
+  }, [
+    vaults,
+    ethereumData,
+    optimismData,
+    arbitrumData,
+    ethereumChainId,
+    optimismChainId,
+    arbitrumChainId,
+    isEthereumFetched,
+    isOptimismFetched,
+    isArbitrumFetched,
+  ]);
 
   return { data: vaults, networkEnv };
 };
