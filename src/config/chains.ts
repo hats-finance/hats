@@ -18,8 +18,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
     chain: mainnet,
     endpoint: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
-    subgraph:
-      "https://gateway.thegraph.com/api/1c8f0e56a34742a0b26d486419dc4ed5/subgraphs/id/FewLU4ds1nBaDR5oBnucc8YsAsRN9cjM5Th15HyDSWBt",
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
   },
   [goerli.id]: {
