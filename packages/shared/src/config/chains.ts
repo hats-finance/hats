@@ -17,8 +17,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [mainnet.id]: {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
     chain: mainnet,
-    subgraph:
-      "https://gateway.thegraph.com/api/1c8f0e56a34742a0b26d486419dc4ed5/subgraphs/id/FewLU4ds1nBaDR5oBnucc8YsAsRN9cjM5Th15HyDSWBt",
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
   },
   [goerli.id]: {
@@ -26,7 +25,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     rewardController: "0x2BC5B4b9d32a3020FC75659A08d14AF755143E50",
     vaultsNFTContract: "0x0196EdC0b3C81B79486E5D99e7D748955EE650D3",
     chain: goerli,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/goerli_v2_1",
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
     coingeckoId: undefined,
   },
   [optimism.id]: {
