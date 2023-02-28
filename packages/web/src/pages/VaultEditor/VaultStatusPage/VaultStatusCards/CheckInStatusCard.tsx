@@ -54,7 +54,7 @@ export const CheckInStatusCard = () => {
         <p className="status-card__text">{t("committeeCheckedIn")}</p>
       ) : (
         <>
-          <p className="status-card__text">{t("checkInExpanation")}</p>
+          <p className="status-card__text mb-5">{t("checkInExpanation")}</p>
           {!isMultisigConnected && <Alert content={t("connectWithCommitteeMultisig")} type="warning" />}
           {checkInCall?.error && <p className="status-card__error">{checkInCall?.error.message}</p>}
           {isBeingExecuted && !checkInCall?.error && <Alert content={t("safeProposalCreatedSuccessfully")} type="warning" />}

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BigNumber } from "ethers";
 import millify from "millify";
-import { Button, Modal, Pill } from "components";
+import { Alert, Button, Modal, Pill } from "components";
 import { ipfsTransformUri } from "utils";
 import { useVaults } from "hooks/vaults/useVaults";
 import useModal from "hooks/useModal";
@@ -40,7 +40,12 @@ export const DepositStatusCard = () => {
         <div className="status-card__title">
           <div className="leftSide">
             <span>{t("deposit")}</span>
-            <Pill color={isVaultDeposited ? "blue" : "red"} text={isVaultDeposited ? t("completed") : t("awaitingAction")} />
+            <Pill
+              color={isVaultDeposited ? "blue" : "red"}
+              text={
+                isVaultDeposited ? t("completed") : vaultData.isCommitteeCheckedIn ? t("awaitingAction") : t("awaitingCheckin")
+              }
+            />
           </div>
         </div>
 
@@ -73,8 +78,8 @@ export const DepositStatusCard = () => {
               </>
             ) : (
               <>
-                <p className="status-card__text">{t("depositOnVaultExplanation")}</p>
-                <p className="status-card__error">{t("committeeMustCheckInFirst")}</p>
+                <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>
+                <Alert content={t("committeeMustCheckInFirst")} type="warning" />
                 <Button disabled className="status-card__button">
                   {t("deposit")}
                 </Button>
