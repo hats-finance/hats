@@ -31,7 +31,7 @@ export function VaultFormReview() {
       honeyPotBalance: "0",
       totalRewardPaid: "0",
       committee: "",
-      allocPoint: "0",
+      allocPoints: ["0"],
       master: {
         address: "",
         numberOfSubmittedClaims: "",

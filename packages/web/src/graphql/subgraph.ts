@@ -10,7 +10,6 @@ export const GET_VAULTS = `
       withdrawRequestPendingPeriod
       vestingHatDuration
       vestingHatPeriods
-      rewardsToken
     }
     userNfts: owners(where: { address: $account }) {
       id
@@ -34,7 +33,7 @@ export const GET_VAULTS = `
       honeyPotBalance
       totalRewardPaid
       committee
-      allocPoint
+      allocPoints
       master {
         address
         numberOfSubmittedClaims
@@ -44,7 +43,6 @@ export const GET_VAULTS = `
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
-        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels

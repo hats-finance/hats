@@ -1,15 +1,14 @@
 import { useTranslation } from "react-i18next";
-import { useTokenBalanceAmount } from "hooks/wagmi";
-import { useVaults } from "hooks/vaults/useVaults";
+import { BigNumber } from "ethers";
 import WalletIcon from "assets/icons/balance.svg";
+import { Amount } from "utils/amounts.utils";
 import { StyledBalance } from "./styles";
-import { useAccount } from "wagmi";
 
 export default function Balance() {
   const { t } = useTranslation();
-  const { address: account } = useAccount();
-  const { masters } = useVaults();
-  const hatsBalance = useTokenBalanceAmount({ token: masters?.[0].rewardsToken, address: account });
+  // const { address: account } = useAccount();
+  // const { masters } = useVaults();
+  const hatsBalance = new Amount(BigNumber.from(0), "18");
 
   return (
     <StyledBalance>

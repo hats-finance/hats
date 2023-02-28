@@ -10,7 +10,7 @@ export interface IBaseVault {
   honeyPotBalance: string;
   totalRewardPaid: string;
   committee: string;
-  allocPoint?: string;
+  allocPoints?: string[];
   master: IMaster;
   version: "v1" | "v2";
   arbitrator?: string;
@@ -40,7 +40,7 @@ export interface IBaseVault {
 export interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
-  allocPoint: string;
+  allocPoints: string[];
   description?: IVaultDescriptionV1;
 }
 export interface IVaultV2 extends IBaseVault {
