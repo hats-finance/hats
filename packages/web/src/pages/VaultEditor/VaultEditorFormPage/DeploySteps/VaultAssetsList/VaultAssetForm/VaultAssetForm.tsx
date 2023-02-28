@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from "react";
+import { useAccount, useNetwork } from "wagmi";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { ChainsConfig } from "@hats-finance/shared";
@@ -19,18 +20,26 @@ type VaultAssetFormProps = {
 
 export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAssetFormProps) {
   const { t } = useTranslation();
+  const { address } = useAccount();
+  const { chain } = useNetwork();
   const [assetInfo, setAssetInfo] = useState<string | undefined>(undefined);
   const { register, control, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 
-  const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
-    label: chainConf.chain.name,
-    value: `${chainConf.chain.id}`,
-  }));
-
   const vaultChainId = useWatch({ control, name: "committee.chainId" });
   const tokenAddress = useWatch({ control, name: `assets.${index}.address` });
+
+  const showTestnets = address && chain?.testnet;
+  const supportedNetworksOptions = Object.values(ChainsConfig)
+    .filter(
+      (chainInfo) =>
+        Number(vaultChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)
+    )
+    .map((chainConf) => ({
+      label: chainConf.chain.name,
+      value: `${chainConf.chain.id}`,
+    }));
 
   useEffect(() => {
     if (tokenAddress && vaultChainId) {

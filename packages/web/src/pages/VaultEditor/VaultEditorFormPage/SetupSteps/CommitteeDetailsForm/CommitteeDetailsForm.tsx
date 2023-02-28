@@ -1,5 +1,6 @@
 import { ChainsConfig } from "@hats-finance/shared";
 import { useContext, useEffect } from "react";
+import { useAccount, useNetwork } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
@@ -11,16 +12,24 @@ import { StyledCommitteeDetailsForm } from "./styles";
 
 export function CommitteeDetailsForm() {
   const { t } = useTranslation();
+  const { address } = useAccount();
+  const { chain } = useNetwork();
 
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const committeeChainId = useWatch({ control, name: "committee.chainId" });
 
   const { isEditingExitingVault, allFormDisabled } = useContext(VaultEditorFormContext);
 
-  const supportedNetworksOptions = Object.values(ChainsConfig).map((chainConf) => ({
-    label: chainConf.chain.name,
-    value: `${chainConf.chain.id}`,
-  }));
+  const showTestnets = address && chain?.testnet;
+  const supportedNetworksOptions = Object.values(ChainsConfig)
+    .filter(
+      (chainInfo) =>
+        Number(committeeChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)
+    )
+    .map((chainConf) => ({
+      label: chainConf.chain.name,
+      value: `${chainConf.chain.id}`,
+    }));
 
   useEffect(() => {
     if (committeeChainId) trigger("committee.multisig-address");
