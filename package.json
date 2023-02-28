@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "cd packages/shared && yarn build && cd ../.. && cd packages/web && yarn start",
     "build": "yarn workspaces run build",
-    "publish:shared": "cd packages/shared && yarn run publish"
+    "publish:shared": "cd packages/shared && npm run publish"
   },
   "workspaces": [
     "packages/*"
