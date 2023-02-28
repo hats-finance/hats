@@ -1,8 +1,7 @@
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
 import { writeContract } from "wagmi/actions";
 import { NFTContractDataProxy } from "constants/constants";
 import { buildMerkleTree, hashToken } from "./utils";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
-import { ChainsConfig } from "config/chains";
 import { AirdropMachineWallet } from "./types";
 
 export async function redeemAirdrop(chainId: number, airdropTree: AirdropMachineWallet[], address: string) {

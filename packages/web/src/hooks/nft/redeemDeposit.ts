@@ -1,7 +1,6 @@
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
 import { writeContract } from "wagmi/actions";
-import { ChainsConfig } from "config/chains";
 import { INFTTokenInfo } from "./types";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { NFTContractDataProxy } from "constants/constants";
 import { getPidsWithAddresses } from "./utils";
 

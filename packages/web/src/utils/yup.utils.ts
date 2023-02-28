@@ -1,5 +1,5 @@
-import { ChainsConfig } from "config/chains";
 import * as Yup from "yup";
+import { ChainsConfig } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
 import { isEmailAddress } from "./emails.utils";
 import { getGnosisSafeInfo } from "./gnosis.utils";

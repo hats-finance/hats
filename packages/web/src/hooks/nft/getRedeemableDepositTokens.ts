@@ -1,7 +1,6 @@
 import { readContract, readContracts } from "wagmi/actions";
-import { ChainsConfig } from "config/chains";
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
 import { NFTContractDataProxy } from "constants/constants";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { ipfsTransformUri } from "utils";

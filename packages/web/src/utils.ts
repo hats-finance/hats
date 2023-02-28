@@ -1,11 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import millify from "millify";
+import { ChainsConfig } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { BASE_SERVICE_URL } from "settings";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
-import { ChainsConfig } from "config/chains";
 import { COIN_GECKO, IPFS_PREFIX, LocalStorage } from "constants/constants";
 import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
 import { CoinGeckoPriceResponse } from "types";

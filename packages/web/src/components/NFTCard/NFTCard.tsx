@@ -1,5 +1,6 @@
-import { useNetwork } from "wagmi";
 import { useEffect, useState } from "react";
+import { useNetwork } from "wagmi";
+import { ChainsConfig } from "@hats-finance/shared";
 import ReactDOM from "react-dom";
 import { Media } from "components";
 import classNames from "classnames";
@@ -8,7 +9,6 @@ import { useEscapePressed } from "hooks/useKeyPress";
 import { ipfsTransformUri } from "utils";
 import OpenInNewTabIcon from "assets/icons/open-in-new-tab.svg";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import { ChainsConfig } from "config/chains";
 import { INFTTokenMetadata } from "hooks/nft/types";
 import "./index.scss";
 

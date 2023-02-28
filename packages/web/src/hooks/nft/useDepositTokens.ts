@@ -1,9 +1,8 @@
-import { prepareWriteContract, writeContract } from "wagmi/actions";
-import { ChainsConfig } from "config/chains";
-import { NFTContractDataProxy } from "constants/constants";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
-import { BigNumber, ethers } from "ethers";
 import { useCallback, useEffect, useState } from "react";
+import { BigNumber, ethers } from "ethers";
+import { prepareWriteContract, writeContract } from "wagmi/actions";
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
+import { NFTContractDataProxy } from "constants/constants";
 import { IVault } from "types";
 import { getDepositTokensWithRedeemState } from "./getRedeemableDepositTokens";
 import { INFTTokenInfoRedeemed } from "./types";

@@ -1,6 +1,6 @@
+import { ChainsConfig, IChainConfiguration } from "@hats-finance/shared";
 import { mainnet } from "wagmi/chains";
 import { stagingServiceUrl, prodServiceUrl } from "./constants/constants";
-import { ChainsConfig, IChainConfiguration } from "config/chains";
 
 const prodHosts = ["app.hats.finance"];
 

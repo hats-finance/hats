@@ -1,12 +1,12 @@
 {
   "name": "@hats-finance/shared",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "publish": "yarn run build && npm publish"
+    "publish": "npm run build && npm publish"
   },
   "keywords": [],
   "author": "leviyehonatan",
@@ -17,6 +17,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "wagmi": "^0.9.4"
   }
 }

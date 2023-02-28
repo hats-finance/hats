@@ -1,4 +1,4 @@
-import { ChainsConfig } from "config/chains";
+import { ChainsConfig } from "@hats-finance/shared";
 import { GET_STAKER } from "graphql/subgraph";
 import { IStaker } from "types";
 
@@ -15,7 +15,7 @@ export async function getStakerData(chainId: number, address: string) {
     method: "POST",
     body: JSON.stringify({ query: GET_STAKER, variables: { address } }),
     headers: { "Content-Type": "application/json" },
-    cache: "default"
+    cache: "default",
   });
   const dataJson = (await res.json()) as { data: { stakers: IStaker[] } };
   return dataJson.data.stakers;

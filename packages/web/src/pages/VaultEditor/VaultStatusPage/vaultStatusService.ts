@@ -1,8 +1,7 @@
-import axios from "axios";
+import { HATSVaultV2_abi, HATSVaultsRegistry_abi, ChainsConfig } from "@hats-finance/shared";
 import { getContract, getProvider, readContracts } from "wagmi/actions";
+import axios from "axios";
 import { IEditedSessionResponse, IVaultDescription } from "types";
-import { HATSVaultV2_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
-import { ChainsConfig } from "config/chains";
 import { BASE_SERVICE_URL } from "settings";
 import { IVaultStatusData } from "./types";
 import { ipfsTransformUri } from "utils";

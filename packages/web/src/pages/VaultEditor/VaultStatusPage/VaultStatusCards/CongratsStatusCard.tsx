@@ -1,8 +1,8 @@
-import { ChainsConfig } from "config/chains";
-import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import Tooltip from "rc-tooltip";
 import { useContext } from "react";
+import Tooltip from "rc-tooltip";
+import { ChainsConfig } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { VaultStatusContext } from "../store";
 
 export const CongratsStatusCard = () => {

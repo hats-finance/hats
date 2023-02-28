@@ -11,14 +11,14 @@ import {
   convertVulnerabilitySeverityV1ToV2,
   editedFormToCreateVaultOnChainCall,
   nonEditableEditionStatus,
+  ChainsConfig,
 } from "@hats-finance/shared";
+import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
 import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
-import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
-import { ChainsConfig } from "config/chains";
 import useConfirm from "hooks/useConfirm";
 import * as VaultService from "./vaultService";
 import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";

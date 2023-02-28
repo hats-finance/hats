@@ -1,7 +1,7 @@
+import { ChainsConfig } from "@hats-finance/shared";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { isAddress, shortenIfAddress } from "utils/addresses.utils";
 import { IVault } from "types";
-import { ChainsConfig } from "config/chains";
 import "./ContractsCovered.scss";
 
 interface ContractsCoveredProps {

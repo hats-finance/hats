@@ -1,8 +1,8 @@
+import { ChainsConfig } from "@hats-finance/shared";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
-import { ChainsConfig } from "config/chains";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
 import { IEditedVaultDescription } from "types";

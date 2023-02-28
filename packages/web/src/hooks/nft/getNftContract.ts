@@ -1,6 +1,5 @@
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
-import { ChainsConfig } from "config/chains";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
 
 export async function getNftContract(chainId: number) {
   const providerForChain = getProvider({ chainId });

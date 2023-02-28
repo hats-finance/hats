@@ -1,8 +1,7 @@
+import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
 import { useContractRead } from "wagmi";
 import { BigNumber } from "ethers";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { IVault } from "types";
-import { ChainsConfig } from "config/chains";
 import { NFTContractDataProxy } from "constants/constants";
 
 export function useVaultRegisteredNft(vault: IVault) {

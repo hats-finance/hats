@@ -1,10 +1,10 @@
+import { ChainsConfig } from "@hats-finance/shared";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, useAccount } from "wagmi";
 import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
 import { IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
-import { ChainsConfig } from "config/chains";
 
 const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
 

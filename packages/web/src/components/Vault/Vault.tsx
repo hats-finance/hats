@@ -1,5 +1,6 @@
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
+import { ChainsConfig } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { BigNumber } from "ethers";
 import millify from "millify";
@@ -14,7 +15,6 @@ import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
 import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
-import { ChainsConfig } from "config/chains";
 
 interface VaultComponentProps {
   vault: IVault;

@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { ChainsConfig } from "@hats-finance/shared";
 import { FormInput, FormSelectInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { IEditedVaultAsset, IEditedVaultDescription } from "types";
 import { StyledVaultAssetForm } from "./styles";
-import { ChainsConfig } from "config/chains";
 import { getTokenInfo } from "utils/tokens.utils";
 import { isAddress } from "utils/addresses.utils";
 import { VaultEditorFormContext } from "../../../store";
