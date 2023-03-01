@@ -45,7 +45,7 @@ export function VaultFormReview() {
         vaults: [],
         totalAllocPoints: "",
         createdAt: "",
-        rewardsToken: "",
+        // rewardsToken: "",
         submittedClaim: [],
       },
       numberOfApprovedClaims: "0",
