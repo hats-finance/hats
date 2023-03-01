@@ -10,7 +10,6 @@ export const GET_VAULTS = `
       withdrawRequestPendingPeriod
       vestingHatDuration
       vestingHatPeriods
-      rewardsToken
     }
     userNfts: owners(where: { address: $account }) {
       id
@@ -43,7 +42,6 @@ export const GET_VAULTS = `
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
-        rewardsToken
       }
       numberOfApprovedClaims
       rewardsLevels

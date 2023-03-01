@@ -172,7 +172,6 @@ export interface IMaster {
   vaults: Array<IVault>;
   totalAllocPoints: string;
   createdAt: string;
-  rewardsToken: string;
   numberOfSubmittedClaims: string;
   submittedClaim: Array<ISubmittedClaim>;
   withdrawPeriod: string;
