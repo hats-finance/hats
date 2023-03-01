@@ -43,6 +43,12 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
   }
 };
 
+export const getSafeWalletConnectLink = (address: string, chainId: number): string => {
+  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(
+    chainId
+  )}:${address}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+};
+
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {
   if (!chainId) return "";
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;
