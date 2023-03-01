@@ -231,6 +231,8 @@
     "immediateSplitExplanation": "Funds sent immediately to beneficiary's wallet",
     "vestedSplitExplanation": "Funds vested 30 days, then sent to beneficiary's wallet.",
     "committeeSplitExplanation": "Determine the committee reward percentage",
+    "openWalletConnectOnSafe": "Open WalletConnect on safe app",
+    "ifYouWantToConnectWalletConnect": "If you want to connect your multisig wallet with WalletConnect, follow this steps: \n 1. Open Gnosis safe WalletConnect app (pressing the button below). \n 2. Select 'WalletConnet' on the 'Connect Wallet' button. \n 3. Copy the QR code and paste it on Gnosis app.",
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
       "titleNoMultisig": "We are creating your vault on chain. This might take a few minutes",
