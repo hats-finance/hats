@@ -20,8 +20,7 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import useConfirm from "hooks/useConfirm";
-import * as VaultService from "./vaultService";
-import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
+import * as VaultEditorService from "../vaultEditorService";
 import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionStatus, IEditedSessionResponse } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
@@ -114,14 +113,14 @@ const VaultEditorFormPage = () => {
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
 
     if (isCreation) {
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(
+      sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(
         undefined,
         undefined,
         withIpfsHash ? editSessionId : undefined
       );
     } else {
       const data: IEditedVaultDescription = getValues();
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId, undefined);
+      sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(data, editSessionId, undefined);
     }
 
     if (typeof sessionIdOrSessionResponse === "string") {
@@ -142,7 +141,7 @@ const VaultEditorFormPage = () => {
     try {
       setLoadingEditSession(true);
 
-      const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
+      const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
       console.log(`EditSession: `, editSessionResponse);
 
       if (editSessionResponse.vaultAddress) {
@@ -225,7 +224,7 @@ const VaultEditorFormPage = () => {
     if (wantsToEdit) {
       setLoading(true);
       await createOrSaveEditSession(false, false);
-      await VaultService.sendEditionToGovApproval(editSessionId);
+      await VaultEditorService.sendEditionToGovApproval(editSessionId);
       setLoading(false);
 
       goToStatusPage();
@@ -243,7 +242,7 @@ const VaultEditorFormPage = () => {
 
     if (wantsToCancel) {
       setLoading(true);
-      const sessionResponse = await VaultService.cancelEditionApprovalRequest(editSessionId);
+      const sessionResponse = await VaultEditorService.cancelEditionApprovalRequest(editSessionId);
       setLoading(false);
       if (sessionResponse) {
         setDescriptionHash(sessionResponse.descriptionHash);
@@ -259,7 +258,7 @@ const VaultEditorFormPage = () => {
     const createdVaultInfo = getValues("vaultCreatedInfo");
 
     if (createdVaultInfo) {
-      const vaultInfo = await VaultStatusService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
+      const vaultInfo = await VaultEditorService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
       setOriginalDescriptionHash(vaultInfo.descriptionHash);
     }
   }, [getValues]);

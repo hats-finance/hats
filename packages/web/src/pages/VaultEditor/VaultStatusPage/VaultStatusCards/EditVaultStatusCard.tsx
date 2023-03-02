@@ -8,7 +8,7 @@ import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
 import { checkIfAddressIsPartOfComitteOnStatus } from "../utils";
 import { VaultStatusContext } from "../store";
-import * as VaultStatusService from "../vaultStatusService";
+import * as VaultEditorService from "../../vaultEditorService";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 
 export const EditVaultStatusCard = () => {
@@ -34,10 +34,10 @@ export const EditVaultStatusCard = () => {
 
   const fetchEditSessions = async (vaultAddress: string, vaultChainId: number, descriptionHash: string) => {
     setLoadingEditSessions(true);
-    const editSessions = await VaultStatusService.getEditionEditSessions(vaultAddress, vaultChainId);
+    const editSessions = await VaultEditorService.getEditionEditSessions(vaultAddress, vaultChainId);
     setEditSessions(editSessions);
 
-    const currentEditSession = await VaultStatusService.getCurrentValidEditSession(descriptionHash, vaultAddress, vaultChainId);
+    const currentEditSession = await VaultEditorService.getCurrentValidEditSession(descriptionHash, vaultAddress, vaultChainId);
     setDeployedEditSession(currentEditSession);
     setLoadingEditSessions(false);
   };
@@ -48,7 +48,7 @@ export const EditVaultStatusCard = () => {
       navigate(`${RoutePaths.vault_editor}/${lastEditSession._id}`);
     } else {
       setLoading(true);
-      const editSessionId = await VaultStatusService.createEditSessionOffChain(vaultAddress, vaultChainId);
+      const editSessionId = await VaultEditorService.createEditSessionOffChain(vaultAddress, vaultChainId);
       navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
       setLoading(false);
     }

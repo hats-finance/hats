@@ -11,7 +11,7 @@ import {
   DepositStatusCard,
   GovApprovalStatusCard,
 } from "./VaultStatusCards";
-import * as VaultStatusService from "./vaultStatusService";
+import * as VaultStatusService from "../vaultEditorService";
 import { IVaultStatusData } from "./types";
 import { StyledVaultStatusPage } from "./styles";
 import { VaultStatusContext } from "./store";

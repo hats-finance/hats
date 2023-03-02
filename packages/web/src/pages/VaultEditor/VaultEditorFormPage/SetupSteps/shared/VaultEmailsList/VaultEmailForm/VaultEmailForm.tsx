@@ -7,7 +7,7 @@ import { isEmailAddress } from "utils/emails.utils";
 import { VaultEditorFormContext } from "pages/VaultEditor/VaultEditorFormPage/store";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import * as VaultService from "../../../../vaultService";
+import * as VaultEditorService from "../../../../../vaultEditorService";
 import { StyledVaultEmail } from "./styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import VerifyEmailIcon from "@mui/icons-material/ForwardToInboxOutlined";
@@ -35,7 +35,7 @@ export const VaultEmailForm = ({ index, email, emailsCount, remove }: VaultEmail
 
   const resendVerificationEmail = async (email: string) => {
     if (editSessionId) {
-      await VaultService.resendVerificationEmail(editSessionId, email);
+      await VaultEditorService.resendVerificationEmail(editSessionId, email);
       setEmailSent(true);
     }
   };

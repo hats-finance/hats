@@ -13380,7 +13380,7 @@ sisteransi@^1.0.5:
 
 siwe@^1.1.6:
   version "1.1.6"
-  resolved "https://registry.npmjs.org/siwe/-/siwe-1.1.6.tgz"
+  resolved "https://registry.yarnpkg.com/siwe/-/siwe-1.1.6.tgz#b4b4fe7814654d5ea529171b2ede15f7ef7ef1ae"
   integrity sha512-3WRdEil32Tc2vuNzqJ2/Z/MIvsvy0Nkzc2ov+QujmpHO7tM83dgcb47z0Pu236T4JQkOQCqQkq3AJ/rVIezniA==
   dependencies:
     "@spruceid/siwe-parser" "^1.1.3"
