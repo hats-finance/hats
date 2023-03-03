@@ -86,10 +86,19 @@ export const useSiweAuth = () => {
     }
   };
 
+  const tryAuthentication = async (): Promise<boolean> => {
+    if (!profileData.loggedIn) {
+      const authenticated = (await signIn()).ok;
+      return authenticated;
+    }
+
+    return true;
+  };
+
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
     setProfileData({ loggedIn: false });
   };
 
-  return { signIn, logout, isSigningIn, profileData, isAuthenticated: profileData.loggedIn };
+  return { signIn, logout, isSigningIn, profileData, isAuthenticated: profileData.loggedIn, tryAuthentication };
 };

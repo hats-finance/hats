@@ -15,6 +15,7 @@ import {
 } from "@hats-finance/shared";
 import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
@@ -48,6 +49,8 @@ const VaultEditorFormPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const confirm = useConfirm();
+
+  const { tryAuthentication } = useSiweAuth();
 
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
   const showVerifiedEmailModal = !!searchParams.get("verifiedEmail") || !!searchParams.get("unverifiedEmail");
@@ -289,13 +292,23 @@ const VaultEditorFormPage = () => {
     const editData = getValues();
     const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnForm(address, editData);
 
-    if (isEditingExitingVault && !isMemberOrMultisig) {
-      setUserHasNoPermissions(true);
-      setAllFormDisabled(true);
+    if (isEditingExitingVault) {
+      if (!isMemberOrMultisig) {
+        setUserHasNoPermissions(true);
+        setAllFormDisabled(true);
+      } else {
+        setUserHasNoPermissions(true);
+        setAllFormDisabled(true);
+        tryAuthentication().then((isAuthenticated) => {
+          setUserHasNoPermissions(!isAuthenticated);
+          setAllFormDisabled(!isAuthenticated);
+        });
+      }
     } else {
       setUserHasNoPermissions(false);
       setAllFormDisabled(isVaultCreated || isNonEditableStatus);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, address, getValues]);
 
   useEffect(() => {

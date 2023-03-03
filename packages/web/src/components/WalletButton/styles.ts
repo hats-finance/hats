@@ -67,5 +67,24 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
       width: 25px;
       height: 25px;
     }
+
+    .signedIn {
+      font-size: var(--tiny);
+      position: absolute;
+      width: 100%;
+      bottom: 0;
+      transform: translate(-50%, 100%);
+      left: 50%;
+      background-color: var(--blue);
+      padding: 4px 12px;
+      opacity: 0;
+      transition: 0.2s;
+    }
+
+    &:hover {
+      .signedIn {
+        opacity: 1;
+      }
+    }
   `
 );

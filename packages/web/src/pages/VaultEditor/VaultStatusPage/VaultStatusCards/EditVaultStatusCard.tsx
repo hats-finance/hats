@@ -18,7 +18,7 @@ export const EditVaultStatusCard = () => {
   const navigate = useNavigate();
   const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
 
-  const { signIn, isAuthenticated } = useSiweAuth();
+  const { tryAuthentication } = useSiweAuth();
 
   const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
 
@@ -46,10 +46,8 @@ export const EditVaultStatusCard = () => {
   };
 
   const handleEditVault = async () => {
-    if (!isAuthenticated) {
-      const authenticated = (await signIn()).ok;
-      if (!authenticated) return;
-    }
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
 
     // If last edition is waiting approval or editing, don't create a new edit session
     if (lastEditionIsEditing || lastEditionIsWaitingApproval) {
@@ -67,7 +65,12 @@ export const EditVaultStatusCard = () => {
     navigate(`${RoutePaths.vault_editor}/${deployedEditSession._id}`);
   };
 
-  const goToEditSession = (editSessionData: IEditedSessionResponse) => {
+  const goToEditSession = async (editSessionData: IEditedSessionResponse, isEditing: boolean) => {
+    if (isEditing) {
+      const signedIn = await tryAuthentication();
+      if (!signedIn) return;
+    }
+
     navigate(`${RoutePaths.vault_editor}/${editSessionData._id}`);
   };
 
@@ -85,8 +88,11 @@ export const EditVaultStatusCard = () => {
 
   const getEditSessionActions = (editSessionData: IEditedSessionResponse) => {
     const isEditing = editSessionData.vaultEditionStatus === "editing";
+
+    if (isEditing && !isMemberOrMultisig) return null;
+
     return (
-      <Button onClick={() => goToEditSession(editSessionData)} styleType="invisible">
+      <Button onClick={() => goToEditSession(editSessionData, isEditing)} styleType="invisible">
         <ViewIcon className="mr-2" /> {isEditing ? t("continueEdition") : t("viewEdit")}
       </Button>
     );

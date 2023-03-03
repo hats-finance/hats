@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork, useTransaction } from "wagmi";
+import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";
@@ -21,8 +22,8 @@ const WalletButton = () => {
   const { disconnect } = useDisconnect();
   const [canReconnect, setCanReconnect] = useState(false);
   const [showConnectors, setShowConnectors] = useState(false);
-  // TODO: [v2] verify if this works well
-  const { data: transaction } = useTransaction({ scopeKey: "hats" });
+
+  const { isAuthenticated } = useSiweAuth();
 
   const deactivateAccount = useCallback(() => {
     disconnect();
@@ -115,11 +116,13 @@ const WalletButton = () => {
       <StyledWalletButton
         onClick={() => setShowConnectors((prev) => !prev)}
         connected={!!account}
-        existsPendingTransaction={!!transaction}>
+        existsPendingTransaction={false}
+      >
         {!account && <Dot color={Colors.red} />}
         {/* {account && connectedConnector && <div className="provider-icon">{getProviderIcon()}</div>} */}
         {account && <div className="network-icon">{getNetworkIcon()}</div>}
         {getButtonTitle()}
+        {isAuthenticated && <p className="signedIn">{t("signedInWithSiwe")}</p>}
       </StyledWalletButton>
 
       <DropdownSelector options={getConnectorsOptions()} show={showConnectors} onClose={() => setShowConnectors(false)} />
