@@ -18,10 +18,7 @@ export const EditVaultStatusCard = () => {
   const navigate = useNavigate();
   const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
 
-  const { signIn, logout, profileData, isSigningIn } = useSiweAuth();
-
-  console.log("profileData", profileData);
-  console.log("isSigningIn", isSigningIn);
+  const { signIn, isAuthenticated } = useSiweAuth();
 
   const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
 
@@ -49,17 +46,20 @@ export const EditVaultStatusCard = () => {
   };
 
   const handleEditVault = async () => {
-    signIn();
-    return;
-    // // If last edition is waiting approval or editing, don't create a new edit session
-    // if (lastEditionIsEditing || lastEditionIsWaitingApproval) {
-    //   navigate(`${RoutePaths.vault_editor}/${lastEditSession._id}`);
-    // } else {
-    //   setLoading(true);
-    //   const editSessionId = await VaultEditorService.createEditSessionOffChain(vaultAddress, vaultChainId);
-    //   navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
-    //   setLoading(false);
-    // }
+    if (!isAuthenticated) {
+      const authenticated = (await signIn()).ok;
+      if (!authenticated) return;
+    }
+
+    // If last edition is waiting approval or editing, don't create a new edit session
+    if (lastEditionIsEditing || lastEditionIsWaitingApproval) {
+      navigate(`${RoutePaths.vault_editor}/${lastEditSession._id}`);
+    } else {
+      setLoading(true);
+      const editSessionId = await VaultEditorService.createEditSessionOffChain(vaultAddress, vaultChainId);
+      navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
+      setLoading(false);
+    }
   };
 
   const handleViewCurrentDescription = () => {
@@ -152,13 +152,9 @@ export const EditVaultStatusCard = () => {
           />
         </div>
       </div>
-
       {getInfoText(lastEditionIsWaitingApproval)}
-
       {loadingEditSessions ? <p>{t("loadingInformation")}...</p> : getEditSessions()}
-
       {!isMemberOrMultisig && <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="warning" />}
-
       {isMemberOrMultisig && (
         <div className="status-card__buttons">
           <Button disabled={!deployedEditSession} onClick={handleViewCurrentDescription} styleType="outlined">
@@ -168,7 +164,6 @@ export const EditVaultStatusCard = () => {
           <Button onClick={handleEditVault}>{t("editVault")}</Button>
         </div>
       )}
-
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}
     </div>
   );
