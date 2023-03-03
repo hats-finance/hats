@@ -1,8 +1,8 @@
-import axios from "axios";
 import { getContract, getProvider, readContracts } from "wagmi/actions";
 import { ChainsConfig, HATSVaultsRegistry_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
+import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
 import { ipfsTransformUri } from "utils";
 import { IEditedSessionResponse, IEditedVaultDescription, IVaultDescription } from "types";
@@ -13,7 +13,7 @@ import { IVaultStatusData } from "./VaultStatusPage/types";
  * @param editSessionId - The edit session id
  */
 export async function getEditSessionData(editSessionId: string): Promise<IEditedSessionResponse> {
-  const response = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
   const isExistingVault = response.data.vaultAddress !== undefined;
 
   // Get maxBountyPercentage from the vault if it's an existing vault
@@ -61,7 +61,7 @@ export async function upsertEditSession(
   if (editSession) formData.append("editedDescription", JSON.stringify(editSession));
   if (ipfsDescriptionHash) formData.append("ipfsDescriptionHash", ipfsDescriptionHash);
 
-  const response = await axios.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId ?? ""}`, formData, {
+  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId ?? ""}`, formData, {
     headers: {
       "Content-Type": "multipart/form-data",
     },
@@ -78,7 +78,9 @@ export async function upsertEditSession(
  */
 export async function resendVerificationEmail(editSessionId: string, email: string): Promise<boolean> {
   try {
-    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/resend-verification-email?address=${email}`);
+    const res = await axiosClient.get(
+      `${BASE_SERVICE_URL}/edit-session/${editSessionId}/resend-verification-email?address=${email}`
+    );
     return res.status === 200 ? true : false;
   } catch (error) {
     return false;
@@ -92,7 +94,7 @@ export async function resendVerificationEmail(editSessionId: string, email: stri
  */
 export async function cancelEditionApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
-    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
     console.log(res);
     return res.status === 200 ? res.data : null;
   } catch (error) {
@@ -107,7 +109,7 @@ export async function cancelEditionApprovalRequest(editSessionId: string): Promi
  */
 export async function sendEditionToGovApproval(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
-    const res = await axios.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/send-to-gov-approval`);
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/send-to-gov-approval`);
     console.log(res);
     return res.status === 200 ? res.data : null;
   } catch (error) {
@@ -213,7 +215,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
  * @param chainId - The chain id of the vault
  */
 export async function createEditSessionOffChain(vaultAddress: string, chainId: number): Promise<string> {
-  const response = await axios.post(`${BASE_SERVICE_URL}/edit-session`, { vaultAddress, chainId });
+  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session`, { vaultAddress, chainId });
   return response.headers["x-new-id"];
 }
 
@@ -228,7 +230,7 @@ export async function getCurrentValidEditSession(
   vaultAddress: string,
   chainId: number
 ): Promise<IEditedSessionResponse> {
-  const response = await axios.get(
+  const response = await axiosClient.get(
     `${BASE_SERVICE_URL}/edit-session/description-hash/${chainId}/${descriptionHash}/${vaultAddress}`
   );
   return response.data;
@@ -241,6 +243,6 @@ export async function getCurrentValidEditSession(
  * @param chainId - The chain id of the vault
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
-  const response = await axios.get(`${BASE_SERVICE_URL}/edit-sessions/${chainId}/${vaultAddress}`);
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-sessions/${chainId}/${vaultAddress}`);
   return response.data ?? [];
 }
