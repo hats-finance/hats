@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
+import { useOnChange } from "hooks/usePrevious";
 import * as SIWEService from "./siweService";
 
 export const useSiweAuth = () => {
@@ -37,6 +38,15 @@ export const useSiweAuth = () => {
     window.addEventListener("focus", getProfile);
     return () => window.removeEventListener("focus", getProfile);
   }, []);
+
+  useOnChange(address, (newVal, prevVal) => {
+    if (prevVal && !newVal) logout();
+    if (prevVal && newVal && prevVal !== newVal) logout();
+  });
+
+  useEffect(() => {
+    if (address && profileData.address && address !== profileData.address) logout();
+  }, [address, profileData]);
 
   const signIn = async (): Promise<{ ok: boolean }> => {
     try {
@@ -81,5 +91,5 @@ export const useSiweAuth = () => {
     setProfileData({ loggedIn: false });
   };
 
-  return { signIn, logout, isSigningIn, profileData };
+  return { signIn, logout, isSigningIn, profileData, isAuthenticated: profileData.loggedIn };
 };
