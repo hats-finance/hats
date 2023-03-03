@@ -1,6 +1,6 @@
-import { SiweMessage } from "./../../../../../node_modules/siwe/lib/client";
 import axios from "axios";
 import { BASE_SERVICE_URL } from "settings";
+import { SiweMessage } from "siwe";
 
 /**
  * Gets a nonce for signing a message

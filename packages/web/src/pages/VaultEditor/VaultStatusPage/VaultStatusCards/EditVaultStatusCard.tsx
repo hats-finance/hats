@@ -7,6 +7,7 @@ import { Alert, Button, Loading, Pill, PillProps } from "components";
 import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
 import { checkIfAddressIsPartOfComitteOnStatus } from "../utils";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { VaultStatusContext } from "../store";
 import * as VaultEditorService from "../../vaultEditorService";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
@@ -16,6 +17,11 @@ export const EditVaultStatusCard = () => {
   const { address } = useAccount();
   const navigate = useNavigate();
   const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
+
+  const { signIn, logout, profileData, isSigningIn } = useSiweAuth();
+
+  console.log("profileData", profileData);
+  console.log("isSigningIn", isSigningIn);
 
   const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
 
@@ -43,15 +49,17 @@ export const EditVaultStatusCard = () => {
   };
 
   const handleEditVault = async () => {
-    // If last edition is waiting approval or editing, don't create a new edit session
-    if (lastEditionIsEditing || lastEditionIsWaitingApproval) {
-      navigate(`${RoutePaths.vault_editor}/${lastEditSession._id}`);
-    } else {
-      setLoading(true);
-      const editSessionId = await VaultEditorService.createEditSessionOffChain(vaultAddress, vaultChainId);
-      navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
-      setLoading(false);
-    }
+    signIn();
+    return;
+    // // If last edition is waiting approval or editing, don't create a new edit session
+    // if (lastEditionIsEditing || lastEditionIsWaitingApproval) {
+    //   navigate(`${RoutePaths.vault_editor}/${lastEditSession._id}`);
+    // } else {
+    //   setLoading(true);
+    //   const editSessionId = await VaultEditorService.createEditSessionOffChain(vaultAddress, vaultChainId);
+    //   navigate(`${RoutePaths.vault_editor}/${editSessionId}`);
+    //   setLoading(false);
+    // }
   };
 
   const handleViewCurrentDescription = () => {

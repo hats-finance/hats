@@ -3,7 +3,7 @@ import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import * as SIWEService from "./siweService";
 
-export const useSiwe = () => {
+export const useSiweAuth = () => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
@@ -49,7 +49,7 @@ export const useSiwe = () => {
       const message = new SiweMessage({
         domain: window.location.host,
         address,
-        statement: "Hats.finance wants you to Sign In With Ethereum in order to do that.",
+        statement: "Hats.finance wants you to Sign In With Ethereum in order to execute that action.",
         uri: window.location.origin,
         version: "1",
         chainId,
