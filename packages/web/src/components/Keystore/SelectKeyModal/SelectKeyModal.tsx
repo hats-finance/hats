@@ -70,11 +70,11 @@ export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
           onClick={() => setAction({ type: ActionType.Import })}
         />
       </div>
-      {vault?.storedKeys.length !== 0 && (
+      {vault?.storedKeys && vault?.storedKeys?.length > 0 && (
         <>
           <p className="keymodal-main__list-title">{t("CommitteeTools.keymodal.your-keys")}</p>
           <div className="keymodal-main__keypair-list">
-            {vault?.storedKeys.map((key) => (
+            {vault.storedKeys.map((key) => (
               <ExistentKeyCard key={key.alias} keypair={key} onSelect={onHide} />
             ))}
           </div>
@@ -101,7 +101,7 @@ export function SelectKeyModal({ isShowing, onHide }: SelectKeyModalProps) {
       case ActionType.Import:
         return t("CommitteeTools.keymodal.import-keypair");
       case ActionType.None:
-        if (vault?.storedKeys.length !== 0) return t("CommitteeTools.keymodal.list-keypair");
+        if (vault?.storedKeys && vault?.storedKeys?.length > 0) return t("CommitteeTools.keymodal.list-keypair");
         else return t("CommitteeTools.keymodal.title");
     }
   };
