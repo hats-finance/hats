@@ -243,6 +243,6 @@ export async function getCurrentValidEditSession(
  * @param chainId - The chain id of the vault
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
-  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-sessions/${chainId}/${vaultAddress}`);
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/all/${chainId}/${vaultAddress}`);
   return response.data ?? [];
 }
