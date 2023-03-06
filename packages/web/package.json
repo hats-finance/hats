@@ -11,7 +11,7 @@
     "@ethersproject/contracts": "^5.6.2",
     "@ethersproject/providers": "^5.6.2",
     "@ethersproject/units": "^5.6.0",
-    "@hats-finance/shared": "^1.0.27",
+    "@hats-finance/shared": "^1.0.29",
     "@hookform/devtools": "^4.2.3",
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",

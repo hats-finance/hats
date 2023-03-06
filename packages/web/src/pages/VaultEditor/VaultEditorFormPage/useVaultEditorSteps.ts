@@ -150,7 +150,7 @@ export const useVaultEditorSteps = (
   };
 
   const onGoToStep = async (stepNumber: number) => {
-    const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+    const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
 
     // If the user is going back, continue
     if (currentStepNumber >= stepNumber) {
@@ -284,7 +284,7 @@ export const useVaultEditorSteps = (
 
       return {
         go: async () => {
-          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
           if (isStepValid) {
             if (options.saveData)
               options.saveData().then(() => {
@@ -308,7 +308,7 @@ export const useVaultEditorSteps = (
     // If the user is in any other step, go to the next step
     return {
       go: async () => {
-        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
         if (isStepValid) {
           if (options.saveData)
             options.saveData().then(() => {

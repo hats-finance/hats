@@ -55,9 +55,8 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             name: Yup.string().required(intl("required")),
             address: Yup.string().test(getTestAddressOrUrl(intl)),
             "pgp-keys": Yup.array()
-              .of(Yup.object({ publicKey: Yup.string().required(intl("required")) }))
-              .min(1, intl("required"))
-              .required(intl("required")),
+              .of(Yup.object({ publicKey: Yup.string() }))
+              .min(1, intl("required")),
             "twitter-link": Yup.string().required(intl("required")),
             "image-ipfs-link": Yup.string(),
           })
