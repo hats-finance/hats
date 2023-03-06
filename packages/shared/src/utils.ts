@@ -167,59 +167,54 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     value: s.id as string,
   }));
 
+  const defaultDescription = createNewVaultDescription("v1");
+
+  const baseEditedDescription = {
+    ...vaultDescription,
+    committee: {
+      ...vaultDescription.committee,
+      members: vaultDescription.committee.members
+        ? vaultDescription.committee.members.map((m) => ({ ...m, "pgp-keys": [{ publicKey: "" }] }))
+        : [createNewCommitteeMember()],
+    },
+    "project-metadata": {
+      ...vaultDescription["project-metadata"],
+      emails: [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }],
+    },
+    "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    assets: defaultDescription.assets,
+    parameters: defaultDescription.parameters,
+    severitiesOptions,
+    includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
+  };
+
+  const existingPgpKeys = vaultDescription["communication-channel"]?.["pgp-pk"];
+  baseEditedDescription.committee.members[0]["pgp-keys"] =
+    typeof existingPgpKeys === "string"
+      ? [{ publicKey: existingPgpKeys }]
+      : existingPgpKeys?.map((key) => ({ publicKey: key })) || [{ publicKey: "" }];
+
+  // V1 vaults
   if (vaultDescription.version === "v1" || !vaultDescription.version) {
     return {
-      ...vaultDescription,
+      ...baseEditedDescription,
       version: "v1",
-      "project-metadata": {
-        ...vaultDescription["project-metadata"],
-        emails: [],
-      },
       "vulnerability-severities-spec": {
         severities: severitiesWithIds as IEditedVulnerabilitySeverityV1[],
         name: "",
         indexArray: vaultDescription.indexArray,
       },
-      "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-      assets: [],
-      parameters: {
-        fixedCommitteeControlledPercetange: 0,
-        fixedHatsGovPercetange: 0,
-        fixedHatsRewardPercetange: 0,
-        committeePercentage: 0,
-        immediatePercentage: 0,
-        vestedPercentage: 0,
-        maxBountyPercentage: 0,
-      },
-      severitiesOptions,
-      includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
     };
   }
 
+  // V2 vaults
   return {
-    ...vaultDescription,
+    ...baseEditedDescription,
     version: "v2",
-    "project-metadata": {
-      ...vaultDescription["project-metadata"],
-      emails: [],
-    },
     "vulnerability-severities-spec": {
       severities: severitiesWithIds as IEditedVulnerabilitySeverityV2[],
       name: "",
     },
-    "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-    assets: [],
-    parameters: {
-      fixedCommitteeControlledPercetange: 0,
-      fixedHatsGovPercetange: 0,
-      fixedHatsRewardPercetange: 0,
-      committeePercentage: 0,
-      immediatePercentage: 0,
-      vestedPercentage: 0,
-      maxBountyPercentage: 0,
-    },
-    severitiesOptions,
-    includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };
 }
 
