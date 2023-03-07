@@ -76,6 +76,7 @@
     "committeeMembersOutsideMultisigExplanation": "<strong>You can add committee members who are not part of Gnosis Safe.</strong> \n\n <strong>Please note,</strong> \n those committee members will be permitted to sign on pay-outs. They can only <strong>decrypt</strong> vulnerabilities sent to the vault.",
     "emailsNotVerifiedExplanation": "In order to create the vault you have to verify the email address. The following email/s wasn't verified.",
     "vaultBlockedBecauseIsCreated": "This vault can't be edited because it's already created on-chain. This is read-only mode. If you want to edit it, please go to the status page and do it there.",
+    "vaultBlockedBecauseIsPendingCreation": "This vault can't be edited because it's pending creation on-chain. Please wait while we are creating the vault on-chain.",
     "doneEditingTheExistingVault": "Done editing the vault? \n Click on <i>'Send to governance approval'</i> and Hats team will be notified to review the changed and update your vault.",
     "youAreEditingAnExistingVault": "You are editing an existing vault. When you are done editing the vault, you can send it to governance approval.",
     "setMaxBountyHelper": "Set the max % of the vault allocated for bounties",

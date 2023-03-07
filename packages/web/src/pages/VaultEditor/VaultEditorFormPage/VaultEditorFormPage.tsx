@@ -58,13 +58,13 @@ const VaultEditorFormPage = () => {
   // Current edition description hash
   const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
   // Vault description hash deployed onChain (only for existing vaults edition)
-  const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
-  const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
+  const [onChainDescriptionHash, setOnChainDescriptionHash] = useState<string | undefined>(undefined);
+  const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
-  const [userHasNoPermissions, setUserHasNoPermissions] = useState(false);
-  const [loadingEditSession, setLoadingEditSession] = useState(false);
-  const [creatingVault, setCreatingVault] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
+  const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
+  const [creatingVault, setCreatingVault] = useState(false); // Is the vault being created on-chain?
+  const [loading, setLoading] = useState(false); // Is any action loading?
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
   const [allFormDisabled, setAllFormDisabled] = useState<boolean>(false);
 
@@ -77,10 +77,12 @@ const VaultEditorFormPage = () => {
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
-  const [isVaultCreated, setIsVaultCreated] = useState(false);
-  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false);
-  const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>();
+  const [isVaultCreated, setIsVaultCreated] = useState(false); // Is this edit session for a vault that is already created?
+  const [editSessionSubmittedCreation, setEditSessionSubmittedCreation] = useState(false); // Has the edit session been submitted for creation on-chain?
+  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false); // Is this edit session for editing an existing vault?
+  const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>(); // Status of the edition of an existing vault
   const isNonEditableStatus = editingExitingVaultStatus ? nonEditableEditionStatus.includes(editingExitingVaultStatus) : false;
+
   const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
 
   const {
@@ -155,6 +157,7 @@ const VaultEditorFormPage = () => {
         }
       }
 
+      setEditSessionSubmittedCreation((editSessionResponse.submittedToCreation ?? false) && !editSessionResponse.vaultAddress);
       setDescriptionHash(editSessionResponse.descriptionHash);
       setLastModifedOn(editSessionResponse.updatedAt);
       setEditingExitingVaultStatus(editSessionResponse.vaultEditionStatus);
@@ -195,13 +198,17 @@ const VaultEditorFormPage = () => {
         const isGnosisTx = await isAGnosisSafeTx(txReceipt.transactionHash, +data.committee.chainId);
         // const vaultAddress = txReceipt.logs[0].address;
 
-        setCreatingVault(false);
-        navigate(
-          `${RoutePaths.vault_editor}?vaultReady=true${
-            isGnosisTx ? `&gnosisMultisig=${data.committee.chainId}:${data.committee["multisig-address"]}` : ""
-          }`,
-          { replace: true }
-        );
+        if (txReceipt.status === 1) {
+          await VaultEditorService.setEditSessionSubmittedToCreation(editSessionId);
+          setCreatingVault(false);
+          navigate(
+            `${RoutePaths.vault_editor}?vaultReady=true${
+              isGnosisTx ? `&gnosisMultisig=${data.committee.chainId}:${data.committee["multisig-address"]}` : ""
+            }`,
+            { replace: true }
+          );
+        }
+
         // if (vaultAddress) {
         //   navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
         // } else {
@@ -235,7 +242,7 @@ const VaultEditorFormPage = () => {
   };
 
   const cancelApprovalRequest = async () => {
-    if (userHasNoPermissions) return;
+    if (!userHasPermissions) return;
     if (!editSessionId) return;
 
     const wantsToCancel = await confirm({
@@ -262,7 +269,7 @@ const VaultEditorFormPage = () => {
 
     if (createdVaultInfo) {
       const vaultInfo = await VaultEditorService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
-      setOriginalDescriptionHash(vaultInfo.descriptionHash);
+      setOnChainDescriptionHash(vaultInfo.descriptionHash);
     }
   }, [getValues]);
 
@@ -294,22 +301,23 @@ const VaultEditorFormPage = () => {
 
     if (isEditingExitingVault) {
       if (!isMemberOrMultisig) {
-        setUserHasNoPermissions(true);
+        setUserHasPermissions(false);
         setAllFormDisabled(true);
       } else {
-        setUserHasNoPermissions(true);
+        setUserHasPermissions(false);
         setAllFormDisabled(true);
         tryAuthentication().then((isAuthenticated) => {
-          setUserHasNoPermissions(!isAuthenticated);
+          setUserHasPermissions(isAuthenticated);
           setAllFormDisabled(!isAuthenticated);
         });
       }
     } else {
-      setUserHasNoPermissions(false);
-      setAllFormDisabled(isVaultCreated || isNonEditableStatus);
+      setUserHasPermissions(true);
+      setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation || isNonEditableStatus);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, address, getValues]);
+  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, editSessionSubmittedCreation, address, getValues]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -416,7 +424,7 @@ const VaultEditorFormPage = () => {
     }
 
     const isLastStep = currentStep?.id === steps[steps.length - 1].id;
-    if (isEditingExitingVault && isLastStep && userHasNoPermissions) return true;
+    if (isEditingExitingVault && isLastStep && !userHasPermissions) return true;
     if (isNonEditableStatus && isEditingExitingVault && isLastStep) return true;
 
     return false;
@@ -432,7 +440,7 @@ const VaultEditorFormPage = () => {
   const getEditingExistingVaultAlert = () => {
     if (!isEditingExitingVault) return null;
 
-    if (userHasNoPermissions) {
+    if (!userHasPermissions) {
       return <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="error" />;
     }
 
@@ -456,7 +464,7 @@ const VaultEditorFormPage = () => {
   const getEditingExistingVaultButtons = () => {
     if (!isEditingExitingVault) return null;
 
-    if (userHasNoPermissions) {
+    if (!userHasPermissions) {
       return (
         <div className="buttons">
           <Button onClick={goToStatusPage} styleType="outlined">
@@ -473,7 +481,7 @@ const VaultEditorFormPage = () => {
             <Button onClick={goToStatusPage} styleType="outlined">
               <BackIcon className="mr-2" /> {t("goToStatusPage")}
             </Button>
-            <Button disabled={userHasNoPermissions} onClick={cancelApprovalRequest} filledColor="error">
+            <Button disabled={!userHasPermissions} onClick={cancelApprovalRequest} filledColor="error">
               {t("cancelApprovalRequest")}
             </Button>
           </div>
@@ -594,6 +602,7 @@ const VaultEditorFormPage = () => {
 
             {/* Alert section */}
             {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+            {editSessionSubmittedCreation && <Alert content={t("vaultBlockedBecauseIsPendingCreation")} type="warning" />}
 
             {/* Action buttons */}
             <div className="buttons-container">

@@ -71,6 +71,19 @@ export async function upsertEditSession(
 }
 
 /**
+ * Set a editSession as submitted to creation
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function setEditSessionSubmittedToCreation(editSessionId: string | undefined): Promise<boolean> {
+  if (!editSessionId) throw new Error("Edit session id is required");
+
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-awaiting-creation`);
+
+  return response.data.ok;
+}
+
+/**
  * Resends the verification email to and specific email
  *
  * @param editSessionId - The edit session id
