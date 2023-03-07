@@ -38,7 +38,7 @@ export class CreateVaultContract {
           committee: vaultData.committee as `0x${string}`,
           owner: vaultData.owner as `0x${string}`,
           isPaused: vaultData.isPaused,
-          rewardControllers: [vaultData.rewardController as `0x${string}`],
+          rewardControllers: [],
           vestingPeriods: vaultData.vestingPeriods,
           vestingDuration: vaultData.vestingDuration,
           descriptionHash: vaultData.descriptionHash,
