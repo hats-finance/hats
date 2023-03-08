@@ -34,7 +34,6 @@ export const GET_VAULTS = `
       honeyPotBalance
       totalRewardPaid
       committee
-      allocPoint
       master {
         address
         numberOfSubmittedClaims
