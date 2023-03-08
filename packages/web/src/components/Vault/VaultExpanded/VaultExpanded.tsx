@@ -42,7 +42,10 @@ export default function VaultExpanded(props: IProps) {
   } = props.data;
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "";
+  const isNormalVault =
+    !description?.["project-metadata"].type ||
+    description?.["project-metadata"].type === "" ||
+    description?.["project-metadata"].type === "normal";
 
   const getPieChartData = () => {
     const bountyVestingDuration = humanizeDuration(Number(vestingDuration) * 1000, {
