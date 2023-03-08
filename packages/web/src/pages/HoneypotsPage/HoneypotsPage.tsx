@@ -43,7 +43,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     vault.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())
   );
 
-  const normalVaultKey: string = "";
+  const normalVaultKey: string = "normal";
 
   const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     if (vault.registered) {
