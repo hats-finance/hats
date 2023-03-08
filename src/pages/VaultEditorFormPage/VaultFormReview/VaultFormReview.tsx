@@ -47,6 +47,8 @@ export function VaultFormReview() {
         createdAt: "",
         // rewardsToken: "",
         submittedClaim: [],
+        defaultHackerHatRewardSplit: "",
+        defaultGovernanceHatRewardSplit: "",
       },
       numberOfApprovedClaims: "0",
       rewardsLevels: [

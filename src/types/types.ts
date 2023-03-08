@@ -181,6 +181,8 @@ export interface IMaster {
   vestingHatDuration: string;
   vestingHatPeriods: string;
   chainId?: number;
+  defaultHackerHatRewardSplit: string;
+  defaultGovernanceHatRewardSplit: string;
 }
 
 export interface ISubmittedClaim {
