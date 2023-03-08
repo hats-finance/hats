@@ -1,10 +1,9 @@
 import { Chain } from "@wagmi/core";
-import { mainnet, goerli, optimismGoerli } from "wagmi/chains";
+import { mainnet, goerli, optimismGoerli, arbitrum } from "wagmi/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;
   chain: Chain;
-  endpoint: string;
   subgraph: string;
   coingeckoId?: string;
 }
@@ -17,14 +16,12 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [mainnet.id]: {
     vaultsNFTContract: "0x1569Fd54478B25E3AcCf3baC3f231108D95F50C4",
     chain: mainnet,
-    endpoint: "https://eth-mainnet.alchemyapi.io/v2/c4ovmC7YsQq1qM0lp6h7Ao9bGX_v4JG-",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
   },
   [goerli.id]: {
     vaultsNFTContract: "0x0196EdC0b3C81B79486E5D99e7D748955EE650D3",
     chain: goerli,
-    endpoint: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/goerli_v2_1",
     coingeckoId: undefined,
   },
@@ -36,9 +33,14 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   // },
   [optimismGoerli.id]: {
     chain: optimismGoerli,
-    endpoint: "https://opt-goerli.g.alchemy.com/v2/sCQtpxEWIHKdIqHjde149TqzJZHsg0JT",
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
     coingeckoId: undefined,
+  },
+  [arbitrum.id]: {
+    vaultsNFTContract: "0x0000000000000000000000000000000000000000",
+    chain: arbitrum,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
+    coingeckoId: "arbitrum-one",
   },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {
