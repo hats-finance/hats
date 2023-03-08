@@ -31,7 +31,7 @@ export default function VaultExpanded(props: IProps) {
     hackerVestedRewardSplit,
     hackerRewardSplit,
     committeeRewardSplit,
-    swapAndBurnSplit,
+    // swapAndBurnSplit,
     governanceHatRewardSplit,
     hackerHatRewardSplit,
     vestingDuration,
@@ -66,13 +66,13 @@ export default function VaultExpanded(props: IProps) {
     return [
       {
         // Inmediate bounty
-        title: `${stakingTokenSymbol} tokens (Hacker bounty)`,
+        title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
         value: (Number(hackerRewardSplit) / 100) * splitFactor,
         color: PieChartColors.token,
       },
       {
         // Vested bounty
-        title: `Vested ${stakingTokenSymbol} for ${bountyVestingDuration} (Hacker bounty)`,
+        title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
         value: (Number(hackerVestedRewardSplit) / 100) * splitFactor,
         color: PieChartColors.vestedToken,
       },
