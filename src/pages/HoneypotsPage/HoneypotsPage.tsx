@@ -86,7 +86,6 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
             {vaultsByGroup &&
               Object.entries(vaultsByGroup)
                 .sort()
-                .reverse()
                 .map(([type, groupVaults]) => (
                   <React.Fragment key={type}>
                     <tr className="transparent-row">
