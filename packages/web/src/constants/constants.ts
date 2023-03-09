@@ -91,7 +91,7 @@ export enum PieChartColors {
   token = "#2BC4CA",
   committee = "#DCFDFF",
   vestedHats = "#88FFF3",
-  governance = "#38CFD4",
+  governance = "#0b858a;",
   swapAndBurn = "#035B5F",
 }
 

@@ -66,7 +66,7 @@ export const variables = css`
     --token: #2bc4ca;
     --committee: #dcfdff;
     --vested-hats: #88fff3;
-    --governance: #38cfd4;
+    --governance: #0b858a;
     --swap-and-burn: #035b5f;
 
     --severity-audit-request: #d1891d;
