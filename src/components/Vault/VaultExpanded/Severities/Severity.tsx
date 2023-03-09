@@ -4,13 +4,13 @@ import { ScreenSize } from "constants/constants";
 import humanizeDuration from "humanize-duration";
 import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
-import { RootState } from "reducers";
 import { IVault, IVulnerabilitySeverity } from "types";
 import { formatNumber, ipfsTransformUri } from "utils";
 import ArrowIcon from "assets/icons/arrow.icon";
 import { useSeverityReward } from "../../hooks/useSeverityReward";
 import "./Severity.scss";
 import { ContractsCovered } from "../ContractsCovered/ContractsCovered";
+import { BigNumber, ethers } from "ethers";
 
 interface IProps {
   severity: IVulnerabilitySeverity;
@@ -27,11 +27,13 @@ export default function Severity(props: IProps) {
     hackerVestedRewardSplit,
     hackerRewardSplit,
     committeeRewardSplit,
-    swapAndBurnSplit,
+    // swapAndBurnSplit,
     governanceHatRewardSplit,
     hackerHatRewardSplit,
     vestingDuration,
     stakingTokenSymbol,
+    master,
+    version,
   } = props.vault;
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
 
@@ -39,10 +41,71 @@ export default function Severity(props: IProps) {
   const { isShowing: isShowingContractsModal, show: showContractsModal, hide: hideContractsModal } = useModal();
   const [modalNFTData, setModalNFTData] = useState(null);
   const [modalContractsData, setModalContractsData] = useState(null);
-  const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
   const { rewardPrice, rewardPercentage, rewardColor } = useSeverityReward(props.vault, severityIndex);
 
   const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "";
+
+  const getPrizeContentDivision = () => {
+    const bountyVestingDuration = humanizeDuration(Number(vestingDuration) * 1000, {
+      units: ["d", "h", "m"],
+    });
+    const rewardVestingDuration = humanizeDuration(Number(master.vestingHatDuration) * 1000, {
+      units: ["d", "h", "m"],
+    });
+
+    const governanceSplit = BigNumber.from(governanceHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? master.defaultGovernanceHatRewardSplit
+      : governanceHatRewardSplit;
+    const hackerHatsSplit = BigNumber.from(hackerHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? master.defaultHackerHatRewardSplit
+      : hackerHatRewardSplit;
+
+    // In v2 vaults the split sum (inmediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
+    // In v1 this is not a probem. So the factor is 1.
+    const splitFactor = version === "v1" ? 1 : (10000 - Number(governanceSplit) - Number(hackerHatsSplit)) / 100 / 100;
+
+    return [
+      {
+        // Inmediate bounty
+        title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
+        percentage: (Number(hackerRewardSplit) / 100) * splitFactor,
+        amountInUsd: formatNumber((((Number(hackerRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
+        className: "token",
+      },
+      {
+        // Vested bounty
+        title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
+        percentage: (Number(hackerVestedRewardSplit) / 100) * splitFactor,
+        amountInUsd: formatNumber((((Number(hackerVestedRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
+        className: "vested-token",
+      },
+      {
+        // Committee fee
+        title: `Committee fee`,
+        percentage: (Number(committeeRewardSplit) / 100) * splitFactor,
+        amountInUsd: formatNumber((((Number(committeeRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
+        className: "committee",
+      },
+      {
+        title: `Vested HATS reward for ${rewardVestingDuration} (Hacker reward) pending start of TGE`,
+        percentage: Number(hackerHatsSplit) / 100,
+        amountInUsd: formatNumber((((Number(hackerHatsSplit) / 100) * splitFactor) / 100) * rewardPrice),
+        className: "vested-hats",
+      },
+      {
+        title: `Hats governance fee`,
+        percentage: Number(governanceSplit) / 100,
+        amountInUsd: formatNumber((((Number(governanceSplit) / 100) * splitFactor) / 100) * rewardPrice),
+        className: "governance",
+      },
+      // {
+      //   title: `Swap and burn`,
+      //   percentage: Number(swapAndBurnSplit) / 100,
+      //   amountInUsd: formatNumber((((Number(swapAndBurnSplit) / 100) * splitFactor) / 100) * rewardPrice),
+      //   className: 'swap-and-burn',
+      // },
+    ];
+  };
 
   return (
     <div className="severity-wrapper">
@@ -70,7 +133,7 @@ export default function Severity(props: IProps) {
           </div>
           <div className="row">
             {severity?.["nft-metadata"] && (
-              <div className="severity-data-item">
+              <div className="severity-data-item nft-section">
                 <span className="vault-expanded-subtitle">NFT:</span>
                 <div
                   className="nft-image-wrapper"
@@ -90,47 +153,17 @@ export default function Severity(props: IProps) {
                 <span className="of-vault-text">&nbsp;of vault&nbsp;</span>
                 &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
               </span>
-              {screenSize === ScreenSize.Desktop && rewardPrice && (
+              {rewardPrice && (
                 <>
                   <span className="vault-expanded-subtitle">Prize Content Division:</span>
                   <div className="severity-prize-division-wrapper">
-                    {Number(hackerVestedRewardSplit) / 100 > 0 && (
-                      <span className="division vested-token">{`${
-                        Number(hackerVestedRewardSplit) / 100
-                      }% Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
-                        units: ["d", "h", "m"],
-                      })} (Hacker reward) ≈ $${formatNumber((Number(hackerVestedRewardSplit) / 10000) * rewardPrice)}`}</span>
-                    )}
-                    {Number(hackerRewardSplit) / 100 > 0 && (
-                      <span className="division token">{`${
-                        Number(hackerRewardSplit) / 100
-                      }% ${stakingTokenSymbol} (Hacker reward) ≈ $${formatNumber(
-                        (Number(hackerRewardSplit) / 10000) * rewardPrice
-                      )}`}</span>
-                    )}
-                    {Number(committeeRewardSplit) / 100 > 0 && (
-                      <span className="division committee">{`${Number(committeeRewardSplit) / 100}% Committee ≈ $${formatNumber(
-                        (Number(committeeRewardSplit) / 10000) * rewardPrice
-                      )}`}</span>
-                    )}
-                    {Number(hackerHatRewardSplit) / 100 > 0 && (
-                      <span className="division vested-hats">{`${
-                        Number(hackerHatRewardSplit) / 100
-                      }% Vested Hats for ${humanizeDuration(Number(props.vault.master.vestingHatDuration) * 1000, {
-                        units: ["d", "h", "m"],
-                      })} (Hacker reward) pending start of TGE ≈ $${formatNumber(
-                        (Number(hackerHatRewardSplit) / 10000) * rewardPrice
-                      )}`}</span>
-                    )}
-                    {Number(governanceHatRewardSplit) / 100 > 0 && (
-                      <span className="division governance">{`${
-                        Number(governanceHatRewardSplit) / 100
-                      }% Governance ≈ $${formatNumber((Number(governanceHatRewardSplit) / 10000) * rewardPrice)}`}</span>
-                    )}
-                    {Number(swapAndBurnSplit) / 100 > 0 && (
-                      <span className="division swap-and-burn">{`${
-                        Number(swapAndBurnSplit) / 100
-                      }% Swap and Burn ≈ $${formatNumber((Number(swapAndBurnSplit) / 10000) * rewardPrice)}`}</span>
+                    {getPrizeContentDivision().map(
+                      (division, index) =>
+                        division.percentage > 0 && (
+                          <span key={index} className={`division ${division.className}`}>
+                            {division.percentage}% {division.title} ≈ ${division.amountInUsd}
+                          </span>
+                        )
                     )}
                   </div>
                 </>
