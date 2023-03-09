@@ -34,6 +34,7 @@ export const GET_VAULTS = `
       honeyPotBalance
       totalRewardPaid
       committee
+      maxBounty
       master {
         address
         numberOfSubmittedClaims
