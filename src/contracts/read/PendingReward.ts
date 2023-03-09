@@ -7,13 +7,13 @@ import { RewardController_abi } from "data/abis/RewardController_abi";
 
 export class PendingRewardContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {
-    const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardControllers[0].id;
+    const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardControllers[0]?.id;
     const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
     const method = vault?.version === "v1" ? "pendingReward" : "getPendingReward";
     const args = vault?.version === "v1" ? [vault?.pid, account] : [vault?.id, account];
 
     return {
-      address: vault ? contractAddress : undefined,
+      address: contractAddress ?? "0x0000000000000000000000000000000000000000",
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

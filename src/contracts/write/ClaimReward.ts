@@ -17,7 +17,7 @@ export class ClaimRewardContract {
     const { address: account } = useAccount();
     const { chain } = useNetwork();
 
-    const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardControllers[0].id;
+    const contractAddress = vault.version === "v1" ? vault.master.address : vault.rewardControllers[0]?.id;
     const abi = vault.version === "v1" ? HATSVaultV1_abi : RewardController_abi;
 
     const claimReward = useContractWrite({
