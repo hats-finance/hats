@@ -10,9 +10,11 @@ export async function checkIfAddressCanEditTheVaultOnStatusPage(
   const vaultChainId = vaultData.description?.committee.chainId;
   if (!address || !vaultData || !vaultChainId) return false;
   const govMultisig = ChainsConfig[Number(vaultChainId)].govMultisig;
+  const committeeMultisig = vaultData.description?.committee["multisig-address"];
 
+  const isCommitteeMultisigMember = isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
   const isGovMember = isAddressAMultisigMember(govMultisig, address, vaultChainId);
-  const isMember = vaultData.description?.committee.members.map((member) => member.address).includes(address) ?? false;
+  const isVaultMember = vaultData.description?.committee.members.map((member) => member.address).includes(address) ?? false;
 
-  return isGovMember || isMember;
+  return isGovMember || isVaultMember || isCommitteeMultisigMember;
 }
