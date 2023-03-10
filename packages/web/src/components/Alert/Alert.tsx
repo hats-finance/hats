@@ -26,6 +26,7 @@ export const Alert = ({ type, content, button, ...props }: AlertProps) => {
   const getAlertTitle = () => {
     switch (type) {
       case "error":
+        return t("error");
       case "warning":
         return t("note");
       case "success":

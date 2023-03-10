@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { ChainsConfig } from "@hats-finance/shared";
+import { ChainsConfig, ICommitteeMember } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
 import { isEmailAddress } from "./emails.utils";
 import { getGnosisSafeInfo } from "./gnosis.utils";
@@ -136,6 +136,21 @@ export const getTestNumberInBetween = (intl, first: number, second: number, isPe
               second: `${!isPercentage ? second : `${second}%`}`,
             }),
           });
+    },
+  };
+};
+
+export const getTestMinAmountOfKeysOnMembers = (intl) => {
+  return {
+    name: `min-pgp-keys-required`,
+    test: (value: any, ctx: Yup.TestContext) => {
+      if (!value) return true;
+
+      const pgpKeys = (value as ICommitteeMember[])
+        .reduce((prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)], [])
+        .filter((key) => !!key);
+
+      return pgpKeys.length > 0 ? true : ctx.createError({ message: intl("at-least-one-pgp-key-required") });
     },
   };
 };

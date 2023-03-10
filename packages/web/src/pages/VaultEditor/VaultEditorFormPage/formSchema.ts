@@ -7,6 +7,7 @@ import {
   getTestCommitteeMultisigForVault,
   getTestTokenAddress,
   getTestUrl,
+  getTestMinAmountOfKeysOnMembers,
 } from "utils/yup.utils";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
@@ -60,7 +61,8 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             "image-ipfs-link": Yup.string(),
           })
         )
-        .min(1, intl("required")),
+        .min(1, intl("required"))
+        .test(getTestMinAmountOfKeysOnMembers(intl)),
     }),
     "contracts-covered": Yup.array().of(
       Yup.object({
