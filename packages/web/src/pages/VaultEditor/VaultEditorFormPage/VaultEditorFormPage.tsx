@@ -27,7 +27,7 @@ import { getEditedDescriptionYupSchema } from "./formSchema";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { checkIfAddressIsPartOfComitteOnForm } from "./utils";
+import { checkIfAddressCanEditTheVaultOnForm } from "./utils";
 import { VaultEditorFormContext } from "./store";
 import {
   Section,
@@ -273,12 +273,7 @@ const VaultEditorFormPage = () => {
     }
   }, [getValues]);
 
-  useEffect(() => {
-    presetIsEditingExistingVault(isEditingExitingVault);
-    initFormSteps();
-    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
-  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
-
+  // Handler for redirecting from the first page. If route is 'new-vault' the user is redirected to a new editSession
   useEffect(() => {
     if (editSessionId) {
       if (editSessionId === "new-vault") {
@@ -295,26 +290,39 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSessionId]);
 
+  // Handler for initializing the form steps
   useEffect(() => {
-    const editData = getValues();
-    const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnForm(address, editData);
+    presetIsEditingExistingVault(isEditingExitingVault);
+    initFormSteps();
+    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
+  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
 
-    if (isEditingExitingVault) {
-      if (!isMemberOrMultisig) {
-        setUserHasPermissions(false);
-        setAllFormDisabled(true);
+  // Check if user has permissions to edit the vault depending on the status (Vault creation or vault edition)
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const editData = getValues();
+      const canEditTheVault = await checkIfAddressCanEditTheVaultOnForm(address, editData);
+
+      if (isEditingExitingVault) {
+        if (!canEditTheVault) {
+          setUserHasPermissions(false);
+          setAllFormDisabled(true);
+        } else {
+          setUserHasPermissions(false);
+          setAllFormDisabled(true);
+
+          // Siwe: Only signed in users can edit the vault
+          tryAuthentication().then((isAuthenticated) => {
+            setUserHasPermissions(isAuthenticated);
+            setAllFormDisabled(!isAuthenticated);
+          });
+        }
       } else {
-        setUserHasPermissions(false);
-        setAllFormDisabled(true);
-        tryAuthentication().then((isAuthenticated) => {
-          setUserHasPermissions(isAuthenticated);
-          setAllFormDisabled(!isAuthenticated);
-        });
+        setUserHasPermissions(true);
+        setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation || isNonEditableStatus);
       }
-    } else {
-      setUserHasPermissions(true);
-      setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation || isNonEditableStatus);
-    }
+    };
+    checkPermissions();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, editSessionSubmittedCreation, address, getValues]);
@@ -441,7 +449,7 @@ const VaultEditorFormPage = () => {
     if (!isEditingExitingVault) return null;
 
     if (!userHasPermissions) {
-      return <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="error" />;
+      return <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="error" />;
     }
 
     if (isNonEditableStatus && editingExitingVaultStatus) {

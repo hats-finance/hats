@@ -165,7 +165,7 @@
     "loadingVaultData": "Loading vault data",
     "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Gnosis safe.",
     "connectWithCommitteeMultisig": "You must be connected with the committee multisig using WalletConnect.",
-    "connectWithCommitteeMultisigOrBeAMember": "You must be connected with the committee multisig using WalletConnect or to be a vault committee member.",
+    "connectWithCommitteeMultisigOrBeAMemberForEditing": "You must be a vault committe member in order to edit the vault.",
     "approveTheTransactionOnSafeApp": "Approve the transaction on the Gnosis safe app.",
     "vaultWithoutDescriptionError": "Your vault doesn't have a description. Wait couple of minutes. If the problem continue, please contact Hats support.",
     "committeeMustCheckInFirst": "Committee must check-in first.",
@@ -234,7 +234,7 @@
     "committeeSplitExplanation": "Determine the committee reward percentage",
     "openWalletConnectOnSafe": "Open WalletConnect on safe app",
     "ifYouWantToConnectWalletConnect": "If you want to connect your multisig wallet with WalletConnect, follow these steps: \n 1. Open Gnosis safe WalletConnect app (pressing the button below). \n 2. Select 'WalletConnet' on the 'Connect Wallet' button. \n 3. Copy the QR code and paste it on Gnosis app.",
-    "signedInWithSiwe": "Signed in",
+    "signedInWithSiwe": "Signed in SIWE",
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
       "titleNoMultisig": "We are creating your vault on chain. This might take a few minutes",

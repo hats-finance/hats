@@ -6,7 +6,7 @@ import moment from "moment";
 import { Alert, Button, Loading, Pill, PillProps } from "components";
 import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
-import { checkIfAddressIsPartOfComitteOnStatus } from "../utils";
+import { checkIfAddressCanEditTheVaultOnStatusPage } from "../utils";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { VaultStatusContext } from "../store";
 import * as VaultEditorService from "../../vaultEditorService";
@@ -20,8 +20,7 @@ export const EditVaultStatusCard = () => {
 
   const { tryAuthentication } = useSiweAuth();
 
-  const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnStatus(address, vaultData);
-
+  const [canUserEditTheVault, setCanUserEditTheVault] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingEditSessions, setLoadingEditSessions] = useState(false);
   const [editSessions, setEditSessions] = useState<IEditedSessionResponse[]>([]);
@@ -30,6 +29,14 @@ export const EditVaultStatusCard = () => {
   const lastEditSession = editSessions.length > 0 ? editSessions[0] : undefined;
   const lastEditionIsWaitingApproval = lastEditSession?.vaultEditionStatus === "pendingApproval";
   const lastEditionIsEditing = lastEditSession?.vaultEditionStatus === "editing";
+
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const canEditTheVault = await checkIfAddressCanEditTheVaultOnStatusPage(address, vaultData);
+      setCanUserEditTheVault(canEditTheVault);
+    };
+    checkPermissions();
+  }, [address, vaultData]);
 
   useEffect(() => {
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);
@@ -89,7 +96,7 @@ export const EditVaultStatusCard = () => {
   const getEditSessionActions = (editSessionData: IEditedSessionResponse) => {
     const isEditing = editSessionData.vaultEditionStatus === "editing";
 
-    if (isEditing && !isMemberOrMultisig) return null;
+    if (isEditing && !canUserEditTheVault) return null;
 
     return (
       <Button onClick={() => goToEditSession(editSessionData, isEditing)} styleType="invisible">
@@ -99,7 +106,7 @@ export const EditVaultStatusCard = () => {
   };
 
   const getInfoText = (isLastPendingApproval: boolean) => {
-    if (!isMemberOrMultisig) {
+    if (!canUserEditTheVault) {
       return <p className="status-card__text mb-5">{t("setupCompleted")}</p>;
     }
 
@@ -160,8 +167,8 @@ export const EditVaultStatusCard = () => {
       </div>
       {getInfoText(lastEditionIsWaitingApproval)}
       {loadingEditSessions ? <p>{t("loadingInformation")}...</p> : getEditSessions()}
-      {!isMemberOrMultisig && <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="warning" />}
-      {isMemberOrMultisig && (
+      {!canUserEditTheVault && <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="warning" />}
+      {canUserEditTheVault && (
         <div className="status-card__buttons">
           <Button disabled={!deployedEditSession} onClick={handleViewCurrentDescription} styleType="outlined">
             <ViewIcon className="mr-2" />
