@@ -27,8 +27,8 @@ import { getEditedDescriptionYupSchema } from "./formSchema";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { checkIfAddressCanEditTheVaultOnForm } from "./utils";
 import { VaultEditorFormContext } from "./store";
+import { checkIfAddressCanEditTheVault } from "../utils";
 import {
   Section,
   StyledVaultEditorForm,
@@ -301,7 +301,7 @@ const VaultEditorFormPage = () => {
   useEffect(() => {
     const checkPermissions = async () => {
       const editData = getValues();
-      const canEditTheVault = await checkIfAddressCanEditTheVaultOnForm(address, editData);
+      const canEditTheVault = await checkIfAddressCanEditTheVault(address, editData);
 
       if (isEditingExitingVault) {
         if (!canEditTheVault) {

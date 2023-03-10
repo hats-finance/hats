@@ -6,9 +6,9 @@ import moment from "moment";
 import { Alert, Button, Loading, Pill, PillProps } from "components";
 import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
-import { checkIfAddressCanEditTheVaultOnStatusPage } from "../utils";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { VaultStatusContext } from "../store";
+import { checkIfAddressCanEditTheVault } from "../../utils";
 import * as VaultEditorService from "../../vaultEditorService";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 
@@ -32,7 +32,7 @@ export const EditVaultStatusCard = () => {
 
   useEffect(() => {
     const checkPermissions = async () => {
-      const canEditTheVault = await checkIfAddressCanEditTheVaultOnStatusPage(address, vaultData);
+      const canEditTheVault = await checkIfAddressCanEditTheVault(address, vaultData);
       setCanUserEditTheVault(canEditTheVault);
     };
     checkPermissions();
