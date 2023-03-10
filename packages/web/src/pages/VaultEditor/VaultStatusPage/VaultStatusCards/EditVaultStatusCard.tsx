@@ -1,26 +1,23 @@
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useAccount } from "wagmi";
 import moment from "moment";
 import { Alert, Button, Loading, Pill, PillProps } from "components";
 import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { VaultStatusContext } from "../store";
-import { checkIfAddressCanEditTheVault } from "../../utils";
 import * as VaultEditorService from "../../vaultEditorService";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 
 export const EditVaultStatusCard = () => {
   const { t } = useTranslation();
-  const { address } = useAccount();
   const navigate = useNavigate();
-  const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
+  const { vaultAddress, vaultChainId, vaultData, userPermissionData } = useContext(VaultStatusContext);
+  const canUserEditTheVault = userPermissionData.canEditVault;
 
   const { tryAuthentication } = useSiweAuth();
 
-  const [canUserEditTheVault, setCanUserEditTheVault] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingEditSessions, setLoadingEditSessions] = useState(false);
   const [editSessions, setEditSessions] = useState<IEditedSessionResponse[]>([]);
@@ -29,14 +26,6 @@ export const EditVaultStatusCard = () => {
   const lastEditSession = editSessions.length > 0 ? editSessions[0] : undefined;
   const lastEditionIsWaitingApproval = lastEditSession?.vaultEditionStatus === "pendingApproval";
   const lastEditionIsEditing = lastEditSession?.vaultEditionStatus === "editing";
-
-  useEffect(() => {
-    const checkPermissions = async () => {
-      const canEditTheVault = await checkIfAddressCanEditTheVault(address, vaultData);
-      setCanUserEditTheVault(canEditTheVault);
-    };
-    checkPermissions();
-  }, [address, vaultData]);
 
   useEffect(() => {
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);

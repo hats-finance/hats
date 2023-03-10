@@ -301,10 +301,10 @@ const VaultEditorFormPage = () => {
   useEffect(() => {
     const checkPermissions = async () => {
       const editData = getValues();
-      const canEditTheVault = await checkIfAddressCanEditTheVault(address, editData);
+      const { canEditVault } = await checkIfAddressCanEditTheVault(address, editData);
 
       if (isEditingExitingVault) {
-        if (!canEditTheVault) {
+        if (!canEditVault) {
           setUserHasPermissions(false);
           setAllFormDisabled(true);
         } else {

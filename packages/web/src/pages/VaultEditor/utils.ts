@@ -7,9 +7,9 @@ import { IVaultStatusData } from "./VaultStatusPage/types";
 export async function checkIfAddressCanEditTheVault(
   address: string | undefined,
   editData: IEditedVaultDescription | IVaultStatusData
-): Promise<boolean> {
+): Promise<{ canEditVault: boolean; role: VaultEditorAddressRole }> {
   const addressRole = await getAddressEditorRole(address, editData);
-  return addressRole !== "none";
+  return { canEditVault: addressRole !== "none", role: addressRole };
 }
 
 export async function getAddressEditorRole(
@@ -32,4 +32,17 @@ export async function getAddressEditorRole(
   if (isCommitteeMultisigMember) return "committee";
   if (isVaultMember) return "invited";
   return "none";
+}
+
+export function vaultEditorRoleToIntlKey(role: VaultEditorAddressRole): string {
+  switch (role) {
+    case "gov":
+      return "addressRoleGov";
+    case "committee":
+      return "addressRoleCommittee";
+    case "invited":
+      return "addressRoleInvited";
+    case "none":
+      return "";
+  }
 }

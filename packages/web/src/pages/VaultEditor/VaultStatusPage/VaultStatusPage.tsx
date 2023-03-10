@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAccount } from "wagmi";
 import { isAddress } from "utils/addresses.utils";
 import { CopyToClipboard, Loading } from "components";
 import {
@@ -12,6 +13,8 @@ import {
   GovApprovalStatusCard,
 } from "./VaultStatusCards";
 import * as VaultStatusService from "../vaultEditorService";
+import { checkIfAddressCanEditTheVault, vaultEditorRoleToIntlKey } from "../utils";
+import { VaultEditorAddressRole } from "../types";
 import { IVaultStatusData } from "./types";
 import { StyledVaultStatusPage } from "./styles";
 import { VaultStatusContext } from "./store";
@@ -21,10 +24,12 @@ import { VaultStatusContext } from "./store";
  */
 export const VaultStatusPage = () => {
   const { t } = useTranslation();
+  const { address } = useAccount();
   const navigate = useNavigate();
   const { vaultAddress, vaultChainId } = useParams();
 
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
+  const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: VaultEditorAddressRole }>();
 
   useEffect(() => {
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
@@ -33,6 +38,16 @@ export const VaultStatusPage = () => {
       navigate(-1);
     }
   }, [vaultAddress, vaultChainId, navigate]);
+
+  useEffect(() => {
+    const getPermissionData = async () => {
+      if (!address || !vaultData) return;
+
+      const permissionData = await checkIfAddressCanEditTheVault(address, vaultData);
+      setUserPermissionData(permissionData);
+    };
+    getPermissionData();
+  }, [address, vaultData]);
 
   const loadVaultData = async (address: string, chainId: number) => {
     const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);
@@ -47,16 +62,26 @@ export const VaultStatusPage = () => {
   };
 
   if (!vaultAddress || !vaultChainId) return null;
-  if (!vaultData) return <Loading fixed extraText={`${t("loadingVaultData")}...`} />;
+  if (!vaultData || !userPermissionData) return <Loading fixed extraText={`${t("loadingVaultData")}...`} />;
 
-  const vaultStatusContext = { vaultData, loadVaultData, refreshVaultData, vaultAddress, vaultChainId: +vaultChainId };
+  const vaultStatusContext = {
+    vaultData,
+    userPermissionData,
+    loadVaultData,
+    refreshVaultData,
+    vaultAddress,
+    vaultChainId: +vaultChainId,
+  };
 
   return (
     <StyledVaultStatusPage className="content-wrapper">
       <div className="status-title">
-        <div className="title">
-          {t("vaultCreator")}
-          <span>/{t("vaultStatus")}</span>
+        <div className="leftSide">
+          <div className="title">
+            {t("vaultCreator")}
+            <span>/{t("vaultStatus")}</span>
+          </div>
+          <div className="role">{t(vaultEditorRoleToIntlKey(userPermissionData.role))}</div>
         </div>
         <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyVaultLink")} />
       </div>

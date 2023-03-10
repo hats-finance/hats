@@ -18,9 +18,16 @@ export const StyledVaultStatusPage = styled.div`
     padding-bottom: ${getSpacing(4)};
     border-bottom: 1px solid var(--grey-600);
 
-    .title {
-      span {
-        font-weight: 700;
+    .leftSide {
+      .role {
+        font-size: var(--xsmall);
+        color: var(--grey-500);
+      }
+
+      .title {
+        span {
+          font-weight: 700;
+        }
       }
     }
   }
