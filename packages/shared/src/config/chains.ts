@@ -4,6 +4,7 @@ export interface IChainConfiguration {
   vaultsNFTContract?: string;
   vaultsCreatorContract?: string;
   rewardController?: string;
+  govMultisig?: string;
   chain: Chain;
   subgraph: string;
   coingeckoId?: string;
@@ -19,6 +20,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: mainnet,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
+    govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
   },
   [goerli.id]: {
     vaultsCreatorContract: "0x8C95B3077A9FE4df7669929478B1Da6BC7378147",
@@ -27,6 +29,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: goerli,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
     coingeckoId: undefined,
+    govMultisig: "0xFc9F1d127f8047B0F41e9eAC2Adc2e5279C568B7",
   },
   [optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37afcc55188233bb4ad463af9e48",
@@ -51,6 +54,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: arbitrum,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
     coingeckoId: "arbitrum-one",
+    govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
   },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {
