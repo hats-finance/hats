@@ -100,3 +100,16 @@ export const getGnosisSafeInfo = async (
     return defaultData;
   }
 };
+
+export const isAddressAMultisigMember = async (
+  multisigAddress: string | undefined,
+  address: string | undefined,
+  chainId: number | string | undefined
+): Promise<boolean> => {
+  if (!multisigAddress || !chainId || !address) return false;
+
+  const members = (await getGnosisSafeInfo(multisigAddress, Number(chainId))).owners;
+  const isMember = members.includes(address);
+
+  return isMember;
+};
