@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
+import { ChainsConfig } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { isAddressAMultisigMember } from "utils/gnosis.utils";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Dot, DropdownSelector } from "components";
@@ -22,6 +24,7 @@ const WalletButton = () => {
   const { disconnect } = useDisconnect();
   const [canReconnect, setCanReconnect] = useState(false);
   const [showConnectors, setShowConnectors] = useState(false);
+  const [isGovMember, setIsGovMember] = useState(false);
 
   const { isAuthenticated } = useSiweAuth();
 
@@ -52,9 +55,26 @@ const WalletButton = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, canReconnect]);
 
+  useEffect(() => {
+    const checkGovMember = async () => {
+      if (account && chain && chain.id) {
+        const chainId = Number(chain.id);
+        const govMultisig = ChainsConfig[Number(chainId)].govMultisig;
+
+        const isGov = await isAddressAMultisigMember(govMultisig, account, chainId);
+        setIsGovMember(isGov);
+      }
+    };
+    checkGovMember();
+  }, [account, chain]);
+
   const getButtonTitle = () => {
     if (account) {
-      return <span>{ens || shortenIfAddress(account)}</span>;
+      return (
+        <span>
+          {ens || shortenIfAddress(account)} {isGovMember && "[Gov]"}
+        </span>
+      );
     } else {
       return t("connect-wallet");
     }
