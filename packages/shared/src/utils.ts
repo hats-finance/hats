@@ -156,7 +156,7 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
   return contractsForm;
 }
 
-export function descriptionToEditedForm(vaultDescription: IVaultDescription): IEditedVaultDescription {
+export function descriptionToEditedForm(vaultDescription: IVaultDescription, withDefaultEmail = false): IEditedVaultDescription {
   const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({
     ...sev,
     id: uuid(),
@@ -179,7 +179,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription): IE
     },
     "project-metadata": {
       ...vaultDescription["project-metadata"],
-      emails: [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }],
+      emails: withDefaultEmail ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     assets: defaultDescription.assets,
