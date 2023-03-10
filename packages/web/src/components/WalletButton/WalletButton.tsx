@@ -26,7 +26,7 @@ const WalletButton = () => {
   const [showConnectors, setShowConnectors] = useState(false);
   const [isGovMember, setIsGovMember] = useState(false);
 
-  const { isAuthenticated } = useSiweAuth();
+  const { isAuthenticated, updateProfile } = useSiweAuth();
 
   const deactivateAccount = useCallback(() => {
     disconnect();
@@ -132,7 +132,7 @@ const WalletButton = () => {
   );
 
   return (
-    <WalletButtonWrapper>
+    <WalletButtonWrapper onMouseEnter={updateProfile}>
       <StyledWalletButton
         onClick={() => setShowConnectors((prev) => !prev)}
         connected={!!account}

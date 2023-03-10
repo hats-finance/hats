@@ -89,5 +89,13 @@ export const useSiweAuth = () => {
     setProfileData({ loggedIn: false });
   };
 
-  return { signIn, logout, isSigningIn, profileData, isAuthenticated: profileData.loggedIn, tryAuthentication };
+  return {
+    signIn,
+    logout,
+    isSigningIn,
+    profileData,
+    isAuthenticated: profileData.loggedIn,
+    tryAuthentication,
+    updateProfile: getProfile,
+  };
 };
