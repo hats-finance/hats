@@ -8,7 +8,6 @@ import {
   getTestTokenAddress,
   getTestUrl,
 } from "utils/yup.utils";
-import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "@hats-finance/shared";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
@@ -103,9 +102,9 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       })
     ),
     parameters: Yup.object({
-      fixedCommitteeControlledPercetange: Yup.number().oneOf([COMMITTEE_CONTROLLED_SPLIT], intl("cantChangeThisValue")),
-      fixedHatsGovPercetange: Yup.number().oneOf([HATS_GOV_SPLIT], intl("cantChangeThisValue")),
-      fixedHatsRewardPercetange: Yup.number().oneOf([HATS_REWARD_SPLIT], intl("cantChangeThisValue")),
+      fixedCommitteeControlledPercetange: Yup.number(),
+      fixedHatsGovPercetange: Yup.number(),
+      fixedHatsRewardPercetange: Yup.number(),
       maxBountyPercentage: Yup.number()
         .test(getTestNumberInBetween(intl, 10, 90, true))
         .required(intl("required"))

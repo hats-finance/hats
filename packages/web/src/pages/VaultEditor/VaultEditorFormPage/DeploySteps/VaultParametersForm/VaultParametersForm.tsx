@@ -7,7 +7,8 @@ import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { Button, FormInput } from "components";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription, IEditedVaultParameters } from "types";
+import { useVaults } from "hooks/vaults/useVaults";
+import { ChainsConfig, IEditedVaultDescription, IEditedVaultParameters } from "types";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledVaultEditorForm } from "../../styles";
@@ -59,6 +60,29 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 
 const VaultParametersFormOnVaultEditor = () => {
   const { allFormDisabled } = useContext(VaultEditorFormContext);
+  const { masters } = useVaults();
+  const methodsToUse = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const chainId = useWatch({ control: methodsToUse.control, name: "committee.chainId" });
+
+  // Set default values for the fixed splits. Getting it from subgraph
+  useEffect(() => {
+    const registryAddress = ChainsConfig[Number(chainId)]?.vaultsCreatorContract;
+    if (registryAddress && masters) {
+      const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
+
+      if (master) {
+        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
+        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
+        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
+
+        if (committeeControlledSplit)
+          methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
+        if (hatsGovernanceSplit) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
+        if (hatsRewardSplit) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
+      }
+    }
+  }, [chainId, masters, methodsToUse]);
 
   return <VaultParametersFormShared disabled={allFormDisabled} />;
 };
