@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import { useOnChange } from "hooks/usePrevious";
@@ -9,8 +9,6 @@ export const useSiweAuth = () => {
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
-  const [nonce, setNonce] = useState<string | undefined>();
-
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<{
     loggedIn: boolean;
@@ -18,19 +16,10 @@ export const useSiweAuth = () => {
     chainId?: number | undefined;
   }>({ loggedIn: false });
 
-  const getNonce = async () => {
-    const nonce = await SIWEService.getNonce();
-    setNonce(nonce);
-  };
-
   const getProfile = async () => {
     const profile = await SIWEService.profile();
     setProfileData(profile);
   };
-
-  useEffect(() => {
-    getNonce();
-  }, []);
 
   useEffect(() => {
     getProfile();
@@ -48,12 +37,14 @@ export const useSiweAuth = () => {
     if (address && profileData.address && address !== profileData.address) logout();
   }, [address, profileData]);
 
-  const signIn = async (): Promise<{ ok: boolean }> => {
+  const signIn = useCallback(async (): Promise<{ ok: boolean }> => {
     try {
       const chainId = chain?.id;
       if (!address || !chainId) return { ok: false };
 
       setIsSigningIn(true);
+
+      const nonce = await SIWEService.getNonce();
 
       // Create SIWE message with pre-fetched nonce and sign with wallet
       const message = new SiweMessage({
@@ -79,21 +70,19 @@ export const useSiweAuth = () => {
       console.log(error);
 
       setIsSigningIn(false);
-      setNonce(undefined);
-      getNonce();
 
       return { ok: false };
     }
-  };
+  }, [address, chain?.id, signMessageAsync]);
 
-  const tryAuthentication = async (): Promise<boolean> => {
+  const tryAuthentication = useCallback(async (): Promise<boolean> => {
     if (!profileData.loggedIn) {
       const authenticated = (await signIn()).ok;
       return authenticated;
     }
 
     return true;
-  };
+  }, [profileData.loggedIn, signIn]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
