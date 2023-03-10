@@ -70,29 +70,29 @@ export default function VaultExpanded(props: IProps) {
       {
         // Inmediate bounty
         title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
-        value: (Number(hackerRewardSplit) / 100) * splitFactor,
+        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.token,
       },
       {
         // Vested bounty
         title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
-        value: (Number(hackerVestedRewardSplit) / 100) * splitFactor,
+        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.vestedToken,
       },
       {
         // Committee fee
         title: `Committee fee`,
-        value: (Number(committeeRewardSplit) / 100) * splitFactor,
+        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.committee,
       },
       {
         title: `Vested HATS reward for ${rewardVestingDuration} (Hacker reward) pending start of TGE`,
-        value: Number(hackerHatsSplit) / 100,
+        value: +(Number(hackerHatsSplit) / 100).toFixed(0),
         color: PieChartColors.vestedHats,
       },
       {
         title: `Hats governance fee`,
-        value: Number(governanceSplit) / 100,
+        value: +(Number(governanceSplit) / 100).toFixed(0),
         color: PieChartColors.governance,
       },
       // {

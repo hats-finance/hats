@@ -62,12 +62,12 @@ export const variables = css`
     --warning-yellow: #f2c94c;
 
     /* pie chart colors */
-    --vested-token: #15686b;
-    --token: #2bc4ca;
-    --committee: #dcfdff;
-    --vested-hats: #88fff3;
-    --governance: #0b858a;
-    --swap-and-burn: #035b5f;
+    --token: #14595b;
+    --vested-token: #296b6d;
+    --committee: #3e7d7f;
+    --vested-hats: #548e91;
+    --governance: #69a0a3;
+    --swap-and-burn: #7eb2b5;
 
     --severity-audit-request: #d1891d;
 

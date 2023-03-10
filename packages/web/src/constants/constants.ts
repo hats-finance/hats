@@ -87,12 +87,12 @@ export enum Colors {
 }
 
 export enum PieChartColors {
-  vestedToken = "#15686B",
-  token = "#2BC4CA",
-  committee = "#DCFDFF",
-  vestedHats = "#88FFF3",
-  governance = "#0b858a;",
-  swapAndBurn = "#035B5F",
+  token = "#14595B",
+  vestedToken = "#296B6D",
+  committee = "#3E7D7F",
+  vestedHats = "#548E91",
+  governance = "#69A0A3",
+  swapAndBurn = "#7EB2B5",
 }
 
 export enum SocialLinks {
