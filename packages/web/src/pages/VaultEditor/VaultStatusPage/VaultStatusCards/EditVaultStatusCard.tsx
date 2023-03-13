@@ -163,7 +163,9 @@ export const EditVaultStatusCard = () => {
             <ViewIcon className="mr-2" />
             {t("viewCurrentDescription")}
           </Button>
-          <Button onClick={handleEditVault}>{t("editVault")}</Button>
+          <Button disabled={loadingEditSessions} onClick={handleEditVault}>
+            {t("editVault")}
+          </Button>
         </div>
       )}
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}
