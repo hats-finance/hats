@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
-import { getGnosisChainPrefixByChainId } from "utils/gnosis.utils";
+import { getGnosisChainPrefixByChainId } from "@hats-finance/shared";
 import { Button } from "components";
 import { StyledVaultReadyModal } from "./styles";
 import HatsHat from "assets/icons/hats-hat.svg";

@@ -12,11 +12,12 @@ import {
   editedFormToCreateVaultOnChainCall,
   nonEditableEditionStatus,
   ChainsConfig,
+  getGnosisSafeInfo,
+  isAGnosisSafeTx,
 } from "@hats-finance/shared";
 import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";

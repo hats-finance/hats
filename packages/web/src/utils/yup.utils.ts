@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import { ChainsConfig, ICommitteeMember } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
 import { isEmailAddress } from "./emails.utils";
-import { getGnosisSafeInfo } from "./gnosis.utils";
+import { getGnosisSafeInfo } from "@hats-finance/shared";
 import { getTokenInfo } from "./tokens.utils";
 
 export const getTestWalletAddress = (intl) => {

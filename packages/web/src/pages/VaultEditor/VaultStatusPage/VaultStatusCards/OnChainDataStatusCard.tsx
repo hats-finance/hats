@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
+import { isAGnosisSafeTx, IEditedVaultParameters } from "@hats-finance/shared";
 import { Alert, FormInput, Loading, Pill } from "components";
 import { VaultBountySplitEditionContract } from "contracts";
 import useConfirm from "hooks/useConfirm";
-import { IEditedVaultParameters } from "types";
 import { VaultParametersForm } from "pages/VaultEditor/VaultEditorFormPage";
 import { VaultStatusContext } from "../store";
-import { isAGnosisSafeTx } from "utils/gnosis.utils";
 import SyncIcon from "@mui/icons-material/Sync";
 
 export const OnChainDataStatusCard = () => {

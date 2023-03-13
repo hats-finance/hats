@@ -1,5 +1,5 @@
 import { ChainsConfig, IEditedVaultDescription } from "@hats-finance/shared";
-import { isAddressAMultisigMember } from "utils/gnosis.utils";
+import { isAddressAMultisigMember } from "@hats-finance/shared";
 import { VaultEditorAddressRole } from "./types";
 import { IVaultStatusData } from "./VaultStatusPage/types";
 

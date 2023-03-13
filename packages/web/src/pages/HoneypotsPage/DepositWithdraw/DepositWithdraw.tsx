@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNetwork } from "wagmi";
 import { waitForTransaction } from "wagmi/actions";
+import { isAGnosisSafeTx, IVault } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { parseUnits } from "@ethersproject/units";
 import { TransactionReceipt } from "@ethersproject/providers";
@@ -8,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import millify from "millify";
 import classNames from "classnames";
 import { Loading, Modal } from "components";
-import { IVault } from "types";
 import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
 import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -17,7 +17,6 @@ import useModal from "hooks/useModal";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
 import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
-import { isAGnosisSafeTx } from "utils/gnosis.utils";
 import {
   ClaimRewardContract,
   CommitteeCheckInContract,

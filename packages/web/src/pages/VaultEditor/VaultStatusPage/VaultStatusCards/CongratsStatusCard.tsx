@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import Tooltip from "rc-tooltip";
 import { useAccount } from "wagmi";
-import { ChainsConfig } from "@hats-finance/shared";
+import { ChainsConfig, getSafeWalletConnectLink } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { getSafeWalletConnectLink } from "utils/gnosis.utils";
 import { Button } from "components";
 import { VaultStatusContext } from "../store";
 

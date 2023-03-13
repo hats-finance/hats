@@ -1,10 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
-import { ChainsConfig } from "@hats-finance/shared";
+import { ChainsConfig, isAddressAMultisigMember } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { isAddressAMultisigMember } from "utils/gnosis.utils";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Dot, DropdownSelector } from "components";
