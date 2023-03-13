@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "./";
-import { getVulnerabilitySeveritiesTemplate } from "./severities";
+import { ICommitteeMember, IVaultDescription } from "..";
+import { getVulnerabilitySeveritiesTemplate } from "../severities";
 import {
   ICreateVaultOnChainCall,
   IEditedCommunicationEmail,
@@ -14,7 +14,7 @@ import {
   IVulnerabilitySeverity,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
-} from "./types";
+} from "../types";
 
 export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
