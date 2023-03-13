@@ -1,4 +1,4 @@
-import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "wagmi/chains";
+import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "@wagmi/chains";
 import axios from "axios";
 
 const getGnosisChainNameByChainId = (chainId: number): string => {
