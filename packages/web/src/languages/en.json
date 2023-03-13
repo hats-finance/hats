@@ -240,6 +240,7 @@
     "addressRoleGov": "Governance",
     "addressRoleCommittee": "Committee multisig member",
     "addressRoleInvited": "Vault committee",
+    "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
       "titleNoMultisig": "We are creating your vault on chain. This might take a few minutes",

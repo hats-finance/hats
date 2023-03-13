@@ -38,7 +38,10 @@ export function FormPgpPublicKeyInputComponent(
   const { t } = useTranslation();
   const { isShowing: isShowingPgpKeyInput, show: showPgpKeyInput, hide: hidePgpKeyInput } = useModal();
 
-  const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[1]?.slice(0, 50)}...`;
+  const getPgpKeyResumed = (pgpKey: string) => {
+    const keyBeggining = pgpKey.split("-----BEGIN PGP PUBLIC KEY BLOCK-----")[1]?.trim();
+    return keyBeggining ? `${keyBeggining?.slice(0, 50)}...` : t("invalidPgpKeyPleaseSelectNewOne");
+  };
 
   return (
     <StyledFormPgpPublicKeyInput

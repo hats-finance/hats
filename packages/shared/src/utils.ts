@@ -175,7 +175,10 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
       ...vaultDescription.committee,
       members: vaultDescription.committee.members
         ? withDefaultData
-          ? vaultDescription.committee.members.map((m) => ({ ...m, "pgp-keys": [{ publicKey: "" }] }))
+          ? vaultDescription.committee.members.map((m) => ({
+              ...m,
+              "pgp-keys": m["pgp-keys"] ? m["pgp-keys"] : [{ publicKey: "" }],
+            }))
           : vaultDescription.committee.members
         : [createNewCommitteeMember()],
     },
@@ -190,12 +193,17 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
     includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };
 
+  // If we are creating a editSession from a descriptionHash, we add all the pgpKeys in the old
+  // format, to the new format (on the first member)
   if (withDefaultData) {
-    const existingPgpKeys = vaultDescription["communication-channel"]?.["pgp-pk"];
-    baseEditedDescription.committee.members[0]["pgp-keys"] =
-      typeof existingPgpKeys === "string"
-        ? [{ publicKey: existingPgpKeys }]
-        : existingPgpKeys?.map((key) => ({ publicKey: key })) || [{ publicKey: "" }];
+    const existingPgpKeyOrKeys = vaultDescription["communication-channel"]?.["pgp-pk"] ?? [];
+    let existingPgpKeys = typeof existingPgpKeyOrKeys === "string" ? [existingPgpKeyOrKeys] : existingPgpKeyOrKeys;
+    existingPgpKeys = [...existingPgpKeys, ...baseEditedDescription.committee.members[0]["pgp-keys"].map((key) => key.publicKey)];
+    existingPgpKeys = [...new Set(existingPgpKeys)];
+
+    baseEditedDescription.committee.members[0]["pgp-keys"] = existingPgpKeys?.map((key) => ({ publicKey: key })) ?? [
+      { publicKey: "" },
+    ];
   }
 
   // V1 vaults
