@@ -13,7 +13,7 @@ export const GET_VAULTS = `
       defaultHackerHatRewardSplit
       defaultGovernanceHatRewardSplit
     }
-    userNfts: owners(where: { address: $account }) {
+    userNfts: nftowners(where: { address: $account }) {
       id
       balance
       nft {
