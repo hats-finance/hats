@@ -1,6 +1,7 @@
 import { ChainsConfig } from "@hats-finance/shared";
 import { configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
@@ -10,6 +11,7 @@ const { chains, provider } = configureChains(
   Object.values(ChainsConfig).map((chain) => chain.chain),
   [
     infuraProvider({ apiKey: INFURA_API_KEY }),
+    publicProvider(),
     // jsonRpcProvider({
     //   rpc: (selectedChain) => {
     //     const supportedChains = Object.keys(ChainsConfig);
