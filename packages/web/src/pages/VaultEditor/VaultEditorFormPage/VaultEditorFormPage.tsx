@@ -112,6 +112,7 @@ const VaultEditorFormPage = () => {
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     // If vault is already created or is isNonEditableStatus, edition is blocked
+    if (isNonEditableStatus) return;
     if (allFormDisabled) return;
     if (isCreation) setLoadingEditSession(true);
 
@@ -304,6 +305,12 @@ const VaultEditorFormPage = () => {
       const { canEditVault } = await checkIfAddressCanEditTheVault(address, editData);
 
       if (isEditingExitingVault) {
+        if (isNonEditableStatus) {
+          setUserHasPermissions(true);
+          setAllFormDisabled(true);
+          return;
+        }
+
         if (!canEditVault) {
           setUserHasPermissions(false);
           setAllFormDisabled(true);
@@ -319,7 +326,7 @@ const VaultEditorFormPage = () => {
         }
       } else {
         setUserHasPermissions(true);
-        setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation || isNonEditableStatus);
+        setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation);
       }
     };
     checkPermissions();
