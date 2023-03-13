@@ -1,5 +1,6 @@
 import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "@wagmi/chains";
 import axios from "axios";
+import { isServer } from "./general.utils";
 
 const getGnosisChainNameByChainId = (chainId: number): string => {
   switch (chainId) {
@@ -77,9 +78,9 @@ export const getGnosisSafeInfo = async (
   try {
     if (!chainId) throw new Error("Please provide chainId");
 
-    const safeInfoStorage = JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
+    const safeInfoStorage = isServer() ? null : JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
     const data = safeInfoStorage ?? (await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId))).data;
-    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
 
@@ -96,7 +97,7 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
     return defaultData;
   }
 };
