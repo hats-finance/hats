@@ -156,7 +156,7 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
   return contractsForm;
 }
 
-export function descriptionToEditedForm(vaultDescription: IVaultDescription, withDefaultEmail = false): IEditedVaultDescription {
+export function descriptionToEditedForm(vaultDescription: IVaultDescription, withDefaultData = false): IEditedVaultDescription {
   const severitiesWithIds: IEditedVulnerabilitySeverity[] = vaultDescription.severities.map((sev) => ({
     ...sev,
     id: uuid(),
@@ -174,12 +174,14 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
     committee: {
       ...vaultDescription.committee,
       members: vaultDescription.committee.members
-        ? vaultDescription.committee.members.map((m) => ({ ...m, "pgp-keys": [{ publicKey: "" }] }))
+        ? withDefaultData
+          ? vaultDescription.committee.members.map((m) => ({ ...m, "pgp-keys": [{ publicKey: "" }] }))
+          : vaultDescription.committee.members
         : [createNewCommitteeMember()],
     },
     "project-metadata": {
       ...vaultDescription["project-metadata"],
-      emails: withDefaultEmail ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
+      emails: withDefaultData ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
     assets: defaultDescription.assets,
@@ -188,11 +190,13 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
     includesStartAndEndTime: !!vaultDescription["project-metadata"].starttime || !!vaultDescription["project-metadata"].endtime,
   };
 
-  const existingPgpKeys = vaultDescription["communication-channel"]?.["pgp-pk"];
-  baseEditedDescription.committee.members[0]["pgp-keys"] =
-    typeof existingPgpKeys === "string"
-      ? [{ publicKey: existingPgpKeys }]
-      : existingPgpKeys?.map((key) => ({ publicKey: key })) || [{ publicKey: "" }];
+  if (withDefaultData) {
+    const existingPgpKeys = vaultDescription["communication-channel"]?.["pgp-pk"];
+    baseEditedDescription.committee.members[0]["pgp-keys"] =
+      typeof existingPgpKeys === "string"
+        ? [{ publicKey: existingPgpKeys }]
+        : existingPgpKeys?.map((key) => ({ publicKey: key })) || [{ publicKey: "" }];
+  }
 
   // V1 vaults
   if (vaultDescription.version === "v1" || !vaultDescription.version) {
