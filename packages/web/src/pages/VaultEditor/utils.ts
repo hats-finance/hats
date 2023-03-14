@@ -26,11 +26,9 @@ export async function getAddressEditorRole(
 
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
   const isGovMember = await isAddressAMultisigMember(govMultisig, address, vaultChainId);
-  const isVaultMember = dataToUse.committee.members.map((member) => member.address).includes(address) ?? false;
 
   if (isGovMember) return "gov";
   if (isCommitteeMultisigMember) return "committee";
-  if (isVaultMember) return "invited";
   return "none";
 }
 
@@ -40,8 +38,6 @@ export function vaultEditorRoleToIntlKey(role: VaultEditorAddressRole): string {
       return "addressRoleGov";
     case "committee":
       return "addressRoleCommittee";
-    case "invited":
-      return "addressRoleInvited";
     case "none":
       return "";
   }

@@ -1,1 +1,1 @@
-export type VaultEditorAddressRole = "gov" | "committee" | "invited" | "none";
+export type VaultEditorAddressRole = "gov" | "committee" | "none";
