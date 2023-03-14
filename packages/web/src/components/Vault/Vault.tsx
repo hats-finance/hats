@@ -40,9 +40,7 @@ const VaultComponent = (
   const vaultName = description?.["project-metadata"].name ?? "";
 
   const vaultExpandAction = (
-    <StyledVaultExpandAction expanded={expanded}>
-      <ArrowIcon />
-    </StyledVaultExpandAction>
+    <StyledVaultExpandAction expanded={expanded}>{!preview ? <ArrowIcon /> : null}</StyledVaultExpandAction>
   );
 
   const expandVault = () => {
