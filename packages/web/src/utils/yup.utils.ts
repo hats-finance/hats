@@ -5,6 +5,11 @@ import { isEmailAddress } from "./emails.utils";
 import { getGnosisSafeInfo } from "@hats-finance/shared";
 import { getTokenInfo } from "./tokens.utils";
 
+function checkUrl(url: string) {
+  const urlRegex = new RegExp(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/);
+  return urlRegex.test(url);
+}
+
 export const getTestWalletAddress = (intl) => {
   return {
     name: "is-address",
@@ -21,9 +26,7 @@ export const getTestUrl = (intl) => {
   return {
     name: "is-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
-      const urlRegex = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
-
-      const isUrl = urlRegex.test(value ?? "");
+      const isUrl = checkUrl(value ?? "");
       const isEmpty = value === "";
 
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
@@ -35,10 +38,8 @@ export const getTestAddressOrUrl = (intl) => {
   return {
     name: "is-address-or-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
-      const urlRegex = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
-
       const isAdd = isAddress(value ?? "");
-      const isUrl = urlRegex.test(value ?? "");
+      const isUrl = checkUrl(value ?? "");
       const isEmpty = value === "";
 
       return isAdd || isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-address-or-url") });
