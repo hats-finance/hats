@@ -2,7 +2,7 @@ import { ChainsConfig, IChainConfiguration } from "@hats-finance/shared";
 import { mainnet } from "wagmi/chains";
 import { stagingServiceUrl, prodServiceUrl } from "./constants/constants";
 
-const prodHosts = ["localhost"];
+const prodHosts = ["app.hats.finance"];
 
 export const IS_PROD = prodHosts.includes(window.location.hostname);
 export const BASE_SERVICE_URL = process.env.REACT_APP_SERVICE_URL ?? (IS_PROD ? prodServiceUrl : stagingServiceUrl);
