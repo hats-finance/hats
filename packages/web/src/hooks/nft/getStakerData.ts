@@ -1,5 +1,5 @@
-import { ChainsConfig } from "@hats-finance/shared";
 import { GET_STAKER } from "graphql/subgraph";
+import { appChains } from "settings";
 import { IStaker } from "types";
 
 /**
@@ -10,7 +10,7 @@ import { IStaker } from "types";
  * @returns
  */
 export async function getStakerData(chainId: number, address: string) {
-  const subgraphUrl = ChainsConfig[chainId].subgraph;
+  const subgraphUrl = appChains[chainId].subgraph;
   const res = await fetch(subgraphUrl, {
     method: "POST",
     body: JSON.stringify({ query: GET_STAKER, variables: { address } }),

@@ -1,9 +1,10 @@
-import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
+import { appChains } from "settings";
 
 export async function getNftContract(chainId: number) {
   const providerForChain = getProvider({ chainId });
-  const contractAddress = ChainsConfig[chainId].vaultsNFTContract;
+  const contractAddress = appChains[chainId].vaultsNFTContract;
   if (!contractAddress) return null;
 
   // get contract for this chain

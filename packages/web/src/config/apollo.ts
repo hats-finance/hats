@@ -1,12 +1,11 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from "@apollo/client";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { ChainsConfig } from "@hats-finance/shared";
 import { UNISWAP_V3_SUBGRAPH } from "constants/constants";
-import { defaultChain } from "settings";
+import { appChains, defaultChain } from "settings";
 
 const subgraphByChain = new ApolloLink((operation) => {
   const { chainId } = operation.getContext();
-  const link = new HttpLink({ uri: ChainsConfig[chainId || defaultChain.chain.id].subgraph });
+  const link = new HttpLink({ uri: appChains[chainId || defaultChain.chain.id].subgraph });
   return link.request(operation);
 });
 

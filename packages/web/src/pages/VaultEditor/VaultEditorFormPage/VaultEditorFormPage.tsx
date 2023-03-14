@@ -11,19 +11,21 @@ import {
   convertVulnerabilitySeverityV1ToV2,
   editedFormToCreateVaultOnChainCall,
   nonEditableEditionStatus,
-  ChainsConfig,
   getGnosisSafeInfo,
   isAGnosisSafeTx,
+  IEditedVaultDescription,
+  IEditedVulnerabilitySeverityV1,
+  IVaultEditionStatus,
+  IEditedSessionResponse,
 } from "@hats-finance/shared";
 import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { BASE_SERVICE_URL } from "settings";
+import { appChains, BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import useConfirm from "hooks/useConfirm";
 import * as VaultEditorService from "../vaultEditorService";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionStatus, IEditedSessionResponse } from "types";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
@@ -186,7 +188,7 @@ const VaultEditorFormPage = () => {
       if (!data.committee.chainId) return;
       if (!address) return;
 
-      const rewardController = ChainsConfig[+data.committee.chainId].rewardController;
+      const rewardController = appChains[+data.committee.chainId].rewardController;
       const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
 
       const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);

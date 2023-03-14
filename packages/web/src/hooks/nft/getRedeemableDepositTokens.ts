@@ -1,8 +1,9 @@
 import { readContract, readContracts } from "wagmi/actions";
-import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { NFTContractDataProxy } from "constants/constants";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
+import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { INFTToken, INFTTokenInfoRedeemed, INFTTokenMetadata, IVaultIdentifier } from "./types";
 
@@ -12,7 +13,7 @@ export async function getDepositTokensWithRedeemState(
   address: string
 ): Promise<INFTTokenInfoRedeemed[]> {
   const nftContract = {
-    address: ChainsConfig[vault.chainId!].vaultsNFTContract!,
+    address: appChains[vault.chainId!].vaultsNFTContract!,
     abi: HATVaultsNFT_abi as any,
     chainId: vault.chainId!,
   };

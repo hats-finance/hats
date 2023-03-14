@@ -1,7 +1,7 @@
-import { ChainsConfig } from "@hats-finance/shared";
+import { appChains } from "settings";
+import { IVault } from "types";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { isAddress, shortenIfAddress } from "utils/addresses.utils";
-import { IVault } from "types";
 import "./ContractsCovered.scss";
 
 interface ContractsCoveredProps {
@@ -10,7 +10,7 @@ interface ContractsCoveredProps {
 }
 
 export function ContractsCovered({ contracts, vault }: ContractsCoveredProps) {
-  const vaultChain = vault.chainId ? ChainsConfig[vault.chainId] : undefined;
+  const vaultChain = vault.chainId ? appChains[vault.chainId] : undefined;
   const blockExplorer = vaultChain?.chain.blockExplorers?.etherscan.url;
 
   return (

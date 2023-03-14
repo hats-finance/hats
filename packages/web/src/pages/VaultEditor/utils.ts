@@ -1,5 +1,5 @@
-import { ChainsConfig, IEditedVaultDescription } from "@hats-finance/shared";
-import { isAddressAMultisigMember } from "@hats-finance/shared";
+import { IEditedVaultDescription, isAddressAMultisigMember } from "@hats-finance/shared";
+import { appChains } from "settings";
 import { VaultEditorAddressRole } from "./types";
 import { IVaultStatusData } from "./VaultStatusPage/types";
 
@@ -21,7 +21,7 @@ export async function getAddressEditorRole(
   const vaultChainId = dataToUse?.committee.chainId;
   if (!address || !dataToUse || !vaultChainId) return "none";
 
-  const govMultisig = ChainsConfig[Number(vaultChainId)].govMultisig;
+  const govMultisig = appChains[Number(vaultChainId)].govMultisig;
   const committeeMultisig = dataToUse.committee["multisig-address"];
 
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);

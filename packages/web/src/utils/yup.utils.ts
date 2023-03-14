@@ -1,8 +1,8 @@
 import * as Yup from "yup";
-import { ChainsConfig, ICommitteeMember } from "@hats-finance/shared";
+import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
+import { appChains } from "settings";
 import { isEmailAddress } from "./emails.utils";
-import { getGnosisSafeInfo } from "@hats-finance/shared";
 import { getTokenInfo } from "./tokens.utils";
 
 function checkUrl(url: string) {
@@ -56,7 +56,7 @@ export const getTestCommitteeMultisigForVault = (intl) => {
       const { chainId } = ctx.parent;
 
       if (!chainId) return ctx.createError({ message: intl("required") });
-      const isTesnet = ChainsConfig[chainId].chain.testnet;
+      const isTesnet = appChains[chainId].chain.testnet;
       const MIN_COMMITTEE_MEMBERS = isTesnet ? 1 : 3;
       const MIN_SIGNERS = isTesnet ? 1 : 2;
 

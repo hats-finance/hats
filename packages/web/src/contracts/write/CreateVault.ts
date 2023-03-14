@@ -1,5 +1,6 @@
-import { ChainsConfig, HATSVaultsRegistry_abi } from "@hats-finance/shared";
+import { HATSVaultsRegistry_abi } from "@hats-finance/shared";
 import { getNetwork, writeContract } from "wagmi/actions";
+import { appChains } from "settings";
 import { ICreateVaultOnChainCall } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 
@@ -16,7 +17,7 @@ export class CreateVaultContract {
     const { chain } = getNetwork();
     if (!chain) return null;
 
-    const registryAddress = ChainsConfig[vaultData.chainId].vaultsCreatorContract;
+    const registryAddress = appChains[vaultData.chainId].vaultsCreatorContract;
     const registryAbi = HATSVaultsRegistry_abi;
 
     if (!registryAddress) {

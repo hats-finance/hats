@@ -1,8 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import millify from "millify";
-import { ChainsConfig } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
-import { BASE_SERVICE_URL } from "settings";
+import { appChains, BASE_SERVICE_URL } from "settings";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
@@ -124,7 +123,7 @@ export const getTokensPrices = async (tokens: { address: string; chain: number }
     // Get prices for each chain
     const allRequests: Promise<AxiosResponse>[] = [];
     for (const chain in tokensByChain) {
-      const networkCoingeckoId = ChainsConfig[chain].coingeckoId;
+      const networkCoingeckoId = appChains[chain].coingeckoId;
       const tokens = Array.from(new Set(tokensByChain[chain])).join(",");
 
       if (networkCoingeckoId) {

@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
-import { ChainsConfig, isAddressAMultisigMember } from "@hats-finance/shared";
+import { isAddressAMultisigMember } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
+import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -58,7 +59,8 @@ const WalletButton = () => {
     const checkGovMember = async () => {
       if (account && chain && chain.id) {
         const chainId = Number(chain.id);
-        const govMultisig = ChainsConfig[Number(chainId)].govMultisig;
+        console.log(appChains);
+        const govMultisig = appChains[Number(chainId)].govMultisig;
 
         const isGov = await isAddressAMultisigMember(govMultisig, account, chainId);
         setIsGovMember(isGov);

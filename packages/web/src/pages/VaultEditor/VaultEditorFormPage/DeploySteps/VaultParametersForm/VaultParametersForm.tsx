@@ -3,12 +3,13 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IEditedVaultDescription, IEditedVaultParameters } from "@hats-finance/shared";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { Button, FormInput } from "components";
+import { appChains } from "settings";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import { useVaults } from "hooks/vaults/useVaults";
-import { ChainsConfig, IEditedVaultDescription, IEditedVaultParameters } from "types";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledVaultEditorForm } from "../../styles";
@@ -67,7 +68,7 @@ const VaultParametersFormOnVaultEditor = () => {
 
   // Set default values for the fixed splits. Getting it from subgraph
   useEffect(() => {
-    const registryAddress = ChainsConfig[Number(chainId)]?.vaultsCreatorContract;
+    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
     if (registryAddress && masters) {
       const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
 

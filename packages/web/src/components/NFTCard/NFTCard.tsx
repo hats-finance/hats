@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNetwork } from "wagmi";
-import { ChainsConfig } from "@hats-finance/shared";
 import ReactDOM from "react-dom";
 import { Media } from "components";
 import classNames from "classnames";
+import { appChains } from "settings";
 import { useTranslation } from "react-i18next";
 import { useEscapePressed } from "hooks/useKeyPress";
 import { ipfsTransformUri } from "utils";
@@ -38,9 +38,9 @@ export function NFTCard({ tokenId, tokenMetadata, isRedeemed = true, chainId }: 
   let openSeaUrl = "";
   if (chainId) {
     if (chain?.testnet) {
-      openSeaUrl = `https://testnets.opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
+      openSeaUrl = `https://testnets.opensea.io/assets/${appChains[chainId].vaultsNFTContract}/${tokenId}`;
     } else {
-      openSeaUrl = `https://opensea.io/assets/${ChainsConfig[chainId].vaultsNFTContract}/${tokenId}`;
+      openSeaUrl = `https://opensea.io/assets/${appChains[chainId].vaultsNFTContract}/${tokenId}`;
     }
   }
 

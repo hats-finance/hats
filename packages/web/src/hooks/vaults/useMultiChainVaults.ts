@@ -1,9 +1,8 @@
-import { ChainsConfig } from "@hats-finance/shared";
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, useAccount } from "wagmi";
 import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
-import { IS_PROD } from "settings";
+import { appChains, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 
 const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
@@ -11,9 +10,9 @@ const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts
 const DATA_REFRESH_TIME = 10000;
 
 const supportedChains = {
-  ETHEREUM: { prod: ChainsConfig[mainnet.id], test: ChainsConfig[goerli.id] },
-  OPTIMISM: { prod: ChainsConfig[optimism.id], test: ChainsConfig[optimismGoerli.id] },
-  ARBITRUM: { prod: ChainsConfig[arbitrum.id], test: null },
+  ETHEREUM: { prod: appChains[mainnet.id], test: appChains[goerli.id] },
+  OPTIMISM: { prod: appChains[optimism.id], test: appChains[optimismGoerli.id] },
+  ARBITRUM: { prod: appChains[arbitrum.id], test: null },
 };
 
 interface GraphVaultsData {
@@ -34,7 +33,7 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
       return;
     }
 
-    const subgraphUrl = ChainsConfig[chainId].subgraph;
+    const subgraphUrl = appChains[chainId].subgraph;
     const res = await fetch(subgraphUrl, {
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
@@ -64,9 +63,10 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
 export const useMultiChainVaults = () => {
   const [vaults, setVaults] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const { chain } = useNetwork();
-  const connectedChain = chain ? ChainsConfig[chain.id] : null;
+  const connectedChain = chain ? appChains[chain.id] : null;
 
-  const showTestnets = connectedChain ? connectedChain.chain.testnet : !IS_PROD;
+  // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
+  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? true;
   const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
   const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);

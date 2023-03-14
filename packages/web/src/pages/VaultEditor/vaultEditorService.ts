@@ -1,11 +1,16 @@
 import { getContract, getProvider, readContracts } from "wagmi/actions";
-import { ChainsConfig, HATSVaultsRegistry_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import {
+  HATSVaultsRegistry_abi,
+  HATSVaultV2_abi,
+  IEditedSessionResponse,
+  IEditedVaultDescription,
+  IVaultDescription,
+} from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { axiosClient } from "config/axiosClient";
-import { BASE_SERVICE_URL } from "settings";
+import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { IEditedSessionResponse, IEditedVaultDescription, IVaultDescription } from "types";
 import { IVaultStatusData } from "./VaultStatusPage/types";
 
 /**
@@ -144,7 +149,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
   };
 
   const registryContractInfo = {
-    address: ChainsConfig[chainId].vaultsCreatorContract ?? "",
+    address: appChains[chainId].vaultsCreatorContract ?? "",
     abi: HATSVaultsRegistry_abi,
     chainId,
   };
