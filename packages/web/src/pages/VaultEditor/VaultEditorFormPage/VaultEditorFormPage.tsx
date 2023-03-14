@@ -295,7 +295,7 @@ const VaultEditorFormPage = () => {
   // Handler for initializing the form steps
   useEffect(() => {
     presetIsEditingExistingVault(isEditingExitingVault);
-    initFormSteps();
+    initFormSteps(isEditingExitingVault);
     if (isEditingExitingVault) getOriginalVaultDescriptionHash();
   }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
 
