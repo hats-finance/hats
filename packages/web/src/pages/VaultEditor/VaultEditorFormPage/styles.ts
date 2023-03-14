@@ -217,6 +217,14 @@ export const Section = styled.div<{ visible: boolean }>(
       margin-bottom: ${getSpacing(2)};
       padding-bottom: ${getSpacing(2)};
       border-bottom: 1px solid var(--grey-600);
+
+      &.no-underline {
+        border-bottom: none;
+      }
+
+      &.no-bottom {
+        padding-bottom: 0;
+      }
     }
 
     .section-content {

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 
 export const StyledVaultEmailsForm = styled.div`
-  width: 80%;
+  width: 100%;
 
   .emails {
     width: 100%;

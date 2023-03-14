@@ -552,7 +552,7 @@ const VaultEditorFormPage = () => {
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
-          <div className="sections-controller content-wrapper">
+          <div className="sections-controller content-wrapper-md">
             {sections.map((section, idx) => (
               <VaultEditorSectionController
                 key={section.id}
@@ -565,7 +565,7 @@ const VaultEditorFormPage = () => {
             ))}
           </div>
 
-          <StyledVaultEditorForm className="content-wrapper">
+          <StyledVaultEditorForm className="content-wrapper-md">
             {/* Title */}
             {descriptionHash && (isAdvancedMode || isEditingExitingVault) && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>

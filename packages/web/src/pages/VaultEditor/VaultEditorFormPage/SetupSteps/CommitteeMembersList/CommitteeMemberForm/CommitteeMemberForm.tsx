@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
-import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button } from "components";
+import { getSafeDashboardLink } from "@hats-finance/shared";
+import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button, WithTooltip } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
 import useConfirm from "hooks/useConfirm";
 import { IEditedVaultDescription } from "types";
@@ -10,6 +11,8 @@ import { getPath } from "utils/objects.utils";
 import { VaultEditorFormContext } from "../../../store";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import GroupIcon from "@mui/icons-material/Groups";
+import { shortenIfAddress } from "utils/addresses.utils";
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -36,6 +39,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
   };
 
   const linkedMultisigAddress = useWatch({ control, name: `committee.members.${index}.linkedMultisigAddress` });
+  const chainId = useWatch({ control, name: `committee.chainId` });
 
   const handleRemoveMember = async () => {
     const wantsToDelete = await confirm({
@@ -55,6 +59,11 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
     if (wantsToDelete) removeKey(keyIndex);
   };
 
+  const handleGoToSafeAddress = () => {
+    if (!linkedMultisigAddress || !chainId) return;
+    window.open(getSafeDashboardLink(linkedMultisigAddress, +chainId));
+  };
+
   return (
     <>
       <StyledCommitteeMemberForm>
@@ -66,6 +75,25 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
         {!linkedMultisigAddress && <div className="linkedMultisig outside">{t("notMemberOfMultisig")}</div>}
         <div className="member-details">
           <div className="content">
+            <div className="title">
+              <p className="section-title no-underline no-bottom">{`${t("committeeMember")} ${index + 1}`}</p>
+              <div className="multisig-info">
+                {linkedMultisigAddress ? (
+                  <WithTooltip text={`${t("multisig")}: ${linkedMultisigAddress}`}>
+                    <span className="multisig-address" onClick={handleGoToSafeAddress}>
+                      <GroupIcon />
+                      {shortenIfAddress(linkedMultisigAddress)}
+                    </span>
+                  </WithTooltip>
+                ) : (
+                  <span className="multisig-outside">
+                    <GroupIcon />
+                    {t("notMemberOfMultisig")}
+                  </span>
+                )}
+              </div>
+            </div>
+
             <FormInput
               {...register(`committee.members.${index}.name`)}
               disabled={allFormDisabled}

@@ -45,9 +45,11 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
 };
 
 export const getSafeWalletConnectLink = (address: string, chainId: number): string => {
-  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(
-    chainId
-  )}:${address}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+  return `${getSafeDashboardLink(address, chainId)}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+};
+
+export const getSafeDashboardLink = (address: string, chainId: number): string => {
+  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
 };
 
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {

@@ -8,6 +8,7 @@ export const variables = css`
     --modal-element-padding: 40px;
     --modal-element-padding-mobile: 20px;
     --element-max-width: 1220px;
+    --element-max-width-md: 900px;
     --header-button-hight: 56px;
     --notifications-container-z-index: 20000;
     --nft-card-z-index: 9999;

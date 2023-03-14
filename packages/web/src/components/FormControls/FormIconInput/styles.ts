@@ -49,8 +49,8 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
     .icon-preview {
       position: relative;
       cursor: pointer;
-      width: ${getSpacing(15)};
-      height: ${getSpacing(15)};
+      width: ${getSpacing(18)};
+      height: ${getSpacing(18)};
       display: flex;
       flex-direction: column;
       justify-content: space-between;
