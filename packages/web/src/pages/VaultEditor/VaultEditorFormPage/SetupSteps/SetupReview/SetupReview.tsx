@@ -15,22 +15,31 @@ export function SetupReview() {
         {isEditingExitingVault ? t("vaultEditorFinishedEditionExplanation") : t("vaultEditorFinishedSetupExplanation")}
       </div>
 
-      <p className="section-title">{t("nextStep")}</p>
+      <p className="section-title">{t("nextSteps")}</p>
       {isEditingExitingVault ? (
         <>
           <div className="next-step">
-            <ArrowForwardIcon className="mr-2" /> {t("sendToGovernanceApproval")}
+            <div className="title">
+              <ArrowForwardIcon className="mr-2" /> {t("sendToGovernanceApproval")}
+            </div>
           </div>
           <div className="next-step">
-            <ArrowForwardIcon className="mr-2" /> {t("waitForApproval")}
+            <div className="title">
+              <ArrowForwardIcon className="mr-2" /> {t("waitForApproval")}
+            </div>
           </div>
           <div className="next-step">
-            <ArrowForwardIcon className="mr-2" /> {t("weWillNotifyYouWhenEditionIsApproved")}
+            <div className="title">
+              <ArrowForwardIcon className="mr-2" /> {t("weWillNotifyYouWhenEditionIsApproved")}
+            </div>
           </div>
         </>
       ) : (
         <div className="next-step">
-          <ArrowForwardIcon className="mr-2" /> {t("deployVault")}
+          <div className="title">
+            <ArrowForwardIcon className="mr-2" /> {t("deployVault")}
+          </div>
+          <div className="helper-text">{t("deployVaultHelper")}</div>
         </div>
       )}
     </StyledSetupReview>
