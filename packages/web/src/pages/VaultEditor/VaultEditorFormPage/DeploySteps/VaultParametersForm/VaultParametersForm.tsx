@@ -162,7 +162,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                 <p />
                 <div className="inputsContainer mb-2">
                   <p className="tiny">{t("splitWithPercentage")}</p>
-                  <p className="tiny">{t("dApp")}</p>
+                  <p className="tiny">{t("percentageOfVault")}</p>
                 </div>
               </div>
               <div className="split">
