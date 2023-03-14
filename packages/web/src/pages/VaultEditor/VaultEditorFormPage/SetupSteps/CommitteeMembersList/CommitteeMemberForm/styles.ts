@@ -80,6 +80,7 @@ export const StyledCommitteeMemberForm = styled.div`
         &__item {
           display: flex;
           align-items: center;
+          gap: ${getSpacing(1)};
 
           &:not(:last-of-type) {
             margin-bottom: ${getSpacing(3)};

@@ -12,61 +12,67 @@ export const StyledFormPgpPublicKeyInput = styled.div<{
     position: relative;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
-    .select-button {
+    .container {
       width: 100%;
-      margin: 0;
-      text-indent: 0;
-      background-color: transparent;
-      color: var(--white);
-      border: 1px solid var(--grey-500);
-      resize: none;
-      border-radius: 0;
-      font-family: inherit;
-      color-scheme: dark;
-      padding: ${getSpacing(1)} ${getSpacing(2)};
-      cursor: pointer;
+      display: flex;
+      gap: ${getSpacing(1)};
 
-      ${disabled &&
-      css`
-        &::after {
-          content: "";
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: calc(100% - ${hasError ? "20px" : "0px"});
-          background-color: var(--grey-700);
-          opacity: 0.4;
-          z-index: 1;
-          cursor: not-allowed;
-        }
-      `}
+      .select-button {
+        flex: 1;
+        margin: 0;
+        text-indent: 0;
+        background-color: transparent;
+        color: var(--white);
+        border: 1px solid var(--grey-500);
+        resize: none;
+        border-radius: 0;
+        font-family: inherit;
+        color-scheme: dark;
+        padding: ${getSpacing(1)} ${getSpacing(2)};
+        cursor: pointer;
 
-      ${isDirty &&
-      css`
-        border-color: var(--warning-yellow);
-      `}
+        ${disabled &&
+        css`
+          &::after {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc(100% - ${hasError ? "20px" : "0px"});
+            background-color: var(--grey-700);
+            opacity: 0.4;
+            z-index: 1;
+            cursor: not-allowed;
+          }
+        `}
+
+        ${isDirty &&
+        css`
+          border-color: var(--warning-yellow);
+        `}
 
       ${hasError &&
-      css`
-        border-color: var(--error-red);
-      `}
+        css`
+          border-color: var(--error-red);
+        `}
 
       label {
-        font-size: var(--xxsmall);
-        display: block;
-        color: var(--grey-500);
-        padding-bottom: ${getSpacing(0.6)};
-        cursor: pointer;
-      }
+          font-size: var(--xxsmall);
+          display: block;
+          color: var(--grey-500);
+          padding-bottom: ${getSpacing(0.6)};
+          cursor: pointer;
+        }
 
-      p {
-        margin: 0;
+        p {
+          margin: 0;
 
-        &.placeholder {
-          color: var(--grey-600);
-          font-family: RobotoMono;
+          &.placeholder {
+            color: var(--grey-500);
+            font-family: RobotoMono;
+          }
         }
       }
     }

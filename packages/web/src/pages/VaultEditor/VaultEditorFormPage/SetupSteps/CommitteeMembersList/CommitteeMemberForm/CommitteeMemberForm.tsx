@@ -46,6 +46,15 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
     if (wantsToDelete) remove(index);
   };
 
+  const handleRemovePgpKey = async (keyIndex: number) => {
+    const wantsToDelete = await confirm({
+      confirmText: t("remove"),
+      description: t("areYouSureYouWantToRemoveThisPgpKey"),
+    });
+
+    if (wantsToDelete) removeKey(keyIndex);
+  };
+
   return (
     <>
       <StyledCommitteeMemberForm>
@@ -109,7 +118,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
                         {...field}
                       />
                       {!allFormDisabled && pgpPublicKeys.length > 1 && (
-                        <Button styleType="invisible" onClick={() => removeKey(pgpKeyIndex)}>
+                        <Button styleType="invisible" onClick={() => handleRemovePgpKey(pgpKeyIndex)}>
                           <DeleteIcon className="mr-2" />
                           <span>{t("remove")}</span>
                         </Button>
