@@ -59,7 +59,6 @@ const WalletButton = () => {
     const checkGovMember = async () => {
       if (account && chain && chain.id) {
         const chainId = Number(chain.id);
-        console.log(appChains);
         const govMultisig = appChains[Number(chainId)].govMultisig;
 
         const isGov = await isAddressAMultisigMember(govMultisig, account, chainId);

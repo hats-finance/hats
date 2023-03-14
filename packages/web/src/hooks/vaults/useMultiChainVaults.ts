@@ -66,7 +66,7 @@ export const useMultiChainVaults = () => {
   const connectedChain = chain ? appChains[chain.id] : null;
 
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
-  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? true;
+  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
   const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
   const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
