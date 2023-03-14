@@ -64,7 +64,7 @@ export function CommitteeDetailsForm() {
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}
-        disabled={!committeeChainId || allFormDisabled}
+        disabled={!committeeChainId || isEditingExitingVault || allFormDisabled}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}
