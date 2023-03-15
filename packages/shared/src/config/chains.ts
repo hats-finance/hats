@@ -25,9 +25,9 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
   },
   [goerli.id]: {
-    vaultsCreatorContract: "0x54FecFaec05140e292B978164985edE92cBAB7d5",
+    vaultsCreatorContract: "0x357D2B22A235E0b0F83926ceE9b0D0fF8489e03b",
     rewardController: "0x0000000000000000000000000000000000000000",
-    vaultsNFTContract: "0x4127f8BF5C591f8DE8071279aA40316af7a45703",
+    vaultsNFTContract: "0xCD22290206442B89662820F8dc48E3AD12F5571b",
     chain: goerli,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
     coingeckoId: undefined,
@@ -40,6 +40,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: optimism,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism",
     coingeckoId: "optimistic-ethereum",
+    govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
   },
   [optimismGoerli.id]: {
     vaultsCreatorContract: "0x8633212777Da1394bb379Df9520f098B014fB77b",
