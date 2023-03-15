@@ -138,7 +138,7 @@ export default function VaultExpanded(props: IProps) {
               <div>
                 <span className="vault-expanded-subtitle">{t("Vault.committee-members")}:</span>
                 <div className="twitter-avatars-wrapper">
-                  <Members members={description!.committee.members} />
+                  <Members members={description!.committee.members} preview={props.preview} />
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>

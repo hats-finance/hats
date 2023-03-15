@@ -30,7 +30,7 @@ export const VerifiedEmailModal = ({ closeModal }: VerifiedEmailModalProps) => {
         <p className="description">
           {verifiedEmail
             ? t("emailVerificationModal.descriptionSuccess", { email: verifiedEmail })
-            : t("emailVerificationModal.descriptionError", { email: unverifiedEmail })}
+            : t("emailVerificationModal.descriptionError", { email: unverifiedEmail === "invalid" ? "" : unverifiedEmail })}
         </p>
 
         <Button onClick={closeModal} bigHorizontalPadding>

@@ -41,7 +41,7 @@ export const VaultStatusPage = () => {
 
   useEffect(() => {
     const getPermissionData = async () => {
-      if (!address || !vaultData) return;
+      if (!vaultData) return;
 
       const permissionData = await checkIfAddressCanEditTheVault(address, vaultData);
       setUserPermissionData(permissionData);

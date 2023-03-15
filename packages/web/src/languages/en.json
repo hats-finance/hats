@@ -247,6 +247,8 @@
     "addressRoleGov": "Governance",
     "addressRoleCommittee": "Committee multisig member",
     "addressRoleInvited": "Vault committee",
+    "addressRoleCommitteeMultisig": "Committee multisig",
+    "pleaseVerifyYourEmail": "Please verify your email address",
     "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "pgpTool": "PGP tool",
     "vaultCreatedModal": {
@@ -259,7 +261,7 @@
       "titleSuccess": "Email verified",
       "titleError": "Email verification error",
       "descriptionSuccess": "Your email {{email}} has been verified successfully.",
-      "descriptionError": "Your verification link for verifying your email {{email}} is expired, please request a new one."
+      "descriptionError": "Your verification link for verifying your email {{email}} is not valid, or your email is already verified, please request a new one."
     },
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",

@@ -5,7 +5,6 @@ import { useAccount } from "wagmi";
 import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
 import { VaultStatusContext } from "../store";
-
 import SyncIcon from "@mui/icons-material/Sync";
 
 export const CheckInStatusCard = () => {

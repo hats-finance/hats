@@ -6,6 +6,7 @@ import "./Members.scss";
 
 interface IProps {
   members: Array<ICommitteeMember>;
+  preview?: boolean;
 }
 
 export default function Members(props: IProps) {
@@ -13,7 +14,11 @@ export default function Members(props: IProps) {
     return (
       <a className="member-link-wrapper" key={index} href={member?.["twitter-link"]} {...defaultAnchorProps}>
         {member?.["image-ipfs-link"] ? (
-          <img src={ipfsTransformUri(member?.["image-ipfs-link"])} alt="twitter avatar" className="twitter-avatar" />
+          <img
+            src={ipfsTransformUri(member?.["image-ipfs-link"], { isPinned: !props.preview })}
+            alt="twitter avatar"
+            className="twitter-avatar"
+          />
         ) : (
           <TwitterImageIcon />
         )}

@@ -45,7 +45,7 @@ export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps)
           )}
 
           {!allFormDisabled && (
-            <Button className="mt-2" styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
+            <Button className="mt-4" styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
               <AddIcon className="mr-2" />
               <span>{t("newEmail")}</span>
             </Button>
