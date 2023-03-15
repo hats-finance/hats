@@ -197,13 +197,16 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           if (isSafeTx) {
             cleanUp();
             alert(t("safeProposalCreatedSuccessfully"));
+
+            // If the user just deposited, close modal
+            if (action === Action.deposit) closeModal();
             return;
           }
 
           waitForTransaction({ hash: txHash }).finally(() => {
             cleanUp();
 
-            // After token allowance approbal we call deposit
+            // After token allowance approval we call deposit
             if (action === Action.approveTokenAllowance) {
               hideApproveSpending();
               handleDeposit();

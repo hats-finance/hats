@@ -8,14 +8,15 @@ import { useVaults } from "hooks/vaults/useVaults";
 import useModal from "hooks/useModal";
 import { DepositWithdraw } from "pages/HoneypotsPage/DepositWithdraw";
 import { getTokenInfo } from "utils/tokens.utils";
-import { VaultStatusContext } from "../store";
 import { Amount } from "utils/amounts.utils";
+import { VaultStatusContext } from "../store";
+import SyncIcon from "@mui/icons-material/Sync";
 
 export const DepositStatusCard = () => {
   const { t } = useTranslation();
   const [tokenInfo, setTokenInfo] = useState<{ isValidToken: boolean; name: string; symbol: string }>();
 
-  const { vaultData, vaultAddress, vaultChainId } = useContext(VaultStatusContext);
+  const { vaultData, vaultAddress, vaultChainId, refreshVaultData } = useContext(VaultStatusContext);
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const { vaults } = useVaults();
@@ -47,9 +48,11 @@ export const DepositStatusCard = () => {
               }
             />
           </div>
+          <div className="reload" onClick={refreshVaultData}>
+            <SyncIcon />
+          </div>
         </div>
-
-        {isVaultDeposited ? (
+        {isVaultDeposited && (
           <div className="status-card__deposited">
             <div className="field">
               <p className="title">{t("depositedAsset")}</p>
@@ -67,27 +70,14 @@ export const DepositStatusCard = () => {
               </div>
             </div>
           </div>
-        ) : (
-          <>
-            {vaultData.isCommitteeCheckedIn ? (
-              <>
-                <p className="status-card__text">{t("depositOnVaultExplanation")}</p>
-                <Button className="status-card__button" onClick={showDepositModal}>
-                  {t("deposit")}
-                </Button>
-              </>
-            ) : (
-              <>
-                <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>
-                <Alert content={t("committeeMustCheckInFirst")} type="warning" />
-                <Button disabled className="status-card__button">
-                  {t("deposit")}
-                </Button>
-              </>
-            )}
-          </>
         )}
+        {!vaultData.isCommitteeCheckedIn && <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>}
+        {!vaultData.isCommitteeCheckedIn && <Alert content={t("committeeMustCheckInFirst")} type="warning" />}
+        <Button className="status-card__button" disabled={!vaultData.isCommitteeCheckedIn} onClick={showDepositModal}>
+          {t("deposit")}
+        </Button>
       </div>
+
       {selectedVault && (
         <Modal
           isShowing={isShowingDepositModal}
