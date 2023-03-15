@@ -1,1 +1,1 @@
-export type VaultEditorAddressRole = "gov" | "committee" | "none";
+export type VaultEditorAddressRole = "gov" | "committee" | "committee-multisig" | "none";

@@ -9,7 +9,7 @@ export async function checkIfAddressCanEditTheVault(
   editData: IEditedVaultDescription | IVaultStatusData
 ): Promise<{ canEditVault: boolean; role: VaultEditorAddressRole }> {
   const addressRole = await getAddressEditorRole(address, editData);
-  return { canEditVault: addressRole !== "none", role: addressRole };
+  return { canEditVault: addressRole !== "none" && addressRole !== "committee-multisig", role: addressRole };
 }
 
 export async function getAddressEditorRole(
@@ -24,11 +24,13 @@ export async function getAddressEditorRole(
   const govMultisig = appChains[Number(vaultChainId)].govMultisig;
   const committeeMultisig = dataToUse.committee["multisig-address"];
 
+  const isCommitteeMultisig = committeeMultisig === address;
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
   const isGovMember = await isAddressAMultisigMember(govMultisig, address, vaultChainId);
 
   if (isGovMember) return "gov";
   if (isCommitteeMultisigMember) return "committee";
+  if (isCommitteeMultisig) return "committee-multisig";
   return "none";
 }
 
@@ -38,6 +40,8 @@ export function vaultEditorRoleToIntlKey(role: VaultEditorAddressRole): string {
       return "addressRoleGov";
     case "committee":
       return "addressRoleCommittee";
+    case "committee-multisig":
+      return "addressRoleCommitteeMultisig";
     case "none":
       return "";
   }

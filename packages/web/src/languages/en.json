@@ -247,6 +247,7 @@
     "addressRoleGov": "Governance",
     "addressRoleCommittee": "Committee multisig member",
     "addressRoleInvited": "Vault committee",
+    "addressRoleCommitteeMultisig": "Committee multisig",
     "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "pgpTool": "PGP tool",
     "vaultCreatedModal": {
