@@ -248,6 +248,7 @@
     "addressRoleCommittee": "Committee multisig member",
     "addressRoleInvited": "Vault committee",
     "addressRoleCommitteeMultisig": "Committee multisig",
+    "pleaseVerifyYourEmail": "Please verify your email address",
     "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "pgpTool": "PGP tool",
     "vaultCreatedModal": {

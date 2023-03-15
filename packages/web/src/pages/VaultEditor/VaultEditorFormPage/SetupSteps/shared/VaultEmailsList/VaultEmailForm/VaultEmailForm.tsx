@@ -120,6 +120,7 @@ export const VaultEmailForm = ({ index, email, emailsCount, remove }: VaultEmail
             prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
             error={getPath(errors, field.name)}
+            helper={field.value && email.status === "unverified" ? t("pleaseVerifyYourEmail") : undefined}
             disabled={email.status === "verified" || email.status === "verifying" || allFormDisabled}
             noMargin
             colorable
