@@ -42,7 +42,7 @@ export function FormPgpPublicKeyInputComponent(
 
   const getPgpKeyResumed = (pgpKey: string) => {
     const keyBeggining = pgpKey.split("-----BEGIN PGP PUBLIC KEY BLOCK-----")[1]?.trim();
-    return keyBeggining ? `${keyBeggining?.slice(0, 50)}...` : t("invalidPgpKeyPleaseSelectNewOne");
+    return keyBeggining ? `${keyBeggining?.slice(0, 35)}...` : t("invalidPgpKeyPleaseSelectNewOne");
   };
 
   return (

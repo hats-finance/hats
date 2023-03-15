@@ -27,7 +27,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
 
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 
-  const { register, control } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
     fields: pgpPublicKeys,
     append: appendKey,
@@ -138,6 +138,10 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
                         notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
                         colorable
                         {...field}
+                        onChange={(value) => {
+                          field.onChange(value);
+                          trigger("committee.members");
+                        }}
                       />
                       {!allFormDisabled && pgpPublicKeys.length > 1 && (
                         <Button styleType="invisible" onClick={() => handleRemovePgpKey(pgpKeyIndex)}>
