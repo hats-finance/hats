@@ -15,7 +15,8 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
 
     const severity = vault.description.severities[severityIndex];
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
-    const rewardPercentage = +severity.percentage;
+    const maxBountyPercentage = Number(vault.maxBounty) / 10000; // Number between 0 and 1;
+    const rewardPercentage = +severity.percentage * maxBountyPercentage;
 
     let rewardPrice: number = 0;
     if (vault.multipleVaults && sumTotalPrices) {

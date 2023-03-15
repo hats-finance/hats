@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import { IEditedVaultDescription, IEditedVaultAsset } from "@hats-finance/shared";
 import { useAccount, useNetwork } from "wagmi";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { ChainsConfig } from "@hats-finance/shared";
 import { FormInput, FormSelectInput } from "components";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultAsset, IEditedVaultDescription } from "types";
+import { appChains } from "settings";
 import { StyledVaultAssetForm } from "./styles";
 import { getTokenInfo } from "utils/tokens.utils";
 import { isAddress } from "utils/addresses.utils";
@@ -31,7 +31,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   const tokenAddress = useWatch({ control, name: `assets.${index}.address` });
 
   const showTestnets = address && chain?.testnet;
-  const supportedNetworksOptions = Object.values(ChainsConfig)
+  const supportedNetworksOptions = Object.values(appChains)
     .filter(
       (chainInfo) =>
         Number(vaultChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)

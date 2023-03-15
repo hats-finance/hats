@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
-import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork, useTransaction } from "wagmi";
+import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
+import { isAddressAMultisigMember } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { useTranslation } from "react-i18next";
+import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Dot, DropdownSelector } from "components";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import ErrorIcon from "assets/icons/error-icon.svg";
@@ -21,8 +24,9 @@ const WalletButton = () => {
   const { disconnect } = useDisconnect();
   const [canReconnect, setCanReconnect] = useState(false);
   const [showConnectors, setShowConnectors] = useState(false);
-  // TODO: [v2] verify if this works well
-  const { data: transaction } = useTransaction({ scopeKey: "hats" });
+  const [isGovMember, setIsGovMember] = useState(false);
+
+  const { isAuthenticated, updateProfile } = useSiweAuth();
 
   const deactivateAccount = useCallback(() => {
     disconnect();
@@ -51,9 +55,27 @@ const WalletButton = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, canReconnect]);
 
+  useEffect(() => {
+    const checkGovMember = async () => {
+      if (account && chain && chain.id) {
+        const chainId = Number(chain.id);
+        console.log(appChains);
+        const govMultisig = appChains[Number(chainId)].govMultisig;
+
+        const isGov = await isAddressAMultisigMember(govMultisig, account, chainId);
+        setIsGovMember(isGov);
+      }
+    };
+    checkGovMember();
+  }, [account, chain]);
+
   const getButtonTitle = () => {
     if (account) {
-      return <span>{ens || shortenIfAddress(account)}</span>;
+      return (
+        <span>
+          {ens || shortenIfAddress(account)} {isGovMember && "[Gov]"}
+        </span>
+      );
     } else {
       return t("connect-wallet");
     }
@@ -111,15 +133,17 @@ const WalletButton = () => {
   );
 
   return (
-    <WalletButtonWrapper>
+    <WalletButtonWrapper onMouseEnter={updateProfile}>
       <StyledWalletButton
         onClick={() => setShowConnectors((prev) => !prev)}
         connected={!!account}
-        existsPendingTransaction={!!transaction}>
+        existsPendingTransaction={false}
+      >
         {!account && <Dot color={Colors.red} />}
         {/* {account && connectedConnector && <div className="provider-icon">{getProviderIcon()}</div>} */}
         {account && <div className="network-icon">{getNetworkIcon()}</div>}
         {getButtonTitle()}
+        {isAuthenticated && <p className="signedIn">{t("signedInWithSiwe")}</p>}
       </StyledWalletButton>
 
       <DropdownSelector options={getConnectorsOptions()} show={showConnectors} onClose={() => setShowConnectors(false)} />

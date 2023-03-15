@@ -25,7 +25,7 @@ export type IEditorSections = {
 export type IEditorSectionsStep = {
   id: string;
   name: string;
-  title: string;
+  title: { creation: string; editing: string };
   backButtonTextKey?: { creation?: string; editing?: string };
   nextButtonTextKey?: { creation?: string; editing?: string };
   isAdvanced?: boolean;
@@ -46,28 +46,28 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "details",
         name: "details",
-        title: "vaultDescription",
+        title: { creation: "vaultDescription", editing: "vaultDescription" },
         component: VaultDetailsForm,
         formFields: ["project-metadata"],
       },
       {
         id: "committee",
         name: "committee",
-        title: "committeeDetails",
+        title: { creation: "committeeDetails", editing: "committeeDetails" },
         component: CommitteeDetailsForm,
         formFields: ["committee.chainId", "committee.multisig-address"],
       },
       {
         id: "members",
         name: "members",
-        title: "committeeMembersAndEncryption",
+        title: { creation: "committeeMembersAndEncryption", editing: "committeeMembersAndEncryption" },
         component: CommitteeMembersList,
         formFields: ["committee.members"],
       },
       {
         id: "severities",
         name: "severities",
-        title: "severities",
+        title: { creation: "severities", editing: "severities" },
         component: VulnerabilitySeveritiesList,
         formFields: ["vulnerability-severities-spec"],
         isAdvanced: true,
@@ -75,14 +75,14 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "contracts",
         name: "contracts",
-        title: "contractsAssetsCovered",
+        title: { creation: "contractsAssetsCovered", editing: "contractsAssetsCovered" },
         component: ContractsCoveredList,
         formFields: ["contracts-covered"],
       },
       {
         id: "setupReview",
         name: "setupReview",
-        title: "vaultDescription",
+        title: { creation: "goodJobYouAre50Done", editing: "vaultDescription" },
         isInvisible: true,
         component: SetupReview,
         formFields: [],
@@ -100,7 +100,7 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "assets",
         name: "assets",
-        title: "createVaultOnChain",
+        title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
         component: VaultAssetsList,
         formFields: ["assets"],
         backButtonTextKey: { creation: "backToVaultDescription" },
@@ -108,14 +108,14 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "params",
         name: "parameters",
-        title: "vaultParameters",
+        title: { creation: "vaultParameters", editing: "vaultParameters" },
         component: VaultParametersForm,
         formFields: ["parameters"],
       },
       {
         id: "preview",
         name: "preview",
-        title: "vaultPreview",
+        title: { creation: "vaultPreview", editing: "vaultPreview" },
         component: VaultFormReview,
         formFields: [],
         nextButtonTextKey: { creation: "createVaultOnChain" },

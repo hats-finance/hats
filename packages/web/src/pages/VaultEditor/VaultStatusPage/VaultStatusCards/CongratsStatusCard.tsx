@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import Tooltip from "rc-tooltip";
 import { useAccount } from "wagmi";
-import { ChainsConfig } from "@hats-finance/shared";
+import { getSafeWalletConnectLink } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
-import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import { getSafeWalletConnectLink } from "utils/gnosis.utils";
 import { Button } from "components";
+import { appChains } from "settings";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { VaultStatusContext } from "../store";
 
 export const CongratsStatusCard = () => {
@@ -16,7 +16,7 @@ export const CongratsStatusCard = () => {
   const isMultisigConnected = address === vaultData.committeeMulsitigAddress;
 
   const getVaultChainIcon = () => {
-    const network = ChainsConfig[vaultChainId];
+    const network = appChains[vaultChainId];
 
     return (
       <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.chain.name}>

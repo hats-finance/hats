@@ -1,21 +1,22 @@
-import { ChainsConfig } from "@hats-finance/shared";
 import { configureChains, createClient } from "wagmi";
 import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { INFURA_API_KEY } from "settings";
+import { appChains, INFURA_API_KEY } from "settings";
 
 const { chains, provider } = configureChains(
-  Object.values(ChainsConfig).map((chain) => chain.chain),
+  Object.values(appChains).map((chainInfo) => chainInfo.chain),
   [
     infuraProvider({ apiKey: INFURA_API_KEY }),
+    publicProvider(),
     // jsonRpcProvider({
     //   rpc: (selectedChain) => {
-    //     const supportedChains = Object.keys(ChainsConfig);
+    //     const supportedChains = Object.keys(appChains);
     //     const isSupportedChain = supportedChains.includes(`${selectedChain.id}`);
 
-    //     if (isSupportedChain) return { http: ChainsConfig[selectedChain.id].endpoint };
+    //     if (isSupportedChain) return { http: appChains[selectedChain.id].endpoint };
     //     return { http: defaultChain.endpoint };
     //   },
     // }),

@@ -7,8 +7,8 @@ import {
   getTestCommitteeMultisigForVault,
   getTestTokenAddress,
   getTestUrl,
+  getTestMinAmountOfKeysOnMembers,
 } from "utils/yup.utils";
-import { COMMITTEE_CONTROLLED_SPLIT, HATS_GOV_SPLIT, HATS_REWARD_SPLIT } from "@hats-finance/shared";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
@@ -55,14 +55,14 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             name: Yup.string().required(intl("required")),
             address: Yup.string().test(getTestAddressOrUrl(intl)),
             "pgp-keys": Yup.array()
-              .of(Yup.object({ publicKey: Yup.string().required(intl("required")) }))
-              .min(1, intl("required"))
-              .required(intl("required")),
+              .of(Yup.object({ publicKey: Yup.string() }))
+              .min(1, intl("required")),
             "twitter-link": Yup.string().required(intl("required")),
             "image-ipfs-link": Yup.string(),
           })
         )
-        .min(1, intl("required")),
+        .min(1, intl("required"))
+        .test(getTestMinAmountOfKeysOnMembers(intl)),
     }),
     "contracts-covered": Yup.array().of(
       Yup.object({
@@ -104,9 +104,9 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       })
     ),
     parameters: Yup.object({
-      fixedCommitteeControlledPercetange: Yup.number().oneOf([COMMITTEE_CONTROLLED_SPLIT], intl("cantChangeThisValue")),
-      fixedHatsGovPercetange: Yup.number().oneOf([HATS_GOV_SPLIT], intl("cantChangeThisValue")),
-      fixedHatsRewardPercetange: Yup.number().oneOf([HATS_REWARD_SPLIT], intl("cantChangeThisValue")),
+      fixedCommitteeControlledPercetange: Yup.number(),
+      fixedHatsGovPercetange: Yup.number(),
+      fixedHatsRewardPercetange: Yup.number(),
       maxBountyPercentage: Yup.number()
         .test(getTestNumberInBetween(intl, 10, 90, true))
         .required(intl("required"))

@@ -12,3 +12,6 @@ export const WHEREVER_MAINNET_KEY = process.env.REACT_APP_WHEREVER_MAINNET_KEY;
 export const WHEREVER_GOERLI_KEY = process.env.REACT_APP_WHEREVER_GOERLI_KEY;
 
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];
+
+// If we're in production, only mainnet is enabled
+export const appChains = ChainsConfig;

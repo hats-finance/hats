@@ -111,11 +111,22 @@
       border-right: unset;
       padding: 0px 20px;
 
+      .row {
+        display: flex;
+        flex-direction: column;
+      }
+
       .severity-data-item {
         margin-right: unset;
         border-right: unset;
         padding-right: unset;
         padding: 20px;
+
+        &.nft-section {
+          border-top: 2px solid $purple-blue;
+          border-bottom: 2px solid $purple-blue;
+          padding: 40px 20px;
+        }
 
         .vault-expanded-subtitle {
           margin-top: 0px;

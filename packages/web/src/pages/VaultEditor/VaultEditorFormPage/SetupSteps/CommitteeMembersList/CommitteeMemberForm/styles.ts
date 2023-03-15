@@ -61,6 +61,35 @@ export const StyledCommitteeMemberForm = styled.div`
         flex-direction: column;
       }
 
+      .title {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .multisig-info {
+          color: var(--grey-400);
+
+          span {
+            display: flex;
+            align-items: center;
+            gap: ${getSpacing(1)};
+
+            &.multisig-address {
+              cursor: pointer;
+              transition: 0.3s;
+
+              &:hover {
+                opacity: 0.7;
+              }
+            }
+
+            &.multisig-outside {
+              color: var(--error-red);
+            }
+          }
+        }
+      }
+
       .inputs {
         width: 100%;
         display: flex;
@@ -80,6 +109,7 @@ export const StyledCommitteeMemberForm = styled.div`
         &__item {
           display: flex;
           align-items: center;
+          gap: ${getSpacing(1)};
 
           &:not(:last-of-type) {
             margin-bottom: ${getSpacing(3)};

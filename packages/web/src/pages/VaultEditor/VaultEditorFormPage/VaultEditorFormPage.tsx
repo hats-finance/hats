@@ -11,24 +11,27 @@ import {
   convertVulnerabilitySeverityV1ToV2,
   editedFormToCreateVaultOnChainCall,
   nonEditableEditionStatus,
-  ChainsConfig,
+  getGnosisSafeInfo,
+  isAGnosisSafeTx,
+  IEditedVaultDescription,
+  IEditedVulnerabilitySeverityV1,
+  IVaultEditionStatus,
+  IEditedSessionResponse,
 } from "@hats-finance/shared";
 import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
-import { getGnosisSafeInfo, isAGnosisSafeTx } from "utils/gnosis.utils";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { BASE_SERVICE_URL } from "settings";
+import { appChains, BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
 import useConfirm from "hooks/useConfirm";
-import * as VaultService from "./vaultService";
-import * as VaultStatusService from "../VaultStatusPage/vaultStatusService";
-import { IEditedVaultDescription, IEditedVulnerabilitySeverityV1, IVaultEditionStatus, IEditedSessionResponse } from "types";
+import * as VaultEditorService from "../vaultEditorService";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { useVaultEditorSteps } from "./useVaultEditorSteps";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { checkIfAddressIsPartOfComitteOnForm } from "./utils";
 import { VaultEditorFormContext } from "./store";
+import { checkIfAddressCanEditTheVault } from "../utils";
 import {
   Section,
   StyledVaultEditorForm,
@@ -50,19 +53,21 @@ const VaultEditorFormPage = () => {
   const navigate = useNavigate();
   const confirm = useConfirm();
 
+  const { tryAuthentication } = useSiweAuth();
+
   const isAdvancedMode = searchParams.get("mode")?.includes("advanced") ?? false;
   const showVerifiedEmailModal = !!searchParams.get("verifiedEmail") || !!searchParams.get("unverifiedEmail");
 
   // Current edition description hash
   const [descriptionHash, setDescriptionHash] = useState<string | undefined>(undefined);
   // Vault description hash deployed onChain (only for existing vaults edition)
-  const [originalDescriptionHash, setOriginalDescriptionHash] = useState<string | undefined>(undefined);
-  const wasEditedSinceCreated = descriptionHash !== originalDescriptionHash;
+  const [onChainDescriptionHash, setOnChainDescriptionHash] = useState<string | undefined>(undefined);
+  const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
-  const [userHasNoPermissions, setUserHasNoPermissions] = useState(false);
-  const [loadingEditSession, setLoadingEditSession] = useState(false);
-  const [creatingVault, setCreatingVault] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
+  const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
+  const [creatingVault, setCreatingVault] = useState(false); // Is the vault being created on-chain?
+  const [loading, setLoading] = useState(false); // Is any action loading?
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
   const [allFormDisabled, setAllFormDisabled] = useState<boolean>(false);
 
@@ -75,10 +80,12 @@ const VaultEditorFormPage = () => {
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
-  const [isVaultCreated, setIsVaultCreated] = useState(false);
-  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false);
-  const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>();
+  const [isVaultCreated, setIsVaultCreated] = useState(false); // Is this edit session for a vault that is already created?
+  const [editSessionSubmittedCreation, setEditSessionSubmittedCreation] = useState(false); // Has the edit session been submitted for creation on-chain?
+  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false); // Is this edit session for editing an existing vault?
+  const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>(); // Status of the edition of an existing vault
   const isNonEditableStatus = editingExitingVaultStatus ? nonEditableEditionStatus.includes(editingExitingVaultStatus) : false;
+
   const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
 
   const {
@@ -108,20 +115,21 @@ const VaultEditorFormPage = () => {
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     // If vault is already created or is isNonEditableStatus, edition is blocked
+    if (isNonEditableStatus) return;
     if (allFormDisabled) return;
     if (isCreation) setLoadingEditSession(true);
 
     let sessionIdOrSessionResponse: string | IEditedSessionResponse;
 
     if (isCreation) {
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(
+      sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(
         undefined,
         undefined,
         withIpfsHash ? editSessionId : undefined
       );
     } else {
       const data: IEditedVaultDescription = getValues();
-      sessionIdOrSessionResponse = await VaultService.upsertEditSession(data, editSessionId, undefined);
+      sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(data, editSessionId, undefined);
     }
 
     if (typeof sessionIdOrSessionResponse === "string") {
@@ -142,7 +150,7 @@ const VaultEditorFormPage = () => {
     try {
       setLoadingEditSession(true);
 
-      const editSessionResponse = await VaultService.getEditSessionData(editSessionId);
+      const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
       console.log(`EditSession: `, editSessionResponse);
 
       if (editSessionResponse.vaultAddress) {
@@ -153,6 +161,7 @@ const VaultEditorFormPage = () => {
         }
       }
 
+      setEditSessionSubmittedCreation((editSessionResponse.submittedToCreation ?? false) && !editSessionResponse.vaultAddress);
       setDescriptionHash(editSessionResponse.descriptionHash);
       setLastModifedOn(editSessionResponse.updatedAt);
       setEditingExitingVaultStatus(editSessionResponse.vaultEditionStatus);
@@ -179,7 +188,7 @@ const VaultEditorFormPage = () => {
       if (!data.committee.chainId) return;
       if (!address) return;
 
-      const rewardController = ChainsConfig[+data.committee.chainId].rewardController;
+      const rewardController = appChains[+data.committee.chainId].rewardController;
       const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
 
       const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);
@@ -193,13 +202,17 @@ const VaultEditorFormPage = () => {
         const isGnosisTx = await isAGnosisSafeTx(txReceipt.transactionHash, +data.committee.chainId);
         // const vaultAddress = txReceipt.logs[0].address;
 
-        setCreatingVault(false);
-        navigate(
-          `${RoutePaths.vault_editor}?vaultReady=true${
-            isGnosisTx ? `&gnosisMultisig=${data.committee.chainId}:${data.committee["multisig-address"]}` : ""
-          }`,
-          { replace: true }
-        );
+        if (txReceipt.status === 1) {
+          await VaultEditorService.setEditSessionSubmittedToCreation(editSessionId);
+          setCreatingVault(false);
+          navigate(
+            `${RoutePaths.vault_editor}?vaultReady=true${
+              isGnosisTx ? `&gnosisMultisig=${data.committee.chainId}:${data.committee["multisig-address"]}` : ""
+            }`,
+            { replace: true }
+          );
+        }
+
         // if (vaultAddress) {
         //   navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
         // } else {
@@ -225,7 +238,7 @@ const VaultEditorFormPage = () => {
     if (wantsToEdit) {
       setLoading(true);
       await createOrSaveEditSession(false, false);
-      await VaultService.sendEditionToGovApproval(editSessionId);
+      await VaultEditorService.sendEditionToGovApproval(editSessionId);
       setLoading(false);
 
       goToStatusPage();
@@ -233,7 +246,7 @@ const VaultEditorFormPage = () => {
   };
 
   const cancelApprovalRequest = async () => {
-    if (userHasNoPermissions) return;
+    if (!userHasPermissions) return;
     if (!editSessionId) return;
 
     const wantsToCancel = await confirm({
@@ -243,7 +256,7 @@ const VaultEditorFormPage = () => {
 
     if (wantsToCancel) {
       setLoading(true);
-      const sessionResponse = await VaultService.cancelEditionApprovalRequest(editSessionId);
+      const sessionResponse = await VaultEditorService.cancelEditionApprovalRequest(editSessionId);
       setLoading(false);
       if (sessionResponse) {
         setDescriptionHash(sessionResponse.descriptionHash);
@@ -259,17 +272,12 @@ const VaultEditorFormPage = () => {
     const createdVaultInfo = getValues("vaultCreatedInfo");
 
     if (createdVaultInfo) {
-      const vaultInfo = await VaultStatusService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
-      setOriginalDescriptionHash(vaultInfo.descriptionHash);
+      const vaultInfo = await VaultEditorService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
+      setOnChainDescriptionHash(vaultInfo.descriptionHash);
     }
   }, [getValues]);
 
-  useEffect(() => {
-    presetIsEditingExistingVault(isEditingExitingVault);
-    initFormSteps();
-    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
-  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
-
+  // Handler for redirecting from the first page. If route is 'new-vault' the user is redirected to a new editSession
   useEffect(() => {
     if (editSessionId) {
       if (editSessionId === "new-vault") {
@@ -286,18 +294,48 @@ const VaultEditorFormPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editSessionId]);
 
+  // Handler for initializing the form steps
   useEffect(() => {
-    const editData = getValues();
-    const isMemberOrMultisig = checkIfAddressIsPartOfComitteOnForm(address, editData);
+    presetIsEditingExistingVault(isEditingExitingVault);
+    initFormSteps(isEditingExitingVault);
+    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
+  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
 
-    if (isEditingExitingVault && !isMemberOrMultisig) {
-      setUserHasNoPermissions(true);
-      setAllFormDisabled(true);
-    } else {
-      setUserHasNoPermissions(false);
-      setAllFormDisabled(isVaultCreated || isNonEditableStatus);
-    }
-  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, address, getValues]);
+  // Check if user has permissions to edit the vault depending on the status (Vault creation or vault edition)
+  useEffect(() => {
+    const checkPermissions = async () => {
+      const editData = getValues();
+      const { canEditVault } = await checkIfAddressCanEditTheVault(address, editData);
+
+      if (isEditingExitingVault) {
+        if (isNonEditableStatus) {
+          setUserHasPermissions(true);
+          setAllFormDisabled(true);
+          return;
+        }
+
+        if (!canEditVault) {
+          setUserHasPermissions(false);
+          setAllFormDisabled(true);
+        } else {
+          setUserHasPermissions(false);
+          setAllFormDisabled(true);
+
+          // Siwe: Only signed in users can edit the vault
+          tryAuthentication().then((isAuthenticated) => {
+            setUserHasPermissions(isAuthenticated);
+            setAllFormDisabled(!isAuthenticated);
+          });
+        }
+      } else {
+        setUserHasPermissions(true);
+        setAllFormDisabled(isVaultCreated || editSessionSubmittedCreation);
+      }
+    };
+    checkPermissions();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, editSessionSubmittedCreation, address, getValues]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -404,7 +442,7 @@ const VaultEditorFormPage = () => {
     }
 
     const isLastStep = currentStep?.id === steps[steps.length - 1].id;
-    if (isEditingExitingVault && isLastStep && userHasNoPermissions) return true;
+    if (isEditingExitingVault && isLastStep && !userHasPermissions) return true;
     if (isNonEditableStatus && isEditingExitingVault && isLastStep) return true;
 
     return false;
@@ -420,8 +458,8 @@ const VaultEditorFormPage = () => {
   const getEditingExistingVaultAlert = () => {
     if (!isEditingExitingVault) return null;
 
-    if (userHasNoPermissions) {
-      return <Alert content={t("connectWithCommitteeMultisigOrBeAMember")} type="error" />;
+    if (!userHasPermissions) {
+      return <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="error" />;
     }
 
     if (isNonEditableStatus && editingExitingVaultStatus) {
@@ -444,7 +482,7 @@ const VaultEditorFormPage = () => {
   const getEditingExistingVaultButtons = () => {
     if (!isEditingExitingVault) return null;
 
-    if (userHasNoPermissions) {
+    if (!userHasPermissions) {
       return (
         <div className="buttons">
           <Button onClick={goToStatusPage} styleType="outlined">
@@ -461,7 +499,7 @@ const VaultEditorFormPage = () => {
             <Button onClick={goToStatusPage} styleType="outlined">
               <BackIcon className="mr-2" /> {t("goToStatusPage")}
             </Button>
-            <Button disabled={userHasNoPermissions} onClick={cancelApprovalRequest} filledColor="error">
+            <Button disabled={!userHasPermissions} onClick={cancelApprovalRequest} filledColor="error">
               {t("cancelApprovalRequest")}
             </Button>
           </div>
@@ -516,7 +554,7 @@ const VaultEditorFormPage = () => {
     <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
       <StyledVaultEditorContainer>
         <FormProvider {...methods}>
-          <div className="sections-controller content-wrapper">
+          <div className="sections-controller content-wrapper-md">
             {sections.map((section, idx) => (
               <VaultEditorSectionController
                 key={section.id}
@@ -529,7 +567,7 @@ const VaultEditorFormPage = () => {
             ))}
           </div>
 
-          <StyledVaultEditorForm className="content-wrapper">
+          <StyledVaultEditorForm className="content-wrapper-md">
             {/* Title */}
             {descriptionHash && (isAdvancedMode || isEditingExitingVault) && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>
@@ -573,7 +611,7 @@ const VaultEditorFormPage = () => {
             {/* Section */}
             {steps.map((step) => (
               <Section key={step.id} visible={step.id === currentStepInfo.id}>
-                <p className="section-title">{t(step.title)}</p>
+                <p className="section-title">{t(isEditingExitingVault ? step.title.editing : step.title.creation)}</p>
                 <div className="section-content">
                   <step.component />
                 </div>
@@ -582,6 +620,7 @@ const VaultEditorFormPage = () => {
 
             {/* Alert section */}
             {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+            {editSessionSubmittedCreation && <Alert content={t("vaultBlockedBecauseIsPendingCreation")} type="warning" />}
 
             {/* Action buttons */}
             <div className="buttons-container">

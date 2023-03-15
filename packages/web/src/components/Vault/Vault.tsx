@@ -1,6 +1,5 @@
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
-import { ChainsConfig } from "@hats-finance/shared";
 import Tooltip from "rc-tooltip";
 import { BigNumber } from "ethers";
 import millify from "millify";
@@ -15,6 +14,7 @@ import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
 import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
+import { appChains } from "settings";
 
 interface VaultComponentProps {
   vault: IVault;
@@ -40,9 +40,7 @@ const VaultComponent = (
   const vaultName = description?.["project-metadata"].name ?? "";
 
   const vaultExpandAction = (
-    <StyledVaultExpandAction expanded={expanded}>
-      <ArrowIcon />
-    </StyledVaultExpandAction>
+    <StyledVaultExpandAction expanded={expanded}>{!preview ? <ArrowIcon /> : null}</StyledVaultExpandAction>
   );
 
   const expandVault = () => {
@@ -50,7 +48,7 @@ const VaultComponent = (
   };
 
   const getVaultChainIcon = () => {
-    const network = vault.chainId ? ChainsConfig[vault.chainId] : null;
+    const network = vault.chainId ? appChains[vault.chainId] : null;
 
     return (
       <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.chain.name}>

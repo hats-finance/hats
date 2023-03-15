@@ -90,39 +90,42 @@ export const useVaultEditorSteps = (
   );
 
   // This function will go through all the steps and check if they are valid or not
-  const initFormSteps = useCallback(async () => {
-    setLoadingSteps(true);
-    let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
+  const initFormSteps = useCallback(
+    async (isEditingExitingVault: boolean) => {
+      setLoadingSteps(true);
+      let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
 
-    for (const step of allSteps) {
-      const isValid = await formMethods.trigger(step.formFields as any);
+      for (const step of allSteps) {
+        const isValid = await formMethods.trigger(step.formFields as any);
 
-      if (firstInvalidStep) {
-        editStepStatus("isChecked", false, step.index, step.section);
-        editStepStatus("isValid", false, step.index, step.section);
-        continue;
+        if (firstInvalidStep) {
+          editStepStatus("isChecked", false, step.index, step.section);
+          editStepStatus("isValid", false, step.index, step.section);
+          continue;
+        }
+
+        if (!isValid) {
+          firstInvalidStep = step;
+          editStepStatus("isChecked", true, step.index, step.section);
+          editStepStatus("isValid", false, step.index, step.section);
+          continue;
+        } else {
+          editStepStatus("isValid", true, step.index, step.section);
+          editStepStatus("isChecked", true, step.index, step.section);
+        }
       }
 
-      if (!isValid) {
-        firstInvalidStep = step;
-        editStepStatus("isChecked", true, step.index, step.section);
-        editStepStatus("isValid", false, step.index, step.section);
-        continue;
-      } else {
-        editStepStatus("isValid", true, step.index, step.section);
-        editStepStatus("isChecked", true, step.index, step.section);
-      }
-    }
+      if (!firstInvalidStep) firstInvalidStep = allSteps[isEditingExitingVault ? 0 : allSteps.length - 1];
 
-    if (!firstInvalidStep) firstInvalidStep = allSteps[0];
+      setCurrentSection(firstInvalidStep.section);
+      setCurrentStepNumber(firstInvalidStep.index);
 
-    setCurrentSection(firstInvalidStep.section);
-    setCurrentStepNumber(firstInvalidStep.index);
-
-    // Reset the form in order to delete all the validations made by the trigger
-    formMethods.reset();
-    setLoadingSteps(false);
-  }, [allSteps, editStepStatus, formMethods]);
+      // Reset the form in order to delete all the validations made by the trigger
+      formMethods.reset();
+      setLoadingSteps(false);
+    },
+    [allSteps, editStepStatus, formMethods]
+  );
 
   const revalidateStep = async (stepNumber: number, section: keyof typeof AllEditorSections) => {
     const isStepValid = await formMethods.trigger(editorSections[section].steps[stepNumber].formFields as any);
@@ -150,7 +153,7 @@ export const useVaultEditorSteps = (
   };
 
   const onGoToStep = async (stepNumber: number) => {
-    const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+    const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
 
     // If the user is going back, continue
     if (currentStepNumber >= stepNumber) {
@@ -284,7 +287,7 @@ export const useVaultEditorSteps = (
 
       return {
         go: async () => {
-          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
           if (isStepValid) {
             if (options.saveData)
               options.saveData().then(() => {
@@ -308,7 +311,7 @@ export const useVaultEditorSteps = (
     // If the user is in any other step, go to the next step
     return {
       go: async () => {
-        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
         if (isStepValid) {
           if (options.saveData)
             options.saveData().then(() => {

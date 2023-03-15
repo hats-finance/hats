@@ -3,11 +3,13 @@ import { useTranslation } from "react-i18next";
 import Tooltip from "rc-tooltip";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IEditedVaultDescription, IEditedVaultParameters } from "@hats-finance/shared";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { Button, FormInput } from "components";
+import { appChains } from "settings";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { IEditedVaultDescription, IEditedVaultParameters } from "types";
+import { useVaults } from "hooks/vaults/useVaults";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { StyledVaultEditorForm } from "../../styles";
@@ -59,6 +61,29 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 
 const VaultParametersFormOnVaultEditor = () => {
   const { allFormDisabled } = useContext(VaultEditorFormContext);
+  const { masters } = useVaults();
+  const methodsToUse = useEnhancedFormContext<IEditedVaultDescription>();
+
+  const chainId = useWatch({ control: methodsToUse.control, name: "committee.chainId" });
+
+  // Set default values for the fixed splits. Getting it from subgraph
+  useEffect(() => {
+    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
+    if (registryAddress && masters) {
+      const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
+
+      if (master) {
+        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
+        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
+        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
+
+        if (committeeControlledSplit)
+          methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
+        if (hatsGovernanceSplit) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
+        if (hatsRewardSplit) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
+      }
+    }
+  }, [chainId, masters, methodsToUse]);
 
   return <VaultParametersFormShared disabled={allFormDisabled} />;
 };
@@ -138,7 +163,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                 <p />
                 <div className="inputsContainer mb-2">
                   <p className="tiny">{t("splitWithPercentage")}</p>
-                  <p className="tiny">{t("dApp")}</p>
+                  <p className="tiny">{t("percentageOfVault")}</p>
                 </div>
               </div>
               <div className="split">

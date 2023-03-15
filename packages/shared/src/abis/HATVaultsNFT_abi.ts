@@ -1,21 +1,9 @@
 export const HATVaultsNFT_abi = [
   {
     inputs: [
-      {
-        internalType: "string",
-        name: "_merkleTreeIPFSRef",
-        type: "string",
-      },
-      {
-        internalType: "bytes32",
-        name: "_root",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "_deadline",
-        type: "uint256",
-      },
+      { internalType: "string", name: "_merkleTreeIPFSRef", type: "string" },
+      { internalType: "bytes32", name: "_root", type: "bytes32" },
+      { internalType: "uint256", name: "_deadline", type: "uint256" },
     ],
     stateMutability: "nonpayable",
     type: "constructor",
@@ -23,24 +11,9 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "bool",
-        name: "approved",
-        type: "bool",
-      },
+      { indexed: true, internalType: "address", name: "account", type: "address" },
+      { indexed: true, internalType: "address", name: "operator", type: "address" },
+      { indexed: false, internalType: "bool", name: "approved", type: "bool" },
     ],
     name: "ApprovalForAll",
     type: "event",
@@ -48,24 +21,9 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "string",
-        name: "merkleTreeIPFSRef",
-        type: "string",
-      },
-      {
-        indexed: false,
-        internalType: "bytes32",
-        name: "root",
-        type: "bytes32",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "deadline",
-        type: "uint256",
-      },
+      { indexed: false, internalType: "string", name: "merkleTreeIPFSRef", type: "string" },
+      { indexed: false, internalType: "bytes32", name: "root", type: "bytes32" },
+      { indexed: false, internalType: "uint256", name: "deadline", type: "uint256" },
     ],
     name: "MerkleTreeChanged",
     type: "event",
@@ -73,18 +31,8 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "previousOwner",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
+      { indexed: true, internalType: "address", name: "previousOwner", type: "address" },
+      { indexed: true, internalType: "address", name: "newOwner", type: "address" },
     ],
     name: "OwnershipTransferred",
     type: "event",
@@ -92,36 +40,11 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256[]",
-        name: "ids",
-        type: "uint256[]",
-      },
-      {
-        indexed: false,
-        internalType: "uint256[]",
-        name: "values",
-        type: "uint256[]",
-      },
+      { indexed: true, internalType: "address", name: "operator", type: "address" },
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      { indexed: false, internalType: "uint256[]", name: "ids", type: "uint256[]" },
+      { indexed: false, internalType: "uint256[]", name: "values", type: "uint256[]" },
     ],
     name: "TransferBatch",
     type: "event",
@@ -129,36 +52,11 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "value",
-        type: "uint256",
-      },
+      { indexed: true, internalType: "address", name: "operator", type: "address" },
+      { indexed: true, internalType: "address", name: "from", type: "address" },
+      { indexed: true, internalType: "address", name: "to", type: "address" },
+      { indexed: false, internalType: "uint256", name: "id", type: "uint256" },
+      { indexed: false, internalType: "uint256", name: "value", type: "uint256" },
     ],
     name: "TransferSingle",
     type: "event",
@@ -166,18 +64,8 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: false,
-        internalType: "string",
-        name: "value",
-        type: "string",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
+      { indexed: false, internalType: "string", name: "value", type: "string" },
+      { indexed: true, internalType: "uint256", name: "id", type: "uint256" },
     ],
     name: "URI",
     type: "event",
@@ -185,18 +73,8 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
+      { indexed: true, internalType: "address", name: "hatVaults", type: "address" },
+      { indexed: true, internalType: "uint256", name: "pid", type: "uint256" },
     ],
     name: "VaultPaused",
     type: "event",
@@ -204,18 +82,8 @@ export const HATVaultsNFT_abi = [
   {
     anonymous: false,
     inputs: [
-      {
-        indexed: true,
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
+      { indexed: true, internalType: "address", name: "hatVaults", type: "address" },
+      { indexed: true, internalType: "uint256", name: "pid", type: "uint256" },
     ],
     name: "VaultResumed",
     type: "event",
@@ -223,46 +91,22 @@ export const HATVaultsNFT_abi = [
   {
     inputs: [],
     name: "HUNDRED_PERCENT",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "TIERS",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "string",
-        name: "_uri",
-        type: "string",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "string", name: "_uri", type: "string" },
     ],
     name: "addVault",
     outputs: [],
@@ -271,254 +115,106 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "uint256", name: "id", type: "uint256" },
     ],
     name: "balanceOf",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address[]",
-        name: "accounts",
-        type: "address[]",
-      },
-      {
-        internalType: "uint256[]",
-        name: "ids",
-        type: "uint256[]",
-      },
+      { internalType: "address[]", name: "accounts", type: "address[]" },
+      { internalType: "uint256[]", name: "ids", type: "uint256[]" },
     ],
     name: "balanceOfBatch",
-    outputs: [
-      {
-        internalType: "uint256[]",
-        name: "",
-        type: "uint256[]",
-      },
-    ],
+    outputs: [{ internalType: "uint256[]", name: "", type: "uint256[]" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "deadline",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "address", name: "account", type: "address" },
     ],
     name: "getTierFromShares",
-    outputs: [
-      {
-        internalType: "uint8",
-        name: "",
-        type: "uint8",
-      },
-    ],
+    outputs: [{ internalType: "uint8", name: "", type: "uint8" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "address", name: "account", type: "address" },
     ],
     name: "getTiersToRedeemFromShares",
-    outputs: [
-      {
-        internalType: "bool[3]",
-        name: "tiers",
-        type: "bool[3]",
-      },
-    ],
+    outputs: [{ internalType: "bool[3]", name: "tiers", type: "bool[3]" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "uint8",
-        name: "tier",
-        type: "uint8",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "uint8", name: "tier", type: "uint8" },
     ],
     name: "getTokenId",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "pure",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
     ],
     name: "getVaultId",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "pure",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "address", name: "operator", type: "address" },
     ],
     name: "isApprovedForAll",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "address", name: "account", type: "address" },
     ],
     name: "isEligible",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "owner",
-    outputs: [
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
-    ],
+    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
     ],
     name: "pauseVault",
     outputs: [],
@@ -526,41 +222,17 @@ export const HATVaultsNFT_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     name: "pausedVaults",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address[]",
-        name: "hatVaults",
-        type: "address[]",
-      },
-      {
-        internalType: "uint256[]",
-        name: "pids",
-        type: "uint256[]",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
+      { internalType: "address[]", name: "hatVaults", type: "address[]" },
+      { internalType: "uint256[]", name: "pids", type: "uint256[]" },
+      { internalType: "address", name: "account", type: "address" },
     ],
     name: "redeemMultipleFromShares",
     outputs: [],
@@ -569,31 +241,11 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address[]",
-        name: "hatVaults",
-        type: "address[]",
-      },
-      {
-        internalType: "uint256[]",
-        name: "pids",
-        type: "uint256[]",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "uint8[]",
-        name: "tiers",
-        type: "uint8[]",
-      },
-      {
-        internalType: "bytes32[][]",
-        name: "proofs",
-        type: "bytes32[][]",
-      },
+      { internalType: "address[]", name: "hatVaults", type: "address[]" },
+      { internalType: "uint256[]", name: "pids", type: "uint256[]" },
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "uint8[]", name: "tiers", type: "uint8[]" },
+      { internalType: "bytes32[][]", name: "proofs", type: "bytes32[][]" },
     ],
     name: "redeemMultipleFromTree",
     outputs: [],
@@ -602,21 +254,9 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "address", name: "account", type: "address" },
     ],
     name: "redeemSingleFromShares",
     outputs: [],
@@ -625,56 +265,22 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "account",
-        type: "address",
-      },
-      {
-        internalType: "uint8",
-        name: "tier",
-        type: "uint8",
-      },
-      {
-        internalType: "bytes32[]",
-        name: "proof",
-        type: "bytes32[]",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
+      { internalType: "address", name: "account", type: "address" },
+      { internalType: "uint8", name: "tier", type: "uint8" },
+      { internalType: "bytes32[]", name: "proof", type: "bytes32[]" },
     ],
     name: "redeemSingleFromTree",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
-  {
-    inputs: [],
-    name: "renounceOwnership",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
+  { inputs: [], name: "renounceOwnership", outputs: [], stateMutability: "nonpayable", type: "function" },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "hatVaults",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "pid",
-        type: "uint256",
-      },
+      { internalType: "address", name: "hatVaults", type: "address" },
+      { internalType: "uint256", name: "pid", type: "uint256" },
     ],
     name: "resumeVault",
     outputs: [],
@@ -684,43 +290,17 @@ export const HATVaultsNFT_abi = [
   {
     inputs: [],
     name: "root",
-    outputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    outputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256[]",
-        name: "ids",
-        type: "uint256[]",
-      },
-      {
-        internalType: "uint256[]",
-        name: "amounts",
-        type: "uint256[]",
-      },
-      {
-        internalType: "bytes",
-        name: "data",
-        type: "bytes",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256[]", name: "ids", type: "uint256[]" },
+      { internalType: "uint256[]", name: "amounts", type: "uint256[]" },
+      { internalType: "bytes", name: "data", type: "bytes" },
     ],
     name: "safeBatchTransferFrom",
     outputs: [],
@@ -729,31 +309,11 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "from",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "to",
-        type: "address",
-      },
-      {
-        internalType: "uint256",
-        name: "id",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "amount",
-        type: "uint256",
-      },
-      {
-        internalType: "bytes",
-        name: "data",
-        type: "bytes",
-      },
+      { internalType: "address", name: "from", type: "address" },
+      { internalType: "address", name: "to", type: "address" },
+      { internalType: "uint256", name: "id", type: "uint256" },
+      { internalType: "uint256", name: "amount", type: "uint256" },
+      { internalType: "bytes", name: "data", type: "bytes" },
     ],
     name: "safeTransferFrom",
     outputs: [],
@@ -762,16 +322,8 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "address",
-        name: "operator",
-        type: "address",
-      },
-      {
-        internalType: "bool",
-        name: "approved",
-        type: "bool",
-      },
+      { internalType: "address", name: "operator", type: "address" },
+      { internalType: "bool", name: "approved", type: "bool" },
     ],
     name: "setApprovalForAll",
     outputs: [],
@@ -779,82 +331,38 @@ export const HATVaultsNFT_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes4",
-        name: "interfaceId",
-        type: "bytes4",
-      },
-    ],
+    inputs: [{ internalType: "bytes4", name: "interfaceId", type: "bytes4" }],
     name: "supportsInterface",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-      {
-        internalType: "address",
-        name: "",
-        type: "address",
-      },
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "address", name: "", type: "address" },
     ],
     name: "tokensRedeemed",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "totalSupply",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "totalSupplyCounter",
-    outputs: [
-      {
-        internalType: "uint256",
-        name: "_value",
-        type: "uint256",
-      },
-    ],
+    outputs: [{ internalType: "uint256", name: "_value", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "address",
-        name: "newOwner",
-        type: "address",
-      },
-    ],
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -862,21 +370,9 @@ export const HATVaultsNFT_abi = [
   },
   {
     inputs: [
-      {
-        internalType: "string",
-        name: "_merkleTreeIPFSRef",
-        type: "string",
-      },
-      {
-        internalType: "bytes32",
-        name: "_root",
-        type: "bytes32",
-      },
-      {
-        internalType: "uint256",
-        name: "_deadline",
-        type: "uint256",
-      },
+      { internalType: "string", name: "_merkleTreeIPFSRef", type: "string" },
+      { internalType: "bytes32", name: "_root", type: "bytes32" },
+      { internalType: "uint256", name: "_deadline", type: "uint256" },
     ],
     name: "updateTree",
     outputs: [],
@@ -884,59 +380,23 @@ export const HATVaultsNFT_abi = [
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "tokenId",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "tokenId", type: "uint256" }],
     name: "uri",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "",
-        type: "uint256",
-      },
-    ],
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     name: "uris",
-    outputs: [
-      {
-        internalType: "string",
-        name: "",
-        type: "string",
-      },
-    ],
+    outputs: [{ internalType: "string", name: "", type: "string" }],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [
-      {
-        internalType: "bytes32",
-        name: "",
-        type: "bytes32",
-      },
-    ],
+    inputs: [{ internalType: "bytes32", name: "", type: "bytes32" }],
     name: "vaultsRegistered",
-    outputs: [
-      {
-        internalType: "bool",
-        name: "",
-        type: "bool",
-      },
-    ],
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "view",
     type: "function",
   },

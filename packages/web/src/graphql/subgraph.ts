@@ -10,8 +10,10 @@ export const GET_VAULTS = `
       withdrawRequestPendingPeriod
       vestingHatDuration
       vestingHatPeriods
+      defaultHackerHatRewardSplit
+      defaultGovernanceHatRewardSplit
     }
-    userNfts: owners(where: { address: $account }) {
+    userNfts: nftowners(where: { address: $account }) {
       id
       balance
       nft {
@@ -43,11 +45,14 @@ export const GET_VAULTS = `
         withdrawRequestPendingPeriod
         vestingHatDuration
         vestingHatPeriods
+        defaultHackerHatRewardSplit
+        defaultGovernanceHatRewardSplit
       }
       numberOfApprovedClaims
       rewardsLevels
       liquidityPool
       registered
+      maxBounty
       userWithdrawRequest: withdrawRequests( where: { beneficiary: $account }) {
         id
         beneficiary

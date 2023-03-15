@@ -106,6 +106,7 @@ export interface IEditedSessionResponse {
   createdAt?: Date;
   updatedAt?: Date;
   editingExistingVault?: boolean;
+  submittedToCreation?: boolean;
   vaultEditionStatus?: IVaultEditionStatus;
 }
 

@@ -1,5 +1,6 @@
-import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "wagmi/chains";
+import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "@wagmi/chains";
 import axios from "axios";
+import { isServer } from "./general.utils";
 
 const getGnosisChainNameByChainId = (chainId: number): string => {
   switch (chainId) {
@@ -44,9 +45,11 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
 };
 
 export const getSafeWalletConnectLink = (address: string, chainId: number): string => {
-  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(
-    chainId
-  )}:${address}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+  return `${getSafeDashboardLink(address, chainId)}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+};
+
+export const getSafeDashboardLink = (address: string, chainId: number): string => {
+  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
 };
 
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {
@@ -77,9 +80,9 @@ export const getGnosisSafeInfo = async (
   try {
     if (!chainId) throw new Error("Please provide chainId");
 
-    const safeInfoStorage = JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
+    const safeInfoStorage = isServer() ? null : JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
     const data = safeInfoStorage ?? (await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId))).data;
-    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
 
@@ -96,7 +99,20 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
     return defaultData;
   }
+};
+
+export const isAddressAMultisigMember = async (
+  multisigAddress: string | undefined,
+  address: string | undefined,
+  chainId: number | string | undefined
+): Promise<boolean> => {
+  if (!multisigAddress || !chainId || !address) return false;
+
+  const members = (await getGnosisSafeInfo(multisigAddress, Number(chainId))).owners;
+  const isMember = members.includes(address);
+
+  return isMember;
 };

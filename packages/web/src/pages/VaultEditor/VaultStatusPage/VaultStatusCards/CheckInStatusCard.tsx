@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
+import { isAGnosisSafeTx } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
 import { VaultStatusContext } from "../store";
-import { isAGnosisSafeTx } from "utils/gnosis.utils";
+
 import SyncIcon from "@mui/icons-material/Sync";
 
 export const CheckInStatusCard = () => {

@@ -1,9 +1,14 @@
 import * as Yup from "yup";
-import { ChainsConfig } from "@hats-finance/shared";
+import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
+import { appChains } from "settings";
 import { isEmailAddress } from "./emails.utils";
-import { getGnosisSafeInfo } from "./gnosis.utils";
 import { getTokenInfo } from "./tokens.utils";
+
+function checkUrl(url: string) {
+  const urlRegex = new RegExp(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/);
+  return urlRegex.test(url);
+}
 
 export const getTestWalletAddress = (intl) => {
   return {
@@ -21,9 +26,7 @@ export const getTestUrl = (intl) => {
   return {
     name: "is-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
-      const urlRegex = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
-
-      const isUrl = urlRegex.test(value ?? "");
+      const isUrl = checkUrl(value ?? "");
       const isEmpty = value === "";
 
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
@@ -35,10 +38,8 @@ export const getTestAddressOrUrl = (intl) => {
   return {
     name: "is-address-or-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
-      const urlRegex = new RegExp(/^(ftp|http|https):\/\/[^ "]+$/);
-
       const isAdd = isAddress(value ?? "");
-      const isUrl = urlRegex.test(value ?? "");
+      const isUrl = checkUrl(value ?? "");
       const isEmpty = value === "";
 
       return isAdd || isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-address-or-url") });
@@ -55,7 +56,7 @@ export const getTestCommitteeMultisigForVault = (intl) => {
       const { chainId } = ctx.parent;
 
       if (!chainId) return ctx.createError({ message: intl("required") });
-      const isTesnet = ChainsConfig[chainId].chain.testnet;
+      const isTesnet = appChains[chainId].chain.testnet;
       const MIN_COMMITTEE_MEMBERS = isTesnet ? 1 : 3;
       const MIN_SIGNERS = isTesnet ? 1 : 2;
 
@@ -136,6 +137,21 @@ export const getTestNumberInBetween = (intl, first: number, second: number, isPe
               second: `${!isPercentage ? second : `${second}%`}`,
             }),
           });
+    },
+  };
+};
+
+export const getTestMinAmountOfKeysOnMembers = (intl) => {
+  return {
+    name: `min-pgp-keys-required`,
+    test: (value: any, ctx: Yup.TestContext) => {
+      if (!value) return true;
+
+      const pgpKeys = (value as ICommitteeMember[])
+        .reduce((prev: string[], curr) => [...prev, ...curr["pgp-keys"].map((key) => key.publicKey)], [])
+        .filter((key) => !!key);
+
+      return pgpKeys.length > 0 ? true : ctx.createError({ message: intl("at-least-one-pgp-key-required") });
     },
   };
 };

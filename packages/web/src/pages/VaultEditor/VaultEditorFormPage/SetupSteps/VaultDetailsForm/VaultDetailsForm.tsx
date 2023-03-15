@@ -13,9 +13,10 @@ export function VaultDetailsForm() {
   const { t } = useTranslation();
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 
-  const { register, control, resetField, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, resetField, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
+  const vaultType = useWatch({ control, name: "project-metadata.type" });
 
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
@@ -32,6 +33,18 @@ export function VaultDetailsForm() {
       setValue("project-metadata.endtime", undefined);
     }
   }, [showDateInputs, setValue, resetField]);
+
+  useEffect(() => {
+    const data = getValues();
+    if (!data["project-metadata"]) return;
+
+    const { starttime, endtime } = data["project-metadata"];
+
+    if (starttime || endtime) return;
+
+    if (vaultType === "audit" || vaultType === "grants") setValue("includesStartAndEndTime", true);
+    else setValue("includesStartAndEndTime", false);
+  }, [vaultType, getValues, setValue]);
 
   return (
     <StyledVaultDetails>

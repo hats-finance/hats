@@ -1,12 +1,12 @@
-import { ChainsConfig } from "@hats-finance/shared";
 import { useContext, useEffect } from "react";
 import { useAccount, useNetwork } from "wagmi";
+import { IEditedVaultDescription } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
+import { appChains } from "settings";
 import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
 import { getPath } from "utils/objects.utils";
-import { IEditedVaultDescription } from "types";
 import { VaultEditorFormContext } from "../../store";
 import { StyledCommitteeDetailsForm } from "./styles";
 
@@ -21,7 +21,7 @@ export function CommitteeDetailsForm() {
   const { isEditingExitingVault, allFormDisabled } = useContext(VaultEditorFormContext);
 
   const showTestnets = address && chain?.testnet;
-  const supportedNetworksOptions = Object.values(ChainsConfig)
+  const supportedNetworksOptions = Object.values(appChains)
     .filter(
       (chainInfo) =>
         Number(committeeChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)
@@ -64,7 +64,7 @@ export function CommitteeDetailsForm() {
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}
-        disabled={!committeeChainId || allFormDisabled}
+        disabled={!committeeChainId || isEditingExitingVault || allFormDisabled}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

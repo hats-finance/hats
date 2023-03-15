@@ -8,6 +8,7 @@ export const variables = css`
     --modal-element-padding: 40px;
     --modal-element-padding-mobile: 20px;
     --element-max-width: 1220px;
+    --element-max-width-md: 900px;
     --header-button-hight: 56px;
     --notifications-container-z-index: 20000;
     --nft-card-z-index: 9999;
@@ -62,12 +63,12 @@ export const variables = css`
     --warning-yellow: #f2c94c;
 
     /* pie chart colors */
-    --vested-token: #15686b;
-    --token: #2bc4ca;
-    --committee: #dcfdff;
-    --vested-hats: #88fff3;
-    --governance: #38cfd4;
-    --swap-and-burn: #035b5f;
+    --token: #14595b;
+    --vested-token: #296b6d;
+    --committee: #3e7d7f;
+    --vested-hats: #548e91;
+    --governance: #69a0a3;
+    --swap-and-burn: #7eb2b5;
 
     --severity-audit-request: #d1891d;
 

@@ -1,9 +1,11 @@
 import { forwardRef } from "react";
-import { StyledFormPgpPublicKeyInput } from "./styles";
+import { Button } from "components";
 import { useTranslation } from "react-i18next";
-import { parseIsDirty } from "../utils";
 import useModal from "hooks/useModal";
 import { PgpPublicKeyInputModal } from "./PgpPublicKeyInputModal";
+import { parseIsDirty } from "../utils";
+import { StyledFormPgpPublicKeyInput } from "./styles";
+import KeyIcon from "@mui/icons-material/KeyOutlined";
 
 interface FormPgpPublicKeyInputProps {
   label?: string;
@@ -38,7 +40,10 @@ export function FormPgpPublicKeyInputComponent(
   const { t } = useTranslation();
   const { isShowing: isShowingPgpKeyInput, show: showPgpKeyInput, hide: hidePgpKeyInput } = useModal();
 
-  const getPgpKeyResumed = (pgpKey: string) => `${pgpKey.split("\n\n")[1]?.slice(0, 50)}...`;
+  const getPgpKeyResumed = (pgpKey: string) => {
+    const keyBeggining = pgpKey.split("-----BEGIN PGP PUBLIC KEY BLOCK-----")[1]?.trim();
+    return keyBeggining ? `${keyBeggining?.slice(0, 50)}...` : t("invalidPgpKeyPleaseSelectNewOne");
+  };
 
   return (
     <StyledFormPgpPublicKeyInput
@@ -47,13 +52,20 @@ export function FormPgpPublicKeyInputComponent(
       isDirty={parseIsDirty(isDirty) && colorable}
       noMargin={noMargin}
     >
-      <div className="select-button" onClick={!disabled ? showPgpKeyInput : () => {}}>
-        <label>{label ?? t("pgpPublicKey")}</label>
-        {value ? (
-          <p className="value">{getPgpKeyResumed(value)}</p>
-        ) : (
-          <p className="placeholder">{placeholder ?? t("addPgpPublicKey")}</p>
-        )}
+      <div className="container">
+        <div className="select-button" onClick={!disabled ? showPgpKeyInput : () => {}}>
+          <label>{label ?? t("pgpPublicKey")}</label>
+          {value ? (
+            <p className="value">{getPgpKeyResumed(value)}</p>
+          ) : (
+            <p className="placeholder">{placeholder ?? t("addPgpPublicKey")}</p>
+          )}
+        </div>
+
+        <Button styleType="invisible" onClick={!disabled ? showPgpKeyInput : () => {}}>
+          <KeyIcon className="mr-2" />
+          <span>{t("pgpTool")}</span>
+        </Button>
       </div>
 
       {error && <span className="error">{error.message}</span>}

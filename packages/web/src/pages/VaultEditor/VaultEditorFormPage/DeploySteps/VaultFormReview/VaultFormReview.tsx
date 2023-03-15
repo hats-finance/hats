@@ -51,6 +51,8 @@ export function VaultFormReview() {
         createdAt: "",
         rewardsToken: "",
         submittedClaim: [],
+        defaultHackerHatRewardSplit: "",
+        defaultGovernanceHatRewardSplit: "",
       },
       numberOfApprovedClaims: "0",
       rewardsLevels: [
@@ -88,6 +90,7 @@ export function VaultFormReview() {
       hackerHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange}00`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
+      maxBounty: "",
       depositPause: false,
       committeeCheckedIn: true,
       approvedClaims: [],
@@ -99,6 +102,7 @@ export function VaultFormReview() {
         ...bothVersionsVault,
         version: editedVaultDescriptionForm.version,
         description: description as IVaultDescriptionV1,
+        maxBounty: null,
       };
     } else {
       return {

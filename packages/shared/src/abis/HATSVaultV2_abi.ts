@@ -16,6 +16,7 @@ export const HATSVaultV2_abi = [
   { inputs: [], name: "CommitteeNotCheckedInYet", type: "error" },
   { inputs: [], name: "DelayPeriodForSettingMaxBountyHadNotPassed", type: "error" },
   { inputs: [], name: "DepositSlippageProtection", type: "error" },
+  { inputs: [], name: "DuplicatedRewardController", type: "error" },
   { inputs: [], name: "MaxBountyCannotBeMoreThanMaxBountyLimit", type: "error" },
   { inputs: [], name: "MintSlippageProtection", type: "error" },
   { inputs: [], name: "NoActiveClaimExists", type: "error" },
@@ -93,7 +94,7 @@ export const HATSVaultV2_abi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "caller", type: "address" },
+      { indexed: true, internalType: "address", name: "sender", type: "address" },
       { indexed: true, internalType: "address", name: "owner", type: "address" },
       { indexed: false, internalType: "uint256", name: "assets", type: "uint256" },
       { indexed: false, internalType: "uint256", name: "shares", type: "uint256" },
@@ -250,7 +251,7 @@ export const HATSVaultV2_abi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "caller", type: "address" },
+      { indexed: true, internalType: "address", name: "sender", type: "address" },
       { indexed: true, internalType: "address", name: "receiver", type: "address" },
       { indexed: true, internalType: "address", name: "owner", type: "address" },
       { indexed: false, internalType: "uint256", name: "assets", type: "uint256" },
@@ -573,7 +574,7 @@ export const HATSVaultV2_abi = [
         components: [
           { internalType: "string", name: "name", type: "string" },
           { internalType: "string", name: "symbol", type: "string" },
-          { internalType: "contract IRewardController", name: "rewardController", type: "address" },
+          { internalType: "contract IRewardController[]", name: "rewardControllers", type: "address[]" },
           { internalType: "uint32", name: "vestingDuration", type: "uint32" },
           { internalType: "uint32", name: "vestingPeriods", type: "uint32" },
           { internalType: "uint16", name: "maxBounty", type: "uint16" },
@@ -751,6 +752,18 @@ export const HATSVaultV2_abi = [
     ],
     name: "redeem",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "shares", type: "uint256" },
+      { internalType: "address", name: "receiver", type: "address" },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "uint256", name: "minAssets", type: "uint256" },
+    ],
+    name: "redeemAndClaim",
+    outputs: [{ internalType: "uint256", name: "assets", type: "uint256" }],
     stateMutability: "nonpayable",
     type: "function",
   },
@@ -983,6 +996,18 @@ export const HATSVaultV2_abi = [
     ],
     name: "withdraw",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "assets", type: "uint256" },
+      { internalType: "address", name: "receiver", type: "address" },
+      { internalType: "address", name: "owner", type: "address" },
+      { internalType: "uint256", name: "maxShares", type: "uint256" },
+    ],
+    name: "withdrawAndClaim",
+    outputs: [{ internalType: "uint256", name: "shares", type: "uint256" }],
     stateMutability: "nonpayable",
     type: "function",
   },

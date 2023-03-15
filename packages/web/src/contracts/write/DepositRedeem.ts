@@ -1,5 +1,6 @@
-import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
 import { NFTContractDataProxy } from "constants/constants";
+import { appChains } from "settings";
 import { IVault } from "types";
 
 export class DepositRedeeemContract {
@@ -7,7 +8,7 @@ export class DepositRedeeemContract {
     const proxyAddress = vault ? NFTContractDataProxy[vault.master.address] : undefined;
     return {
       mode: "recklesslyUnprepared",
-      address: vault?.chainId ? ChainsConfig[vault?.chainId].vaultsNFTContract : undefined,
+      address: vault?.chainId ? appChains[vault?.chainId].vaultsNFTContract : undefined,
       abi: HATVaultsNFT_abi as any,
       functionName: "redeemMultipleFromShares",
       chainId: vault?.chainId,

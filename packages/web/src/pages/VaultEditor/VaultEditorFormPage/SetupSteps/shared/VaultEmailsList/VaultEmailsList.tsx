@@ -35,7 +35,9 @@ export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps)
         <div className="emails">
           {emails.map((email, emailIndex) => {
             if (onlyNotVerifiedEmails && email.status === "verified") return <></>;
-            return <VaultEmailForm index={emailIndex} email={email} emailsCount={emails.length} remove={removeEmail} />;
+            return (
+              <VaultEmailForm key={email.id} index={emailIndex} email={email} emailsCount={emails.length} remove={removeEmail} />
+            );
           })}
 
           {getPath(errors, "project-metadata.emails") && (

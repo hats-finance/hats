@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { prepareWriteContract, writeContract } from "wagmi/actions";
-import { HATVaultsNFT_abi, ChainsConfig } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats-finance/shared";
+import { appChains } from "settings";
 import { NFTContractDataProxy } from "constants/constants";
 import { IVault } from "types";
 import { getDepositTokensWithRedeemState } from "./getRedeemableDepositTokens";
@@ -26,7 +27,7 @@ export function useDepositTokens(vault: IVault, vaultNftRegistered?: boolean, ti
     if (!availableNftsByDeposit || !availableNftsByDeposit.length) return;
 
     const nftInterface = new ethers.utils.Interface(HATVaultsNFT_abi);
-    const nftContract = vault?.chainId ? ChainsConfig[vault.chainId].vaultsNFTContract : undefined;
+    const nftContract = vault?.chainId ? appChains[vault.chainId].vaultsNFTContract : undefined;
     if (!nftContract) return;
 
     const config = await prepareWriteContract({

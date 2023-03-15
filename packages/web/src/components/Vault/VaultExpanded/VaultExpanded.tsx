@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { BigNumber, ethers } from "ethers";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PieChart } from "react-minimal-pie-chart";
@@ -30,39 +31,79 @@ export default function VaultExpanded(props: IProps) {
     hackerVestedRewardSplit,
     hackerRewardSplit,
     committeeRewardSplit,
-    swapAndBurnSplit,
+    // swapAndBurnSplit,
     governanceHatRewardSplit,
     hackerHatRewardSplit,
     vestingDuration,
     stakingTokenSymbol,
     description,
+    master,
+    version,
   } = props.data;
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "";
+  const isNormalVault =
+    !description?.["project-metadata"].type ||
+    description?.["project-metadata"].type === "" ||
+    description?.["project-metadata"].type === "normal";
 
-  const pieChartData = [
-    {
-      title: `Vested ${stakingTokenSymbol} for ${humanizeDuration(Number(vestingDuration) * 1000, {
-        units: ["d", "h", "m"],
-      })} (Hacker reward)`,
-      value: Number(hackerVestedRewardSplit) / 100,
-      color: PieChartColors.vestedToken,
-    },
-    { title: `${stakingTokenSymbol} (Hacker reward)`, value: Number(hackerRewardSplit) / 100, color: PieChartColors.token },
-    { title: "Committee", value: Number(committeeRewardSplit) / 100, color: PieChartColors.committee },
-    {
-      title: `Vested Hats for ${humanizeDuration(Number(props.data.master.vestingHatDuration) * 1000, {
-        units: ["d", "h", "m"],
-      })} (Hacker reward) pending start of TGE`,
-      value: Number(hackerHatRewardSplit) / 100,
-      color: PieChartColors.vestedHats,
-    },
-    { title: "Governance", value: Number(governanceHatRewardSplit) / 100, color: PieChartColors.governance },
-    { title: "Swap and Burn", value: Number(swapAndBurnSplit) / 100, color: PieChartColors.swapAndBurn },
-  ];
+  const getPieChartData = () => {
+    const bountyVestingDuration = humanizeDuration(Number(vestingDuration) * 1000, {
+      units: ["d", "h", "m"],
+    });
+    const rewardVestingDuration = humanizeDuration(Number(props.data.master.vestingHatDuration) * 1000, {
+      units: ["d", "h", "m"],
+    });
 
-  const pieChartNonZeroVaules = pieChartData.filter((obj) => obj.value !== 0);
+    const governanceSplit = BigNumber.from(governanceHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? master.defaultGovernanceHatRewardSplit
+      : governanceHatRewardSplit;
+    const hackerHatsSplit = BigNumber.from(hackerHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? master.defaultHackerHatRewardSplit
+      : hackerHatRewardSplit;
+
+    // In v2 vaults the split sum (inmediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
+    // In v1 this is not a probem. So the factor is 1.
+    const splitFactor = version === "v1" ? 1 : (10000 - Number(governanceSplit) - Number(hackerHatsSplit)) / 100 / 100;
+
+    return [
+      {
+        // Inmediate bounty
+        title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
+        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(0),
+        color: PieChartColors.token,
+      },
+      {
+        // Vested bounty
+        title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
+        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(0),
+        color: PieChartColors.vestedToken,
+      },
+      {
+        // Committee fee
+        title: `Committee fee`,
+        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(0),
+        color: PieChartColors.committee,
+      },
+      {
+        title: `Vested HATS reward for ${rewardVestingDuration} (Hacker reward) pending start of TGE`,
+        value: +(Number(hackerHatsSplit) / 100).toFixed(0),
+        color: PieChartColors.vestedHats,
+      },
+      {
+        title: `Hats governance fee`,
+        value: +(Number(governanceSplit) / 100).toFixed(0),
+        color: PieChartColors.governance,
+      },
+      // {
+      //   title: `Swap and burn`,
+      //   value: Number(swapAndBurnSplit) / 100,
+      //   color: PieChartColors.swapAndBurn,
+      // },
+    ];
+  };
+
+  const pieChartNonZeroVaules = getPieChartData().filter((obj) => obj.value !== 0);
   const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
   const [chartMouseOver, setChartMouseOver] = useState(false);
 

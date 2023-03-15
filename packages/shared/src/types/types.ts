@@ -41,6 +41,7 @@ export interface IVaultV1 extends IBaseVault {
   version: "v1";
   rewardsLevels: Array<string>;
   allocPoints: string[];
+  maxBounty: null;
   description?: IVaultDescriptionV1;
 }
 export interface IVaultV2 extends IBaseVault {
@@ -192,6 +193,8 @@ export interface IMaster {
   vestingHatDuration: string;
   vestingHatPeriods: string;
   chainId?: number;
+  defaultHackerHatRewardSplit: string;
+  defaultGovernanceHatRewardSplit: string;
 }
 
 export interface ISubmittedClaim {

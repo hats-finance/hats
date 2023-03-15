@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
-import { getSpacing } from 'styles';
+import { getSpacing } from "styles";
 
 export const StyledHeader = styled.header`
   position: sticky;
@@ -14,7 +14,7 @@ export const StyledHeader = styled.header`
   z-index: 3;
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
-    padding: 10px;
+    padding: ${getSpacing(1.5)} ${getSpacing(1.5)} ${getSpacing(3)} ${getSpacing(1.5)};
   }
 
   .page-title {

@@ -43,7 +43,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     vault.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())
   );
 
-  const normalVaultKey: string = "";
+  const normalVaultKey: string = "normal";
 
   const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     if (vault.registered) {
@@ -53,6 +53,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return groups;
   }, [] as IVault[][])!;
 
+  console.log(vaultsByGroup);
   function capitalizeFirstLetter(val: string) {
     return val.charAt(0).toUpperCase() + val.slice(1);
   }
@@ -86,7 +87,6 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
             {vaultsByGroup &&
               Object.entries(vaultsByGroup)
                 .sort()
-                .reverse()
                 .map(([type, groupVaults]) => (
                   <React.Fragment key={type}>
                     <tr className="transparent-row">
