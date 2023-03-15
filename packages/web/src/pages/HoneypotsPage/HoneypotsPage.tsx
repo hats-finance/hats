@@ -53,7 +53,6 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return groups;
   }, [] as IVault[][])!;
 
-  console.log(vaultsByGroup);
   function capitalizeFirstLetter(val: string) {
     return val.charAt(0).toUpperCase() + val.slice(1);
   }
