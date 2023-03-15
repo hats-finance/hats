@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://app.hats.finance">
-      <img src="https://app.hats.finance/logo.png" height="128">
+      <img src="https://hats.finance/static/media/logo-new.9159ae16.svg" height="128">
   </a>
 </p>
 
