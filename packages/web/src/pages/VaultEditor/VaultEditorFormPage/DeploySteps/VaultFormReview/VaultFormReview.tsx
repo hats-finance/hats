@@ -49,7 +49,7 @@ export function VaultFormReview() {
         vaults: [],
         totalAllocPoints: "",
         createdAt: "",
-        rewardsToken: "",
+        // rewardsToken: "",
         submittedClaim: [],
         defaultHackerHatRewardSplit: "",
         defaultGovernanceHatRewardSplit: "",

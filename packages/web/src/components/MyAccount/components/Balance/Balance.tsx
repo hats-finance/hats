@@ -10,11 +10,11 @@ export default function Balance() {
   // const { masters } = useVaults();
   const hatsBalance = new Amount(BigNumber.from(0), "18");
 
-  return (
-    <StyledBalance>
-      <img src={WalletIcon} width="40px" alt="wallet" />
-      <span className="value">{hatsBalance.formattedWithoutSymbol(4)}</span>
-      <span className="title">{t("Header.MyAccount.Balance.title")}</span>
-    </StyledBalance>
-  );
+  // return (
+  //   <StyledBalance>
+  //     <img src={WalletIcon} width="40px" alt="wallet" />
+  //     <span className="value">{hatsBalance.formattedWithoutSymbol(4)}</span>
+  //     <span className="title">{t("Header.MyAccount.Balance.title")}</span>
+  //   </StyledBalance>
+  // );
 }
