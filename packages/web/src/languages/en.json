@@ -261,7 +261,7 @@
       "titleSuccess": "Email verified",
       "titleError": "Email verification error",
       "descriptionSuccess": "Your email {{email}} has been verified successfully.",
-      "descriptionError": "Your verification link for verifying your email {{email}} is expired, please request a new one."
+      "descriptionError": "Your verification link for verifying your email {{email}} is not valid, or your email is already verified, please request a new one."
     },
     "whereverModal": {
       "title": "Wallet-to-Wallet notifications",
