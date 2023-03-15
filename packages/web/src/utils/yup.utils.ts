@@ -6,7 +6,7 @@ import { isEmailAddress } from "./emails.utils";
 import { getTokenInfo } from "./tokens.utils";
 
 function checkUrl(url: string) {
-  const urlRegex = new RegExp(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/);
+  const urlRegex = new RegExp(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/);
   return urlRegex.test(url);
 }
 
