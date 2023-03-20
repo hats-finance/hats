@@ -138,10 +138,6 @@ export const ModalContainer = styled.div<{
       ${!removeHorizontalPadding &&
       css`
         padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(3)};
-
-        @media (max-width: ${breakpointsDefinition.smallMobile}) {
-          padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(3)};
-        }
       `}
 
       ${removeTopPadding &&
