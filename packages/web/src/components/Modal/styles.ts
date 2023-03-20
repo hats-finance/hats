@@ -91,6 +91,7 @@ export const ModalContainer = styled.div<{
         align-items: center;
         color: var(--white);
         font-size: var(--small);
+        font-weight: 700;
 
         ${capitalizeTitle &&
         css`
