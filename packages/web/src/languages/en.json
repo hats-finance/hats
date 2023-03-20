@@ -251,6 +251,13 @@
     "pleaseVerifyYourEmail": "Please verify your email address",
     "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "pgpTool": "PGP tool",
+    "PGPTool": {
+      "title": "PGP tool",
+      "unlockPgpTool": "Unlock the PGP tool",
+      "pgpToolPassword": "PGP tool password",
+      "enterYourPgpToolPassword": "Enter your PGP tool password",
+      "unlockKeystore": "Unlock keystore"
+    },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
       "titleNoMultisig": "We are creating your vault on chain. This might take a few minutes",

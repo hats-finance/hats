@@ -11,6 +11,7 @@ import { VaultsProvider } from "hooks/vaults/useVaults";
 import { ConfirmDialogProvider } from "hooks/useConfirm";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
+import { KeystoreProvider as KeystoreProviderv2 } from "components/Keystore.v2/provider";
 import { NotificationProvider } from "components/Notifications/NotificationProvider";
 import App from "./App";
 import store from "../store";
@@ -33,9 +34,11 @@ function Root() {
                 <GlobalStyle />
                 <NotificationProvider>
                   <KeystoreProvider>
-                    <ConfirmDialogProvider>
-                      <App />
-                    </ConfirmDialogProvider>
+                    <KeystoreProviderv2>
+                      <ConfirmDialogProvider>
+                        <App />
+                      </ConfirmDialogProvider>
+                    </KeystoreProviderv2>
                   </KeystoreProvider>
                 </NotificationProvider>
               </BrowserRouter>
