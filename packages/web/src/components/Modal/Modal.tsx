@@ -17,6 +17,7 @@ interface ModalProps {
   disableClose?: boolean;
   disableOnOverlayClose?: boolean;
   overflowVisible?: boolean;
+  pgpKeystoreStyles?: boolean;
 }
 
 export function Modal({
@@ -33,6 +34,7 @@ export function Modal({
   removeHorizontalPadding = false,
   capitalizeTitle = false,
   overflowVisible = false,
+  pgpKeystoreStyles = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
   // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
@@ -74,6 +76,7 @@ export function Modal({
             removeHorizontalPadding={removeHorizontalPadding}
             overflowVisible={overflowVisible}
             capitalizeTitle={capitalizeTitle}
+            pgpKeystoreStyles={pgpKeystoreStyles}
           >
             <div className="header">
               <div className="title">
