@@ -262,7 +262,12 @@
       "confirmPassword": "Confirm password",
       "createStrongPassword": "Create a strong password",
       "createKeystore": "Create keystore",
-      "usePgpToolFor": "Use PGP tool for:"
+      "usePgpToolFor": "Use PGP tool for:",
+      "createNewKeyPair": "Create a new key-pair",
+      "createNewKeyPairDescription": "Create a new key-pair. \n\n Add alias which will help you identify the key.",
+      "pgpKeysBackup": "Keystore backup",
+      "importKey": "Import existing key-pair",
+      "uploadBackup": "Restore keystore backup"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

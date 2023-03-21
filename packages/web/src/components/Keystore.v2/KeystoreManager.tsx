@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
 import { LocalStorage } from "constants/constants";
-import { CreateKeystore, KeysDashboard, UnlockKeystore } from "./components";
+import { CreateKeystore, KeystoreDashboard, UnlockKeystore } from "./components";
 import { IKeystoreActions, IKeystoreData, IStoredKey } from "./types";
 import { useKeystore } from "./KeystoreProvider";
 
@@ -16,14 +16,13 @@ type KeystoreManagerProps = {
 
 export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onInitializedKeystore }: KeystoreManagerProps) => {
   const [activeAction, setActiveAction] = useState<KeystoreActions | undefined>(undefined);
+  const removeActiveAction = () => setActiveAction(undefined);
 
   const { keystore, setKeystore } = useKeystore();
   const [password, setPassword] = useState<string | undefined>(undefined);
 
   const isCreated = localStorage.getItem(LocalStorage.Keystore);
   const isLocked = password === undefined;
-
-  const removeActiveAction = () => setActiveAction(undefined);
 
   // Run actions based on mode
   useEffect(() => {
@@ -164,7 +163,7 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
           onCreateKeystore={(pass) => createKeystoreResolver.current?.(pass)}
         />
       )}
-      {activeAction === "dashboard" && <KeysDashboard onClose={removeActiveAction} />}
+      {activeAction === "dashboard" && <KeystoreDashboard onClose={removeActiveAction} />}
     </>
   );
 };

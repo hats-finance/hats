@@ -5,7 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormInput, Modal } from "components";
 import { getPath } from "utils/objects.utils";
 import { getUnlockKeystoreSchema } from "./formSchema";
-import { StyledKeystoreContainer } from "../../styles";
+import { StyledBaseKeystoreContainer } from "../../styles";
 
 type UnlockKeystoreProps = {
   onClose?: () => void;
@@ -44,8 +44,8 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
 
   return (
     <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
-      <StyledKeystoreContainer>
-        <div className="description mb-4">{t("PGPTool.unlockPgpTool")}</div>
+      <StyledBaseKeystoreContainer>
+        <div className="mb-4">{t("PGPTool.unlockPgpTool")}</div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormInput
@@ -61,7 +61,7 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
             {t("PGPTool.unlockKeystore")}
           </Button>
         </form>
-      </StyledKeystoreContainer>
+      </StyledBaseKeystoreContainer>
     </Modal>
   );
 };

@@ -1,16 +1,18 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledKeystoreContainer = styled.div`
-  color: var(--white);
-  width: 360px;
+export const StyledBaseKeystoreContainer = styled.div<{ bigger?: boolean }>(
+  ({ bigger }) => css`
+    color: var(--white);
+    width: ${bigger ? "420px" : "380px"};
 
-  @media (max-width: ${breakpointsDefinition.smallMobile}) {
-    width: 100%;
-  }
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      width: 100%;
+    }
 
-  p.error {
-    font-size: var(--xxsmall);
-    color: var(--error-red);
-  }
-`;
+    p.error {
+      font-size: var(--xxsmall);
+      color: var(--error-red);
+    }
+  `
+);
