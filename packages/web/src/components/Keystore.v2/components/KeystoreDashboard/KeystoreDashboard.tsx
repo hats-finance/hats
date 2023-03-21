@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
+import moment from "moment";
 import { Modal, WithTooltip } from "components";
 import { CreateKey, ImportKey, CreateBackup, RestoreBackup } from "./";
 import { IStoredKey } from "../../types";
@@ -35,24 +36,30 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
   const _getActions = (): JSX.Element => {
     return (
       <StyledKeystoreActions>
-        <div className="action" onClick={() => setActiveAction("create")}>
-          <div className="icon">
-            <AddIcon fontSize="inherit" />
+        <WithTooltip placement="bottom" text={t("PGPTool.createNewKey")}>
+          <div className="action" onClick={() => setActiveAction("create")}>
+            <div className="icon">
+              <AddIcon fontSize="inherit" />
+            </div>
+            <p>{t("create")}</p>
           </div>
-          <p>{t("create")}</p>
-        </div>
-        <div className="action" onClick={() => setActiveAction("import")}>
-          <div className="icon">
-            <UploadIcon fontSize="inherit" />
+        </WithTooltip>
+        <WithTooltip placement="bottom" text={t("PGPTool.importKeyUsingPrivateKey")}>
+          <div className="action" onClick={() => setActiveAction("import")}>
+            <div className="icon">
+              <UploadIcon fontSize="inherit" />
+            </div>
+            <p>{t("import")}</p>
           </div>
-          <p>{t("import")}</p>
-        </div>
-        <div className="action" onClick={() => setActiveAction("restore_backup")}>
-          <div className="icon">
-            <RestoreIcon fontSize="inherit" />
+        </WithTooltip>
+        <WithTooltip placement="bottom" text={t("PGPTool.uploadBackup")}>
+          <div className="action" onClick={() => setActiveAction("restore_backup")}>
+            <div className="icon">
+              <RestoreIcon fontSize="inherit" />
+            </div>
+            <p>{t("uploadBackup")}</p>
           </div>
-          <p>{t("uploadBackup")}</p>
-        </div>
+        </WithTooltip>
       </StyledKeystoreActions>
     );
   };
@@ -67,14 +74,17 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
               <StyledKey key={id}>
                 <div className="info">
                   <Identicon string={id} size={24} bg="#fff" />
-                  <p>{key.alias}</p>
+                  <div className="text">
+                    <p>{key.alias}</p>
+                    {key.createdAt && <p className="createdAt">{moment(key.createdAt).fromNow()}</p>}
+                  </div>
                 </div>
 
                 <div className="actions">
-                  <WithTooltip text={t("PGPTool.viewKeyDetails")}>
+                  <WithTooltip placement="left" text={t("PGPTool.viewKeyDetails")}>
                     <ViewIcon className="icon" fontSize="inherit" />
                   </WithTooltip>
-                  <WithTooltip text={t("PGPTool.deleteKey")}>
+                  <WithTooltip placement="right" text={t("PGPTool.deleteKey")}>
                     <DeleteIcon className="icon" fontSize="inherit" />
                   </WithTooltip>
                 </div>

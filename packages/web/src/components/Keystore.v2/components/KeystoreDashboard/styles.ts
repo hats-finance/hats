@@ -72,6 +72,10 @@ export const StyledKey = styled.div<{ noSelectable?: boolean }>(
       display: flex;
       align-items: center;
       gap: ${getSpacing(2)};
+
+      p.createdAt {
+        font-size: var(--tiny);
+      }
     }
 
     .actions {

@@ -12,6 +12,11 @@ type CreateKeystoreProps = {
   onCreateKeystore?: (pass: string) => Promise<void> | undefined;
 };
 
+type ICreateKeystoreForm = {
+  password: string;
+  confirmPassword: string;
+};
+
 export const CreateKeystore = ({ onClose, onCreateKeystore }: CreateKeystoreProps) => {
   const { t } = useTranslation();
 
@@ -20,14 +25,14 @@ export const CreateKeystore = ({ onClose, onCreateKeystore }: CreateKeystoreProp
     handleSubmit,
     setFocus,
     formState: { errors, isValid },
-  } = useForm<{ password: string; confirmPassword: string }>({
+  } = useForm<ICreateKeystoreForm>({
     resolver: yupResolver(getCreateKeystoreSchema(t)),
     mode: "onChange",
   });
 
   useEffect(() => setFocus("password"), [setFocus]);
 
-  const onSubmit = async (data: { password: string }) => {
+  const onSubmit = async (data: ICreateKeystoreForm) => {
     if (onCreateKeystore) await onCreateKeystore(data.password);
   };
 

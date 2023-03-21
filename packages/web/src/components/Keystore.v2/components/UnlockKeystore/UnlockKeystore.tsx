@@ -12,6 +12,10 @@ type UnlockKeystoreProps = {
   onUnlockKeystore?: (pass: string) => Promise<void> | undefined;
 };
 
+type IUnlockKeystoreForm = {
+  password: string;
+};
+
 export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProps) => {
   const { t } = useTranslation();
   const [error, setError] = useState<string | undefined>();
@@ -22,7 +26,7 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
     handleSubmit,
     setFocus,
     formState: { errors, isValid },
-  } = useForm<{ password: string }>({
+  } = useForm<IUnlockKeystoreForm>({
     resolver: yupResolver(getUnlockKeystoreSchema(t)),
     mode: "onChange",
   });
@@ -32,7 +36,7 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
   const password = useWatch({ control, name: "password" });
   useEffect(() => setError(undefined), [password]);
 
-  const onSubmit = async (data: { password: string }) => {
+  const onSubmit = async (data: IUnlockKeystoreForm) => {
     if (onUnlockKeystore) {
       try {
         await onUnlockKeystore(data.password);
