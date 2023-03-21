@@ -35,19 +35,19 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
   const _getActions = (): JSX.Element => {
     return (
       <StyledKeystoreActions>
-        <div className="action">
+        <div className="action" onClick={() => setActiveAction("create")}>
           <div className="icon">
             <AddIcon fontSize="inherit" />
           </div>
           <p>{t("create")}</p>
         </div>
-        <div className="action">
+        <div className="action" onClick={() => setActiveAction("import")}>
           <div className="icon">
             <UploadIcon fontSize="inherit" />
           </div>
           <p>{t("import")}</p>
         </div>
-        <div className="action">
+        <div className="action" onClick={() => setActiveAction("restore_backup")}>
           <div className="icon">
             <RestoreIcon fontSize="inherit" />
           </div>
@@ -95,7 +95,7 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
 
   const _getBackupOption = (): JSX.Element => {
     return (
-      <StyledBackupOption>
+      <StyledBackupOption onClick={() => setActiveAction("create_backup")}>
         <div className="mb-4">{t("PGPTool.downloadBackup")}</div>
         <SaveIcon className="icon" />
       </StyledBackupOption>
