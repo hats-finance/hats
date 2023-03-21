@@ -8,12 +8,11 @@ import { getUnlockKeystoreSchema } from "./formSchema";
 import { StyledKeystoreContainer } from "../../styles";
 
 type UnlockKeystoreProps = {
-  isShowing: boolean;
   onClose?: () => void;
   onUnlockKeystore?: (pass: string) => Promise<void> | undefined;
 };
 
-export const UnlockKeystore = ({ isShowing, onClose, onUnlockKeystore }: UnlockKeystoreProps) => {
+export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProps) => {
   const { t } = useTranslation();
   const [error, setError] = useState<string | undefined>();
 
@@ -44,7 +43,7 @@ export const UnlockKeystore = ({ isShowing, onClose, onUnlockKeystore }: UnlockK
   };
 
   return (
-    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={isShowing} onHide={onClose}>
+    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledKeystoreContainer>
         <div className="description mb-4">{t("PGPTool.unlockPgpTool")}</div>
 

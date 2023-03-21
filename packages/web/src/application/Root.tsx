@@ -11,7 +11,7 @@ import { VaultsProvider } from "hooks/vaults/useVaults";
 import { ConfirmDialogProvider } from "hooks/useConfirm";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
-import { KeystoreProvider as KeystoreProviderv2 } from "components/Keystore.v2/provider";
+import { KeystoreProvider as KeystoreProviderv2 } from "components/Keystore.v2/KeystoreProvider";
 import { NotificationProvider } from "components/Notifications/NotificationProvider";
 import App from "./App";
 import store from "../store";

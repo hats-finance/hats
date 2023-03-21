@@ -11,8 +11,11 @@ export interface IKeystoreData {
 }
 
 export interface IKeystoreContext {
+  initKeystore: () => Promise<boolean>;
+  openKeystore: () => Promise<boolean>;
+  selectKey: () => Promise<IStoredKey | undefined>;
+  setKeystore: (keystore: IKeystoreData) => void;
   keystore: IKeystoreData | undefined;
-  selectPgpKey: () => Promise<IStoredKey | undefined>;
   // isLocked: boolean;
   // isCreated: boolean;
   // addKeyToKeystore: (key: IStoredKey) => void;
@@ -20,3 +23,5 @@ export interface IKeystoreContext {
   // createNewKeystore: (password: string) => void;
   // deleteCurrentKeystore: () => void;
 }
+
+export type IKeystoreActions = "OPEN" | "SELECT" | "INIT";

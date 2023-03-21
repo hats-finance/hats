@@ -261,7 +261,8 @@
       "createStrongPasswordForKeystore": "Create a strong password for your keystore",
       "confirmPassword": "Confirm password",
       "createStrongPassword": "Create a strong password",
-      "createKeystore": "Create keystore"
+      "createKeystore": "Create keystore",
+      "usePgpToolFor": "Use PGP tool for:"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

@@ -8,12 +8,11 @@ import { getCreateKeystoreSchema } from "./formSchema";
 import { StyledKeystoreContainer } from "../../styles";
 
 type CreateKeystoreProps = {
-  isShowing: boolean;
   onClose?: () => void;
   onCreateKeystore?: (pass: string) => Promise<void> | undefined;
 };
 
-export const CreateKeystore = ({ isShowing, onClose, onCreateKeystore }: CreateKeystoreProps) => {
+export const CreateKeystore = ({ onClose, onCreateKeystore }: CreateKeystoreProps) => {
   const { t } = useTranslation();
 
   const {
@@ -33,7 +32,7 @@ export const CreateKeystore = ({ isShowing, onClose, onCreateKeystore }: CreateK
   };
 
   return (
-    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={isShowing} onHide={onClose}>
+    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledKeystoreContainer>
         <div className="description mb-4">{t("PGPTool.createStrongPasswordForKeystore")}</div>
 
