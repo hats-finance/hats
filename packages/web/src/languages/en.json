@@ -9,6 +9,7 @@
     "invalid-image-type": "Invalid image type, only supported: {{types}}",
     "invalid-email-address": "Invalid email address",
     "at-least-one-email": "At least one email is required",
+    "passwords-must-match": "Passwords must match",
     "address-is-not-token": "The address is not a token",
     "invalid-url": "Invalid link/url",
     "endtimeGreaterThanStarttime": "End time must be greater than start time",
@@ -256,7 +257,11 @@
       "unlockPgpTool": "Unlock the PGP tool",
       "pgpToolPassword": "PGP tool password",
       "enterYourPgpToolPassword": "Enter your PGP tool password",
-      "unlockKeystore": "Unlock keystore"
+      "unlockKeystore": "Unlock keystore",
+      "createStrongPasswordForKeystore": "Create a strong password for your keystore",
+      "confirmPassword": "Confirm password",
+      "createStrongPassword": "Create a strong password",
+      "createKeystore": "Create keystore"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

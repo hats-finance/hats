@@ -3,9 +3,9 @@ import { v4 as uuid } from "uuid";
 import * as encryptor from "browser-passworder";
 import { LocalStorage } from "constants/constants";
 import { IStoredKey, IKeystoreContext, IKeystoreData } from "./types";
-import { UnlockKeystore } from "./components";
+import { CreateKeystore, UnlockKeystore } from "./components";
 
-type KeystoreActions = "unlock";
+type KeystoreActions = "create" | "unlock";
 
 export const KeystoreContext = createContext<IKeystoreContext>(undefined as any);
 
@@ -16,14 +16,17 @@ export function KeystoreProvider({ children }) {
   const [activeActions, setActiveActions] = useState<KeystoreActions[]>([]);
   const isLocked = password === undefined;
 
-  const fnUnlock = useRef<(password: string | undefined) => Promise<void>>();
-  const unlockKeystore = useCallback(() => {
-    return new Promise<boolean>((res, rej) => {
+  const removeActiveAction = (action: KeystoreActions) => setActiveActions((prev) => prev.filter((act) => act !== action));
+
+  // Unlock keystore and resolver
+  const unlockKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
+  const unlockKeystore = useCallback((): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
       setActiveActions(["unlock"]);
-      fnUnlock.current = async (password: string | undefined): Promise<void> => {
+      unlockKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
         if (!password) {
-          res(false);
-          setActiveActions((prev) => prev.filter((act) => act !== "unlock"));
+          resolve(false);
+          removeActiveAction("unlock");
           return;
         }
 
@@ -31,11 +34,31 @@ export function KeystoreProvider({ children }) {
           const decryptedKeystore = await encryptor.decrypt(password, localStorage.getItem(LocalStorage.Keystore));
           setPassword(password);
           setKeystore(decryptedKeystore);
-          res(true);
-          setActiveActions((prev) => prev.filter((act) => act !== "unlock"));
+          resolve(true);
+          removeActiveAction("unlock");
         } catch (error) {
           throw error;
         }
+      };
+    });
+  }, [setActiveActions]);
+
+  // Create keystore and resolver
+  const createKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
+  const createKeystore = useCallback((): Promise<boolean> => {
+    return new Promise<boolean>((resolve) => {
+      setActiveActions(["create"]);
+      createKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
+        if (!password) {
+          resolve(false);
+          removeActiveAction("create");
+          return;
+        }
+
+        setPassword(password);
+        setKeystore({ storedKeys: [] });
+        resolve(true);
+        removeActiveAction("create");
       };
     });
   }, [setActiveActions]);
@@ -81,19 +104,17 @@ export function KeystoreProvider({ children }) {
   //   }
   // };
 
-  // -------------------------------
-  // MIGRATED
-  const createNewKeystore = (password: string) => {
-    setPassword(password);
-    setKeystore({ storedKeys: [] });
-  };
+  // const createNewKeystore = (password: string) => {
+  //   setPassword(password);
+  //   setKeystore({ storedKeys: [] });
+  // };
 
   const selectPgpKey = async (): Promise<IStoredKey | undefined> => {
     if (!isCreated) {
-      // TODO: implement this
-    }
-
-    if (isLocked) {
+      const wasCreated = await createKeystore();
+      console.log("wasCreated", wasCreated);
+      if (!wasCreated) return undefined;
+    } else if (isLocked) {
       const wasUnlocked = await unlockKeystore();
       console.log("wasUnlocked", wasUnlocked);
       if (!wasUnlocked) return undefined;
@@ -120,18 +141,22 @@ export function KeystoreProvider({ children }) {
   }, []);
 
   return (
-    <KeystoreContext.Provider
-      value={{
-        keystore,
-        selectPgpKey,
-      }}
-    >
+    <KeystoreContext.Provider value={{ keystore, selectPgpKey }}>
       {children}
-      <UnlockKeystore
-        isShowing={activeActions.includes("unlock")}
-        onClose={() => fnUnlock.current?.(undefined)}
-        onUnlockKeystore={(pass) => fnUnlock.current?.(pass)}
-      />
+      {activeActions.includes("unlock") && (
+        <UnlockKeystore
+          isShowing={activeActions.includes("unlock")}
+          onClose={() => unlockKeystoreResolver.current?.(undefined)}
+          onUnlockKeystore={(pass) => unlockKeystoreResolver.current?.(pass)}
+        />
+      )}
+      {activeActions.includes("create") && (
+        <CreateKeystore
+          isShowing={activeActions.includes("create")}
+          onClose={() => createKeystoreResolver.current?.(undefined)}
+          onCreateKeystore={(pass) => createKeystoreResolver.current?.(pass)}
+        />
+      )}
     </KeystoreContext.Provider>
   );
 }
