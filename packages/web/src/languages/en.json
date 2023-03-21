@@ -252,6 +252,9 @@
     "pleaseVerifyYourEmail": "Please verify your email address",
     "invalidPgpKeyPleaseSelectNewOne": "Invalid PGP key, please select a new one",
     "pgpTool": "PGP tool",
+    "create": "Create",
+    "import": "Import",
+    "uploadBackup": "Upload backup",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -267,7 +270,12 @@
       "createNewKeyPairDescription": "Create a new key-pair. \n\n Add alias which will help you identify the key.",
       "pgpKeysBackup": "Keystore backup",
       "importKey": "Import existing key-pair",
-      "uploadBackup": "Restore keystore backup"
+      "uploadBackup": "Restore keystore backup",
+      "yourKeys": "Your keys",
+      "viewKeyDetails": "View key details",
+      "deleteKey": "Delete key",
+      "noKeysInStore": "No keys in store",
+      "downloadBackup": "Download keys backup"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

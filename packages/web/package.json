@@ -99,6 +99,7 @@
     ]
   },
   "dependencies": {
+    "react-identicons": "^1.2.5",
     "siwe": "^1.1.6"
   }
 }

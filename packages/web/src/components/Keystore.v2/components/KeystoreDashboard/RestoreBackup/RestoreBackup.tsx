@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Modal } from "components";
 import { StyledBaseKeystoreContainer } from "../../../styles";
-import RestoreIcon from "@mui/icons-material/RestorePageOutlined";
+import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
 
 type RestoreBackupProps = {
   onClose: () => void;
