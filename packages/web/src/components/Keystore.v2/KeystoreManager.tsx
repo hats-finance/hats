@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
-import { LocalStorage } from "constants/constants";
+import { LocalStorage, SessionStorage } from "constants/constants";
 import { CreateKeystore, KeystoreDashboard, UnlockKeystore } from "./components";
 import { IKeystoreActions, IKeystoreData, IStoredKey } from "./types";
 import { useKeystore } from "./KeystoreProvider";
@@ -52,10 +52,33 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
       if (password && keystore) {
         const encrypted = await encryptor.encrypt(password, keystore);
         localStorage.setItem(LocalStorage.Keystore, encrypted);
+        sessionStorage.setItem(SessionStorage.KeystorePassword, password);
       }
     };
     saveKeystoreChanges();
   }, [keystore, password]);
+
+  // Check sessionStorage for password
+  useEffect(() => {
+    const checkSessionStorage = async () => {
+      const passwordOnSessionStorage = sessionStorage.getItem(SessionStorage.KeystorePassword);
+
+      if (passwordOnSessionStorage) {
+        try {
+          const decryptedKeystore: IKeystoreData = await encryptor.decrypt(
+            passwordOnSessionStorage,
+            localStorage.getItem(LocalStorage.Keystore)
+          );
+          setPassword(passwordOnSessionStorage);
+          setKeystore(decryptedKeystore);
+        } catch (error) {
+          setPassword(undefined);
+        }
+      }
+    };
+
+    checkSessionStorage();
+  }, [setKeystore]);
 
   // Unlock keystore and resolver
   const unlockKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
