@@ -272,6 +272,7 @@
       "createNewKeyPair": "Create new key-pair",
       "createNewKeyPairDescription": "Create a new key-pair.",
       "createNewKeyPairDescription2": "Add alias which will help you identify the key.",
+      "importKeyDescription": "Import an existing key using your private key.",
       "pgpKeysBackup": "Keystore backup",
       "importKey": "Import key-pair",
       "uploadBackup": "Restore backup",
@@ -291,7 +292,9 @@
       "email": "Email",
       "emailPlaceholder": "Enter your email",
       "keyWithAliasAlreadyExists": "Key with alias `{{alias}}` already exists",
-      "keyAlreadyExists": "Key already exists"
+      "keyAlreadyExists": "Key already exists",
+      "privateKey": "PGP Private key",
+      "privateKeyPlaceholder": "Paste PGP private key"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

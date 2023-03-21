@@ -115,7 +115,7 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
   return (
     <>
       <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
-        <StyledBaseKeystoreContainer bigger>
+        <StyledBaseKeystoreContainer size="medium">
           <div className="mb-4">{t("PGPTool.usePgpToolFor")}</div>
           {_getActions()}
 

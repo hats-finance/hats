@@ -49,7 +49,7 @@ export const CreateKey = ({ onClose }: CreateKeyProps) => {
   useEffect(() => setError(undefined), [formChanged]);
 
   const onSubmit = async (data: ICreateKeyForm) => {
-    const cleanData = removeEmpty(data);
+    const cleanData: ICreateKeyForm = removeEmpty(data);
 
     try {
       setLoading(true);
@@ -65,8 +65,8 @@ export const CreateKey = ({ onClose }: CreateKeyProps) => {
 
       const newKeyToAdd: IStoredKey = {
         id: uuid(),
-        alias: data.alias,
-        passphrase: data.passphrase,
+        alias: cleanData.alias,
+        passphrase: cleanData.passphrase,
         privateKey,
         publicKey,
         createdAt: new Date(),
