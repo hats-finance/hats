@@ -263,6 +263,8 @@
     "uploadBackup": "Upload backup",
     "advanced": "Advanced",
     "optional": "Optional",
+    "no": "No",
+    "yes": "Yes",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -313,7 +315,8 @@
       "youAreAboutToImportNumKeys": "<strong>Attention:</strong> You are about to import <b>{{numKeys}} valid keys</b> from your backup.",
       "restoreNumKeys": "Restore {{numKeys}} keys",
       "backupDoesNotHaveValidOrNewKeys": "This backup does not have any valid or new key to restore.",
-      "keyDetails": "Key details"
+      "keyDetails": "Key details",
+      "deleteKeyDescription": "Are you sure you want to delete:"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

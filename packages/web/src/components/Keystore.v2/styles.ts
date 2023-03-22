@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
+import { getSpacing } from "styles";
 
 export const StyledBaseKeystoreContainer = styled.div<{ size?: "small" | "medium" | "big" | "bigger" }>(
   ({ size = "small" }) => css`
@@ -37,6 +38,11 @@ export const StyledBaseKeystoreContainer = styled.div<{ size?: "small" | "medium
     p b {
       font-weight: 900;
       color: var(--warning-yellow);
+    }
+
+    .buttons-row {
+      display: flex;
+      gap: ${getSpacing(4)};
     }
   `
 );

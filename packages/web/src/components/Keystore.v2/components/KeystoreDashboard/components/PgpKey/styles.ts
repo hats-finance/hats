@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledKey = styled.div<{ noSelectable?: boolean }>(
-  ({ noSelectable }) => css`
+export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean }>(
+  ({ noSelectable, viewOnly }) => css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -19,6 +19,13 @@ export const StyledKey = styled.div<{ noSelectable?: boolean }>(
       }
     `}
 
+    ${viewOnly &&
+    css`
+      cursor: default;
+      background-color: var(--purple-blue);
+      border-color: var(--turquoise);
+    `}
+    
     .info {
       display: flex;
       align-items: center;

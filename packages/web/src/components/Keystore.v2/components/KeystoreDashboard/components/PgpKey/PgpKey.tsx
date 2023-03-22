@@ -13,15 +13,16 @@ type PgpKeyProps = {
   pgpKey?: IStoredKey;
   onSelectedDetails?: () => void;
   onSelectedDelete?: () => void;
+  viewOnly?: boolean;
 };
 
-export const PgpKey = ({ pgpKey, onSelectedDetails, onSelectedDelete }: PgpKeyProps) => {
+export const PgpKey = ({ pgpKey, onSelectedDetails, onSelectedDelete, viewOnly = false }: PgpKeyProps) => {
   const { t } = useTranslation();
 
   const id = pgpKey?.id ?? pgpKey?.alias;
 
   return (
-    <StyledKey noSelectable={!pgpKey}>
+    <StyledKey noSelectable={!pgpKey} viewOnly={viewOnly}>
       {pgpKey ? (
         <div className="info">
           <Identicon string={id} size={24} bg="#fff" />
@@ -37,7 +38,7 @@ export const PgpKey = ({ pgpKey, onSelectedDetails, onSelectedDelete }: PgpKeyPr
         </div>
       )}
 
-      {pgpKey && (
+      {pgpKey && !viewOnly && (
         <div className="actions">
           <WithTooltip placement="left" text={t("PGPTool.viewKeyDetails")}>
             <div onClick={onSelectedDetails}>

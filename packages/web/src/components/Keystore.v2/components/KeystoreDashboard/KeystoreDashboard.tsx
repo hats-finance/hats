@@ -1,22 +1,17 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import Identicon from "react-identicons";
-import moment from "moment";
 import { Modal, WithTooltip } from "components";
-import { CreateKey, ImportKey, CreateBackup, RestoreBackup } from "./";
+import { PgpKey } from "./components";
+import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails, KeyDelete } from "./";
 import { IStoredKey } from "../../types";
 import { StyledBaseKeystoreContainer } from "../../styles";
 import { useKeystore } from "../../KeystoreProvider";
-import { StyledKeystoreActions, StyledStoredKeys, StyledKey, StyledBackupOption } from "./styles";
+import { StyledKeystoreActions, StyledStoredKeys, StyledBackupOption } from "./styles";
 
 import AddIcon from "@mui/icons-material/Add";
 import UploadIcon from "@mui/icons-material/FileUploadOutlined";
 import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
-import ViewIcon from "@mui/icons-material/VisibilityOutlined";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import CloseIcon from "@mui/icons-material/CloseOutlined";
 import SaveIcon from "@mui/icons-material/SaveAltOutlined";
-import { KeyDetails } from "./KeyDetails/KeyDetails";
 
 type KeystoreDashboardAction = "create" | "import" | "create_backup" | "restore_backup" | "key_details" | "delete_key";
 
@@ -78,47 +73,22 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
             const id = key.id ?? key.alias;
 
             return (
-              <StyledKey key={id}>
-                <div className="info">
-                  <Identicon string={id} size={24} bg="#fff" />
-                  <div className="text">
-                    <p>{key.alias}</p>
-                    {key.createdAt && <p className="createdAt">{moment(key.createdAt).fromNow()}</p>}
-                  </div>
-                </div>
-
-                <div className="actions">
-                  <WithTooltip placement="left" text={t("PGPTool.viewKeyDetails")}>
-                    <div
-                      onClick={() => {
-                        setActiveAction("key_details");
-                        setSelectedKey(key);
-                      }}
-                    >
-                      <ViewIcon className="icon" fontSize="inherit" />
-                    </div>
-                  </WithTooltip>
-                  <WithTooltip placement="right" text={t("PGPTool.deleteKey")}>
-                    <div
-                      onClick={() => {
-                        setActiveAction("delete_key");
-                        setSelectedKey(key);
-                      }}
-                    >
-                      <DeleteIcon className="icon" fontSize="inherit" />
-                    </div>
-                  </WithTooltip>
-                </div>
-              </StyledKey>
+              <PgpKey
+                key={id}
+                pgpKey={key}
+                onSelectedDetails={() => {
+                  setActiveAction("key_details");
+                  setSelectedKey(key);
+                }}
+                onSelectedDelete={() => {
+                  setActiveAction("delete_key");
+                  setSelectedKey(key);
+                }}
+              />
             );
           })
         ) : (
-          <StyledKey noSelectable>
-            <div className="info">
-              <CloseIcon color="error" />
-              <p>{t("PGPTool.noKeysInStore")}</p>
-            </div>
-          </StyledKey>
+          <PgpKey />
         )}
       </StyledStoredKeys>
     );
@@ -152,7 +122,7 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
       {activeAction === "create_backup" && <CreateBackup onClose={removeActiveAction} />}
       {activeAction === "restore_backup" && <RestoreBackup onClose={removeActiveAction} />}
       {activeAction === "key_details" && selectedKey && <KeyDetails pgpKey={selectedKey} onClose={removeActiveAction} />}
-      {/* {activeAction === "delete_key" && <RestoreBackup onClose={removeActiveAction} />} */}
+      {activeAction === "delete_key" && selectedKey && <KeyDelete pgpKey={selectedKey} onClose={removeActiveAction} />}
     </>
   );
 };
