@@ -21,6 +21,7 @@
     "email-verification-sent": "Verification email sent",
     "email-verification-error": "Error sending verification email",
     "at-least-one-pgp-key-required": "At least one PGP key is required",
+    "private-key-badly-formatted": "Private key badly formatted",
     "min0": "Min 0",
     "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
@@ -292,9 +293,11 @@
       "email": "Email",
       "emailPlaceholder": "Enter your email",
       "keyWithAliasAlreadyExists": "Key with alias `{{alias}}` already exists",
-      "keyAlreadyExists": "Key already exists",
+      "keyAlreadyExists": "Key already exists in your keystore",
       "privateKey": "PGP Private key",
-      "privateKeyPlaceholder": "Paste PGP private key"
+      "privateKeyPlaceholder": "Paste PGP private key",
+      "privateKeyHasPassphrase": "We've noticed your key is encrypted with a passphrase, please add it to import.",
+      "keyNeedPassphrase": "The private key needs passphrase"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

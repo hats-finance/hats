@@ -71,8 +71,8 @@ export const CreateKey = ({ onClose }: CreateKeyProps) => {
         publicKey,
         createdAt: new Date(),
       };
-      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
 
+      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
       onClose();
     } catch (error) {
       if (error instanceof Error) setError(error.message);
