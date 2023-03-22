@@ -4,7 +4,7 @@ import ArrowIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 
 export type CollapsableTextContentProps = {
   title: string;
-  children: string;
+  children: JSX.Element;
 };
 
 export const CollapsableTextContent = ({ title, children }: CollapsableTextContentProps) => {
