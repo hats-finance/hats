@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Button, CollapsableTextContent, Modal } from "components";
 import { LocalStorage } from "constants/constants";
+import { useKeystore } from "../../../KeystoreProvider";
 import { StyledBaseKeystoreContainer } from "../../../styles";
 import SaveIcon from "@mui/icons-material/SaveAltOutlined";
 
@@ -11,13 +12,14 @@ type CreateBackupProps = {
 export const CreateBackup = ({ onClose }: CreateBackupProps) => {
   const { t } = useTranslation();
 
+  const { keystore } = useKeystore();
   const validKeystore = !!localStorage.getItem(LocalStorage.Keystore);
 
   const handleDownloadKeystoreBackup = () => {
-    const encryptedKeystore = localStorage.getItem(LocalStorage.Keystore);
-    if (!encryptedKeystore) return;
+    const decryptedKeystore = keystore;
+    if (!decryptedKeystore) return;
 
-    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(encryptedKeystore)}`;
+    const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(JSON.stringify(decryptedKeystore))}`;
     const actualTime = new Date().toJSON().split(".")[0].replaceAll(":", "").replaceAll("-", "");
     const link = document.createElement("a");
     link.href = jsonString;
