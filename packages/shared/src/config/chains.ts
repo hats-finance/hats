@@ -18,7 +18,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [mainnet.id]: {
     vaultsCreatorContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     rewardController: "0x0000000000000000000000000000000000000000",
-    vaultsNFTContract: "0x225A2A0Dea1357c808B4eb8BC423507dD4bbc401",
+    vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     chain: mainnet,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
