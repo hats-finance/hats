@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "types";
@@ -10,6 +10,7 @@ import { Loading, Vault, Modal } from "components";
 import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
+import { useKeystore } from "components/Keystore.v2/KeystoreProvider";
 
 interface HoneypotsPageProps {
   showDeposit?: boolean;
@@ -22,6 +23,12 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { vaultId } = useParams();
   const selectedVault = vaultId ? vaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
   const navigate = useNavigate();
+
+  const { initKeystore, openKeystore, keystore } = useKeystore();
+
+  useEffect(() => {
+    console.log(keystore);
+  }, [keystore]);
 
   const vaultValue = useCallback(
     (vault: IVault) => {
@@ -63,6 +70,24 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
         <Loading fixed />
       ) : (
         <table>
+          <button
+            onClick={() => {
+              initKeystore().then((success) => {
+                console.log(`Was init successful? ${success}`);
+              });
+            }}
+          >
+            INIT
+          </button>
+          <button
+            onClick={() => {
+              openKeystore().then((success) => {
+                console.log(`Was opened successful? ${success}`);
+              });
+            }}
+          >
+            OPEN
+          </button>
           <tbody>
             <SafePeriodBar />
             <tr>
