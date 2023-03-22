@@ -274,6 +274,7 @@
       "createNewKeyPairDescription": "Create a new key-pair.",
       "createNewKeyPairDescription2": "Add alias which will help you identify the key.",
       "importKeyDescription": "Import an existing key using your private key.",
+      "backupDescription": "Please backup your PGP key-pairs. \n\n The backup file will hold all of your keys & passphrases.",
       "pgpKeysBackup": "Keystore backup",
       "importKey": "Import key-pair",
       "uploadBackup": "Restore backup",
@@ -297,7 +298,10 @@
       "privateKey": "PGP Private key",
       "privateKeyPlaceholder": "Paste PGP private key",
       "privateKeyHasPassphrase": "We've noticed your key is encrypted with a passphrase, please add it to import.",
-      "keyNeedPassphrase": "The private key needs passphrase"
+      "keyNeedPassphrase": "The private key needs passphrase",
+      "whyABackup": "Why do I need a backup?",
+      "whyABackupExplanation": "• Your keys are stored on your local browser. In case the cache storage is deleted you can upload the backup. \n\n • Use the backup file to move keys between different machines.",
+      "youDontHaveKeystore": "You don't have a keystore yet"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",

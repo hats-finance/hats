@@ -21,7 +21,7 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
   const { keystore, setKeystore } = useKeystore();
   const [password, setPassword] = useState<string | undefined>(undefined);
 
-  const isCreated = localStorage.getItem(LocalStorage.Keystore);
+  const isCreated = !!localStorage.getItem(LocalStorage.Keystore);
   const isLocked = password === undefined;
 
   // Run actions based on mode

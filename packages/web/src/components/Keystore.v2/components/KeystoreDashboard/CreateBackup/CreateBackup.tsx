@@ -11,6 +11,8 @@ type CreateBackupProps = {
 export const CreateBackup = ({ onClose }: CreateBackupProps) => {
   const { t } = useTranslation();
 
+  const validKeystore = !!localStorage.getItem(LocalStorage.Keystore);
+
   const handleDownloadKeystoreBackup = () => {
     const encryptedKeystore = localStorage.getItem(LocalStorage.Keystore);
     if (!encryptedKeystore) return;
@@ -21,6 +23,8 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
     link.href = jsonString;
     link.download = `hatsKeysBackup-${actualTime}.json`;
     link.click();
+
+    onClose();
   };
 
   return (
@@ -37,10 +41,13 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
 
         <CollapsableTextContent title={t("PGPTool.whyABackup")}>{t("PGPTool.whyABackupExplanation")}</CollapsableTextContent>
 
-        <Button expanded className="mt-5" onClick={handleDownloadKeystoreBackup}>
-          <SaveIcon className="mr-3" fontSize="small" />
-          {t("PGPTool.downloadBackup")}
-        </Button>
+        <div className="mt-5">
+          {!validKeystore && <p className="error mb-2">{t("PGPTool.youDontHaveKeystore")}</p>}
+          <Button disabled={!validKeystore} expanded onClick={handleDownloadKeystoreBackup}>
+            <SaveIcon className="mr-3" fontSize="small" />
+            {t("PGPTool.downloadBackup")}
+          </Button>
+        </div>
       </StyledBaseKeystoreContainer>
     </Modal>
   );
