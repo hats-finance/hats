@@ -5,13 +5,14 @@ import ArrowIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 export type CollapsableTextContentProps = {
   title: string;
   children: JSX.Element;
+  noContentPadding?: boolean;
 };
 
-export const CollapsableTextContent = ({ title, children }: CollapsableTextContentProps) => {
+export const CollapsableTextContent = ({ title, children, noContentPadding = false }: CollapsableTextContentProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <StyledCollapsableTextContent isOpen={isOpen}>
+    <StyledCollapsableTextContent isOpen={isOpen} noContentPadding={noContentPadding}>
       <div className="title-container" onClick={() => setIsOpen((prev) => !prev)}>
         <ArrowIcon className="arrow" />
         <p>{title}</p>

@@ -16,8 +16,9 @@ import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
 import SaveIcon from "@mui/icons-material/SaveAltOutlined";
+import { KeyDetails } from "./KeyDetails/KeyDetails";
 
-type KeystoreDashboardAction = "create" | "import" | "create_backup" | "restore_backup";
+type KeystoreDashboardAction = "create" | "import" | "create_backup" | "restore_backup" | "key_details" | "delete_key";
 
 type KeystoreDashboardProps = {
   onClose?: () => void;
@@ -27,11 +28,16 @@ type KeystoreDashboardProps = {
 export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardProps) => {
   const { t } = useTranslation();
 
+  const [selectedKey, setSelectedKey] = useState<IStoredKey | undefined>();
+
   const { keystore } = useKeystore();
   const userHasKeys = keystore && keystore.storedKeys.length > 0;
 
   const [activeAction, setActiveAction] = useState<KeystoreDashboardAction | undefined>();
-  const removeActiveAction = () => setActiveAction(undefined);
+  const removeActiveAction = () => {
+    setActiveAction(undefined);
+    setSelectedKey(undefined);
+  };
 
   const _getActions = (): JSX.Element => {
     return (
@@ -70,6 +76,7 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
         {userHasKeys ? (
           keystore.storedKeys.map((key) => {
             const id = key.id ?? key.alias;
+
             return (
               <StyledKey key={id}>
                 <div className="info">
@@ -82,10 +89,24 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
 
                 <div className="actions">
                   <WithTooltip placement="left" text={t("PGPTool.viewKeyDetails")}>
-                    <ViewIcon className="icon" fontSize="inherit" />
+                    <div
+                      onClick={() => {
+                        setActiveAction("key_details");
+                        setSelectedKey(key);
+                      }}
+                    >
+                      <ViewIcon className="icon" fontSize="inherit" />
+                    </div>
                   </WithTooltip>
                   <WithTooltip placement="right" text={t("PGPTool.deleteKey")}>
-                    <DeleteIcon className="icon" fontSize="inherit" />
+                    <div
+                      onClick={() => {
+                        setActiveAction("delete_key");
+                        setSelectedKey(key);
+                      }}
+                    >
+                      <DeleteIcon className="icon" fontSize="inherit" />
+                    </div>
                   </WithTooltip>
                 </div>
               </StyledKey>
@@ -130,6 +151,8 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
       {activeAction === "import" && <ImportKey onClose={removeActiveAction} />}
       {activeAction === "create_backup" && <CreateBackup onClose={removeActiveAction} />}
       {activeAction === "restore_backup" && <RestoreBackup onClose={removeActiveAction} />}
+      {activeAction === "key_details" && selectedKey && <KeyDetails pgpKey={selectedKey} onClose={removeActiveAction} />}
+      {/* {activeAction === "delete_key" && <RestoreBackup onClose={removeActiveAction} />} */}
     </>
   );
 };

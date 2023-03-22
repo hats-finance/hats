@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean }>(
-  ({ isOpen }) => css`
+export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean; noContentPadding: boolean }>(
+  ({ isOpen, noContentPadding }) => css`
     .title-container {
       display: flex;
       gap: ${getSpacing(1)};
@@ -25,7 +25,7 @@ export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean }>(
 
     .content-container {
       font-size: var(--xxsmall);
-      margin-left: ${getSpacing(3)};
+      margin-left: ${noContentPadding ? 0 : getSpacing(3)};
       overflow: hidden;
       display: none;
 
