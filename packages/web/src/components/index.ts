@@ -2,6 +2,7 @@ export { Header } from "./Header/Header";
 export { WalletButton } from "./WalletButton/WalletButton";
 export { FormInput } from "./FormControls/FormInput/FormInput";
 export { FormIconInput } from "./FormControls/FormIconInput/FormIconInput";
+export { FormJSONFileInput } from "./FormControls/FormJSONFileInput/FormJSONFileInput";
 export { FormDateInput } from "./FormControls/FormDateInput/FormDateInput";
 export { FormSelectInput } from "./FormControls/FormSelectInput/FormSelectInput";
 export { FormPgpPublicKeyInput } from "./FormControls/FormPgpPublicKeyInput/FormPgpPublicKeyInput";
