@@ -7,7 +7,7 @@ export const StyledBaseKeystoreContainer = styled.div<{ size?: "small" | "medium
 
     ${size === "small" &&
     css`
-      width: 350px;
+      width: 330px;
     `}
 
     ${size === "medium" &&
@@ -27,6 +27,11 @@ export const StyledBaseKeystoreContainer = styled.div<{ size?: "small" | "medium
     p.error {
       font-size: var(--xxsmall);
       color: var(--error-red);
+    }
+
+    p b {
+      font-weight: 900;
+      color: var(--warning-yellow);
     }
   `
 );

@@ -22,6 +22,10 @@
     "email-verification-error": "Error sending verification email",
     "at-least-one-pgp-key-required": "At least one PGP key is required",
     "private-key-badly-formatted": "Private key badly formatted",
+    "img-placeholder": "SVG/PNG \n Max(2MB)",
+    "icon-placeholder": "SVG \n Max(50KB)",
+    "json-file-placeholder": "JSON file",
+    "invalid-json-file": "Invalid JSON file",
     "min0": "Min 0",
     "max100": "Max 100",
     "enterValidNumber": "Enter a valid number",
@@ -275,6 +279,7 @@
       "createNewKeyPairDescription2": "Add alias which will help you identify the key.",
       "importKeyDescription": "Import an existing key using your private key.",
       "backupDescription": "Please backup your PGP key-pairs. \n\n The backup file will hold all of your keys & passphrases.",
+      "restoreBackupDescription": "Restore your PGP key-pairs from a backup file.",
       "pgpKeysBackup": "Keystore backup",
       "importKey": "Import key-pair",
       "uploadBackup": "Restore backup",
@@ -301,7 +306,11 @@
       "keyNeedPassphrase": "The private key needs passphrase",
       "whyABackup": "Why do I need a backup?",
       "whyABackupExplanation": "• Your keys are stored on your local browser. In case the cache storage is deleted you can upload the backup. \n\n • Use the backup file to move keys between different machines.",
-      "youDontHaveKeystore": "You don't have a keystore yet"
+      "youDontHaveKeystore": "You don't have a keystore yet",
+      "selectBackupFile": "Select backup file",
+      "youAreAboutToImportNumKeys": "<strong>Attention:</strong> You are about to import <b>{{numKeys}} valid keys</b> from your backup.",
+      "restoreNumKeys": "Restore {{numKeys}} keys",
+      "backupDoesNotHaveValidOrNewKeys": "This backup does not have any valid or new key to restore."
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
@@ -741,9 +750,7 @@
       "vault-parameters": {
         "maxBountyPercentage": "Maximum bounty (10%-90%)",
         "maxBountyPercentage-placeholder": "Maximum bounty (10%-90%)"
-      },
-      "img-placeholder": "SVG/PNG \n Max(2MB)",
-      "icon-placeholder": "SVG \n Max(50KB)"
+      }
     },
     "Vault": {
       "vault-details": "Vault Details",
