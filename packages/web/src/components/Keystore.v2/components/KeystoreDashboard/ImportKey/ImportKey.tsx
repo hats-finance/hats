@@ -15,6 +15,7 @@ import UploadIcon from "@mui/icons-material/FileUploadOutlined";
 
 type ImportKeyProps = {
   onClose: () => void;
+  onImportedSuccess: () => void;
 };
 
 type IImportKeyForm = {
@@ -24,7 +25,7 @@ type IImportKeyForm = {
   passphrase?: string;
 };
 
-export const ImportKey = ({ onClose }: ImportKeyProps) => {
+export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
   const { t } = useTranslation();
   const { keystore, setKeystore } = useKeystore();
 
@@ -69,7 +70,6 @@ export const ImportKey = ({ onClose }: ImportKeyProps) => {
 
   const onSubmit = async (data: IImportKeyForm) => {
     const cleanData: IImportKeyForm = removeEmpty(data);
-    console.log(cleanData);
 
     try {
       setLoading(true);
@@ -96,6 +96,7 @@ export const ImportKey = ({ onClose }: ImportKeyProps) => {
 
       setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
       onClose();
+      onImportedSuccess();
     } catch (error) {
       if (error instanceof Error) setError(error.message);
     } finally {

@@ -117,8 +117,12 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
         </StyledBaseKeystoreContainer>
       </Modal>
 
-      {activeAction === "create" && <CreateKey onClose={removeActiveAction} />}
-      {activeAction === "import" && <ImportKey onClose={removeActiveAction} />}
+      {activeAction === "create" && (
+        <CreateKey onClose={removeActiveAction} onCreatedSuccess={() => setActiveAction("create_backup")} />
+      )}
+      {activeAction === "import" && (
+        <ImportKey onClose={removeActiveAction} onImportedSuccess={() => setActiveAction("create_backup")} />
+      )}
       {activeAction === "create_backup" && <CreateBackup onClose={removeActiveAction} />}
       {activeAction === "restore_backup" && <RestoreBackup onClose={removeActiveAction} />}
       {activeAction === "key_details" && selectedKey && <KeyDetails pgpKey={selectedKey} onClose={removeActiveAction} />}

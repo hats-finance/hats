@@ -15,6 +15,7 @@ import AddIcon from "@mui/icons-material/Add";
 
 type CreateKeyProps = {
   onClose: () => void;
+  onCreatedSuccess: () => void;
 };
 
 type ICreateKeyForm = {
@@ -24,7 +25,7 @@ type ICreateKeyForm = {
   email?: string;
 };
 
-export const CreateKey = ({ onClose }: CreateKeyProps) => {
+export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
   const { t } = useTranslation();
   const { keystore, setKeystore } = useKeystore();
 
@@ -74,6 +75,7 @@ export const CreateKey = ({ onClose }: CreateKeyProps) => {
 
       setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
       onClose();
+      onCreatedSuccess();
     } catch (error) {
       if (error instanceof Error) setError(error.message);
     } finally {
