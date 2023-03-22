@@ -1,8 +1,8 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean }>(
-  ({ noSelectable, viewOnly }) => css`
+export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean; selected: boolean }>(
+  ({ noSelectable, viewOnly, selected }) => css`
     width: 100%;
     display: flex;
     align-items: center;
@@ -25,6 +25,12 @@ export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean }
       background-color: var(--purple-blue);
       border-color: var(--turquoise);
     `}
+
+    ${selected &&
+    css`
+      background-color: var(--purple-blue);
+      border-color: var(--turquoise);
+    `}
     
     .info {
       display: flex;
@@ -40,7 +46,7 @@ export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean }
       display: flex;
       align-items: center;
       font-size: ${getSpacing(3.2)};
-      gap: ${getSpacing(1.5)};
+      gap: ${getSpacing(1)};
 
       .icon {
         cursor: pointer;
@@ -49,6 +55,10 @@ export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean }
         &:hover {
           color: var(--grey-500);
         }
+      }
+
+      .icon-selected {
+        color: var(--turquoise);
       }
     }
   `

@@ -74,8 +74,10 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
 
             return (
               <PgpKey
+                onClick={() => onSelectKey && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
                 key={id}
                 pgpKey={key}
+                selected={selectedKey && (selectedKey?.id === key.id || selectedKey?.alias === key.alias)}
                 onSelectedDetails={() => {
                   setActiveAction("key_details");
                   setSelectedKey(key);

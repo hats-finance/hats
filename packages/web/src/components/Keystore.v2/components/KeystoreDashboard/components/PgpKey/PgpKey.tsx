@@ -8,21 +8,31 @@ import { StyledKey } from "./styles";
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
+import CheckIcon from "@mui/icons-material/CheckOutlined";
 
 type PgpKeyProps = {
   pgpKey?: IStoredKey;
   onSelectedDetails?: () => void;
   onSelectedDelete?: () => void;
+  onClick?: () => void;
   viewOnly?: boolean;
+  selected?: boolean;
 };
 
-export const PgpKey = ({ pgpKey, onSelectedDetails, onSelectedDelete, viewOnly = false }: PgpKeyProps) => {
+export const PgpKey = ({
+  pgpKey,
+  onSelectedDetails,
+  onSelectedDelete,
+  onClick,
+  viewOnly = false,
+  selected = false,
+}: PgpKeyProps) => {
   const { t } = useTranslation();
 
   const id = pgpKey?.id ?? pgpKey?.alias;
 
   return (
-    <StyledKey noSelectable={!pgpKey} viewOnly={viewOnly}>
+    <StyledKey onClick={onClick} noSelectable={!pgpKey} viewOnly={viewOnly} selected={selected}>
       {pgpKey ? (
         <div className="info">
           <Identicon string={id} size={24} bg="#fff" />
@@ -50,6 +60,13 @@ export const PgpKey = ({ pgpKey, onSelectedDetails, onSelectedDelete, viewOnly =
               <DeleteIcon className="icon" fontSize="inherit" />
             </div>
           </WithTooltip>
+          {selected && (
+            <WithTooltip placement="right" text={t("PGPTool.deleteKey")}>
+              <div className="ml-2">
+                <CheckIcon className="icon-selected" fontSize="inherit" />
+              </div>
+            </WithTooltip>
+          )}
         </div>
       )}
     </StyledKey>
