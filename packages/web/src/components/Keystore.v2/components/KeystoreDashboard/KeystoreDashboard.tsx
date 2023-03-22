@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Modal, WithTooltip } from "components";
+import { Button, Modal, WithTooltip } from "components";
 import { PgpKey } from "./components";
 import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails, KeyDelete } from "./";
 import { IStoredKey } from "../../types";
@@ -112,10 +112,16 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
           <div className="mb-4">{t("PGPTool.usePgpToolFor")}</div>
           {_getActions()}
 
-          <div className="mb-4">{t("PGPTool.yourKeys")}</div>
+          <div className="mb-4">{`${t("PGPTool.yourKeys")} ${onSelectKey && `(${t("PGPTool.selectOne")})`}`}</div>
           {_getStoredKeys()}
 
           {userHasKeys && _getBackupOption()}
+
+          {onSelectKey && (
+            <Button className="mt-4" disabled={!selectedKey} expanded>
+              {t("PGPTool.selectKey")}
+            </Button>
+          )}
         </StyledBaseKeystoreContainer>
       </Modal>
 

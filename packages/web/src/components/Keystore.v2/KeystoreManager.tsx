@@ -82,7 +82,7 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
 
   // Unlock keystore and resolver
   const unlockKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
-  const unlockKeystore = useCallback((): Promise<IKeystoreData | undefined> => {
+  const unlockKeystoreHandler = useCallback((): Promise<IKeystoreData | undefined> => {
     return new Promise<IKeystoreData | undefined>((resolve) => {
       setActiveAction("unlock");
       unlockKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
@@ -107,7 +107,7 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
 
   // Create keystore and resolver
   const createKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
-  const createKeystore = useCallback((): Promise<IKeystoreData | undefined> => {
+  const createKeystoreHandler = useCallback((): Promise<IKeystoreData | undefined> => {
     return new Promise<IKeystoreData | undefined>((resolve) => {
       setActiveAction("create");
       createKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
@@ -127,15 +127,33 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
     });
   }, [setActiveAction, setPassword, setKeystore]);
 
+  // Create keystore and resolver
+  const selectKeyResolver = useRef<(key: IStoredKey | undefined) => Promise<void>>();
+  const selectKeyHandler = useCallback((): Promise<IStoredKey | undefined> => {
+    return new Promise<IStoredKey | undefined>((resolve) => {
+      setActiveAction("select");
+      selectKeyResolver.current = async (key: IStoredKey | undefined): Promise<void> => {
+        if (!key) {
+          resolve(undefined);
+          removeActiveAction();
+          return;
+        }
+
+        resolve(key);
+        removeActiveAction();
+      };
+    });
+  }, [setActiveAction]);
+
   // -------------------------------------------
   // ----------------- Actions -----------------
   const initKeystore = async (): Promise<boolean> => {
     if (!isCreated) {
-      const wasCreated = await createKeystore();
+      const wasCreated = await createKeystoreHandler();
       console.log("wasCreated", wasCreated);
       if (!wasCreated) return false;
     } else if (isLocked) {
-      const wasUnlocked = await unlockKeystore();
+      const wasUnlocked = await unlockKeystoreHandler();
       console.log("wasUnlocked", wasUnlocked);
       if (!wasUnlocked) return false;
     }
@@ -145,11 +163,11 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
 
   const openKeystore = async (): Promise<boolean> => {
     if (!isCreated) {
-      const wasCreated = await createKeystore();
+      const wasCreated = await createKeystoreHandler();
       console.log("wasCreated", wasCreated);
       if (!wasCreated) return false;
     } else if (isLocked) {
-      const wasUnlocked = await unlockKeystore();
+      const wasUnlocked = await unlockKeystoreHandler();
       console.log("wasUnlocked", wasUnlocked);
       if (!wasUnlocked) return false;
     }
@@ -160,16 +178,17 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
 
   const selectKey = async (): Promise<IStoredKey | undefined> => {
     if (!isCreated) {
-      const wasCreated = await createKeystore();
+      const wasCreated = await createKeystoreHandler();
       console.log("wasCreated", wasCreated);
       if (!wasCreated) return undefined;
     } else if (isLocked) {
-      const wasUnlocked = await unlockKeystore();
+      const wasUnlocked = await unlockKeystoreHandler();
       console.log("wasUnlocked", wasUnlocked);
       if (!wasUnlocked) return undefined;
     }
 
-    return undefined;
+    const selectedKey = await selectKeyHandler();
+    return selectedKey;
   };
 
   return (
@@ -184,6 +203,12 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
         <CreateKeystore
           onClose={() => createKeystoreResolver.current?.(undefined)}
           onCreateKeystore={(pass) => createKeystoreResolver.current?.(pass)}
+        />
+      )}
+      {activeAction === "select" && (
+        <KeystoreDashboard
+          onSelectKey={(key) => selectKeyResolver.current?.(key)}
+          onClose={() => selectKeyResolver.current?.(undefined)}
         />
       )}
       {activeAction === "dashboard" && <KeystoreDashboard onClose={removeActiveAction} />}

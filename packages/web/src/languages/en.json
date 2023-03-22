@@ -316,7 +316,9 @@
       "restoreNumKeys": "Restore {{numKeys}} keys",
       "backupDoesNotHaveValidOrNewKeys": "This backup does not have any valid or new key to restore.",
       "keyDetails": "Key details",
-      "deleteKeyDescription": "Are you sure you want to delete:"
+      "deleteKeyDescription": "Are you sure you want to delete:",
+      "selectKey": "Select key",
+      "selectOne": "Select one"
     },
     "vaultCreatedModal": {
       "titleMultisig": "Please sign the vault creation request on Gnosis safe",
