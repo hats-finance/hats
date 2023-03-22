@@ -24,7 +24,9 @@ export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean }>(
     }
 
     .content-container {
-      margin-top: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+      margin-top: ${getSpacing(1.5)};
+      margin-left: ${getSpacing(3)};
       overflow: hidden;
       height: 0;
       transition: 0.3s;
