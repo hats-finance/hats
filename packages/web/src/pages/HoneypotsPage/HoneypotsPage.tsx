@@ -24,7 +24,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const selectedVault = vaultId ? vaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
   const navigate = useNavigate();
 
-  const { initKeystore, openKeystore, keystore } = useKeystore();
+  const { initKeystore, openKeystore, selectPublicKey, keystore } = useKeystore();
 
   useEffect(() => {
     console.log(keystore);
@@ -87,6 +87,15 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
             }}
           >
             OPEN
+          </button>
+          <button
+            onClick={() => {
+              selectPublicKey().then((key) => {
+                console.log(`Was selected successful?`, key);
+              });
+            }}
+          >
+            SELECT
           </button>
           <tbody>
             <SafePeriodBar />

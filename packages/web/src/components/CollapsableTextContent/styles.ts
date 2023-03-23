@@ -24,8 +24,7 @@ export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean; noCont
     }
 
     .content-container {
-      font-size: var(--xxsmall);
-      margin-left: ${noContentPadding ? 0 : getSpacing(3)};
+      margin-left: ${noContentPadding ? 0 : getSpacing(3.5)};
       overflow: hidden;
       display: none;
 

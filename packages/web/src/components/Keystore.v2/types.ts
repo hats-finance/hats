@@ -16,7 +16,7 @@ export interface IKeystoreData {
 export interface IKeystoreContext {
   initKeystore: () => Promise<boolean>;
   openKeystore: () => Promise<boolean>;
-  selectKey: () => Promise<IStoredKey | undefined>;
+  selectPublicKey: () => Promise<string | undefined>;
   setKeystore: Dispatch<SetStateAction<IKeystoreData | undefined>>;
   keystore: IKeystoreData | undefined;
   // isLocked: boolean;
@@ -27,4 +27,5 @@ export interface IKeystoreContext {
   // deleteCurrentKeystore: () => void;
 }
 
-export type IKeystoreActions = "OPEN" | "SELECT" | "INIT";
+export type IKeystoreManagerActions = "create" | "unlock" | "select_publickey" | "dashboard";
+export type IKeystoreActions = "OPEN" | "SELECT_PUBLICKEY" | "INIT";

@@ -18,6 +18,7 @@ interface ModalProps {
   disableOnOverlayClose?: boolean;
   overflowVisible?: boolean;
   pgpKeystoreStyles?: boolean;
+  removeAnimation?: boolean;
 }
 
 export function Modal({
@@ -35,6 +36,7 @@ export function Modal({
   capitalizeTitle = false,
   overflowVisible = false,
   pgpKeystoreStyles = false,
+  removeAnimation = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
   // const inTransaction = useTransactions().transactions.some((tx) => !tx.receipt);
@@ -45,10 +47,14 @@ export function Modal({
     if (disableClose) return;
 
     if (!inTransaction) {
-      setLocalShowModal(false);
-      setTimeout(() => onHide(), 150);
+      if (removeAnimation) {
+        onHide();
+      } else {
+        setLocalShowModal(false);
+        setTimeout(() => onHide(), 150);
+      }
     }
-  }, [inTransaction, onHide, disableClose]);
+  }, [inTransaction, onHide, disableClose, removeAnimation]);
 
   const escapeHandler = useCallback(
     (event: KeyboardEvent) => {
@@ -66,7 +72,7 @@ export function Modal({
 
   return isShowing
     ? ReactDOM.createPortal(
-        <StyledModal isShowing={localShowModal} zIndex={zIndex}>
+        <StyledModal removeAnimation isShowing={localShowModal} zIndex={zIndex}>
           <div className="overlay" onClick={disableOnOverlayClose ? () => {} : handleOnHide} />
           <ModalContainer
             disableClose={disableClose}

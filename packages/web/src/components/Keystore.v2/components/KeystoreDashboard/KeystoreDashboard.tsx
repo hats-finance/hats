@@ -17,10 +17,10 @@ type KeystoreDashboardAction = "create" | "import" | "create_backup" | "restore_
 
 type KeystoreDashboardProps = {
   onClose?: () => void;
-  onSelectKey?: (key: IStoredKey) => Promise<void> | undefined;
+  onPublicKeySelected?: (publickey: string) => Promise<void> | undefined;
 };
 
-export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardProps) => {
+export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDashboardProps) => {
   const { t } = useTranslation();
 
   const [selectedKey, setSelectedKey] = useState<IStoredKey | undefined>();
@@ -74,7 +74,7 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
 
             return (
               <PgpKey
-                onClick={() => onSelectKey && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
+                onClick={() => onPublicKeySelected && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
                 key={id}
                 pgpKey={key}
                 selected={selectedKey && (selectedKey?.id === key.id || selectedKey?.alias === key.alias)}
@@ -107,18 +107,23 @@ export const KeystoreDashboard = ({ onClose, onSelectKey }: KeystoreDashboardPro
 
   return (
     <>
-      <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
+      <Modal removeAnimation title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
         <StyledBaseKeystoreContainer size="medium">
           <div className="mb-4">{t("PGPTool.usePgpToolFor")}</div>
           {_getActions()}
 
-          <div className="mb-4">{`${t("PGPTool.yourKeys")} ${onSelectKey && `(${t("PGPTool.selectOne")})`}`}</div>
+          <div className="mb-4">{`${t("PGPTool.yourKeys")} ${onPublicKeySelected ? `(${t("PGPTool.selectOne")})` : ""}`}</div>
           {_getStoredKeys()}
 
           {userHasKeys && _getBackupOption()}
 
-          {onSelectKey && (
-            <Button className="mt-4" disabled={!selectedKey} expanded>
+          {onPublicKeySelected && (
+            <Button
+              className="mt-4"
+              disabled={!selectedKey}
+              expanded
+              onClick={() => selectedKey && onPublicKeySelected(selectedKey.publicKey)}
+            >
               {t("PGPTool.selectKey")}
             </Button>
           )}

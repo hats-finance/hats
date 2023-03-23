@@ -9,7 +9,7 @@ import { StyledBaseKeystoreContainer } from "../../styles";
 
 type CreateKeystoreProps = {
   onClose?: () => void;
-  onCreateKeystore?: (pass: string) => Promise<void> | undefined;
+  onKeystoreCreated?: (pass: string) => Promise<void> | undefined;
 };
 
 type ICreateKeystoreForm = {
@@ -17,7 +17,7 @@ type ICreateKeystoreForm = {
   confirmPassword: string;
 };
 
-export const CreateKeystore = ({ onClose, onCreateKeystore }: CreateKeystoreProps) => {
+export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystoreProps) => {
   const { t } = useTranslation();
 
   const {
@@ -33,11 +33,11 @@ export const CreateKeystore = ({ onClose, onCreateKeystore }: CreateKeystoreProp
   useEffect(() => setFocus("password"), [setFocus]);
 
   const onSubmit = async (data: ICreateKeystoreForm) => {
-    if (onCreateKeystore) await onCreateKeystore(data.password);
+    if (onKeystoreCreated) await onKeystoreCreated(data.password);
   };
 
   return (
-    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
+    <Modal removeAnimation title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledBaseKeystoreContainer>
         <div className="mb-4">{t("PGPTool.createStrongPasswordForKeystore")}</div>
 

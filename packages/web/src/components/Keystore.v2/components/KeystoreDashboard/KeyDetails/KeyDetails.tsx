@@ -14,6 +14,7 @@ export const KeyDetails = ({ pgpKey, onClose }: KeyDetailsProps) => {
 
   return (
     <Modal
+      removeAnimation
       titleIcon={<DetailsIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.keyDetails")}
       pgpKeystoreStyles

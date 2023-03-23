@@ -1,22 +1,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
 import { LocalStorage, SessionStorage } from "constants/constants";
-import { CreateKeystore, KeystoreDashboard, UnlockKeystore } from "./components";
-import { IKeystoreActions, IKeystoreData, IStoredKey } from "./types";
+import { CreateKeystore, KeystoreDashboard, SelectPublicKey, UnlockKeystore } from "./components";
+import { IKeystoreActions, IKeystoreData, IKeystoreManagerActions } from "./types";
 import { useKeystore } from "./KeystoreProvider";
-
-type KeystoreActions = "create" | "unlock" | "select" | "dashboard";
 
 type KeystoreManagerProps = {
   mode: IKeystoreActions | undefined;
-  onSelectedKey?: (key: IStoredKey | undefined) => Promise<void> | undefined;
+  onSelectedPublicKey?: (key: string | undefined) => Promise<void> | undefined;
   onOpenedKeystore?: (success: boolean) => Promise<void> | undefined;
   onInitializedKeystore?: (success: boolean) => Promise<void> | undefined;
 };
 
-export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onInitializedKeystore }: KeystoreManagerProps) => {
-  const [activeAction, setActiveAction] = useState<KeystoreActions | undefined>(undefined);
-  const removeActiveAction = () => setActiveAction(undefined);
+export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, onInitializedKeystore }: KeystoreManagerProps) => {
+  const [activeActions, setActiveActions] = useState<IKeystoreManagerActions[]>([]);
+  const removeActiveAction = (action: IKeystoreManagerActions) => setActiveActions((prev) => prev.filter((a) => a !== action));
+  const addActiveAction = (action: IKeystoreManagerActions) => setActiveActions((prev) => [...prev, action]);
 
   const { keystore, setKeystore } = useKeystore();
   const [password, setPassword] = useState<string | undefined>(undefined);
@@ -37,14 +36,14 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
         if (onOpenedKeystore) onOpenedKeystore(success);
       }
 
-      if (mode === "SELECT") {
-        const selectedKey = await selectKey();
-        if (onSelectedKey) onSelectedKey(selectedKey);
+      if (mode === "SELECT_PUBLICKEY") {
+        const selectedPublicKey = await selectPublicKey();
+        if (onSelectedPublicKey) onSelectedPublicKey(selectedPublicKey);
       }
     };
 
     runActions();
-  }, [mode, onInitializedKeystore, onOpenedKeystore, onSelectedKey]);
+  }, [mode, onInitializedKeystore, onOpenedKeystore, onSelectedPublicKey]);
 
   // Save changes to localStorage
   useEffect(() => {
@@ -84,11 +83,11 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
   const unlockKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
   const unlockKeystoreHandler = useCallback((): Promise<IKeystoreData | undefined> => {
     return new Promise<IKeystoreData | undefined>((resolve) => {
-      setActiveAction("unlock");
+      addActiveAction("unlock");
       unlockKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
         if (!password) {
           resolve(undefined);
-          removeActiveAction();
+          removeActiveAction("unlock");
           return;
         }
 
@@ -97,23 +96,23 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
           setPassword(password);
           setKeystore(decryptedKeystore);
           resolve(decryptedKeystore);
-          removeActiveAction();
+          removeActiveAction("unlock");
         } catch (error) {
           throw error;
         }
       };
     });
-  }, [setActiveAction, setPassword, setKeystore]);
+  }, [setPassword, setKeystore]);
 
   // Create keystore and resolver
   const createKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
   const createKeystoreHandler = useCallback((): Promise<IKeystoreData | undefined> => {
     return new Promise<IKeystoreData | undefined>((resolve) => {
-      setActiveAction("create");
+      addActiveAction("create");
       createKeystoreResolver.current = async (password: string | undefined): Promise<void> => {
         if (!password) {
           resolve(undefined);
-          removeActiveAction();
+          removeActiveAction("create");
           return;
         }
 
@@ -122,32 +121,32 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
         setPassword(password);
         setKeystore(newKeystore);
         resolve(newKeystore);
-        removeActiveAction();
+        removeActiveAction("create");
       };
     });
-  }, [setActiveAction, setPassword, setKeystore]);
+  }, [setPassword, setKeystore]);
 
   // Create keystore and resolver
-  const selectKeyResolver = useRef<(key: IStoredKey | undefined) => Promise<void>>();
-  const selectKeyHandler = useCallback((): Promise<IStoredKey | undefined> => {
-    return new Promise<IStoredKey | undefined>((resolve) => {
-      setActiveAction("select");
-      selectKeyResolver.current = async (key: IStoredKey | undefined): Promise<void> => {
+  const selectPublicKeyResolver = useRef<(key: string | undefined) => Promise<void>>();
+  const selectPublicKeyHandler = useCallback((): Promise<string | undefined> => {
+    return new Promise<string | undefined>((resolve) => {
+      addActiveAction("select_publickey");
+      selectPublicKeyResolver.current = async (key: string | undefined): Promise<void> => {
         if (!key) {
           resolve(undefined);
-          removeActiveAction();
+          removeActiveAction("select_publickey");
           return;
         }
 
         resolve(key);
-        removeActiveAction();
+        removeActiveAction("select_publickey");
       };
     });
-  }, [setActiveAction]);
+  }, []);
 
   // -------------------------------------------
   // ----------------- Actions -----------------
-  const initKeystore = async (): Promise<boolean> => {
+  const initKeystore = async (openOnSuccess?: IKeystoreManagerActions): Promise<boolean> => {
     if (!isCreated) {
       const wasCreated = await createKeystoreHandler();
       console.log("wasCreated", wasCreated);
@@ -158,60 +157,43 @@ export const KeystoreManager = ({ mode, onSelectedKey, onOpenedKeystore, onIniti
       if (!wasUnlocked) return false;
     }
 
+    if (openOnSuccess) addActiveAction(openOnSuccess);
     return true;
   };
 
   const openKeystore = async (): Promise<boolean> => {
-    if (!isCreated) {
-      const wasCreated = await createKeystoreHandler();
-      console.log("wasCreated", wasCreated);
-      if (!wasCreated) return false;
-    } else if (isLocked) {
-      const wasUnlocked = await unlockKeystoreHandler();
-      console.log("wasUnlocked", wasUnlocked);
-      if (!wasUnlocked) return false;
-    }
-
-    setActiveAction("dashboard");
-    return true;
+    const wasOpened = await initKeystore("dashboard");
+    return wasOpened;
   };
 
-  const selectKey = async (): Promise<IStoredKey | undefined> => {
-    if (!isCreated) {
-      const wasCreated = await createKeystoreHandler();
-      console.log("wasCreated", wasCreated);
-      if (!wasCreated) return undefined;
-    } else if (isLocked) {
-      const wasUnlocked = await unlockKeystoreHandler();
-      console.log("wasUnlocked", wasUnlocked);
-      if (!wasUnlocked) return undefined;
-    }
-
-    const selectedKey = await selectKeyHandler();
-    return selectedKey;
+  const selectPublicKey = async (): Promise<string | undefined> => {
+    const selectedPublicKey = await selectPublicKeyHandler();
+    return selectedPublicKey;
   };
 
   return (
     <>
-      {activeAction === "unlock" && (
+      {activeActions.includes("dashboard") && <KeystoreDashboard onClose={() => removeActiveAction("dashboard")} />}
+      {activeActions.includes("select_publickey") && (
+        <SelectPublicKey
+          isCreated={isCreated}
+          initKeystore={initKeystore}
+          onClose={() => selectPublicKeyResolver.current?.(undefined)}
+          onPublicKeySelected={(publickey) => selectPublicKeyResolver.current?.(publickey)}
+        />
+      )}
+      {activeActions.includes("unlock") && (
         <UnlockKeystore
           onClose={() => unlockKeystoreResolver.current?.(undefined)}
-          onUnlockKeystore={(pass) => unlockKeystoreResolver.current?.(pass)}
+          onKeystoreUnlocked={(pass) => unlockKeystoreResolver.current?.(pass)}
         />
       )}
-      {activeAction === "create" && (
+      {activeActions.includes("create") && (
         <CreateKeystore
           onClose={() => createKeystoreResolver.current?.(undefined)}
-          onCreateKeystore={(pass) => createKeystoreResolver.current?.(pass)}
+          onKeystoreCreated={(pass) => createKeystoreResolver.current?.(pass)}
         />
       )}
-      {activeAction === "select" && (
-        <KeystoreDashboard
-          onSelectKey={(key) => selectKeyResolver.current?.(key)}
-          onClose={() => selectKeyResolver.current?.(undefined)}
-        />
-      )}
-      {activeAction === "dashboard" && <KeystoreDashboard onClose={removeActiveAction} />}
     </>
   );
 };

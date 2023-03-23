@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
-  ({ isShowing, zIndex }) => css`
+export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number; removeAnimation: boolean }>(
+  ({ isShowing, zIndex, removeAnimation }) => css`
     position: fixed;
     z-index: ${1040 + zIndex};
     top: 0;
@@ -15,7 +15,7 @@ export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: 150ms;
+    transition: ${removeAnimation ? "0" : "150ms"};
 
     ${isShowing &&
     css`

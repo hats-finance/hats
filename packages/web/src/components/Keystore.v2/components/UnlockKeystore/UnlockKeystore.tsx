@@ -9,14 +9,14 @@ import { StyledBaseKeystoreContainer } from "../../styles";
 
 type UnlockKeystoreProps = {
   onClose?: () => void;
-  onUnlockKeystore?: (pass: string) => Promise<void> | undefined;
+  onKeystoreUnlocked?: (pass: string) => Promise<void> | undefined;
 };
 
 type IUnlockKeystoreForm = {
   password: string;
 };
 
-export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProps) => {
+export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystoreProps) => {
   const { t } = useTranslation();
   const [error, setError] = useState<string | undefined>();
 
@@ -37,9 +37,9 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
   useEffect(() => setError(undefined), [password]);
 
   const onSubmit = async (data: IUnlockKeystoreForm) => {
-    if (onUnlockKeystore) {
+    if (onKeystoreUnlocked) {
       try {
-        await onUnlockKeystore(data.password);
+        await onKeystoreUnlocked(data.password);
       } catch (error) {
         setError((error as any).message);
       }
@@ -47,7 +47,7 @@ export const UnlockKeystore = ({ onClose, onUnlockKeystore }: UnlockKeystoreProp
   };
 
   return (
-    <Modal title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
+    <Modal removeAnimation title={t("PGPTool.title")} pgpKeystoreStyles capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledBaseKeystoreContainer>
         <div className="mb-4">{t("PGPTool.unlockPgpTool")}</div>
 

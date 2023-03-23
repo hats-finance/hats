@@ -97,6 +97,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
 
   return (
     <Modal
+      removeAnimation
       titleIcon={<AddIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.createNewKeyPair")}
       pgpKeystoreStyles

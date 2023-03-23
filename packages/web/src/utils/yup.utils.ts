@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
-import { readPrivateKey } from "openpgp";
+import { readPrivateKey, readKey } from "openpgp";
 import { isAddress } from "ethers/lib/utils";
 import { appChains } from "settings";
 import { isEmailAddress } from "./emails.utils";
@@ -157,9 +157,9 @@ export const getTestMinAmountOfKeysOnMembers = (intl) => {
   };
 };
 
-export const getTestPrivateKeyFormat = (intl) => {
+export const getTestPGPKeyFormat = (intl, type: "public" | "private") => {
   return {
-    name: `private-key-format`,
+    name: `pgp-${type}-key-format`,
     test: async (value: string | undefined, ctx: Yup.TestContext) => {
       const isEmpty = value === "";
       if (isEmpty || !value) return true;
@@ -168,10 +168,20 @@ export const getTestPrivateKeyFormat = (intl) => {
         const timeout = (cb, interval) => () => new Promise<undefined>((resolve) => setTimeout(() => cb(resolve), interval));
         const onTimeout = timeout((resolve) => resolve(undefined), 200);
 
-        const privateKeyData = await Promise.race([readPrivateKey({ armoredKey: value }), onTimeout()]);
-        return privateKeyData?.isPrivate() ? true : ctx.createError({ message: intl("private-key-badly-formatted") });
+        const keyData = await Promise.race([readKey({ armoredKey: value }), onTimeout()]);
+        if (!keyData)
+          return ctx.createError({
+            message: intl(type === "private" ? "private-key-badly-formatted" : "public-key-badly-formatted"),
+          });
+
+        const isValidType = type === "private" ? keyData.isPrivate() : !keyData.isPrivate();
+        return isValidType
+          ? true
+          : ctx.createError({ message: intl(type === "private" ? "key-is-public-not-private" : "key-is-private-not-public") });
       } catch (error) {
-        return ctx.createError({ message: intl("private-key-badly-formatted") });
+        return ctx.createError({
+          message: intl(type === "private" ? "private-key-badly-formatted" : "public-key-badly-formatted"),
+        });
       }
     },
   };

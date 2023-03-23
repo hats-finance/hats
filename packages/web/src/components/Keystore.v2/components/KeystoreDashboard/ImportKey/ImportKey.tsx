@@ -106,6 +106,7 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
 
   return (
     <Modal
+      removeAnimation
       titleIcon={<UploadIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.importKey")}
       pgpKeystoreStyles
