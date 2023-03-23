@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
 import { LocalStorage, SessionStorage } from "constants/constants";
 import { CreateKeystore, KeystoreDashboard, SelectPublicKey, UnlockKeystore } from "./components";
@@ -7,19 +7,27 @@ import { useKeystore } from "./KeystoreProvider";
 
 type KeystoreManagerProps = {
   mode: IKeystoreActions | undefined;
+  setIsKeystoreCreated: Dispatch<SetStateAction<boolean>>;
+  setIsKeystoreLoaded: Dispatch<SetStateAction<boolean>>;
   onSelectedPublicKey?: (key: string | undefined) => Promise<void> | undefined;
   onOpenedKeystore?: (success: boolean) => Promise<void> | undefined;
   onInitializedKeystore?: (success: boolean) => Promise<void> | undefined;
 };
 
-export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, onInitializedKeystore }: KeystoreManagerProps) => {
+export const KeystoreManager = ({
+  mode,
+  setIsKeystoreCreated,
+  setIsKeystoreLoaded,
+  onSelectedPublicKey,
+  onOpenedKeystore,
+  onInitializedKeystore,
+}: KeystoreManagerProps) => {
   const [activeActions, setActiveActions] = useState<IKeystoreManagerActions[]>([]);
   const removeActiveAction = (action: IKeystoreManagerActions) => setActiveActions((prev) => prev.filter((a) => a !== action));
   const addActiveAction = (action: IKeystoreManagerActions) => setActiveActions((prev) => [...prev, action]);
 
-  const { keystore, setKeystore } = useKeystore();
+  const { keystore, setKeystore, isKeystoreCreated } = useKeystore();
   const [password, setPassword] = useState<string | undefined>(undefined);
-  const [isCreated, setIsCreated] = useState<boolean>(!!localStorage.getItem(LocalStorage.Keystore));
 
   const isLocked = password === undefined;
 
@@ -73,12 +81,17 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
           setKeystore(decryptedKeystore);
         } catch (error) {
           setPassword(undefined);
+          setKeystore(undefined);
+        } finally {
+          setIsKeystoreLoaded(true);
         }
+      } else {
+        setIsKeystoreLoaded(true);
       }
     };
 
     checkSessionStorage();
-  }, [setKeystore]);
+  }, [setKeystore, setIsKeystoreLoaded]);
 
   // Unlock keystore and resolver
   const unlockKeystoreResolver = useRef<(password: string | undefined) => Promise<void>>();
@@ -121,12 +134,12 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
 
         setPassword(password);
         setKeystore(newKeystore);
-        setIsCreated(true);
+        setIsKeystoreCreated(true);
         resolve(newKeystore);
         removeActiveAction("create");
       };
     });
-  }, [setPassword, setKeystore]);
+  }, [setPassword, setKeystore, setIsKeystoreCreated]);
 
   // Create keystore and resolver
   const selectPublicKeyResolver = useRef<(key: string | undefined) => Promise<void>>();
@@ -149,7 +162,7 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
   // -------------------------------------------
   // ----------------- Actions -----------------
   const initKeystore = async (openOnSuccess?: IKeystoreManagerActions): Promise<boolean> => {
-    if (!isCreated) {
+    if (!isKeystoreCreated) {
       const wasCreated = await createKeystoreHandler();
       if (!wasCreated) return false;
     } else if (isLocked) {
@@ -176,7 +189,6 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
       {activeActions.includes("dashboard") && <KeystoreDashboard onClose={() => removeActiveAction("dashboard")} />}
       {activeActions.includes("select_publickey") && (
         <SelectPublicKey
-          isCreated={isCreated}
           initKeystore={initKeystore}
           onClose={() => selectPublicKeyResolver.current?.(undefined)}
           onPublicKeySelected={(publickey) => selectPublicKeyResolver.current?.(publickey)}

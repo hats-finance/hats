@@ -22,4 +22,6 @@ export interface IKeystoreContext {
   selectPublicKey: () => Promise<string | undefined>;
   setKeystore: Dispatch<SetStateAction<IKeystoreData | undefined>>;
   keystore: IKeystoreData | undefined;
+  isKeystoreLoaded: boolean;
+  isKeystoreCreated: boolean;
 }

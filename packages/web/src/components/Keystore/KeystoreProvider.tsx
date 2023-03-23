@@ -1,4 +1,5 @@
 import { useContext, useState, createContext, useRef, useCallback } from "react";
+import { LocalStorage } from "constants/constants";
 import { KeystoreManager } from "./KeystoreManager";
 import { IKeystoreContext, IKeystoreActions, IKeystoreData } from "./types";
 
@@ -7,6 +8,8 @@ const KeystoreContext = createContext<IKeystoreContext>(undefined as any);
 export function KeystoreProvider({ children }) {
   const [activeMode, setActiveMode] = useState<IKeystoreActions | undefined>();
   const [keystore, setKeystore] = useState<IKeystoreData | undefined>(undefined);
+  const [isKeystoreLoaded, setIsKeystoreLoaded] = useState(false);
+  const [isKeystoreCreated, setIsKeystoreCreated] = useState(!!localStorage.getItem(LocalStorage.Keystore));
 
   // Init keystore function and resolver
   const initKeystoreResolver = useRef<(success: boolean) => Promise<void>>();
@@ -44,20 +47,20 @@ export function KeystoreProvider({ children }) {
     });
   }, [setActiveMode]);
 
-  const initKeystoreHandler = async (): Promise<boolean> => {
+  const initKeystoreHandler = useCallback(async (): Promise<boolean> => {
     const wasInitialized = await initKeystore();
     return wasInitialized;
-  };
+  }, [initKeystore]);
 
-  const openKeystoreHandler = async (): Promise<boolean> => {
+  const openKeystoreHandler = useCallback(async (): Promise<boolean> => {
     const wasOpened = await openKeystore();
     return wasOpened;
-  };
+  }, [openKeystore]);
 
-  const selectPublicKeyHandler = async (): Promise<string | undefined> => {
+  const selectPublicKeyHandler = useCallback(async (): Promise<string | undefined> => {
     const selectedPublicKey = await selectPublicKey();
     return selectedPublicKey;
-  };
+  }, [selectPublicKey]);
 
   return (
     <KeystoreContext.Provider
@@ -67,11 +70,15 @@ export function KeystoreProvider({ children }) {
         selectPublicKey: selectPublicKeyHandler,
         keystore,
         setKeystore,
+        isKeystoreLoaded,
+        isKeystoreCreated,
       }}
     >
       {children}
       <KeystoreManager
         mode={activeMode}
+        setIsKeystoreLoaded={setIsKeystoreLoaded}
+        setIsKeystoreCreated={setIsKeystoreCreated}
         onInitializedKeystore={(keys) => initKeystoreResolver.current?.(keys)}
         onOpenedKeystore={(wasOpened) => openKeystoreResolver.current?.(wasOpened)}
         onSelectedPublicKey={(publickey) => selectPublicKeyResolver.current?.(publickey)}
