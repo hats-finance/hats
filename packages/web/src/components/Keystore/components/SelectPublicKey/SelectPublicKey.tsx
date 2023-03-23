@@ -5,8 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, CollapsableTextContent, FormInput, Modal } from "components";
 import { getPath } from "utils/objects.utils";
 import { getSelectPublicKeySchema } from "./formSchema";
-import { StyledBaseKeystoreContainer } from "../../styles";
 import { KeystoreDashboard } from "../KeystoreDashboard/KeystoreDashboard";
+import { StyledBaseKeystoreContainer } from "../../styles";
 
 type SelectPublicKeyProps = {
   isCreated: boolean;

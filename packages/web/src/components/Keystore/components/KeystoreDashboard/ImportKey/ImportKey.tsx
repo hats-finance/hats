@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { getPath, removeEmpty } from "utils/objects.utils";
 import { Button, FormInput, Modal } from "components";
-import { getImportKeySchema } from "../ImportKey/formSchema";
+import { getImportKeySchema } from "./formSchema";
 import { useKeystore } from "../../../KeystoreProvider";
 import { IStoredKey } from "../../../types";
 import { readPrivateKeyFromStoredKey } from "../../../utils";

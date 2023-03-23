@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "components";
+import { PgpKey } from "../components";
 import { useKeystore } from "../../../KeystoreProvider";
 import { IStoredKey } from "../../../types";
 import { StyledBaseKeystoreContainer } from "../../../styles";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { PgpKey } from "../components";
 
 type KeyDeleteProps = {
   pgpKey: IStoredKey;

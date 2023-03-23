@@ -2,7 +2,7 @@ import { useContext, useState, createContext, useRef, useCallback } from "react"
 import { KeystoreManager } from "./KeystoreManager";
 import { IKeystoreContext, IKeystoreActions, IKeystoreData } from "./types";
 
-export const KeystoreContext = createContext<IKeystoreContext>(undefined as any);
+const KeystoreContext = createContext<IKeystoreContext>(undefined as any);
 
 export function KeystoreProvider({ children }) {
   const [activeMode, setActiveMode] = useState<IKeystoreActions | undefined>();

@@ -1,25 +1,25 @@
+import { Dispatch, SetStateAction } from "react";
+
+export type IKeystoreManagerActions = "create" | "unlock" | "select_publickey" | "dashboard";
+export type IKeystoreActions = "OPEN" | "SELECT_PUBLICKEY" | "INIT";
+
 export interface IStoredKey {
-    alias: string
-    privateKey: string
-    passphrase?: string | undefined
-    publicKey: string
+  id?: string;
+  alias: string;
+  privateKey: string;
+  publicKey: string;
+  passphrase?: string | undefined;
+  createdAt?: Date;
 }
 
 export interface IKeystoreData {
-    storedKeys: IStoredKey[]
-    selectedAlias?: string | undefined
+  storedKeys: IStoredKey[];
 }
 
 export interface IKeystoreContext {
-    keystore: IKeystoreData | undefined
-    isLocked: boolean
-    isCreated: boolean
-    selectedKey: IStoredKey | undefined
-    addKey: (key: IStoredKey) => void
-    removeKey: (key: IStoredKey) => void
-    createKeystore: (password: string) => void
-    unlockKeystore: (password: string) => Promise<void>
-    setSelectedAlias: (alias: string) => void
-    deleteKeystore: () => void
-    deleteKey: (key: IStoredKey) => void
+  initKeystore: () => Promise<boolean>;
+  openKeystore: () => Promise<boolean>;
+  selectPublicKey: () => Promise<string | undefined>;
+  setKeystore: Dispatch<SetStateAction<IKeystoreData | undefined>>;
+  keystore: IKeystoreData | undefined;
 }

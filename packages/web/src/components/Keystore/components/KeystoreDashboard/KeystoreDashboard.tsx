@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, WithTooltip } from "components";
 import { PgpKey } from "./components";
-import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails, KeyDelete } from "./";
+import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails, KeyDelete } from ".";
 import { IStoredKey } from "../../types";
 import { StyledBaseKeystoreContainer } from "../../styles";
 import { useKeystore } from "../../KeystoreProvider";
