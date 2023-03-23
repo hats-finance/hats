@@ -193,7 +193,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       align-items: center;
       padding: ${getSpacing(1)};
 
-      ${type === "text" &&
+      ${(type === "text" || type === "password") &&
       css`
         top: 50%;
         transform: translateY(-50%);
@@ -204,7 +204,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         bottom: 5px;
       `}
 
-      img {
+      img, .icon {
         cursor: pointer;
         width: ${getSpacing(3)};
         height: ${getSpacing(3)};
