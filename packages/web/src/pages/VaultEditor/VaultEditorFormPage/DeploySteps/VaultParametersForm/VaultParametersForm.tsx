@@ -72,7 +72,6 @@ const VaultParametersFormOnVaultEditor = () => {
     if (registryAddress && masters) {
       const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
 
-      console.log(master);
       if (master) {
         const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
         const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
