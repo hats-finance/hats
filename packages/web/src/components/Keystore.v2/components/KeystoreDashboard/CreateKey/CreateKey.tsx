@@ -133,6 +133,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
             <>
               <FormInput
                 {...register("passphrase")}
+                type="password"
                 label={t("PGPTool.passphrase")}
                 placeholder={`${t("PGPTool.passphrasePlaceholder")} (${t("optional").toLowerCase()})`}
                 colorable

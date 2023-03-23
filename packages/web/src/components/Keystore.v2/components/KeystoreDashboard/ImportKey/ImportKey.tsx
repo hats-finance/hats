@@ -140,6 +140,7 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
               <p className="mb-4">{t("PGPTool.privateKeyHasPassphrase")}</p>
               <FormInput
                 {...register("passphrase")}
+                type="password"
                 label={t("PGPTool.passphrase")}
                 placeholder={t("PGPTool.passphrasePlaceholder")}
                 colorable

@@ -54,6 +54,7 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormInput
             {...register("password")}
+            type="password"
             placeholder={t("PGPTool.enterYourPgpToolPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable

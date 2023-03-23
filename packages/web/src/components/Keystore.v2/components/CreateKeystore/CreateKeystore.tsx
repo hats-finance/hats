@@ -44,6 +44,7 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
         <form onSubmit={handleSubmit(onSubmit)}>
           <FormInput
             {...register("password")}
+            type="password"
             placeholder={t("PGPTool.createStrongPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
@@ -51,6 +52,7 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
           />
           <FormInput
             {...register("confirmPassword")}
+            type="password"
             placeholder={t("PGPTool.confirmPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
