@@ -43,6 +43,7 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
     };
 
     runActions();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mode, onInitializedKeystore, onOpenedKeystore, onSelectedPublicKey]);
 
   // Save changes to localStorage
