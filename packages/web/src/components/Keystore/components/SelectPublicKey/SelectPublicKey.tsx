@@ -7,9 +7,9 @@ import { getPath } from "utils/objects.utils";
 import { getSelectPublicKeySchema } from "./formSchema";
 import { KeystoreDashboard } from "../KeystoreDashboard/KeystoreDashboard";
 import { StyledBaseKeystoreContainer } from "../../styles";
+import { useKeystore } from "components/Keystore/KeystoreProvider";
 
 type SelectPublicKeyProps = {
-  isCreated: boolean;
   initKeystore: () => Promise<boolean>;
   onClose?: () => void;
   onPublicKeySelected?: (publickey: string) => Promise<void> | undefined;
@@ -19,8 +19,10 @@ type ISelectPublicKeyForm = {
   publicKey: string;
 };
 
-export const SelectPublicKey = ({ isCreated, initKeystore, onClose, onPublicKeySelected }: SelectPublicKeyProps) => {
+export const SelectPublicKey = ({ initKeystore, onClose, onPublicKeySelected }: SelectPublicKeyProps) => {
   const { t } = useTranslation();
+  const { isKeystoreCreated } = useKeystore();
+
   const [openKeystoreForSelecting, setOpenKeystoreForSelecting] = useState(false);
 
   const {
@@ -70,7 +72,7 @@ export const SelectPublicKey = ({ isCreated, initKeystore, onClose, onPublicKeyS
             <div className="mb-4">{t("PGPTool.useKeystoreForSelectCreate")}</div>
 
             <Button type="button" expanded onClick={handleOpenPgpKeystore}>
-              {isCreated ? t("PGPTool.openKeystore") : t("PGPTool.createKeystore")}
+              {isKeystoreCreated ? t("PGPTool.openKeystore") : t("PGPTool.createKeystore")}
             </Button>
 
             <div className="mt-5">
