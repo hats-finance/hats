@@ -19,8 +19,8 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
 
   const { keystore, setKeystore } = useKeystore();
   const [password, setPassword] = useState<string | undefined>(undefined);
+  const [isCreated, setIsCreated] = useState<boolean>(!!localStorage.getItem(LocalStorage.Keystore));
 
-  const isCreated = !!localStorage.getItem(LocalStorage.Keystore);
   const isLocked = password === undefined;
 
   // Run actions based on mode
@@ -120,6 +120,7 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
 
         setPassword(password);
         setKeystore(newKeystore);
+        setIsCreated(true);
         resolve(newKeystore);
         removeActiveAction("create");
       };
@@ -149,11 +150,9 @@ export const KeystoreManager = ({ mode, onSelectedPublicKey, onOpenedKeystore, o
   const initKeystore = async (openOnSuccess?: IKeystoreManagerActions): Promise<boolean> => {
     if (!isCreated) {
       const wasCreated = await createKeystoreHandler();
-      console.log("wasCreated", wasCreated);
       if (!wasCreated) return false;
     } else if (isLocked) {
       const wasUnlocked = await unlockKeystoreHandler();
-      console.log("wasUnlocked", wasUnlocked);
       if (!wasUnlocked) return false;
     }
 
