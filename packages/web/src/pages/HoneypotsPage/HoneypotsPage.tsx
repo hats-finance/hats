@@ -9,8 +9,8 @@ import SearchIcon from "assets/icons/search.icon";
 import { Loading, Vault, Modal } from "components";
 import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
+import { useKeystore } from "components/Keystore";
 import { StyledHoneypotsPage } from "./styles";
-import { useKeystore } from "components/Keystore.v2/KeystoreProvider";
 
 interface HoneypotsPageProps {
   showDeposit?: boolean;
