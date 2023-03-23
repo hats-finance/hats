@@ -72,15 +72,16 @@ const VaultParametersFormOnVaultEditor = () => {
     if (registryAddress && masters) {
       const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
 
+      console.log(master);
       if (master) {
         const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
         const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
         const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
 
-        if (committeeControlledSplit)
+        if (!isNaN(committeeControlledSplit))
           methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
-        if (hatsGovernanceSplit) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
-        if (hatsRewardSplit) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
+        if (!isNaN(hatsGovernanceSplit)) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
+        if (!isNaN(hatsRewardSplit)) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
       }
     }
   }, [chainId, masters, methodsToUse]);
