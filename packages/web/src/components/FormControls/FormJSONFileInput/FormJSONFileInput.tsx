@@ -10,7 +10,7 @@ interface FormJSONFileInputProps {
   isDirty?: boolean;
   disabled?: boolean;
   label?: string;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 }
 
 function FormJSONFileInputComponent(

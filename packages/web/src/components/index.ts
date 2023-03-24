@@ -1,11 +1,5 @@
 export { Header } from "./Header/Header";
 export { WalletButton } from "./WalletButton/WalletButton";
-export { FormInput } from "./FormControls/FormInput/FormInput";
-export { FormIconInput } from "./FormControls/FormIconInput/FormIconInput";
-export { FormJSONFileInput } from "./FormControls/FormJSONFileInput/FormJSONFileInput";
-export { FormDateInput } from "./FormControls/FormDateInput/FormDateInput";
-export { FormSelectInput } from "./FormControls/FormSelectInput/FormSelectInput";
-export { FormPgpPublicKeyInput } from "./FormControls/FormPgpPublicKeyInput/FormPgpPublicKeyInput";
 export { Vault } from "./Vault/Vault";
 export { NFTCard } from "./NFTCard/NFTCard";
 export { NFTPrize } from "./NFTPrize/NFTPrize";
@@ -27,3 +21,4 @@ export { CopyToClipboard } from "./CopyToClipboard/CopyToClipboard";
 export { CollapsableTextContent } from "./CollapsableTextContent/CollapsableTextContent";
 export { Pill, type PillProps } from "./Pill/Pill";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
+export * from "./FormControls";

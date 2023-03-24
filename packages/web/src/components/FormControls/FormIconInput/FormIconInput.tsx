@@ -15,7 +15,7 @@ interface FormIconInputProps {
   disabled?: boolean;
   type?: "icon" | "image";
   label?: string;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 }
 
 function FormIconInputComponent(

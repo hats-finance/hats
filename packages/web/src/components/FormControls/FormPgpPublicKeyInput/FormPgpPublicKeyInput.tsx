@@ -17,7 +17,7 @@ interface FormPgpPublicKeyInputProps {
   value: string;
   notAllowedKeys?: string[];
   onChange: (data: string) => void;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 }
 
 export function FormPgpPublicKeyInputComponent(

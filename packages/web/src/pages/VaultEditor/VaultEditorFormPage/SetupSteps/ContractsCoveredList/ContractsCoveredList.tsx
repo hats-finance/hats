@@ -3,7 +3,7 @@ import { useFieldArray, useWatch } from "react-hook-form";
 import { createNewCoveredContract } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { Button } from "components";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 import { IEditedVaultDescription } from "types";
 import { VaultEditorFormContext } from "../../store";

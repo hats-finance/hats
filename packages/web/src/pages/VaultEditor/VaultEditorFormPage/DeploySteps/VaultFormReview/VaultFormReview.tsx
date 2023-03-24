@@ -5,7 +5,7 @@ import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
 import { IEditedVaultDescription } from "types";
 import { editedFormToDescription } from "@hats-finance/shared";
 import { StyledVaultFormReview } from "./styles";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useCallback } from "react";
 import { VaultEmailsForm } from "../../SetupSteps/shared/VaultEmailsList/VaultEmailsList";
 

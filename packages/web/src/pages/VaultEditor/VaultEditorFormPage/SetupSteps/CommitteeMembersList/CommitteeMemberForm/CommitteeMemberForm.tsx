@@ -3,11 +3,10 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { getSafeDashboardLink } from "@hats-finance/shared";
 import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button, WithTooltip } from "components";
-import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
 import { IEditedVaultDescription } from "types";
 import { StyledCommitteeMemberForm } from "./styles";
-import { getPath } from "utils/objects.utils";
 import { VaultEditorFormContext } from "../../../store";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -128,13 +127,13 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
                   key={pgpKey.id}
                   control={control}
                   name={`committee.members.${index}.pgp-keys.${pgpKeyIndex}.publicKey`}
-                  render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
+                  render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
                     <div className="pgp-keys__item">
                       <FormPgpPublicKeyInput
                         noMargin
                         disabled={allFormDisabled}
                         isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                        error={getPath(errors, field.name)}
+                        error={error}
                         notAllowedKeys={getAlreadyAddedPgpKeys(field.value)}
                         colorable
                         {...field}

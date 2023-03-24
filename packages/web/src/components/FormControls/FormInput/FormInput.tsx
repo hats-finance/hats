@@ -24,7 +24,7 @@ type FormInputProps = {
   isDirty?: boolean;
   noMargin?: boolean;
   prefixIcon?: JSX.Element;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 

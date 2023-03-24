@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
 import { appChains } from "settings";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
-import { getPath } from "utils/objects.utils";
+import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
 import { VaultEditorFormContext } from "../../store";
 import { StyledCommitteeDetailsForm } from "./styles";
 
@@ -43,11 +42,11 @@ export function CommitteeDetailsForm() {
         <Controller
           control={control}
           name={`committee.chainId`}
-          render={({ field, formState: { errors, dirtyFields, defaultValues } }) => {
+          render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => {
             return (
               <FormSelectInput
                 isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                error={getPath(errors, field.name)}
+                error={error}
                 label={t("VaultEditor.vault-details.chain")}
                 placeholder={t("VaultEditor.vault-details.chain-placeholder")}
                 colorable

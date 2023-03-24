@@ -4,7 +4,7 @@ import { useAccount, useNetwork } from "wagmi";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { FormInput, FormSelectInput } from "components";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { appChains } from "settings";
 import { StyledVaultAssetForm } from "./styles";
 import { getTokenInfo } from "utils/tokens.utils";
