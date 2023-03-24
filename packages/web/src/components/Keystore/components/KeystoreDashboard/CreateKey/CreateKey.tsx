@@ -20,6 +20,7 @@ type CreateKeyProps = {
 };
 
 type ICreateKeyForm = {
+  advancedMode: boolean;
   alias: string;
   passphrase?: string;
   name?: string;
@@ -30,7 +31,6 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
   const { t } = useTranslation();
   const { keystore, setKeystore } = useKeystore();
 
-  const [advancedMode, setAdvancedMode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
@@ -46,6 +46,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
   });
 
   useEffect(() => setFocus("alias"), [setFocus]);
+  const advancedMode = useWatch({ control, name: "advancedMode" });
 
   const formChanged = useWatch({ control });
   useEffect(() => setError(undefined), [formChanged]);
@@ -68,7 +69,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
       const newKeyToAdd: IStoredKey = {
         id: uuid(),
         alias: cleanData.alias,
-        passphrase: cleanData.passphrase,
+        passphrase: cleanData.advancedMode ? cleanData.passphrase : undefined,
         privateKey,
         publicKey,
         createdAt: new Date(),
@@ -89,7 +90,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
       type: "rsa",
       rsaBits: 2048,
       userIDs: { name: data.name, email: data.email },
-      passphrase: data.passphrase,
+      passphrase: data.advancedMode ? data.passphrase : undefined,
       format: "armored",
     });
 
@@ -108,14 +109,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
     >
       <StyledBaseKeystoreContainer>
         <AdvancedModeContainer>
-          <FormInput
-            name="advancedMode"
-            value={`${advancedMode}`}
-            onChange={(e) => setAdvancedMode(e.target.checked)}
-            type="checkbox"
-            label={t("advanced")}
-            noMargin
-          />
+          <FormInput {...register("advancedMode")} type="checkbox" label={t("advanced")} noMargin />
         </AdvancedModeContainer>
 
         <p className="mb-4">{t("PGPTool.createNewKeyPairDescription")}</p>
