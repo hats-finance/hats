@@ -1,13 +1,32 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
 import { createMessage, decrypt, encrypt, readMessage } from "openpgp";
 import { Button, FormInput } from "components";
+import { useEnhancedForm } from "hooks/form";
+import { getDecryptMessageSchema } from "./formSchema";
 import { StyledDecrypt } from "./styles";
+
+type IDecryptMessageForm = {
+  encryptedMessage: string;
+  decryptedMessage: string;
+};
 
 export default function Decrypt() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    setFocus,
+    formState: { isValid },
+  } = useEnhancedForm<IDecryptMessageForm>({
+    resolver: yupResolver(getDecryptMessageSchema(t)),
+    mode: "onChange",
+  });
 
   const [encryptedMessage, setEncryptedMessage] = useState<string | undefined>();
   const [decryptedMessage, setDecryptedMessage] = useState<string | undefined>();
@@ -96,16 +115,17 @@ export default function Decrypt() {
   // const areActionsBlocked = !keystoreContext.isCreated || keystoreContext.isLocked || !keystoreContext.selectedKey;
 
   return (
-    <StyledDecrypt>
+    <StyledDecrypt className="content-wrapper-md">
       <h2 className="title">{t("CommitteeTools.Decrypt.decrypt-tool")}</h2>
       <p className="description">{t("CommitteeTools.Decrypt.decrypt-description")}</p>
 
       <div className="textbox-container mt-4">
         <FormInput
+          {...register("encryptedMessage")}
           type="textarea"
-          value={encryptedMessage}
           label={t("encryptedMessage")}
           placeholder={t("enterMessageToDecrypt")}
+          rows={14}
           // error={error ? { message: error, type: "error" } : undefined}
         />
         {/* <Button disabled={areActionsBlocked} onClick={_decrypt}>
@@ -115,10 +135,11 @@ export default function Decrypt() {
 
       <div className="textbox-container mt-4">
         <FormInput
+          {...register("decryptedMessage")}
           type="textarea"
-          value={decryptedMessage}
           label={t("decryptedMessage")}
           placeholder={t("hereYouWillSeeDecryptedMessage")}
+          rows={14}
           // error={error ? { message: error, type: "error" } : undefined}
         />
         {/* <Button disabled={areActionsBlocked} onClick={_encrypt}>
