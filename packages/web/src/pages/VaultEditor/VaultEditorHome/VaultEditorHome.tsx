@@ -22,7 +22,6 @@ export const VaultEditorHome = () => {
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
   const populateVaultsOptions = useCallback(() => {
-    console.log(vaults);
     if (!address || !vaults) return setVaultsOptions([]);
     const userVaults = [] as IVault[];
 
