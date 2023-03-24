@@ -73,6 +73,7 @@ export const DecryptTool = () => {
       // If we get here, it means that we couldn't decrypt the message
       setErrorDecrypting(true);
       setDecryptedWith(undefined);
+      setValue("decryptedMessage", "");
     },
     [getValues, setValue, keystore]
   );
