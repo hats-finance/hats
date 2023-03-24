@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, CollapsableTextContent, FormInput, Modal } from "components";
-import { getPath } from "utils/objects.utils";
+import { useEnhancedForm } from "hooks/form";
 import { getSelectPublicKeySchema } from "./formSchema";
 import { KeystoreDashboard } from "../KeystoreDashboard/KeystoreDashboard";
 import { StyledBaseKeystoreContainer } from "../../styles";
@@ -28,8 +27,8 @@ export const SelectPublicKey = ({ initKeystore, onClose, onPublicKeySelected }: 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
-  } = useForm<ISelectPublicKeyForm>({
+    formState: { isValid },
+  } = useEnhancedForm<ISelectPublicKeyForm>({
     resolver: yupResolver(getSelectPublicKeySchema(t)),
     mode: "onChange",
   });
@@ -87,7 +86,6 @@ export const SelectPublicKey = ({ initKeystore, onClose, onPublicKeySelected }: 
                       colorable
                       placeholder={t("PGPTool.publicKeyPlaceholder")}
                       label={t("PGPTool.publicKey")}
-                      error={getPath(errors, "publicKey")}
                     />
 
                     <Button disabled={!isValid} type="submit" expanded>

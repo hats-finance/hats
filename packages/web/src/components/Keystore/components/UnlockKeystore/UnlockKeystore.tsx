@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useEnhancedForm } from "hooks/form";
 import { Button, FormInput, Modal } from "components";
-import { getPath } from "utils/objects.utils";
 import { getUnlockKeystoreSchema } from "./formSchema";
 import { StyledBaseKeystoreContainer } from "../../styles";
 
@@ -25,8 +25,8 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
     register,
     handleSubmit,
     setFocus,
-    formState: { errors, isValid },
-  } = useForm<IUnlockKeystoreForm>({
+    formState: { isValid },
+  } = useEnhancedForm<IUnlockKeystoreForm>({
     resolver: yupResolver(getUnlockKeystoreSchema(t)),
     mode: "onChange",
   });
@@ -58,7 +58,6 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
             placeholder={t("PGPTool.enterYourPgpToolPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
-            error={getPath(errors, "password")}
           />
 
           <p className="error mb-2">{error}</p>

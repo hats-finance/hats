@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormInput, Modal } from "components";
-import { getPath } from "utils/objects.utils";
+import { useEnhancedForm } from "hooks/form";
 import { getCreateKeystoreSchema } from "./formSchema";
 import { StyledBaseKeystoreContainer } from "../../styles";
 
@@ -24,8 +23,8 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
     register,
     handleSubmit,
     setFocus,
-    formState: { errors, isValid },
-  } = useForm<ICreateKeystoreForm>({
+    formState: { isValid },
+  } = useEnhancedForm<ICreateKeystoreForm>({
     resolver: yupResolver(getCreateKeystoreSchema(t)),
     mode: "onChange",
   });
@@ -48,7 +47,6 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
             placeholder={t("PGPTool.createStrongPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
-            error={getPath(errors, "password")}
           />
           <FormInput
             {...register("confirmPassword")}
@@ -56,7 +54,6 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
             placeholder={t("PGPTool.confirmPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
-            error={getPath(errors, "confirmPassword")}
           />
 
           <Button disabled={!isValid} type="submit" expanded>

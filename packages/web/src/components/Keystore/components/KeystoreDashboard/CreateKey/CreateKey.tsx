@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { generateKey } from "openpgp";
 import { v4 as uuid } from "uuid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { getPath, removeEmpty } from "utils/objects.utils";
+import { useEnhancedForm } from "hooks/form";
+import { removeEmpty } from "utils/objects.utils";
 import { Button, FormInput, Modal } from "components";
 import { AdvancedModeContainer } from "./styles";
 import { getCreateKeySchema } from "./formSchema";
@@ -38,8 +39,8 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
     register,
     handleSubmit,
     setFocus,
-    formState: { errors, isValid },
-  } = useForm<ICreateKeyForm>({
+    formState: { isValid },
+  } = useEnhancedForm<ICreateKeyForm>({
     resolver: yupResolver(getCreateKeySchema(t)),
     mode: "onChange",
   });
@@ -126,7 +127,6 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
             label={`${t("PGPTool.keyNameAlias")}*`}
             placeholder={t("PGPTool.keyNameAliasPlaceholder")}
             colorable
-            error={getPath(errors, "alias")}
           />
 
           {advancedMode && (
@@ -137,21 +137,18 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
                 label={t("PGPTool.passphrase")}
                 placeholder={`${t("PGPTool.passphrasePlaceholder")} (${t("optional").toLowerCase()})`}
                 colorable
-                error={getPath(errors, "passphrase")}
               />
               <FormInput
                 {...register("name")}
                 label={t("PGPTool.name")}
                 placeholder={`${t("PGPTool.namePlaceholder")} (${t("optional").toLowerCase()})`}
                 colorable
-                error={getPath(errors, "name")}
               />
               <FormInput
                 {...register("email")}
                 label={t("PGPTool.email")}
                 placeholder={`${t("PGPTool.emailPlaceholder")} (${t("optional").toLowerCase()})`}
                 colorable
-                error={getPath(errors, "email")}
               />
             </>
           )}

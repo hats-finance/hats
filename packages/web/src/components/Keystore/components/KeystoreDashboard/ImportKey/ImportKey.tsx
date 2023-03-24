@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useWatch } from "react-hook-form";
 import { readPrivateKey } from "openpgp";
 import { v4 as uuid } from "uuid";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { getPath, removeEmpty } from "utils/objects.utils";
+import { useEnhancedForm } from "hooks/form";
+import { removeEmpty } from "utils/objects.utils";
 import { Button, FormInput, Modal } from "components";
 import { getImportKeySchema } from "./formSchema";
 import { useKeystore } from "../../../KeystoreProvider";
@@ -38,8 +39,8 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
     handleSubmit,
     setFocus,
     setValue,
-    formState: { errors, isValid },
-  } = useForm<IImportKeyForm>({
+    formState: { isValid },
+  } = useEnhancedForm<IImportKeyForm>({
     resolver: yupResolver(getImportKeySchema(t)),
     mode: "onChange",
   });
@@ -123,7 +124,6 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
             label={t("PGPTool.keyNameAlias")}
             placeholder={t("PGPTool.keyNameAliasPlaceholder")}
             colorable
-            error={getPath(errors, "alias")}
           />
 
           <FormInput
@@ -132,7 +132,6 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
             placeholder={t("PGPTool.privateKeyPlaceholder")}
             colorable
             type="textarea"
-            error={getPath(errors, "privateKey")}
           />
 
           {needPassphrase && (
@@ -144,7 +143,6 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
                 label={t("PGPTool.passphrase")}
                 placeholder={t("PGPTool.passphrasePlaceholder")}
                 colorable
-                error={getPath(errors, "passphrase")}
               />
             </>
           )}
