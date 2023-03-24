@@ -1,13 +1,24 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledPgpKeyCard = styled.div<{ noSelectable: boolean; viewOnly: boolean; selected: boolean }>(
-  ({ noSelectable, viewOnly, selected }) => css`
-    width: 100%;
+export const StyledPgpKeyCard = styled.div<{
+  noSelectable: boolean;
+  viewOnly: boolean;
+  selected: boolean;
+  expanded: boolean;
+  smallPadding: boolean;
+}>(
+  ({ noSelectable, viewOnly, selected, expanded, smallPadding }) => css`
+    width: ${expanded ? "100%" : "fit-content"};
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: ${getSpacing(2.5)} ${getSpacing(2)} ${getSpacing(2.5)} ${getSpacing(3)};
+
+    ${smallPadding &&
+    css`
+      padding: ${getSpacing(1.5)} ${getSpacing(2)} ${getSpacing(1.5)} ${getSpacing(2.5)};
+    `}
 
     ${!noSelectable &&
     css`
@@ -47,6 +58,7 @@ export const StyledPgpKeyCard = styled.div<{ noSelectable: boolean; viewOnly: bo
       align-items: center;
       font-size: ${getSpacing(3.2)};
       gap: ${getSpacing(1)};
+      padding-left: ${getSpacing(4)};
 
       .icon {
         cursor: pointer;

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { decrypt, readMessage } from "openpgp";
 import { getPath } from "utils/objects.utils";
 import { Alert, Button, FormInput } from "components";
-import { useKeystore, readPrivateKeyFromStoredKey } from "components/Keystore";
+import { useKeystore, readPrivateKeyFromStoredKey, IStoredKey, PgpKeyCard } from "components/Keystore";
 import { useEnhancedForm } from "hooks/form";
 import { getDecryptMessageSchema } from "./formSchema";
 import { WelcomeCommittee } from "../WelcomeCommittee/WelcomeCommittee";
@@ -25,6 +25,7 @@ export const DecryptTool = () => {
 
   const { keystore, openKeystore } = useKeystore();
   const [errorDecrypting, setErrorDecrypting] = useState(false);
+  const [decryptedWith, setDecryptedWith] = useState<IStoredKey | undefined>();
   console.log(keystore);
 
   const {
@@ -62,6 +63,7 @@ export const DecryptTool = () => {
           });
 
           setValue("decryptedMessage", decrypted as string);
+          setDecryptedWith(keypair);
           return;
         } catch (error) {
           continue;
@@ -70,6 +72,7 @@ export const DecryptTool = () => {
 
       // If we get here, it means that we couldn't decrypt the message
       setErrorDecrypting(true);
+      setDecryptedWith(undefined);
     },
     [getValues, setValue, keystore]
   );
@@ -78,6 +81,7 @@ export const DecryptTool = () => {
   useEffect(() => {
     setValue("decryptedMessage", "");
     setErrorDecrypting(false);
+    setDecryptedWith(undefined);
   }, [encryptedMessage, setValue]);
 
   // Get encrypted message from IPFS Url
@@ -130,16 +134,22 @@ export const DecryptTool = () => {
             <>
               We couldn't decrypt the message with any of your keys. Please make sure you have the correct key on your
               <Button onClick={() => openKeystore()} styleType="text">
-                keystore
+                keystore.
               </Button>
-              .
             </>
           </Alert>
         )}
       </div>
 
       {decryptedMessage && !getPath(errors, "encryptedMessage") && (
-        <div className="textbox-container mt-4">
+        <div className="textbox-container mt-2">
+          {decryptedWith && (
+            <div className="mb-4">
+              <p className="mb-2">Decrypted with:</p>
+              <PgpKeyCard smallPadding viewOnly pgpKey={decryptedWith} />
+            </div>
+          )}
+
           <FormInput
             {...register("decryptedMessage")}
             readOnly

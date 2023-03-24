@@ -33,7 +33,7 @@ export const KeyDelete = ({ pgpKey, onClose }: KeyDeleteProps) => {
     >
       <StyledBaseKeystoreContainer>
         <p className="mb-5">{t("PGPTool.deleteKeyDescription")}</p>
-        <PgpKeyCard pgpKey={pgpKey} viewOnly />
+        <PgpKeyCard expanded pgpKey={pgpKey} viewOnly />
 
         <div className="buttons-row mt-5">
           <Button styleType="outlined" expanded onClick={onClose}>
