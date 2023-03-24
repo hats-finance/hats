@@ -74,8 +74,9 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
 
             return (
               <PgpKeyCard
-                onClick={() => onPublicKeySelected && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
                 key={id}
+                expanded
+                onClick={() => onPublicKeySelected && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
                 pgpKey={key}
                 selected={selectedKey && (selectedKey?.id === key.id || selectedKey?.alias === key.alias)}
                 onSelectedDetails={() => {
@@ -90,7 +91,7 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
             );
           })
         ) : (
-          <PgpKeyCard />
+          <PgpKeyCard expanded />
         )}
       </StyledStoredKeys>
     );

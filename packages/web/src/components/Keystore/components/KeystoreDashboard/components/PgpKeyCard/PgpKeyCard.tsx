@@ -17,6 +17,8 @@ type PgpKeyCardProps = {
   onClick?: () => void;
   viewOnly?: boolean;
   selected?: boolean;
+  expanded?: boolean;
+  smallPadding?: boolean;
 };
 
 export const PgpKeyCard = ({
@@ -26,13 +28,22 @@ export const PgpKeyCard = ({
   onClick,
   viewOnly = false,
   selected = false,
+  expanded = false,
+  smallPadding = false,
 }: PgpKeyCardProps) => {
   const { t } = useTranslation();
 
   const id = pgpKey?.id ?? pgpKey?.alias;
 
   return (
-    <StyledPgpKeyCard onClick={onClick} noSelectable={!pgpKey} viewOnly={viewOnly} selected={selected}>
+    <StyledPgpKeyCard
+      smallPadding={smallPadding}
+      expanded={expanded}
+      onClick={onClick}
+      noSelectable={!pgpKey}
+      viewOnly={viewOnly}
+      selected={selected}
+    >
       {pgpKey ? (
         <div className="info">
           <Identicon string={id} size={24} bg="#fff" />
