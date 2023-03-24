@@ -1,6 +1,6 @@
 import * as Yup from "yup";
 import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
-import { readPrivateKey, readKey } from "openpgp";
+import { readMessage, readKey } from "openpgp";
 import { isAddress } from "ethers/lib/utils";
 import { appChains } from "settings";
 import { isEmailAddress } from "./emails.utils";
@@ -181,6 +181,28 @@ export const getTestPGPKeyFormat = (intl, type: "public" | "private") => {
       } catch (error) {
         return ctx.createError({
           message: intl(type === "private" ? "private-key-badly-formatted" : "public-key-badly-formatted"),
+        });
+      }
+    },
+  };
+};
+
+export const getTestPGPMessageFormat = (intl) => {
+  return {
+    name: `pgp-message-format`,
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isEmpty = value === "";
+      if (isEmpty || !value) return true;
+
+      try {
+        const timeout = (cb, interval) => () => new Promise<undefined>((resolve) => setTimeout(() => cb(resolve), interval));
+        const onTimeout = timeout((resolve) => resolve(undefined), 200);
+
+        const messageData = await Promise.race([readMessage({ armoredMessage: value }), onTimeout()]);
+        return messageData ? true : ctx.createError({ message: intl("pgp-message-badly-formatted") });
+      } catch (error) {
+        return ctx.createError({
+          message: intl("pgp-message-badly-formatted"),
         });
       }
     },

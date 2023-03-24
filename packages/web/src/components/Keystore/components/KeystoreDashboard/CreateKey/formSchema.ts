@@ -6,7 +6,7 @@ export const getCreateKeySchema = (intl: TFunction) =>
     alias: Yup.string()
       .min(3, intl("min-characters", { min: 3 }))
       .required(intl("required")),
-    passphrase: Yup.string(),
+    passphrase: Yup.string().min(5, intl("min-characters", { min: 5 })),
     name: Yup.string(),
     email: Yup.string(),
   });
