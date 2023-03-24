@@ -5,12 +5,13 @@ import CheckIcon from "@mui/icons-material/Check";
 
 export type AlertProps = {
   type: "warning" | "error" | "success";
-  content: string;
+  content?: string;
+  children?: JSX.Element;
   button?: JSX.Element;
   className?: string;
 };
 
-export const Alert = ({ type, content, button, ...props }: AlertProps) => {
+export const Alert = ({ type, content, children, button, ...props }: AlertProps) => {
   const { t } = useTranslation();
 
   const getAlertIcon = () => {
@@ -39,7 +40,8 @@ export const Alert = ({ type, content, button, ...props }: AlertProps) => {
       <div className="icon-container">
         <div className="icon">{getAlertIcon()}</div> <span>{getAlertTitle()}</span>
       </div>
-      <div className="content" dangerouslySetInnerHTML={{ __html: content }} />
+      {content && <div className="content" dangerouslySetInnerHTML={{ __html: content }} />}
+      {children && <div className="content">{children}</div>}
       {button}
     </StyledAlert>
   );
