@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import { useKeystore } from "components/Keystore";
-import "./index.scss";
 import { StyledWelcomeCommittee } from "./styles";
 
 export const WelcomeCommittee = () => {
