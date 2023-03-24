@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
-import { LocalStorage, SessionStorage } from "constants/constants";
+import { encryptedStorage } from "config/encryptedStorage";
+import { LocalStorage, EncryptedStorage } from "constants/constants";
 import { CreateKeystore, KeystoreDashboard, SelectPublicKey, UnlockKeystore } from "./components";
 import { IKeystoreActions, IKeystoreData, IKeystoreManagerActions } from "./types";
 import { useKeystore } from "./KeystoreProvider";
@@ -60,16 +61,16 @@ export const KeystoreManager = ({
       if (password && keystore) {
         const encrypted = await encryptor.encrypt(password, keystore);
         localStorage.setItem(LocalStorage.Keystore, encrypted);
-        sessionStorage.setItem(SessionStorage.KeystorePassword, password);
+        encryptedStorage.setItem(EncryptedStorage.KeystorePassword, password);
       }
     };
     saveKeystoreChanges();
   }, [keystore, password]);
 
-  // Check sessionStorage for password
+  // Check encryptedStorage for password
   useEffect(() => {
     const checkSessionStorage = async () => {
-      const passwordOnSessionStorage = sessionStorage.getItem(SessionStorage.KeystorePassword);
+      const passwordOnSessionStorage = encryptedStorage.getItem(EncryptedStorage.KeystorePassword);
 
       if (passwordOnSessionStorage) {
         try {
