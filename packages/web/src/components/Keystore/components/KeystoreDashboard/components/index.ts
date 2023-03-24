@@ -1,1 +1,1 @@
-export { PgpKey } from "./PgpKey/PgpKey";
+export { PgpKeyCard } from "./PgpKeyCard/PgpKeyCard";

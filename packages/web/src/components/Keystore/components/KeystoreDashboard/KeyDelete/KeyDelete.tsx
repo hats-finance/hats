@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button, Modal } from "components";
-import { PgpKey } from "../components";
+import { PgpKeyCard } from "../components";
 import { useKeystore } from "../../../KeystoreProvider";
 import { IStoredKey } from "../../../types";
 import { StyledBaseKeystoreContainer } from "../../../styles";
@@ -33,7 +33,7 @@ export const KeyDelete = ({ pgpKey, onClose }: KeyDeleteProps) => {
     >
       <StyledBaseKeystoreContainer>
         <p className="mb-5">{t("PGPTool.deleteKeyDescription")}</p>
-        <PgpKey pgpKey={pgpKey} viewOnly />
+        <PgpKeyCard pgpKey={pgpKey} viewOnly />
 
         <div className="buttons-row mt-5">
           <Button styleType="outlined" expanded onClick={onClose}>

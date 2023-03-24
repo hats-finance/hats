@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, WithTooltip } from "components";
-import { PgpKey } from "./components";
+import { PgpKeyCard } from "./components";
 import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails, KeyDelete } from ".";
 import { IStoredKey } from "../../types";
 import { StyledBaseKeystoreContainer } from "../../styles";
@@ -73,7 +73,7 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
             const id = key.id ?? key.alias;
 
             return (
-              <PgpKey
+              <PgpKeyCard
                 onClick={() => onPublicKeySelected && (selectedKey === key ? setSelectedKey(undefined) : setSelectedKey(key))}
                 key={id}
                 pgpKey={key}
@@ -90,7 +90,7 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
             );
           })
         ) : (
-          <PgpKey />
+          <PgpKeyCard />
         )}
       </StyledStoredKeys>
     );

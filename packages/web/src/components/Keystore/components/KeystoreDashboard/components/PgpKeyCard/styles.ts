@@ -1,7 +1,7 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledKey = styled.div<{ noSelectable: boolean; viewOnly: boolean; selected: boolean }>(
+export const StyledPgpKeyCard = styled.div<{ noSelectable: boolean; viewOnly: boolean; selected: boolean }>(
   ({ noSelectable, viewOnly, selected }) => css`
     width: 100%;
     display: flex;

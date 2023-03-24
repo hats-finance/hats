@@ -3,14 +3,14 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { WithTooltip } from "components";
 import { IStoredKey } from "../../../../types";
-import { StyledKey } from "./styles";
+import { StyledPgpKeyCard } from "./styles";
 
 import ViewIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
 import CheckIcon from "@mui/icons-material/CheckOutlined";
 
-type PgpKeyProps = {
+type PgpKeyCardProps = {
   pgpKey?: IStoredKey;
   onSelectedDetails?: () => void;
   onSelectedDelete?: () => void;
@@ -19,20 +19,20 @@ type PgpKeyProps = {
   selected?: boolean;
 };
 
-export const PgpKey = ({
+export const PgpKeyCard = ({
   pgpKey,
   onSelectedDetails,
   onSelectedDelete,
   onClick,
   viewOnly = false,
   selected = false,
-}: PgpKeyProps) => {
+}: PgpKeyCardProps) => {
   const { t } = useTranslation();
 
   const id = pgpKey?.id ?? pgpKey?.alias;
 
   return (
-    <StyledKey onClick={onClick} noSelectable={!pgpKey} viewOnly={viewOnly} selected={selected}>
+    <StyledPgpKeyCard onClick={onClick} noSelectable={!pgpKey} viewOnly={viewOnly} selected={selected}>
       {pgpKey ? (
         <div className="info">
           <Identicon string={id} size={24} bg="#fff" />
@@ -69,6 +69,6 @@ export const PgpKey = ({
           )}
         </div>
       )}
-    </StyledKey>
+    </StyledPgpKeyCard>
   );
 };
