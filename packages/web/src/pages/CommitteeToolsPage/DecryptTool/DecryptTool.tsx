@@ -26,7 +26,6 @@ export const DecryptTool = () => {
   const { keystore, openKeystore } = useKeystore();
   const [errorDecrypting, setErrorDecrypting] = useState(false);
   const [decryptedWith, setDecryptedWith] = useState<IStoredKey | undefined>();
-  console.log(keystore);
 
   const {
     control,
