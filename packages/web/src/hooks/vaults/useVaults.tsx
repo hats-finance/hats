@@ -14,6 +14,7 @@ import { fixObject } from "@hats-finance/shared";
 
 interface IVaultsContext {
   vaults?: IVault[];
+  allVaults?: IVault[]; // Vaults without dates filtering
   tokenPrices?: number[];
   masters?: IMaster[];
   userNfts?: IUserNft[];
@@ -206,6 +207,7 @@ export function VaultsProvider({ children }) {
 
   const context: IVaultsContext = {
     vaults,
+    allVaults,
     userNfts,
     tokenPrices,
     masters: data?.masters,
