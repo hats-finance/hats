@@ -90,7 +90,6 @@ export function VaultFormReview() {
       hackerHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange}00`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
-      maxBounty: "",
       depositPause: false,
       committeeCheckedIn: true,
       approvedClaims: [],
@@ -109,7 +108,7 @@ export function VaultFormReview() {
         ...bothVersionsVault,
         version: "v2",
         description: description as IVaultDescriptionV2,
-        maxBounty: "",
+        maxBounty: `${editedVaultDescriptionForm.parameters.maxBountyPercentage}00`,
         rewardControllers: [],
       };
     }
