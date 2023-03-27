@@ -690,7 +690,7 @@
         "maxBountyPercentage": "Maximum bounty (10%-90%)",
         "maxBountyPercentage-placeholder": "Maximum bounty (10%-90%)"
       },
-      "img-placeholder": "SVG/PNG \n Max(2MB)",
+      "img-placeholder": "SVG/PNG/JPG \n Max(50KB)",
       "icon-placeholder": "SVG \n Max(50KB)"
     },
     "Vault": {
