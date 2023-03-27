@@ -19,8 +19,8 @@ export const DepositStatusCard = () => {
   const { vaultData, vaultAddress, vaultChainId, refreshVaultData } = useContext(VaultStatusContext);
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
-  const { vaults } = useVaults();
-  const selectedVault = vaultAddress ? vaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase()) : undefined;
+  const { allVaults } = useVaults();
+  const selectedVault = vaultAddress ? allVaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase()) : undefined;
 
   const vaultBalance = new Amount(BigNumber.from(vaultData.depositedAmount), vaultData.tokenDecimals).number;
   const isVaultDeposited = vaultData.depositedAmount.gt(0);

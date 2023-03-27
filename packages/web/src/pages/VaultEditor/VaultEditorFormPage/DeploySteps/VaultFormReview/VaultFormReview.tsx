@@ -96,8 +96,6 @@ export function VaultFormReview() {
       stakers: [],
     };
 
-    console.log(bothVersionsVault);
-
     if (editedVaultDescriptionForm.version === "v1") {
       return {
         ...bothVersionsVault,

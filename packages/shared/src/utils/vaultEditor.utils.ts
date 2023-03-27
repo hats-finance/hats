@@ -315,7 +315,8 @@ export function editedFormToCreateVaultOnChainCall(
       .toLowerCase()
       .replace(/ /g, "-")
       .replace(/[^\w-]+/g, "");
-  const formatPercentage = (percentage: number) => +(percentage.toString().split(".")[0] + "00");
+
+  const formatPercentage = (percentage: number) => Number(percentage) * 100;
 
   const { maxBountyPercentage, immediatePercentage, vestedPercentage, committeePercentage } = editedVaultDescription.parameters;
 
