@@ -82,20 +82,21 @@ export function VaultFormReview() {
       registered: true,
       withdrawRequests: [],
       totalUsersShares: "",
-      hackerVestedRewardSplit: `${editedVaultDescriptionForm.parameters.vestedPercentage}00`,
-      hackerRewardSplit: `${editedVaultDescriptionForm.parameters.immediatePercentage}00`,
-      committeeRewardSplit: `${editedVaultDescriptionForm.parameters.committeePercentage}00`,
+      hackerVestedRewardSplit: `${editedVaultDescriptionForm.parameters.vestedPercentage * 100}`,
+      hackerRewardSplit: `${editedVaultDescriptionForm.parameters.immediatePercentage * 100}`,
+      committeeRewardSplit: `${editedVaultDescriptionForm.parameters.committeePercentage * 100}`,
       swapAndBurnSplit: "0",
-      governanceHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange}00`,
-      hackerHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange}00`,
+      governanceHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange * 100}`,
+      hackerHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange * 100}`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
-      maxBounty: "",
       depositPause: false,
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
     };
+
+    console.log(bothVersionsVault);
 
     if (editedVaultDescriptionForm.version === "v1") {
       return {
@@ -109,7 +110,7 @@ export function VaultFormReview() {
         ...bothVersionsVault,
         version: "v2",
         description: description as IVaultDescriptionV2,
-        maxBounty: "",
+        maxBounty: `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
         rewardControllers: [],
       };
     }
