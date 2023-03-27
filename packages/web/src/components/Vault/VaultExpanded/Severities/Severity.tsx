@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BigNumber, ethers } from "ethers";
-import { useSelector } from "react-redux";
-import { ScreenSize } from "constants/constants";
 import humanizeDuration from "humanize-duration";
 import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
@@ -36,7 +34,7 @@ export default function Severity(props: IProps) {
     master,
     version,
   } = props.vault;
-  const { severityIndex, severity, expanded, expandedSeverityIndex, preview } = props;
+  const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
 
   const { isShowing: isShowingNFTModal, show: showNFTModal, hide: hideNFTModal } = useModal();
   const { isShowing: isShowingContractsModal, show: showContractsModal, hide: hideContractsModal } = useModal();
