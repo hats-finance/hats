@@ -151,7 +151,6 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
-      console.log(`EditSession: `, editSessionResponse);
 
       if (editSessionResponse.vaultAddress) {
         if (editSessionResponse.editingExistingVault) {
