@@ -9,7 +9,7 @@ import { useVaults } from "hooks/vaults/useVaults";
 import { StyledVaultEditorHome } from "./styles";
 import { VaultReadyModal } from "./VaultReadyModal";
 
-export const VaultEditorHome = () => {
+export const VaultEditorHomePage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

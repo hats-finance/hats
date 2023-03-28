@@ -1,7 +1,7 @@
 import { Navigate, RouteObject } from "react-router-dom";
 import { RoutePaths } from "navigation";
 // Pages components
-import { VaultEditorHome } from "./VaultEditorHome/VaultEditorHome";
+import { VaultEditorHomePage } from "./VaultEditorHomePage/VaultEditorHomePage";
 import { VaultEditorFormPage } from "./VaultEditorFormPage/VaultEditorFormPage";
 import { VaultStatusPage } from "./VaultStatusPage/VaultStatusPage";
 
@@ -10,7 +10,7 @@ export const vaultEditorRouter = (): RouteObject => ({
   children: [
     {
       path: "",
-      element: <VaultEditorHome />,
+      element: <VaultEditorHomePage />,
     },
     {
       path: ":editSessionId",
