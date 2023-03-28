@@ -40,8 +40,8 @@ export const Alert = ({ type, content, children, button, ...props }: AlertProps)
       <div className="icon-container">
         <div className="icon">{getAlertIcon()}</div> <span>{getAlertTitle()}</span>
       </div>
-      {content && <div className="content" dangerouslySetInnerHTML={{ __html: content }} />}
-      {children && <div className="content">{children}</div>}
+      {content && <div className="alert-content" dangerouslySetInnerHTML={{ __html: content }} />}
+      {children && <div className="alert-content">{children}</div>}
       {button}
     </StyledAlert>
   );

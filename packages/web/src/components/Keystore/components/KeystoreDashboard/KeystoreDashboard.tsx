@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Modal, WithTooltip } from "components";
 import { PgpKeyCard } from "./components";
@@ -33,6 +33,10 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
     setActiveAction(undefined);
     setSelectedKey(undefined);
   };
+
+  useEffect(() => {
+    if (!keystore?.isBackedUp) setActiveAction("create_backup");
+  }, [keystore?.isBackedUp]);
 
   const _getActions = (): JSX.Element => {
     return (

@@ -17,7 +17,11 @@ export const KeyDelete = ({ pgpKey, onClose }: KeyDeleteProps) => {
   const { setKeystore } = useKeystore();
 
   const handleDeleteKey = () => {
-    setKeystore((prev) => ({ ...prev, storedKeys: [...prev!.storedKeys.filter((key) => key.id !== pgpKey.id)] }));
+    setKeystore((prev) => ({
+      ...prev,
+      storedKeys: [...prev!.storedKeys.filter((key) => key.id !== pgpKey.id)],
+      isBackedUp: false,
+    }));
     onClose();
   };
 
