@@ -99,6 +99,8 @@
     ]
   },
   "dependencies": {
+    "encrypt-storage": "^2.12.15",
+    "react-identicons": "^1.2.5",
     "siwe": "^1.1.6"
   }
 }

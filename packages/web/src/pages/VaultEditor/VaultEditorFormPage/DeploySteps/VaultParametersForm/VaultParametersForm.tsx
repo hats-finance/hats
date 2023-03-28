@@ -8,7 +8,7 @@ import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { Button, FormInput } from "components";
 import { appChains } from "settings";
 import { toFixedIfNecessary } from "utils/amounts.utils";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useVaults } from "hooks/vaults/useVaults";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 import { getEditedDescriptionYupSchema } from "../../formSchema";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { BigNumber, ethers } from "ethers";
+import { useTranslation } from "react-i18next";
 import humanizeDuration from "humanize-duration";
 import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
@@ -34,6 +35,7 @@ export default function Severity(props: IProps) {
     master,
     version,
   } = props.vault;
+  const { t } = useTranslation();
   const { severityIndex, severity, expanded, expandedSeverityIndex } = props;
 
   const { isShowing: isShowingNFTModal, show: showNFTModal, hide: hideNFTModal } = useModal();
@@ -62,40 +64,40 @@ export default function Severity(props: IProps) {
       ? master.defaultHackerHatRewardSplit
       : hackerHatRewardSplit;
 
-    // In v2 vaults the split sum (inmediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
+    // In v2 vaults the split sum (immediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
     // In v1 this is not a probem. So the factor is 1.
     const splitFactor = version === "v1" ? 1 : (10000 - Number(governanceSplit) - Number(hackerHatsSplit)) / 100 / 100;
 
     return [
       {
-        // Inmediate bounty
-        title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
+        // Immediate bounty
+        title: t("immediateBountyInTokens", { token: stakingTokenSymbol }),
         percentage: (Number(hackerRewardSplit) / 100) * splitFactor,
         amountInUsd: formatNumber((((Number(hackerRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
         className: "token",
       },
       {
         // Vested bounty
-        title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
+        title: t("vestedBountyForDurationInTokens", { duration: bountyVestingDuration, token: stakingTokenSymbol }),
         percentage: (Number(hackerVestedRewardSplit) / 100) * splitFactor,
         amountInUsd: formatNumber((((Number(hackerVestedRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
         className: "vested-token",
       },
       {
-        // Committee fee
-        title: `Committee fee`,
+        // Committee fe
+        title: t("committeeFee"),
         percentage: (Number(committeeRewardSplit) / 100) * splitFactor,
         amountInUsd: formatNumber((((Number(committeeRewardSplit) / 100) * splitFactor) / 100) * rewardPrice),
         className: "committee",
       },
       {
-        title: `Vested HATS reward for ${rewardVestingDuration} (Hacker reward) pending start of TGE`,
+        title: t("vestedHatsForDuration", { duration: rewardVestingDuration }),
         percentage: Number(hackerHatsSplit) / 100,
         amountInUsd: formatNumber((((Number(hackerHatsSplit) / 100) * splitFactor) / 100) * rewardPrice),
         className: "vested-hats",
       },
       {
-        title: `Hats governance fee`,
+        title: t("hatsGovFee"),
         percentage: Number(governanceSplit) / 100,
         amountInUsd: formatNumber((((Number(governanceSplit) / 100) * splitFactor) / 100) * rewardPrice),
         className: "governance",
@@ -129,7 +131,9 @@ export default function Severity(props: IProps) {
           <div className="row">
             {severity?.description && (
               <div className="severity-data-item">
-                <span className="vault-expanded-subtitle">{isNormalVault && "Severity "} Description:</span>
+                <span className="vault-expanded-subtitle">
+                  {isNormalVault && "Severity "} {t("description")}:
+                </span>
                 <span style={{ color: "white" }}>{severity.description}</span>
               </div>
             )}
@@ -146,20 +150,20 @@ export default function Severity(props: IProps) {
                   }}
                 >
                   <Media link={ipfsTransformUri(severity?.["nft-metadata"]?.image)} className="nft-image" />
-                  <span className="view-more">View NFT info</span>
+                  <span className="view-more">{t("viewNftInfo")}</span>
                 </div>
               </div>
             )}
             <div className="severity-data-item">
-              <span className="vault-expanded-subtitle">Max Prize:</span>
+              <span className="vault-expanded-subtitle">{t("maxPrize")}:</span>
               <span className="vault-prize">
                 <b style={{ color: "white" }}>{`${rewardPercentage.toFixed(2)}%`}</b>
-                <span className="of-vault-text">&nbsp;of vault&nbsp;</span>
+                <span className="of-vault-text">&nbsp;{t("ofVault")}&nbsp;</span>
                 &#8776; {`$${formatNumber(rewardPrice)}`}&nbsp;
               </span>
               {rewardPrice && (
                 <>
-                  <span className="vault-expanded-subtitle">Prize Content Division:</span>
+                  <span className="vault-expanded-subtitle">{t("prizeContentDivision")}:</span>
                   <div className="severity-prize-division-wrapper">
                     {getPrizeContentDivision().map(
                       (division, index) =>
@@ -179,7 +183,7 @@ export default function Severity(props: IProps) {
                   showContractsModal();
                 }}
               >
-                View Contracts Covered
+                {t("viewContractsCovered")}
               </span>
             </div>
           </div>

@@ -117,6 +117,12 @@ export const GlobalStyle = createGlobalStyle`
         white-space: pre-line;
         margin: 0 auto;
     }
+    
+    .content-wrapper-sm {
+        max-width: var(--element-max-width-sm);
+        white-space: pre-line;
+        margin: 0 auto;
+    }
 
     .seperator {
         height: 1px;

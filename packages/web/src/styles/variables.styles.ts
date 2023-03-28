@@ -9,6 +9,7 @@ export const variables = css`
     --modal-element-padding-mobile: 20px;
     --element-max-width: 1220px;
     --element-max-width-md: 900px;
+    --element-max-width-sm: 540px;
     --header-button-hight: 56px;
     --notifications-container-z-index: 20000;
     --nft-card-z-index: 9999;
@@ -54,7 +55,7 @@ export const variables = css`
 
     --background-clear-blue: #161b2f;
     --background-clearer-blue: #212639;
-    --grey-400: #b3b9c4;
+    --grey-400: #d0d5dd;
     --grey-500: #667085;
     --grey-600: #424751;
     --grey-700: #343841;

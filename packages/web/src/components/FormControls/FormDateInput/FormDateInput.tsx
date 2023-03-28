@@ -11,7 +11,7 @@ type FormDateInputProps = {
   disabled?: boolean;
   withTime?: boolean;
   isDirty?: boolean | boolean[];
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
   onChange: (data: number) => void;
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 

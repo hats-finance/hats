@@ -1,13 +1,14 @@
-import { ChangeEvent, forwardRef, KeyboardEvent, useRef } from "react";
+import { ChangeEvent, forwardRef, KeyboardEvent, useRef, useState } from "react";
 import PasteIcon from "assets/icons/paste.icon.svg";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
 import { StyledFormInput } from "./styles";
 import { parseIsDirty } from "../utils";
+import EyeIcon from "@mui/icons-material/VisibilityOutlined";
 
 const DEFAULT_ROWS = 10;
 
-export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "checkbox" | "radio";
+export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "checkbox" | "radio" | "password";
 
 type FormInputProps = {
   type?: FormInputType;
@@ -23,7 +24,7 @@ type FormInputProps = {
   isDirty?: boolean;
   noMargin?: boolean;
   prefixIcon?: JSX.Element;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
 
@@ -47,13 +48,15 @@ function FormInputComponent(
   }: FormInputProps,
   ref
 ) {
+  const [inputType, setInputType] = useState<FormInputType>(type);
+
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
-  const extraIcons = pastable || copyable || removable;
+  const extraIcons = pastable || copyable || removable || type === "password";
 
-  const areAvailableExtraIcons = type === "text" || type === "textarea";
-  const isCheckOrRadio = type === "checkbox" || type === "radio";
+  const areAvailableExtraIcons = inputType === "text" || inputType === "textarea" || inputType === "password";
+  const isCheckOrRadio = inputType === "checkbox" || inputType === "radio";
 
-  const isChecked = type === "checkbox" || type === "radio" ? (localRef.current as any)?.checked : undefined;
+  const isChecked = inputType === "checkbox" || inputType === "radio" ? (localRef.current as any)?.checked : undefined;
 
   const handleOnChange = (e: ChangeEvent<any>) => {
     if (props.onChange) props.onChange(e);
@@ -72,7 +75,7 @@ function FormInputComponent(
   };
 
   const removeNotNumber = (e: KeyboardEvent) => {
-    const notAllowedKeys = type === "number" ? ["e", "+", "-"] : ["e", "+", "-", ".", ","];
+    const notAllowedKeys = inputType === "number" ? ["e", "+", "-"] : ["e", "+", "-", ".", ","];
     if (notAllowedKeys.includes(e.key)) {
       e.preventDefault();
       e.stopPropagation();
@@ -86,23 +89,21 @@ function FormInputComponent(
       localRef.current = r;
     };
 
-    if (type === "text") {
-      return <input {...props} disabled={disabled} id={props.name} type="text" ref={setRef} onChange={handleOnChange} />;
-    } else if (type === "textarea") {
+    if (inputType === "textarea") {
       return <textarea {...props} disabled={disabled} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
-    } else if (type === "number") {
+    } else if (inputType === "number") {
       return (
         <input
           {...props}
           disabled={disabled}
           id={props.name}
-          type={type}
+          type="number"
           ref={setRef}
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
         />
       );
-    } else if (type === "whole-number") {
+    } else if (inputType === "whole-number") {
       return (
         <input
           {...props}
@@ -115,7 +116,7 @@ function FormInputComponent(
         />
       );
     } else {
-      return <input {...props} disabled={disabled} id={props.name} type={type} ref={setRef} onChange={handleOnChange} />;
+      return <input {...props} disabled={disabled} id={props.name} type={inputType} ref={setRef} onChange={handleOnChange} />;
     }
   };
 
@@ -126,7 +127,7 @@ function FormInputComponent(
       isChecked={isChecked}
       noLabel={!label}
       hasError={!!error && colorable}
-      type={type}
+      type={inputType}
       disabled={disabled}
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
@@ -152,6 +153,9 @@ function FormInputComponent(
               {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
               {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
               {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
+              {type === "password" && (
+                <EyeIcon className="icon" onClick={() => setInputType((prev) => (prev === "password" ? "text" : "password"))} />
+              )}
             </div>
           )}
         </div>

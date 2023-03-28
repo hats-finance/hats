@@ -5,8 +5,7 @@ import { Button, FormInput, WithTooltip } from "components";
 import { IEditedCommunicationEmail, IEditedVaultDescription } from "types";
 import { isEmailAddress } from "utils/emails.utils";
 import { VaultEditorFormContext } from "pages/VaultEditor/VaultEditorFormPage/store";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
-import { getPath } from "utils/objects.utils";
+import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
 import * as VaultEditorService from "../../../../../vaultEditorService";
 import { StyledVaultEmail } from "./styles";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -114,13 +113,13 @@ export const VaultEmailForm = ({ index, email, emailsCount, remove }: VaultEmail
     <Controller
       control={control}
       name={`project-metadata.emails.${index}.address`}
-      render={({ field, formState: { dirtyFields, defaultValues, errors } }) => (
+      render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
         <StyledVaultEmail className="emails__item">
           <FormInput
             prefixIcon={email.status === "verified" ? <CheckIcon /> : undefined}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-            error={getPath(errors, field.name)}
-            helper={field.value && email.status === "unverified" ? t("pleaseVerifyYourEmail") : undefined}
+            error={error}
+            helper={field.value && email.status !== "verified" ? t("pleaseVerifyYourEmail") : undefined}
             disabled={email.status === "verified" || email.status === "verifying" || allFormDisabled}
             noMargin
             colorable

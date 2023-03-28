@@ -10,6 +10,7 @@ export const BASE_SERVICE_URL = process.env.REACT_APP_SERVICE_URL ?? (IS_PROD ? 
 export const INFURA_API_KEY = process.env.REACT_APP_INFURA_API_KEY ?? "";
 export const WHEREVER_MAINNET_KEY = process.env.REACT_APP_WHEREVER_MAINNET_KEY;
 export const WHEREVER_GOERLI_KEY = process.env.REACT_APP_WHEREVER_GOERLI_KEY;
+export const ENCRYPTED_STORAGE_KEY = process.env.REACT_APP_ENCRYPTED_STORAGE_KEY ?? "";
 
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];
 

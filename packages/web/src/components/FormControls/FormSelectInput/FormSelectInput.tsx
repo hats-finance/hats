@@ -19,7 +19,7 @@ interface FormSelectInputProps {
   value: string | string[];
   onChange: (data: string | string[]) => void;
   options: FormSelectInputOption[];
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 }
 
 export function FormSelectInputComponent(

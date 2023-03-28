@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useFieldArray } from "react-hook-form";
 import { VaultEmailForm } from "./VaultEmailForm/VaultEmailForm";
-import { useEnhancedFormContext } from "hooks/useEnhancedFormContext";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { Button } from "components";
 import { IEditedVaultDescription } from "types";
 import { getPath } from "utils/objects.utils";

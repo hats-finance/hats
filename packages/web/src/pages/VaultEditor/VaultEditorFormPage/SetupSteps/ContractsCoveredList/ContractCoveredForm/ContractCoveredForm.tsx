@@ -2,8 +2,7 @@ import { useContext, useEffect, useMemo } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, FormSelectInput } from "components";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/useEnhancedFormContext";
-import { getPath } from "utils/objects.utils";
+import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
 import { IEditedVaultDescription } from "types";
 import { StyledContractCoveredForm } from "./styles";
 import { VaultEditorFormContext } from "../../../store";
@@ -50,11 +49,11 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
             <Controller
               control={control}
               name={`contracts-covered.${index}.severities`}
-              render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
+              render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
                 <FormSelectInput
                   disabled={allFormDisabled}
                   isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                  error={getPath(errors, field.name)}
+                  error={error}
                   label={t("VaultEditor.contract-severities")}
                   placeholder={t("VaultEditor.contract-severities-placeholder")}
                   colorable

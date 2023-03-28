@@ -62,36 +62,36 @@ export default function VaultExpanded(props: IProps) {
       ? master.defaultHackerHatRewardSplit
       : hackerHatRewardSplit;
 
-    // In v2 vaults the split sum (inmediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
+    // In v2 vaults the split sum (immediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
     // In v1 this is not a probem. So the factor is 1.
     const splitFactor = version === "v1" ? 1 : (10000 - Number(governanceSplit) - Number(hackerHatsSplit)) / 100 / 100;
 
     return [
       {
-        // Inmediate bounty
-        title: `Inmediate bounty in ${stakingTokenSymbol} tokens`,
+        // Immediate bounty
+        title: t("immediateBountyInTokens", { token: stakingTokenSymbol }),
         value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.token,
       },
       {
         // Vested bounty
-        title: `Vested bounty for ${bountyVestingDuration} in ${stakingTokenSymbol} tokens`,
+        title: t("vestedBountyForDurationInTokens", { duration: bountyVestingDuration, token: stakingTokenSymbol }),
         value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.vestedToken,
       },
       {
         // Committee fee
-        title: `Committee fee`,
+        title: t("committeeFee"),
         value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(0),
         color: PieChartColors.committee,
       },
       {
-        title: `Vested HATS reward for ${rewardVestingDuration} (Hacker reward) pending start of TGE`,
+        title: t("vestedHatsForDuration", { duration: rewardVestingDuration }),
         value: +(Number(hackerHatsSplit) / 100).toFixed(0),
         color: PieChartColors.vestedHats,
       },
       {
-        title: `Hats governance fee`,
+        title: t("hatsGovFee"),
         value: +(Number(governanceSplit) / 100).toFixed(0),
         color: PieChartColors.governance,
       },

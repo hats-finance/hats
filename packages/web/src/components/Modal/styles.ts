@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
-  ({ isShowing, zIndex }) => css`
+export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number; removeAnimation: boolean }>(
+  ({ isShowing, zIndex, removeAnimation }) => css`
     position: fixed;
     z-index: ${1040 + zIndex};
     top: 0;
@@ -15,7 +15,7 @@ export const StyledModal = styled.div<{ isShowing: boolean; zIndex: number }>(
     align-items: center;
     opacity: 0;
     visibility: hidden;
-    transition: 150ms;
+    transition: ${removeAnimation ? "0" : "150ms"};
 
     ${isShowing &&
     css`
@@ -43,6 +43,7 @@ export const ModalContainer = styled.div<{
   withIcon: boolean;
   disableClose: boolean;
   overflowVisible: boolean;
+  pgpKeystoreStyles: boolean;
 }>(
   ({
     withTitleDivider,
@@ -52,12 +53,14 @@ export const ModalContainer = styled.div<{
     disableClose,
     removeTopPadding,
     overflowVisible,
+    pgpKeystoreStyles,
   }) => css`
     position: relative;
-    background: var(--field-blue);
     max-width: calc(100vw - ${getSpacing(6)});
     max-height: calc(100vh - ${getSpacing(6)});
     overflow: ${overflowVisible ? "visible" : "auto"};
+    background: ${pgpKeystoreStyles ? "var(--background-clearer-blue)" : "var(--field-blue)"};
+    border: ${pgpKeystoreStyles ? "1px solid var(--turquoise)" : "none"};
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
       max-width: unset;
@@ -91,6 +94,7 @@ export const ModalContainer = styled.div<{
         align-items: center;
         color: var(--white);
         font-size: var(--small);
+        font-weight: 700;
 
         ${capitalizeTitle &&
         css`
@@ -134,10 +138,6 @@ export const ModalContainer = styled.div<{
       ${!removeHorizontalPadding &&
       css`
         padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(3)};
-
-        @media (max-width: ${breakpointsDefinition.smallMobile}) {
-          padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(3)};
-        }
       `}
 
       ${removeTopPadding &&
