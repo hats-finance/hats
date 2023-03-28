@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
+import { v4 as uuid } from "uuid";
 import { encryptedStorage } from "config/encryptedStorage";
 import { LocalStorage, EncryptedStorage } from "constants/constants";
 import { CreateKeystore, KeystoreDashboard, SelectPublicKey, UnlockKeystore } from "./components";
@@ -78,8 +79,15 @@ export const KeystoreManager = ({
             passwordOnSessionStorage,
             localStorage.getItem(LocalStorage.Keystore)
           );
+
+          // If some key doesn't have an id, add one
+          const decryptedKeystoreWithIds: IKeystoreData = {
+            ...decryptedKeystore,
+            storedKeys: decryptedKeystore.storedKeys.map((key) => ({ ...key, id: key.id ?? uuid() })),
+          };
+
           setPassword(passwordOnSessionStorage);
-          setKeystore(decryptedKeystore);
+          setKeystore(decryptedKeystoreWithIds);
         } catch (error) {
           setPassword(undefined);
           setKeystore(undefined);
@@ -108,9 +116,16 @@ export const KeystoreManager = ({
 
         try {
           const decryptedKeystore: IKeystoreData = await encryptor.decrypt(password, localStorage.getItem(LocalStorage.Keystore));
+
+          // If some key doesn't have an id, add one
+          const decryptedKeystoreWithIds: IKeystoreData = {
+            ...decryptedKeystore,
+            storedKeys: decryptedKeystore.storedKeys.map((key) => ({ ...key, id: key.id ?? uuid() })),
+          };
+
           setPassword(password);
-          setKeystore(decryptedKeystore);
-          resolve(decryptedKeystore);
+          setKeystore(decryptedKeystoreWithIds);
+          resolve(decryptedKeystoreWithIds);
           removeActiveAction("unlock");
         } catch (error) {
           throw error;

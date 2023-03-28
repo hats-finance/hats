@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { v4 as uuid } from "uuid";
 import { Button, FormJSONFileInput, Modal } from "components";
 import { useKeystore } from "../../../KeystoreProvider";
 import { IStoredKey, IKeystoreData } from "../../../types";
@@ -27,7 +28,12 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
       (key) => !keystore?.storedKeys.find((k) => k.privateKey === key.privateKey)
     );
 
-    setKeysToImport(nonExistentAndValidKeysOnBackup);
+    const nonExistentAndValidKeysOnBackupWithIds = nonExistentAndValidKeysOnBackup?.map((key) => ({
+      ...key,
+      id: key.id ?? uuid(),
+    }));
+
+    setKeysToImport(nonExistentAndValidKeysOnBackupWithIds);
   };
 
   const handleRestoreKeystoreBackup = () => {
