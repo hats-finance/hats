@@ -28,6 +28,7 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
       (key) => !keystore?.storedKeys.find((k) => k.privateKey === key.privateKey)
     );
 
+    // If some key doesn't have an id, add one
     const nonExistentAndValidKeysOnBackupWithIds = nonExistentAndValidKeysOnBackup?.map((key) => ({
       ...key,
       id: key.id ?? uuid(),
