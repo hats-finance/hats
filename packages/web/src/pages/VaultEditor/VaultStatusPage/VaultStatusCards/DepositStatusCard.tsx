@@ -71,7 +71,9 @@ export const DepositStatusCard = () => {
             </div>
           </div>
         )}
-        {vaultData.isCommitteeCheckedIn && <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>}
+        {vaultData.isCommitteeCheckedIn && !isVaultDeposited && (
+          <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>
+        )}
         {!vaultData.isCommitteeCheckedIn && <Alert content={t("committeeMustCheckInFirst")} type="warning" />}
         <Button className="status-card__button" disabled={!vaultData.isCommitteeCheckedIn} onClick={showDepositModal}>
           {t("deposit")}
