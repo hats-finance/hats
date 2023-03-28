@@ -14,6 +14,7 @@ export interface IStoredKey {
 
 export interface IKeystoreData {
   storedKeys: IStoredKey[];
+  isBackedUp?: boolean;
 }
 
 export interface IKeystoreContext {

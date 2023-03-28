@@ -35,7 +35,7 @@ export const StyledAlert = styled.div<StyledAlertProps>(
       }
     }
 
-    .content {
+    .alert-content {
       margin-top: ${getSpacing(1.5)};
     }
   `

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Button, CollapsableTextContent, Modal } from "components";
+import { Alert, Button, CollapsableTextContent, Modal } from "components";
 import { LocalStorage } from "constants/constants";
 import { useKeystore } from "../../../KeystoreProvider";
 import { StyledBaseKeystoreContainer } from "../../../styles";
@@ -12,7 +12,7 @@ type CreateBackupProps = {
 export const CreateBackup = ({ onClose }: CreateBackupProps) => {
   const { t } = useTranslation();
 
-  const { keystore } = useKeystore();
+  const { keystore, setKeystore } = useKeystore();
   const validKeystore = !!localStorage.getItem(LocalStorage.Keystore);
 
   const handleDownloadKeystoreBackup = () => {
@@ -26,6 +26,7 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
     link.download = `hatsKeysBackup-${actualTime}.json`;
     link.click();
 
+    setKeystore({ ...decryptedKeystore, isBackedUp: true });
     onClose();
   };
 
@@ -40,6 +41,11 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
       onHide={onClose}
     >
       <StyledBaseKeystoreContainer>
+        {!keystore?.isBackedUp && (
+          <Alert className="mb-3" type="warning">
+            <span>{t("PGPTool.yourKeystoreIsNotBackedUp")}</span>
+          </Alert>
+        )}
         <p className="mb-4">{t("PGPTool.backupDescription")}</p>
 
         <CollapsableTextContent title={t("PGPTool.whyABackup")}>{t("PGPTool.whyABackupExplanation")}</CollapsableTextContent>
