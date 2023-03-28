@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useCallback, useEffect, useRef, useState } from "react";
 import * as encryptor from "browser-passworder";
-import { v4 as uuid } from "uuid";
 import { encryptedStorage } from "config/encryptedStorage";
 import { LocalStorage, EncryptedStorage } from "constants/constants";
 import { CreateKeystore, KeystoreDashboard, SelectPublicKey, UnlockKeystore } from "./components";
 import { IKeystoreActions, IKeystoreData, IKeystoreManagerActions } from "./types";
+import { formatKeyWithId } from "./utils";
 import { useKeystore } from "./KeystoreProvider";
 
 type KeystoreManagerProps = {
@@ -83,7 +83,7 @@ export const KeystoreManager = ({
           // If some key doesn't have an id, add one
           const decryptedKeystoreWithIds: IKeystoreData = {
             ...decryptedKeystore,
-            storedKeys: decryptedKeystore.storedKeys.map((key) => ({ ...key, id: key.id ?? uuid() })),
+            storedKeys: decryptedKeystore.storedKeys.map((key) => formatKeyWithId(key)),
           };
 
           setPassword(passwordOnSessionStorage);
@@ -120,7 +120,7 @@ export const KeystoreManager = ({
           // If some key doesn't have an id, add one
           const decryptedKeystoreWithIds: IKeystoreData = {
             ...decryptedKeystore,
-            storedKeys: decryptedKeystore.storedKeys.map((key) => ({ ...key, id: key.id ?? uuid() })),
+            storedKeys: decryptedKeystore.storedKeys.map((key) => formatKeyWithId(key)),
           };
 
           setPassword(password);

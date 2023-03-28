@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { v4 as uuid } from "uuid";
 import { Button, FormJSONFileInput, Modal } from "components";
 import { useKeystore } from "../../../KeystoreProvider";
 import { IStoredKey, IKeystoreData } from "../../../types";
 import { StyledBaseKeystoreContainer } from "../../../styles";
+import { formatKeyWithId } from "../../../utils";
 import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
 
 type RestoreBackupProps = {
@@ -29,10 +29,7 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
     );
 
     // If some key doesn't have an id, add one
-    const nonExistentAndValidKeysOnBackupWithIds = nonExistentAndValidKeysOnBackup?.map((key) => ({
-      ...key,
-      id: key.id ?? uuid(),
-    }));
+    const nonExistentAndValidKeysOnBackupWithIds = nonExistentAndValidKeysOnBackup?.map((key) => formatKeyWithId(key));
 
     setKeysToImport(nonExistentAndValidKeysOnBackupWithIds);
   };
