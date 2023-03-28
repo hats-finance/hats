@@ -14,7 +14,7 @@ export const VaultEditorHome = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { address } = useAccount();
-  const { vaults } = useVaults();
+  const { allVaults } = useVaults();
 
   const isVaultCreated = !!searchParams.get("vaultReady");
 
@@ -22,10 +22,10 @@ export const VaultEditorHome = () => {
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
   const populateVaultsOptions = useCallback(() => {
-    if (!address || !vaults) return setVaultsOptions([]);
+    if (!address || !allVaults) return setVaultsOptions([]);
     const userVaults = [] as IVault[];
 
-    for (const vault of vaults) {
+    for (const vault of allVaults) {
       const isMultisig = vault.committee === address;
       const isCommitteeMember = vault.description?.committee.members.map((member) => member.address).includes(address);
 
@@ -39,7 +39,7 @@ export const VaultEditorHome = () => {
         icon: vault.description?.["project-metadata"].icon,
       }))
     );
-  }, [address, vaults]);
+  }, [address, allVaults]);
 
   useEffect(() => {
     populateVaultsOptions();
@@ -50,7 +50,7 @@ export const VaultEditorHome = () => {
   };
 
   const goToStatusPage = () => {
-    const selectedVault = vaults?.find((vault) => vault.id === selectedVaultAddress);
+    const selectedVault = allVaults?.find((vault) => vault.id === selectedVaultAddress);
     if (!selectedVault || !selectedVault.chainId) return;
 
     navigate(`${RoutePaths.vault_editor}/status/${selectedVault.chainId}/${selectedVault.id}`);
