@@ -348,7 +348,8 @@
       "whereAreTheKeysStoredExplanation": "• The Keys are stored on your browser local storage. \n\n • Once created, a backup of the keys will available to download.",
       "useKeystoreForSelectCreate": "Use the keystore to select/create/import/upload keys and backup.",
       "dontWantToUseOurKeystore": "Don't want to use our PGP keystore?",
-      "pasteExistingPublicKey": "Paste existing PGP public key"
+      "pasteExistingPublicKey": "Paste existing PGP public key",
+      "yourKeystoreIsNotBackedUp": "Your keystore is not backed up."
     },
     "CommitteeTools": {
       "welcomeTitle": "Welcome to the committee tools",
