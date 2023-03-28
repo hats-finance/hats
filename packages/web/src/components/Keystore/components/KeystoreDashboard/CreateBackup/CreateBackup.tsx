@@ -12,7 +12,7 @@ type CreateBackupProps = {
 export const CreateBackup = ({ onClose }: CreateBackupProps) => {
   const { t } = useTranslation();
 
-  const { keystore } = useKeystore();
+  const { keystore, setKeystore } = useKeystore();
   const validKeystore = !!localStorage.getItem(LocalStorage.Keystore);
 
   const handleDownloadKeystoreBackup = () => {
@@ -26,6 +26,7 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
     link.download = `hatsKeysBackup-${actualTime}.json`;
     link.click();
 
+    setKeystore({ ...decryptedKeystore, isBackedUp: true });
     onClose();
   };
 

@@ -95,7 +95,7 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
         createdAt: new Date(),
       };
 
-      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
+      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys], isBackedUp: false }));
       onClose();
       onImportedSuccess();
     } catch (error) {

@@ -75,7 +75,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
         createdAt: new Date(),
       };
 
-      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys] }));
+      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys], isBackedUp: false }));
       onClose();
       onCreatedSuccess();
     } catch (error) {
