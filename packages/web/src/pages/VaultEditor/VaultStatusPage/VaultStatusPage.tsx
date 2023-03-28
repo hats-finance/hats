@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 import { isAddress } from "utils/addresses.utils";
 import { CopyToClipboard, Loading } from "components";
 import {
@@ -14,8 +15,6 @@ import {
 } from "./VaultStatusCards";
 import * as VaultStatusService from "../vaultEditorService";
 import { checkIfAddressCanEditTheVault, vaultEditorRoleToIntlKey } from "../utils";
-import { VaultEditorAddressRole } from "../types";
-import { IVaultStatusData } from "./types";
 import { StyledVaultStatusPage } from "./styles";
 import { VaultStatusContext } from "./store";
 
@@ -29,7 +28,7 @@ export const VaultStatusPage = () => {
   const { vaultAddress, vaultChainId } = useParams();
 
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
-  const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: VaultEditorAddressRole }>();
+  const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: IAddressRoleInVault }>();
 
   useEffect(() => {
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {

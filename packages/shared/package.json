@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@wagmi/chains": "0.1.9-cjs",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "ethers": "^5.7.2"
   }
 }

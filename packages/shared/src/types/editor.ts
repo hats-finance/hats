@@ -1,4 +1,5 @@
-import { ICommitteeMember, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "./types";
+import { BigNumber } from "ethers";
+import { ICommitteeMember, IVaultDescription, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "./types";
 
 export interface IEditedContractCovered {
   name: string;
@@ -128,4 +129,26 @@ export interface ICreateVaultOnChainCall {
   committee: string;
   isPaused: boolean;
   descriptionHash: string;
+}
+
+export type IAddressRoleInVault = "gov" | "committee" | "committee-multisig" | "none";
+
+export interface IVaultStatusData {
+  descriptionHash: string;
+  description: IVaultDescription | undefined;
+  committeeMulsitigAddress: string;
+  isCommitteeCheckedIn: boolean;
+  isRegistered: boolean;
+  depositedAmount: BigNumber;
+  assetToken: string;
+  tokenDecimals: number;
+  parameters: {
+    bountySplitImmediate: number;
+    bountySplitVested: number;
+    bountySplitCommittee: number;
+    maxBounty: number;
+    committeeControlledSplit: number;
+    hatsGovernanceSplit: number;
+    hatsRewardSplit: number;
+  };
 }

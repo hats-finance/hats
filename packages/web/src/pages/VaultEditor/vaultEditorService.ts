@@ -5,13 +5,13 @@ import {
   IEditedSessionResponse,
   IEditedVaultDescription,
   IVaultDescription,
+  IVaultStatusData,
 } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { IVaultStatusData } from "./VaultStatusPage/types";
 
 /**
  * Gets an edit session data
