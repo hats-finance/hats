@@ -22,7 +22,7 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
 
     if (!keysOnBackup) return setKeysToImport([]);
 
-    const validKeysOnBackup = keysOnBackup?.filter((key) => key.alias && key.privateKey && key.publicKey && key.id);
+    const validKeysOnBackup = keysOnBackup?.filter((key) => key.alias && key.privateKey && key.publicKey);
     const nonExistentAndValidKeysOnBackup = validKeysOnBackup?.filter(
       (key) => !keystore?.storedKeys.find((k) => k.privateKey === key.privateKey)
     );
