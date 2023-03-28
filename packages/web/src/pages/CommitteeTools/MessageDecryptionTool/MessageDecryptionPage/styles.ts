@@ -2,7 +2,7 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 import styled from "styled-components";
 
-export const StyledDecrypt = styled.div`
+export const StyledMessageDecryptionPage = styled.div`
   color: var(--white);
   width: 100%;
   margin-bottom: ${getSpacing(5)};

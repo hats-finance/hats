@@ -1,7 +1,7 @@
 import { getSpacing } from "styles";
 import styled from "styled-components";
 
-export const StyledWelcomeCommittee = styled.div`
+export const StyledMessageDecryptionWelcome = styled.div`
   color: var(--white);
 
   .title {

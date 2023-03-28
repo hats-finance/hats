@@ -9,8 +9,7 @@ import { Alert, Button, FormInput } from "components";
 import { useKeystore, readPrivateKeyFromStoredKey, IStoredKey, PgpKeyCard } from "components/Keystore";
 import { useEnhancedForm } from "hooks/form";
 import { getDecryptMessageSchema } from "./formSchema";
-import { WelcomeCommittee } from "../WelcomeCommittee/WelcomeCommittee";
-import { StyledDecrypt } from "./styles";
+import { StyledMessageDecryptionPage } from "./styles";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";
 
@@ -19,7 +18,7 @@ type IDecryptMessageForm = {
   decryptedMessage: string;
 };
 
-export const DecryptTool = () => {
+export const MessageDecryptionPage = () => {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
 
@@ -100,10 +99,8 @@ export const DecryptTool = () => {
     }
   }, [searchParams, setValue, handleDecryptMessage]);
 
-  if (!keystore) return <WelcomeCommittee />;
-
   return (
-    <StyledDecrypt className="content-wrapper-md">
+    <StyledMessageDecryptionPage className="content-wrapper-md">
       <h2 className="title">{t("CommitteeTools.decryptTitle")}</h2>
       <p className="mb-5">{t("CommitteeTools.decryptDescription")}</p>
 
@@ -160,6 +157,6 @@ export const DecryptTool = () => {
           />
         </div>
       )}
-    </StyledDecrypt>
+    </StyledMessageDecryptionPage>
   );
 };
