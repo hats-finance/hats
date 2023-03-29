@@ -26,11 +26,11 @@ export const committeeToolsRouter = (): RouteObject => ({
           element: <PayoutsListPage />,
         },
         {
-          path: ":vaultChainId/:vaultAddress",
+          path: ":payoutId",
           element: <PayoutFormPage />,
         },
         {
-          path: ":vaultChainId/:vaultAddress",
+          path: "status/:payoutId",
           element: <PayoutStatusPage />,
         },
       ],
