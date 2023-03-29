@@ -18,8 +18,8 @@ export const getAddressRoleOnVault = async (
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
   const isGovMember = await isAddressAMultisigMember(govMultisig, address, vaultChainId);
 
-  if (isGovMember) return "gov";
   if (isCommitteeMultisigMember) return "committee";
   if (isCommitteeMultisig) return "committee-multisig";
+  if (isGovMember) return "gov";
   return "none";
 };
