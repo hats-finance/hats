@@ -14,7 +14,11 @@ import { StyledWalletButton, WalletButtonWrapper } from "./styles";
 import { connectorIcons } from "./connector.icons";
 import { chainIcons } from "./chains.icons";
 
-const WalletButton = () => {
+type WalletButtonProps = {
+  expanded?: boolean;
+};
+
+const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { connect, connectors } = useConnect();
@@ -137,6 +141,7 @@ const WalletButton = () => {
         onClick={() => setShowConnectors((prev) => !prev)}
         connected={!!account}
         existsPendingTransaction={false}
+        expanded={expanded}
       >
         {!account && <Dot color={Colors.red} />}
         {/* {account && connectedConnector && <div className="provider-icon">{getProviderIcon()}</div>} */}
