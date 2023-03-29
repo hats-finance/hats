@@ -1,3 +1,9 @@
+import { StyledPayoutsHome } from "./styles";
+
 export const PayoutsHomePage = () => {
-  return <div>PayoutsHomePage</div>;
+  return (
+    <StyledPayoutsHome>
+      <div className="container">asd</div>
+    </StyledPayoutsHome>
+  );
 };
