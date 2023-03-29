@@ -1,15 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "components";
 import { useKeystore } from "components/Keystore";
-import { StyledMessageDecryptionWelcome } from "./styles";
+import { StyledDecryptionWelcomePage } from "./styles";
 
-export const MessageDecryptionWelcome = () => {
+export const DecryptionWelcomePage = () => {
   const { t } = useTranslation();
 
   const { initKeystore, isKeystoreCreated } = useKeystore();
 
   return (
-    <StyledMessageDecryptionWelcome className="content-wrapper-sm">
+    <StyledDecryptionWelcomePage className="content-wrapper-sm">
       <p className="title">{t("CommitteeTools.welcomeTitle")}</p>
       <p className="mt-4">{t("CommitteeTools.welcomeDescription")}</p>
 
@@ -31,6 +31,6 @@ export const MessageDecryptionWelcome = () => {
           </Button>
         </div>
       )}
-    </StyledMessageDecryptionWelcome>
+    </StyledDecryptionWelcomePage>
   );
 };

@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import { RoutePaths } from "navigation";
 // Pages components
-import { MessageDecryptionHome } from "./MessageDecryptionTool/MessageDecryptionHome";
+import { DecryptionHomePage } from "./DecryptionTool/DecryptionHomePage";
 import { PayoutsHomePage } from "./PayoutsTool/PayoutsHomePage/PayoutsHomePage";
 import { PayoutsListPage } from "./PayoutsTool/PayoutsListPage/PayoutsListPage";
 import { PayoutFormPage } from "./PayoutsTool/PayoutFormPage/PayoutFormPage";
@@ -12,7 +12,7 @@ export const committeeToolsRouter = (): RouteObject => ({
   children: [
     {
       path: "",
-      element: <MessageDecryptionHome />,
+      element: <DecryptionHomePage />,
     },
     {
       path: "payouts",
