@@ -101,8 +101,8 @@ export const DecryptionPage = () => {
 
   return (
     <StyledDecryptionPage className="content-wrapper-md">
-      <h2 className="title">{t("CommitteeTools.decryptTitle")}</h2>
-      <p className="mb-5">{t("CommitteeTools.decryptDescription")}</p>
+      <h2 className="title">{t("DecryptionTool.decryptTitle")}</h2>
+      <p className="mb-5">{t("DecryptionTool.decryptDescription")}</p>
 
       <Button styleType="outlined" className="mb-5" onClick={() => openKeystore()}>
         <KeyIcon className="mr-3" />
@@ -123,7 +123,7 @@ export const DecryptionPage = () => {
 
         <Button type="submit" disabled={!isValid} onClick={handleSubmit(handleDecryptMessage)}>
           <EyeIcon className="mr-3" />
-          {t("CommitteeTools.decryptMessage")}
+          {t("DecryptionTool.decryptMessage")}
         </Button>
 
         {errorDecrypting && (

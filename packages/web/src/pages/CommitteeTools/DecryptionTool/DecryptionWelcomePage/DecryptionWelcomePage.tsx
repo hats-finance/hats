@@ -10,8 +10,8 @@ export const DecryptionWelcomePage = () => {
 
   return (
     <StyledDecryptionWelcomePage className="content-wrapper-sm">
-      <p className="title">{t("CommitteeTools.welcomeTitle")}</p>
-      <p className="mt-4">{t("CommitteeTools.welcomeDescription")}</p>
+      <p className="title">{t("DecryptionTool.welcomeTitle")}</p>
+      <p className="mt-4">{t("DecryptionTool.welcomeDescription")}</p>
 
       {isKeystoreCreated ? (
         <Button className="mt-5" expanded onClick={initKeystore}>
@@ -19,12 +19,12 @@ export const DecryptionWelcomePage = () => {
         </Button>
       ) : (
         <div className="mt-5">
-          <p>{t("CommitteeTools.step1Title")}</p>
-          <p className="step-info">{t("CommitteeTools.step1Content")}</p>
-          <p>{t("CommitteeTools.step2Title")}</p>
-          <p className="step-info">{t("CommitteeTools.step2Content")}</p>
-          <p>{t("CommitteeTools.step3Title")}</p>
-          <p className="step-info">{t("CommitteeTools.step3Content")}</p>
+          <p>{t("DecryptionTool.step1Title")}</p>
+          <p className="step-info">{t("DecryptionTool.step1Content")}</p>
+          <p>{t("DecryptionTool.step2Title")}</p>
+          <p className="step-info">{t("DecryptionTool.step2Content")}</p>
+          <p>{t("DecryptionTool.step3Title")}</p>
+          <p className="step-info">{t("DecryptionTool.step3Content")}</p>
 
           <Button className="mt-5" expanded onClick={initKeystore}>
             {t("PGPTool.createKeystore")}

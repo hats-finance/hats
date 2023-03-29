@@ -133,7 +133,7 @@
     "welcomeVaultEditorHome": "Welcome to the Vault Creator,",
     "createNewVault": "Create new vault",
     "or": "or",
-    "editExistingVaultExplanation": "Connect with a committee member wallet to edit an existing vault or view it's status ",
+    "editExistingVaultExplanation": "Connect with a committee member wallet to edit an existing vault or view it's status.",
     "vault": "Vault",
     "selectVault": "Select vault",
     "statusPage": "Status page",
@@ -284,6 +284,7 @@
     "prizeContentDivision": "Prize content division",
     "viewContractsCovered": "View contracts covered",
     "ofVault": "of vault",
+    "continue": "Continue",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -351,9 +352,14 @@
       "pasteExistingPublicKey": "Paste existing PGP public key",
       "yourKeystoreIsNotBackedUp": "Your keystore is not backed up."
     },
-    "CommitteeTools": {
-      "welcomeTitle": "Welcome to the committee tools",
-      "welcomeDescription": "The committe tools allow you to easily decrypt vulnerabilities messages submitted by hackers. \n\n In order to decrypt a message you will need to:",
+    "Payouts": {
+      "welcomeTitle": "Create easy payouts with the payout tool",
+      "selectVaultToCreatePayout": "Select a vault to a create payout",
+      "connectWithACommitteeMemberWallet": "Connect with a committee member wallet to create a new payout for your Vault."
+    },
+    "DecryptionTool": {
+      "welcomeTitle": "Welcome to the decryption tool",
+      "welcomeDescription": "The decryption tool allow you to easily decrypt vulnerabilities messages submitted by hackers. \n\n In order to decrypt a message you will need to:",
       "step1Title": "Step 1:",
       "step1Content": "Create a Keystore using a password. Your password will be used to encrypt the storage.",
       "step2Title": "Step 2:",

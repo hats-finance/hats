@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { IVault } from "types";
+import { getAddressRoleOnVault, IVault } from "@hats-finance/shared";
 import { Button, FormSelectInput, Modal } from "components";
 import { RoutePaths } from "navigation";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -21,15 +21,15 @@ export const VaultEditorHomePage = () => {
   const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
-  const populateVaultsOptions = useCallback(() => {
+  const populateVaultsOptions = useCallback(async () => {
     if (!address || !allVaults) return setVaultsOptions([]);
     const userVaults = [] as IVault[];
 
     for (const vault of allVaults) {
-      const isMultisig = vault.committee === address;
-      const isCommitteeMember = vault.description?.committee.members.map((member) => member.address).includes(address);
+      if (!vault.description) continue;
 
-      if ((isMultisig || isCommitteeMember) && vault.version === "v2") userVaults.push(vault);
+      const userRole = await getAddressRoleOnVault(address, vault.description);
+      if ((userRole === "committee-multisig" || userRole === "committee") && vault.version === "v2") userVaults.push(vault);
     }
 
     setVaultsOptions(
