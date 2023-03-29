@@ -37,7 +37,11 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
   const handleRestoreKeystoreBackup = () => {
     if (!keysToImport || keysToImport.length === 0) return;
 
-    setKeystore((prev) => ({ ...prev, storedKeys: [...keysToImport, ...prev!.storedKeys] }));
+    setKeystore((prev) => ({
+      ...prev,
+      storedKeys: [...keysToImport, ...prev!.storedKeys],
+      isBackedUp: prev?.storedKeys.length === 0,
+    }));
     onClose();
   };
 

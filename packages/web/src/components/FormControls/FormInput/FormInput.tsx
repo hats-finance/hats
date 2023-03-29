@@ -23,6 +23,7 @@ type FormInputProps = {
   colorable?: boolean;
   isDirty?: boolean;
   noMargin?: boolean;
+  selectAllOnClick?: boolean;
   prefixIcon?: JSX.Element;
   error?: { message?: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
@@ -39,6 +40,7 @@ function FormInputComponent(
     disabled = false,
     noMargin = false,
     isDirty = false,
+    selectAllOnClick = false,
     rows = DEFAULT_ROWS,
     label,
     error,
@@ -89,8 +91,20 @@ function FormInputComponent(
       localRef.current = r;
     };
 
+    const onClick = selectAllOnClick ? (event) => event?.target.select() : undefined;
+
     if (inputType === "textarea") {
-      return <textarea {...props} disabled={disabled} id={props.name} ref={setRef} rows={rows} onChange={handleOnChange} />;
+      return (
+        <textarea
+          {...props}
+          disabled={disabled}
+          id={props.name}
+          ref={setRef}
+          rows={rows}
+          onChange={handleOnChange}
+          onClick={onClick}
+        />
+      );
     } else if (inputType === "number") {
       return (
         <input
@@ -101,6 +115,7 @@ function FormInputComponent(
           ref={setRef}
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
+          onClick={onClick}
         />
       );
     } else if (inputType === "whole-number") {
@@ -113,10 +128,21 @@ function FormInputComponent(
           ref={setRef}
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
+          onClick={onClick}
         />
       );
     } else {
-      return <input {...props} disabled={disabled} id={props.name} type={inputType} ref={setRef} onChange={handleOnChange} />;
+      return (
+        <input
+          {...props}
+          disabled={disabled}
+          id={props.name}
+          type={inputType}
+          ref={setRef}
+          onChange={handleOnChange}
+          onClick={onClick}
+        />
+      );
     }
   };
 
