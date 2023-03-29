@@ -146,7 +146,7 @@ export const KeystoreManager = ({
           return;
         }
 
-        const newKeystore: IKeystoreData = { storedKeys: [] };
+        const newKeystore: IKeystoreData = { storedKeys: [], isBackedUp: true };
 
         setPassword(password);
         setKeystore(newKeystore);

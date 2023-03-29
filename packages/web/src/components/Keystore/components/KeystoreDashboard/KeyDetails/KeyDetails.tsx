@@ -22,28 +22,35 @@ export const KeyDetails = ({ pgpKey, onClose }: KeyDetailsProps) => {
       isShowing={true}
       onHide={onClose}
     >
-      <StyledBaseKeystoreContainer size="big">
+      <StyledBaseKeystoreContainer>
         <p className="mb-5">{t("PGPTool.keyDetailsDescription")}</p>
 
         <FormInput value={pgpKey.alias} label={t("PGPTool.keyNameAlias")} readOnly />
 
         <div className="mb-4">
           <CollapsableTextContent noContentPadding title={t("PGPTool.privateKey")}>
-            <FormInput rows={16} value={pgpKey.privateKey} label={t("PGPTool.privateKey")} readOnly type="textarea" />
+            <FormInput
+              selectAllOnClick
+              rows={16}
+              value={pgpKey.privateKey}
+              label={t("PGPTool.privateKey")}
+              readOnly
+              type="textarea"
+            />
           </CollapsableTextContent>
         </div>
 
         {pgpKey.passphrase && (
           <div className="mb-4">
             <CollapsableTextContent noContentPadding title={t("PGPTool.passphrase")}>
-              <FormInput value={pgpKey.passphrase} label={t("PGPTool.passphrase")} readOnly />
+              <FormInput selectAllOnClick value={pgpKey.passphrase} label={t("PGPTool.passphrase")} readOnly />
             </CollapsableTextContent>
           </div>
         )}
 
         <div className="mb-4">
           <CollapsableTextContent noContentPadding title={t("PGPTool.publicKey")}>
-            <FormInput value={pgpKey.publicKey} label={t("PGPTool.publicKey")} readOnly type="textarea" />
+            <FormInput selectAllOnClick value={pgpKey.publicKey} label={t("PGPTool.publicKey")} readOnly type="textarea" />
           </CollapsableTextContent>
         </div>
       </StyledBaseKeystoreContainer>

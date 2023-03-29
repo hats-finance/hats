@@ -115,7 +115,7 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
       isShowing={true}
       onHide={onClose}
     >
-      <StyledBaseKeystoreContainer size="big">
+      <StyledBaseKeystoreContainer>
         <p className="mb-4">{t("PGPTool.importKeyDescription")}</p>
 
         <form onSubmit={handleSubmit(onSubmit)}>
