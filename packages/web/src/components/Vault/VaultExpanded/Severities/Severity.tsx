@@ -118,7 +118,7 @@ export default function Severity(props: IProps) {
       >
         <div className="severity-title">
           {`${severity?.name.toUpperCase()}`}
-          {isNormalVault && " SEVERITY"}{" "}
+          {isNormalVault && props.vault.version === "v1" && " SEVERITY"}
         </div>
         <div className={expanded ? "arrow open" : "arrow"}>
           <ArrowIcon />
