@@ -285,6 +285,9 @@
     "viewContractsCovered": "View contracts covered",
     "ofVault": "of vault",
     "continue": "Continue",
+    "payouts": "Payouts",
+    "inProgress": "In progress",
+    "history": "History",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -355,7 +358,12 @@
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
       "selectVaultToCreatePayout": "Select a vault to a create payout",
-      "connectWithACommitteeMemberWallet": "Connect with a committee member wallet to create a new payout for your Vault."
+      "connectWithACommitteeMemberWallet": "Connect with a committee member wallet to create a new payout for your Vault.",
+      "copyPayoutLink": "Copy payout link",
+      "copyPayoutListLink": "Copy payout list link",
+      "payoutStatus": "Payout status",
+      "creatingPayout": "Creating payout",
+      "creatingSinglePayout": "Creating single payout"
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",
