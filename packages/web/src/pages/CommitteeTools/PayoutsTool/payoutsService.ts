@@ -7,7 +7,7 @@ import { axiosClient } from "config/axiosClient";
  * @param vaultAddress - The vault address
  * @param chainId - The vault chain id
  */
-export async function getPayoutsListByVault(vaultAddress: string, chainId: number): Promise<IPayoutResponse[]> {
+export async function getPayoutsListByVault(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
   //   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
 
   return [

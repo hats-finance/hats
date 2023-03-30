@@ -1,38 +1,37 @@
 import { useCallback, useEffect, useState } from "react";
 import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { useAccount } from "wagmi";
-import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { CopyToClipboard, Loading } from "components";
+import { Loading } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { isAddress } from "utils/addresses.utils";
 import { PayoutsWelcome } from "./PayoutsWelcome";
 import * as PayoutsService from "../payoutsService";
 import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
 
 export const PayoutsListPage = () => {
   const { t } = useTranslation();
-  const { vaultAddress, vaultChainId } = useParams();
 
   const { address } = useAccount();
   const { allVaults } = useVaults();
 
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<"in_progress" | "finished">("in_progress");
-  const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
+  const [userVaults, setUserVaults] = useState<IVault[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
-      if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
-        const payouts = await PayoutsService.getPayoutsListByVault(vaultAddress, +vaultChainId);
-      }
+      if (userVaults.length === 0) return;
+
+      const payouts = await PayoutsService.getPayoutsListByVault(
+        userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
+      );
     };
     loadData();
-  }, []);
+  }, [userVaults]);
 
   const populateVaultsOptions = useCallback(async () => {
-    if (!address || !allVaults || allVaults.length === 0) return setVaultsOptions([]);
-    const userVaults = [] as IVault[];
+    if (!address || !allVaults || allVaults.length === 0) return setUserVaults([]);
+    const foundVaults = [] as IVault[];
 
     for (const vault of allVaults) {
       if (!vault.description) continue;
@@ -41,25 +40,19 @@ export const PayoutsListPage = () => {
       const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
       const isMultisigAddress = vault.description?.committee["multisig-address"] === address;
 
-      if ((isSafeMember || isMultisigAddress) && vault.version === "v2") userVaults.push(vault);
+      if ((isSafeMember || isMultisigAddress) && vault.version === "v2") foundVaults.push(vault);
     }
 
     setTimeout(() => setLoading(false), 200);
-    setVaultsOptions(
-      userVaults.map((vault) => ({
-        label: vault.description?.["project-metadata"].name ?? vault.name,
-        value: vault.id,
-        icon: vault.description?.["project-metadata"].icon,
-      }))
-    );
+    setUserVaults(foundVaults);
   }, [address, allVaults]);
 
   useEffect(() => {
     populateVaultsOptions();
   }, [populateVaultsOptions]);
 
-  if (loading && address) return <Loading />;
-  if (!address || vaultsOptions.length === 0) return <PayoutsWelcome />;
+  if (loading && address && allVaults) return <Loading />;
+  if (!address || userVaults.length === 0) return <PayoutsWelcome />;
 
   return (
     <StyledPayoutsListPage className="content-wrapper-md">
@@ -67,9 +60,8 @@ export const PayoutsListPage = () => {
         <div className="title">
           <p>{t("payouts")}</p>
         </div>
-
-        <CopyToClipboard valueToCopy={document.location.href} overlayText={t("Payouts.copyPayoutListLink")} />
       </div>
+
       <PayoutListSections>
         <PayoutListSection active={section === "in_progress"} onClick={() => setSection("in_progress")}>
           {t("inProgress")}
