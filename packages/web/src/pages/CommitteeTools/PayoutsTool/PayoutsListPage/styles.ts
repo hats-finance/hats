@@ -28,6 +28,21 @@ export const StyledPayoutsListPage = styled.div`
       }
     }
   }
+
+  .group {
+    display: flex;
+    flex-direction: column;
+    gap: ${getSpacing(2)};
+
+    &:not(:last-child) {
+      margin-bottom: ${getSpacing(3)};
+    }
+
+    .group-date {
+      color: var(--grey-500);
+      font-weight: 700;
+    }
+  }
 `;
 
 export const PayoutListSections = styled.div`
