@@ -1,6 +1,7 @@
 import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "@wagmi/chains";
 import axios from "axios";
 import { isServer } from "./general.utils";
+import { utils } from "ethers";
 
 const getGnosisChainNameByChainId = (chainId: number): string => {
   switch (chainId) {
@@ -69,8 +70,9 @@ export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): 
 };
 
 const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): string => {
+  const checksummedSafeAddress = utils.getAddress(safeAddress);
   if (!chainId) return "";
-  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${safeAddress}`;
+  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${checksummedSafeAddress}`;
 };
 
 export const getGnosisSafeInfo = async (
