@@ -253,7 +253,7 @@ export const normalizeAddress = (address: string) => {
 export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPinned: true }) => {
   if (!uri || typeof uri !== "string") return "";
 
-  const ipfsPrefix = isPinned ? IPFS_PREFIX : `${BASE_SERVICE_URL}/ipfs`;
+  const ipfsPrefix = isPinned ? IPFS_PREFIX : `${BASE_SERVICE_URL}/files`;
 
   if (uri.startsWith("ipfs")) {
     let ipfs;

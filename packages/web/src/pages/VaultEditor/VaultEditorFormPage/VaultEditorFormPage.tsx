@@ -402,7 +402,7 @@ const VaultEditorFormPage = () => {
   };
 
   const goToDescriptionHashContent = () => {
-    window.open(`${BASE_SERVICE_URL}/ipfs/${descriptionHash}`, "_blank");
+    window.open(`${BASE_SERVICE_URL}/files/${descriptionHash}`, "_blank");
   };
 
   const goToStatusPage = () => {
