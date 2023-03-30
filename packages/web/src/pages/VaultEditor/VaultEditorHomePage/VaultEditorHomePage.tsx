@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getAddressRoleOnVault, IVault } from "@hats-finance/shared";
+import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { Button, FormSelectInput, Modal } from "components";
 import { RoutePaths } from "navigation";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -28,8 +28,11 @@ export const VaultEditorHomePage = () => {
     for (const vault of allVaults) {
       if (!vault.description) continue;
 
-      const userRole = await getAddressRoleOnVault(address, vault.description);
-      if ((userRole === "committee-multisig" || userRole === "committee") && vault.version === "v2") userVaults.push(vault);
+      const userSafes = await getAddressSafes(address, vault.chainId);
+      const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
+      const isMultisigAddress = vault.description?.committee["multisig-address"] === address;
+
+      if ((isSafeMember || isMultisigAddress) && vault.version === "v2") userVaults.push(vault);
     }
 
     setVaultsOptions(

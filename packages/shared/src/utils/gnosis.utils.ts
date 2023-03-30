@@ -116,3 +116,30 @@ export const isAddressAMultisigMember = async (
 
   return isMember;
 };
+
+const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string => {
+  if (!chainId) return "";
+  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/owners/${walletAddress}/safes`;
+};
+
+export const getAddressSafes = async (walletAddress: string, chainId: number | undefined): Promise<string[]> => {
+  try {
+    if (!chainId) throw new Error("Please provide chainId");
+
+    const addressSafesStorage = isServer()
+      ? null
+      : JSON.parse(sessionStorage.getItem(`addressSafes-${chainId}-${walletAddress}`) ?? "null");
+    const data = addressSafesStorage ?? (await axios.get(getAddressSafesApiEndpoint(walletAddress, chainId))).data;
+    !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(data));
+
+    if (!data) throw new Error("No data");
+
+    return data.safes;
+  } catch (error) {
+    console.log(error);
+    const defaultData: string[] = [];
+
+    !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(defaultData));
+    return defaultData;
+  }
+};

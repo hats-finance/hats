@@ -18,12 +18,6 @@ export const StyledPayoutsListPage = styled.div`
       align-items: center;
       font-size: var(--moderate);
       margin-bottom: ${getSpacing(5)};
-      cursor: pointer;
-      transition: 0.2s;
-
-      &:hover {
-        opacity: 0.8;
-      }
 
       p {
         margin-left: ${getSpacing(1)};
