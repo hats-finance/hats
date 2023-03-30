@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNetwork, useAccount } from "wagmi";
+import { useAccount } from "wagmi";
 import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
-import { appChains, IS_PROD } from "settings";
+import { appChains } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 
-const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
+const INITIAL_NETWORK_DATA = { vaults: [], masters: [], userNfts: [] };
+const INITIAL_VAULTS_DATA: GraphVaultsData = {
+  test: INITIAL_NETWORK_DATA,
+  prod: INITIAL_NETWORK_DATA,
+};
 
 const DATA_REFRESH_TIME = 10000;
 
@@ -16,38 +20,63 @@ const supportedChains = {
 };
 
 interface GraphVaultsData {
-  vaults: IVault[];
-  masters: IMaster[];
-  userNfts: IUserNft[];
+  test: {
+    vaults: IVault[];
+    masters: IMaster[];
+    userNfts: IUserNft[];
+  };
+  prod: {
+    vaults: IVault[];
+    masters: IMaster[];
+    userNfts: IUserNft[];
+  };
 }
 
-const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
+const useSubgraphFetch = (chainName: keyof typeof supportedChains) => {
   const { address: account } = useAccount();
   const [data, setData] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const [isFetched, setIsFetched] = useState(false);
-  const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
-  const fetchData = useCallback(async () => {
-    if (!chainId) {
-      setData(INITIAL_VAULTS_DATA);
-      return;
-    }
+  const chainIdTest = supportedChains[chainName]["test"]?.chain.id;
+  const chainIdProd = supportedChains[chainName]["prod"]?.chain.id;
 
-    const subgraphUrl = appChains[chainId].subgraph;
-    const res = await fetch(subgraphUrl, {
-      method: "POST",
-      body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
-      headers: { "Content-Type": "application/json" },
-      cache: "default",
-    });
-    const dataJson = await res.json();
+  const fetchData = useCallback(
+    async () => {
+      if (chainIdTest) {
+        const subgraphUrlTest = appChains[chainIdTest].subgraph;
+        const resTest = await fetch(subgraphUrlTest, {
+          method: "POST",
+          body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
+          headers: { "Content-Type": "application/json" },
+          cache: "default",
+        });
+        const dataJsonTest = await resTest.json();
 
-    if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
-      setData(dataJson.data);
+        if (JSON.stringify(dataJsonTest.data) !== JSON.stringify(data.test)) {
+          setData((prev) => ({ ...prev, test: dataJsonTest.data ?? INITIAL_NETWORK_DATA }));
+        }
+      }
+
+      if (chainIdProd) {
+        const subgraphUrlProd = appChains[chainIdProd].subgraph;
+        const resProd = await fetch(subgraphUrlProd, {
+          method: "POST",
+          body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
+          headers: { "Content-Type": "application/json" },
+          cache: "default",
+        });
+        const dataJsonProd = await resProd.json();
+
+        if (JSON.stringify(dataJsonProd.data) !== JSON.stringify(data.prod)) {
+          setData((prev) => ({ ...prev, prod: dataJsonProd.data ?? INITIAL_NETWORK_DATA }));
+        }
+      }
+
       setIsFetched(true);
-    }
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, account]);
+    [account]
+  );
 
   useEffect(() => {
     fetchData();
@@ -56,22 +85,31 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "
     return () => clearInterval(interval);
   }, [fetchData]);
 
-  if (chainId) return { data, chainId, isFetched };
-  return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
+  return { data, isFetched, chainIdTest, chainIdProd };
+  // return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
 };
 
 export const useMultiChainVaults = () => {
   const [vaults, setVaults] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
-  const { chain } = useNetwork();
-  const connectedChain = chain ? appChains[chain.id] : null;
 
-  // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
-  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
-  const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
-
-  const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
-  const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
-  const { data: arbitrumData, chainId: arbitrumChainId, isFetched: isArbitrumFetched } = useSubgraphFetch("ARBITRUM", networkEnv);
+  const {
+    data: ethereumData,
+    chainIdTest: ethereumTestChainId,
+    chainIdProd: ethereumProdChainId,
+    isFetched: isEthereumFetched,
+  } = useSubgraphFetch("ETHEREUM");
+  const {
+    data: optimismData,
+    chainIdTest: optimismTestChainId,
+    chainIdProd: optimismProdChainId,
+    isFetched: isOptimismFetched,
+  } = useSubgraphFetch("OPTIMISM");
+  const {
+    data: arbitrumData,
+    chainIdTest: arbitrumTestChainId,
+    chainIdProd: arbitrumProdChainId,
+    isFetched: isArbitrumFetched,
+  } = useSubgraphFetch("ARBITRUM");
 
   useEffect(() => {
     const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched];
@@ -79,47 +117,75 @@ export const useMultiChainVaults = () => {
 
     if (!areAllNetworksFetched) return;
 
-    const allVaults = [
-      ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.vaults?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+    const allVaultsProd = [
+      ...(ethereumData?.prod?.vaults?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
+      ...(optimismData?.prod?.vaults?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
+      ...(arbitrumData?.prod?.vaults?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
     ];
 
-    const allMasters = [
-      ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.masters?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+    const allVaultsTest = [
+      ...(ethereumData?.test?.vaults?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
+      ...(optimismData?.test?.vaults?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
+      ...(arbitrumData?.test?.vaults?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
     ];
 
-    const allUserNfts = [
-      ...(ethereumData?.userNfts?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.userNfts?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.userNfts?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+    const allMastersProd = [
+      ...(ethereumData?.prod?.masters?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
+      ...(optimismData?.prod?.masters?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
+      ...(arbitrumData?.prod?.masters?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
     ];
 
-    const newVaults = {
-      vaults: allVaults.map((vault) => ({
+    const allMastersTest = [
+      ...(ethereumData?.test?.masters?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
+      ...(optimismData?.test?.masters?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
+      ...(arbitrumData?.test?.masters?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
+    ];
+
+    const allUserNftsProd = [
+      ...(ethereumData?.prod?.userNfts?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
+      ...(optimismData?.prod?.userNfts?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
+      ...(arbitrumData?.prod?.userNfts?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
+    ];
+
+    const allUserNftsTest = [
+      ...(ethereumData?.test?.userNfts?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
+      ...(optimismData?.test?.userNfts?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
+      ...(arbitrumData?.test?.userNfts?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
+    ];
+
+    const newDataProd = {
+      vaults: allVaultsProd.map((vault) => ({
         ...vault,
       })),
-      masters: allMasters,
-      userNfts: allUserNfts,
+      masters: allMastersProd,
+      userNfts: allUserNftsProd,
     };
 
-    if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
-      setVaults({ vaults: allVaults, masters: allMasters, userNfts: allUserNfts });
-    }
+    const newDataTest = {
+      vaults: allVaultsTest.map((vault) => ({
+        ...vault,
+      })),
+      masters: allMastersTest,
+      userNfts: allUserNftsTest,
+    };
+
+    if (JSON.stringify(vaults.prod) !== JSON.stringify(newDataProd)) setVaults((prev) => ({ ...prev, prod: newDataProd }));
+    if (JSON.stringify(vaults.test) !== JSON.stringify(newDataTest)) setVaults((prev) => ({ ...prev, test: newDataTest }));
   }, [
     vaults,
     ethereumData,
     optimismData,
     arbitrumData,
-    ethereumChainId,
-    optimismChainId,
-    arbitrumChainId,
+    ethereumTestChainId,
+    ethereumProdChainId,
+    optimismTestChainId,
+    optimismProdChainId,
+    arbitrumTestChainId,
+    arbitrumProdChainId,
     isEthereumFetched,
     isOptimismFetched,
     isArbitrumFetched,
   ]);
 
-  return { data: vaults, networkEnv };
+  return { data: vaults };
 };
