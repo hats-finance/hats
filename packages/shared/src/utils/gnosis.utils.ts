@@ -70,8 +70,8 @@ export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): 
 };
 
 const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): string => {
-  const checksummedSafeAddress = utils.getAddress(safeAddress);
   if (!chainId) return "";
+  const checksummedSafeAddress = utils.getAddress(safeAddress);
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${checksummedSafeAddress}`;
 };
 
