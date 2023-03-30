@@ -5,6 +5,7 @@ export interface IPayoutResponse {
   payoutData: IPayoutData;
   nonce: number;
   txToSign: string;
+  minSignaturesNeeded: number;
   signatures: IPayoutSignature[];
   status: PayoutStatus;
   lastActionNeededNotifiedAt: Date;

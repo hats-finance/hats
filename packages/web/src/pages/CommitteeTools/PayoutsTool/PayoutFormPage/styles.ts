@@ -17,7 +17,6 @@ export const StyledPayoutFormPage = styled.div`
     .title {
       display: flex;
       align-items: center;
-      color: var(--white);
       font-size: var(--moderate);
       margin-bottom: ${getSpacing(5)};
       cursor: pointer;
@@ -38,7 +37,6 @@ export const StyledPayoutFormPage = styled.div`
   }
 
   .section-title {
-    color: var(--white);
     font-size: var(--small);
     text-transform: uppercase;
     font-weight: 700;

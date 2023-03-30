@@ -7,6 +7,7 @@ export const StyledPayoutsListPage = styled.div`
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(6)};
+  color: var(--white);
 
   .title-container {
     display: flex;
@@ -15,7 +16,6 @@ export const StyledPayoutsListPage = styled.div`
     .title {
       display: flex;
       align-items: center;
-      color: var(--white);
       font-size: var(--moderate);
       margin-bottom: ${getSpacing(5)};
       cursor: pointer;
@@ -62,3 +62,45 @@ export const PayoutListSection = styled.div<{ active: boolean }>(
     }
   `
 );
+
+export const StyledPayoutsWelcome = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: ${getSpacing(10)};
+  color: var(--white);
+
+  .container {
+    width: 100%;
+    max-width: 500px;
+
+    .title-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: ${getSpacing(5)};
+
+      img {
+        width: ${getSpacing(10)};
+      }
+
+      p {
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: var(--moderate);
+        text-align: center;
+      }
+    }
+
+    .vault-selection {
+      padding-top: ${getSpacing(2)};
+
+      .options {
+        display: flex;
+        gap: ${getSpacing(2)};
+        justify-content: flex-end;
+      }
+    }
+  }
+`;

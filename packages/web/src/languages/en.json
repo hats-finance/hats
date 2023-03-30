@@ -359,6 +359,7 @@
       "welcomeTitle": "Create easy payouts with the payout tool",
       "selectVaultToCreatePayout": "Select a vault to a create payout",
       "connectWithACommitteeMemberWallet": "Connect with a committee member wallet to create a new payout for your Vault.",
+      "yourWalletIsNotACommittee": "Your wallet is not associated with any committee. Please make sure you are connected with the right wallet.",
       "copyPayoutLink": "Copy payout link",
       "copyPayoutListLink": "Copy payout list link",
       "payoutStatus": "Payout status",
