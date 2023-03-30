@@ -4,6 +4,7 @@ import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chain
 import { IMaster, IUserNft, IVault } from "types";
 import { appChains } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
+import { useTabFocus } from "hooks/useTabFocus";
 
 const INITIAL_NETWORK_DATA = { vaults: [], masters: [], userNfts: [] };
 const INITIAL_VAULTS_DATA: GraphVaultsData = {
@@ -33,6 +34,8 @@ interface GraphVaultsData {
 }
 
 const useSubgraphFetch = (chainName: keyof typeof supportedChains) => {
+  const isTabFocused = useTabFocus();
+
   const { address: account } = useAccount();
   const [data, setData] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
   const [isFetched, setIsFetched] = useState(false);
@@ -79,14 +82,13 @@ const useSubgraphFetch = (chainName: keyof typeof supportedChains) => {
   );
 
   useEffect(() => {
-    fetchData();
+    if (isTabFocused) fetchData();
 
-    const interval = setInterval(fetchData, DATA_REFRESH_TIME);
+    const interval = setInterval(isTabFocused ? fetchData : () => {}, DATA_REFRESH_TIME);
     return () => clearInterval(interval);
-  }, [fetchData]);
+  }, [fetchData, isTabFocused]);
 
   return { data, isFetched, chainIdTest, chainIdProd };
-  // return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
 };
 
 export const useMultiChainVaults = () => {
