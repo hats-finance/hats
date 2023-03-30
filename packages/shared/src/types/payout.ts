@@ -9,6 +9,8 @@ export interface IPayoutResponse {
   status: PayoutStatus;
   lastActionNeededNotifiedAt: Date;
   payoutTxHash: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface IPayoutData {
