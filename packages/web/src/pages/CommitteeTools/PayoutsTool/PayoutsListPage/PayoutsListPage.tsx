@@ -38,7 +38,14 @@ export const PayoutsListPage = () => {
   // Get user vaults
   useEffect(() => {
     const populateVaultsOptions = async () => {
-      if (!address || !allVaults || allVaults.length === 0) return setUserVaults([]);
+      if (!address || !allVaults || allVaults.length === 0) {
+        setAllPayouts(undefined);
+        setPayoutsGroupsByDate(undefined);
+        setUserVaults([]);
+        setSection("in_progress");
+        setInitialized(false);
+        return;
+      }
       const foundVaults = [] as IVault[];
 
       for (const vault of allVaults) {
@@ -70,6 +77,7 @@ export const PayoutsListPage = () => {
 
     if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
     if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
+
     setAllPayouts(payouts);
     setInitialized(true);
   });
