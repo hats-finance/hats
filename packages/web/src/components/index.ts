@@ -3,6 +3,7 @@ export { WalletButton } from "./WalletButton/WalletButton";
 export { Vault } from "./Vault/Vault";
 export { NFTCard } from "./NFTCard/NFTCard";
 export { NFTPrize } from "./NFTPrize/NFTPrize";
+export { HatSpinner } from "./HatSpinner/HatSpinner";
 export { Loading } from "./Loading";
 export { Media } from "./Media/Media";
 export { CountdownTimer } from "./CountdownTimer/CountdownTimer";
