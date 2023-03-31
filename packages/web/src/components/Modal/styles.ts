@@ -43,7 +43,7 @@ export const ModalContainer = styled.div<{
   withIcon: boolean;
   disableClose: boolean;
   overflowVisible: boolean;
-  pgpKeystoreStyles: boolean;
+  newStyles: boolean;
 }>(
   ({
     withTitleDivider,
@@ -53,14 +53,14 @@ export const ModalContainer = styled.div<{
     disableClose,
     removeTopPadding,
     overflowVisible,
-    pgpKeystoreStyles,
+    newStyles,
   }) => css`
     position: relative;
     max-width: calc(100vw - ${getSpacing(6)});
     max-height: calc(100vh - ${getSpacing(6)});
     overflow: ${overflowVisible ? "visible" : "auto"};
-    background: ${pgpKeystoreStyles ? "var(--background-clearer-blue)" : "var(--field-blue)"};
-    border: ${pgpKeystoreStyles ? "1px solid var(--turquoise)" : "none"};
+    background: ${newStyles ? "var(--background-clearer-blue)" : "var(--field-blue)"};
+    border: ${newStyles ? "1px solid var(--turquoise)" : "none"};
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
       max-width: unset;

@@ -45,14 +45,7 @@ export const SelectPublicKey = ({ initKeystore, onClose, onPublicKeySelected }: 
   return (
     <>
       {!openKeystoreForSelecting && (
-        <Modal
-          removeAnimation
-          title={t("PGPTool.selectPgpKey")}
-          pgpKeystoreStyles
-          capitalizeTitle
-          isShowing={true}
-          onHide={onClose}
-        >
+        <Modal removeAnimation title={t("PGPTool.selectPgpKey")} newStyles capitalizeTitle isShowing={true} onHide={onClose}>
           <StyledBaseKeystoreContainer size="big">
             <div className="mb-5">{t("PGPTool.selectPgpKeyDescription")}</div>
 

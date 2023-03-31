@@ -30,7 +30,7 @@ export const KeyDelete = ({ pgpKey, onClose }: KeyDeleteProps) => {
       removeAnimation
       titleIcon={<RemoveIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.deleteKey")}
-      pgpKeystoreStyles
+      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}
