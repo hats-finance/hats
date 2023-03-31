@@ -19,6 +19,7 @@ export const useSiweAuth = () => {
   const getProfile = async () => {
     const profile = await SIWEService.profile();
     setProfileData(profile);
+    return profile;
   };
 
   useEffect(() => {
@@ -76,13 +77,15 @@ export const useSiweAuth = () => {
   }, [address, chain?.id, signMessageAsync]);
 
   const tryAuthentication = useCallback(async (): Promise<boolean> => {
-    if (!profileData.loggedIn) {
+    const profile = await getProfile();
+
+    if (!profile.loggedIn) {
       const authenticated = (await signIn()).ok;
       return authenticated;
     }
 
     return true;
-  }, [profileData, signIn]);
+  }, [signIn]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
