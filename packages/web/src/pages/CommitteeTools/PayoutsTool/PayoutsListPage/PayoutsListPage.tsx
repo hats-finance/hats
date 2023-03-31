@@ -93,7 +93,7 @@ export const PayoutsListPage = () => {
       return FinishedStatus.includes(payout.status);
     });
 
-    const payoutGroupsByDate = payoutsFilteredBySection.reduce((groups, payout) => {
+    const payoutGroupsByDate = payoutsFilteredBySection.reduce<{ [key: string]: IPayoutResponse[] }>((groups, payout) => {
       const date = moment(payout.createdAt).format("MM/DD/YYYY");
       if (!groups[date]) groups[date] = [];
       groups[date].push(payout);
@@ -103,7 +103,9 @@ export const PayoutsListPage = () => {
     const payoutGroupsByDateArray = Object.keys(payoutGroupsByDate).map((date) => {
       return {
         date,
-        payouts: payoutGroupsByDate[date],
+        payouts: payoutGroupsByDate[date].sort(
+          (a, b) => new Date(b.createdAt ?? "").getTime() - new Date(a.createdAt ?? "").getTime()
+        ),
       };
     });
 
