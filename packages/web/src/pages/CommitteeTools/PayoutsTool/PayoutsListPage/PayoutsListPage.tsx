@@ -3,12 +3,15 @@ import { getAddressSafes, IPayoutResponse, IVault, PayoutStatus } from "@hats-fi
 import { useAccount } from "wagmi";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { Loading } from "components";
+import { Button, Loading, Modal } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
+import useModal from "hooks/useModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
+import { PayoutCreateModal } from "./PayoutCreateModal";
 import { PayoutCard } from "../components";
 import * as PayoutsService from "../payoutsService";
 import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
+import AddIcon from "@mui/icons-material/AddOutlined";
 
 export const PayoutsListPage = () => {
   const { t } = useTranslation();
@@ -16,6 +19,7 @@ export const PayoutsListPage = () => {
   const { address } = useAccount();
   const { allVaults } = useVaults();
 
+  const { isShowing: isShowingCreateModal, show: showCreateModal, hide: hideCreateModal } = useModal();
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<"in_progress" | "finished">("in_progress");
   const [userVaults, setUserVaults] = useState<IVault[]>([]);
@@ -92,34 +96,55 @@ export const PayoutsListPage = () => {
     setPayoutsGroupsByDate(payoutGroupsByDateArray);
   }, [allPayouts, section]);
 
+  const handleCreatePayout = (vault: IVault) => {
+    // PayoutsService.createNewPayout();
+  };
+
   if (loading && address && allVaults) return <Loading />;
   if (!address || userVaults.length === 0) return <PayoutsWelcome />;
 
   return (
-    <StyledPayoutsListPage className="content-wrapper-md">
-      <div className="title-container">
-        <div className="title">
-          <p>{t("payouts")}</p>
-        </div>
-      </div>
+    <>
+      <StyledPayoutsListPage className="content-wrapper-md">
+        <div className="title-container">
+          <div className="title">
+            <p>{t("payouts")}</p>
+          </div>
 
-      <PayoutListSections>
-        <PayoutListSection active={section === "in_progress"} onClick={() => setSection("in_progress")}>
-          {t("inProgress")}
-        </PayoutListSection>
-        <PayoutListSection active={section === "finished"} onClick={() => setSection("finished")}>
-          {t("history")}
-        </PayoutListSection>
-      </PayoutListSections>
-
-      {payoutsGroupsByDate.map((payoutGroup) => (
-        <div className="group" key={payoutGroup.date}>
-          <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
-          {payoutGroup.payouts.map((payout) => (
-            <PayoutCard key={payout._id} payout={payout} />
-          ))}
+          <Button onClick={showCreateModal}>
+            <AddIcon className="mr-2" />
+            {t("Payouts.createPayout")}
+          </Button>
         </div>
-      ))}
-    </StyledPayoutsListPage>
+
+        <PayoutListSections>
+          <PayoutListSection active={section === "in_progress"} onClick={() => setSection("in_progress")}>
+            {t("inProgress")}
+          </PayoutListSection>
+          <PayoutListSection active={section === "finished"} onClick={() => setSection("finished")}>
+            {t("history")}
+          </PayoutListSection>
+        </PayoutListSections>
+
+        {payoutsGroupsByDate.map((payoutGroup) => (
+          <div className="group" key={payoutGroup.date}>
+            <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
+            {payoutGroup.payouts.map((payout) => (
+              <PayoutCard key={payout._id} payout={payout} />
+            ))}
+          </div>
+        ))}
+      </StyledPayoutsListPage>
+
+      <Modal
+        isShowing={isShowingCreateModal}
+        title={t("Payouts.createNewPayout")}
+        titleIcon={<AddIcon className="mr-2" />}
+        onHide={hideCreateModal}
+        newStyles
+      >
+        <PayoutCreateModal onSelectVault={(vault) => handleCreatePayout(vault)} closeModal={hideCreateModal} />
+      </Modal>
+    </>
   );
 };

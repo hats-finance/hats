@@ -3,9 +3,8 @@ import { BASE_SERVICE_URL } from "settings";
 import { axiosClient } from "config/axiosClient";
 
 /**
- * Gets a list of all the payouts of a vault
- * @param vaultAddress - The vault address
- * @param chainId - The vault chain id
+ * Gets a list of all the payouts of a vaults list
+ * @param vaultsList: { chainId: number; vaultAddress: string }[] - The list of vaults to get the payouts from
  */
 export async function getPayoutsListByVault(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
   //   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
@@ -26,12 +25,12 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
       updatedAt: new Date("04/06/2023"),
       payoutData: {
         beneficiary: "0x000000",
-        decryptedMessage: "",
-        encryptedMessage: "",
-        percentageToPay: 90,
-        reportDate: new Date(),
+        percentageToPay: "90",
         title: "Payout 1",
-        reportTxid: "0x000000",
+        additionalInfo: "",
+        severity: "1",
+        explanation: "test",
+        nftUrl: "",
       },
     },
     {
@@ -49,12 +48,12 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
       updatedAt: new Date("05/06/2023"),
       payoutData: {
         beneficiary: "0x000000",
-        decryptedMessage: "",
-        encryptedMessage: "",
-        percentageToPay: 90,
-        reportDate: new Date(),
+        percentageToPay: "90",
         title: "Payout 1",
-        reportTxid: "0x000000",
+        additionalInfo: "",
+        severity: "1",
+        explanation: "test",
+        nftUrl: "",
       },
     },
     {
@@ -72,12 +71,12 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
       updatedAt: new Date("05/06/2023"),
       payoutData: {
         beneficiary: "0x000000",
-        decryptedMessage: "",
-        encryptedMessage: "",
-        percentageToPay: 90,
-        reportDate: new Date(),
+        percentageToPay: "90",
         title: "Payout 1",
-        reportTxid: "0x000000",
+        additionalInfo: "",
+        severity: "1",
+        explanation: "test",
+        nftUrl: "",
       },
     },
     {
@@ -95,13 +94,29 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
       updatedAt: new Date("05/06/2023"),
       payoutData: {
         beneficiary: "0x000000",
-        decryptedMessage: "",
-        encryptedMessage: "",
-        percentageToPay: 90,
-        reportDate: new Date(),
+        percentageToPay: "90",
         title: "Payout 1",
-        reportTxid: "0x000000",
+        additionalInfo: "",
+        severity: "1",
+        explanation: "test",
+        nftUrl: "",
       },
     },
   ];
+}
+
+/**
+ * Creates a new payout
+ * @param vaultAddress - The vault address to create the payout
+ * @param chainId - The vault chain id to create the payout
+ *
+ * @returns The id of the created payout
+ */
+export async function createNewPayout(chainId: number, vaultAddress: string): Promise<string | undefined> {
+  try {
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}`);
+    return res.status === 200 ? res.data.upsertedId : undefined;
+  } catch (error) {
+    return undefined;
+  }
 }

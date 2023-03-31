@@ -364,7 +364,10 @@
       "copyPayoutListLink": "Copy payout list link",
       "payoutStatus": "Payout status",
       "creatingPayout": "Creating payout",
-      "creatingSinglePayout": "Creating single payout"
+      "creatingSinglePayout": "Creating single payout",
+      "createPayout": "Create payout",
+      "createNewPayout": "Create new payout",
+      "createPayoutDescription": "Select the vault you want to create a payout for."
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",

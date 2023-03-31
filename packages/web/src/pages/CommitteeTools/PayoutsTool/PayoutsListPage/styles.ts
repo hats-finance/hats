@@ -12,12 +12,13 @@ export const StyledPayoutsListPage = styled.div`
   .title-container {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: ${getSpacing(5)};
 
     .title {
       display: flex;
       align-items: center;
       font-size: var(--moderate);
-      margin-bottom: ${getSpacing(5)};
 
       p {
         margin-left: ${getSpacing(1)};
@@ -112,4 +113,9 @@ export const StyledPayoutsWelcome = styled.div`
       }
     }
   }
+`;
+
+export const StyledPayoutCreateModal = styled.div`
+  width: 380px;
+  color: var(--white);
 `;

@@ -15,13 +15,17 @@ export interface IPayoutResponse {
 }
 
 export interface IPayoutData {
-  title: string;
-  reportTxid: string;
-  reportDate: Date;
-  encryptedMessage: string;
-  decryptedMessage: string;
-  percentageToPay: number;
   beneficiary: string;
+  title: string;
+  severity: string;
+  percentageToPay: string;
+  explanation: string;
+  nftUrl: string;
+  additionalInfo: string;
+  reportTxid?: string; // Future
+  reportDate?: Date; // Future
+  encryptedMessage?: string; // Future
+  decryptedMessage?: string; // Future
 }
 
 export interface IPayoutSignature {
