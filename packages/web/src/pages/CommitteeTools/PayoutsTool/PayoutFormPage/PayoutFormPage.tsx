@@ -22,7 +22,7 @@ export const PayoutFormPage = () => {
           </p>
         )}
 
-        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}/chainId/vaultAddress`)}>
+        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
           <BackIcon />
           <p>{t("payouts")}</p>
         </div>

@@ -12,7 +12,7 @@ export const PayoutStatusPage = () => {
   return (
     <StyledPayoutStatusPage className="content-wrapper-md">
       <div className="title-container">
-        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}/chainId/vaultAddress`)}>
+        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
           <BackIcon />
           <p>{t("payouts")}</p>
         </div>

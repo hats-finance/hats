@@ -102,20 +102,20 @@ export const StyledPayoutsWelcome = styled.div`
         text-align: center;
       }
     }
-
-    .vault-selection {
-      padding-top: ${getSpacing(2)};
-
-      .options {
-        display: flex;
-        gap: ${getSpacing(2)};
-        justify-content: flex-end;
-      }
-    }
   }
 `;
 
 export const StyledPayoutCreateModal = styled.div`
   width: 380px;
   color: var(--white);
+
+  .vault-selection {
+    padding-top: ${getSpacing(2)};
+
+    .options {
+      display: flex;
+      gap: ${getSpacing(2)};
+      justify-content: flex-end;
+    }
+  }
 `;

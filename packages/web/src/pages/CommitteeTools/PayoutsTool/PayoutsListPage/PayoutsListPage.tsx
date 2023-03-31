@@ -3,7 +3,8 @@ import { getAddressSafes, IPayoutResponse, IVault, PayoutStatus } from "@hats-fi
 import { useAccount } from "wagmi";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { Button, Loading, Modal } from "components";
+import { Alert, Button, HatSpinner, Loading, Modal } from "components";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/vaults/useVaults";
 import useModal from "hooks/useModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
@@ -12,10 +13,12 @@ import { PayoutCard } from "../components";
 import * as PayoutsService from "../payoutsService";
 import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
 import AddIcon from "@mui/icons-material/AddOutlined";
+import { useOnChange } from "hooks/usePrevious";
 
 export const PayoutsListPage = () => {
   const { t } = useTranslation();
 
+  const { tryAuthentication, isAuthenticated } = useSiweAuth();
   const { address } = useAccount();
   const { allVaults } = useVaults();
 
@@ -24,8 +27,8 @@ export const PayoutsListPage = () => {
   const [section, setSection] = useState<"in_progress" | "finished">("in_progress");
   const [userVaults, setUserVaults] = useState<IVault[]>([]);
 
-  const [allPayouts, setAllPayouts] = useState<IPayoutResponse[]>([]);
-  const [payoutsGroupsByDate, setPayoutsGroupsByDate] = useState<{ date: string; payouts: IPayoutResponse[] }[]>([]);
+  const [allPayouts, setAllPayouts] = useState<IPayoutResponse[] | undefined>();
+  const [payoutsGroupsByDate, setPayoutsGroupsByDate] = useState<{ date: string; payouts: IPayoutResponse[] }[] | undefined>();
 
   // Get user vaults
   useEffect(() => {
@@ -38,9 +41,8 @@ export const PayoutsListPage = () => {
 
         const userSafes = await getAddressSafes(address, vault.chainId);
         const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
-        const isMultisigAddress = vault.description?.committee["multisig-address"] === address;
 
-        if ((isSafeMember || isMultisigAddress) && vault.version === "v2") foundVaults.push(vault);
+        if (isSafeMember && vault.version === "v2") foundVaults.push(vault);
       }
 
       setTimeout(() => setLoading(false), 200);
@@ -50,21 +52,23 @@ export const PayoutsListPage = () => {
   }, [address, allVaults]);
 
   // Get user payouts
-  useEffect(() => {
-    const loadData = async () => {
-      if (userVaults.length === 0) return;
+  useOnChange(userVaults, async (newVal, prevVal) => {
+    if (JSON.stringify(newVal) === JSON.stringify(prevVal)) return;
+    if (newVal.length === 0) return;
 
-      const payouts = await PayoutsService.getPayoutsListByVault(
-        userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
-      );
-      setAllPayouts(payouts);
-    };
-    loadData();
-  }, [userVaults]);
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return setAllPayouts([]);
+
+    const payouts = await PayoutsService.getPayoutsListByVault(
+      userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
+    );
+    setAllPayouts(payouts);
+  });
 
   // Filter payouts by section
   useEffect(() => {
-    if (allPayouts.length === 0) return setPayoutsGroupsByDate([]);
+    if (!allPayouts) return setPayoutsGroupsByDate(undefined);
+    if (allPayouts && allPayouts?.length === 0) return setPayoutsGroupsByDate([]);
 
     const payoutsFilteredBySection = allPayouts.filter((payout) => {
       if (section === "in_progress") return payout.status !== PayoutStatus.Executed;
@@ -96,8 +100,11 @@ export const PayoutsListPage = () => {
     setPayoutsGroupsByDate(payoutGroupsByDateArray);
   }, [allPayouts, section]);
 
-  const handleCreatePayout = (vault: IVault) => {
-    // PayoutsService.createNewPayout();
+  const handleCreatePayout = async () => {
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
+    showCreateModal();
   };
 
   if (loading && address && allVaults) return <Loading />;
@@ -111,7 +118,7 @@ export const PayoutsListPage = () => {
             <p>{t("payouts")}</p>
           </div>
 
-          <Button onClick={showCreateModal}>
+          <Button onClick={handleCreatePayout}>
             <AddIcon className="mr-2" />
             {t("Payouts.createPayout")}
           </Button>
@@ -126,14 +133,31 @@ export const PayoutsListPage = () => {
           </PayoutListSection>
         </PayoutListSections>
 
-        {payoutsGroupsByDate.map((payoutGroup) => (
-          <div className="group" key={payoutGroup.date}>
-            <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
-            {payoutGroup.payouts.map((payout) => (
-              <PayoutCard key={payout._id} payout={payout} />
-            ))}
-          </div>
-        ))}
+        {!isAuthenticated && (
+          <>
+            <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
+            <Button onClick={tryAuthentication} className="mt-4">
+              {t("signInWithEthereum")}
+            </Button>
+          </>
+        )}
+
+        {isAuthenticated && (
+          <>
+            {payoutsGroupsByDate ? (
+              payoutsGroupsByDate.map((payoutGroup) => (
+                <div className="group" key={payoutGroup.date}>
+                  <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
+                  {payoutGroup.payouts.map((payout) => (
+                    <PayoutCard key={payout._id} payout={payout} />
+                  ))}
+                </div>
+              ))
+            ) : (
+              <HatSpinner expanded text={`${t("Payouts.loadingPayouts")}...`} />
+            )}
+          </>
+        )}
       </StyledPayoutsListPage>
 
       <Modal
@@ -142,8 +166,9 @@ export const PayoutsListPage = () => {
         titleIcon={<AddIcon className="mr-2" />}
         onHide={hideCreateModal}
         newStyles
+        overflowVisible
       >
-        <PayoutCreateModal onSelectVault={(vault) => handleCreatePayout(vault)} closeModal={hideCreateModal} />
+        <PayoutCreateModal closeModal={hideCreateModal} />
       </Modal>
     </>
   );
