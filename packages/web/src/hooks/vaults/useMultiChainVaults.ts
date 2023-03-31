@@ -171,8 +171,12 @@ export const useMultiChainVaults = () => {
       userNfts: allUserNftsTest,
     };
 
-    if (JSON.stringify(vaults.prod) !== JSON.stringify(newDataProd)) setVaults((prev) => ({ ...prev, prod: newDataProd }));
-    if (JSON.stringify(vaults.test) !== JSON.stringify(newDataTest)) setVaults((prev) => ({ ...prev, test: newDataTest }));
+    const newData = {
+      prod: newDataProd,
+      test: newDataTest,
+    };
+
+    if (JSON.stringify(vaults) !== JSON.stringify(newData)) setVaults(newData);
   }, [
     vaults,
     ethereumData,

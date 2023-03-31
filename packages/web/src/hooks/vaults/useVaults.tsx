@@ -162,8 +162,8 @@ export function VaultsProvider({ children }) {
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    setAllVaults(allVaultsData);
-    setVaults(vaultsFilteredByNetwork);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsData)) setAllVaults(allVaultsData);
+    if (JSON.stringify(vaults) !== JSON.stringify(vaultsFilteredByNetwork)) setVaults(vaultsFilteredByNetwork);
   };
 
   const setAllUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
@@ -199,15 +199,17 @@ export function VaultsProvider({ children }) {
         : appChains[nft.chainId as number].chain.testnet;
     });
 
-    setAllUserNfts(nftsWithData);
-    setUserNfts(nftsFilteredByNetwork);
+    if (JSON.stringify(allUserNfts) !== JSON.stringify(nftsWithData)) setAllUserNfts(nftsWithData);
+    if (JSON.stringify(userNfts) !== JSON.stringify(nftsFilteredByNetwork)) setUserNfts(nftsFilteredByNetwork);
   };
 
   useEffect(() => {
     let cancelled = false;
     if (vaults && networkEnv === "prod") {
       getPrices(vaults).then((prices) => {
-        if (!cancelled) setTokenPrices(prices);
+        if (!cancelled) {
+          setTokenPrices(prices);
+        }
       });
     }
 
