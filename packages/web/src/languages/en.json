@@ -289,6 +289,7 @@
     "inProgress": "In progress",
     "history": "History",
     "signInWithEthereum": "Sign in with Ethereum",
+    "info": "Info",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -370,7 +371,9 @@
       "createNewPayout": "Create new payout",
       "createPayoutDescription": "Select the vault you want to create a payout for.",
       "signInToSeePayouts": "You need to Sign in with Ethereum in order to see your payouts.",
-      "loadingPayouts": "Loading payouts"
+      "loadingPayouts": "Loading payouts",
+      "noPayoutsInProgress": "You have no in progress payouts. You can create a new one by clicking on the button below.",
+      "noPayoutsHistory": "You have no finished payouts."
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",

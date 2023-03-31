@@ -96,7 +96,6 @@ export const PayoutsListPage = () => {
       return dateB.diff(dateA);
     });
 
-    console.log(payoutGroupsByDateArray);
     setPayoutsGroupsByDate(payoutGroupsByDateArray);
   }, [allPayouts, section]);
 
@@ -145,14 +144,32 @@ export const PayoutsListPage = () => {
         {isAuthenticated && (
           <>
             {payoutsGroupsByDate ? (
-              payoutsGroupsByDate.map((payoutGroup) => (
-                <div className="group" key={payoutGroup.date}>
-                  <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
-                  {payoutGroup.payouts.map((payout) => (
-                    <PayoutCard key={payout._id} payout={payout} />
-                  ))}
-                </div>
-              ))
+              <>
+                {payoutsGroupsByDate.length > 0 ? (
+                  payoutsGroupsByDate.map((payoutGroup) => (
+                    <div className="group" key={payoutGroup.date}>
+                      <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
+                      {payoutGroup.payouts.map((payout) => (
+                        <PayoutCard key={payout._id} payout={payout} />
+                      ))}
+                    </div>
+                  ))
+                ) : (
+                  <>
+                    {section === "in_progress" ? (
+                      <>
+                        <Alert type="info">{t("Payouts.noPayoutsInProgress")}</Alert>
+                        <Button onClick={handleCreatePayout} className="mt-4">
+                          <AddIcon className="mr-2" />
+                          {t("Payouts.createPayout")}
+                        </Button>
+                      </>
+                    ) : (
+                      <Alert type="info">{t("Payouts.noPayoutsHistory")}</Alert>
+                    )}
+                  </>
+                )}
+              </>
             ) : (
               <HatSpinner expanded text={`${t("Payouts.loadingPayouts")}...`} />
             )}
