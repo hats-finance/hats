@@ -36,8 +36,37 @@ export interface IPayoutSignature {
 }
 
 export enum PayoutStatus {
-  Creating,
-  Pending,
-  ReadyToExecute,
-  Executed,
+  Creating = "creating",
+  Pending = "pending",
+  ReadyToExecute = "readyToExecute",
+  UnderReview = "underReview",
+  Executed = "executed",
+  Rejected = "rejected",
 }
+
+export const payoutStatusInfo = {
+  [PayoutStatus.Creating]: {
+    label: "creating",
+    color: "--warning-yellow",
+  },
+  [PayoutStatus.Pending]: {
+    label: "collecting",
+    color: "--warning-yellow",
+  },
+  [PayoutStatus.ReadyToExecute]: {
+    label: "waitingExecution",
+    color: "--turquoise",
+  },
+  [PayoutStatus.UnderReview]: {
+    label: "underReview",
+    color: "--teal",
+  },
+  [PayoutStatus.Executed]: {
+    label: "executed",
+    color: "--turquoise",
+  },
+  [PayoutStatus.Rejected]: {
+    label: "rejected",
+    color: "--error-red",
+  },
+};

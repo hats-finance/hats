@@ -15,6 +15,10 @@ import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { useOnChange } from "hooks/usePrevious";
 
+const DraftStatus = [PayoutStatus.Creating];
+const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute, PayoutStatus.UnderReview];
+const FinishedStatus = [PayoutStatus.Executed, PayoutStatus.Rejected];
+
 export const PayoutsListPage = () => {
   const { t } = useTranslation();
 
@@ -23,8 +27,9 @@ export const PayoutsListPage = () => {
   const { allVaults } = useVaults();
 
   const { isShowing: isShowingCreateModal, show: showCreateModal, hide: hideCreateModal } = useModal();
+  const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [section, setSection] = useState<"in_progress" | "finished">("in_progress");
+  const [section, setSection] = useState<"drafts" | "in_progress" | "finished">("in_progress");
   const [userVaults, setUserVaults] = useState<IVault[]>([]);
 
   const [allPayouts, setAllPayouts] = useState<IPayoutResponse[] | undefined>();
@@ -62,7 +67,11 @@ export const PayoutsListPage = () => {
     const payouts = await PayoutsService.getPayoutsListByVault(
       userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
     );
+
+    if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
+    if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
     setAllPayouts(payouts);
+    setInitialized(true);
   });
 
   // Filter payouts by section
@@ -71,8 +80,9 @@ export const PayoutsListPage = () => {
     if (allPayouts && allPayouts?.length === 0) return setPayoutsGroupsByDate([]);
 
     const payoutsFilteredBySection = allPayouts.filter((payout) => {
-      if (section === "in_progress") return payout.status !== PayoutStatus.Executed;
-      return payout.status === PayoutStatus.Executed;
+      if (section === "drafts") return DraftStatus.includes(payout.status);
+      if (section === "in_progress") return InProgressStatus.includes(payout.status);
+      return FinishedStatus.includes(payout.status);
     });
 
     const payoutGroupsByDate = payoutsFilteredBySection.reduce((groups, payout) => {
@@ -124,6 +134,11 @@ export const PayoutsListPage = () => {
         </div>
 
         <PayoutListSections>
+          {allPayouts && allPayouts.some((payout) => payout.status === PayoutStatus.Creating) && (
+            <PayoutListSection active={section === "drafts"} onClick={() => setSection("drafts")}>
+              {t("drafts")}
+            </PayoutListSection>
+          )}
           <PayoutListSection active={section === "in_progress"} onClick={() => setSection("in_progress")}>
             {t("inProgress")}
           </PayoutListSection>
@@ -156,7 +171,9 @@ export const PayoutsListPage = () => {
                   ))
                 ) : (
                   <>
-                    {section === "in_progress" ? (
+                    {section === "finished" ? (
+                      <Alert type="info">{t("Payouts.noPayoutsHistory")}</Alert>
+                    ) : (
                       <>
                         <Alert type="info">{t("Payouts.noPayoutsInProgress")}</Alert>
                         <Button onClick={handleCreatePayout} className="mt-4">
@@ -164,8 +181,6 @@ export const PayoutsListPage = () => {
                           {t("Payouts.createPayout")}
                         </Button>
                       </>
-                    ) : (
-                      <Alert type="info">{t("Payouts.noPayoutsHistory")}</Alert>
                     )}
                   </>
                 )}

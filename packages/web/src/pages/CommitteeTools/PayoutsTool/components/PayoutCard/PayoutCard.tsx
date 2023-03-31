@@ -1,5 +1,10 @@
-import { IPayoutResponse } from "@hats-finance/shared";
+import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
+import { useVaults } from "hooks/vaults/useVaults";
+import { WithTooltip } from "components";
+import { ipfsTransformUri } from "utils";
+import { appChains } from "settings";
 import { StyledPayoutCard } from "./styles";
 
 type PayoutCardProps = {
@@ -9,5 +14,58 @@ type PayoutCardProps = {
 export const PayoutCard = ({ payout }: PayoutCardProps) => {
   const { t } = useTranslation();
 
-  return <StyledPayoutCard>PayoutCard</StyledPayoutCard>;
+  const vaultAddress = payout.vaultAddress;
+  const isCreating = payout.status === PayoutStatus.Creating;
+
+  const { allVaults } = useVaults();
+  const selectedVault = vaultAddress ? allVaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase()) : undefined;
+
+  const getVaultLogo = (vault: IVault) => {
+    const network = vault.chainId ? appChains[vault.chainId] : null;
+
+    return (
+      <WithTooltip text={vault.description?.["project-metadata"].name ?? ""}>
+        <div>
+          <img
+            className="logo"
+            src={ipfsTransformUri(vault.description?.["project-metadata"].icon)}
+            alt={vault.description?.["project-metadata"].name}
+          />
+          {vault.chainId && (
+            <div className="chain-logo">
+              <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.chain.name} />
+            </div>
+          )}
+        </div>
+      </WithTooltip>
+    );
+  };
+
+  if (!selectedVault) return null;
+
+  return (
+    <StyledPayoutCard status={payout.status}>
+      <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
+      <div className="col nonce">
+        <p className="title">{t("nonce")}</p>
+        <p className="content">{isCreating ? "-" : payout.nonce}</p>
+      </div>
+      <div className="col name">
+        <p className="title">{t("payoutName")}</p>
+        <p className="content">{payout.payoutData.title || "-"}</p>
+      </div>
+      <div className="col createdAt">
+        <p className="title">{t("createdAt")}</p>
+        <p className="content">{payout.createdAt ? moment(payout.createdAt).fromNow() : "-"}</p>
+      </div>
+      <div className="col signers">
+        <p className="title">{t("signers")}</p>
+        <p className="content">{isCreating ? "-/-" : `${payout.signatures.length}/${payout.minSignaturesNeeded}`}</p>
+      </div>
+      <div className="col status">
+        <p className="title">{t("status")}</p>
+        <p className="content">{t(payoutStatusInfo[payout.status].label)}</p>
+      </div>
+    </StyledPayoutCard>
+  );
 };
