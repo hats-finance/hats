@@ -82,7 +82,7 @@ export const useSiweAuth = () => {
     }
 
     return true;
-  }, [profileData.loggedIn, signIn]);
+  }, [profileData, signIn]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
