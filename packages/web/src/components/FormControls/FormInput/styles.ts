@@ -51,7 +51,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--grey-700);
+        background-color: var(--disabled-input);
         opacity: 0.4;
         z-index: 1;
         cursor: not-allowed;
@@ -70,6 +70,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       border-radius: 0;
       font-family: inherit;
       color-scheme: dark;
+      font-size: var(--xsmall);
 
       &::placeholder {
         color: var(--grey-500);
