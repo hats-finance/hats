@@ -73,7 +73,7 @@ export const PayoutsListPage = () => {
 
     const vaultsIds = newVal.map((vault) => vault.id).join(",");
 
-    const payoutsOnStorage = JSON.parse(sessionStorage.getItem(`payouts-${vaultsIds}`) || "null");
+    const payoutsOnStorage = JSON.parse(sessionStorage.getItem(`payouts-${address}-${vaultsIds}`) || "null");
     if (payoutsOnStorage) {
       if (!initialized && payoutsOnStorage.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
       if (!initialized && payoutsOnStorage.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
@@ -84,7 +84,7 @@ export const PayoutsListPage = () => {
       userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
     );
 
-    sessionStorage.setItem(`payouts-${vaultsIds}`, JSON.stringify(payouts));
+    sessionStorage.setItem(`payouts-${address}-${vaultsIds}`, JSON.stringify(payouts));
 
     if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
     if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
