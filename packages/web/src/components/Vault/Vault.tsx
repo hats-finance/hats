@@ -10,7 +10,7 @@ import ArrowIcon from "assets/icons/arrow.icon";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultActions from "./VaultActions/VaultActions";
 import VaultTokens from "./VaultTokens/VaultTokens";
-import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
 import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
