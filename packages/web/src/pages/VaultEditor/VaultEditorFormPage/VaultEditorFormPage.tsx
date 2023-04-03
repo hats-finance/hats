@@ -302,7 +302,7 @@ const VaultEditorFormPage = () => {
 
       if (isEditingExitingVault) {
         if (isNonEditableStatus) {
-          setUserHasPermissions(true);
+          setUserHasPermissions(canEditVault);
           setAllFormDisabled(true);
           return;
         }
