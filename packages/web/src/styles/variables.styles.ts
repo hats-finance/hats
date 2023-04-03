@@ -53,6 +53,7 @@ export const variables = css`
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
 
+    --disabled-input: #070a14;
     --background-clear-blue: #161b2f;
     --background-clearer-blue: #212639;
     --grey-400: #d0d5dd;
@@ -60,6 +61,7 @@ export const variables = css`
     --grey-600: #424751;
     --grey-700: #343841;
     --grey-800: #282c33;
+    --grey-900: #424751;
     --error-red: #ff6464;
     --warning-yellow: #f2c94c;
 
