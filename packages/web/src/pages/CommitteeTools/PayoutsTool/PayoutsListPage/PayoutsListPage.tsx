@@ -57,7 +57,7 @@ export const PayoutsListPage = () => {
         if (isSafeMember && vault.version === "v2") foundVaults.push(vault);
       }
 
-      setTimeout(() => setLoading(false), 200);
+      setLoading(false);
       setUserVaults(foundVaults);
     };
     populateVaultsOptions();
@@ -71,9 +71,20 @@ export const PayoutsListPage = () => {
     const signedIn = await tryAuthentication();
     if (!signedIn) return setAllPayouts([]);
 
+    const vaultsIds = newVal.map((vault) => vault.id).join(",");
+
+    const payoutsOnStorage = JSON.parse(sessionStorage.getItem(`payouts-${vaultsIds}`) || "null");
+    if (payoutsOnStorage) {
+      if (!initialized && payoutsOnStorage.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
+      if (!initialized && payoutsOnStorage.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
+      setAllPayouts(payoutsOnStorage);
+    }
+
     const payouts = await PayoutsService.getPayoutsListByVault(
       userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
     );
+
+    sessionStorage.setItem(`payouts-${vaultsIds}`, JSON.stringify(payouts));
 
     if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
     if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");

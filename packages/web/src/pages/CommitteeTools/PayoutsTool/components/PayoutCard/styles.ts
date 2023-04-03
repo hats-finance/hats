@@ -10,6 +10,16 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus }>(
     align-items: center;
     gap: ${getSpacing(4)};
     grid-template-columns: auto auto 2fr 2fr 1fr 2fr;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &:active {
+      opacity: 0.6;
+    }
 
     .vault-icon {
       position: relative;

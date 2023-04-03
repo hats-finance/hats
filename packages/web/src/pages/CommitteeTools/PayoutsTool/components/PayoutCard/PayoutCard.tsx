@@ -1,7 +1,9 @@
 import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { useVaults } from "hooks/vaults/useVaults";
+import { RoutePaths } from "navigation";
 import { WithTooltip } from "components";
 import { ipfsTransformUri } from "utils";
 import { appChains } from "settings";
@@ -13,6 +15,7 @@ type PayoutCardProps = {
 
 export const PayoutCard = ({ payout }: PayoutCardProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const vaultAddress = payout.vaultAddress;
   const isCreating = payout.status === PayoutStatus.Creating;
@@ -41,10 +44,18 @@ export const PayoutCard = ({ payout }: PayoutCardProps) => {
     );
   };
 
+  const handleGoToPayout = () => {
+    if (payout.status === PayoutStatus.Creating) {
+      navigate(`${RoutePaths.payouts}/${payout._id}`);
+    } else {
+      navigate(`${RoutePaths.payouts}/status/${payout._id}`);
+    }
+  };
+
   if (!selectedVault) return null;
 
   return (
-    <StyledPayoutCard status={payout.status}>
+    <StyledPayoutCard status={payout.status} onClick={handleGoToPayout}>
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
       <div className="col nonce">
         <p className="title">{t("nonce")}</p>
