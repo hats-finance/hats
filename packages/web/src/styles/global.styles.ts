@@ -109,19 +109,22 @@ export const GlobalStyle = createGlobalStyle`
     .content-wrapper {
         max-width: var(--element-max-width);
         white-space: pre-line;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .content-wrapper-md {
         max-width: var(--element-max-width-md);
         white-space: pre-line;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
     
     .content-wrapper-sm {
         max-width: var(--element-max-width-sm);
         white-space: pre-line;
-        margin: 0 auto;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .seperator {
