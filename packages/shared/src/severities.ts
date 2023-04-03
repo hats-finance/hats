@@ -7,6 +7,10 @@ import {
   IVulnerabilitySeveritiesTemplateV2,
 } from "./types";
 
+export const DefaultIndexArray = [
+  0, 10, 20, 70, 150, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
+];
+
 export const convertVulnerabilitySeverityV1ToV2 = (
   severity: IEditedVulnerabilitySeverityV1,
   indexArray?: number[]
@@ -24,9 +28,7 @@ export const getVulnerabilitySeveritiesTemplate = (
   version: "v1" | "v2",
   useAuditTemplate = false
 ): IVulnerabilitySeveritiesTemplate => {
-  const indexArray = [
-    0, 10, 20, 70, 150, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
-  ];
+  const indexArray = DefaultIndexArray;
 
   const auditTemplateV1: IVulnerabilitySeveritiesTemplateV1 = {
     name: "Default Template",
