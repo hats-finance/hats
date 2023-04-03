@@ -8,6 +8,6 @@ export const createNewPayoutData = (): IPayoutData => {
     percentageToPay: "",
     explanation: "",
     nftUrl: "",
-    additionalInfo: "Submission tx: \nSubmission link: \nDecrypted submission:",
+    additionalInfo: "Submission tx: \n\nSubmission link: \n\nDecrypted submission:",
   };
 };
