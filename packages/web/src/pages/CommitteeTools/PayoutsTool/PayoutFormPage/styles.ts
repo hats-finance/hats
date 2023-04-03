@@ -60,8 +60,61 @@ export const StyledPayoutFormPage = styled.div`
   }
 `;
 
-export const StyledPayoutForm = styled.div`
-  background: var(--background-clearer-blue);
-  border-radius: 4px;
-  padding: ${getSpacing(2.5)};
+export const StyledPayoutForm = styled.form`
+  .form-container {
+    background: var(--background-clearer-blue);
+    border-radius: 4px;
+    padding: ${getSpacing(2.5)};
+
+    .subtitle {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: var(--small);
+    }
+
+    .reasoningAlert {
+      font-size: var(--xxsmall);
+      span {
+        color: var(--teal);
+      }
+    }
+
+    .row {
+      display: flex;
+      gap: ${getSpacing(2)};
+
+      & > * {
+        width: 33.33%;
+      }
+    }
+
+    .resultDivider {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(2)};
+      margin: ${getSpacing(3)} 0;
+
+      div {
+        flex: 1;
+        height: 1px;
+        border: 1px solid var(--grey-500);
+        border-style: dashed;
+      }
+    }
+
+    .result {
+      display: flex;
+      gap: ${getSpacing(3)};
+    }
+  }
+
+  .buttons {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    gap: ${getSpacing(2)};
+    border-top: 1px solid var(--grey-600);
+    padding-top: ${getSpacing(2)};
+    margin-top: ${getSpacing(5)};
+  }
 `;
