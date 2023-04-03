@@ -413,7 +413,8 @@
       "additionalInfoPlaceholder": "Type additional information here",
       "resultDescription": "The payout sum and NFT are calculated by the selected severity.",
       "savePayout": "Save payout",
-      "payoutSum": "Payout sum"
+      "payoutSum": "Payout sum",
+      "percentageOfTheTotalVaultToPay": "% of the whole vault"
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { BigNumber } from "ethers";
+import millify from "millify";
 import { useAccount } from "wagmi";
 import { Controller, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,6 +10,7 @@ import {
   DefaultIndexArray,
   IPayoutData,
   IPayoutResponse,
+  IVault,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
   PayoutStatus,
@@ -18,10 +21,11 @@ import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { Amount } from "utils/amounts.utils";
 import { RoutePaths } from "navigation";
+import * as PayoutsService from "../payoutsService";
 import { getPayoutDataYupSchema } from "./formSchema";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
-import * as PayoutsService from "../payoutsService";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
@@ -31,7 +35,7 @@ import { NftPreview } from "../components/NftPreview/NftPreview";
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { allVaults } = useVaults();
+  const { allVaults, tokenPrices } = useVaults();
 
   const { address } = useAccount();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
@@ -58,7 +62,22 @@ export const PayoutFormPage = () => {
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
-  console.log(selectedSeverityData);
+  const calculateAmountInTokensToPay = (percentageToPay: string, vault: IVault | undefined): string => {
+    if (!vault || isNaN(+percentageToPay)) return "";
+
+    const tokenAddress = vault.stakingToken;
+    const tokenSymbol = vault.stakingTokenSymbol;
+    const tokenDecimals = vault.stakingTokenDecimals;
+    const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), tokenDecimals, tokenSymbol).number;
+    const amountInTokens = vaultBalance * (+percentageToPay / 100);
+
+    const tokenPrice = tokenPrices?.[tokenAddress] ?? 0;
+
+    return `≈ ${millify(amountInTokens)} ${tokenSymbol} ~ ${millify(amountInTokens * tokenPrice)}$`;
+  };
+
+  const percentageToPay = useWatch({ control, name: "percentageToPay" });
+  const amountInTokensToPay = calculateAmountInTokensToPay(percentageToPay, vault);
 
   // Handler for getting payout data
   useEffect(() => {
@@ -97,7 +116,9 @@ export const PayoutFormPage = () => {
     if (prevData === undefined || newData === undefined) return;
 
     if (vault?.version === "v2") {
-      setValue("percentageToPay", (selectedSeverityData as IVulnerabilitySeverityV2).percentage.toString());
+      const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
+      const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
+      setValue("percentageToPay", percentage.toString());
     } else {
       const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
       setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
@@ -235,6 +256,7 @@ export const PayoutFormPage = () => {
                   placeholder={t("Payouts.percentageToPayPlaceholder")}
                   disabled
                   colorable
+                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                 />
               </div>
 
@@ -279,7 +301,7 @@ export const PayoutFormPage = () => {
                   severityName={selectedSeverityData?.name}
                   nftData={selectedSeverityData?.["nft-metadata"]}
                 />
-                <FormInput value={`~0.00$`} label={t("Payouts.payoutSum")} disabled />
+                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} disabled />
               </div>
             </div>
 
