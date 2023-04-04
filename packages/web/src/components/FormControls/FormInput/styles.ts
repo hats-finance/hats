@@ -21,6 +21,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
     width: 100%;
+    flex: 1;
 
     .main-container {
       position: relative;

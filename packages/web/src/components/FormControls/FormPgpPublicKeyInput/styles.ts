@@ -8,9 +8,10 @@ export const StyledFormPgpPublicKeyInput = styled.div<{
   disabled: boolean;
 }>(
   ({ hasError, isDirty, noMargin, disabled }) => css`
-    width: 100%;
     position: relative;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
+    width: 100%;
+    flex: 1;
 
     .container {
       width: 100%;

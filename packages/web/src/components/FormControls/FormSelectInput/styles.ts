@@ -3,9 +3,10 @@ import { getSpacing } from "styles";
 
 export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
   ({ hasError }) => css`
-    width: 100%;
     position: relative;
     margin-bottom: ${getSpacing(3)};
+    width: 100%;
+    flex: 1;
 
     label.input-label {
       display: block;
