@@ -15,7 +15,7 @@ interface FormIconInputProps {
   disabled?: boolean;
   type?: "icon" | "image";
   label?: string;
-  error?: { message: string; type: string };
+  error?: { message?: string; type: string };
 }
 
 function FormIconInputComponent(
@@ -81,9 +81,9 @@ function FormIconInputComponent(
 
   const getPlaceholder = () => {
     if (type === "icon") {
-      return t("VaultEditor.icon-placeholder");
+      return t("icon-placeholder");
     } else {
-      return t("VaultEditor.img-placeholder");
+      return t("img-placeholder");
     }
   };
 
@@ -94,7 +94,7 @@ function FormIconInputComponent(
         disabled={disabled}
         type="hidden"
         ref={(e) => {
-          ref(e);
+          if (ref && typeof ref === "function") ref(e);
           (localRef as any).current = e;
           setChanged((prev) => !prev);
         }}

@@ -1,4 +1,4 @@
-import { Chain, arbitrum, goerli, mainnet, optimism, optimismGoerli } from "@wagmi/chains";
+import { Chain, arbitrum, goerli, mainnet, optimism, optimismGoerli, polygon, bsc } from "@wagmi/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;
@@ -58,6 +58,24 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
     coingeckoId: "arbitrum-one",
     govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
+  },
+  [polygon.id]: {
+    vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
+    chain: polygon,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
+    coingeckoId: "polygon-pos",
+    govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
+  },
+  [bsc.id]: {
+    vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
+    chain: bsc,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    coingeckoId: "binance-smart-chain",
+    govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
   },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {

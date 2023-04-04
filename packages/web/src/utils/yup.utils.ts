@@ -1,5 +1,6 @@
 import * as Yup from "yup";
 import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
+import { readMessage, readKey } from "openpgp";
 import { isAddress } from "ethers/lib/utils";
 import { appChains } from "settings";
 import { isEmailAddress } from "./emails.utils";
@@ -152,6 +153,58 @@ export const getTestMinAmountOfKeysOnMembers = (intl) => {
         .filter((key) => !!key);
 
       return pgpKeys.length > 0 ? true : ctx.createError({ message: intl("at-least-one-pgp-key-required") });
+    },
+  };
+};
+
+export const getTestPGPKeyFormat = (intl, type: "public" | "private") => {
+  return {
+    name: `pgp-${type}-key-format`,
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isEmpty = value === "";
+      if (isEmpty || !value) return true;
+
+      try {
+        const timeout = (cb, interval) => () => new Promise<undefined>((resolve) => setTimeout(() => cb(resolve), interval));
+        const onTimeout = timeout((resolve) => resolve(undefined), 200);
+
+        const keyData = await Promise.race([readKey({ armoredKey: value }), onTimeout()]);
+        if (!keyData)
+          return ctx.createError({
+            message: intl(type === "private" ? "private-key-badly-formatted" : "public-key-badly-formatted"),
+          });
+
+        const isValidType = type === "private" ? keyData.isPrivate() : !keyData.isPrivate();
+        return isValidType
+          ? true
+          : ctx.createError({ message: intl(type === "private" ? "key-is-public-not-private" : "key-is-private-not-public") });
+      } catch (error) {
+        return ctx.createError({
+          message: intl(type === "private" ? "private-key-badly-formatted" : "public-key-badly-formatted"),
+        });
+      }
+    },
+  };
+};
+
+export const getTestPGPMessageFormat = (intl) => {
+  return {
+    name: `pgp-message-format`,
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isEmpty = value === "";
+      if (isEmpty || !value) return true;
+
+      try {
+        const timeout = (cb, interval) => () => new Promise<undefined>((resolve) => setTimeout(() => cb(resolve), interval));
+        const onTimeout = timeout((resolve) => resolve(undefined), 200);
+
+        const messageData = await Promise.race([readMessage({ armoredMessage: value }), onTimeout()]);
+        return messageData ? true : ctx.createError({ message: intl("pgp-message-badly-formatted") });
+      } catch (error) {
+        return ctx.createError({
+          message: intl("pgp-message-badly-formatted"),
+        });
+      }
     },
   };
 };

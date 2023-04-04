@@ -113,7 +113,6 @@ export async function resendVerificationEmail(editSessionId: string, email: stri
 export async function cancelEditionApprovalRequest(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/cancel-approval-request`);
-    console.log(res);
     return res.status === 200 ? res.data : null;
   } catch (error) {
     return null;
@@ -128,7 +127,6 @@ export async function cancelEditionApprovalRequest(editSessionId: string): Promi
 export async function sendEditionToGovApproval(editSessionId: string): Promise<IEditedSessionResponse | null> {
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/send-to-gov-approval`);
-    console.log(res);
     return res.status === 200 ? res.data : null;
   } catch (error) {
     return null;

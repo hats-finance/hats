@@ -1,20 +1,12 @@
-import { useContext } from "react";
-import { KeystoreContext, UnlockKeystoreModal } from "components/Keystore";
-import Decrypt from "./Decrypt/Decrypt";
-import Welcome from "./Welcome/Welcome";
-import { StyledCommitteeToolsPage } from "./styles";
+import { Loading } from "components";
+import { useKeystore } from "components/Keystore";
+import { DecryptTool } from "./DecryptTool/DecryptTool";
+import { WelcomeCommittee } from "./WelcomeCommittee/WelcomeCommittee";
 
-const CommitteeToolsPage = () => {
-  const keystoreContext = useContext(KeystoreContext);
+export const CommitteeToolsPage = () => {
+  const { keystore, isKeystoreLoaded } = useKeystore();
 
-  return (
-    <StyledCommitteeToolsPage className="content-wrapper">
-      <div className="committee-tools-content">
-        <UnlockKeystoreModal isShowing={keystoreContext.isCreated && keystoreContext.isLocked} />
-        {keystoreContext.isCreated ? <Decrypt /> : <Welcome />}
-      </div>
-    </StyledCommitteeToolsPage>
-  );
+  if (!isKeystoreLoaded) return <Loading fixed />;
+
+  return <div className="content-wrapper">{keystore ? <DecryptTool /> : <WelcomeCommittee />}</div>;
 };
-
-export { CommitteeToolsPage };

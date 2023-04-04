@@ -11,6 +11,7 @@ export type ButtonProps = {
   bigHorizontalPadding?: boolean;
   noPadding?: boolean;
   lowercase?: boolean;
+  type?: "button" | "submit" | "reset";
   onClick?: () => void;
   children: React.ReactNode;
 };
@@ -21,6 +22,7 @@ export const Button = ({
   size = "normal",
   disabled = false,
   bigHorizontalPadding = false,
+  type = "button",
   lowercase,
   noPadding,
   expanded,
@@ -31,7 +33,7 @@ export const Button = ({
 }: ButtonProps) => {
   return (
     <StyledButton
-      type="button"
+      type={type}
       styleType={styleType}
       filledColor={filledColor}
       size={size}

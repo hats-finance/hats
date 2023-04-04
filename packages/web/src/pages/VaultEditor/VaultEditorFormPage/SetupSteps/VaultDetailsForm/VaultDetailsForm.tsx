@@ -1,8 +1,7 @@
 import { useContext, useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { getCustomIsDirty, useEnhancedFormContext } from "hooks/useEnhancedFormContext";
-import { getPath } from "utils/objects.utils";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
 import { IEditedVaultDescription } from "types";
@@ -60,10 +59,10 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.type`}
-            render={({ field, formState: { errors, dirtyFields, defaultValues } }) => (
+            render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
               <FormSelectInput
                 isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                error={getPath(errors, field.name)}
+                error={error}
                 label={t("VaultEditor.vault-details.type")}
                 placeholder={t("VaultEditor.vault-details.type-placeholder")}
                 colorable
@@ -118,11 +117,11 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.starttime`}
-            render={({ field, formState: { errors, defaultValues, dirtyFields } }) => (
+            render={({ field, fieldState: { error }, formState: { defaultValues, dirtyFields } }) => (
               <FormDateInput
                 withTime
                 isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                error={getPath(errors, field.name)}
+                error={error}
                 label={t("VaultEditor.vault-details.starttime")}
                 placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
                 colorable
@@ -134,11 +133,11 @@ export function VaultDetailsForm() {
           <Controller
             control={control}
             name={`project-metadata.endtime`}
-            render={({ field, formState: { errors, defaultValues, dirtyFields } }) => (
+            render={({ field, fieldState: { error }, formState: { defaultValues, dirtyFields } }) => (
               <FormDateInput
                 withTime
                 isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                error={getPath(errors, field.name)}
+                error={error}
                 label={t("VaultEditor.vault-details.endtime")}
                 placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
                 colorable

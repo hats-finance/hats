@@ -9,6 +9,10 @@ export enum LocalStorage {
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
 }
 
+export enum EncryptedStorage {
+  KeystorePassword = "HATS_PGP_KEYSTORE_PASSWORD",
+}
+
 export enum ScreenSize {
   Mobile = "MOBILE",
   Desktop = "DESKTOP",

@@ -211,12 +211,6 @@ const VaultEditorFormPage = () => {
             { replace: true }
           );
         }
-
-        // if (vaultAddress) {
-        //   navigate(`${RoutePaths.vault_editor}/status/${data.committee.chainId}/${vaultAddress}`);
-        // } else {
-        //   alert("Vault is being created. We'll send you an email when it's ready.");
-        // }
       }
     } catch (error) {
       console.error(error);
