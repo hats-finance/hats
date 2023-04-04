@@ -32,6 +32,22 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
 }
 
 /**
+ * Gets a list of all the active payouts of a vault
+ * @param vaultAddress - The vault address to create the payout
+ * @param chainId - The vault chain id to create the payout
+ *
+ * @returns A list of active payouts
+ */
+export async function getActivePayoutsByVault(chainId: number, vaultAddress: string): Promise<IPayoutResponse[]> {
+  try {
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/active/${chainId}/${vaultAddress}`);
+    return res.status === 200 ? res.data.payouts : [];
+  } catch (error) {
+    return [];
+  }
+}
+
+/**
  * Creates a new payout
  * @param vaultAddress - The vault address to create the payout
  * @param chainId - The vault chain id to create the payout

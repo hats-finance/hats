@@ -56,6 +56,7 @@ export const PayoutFormPage = () => {
   const [lockingPayout, setLockingPayout] = useState(false);
   const [loadingPayoutData, setLoadingPayoutData] = useState(false);
   const [showProgressSavedFlag, setShowProgressSavedFlag] = useState(false);
+  const [isAnotherActivePayout, setIsAnotherActivePayout] = useState(false);
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
 
   const vaultSeverities = vault?.description?.severities ?? [];
@@ -145,6 +146,7 @@ export const PayoutFormPage = () => {
         return;
       }
 
+      getActivePayoutsInfo(payoutResponse);
       setPayout(payoutResponse);
       setLastModifedOn(payoutResponse.updatedAt);
       handleReset(payoutResponse.payoutData);
@@ -152,6 +154,19 @@ export const PayoutFormPage = () => {
       console.error(error);
     } finally {
       setLoadingPayoutData(false);
+    }
+  };
+
+  const getActivePayoutsInfo = async (payoutResponse: IPayoutResponse) => {
+    const activePayoutsByVault = await PayoutsService.getActivePayoutsByVault(
+      payoutResponse.chainId,
+      payoutResponse.vaultAddress
+    );
+
+    if (activePayoutsByVault.length > 0) {
+      setIsAnotherActivePayout(true);
+    } else {
+      setIsAnotherActivePayout(false);
     }
   };
 
@@ -179,16 +194,13 @@ export const PayoutFormPage = () => {
   };
 
   const handleCreatePayout = async (payoutData: IPayoutData) => {
-    if (isPayoutCreated || !address || !isAuthenticated || !payoutId) return;
+    if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
 
     setLockingPayout(true);
     const wasLocked = await PayoutsService.lockPayout(payoutId);
     setLockingPayout(false);
 
-    if (wasLocked) {
-      navigate(`${RoutePaths.payouts}/status/${payoutId}`);
-    } else {
-    }
+    if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
   };
 
   if (!address) return <PayoutsWelcome />;
@@ -318,13 +330,19 @@ export const PayoutFormPage = () => {
               </div>
             </div>
 
+            {isAnotherActivePayout && (
+              <Alert type="warning" className="mt-5">
+                {t("Payouts.anotherActivePayout")}
+              </Alert>
+            )}
+
             <div className="buttons">
               <WithTooltip visible={showProgressSavedFlag} text={t("progressSaved")} placement="left">
                 <Button disabled={!formState.isDirty || savingData} styleType="outlined" onClick={handleSavePayout}>
                   {savingData ? `${t("loading")}...` : t("Payouts.savePayout")}
                 </Button>
               </WithTooltip>
-              <Button type="submit" disabled={lockingPayout}>
+              <Button type="submit" disabled={lockingPayout || isAnotherActivePayout}>
                 {lockingPayout ? `${t("loading")}...` : t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
               </Button>
             </div>

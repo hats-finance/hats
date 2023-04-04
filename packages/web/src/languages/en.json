@@ -415,7 +415,8 @@
       "resultDescription": "The payout sum and NFT are calculated by the selected severity.",
       "savePayout": "Save payout",
       "payoutSum": "Payout sum",
-      "percentageOfTheTotalVaultToPay": "% of the whole vault"
+      "percentageOfTheTotalVaultToPay": "% of the whole vault",
+      "anotherActivePayout": "You can't create a new payout for this vault while it has an active one. Please wait for the current payout to finish, or delete it."
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",
