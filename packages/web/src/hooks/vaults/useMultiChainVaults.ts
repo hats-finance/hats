@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chains";
+import { mainnet, goerli, optimismGoerli, optimism, arbitrum, polygon, bsc } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
 import { appChains } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -18,6 +18,8 @@ const supportedChains = {
   ETHEREUM: { prod: appChains[mainnet.id], test: appChains[goerli.id] },
   OPTIMISM: { prod: appChains[optimism.id], test: appChains[optimismGoerli.id] },
   ARBITRUM: { prod: appChains[arbitrum.id], test: null },
+  POLYGON: { prod: appChains[polygon.id], test: null },
+  BINANCE: { prod: appChains[bsc.id], test: null },
 };
 
 interface GraphVaultsData {
@@ -112,9 +114,21 @@ export const useMultiChainVaults = () => {
     chainIdProd: arbitrumProdChainId,
     isFetched: isArbitrumFetched,
   } = useSubgraphFetch("ARBITRUM");
+  const {
+    data: polygonData,
+    chainIdTest: polygonTestChainId,
+    chainIdProd: polygonProdChainId,
+    isFetched: isPolygonFetched,
+  } = useSubgraphFetch("POLYGON");
+  const {
+    data: binanceData,
+    chainIdTest: binanceTestChainId,
+    chainIdProd: binanceProdChainId,
+    isFetched: isBinanceFetched,
+  } = useSubgraphFetch("BINANCE");
 
   useEffect(() => {
-    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched];
+    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched, isPolygonFetched, isBinanceFetched];
     const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
 
     if (!areAllNetworksFetched) return;
@@ -123,36 +137,48 @@ export const useMultiChainVaults = () => {
       ...(ethereumData?.prod?.vaults?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
       ...(optimismData?.prod?.vaults?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
       ...(arbitrumData?.prod?.vaults?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
+      ...(polygonData?.prod?.vaults?.map((v) => ({ ...v, chainId: polygonProdChainId })) || []),
+      ...(binanceData?.prod?.vaults?.map((v) => ({ ...v, chainId: binanceProdChainId })) || []),
     ];
 
     const allVaultsTest = [
       ...(ethereumData?.test?.vaults?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
       ...(optimismData?.test?.vaults?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
       ...(arbitrumData?.test?.vaults?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
+      ...(polygonData?.test?.vaults?.map((v) => ({ ...v, chainId: polygonTestChainId })) || []),
+      ...(binanceData?.test?.vaults?.map((v) => ({ ...v, chainId: binanceTestChainId })) || []),
     ];
 
     const allMastersProd = [
       ...(ethereumData?.prod?.masters?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
       ...(optimismData?.prod?.masters?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
       ...(arbitrumData?.prod?.masters?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
+      ...(polygonData?.prod?.masters?.map((v) => ({ ...v, chainId: polygonProdChainId })) || []),
+      ...(binanceData?.prod?.masters?.map((v) => ({ ...v, chainId: binanceProdChainId })) || []),
     ];
 
     const allMastersTest = [
       ...(ethereumData?.test?.masters?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
       ...(optimismData?.test?.masters?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
       ...(arbitrumData?.test?.masters?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
+      ...(polygonData?.test?.masters?.map((v) => ({ ...v, chainId: polygonTestChainId })) || []),
+      ...(binanceData?.test?.masters?.map((v) => ({ ...v, chainId: binanceTestChainId })) || []),
     ];
 
     const allUserNftsProd = [
       ...(ethereumData?.prod?.userNfts?.map((v) => ({ ...v, chainId: ethereumProdChainId })) || []),
       ...(optimismData?.prod?.userNfts?.map((v) => ({ ...v, chainId: optimismProdChainId })) || []),
       ...(arbitrumData?.prod?.userNfts?.map((v) => ({ ...v, chainId: arbitrumProdChainId })) || []),
+      ...(polygonData?.prod?.userNfts?.map((v) => ({ ...v, chainId: polygonProdChainId })) || []),
+      ...(binanceData?.prod?.userNfts?.map((v) => ({ ...v, chainId: binanceProdChainId })) || []),
     ];
 
     const allUserNftsTest = [
       ...(ethereumData?.test?.userNfts?.map((v) => ({ ...v, chainId: ethereumTestChainId })) || []),
       ...(optimismData?.test?.userNfts?.map((v) => ({ ...v, chainId: optimismTestChainId })) || []),
       ...(arbitrumData?.test?.userNfts?.map((v) => ({ ...v, chainId: arbitrumTestChainId })) || []),
+      ...(polygonData?.test?.userNfts?.map((v) => ({ ...v, chainId: polygonTestChainId })) || []),
+      ...(binanceData?.test?.userNfts?.map((v) => ({ ...v, chainId: binanceTestChainId })) || []),
     ];
 
     const newDataProd = {
@@ -182,15 +208,23 @@ export const useMultiChainVaults = () => {
     ethereumData,
     optimismData,
     arbitrumData,
+    polygonData,
+    binanceData,
     ethereumTestChainId,
     ethereumProdChainId,
     optimismTestChainId,
     optimismProdChainId,
     arbitrumTestChainId,
     arbitrumProdChainId,
+    polygonProdChainId,
+    polygonTestChainId,
+    binanceProdChainId,
+    binanceTestChainId,
     isEthereumFetched,
     isOptimismFetched,
     isArbitrumFetched,
+    isPolygonFetched,
+    isBinanceFetched,
   ]);
 
   return { data: vaults };
