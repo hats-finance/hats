@@ -54,34 +54,40 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
   const onSubmit = async (data: ICreateKeyForm) => {
     const cleanData: ICreateKeyForm = removeEmpty(data);
 
-    try {
-      setLoading(true);
-      const { privateKey, publicKey } = await generatePgpKeyPair(cleanData);
+    if (keystore?.storedKeys) {
+      try {
+        setLoading(true);
+        const { privateKey, publicKey } = await generatePgpKeyPair(cleanData);
 
-      if (!data.alias || data.alias === "") throw new Error(t("PGPTool.aliasCannotBeEmpty"));
+        if (!data.alias || data.alias === "") throw new Error(t("PGPTool.aliasCannotBeEmpty"));
 
-      const aliasExists = keystore?.storedKeys.find((key) => key.alias.toLowerCase() === data.alias.toLowerCase());
-      if (aliasExists) throw new Error(t("PGPTool.keyWithAliasAlreadyExists", { alias: data.alias.toLowerCase() }));
+        const aliasExists = keystore?.storedKeys.find((key) => key.alias.toLowerCase() === data.alias.toLowerCase());
+        if (aliasExists) throw new Error(t("PGPTool.keyWithAliasAlreadyExists", { alias: data.alias.toLowerCase() }));
 
-      const keyExists = keystore?.storedKeys.find((key) => key.privateKey === privateKey);
-      if (keyExists) throw new Error(t("PGPTool.keyAlreadyExists"));
+        const keyExists = keystore?.storedKeys.find((key) => key.privateKey === privateKey);
+        if (keyExists) throw new Error(t("PGPTool.keyAlreadyExists"));
 
-      const newKeyToAdd: IStoredKey = {
-        id: uuid(),
-        alias: cleanData.alias,
-        passphrase: cleanData.advancedMode ? cleanData.passphrase : undefined,
-        privateKey,
-        publicKey,
-        createdAt: new Date(),
-      };
+        const newKeyToAdd = {
+          id: uuid(),
+          alias: cleanData.alias,
+          passphrase: cleanData.advancedMode ? cleanData.passphrase : undefined,
+          privateKey,
+          publicKey,
+          createdAt: new Date(),
+        } as IStoredKey;
 
-      setKeystore((prev) => ({ ...prev, storedKeys: [newKeyToAdd, ...prev!.storedKeys], isBackedUp: false }));
-      onClose();
-      onCreatedSuccess();
-    } catch (error) {
-      if (error instanceof Error) setError(error.message);
-    } finally {
-      setLoading(false);
+        setKeystore((prev) => ({
+          ...prev,
+          storedKeys: [newKeyToAdd, ...(prev?.storedKeys ?? [])],
+          isBackedUp: false,
+        }));
+        onClose();
+        onCreatedSuccess();
+      } catch (error) {
+        setError(error instanceof Error ? error.message : undefined);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
