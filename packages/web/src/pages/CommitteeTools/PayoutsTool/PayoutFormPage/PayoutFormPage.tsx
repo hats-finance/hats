@@ -53,6 +53,7 @@ export const PayoutFormPage = () => {
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
   const [savingData, setSavingData] = useState(false);
+  const [lockingPayout, setLockingPayout] = useState(false);
   const [loadingPayoutData, setLoadingPayoutData] = useState(false);
   const [showProgressSavedFlag, setShowProgressSavedFlag] = useState(false);
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
@@ -63,7 +64,7 @@ export const PayoutFormPage = () => {
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   const calculateAmountInTokensToPay = (percentageToPay: string, vault: IVault | undefined): string => {
-    if (!vault || isNaN(+percentageToPay)) return "";
+    if (!vault || isNaN(+percentageToPay)) return "-";
 
     const tokenAddress = vault.stakingToken;
     const tokenSymbol = vault.stakingTokenSymbol;
@@ -82,7 +83,7 @@ export const PayoutFormPage = () => {
   // Handler for getting payout data
   useEffect(() => {
     if (payoutId) {
-      loadPayoutData(payoutId);
+      loadPayoutData();
     } else {
       navigate(-1);
     }
@@ -124,9 +125,13 @@ export const PayoutFormPage = () => {
       const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
       setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
     }
+
+    setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
   });
 
-  const loadPayoutData = async (payoutId: string) => {
+  const loadPayoutData = async () => {
+    if (!payoutId) return;
+
     try {
       setLoadingPayoutData(true);
 
@@ -174,13 +179,20 @@ export const PayoutFormPage = () => {
   };
 
   const handleCreatePayout = async (payoutData: IPayoutData) => {
-    if (isPayoutCreated || !address || !isAuthenticated) return;
+    if (isPayoutCreated || !address || !isAuthenticated || !payoutId) return;
 
-    console.log(payoutData);
+    setLockingPayout(true);
+    const wasLocked = await PayoutsService.lockPayout(payoutId);
+    setLockingPayout(false);
+
+    if (wasLocked) {
+      navigate(`${RoutePaths.payouts}/status/${payoutId}`);
+    } else {
+    }
   };
 
   if (!address) return <PayoutsWelcome />;
-  if (loadingPayoutData) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
+  if (loadingPayoutData || allVaults?.length === 0) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
   return (
     <StyledPayoutFormPage className="content-wrapper-md">
@@ -206,7 +218,7 @@ export const PayoutFormPage = () => {
       {!isAuthenticated && (
         <>
           <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
-          <Button onClick={tryAuthentication} className="mt-4">
+          <Button onClick={loadPayoutData} className="mt-4">
             {t("signInWithEthereum")}
           </Button>
         </>
@@ -312,13 +324,15 @@ export const PayoutFormPage = () => {
                   {savingData ? `${t("loading")}...` : t("Payouts.savePayout")}
                 </Button>
               </WithTooltip>
-              <Button type="submit">
-                {t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
+              <Button type="submit" disabled={lockingPayout}>
+                {lockingPayout ? `${t("loading")}...` : t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
               </Button>
             </div>
           </StyledPayoutForm>
         </>
       )}
+
+      {lockingPayout && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
     </StyledPayoutFormPage>
   );
 };
