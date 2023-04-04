@@ -4,7 +4,6 @@ import { getSpacing } from "styles";
 export const StyledNftPreview = styled.div`
   border: 1px solid var(--grey-600);
   padding: ${getSpacing(1)};
-  background: var(--background-clear-blue);
   position: relative;
   cursor: pointer;
   transition: 0.2s;
