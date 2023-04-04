@@ -67,3 +67,18 @@ export async function savePayoutData(
     return undefined;
   }
 }
+
+/**
+ * Locks a payout. This means, the payout is set to  "Peding" and a nonce is generated
+ * @param payoutId - The payout id to lock
+ *
+ * @returns True if the payout was locked, false otherwise
+ */
+export async function lockPayout(payoutId: string): Promise<boolean> {
+  try {
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/lock/${payoutId}`);
+    return res.status === 200 ? res.data.ok : false;
+  } catch (error) {
+    return false;
+  }
+}
