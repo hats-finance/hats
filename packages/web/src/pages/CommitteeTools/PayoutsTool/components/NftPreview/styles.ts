@@ -8,14 +8,19 @@ export const StyledNftPreview = styled.div`
   position: relative;
   cursor: pointer;
   transition: 0.2s;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
   &:hover {
     opacity: 0.8;
   }
 
   .preview {
-    width: 140px;
-    height: 140px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
@@ -30,7 +35,7 @@ export const StyledNFTDetailsModal = styled.div`
   max-width: 480px;
   color: var(--white);
 
-  .preview {
+  .big-preview {
     width: 100%;
   }
 

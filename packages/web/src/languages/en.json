@@ -309,6 +309,7 @@
     "vaultName": "Vault name",
     "severity": "Severity",
     "close": "Close",
+    "noNFT": "No NFT",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

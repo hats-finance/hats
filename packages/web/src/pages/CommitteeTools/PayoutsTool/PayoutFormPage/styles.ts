@@ -82,10 +82,6 @@ export const StyledPayoutForm = styled.form`
     .row {
       display: flex;
       gap: ${getSpacing(2)};
-
-      & > * {
-        width: 33.33%;
-      }
     }
 
     .resultDivider {

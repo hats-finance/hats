@@ -113,6 +113,7 @@ export const PayoutFormPage = () => {
 
   // Edit the payout percentage based on the selected severity
   useOnChange(selectedSeverityName, (newData, prevData) => {
+    if (!selectedSeverityData) return;
     if (prevData === undefined || newData === undefined) return;
 
     if (vault?.version === "v2") {

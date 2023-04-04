@@ -20,14 +20,14 @@ export const NftPreview = ({ nftData, severityName, vault }: NftPreviewProps) =>
   return (
     <>
       <StyledNftPreview onClick={nftData ? showNFTModal : undefined}>
-        {nftData ? <Media className="preview" link={ipfsTransformUri(nftData.image)} /> : <p>asd</p>}
+        {nftData ? <Media className="preview" link={ipfsTransformUri(nftData.image)} /> : <p>{t("noNFT")}</p>}
         <OpenIcon className="icon" />
       </StyledNftPreview>
 
       {nftData && (
         <Modal newStyles isShowing={isShowingNFTModal} title={t("nft")} onHide={hideNFTModal}>
           <StyledNFTDetailsModal>
-            <Media className="preview" link={ipfsTransformUri(nftData.image)} />
+            <Media className="big-preview" link={ipfsTransformUri(nftData.image)} />
 
             <p className="nft-name mt-5">{nftData.name}</p>
 

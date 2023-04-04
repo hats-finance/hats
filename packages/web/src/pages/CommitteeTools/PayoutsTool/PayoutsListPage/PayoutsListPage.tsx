@@ -63,15 +63,11 @@ export const PayoutsListPage = () => {
     populateVaultsOptions();
   }, [address, allVaults]);
 
-  // Get user payouts
-  useOnChange(userVaults, async (newVal, prevVal) => {
-    if (JSON.stringify(newVal) === JSON.stringify(prevVal)) return;
-    if (newVal.length === 0) return;
-
+  const getUserPayouts = async () => {
     const signedIn = await tryAuthentication();
     if (!signedIn) return setAllPayouts([]);
 
-    const vaultsIds = newVal.map((vault) => vault.id).join(",");
+    const vaultsIds = userVaults.map((vault) => vault.id).join(",");
 
     const payoutsOnStorage = JSON.parse(sessionStorage.getItem(`payouts-${address}-${vaultsIds}`) || "null");
     if (payoutsOnStorage) {
@@ -80,6 +76,7 @@ export const PayoutsListPage = () => {
       setAllPayouts(payoutsOnStorage);
     }
 
+    setLoading(true);
     const payouts = await PayoutsService.getPayoutsListByVault(
       userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
     );
@@ -91,6 +88,15 @@ export const PayoutsListPage = () => {
 
     setAllPayouts(payouts);
     setInitialized(true);
+    setLoading(false);
+  };
+
+  // Get user payouts
+  useOnChange(userVaults, async (newVal, prevVal) => {
+    if (JSON.stringify(newVal) === JSON.stringify(prevVal)) return;
+    if (newVal.length === 0) return;
+
+    getUserPayouts();
   });
 
   // Filter payouts by section
@@ -171,7 +177,7 @@ export const PayoutsListPage = () => {
         {!isAuthenticated && (
           <>
             <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
-            <Button onClick={tryAuthentication} className="mt-4">
+            <Button onClick={getUserPayouts} className="mt-4">
               {t("signInWithEthereum")}
             </Button>
           </>
