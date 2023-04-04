@@ -1,5 +1,4 @@
-import { IPayoutData } from "./../../../../../shared/src/types/payout";
-import { IPayoutResponse } from "@hats-finance/shared";
+import { IPayoutResponse, IPayoutData } from "@hats-finance/shared";
 import { BASE_SERVICE_URL } from "settings";
 import { axiosClient } from "config/axiosClient";
 
@@ -7,12 +6,12 @@ import { axiosClient } from "config/axiosClient";
  * Gets a payout by id
  * @param payoutId - The payout id to get
  */
-export async function getPayoutData(payoutId: string): Promise<IPayoutResponse | undefined> {
+export async function getPayoutById(payoutId?: string): Promise<IPayoutResponse> {
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/${payoutId}`);
-    return res.status === 200 ? res.data.payout : undefined;
+    return res.data.payout;
   } catch (error) {
-    return undefined;
+    throw new Error(`Unknown error: ${error}`);
   }
 }
 
@@ -38,12 +37,12 @@ export async function getPayoutsListByVault(vaultsList: { chainId: number; vault
  *
  * @returns A list of active payouts
  */
-export async function getActivePayoutsByVault(chainId: number, vaultAddress: string): Promise<IPayoutResponse[]> {
+export async function getActivePayoutsByVault(chainId?: number, vaultAddress?: string): Promise<IPayoutResponse[]> {
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/active/${chainId}/${vaultAddress}`);
-    return res.status === 200 ? res.data.payouts : [];
+    return res.data.payouts;
   } catch (error) {
-    return [];
+    throw new Error(`Unknown error: ${error}`);
   }
 }
 

@@ -17,32 +17,29 @@ import {
 } from "@hats-finance/shared";
 import moment from "moment";
 import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, WithTooltip } from "components";
+import { queryClient } from "config/reactQuery";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Amount } from "utils/amounts.utils";
 import { RoutePaths } from "navigation";
-import * as PayoutsService from "../payoutsService";
 import { getPayoutDataYupSchema } from "./formSchema";
+import { usePayout, useVaultActivePayouts } from "../payoutsService.hooks";
+import * as PayoutsService from "../payoutsService.api";
+import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
+import { NftPreview } from "../components/NftPreview/NftPreview";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
-import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { NftPreview } from "../components/NftPreview/NftPreview";
 
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { allVaults, tokenPrices } = useVaults();
-
   const { address } = useAccount();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
-
-  const { payoutId } = useParams();
-  const [payout, setPayout] = useState<IPayoutResponse | undefined>();
-  const vault = allVaults?.find((vault) => vault.id === payout?.vaultAddress);
 
   const methods = useEnhancedForm<IPayoutData>({
     resolver: yupResolver(getPayoutDataYupSchema(t)),
@@ -50,13 +47,19 @@ export const PayoutFormPage = () => {
   });
   const { reset: handleReset, handleSubmit, register, control, formState, setValue } = methods;
 
+  const { payoutId } = useParams();
+  const { data: payout } = usePayout(payoutId);
+  const { data: vaultActivePayouts } = useVaultActivePayouts(payout?.chainId, payout?.vaultAddress);
+
+  const vault = allVaults?.find((vault) => vault.id === payout?.vaultAddress);
+  const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
-  const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
+
   const [savingData, setSavingData] = useState(false);
   const [lockingPayout, setLockingPayout] = useState(false);
   const [loadingPayoutData, setLoadingPayoutData] = useState(false);
   const [showProgressSavedFlag, setShowProgressSavedFlag] = useState(false);
-  const [isAnotherActivePayout, setIsAnotherActivePayout] = useState(false);
+  // const [isAnotherActivePayout, setIsAnotherActivePayout] = useState(false);
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
 
   const vaultSeverities = vault?.description?.severities ?? [];
@@ -81,15 +84,11 @@ export const PayoutFormPage = () => {
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
   const amountInTokensToPay = calculateAmountInTokensToPay(percentageToPay, vault);
 
-  // Handler for getting payout data
+  // Handle reset form when payout changes
   useEffect(() => {
-    if (payoutId) {
-      loadPayoutData();
-    } else {
-      navigate(-1);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [payoutId, navigate]);
+    if (!payout) return;
+    handleReset(payout.payoutData, { keepErrors: true });
+  }, [payout, handleReset]);
 
   // Get payout severities information from allVaults
   useEffect(() => {
@@ -130,46 +129,6 @@ export const PayoutFormPage = () => {
     setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
   });
 
-  const loadPayoutData = async () => {
-    if (!payoutId) return;
-
-    try {
-      setLoadingPayoutData(true);
-
-      const signedIn = await tryAuthentication();
-      if (!signedIn) return;
-
-      const payoutResponse = await PayoutsService.getPayoutData(payoutId);
-
-      if (!payoutResponse) {
-        navigate(-1);
-        return;
-      }
-
-      getActivePayoutsInfo(payoutResponse);
-      setPayout(payoutResponse);
-      setLastModifedOn(payoutResponse.updatedAt);
-      handleReset(payoutResponse.payoutData);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoadingPayoutData(false);
-    }
-  };
-
-  const getActivePayoutsInfo = async (payoutResponse: IPayoutResponse) => {
-    const activePayoutsByVault = await PayoutsService.getActivePayoutsByVault(
-      payoutResponse.chainId,
-      payoutResponse.vaultAddress
-    );
-
-    if (activePayoutsByVault.length > 0) {
-      setIsAnotherActivePayout(true);
-    } else {
-      setIsAnotherActivePayout(false);
-    }
-  };
-
   const handleSavePayout = async () => {
     if (!payoutId || !payout || !formState.isDirty) return;
 
@@ -180,9 +139,7 @@ export const PayoutFormPage = () => {
       const payoutResponse = await PayoutsService.savePayoutData(payoutId, payout.chainId, payout.vaultAddress, payoutData);
       if (!payoutResponse) return;
 
-      setPayout(payoutResponse);
-      setLastModifedOn(payoutResponse.updatedAt);
-      handleReset(payoutResponse.payoutData, { keepErrors: true });
+      queryClient.setQueryData(["payout", payoutId], payoutResponse);
 
       setShowProgressSavedFlag(true);
       setTimeout(() => setShowProgressSavedFlag(false), 3000);
@@ -209,9 +166,9 @@ export const PayoutFormPage = () => {
   return (
     <StyledPayoutFormPage className="content-wrapper-md">
       <div className="title-container">
-        {lastModifedOn && (
+        {payout?.updatedAt && (
           <p className="lastModifiedOn">
-            <strong>{t("saved")}</strong> {moment(lastModifedOn).fromNow()}
+            <strong>{t("saved")}</strong> {moment(payout.updatedAt).fromNow()}
           </p>
         )}
 
@@ -230,7 +187,7 @@ export const PayoutFormPage = () => {
       {!isAuthenticated && (
         <>
           <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
-          <Button onClick={loadPayoutData} className="mt-4">
+          <Button onClick={tryAuthentication} className="mt-4">
             {t("signInWithEthereum")}
           </Button>
         </>

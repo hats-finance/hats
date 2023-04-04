@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { RoutePaths } from "navigation";
 import { Button, FormSelectInput, Loading } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import * as PayoutsService from "../payoutsService";
+import * as PayoutsService from "../payoutsService.api";
 import { StyledPayoutCreateModal } from "./styles";
 
 interface PayoutCreateModalProps {

@@ -10,7 +10,7 @@ import useModal from "hooks/useModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
 import { PayoutCreateModal } from "./PayoutCreateModal";
 import { PayoutCard } from "../components";
-import * as PayoutsService from "../payoutsService";
+import * as PayoutsService from "../payoutsService.api";
 import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { useOnChange } from "hooks/usePrevious";
