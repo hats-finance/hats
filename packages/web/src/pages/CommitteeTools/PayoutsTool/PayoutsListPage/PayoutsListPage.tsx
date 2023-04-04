@@ -76,15 +76,17 @@ export const PayoutsListPage = () => {
       setAllPayouts(payoutsOnStorage);
     }
 
-    setLoading(true);
+    if (!payoutsOnStorage) setLoading(true);
+
     const payouts = await PayoutsService.getPayoutsListByVault(
       userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
     );
-
     sessionStorage.setItem(`payouts-${address}-${vaultsIds}`, JSON.stringify(payouts));
 
-    if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
-    if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
+    if (!payoutsOnStorage) {
+      if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
+      if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
+    }
 
     setAllPayouts(payouts);
     setInitialized(true);
@@ -143,7 +145,7 @@ export const PayoutsListPage = () => {
     showCreateModal();
   };
 
-  if (loading && address && allVaults) return <Loading />;
+  if (loading && address && allVaults) return <Loading fixed extraText={`${t("Payouts.loadingPayouts")}...`} />;
   if (!address || userVaults.length === 0) return <PayoutsWelcome />;
 
   return (
