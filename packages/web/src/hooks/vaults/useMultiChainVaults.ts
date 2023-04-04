@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNetwork, useAccount } from "wagmi";
-import { mainnet, goerli, optimismGoerli, optimism, arbitrum } from "wagmi/chains";
+import { mainnet, goerli, optimismGoerli, optimism, arbitrum, polygon, bsc } from "wagmi/chains";
 import { IMaster, IUserNft, IVault } from "types";
 import { appChains, IS_PROD } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
@@ -13,6 +13,8 @@ const supportedChains = {
   ETHEREUM: { prod: appChains[mainnet.id], test: appChains[goerli.id] },
   OPTIMISM: { prod: appChains[optimism.id], test: appChains[optimismGoerli.id] },
   ARBITRUM: { prod: appChains[arbitrum.id], test: null },
+  POLYGON: { prod: appChains[polygon.id], test: null },
+  BINANCE: { prod: appChains[bsc.id], test: null },
 };
 
 interface GraphVaultsData {
@@ -72,9 +74,11 @@ export const useMultiChainVaults = () => {
   const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
   const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
   const { data: arbitrumData, chainId: arbitrumChainId, isFetched: isArbitrumFetched } = useSubgraphFetch("ARBITRUM", networkEnv);
+  const { data: polygonData, chainId: polygonChainId, isFetched: isPolygonFetched } = useSubgraphFetch("POLYGON", networkEnv);
+  const { data: binanceData, chainId: binanceChainId, isFetched: isBinanceFetched } = useSubgraphFetch("BINANCE", networkEnv);
 
   useEffect(() => {
-    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched];
+    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched, isPolygonFetched, isBinanceFetched];
     const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
 
     if (!areAllNetworksFetched) return;
@@ -83,18 +87,24 @@ export const useMultiChainVaults = () => {
       ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
       ...(arbitrumData?.vaults?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+      ...(polygonData?.vaults?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
+      ...(binanceData?.vaults?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
     ];
 
     const allMasters = [
       ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
       ...(arbitrumData?.masters?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+      ...(polygonData?.masters?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
+      ...(binanceData?.masters?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
     ];
 
     const allUserNfts = [
       ...(ethereumData?.userNfts?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
       ...(optimismData?.userNfts?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
       ...(arbitrumData?.userNfts?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
+      ...(polygonData?.userNfts?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
+      ...(binanceData?.userNfts?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
     ];
 
     const newVaults = {
@@ -113,12 +123,18 @@ export const useMultiChainVaults = () => {
     ethereumData,
     optimismData,
     arbitrumData,
+    polygonData,
+    binanceData,
     ethereumChainId,
     optimismChainId,
     arbitrumChainId,
+    polygonChainId,
+    binanceChainId,
     isEthereumFetched,
     isOptimismFetched,
     isArbitrumFetched,
+    isPolygonFetched,
+    isBinanceFetched,
   ]);
 
   return { data: vaults, networkEnv };
