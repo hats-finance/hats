@@ -9,7 +9,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   DefaultIndexArray,
   IPayoutData,
-  IPayoutResponse,
   IVault,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
@@ -25,8 +24,7 @@ import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { Amount } from "utils/amounts.utils";
 import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
-import { usePayout, useVaultActivePayouts } from "../payoutsService.hooks";
-import * as PayoutsService from "../payoutsService.api";
+import { useLockPayout, usePayout, useSavePayout, useVaultActivePayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { NftPreview } from "../components/NftPreview/NftPreview";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
@@ -48,18 +46,15 @@ export const PayoutFormPage = () => {
   const { reset: handleReset, handleSubmit, register, control, formState, setValue } = methods;
 
   const { payoutId } = useParams();
-  const { data: payout } = usePayout(payoutId);
+  const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
   const { data: vaultActivePayouts } = useVaultActivePayouts(payout?.chainId, payout?.vaultAddress);
+  const savePayout = useSavePayout();
+  const lockPayout = useLockPayout();
 
   const vault = allVaults?.find((vault) => vault.id === payout?.vaultAddress);
   const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
-  const [savingData, setSavingData] = useState(false);
-  const [lockingPayout, setLockingPayout] = useState(false);
-  const [loadingPayoutData, setLoadingPayoutData] = useState(false);
-  const [showProgressSavedFlag, setShowProgressSavedFlag] = useState(false);
-  // const [isAnotherActivePayout, setIsAnotherActivePayout] = useState(false);
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
 
   const vaultSeverities = vault?.description?.severities ?? [];
@@ -112,11 +107,12 @@ export const PayoutFormPage = () => {
     }
   }, [allVaults, payout, vault]);
 
-  // Edit the payout percentage based on the selected severity
-  useOnChange(selectedSeverityName, (newData, prevData) => {
+  // Edit the payout percentage and NFT info based on the selected severity
+  useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
-    if (prevData === undefined || newData === undefined) return;
+    if (prevSelected === undefined || newSelected === undefined) return;
 
+    setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
     if (vault?.version === "v2") {
       const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
       const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
@@ -125,43 +121,42 @@ export const PayoutFormPage = () => {
       const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
       setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
     }
-
-    setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
   });
 
   const handleSavePayout = async () => {
-    if (!payoutId || !payout || !formState.isDirty) return;
+    if (!payoutId || !payout || !isAuthenticated || !formState.isDirty) return;
 
     try {
-      setSavingData(true);
       const payoutData = methods.getValues();
 
-      const payoutResponse = await PayoutsService.savePayoutData(payoutId, payout.chainId, payout.vaultAddress, payoutData);
-      if (!payoutResponse) return;
+      const payoutResponse = await savePayout.mutateAsync({
+        payoutId,
+        chainId: payout.chainId,
+        vaultAddress: payout.vaultAddress,
+        payoutData,
+      });
 
+      // Reset after 3 seconds for the user to see the success message
+      setTimeout(() => savePayout.reset(), 3000);
       queryClient.setQueryData(["payout", payoutId], payoutResponse);
-
-      setShowProgressSavedFlag(true);
-      setTimeout(() => setShowProgressSavedFlag(false), 3000);
     } catch (error) {
       console.error(error);
-    } finally {
-      setSavingData(false);
     }
   };
 
-  const handleCreatePayout = async (payoutData: IPayoutData) => {
+  const handleLockPayout = async () => {
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
 
-    setLockingPayout(true);
-    const wasLocked = await PayoutsService.lockPayout(payoutId);
-    setLockingPayout(false);
-
-    if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
+    try {
+      const wasLocked = await lockPayout.mutateAsync({ payoutId });
+      if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!address) return <PayoutsWelcome />;
-  if (loadingPayoutData || allVaults?.length === 0) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
+  if (isLoadingPayout || allVaults?.length === 0) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
   return (
     <StyledPayoutFormPage className="content-wrapper-md">
@@ -197,7 +192,7 @@ export const PayoutFormPage = () => {
         <>
           <p className="mb-4">{t("Payouts.fillPayoutInfo")}</p>
 
-          <StyledPayoutForm onSubmit={handleSubmit(handleCreatePayout)}>
+          <StyledPayoutForm onSubmit={handleSubmit(handleLockPayout)}>
             <div className="form-container">
               <FormInput
                 {...register("beneficiary")}
@@ -294,20 +289,20 @@ export const PayoutFormPage = () => {
             )}
 
             <div className="buttons">
-              <WithTooltip visible={showProgressSavedFlag} text={t("progressSaved")} placement="left">
-                <Button disabled={!formState.isDirty || savingData} styleType="outlined" onClick={handleSavePayout}>
-                  {savingData ? `${t("loading")}...` : t("Payouts.savePayout")}
+              <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                <Button disabled={!formState.isDirty || savePayout.isLoading} styleType="outlined" onClick={handleSavePayout}>
+                  {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
                 </Button>
               </WithTooltip>
-              <Button type="submit" disabled={lockingPayout || isAnotherActivePayout}>
-                {lockingPayout ? `${t("loading")}...` : t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
+              <Button type="submit" disabled={lockPayout.isLoading || isAnotherActivePayout}>
+                {lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
               </Button>
             </div>
           </StyledPayoutForm>
         </>
       )}
 
-      {lockingPayout && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
+      {lockPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
     </StyledPayoutFormPage>
   );
 };

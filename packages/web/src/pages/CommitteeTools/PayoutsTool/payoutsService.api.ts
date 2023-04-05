@@ -53,12 +53,12 @@ export async function getActivePayoutsByVault(chainId?: number, vaultAddress?: s
  *
  * @returns The id of the created payout
  */
-export async function createNewPayout(chainId: number, vaultAddress: string): Promise<string | undefined> {
+export async function createNewPayout(chainId: number, vaultAddress: string): Promise<string> {
   try {
     const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}`);
-    return res.status === 201 ? res.data.upsertedId : undefined;
+    return res.data.upsertedId;
   } catch (error) {
-    return undefined;
+    throw new Error(`Unknown error: ${error}`);
   }
 }
 
@@ -74,12 +74,12 @@ export async function savePayoutData(
   chainId: number,
   vaultAddress: string,
   payoutData: IPayoutData
-): Promise<IPayoutResponse | undefined> {
+): Promise<IPayoutResponse> {
   try {
     const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}/${payoutId}`, { ...payoutData });
-    return res.status === 200 ? res.data.payout : undefined;
+    return res.data.payout;
   } catch (error) {
-    return undefined;
+    throw new Error(`Unknown error: ${error}`);
   }
 }
 
