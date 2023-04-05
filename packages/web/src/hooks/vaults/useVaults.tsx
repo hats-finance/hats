@@ -1,25 +1,24 @@
 import { useApolloClient } from "@apollo/client";
+import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod, fixObject } from "@hats-finance/shared";
 import { useAccount, useNetwork } from "wagmi";
+import { appChains, IS_PROD } from "settings";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod } from "types";
 import { getTokensPrices, ipfsTransformUri } from "utils";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
-import { useMultiChainVaults } from "./useMultiChainVaults";
 import { INFTTokenMetadata } from "hooks/nft/types";
-import { fixObject } from "@hats-finance/shared";
-import { appChains, IS_PROD } from "settings";
+import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
   vaults?: IVault[];
   allVaults?: IVault[]; // Vaults without dates and chains filtering
-  tokenPrices?: number[];
-  masters?: IMaster[];
   userNfts?: IUserNft[];
   allUserNfts?: IUserNft[]; // User nfts without chains filtering
+  tokenPrices?: number[];
+  masters?: IMaster[];
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -40,16 +39,14 @@ export function VaultsProvider({ children }) {
   const { address: account } = useAccount();
   const { chain } = useNetwork();
   const connectedChain = chain ? appChains[chain.id] : null;
-
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
   const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
-  const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
 
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");
   }
 
-  const { data } = useMultiChainVaults();
+  const { multiChainData } = useMultiChainVaultsV2();
 
   const getPrices = useCallback(
     async (vaults: IVault[]) => {
@@ -144,20 +141,17 @@ export function VaultsProvider({ children }) {
     const allVaultsData = await getVaultsData(vaultsData);
 
     const vaultsFilteredByDate = allVaultsData.filter((vault) => {
-      if (
-        vault.description?.["project-metadata"].starttime &&
-        vault.description?.["project-metadata"].starttime > Date.now() / 1000
-      )
-        return false;
-      if (vault.description?.["project-metadata"].endtime && vault.description?.["project-metadata"].endtime < Date.now() / 1000)
-        return false;
+      const startTime = vault.description?.["project-metadata"].starttime;
+      const endTime = vault.description?.["project-metadata"].endtime;
+
+      if (startTime && startTime > Date.now() / 1000) return false;
+      if (endTime && endTime < Date.now() / 1000) return false;
+
       return true;
     });
 
     const vaultsFilteredByNetwork = vaultsFilteredByDate.filter((vault) => {
-      return networkEnv === "prod"
-        ? !appChains[vault.chainId as number].chain.testnet
-        : appChains[vault.chainId as number].chain.testnet;
+      return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
     // TODO: remove this in order to support multiple vaults again
@@ -194,9 +188,7 @@ export function VaultsProvider({ children }) {
     const nftsWithData = await getNftsMetadata(userNftsData);
 
     const nftsFilteredByNetwork = nftsWithData.filter((nft) => {
-      return networkEnv === "prod"
-        ? !appChains[nft.chainId as number].chain.testnet
-        : appChains[nft.chainId as number].chain.testnet;
+      return showTestnets ? appChains[nft.chainId as number].chain.testnet : !appChains[nft.chainId as number].chain.testnet;
     });
 
     if (JSON.stringify(allUserNfts) !== JSON.stringify(nftsWithData)) setAllUserNfts(nftsWithData);
@@ -205,7 +197,7 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults && networkEnv === "prod") {
+    if (vaults && !showTestnets) {
       getPrices(vaults).then((prices) => {
         if (!cancelled) {
           setTokenPrices(prices);
@@ -216,16 +208,16 @@ export function VaultsProvider({ children }) {
     return () => {
       cancelled = true;
     };
-  }, [vaults, getPrices, chain, networkEnv]);
+  }, [vaults, getPrices, chain, showTestnets]);
 
   useEffect(() => {
-    setAllVaultsWithDetails([...data.prod.vaults, ...data.test.vaults]);
-    setAllUserNftsWithMetadata([...data.prod.userNfts, ...data.test.userNfts]);
+    setAllVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
+    setAllUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, networkEnv]);
+  }, [multiChainData, showTestnets]);
 
-  const { safetyPeriod, withdrawPeriod } = data?.prod.masters?.[0] || {};
+  const { safetyPeriod, withdrawPeriod } = multiChainData?.prod.masters?.[0] || {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
@@ -235,8 +227,8 @@ export function VaultsProvider({ children }) {
     userNfts,
     allUserNfts,
     tokenPrices,
-    masters: [...data.prod.masters, ...data.test.masters],
     withdrawSafetyPeriod,
+    masters: [...multiChainData.prod.masters, ...multiChainData.test.masters],
   };
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;
