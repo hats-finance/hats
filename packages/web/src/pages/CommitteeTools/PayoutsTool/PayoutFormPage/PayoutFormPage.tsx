@@ -35,8 +35,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { allVaults, tokenPrices } = useVaults();
   const { address } = useAccount();
+  const { allVaults, tokenPrices } = useVaults();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
   const methods = useEnhancedForm<IPayoutData>({

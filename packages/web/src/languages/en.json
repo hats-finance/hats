@@ -310,6 +310,7 @@
     "severity": "Severity",
     "close": "Close",
     "noNFT": "No NFT",
+    "loadingVaults": "Loading vaults",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

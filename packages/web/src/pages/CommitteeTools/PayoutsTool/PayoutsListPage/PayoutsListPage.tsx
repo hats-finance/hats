@@ -1,19 +1,18 @@
-import { useEffect, useState } from "react";
-import { getAddressSafes, IPayoutResponse, IVault, PayoutStatus } from "@hats-finance/shared";
+import { useCallback, useEffect, useState } from "react";
+import { IPayoutResponse, PayoutStatus } from "@hats-finance/shared";
 import { useAccount } from "wagmi";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
-import { Alert, Button, HatSpinner, Loading, Modal } from "components";
+import { Alert, Button, HatSpinner, Modal } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useUserVaults } from "hooks/vaults/useUserVaults";
 import useModal from "hooks/useModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
 import { PayoutCreateModal } from "./PayoutCreateModal";
 import { PayoutCard } from "../components";
-import * as PayoutsService from "../payoutsService.api";
+import { usePayoutsByVaults } from "../payoutsService.hooks";
 import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import { useOnChange } from "hooks/usePrevious";
 
 const DraftStatus = [PayoutStatus.Creating];
 const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute, PayoutStatus.UnderReview];
@@ -21,90 +20,37 @@ const FinishedStatus = [PayoutStatus.Executed, PayoutStatus.Rejected];
 
 export const PayoutsListPage = () => {
   const { t } = useTranslation();
-
-  const { tryAuthentication, isAuthenticated } = useSiweAuth();
   const { address } = useAccount();
-  const { allVaults } = useVaults();
+  const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
   const { isShowing: isShowingCreateModal, show: showCreateModal, hide: hideCreateModal } = useModal();
-  const [initialized, setInitialized] = useState(false);
-  const [loading, setLoading] = useState(true);
+
   const [section, setSection] = useState<"drafts" | "in_progress" | "finished">("in_progress");
-  const [userVaults, setUserVaults] = useState<IVault[]>([]);
 
-  const [allPayouts, setAllPayouts] = useState<IPayoutResponse[] | undefined>();
-  const [payoutsGroupsByDate, setPayoutsGroupsByDate] = useState<{ date: string; payouts: IPayoutResponse[] }[] | undefined>();
+  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
+  const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsByVaults(userVaults ?? []);
 
-  // Get user vaults
+  // Only the first time the payouts are loaded, check if there are any drafts or in progress payouts
   useEffect(() => {
-    const populateVaultsOptions = async () => {
-      if (!address || !allVaults || allVaults.length === 0) {
-        setAllPayouts(undefined);
-        setPayoutsGroupsByDate(undefined);
-        setUserVaults([]);
-        setSection("in_progress");
-        setInitialized(false);
-        return;
-      }
-      const foundVaults = [] as IVault[];
+    if (isLoadingPayouts) return;
 
-      for (const vault of allVaults) {
-        if (!vault.description) continue;
+    if (allPayouts?.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
+    if (allPayouts?.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
 
-        const userSafes = await getAddressSafes(address, vault.chainId);
-        const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoadingPayouts]);
 
-        if (isSafeMember && vault.version === "v2") foundVaults.push(vault);
-      }
-
-      setLoading(false);
-      setUserVaults(foundVaults);
-    };
-    populateVaultsOptions();
-  }, [address, allVaults]);
-
-  const getUserPayouts = async () => {
+  const handleCreatePayout = async () => {
     const signedIn = await tryAuthentication();
-    if (!signedIn) return setAllPayouts([]);
+    if (!signedIn) return;
 
-    const vaultsIds = userVaults.map((vault) => vault.id).join(",");
-
-    const payoutsOnStorage = JSON.parse(sessionStorage.getItem(`payouts-${address}-${vaultsIds}`) || "null");
-    if (payoutsOnStorage) {
-      if (!initialized && payoutsOnStorage.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
-      if (!initialized && payoutsOnStorage.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
-      setAllPayouts(payoutsOnStorage);
-    }
-
-    if (!payoutsOnStorage) setLoading(true);
-
-    const payouts = await PayoutsService.getPayoutsListByVault(
-      userVaults.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }))
-    );
-    sessionStorage.setItem(`payouts-${address}-${vaultsIds}`, JSON.stringify(payouts));
-
-    if (!payoutsOnStorage) {
-      if (!initialized && payouts.some((payout) => DraftStatus.includes(payout.status))) setSection("drafts");
-      if (!initialized && payouts.some((payout) => InProgressStatus.includes(payout.status))) setSection("in_progress");
-    }
-
-    setAllPayouts(payouts);
-    setInitialized(true);
-    setLoading(false);
+    showCreateModal();
   };
 
-  // Get user payouts
-  useOnChange(userVaults, async (newVal, prevVal) => {
-    if (JSON.stringify(newVal) === JSON.stringify(prevVal)) return;
-    if (newVal.length === 0) return;
-
-    getUserPayouts();
-  });
-
-  // Filter payouts by section
-  useEffect(() => {
-    if (!allPayouts) return setPayoutsGroupsByDate(undefined);
-    if (allPayouts && allPayouts?.length === 0) return setPayoutsGroupsByDate([]);
+  // Gets the payouts, filter them by section and group them by date
+  const getPayoutsToShow = useCallback((): { date: string; payouts: IPayoutResponse[] }[] => {
+    if (isLoadingPayouts || isLoadingUserVaults) return [];
+    if (!allPayouts || allPayouts.length === 0) return [];
 
     const payoutsFilteredBySection = allPayouts.filter((payout) => {
       if (section === "drafts") return DraftStatus.includes(payout.status);
@@ -135,18 +81,12 @@ export const PayoutsListPage = () => {
       return dateB.diff(dateA);
     });
 
-    setPayoutsGroupsByDate(payoutGroupsByDateArray);
-  }, [allPayouts, section]);
+    return payoutGroupsByDateArray;
+  }, [allPayouts, isLoadingPayouts, isLoadingUserVaults, section]);
 
-  const handleCreatePayout = async () => {
-    const signedIn = await tryAuthentication();
-    if (!signedIn) return;
+  if (!address) return <PayoutsWelcome />;
 
-    showCreateModal();
-  };
-
-  if (loading && address && allVaults) return <Loading fixed extraText={`${t("Payouts.loadingPayouts")}...`} />;
-  if (!address || userVaults.length === 0) return <PayoutsWelcome />;
+  const payoutsToShow = getPayoutsToShow();
 
   return (
     <>
@@ -179,7 +119,7 @@ export const PayoutsListPage = () => {
         {!isAuthenticated && (
           <>
             <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
-            <Button onClick={getUserPayouts} className="mt-4">
+            <Button onClick={tryAuthentication} className="mt-4">
               {t("signInWithEthereum")}
             </Button>
           </>
@@ -187,10 +127,10 @@ export const PayoutsListPage = () => {
 
         {isAuthenticated && (
           <>
-            {payoutsGroupsByDate ? (
+            {!isLoadingPayouts && !isLoadingUserVaults ? (
               <>
-                {payoutsGroupsByDate.length > 0 ? (
-                  payoutsGroupsByDate.map((payoutGroup) => (
+                {payoutsToShow.length > 0 ? (
+                  payoutsToShow.map((payoutGroup) => (
                     <div className="group" key={payoutGroup.date}>
                       <p className="group-date">{moment(payoutGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
                       {payoutGroup.payouts.map((payout) => (

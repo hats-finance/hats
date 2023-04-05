@@ -1,12 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAccount } from "wagmi";
-import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { RoutePaths } from "navigation";
 import { Button, FormSelectInput, Loading } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
-import * as PayoutsService from "../payoutsService.api";
+import { useUserVaults } from "hooks/vaults/useUserVaults";
+import { useCreateDraftPayout } from "../payoutsService.hooks";
 import { StyledPayoutCreateModal } from "./styles";
 
 interface PayoutCreateModalProps {
@@ -17,50 +15,27 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const { address } = useAccount();
-  const { allVaults } = useVaults();
+  const createDraftPayout = useCreateDraftPayout();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
+  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
-
-  // Get user vaults
-  useEffect(() => {
-    const populateVaultsOptions = async () => {
-      if (!address || !allVaults || allVaults.length === 0) return setVaultsOptions([]);
-      const foundVaults = [] as IVault[];
-
-      for (const vault of allVaults) {
-        if (!vault.description) continue;
-
-        const userSafes = await getAddressSafes(address, vault.chainId);
-        const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
-        const isMultisigAddress = vault.description?.committee["multisig-address"] === address;
-
-        if ((isSafeMember || isMultisigAddress) && vault.version === "v2") foundVaults.push(vault);
-      }
-
-      setVaultsOptions(
-        foundVaults.map((vault) => ({
-          label: vault.description?.["project-metadata"].name ?? vault.name,
-          value: vault.id,
-          icon: vault.description?.["project-metadata"].icon,
-        }))
-      );
-    };
-    populateVaultsOptions();
-  }, [address, allVaults]);
+  const vaultsOptions =
+    userVaults?.map((vault) => ({
+      value: vault.id,
+      label: vault.description?.["project-metadata"].name ?? vault.name,
+      icon: vault.description?.["project-metadata"].icon,
+    })) ?? [];
 
   const handleCreatePayout = async () => {
-    const selectedVault = allVaults?.find((vault) => vault.id === selectedVaultAddress);
+    const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
     if (!selectedVault) return;
-    setIsLoading(true);
 
-    const payoutId = await PayoutsService.createNewPayout(selectedVault.chainId as number, selectedVault.id);
-    console.log(payoutId);
+    const payoutId = await createDraftPayout.mutateAsync({
+      chainId: selectedVault.chainId as number,
+      vaultAddress: selectedVault.id,
+    });
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
 
-    setIsLoading(false);
     closeModal();
   };
 
@@ -71,7 +46,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
       <div className="vault-selection">
         <FormSelectInput
           label={t("vault")}
-          emptyState={t("youHaveNoVaults")}
+          emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
           placeholder={t("selectVault")}
           name="editSessionId"
           value={selectedVaultAddress}
@@ -86,7 +61,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
         </div>
       </div>
 
-      {isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
+      {createDraftPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
     </StyledPayoutCreateModal>
   );
 };

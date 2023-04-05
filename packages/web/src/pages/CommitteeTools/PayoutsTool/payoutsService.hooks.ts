@@ -1,9 +1,11 @@
 import { useEffect } from "react";
 import { UseQueryResult, useQuery, useMutation, UseMutationResult } from "@tanstack/react-query";
-import { IPayoutData, IPayoutResponse } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVault } from "@hats-finance/shared";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import * as PayoutsService from "./payoutsService.api";
 
+// ------------------------
+// QUERIES
 export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse> => {
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
@@ -31,6 +33,37 @@ export const useVaultActivePayouts = (chainId?: number, vaultAddress?: string): 
     queryFn: () => PayoutsService.getActivePayoutsByVault(chainId, vaultAddress),
     enabled: isAuthenticated && !!chainId && !!vaultAddress,
     refetchOnWindowFocus: false,
+  });
+};
+
+export const usePayoutsByVaults = (vaultsList: IVault[]): UseQueryResult<IPayoutResponse[]> => {
+  const { tryAuthentication, isAuthenticated } = useSiweAuth();
+
+  useEffect(() => {
+    tryAuthentication();
+  }, [tryAuthentication]);
+
+  const vaultsIds = vaultsList.map((vault) => `${vault.chainId}-${vault.id}`);
+  const vaultsInfo = vaultsList.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }));
+
+  return useQuery({
+    queryKey: ["payouts-by-vaults", ...vaultsIds],
+    queryFn: () => PayoutsService.getPayoutsByVaults(vaultsInfo),
+    enabled: isAuthenticated && vaultsList.length > 0,
+    refetchOnWindowFocus: false,
+  });
+};
+
+// ------------------------
+// MUTATIONS
+export const useCreateDraftPayout = (): UseMutationResult<
+  string,
+  unknown,
+  { chainId: number; vaultAddress: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ chainId, vaultAddress }) => PayoutsService.createDraftPayout(chainId, vaultAddress),
   });
 };
 

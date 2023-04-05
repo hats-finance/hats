@@ -19,14 +19,14 @@ export async function getPayoutById(payoutId?: string): Promise<IPayoutResponse>
  * Gets a list of all the payouts of a vaults list
  * @param vaultsList: { chainId: number; vaultAddress: string }[] - The list of vaults to get the payouts from
  */
-export async function getPayoutsListByVault(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
+export async function getPayoutsByVaults(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/all/vaultsList`, {
       params: { vaults: JSON.stringify(vaultsList) },
     });
-    return res.status === 200 ? res.data.payouts : [];
+    return res.data.payouts;
   } catch (error) {
-    return [];
+    throw new Error(`Unknown error: ${error}`);
   }
 }
 
@@ -53,7 +53,7 @@ export async function getActivePayoutsByVault(chainId?: number, vaultAddress?: s
  *
  * @returns The id of the created payout
  */
-export async function createNewPayout(chainId: number, vaultAddress: string): Promise<string> {
+export async function createDraftPayout(chainId: number, vaultAddress: string): Promise<string> {
   try {
     const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}`);
     return res.data.upsertedId;

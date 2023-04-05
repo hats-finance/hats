@@ -14,7 +14,7 @@ export const useSiweAuth = () => {
     loggedIn: boolean;
     address?: string | undefined;
     chainId?: number | undefined;
-  }>({ loggedIn: false });
+  }>({ loggedIn: true });
 
   const getProfile = async () => {
     const profile = await SIWEService.profile();
