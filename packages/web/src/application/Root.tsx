@@ -11,6 +11,7 @@ import { queryClient } from "config/reactQuery";
 import { wagmiClient } from "config/wagmi";
 import { VaultsProvider } from "hooks/vaults/useVaults";
 import { ConfirmDialogProvider } from "hooks/useConfirm";
+import { SiweAuthProvider } from "hooks/siwe/useSiweAuth";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
 import { NotificationProvider } from "components/Notifications/NotificationProvider";
@@ -37,7 +38,9 @@ function Root() {
                   <NotificationProvider>
                     <KeystoreProvider>
                       <ConfirmDialogProvider>
-                        <App />
+                        <SiweAuthProvider>
+                          <App />
+                        </SiweAuthProvider>
                       </ConfirmDialogProvider>
                     </KeystoreProvider>
                   </NotificationProvider>

@@ -1,10 +1,28 @@
-import { useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import { SiweMessage } from "siwe";
 import { useOnChange } from "hooks/usePrevious";
 import * as SIWEService from "./siweService";
 
-export const useSiweAuth = () => {
+type SiweProfileData = {
+  loggedIn: boolean;
+  address?: string | undefined;
+  chainId?: number | undefined;
+};
+
+type ISiweAuthContext = {
+  signIn: () => Promise<{ ok: boolean }>;
+  logout: () => Promise<void>;
+  tryAuthentication: () => Promise<boolean>;
+  updateProfile: () => Promise<SiweProfileData>;
+  profileData: SiweProfileData;
+  isSigningIn: boolean;
+  isAuthenticated: boolean;
+};
+
+const SiweAuthContext = createContext<ISiweAuthContext>(undefined as any);
+
+export const SiweAuthProvider = ({ children }) => {
   const { address } = useAccount();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
@@ -77,22 +95,20 @@ export const useSiweAuth = () => {
   }, [address, chain?.id, signMessageAsync]);
 
   const tryAuthentication = useCallback(async (): Promise<boolean> => {
-    const profile = await getProfile();
-
-    if (!profile.loggedIn) {
+    if (!profileData.loggedIn) {
       const authenticated = (await signIn()).ok;
       return authenticated;
     }
 
     return true;
-  }, [signIn]);
+  }, [signIn, profileData]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
     setProfileData({ loggedIn: false });
   };
 
-  return {
+  const context = {
     signIn,
     logout,
     isSigningIn,
@@ -101,4 +117,10 @@ export const useSiweAuth = () => {
     tryAuthentication,
     updateProfile: getProfile,
   };
+
+  return <SiweAuthContext.Provider value={context}>{children}</SiweAuthContext.Provider>;
+};
+
+export const useSiweAuth = () => {
+  return useContext(SiweAuthContext);
 };
