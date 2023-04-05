@@ -72,7 +72,6 @@ export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
 
 export const COIN_GECKO_ETHEREUM = "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
-export const COIN_GECKO = "https://api.coingecko.com/api/v3/simple/token_price";
 
 export const EMBASSY_LEARN_MORE = "https://medium.com/@hatsfinance/proof-of-deposit-nft-powered-security-7c0456672539";
 

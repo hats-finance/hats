@@ -1,13 +1,10 @@
-import axios, { AxiosResponse } from "axios";
 import millify from "millify";
 import { BigNumber } from "ethers";
-import { appChains, BASE_SERVICE_URL } from "settings";
 import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
+import { BASE_SERVICE_URL } from "settings";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
-import { COIN_GECKO, IPFS_PREFIX, LocalStorage } from "constants/constants";
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT, COIN_GECKO_ETHEREUM } from "constants/constants";
-import { CoinGeckoPriceResponse } from "types";
+import { ScreenSize, SMALL_SCREEN_BREAKPOINT, IPFS_PREFIX, LocalStorage } from "constants/constants";
 
 /**
  * Adds commas to a given number
@@ -84,75 +81,6 @@ export const formatNumber = (value: string | number | undefined, precision = 1):
  */
 export const isDigitsOnly = (value: string): boolean => {
   return /^-?\d*[.,]?\d{0,2}$/.test(value);
-};
-
-let lastCoinGeckoError = 0;
-/**
- * Gets token price in USD using CoinGecko API
- * @param {string} tokenAddress
- */
-export const getTokenPrice = async (tokenAddress: string) => {
-  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) {
-    return;
-  }
-  try {
-    const data = await axios.get(`${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd`);
-    return data.data[Object.keys(data.data)[0]]?.usd;
-  } catch (err) {
-    lastCoinGeckoError = Date.now();
-    console.error(err);
-  }
-};
-
-/**
- * Gets tokens prices in USD using CoinGecko API
- * @param {string[]} tokensAddresses
- * @returns the prices for each given token
- */
-export const getTokensPrices = async (tokens: { address: string; chain: number }[]): Promise<CoinGeckoPriceResponse> => {
-  if (lastCoinGeckoError > Date.now() - 1000 * 60 * 60) return {};
-
-  try {
-    // Separate tokens by chain
-    const tokensByChain = tokens.reduce((acc, token) => {
-      if (!acc[token.chain]) acc[token.chain] = [];
-      acc[token.chain].push(token.address);
-      return acc;
-    }, {} as { [chain: number]: string[] });
-
-    // Get prices for each chain
-    const allRequests: Promise<AxiosResponse>[] = [];
-    for (const chain in tokensByChain) {
-      const networkCoingeckoId = appChains[chain].coingeckoId;
-      const tokens = Array.from(new Set(tokensByChain[chain])).join(",");
-
-      if (networkCoingeckoId) {
-        allRequests.push(axios.get(`${COIN_GECKO}/${networkCoingeckoId}?contract_addresses=${tokens}&vs_currencies=usd`));
-      }
-    }
-
-    const data = await Promise.all(allRequests);
-    return data.reduce((acc, response) => ({ ...acc, ...response.data }), {} as CoinGeckoPriceResponse);
-  } catch (err) {
-    lastCoinGeckoError = Date.now();
-    console.error(err);
-  }
-  return {};
-};
-
-/**
- * Gets token market cap in USD using CoinGecko API
- * @param {string} tokenAddress
- */
-export const getTokenMarketCap = async (tokenAddress: string) => {
-  try {
-    const data = await axios.get(
-      `${COIN_GECKO_ETHEREUM}?contract_addresses=${tokenAddress}&vs_currencies=usd&include_market_cap=true`
-    );
-    return data.data[Object.keys(data.data)[0]]?.usd_market_cap;
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 /**

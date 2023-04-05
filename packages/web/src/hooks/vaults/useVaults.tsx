@@ -1,15 +1,14 @@
-import { useApolloClient } from "@apollo/client";
+import { useEffect, useState, createContext, useContext } from "react";
 import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod, fixObject } from "@hats-finance/shared";
 import { useAccount, useNetwork } from "wagmi";
 import { appChains, IS_PROD } from "settings";
 import { PROTECTED_TOKENS } from "data/vaults";
-import { GET_PRICES, UniswapV3GetPrices } from "graphql/uniswap";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
-import { useCallback, useEffect, useState, createContext, useContext } from "react";
-import { getTokensPrices, ipfsTransformUri } from "utils";
+import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import { ipfsTransformUri } from "utils";
 import { blacklistedWallets } from "data/blacklistedWallets";
-import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
@@ -29,15 +28,15 @@ export function useVaults() {
 }
 
 export function VaultsProvider({ children }) {
+  const { address: account } = useAccount();
+  const { chain } = useNetwork();
+
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
   const [vaults, setVaults] = useState<IVault[]>([]);
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
-  const apolloClient = useApolloClient();
 
-  const { address: account } = useAccount();
-  const { chain } = useNetwork();
   const connectedChain = chain ? appChains[chain.id] : null;
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
   const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
@@ -48,61 +47,64 @@ export function VaultsProvider({ children }) {
 
   const { multiChainData } = useMultiChainVaultsV2();
 
-  const getPrices = useCallback(
-    async (vaults: IVault[]) => {
-      if (vaults) {
-        const stakingTokens = vaults?.map((vault) => ({
-          address: vault.stakingToken.toLowerCase(),
-          chain: vault.chainId as number,
-        }));
+  const getTokenPrices = async (vaultsToSearch: IVault[]) => {
+    const stakingTokens = vaultsToSearch.map((vault) => ({
+      address: vault.stakingToken.toLowerCase(),
+      chainId: vault.chainId as number,
+    }));
 
-        const newTokenPrices = Array<number>();
-        for (const token in tokenPriceFunctions) {
-          const getPriceFunction = tokenPriceFunctions[token];
-          if (getPriceFunction !== undefined) {
-            const price = await getPriceFunction();
-            if (price && price > 0) newTokenPrices[token] = price;
-          }
-        }
+    const foundTokenPrices = [] as number[];
 
-        try {
-          // get all tokens that did not have price from contract
-          const coinGeckoTokenPrices = await getTokensPrices(stakingTokens.filter((token) => !(token.address in newTokenPrices)));
-          if (coinGeckoTokenPrices) {
-            stakingTokens?.forEach((token) => {
-              if (coinGeckoTokenPrices.hasOwnProperty(token.address)) {
-                const price = coinGeckoTokenPrices?.[token.address]?.["usd"];
-                if (price > 0) {
-                  newTokenPrices[token.address] = price;
-                }
-              }
-            });
-          }
-        } catch (error) {
-          console.error(error);
-        }
+    // Get prices from contracts
+    try {
+      for (const token in tokenPriceFunctions) {
+        const getPriceFunction = tokenPriceFunctions[token];
 
-        // get all tokens that are still without prices
-        const missingTokens = stakingTokens.filter((token) => !(token.address in newTokenPrices)).map((token) => token.address);
-        if (missingTokens && missingTokens.length > 0) {
-          const uniswapPrices = (
-            await apolloClient.query<UniswapV3GetPrices>({
-              query: GET_PRICES,
-              variables: { tokens: missingTokens },
-            })
-          ).data;
-          uniswapPrices.tokens.forEach((tokenData) => {
-            const price = tokenData.tokenDayData[0].priceUSD;
-            if (price > 0) {
-              newTokenPrices[tokenData.id] = price;
-            }
-          });
+        if (getPriceFunction) {
+          const price = await getPriceFunction();
+          if (price && +price > 0) foundTokenPrices[token] = +price;
         }
-        return newTokenPrices;
       }
-    },
-    [apolloClient]
-  );
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Get prices from CoinGecko
+    try {
+      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const coingeckoTokenPrices = await getCoingeckoTokensPrices(tokensLeft);
+
+      if (coingeckoTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (coingeckoTokenPrices.hasOwnProperty(token.address)) {
+            const price = coingeckoTokenPrices[token.address]?.["usd"];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Get prices from Uniswap
+    try {
+      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const uniswapTokenPrices = await getUniswapTokenPrices(tokensLeft);
+
+      if (uniswapTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (uniswapTokenPrices.hasOwnProperty(token.address)) {
+            const price = uniswapTokenPrices[token.address]?.["usd"];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    return foundTokenPrices;
+  };
 
   const setAllVaultsWithDetails = async (vaultsData: IVault[]) => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
@@ -197,18 +199,16 @@ export function VaultsProvider({ children }) {
 
   useEffect(() => {
     let cancelled = false;
-    if (vaults && !showTestnets) {
-      getPrices(vaults).then((prices) => {
-        if (!cancelled) {
-          setTokenPrices(prices);
-        }
+    if (allVaults && !showTestnets) {
+      getTokenPrices(allVaults).then((prices) => {
+        if (!cancelled) setTokenPrices(prices);
       });
     }
 
     return () => {
       cancelled = true;
     };
-  }, [vaults, getPrices, chain, showTestnets]);
+  }, [allVaults, showTestnets]);
 
   useEffect(() => {
     setAllVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);

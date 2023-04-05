@@ -232,6 +232,6 @@ export interface IWithdrawSafetyPeriod {
   safetyEndsAt: number;
 }
 
-export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
+export type TokenPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined; tokenSymbol: string } };

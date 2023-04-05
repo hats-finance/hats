@@ -8,6 +8,7 @@ export interface IChainConfiguration {
   chain: Chain;
   subgraph: string;
   coingeckoId?: string;
+  uniswapSubgraph?: string;
 }
 
 /**
@@ -23,6 +24,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
+    uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
   },
   [goerli.id]: {
     vaultsCreatorContract: "0x357D2B22A235E0b0F83926ceE9b0D0fF8489e03b",
@@ -32,6 +34,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
     coingeckoId: undefined,
     govMultisig: "0xFc9F1d127f8047B0F41e9eAC2Adc2e5279C568B7",
+    uniswapSubgraph: undefined,
   },
   [optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -41,6 +44,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism",
     coingeckoId: "optimistic-ethereum",
     govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
+    uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
   },
   [optimismGoerli.id]: {
     vaultsCreatorContract: "0x8633212777Da1394bb379Df9520f098B014fB77b",
@@ -49,6 +53,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     chain: optimismGoerli,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
     coingeckoId: undefined,
+    uniswapSubgraph: undefined,
   },
   [arbitrum.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -58,6 +63,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
     coingeckoId: "arbitrum-one",
     govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
+    uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
   },
   [polygon.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -67,6 +73,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
     coingeckoId: "polygon-pos",
     govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
+    uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
   },
   // [bsc.id]: {
   //   vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",

@@ -4,10 +4,14 @@ import { RoutePaths } from "navigation";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import { CopyToClipboard } from "components";
+import { useVaults } from "hooks/vaults/useVaults";
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+
+  const { allVaults } = useVaults();
+  // console.log(allVaults);
 
   return (
     <StyledPayoutStatusPage className="content-wrapper-md">

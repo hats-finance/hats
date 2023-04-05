@@ -19,7 +19,7 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@apollo/client@^3.6.9", "@apollo/client@^3.7.1":
+"@apollo/client@^3.6.9":
   version "3.7.6"
   resolved "https://registry.npmjs.org/@apollo/client/-/client-3.7.6.tgz"
   integrity sha512-K0l8+wgcdVDjdgI8O2YuhX1CiQlavGuBp8HR/+PEbc2+jqM/BaVpL0g7YAuXrTW20np/MXHNRDxK20/ujF9hjA==
