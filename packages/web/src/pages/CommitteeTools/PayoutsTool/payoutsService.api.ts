@@ -16,6 +16,19 @@ export async function getPayoutById(payoutId?: string): Promise<IPayoutResponse>
 }
 
 /**
+ * Deletes a payout by id
+ * @param payoutId - The payout id to delete
+ */
+export async function deletePayoutById(payoutId?: string): Promise<boolean> {
+  try {
+    const res = await axiosClient.delete(`${BASE_SERVICE_URL}/payouts/${payoutId}`);
+    return res.status === 200 ? res.data.ok : false;
+  } catch (error) {
+    throw new Error(`Unknown error: ${error}`);
+  }
+}
+
+/**
  * Gets a list of all the payouts of a vaults list
  * @param vaultsList: { chainId: number; vaultAddress: string }[] - The list of vaults to get the payouts from
  */

@@ -84,3 +84,9 @@ export const useLockPayout = (): UseMutationResult<boolean, unknown, { payoutId:
     mutationFn: ({ payoutId }) => PayoutsService.lockPayout(payoutId),
   });
 };
+
+export const useDeletePayout = (): UseMutationResult<boolean, unknown, { payoutId: string }, unknown> => {
+  return useMutation({
+    mutationFn: ({ payoutId }) => PayoutsService.deletePayoutById(payoutId),
+  });
+};
