@@ -18,6 +18,7 @@ export const WithTooltip = ({ children, text, placement, visible }: WithTooltipP
         placement={placement}
         overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
         overlay={text}
+        showArrow={false}
       >
         {children}
       </Tooltip>
@@ -25,7 +26,13 @@ export const WithTooltip = ({ children, text, placement, visible }: WithTooltipP
   }
 
   return (
-    <Tooltip overlayClassName="tooltip" placement={placement} overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={text}>
+    <Tooltip
+      overlayClassName="tooltip"
+      placement={placement}
+      overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+      overlay={text}
+      showArrow={false}
+    >
       {children}
     </Tooltip>
   );

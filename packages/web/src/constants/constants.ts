@@ -51,8 +51,11 @@ export const MAX_SPENDING = BigNumber.from(2).pow(BigNumber.from(96)).sub(BigNum
 export const MINIMUM_DEPOSIT = 1000000;
 
 export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
-  border: "none",
   minHeight: "unset",
+  maxWidth: "480px",
+  color: "var(--white)",
+  background: "var(--purple-blue)",
+  border: "1px solid var(--field-blue)",
 };
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
