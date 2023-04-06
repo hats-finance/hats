@@ -33,13 +33,13 @@ function Root() {
               <BrowserRouter>
                 <GlobalStyle />
                 <NotificationProvider>
-                  <KeystoreProvider>
-                    <ConfirmDialogProvider>
+                  <ConfirmDialogProvider>
+                    <KeystoreProvider>
                       <SiweAuthProvider>
                         <App />
                       </SiweAuthProvider>
-                    </ConfirmDialogProvider>
-                  </KeystoreProvider>
+                    </KeystoreProvider>
+                  </ConfirmDialogProvider>
                 </NotificationProvider>
               </BrowserRouter>
             </HttpsRedirect>
