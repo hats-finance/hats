@@ -46,7 +46,7 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
       titleIcon: <RemoveIcon className="mr-2" fontSize="large" />,
       description: t("PGPTool.deleteKeyDescription"),
       cancelText: t("no"),
-      confirmText: t("yes"),
+      confirmText: t("delete"),
       bodyComponent: <PgpKeyCard expanded pgpKey={keyToDelete} viewOnly />,
     });
 
