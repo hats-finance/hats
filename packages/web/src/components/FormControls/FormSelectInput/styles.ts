@@ -6,7 +6,6 @@ export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
     position: relative;
     margin-bottom: ${getSpacing(3)};
     width: 100%;
-    flex: 1;
 
     label.input-label {
       display: block;
