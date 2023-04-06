@@ -59,7 +59,7 @@ export const PayoutStatusPage = () => {
 
       <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
 
-      {payout && <PayoutCard payout={payout} />}
+      {payout && <PayoutCard viewOnly payout={payout} />}
 
       <div className="buttons">
         <Button styleType="outlined" onClick={handleDeletePayout}>
