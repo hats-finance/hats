@@ -74,7 +74,7 @@ export const VaultStatusPage = () => {
   };
 
   return (
-    <StyledVaultStatusPage className="content-wrapper">
+    <StyledVaultStatusPage className="content-wrapper-md">
       <div className="status-title">
         <div className="leftSide">
           <div className="title">
