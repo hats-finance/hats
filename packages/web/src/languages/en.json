@@ -389,6 +389,7 @@
       "copyPayoutListLink": "Copy payout list link",
       "payoutStatus": "Payout status",
       "creatingPayout": "Creating payout",
+      "deletingPayout": "Deleting payout",
       "creatingSinglePayout": "Creating single payout",
       "createPayout": "Create payout",
       "createNewPayout": "Create new payout",
@@ -422,7 +423,8 @@
       "anotherActivePayout": "You can't create a new payout for this vault while it has an active one. Please wait for the current payout to finish, or delete it.",
       "deletePayout": "Delete payout",
       "deletePayoutDescription": "Are you sure you want to delete the payout?. This action will permanently delete the payout.",
-      "deletePayoutConfirmText": "Confirm deletion vault name to continue"
+      "deletePayoutConfirmText": "Confirm deletion vault name to continue",
+      "signPayout": "Sign payout"
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",
