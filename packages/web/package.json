@@ -15,6 +15,7 @@
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
+    "@types/dompurify": "^3.0.1",
     "@types/downloadjs": "^1.4.2",
     "@types/react": "^18.0.26",
     "@types/react-redux": "^7.1.16",
@@ -99,6 +100,7 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^4.28.0",
+    "dompurify": "^3.0.1",
     "encrypt-storage": "^2.12.15",
     "react-identicons": "^1.2.5",
     "siwe": "^1.1.6"

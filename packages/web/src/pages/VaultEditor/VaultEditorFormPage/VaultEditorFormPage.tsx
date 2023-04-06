@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
+import DOMPurify from "dompurify";
 import moment from "moment";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -580,7 +581,7 @@ const VaultEditorFormPage = () => {
                 </p>
               </div>
 
-              <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyEditorLink")} />
+              <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyEditorLink")} />
             </div>
 
             {/* Steps control */}

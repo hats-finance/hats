@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { BigNumber } from "ethers";
 import millify from "millify";
 import { useAccount } from "wagmi";
+import DOMPurify from "dompurify";
 import { Controller, useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -172,7 +173,7 @@ export const PayoutFormPage = () => {
           <p>{t("payouts")}</p>
         </div>
 
-        <CopyToClipboard valueToCopy={document.location.href} overlayText={t("Payouts.copyPayoutLink")} />
+        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
       </div>
 
       <div className="section-title">

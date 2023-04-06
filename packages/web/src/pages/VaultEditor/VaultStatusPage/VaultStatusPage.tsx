@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import DOMPurify from "dompurify";
 import { useAccount } from "wagmi";
 import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 import { isAddress } from "utils/addresses.utils";
@@ -82,7 +83,7 @@ export const VaultStatusPage = () => {
           </div>
           <div className="role">{t(vaultEditorRoleToIntlKey(userPermissionData.role))}</div>
         </div>
-        <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyVaultLink")} />
+        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyVaultLink")} />
       </div>
 
       {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}
