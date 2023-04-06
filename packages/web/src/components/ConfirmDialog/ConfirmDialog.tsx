@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, Modal } from "components";
 import { StyledConfirmDialog } from "./styles";
@@ -36,6 +36,10 @@ function ConfirmDialog({
   const { t } = useTranslation();
 
   const [confirmationText, setConfirmationText] = useState("");
+
+  useEffect(() => {
+    setConfirmationText("");
+  }, [isShowing]);
 
   const handleConfirm = () => {
     if (confirmTextInput && confirmationText !== confirmTextInput.textToConfirm) return;
