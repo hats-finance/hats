@@ -5,6 +5,7 @@ import useConfirm from "hooks/useConfirm";
 import { CopyToClipboard, Button, Loading } from "components";
 import { RoutePaths } from "navigation";
 import { useDeletePayout, usePayout } from "../payoutsService.hooks";
+import { PayoutCard } from "../components";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -57,6 +58,8 @@ export const PayoutStatusPage = () => {
       <div className="section-title">{t("Payouts.payoutStatus")}</div>
 
       <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
+
+      {payout && <PayoutCard payout={payout} />}
 
       <div className="buttons">
         <Button styleType="outlined" onClick={handleDeletePayout}>
