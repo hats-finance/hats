@@ -8,7 +8,7 @@ export const StyledConfirmDialog = styled.div`
   color: var(--white);
 
   .description-container {
-    margin-bottom: ${getSpacing(3)};
+    margin-bottom: ${getSpacing(5)};
   }
 
   .button-container {
