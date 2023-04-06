@@ -9,6 +9,11 @@ export const StyledConfirmDialog = styled.div`
 
   .description-container {
     margin-bottom: ${getSpacing(5)};
+
+    .strong {
+      font-weight: 700;
+      font-style: italic;
+    }
   }
 
   .button-container {
