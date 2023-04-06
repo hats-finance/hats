@@ -44,6 +44,11 @@ export const StyledPayoutStatusPage = styled.div`
     border-bottom: 1px solid var(--grey-600);
   }
 
+  .status-description {
+    margin: ${getSpacing(4)} 0;
+    /* font-weight: 700; */
+  }
+
   .buttons {
     display: flex;
     gap: ${getSpacing(3)};

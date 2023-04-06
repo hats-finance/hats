@@ -424,7 +424,14 @@
       "deletePayout": "Delete payout",
       "deletePayoutDescription": "Are you sure you want to delete the payout?. This action will permanently delete the payout.",
       "deletePayoutConfirmText": "Confirm deletion vault name to continue",
-      "signPayout": "Sign payout"
+      "signPayout": "Sign payout",
+      "payoutStatusDescriptions": {
+        "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
+        "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
+        "underReview": "Your payout is now under review. Please wait while the arbitrator review it.",
+        "executed": "Your payout was executed successfully.",
+        "rejected": "Your payout was rejected by the arbitrator."
+      }
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",

@@ -56,6 +56,8 @@ export const PayoutStatusPage = () => {
 
       <div className="section-title">{t("Payouts.payoutStatus")}</div>
 
+      <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
+
       <div className="buttons">
         <Button styleType="outlined" onClick={handleDeletePayout}>
           <RemoveIcon className="mr-2" />
