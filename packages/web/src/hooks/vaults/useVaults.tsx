@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext, PropsWithChildren } from "react";
 import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod, fixObject } from "@hats-finance/shared";
 import { useAccount, useNetwork } from "wagmi";
 import { appChains, IS_PROD } from "settings";
@@ -23,11 +23,11 @@ interface IVaultsContext {
 
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
-export function useVaults() {
+export function useVaults(): IVaultsContext {
   return useContext(VaultsContext);
 }
 
-export function VaultsProvider({ children }) {
+export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { address: account } = useAccount();
   const { chain } = useNetwork();
 
@@ -106,7 +106,7 @@ export function VaultsProvider({ children }) {
     return foundTokenPrices;
   };
 
-  const setAllVaultsWithDetails = async (vaultsData: IVault[]) => {
+  const setVaultsWithDetails = async (vaultsData: IVault[]) => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
       if (vault.descriptionHash && vault.descriptionHash !== "") {
         try {
@@ -162,7 +162,7 @@ export function VaultsProvider({ children }) {
     if (JSON.stringify(vaults) !== JSON.stringify(vaultsFilteredByNetwork)) setVaults(vaultsFilteredByNetwork);
   };
 
-  const setAllUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
+  const setUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
     const loadNftMetadata = async (userNft: IUserNft): Promise<INFTTokenMetadata | undefined> => {
       if (userNft.nft.tokenURI && userNft.nft.tokenURI !== "") {
         try {
@@ -211,8 +211,8 @@ export function VaultsProvider({ children }) {
   }, [allVaults, showTestnets]);
 
   useEffect(() => {
-    setAllVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
-    setAllUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
+    setVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
+    setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
