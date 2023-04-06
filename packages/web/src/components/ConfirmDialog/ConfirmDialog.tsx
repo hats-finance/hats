@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, FormInput, Modal } from "components";
 import { StyledConfirmDialog } from "./styles";
+import CheckIcon from "@mui/icons-material/Check";
 
 type ConfirmDialogProps = {
   isShowing: boolean;
@@ -60,6 +61,7 @@ function ConfirmDialog({
             <div className="mt-4">
               <p className="strong mb-2">{t("toConfirmWriteThisBelow", { text: confirmTextInput.textToConfirm })}</p>
               <FormInput
+                prefixIcon={confirmationText === confirmTextInput.textToConfirm ? <CheckIcon color="primary" /> : undefined}
                 onChange={(e) => setConfirmationText(e.target.value)}
                 label={confirmTextInput.label}
                 placeholder={confirmTextInput.placeholder}
