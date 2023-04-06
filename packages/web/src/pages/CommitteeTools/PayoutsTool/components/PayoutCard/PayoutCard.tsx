@@ -11,9 +11,10 @@ import { StyledPayoutCard } from "./styles";
 
 type PayoutCardProps = {
   payout: IPayoutResponse;
+  viewOnly?: boolean;
 };
 
-export const PayoutCard = ({ payout }: PayoutCardProps) => {
+export const PayoutCard = ({ payout, viewOnly = false }: PayoutCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -56,8 +57,9 @@ export const PayoutCard = ({ payout }: PayoutCardProps) => {
 
   return (
     <StyledPayoutCard
+      viewOnly={viewOnly}
       status={payout.status}
-      onClick={handleGoToPayout}
+      onClick={viewOnly ? undefined : handleGoToPayout}
       minSignersReached={payout.signatures.length >= payout.minSignaturesNeeded}
     >
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
