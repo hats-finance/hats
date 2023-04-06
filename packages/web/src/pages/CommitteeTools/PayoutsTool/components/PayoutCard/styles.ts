@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
 import { getSpacing } from "styles";
 
-export const StyledPayoutCard = styled.div<{ status: PayoutStatus }>(
-  ({ status }) => css`
+export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersReached: boolean }>(
+  ({ status, minSignersReached }) => css`
     background: var(--background-clearer-blue);
     padding: ${getSpacing(2)};
     display: grid;
@@ -55,6 +55,12 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus }>(
     .status {
       .content {
         color: var(${payoutStatusInfo[status].color});
+      }
+    }
+
+    .signers {
+      .content {
+        color: ${minSignersReached ? "unset" : "var(--warning-yellow)"};
       }
     }
 

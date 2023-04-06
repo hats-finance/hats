@@ -55,7 +55,11 @@ export const PayoutCard = ({ payout }: PayoutCardProps) => {
   if (!selectedVault) return null;
 
   return (
-    <StyledPayoutCard status={payout.status} onClick={handleGoToPayout}>
+    <StyledPayoutCard
+      status={payout.status}
+      onClick={handleGoToPayout}
+      minSignersReached={payout.signatures.length >= payout.minSignaturesNeeded}
+    >
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
       <div className="col nonce">
         <p className="title">{t("nonce")}</p>
