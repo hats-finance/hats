@@ -32,7 +32,7 @@ export const SiweAuthProvider = ({ children }) => {
     loggedIn: boolean;
     address?: string | undefined;
     chainId?: number | undefined;
-  }>({ loggedIn: true });
+  }>({ loggedIn: false });
 
   const getProfile = async () => {
     const profile = await SIWEService.profile();

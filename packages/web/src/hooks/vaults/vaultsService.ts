@@ -34,7 +34,6 @@ export async function getSubgraphData(chainId?: number, account?: string): Promi
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
-      cache: "default",
     });
     const dataJsonTest = await resTest.json();
 

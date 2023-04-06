@@ -39,7 +39,7 @@ export function VaultsProvider({ children }) {
 
   const connectedChain = chain ? appChains[chain.id] : null;
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
-  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
+  const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
 
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");

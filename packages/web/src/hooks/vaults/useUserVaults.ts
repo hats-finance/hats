@@ -19,6 +19,13 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
     getUserVaults(address, allVaults, version);
   }, [address, allVaults, version]);
 
+  /**
+   * Retrieves the user's vaults based on their address and vault version.
+   *
+   * @param address - The user's wallet address.
+   * @param allVaults - An array of all available vaults.
+   * @param version - The version of the vaults to retrieve ("v1", "v2", or "all").
+   */
   const getUserVaults = async (address: string, allVaults: IVault[], version: UserVaultsVersion) => {
     const foundVaults = [] as IVault[];
     for (const vault of allVaults) {
