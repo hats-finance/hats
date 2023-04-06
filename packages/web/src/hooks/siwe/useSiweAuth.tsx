@@ -23,7 +23,7 @@ type ISiweAuthContext = {
 const SiweAuthContext = createContext<ISiweAuthContext>(undefined as any);
 
 export const SiweAuthProvider = ({ children }) => {
-  const { address } = useAccount();
+  const { address, connector } = useAccount();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
@@ -57,12 +57,12 @@ export const SiweAuthProvider = ({ children }) => {
   }, [address, profileData]);
 
   const signIn = useCallback(async (): Promise<{ ok: boolean }> => {
-    try {
-      const chainId = chain?.id;
-      if (!address || !chainId) return { ok: false };
+    if (!connector || !address || !chain) return { ok: false };
 
+    try {
       setIsSigningIn(true);
 
+      const chainId = chain?.id;
       const nonce = await SIWEService.getNonce();
 
       // Create SIWE message with pre-fetched nonce and sign with wallet
@@ -92,7 +92,7 @@ export const SiweAuthProvider = ({ children }) => {
 
       return { ok: false };
     }
-  }, [address, chain?.id, signMessageAsync]);
+  }, [connector, address, chain, signMessageAsync]);
 
   const tryAuthentication = useCallback(async (): Promise<boolean> => {
     if (!profileData.loggedIn) {
@@ -101,7 +101,7 @@ export const SiweAuthProvider = ({ children }) => {
     }
 
     return true;
-  }, [signIn, profileData]);
+  }, [signIn, profileData.loggedIn]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
@@ -113,8 +113,8 @@ export const SiweAuthProvider = ({ children }) => {
     logout,
     isSigningIn,
     profileData,
-    isAuthenticated: profileData.loggedIn,
     tryAuthentication,
+    isAuthenticated: profileData.loggedIn,
     updateProfile: getProfile,
   };
 
