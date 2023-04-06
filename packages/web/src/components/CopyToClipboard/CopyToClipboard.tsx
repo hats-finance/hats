@@ -27,7 +27,7 @@ export function CopyToClipboard({ valueToCopy, overlayText }: IProps) {
 
   return (
     <StyledCopyToClipboard>
-      <WithTooltip text={hasClicked ? t("copied") : overlayText ?? t("copyToClipboard")}>
+      <WithTooltip placement="left" text={hasClicked ? t("copied") : overlayText ?? t("copyToClipboard")}>
         <div className="copy-button" onClick={handleCopy}>
           {hasClicked ? <CheckIcon fontSize="small" /> : <CopyIcon fontSize="small" />}
         </div>
