@@ -7,8 +7,8 @@ export const StyledNftPreview = styled.div`
   position: relative;
   cursor: pointer;
   transition: 0.2s;
-  width: 150px;
-  height: 150px;
+  width: 180px;
+  aspect-ratio: 1;
   display: flex;
   justify-content: center;
   align-items: center;
