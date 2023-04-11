@@ -158,6 +158,7 @@ function FormInputComponent(
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
       withExtraicons={extraIcons}
+      colorable={colorable}
     >
       <div className="main-container">
         {label && (

@@ -11,12 +11,25 @@ type StyledFormInputProps = {
   withExtraicons?: boolean;
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
+  colorable?: boolean;
   disabled?: boolean;
   type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked, noLabel, disabled }) => css`
+  ({
+    isDirty,
+    type,
+    withExtraicons,
+    hasError,
+    isCheckOrRadio,
+    noMargin,
+    withPrefixIcon,
+    isChecked,
+    noLabel,
+    disabled,
+    colorable,
+  }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -77,9 +90,12 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         font-family: RobotoMono;
       }
 
-      &:focus {
-        border-color: var(--turquoise);
-      }
+      ${colorable &&
+      css`
+        &:focus {
+          border-color: var(--turquoise);
+        }
+      `}
 
       ${isDirty &&
       css`
