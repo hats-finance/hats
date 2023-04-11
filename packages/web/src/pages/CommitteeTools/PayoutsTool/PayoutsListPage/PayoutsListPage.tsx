@@ -5,7 +5,6 @@ import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { Alert, Button, HatSpinner, Modal } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { useUserVaults } from "hooks/vaults/useUserVaults";
 import useModal from "hooks/useModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
 import { PayoutCreateModal } from "./PayoutCreateModal";
@@ -27,8 +26,7 @@ export const PayoutsListPage = () => {
 
   const [section, setSection] = useState<"drafts" | "in_progress" | "finished">("in_progress");
 
-  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
-  const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsByVaults(userVaults ?? []);
+  const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsByVaults();
 
   // Only the first time the payouts are loaded, check if there are any drafts or in progress payouts
   useEffect(() => {
@@ -49,7 +47,7 @@ export const PayoutsListPage = () => {
 
   // Gets the payouts, filter them by section and group them by date
   const getPayoutsToShow = useCallback((): { date: string; payouts: IPayoutResponse[] }[] => {
-    if (isLoadingPayouts || isLoadingUserVaults) return [];
+    if (isLoadingPayouts) return [];
     if (!allPayouts || allPayouts.length === 0) return [];
 
     const payoutsFilteredBySection = allPayouts.filter((payout) => {
@@ -82,7 +80,7 @@ export const PayoutsListPage = () => {
     });
 
     return payoutGroupsByDateArray;
-  }, [allPayouts, isLoadingPayouts, isLoadingUserVaults, section]);
+  }, [allPayouts, isLoadingPayouts, section]);
 
   if (!address) return <PayoutsWelcome />;
 
@@ -127,7 +125,7 @@ export const PayoutsListPage = () => {
 
         {isAuthenticated && (
           <>
-            {!isLoadingPayouts && !isLoadingUserVaults ? (
+            {!isLoadingPayouts ? (
               <>
                 {payoutsToShow.length > 0 ? (
                   payoutsToShow.map((payoutGroup) => (

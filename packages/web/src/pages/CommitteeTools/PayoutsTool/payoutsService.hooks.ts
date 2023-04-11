@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import { UseQueryResult, useQuery, useMutation, UseMutationResult } from "@tanstack/react-query";
-import { IPayoutData, IPayoutResponse, IVault } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse } from "@hats-finance/shared";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useUserVaults } from "hooks/vaults/useUserVaults";
+import { queryClient } from "config/reactQuery";
 import * as PayoutsService from "./payoutsService.api";
 
 // ------------------------
@@ -36,22 +38,28 @@ export const useVaultActivePayouts = (chainId?: number, vaultAddress?: string): 
   });
 };
 
-export const usePayoutsByVaults = (vaultsList: IVault[]): UseQueryResult<IPayoutResponse[]> => {
+export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
+  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
 
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
 
-  const vaultsIds = vaultsList.map((vault) => `${vault.chainId}-${vault.id}`);
-  const vaultsInfo = vaultsList.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id }));
+  const vaultsIds = userVaults?.map((vault) => `${vault.chainId}-${vault.id}`) ?? [];
+  const vaultsInfo = userVaults?.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id })) ?? [];
 
-  return useQuery({
+  const queryResult = useQuery({
     queryKey: ["payouts-by-vaults", ...vaultsIds],
     queryFn: () => PayoutsService.getPayoutsByVaults(vaultsInfo),
-    enabled: isAuthenticated && vaultsList.length > 0,
+    enabled: isAuthenticated && userVaults && userVaults.length > 0,
     refetchOnWindowFocus: false,
   });
+
+  return {
+    ...queryResult,
+    isLoading: queryResult.isLoading || isLoadingUserVaults,
+  } as UseQueryResult<IPayoutResponse[]>;
 };
 
 // ------------------------
@@ -88,5 +96,8 @@ export const useLockPayout = (): UseMutationResult<boolean, unknown, { payoutId:
 export const useDeletePayout = (): UseMutationResult<boolean, unknown, { payoutId: string }, unknown> => {
   return useMutation({
     mutationFn: ({ payoutId }) => PayoutsService.deletePayoutById(payoutId),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [] });
+    },
   });
 };

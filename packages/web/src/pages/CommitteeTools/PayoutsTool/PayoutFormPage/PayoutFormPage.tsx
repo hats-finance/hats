@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { BigNumber } from "ethers";
-import millify from "millify";
 import { useAccount } from "wagmi";
 import DOMPurify from "dompurify";
 import { Controller, useWatch } from "react-hook-form";
@@ -10,7 +8,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import {
   DefaultIndexArray,
   IPayoutData,
-  IVault,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
   PayoutStatus,
@@ -22,9 +19,9 @@ import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { Amount } from "utils/amounts.utils";
 import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
+import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useLockPayout, usePayout, useSavePayout, useVaultActivePayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { NftPreview } from "../components/NftPreview/NftPreview";
@@ -63,22 +60,8 @@ export const PayoutFormPage = () => {
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
-  const calculateAmountInTokensToPay = (percentageToPay: string, vault: IVault | undefined): string => {
-    if (!vault || isNaN(+percentageToPay)) return "-";
-
-    const tokenAddress = vault.stakingToken;
-    const tokenSymbol = vault.stakingTokenSymbol;
-    const tokenDecimals = vault.stakingTokenDecimals;
-    const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), tokenDecimals, tokenSymbol).number;
-    const amountInTokens = vaultBalance * (+percentageToPay / 100);
-
-    const tokenPrice = tokenPrices?.[tokenAddress] ?? 0;
-
-    return `≈ ${millify(amountInTokens)} ${tokenSymbol} ~ ${millify(amountInTokens * tokenPrice)}$`;
-  };
-
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
-  const amountInTokensToPay = calculateAmountInTokensToPay(percentageToPay, vault);
+  const amountInTokensToPay = calculateAmountInTokensFromPercentage(percentageToPay, vault, tokenPrices);
 
   // Handle reset form when payout changes
   useEffect(() => {
