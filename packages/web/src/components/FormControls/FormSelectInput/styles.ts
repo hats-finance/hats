@@ -85,7 +85,6 @@ export const SelectButton = styled.div<{
       text-overflow: ellipsis;
       white-space: nowrap;
       flex-basis: 100%;
-      font-size: var(--xxsmall);
       color: ${isFilled ? "var(--white)" : "var(--grey-500)"};
     }
 
