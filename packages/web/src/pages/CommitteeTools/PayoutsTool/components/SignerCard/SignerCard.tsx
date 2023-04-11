@@ -27,7 +27,9 @@ export const SignerCard = ({ signerAddress, chainId, signed }: SignerCardProps) 
         {address === signerAddress && <strong>({t("you")})</strong>}
       </p>
 
-      <CopyToClipboard overlayText={t("copyAddress")} tooltipPlacement="right" valueToCopy={signerAddress} />
+      <div className="mr-4">
+        <CopyToClipboard overlayText={t("copyAddress")} tooltipPlacement="right" valueToCopy={signerAddress} />
+      </div>
 
       <Pill color={signed ? "blue" : "yellow"} text={signed ? t("approved") : t("waitingSignature")} />
     </StyledSignerCard>

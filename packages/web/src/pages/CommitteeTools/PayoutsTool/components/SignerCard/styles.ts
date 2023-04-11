@@ -9,14 +9,4 @@ export const StyledSignerCard = styled.div`
   .identicon {
     border-radius: 100px;
   }
-
-  .action-icon {
-    cursor: pointer;
-    transition: 0.2s;
-    margin-right: ${getSpacing(2)};
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
 `;
