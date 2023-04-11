@@ -313,6 +313,8 @@
     "loadingVaults": "Loading vaults",
     "delete": "Delete",
     "toConfirmWriteThisBelow": "Write \"{{text}}\" to confirm:",
+    "waitingSignature": "Waiting signature",
+    "copyAddress": "Copy address",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -425,6 +427,7 @@
       "deletePayoutDescription": "Are you sure you want to delete the payout?. This action will permanently delete the payout.",
       "deletePayoutConfirmText": "Confirm deletion vault name to continue",
       "signPayout": "Sign payout",
+      "signers": "Signers",
       "payoutStatusDescriptions": {
         "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
