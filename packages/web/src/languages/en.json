@@ -315,6 +315,7 @@
     "toConfirmWriteThisBelow": "Write \"{{text}}\" to confirm:",
     "waitingSignature": "Waiting signature",
     "copyAddress": "Copy address",
+    "you": "You",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
