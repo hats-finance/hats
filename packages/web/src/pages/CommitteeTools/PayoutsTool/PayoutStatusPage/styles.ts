@@ -48,14 +48,24 @@ export const StyledPayoutStatusPage = styled.div`
     margin: ${getSpacing(4)} 0;
   }
 
-  .payout-details {
+  .payout-status {
     background: var(--background-clearer-blue);
     padding: ${getSpacing(3)};
     margin-bottom: ${getSpacing(6)};
 
-    .row {
-      display: flex;
-      gap: ${getSpacing(2)};
+    .form {
+      .row {
+        display: flex;
+        gap: ${getSpacing(2)};
+      }
+    }
+
+    .signers {
+      margin-top: ${getSpacing(4)};
+
+      &-list {
+        margin: ${getSpacing(3)} ${getSpacing(1)};
+      }
     }
 
     .buttons {

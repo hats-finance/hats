@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
 import DOMPurify from "dompurify";
 import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput } from "components";
 import useConfirm from "hooks/useConfirm";
+import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useDeletePayout, usePayout } from "../payoutsService.hooks";
-import { PayoutCard } from "../components";
+import { PayoutCard, NftPreview, SignerCard } from "../components";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
-import { NftPreview } from "../components/NftPreview/NftPreview";
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
@@ -25,7 +25,9 @@ export const PayoutStatusPage = () => {
   const { payoutId } = useParams();
   const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
 
-  const vault = allVaults?.find((vault) => vault.id === payout?.vaultAddress);
+  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
+  const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
+
   const amountInTokensToPay = calculateAmountInTokensFromPercentage(payout?.payoutData.percentageToPay, vault, tokenPrices);
 
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
@@ -80,7 +82,7 @@ export const PayoutStatusPage = () => {
     if (wasDeleted) navigate(`${RoutePaths.payouts}`);
   };
 
-  if (isLoadingPayout) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
+  if (isLoadingPayout || isLoadingSafeInfo) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
   return (
     <StyledPayoutStatusPage className="content-wrapper-md">
@@ -98,52 +100,70 @@ export const PayoutStatusPage = () => {
       <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
 
       {payout && <PayoutCard viewOnly payout={payout} />}
-      <div className="payout-details">
-        <FormInput
-          label={t("Payouts.beneficiary")}
-          placeholder={t("Payouts.beneficiaryPlaceholder")}
-          value={payout?.payoutData.beneficiary}
-          readOnly
-        />
 
-        <div className="row">
-          {payout?.payoutData.severity && (
-            <FormSelectInput
-              value={payout.payoutData.severity}
-              label={t("Payouts.severity")}
-              placeholder={t("Payouts.severityPlaceholder")}
-              options={severitiesOptions ?? []}
-              readOnly
-            />
-          )}
-
+      <div className="payout-status">
+        <div className="form">
           <FormInput
-            value={payout?.payoutData.percentageToPay}
-            label={t("Payouts.percentageToPay")}
-            placeholder={t("Payouts.percentageToPayPlaceholder")}
+            label={t("Payouts.beneficiary")}
+            placeholder={t("Payouts.beneficiaryPlaceholder")}
+            value={payout?.payoutData.beneficiary}
             readOnly
           />
 
-          <ArrowForwardIcon className="mt-4" />
+          <div className="row">
+            {payout?.payoutData.severity && (
+              <FormSelectInput
+                value={payout.payoutData.severity}
+                label={t("Payouts.severity")}
+                placeholder={t("Payouts.severityPlaceholder")}
+                options={severitiesOptions ?? []}
+                readOnly
+              />
+            )}
 
-          <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
+            <FormInput
+              value={payout?.payoutData.percentageToPay}
+              label={t("Payouts.percentageToPay")}
+              placeholder={t("Payouts.percentageToPayPlaceholder")}
+              readOnly
+            />
+
+            <ArrowForwardIcon className="mt-4" />
+
+            <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
+          </div>
+
+          <FormInput
+            value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
+            label={t("Payouts.explanation")}
+            placeholder={t("Payouts.explanationPlaceholder")}
+            type="textarea"
+            rows={10}
+            readOnly
+          />
+
+          <NftPreview
+            size="small"
+            vault={vault}
+            severityName={selectedSeverityData?.name}
+            nftData={selectedSeverityData?.["nft-metadata"]}
+          />
         </div>
 
-        <FormInput
-          value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
-          label={t("Payouts.explanation")}
-          placeholder={t("Payouts.explanationPlaceholder")}
-          type="textarea"
-          rows={10}
-          readOnly
-        />
+        <div className="signers">
+          <p className="section-title">{t("Payouts.signers")}</p>
 
-        <NftPreview
-          size="small"
-          vault={vault}
-          severityName={selectedSeverityData?.name}
-          nftData={selectedSeverityData?.["nft-metadata"]}
-        />
+          <div className="signers-list">
+            {vault &&
+              safeInfo?.owners.map((signerAddress) => (
+                <SignerCard
+                  signerAddress={signerAddress}
+                  chainId={vault.chainId as number}
+                  signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
+                />
+              ))}
+          </div>
+        </div>
 
         <div className="buttons">
           <Button styleType="outlined" onClick={handleDeletePayout}>

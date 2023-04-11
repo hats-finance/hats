@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
@@ -21,10 +21,10 @@ import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
+import { NftPreview } from "../components";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useLockPayout, usePayout, useSavePayout, useVaultActivePayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { NftPreview } from "../components/NftPreview/NftPreview";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
@@ -49,7 +49,7 @@ export const PayoutFormPage = () => {
   const savePayout = useSavePayout();
   const lockPayout = useLockPayout();
 
-  const vault = allVaults?.find((vault) => vault.id === payout?.vaultAddress);
+  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
   const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
