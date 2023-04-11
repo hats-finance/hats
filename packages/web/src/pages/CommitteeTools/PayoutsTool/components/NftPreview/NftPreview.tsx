@@ -6,20 +6,21 @@ import { ipfsTransformUri } from "utils";
 import { StyledNFTDetailsModal, StyledNftPreview } from "./styles";
 import OpenIcon from "@mui/icons-material/FitScreenOutlined";
 
-type NftPreviewProps = {
+export type NftPreviewProps = {
   nftData: INFTMetaData | undefined;
   severityName?: string;
   vault?: IVault;
+  size?: "small" | "normal";
 };
 
-export const NftPreview = ({ nftData, severityName, vault }: NftPreviewProps) => {
+export const NftPreview = ({ nftData, severityName, vault, size = "normal" }: NftPreviewProps) => {
   const { t } = useTranslation();
 
   const { isShowing: isShowingNFTModal, show: showNFTModal, hide: hideNFTModal } = useModal();
 
   return (
     <>
-      <StyledNftPreview onClick={nftData ? showNFTModal : undefined}>
+      <StyledNftPreview size={size} onClick={nftData ? showNFTModal : undefined}>
         {nftData ? <Media className="preview" link={ipfsTransformUri(nftData.image)} /> : <p>{t("noNFT")}</p>}
         <OpenIcon className="icon" />
       </StyledNftPreview>
