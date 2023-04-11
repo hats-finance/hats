@@ -93,6 +93,12 @@ export const useLockPayout = (): UseMutationResult<boolean, unknown, { payoutId:
   });
 };
 
+export const useAddSignature = (): UseMutationResult<boolean, unknown, { payoutId: string; signature: string }, unknown> => {
+  return useMutation({
+    mutationFn: ({ payoutId, signature }) => PayoutsService.addSignature(payoutId, signature),
+  });
+};
+
 export const useDeletePayout = (): UseMutationResult<boolean, unknown, { payoutId: string }, unknown> => {
   return useMutation({
     mutationFn: ({ payoutId }) => PayoutsService.deletePayoutById(payoutId),

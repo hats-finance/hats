@@ -107,6 +107,22 @@ export async function lockPayout(payoutId: string): Promise<boolean> {
     const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/lock/${payoutId}`);
     return res.status === 200 ? res.data.ok : false;
   } catch (error) {
-    return false;
+    throw new Error(`Unknown error: ${error}`);
+  }
+}
+
+/**
+ * Adds a new signature to a payout
+ * @param payoutId - The payout id
+ * @param signature - The signature to add
+ *
+ * @returns True if the signature was added, false otherwise
+ */
+export async function addSignature(payoutId: string, signature: string): Promise<boolean> {
+  try {
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/signatures/${payoutId}`, { signature });
+    return res.status === 200 ? res.data.ok : false;
+  } catch (error) {
+    throw new Error(`Unknown error: ${error}`);
   }
 }
