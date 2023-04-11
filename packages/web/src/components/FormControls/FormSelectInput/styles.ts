@@ -34,6 +34,7 @@ export const SelectButton = styled.div<{
   disabled: boolean;
 }>(
   ({ isDirty, isOpen, hasError, isFilled, disabled }) => css`
+    position: relative;
     width: 100%;
     display: flex;
     align-items: center;
