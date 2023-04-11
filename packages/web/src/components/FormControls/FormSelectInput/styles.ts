@@ -32,8 +32,9 @@ export const SelectButton = styled.div<{
   isOpen: boolean;
   isFilled: boolean;
   disabled: boolean;
+  readOnly: boolean;
 }>(
-  ({ isDirty, isOpen, hasError, isFilled, disabled }) => css`
+  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly }) => css`
     position: relative;
     width: 100%;
     display: flex;
@@ -95,8 +96,8 @@ export const SelectButton = styled.div<{
       justify-content: center;
       align-items: center;
       transition: 0.2s;
-      filter: grayscale(1);
       transform: translateY(-40%);
+      color: ${readOnly ? "transparent" : "unherit"};
 
       ${isOpen &&
       css`
