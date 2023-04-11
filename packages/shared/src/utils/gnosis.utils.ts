@@ -3,6 +3,8 @@ import axios from "axios";
 import { isServer } from "./general.utils";
 import { utils } from "ethers";
 
+export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
+
 const getGnosisChainNameByChainId = (chainId: number): string => {
   switch (chainId) {
     case mainnet.id:
@@ -76,11 +78,11 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
 };
 
 export const getGnosisSafeInfo = async (
-  address: string,
+  address: string | undefined,
   chainId: number | undefined
-): Promise<{ isSafeAddress: boolean; owners: string[]; threshold: number }> => {
+): Promise<IGnosisSafeInfoResponse> => {
   try {
-    if (!chainId) throw new Error("Please provide chainId");
+    if (!chainId || !address) throw new Error("Please provide address and chainId");
 
     const safeInfoStorage = isServer() ? null : JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
     const data = safeInfoStorage ?? (await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId))).data;
