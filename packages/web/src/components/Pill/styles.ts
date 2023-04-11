@@ -23,7 +23,7 @@ export const StyledPill = styled.div<{ transparent: boolean }>(
     align-items: center;
     gap: ${getSpacing(0.8)};
     background: ${transparent ? "transparent" : "var(--dark-blue)"};
-    padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+    padding: ${getSpacing(0.8)} ${getSpacing(1.4)};
     border-radius: 100px;
     width: fit-content;
     border: 1px solid var(--grey-600);
