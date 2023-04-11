@@ -1,15 +1,17 @@
 import { useEffect, useMemo, useState } from "react";
+import { ethers } from "ethers";
+import { useAccount, useSignMessage } from "wagmi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
 import DOMPurify from "dompurify";
-import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput } from "components";
+import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert } from "components";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
-import { useDeletePayout, usePayout } from "../payoutsService.hooks";
+import { useAddSignature, useDeletePayout, usePayout } from "../payoutsService.hooks";
 import { PayoutCard, NftPreview, SignerCard } from "../components";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
@@ -18,12 +20,23 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
+  const { address } = useAccount();
   const navigate = useNavigate();
   const confirm = useConfirm();
+
   const { allVaults, tokenPrices } = useVaults();
 
   const { payoutId } = useParams();
-  const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
+  const {
+    data: payout,
+    isLoading: isLoadingPayout,
+    isRefetching: isRefetchingPayout,
+    refetch: refetchPayout,
+  } = usePayout(payoutId);
+  const deletePayout = useDeletePayout();
+  const addSignature = useAddSignature();
+  const signTransaction = useSignMessage();
+  console.log(`Payout -> `, payout);
 
   const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
@@ -58,7 +71,15 @@ export const PayoutStatusPage = () => {
     }
   }, [allVaults, payout, vault]);
 
-  const deletePayout = useDeletePayout();
+  const isSignButtonDisabled = useMemo((): string | false => {
+    if (!safeInfo || !payout) return `${t("loading")}...`;
+    if (!address) return t("pleaseConnectYourWallet");
+
+    if (!safeInfo.owners.includes(address)) return t("youAreNotACommitteeMember");
+    if (payout?.signatures.some((sig) => sig.signerAddress === address)) return t("Payouts.youHaveAlreadySignedThisPayout");
+
+    return false;
+  }, [t, payout, safeInfo, address]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
@@ -80,6 +101,16 @@ export const PayoutStatusPage = () => {
 
     const wasDeleted = await deletePayout.mutateAsync({ payoutId });
     if (wasDeleted) navigate(`${RoutePaths.payouts}`);
+  };
+
+  const handleSignPayout = async () => {
+    if (isSignButtonDisabled || !payoutId || !payout) return;
+
+    const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
+    if (!signature) return;
+
+    await addSignature.mutateAsync({ payoutId, signature });
+    refetchPayout();
   };
 
   if (isLoadingPayout || isLoadingSafeInfo) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
@@ -157,6 +188,7 @@ export const PayoutStatusPage = () => {
             {vault &&
               safeInfo?.owners.map((signerAddress) => (
                 <SignerCard
+                  key={signerAddress}
                   signerAddress={signerAddress}
                   chainId={vault.chainId as number}
                   signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
@@ -165,17 +197,25 @@ export const PayoutStatusPage = () => {
           </div>
         </div>
 
+        {!!isSignButtonDisabled && <Alert type="warning" content={isSignButtonDisabled} />}
+
         <div className="buttons">
           <Button styleType="outlined" onClick={handleDeletePayout}>
             <RemoveIcon className="mr-2" />
             {t("Payouts.deletePayout")}
           </Button>
 
-          <Button>{t("Payouts.signPayout")}</Button>
+          <Button disabled={!!isSignButtonDisabled} onClick={handleSignPayout}>
+            {t("Payouts.signPayout")}
+          </Button>
         </div>
       </div>
 
       {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
+      {isRefetchingPayout && <Loading fixed extraText={`${t("Payouts.loadingPayoutData")}...`} />}
+      {(addSignature.isLoading || signTransaction.isLoading) && (
+        <Loading fixed extraText={`${t("Payouts.signingPayoutTransaction")}...`} />
+      )}
     </StyledPayoutStatusPage>
   );
 };

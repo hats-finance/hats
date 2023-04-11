@@ -316,6 +316,8 @@
     "waitingSignature": "Waiting signature",
     "copyAddress": "Copy address",
     "you": "You",
+    "pleaseConnectYourWallet": "Please connect your wallet.",
+    "youAreNotACommitteeMember": "You are not a committee member.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -429,6 +431,8 @@
       "deletePayoutConfirmText": "Confirm deletion vault name to continue",
       "signPayout": "Sign payout",
       "signers": "Signers",
+      "youHaveAlreadySignedThisPayout": "You have already signed this payout.",
+      "signingPayoutTransaction": "Signing payout transaction",
       "payoutStatusDescriptions": {
         "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
