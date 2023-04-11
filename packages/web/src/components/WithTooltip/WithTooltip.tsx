@@ -10,6 +10,10 @@ export type WithTooltipProps = {
 };
 
 export const WithTooltip = ({ children, text, placement, visible }: WithTooltipProps) => {
+  if (!text) {
+    return children;
+  }
+
   if (visible === true || visible === false) {
     return (
       <Tooltip
