@@ -321,6 +321,7 @@
     "withdrawalSafePeriodOnUntil": "Withdrawal safe period on until {{safetyPeriodDate}}",
     "nextSafePeriodStartsAt": "Next safe period starts at {{safetyPeriodDate}}",
     "safePeriodExplanation": "Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled.",
+    "vaultAddress": "Vault address",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

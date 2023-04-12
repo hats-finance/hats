@@ -12,9 +12,10 @@ import { StyledPayoutCard } from "./styles";
 type PayoutCardProps = {
   payout: IPayoutResponse;
   viewOnly?: boolean;
+  showVaultAddress?: boolean;
 };
 
-export const PayoutCard = ({ payout, viewOnly = false }: PayoutCardProps) => {
+export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false }: PayoutCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -28,7 +29,7 @@ export const PayoutCard = ({ payout, viewOnly = false }: PayoutCardProps) => {
     const network = vault.chainId ? appChains[vault.chainId] : null;
 
     return (
-      <WithTooltip text={vault.description?.["project-metadata"].name ?? ""}>
+      <WithTooltip text={`${vault.description?.["project-metadata"].name} ~ ${network?.chain.name}` ?? ""}>
         <div>
           <img
             className="logo"
@@ -62,6 +63,11 @@ export const PayoutCard = ({ payout, viewOnly = false }: PayoutCardProps) => {
       onClick={viewOnly ? undefined : handleGoToPayout}
       minSignersReached={payout.signatures.length >= payout.minSignaturesNeeded}
     >
+      {showVaultAddress && (
+        <div className="vault-address">
+          {t("vaultAddress")}: {payout.vaultAddress}
+        </div>
+      )}
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
       <div className="col nonce">
         <p className="title">{t("nonce")}</p>

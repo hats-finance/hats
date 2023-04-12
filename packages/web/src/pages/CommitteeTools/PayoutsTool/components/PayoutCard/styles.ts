@@ -4,6 +4,7 @@ import { getSpacing } from "styles";
 
 export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersReached: boolean; viewOnly: boolean }>(
   ({ status, minSignersReached, viewOnly }) => css`
+    position: relative;
     background: var(--background-clearer-blue);
     padding: ${getSpacing(2)};
     display: grid;
@@ -23,6 +24,19 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersRea
         opacity: 0.6;
       }
     `}
+
+    .vault-address {
+      position: absolute;
+      margin: 0;
+      top: 0;
+      left: ${getSpacing(2)};
+      color: var(--grey-400);
+      background: var(--grey-600);
+      font-size: var(--xxsmall);
+      padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+      border-radius: 5px;
+      transform: translateY(-50%);
+    }
 
     .vault-icon {
       position: relative;
