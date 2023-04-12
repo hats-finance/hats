@@ -10,6 +10,7 @@ export interface IPayoutResponse {
   status: PayoutStatus;
   lastActionNeededNotifiedAt: Date;
   payoutTxHash: string;
+  reasoningDescriptionHash: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
