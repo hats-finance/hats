@@ -3,9 +3,9 @@ import { ethers } from "ethers";
 import { useAccount, useSignMessage } from "wagmi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2, PayoutStatus } from "@hats-finance/shared";
 import DOMPurify from "dompurify";
-import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert } from "components";
+import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert, SafePeriodBar } from "components";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -24,7 +24,7 @@ export const PayoutStatusPage = () => {
   const navigate = useNavigate();
   const confirm = useConfirm();
 
-  const { allVaults, tokenPrices } = useVaults();
+  const { allVaults, tokenPrices, withdrawSafetyPeriod } = useVaults();
 
   const { payoutId } = useParams();
   const {
@@ -40,6 +40,8 @@ export const PayoutStatusPage = () => {
 
   const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
+  const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
+  const isPayoutReadyToExecute = payout?.status === PayoutStatus.ReadyToExecute;
 
   const amountInTokensToPay = calculateAmountInTokensFromPercentage(payout?.payoutData.percentageToPay, vault, tokenPrices);
 
@@ -71,16 +73,6 @@ export const PayoutStatusPage = () => {
     }
   }, [allVaults, payout, vault]);
 
-  const isSignButtonDisabled = useMemo((): string | false => {
-    if (!safeInfo || !payout) return `${t("loading")}...`;
-    if (!address) return t("pleaseConnectYourWallet");
-
-    if (!safeInfo.owners.includes(address)) return t("youAreNotACommitteeMember");
-    if (payout?.signatures.some((sig) => sig.signerAddress === address)) return t("Payouts.youHaveAlreadySignedThisPayout");
-
-    return false;
-  }, [t, payout, safeInfo, address]);
-
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
 
@@ -104,13 +96,23 @@ export const PayoutStatusPage = () => {
   };
 
   const handleSignPayout = async () => {
-    if (isSignButtonDisabled || !payoutId || !payout) return;
+    if (userHasAlreadySigned || !payoutId || !payout) return;
 
     const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
     if (!signature) return;
 
     await addSignature.mutateAsync({ payoutId, signature });
     refetchPayout();
+  };
+
+  const handleExecutePayout = async () => {
+    if (!withdrawSafetyPeriod?.isSafetyPeriod || !isPayoutReadyToExecute) return;
+
+    // const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
+    // if (!signature) return;
+
+    // await addSignature.mutateAsync({ payoutId, signature });
+    // refetchPayout();
   };
 
   if (isLoadingPayout || isLoadingSafeInfo) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
@@ -127,8 +129,21 @@ export const PayoutStatusPage = () => {
       </div>
 
       <div className="section-title">{t("Payouts.payoutStatus")}</div>
-
       <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
+
+      {userHasAlreadySigned && !isPayoutReadyToExecute && (
+        <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
+      )}
+
+      {!userHasAlreadySigned && !isPayoutReadyToExecute && (
+        <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
+      )}
+
+      {/* {isPayoutReadyToExecute && (
+        <div className="mb-3">
+          <SafePeriodBar />
+        </div>
+      )} */}
 
       {payout && <PayoutCard viewOnly payout={payout} />}
 
@@ -197,17 +212,31 @@ export const PayoutStatusPage = () => {
           </div>
         </div>
 
-        {!!isSignButtonDisabled && <Alert type="warning" content={isSignButtonDisabled} />}
+        {isPayoutReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
+          <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
+        )}
+
+        {isPayoutReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
+          <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
+        )}
+
+        {isPayoutReadyToExecute && (
+          <div className="mt-3">
+            <SafePeriodBar />
+          </div>
+        )}
 
         <div className="buttons">
           <Button styleType="outlined" onClick={handleDeletePayout}>
-            <RemoveIcon className="mr-2" />
-            {t("Payouts.deletePayout")}
+            <RemoveIcon />
           </Button>
 
-          <Button disabled={!!isSignButtonDisabled} onClick={handleSignPayout}>
-            {t("Payouts.signPayout")}
-          </Button>
+          {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
+          {isPayoutReadyToExecute && (
+            <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod} onClick={handleExecutePayout}>
+              {t("Payouts.executePayout")}
+            </Button>
+          )}
         </div>
       </div>
 

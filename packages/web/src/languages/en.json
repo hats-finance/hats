@@ -318,6 +318,9 @@
     "you": "You",
     "pleaseConnectYourWallet": "Please connect your wallet.",
     "youAreNotACommitteeMember": "You are not a committee member.",
+    "withdrawalSafePeriodOnUntil": "Withdrawal safe period on until {{safetyPeriodDate}}",
+    "nextSafePeriodStartsAt": "Next safe period starts at {{safetyPeriodDate}}",
+    "safePeriodExplanation": "Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -433,6 +436,11 @@
       "signers": "Signers",
       "youHaveAlreadySignedThisPayout": "You have already signed this payout.",
       "signingPayoutTransaction": "Signing payout transaction",
+      "youHaveAlredySignedWaitingForOthers": "You have already signed this payout. Please wait for the other committee members to sign. Once the minimum signatures are collected you will be able to execute the payout transaction.",
+      "pleaseSignTheTransaction": "Please sign the transaction. Once the minimum signatures are collected you will be able to execute the payout transaction.",
+      "executePayout": "Execute payout",
+      "payoutReadyToExecuteButWaitingForSafetyPeriod": "The payout is ready to be executed, but you need to wait for the safety period to starts.",
+      "safetyPeriodOnYouCanExecutePayout": "The safety period is on. You can now execute the payout.",
       "payoutStatusDescriptions": {
         "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

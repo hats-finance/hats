@@ -45,7 +45,7 @@ export const StyledPayoutStatusPage = styled.div`
   }
 
   .status-description {
-    margin: ${getSpacing(4)} 0;
+    margin: ${getSpacing(2.5)} 0;
   }
 
   .payout-status {
@@ -74,7 +74,7 @@ export const StyledPayoutStatusPage = styled.div`
 
     .buttons {
       display: flex;
-      gap: ${getSpacing(3)};
+      gap: ${getSpacing(2)};
       justify-content: flex-end;
       padding-top: ${getSpacing(4)};
     }
