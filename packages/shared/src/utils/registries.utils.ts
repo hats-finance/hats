@@ -45,9 +45,9 @@ export const getAllRegistriesInfo = async (): Promise<IRegistryInfo[]> => {
     for (const registry of subgraphsData[i].data.masters) {
       const withdrawPeriod = +registry.withdrawPeriod;
       const safetyPeriod = +registry.safetyPeriod;
-      const secondsInPeriod = (new Date().getTime() / 1000) % (withdrawPeriod + safetyPeriod);
+      const secondsInPeriod = (Date.now() / 1000) % (withdrawPeriod + safetyPeriod);
 
-      let nextSafetyPeriod;
+      let nextSafetyPeriod: number;
       let isSafetyPeriod = false;
       if (secondsInPeriod >= withdrawPeriod) {
         nextSafetyPeriod = safetyPeriod + withdrawPeriod * 2 - secondsInPeriod;

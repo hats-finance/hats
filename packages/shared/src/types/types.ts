@@ -228,8 +228,8 @@ export interface IPoolWithdrawRequest {
 
 export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean;
-  safetyStartsAt: number;
-  safetyEndsAt: number;
+  nextSafetyStartsAt: number;
+  ongoingSafetyEndsAt: number;
 }
 
 export type TokenPriceResponse = { [token: string]: undefined | {} | { usd?: number } };

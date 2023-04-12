@@ -10,8 +10,8 @@ export function SafePeriodBar() {
   const { withdrawSafetyPeriod } = useVaults();
   if (!withdrawSafetyPeriod) return null;
 
-  const { safetyEndsAt, safetyStartsAt, isSafetyPeriod } = withdrawSafetyPeriod;
-  const safetyPeriodDate = new Date(isSafetyPeriod && safetyEndsAt ? safetyEndsAt : safetyStartsAt).toLocaleTimeString([], {
+  const { ongoingSafetyEndsAt, nextSafetyStartsAt, isSafetyPeriod } = withdrawSafetyPeriod;
+  const safetyPeriodDate = new Date(isSafetyPeriod ? ongoingSafetyEndsAt : nextSafetyStartsAt).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
