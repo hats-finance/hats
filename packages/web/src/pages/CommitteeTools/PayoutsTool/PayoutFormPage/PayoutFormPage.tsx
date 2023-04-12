@@ -132,6 +132,7 @@ export const PayoutFormPage = () => {
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
 
     try {
+      await handleSavePayout();
       const wasLocked = await lockPayout.mutateAsync({ payoutId });
       if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
     } catch (error) {
