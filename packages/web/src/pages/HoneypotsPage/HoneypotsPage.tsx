@@ -62,49 +62,51 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
       {vaults === undefined ? (
         <Loading fixed />
       ) : (
-        <table>
-          <tbody>
-            <SafePeriodBar />
-            <tr>
-              <th colSpan={2} className="search-cell">
-                <div className="search-wrapper">
-                  <SearchIcon />
-                  <input
-                    type="text"
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    className="search-input"
-                    placeholder="Search vault..."
-                  />
-                </div>
-              </th>
-              <th className="onlyDesktop">TOTAL VAULT</th>
-              <th className="onlyDesktop">APY</th>
-              <th className="onlyDesktop"></th>
-            </tr>
-            {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
-            {vaultsByGroup &&
-              Object.entries(vaultsByGroup)
-                .sort()
-                .map(([type, groupVaults]) => (
-                  <React.Fragment key={type}>
-                    <tr className="transparent-row">
-                      <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
-                    </tr>
-                    {groupVaults &&
-                      groupVaults.map((vault) => (
-                        <Vault
-                          ref={vault.id === vaultId ? scrollRef : null}
-                          expanded={expanded === vault.id}
-                          setExpanded={setExpanded}
-                          key={vault.id}
-                          vault={vault}
-                        />
-                      ))}
-                  </React.Fragment>
-                ))}
-          </tbody>
-        </table>
+        <>
+          <SafePeriodBar />
+          <table>
+            <tbody>
+              <tr>
+                <th colSpan={2} className="search-cell">
+                  <div className="search-wrapper">
+                    <SearchIcon />
+                    <input
+                      type="text"
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      className="search-input"
+                      placeholder="Search vault..."
+                    />
+                  </div>
+                </th>
+                <th className="onlyDesktop">TOTAL VAULT</th>
+                <th className="onlyDesktop">APY</th>
+                <th className="onlyDesktop"></th>
+              </tr>
+              {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
+              {vaultsByGroup &&
+                Object.entries(vaultsByGroup)
+                  .sort()
+                  .map(([type, groupVaults]) => (
+                    <React.Fragment key={type}>
+                      <tr className="transparent-row">
+                        <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
+                      </tr>
+                      {groupVaults &&
+                        groupVaults.map((vault) => (
+                          <Vault
+                            ref={vault.id === vaultId ? scrollRef : null}
+                            expanded={expanded === vault.id}
+                            setExpanded={setExpanded}
+                            key={vault.id}
+                            vault={vault}
+                          />
+                        ))}
+                    </React.Fragment>
+                  ))}
+            </tbody>
+          </table>
+        </>
       )}
 
       {selectedVault && (
