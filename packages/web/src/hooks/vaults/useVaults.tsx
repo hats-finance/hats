@@ -217,7 +217,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
 
-  const { safetyPeriod, withdrawPeriod } = multiChainData?.prod.masters?.[0] || {};
+  const { safetyPeriod, withdrawPeriod } =
+    (showTestnets ? multiChainData?.test.masters?.[0] : multiChainData?.prod.masters?.[0]) ?? {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
