@@ -139,13 +139,11 @@ export const PayoutStatusPage = () => {
         <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
       )}
 
-      {/* {isPayoutReadyToExecute && (
-        <div className="mb-3">
-          <SafePeriodBar />
+      {payout && (
+        <div className="pt-4">
+          <PayoutCard viewOnly showVaultAddress payout={payout} />
         </div>
-      )} */}
-
-      {payout && <PayoutCard viewOnly payout={payout} />}
+      )}
 
       <div className="payout-status">
         <div className="form">
