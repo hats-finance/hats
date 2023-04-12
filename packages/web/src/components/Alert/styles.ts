@@ -10,6 +10,7 @@ const alertColors = {
   warning: "--warning-yellow",
   error: "--error-red",
   info: "--turquoise",
+  success: "--turquoise",
 };
 
 export const StyledAlert = styled.div<StyledAlertProps>(
