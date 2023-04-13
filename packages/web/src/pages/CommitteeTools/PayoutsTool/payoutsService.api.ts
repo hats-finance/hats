@@ -33,6 +33,8 @@ export async function deletePayoutById(payoutId?: string): Promise<boolean> {
  * @param vaultsList: { chainId: number; vaultAddress: string }[] - The list of vaults to get the payouts from
  */
 export async function getPayoutsByVaults(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
+  if (vaultsList.length === 0) return [];
+
   try {
     const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/all/vaultsList`, {
       params: { vaults: JSON.stringify(vaultsList) },
