@@ -10,6 +10,7 @@ import { ExecutePayoutContract } from "contracts";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useAddSignature, useDeletePayout, usePayout } from "../payoutsService.hooks";
@@ -25,6 +26,7 @@ export const PayoutStatusPage = () => {
   const { address } = useAccount();
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
   const { allVaults, tokenPrices, withdrawSafetyPeriod } = useVaults();
 
@@ -35,13 +37,13 @@ export const PayoutStatusPage = () => {
     isRefetching: isRefetchingPayout,
     refetch: refetchPayout,
   } = usePayout(payoutId);
-  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
+  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultInfo.address), [allVaults, payout]);
   const deletePayout = useDeletePayout();
   const addSignature = useAddSignature();
   const signTransaction = useSignMessage();
-  const executePayout = ExecutePayoutContract.hook(vault);
-  console.log(`executePayout -> `, executePayout);
-  console.log(`Payout -> `, payout);
+  const executePayout = ExecutePayoutContract.hook(vault, payout);
+  // console.log(`executePayout -> `, executePayout);
+  // console.log(`Payout -> `, payout);
 
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
@@ -54,6 +56,10 @@ export const PayoutStatusPage = () => {
   const selectedSeverityName = payout?.payoutData.severity;
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
+
+  useEffect(() => {
+    tryAuthentication();
+  }, [tryAuthentication]);
 
   // Get payout severities information from allVaults
   useEffect(() => {
@@ -112,8 +118,7 @@ export const PayoutStatusPage = () => {
   const handleExecutePayout = async () => {
     // if (!withdrawSafetyPeriod?.isSafetyPeriod || !isPayoutReadyToExecute || !payout) return;
 
-    const formattedPercentage = Number(payout!.payoutData.percentageToPay) * 100;
-    await executePayout.send(payout!.payoutData.beneficiary, formattedPercentage, payout!.reasoningDescriptionHash);
+    await executePayout.send(payout!.payoutData.beneficiary, payout!.payoutDescriptionHash, payout!.payoutData.percentageToPay);
 
     // const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
     // if (!signature) return;
@@ -137,115 +142,138 @@ export const PayoutStatusPage = () => {
       </div>
 
       <div className="section-title">{t("Payouts.payoutStatus")}</div>
-      <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
 
-      {userHasAlreadySigned && !isPayoutReadyToExecute && (
-        <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
+      {!isAuthenticated && (
+        <>
+          <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
+          <Button onClick={tryAuthentication} className="mt-4">
+            {t("signInWithEthereum")}
+          </Button>
+        </>
       )}
 
-      {!userHasAlreadySigned && !isPayoutReadyToExecute && (
-        <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
+      {payout?.status === PayoutStatus.Creating && (
+        <>
+          <Alert type="warning">{t("Payouts.yourPayoutIsNotYetCreated")}</Alert>
+          <Button onClick={() => navigate(`${RoutePaths.payouts}`)} className="mt-4">
+            {t("Payouts.goToPayoutCreator")}
+          </Button>
+        </>
       )}
 
-      {payout && (
-        <div className="pt-4">
-          <PayoutCard viewOnly showVaultAddress payout={payout} />
-        </div>
-      )}
+      {isAuthenticated && payout?.status !== PayoutStatus.Creating && (
+        <div className="status-content">
+          <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
 
-      <div className="payout-status">
-        <div className="form">
-          <FormInput
-            label={t("Payouts.beneficiary")}
-            placeholder={t("Payouts.beneficiaryPlaceholder")}
-            value={payout?.payoutData.beneficiary}
-            readOnly
-          />
+          {userHasAlreadySigned && !isPayoutReadyToExecute && (
+            <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
+          )}
 
-          <div className="row">
-            {payout?.payoutData.severity && (
-              <FormSelectInput
-                value={payout.payoutData.severity}
-                label={t("Payouts.severity")}
-                placeholder={t("Payouts.severityPlaceholder")}
-                options={severitiesOptions ?? []}
+          {!userHasAlreadySigned && !isPayoutReadyToExecute && (
+            <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
+          )}
+
+          {payout && (
+            <div className="pt-4">
+              <PayoutCard viewOnly showVaultAddress payout={payout} />
+            </div>
+          )}
+
+          <div className="payout-status">
+            <div className="form">
+              <FormInput
+                label={t("Payouts.beneficiary")}
+                placeholder={t("Payouts.beneficiaryPlaceholder")}
+                value={payout?.payoutData.beneficiary}
                 readOnly
               />
+
+              <div className="row">
+                {payout?.payoutData.severity && (
+                  <FormSelectInput
+                    value={payout.payoutData.severity}
+                    label={t("Payouts.severity")}
+                    placeholder={t("Payouts.severityPlaceholder")}
+                    options={severitiesOptions ?? []}
+                    readOnly
+                  />
+                )}
+
+                <FormInput
+                  value={payout?.payoutData.percentageToPay}
+                  label={t("Payouts.percentageToPay")}
+                  placeholder={t("Payouts.percentageToPayPlaceholder")}
+                  readOnly
+                />
+
+                <ArrowForwardIcon className="mt-4" />
+
+                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
+              </div>
+
+              <FormInput
+                value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
+                label={t("Payouts.explanation")}
+                placeholder={t("Payouts.explanationPlaceholder")}
+                type="textarea"
+                rows={10}
+                readOnly
+              />
+
+              <NftPreview
+                size="small"
+                vault={vault}
+                severityName={selectedSeverityData?.name}
+                nftData={selectedSeverityData?.["nft-metadata"]}
+              />
+            </div>
+
+            <div className="signers">
+              <p className="section-title">{t("Payouts.signers")}</p>
+
+              <div className="signers-list">
+                {vault &&
+                  safeInfo?.owners.map((signerAddress) => (
+                    <SignerCard
+                      key={signerAddress}
+                      signerAddress={signerAddress}
+                      chainId={vault.chainId as number}
+                      signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
+                    />
+                  ))}
+              </div>
+            </div>
+
+            {isPayoutReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
+              <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
             )}
 
-            <FormInput
-              value={payout?.payoutData.percentageToPay}
-              label={t("Payouts.percentageToPay")}
-              placeholder={t("Payouts.percentageToPayPlaceholder")}
-              readOnly
-            />
+            {isPayoutReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
+              <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
+            )}
 
-            <ArrowForwardIcon className="mt-4" />
+            {isPayoutReadyToExecute && (
+              <div className="mt-3">
+                <SafePeriodBar />
+              </div>
+            )}
 
-            <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
-          </div>
+            <div className="buttons">
+              <Button styleType="outlined" onClick={handleDeletePayout}>
+                <RemoveIcon />
+              </Button>
 
-          <FormInput
-            value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
-            label={t("Payouts.explanation")}
-            placeholder={t("Payouts.explanationPlaceholder")}
-            type="textarea"
-            rows={10}
-            readOnly
-          />
-
-          <NftPreview
-            size="small"
-            vault={vault}
-            severityName={selectedSeverityData?.name}
-            nftData={selectedSeverityData?.["nft-metadata"]}
-          />
-        </div>
-
-        <div className="signers">
-          <p className="section-title">{t("Payouts.signers")}</p>
-
-          <div className="signers-list">
-            {vault &&
-              safeInfo?.owners.map((signerAddress) => (
-                <SignerCard
-                  key={signerAddress}
-                  signerAddress={signerAddress}
-                  chainId={vault.chainId as number}
-                  signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
-                />
-              ))}
+              {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
+              {isPayoutReadyToExecute && (
+                // <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod} onClick={handleExecutePayout}>
+                //   {t("Payouts.executePayout")}
+                // </Button>
+                <Button onClick={handleExecutePayout}>{t("Payouts.executePayout")}</Button>
+              )}
+            </div>
           </div>
         </div>
-
-        {isPayoutReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
-          <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
-        )}
-
-        {isPayoutReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
-          <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
-        )}
-
-        {isPayoutReadyToExecute && (
-          <div className="mt-3">
-            <SafePeriodBar />
-          </div>
-        )}
-
-        <div className="buttons">
-          <Button styleType="outlined" onClick={handleDeletePayout}>
-            <RemoveIcon />
-          </Button>
-
-          {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
-          {isPayoutReadyToExecute && (
-            // <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod} onClick={handleExecutePayout}>
-            //   {t("Payouts.executePayout")}
-            // </Button>
-            <Button onClick={handleExecutePayout}>{t("Payouts.executePayout")}</Button>
-          )}
-        </div>
-      </div>
+      )}
 
       {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       {isRefetchingPayout && <Loading fixed extraText={`${t("Payouts.loadingPayoutData")}...`} />}

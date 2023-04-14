@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { UseQueryResult, useQuery, useMutation, UseMutationResult } from "@tanstack/react-query";
-import { IPayoutData, IPayoutResponse } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVaultInfo, getVaultInfoFromVault } from "@hats-finance/shared";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { queryClient } from "config/reactQuery";
@@ -9,11 +8,7 @@ import * as PayoutsService from "./payoutsService.api";
 // ------------------------
 // QUERIES
 export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse> => {
-  const { tryAuthentication, isAuthenticated } = useSiweAuth();
-
-  useEffect(() => {
-    tryAuthentication();
-  }, [tryAuthentication]);
+  const { isAuthenticated } = useSiweAuth();
 
   return useQuery({
     queryKey: ["payout", payoutId],
@@ -23,31 +18,23 @@ export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse> =>
   });
 };
 
-export const useVaultActivePayouts = (chainId?: number, vaultAddress?: string): UseQueryResult<IPayoutResponse[]> => {
-  const { tryAuthentication, isAuthenticated } = useSiweAuth();
-
-  useEffect(() => {
-    tryAuthentication();
-  }, [tryAuthentication]);
+export const useVaultActivePayouts = (vaultInfo?: IVaultInfo): UseQueryResult<IPayoutResponse[]> => {
+  const { isAuthenticated } = useSiweAuth();
 
   return useQuery({
-    queryKey: ["active-payouts", chainId, vaultAddress],
-    queryFn: () => PayoutsService.getActivePayoutsByVault(chainId, vaultAddress),
-    enabled: isAuthenticated && !!chainId && !!vaultAddress,
+    queryKey: ["active-payouts", vaultInfo?.chainId, vaultInfo?.address],
+    queryFn: () => PayoutsService.getActivePayoutsByVault(vaultInfo),
+    enabled: isAuthenticated && !!vaultInfo,
     refetchOnWindowFocus: false,
   });
 };
 
 export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
-  const { tryAuthentication, isAuthenticated } = useSiweAuth();
+  const { isAuthenticated } = useSiweAuth();
   const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
 
-  useEffect(() => {
-    tryAuthentication();
-  }, [tryAuthentication]);
-
   const vaultsIds = userVaults?.map((vault) => `${vault.chainId}-${vault.id}`) ?? [];
-  const vaultsInfo = userVaults?.map((vault) => ({ chainId: vault.chainId as number, vaultAddress: vault.id })) ?? [];
+  const vaultsInfo: IVaultInfo[] = userVaults?.map((vault) => getVaultInfoFromVault(vault)) ?? [];
 
   const queryResult = useQuery({
     queryKey: ["payouts-by-vaults", ...vaultsIds],
@@ -64,26 +51,20 @@ export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
 
 // ------------------------
 // MUTATIONS
-export const useCreateDraftPayout = (): UseMutationResult<
-  string,
-  unknown,
-  { chainId: number; vaultAddress: string },
-  unknown
-> => {
+export const useCreateDraftPayout = (): UseMutationResult<string, unknown, IVaultInfo, unknown> => {
   return useMutation({
-    mutationFn: ({ chainId, vaultAddress }) => PayoutsService.createDraftPayout(chainId, vaultAddress),
+    mutationFn: (vaultInfo) => PayoutsService.createDraftPayout(vaultInfo),
   });
 };
 
 export const useSavePayout = (): UseMutationResult<
   IPayoutResponse,
   unknown,
-  { payoutId: string; chainId: number; vaultAddress: string; payoutData: IPayoutData },
+  { payoutId: string; vaultInfo: IVaultInfo; payoutData: IPayoutData },
   unknown
 > => {
   return useMutation({
-    mutationFn: ({ payoutId, chainId, vaultAddress, payoutData }) =>
-      PayoutsService.savePayoutData(payoutId, chainId, vaultAddress, payoutData),
+    mutationFn: ({ payoutId, vaultInfo, payoutData }) => PayoutsService.savePayoutData(payoutId, vaultInfo, payoutData),
   });
 };
 

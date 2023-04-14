@@ -11,6 +11,7 @@ import {
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
   PayoutStatus,
+  getVaultInfoFromVault,
 } from "@hats-finance/shared";
 import moment from "moment";
 import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, WithTooltip } from "components";
@@ -45,11 +46,11 @@ export const PayoutFormPage = () => {
 
   const { payoutId } = useParams();
   const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
-  const { data: vaultActivePayouts } = useVaultActivePayouts(payout?.chainId, payout?.vaultAddress);
+  const { data: vaultActivePayouts } = useVaultActivePayouts(payout?.vaultInfo);
   const savePayout = useSavePayout();
   const lockPayout = useLockPayout();
 
-  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultAddress), [allVaults, payout]);
+  const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultInfo.address), [allVaults, payout]);
   const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
@@ -62,6 +63,10 @@ export const PayoutFormPage = () => {
 
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
   const amountInTokensToPay = calculateAmountInTokensFromPercentage(percentageToPay, vault, tokenPrices);
+
+  useEffect(() => {
+    tryAuthentication();
+  }, [tryAuthentication]);
 
   // Handle reset form when payout changes
   useEffect(() => {
@@ -108,15 +113,14 @@ export const PayoutFormPage = () => {
   });
 
   const handleSavePayout = async () => {
-    if (!payoutId || !payout || !isAuthenticated || !formState.isDirty) return;
+    if (!payoutId || !payout || !isAuthenticated || !formState.isDirty || !vault) return;
 
     try {
       const payoutData = methods.getValues();
 
       const payoutResponse = await savePayout.mutateAsync({
         payoutId,
-        chainId: payout.chainId,
-        vaultAddress: payout.vaultAddress,
+        vaultInfo: getVaultInfoFromVault(vault),
         payoutData,
       });
 
@@ -279,8 +283,9 @@ export const PayoutFormPage = () => {
                   {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
                 </Button>
               </WithTooltip>
-              <Button type="submit" disabled={lockPayout.isLoading || isAnotherActivePayout}>
-                {lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")} <ArrowForwardIcon className="ml-3" />
+              <Button type="submit" disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}>
+                {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
+                <ArrowForwardIcon className="ml-3" />
               </Button>
             </div>
           </StyledPayoutForm>

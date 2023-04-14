@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { getVaultInfoFromVault } from "@hats-finance/shared";
 import { RoutePaths } from "navigation";
 import { Button, FormSelectInput, Loading } from "components";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
@@ -30,10 +31,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
     const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
     if (!selectedVault) return;
 
-    const payoutId = await createDraftPayout.mutateAsync({
-      chainId: selectedVault.chainId as number,
-      vaultAddress: selectedVault.id,
-    });
+    const payoutId = await createDraftPayout.mutateAsync(getVaultInfoFromVault(selectedVault));
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
 
     closeModal();

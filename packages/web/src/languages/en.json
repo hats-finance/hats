@@ -442,6 +442,8 @@
       "executePayout": "Execute payout",
       "payoutReadyToExecuteButWaitingForSafetyPeriod": "The payout is ready to be executed, but you need to wait for the safety period to starts.",
       "safetyPeriodOnYouCanExecutePayout": "The safety period is on. You can now execute the payout.",
+      "yourPayoutIsNotYetCreated": "Your payout is not yet created. Please finish the edition and click on 'Create payout'",
+      "goToPayoutCreator": "Go to payout creator",
       "payoutStatusDescriptions": {
         "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

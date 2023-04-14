@@ -28,6 +28,10 @@ export const PayoutsListPage = () => {
 
   const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsByVaults();
 
+  useEffect(() => {
+    tryAuthentication();
+  }, [tryAuthentication]);
+
   // Only the first time the payouts are loaded, check if there are any drafts or in progress payouts
   useEffect(() => {
     if (isLoadingPayouts) return;

@@ -19,7 +19,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const vaultAddress = payout.vaultAddress;
+  const vaultAddress = payout.vaultInfo.address;
   const isCreating = payout.status === PayoutStatus.Creating;
 
   const { allVaults } = useVaults();
@@ -65,7 +65,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
     >
       {showVaultAddress && (
         <div className="vault-address">
-          {t("vaultAddress")}: {payout.vaultAddress}
+          {t("vaultAddress")}: {payout.vaultInfo.address}
         </div>
       )}
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>

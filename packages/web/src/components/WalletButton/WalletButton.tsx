@@ -30,14 +30,13 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   const [showConnectors, setShowConnectors] = useState(false);
   const [isGovMember, setIsGovMember] = useState(false);
 
-  const { isAuthenticated, updateProfile, logout } = useSiweAuth();
+  const { isAuthenticated, updateProfile } = useSiweAuth();
 
   const deactivateAccount = useCallback(() => {
     disconnect();
     setCanReconnect(false);
-    logout();
     localStorage.removeItem("wagmi.wallet");
-  }, [disconnect, logout]);
+  }, [disconnect]);
 
   const activateAccount = useCallback(
     (connector: Connector | undefined) => {

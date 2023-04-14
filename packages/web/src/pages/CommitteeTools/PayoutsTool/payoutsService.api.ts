@@ -1,4 +1,4 @@
-import { IPayoutResponse, IPayoutData } from "@hats-finance/shared";
+import { IPayoutResponse, IPayoutData, IVaultInfo } from "@hats-finance/shared";
 import { BASE_SERVICE_URL } from "settings";
 import { axiosClient } from "config/axiosClient";
 
@@ -30,9 +30,9 @@ export async function deletePayoutById(payoutId?: string): Promise<boolean> {
 
 /**
  * Gets a list of all the payouts of a vaults list
- * @param vaultsList: { chainId: number; vaultAddress: string }[] - The list of vaults to get the payouts from
+ * @param vaultsList: IVaultInfo[] - The list of vaults to get the payouts from
  */
-export async function getPayoutsByVaults(vaultsList: { chainId: number; vaultAddress: string }[]): Promise<IPayoutResponse[]> {
+export async function getPayoutsByVaults(vaultsList: IVaultInfo[]): Promise<IPayoutResponse[]> {
   if (vaultsList.length === 0) return [];
 
   try {
@@ -52,9 +52,13 @@ export async function getPayoutsByVaults(vaultsList: { chainId: number; vaultAdd
  *
  * @returns A list of active payouts
  */
-export async function getActivePayoutsByVault(chainId?: number, vaultAddress?: string): Promise<IPayoutResponse[]> {
+export async function getActivePayoutsByVault(vaultInfo?: IVaultInfo): Promise<IPayoutResponse[]> {
+  if (!vaultInfo) return [];
+
   try {
-    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/active/${chainId}/${vaultAddress}`);
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/active`, {
+      params: { vaultInfo: JSON.stringify(vaultInfo) },
+    });
     return res.data.payouts;
   } catch (error) {
     throw new Error(`Unknown error: ${error}`);
@@ -63,14 +67,13 @@ export async function getActivePayoutsByVault(chainId?: number, vaultAddress?: s
 
 /**
  * Creates a new payout
- * @param vaultAddress - The vault address to create the payout
- * @param chainId - The vault chain id to create the payout
+ * @param vaultInfo - The vault info to create the payout
  *
  * @returns The id of the created payout
  */
-export async function createDraftPayout(chainId: number, vaultAddress: string): Promise<string> {
+export async function createDraftPayout(vaultInfo: IVaultInfo): Promise<string> {
   try {
-    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}`);
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, { vaultInfo });
     return res.data.upsertedId;
   } catch (error) {
     throw new Error(`Unknown error: ${error}`);
@@ -78,20 +81,16 @@ export async function createDraftPayout(chainId: number, vaultAddress: string): 
 }
 
 /**
- * Creates a new payout
- * @param vaultAddress - The vault address to create the payout
- * @param chainId - The vault chain id to create the payout
+ * Saves an existent payout
+ * @param payoutId - The payout id to save
+ * @param vaultInfo - The vault info to create the payout
+ * @param payoutData - The payout data to save
  *
- * @returns The id of the created payout
+ * @returns The updated payout
  */
-export async function savePayoutData(
-  payoutId: string,
-  chainId: number,
-  vaultAddress: string,
-  payoutData: IPayoutData
-): Promise<IPayoutResponse> {
+export async function savePayoutData(payoutId: string, vaultInfo: IVaultInfo, payoutData: IPayoutData): Promise<IPayoutResponse> {
   try {
-    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${chainId}/${vaultAddress}/${payoutId}`, { ...payoutData });
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/${payoutId}`, { payoutData, vaultInfo });
     return res.data.payout;
   } catch (error) {
     throw new Error(`Unknown error: ${error}`);

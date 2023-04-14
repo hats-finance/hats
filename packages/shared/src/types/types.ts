@@ -1,3 +1,11 @@
+export interface IVaultInfo {
+  version: IVault["version"];
+  address: string;
+  chainId: number;
+  master: string;
+  pid: string;
+}
+
 export interface IBaseVault {
   id: string;
   name: string;

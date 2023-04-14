@@ -1,7 +1,8 @@
+import { IVault, IVaultInfo } from "./types";
+
 export interface IPayoutResponse {
   _id: string;
-  vaultAddress: string;
-  chainId: number;
+  vaultInfo: IVaultInfo;
   payoutData: IPayoutData;
   nonce: number;
   txToSign: string;
@@ -10,7 +11,7 @@ export interface IPayoutResponse {
   status: PayoutStatus;
   lastActionNeededNotifiedAt: Date;
   payoutTxHash: string;
-  reasoningDescriptionHash: string;
+  payoutDescriptionHash: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -18,8 +19,9 @@ export interface IPayoutResponse {
 export interface IPayoutData {
   beneficiary: string;
   title: string;
-  severity: string;
+  severity: string; // Severity name
   percentageToPay: string; // Number between 0 and 100
+  severityBountyIndex: string; // Severity index (for V1 vaults)
   explanation: string;
   nftUrl: string;
   additionalInfo: string;

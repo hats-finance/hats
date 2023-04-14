@@ -99,6 +99,9 @@
     ]
   },
   "dependencies": {
+    "@safe-global/safe-core-sdk": "^3.3.2",
+    "@safe-global/safe-core-sdk-types": "^1.10.1",
+    "@safe-global/safe-ethers-lib": "^1.9.2",
     "@tanstack/react-query": "^4.28.0",
     "dompurify": "^3.0.1",
     "encrypt-storage": "^2.12.15",
