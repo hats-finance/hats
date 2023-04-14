@@ -45,6 +45,8 @@ export const PayoutStatusPage = () => {
   // console.log(`executePayout -> `, executePayout);
   // console.log(`Payout -> `, payout);
 
+  console.log(executePayout);
+
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
   const isPayoutReadyToExecute = payout?.status === PayoutStatus.ReadyToExecute;
@@ -118,13 +120,13 @@ export const PayoutStatusPage = () => {
   const handleExecutePayout = async () => {
     // if (!withdrawSafetyPeriod?.isSafetyPeriod || !isPayoutReadyToExecute || !payout) return;
 
-    await executePayout.send(payout!.payoutData.beneficiary, payout!.payoutDescriptionHash, payout!.payoutData.percentageToPay);
+    const txResult = await executePayout.send(
+      payout!.payoutData.beneficiary,
+      payout!.payoutData.percentageToPay,
+      payout!.payoutDescriptionHash
+    );
 
-    // const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
-    // if (!signature) return;
-
-    // await addSignature.mutateAsync({ payoutId, signature });
-    // refetchPayout();
+    // TODO: Get txResult hash, wait for it, and call executedPayout endpoint
   };
 
   if (!address) return <PayoutsWelcome />;
