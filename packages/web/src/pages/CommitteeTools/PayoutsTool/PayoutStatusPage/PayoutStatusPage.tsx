@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { useAccount, useSignMessage, useWaitForTransaction } from "wagmi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2, PayoutStatus } from "@hats-finance/shared";
+import { HATSVaultV2_abi, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2, PayoutStatus } from "@hats-finance/shared";
 import DOMPurify from "dompurify";
 import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert, SafePeriodBar } from "components";
 import { ExecutePayoutContract } from "contracts";
@@ -48,15 +48,22 @@ export const PayoutStatusPage = () => {
     onSuccess: async (data) => {
       if (!payoutId) return;
 
-      await markPayoutAsExecuted.mutateAsync({ payoutId, txHash: data.transactionHash });
+      let payoutClaimId = "";
+
+      if (vault?.version === "v2") {
+        const vaultIface = new ethers.utils.Interface(HATSVaultV2_abi);
+        data.logs.forEach((log) => {
+          try {
+            const parsedLog = vaultIface.parseLog(log);
+            if (parsedLog.name === "SubmitClaim") payoutClaimId = parsedLog.args._claimId;
+          } catch (error) {}
+        });
+      }
+
+      await markPayoutAsExecuted.mutateAsync({ payoutId, txHash: data.transactionHash, claimId: payoutClaimId });
       refetchPayout();
     },
   });
-
-  // console.log(`executePayout -> `, executePayout);
-  // console.log(`Payout -> `, payout);
-
-  console.log(executePayout);
 
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);

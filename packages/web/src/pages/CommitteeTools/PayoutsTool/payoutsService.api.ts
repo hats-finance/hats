@@ -132,12 +132,13 @@ export async function addSignature(payoutId: string, signature: string): Promise
  * Marks a payout as executed
  * @param payoutId - The payout id to mark as executed
  * @param payoutTxHash - The payout transaction hash
+ * @param payoutClaimId - The payout claim id
  *
  * @returns True if the payout was marked as executed, false otherwise
  */
-export async function markPayoutAsExecuted(payoutId: string, payoutTxHash: string): Promise<boolean> {
+export async function markPayoutAsExecuted(payoutId: string, payoutTxHash: string, payoutClaimId: string): Promise<boolean> {
   try {
-    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/executed/${payoutId}`, { payoutTxHash });
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts/executed/${payoutId}`, { payoutTxHash, payoutClaimId });
     return res.status === 200 ? res.data.ok : false;
   } catch (error) {
     throw new Error(`Unknown error: ${error}`);

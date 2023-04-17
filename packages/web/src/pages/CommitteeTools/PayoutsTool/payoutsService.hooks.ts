@@ -85,8 +85,13 @@ export const useDeletePayout = (): UseMutationResult<boolean, unknown, { payoutI
   });
 };
 
-export const useMarkPayoutAsExecuted = (): UseMutationResult<boolean, unknown, { payoutId: string; txHash: string }, unknown> => {
+export const useMarkPayoutAsExecuted = (): UseMutationResult<
+  boolean,
+  unknown,
+  { payoutId: string; txHash: string; claimId: string },
+  unknown
+> => {
   return useMutation({
-    mutationFn: ({ payoutId, txHash }) => PayoutsService.markPayoutAsExecuted(payoutId, txHash),
+    mutationFn: ({ payoutId, txHash, claimId }) => PayoutsService.markPayoutAsExecuted(payoutId, txHash, claimId),
   });
 };

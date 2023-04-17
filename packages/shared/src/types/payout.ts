@@ -1,4 +1,4 @@
-import { IVault, IVaultInfo } from "./types";
+import { IVaultInfo } from "./types";
 
 export interface IPayoutResponse {
   _id: string;
@@ -10,7 +10,8 @@ export interface IPayoutResponse {
   signatures: IPayoutSignature[];
   status: PayoutStatus;
   lastActionNeededNotifiedAt: Date;
-  payoutTxHash: string;
+  payoutTxHash: string; // Only after execution
+  payoutClaimId: string; // Only after execution
   payoutDescriptionHash: string;
   createdAt?: Date;
   updatedAt?: Date;
@@ -42,9 +43,9 @@ export enum PayoutStatus {
   Creating = "creating", // is a draft
   Pending = "pending", // is ready to be signed and waiting signatures
   ReadyToExecute = "readyToExecute", // the minimum signatures are reached and the payout is ready to be executed
-  UnderReview = "underReview", // the payout is under arbitrator review
-  Executed = "executed", // the payout was executed by arbitrator
-  Rejected = "rejected", // the payout was rejected by arbitrator
+  Executed = "executed", // the payout was executed by committee
+  Approved = "approved", // the payout was approved
+  Rejected = "rejected", // the payout was rejected
 }
 
 export const payoutStatusInfo = {
@@ -60,13 +61,13 @@ export const payoutStatusInfo = {
     label: "waitingExecution",
     color: "--turquoise",
   },
-  [PayoutStatus.UnderReview]: {
-    label: "underReview",
-    color: "--teal",
-  },
   [PayoutStatus.Executed]: {
     label: "executed",
-    color: "--turquoise",
+    color: "--warning-yellow",
+  },
+  [PayoutStatus.Approved]: {
+    label: "approved",
+    color: "--teal",
   },
   [PayoutStatus.Rejected]: {
     label: "rejected",
