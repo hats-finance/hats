@@ -87,6 +87,22 @@ export const GET_VAULTS = `
         totalRewardPaid
       }
     }
+    payouts: claims {
+      id
+      vault {
+        id
+      }
+      approvedAt
+      dismissedAt
+      bountyPercentage
+      severityIndex: severity
+      hackerReward
+      hackerVestedReward
+      governanceHatReward
+      hackerHatReward
+      committeeReward
+      isChallenged
+    }  
   }
 `;
 
