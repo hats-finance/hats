@@ -35,7 +35,7 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersRea
       font-size: var(--xxsmall);
       padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
       border-radius: 5px;
-      transform: translateY(-50%);
+      transform: translateY(-75%);
     }
 
     .vault-icon {
