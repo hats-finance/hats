@@ -2,7 +2,6 @@ import { UseQueryResult, useQuery, useMutation, UseMutationResult } from "@tanst
 import { IPayoutData, IPayoutResponse, IVaultInfo, getVaultInfoFromVault } from "@hats-finance/shared";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
-import { queryClient } from "config/reactQuery";
 import * as PayoutsService from "./payoutsService.api";
 
 // ------------------------
@@ -83,8 +82,11 @@ export const useAddSignature = (): UseMutationResult<boolean, unknown, { payoutI
 export const useDeletePayout = (): UseMutationResult<boolean, unknown, { payoutId: string }, unknown> => {
   return useMutation({
     mutationFn: ({ payoutId }) => PayoutsService.deletePayoutById(payoutId),
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: [] });
-    },
+  });
+};
+
+export const useMarkPayoutAsExecuted = (): UseMutationResult<boolean, unknown, { payoutId: string; txHash: string }, unknown> => {
+  return useMutation({
+    mutationFn: ({ payoutId, txHash }) => PayoutsService.markPayoutAsExecuted(payoutId, txHash),
   });
 };

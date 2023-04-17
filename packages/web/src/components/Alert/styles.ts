@@ -39,6 +39,8 @@ export const StyledAlert = styled.div<StyledAlertProps>(
 
     .alert-content {
       margin-top: ${getSpacing(1.5)};
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   `
 );

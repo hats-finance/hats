@@ -3,6 +3,7 @@ import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/
 import Safe from "@safe-global/safe-core-sdk";
 import EthersAdapter from "@safe-global/safe-ethers-lib";
 import EthSignSignature from "@safe-global/safe-core-sdk/dist/src/utils/signatures/SafeSignature";
+import { TransactionResult } from "@safe-global/safe-core-sdk-types";
 import { ethers, Signer } from "ethers";
 import { useNetwork, useProvider, useSigner } from "wagmi";
 import { IVault } from "types";
@@ -22,18 +23,21 @@ export class ExecutePayoutContract {
     const provider = useProvider();
     const { data: signer } = useSigner();
 
+    const [data, setData] = useState<TransactionResult | undefined>();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | undefined>();
 
     const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
 
     return {
+      data,
       isLoading,
       error,
       isError: !!error,
       send: async (beneficiary: string, bountyPercentageOrSeverityIndex: string | number, descriptionHash: string) => {
         try {
           if (!vault || !payout || !contractAddress) return;
+          setError(undefined);
           setIsLoading(true);
 
           await switchNetworkAndValidate(chain!.id, vault.chainId as number);
@@ -59,6 +63,7 @@ export class ExecutePayoutContract {
           }
 
           const txResult = await safeSdk.executeTransaction(safeTransaction);
+          setData(txResult);
           setIsLoading(false);
 
           return txResult;

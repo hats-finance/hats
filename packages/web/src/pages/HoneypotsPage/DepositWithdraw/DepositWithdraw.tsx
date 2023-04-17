@@ -59,8 +59,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { tokenPrices, withdrawSafetyPeriod } = useVaults();
   const { id, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
 
-  console.log(stakingToken);
-
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
 
   const [inProgressTransaction, setInProgressTransaction] = useState<InProgressAction | undefined>(undefined);
