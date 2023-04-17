@@ -298,8 +298,7 @@
     "creating": "Creating",
     "collecting": "Collecting",
     "waitingExecution": "Waiting Execution",
-    "executed": "Executed",
-    "underReview": "Under review",
+    "executed": "Submitted",
     "draft": "Draft",
     "drafts": "Drafts",
     "thisInformationWillAppearOnChain": "This information will appear on-chain",
@@ -448,9 +447,9 @@
       "payoutStatusDescriptions": {
         "pending": "Your payout tx was created please share this page between other committee member to sign. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
-        "underReview": "Your payout is now under review. Please wait while the arbitrator review it.",
-        "executed": "Your payout was executed successfully.",
-        "rejected": "Your payout was rejected by the arbitrator."
+        "executed": "Your payout was submitted successfully and it's under review. Please wait for the review to finish.",
+        "approved": "Your payout was approved, the beneficiaries received the payout.",
+        "rejected": "Your payout was rejected."
       }
     },
     "DecryptionTool": {

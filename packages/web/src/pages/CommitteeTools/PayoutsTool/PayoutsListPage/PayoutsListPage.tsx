@@ -14,7 +14,7 @@ import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./
 import AddIcon from "@mui/icons-material/AddOutlined";
 
 const DraftStatus = [PayoutStatus.Creating];
-const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute, PayoutStatus.UnderReview];
+const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute, PayoutStatus.Approved];
 const FinishedStatus = [PayoutStatus.Executed, PayoutStatus.Rejected];
 
 export const PayoutsListPage = () => {
