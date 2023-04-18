@@ -1,5 +1,5 @@
 import { utils } from "ethers";
-import { isAddress as isAddressEthers } from "ethers/lib/utils";
+import { getAddress, isAddress as isAddressEthers } from "ethers/lib/utils";
 
 type ShortenOptions = {
   startLength?: number;
@@ -25,4 +25,11 @@ export const shortenAddress = (address: string, opts?: ShortenOptions): string =
   } catch {
     throw new TypeError("Invalid input, address can't be parsed");
   }
+};
+
+export const normalizeAddress = (address: string) => {
+  if (isAddress(address)) {
+    return getAddress(address);
+  }
+  return "";
 };

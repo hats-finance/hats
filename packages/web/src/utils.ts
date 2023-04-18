@@ -162,22 +162,6 @@ export const setVulnerabilityProject = (projectName: string, projectId: string, 
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 };
 
-/**
- * Throws an error if the master address is not as provided in the env var or as the defualt one when running locally.
- * @param {string} masterAddress
- */
-
-/**
- * Normalize any supported address-format to a checksum address.
- * @param {string} address
- */
-export const normalizeAddress = (address: string) => {
-  if (isAddress(address)) {
-    return getAddress(address);
-  }
-  return "";
-};
-
 export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPinned: true }) => {
   if (!uri || typeof uri !== "string") return "";
 
