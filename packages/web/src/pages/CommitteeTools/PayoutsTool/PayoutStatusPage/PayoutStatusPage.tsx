@@ -28,7 +28,7 @@ export const PayoutStatusPage = () => {
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { allVaults, tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { allVaults, payouts, tokenPrices, withdrawSafetyPeriod } = useVaults();
 
   const { payoutId } = useParams();
   const {
@@ -70,6 +70,7 @@ export const PayoutStatusPage = () => {
   const isReadyToExecute = payout?.status === PayoutStatus.ReadyToExecute;
   const isCollectingSignatures = payout?.status === PayoutStatus.Pending;
   const canBeDeleted = payout && [PayoutStatus.Creating, PayoutStatus.Pending].includes(payout.status);
+  const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const amountInTokensToPay = calculateAmountInTokensFromPercentage(payout?.payoutData.percentageToPay, vault, tokenPrices);
 
@@ -138,7 +139,7 @@ export const PayoutStatusPage = () => {
   };
 
   const handleExecutePayout = async () => {
-    if (!withdrawSafetyPeriod?.isSafetyPeriod || !isReadyToExecute || !payout) return;
+    if (!withdrawSafetyPeriod?.isSafetyPeriod || !isReadyToExecute || !payout || isAnyActivePayout) return;
 
     await executePayout.send(payout.payoutData.beneficiary, payout.payoutData.percentageToPay, payout.payoutDescriptionHash);
   };
@@ -260,12 +261,18 @@ export const PayoutStatusPage = () => {
               </div>
             </div>
 
-            {isReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
-              <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
-            )}
+            {isReadyToExecute && isAnyActivePayout ? (
+              <Alert type="warning" content={t("Payouts.thisVaultHasAnActivePayout")} />
+            ) : (
+              <>
+                {isReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
+                  <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
+                )}
 
-            {isReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
-              <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
+                {isReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
+                  <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
+                )}
+              </>
             )}
 
             {isReadyToExecute && (
@@ -285,7 +292,7 @@ export const PayoutStatusPage = () => {
 
               {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
               {isReadyToExecute && (
-                <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod} onClick={handleExecutePayout}>
+                <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
                   {t("Payouts.executePayout")}
                 </Button>
               )}
