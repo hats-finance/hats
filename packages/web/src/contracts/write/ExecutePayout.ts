@@ -36,7 +36,7 @@ export class ExecutePayoutContract {
       isLoading,
       error,
       isError: !!error,
-      send: async (beneficiary: string, bountyPercentageOrSeverityIndex: string | number, descriptionHash: string) => {
+      send: async () => {
         try {
           if (!vault || !payout || !contractAddress) return;
           setError(undefined);
@@ -48,9 +48,10 @@ export class ExecutePayoutContract {
           const safeSdk = await Safe.create({ ethAdapter, safeAddress: vault.committee });
 
           const safeTransaction = await getExecutePayoutSafeTransaction(provider, vault.committee, payout.vaultInfo, {
-            beneficiary,
-            descriptionHash,
-            bountyPercentageOrSeverityIndex,
+            beneficiary: payout.payoutData.beneficiary,
+            descriptionHash: payout.payoutDescriptionHash,
+            bountyPercentageOrSeverityIndex:
+              vault?.version === "v1" ? payout.payoutData.severityBountyIndex : payout.payoutData.percentageToPay,
           });
           const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
 

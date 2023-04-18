@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { ethers } from "ethers";
-import { useAccount, useSignMessage, useWaitForTransaction } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HATSVaultV2_abi, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2, PayoutStatus } from "@hats-finance/shared";
@@ -16,6 +16,7 @@ import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountI
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
 import { PayoutCard, NftPreview, SignerCard } from "../components";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
+import { useSignPayout } from "./useSignPayout";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
@@ -41,7 +42,7 @@ export const PayoutStatusPage = () => {
   const deletePayout = useDeletePayout();
   const addSignature = useAddSignature();
   const markPayoutAsExecuted = useMarkPayoutAsExecuted();
-  const signTransaction = useSignMessage();
+  const signPayout = useSignPayout(vault, payout);
   const executePayout = ExecutePayoutContract.hook(vault, payout);
   const waitingPayoutExecution = useWaitForTransaction({
     hash: executePayout.data?.hash as `0x${string}`,
@@ -148,9 +149,9 @@ export const PayoutStatusPage = () => {
   };
 
   const handleSignPayout = async () => {
-    if (userHasAlreadySigned || !payoutId || !payout) return;
+    if (userHasAlreadySigned || !payoutId || !payout || !vault) return;
 
-    const signature = await signTransaction.signMessageAsync({ message: ethers.utils.arrayify(payout.txToSign) });
+    const signature = await signPayout.signTypedData();
     if (!signature) return;
 
     await addSignature.mutateAsync({ payoutId, signature });
@@ -159,8 +160,7 @@ export const PayoutStatusPage = () => {
 
   const handleExecutePayout = async () => {
     if (!withdrawSafetyPeriod?.isSafetyPeriod || !isReadyToExecute || !payout || isAnyActivePayout) return;
-
-    await executePayout.send(payout.payoutData.beneficiary, payout.payoutData.percentageToPay, payout.payoutDescriptionHash);
+    await executePayout.send();
   };
 
   if (!address) return <PayoutsWelcome />;
@@ -322,7 +322,7 @@ export const PayoutStatusPage = () => {
 
       {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       {isRefetchingPayout && <Loading fixed extraText={`${t("Payouts.loadingPayoutData")}...`} />}
-      {(addSignature.isLoading || signTransaction.isLoading) && (
+      {(addSignature.isLoading || signPayout.isLoading) && (
         <Loading fixed extraText={`${t("Payouts.signingPayoutTransaction")}...`} />
       )}
       {(executePayout.isLoading || waitingPayoutExecution.isLoading || markPayoutAsExecuted.isLoading) && (
