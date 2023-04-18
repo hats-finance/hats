@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
 import Safe from "@safe-global/safe-core-sdk";
 import EthersAdapter from "@safe-global/safe-ethers-lib";
@@ -19,6 +20,7 @@ export class ExecutePayoutContract {
    * @param vault - The selected vault to execute the payout
    */
   static hook = (vault?: IVault, payout?: IPayoutResponse) => {
+    const { t } = useTranslation();
     const { chain } = useNetwork();
     const provider = useProvider();
     const { data: signer } = useSigner();
@@ -68,7 +70,8 @@ export class ExecutePayoutContract {
 
           return txResult;
         } catch (error) {
-          setError(`TX error: ${error}`);
+          console.log(error);
+          setError(t("Payouts.executePayoutError"));
         } finally {
           setIsLoading(false);
         }

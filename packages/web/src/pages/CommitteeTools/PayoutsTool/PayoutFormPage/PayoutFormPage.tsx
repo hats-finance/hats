@@ -24,7 +24,7 @@ import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
 import { NftPreview } from "../components";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
-import { useLockPayout, usePayout, useSavePayout, useVaultActivePayouts } from "../payoutsService.hooks";
+import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
@@ -46,7 +46,7 @@ export const PayoutFormPage = () => {
 
   const { payoutId } = useParams();
   const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
-  const { data: vaultActivePayouts } = useVaultActivePayouts(payout?.vaultInfo);
+  const { data: vaultActivePayouts } = useVaultInProgressPayouts(payout?.vaultInfo);
   const savePayout = useSavePayout();
   const lockPayout = useLockPayout();
 

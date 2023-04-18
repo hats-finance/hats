@@ -46,17 +46,17 @@ export async function getPayoutsByVaults(vaultsList: IVaultInfo[]): Promise<IPay
 }
 
 /**
- * Gets a list of all the active payouts of a vault
+ * Gets a list of all the in progress payouts of a vault
  * @param vaultAddress - The vault address to create the payout
  * @param chainId - The vault chain id to create the payout
  *
- * @returns A list of active payouts
+ * @returns A list of in progress payouts
  */
-export async function getActivePayoutsByVault(vaultInfo?: IVaultInfo): Promise<IPayoutResponse[]> {
+export async function getInProgressPayoutsByVault(vaultInfo?: IVaultInfo): Promise<IPayoutResponse[]> {
   if (!vaultInfo) return [];
 
   try {
-    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/active`, {
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/in-progress`, {
       params: { vaultInfo: JSON.stringify(vaultInfo) },
     });
     return res.data.payouts;

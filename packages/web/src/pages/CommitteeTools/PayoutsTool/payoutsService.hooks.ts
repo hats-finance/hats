@@ -17,12 +17,12 @@ export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse> =>
   });
 };
 
-export const useVaultActivePayouts = (vaultInfo?: IVaultInfo): UseQueryResult<IPayoutResponse[]> => {
+export const useVaultInProgressPayouts = (vaultInfo?: IVaultInfo): UseQueryResult<IPayoutResponse[]> => {
   const { isAuthenticated } = useSiweAuth();
 
   return useQuery({
-    queryKey: ["active-payouts", vaultInfo?.chainId, vaultInfo?.address],
-    queryFn: () => PayoutsService.getActivePayoutsByVault(vaultInfo),
+    queryKey: ["in-progress-payouts", vaultInfo?.chainId, vaultInfo?.address],
+    queryFn: () => PayoutsService.getInProgressPayoutsByVault(vaultInfo),
     enabled: isAuthenticated && !!vaultInfo,
     refetchOnWindowFocus: false,
   });
