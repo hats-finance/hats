@@ -1,6 +1,7 @@
-import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
 import moment from "moment";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
@@ -18,9 +19,27 @@ type PayoutCardProps = {
 export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false }: PayoutCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { payouts } = useVaults();
+
+  /**
+   * Get payout status. We only handle the status until 'Executed'. After that, we need to check onchain data. We do
+   * this with the subgraph data.
+   */
+  const payoutStatus = useMemo(() => {
+    if (payout.status === PayoutStatus.Executed) {
+      // Check the status on subgraph
+      const payoutOnSubgraph = payouts?.find((p) => p.id === payout.payoutClaimId);
+      if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
+        return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
+      }
+    }
+
+    // Return status saved on database
+    return payout.status;
+  }, [payout, payouts]);
 
   const vaultAddress = payout.vaultInfo.address;
-  const isCreating = payout.status === PayoutStatus.Creating;
+  const isCreating = payoutStatus === PayoutStatus.Creating;
 
   const { allVaults } = useVaults();
   const selectedVault = vaultAddress ? allVaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase()) : undefined;
@@ -47,7 +66,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
   };
 
   const handleGoToPayout = () => {
-    if (payout.status === PayoutStatus.Creating) {
+    if (payoutStatus === PayoutStatus.Creating) {
       navigate(`${RoutePaths.payouts}/${payout._id}`);
     } else {
       navigate(`${RoutePaths.payouts}/status/${payout._id}`);
@@ -59,7 +78,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
   return (
     <StyledPayoutCard
       viewOnly={viewOnly}
-      status={payout.status}
+      status={payoutStatus}
       onClick={viewOnly ? undefined : handleGoToPayout}
       minSignersReached={payout.signatures.length >= payout.minSignaturesNeeded}
     >
@@ -87,7 +106,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
       </div>
       <div className="col status">
         <p className="title">{t("status")}</p>
-        <p className="content">{t(payoutStatusInfo[payout.status].label)}</p>
+        <p className="content">{t(payoutStatusInfo[payoutStatus].label)}</p>
       </div>
     </StyledPayoutCard>
   );

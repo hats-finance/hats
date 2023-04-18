@@ -65,11 +65,30 @@ export const PayoutStatusPage = () => {
     },
   });
 
+  /**
+   * Get payout status. We only handle the status until 'Executed'. After that, we need to check onchain data. We do
+   * this with the subgraph data.
+   */
+  const payoutStatus = useMemo(() => {
+    if (!payout) return;
+
+    if (payout.status === PayoutStatus.Executed) {
+      // Check the status on subgraph
+      const payoutOnSubgraph = payouts?.find((p) => p.id === payout.payoutClaimId);
+      if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
+        return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
+      }
+    }
+
+    // Return status saved on database
+    return payout.status;
+  }, [payout, payouts]);
+
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
-  const isReadyToExecute = payout?.status === PayoutStatus.ReadyToExecute;
-  const isCollectingSignatures = payout?.status === PayoutStatus.Pending;
-  const canBeDeleted = payout && [PayoutStatus.Creating, PayoutStatus.Pending].includes(payout.status);
+  const isReadyToExecute = payoutStatus === PayoutStatus.ReadyToExecute;
+  const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
+  const canBeDeleted = payoutStatus && [PayoutStatus.Creating, PayoutStatus.Pending].includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const amountInTokensToPay = calculateAmountInTokensFromPercentage(payout?.payoutData.percentageToPay, vault, tokenPrices);
@@ -169,7 +188,7 @@ export const PayoutStatusPage = () => {
         </>
       )}
 
-      {payout?.status === PayoutStatus.Creating && (
+      {payoutStatus === PayoutStatus.Creating && (
         <>
           <Alert type="warning">{t("Payouts.yourPayoutIsNotYetCreated")}</Alert>
           <Button onClick={() => navigate(`${RoutePaths.payouts}`)} className="mt-4">
@@ -178,9 +197,9 @@ export const PayoutStatusPage = () => {
         </>
       )}
 
-      {isAuthenticated && payout?.status !== PayoutStatus.Creating && (
+      {isAuthenticated && payoutStatus !== PayoutStatus.Creating && (
         <div className="status-content">
-          <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payout?.status}`)}</p>
+          <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payoutStatus}`)}</p>
 
           {userHasAlreadySigned && isCollectingSignatures && (
             <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
