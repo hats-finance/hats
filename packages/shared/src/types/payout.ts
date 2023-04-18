@@ -1,5 +1,21 @@
 import { IVaultInfo } from "./types";
 
+export interface IPayoutGraph {
+  id: string;
+  vault: { id: string };
+  chainId: number;
+  approvedAt: string; // Date in seconds
+  dismissedAt: string; // Date in seconds
+  bountyPercentage: string; // Number between 0 and 10000 (for V2 vaults)
+  severityIndex: string; // Severity index (for V1 vaults)
+  isChallenged: boolean;
+  hackerReward: string;
+  hackerVestedReward: string;
+  governanceHatReward: string;
+  hackerHatReward: string;
+  committeeReward: string;
+}
+
 export interface IPayoutResponse {
   _id: string;
   vaultInfo: IVaultInfo;

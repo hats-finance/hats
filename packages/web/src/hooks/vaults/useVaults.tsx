@@ -1,5 +1,13 @@
 import { useEffect, useState, createContext, useContext, PropsWithChildren } from "react";
-import { IMaster, IUserNft, IVault, IVaultDescription, IWithdrawSafetyPeriod, fixObject } from "@hats-finance/shared";
+import {
+  IMaster,
+  IUserNft,
+  IVault,
+  IVaultDescription,
+  IWithdrawSafetyPeriod,
+  fixObject,
+  IPayoutGraph,
+} from "@hats-finance/shared";
 import { useAccount, useNetwork } from "wagmi";
 import { appChains, IS_PROD } from "settings";
 import { PROTECTED_TOKENS } from "data/vaults";
@@ -18,6 +26,7 @@ interface IVaultsContext {
   allUserNfts?: IUserNft[]; // User nfts without chains filtering
   tokenPrices?: number[];
   masters?: IMaster[];
+  payouts?: IPayoutGraph[];
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -230,6 +239,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     tokenPrices,
     withdrawSafetyPeriod,
     masters: [...multiChainData.prod.masters, ...multiChainData.test.masters],
+    payouts: [...multiChainData.prod.payouts, ...multiChainData.test.payouts],
   };
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;

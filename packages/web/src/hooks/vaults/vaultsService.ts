@@ -1,4 +1,4 @@
-import { IMaster, IUserNft, IVault } from "@hats-finance/shared";
+import { IMaster, IUserNft, IVault, IPayoutGraph } from "@hats-finance/shared";
 import { appChains } from "settings";
 import { GET_VAULTS } from "graphql/subgraph";
 
@@ -11,6 +11,7 @@ export type ISubgraphData = {
   vaults: IVault[];
   masters: IMaster[];
   userNfts: IUserNft[];
+  payouts: IPayoutGraph[];
 };
 
 type ISubgraphResponse = {
