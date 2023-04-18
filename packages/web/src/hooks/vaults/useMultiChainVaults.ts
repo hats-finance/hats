@@ -4,6 +4,7 @@ import { useAccount } from "wagmi";
 import { IMaster, IUserNft, IVault, IPayoutGraph } from "@hats-finance/shared";
 import { appChains } from "settings";
 import { getSubgraphData, IGraphVaultsData } from "./vaultsService";
+import { parseMasters, parseUserNfts, parseVaults, parsePayouts } from "./parser";
 
 const DATA_REFRESH_TIME = 15000;
 
@@ -42,10 +43,10 @@ export const useMultiChainVaultsV2 = () => {
         const { chainId, data } = query.data;
 
         // Add chainId to all the objects inside query data
-        data.masters = data.masters.map((master) => ({ ...master, chainId }));
-        data.userNfts = data.userNfts.map((userNft) => ({ ...userNft, chainId }));
-        data.vaults = data.vaults.map((vault) => ({ ...vault, chainId }));
-        data.payouts = data.payouts.map((payout) => ({ ...payout, chainId }));
+        data.masters = parseMasters(data.masters, chainId);
+        data.userNfts = parseUserNfts(data.userNfts, chainId);
+        data.vaults = parseVaults(data.vaults, chainId);
+        data.payouts = parsePayouts(data.payouts, chainId);
 
         if (appChains[chainId].chain.testnet) {
           acc.test.masters = [...acc.test.masters, ...data.masters];

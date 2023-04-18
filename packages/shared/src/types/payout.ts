@@ -14,6 +14,10 @@ export interface IPayoutGraph {
   governanceHatReward: string;
   hackerHatReward: string;
   committeeReward: string;
+  // Computed
+  isActive?: boolean; // Is active claim
+  isApproved?: boolean; // Is approved claim
+  isDismissed?: boolean; // Is dismissed claim
 }
 
 export interface IPayoutResponse {
