@@ -18,14 +18,8 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
 
   const createDraftPayout = useCreateDraftPayout();
 
-  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("all");
+  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
-  const vaultsOptions =
-    userVaults?.map((vault) => ({
-      value: vault.id,
-      label: vault.description?.["project-metadata"].name ?? vault.name,
-      icon: vault.description?.["project-metadata"].icon,
-    })) ?? [];
 
   const handleCreatePayout = async () => {
     const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);

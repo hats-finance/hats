@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { useAccount } from "wagmi";
+import { FormSelectInputOption } from "components";
 import { useVaults } from "./useVaults";
 
 type UserVaultsVersion = "v1" | "v2" | "all";
@@ -11,6 +12,12 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
 
   const [isLoading, setIsLoading] = useState(true);
   const [userVaults, setUserVaults] = useState<IVault[] | undefined>();
+  const selectInputOptions: FormSelectInputOption[] =
+    userVaults?.map((vault) => ({
+      value: vault.id,
+      label: vault.description?.["project-metadata"].name ?? vault.name,
+      icon: vault.description?.["project-metadata"].icon,
+    })) ?? [];
 
   useEffect(() => {
     if (!address) return;
@@ -32,7 +39,7 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       if (!vault.description) continue;
 
       const userSafes = await getAddressSafes(address, vault.chainId);
-      const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
+      const isSafeMember = userSafes.some((safeAddress) => safeAddress.toLowerCase() === vault.committee.toLowerCase());
 
       if (isSafeMember && (version !== "all" ? vault.version === version : true)) foundVaults.push(vault);
     }
@@ -44,5 +51,6 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
   return {
     isLoading,
     userVaults,
+    selectInputOptions,
   };
 };

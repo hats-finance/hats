@@ -1,11 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState } from "react";
 import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { Button, FormSelectInput, Modal } from "components";
 import { RoutePaths } from "navigation";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { StyledVaultEditorHome } from "./styles";
 import { VaultReadyModal } from "./VaultReadyModal";
 
@@ -14,46 +13,17 @@ export const VaultEditorHomePage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { address } = useAccount();
-  const { allVaults } = useVaults();
 
   const isVaultCreated = !!searchParams.get("vaultReady");
-
-  const [vaultsOptions, setVaultsOptions] = useState<{ label: string; value: string; icon: string | undefined }[]>([]);
+  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("v2");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
-
-  const populateVaultsOptions = useCallback(async () => {
-    if (!address || !allVaults) return setVaultsOptions([]);
-    const userVaults = [] as IVault[];
-
-    for (const vault of allVaults) {
-      if (!vault.description) continue;
-
-      const userSafes = await getAddressSafes(address, vault.chainId);
-      const isSafeMember = userSafes.some((safeAddress) => safeAddress === vault.description?.committee["multisig-address"]);
-      const isMultisigAddress = vault.description?.committee["multisig-address"] === address;
-
-      if ((isSafeMember || isMultisigAddress) && vault.version === "v2") userVaults.push(vault);
-    }
-
-    setVaultsOptions(
-      userVaults.map((vault) => ({
-        label: vault.description?.["project-metadata"].name ?? vault.name,
-        value: vault.id,
-        icon: vault.description?.["project-metadata"].icon,
-      }))
-    );
-  }, [address, allVaults]);
-
-  useEffect(() => {
-    populateVaultsOptions();
-  }, [populateVaultsOptions]);
 
   const createNewVault = () => {
     navigate(`${RoutePaths.vault_editor}/new-vault`);
   };
 
   const goToStatusPage = () => {
-    const selectedVault = allVaults?.find((vault) => vault.id === selectedVaultAddress);
+    const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
     if (!selectedVault || !selectedVault.chainId) return;
 
     navigate(`${RoutePaths.vault_editor}/status/${selectedVault.chainId}/${selectedVault.id}`);
@@ -79,7 +49,7 @@ export const VaultEditorHomePage = () => {
             <div className="vault-selection">
               <FormSelectInput
                 label={t("vault")}
-                emptyState={t("youHaveNoVaults")}
+                emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
                 placeholder={t("selectVault")}
                 name="editSessionId"
                 value={selectedVaultAddress}

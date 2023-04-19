@@ -1,11 +1,16 @@
 import React, { forwardRef, useRef, useState } from "react";
 import useOnClickOutside from "hooks/useOnClickOutside";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { FormSelectInputItem } from "./FormSelectInputItem/FormSelectInputItem";
-import { FormSelectInputOption } from "./types";
 import { parseIsDirty } from "../utils";
 import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles";
 import DropdownArrow from "@mui/icons-material/KeyboardArrowDownOutlined";
+
+export interface FormSelectInputOption {
+  label: string;
+  value: string;
+  icon?: string;
+}
 
 interface FormSelectInputProps {
   name?: string;
@@ -41,6 +46,7 @@ export function FormSelectInputComponent(
   }: FormSelectInputProps,
   ref
 ) {
+  const { t } = useTranslation();
   const [isOpen, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(menuRef, () => setOpen(false));

@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import { FormSelectInputOption } from "../types";
+import { ipfsTransformUri } from "utils";
+import { FormSelectInputOption } from "../FormSelectInput";
 import { StyledFormSelectInputItem } from "./styles";
 import CheckboxCheckedIcon from "@mui/icons-material/CheckBox";
 import CheckboxUncheckedIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import RadioCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import RadioUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
-import { ipfsTransformUri } from "utils";
 
 interface MenuItemProps {
   currentValue: string | string[];
