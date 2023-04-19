@@ -1,11 +1,12 @@
-import { IEditedVaultDescription, IVaultStatusData, IAddressRoleInVault, getAddressRoleOnVault } from "@hats-finance/shared";
+import { IAddressRoleInVault, getAddressRoleOnVault } from "@hats-finance/shared";
 
 // Only committee members or gov multisig members can edit the vault
 export async function checkIfAddressCanEditTheVault(
   address: string | undefined,
-  editData: IEditedVaultDescription | IVaultStatusData
+  vaultChainId: string | number | undefined,
+  vaultCommittee: string | undefined
 ): Promise<{ canEditVault: boolean; role: IAddressRoleInVault }> {
-  const addressRole = await getAddressRoleOnVault(address, editData);
+  const addressRole = await getAddressRoleOnVault(address, vaultChainId, vaultCommittee);
   return { canEditVault: addressRole !== "none" && addressRole !== "committee-multisig", role: addressRole };
 }
 

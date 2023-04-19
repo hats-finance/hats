@@ -22,6 +22,7 @@ import {
 import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
 import { CreateVaultContract } from "contracts";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useVaults } from "hooks/vaults/useVaults";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { appChains, BASE_SERVICE_URL } from "settings";
 import { RoutePaths } from "navigation";
@@ -48,6 +49,7 @@ import CheckIcon from "@mui/icons-material/Check";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { allVaults } = useVaults();
 
   const { editSessionId } = useParams();
   const [searchParams] = useSearchParams();
@@ -83,11 +85,12 @@ const VaultEditorFormPage = () => {
 
   const [isVaultCreated, setIsVaultCreated] = useState(false); // Is this edit session for a vault that is already created?
   const [editSessionSubmittedCreation, setEditSessionSubmittedCreation] = useState(false); // Has the edit session been submitted for creation on-chain?
-  const [isEditingExitingVault, setIsEditingExitingVault] = useState(false); // Is this edit session for editing an existing vault?
+  const [isEditingExistingVault, setIsEditingExistingVault] = useState(false); // Is this edit session for editing an existing vault?
   const [editingExitingVaultStatus, setEditingExitingVaultStatus] = useState<IVaultEditionStatus | undefined>(); // Status of the edition of an existing vault
   const isNonEditableStatus = editingExitingVaultStatus ? nonEditableEditionStatus.includes(editingExitingVaultStatus) : false;
 
   const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
+  const existingVault = allVaults?.find((vault) => vault.id === vaultCreatedInfo?.vaultAddress);
 
   const {
     steps,
@@ -155,7 +158,7 @@ const VaultEditorFormPage = () => {
 
       if (editSessionResponse.vaultAddress) {
         if (editSessionResponse.editingExistingVault) {
-          setIsEditingExitingVault(true);
+          setIsEditingExistingVault(true);
         } else {
           setIsVaultCreated(true);
         }
@@ -290,18 +293,17 @@ const VaultEditorFormPage = () => {
 
   // Handler for initializing the form steps
   useEffect(() => {
-    presetIsEditingExistingVault(isEditingExitingVault);
-    initFormSteps(isEditingExitingVault);
-    if (isEditingExitingVault) getOriginalVaultDescriptionHash();
-  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExitingVault, getOriginalVaultDescriptionHash]);
+    presetIsEditingExistingVault(isEditingExistingVault);
+    initFormSteps(isEditingExistingVault);
+    if (isEditingExistingVault) getOriginalVaultDescriptionHash();
+  }, [loadingEditSession, initFormSteps, presetIsEditingExistingVault, isEditingExistingVault, getOriginalVaultDescriptionHash]);
 
   // Check if user has permissions to edit the vault depending on the status (Vault creation or vault edition)
   useEffect(() => {
     const checkPermissions = async () => {
-      const editData = getValues();
-      const { canEditVault } = await checkIfAddressCanEditTheVault(address, editData);
+      if (isEditingExistingVault && existingVault) {
+        const { canEditVault } = await checkIfAddressCanEditTheVault(address, existingVault.chainId, existingVault.committee);
 
-      if (isEditingExitingVault) {
         if (isNonEditableStatus) {
           setUserHasPermissions(canEditVault);
           setAllFormDisabled(true);
@@ -329,7 +331,7 @@ const VaultEditorFormPage = () => {
     checkPermissions();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVaultCreated, isNonEditableStatus, isEditingExitingVault, editSessionSubmittedCreation, address, getValues]);
+  }, [isVaultCreated, isNonEditableStatus, isEditingExistingVault, editSessionSubmittedCreation, address, getValues]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -436,8 +438,8 @@ const VaultEditorFormPage = () => {
     }
 
     const isLastStep = currentStep?.id === steps[steps.length - 1].id;
-    if (isEditingExitingVault && isLastStep && !userHasPermissions) return true;
-    if (isNonEditableStatus && isEditingExitingVault && isLastStep) return true;
+    if (isEditingExistingVault && isLastStep && !userHasPermissions) return true;
+    if (isNonEditableStatus && isEditingExistingVault && isLastStep) return true;
 
     return false;
   };
@@ -450,7 +452,7 @@ const VaultEditorFormPage = () => {
   };
 
   const getEditingExistingVaultAlert = () => {
-    if (!isEditingExitingVault) return null;
+    if (!isEditingExistingVault) return null;
 
     if (!userHasPermissions) {
       return <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="error" />;
@@ -474,7 +476,7 @@ const VaultEditorFormPage = () => {
   };
 
   const getEditingExistingVaultButtons = () => {
-    if (!isEditingExitingVault) return null;
+    if (!isEditingExistingVault) return null;
 
     if (!userHasPermissions) {
       return (
@@ -540,7 +542,7 @@ const VaultEditorFormPage = () => {
     committeeMembersFieldArray,
     saveEditSessionData: createOrSaveEditSession,
     isVaultCreated,
-    isEditingExitingVault,
+    isEditingExitingVault: isEditingExistingVault,
     allFormDisabled,
   };
 
@@ -563,7 +565,7 @@ const VaultEditorFormPage = () => {
 
           <StyledVaultEditorForm className="content-wrapper-md">
             {/* Title */}
-            {descriptionHash && (isAdvancedMode || isEditingExitingVault) && (
+            {descriptionHash && (isAdvancedMode || isEditingExistingVault) && (
               <p className="descriptionHash" onClick={goToDescriptionHashContent}>
                 {descriptionHash}
               </p>
@@ -605,7 +607,7 @@ const VaultEditorFormPage = () => {
             {/* Section */}
             {steps.map((step) => (
               <Section key={step.id} visible={step.id === currentStepInfo.id}>
-                <p className="section-title">{t(isEditingExitingVault ? step.title.editing : step.title.creation)}</p>
+                <p className="section-title">{t(isEditingExistingVault ? step.title.editing : step.title.creation)}</p>
                 <div className="section-content">
                   <step.component />
                 </div>
@@ -639,7 +641,7 @@ const VaultEditorFormPage = () => {
             </div>
 
             {/* Editing existing vault action button */}
-            {isEditingExitingVault && (
+            {isEditingExistingVault && (
               <div className="editing-existing-buttons">
                 {getEditingExistingVaultAlert()}
                 {getEditingExistingVaultButtons()}

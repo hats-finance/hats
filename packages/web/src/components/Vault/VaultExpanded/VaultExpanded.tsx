@@ -39,6 +39,7 @@ export default function VaultExpanded(props: IProps) {
     description,
     master,
     version,
+    committee,
   } = props.data;
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -142,7 +143,7 @@ export default function VaultExpanded(props: IProps) {
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
-                  <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
+                  <Multisig multisigAddress={committee} />
                 </div>
                 <div className="submit-vulnerability-button-wrapper">
                   <button

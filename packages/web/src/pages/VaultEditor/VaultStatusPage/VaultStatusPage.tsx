@@ -43,11 +43,11 @@ export const VaultStatusPage = () => {
     const getPermissionData = async () => {
       if (!vaultData) return;
 
-      const permissionData = await checkIfAddressCanEditTheVault(address, vaultData);
+      const permissionData = await checkIfAddressCanEditTheVault(address, vaultChainId, vaultData.committeeMulsitigAddress);
       setUserPermissionData(permissionData);
     };
     getPermissionData();
-  }, [address, vaultData]);
+  }, [address, vaultChainId, vaultData]);
 
   const loadVaultData = async (address: string, chainId: number) => {
     const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);

@@ -1,18 +1,16 @@
 import { ChainsConfig } from "../config";
-import { IAddressRoleInVault, IEditedVaultDescription, IVaultDescription, IVaultStatusData, IVault, IVaultInfo } from "../types";
+import { IAddressRoleInVault, IVault, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
 
 export const getAddressRoleOnVault = async (
   address: string | undefined,
-  vaultData: IEditedVaultDescription | IVaultStatusData | IVaultDescription
+  vaultChainId: string | number | undefined,
+  vaultCommittee: string | undefined
 ): Promise<IAddressRoleInVault> => {
-  const dataToUse = "description" in vaultData ? vaultData.description : vaultData;
-
-  const vaultChainId = dataToUse?.committee.chainId;
-  if (!address || !dataToUse || !vaultChainId) return "none";
+  if (!address || !vaultCommittee || !vaultChainId) return "none";
 
   const govMultisig = ChainsConfig[Number(vaultChainId)].govMultisig;
-  const committeeMultisig = dataToUse.committee["multisig-address"];
+  const committeeMultisig = vaultCommittee;
 
   const isCommitteeMultisig = committeeMultisig === address;
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
