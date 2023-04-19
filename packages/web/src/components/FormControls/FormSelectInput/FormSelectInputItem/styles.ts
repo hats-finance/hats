@@ -21,8 +21,8 @@ export const StyledFormSelectInputItem = styled.label`
     gap: ${getSpacing(1)};
 
     img {
-      width: ${getSpacing(3)};
-      height: ${getSpacing(3)};
+      width: ${getSpacing(3.8)};
+      height: ${getSpacing(3.8)};
       object-fit: contain;
     }
 

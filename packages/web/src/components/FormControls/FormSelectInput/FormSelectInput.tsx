@@ -10,6 +10,7 @@ export interface FormSelectInputOption {
   label: string;
   value: string;
   icon?: string;
+  onHoverText?: string;
 }
 
 interface FormSelectInputProps {

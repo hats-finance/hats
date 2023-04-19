@@ -4,7 +4,7 @@ import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 
 export type WithTooltipProps = {
   children: ReactElement;
-  text: string;
+  text: string | undefined;
   visible?: boolean;
   placement?: "left" | "right" | "top" | "bottom";
 };

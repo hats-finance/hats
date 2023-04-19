@@ -3,6 +3,7 @@ import { getAddressSafes, IVault } from "@hats-finance/shared";
 import { useAccount } from "wagmi";
 import { FormSelectInputOption } from "components";
 import { useVaults } from "./useVaults";
+import { appChains } from "settings";
 
 type UserVaultsVersion = "v1" | "v2" | "all";
 
@@ -17,6 +18,7 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       value: vault.id,
       label: vault.description?.["project-metadata"].name ?? vault.name,
       icon: vault.description?.["project-metadata"].icon,
+      onHoverText: `${vault.version} - ${appChains[vault.chainId as number].chain.name}`,
     })) ?? [];
 
   useEffect(() => {
