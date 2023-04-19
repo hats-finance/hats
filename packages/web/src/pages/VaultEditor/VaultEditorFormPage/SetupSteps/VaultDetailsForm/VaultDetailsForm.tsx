@@ -1,10 +1,16 @@
 import { useContext, useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import {
+  IEditedVaultDescription,
+  IEditedVulnerabilitySeverity,
+  createNewCoveredContract,
+  getVulnerabilitySeveritiesTemplate,
+} from "@hats-finance/shared";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import { useOnChange } from "hooks/usePrevious";
 import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
-import { IEditedVaultDescription } from "types";
 import { VaultEditorFormContext } from "../../store";
 import { StyledVaultDetails } from "./styles";
 
@@ -44,6 +50,26 @@ export function VaultDetailsForm() {
     if (vaultType === "audit" || vaultType === "grants") setValue("includesStartAndEndTime", true);
     else setValue("includesStartAndEndTime", false);
   }, [vaultType, getValues, setValue]);
+
+  // Change the vulnerability template if the vault type changes
+  useOnChange(vaultType, (_, prevVal) => {
+    if (prevVal === undefined) return;
+
+    const data = getValues();
+    const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version, vaultType === "audit");
+
+    const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
+    const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
+      (s: IEditedVulnerabilitySeverity) => ({
+        label: s.name,
+        value: s.id as string,
+      })
+    );
+
+    setValue("vulnerability-severities-spec", vulnerabilitySeveritiesTemplate);
+    setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
+    setValue("severitiesOptions", severitiesOptionsForContractsCovered);
+  });
 
   return (
     <StyledVaultDetails>
