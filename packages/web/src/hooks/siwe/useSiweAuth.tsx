@@ -95,13 +95,14 @@ export const SiweAuthProvider = ({ children }) => {
   }, [connector, address, chain, signMessageAsync]);
 
   const tryAuthentication = useCallback(async (): Promise<boolean> => {
-    if (!profileData.loggedIn) {
+    const profile = await getProfile();
+    if (!profile.loggedIn) {
       const authenticated = (await signIn()).ok;
       return authenticated;
     }
 
     return true;
-  }, [signIn, profileData.loggedIn]);
+  }, [signIn]);
 
   const logout = async (): Promise<void> => {
     await SIWEService.logout();
