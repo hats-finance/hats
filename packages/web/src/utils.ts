@@ -1,6 +1,6 @@
 import millify from "millify";
 import { BigNumber } from "ethers";
-import { isAddress, getAddress, formatUnits } from "ethers/lib/utils";
+import { formatUnits } from "ethers/lib/utils";
 import { BASE_SERVICE_URL } from "settings";
 import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
 import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";

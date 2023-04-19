@@ -21,8 +21,8 @@ export enum ScreenSize {
 export const MAX_NFT_TIER = 3;
 
 // export const stagingServiceUrl = "https://rl848xdj4k.execute-api.us-east-1.amazonaws.com/staging";
-export const stagingServiceUrl = "https://stagingbot.herokuapp.com";
-export const prodServiceUrl = "https://hats-telegram-bot.herokuapp.com";
+export const stagingServiceUrl = "https://hats-backend-dev.herokuapp.com/v1";
+export const prodServiceUrl = "https://hats-backend-prod.herokuapp.com/v1";
 
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
@@ -30,8 +30,6 @@ export const NFTContractDataProxy = {
   "0x18a82fd0e4f64f0f3be455319c8609771e49d58f": "0x63CACDa852A1Efc63Dc7988750d9e1BA77c5FB68",
   ["0xbf5A12c4dD49f81cF5827290Ac9d94470C0E7759".toLowerCase()]: "0x5E32BF5A465A881E217Ef816506D7ecddB53F48F",
 };
-
-export const UNISWAP_V3_SUBGRAPH = "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3";
 
 export enum Pages {
   vaults = "Vaults",
@@ -73,8 +71,6 @@ export const RISK_FACTOR = "https://docs.hats.finance/risk-factor";
 export const COOKIES_POLICY = "https://docs.hats.finance/cookies-policy";
 
 export const TERMS_OF_SALE_OF_NFTS = "https://docs.hats.finance/nft/terms-of-sale-of-nfts";
-
-export const COIN_GECKO_ETHEREUM = "https://api.coingecko.com/api/v3/simple/token_price/ethereum";
 
 export const EMBASSY_LEARN_MORE = "https://medium.com/@hatsfinance/proof-of-deposit-nft-powered-security-7c0456672539";
 

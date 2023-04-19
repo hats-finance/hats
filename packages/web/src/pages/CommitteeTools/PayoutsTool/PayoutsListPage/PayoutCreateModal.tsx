@@ -18,7 +18,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
 
   const createDraftPayout = useCreateDraftPayout();
 
-  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
+  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("all");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
   const vaultsOptions =
     userVaults?.map((vault) => ({
