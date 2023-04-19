@@ -71,27 +71,6 @@ export function VaultDetailsForm() {
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
   });
 
-  // useEffect(() => {
-  //   const data = getValues();
-
-  //   if (vaultType === "audit") {
-  //     const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version);
-  //     const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
-  //     const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
-  //       (s: IEditedVulnerabilitySeverity) => ({
-  //         label: s.name,
-  //         value: s.id as string,
-  //       })
-  //     );
-
-  //     setValue('vulnerability-severities-spec', vulnerabilitySeveritiesTemplate);
-  //     setValue('contracts-covered', [{ ...createNewCoveredContract(severitiesIds) }]);
-  //     setValue('severitiesOptions', severitiesOptionsForContractsCovered);
-  //   } else {
-
-  //   }
-  // }, [vaultType, getValues, setValue]);
-
   return (
     <StyledVaultDetails>
       <div className="sub-container">
