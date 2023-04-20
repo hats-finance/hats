@@ -8,7 +8,7 @@ import { RoutePaths } from "navigation";
 import { WithTooltip } from "components";
 import { ipfsTransformUri } from "utils";
 import { appChains } from "settings";
-import { StyledPayoutCard } from "./styles";
+import { StyledPayoutCard, StyledVersionFlag } from "./styles";
 
 type PayoutCardProps = {
   payout: IPayoutResponse;
@@ -87,6 +87,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
           {t("vaultAddress")}: {payout.vaultInfo.address}
         </div>
       )}
+      <StyledVersionFlag>{selectedVault.version}</StyledVersionFlag>
       <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
       <div className="col nonce">
         <p className="title">{t("nonce")}</p>

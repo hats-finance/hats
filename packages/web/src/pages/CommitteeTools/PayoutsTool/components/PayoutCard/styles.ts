@@ -6,7 +6,7 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersRea
   ({ status, minSignersReached, viewOnly }) => css`
     position: relative;
     background: var(--background-clearer-blue);
-    padding: ${getSpacing(2)};
+    padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(5)};
     display: grid;
     align-items: center;
     gap: ${getSpacing(4)};
@@ -36,6 +36,7 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersRea
       padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
       border-radius: 5px;
       transform: translateY(-75%);
+      z-index: 3;
     }
 
     .vault-icon {
@@ -93,3 +94,15 @@ export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersRea
     }
   `
 );
+
+export const StyledVersionFlag = styled.span`
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-transform: uppercase;
+  background-color: var(--turquoise);
+  color: var(--strong-blue);
+  padding: 10px 6px;
+  border-radius: 0 0 18px 0;
+  font-size: var(--xsmall);
+`;
