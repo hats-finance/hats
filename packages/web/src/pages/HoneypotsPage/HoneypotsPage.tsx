@@ -11,6 +11,8 @@ import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
 
+const VAULT_GROUPS_ORDER = ["pendingReward", "audit", "normal", ""];
+
 interface HoneypotsPageProps {
   showDeposit?: boolean;
 }
@@ -47,7 +49,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
 
   const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     if (vault.registered) {
-      const key = vault.description?.["project-metadata"].type || normalVaultKey;
+      const key = (vault.activeClaim && "pendingReward") ?? vault.description?.["project-metadata"].type ?? normalVaultKey;
       (groups[key] = groups[key] || []).push(vault);
     }
     return groups;
@@ -86,7 +88,9 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
               {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
               {vaultsByGroup &&
                 Object.entries(vaultsByGroup)
-                  .sort()
+                  .sort(([aType], [bType]) =>
+                    VAULT_GROUPS_ORDER.findIndex((v) => v === aType) > VAULT_GROUPS_ORDER.findIndex((v) => v === bType) ? 1 : -1
+                  )
                   .map(([type, groupVaults]) => (
                     <React.Fragment key={type}>
                       <tr className="transparent-row">
