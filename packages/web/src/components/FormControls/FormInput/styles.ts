@@ -12,6 +12,7 @@ type StyledFormInputProps = {
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
   colorable?: boolean;
+  readOnly?: boolean;
   disabled?: boolean;
   type?: FormInputType;
 };
@@ -29,6 +30,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     noLabel,
     disabled,
     colorable,
+    readOnly,
   }) => css`
     position: relative;
     overflow: hidden;
@@ -67,6 +69,13 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         background-color: var(--disabled-input);
         opacity: 0.4;
         z-index: 1;
+        cursor: not-allowed;
+      }
+    `}
+
+    ${readOnly &&
+    css`
+      * {
         cursor: not-allowed;
       }
     `}
