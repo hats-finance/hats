@@ -71,29 +71,29 @@ export default function VaultExpanded(props: IProps) {
       {
         // Immediate bounty
         title: t("immediateBountyInTokens", { token: stakingTokenSymbol }),
-        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.token,
       },
       {
         // Vested bounty
         title: t("vestedBountyForDurationInTokens", { duration: bountyVestingDuration, token: stakingTokenSymbol }),
-        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.vestedToken,
       },
       {
         // Committee fee
         title: t("committeeFee"),
-        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.committee,
       },
       {
         title: t("vestedHatsForDuration", { duration: rewardVestingDuration }),
-        value: +(Number(hackerHatsSplit) / 100).toFixed(0),
+        value: +(Number(hackerHatsSplit) / 100).toFixed(2),
         color: PieChartColors.vestedHats,
       },
       {
         title: t("hatsGovFee"),
-        value: +(Number(governanceSplit) / 100).toFixed(0),
+        value: +(Number(governanceSplit) / 100).toFixed(2),
         color: PieChartColors.governance,
       },
       // {
