@@ -322,6 +322,9 @@
     "safePeriodExplanation": "Safe period - twice a day and for 1 hour the committee gathers. During that time withdraw is disabled.",
     "vaultAddress": "Vault address",
     "pendingReward": "Pending reward",
+    "bounty": "Bounty",
+    "audit": "Audit",
+    "grants": "Grants",
     "vaultPausedActiveClaimExplanation": "Vault is paused to withdraws due to an ongoing payout.",
     "PGPTool": {
       "title": "PGP tool",

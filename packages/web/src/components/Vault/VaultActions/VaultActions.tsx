@@ -16,10 +16,10 @@ interface IProps {
 }
 
 export default function VaultActions(props: IProps) {
-  const navigate = useNavigate();
-  const isSupportedNetwork = useSupportedNetwork();
   const { t } = useTranslation();
   const { address: account } = useAccount();
+  const navigate = useNavigate();
+  const isSupportedNetwork = useSupportedNetwork();
   const vault = props.data;
 
   if (!vault) return null;

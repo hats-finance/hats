@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "types";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -18,6 +19,7 @@ interface HoneypotsPageProps {
 }
 
 const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
+  const { t } = useTranslation();
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
@@ -55,10 +57,6 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return groups;
   }, [] as IVault[][])!;
 
-  function capitalizeFirstLetter(val: string) {
-    return val.charAt(0).toUpperCase() + val.slice(1);
-  }
-
   return (
     <StyledHoneypotsPage className="content-wrapper">
       {vaults === undefined ? (
@@ -94,7 +92,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
                   .map(([type, groupVaults]) => (
                     <React.Fragment key={type}>
                       <tr className="transparent-row">
-                        <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
+                        <td colSpan={7}>{t(type === normalVaultKey ? "bounty" : type)} Vaults</td>
                       </tr>
                       {groupVaults &&
                         groupVaults.map((vault) => (
