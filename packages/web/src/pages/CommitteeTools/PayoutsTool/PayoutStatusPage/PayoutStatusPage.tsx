@@ -12,15 +12,13 @@ import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
-import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
-import { PayoutCard, NftPreview, SignerCard, PayoutAllocation } from "../components";
+import { PayoutCard, SignerCard, PayoutAllocation } from "../components";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { useSignPayout } from "./useSignPayout";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
@@ -29,7 +27,7 @@ export const PayoutStatusPage = () => {
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { allVaults, payouts, tokenPrices, withdrawSafetyPeriod } = useVaults();
+  const { allVaults, payouts, withdrawSafetyPeriod } = useVaults();
 
   const { payoutId } = useParams();
   const {
@@ -91,8 +89,6 @@ export const PayoutStatusPage = () => {
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
   const canBeDeleted = payoutStatus && [PayoutStatus.Creating, PayoutStatus.Pending].includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
-
-  const amountInTokensToPay = calculateAmountInTokensFromPercentage(payout?.payoutData.percentageToPay, vault, tokenPrices);
 
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
   const vaultSeverities = vault?.description?.severities ?? [];
@@ -215,79 +211,70 @@ export const PayoutStatusPage = () => {
             </div>
           )}
 
-          <div className="payout-status">
-            <div className="form">
-              <FormInput
-                label={t("Payouts.beneficiary")}
-                placeholder={t("Payouts.beneficiaryPlaceholder")}
-                value={payout?.payoutData.beneficiary}
-                readOnly
-              />
+          <div className="payout-status-container">
+            <FormInput
+              label={t("Payouts.beneficiary")}
+              placeholder={t("Payouts.beneficiaryPlaceholder")}
+              value={payout?.payoutData.beneficiary}
+              readOnly
+            />
 
-              <div className="row">
-                {payout?.payoutData.severity && (
-                  <FormSelectInput
-                    value={payout.payoutData.severity}
-                    label={t("Payouts.severity")}
-                    placeholder={t("Payouts.severityPlaceholder")}
-                    options={severitiesOptions ?? []}
-                    readOnly
-                  />
-                )}
-
-                <FormInput
-                  value={`${payout?.payoutData.percentageToPay}%`}
-                  label={t("Payouts.percentageToPay")}
-                  placeholder={t("Payouts.percentageToPayPlaceholder")}
-                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+            <div className="row">
+              {payout?.payoutData.severity && (
+                <FormSelectInput
+                  value={payout.payoutData.severity}
+                  label={t("Payouts.severity")}
+                  placeholder={t("Payouts.severityPlaceholder")}
+                  options={severitiesOptions ?? []}
                   readOnly
                 />
-              </div>
-
-              <div className="resultDivider">
-                <div />
-                <ArrowDownIcon />
-                <div />
-              </div>
-
-              <div className="result">
-                <NftPreview
-                  vault={vault}
-                  severityName={selectedSeverityData?.name}
-                  nftData={selectedSeverityData?.["nft-metadata"]}
-                />
-
-                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
-              </div>
-
-              <div className="my-5">
-                <PayoutAllocation />
-              </div>
+              )}
 
               <FormInput
-                value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
-                label={t("Payouts.explanation")}
-                placeholder={t("Payouts.explanationPlaceholder")}
-                type="textarea"
-                rows={10}
+                value={`${payout?.payoutData.percentageToPay}%`}
+                label={t("Payouts.percentageToPay")}
+                placeholder={t("Payouts.percentageToPayPlaceholder")}
+                helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                 readOnly
               />
             </div>
 
-            <div className="signers">
-              <p className="section-title">{t("Payouts.signers")}</p>
+            <div className="my-5">
+              <PayoutAllocation
+                vault={vault}
+                payout={payout}
+                percentageToPay={payout?.payoutData.percentageToPay}
+                selectedSeverity={selectedSeverityData}
+              />
+            </div>
+          </div>
 
-              <div className="signers-list">
-                {vault &&
-                  safeInfo?.owners.map((signerAddress) => (
-                    <SignerCard
-                      key={signerAddress}
-                      signerAddress={signerAddress}
-                      chainId={vault.chainId as number}
-                      signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
-                    />
-                  ))}
-              </div>
+          <div className="payout-status-container">
+            <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
+
+            <FormInput
+              value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
+              label={t("Payouts.explanation")}
+              placeholder={t("Payouts.explanationPlaceholder")}
+              type="textarea"
+              rows={10}
+              readOnly
+            />
+          </div>
+
+          <div className="payout-status-container">
+            <p className="section-title">{t("Payouts.signAndExecute")}</p>
+
+            <div className="signers-list">
+              {vault &&
+                safeInfo?.owners.map((signerAddress) => (
+                  <SignerCard
+                    key={signerAddress}
+                    signerAddress={signerAddress}
+                    chainId={vault.chainId as number}
+                    signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
+                  />
+                ))}
             </div>
 
             {isReadyToExecute && isAnyActivePayout ? (

@@ -18,5 +18,5 @@ export const calculateAmountInTokensFromPercentage = (
 
   const tokenPrice = tokenPrices?.[tokenAddress] ?? 0;
 
-  return `≈ ${millify(amountInTokens)} ${tokenSymbol} ~ ${millify(amountInTokens * tokenPrice)}$`;
+  return `≈ ${millify(amountInTokens, { precision: 8 })} ${tokenSymbol} ~ ${millify(amountInTokens * tokenPrice)}$`;
 };

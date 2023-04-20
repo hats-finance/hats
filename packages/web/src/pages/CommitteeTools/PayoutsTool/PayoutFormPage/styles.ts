@@ -74,6 +74,7 @@ export const StyledPayoutForm = styled.form`
 
     .reasoningAlert {
       font-size: var(--xxsmall);
+
       span {
         color: var(--teal);
       }
@@ -86,25 +87,6 @@ export const StyledPayoutForm = styled.form`
     .row {
       display: flex;
       gap: ${getSpacing(2)};
-    }
-
-    .resultDivider {
-      display: flex;
-      align-items: center;
-      gap: ${getSpacing(2)};
-      margin: ${getSpacing(1)} 0 ${getSpacing(3)};
-
-      div {
-        flex: 1;
-        height: 1px;
-        border: 1px solid var(--grey-500);
-        border-style: dashed;
-      }
-    }
-
-    .result {
-      display: flex;
-      gap: ${getSpacing(3)};
     }
   }
 

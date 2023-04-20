@@ -22,20 +22,18 @@ import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
-import { NftPreview, PayoutAllocation } from "../components";
-import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
+import { PayoutAllocation } from "../components";
 import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
 
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { address } = useAccount();
-  const { allVaults, tokenPrices } = useVaults();
+  const { allVaults } = useVaults();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
   const methods = useEnhancedForm<IPayoutData>({
@@ -62,7 +60,6 @@ export const PayoutFormPage = () => {
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
-  const amountInTokensToPay = calculateAmountInTokensFromPercentage(percentageToPay, vault, tokenPrices);
 
   useEffect(() => {
     tryAuthentication();
@@ -222,29 +219,17 @@ export const PayoutFormPage = () => {
                   {...register("percentageToPay")}
                   label={t("Payouts.percentageToPay")}
                   placeholder={t("Payouts.percentageToPayPlaceholder")}
-                  disabled
-                  colorable
+                  readOnly
                   helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                 />
               </div>
 
-              <div className="resultDivider">
-                <div />
-                <ArrowDownIcon />
-                <div />
-              </div>
-
-              <div>{t("Payouts.resultDescription")}</div>
-              <div className="result mt-4 mb-5">
-                <NftPreview
-                  vault={vault}
-                  severityName={selectedSeverityData?.name}
-                  nftData={selectedSeverityData?.["nft-metadata"]}
-                />
-                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} disabled />
-              </div>
-
-              <PayoutAllocation />
+              <PayoutAllocation
+                vault={vault}
+                payout={payout}
+                percentageToPay={percentageToPay}
+                selectedSeverity={selectedSeverityData}
+              />
             </div>
 
             <div className="form-container mt-5">

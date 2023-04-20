@@ -48,47 +48,35 @@ export const StyledPayoutStatusPage = styled.div`
     margin: ${getSpacing(2.5)} 0;
   }
 
-  .payout-status {
+  .payout-status-container {
     background: var(--background-clearer-blue);
     padding: ${getSpacing(3)};
-    margin-bottom: ${getSpacing(6)};
+    margin-bottom: ${getSpacing(3)};
 
-    .form {
-      .row {
-        display: flex;
-        gap: ${getSpacing(2)};
-      }
+    .row {
+      display: flex;
+      gap: ${getSpacing(2)};
+    }
 
-      .resultDivider {
-        display: flex;
-        align-items: center;
-        gap: ${getSpacing(2)};
-        margin: ${getSpacing(1)} 0 ${getSpacing(3)};
+    .subtitle {
+      text-transform: uppercase;
+      font-weight: 700;
+      font-size: var(--small);
+    }
 
-        div {
-          flex: 1;
-          height: 1px;
-          border: 1px solid var(--grey-500);
-          border-style: dashed;
-        }
-      }
+    .reasoningAlert {
+      font-size: var(--xxsmall);
 
-      .result {
-        display: flex;
-        gap: ${getSpacing(3)};
+      span {
+        color: var(--teal);
       }
     }
 
-    .signers {
-      margin-top: ${getSpacing(4)};
-      margin-bottom: ${getSpacing(10)};
-
-      &-list {
-        display: flex;
-        flex-direction: column;
-        gap: ${getSpacing(5)};
-        margin: ${getSpacing(3)} ${getSpacing(1)};
-      }
+    .signers-list {
+      display: flex;
+      flex-direction: column;
+      gap: ${getSpacing(5)};
+      margin: ${getSpacing(4)} ${getSpacing(1)};
     }
 
     .buttons {
