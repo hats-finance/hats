@@ -64,6 +64,11 @@ export const SelectButton = styled.div<{
       }
     `}
 
+    ${readOnly &&
+    css`
+      cursor: not-allowed;
+    `}
+
     ${isDirty &&
     css`
       border: 1px solid var(--yellow);
