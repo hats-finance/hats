@@ -43,6 +43,7 @@ export interface IBaseVault {
   description?: IVaultDescription;
   chainId?: number;
   userWithdrawRequest?: IWithdrawRequest[];
+  activeClaim?: IVaultActiveClaim;
 }
 
 export interface IVaultV1 extends IBaseVault {
@@ -66,6 +67,11 @@ export interface IWithdrawRequest {
   withdrawEnableTime: number;
   expiryTime: number;
   vault: { id: string };
+}
+
+export interface IVaultActiveClaim {
+  id: string;
+  claim: string;
 }
 
 export interface IUserNft {

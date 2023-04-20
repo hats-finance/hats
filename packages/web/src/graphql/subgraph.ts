@@ -86,6 +86,10 @@ export const GET_VAULTS = `
         rewardTokenDecimals
         totalRewardPaid
       }
+      activeClaim {
+        id
+        claim
+      }
     }
     payouts: claims {
       id
