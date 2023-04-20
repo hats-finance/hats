@@ -14,13 +14,13 @@ import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
-import { PayoutCard, NftPreview, SignerCard } from "../components";
+import { PayoutCard, NftPreview, SignerCard, PayoutAllocation } from "../components";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { useSignPayout } from "./useSignPayout";
 import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
+import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
@@ -236,15 +236,32 @@ export const PayoutStatusPage = () => {
                 )}
 
                 <FormInput
-                  value={payout?.payoutData.percentageToPay}
+                  value={`${payout?.payoutData.percentageToPay}%`}
                   label={t("Payouts.percentageToPay")}
                   placeholder={t("Payouts.percentageToPayPlaceholder")}
+                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                   readOnly
                 />
+              </div>
 
-                <ArrowForwardIcon className="mt-4" />
+              <div className="resultDivider">
+                <div />
+                <ArrowDownIcon />
+                <div />
+              </div>
+
+              <div className="result">
+                <NftPreview
+                  vault={vault}
+                  severityName={selectedSeverityData?.name}
+                  nftData={selectedSeverityData?.["nft-metadata"]}
+                />
 
                 <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} readOnly />
+              </div>
+
+              <div className="my-5">
+                <PayoutAllocation />
               </div>
 
               <FormInput
@@ -254,13 +271,6 @@ export const PayoutStatusPage = () => {
                 type="textarea"
                 rows={10}
                 readOnly
-              />
-
-              <NftPreview
-                size="small"
-                vault={vault}
-                severityName={selectedSeverityData?.name}
-                nftData={selectedSeverityData?.["nft-metadata"]}
               />
             </div>
 

@@ -79,6 +79,10 @@ export const StyledPayoutForm = styled.form`
       }
     }
 
+    .no-expanded-input {
+      width: 60%;
+    }
+
     .row {
       display: flex;
       gap: ${getSpacing(2)};
@@ -88,7 +92,7 @@ export const StyledPayoutForm = styled.form`
       display: flex;
       align-items: center;
       gap: ${getSpacing(2)};
-      margin: ${getSpacing(3)} 0;
+      margin: ${getSpacing(1)} 0 ${getSpacing(3)};
 
       div {
         flex: 1;

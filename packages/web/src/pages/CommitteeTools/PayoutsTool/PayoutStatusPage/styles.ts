@@ -58,6 +58,25 @@ export const StyledPayoutStatusPage = styled.div`
         display: flex;
         gap: ${getSpacing(2)};
       }
+
+      .resultDivider {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+        margin: ${getSpacing(1)} 0 ${getSpacing(3)};
+
+        div {
+          flex: 1;
+          height: 1px;
+          border: 1px solid var(--grey-500);
+          border-style: dashed;
+        }
+      }
+
+      .result {
+        display: flex;
+        gap: ${getSpacing(3)};
+      }
     }
 
     .signers {

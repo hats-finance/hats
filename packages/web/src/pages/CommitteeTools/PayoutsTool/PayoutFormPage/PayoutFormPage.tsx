@@ -22,7 +22,7 @@ import { useOnChange } from "hooks/usePrevious";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
 import { getPayoutDataYupSchema } from "./formSchema";
-import { NftPreview } from "../components";
+import { NftPreview, PayoutAllocation } from "../components";
 import { calculateAmountInTokensFromPercentage } from "../utils/calculateAmountInTokensFromPercentage";
 import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
@@ -184,6 +184,15 @@ export const PayoutFormPage = () => {
           <StyledPayoutForm onSubmit={handleSubmit(handleLockPayout)}>
             <div className="form-container">
               <FormInput
+                {...register("title")}
+                label={t("Payouts.payoutName")}
+                placeholder={t("Payouts.payoutNamePlaceholder")}
+                disabled={isPayoutCreated}
+                colorable
+                className="no-expanded-input"
+              />
+
+              <FormInput
                 {...register("beneficiary")}
                 label={t("Payouts.beneficiary")}
                 placeholder={t("Payouts.beneficiaryPlaceholder")}
@@ -193,13 +202,6 @@ export const PayoutFormPage = () => {
               />
 
               <div className="row">
-                <FormInput
-                  {...register("title")}
-                  label={t("Payouts.payoutName")}
-                  placeholder={t("Payouts.payoutNamePlaceholder")}
-                  disabled={isPayoutCreated}
-                  colorable
-                />
                 <Controller
                   control={control}
                   name={`severity`}
@@ -226,6 +228,26 @@ export const PayoutFormPage = () => {
                 />
               </div>
 
+              <div className="resultDivider">
+                <div />
+                <ArrowDownIcon />
+                <div />
+              </div>
+
+              <div>{t("Payouts.resultDescription")}</div>
+              <div className="result mt-4 mb-5">
+                <NftPreview
+                  vault={vault}
+                  severityName={selectedSeverityData?.name}
+                  nftData={selectedSeverityData?.["nft-metadata"]}
+                />
+                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} disabled />
+              </div>
+
+              <PayoutAllocation />
+            </div>
+
+            <div className="form-container mt-5">
               <p className="mt-2 subtitle">{t("Payouts.reasoning")}</p>
               <p className="mt-2">{t("Payouts.reasoningDescription")}</p>
               <p className="mt-2 mb-5 reasoningAlert">
@@ -253,22 +275,6 @@ export const PayoutFormPage = () => {
                 rows={8}
                 colorable
               />
-
-              <div className="resultDivider">
-                <div />
-                <ArrowDownIcon />
-                <div />
-              </div>
-
-              <div>{t("Payouts.resultDescription")}</div>
-              <div className="result mt-4">
-                <NftPreview
-                  vault={vault}
-                  severityName={selectedSeverityData?.name}
-                  nftData={selectedSeverityData?.["nft-metadata"]}
-                />
-                <FormInput value={amountInTokensToPay} label={t("Payouts.payoutSum")} disabled />
-              </div>
             </div>
 
             {isAnotherActivePayout && (
