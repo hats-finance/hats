@@ -20,9 +20,7 @@ export const PayoutAllocation = ({ vault, payout, percentageToPay, selectedSever
   const { immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount } =
     usePayoutAmountsInfo(vault, payout, percentageToPay);
 
-  console.log({ immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount });
-
-  if (!vault) return null;
+  if (!vault || !totalAmount) return null;
   return (
     <StyledPayoutAllocation>
       <div className="result-divider">
