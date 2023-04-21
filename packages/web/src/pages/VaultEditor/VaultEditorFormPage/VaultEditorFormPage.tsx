@@ -74,7 +74,6 @@ const VaultEditorFormPage = () => {
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
   const [allFormDisabled, setAllFormDisabled] = useState<boolean>(false);
   const [isSomeoneCreatingTheVault, setIsSomeoneCreatingTheVault] = useState<boolean>(false);
-  console.log("isSomeoneCreatingTheVault", isSomeoneCreatingTheVault);
 
   const methods = useForm<IEditedVaultDescription>({
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
