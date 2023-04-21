@@ -108,6 +108,7 @@ export interface IEditedSessionResponse {
   updatedAt?: Date;
   editingExistingVault?: boolean;
   submittedToCreation?: boolean;
+  lastCreationOnChainRequest?: Date;
   vaultEditionStatus?: IVaultEditionStatus;
 }
 

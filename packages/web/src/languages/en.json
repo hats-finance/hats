@@ -179,6 +179,7 @@
     "govApproval": "Governance approval",
     "yourVaultChanged": "Your vault changed",
     "yourVaultChangedExplanation": "Your vault information has a new version. Please take a look at the changes and try again.",
+    "someoneIsCreatingTheVault": "Other committee member is creating the vault on-chain. You can't edit the vault form until the vault is created.",
     "pendingApprovalExplanation": "Pending approval - Hats team is reviewing your submission.",
     "pendingApproval": "Pending approval",
     "live": "Live",
