@@ -177,6 +177,8 @@
     "checkInExpanation": "Press check-in and sign a transaction with the committee multi-sig address on Safe app",
     "depositOnVaultExplanation": "Deposit assets to the vaults. \n\n Vault deposit is needed for the vault listing on Hats live dApp.",
     "govApproval": "Governance approval",
+    "yourVaultChanged": "Your vault changed",
+    "yourVaultChangedExplanation": "Your vault information has a new version. Please take a look at the changes and try again.",
     "pendingApprovalExplanation": "Pending approval - Hats team is reviewing your submission.",
     "pendingApproval": "Pending approval",
     "live": "Live",

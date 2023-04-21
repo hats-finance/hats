@@ -139,10 +139,7 @@ const VaultEditorFormPage = () => {
     if (typeof sessionIdOrSessionResponse === "string") {
       navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
     } else {
-      setDescriptionHash(sessionIdOrSessionResponse.descriptionHash);
-      setLastModifedOn(sessionIdOrSessionResponse.updatedAt);
-      setEditingExitingVaultStatus(sessionIdOrSessionResponse.vaultEditionStatus);
-      handleReset(sessionIdOrSessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+      refreshEditSessionData(sessionIdOrSessionResponse);
     }
 
     setLoadingEditSession(false);
@@ -182,22 +179,46 @@ const VaultEditorFormPage = () => {
     }
   }
 
+  const refreshEditSessionData = async (newEditSession: IEditedSessionResponse) => {
+    setDescriptionHash(newEditSession.descriptionHash);
+    setLastModifedOn(newEditSession.updatedAt);
+    setEditingExitingVaultStatus(newEditSession.vaultEditionStatus);
+    handleReset(newEditSession.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+  };
+
   const createVaultOnChain = async () => {
     if (allFormDisabled) return;
 
     try {
       const data: IEditedVaultDescription = getValues();
+      if (!editSessionId) return;
       if (!descriptionHash) return;
       if (!data.committee.chainId) return;
       if (!address) return;
+      setCreatingVault(true);
 
       const rewardController = appChains[+data.committee.chainId].rewardController;
       const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
 
       const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);
-      if (gnosisInfo.isSafeAddress) return alert(t("youCantExecuteThisTxWithMultisig"));
+      if (gnosisInfo.isSafeAddress) {
+        setCreatingVault(false);
+        return alert(t("youCantExecuteThisTxWithMultisig"));
+      }
 
-      setCreatingVault(true);
+      const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
+      if (editSessionResponse.descriptionHash !== descriptionHash) {
+        setCreatingVault(false);
+        refreshEditSessionData(editSessionResponse);
+
+        confirm({
+          title: t("yourVaultChanged"),
+          description: t("yourVaultChangedExplanation"),
+          confirmText: t("gotIt"),
+        });
+        return;
+      }
+
       const createdVaultData = await CreateVaultContract.send(vaultOnChainCall);
 
       if (createdVaultData) {
