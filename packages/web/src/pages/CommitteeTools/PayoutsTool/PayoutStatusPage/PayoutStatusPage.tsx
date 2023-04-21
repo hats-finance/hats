@@ -27,6 +27,8 @@ import { StyledPayoutStatusPage } from "./styles";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 
+const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
+
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
@@ -94,7 +96,7 @@ export const PayoutStatusPage = () => {
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
   const isReadyToExecute = payoutStatus === PayoutStatus.ReadyToExecute;
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
-  const canBeDeleted = payoutStatus && [PayoutStatus.Creating, PayoutStatus.Pending].includes(payoutStatus);
+  const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();

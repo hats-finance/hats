@@ -106,6 +106,7 @@ export const PayoutFormPage = () => {
     } else {
       const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
       setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
+      setValue("severityBountyIndex", (selectedSeverityData as IVulnerabilitySeverityV1).index.toString());
     }
   });
 
