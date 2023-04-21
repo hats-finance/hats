@@ -55,6 +55,10 @@ export const getSafeDashboardLink = (address: string, chainId: number): string =
   return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
 };
 
+export const getSafeHomeLink = (address: string, chainId: number): string => {
+  return `https://app.safe.global/home?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
+};
+
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {
   if (!chainId) return "";
   return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;
