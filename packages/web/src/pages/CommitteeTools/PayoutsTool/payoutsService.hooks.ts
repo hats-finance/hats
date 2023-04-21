@@ -30,7 +30,7 @@ export const useVaultInProgressPayouts = (vaultInfo?: IVaultInfo): UseQueryResul
 
 export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
   const { isAuthenticated } = useSiweAuth();
-  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("v2");
+  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("all");
 
   const vaultsIds = userVaults?.map((vault) => `${vault.chainId}-${vault.id}`) ?? [];
   const vaultsInfo: IVaultInfo[] = userVaults?.map((vault) => getVaultInfoFromVault(vault)) ?? [];
