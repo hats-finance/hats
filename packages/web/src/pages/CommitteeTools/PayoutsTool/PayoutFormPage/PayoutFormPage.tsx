@@ -77,21 +77,21 @@ export const PayoutFormPage = () => {
 
     if (vault.description) {
       const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
-        label: severity.name,
+        label: `${severity.name} ${vault.version === "v1" ? t("severity") : ""}`,
         value: severity.name,
       }));
 
       // if the current severity is not in the list of severities, add it
       if (payout.payoutData.severity && !severities.find((severity) => severity.value === payout.payoutData.severity)) {
         severities.push({
-          label: payout.payoutData.severity,
+          label: `${payout.payoutData.severity} ${vault.version === "v1" ? t("severity") : ""}`,
           value: payout.payoutData.severity,
         });
       }
 
       setSeveritiesOptions(severities);
     }
-  }, [allVaults, payout, vault]);
+  }, [allVaults, payout, vault, t]);
 
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {

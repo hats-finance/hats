@@ -3,10 +3,17 @@ import { ethers } from "ethers";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { HATSVaultV2_abi, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2, PayoutStatus } from "@hats-finance/shared";
+import {
+  HATSVaultV2_abi,
+  IVulnerabilitySeverityV1,
+  IVulnerabilitySeverityV2,
+  PayoutStatus,
+  getSafeHomeLink,
+} from "@hats-finance/shared";
 import DOMPurify from "dompurify";
 import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert, SafePeriodBar } from "components";
 import { ExecutePayoutContract } from "contracts";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -262,7 +269,16 @@ export const PayoutStatusPage = () => {
             />
           </div>
 
-          <div className="payout-status-container">
+          <div className="payout-status-container top-separation">
+            {vault && (
+              <a
+                className="mulsitig-address"
+                href={getSafeHomeLink(vault.committee, vault.chainId as number)}
+                {...defaultAnchorProps}
+              >
+                <strong>{t("multisigAddress")}</strong>: {vault?.committee}
+              </a>
+            )}
             <p className="section-title">{t("Payouts.signAndExecute")}</p>
 
             <div className="signers-list">

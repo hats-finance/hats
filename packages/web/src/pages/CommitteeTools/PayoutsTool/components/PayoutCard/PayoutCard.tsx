@@ -73,6 +73,13 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
     }
   };
 
+  const getVaultId = () => {
+    if (payout.vaultInfo.version === "v1") {
+      return `${payout.vaultInfo.address}~${payout.vaultInfo.pid}`;
+    }
+    return payout.vaultInfo.address;
+  };
+
   if (!selectedVault) return null;
 
   return (
@@ -84,7 +91,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
     >
       {showVaultAddress && (
         <div className="vault-address">
-          {t("vaultAddress")}: {payout.vaultInfo.address}
+          <strong>{t("vaultId")}</strong>: {getVaultId()}
         </div>
       )}
       <StyledVersionFlag>{selectedVault.version}</StyledVersionFlag>

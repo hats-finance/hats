@@ -52,6 +52,31 @@ export const StyledPayoutStatusPage = styled.div`
     background: var(--background-clearer-blue);
     padding: ${getSpacing(3)};
     margin-bottom: ${getSpacing(3)};
+    position: relative;
+
+    &.top-separation {
+      margin-top: ${getSpacing(4)};
+    }
+
+    .mulsitig-address {
+      position: absolute;
+      margin: 0;
+      top: 0;
+      left: ${getSpacing(2)};
+      color: var(--grey-400);
+      background: var(--grey-600);
+      font-size: var(--xxsmall);
+      padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+      border-radius: 5px;
+      transform: translateY(-55%);
+      z-index: 1;
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
+    }
 
     .row {
       display: flex;
