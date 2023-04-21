@@ -54,8 +54,10 @@ export const PayoutStatusPage = () => {
   const waitingPayoutExecution = useWaitForTransaction({
     hash: executePayout.data?.hash as `0x${string}`,
     onSuccess: async (data) => {
+      console.log(data);
       if (!payoutId) return;
 
+      // TODO: what to do with this in V1?
       let payoutClaimId = "";
 
       if (vault?.version === "v2") {

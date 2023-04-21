@@ -40,7 +40,7 @@ export const getExecutePayoutSafeTransaction = async (
 
   if (vaultInfo.version === "v1") {
     encodedExecPayoutData = vaultInterface.encodeFunctionData(method, [
-      vaultInfo.pid,
+      Number(vaultInfo.pid),
       params.beneficiary as `0x${string}`,
       Number(params.bountyPercentageOrSeverityIndex),
     ]);
