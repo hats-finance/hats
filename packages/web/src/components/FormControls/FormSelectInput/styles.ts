@@ -91,6 +91,7 @@ export const SelectButton = styled.div<{
       white-space: nowrap;
       flex-basis: 100%;
       color: ${isFilled ? "var(--white)" : "var(--grey-500)"};
+      text-transform: capitalize;
     }
 
     .icon {

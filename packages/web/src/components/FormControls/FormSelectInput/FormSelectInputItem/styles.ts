@@ -19,6 +19,7 @@ export const StyledFormSelectInputItem = styled.label`
     display: flex;
     align-items: center;
     gap: ${getSpacing(1)};
+    text-transform: capitalize;
 
     img {
       width: ${getSpacing(3.8)};
