@@ -29,7 +29,8 @@ export type IEditorSectionsStep = {
   backButtonTextKey?: { creation?: string; editing?: string };
   nextButtonTextKey?: { creation?: string; editing?: string };
   isAdvanced?: boolean;
-  isInvisible?: boolean;
+  isInvisible?: "all" | "creation" | "editing";
+  onlyInEdition?: boolean;
   isValid?: boolean;
   isChecked?: boolean;
   formFields: string[];
@@ -83,7 +84,7 @@ export const AllEditorSections: IEditorSections = {
         id: "setupReview",
         name: "setupReview",
         title: { creation: "goodJobYouAre50Done", editing: "vaultDescription" },
-        isInvisible: true,
+        isInvisible: "creation",
         component: SetupReview,
         formFields: [],
         nextButtonTextKey: { creation: "continueToVaultCreation", editing: "sendToGovernanceApproval" },

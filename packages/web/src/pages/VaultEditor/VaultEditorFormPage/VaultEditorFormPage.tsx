@@ -372,9 +372,16 @@ const VaultEditorFormPage = () => {
       }
     };
     checkPermissions();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVaultCreated, isNonEditableStatus, isEditingExistingVault, editSessionSubmittedCreation, address, getValues]);
+  }, [
+    isVaultCreated,
+    isNonEditableStatus,
+    isEditingExistingVault,
+    editSessionSubmittedCreation,
+    address,
+    getValues,
+    existingVault,
+    tryAuthentication,
+  ]);
 
   useEffect(() => {
     const dirtyFields = Object.keys(formState.dirtyFields);
@@ -635,7 +642,12 @@ const VaultEditorFormPage = () => {
             {/* Steps control */}
             <VaultEditorStepper>
               {steps
-                .filter((step) => !step.isInvisible)
+                .filter((step) => {
+                  if (step.isInvisible === "all") return false;
+                  if (step.isInvisible === "editing") return !isEditingExistingVault;
+                  if (step.isInvisible === "creation") return isEditingExistingVault;
+                  return true;
+                })
                 .map((step, index) => (
                   <VaultEditorStepController
                     key={step.id}
