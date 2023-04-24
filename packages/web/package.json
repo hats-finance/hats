@@ -3,7 +3,6 @@
   "version": "1.1.1",
   "private": true,
   "devDependencies": {
-    "@apollo/client": "^3.7.1",
     "@craco/craco": "^7.0.0",
     "@davatar/react": "^1.10.3",
     "@emotion/react": "^11.10.5",
@@ -11,11 +10,12 @@
     "@ethersproject/contracts": "^5.6.2",
     "@ethersproject/providers": "^5.6.2",
     "@ethersproject/units": "^5.6.0",
-    "@hats-finance/shared": "^1.0.42",
+    "@hats-finance/shared": "^1.0.44",
     "@hookform/devtools": "^4.2.3",
     "@hookform/resolvers": "^2.9.10",
     "@mui/icons-material": "^5.11.0",
     "@mui/material": "^5.11.4",
+    "@types/dompurify": "^3.0.1",
     "@types/downloadjs": "^1.4.2",
     "@types/react": "^18.0.26",
     "@types/react-redux": "^7.1.16",
@@ -32,7 +32,7 @@
     "buffer": "^6.0.3",
     "classnames": "^2.3.1",
     "downloadjs": "^1.4.7",
-    "ethers": "^5.7.2",
+    "ethers": "5.7.2",
     "fs": "^0.0.1-security",
     "graphql": "^16.5.0",
     "https-browserify": "^1.0.0",
@@ -99,6 +99,11 @@
     ]
   },
   "dependencies": {
+    "@safe-global/safe-core-sdk": "^3.3.2",
+    "@safe-global/safe-core-sdk-types": "^1.10.1",
+    "@safe-global/safe-ethers-lib": "^1.9.2",
+    "@tanstack/react-query": "^4.28.0",
+    "dompurify": "^3.0.1",
     "encrypt-storage": "^2.12.15",
     "react-identicons": "^1.2.5",
     "siwe": "^1.1.6"

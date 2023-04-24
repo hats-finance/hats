@@ -1,14 +1,17 @@
 import { useEffect } from "react";
-import { ApolloProvider } from "@apollo/client";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
+import { ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import HttpsRedirect from "react-https-redirect";
 import { BrowserRouter } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
-import { client } from "config/apollo";
+import { queryClient } from "config/reactQuery";
 import { wagmiClient } from "config/wagmi";
+import { theme } from "config/theme";
 import { VaultsProvider } from "hooks/vaults/useVaults";
 import { ConfirmDialogProvider } from "hooks/useConfirm";
+import { SiweAuthProvider } from "hooks/siwe/useSiweAuth";
 import { GlobalStyle } from "styles";
 import { KeystoreProvider } from "components/Keystore";
 import { NotificationProvider } from "components/Notifications/NotificationProvider";
@@ -24,26 +27,30 @@ function Root() {
   }, [i18n]);
 
   return (
-    <WagmiConfig client={wagmiClient}>
-      <Provider store={store}>
-        <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
+      <WagmiConfig client={wagmiClient}>
+        <Provider store={store}>
           <VaultsProvider>
             <HttpsRedirect>
               <BrowserRouter>
                 <GlobalStyle />
-                <NotificationProvider>
-                  <KeystoreProvider>
+                <ThemeProvider theme={theme}>
+                  <NotificationProvider>
                     <ConfirmDialogProvider>
-                      <App />
+                      <KeystoreProvider>
+                        <SiweAuthProvider>
+                          <App />
+                        </SiweAuthProvider>
+                      </KeystoreProvider>
                     </ConfirmDialogProvider>
-                  </KeystoreProvider>
-                </NotificationProvider>
+                  </NotificationProvider>
+                </ThemeProvider>
               </BrowserRouter>
             </HttpsRedirect>
           </VaultsProvider>
-        </ApolloProvider>
-      </Provider>
-    </WagmiConfig>
+        </Provider>
+      </WagmiConfig>
+    </QueryClientProvider>
   );
 }
 

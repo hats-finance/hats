@@ -5,6 +5,7 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 type StyledWalletButtonProps = {
   existsPendingTransaction: boolean;
   connected: boolean;
+  expanded: boolean;
 };
 
 export const WalletButtonWrapper = styled.div`
@@ -12,7 +13,7 @@ export const WalletButtonWrapper = styled.div`
 `;
 
 export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
-  ({ existsPendingTransaction, connected }) => css`
+  ({ existsPendingTransaction, connected, expanded }) => css`
     border: 1px solid;
     color: var(--white);
     background-color: var(--blue);
@@ -20,9 +21,15 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     padding: 18px;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: ${getSpacing(1)};
     border-radius: 2px;
     position: relative;
+
+    ${expanded &&
+    css`
+      width: 100%;
+    `}
 
     ${connected &&
     css`

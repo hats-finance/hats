@@ -3,7 +3,7 @@ import millify from "millify";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { IVault } from "types";
 import { formatWei } from "utils";
-import { useVaultsTotalPrices } from "../hooks/useVaultsTotalPrices";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import "./index.scss";
 
 interface IProps {
@@ -22,7 +22,8 @@ export default function VaultTokens({ vault }: IProps) {
             totalPrices[vault.stakingToken] ?? 0
           )}`}
           overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
-          placement="top">
+          placement="top"
+        >
           <span className="token-symbol">{vault.stakingTokenSymbol}</span>
         </Tooltip>
       );

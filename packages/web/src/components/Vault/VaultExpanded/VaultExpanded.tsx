@@ -22,6 +22,7 @@ interface IProps {
   data: IVault;
   withdrawRequests?: IPoolWithdrawRequest[];
   preview?: boolean;
+  noActions?: boolean;
 }
 
 export default function VaultExpanded(props: IProps) {
@@ -39,6 +40,7 @@ export default function VaultExpanded(props: IProps) {
     description,
     master,
     version,
+    committee,
   } = props.data;
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
@@ -70,29 +72,29 @@ export default function VaultExpanded(props: IProps) {
       {
         // Immediate bounty
         title: t("immediateBountyInTokens", { token: stakingTokenSymbol }),
-        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(hackerRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.token,
       },
       {
         // Vested bounty
         title: t("vestedBountyForDurationInTokens", { duration: bountyVestingDuration, token: stakingTokenSymbol }),
-        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(hackerVestedRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.vestedToken,
       },
       {
         // Committee fee
         title: t("committeeFee"),
-        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(0),
+        value: +((Number(committeeRewardSplit) / 100) * splitFactor).toFixed(2),
         color: PieChartColors.committee,
       },
       {
         title: t("vestedHatsForDuration", { duration: rewardVestingDuration }),
-        value: +(Number(hackerHatsSplit) / 100).toFixed(0),
+        value: +(Number(hackerHatsSplit) / 100).toFixed(2),
         color: PieChartColors.vestedHats,
       },
       {
         title: t("hatsGovFee"),
-        value: +(Number(governanceSplit) / 100).toFixed(0),
+        value: +(Number(governanceSplit) / 100).toFixed(2),
         color: PieChartColors.governance,
       },
       // {
@@ -127,11 +129,7 @@ export default function VaultExpanded(props: IProps) {
     <tr>
       <td className="sub-row" colSpan={7}>
         <div className="vault-expanded">
-          {screenSize === ScreenSize.Mobile && (
-            <div>
-              <VaultActions {...props} />
-            </div>
-          )}
+          {screenSize === ScreenSize.Mobile && <div>{!props.noActions && <VaultActions {...props} />}</div>}
           <div className="vault-details-wrapper">
             <div className="sub-title">{t("Vault.vault-details")}</div>
             <div className="vault-details-content">
@@ -142,19 +140,21 @@ export default function VaultExpanded(props: IProps) {
                 </div>
                 <div className="multi-sig-wrapper">
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
-                  <Multisig multisigAddress={(description as IVaultDescription).committee["multisig-address"]} />
+                  <Multisig multisigAddress={committee} />
                 </div>
-                <div className="submit-vulnerability-button-wrapper">
-                  <button
-                    onClick={() => {
-                      setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
-                      navigate(RoutePaths.vulnerability);
-                    }}
-                    disabled={props.preview}
-                  >
-                    {t("Vault.submit-vulnerability")}
-                  </button>
-                </div>
+                {!props.noActions && (
+                  <div className="submit-vulnerability-button-wrapper">
+                    <button
+                      onClick={() => {
+                        setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
+                        navigate(RoutePaths.vulnerability);
+                      }}
+                      disabled={props.preview}
+                    >
+                      {t("Vault.submit-vulnerability")}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="prize-division-wrapper">
                 <span className="vault-expanded-subtitle">{t("Vault.prize-division")}:</span>

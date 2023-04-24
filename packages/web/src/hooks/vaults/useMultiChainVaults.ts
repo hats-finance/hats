@@ -1,141 +1,74 @@
-import { useCallback, useEffect, useState } from "react";
-import { useNetwork, useAccount } from "wagmi";
-import { mainnet, goerli, optimismGoerli, optimism, arbitrum, polygon, bsc } from "wagmi/chains";
-import { IMaster, IUserNft, IVault } from "types";
-import { appChains, IS_PROD } from "settings";
-import { GET_VAULTS } from "graphql/subgraph";
+import { useEffect, useState } from "react";
+import { useQueries } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
+import { IMaster, IUserNft, IVault, IPayoutGraph } from "@hats-finance/shared";
+import { appChains } from "settings";
+import { getSubgraphData, IGraphVaultsData } from "./vaultsService";
+import { parseMasters, parseUserNfts, parseVaults, parsePayouts } from "./parser";
 
-const INITIAL_VAULTS_DATA: GraphVaultsData = { vaults: [], masters: [], userNfts: [] };
+const DATA_REFRESH_TIME = 15000;
 
-const DATA_REFRESH_TIME = 10000;
-
-const supportedChains = {
-  ETHEREUM: { prod: appChains[mainnet.id], test: appChains[goerli.id] },
-  OPTIMISM: { prod: appChains[optimism.id], test: appChains[optimismGoerli.id] },
-  ARBITRUM: { prod: appChains[arbitrum.id], test: null },
-  POLYGON: { prod: appChains[polygon.id], test: null },
-  BINANCE: { prod: appChains[bsc.id], test: null },
+const INITIAL_NETWORK_DATA = {
+  vaults: [] as IVault[],
+  masters: [] as IMaster[],
+  userNfts: [] as IUserNft[],
+  payouts: [] as IPayoutGraph[],
+};
+const INITIAL_VAULTS_DATA: IGraphVaultsData = {
+  test: { ...INITIAL_NETWORK_DATA },
+  prod: { ...INITIAL_NETWORK_DATA },
 };
 
-interface GraphVaultsData {
-  vaults: IVault[];
-  masters: IMaster[];
-  userNfts: IUserNft[];
-}
-
-const useSubgraphFetch = (chainName: keyof typeof supportedChains, networkEnv: "prod" | "test") => {
+export const useMultiChainVaultsV2 = () => {
   const { address: account } = useAccount();
-  const [data, setData] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
-  const [isFetched, setIsFetched] = useState(false);
-  const chainId = supportedChains[chainName][networkEnv]?.chain.id;
 
-  const fetchData = useCallback(async () => {
-    if (!chainId) {
-      setData(INITIAL_VAULTS_DATA);
-      return;
-    }
+  const [multiChainData, setMultiChainData] = useState<IGraphVaultsData>(INITIAL_VAULTS_DATA);
 
-    const subgraphUrl = appChains[chainId].subgraph;
-    const res = await fetch(subgraphUrl, {
-      method: "POST",
-      body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
-      headers: { "Content-Type": "application/json" },
-      cache: "default",
-    });
-    const dataJson = await res.json();
-
-    if (JSON.stringify(dataJson.data) !== JSON.stringify(data)) {
-      setData(dataJson.data);
-      setIsFetched(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chainId, account]);
+  const subgraphQueries = useQueries({
+    queries: Object.keys(appChains).map((chainId) => ({
+      queryKey: ["subgraph", chainId],
+      queryFn: () => getSubgraphData(+chainId, account),
+      refetchInterval: DATA_REFRESH_TIME,
+      refetchIntervalInBackground: false,
+    })),
+  });
 
   useEffect(() => {
-    fetchData();
+    if (subgraphQueries.some((a) => a.isLoading)) return;
 
-    const interval = setInterval(fetchData, DATA_REFRESH_TIME);
-    return () => clearInterval(interval);
-  }, [fetchData]);
+    const vaultsData = subgraphQueries.reduce(
+      (acc, query) => {
+        if (!query.data) return acc;
 
-  if (chainId) return { data, chainId, isFetched };
-  return { data: INITIAL_VAULTS_DATA, chainId: undefined, isFetched: true };
-};
+        const { chainId, data } = query.data;
 
-export const useMultiChainVaults = () => {
-  const [vaults, setVaults] = useState<GraphVaultsData>(INITIAL_VAULTS_DATA);
-  const { chain } = useNetwork();
-  const connectedChain = chain ? appChains[chain.id] : null;
+        // Add chainId to all the objects inside query data
+        data.masters = parseMasters(data.masters, chainId);
+        data.userNfts = parseUserNfts(data.userNfts, chainId);
+        data.vaults = parseVaults(data.vaults, chainId);
+        data.payouts = parsePayouts(data.payouts, chainId);
 
-  // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
-  const showTestnets = IS_PROD ? false : connectedChain?.chain.testnet ?? false;
-  const networkEnv: "test" | "prod" = showTestnets ? "test" : "prod";
+        if (appChains[chainId].chain.testnet) {
+          acc.test.masters = [...acc.test.masters, ...data.masters];
+          acc.test.userNfts = [...acc.test.userNfts, ...data.userNfts];
+          acc.test.vaults = [...acc.test.vaults, ...data.vaults];
+          acc.test.payouts = [...acc.test.payouts, ...data.payouts];
+        } else {
+          acc.prod.masters = [...acc.prod.masters, ...data.masters];
+          acc.prod.userNfts = [...acc.prod.userNfts, ...data.userNfts];
+          acc.prod.vaults = [...acc.prod.vaults, ...data.vaults];
+          acc.prod.payouts = [...acc.prod.payouts, ...data.payouts];
+        }
 
-  const { data: ethereumData, chainId: ethereumChainId, isFetched: isEthereumFetched } = useSubgraphFetch("ETHEREUM", networkEnv);
-  const { data: optimismData, chainId: optimismChainId, isFetched: isOptimismFetched } = useSubgraphFetch("OPTIMISM", networkEnv);
-  const { data: arbitrumData, chainId: arbitrumChainId, isFetched: isArbitrumFetched } = useSubgraphFetch("ARBITRUM", networkEnv);
-  const { data: polygonData, chainId: polygonChainId, isFetched: isPolygonFetched } = useSubgraphFetch("POLYGON", networkEnv);
-  const { data: binanceData, chainId: binanceChainId, isFetched: isBinanceFetched } = useSubgraphFetch("BINANCE", networkEnv);
+        return acc;
+      },
+      { test: { ...INITIAL_NETWORK_DATA }, prod: { ...INITIAL_NETWORK_DATA } }
+    );
 
-  useEffect(() => {
-    const allNetworksFetchStatus = [isEthereumFetched, isOptimismFetched, isArbitrumFetched, isPolygonFetched, isBinanceFetched];
-    const areAllNetworksFetched = allNetworksFetchStatus.every((status) => status);
-
-    if (!areAllNetworksFetched) return;
-
-    const allVaults = [
-      ...(ethereumData?.vaults?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.vaults?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.vaults?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
-      ...(polygonData?.vaults?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
-      ...(binanceData?.vaults?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
-    ];
-
-    const allMasters = [
-      ...(ethereumData?.masters?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.masters?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.masters?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
-      ...(polygonData?.masters?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
-      ...(binanceData?.masters?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
-    ];
-
-    const allUserNfts = [
-      ...(ethereumData?.userNfts?.map((v) => ({ ...v, chainId: ethereumChainId })) || []),
-      ...(optimismData?.userNfts?.map((v) => ({ ...v, chainId: optimismChainId })) || []),
-      ...(arbitrumData?.userNfts?.map((v) => ({ ...v, chainId: arbitrumChainId })) || []),
-      ...(polygonData?.userNfts?.map((v) => ({ ...v, chainId: polygonChainId })) || []),
-      ...(binanceData?.userNfts?.map((v) => ({ ...v, chainId: binanceChainId })) || []),
-    ];
-
-    const newVaults = {
-      vaults: allVaults.map((vault) => ({
-        ...vault,
-      })),
-      masters: allMasters,
-      userNfts: allUserNfts,
-    };
-
-    if (JSON.stringify(vaults) !== JSON.stringify(newVaults)) {
-      setVaults({ vaults: allVaults, masters: allMasters, userNfts: allUserNfts });
+    if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) {
+      setMultiChainData(vaultsData);
     }
-  }, [
-    vaults,
-    ethereumData,
-    optimismData,
-    arbitrumData,
-    polygonData,
-    binanceData,
-    ethereumChainId,
-    optimismChainId,
-    arbitrumChainId,
-    polygonChainId,
-    binanceChainId,
-    isEthereumFetched,
-    isOptimismFetched,
-    isArbitrumFetched,
-    isPolygonFetched,
-    isBinanceFetched,
-  ]);
+  }, [subgraphQueries, multiChainData]);
 
-  return { data: vaults, networkEnv };
+  return { multiChainData };
 };

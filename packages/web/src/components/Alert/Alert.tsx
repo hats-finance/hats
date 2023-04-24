@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 import { StyledAlert } from "./styles";
 import WarningIcon from "@mui/icons-material/EmojiObjectsTwoTone";
 import CheckIcon from "@mui/icons-material/Check";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 export type AlertProps = {
-  type: "warning" | "error" | "success";
+  type: "warning" | "error" | "success" | "info";
   content?: string;
   children?: JSX.Element;
   button?: JSX.Element;
@@ -21,6 +22,8 @@ export const Alert = ({ type, content, children, button, ...props }: AlertProps)
         return <WarningIcon />;
       case "success":
         return <CheckIcon />;
+      case "info":
+        return <InfoIcon />;
     }
   };
 
@@ -32,6 +35,8 @@ export const Alert = ({ type, content, children, button, ...props }: AlertProps)
         return t("note");
       case "success":
         return t("note");
+      case "info":
+        return t("info");
     }
   };
 

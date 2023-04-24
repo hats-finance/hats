@@ -17,7 +17,7 @@ export const KeyDetails = ({ pgpKey, onClose }: KeyDetailsProps) => {
       removeAnimation
       titleIcon={<DetailsIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.keyDetails")}
-      pgpKeystoreStyles
+      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

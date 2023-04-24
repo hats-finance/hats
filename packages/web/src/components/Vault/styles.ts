@@ -143,9 +143,26 @@ export const StyledVersionFlag = styled.span`
   text-transform: uppercase;
   background-color: var(--turquoise);
   color: var(--strong-blue);
-  padding: 10px 6px;
+  padding: 8px 6px;
   border-radius: 0 0 18px 0;
   font-size: var(--xsmall);
+
+  @media (max-width: ${breakpointsDefinition.mobile}) {
+    margin-left: unset;
+  }
+`;
+
+export const StyledActiveClaimFlag = styled.span`
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-transform: uppercase;
+  background-color: var(--error-red);
+  color: var(--strong-blue);
+  padding: 6px;
+  border-radius: 0 0 18px 0;
+  font-size: var(--xsmall);
+  color: var(--white);
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
     margin-left: unset;

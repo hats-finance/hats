@@ -5,13 +5,13 @@ import {
   IEditedSessionResponse,
   IEditedVaultDescription,
   IVaultDescription,
+  IVaultStatusData,
 } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { IVaultStatusData } from "./VaultStatusPage/types";
 
 /**
  * Gets an edit session data
@@ -260,5 +260,15 @@ export async function getCurrentValidEditSession(
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/all/${chainId}/${vaultAddress}`);
+  return response.data ?? [];
+}
+
+/**
+ * Sets the edit session as clicked to create the new vault on-chain
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function setLastCreationOnChainRequest(editSessionId: string): Promise<boolean[]> {
+  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-last-creation-onchain-request`);
   return response.data ?? [];
 }

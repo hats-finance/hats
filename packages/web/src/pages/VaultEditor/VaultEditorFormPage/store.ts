@@ -7,7 +7,7 @@ interface IVaultEditorFormContext {
   committeeMembersFieldArray: UseFieldArrayReturn<IEditedVaultDescription, "committee.members">;
   saveEditSessionData: () => Promise<void>;
   isVaultCreated: boolean;
-  isEditingExitingVault: boolean;
+  isEditingExistingVault: boolean;
   allFormDisabled: boolean;
 }
 

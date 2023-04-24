@@ -3,5 +3,5 @@ export { FormIconInput } from "./FormIconInput/FormIconInput";
 export { FormInput } from "./FormInput/FormInput";
 export { FormJSONFileInput } from "./FormJSONFileInput/FormJSONFileInput";
 export { FormPgpPublicKeyInput } from "./FormPgpPublicKeyInput/FormPgpPublicKeyInput";
-export { FormSelectInput } from "./FormSelectInput/FormSelectInput";
+export { FormSelectInput, type FormSelectInputOption } from "./FormSelectInput/FormSelectInput";
 export * from "./utils";

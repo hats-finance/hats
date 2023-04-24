@@ -86,7 +86,28 @@ export const GET_VAULTS = `
         rewardTokenDecimals
         totalRewardPaid
       }
+      activeClaim {
+        id
+        claim
+      }
     }
+    payouts: claims {
+      id
+      vault {
+        id
+      }
+      beneficiary: claimer
+      approvedAt
+      dismissedAt
+      bountyPercentage
+      severityIndex: severity
+      hackerReward
+      hackerVestedReward
+      governanceHatReward
+      hackerHatReward
+      committeeReward
+      isChallenged
+    }  
   }
 `;
 

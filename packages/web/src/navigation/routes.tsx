@@ -2,17 +2,9 @@ import { Navigate, RouteObject } from "react-router-dom";
 import { RoutePaths } from "./paths";
 // Page Components
 import { BasicLayout } from "layout";
-import {
-  HoneypotsPage,
-  GovPage,
-  // VulnerabilityListPage,
-  VulnerabilityFormPage,
-  CommitteeToolsPage,
-  VaultEditorFormPage,
-  AirdropMachinePage,
-  VaultEditorHome,
-  VaultStatusPage,
-} from "pages";
+import { HoneypotsPage, GovPage, VulnerabilityFormPage, AirdropMachinePage } from "pages";
+import { committeeToolsRouter } from "pages/CommitteeTools/router";
+import { vaultEditorRouter } from "pages/VaultEditor/router";
 
 const routes: RouteObject[] = [
   {
@@ -65,34 +57,11 @@ const routes: RouteObject[] = [
         ],
       },
       {
-        path: `${RoutePaths.committee_tools}`,
-        element: <CommitteeToolsPage />,
-      },
-      {
-        path: `${RoutePaths.vault_editor}`,
-        children: [
-          {
-            path: "",
-            element: <VaultEditorHome />,
-          },
-          {
-            path: ":editSessionId",
-            element: <VaultEditorFormPage />,
-          },
-          {
-            path: "status",
-            element: <Navigate to={RoutePaths.vault_editor} replace={true} />,
-          },
-          {
-            path: "status/:vaultChainId/:vaultAddress",
-            element: <VaultStatusPage />,
-          },
-        ],
-      },
-      {
         path: `${RoutePaths.airdrop_machine}`,
         element: <AirdropMachinePage />,
       },
+      committeeToolsRouter(),
+      vaultEditorRouter(),
     ],
   },
   {

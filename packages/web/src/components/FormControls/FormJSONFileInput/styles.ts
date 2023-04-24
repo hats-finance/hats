@@ -28,7 +28,7 @@ export const StyledFormJSONFileInput = styled.div<StyledFormJSONFileInputProps>(
         left: 0;
         width: 100%;
         height: calc(100% - ${hasError ? "20px" : "0px"});
-        background-color: var(--grey-700);
+        background-color: var(--disabled-input);
         opacity: 0.4;
         z-index: 1;
         cursor: not-allowed;

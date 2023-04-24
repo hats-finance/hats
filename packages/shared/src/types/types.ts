@@ -1,3 +1,11 @@
+export interface IVaultInfo {
+  version: IVault["version"];
+  address: string;
+  chainId: number;
+  master: string;
+  pid: string;
+}
+
 export interface IBaseVault {
   id: string;
   name: string;
@@ -35,6 +43,7 @@ export interface IBaseVault {
   description?: IVaultDescription;
   chainId?: number;
   userWithdrawRequest?: IWithdrawRequest[];
+  activeClaim?: IVaultActiveClaim;
 }
 
 export interface IVaultV1 extends IBaseVault {
@@ -58,6 +67,11 @@ export interface IWithdrawRequest {
   withdrawEnableTime: number;
   expiryTime: number;
   vault: { id: string };
+}
+
+export interface IVaultActiveClaim {
+  id: string;
+  claim: string;
 }
 
 export interface IUserNft {
@@ -228,10 +242,10 @@ export interface IPoolWithdrawRequest {
 
 export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean;
-  safetyStartsAt: number;
-  safetyEndsAt: number;
+  nextSafetyStartsAt: number;
+  ongoingSafetyEndsAt: number;
 }
 
-export type CoinGeckoPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
+export type TokenPriceResponse = { [token: string]: undefined | {} | { usd?: number } };
 
 export type VaultApys = { [token: string]: { apy: number | undefined; tokenSymbol: string } };

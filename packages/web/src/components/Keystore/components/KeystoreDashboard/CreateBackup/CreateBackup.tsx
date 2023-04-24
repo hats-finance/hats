@@ -35,7 +35,7 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
       removeAnimation
       titleIcon={<SaveIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.pgpKeysBackup")}
-      pgpKeystoreStyles
+      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

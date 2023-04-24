@@ -1,6 +1,6 @@
 import { useVaults } from "hooks/vaults/useVaults";
 import { IVault } from "types";
-import { useVaultsTotalPrices } from "./useVaultsTotalPrices";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import { formatUnits } from "ethers/lib/utils";
 import { VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 
