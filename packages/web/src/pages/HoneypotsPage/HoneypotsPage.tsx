@@ -51,11 +51,15 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
 
   const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     if (vault.registered) {
-      const key = (vault.activeClaim && "pendingReward") ?? vault.description?.["project-metadata"].type ?? normalVaultKey;
-      (groups[key] = groups[key] || []).push(vault);
+      let vaultTypeKey = normalVaultKey;
+      if (vault.activeClaim) vaultTypeKey = "pendingReward";
+      if (vault.description?.["project-metadata"].type) vaultTypeKey = vault.description?.["project-metadata"].type;
+
+      groups[vaultTypeKey] = groups[vaultTypeKey] || [];
+      groups[vaultTypeKey].push(vault);
     }
     return groups;
-  }, [] as IVault[][])!;
+  }, [] as IVault[][]);
 
   return (
     <StyledHoneypotsPage className="content-wrapper">
