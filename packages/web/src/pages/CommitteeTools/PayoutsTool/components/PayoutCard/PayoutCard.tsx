@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
@@ -8,6 +7,7 @@ import { RoutePaths } from "navigation";
 import { WithTooltip } from "components";
 import { ipfsTransformUri } from "utils";
 import { appChains } from "settings";
+import { usePayoutStatus } from "../../utils/usePayoutStatus";
 import { StyledPayoutCard, StyledVersionFlag } from "./styles";
 
 type PayoutCardProps = {
@@ -19,24 +19,7 @@ type PayoutCardProps = {
 export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false }: PayoutCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { payouts } = useVaults();
-
-  /**
-   * Get payout status. We only handle the status until 'Executed'. After that, we need to check onchain data. We do
-   * this with the subgraph data.
-   */
-  const payoutStatus = useMemo(() => {
-    if (payout.status === PayoutStatus.Executed) {
-      // Check the status on subgraph
-      const payoutOnSubgraph = payouts?.find((p) => p.id === payout.payoutClaimId);
-      if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
-        return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
-      }
-    }
-
-    // Return status saved on database
-    return payout.status;
-  }, [payout, payouts]);
+  const payoutStatus = usePayoutStatus(payout);
 
   const vaultAddress = payout.vaultInfo.address;
   const isCreating = payoutStatus === PayoutStatus.Creating;
@@ -80,7 +63,7 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
     return payout.vaultInfo.address;
   };
 
-  if (!selectedVault) return null;
+  if (!selectedVault || !payoutStatus) return null;
 
   return (
     <StyledPayoutCard

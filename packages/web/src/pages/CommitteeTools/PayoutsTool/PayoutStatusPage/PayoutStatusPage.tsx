@@ -19,6 +19,7 @@ import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
+import { usePayoutStatus } from "../utils/usePayoutStatus";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
 import { PayoutCard, SignerCard, PayoutAllocation } from "../components";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
@@ -45,6 +46,7 @@ export const PayoutStatusPage = () => {
     isRefetching: isRefetchingPayout,
     refetch: refetchPayout,
   } = usePayout(payoutId);
+  const payoutStatus = usePayoutStatus(payout);
   const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultInfo.address), [allVaults, payout]);
   const deletePayout = useDeletePayout();
   const addSignature = useAddSignature();
@@ -54,10 +56,8 @@ export const PayoutStatusPage = () => {
   const waitingPayoutExecution = useWaitForTransaction({
     hash: executePayout.data?.hash as `0x${string}`,
     onSuccess: async (data) => {
-      console.log(data);
       if (!payoutId) return;
 
-      // TODO: what to do with this in V1?
       let payoutClaimId = "";
 
       if (vault?.version === "v2") {
@@ -74,25 +74,6 @@ export const PayoutStatusPage = () => {
       refetchPayout();
     },
   });
-
-  /**
-   * Get payout status. We only handle the status until 'Executed'. After that, we need to check onchain data. We do
-   * this with the subgraph data.
-   */
-  const payoutStatus = useMemo(() => {
-    if (!payout) return;
-
-    if (payout.status === PayoutStatus.Executed) {
-      // Check the status on subgraph
-      const payoutOnSubgraph = payouts?.find((p) => p.id === payout.payoutClaimId);
-      if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
-        return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
-      }
-    }
-
-    // Return status saved on database
-    return payout.status;
-  }, [payout, payouts]);
 
   const { data: safeInfo, isLoading: isLoadingSafeInfo } = useVaultSafeInfo(vault);
   const userHasAlreadySigned = payout?.signatures.some((sig) => sig.signerAddress === address);
