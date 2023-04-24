@@ -171,6 +171,8 @@ export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPin
     let ipfs;
     if (uri.startsWith("ipfs://ipfs/")) {
       ipfs = uri.slice(12);
+    } else if (uri.startsWith("ipfs:///ipfs/")) {
+      ipfs = uri.slice(13);
     } else if (uri.startsWith("ipfs/")) {
       ipfs = uri.slice(5);
     } else if (uri.startsWith("ipfs://")) {
