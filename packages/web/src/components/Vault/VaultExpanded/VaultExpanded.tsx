@@ -22,6 +22,7 @@ interface IProps {
   data: IVault;
   withdrawRequests?: IPoolWithdrawRequest[];
   preview?: boolean;
+  noActions?: boolean;
 }
 
 export default function VaultExpanded(props: IProps) {
@@ -128,11 +129,7 @@ export default function VaultExpanded(props: IProps) {
     <tr>
       <td className="sub-row" colSpan={7}>
         <div className="vault-expanded">
-          {screenSize === ScreenSize.Mobile && (
-            <div>
-              <VaultActions {...props} />
-            </div>
-          )}
+          {screenSize === ScreenSize.Mobile && <div>{!props.noActions && <VaultActions {...props} />}</div>}
           <div className="vault-details-wrapper">
             <div className="sub-title">{t("Vault.vault-details")}</div>
             <div className="vault-details-content">
@@ -145,17 +142,19 @@ export default function VaultExpanded(props: IProps) {
                   <span className="vault-expanded-subtitle">{t("Vault.committee-address")}:</span>
                   <Multisig multisigAddress={committee} />
                 </div>
-                <div className="submit-vulnerability-button-wrapper">
-                  <button
-                    onClick={() => {
-                      setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
-                      navigate(RoutePaths.vulnerability);
-                    }}
-                    disabled={props.preview}
-                  >
-                    {t("Vault.submit-vulnerability")}
-                  </button>
-                </div>
+                {!props.noActions && (
+                  <div className="submit-vulnerability-button-wrapper">
+                    <button
+                      onClick={() => {
+                        setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
+                        navigate(RoutePaths.vulnerability);
+                      }}
+                      disabled={props.preview}
+                    >
+                      {t("Vault.submit-vulnerability")}
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="prize-division-wrapper">
                 <span className="vault-expanded-subtitle">{t("Vault.prize-division")}:</span>

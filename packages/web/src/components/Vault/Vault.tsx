@@ -21,6 +21,7 @@ import { WithTooltip } from "components/WithTooltip/WithTooltip";
 interface VaultComponentProps {
   vault: IVault;
   expanded: boolean;
+  noActions?: boolean;
   setExpanded?: any;
   preview?: boolean;
   selected?: boolean;
@@ -28,7 +29,7 @@ interface VaultComponentProps {
 }
 
 const VaultComponent = (
-  { vault, expanded, preview, setExpanded, onSelect, selected = false }: VaultComponentProps,
+  { vault, expanded, preview, setExpanded, onSelect, selected = false, noActions = false }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
   const { t } = useTranslation();
@@ -132,7 +133,7 @@ const VaultComponent = (
         )}
         {!onSelect && (
           <td className="onlyDesktop">
-            <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />
+            {!noActions && <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
           </td>
         )}
 
@@ -140,7 +141,7 @@ const VaultComponent = (
           {vaultExpandAction}
         </td>
       </StyledVault>
-      {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
+      {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} noActions={noActions} />}
     </>
   );
 };
