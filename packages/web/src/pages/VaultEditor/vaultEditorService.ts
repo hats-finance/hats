@@ -163,7 +163,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
       { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
       { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
       { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
-      { ...vaultContractInfo, functionName: "totalSupply" }, // Deposited amount
+      { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
       { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
       { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
       { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
