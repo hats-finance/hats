@@ -96,6 +96,7 @@ export const GET_VAULTS = `
       vault {
         id
       }
+      beneficiary: claimer
       approvedAt
       dismissedAt
       bountyPercentage
