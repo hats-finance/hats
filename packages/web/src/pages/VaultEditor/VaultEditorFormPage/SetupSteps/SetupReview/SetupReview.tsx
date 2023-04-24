@@ -19,7 +19,7 @@ export function SetupReview() {
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const editedVaultDescriptionForm = useWatch({ control }) as IEditedVaultDescription;
-  const { isEditingExitingVault } = useContext(VaultEditorFormContext);
+  const { isEditingExistingVault } = useContext(VaultEditorFormContext);
 
   const getVault = useCallback((): IVault => {
     const description = editedFormToDescription(editedVaultDescriptionForm);
@@ -121,11 +121,11 @@ export function SetupReview() {
   return (
     <StyledSetupReview>
       <div className="helper-text">
-        {isEditingExitingVault ? t("vaultEditorFinishedEditionExplanation") : t("vaultEditorFinishedSetupExplanation")}
+        {isEditingExistingVault ? t("vaultEditorFinishedEditionExplanation") : t("vaultEditorFinishedSetupExplanation")}
       </div>
 
       <p className="section-title">{t("nextSteps")}</p>
-      {isEditingExitingVault ? (
+      {isEditingExistingVault ? (
         <>
           <div className="next-step">
             <div className="title">
@@ -152,7 +152,7 @@ export function SetupReview() {
         </div>
       )}
 
-      {isEditingExitingVault && (
+      {isEditingExistingVault && (
         <div className="preview-vault">
           <table>
             <tbody>

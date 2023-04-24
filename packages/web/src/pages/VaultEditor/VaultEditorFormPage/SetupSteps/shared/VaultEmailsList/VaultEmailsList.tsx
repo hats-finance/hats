@@ -16,7 +16,7 @@ type VaultEmailsFormProps = {
 
 export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps) => {
   const { t } = useTranslation();
-  const { isEditingExitingVault, allFormDisabled } = useContext(VaultEditorFormContext);
+  const { isEditingExistingVault, allFormDisabled } = useContext(VaultEditorFormContext);
 
   const {
     control,
@@ -31,7 +31,7 @@ export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps)
 
   return (
     <StyledVaultEmailsForm>
-      {!isEditingExitingVault && (
+      {!isEditingExistingVault && (
         <div className="emails">
           {emails.map((email, emailIndex) => {
             if (onlyNotVerifiedEmails && email.status === "verified") return <></>;
