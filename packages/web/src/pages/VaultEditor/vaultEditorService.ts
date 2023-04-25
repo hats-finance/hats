@@ -161,18 +161,18 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
   const allDescriptionsHashesPromise = vaultContract.queryFilter(vaultContract.filters.SetVaultDescription(null));
   const allContractCallsPromises = readContracts({
     contracts: [
-      { ...vaultContractInfo, functionName: "committee", args: [] }, // Committee multisig address
-      { ...vaultContractInfo, functionName: "committeeCheckedIn", args: [] }, // Is committee checked in
+      { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
+      { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
       { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
-      { ...vaultContractInfo, functionName: "totalAssets", args: [] }, // Deposited amount
-      { ...vaultContractInfo, functionName: "bountySplit", args: [] }, // bountySplit
-      { ...vaultContractInfo, functionName: "getBountyHackerHATVested", args: [] }, // hatsRewardSplit
-      { ...vaultContractInfo, functionName: "getBountyGovernanceHAT", args: [] }, // hatsGovernanceSplit
-      { ...vaultContractInfo, functionName: "maxBounty", args: [] }, // maxBounty
-      { ...vaultContractInfo, functionName: "asset", args: [] }, // asset
-      { ...vaultContractInfo, functionName: "decimals", args: [] }, // tokenDecimals
+      { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
+      { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
+      { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
+      { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
+      { ...vaultContractInfo, functionName: "maxBounty" }, // maxBounty
+      { ...vaultContractInfo, functionName: "asset" }, // asset
+      { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
     ],
-  }) as Promise<[string, boolean, boolean, BigNumber, [number, number, number], number, number, number, string, number]>;
+  }) as Promise<any[]>;
 
   const promisesData = await Promise.all([allDescriptionsHashesPromise, allContractCallsPromises]);
 
