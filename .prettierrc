@@ -4,6 +4,10 @@
   "printWidth": 130,
   "semi": true,
   "singleQuote": false,
-  "importOrder": ["^@/(.*)$", "^[./]"],
-  "importOrderSeparation": true
+  "importOrder": [
+    "<THIRD_PARTY_MODULES>",
+    "^@/(.*)$",
+    "^[./]"
+  ],
+  "importOrderSortSpecifiers": true
 }
