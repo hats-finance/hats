@@ -1,4 +1,5 @@
 import { getContract, getProvider, readContracts } from "wagmi/actions";
+import { BigNumber } from "ethers";
 import {
   HATSVaultsRegistry_abi,
   HATSVaultV2_abi,
@@ -163,7 +164,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
       { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
       { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
       { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
-      { ...vaultContractInfo, functionName: "totalSupply" }, // Deposited amount
+      { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
       { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
       { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
       { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
@@ -171,7 +172,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
       { ...vaultContractInfo, functionName: "asset" }, // asset
       { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
     ],
-  });
+  }) as Promise<any[]>;
 
   const promisesData = await Promise.all([allDescriptionsHashesPromise, allContractCallsPromises]);
 
