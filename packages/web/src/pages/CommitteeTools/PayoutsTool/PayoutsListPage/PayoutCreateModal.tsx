@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { getVaultInfoFromVault } from "@hats-finance/shared";
 import { RoutePaths } from "navigation";
 import { Button, FormSelectInput, Loading } from "components";
+import { useVaults } from "hooks/vaults/useVaults";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { useCreateDraftPayout } from "../payoutsService.hooks";
 import { StyledPayoutCreateModal } from "./styles";
@@ -15,11 +16,13 @@ interface PayoutCreateModalProps {
 export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { allVaults } = useVaults();
 
   const createDraftPayout = useCreateDraftPayout();
 
   const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
+  const selectedVault = allVaults?.find((vault) => vault.id === selectedVaultAddress);
 
   const handleCreatePayout = async () => {
     const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
