@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { getVaultInfoFromVault } from "@hats-finance/shared";
 import { RoutePaths } from "navigation";
-import { Button, FormSelectInput, Loading } from "components";
+import { Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { useCreateDraftPayout } from "../payoutsService.hooks";
@@ -47,6 +47,16 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           value={selectedVaultAddress}
           onChange={(e) => setSelectedVaultAddress(e as string)}
           options={vaultsOptions}
+        />
+
+        <FormRadioInput
+          name="test"
+          label="Choose payout type:"
+          radioOptions={[
+            { label: "Test1", value: "11" },
+            { label: "Test2", value: "22" },
+          ]}
+          onChange={(e) => console.log(e)}
         />
 
         <div className="options">
