@@ -3,7 +3,7 @@ import { Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useCreateDraftPayout } from "../payoutsService.hooks";
@@ -21,7 +21,8 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const createDraftPayout = useCreateDraftPayout();
 
   const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
-  const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
+  const [selectedVaultAddress, setSelectedVaultAddress] = useState<string>();
+  const [payoutType, setPayoutType] = useState<"single" | "split">();
   const selectedVault = allVaults?.find((vault) => vault.id === selectedVaultAddress);
 
   const handleCreatePayout = async () => {
@@ -34,6 +35,19 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
     closeModal();
   };
 
+  const payoutTypeOptions = useMemo(() => {
+    if (selectedVault?.description?.["project-metadata"].type === "audit") {
+      return [{ label: t("Payouts.singlePayout"), value: "single" }];
+    } else {
+      return [
+        { label: t("Payouts.singlePayout"), value: "single" },
+        { label: t("Payouts.splitPayout"), value: "split" },
+      ];
+    }
+  }, [selectedVault, t]);
+
+  console.log(payoutType);
+
   return (
     <StyledPayoutCreateModal>
       <p>{t("Payouts.createPayoutDescription")}</p>
@@ -44,20 +58,19 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
           placeholder={t("selectVault")}
           name="editSessionId"
-          value={selectedVaultAddress}
+          value={selectedVaultAddress ?? ""}
           onChange={(e) => setSelectedVaultAddress(e as string)}
           options={vaultsOptions}
         />
 
         <FormRadioInput
-          name="test"
-          label="Choose payout type:"
-          radioOptions={[
-            { label: "Test1", value: "11" },
-            { label: "Test2", value: "22" },
-          ]}
-          onChange={(e) => console.log(e)}
+          name="payoutType"
+          label={t("Payouts.choosePayoutType")}
+          radioOptions={payoutTypeOptions}
+          onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
         />
+
+        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>}
 
         <div className="options">
           <Button disabled={!selectedVaultAddress} onClick={handleCreatePayout}>

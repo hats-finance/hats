@@ -462,6 +462,11 @@
       "executePayoutError": "There was an error executing the payout. You can only execute the payout if: \n - You are connected with a committee wallet. \n - This vault has no other active claim \n - The safety period is on.",
       "thisVaultHasAnActivePayout": "This vault has an active payout. You can't execute a new payout for this vault until the active one is resolved.",
       "payoutAllocationExplanation": "This is exactly how the 'Total payout sum' amount will be distributed.",
+      "choosePayoutType": "Choose payout type",
+      "singlePayout": "Single payout",
+      "splitPayout": "Split payout",
+      "singlePayoutExplanation": "Single payout will allow you to create a payout for a single beneficiary",
+      "splitPayoutExplanation": "Split payout will allow you payout multiple beneficiaries in one transaction",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
