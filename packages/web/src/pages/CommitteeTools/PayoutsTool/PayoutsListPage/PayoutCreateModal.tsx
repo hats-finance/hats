@@ -20,7 +20,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
 
   const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState<string>();
-  const [payoutType, setPayoutType] = useState<PayoutType>("single");
+  const [payoutType, setPayoutType] = useState<PayoutType>();
   const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
 
   const handleCreatePayout = async () => {
@@ -58,14 +58,14 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           options={vaultsOptions}
         />
 
-        {/* <FormRadioInput
+        <FormRadioInput
           name="payoutType"
           label={t("Payouts.choosePayoutType")}
           radioOptions={payoutTypeOptions}
           onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
         />
 
-        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>} */}
+        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>}
 
         <div className="options">
           <Button disabled={!selectedVaultAddress || !payoutType} onClick={handleCreatePayout}>
