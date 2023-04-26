@@ -1,5 +1,5 @@
-import { UseQueryResult, useQuery, useMutation, UseMutationResult } from "@tanstack/react-query";
-import { IPayoutData, IPayoutResponse, IVaultInfo, getVaultInfoFromVault } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType, getVaultInfoFromVault } from "@hats-finance/shared";
+import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import * as PayoutsService from "./payoutsService.api";
@@ -50,9 +50,14 @@ export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
 
 // ------------------------
 // MUTATIONS
-export const useCreateDraftPayout = (): UseMutationResult<string, unknown, IVaultInfo, unknown> => {
+export const useCreateDraftPayout = (): UseMutationResult<
+  string,
+  unknown,
+  { vaultInfo: IVaultInfo; type: PayoutType },
+  unknown
+> => {
   return useMutation({
-    mutationFn: (vaultInfo) => PayoutsService.createDraftPayout(vaultInfo),
+    mutationFn: ({ vaultInfo, type }) => PayoutsService.createDraftPayout(vaultInfo, type),
   });
 };
 

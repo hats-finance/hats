@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { getVaultInfoFromVault } from "@hats-finance/shared";
-import { RoutePaths } from "navigation";
-import { Button, FormSelectInput, Loading } from "components";
+import { PayoutType, getVaultInfoFromVault } from "@hats-finance/shared";
+import { Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
+import { RoutePaths } from "navigation";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useCreateDraftPayout } from "../payoutsService.hooks";
 import { StyledPayoutCreateModal } from "./styles";
 
@@ -19,17 +19,29 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const createDraftPayout = useCreateDraftPayout();
 
   const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
-  const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
+  const [selectedVaultAddress, setSelectedVaultAddress] = useState<string>();
+  const [payoutType, setPayoutType] = useState<PayoutType>("single");
+  const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
 
   const handleCreatePayout = async () => {
-    const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
-    if (!selectedVault) return;
+    if (!selectedVault || !payoutType) return;
 
-    const payoutId = await createDraftPayout.mutateAsync(getVaultInfoFromVault(selectedVault));
+    const payoutId = await createDraftPayout.mutateAsync({ vaultInfo: getVaultInfoFromVault(selectedVault), type: payoutType });
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
 
     closeModal();
   };
+
+  const payoutTypeOptions = useMemo(() => {
+    if (selectedVault?.description?.["project-metadata"].type === "audit") {
+      return [{ label: t("Payouts.singlePayout"), value: "single" }];
+    } else {
+      return [
+        { label: t("Payouts.singlePayout"), value: "single" },
+        { label: t("Payouts.splitPayout"), value: "split" },
+      ];
+    }
+  }, [selectedVault, t]);
 
   return (
     <StyledPayoutCreateModal>
@@ -41,13 +53,22 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
           placeholder={t("selectVault")}
           name="editSessionId"
-          value={selectedVaultAddress}
+          value={selectedVaultAddress ?? ""}
           onChange={(e) => setSelectedVaultAddress(e as string)}
           options={vaultsOptions}
         />
 
+        {/* <FormRadioInput
+          name="payoutType"
+          label={t("Payouts.choosePayoutType")}
+          radioOptions={payoutTypeOptions}
+          onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
+        />
+
+        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>} */}
+
         <div className="options">
-          <Button disabled={!selectedVaultAddress} onClick={handleCreatePayout}>
+          <Button disabled={!selectedVaultAddress || !payoutType} onClick={handleCreatePayout}>
             {t("Payouts.createPayout")}
           </Button>
         </div>

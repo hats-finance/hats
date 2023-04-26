@@ -1,12 +1,13 @@
 import Safe from "@safe-global/safe-core-sdk";
-import EthersAdapter from "@safe-global/safe-ethers-lib";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
+import EthersAdapter from "@safe-global/safe-ethers-lib";
 import { ethers } from "ethers";
-import { IPayoutData, IVaultInfo } from "../types";
 import { HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
+import { IPayoutData, IVaultInfo, PayoutType } from "../types";
 
-export const createNewPayoutData = (): IPayoutData => {
+export const createNewPayoutData = (type: PayoutType): IPayoutData => {
   return {
+    type,
     beneficiary: "",
     title: "",
     severity: "",
@@ -14,7 +15,7 @@ export const createNewPayoutData = (): IPayoutData => {
     severityBountyIndex: "",
     explanation: "",
     nftUrl: "",
-    additionalInfo: "Submission tx: \n\nSubmission link: \n\nDecrypted submission:",
+    additionalInfo: "Submission tx: \n\nSubmission link: \n\nDecrypted submission: ",
   };
 };
 
