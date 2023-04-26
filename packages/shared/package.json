@@ -1,6 +1,6 @@
 {
   "name": "@hats-finance/shared",
-  "version": "1.0.68",
+  "version": "1.0.70",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

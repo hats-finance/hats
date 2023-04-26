@@ -1,6 +1,6 @@
-import { IPayoutResponse, IPayoutData, IVaultInfo } from "@hats-finance/shared";
-import { BASE_SERVICE_URL } from "settings";
+import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
+import { BASE_SERVICE_URL } from "settings";
 
 /**
  * Gets a payout by id
@@ -71,9 +71,9 @@ export async function getInProgressPayoutsByVault(vaultInfo?: IVaultInfo): Promi
  *
  * @returns The id of the created payout
  */
-export async function createDraftPayout(vaultInfo: IVaultInfo): Promise<string> {
+export async function createDraftPayout(vaultInfo: IVaultInfo, type: PayoutType): Promise<string> {
   try {
-    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, { vaultInfo });
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, { vaultInfo, type });
     return res.data.upsertedId;
   } catch (error) {
     throw new Error(`Unknown error: ${error}`);

@@ -39,6 +39,7 @@ export interface IPayoutResponse {
 }
 
 export interface IPayoutData {
+  type: PayoutType;
   beneficiary: string;
   title: string;
   severity: string; // Severity name
@@ -68,6 +69,8 @@ export enum PayoutStatus {
   Approved = "approved", // the payout was approved
   Rejected = "rejected", // the payout was rejected
 }
+
+export type PayoutType = "single" | "split";
 
 export const payoutStatusInfo = {
   [PayoutStatus.Creating]: {
