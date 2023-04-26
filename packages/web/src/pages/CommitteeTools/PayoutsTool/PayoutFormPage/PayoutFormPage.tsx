@@ -1,33 +1,32 @@
-import { useEffect, useMemo, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
-import { useAccount } from "wagmi";
-import DOMPurify from "dompurify";
-import { Controller, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  DefaultIndexArray,
   IPayoutData,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
   PayoutStatus,
   getVaultInfoFromVault,
 } from "@hats-finance/shared";
-import moment from "moment";
-import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, WithTooltip } from "components";
-import { queryClient } from "config/reactQuery";
-import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
-import { useVaults } from "hooks/vaults/useVaults";
-import { useOnChange } from "hooks/usePrevious";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { RoutePaths } from "navigation";
-import { getPayoutDataYupSchema } from "./formSchema";
-import { PayoutAllocation } from "../components";
-import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
-import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { StyledPayoutFormPage, StyledPayoutForm } from "./styles";
+import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
+import { Alert, Button, CopyToClipboard, Loading, WithTooltip } from "components";
+import { queryClient } from "config/reactQuery";
+import DOMPurify from "dompurify";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useVaults } from "hooks/vaults/useVaults";
+import moment from "moment";
+import { RoutePaths } from "navigation";
+import { useEffect, useMemo, useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccount } from "wagmi";
+import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
+import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
+import { getPayoutDataYupSchema } from "./formSchema";
+import { SinglePayoutForm } from "./forms/SinglePayoutForm";
+import { SplitPayoutForm } from "./forms/SplitPayoutForm";
+import { IPayoutFormContext, PayoutFormContext } from "./store";
+import { StyledPayoutForm, StyledPayoutFormPage } from "./styles";
 
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
@@ -35,12 +34,6 @@ export const PayoutFormPage = () => {
   const { address } = useAccount();
   const { allVaults } = useVaults();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
-
-  const methods = useEnhancedForm<IPayoutData>({
-    resolver: yupResolver(getPayoutDataYupSchema(t)),
-    mode: "onChange",
-  });
-  const { reset: handleReset, handleSubmit, register, control, formState, setValue } = methods;
 
   const { payoutId } = useParams();
   const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
@@ -52,14 +45,13 @@ export const PayoutFormPage = () => {
   const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
+  const methods = useForm<IPayoutData>({
+    resolver: yupResolver(getPayoutDataYupSchema(t)),
+    mode: "onChange",
+  });
+  const { reset: handleReset, handleSubmit, formState } = methods;
+
   const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
-
-  const vaultSeverities = vault?.description?.severities ?? [];
-  const selectedSeverityName = useWatch({ control, name: "severity", defaultValue: undefined });
-  const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
-  const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
-
-  const percentageToPay = useWatch({ control, name: "percentageToPay" });
 
   useEffect(() => {
     tryAuthentication();
@@ -82,33 +74,31 @@ export const PayoutFormPage = () => {
       }));
 
       // if the current severity is not in the list of severities, add it
-      if (payout.payoutData.severity && !severities.find((severity) => severity.value === payout.payoutData.severity)) {
-        severities.push({
-          label: `${payout.payoutData.severity} ${vault.version === "v1" ? t("severity") : ""}`,
-          value: payout.payoutData.severity,
-        });
+      if (payout.payoutData.type === "single") {
+        const payoutData = payout.payoutData;
+        if (payoutData.severity && !severities.find((severity) => severity.value === payoutData.severity)) {
+          severities.push({
+            label: `${payoutData.severity} ${vault.version === "v1" ? t("severity") : ""}`,
+            value: payoutData.severity,
+          });
+        }
+      } else {
+        for (const splitPayoutBeneficiary of payout.payoutData.beneficiaries) {
+          if (
+            splitPayoutBeneficiary.severity &&
+            !severities.find((severity) => severity.value === splitPayoutBeneficiary.severity)
+          ) {
+            severities.push({
+              label: `${splitPayoutBeneficiary.severity} ${vault.version === "v1" ? t("severity") : ""}`,
+              value: splitPayoutBeneficiary.severity,
+            });
+          }
+        }
       }
 
       setSeveritiesOptions(severities);
     }
   }, [allVaults, payout, vault, t]);
-
-  // Edit the payout percentage and NFT info based on the selected severity
-  useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
-    if (!selectedSeverityData) return;
-    if (prevSelected === undefined || newSelected === undefined) return;
-
-    setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
-    if (vault?.version === "v2") {
-      const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
-      const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
-      setValue("percentageToPay", percentage.toString());
-    } else {
-      const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
-      setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
-      setValue("severityBountyIndex", (selectedSeverityData as IVulnerabilitySeverityV1).index.toString());
-    }
-  });
 
   const handleSavePayout = async () => {
     if (!payoutId || !payout || !isAuthenticated || !formState.isDirty || !vault) return;
@@ -145,146 +135,82 @@ export const PayoutFormPage = () => {
   if (!address) return <PayoutsWelcome />;
   if (isLoadingPayout || allVaults?.length === 0) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
-  return (
-    <StyledPayoutFormPage className="content-wrapper-md">
-      <div className="title-container">
-        {payout?.updatedAt && (
-          <p className="lastModifiedOn">
-            <strong>{t("saved")}</strong> {moment(payout.updatedAt).fromNow()}
-          </p>
-        )}
+  const payoutFormContext: IPayoutFormContext = {
+    payout,
+    vault,
+    isPayoutCreated,
+    severitiesOptions,
+  };
 
-        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
-          <BackIcon />
-          <p>{t("payouts")}</p>
+  return (
+    <PayoutFormContext.Provider value={payoutFormContext}>
+      <StyledPayoutFormPage className="content-wrapper-md">
+        <div className="title-container">
+          {payout?.updatedAt && (
+            <p className="lastModifiedOn">
+              <strong>{t("saved")}</strong> {moment(payout.updatedAt).fromNow()}
+            </p>
+          )}
+
+          <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
+            <BackIcon />
+            <p>{t("payouts")}</p>
+          </div>
+
+          <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
         </div>
 
-        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
-      </div>
+        <div className="section-title">
+          {t(payout?.payoutData.type === "single" ? "Payouts.creatingSinglePayout" : "Payouts.creatingSplitPayout")}{" "}
+          {!isPayoutCreated && `[${t("draft")}]`}
+        </div>
 
-      <div className="section-title">
-        {t("Payouts.creatingSinglePayout")} {!isPayoutCreated && `[${t("draft")}]`}
-      </div>
+        {!isAuthenticated && (
+          <>
+            <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
+            <Button onClick={tryAuthentication} className="mt-4">
+              {t("signInWithEthereum")}
+            </Button>
+          </>
+        )}
 
-      {!isAuthenticated && (
-        <>
-          <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
-          <Button onClick={tryAuthentication} className="mt-4">
-            {t("signInWithEthereum")}
-          </Button>
-        </>
-      )}
+        {isAuthenticated && (
+          <>
+            <p className="mb-4">
+              {t(payout?.payoutData.type === "single" ? "Payouts.fillPayoutInfo" : "Payouts.fillSplitPayoutInfo")}
+            </p>
 
-      {isAuthenticated && (
-        <>
-          <p className="mb-4">{t("Payouts.fillPayoutInfo")}</p>
+            <FormProvider {...methods}>
+              <StyledPayoutForm>
+                {payout?.payoutData.type === "split" ? <SplitPayoutForm /> : <SinglePayoutForm />}
 
-          <StyledPayoutForm onSubmit={handleSubmit(handleLockPayout)}>
-            <div className="form-container">
-              <FormInput
-                {...register("title")}
-                label={t("Payouts.payoutName")}
-                placeholder={t("Payouts.payoutNamePlaceholder")}
-                disabled={isPayoutCreated}
-                colorable
-                className="no-expanded-input"
-              />
+                {isAnotherActivePayout && (
+                  <Alert type="warning" className="mt-5">
+                    {t("Payouts.anotherActivePayout")}
+                  </Alert>
+                )}
 
-              <FormInput
-                {...register("beneficiary")}
-                label={t("Payouts.beneficiary")}
-                placeholder={t("Payouts.beneficiaryPlaceholder")}
-                disabled={isPayoutCreated}
-                pastable
-                colorable
-              />
+                <div className="buttons">
+                  <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                    <Button disabled={!formState.isDirty || savePayout.isLoading} styleType="outlined" onClick={handleSavePayout}>
+                      {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                    </Button>
+                  </WithTooltip>
+                  <Button
+                    onClick={handleSubmit(handleLockPayout)}
+                    disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
+                  >
+                    {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
+                    <ArrowForwardIcon className="ml-3" />
+                  </Button>
+                </div>
+              </StyledPayoutForm>
+            </FormProvider>
+          </>
+        )}
 
-              <div className="row">
-                <Controller
-                  control={control}
-                  name={`severity`}
-                  render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-                    <FormSelectInput
-                      disabled={isPayoutCreated}
-                      isDirty={getCustomIsDirty<IPayoutData>(field.name, dirtyFields, defaultValues)}
-                      error={error}
-                      label={t("Payouts.severity")}
-                      placeholder={t("Payouts.severityPlaceholder")}
-                      colorable
-                      options={severitiesOptions ?? []}
-                      {...field}
-                    />
-                  )}
-                />
-                <FormInput
-                  {...register("percentageToPay")}
-                  label={t("Payouts.percentageToPay")}
-                  placeholder={t("Payouts.percentageToPayPlaceholder")}
-                  readOnly
-                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
-                />
-              </div>
-
-              <PayoutAllocation
-                vault={vault}
-                payout={payout}
-                percentageToPay={percentageToPay}
-                selectedSeverity={selectedSeverityData}
-              />
-            </div>
-
-            <div className="form-container mt-5">
-              <p className="mt-2 subtitle">{t("Payouts.reasoning")}</p>
-              <p className="mt-2">{t("Payouts.reasoningDescription")}</p>
-              <p className="mt-2 mb-5 reasoningAlert">
-                <span>{t("pleaseNote")}:</span> {t("thisInformationWillAppearOnChain")}
-              </p>
-
-              <FormInput
-                {...register("explanation")}
-                label={t("Payouts.explanation")}
-                placeholder={t("Payouts.explanationPlaceholder")}
-                disabled={isPayoutCreated}
-                type="textarea"
-                rows={4}
-                colorable
-              />
-
-              <p className="mt-2 mb-5">{t("Payouts.additionalDetails")}</p>
-
-              <FormInput
-                {...register("additionalInfo")}
-                label={t("Payouts.additionalInfo")}
-                placeholder={t("Payouts.additionalInfoPlaceholder")}
-                disabled={isPayoutCreated}
-                type="textarea"
-                rows={8}
-                colorable
-              />
-            </div>
-
-            {isAnotherActivePayout && (
-              <Alert type="warning" className="mt-5">
-                {t("Payouts.anotherActivePayout")}
-              </Alert>
-            )}
-
-            <div className="buttons">
-              <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
-                <Button disabled={!formState.isDirty || savePayout.isLoading} styleType="outlined" onClick={handleSavePayout}>
-                  {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
-                </Button>
-              </WithTooltip>
-              <Button type="submit" disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}>
-                {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
-                <ArrowForwardIcon className="ml-3" />
-              </Button>
-            </div>
-          </StyledPayoutForm>
-        </>
-      )}
-
-      {lockPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
-    </StyledPayoutFormPage>
+        {lockPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
+      </StyledPayoutFormPage>
+    </PayoutFormContext.Provider>
   );
 };

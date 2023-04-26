@@ -43,6 +43,7 @@ export type IPayoutData = ISinglePayoutData | ISplitPayoutData;
 interface IPayoutDataBase {
   type: PayoutType;
   title: string;
+  percentageToPay: string; // Percentage of the whole vault: number between 0 and 100
   explanation: string;
   additionalInfo: string;
 }
@@ -51,13 +52,14 @@ export interface ISinglePayoutData extends IPayoutDataBase {
   type: "single";
   beneficiary: string;
   severity: string; // Severity name
-  percentageToPay: string; // Number between 0 and 100
   severityBountyIndex: string; // Severity index (for V1 vaults)
   nftUrl: string;
 }
 
+// Only for v2 vaults
 export interface ISplitPayoutData extends IPayoutDataBase {
   type: "split";
+  paymentSplitterBeneficiary?: string;
   beneficiaries: ISplitPayoutBeneficiary[];
 }
 

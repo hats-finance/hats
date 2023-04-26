@@ -1,7 +1,13 @@
+import {
+  EIP712_SAFE_TX_TYPE,
+  IPayoutResponse,
+  ISinglePayoutData,
+  IVault,
+  getExecutePayoutSafeTransaction,
+} from "@hats-finance/shared";
 import { useState } from "react";
-import { useNetwork, useProvider, useSignTypedData } from "wagmi";
-import { EIP712_SAFE_TX_TYPE, getExecutePayoutSafeTransaction, IPayoutResponse, IVault } from "@hats-finance/shared";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { useNetwork, useProvider, useSignTypedData } from "wagmi";
 
 export const useSignPayout = (vault?: IVault, payout?: IPayoutResponse) => {
   const provider = useProvider();
@@ -17,11 +23,17 @@ export const useSignPayout = (vault?: IVault, payout?: IPayoutResponse) => {
     try {
       await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
+      const payoutBeneficiary =
+        payout.payoutData.type === "single" ? payout.payoutData.beneficiary : payout.payoutData.paymentSplitterBeneficiary;
+      if (!payoutBeneficiary) return console.error("No payout beneficiary");
+
       const safeTransaction = await getExecutePayoutSafeTransaction(provider, vault.committee, payout.vaultInfo, {
-        beneficiary: payout.payoutData.beneficiary,
+        beneficiary: payoutBeneficiary,
         descriptionHash: payout.payoutDescriptionHash,
         bountyPercentageOrSeverityIndex:
-          vault?.version === "v1" ? payout.payoutData.severityBountyIndex : payout.payoutData.percentageToPay,
+          vault?.version === "v1"
+            ? (payout.payoutData as ISinglePayoutData).severityBountyIndex
+            : payout.payoutData.percentageToPay,
       });
 
       return signPayout.signTypedDataAsync({

@@ -60,11 +60,12 @@ export const StyledPayoutFormPage = styled.div`
   }
 `;
 
-export const StyledPayoutForm = styled.form`
+export const StyledPayoutForm = styled.div`
   .form-container {
     background: var(--background-clearer-blue);
     border-radius: 4px;
     padding: ${getSpacing(2.5)};
+    padding-top: ${getSpacing(3.5)};
 
     .subtitle {
       text-transform: uppercase;
