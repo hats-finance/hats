@@ -99,5 +99,18 @@ export const StyledPayoutForm = styled.div`
     border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
     margin-top: ${getSpacing(5)};
+
+    &.no-line {
+      border-top: none;
+    }
+  }
+
+  p.error {
+    font-size: var(--xxsmall);
+    color: var(--error-red);
+  }
+
+  strong.turquoise {
+    color: var(--turquoise);
   }
 `;

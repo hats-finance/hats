@@ -475,6 +475,9 @@
       "uploadCsvExplanation": "Upload a payment file on this page using the this CSV template or use this format (beneficiary,severity)",
       "downloadTemplateFile": "Download template file",
       "selectCsvFile": "Select CSV file",
+      "csvDoesNotHaveAnyBeneficiary": "The CSV file does not have any beneficiary to add.",
+      "fileContainsNumBeneficiaries": "File contains <strong class='turquoise'>{{numBeneficiaries}} beneficiaries</strong> to import.",
+      "importBeneficiaries": "Import beneficiaries",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
