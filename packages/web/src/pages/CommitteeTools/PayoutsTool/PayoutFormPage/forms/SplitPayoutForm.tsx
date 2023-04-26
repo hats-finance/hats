@@ -13,6 +13,27 @@ export const SplitPayoutForm = () => {
 
   const [beneficiariesToImport, setBeneficiariesToImport] = useState<CSVBeneficiary[] | undefined>();
 
+  const handleDownloadCsvTemplate = () => {
+    if (!severitiesOptions) return;
+
+    const csvString = [
+      ["beneficiary", "severity"],
+      ...severitiesOptions.map((severity, idx) => [
+        `0x000000000000000000000000000000000000000${idx}`,
+        severity.value.toLowerCase(),
+      ]),
+    ]
+      .map((e) => e.join(","))
+      .join("\n");
+
+    const blob = new Blob([csvString], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.setAttribute("href", url);
+    a.setAttribute("download", "hats-beneficiaries-template.csv");
+    a.click();
+  };
+
   const handleChangeCsvFile = (csvString: string) => {
     const beneficiariesOnFile = JSON.parse(csvString) as CSVBeneficiary[] | undefined;
 
@@ -38,7 +59,7 @@ export const SplitPayoutForm = () => {
         <p className="subtitle">{t("Payouts.uploadCsv")}</p>
         <p className="mt-3">{t("Payouts.uploadCsvExplanation")}</p>
 
-        <Button className="mt-2" onClick={() => {}} styleType="invisible">
+        <Button className="mt-2" onClick={handleDownloadCsvTemplate} styleType="invisible" disabled={!severitiesOptions}>
           <DownloadIcon className="mr-3" />
           {t("Payouts.downloadTemplateFile")}
         </Button>
