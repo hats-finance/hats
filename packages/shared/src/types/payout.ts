@@ -38,20 +38,34 @@ export interface IPayoutResponse {
   updatedAt?: Date;
 }
 
-export interface IPayoutData {
+export type IPayoutData = ISinglePayoutData | ISplitPayoutData;
+
+interface IPayoutDataBase {
   type: PayoutType;
-  beneficiary: string;
   title: string;
+  explanation: string;
+  additionalInfo: string;
+}
+
+export interface ISinglePayoutData extends IPayoutDataBase {
+  type: "single";
+  beneficiary: string;
   severity: string; // Severity name
   percentageToPay: string; // Number between 0 and 100
   severityBountyIndex: string; // Severity index (for V1 vaults)
-  explanation: string;
   nftUrl: string;
-  additionalInfo: string;
-  reportTxid?: string; // Future
-  reportDate?: Date; // Future
-  encryptedMessage?: string; // Future
-  decryptedMessage?: string; // Future
+}
+
+export interface ISplitPayoutData extends IPayoutDataBase {
+  type: "split";
+  beneficiaries: ISplitPayoutBeneficiary[];
+}
+
+export interface ISplitPayoutBeneficiary {
+  beneficiary: string;
+  severity: string; // Severity name
+  percentageToPay: string; // Number between 0 and 100
+  nftUrl: string;
 }
 
 export interface IPayoutSignature {

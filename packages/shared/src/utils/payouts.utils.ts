@@ -3,19 +3,38 @@ import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import EthersAdapter from "@safe-global/safe-ethers-lib";
 import { ethers } from "ethers";
 import { HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
-import { IPayoutData, IVaultInfo, PayoutType } from "../types";
+import { IPayoutData, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, IVaultInfo, PayoutType } from "../types";
 
 export const createNewPayoutData = (type: PayoutType): IPayoutData => {
+  if (type === "single") {
+    return {
+      type,
+      beneficiary: "",
+      title: "",
+      severity: "",
+      percentageToPay: "",
+      severityBountyIndex: "",
+      explanation: "",
+      nftUrl: "",
+      additionalInfo: "Submission tx: \n\nSubmission link: \n\nDecrypted submission: ",
+    } as ISinglePayoutData;
+  } else {
+    return {
+      type,
+      title: "",
+      explanation: "",
+      additionalInfo: "",
+      beneficiaries: [createNewSplitPayoutBeneficiary()],
+    } as ISplitPayoutData;
+  }
+};
+
+export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
   return {
-    type,
     beneficiary: "",
-    title: "",
     severity: "",
     percentageToPay: "",
-    severityBountyIndex: "",
-    explanation: "",
     nftUrl: "",
-    additionalInfo: "Submission tx: \n\nSubmission link: \n\nDecrypted submission: ",
   };
 };
 
