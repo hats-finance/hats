@@ -58,7 +58,13 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
       <StyledBaseKeystoreContainer>
         <p className="mb-4">{t("PGPTool.restoreBackupDescription")}</p>
 
-        <FormJSONCSVFileInput label={t("PGPTool.selectBackupFile")} onChange={(e) => handleChangeJsonFile(e.target.value)} />
+        <FormJSONCSVFileInput
+          small
+          name="restore-pgp-keys"
+          fileType="JSON"
+          label={t("PGPTool.selectBackupFile")}
+          onChange={(e) => handleChangeJsonFile(e.target.value)}
+        />
 
         {keysToImport && keysToImport.length > 0 && (
           <p
