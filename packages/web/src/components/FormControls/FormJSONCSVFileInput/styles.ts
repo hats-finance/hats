@@ -4,11 +4,13 @@ import { getSpacing } from "styles";
 type StyledFormJSONCSVFileInputProps = {
   isDirty: boolean;
   hasError: boolean;
+  isSmall: boolean;
   disabled: boolean;
+  selected: boolean;
 };
 
 export const StyledFormJSONCSVFileInput = styled.div<StyledFormJSONCSVFileInputProps>(
-  ({ isDirty, hasError, disabled }) => css`
+  ({ isDirty, hasError, disabled, isSmall, selected }) => css`
     position: relative;
 
     label {
@@ -59,15 +61,33 @@ export const StyledFormJSONCSVFileInput = styled.div<StyledFormJSONCSVFileInputP
       color: var(--grey-500);
       padding: ${getSpacing(2)} 0;
 
+      ${isSmall &&
+      css`
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: ${getSpacing(1)};
+        height: ${getSpacing(7)};
+      `}
+
       ${isDirty &&
       css`
         border: 1px solid var(--yellow);
+      `}
+
+      ${selected &&
+      css`
+        border: 1px dashed var(--turquoise);
       `}
 
       ${hasError &&
       css`
         border-color: var(--error-red);
       `}
+
+      .icon {
+        color: var(--grey-400);
+      }
 
       label {
         cursor: pointer;
@@ -77,12 +97,23 @@ export const StyledFormJSONCSVFileInput = styled.div<StyledFormJSONCSVFileInputP
     .icon-add {
       font-size: var(--tiny);
 
-      img {
-        filter: grayscale(1);
-        width: ${getSpacing(3)};
-        height: ${getSpacing(3)};
+      .icon {
+        font-size: var(--large);
         margin-bottom: ${getSpacing(0.5)};
+
+        ${isSmall &&
+        css`
+          font-size: var(--medium);
+          margin-bottom: 0;
+        `}
       }
+
+      ${isSmall &&
+      css`
+        p {
+          display: none;
+        }
+      `}
     }
 
     .icon-preview {
@@ -90,6 +121,15 @@ export const StyledFormJSONCSVFileInput = styled.div<StyledFormJSONCSVFileInputP
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--grey-400);
+
+      ${!isSmall &&
+      css`
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        gap: ${getSpacing(1)};
+      `}
 
       label {
         position: absolute;
@@ -98,10 +138,14 @@ export const StyledFormJSONCSVFileInput = styled.div<StyledFormJSONCSVFileInputP
         opacity: 0.5;
         padding: ${getSpacing(0.2)} ${getSpacing(0.6)};
         border-radius: 4px;
+
+        ${isSmall &&
+        css`
+          display: none;
+        `}
       }
 
       p {
-        width: 100%;
         text-overflow: ellipsis;
         overflow: hidden;
       }
