@@ -1,6 +1,5 @@
 import { ChangeEvent, forwardRef, useRef } from "react";
 import { StyledFormRadioInput } from "./styles";
-import { parseIsDirty } from "../utils";
 
 type FormRadioInputProps = {
   label?: string;
@@ -11,7 +10,7 @@ type FormRadioInputProps = {
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 function FormRadioInputComponent(
-  { colorable = false, disabled = false, label, error, type = "radio", ...props }: FormRadioInputProps,
+  { colorable = false, disabled = false, label, error, type = "radio", radioOptions, ...props }: FormRadioInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
@@ -29,9 +28,11 @@ function FormRadioInputComponent(
 
     return (
       <div className="input-container">
-        {props.radioOptions.map((option, index) => (
-          <div className="radio-option" key={index}>
+        {radioOptions.map((option, index) => (
+          <label htmlFor={`radio-${option.value}`} className="radio-option" key={index}>
+            {option.label}
             <input
+              {...props}
               ref={setRef}
               type={type}
               disabled={disabled}
@@ -40,8 +41,8 @@ function FormRadioInputComponent(
               value={option.value}
               onChange={handleOnChange}
             />
-            <label htmlFor={`radio-${option.value}`}>{option.label}</label>
-          </div>
+            <span className="checkmark" />
+          </label>
         ))}
       </div>
     );
