@@ -1,20 +1,20 @@
-import { useTranslation } from "react-i18next";
 import { IPayoutResponse, IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
-import { FormInput, WithTooltip } from "components";
-import { NftPreview } from "../NftPreview/NftPreview";
-import { usePayoutAmountsInfo } from "../../utils/usePayoutAmountsInfo";
-import { StyledPayoutAllocation } from "./styles";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
+import { FormInput, WithTooltip } from "components";
+import { useTranslation } from "react-i18next";
+import { usePayoutAmountsInfo } from "../../utils/usePayoutAmountsInfo";
+import { NftPreview } from "../NftPreview/NftPreview";
+import { StyledSinglePayoutAllocation } from "./styles";
 
-type PayoutAllocationProps = {
+type SinglePayoutAllocationProps = {
   selectedSeverity: IVulnerabilitySeverity | undefined;
   vault: IVault | undefined;
   payout: IPayoutResponse | undefined;
   percentageToPay: string | undefined;
 };
 
-export const PayoutAllocation = ({ vault, payout, percentageToPay, selectedSeverity }: PayoutAllocationProps) => {
+export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selectedSeverity }: SinglePayoutAllocationProps) => {
   const { t } = useTranslation();
 
   const { immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount } =
@@ -22,7 +22,7 @@ export const PayoutAllocation = ({ vault, payout, percentageToPay, selectedSever
 
   if (!vault || !totalAmount) return null;
   return (
-    <StyledPayoutAllocation>
+    <StyledSinglePayoutAllocation>
       <div className="result-divider">
         <div />
         <ArrowDownIcon />
@@ -105,6 +105,6 @@ export const PayoutAllocation = ({ vault, payout, percentageToPay, selectedSever
           </div>
         )}
       </div>
-    </StyledPayoutAllocation>
+    </StyledSinglePayoutAllocation>
   );
 };

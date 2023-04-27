@@ -33,7 +33,7 @@ export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
   return {
     beneficiary: "",
     severity: "",
-    percentageToPay: "",
+    percentageOfPayout: "",
     nftUrl: "",
   };
 };

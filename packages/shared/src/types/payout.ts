@@ -66,7 +66,7 @@ export interface ISplitPayoutData extends IPayoutDataBase {
 export interface ISplitPayoutBeneficiary {
   beneficiary: string;
   severity: string; // Severity name
-  percentageToPay: string; // Number between 0 and 100
+  percentageOfPayout: string; // Number between 0 and 100
   nftUrl: string;
 }
 

@@ -11,9 +11,9 @@ import { useOnChange } from "hooks/usePrevious";
 import { useContext } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { PayoutAllocation } from "../../components";
-import { PayoutFormContext } from "../store";
-import { StyledPayoutForm } from "../styles";
+import { SinglePayoutAllocation } from "../../../components";
+import { PayoutFormContext } from "../../store";
+import { StyledPayoutForm } from "../../styles";
 
 export const SinglePayoutForm = () => {
   const { t } = useTranslation();
@@ -93,7 +93,7 @@ export const SinglePayoutForm = () => {
           />
         </div>
 
-        <PayoutAllocation
+        <SinglePayoutAllocation
           vault={vault}
           payout={payout}
           percentageToPay={percentageToPay}

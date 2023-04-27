@@ -1,8 +1,8 @@
-import * as Yup from "yup";
 import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
-import { readMessage, readKey } from "openpgp";
 import { isAddress } from "ethers/lib/utils";
+import { readKey, readMessage } from "openpgp";
 import { appChains } from "settings";
+import * as Yup from "yup";
 import { isEmailAddress } from "./emails.utils";
 import { getTokenInfo } from "./tokens.utils";
 
@@ -123,7 +123,13 @@ export const getTestEmailAddress = (intl) => {
   };
 };
 
-export const getTestNumberInBetween = (intl, first: number, second: number, isPercentage: boolean) => {
+export const getTestNumberInBetween = (
+  intl,
+  first: number,
+  second: number,
+  isPercentage: boolean,
+  opts?: { smallError: boolean }
+) => {
   return {
     name: `is-${isPercentage ? "percentage" : "number"}-between-${first}-and-${second}`,
     test: (value: number | undefined, ctx: Yup.TestContext) => {
@@ -133,7 +139,7 @@ export const getTestNumberInBetween = (intl, first: number, second: number, isPe
       return isBetween
         ? true
         : ctx.createError({
-            message: intl("valueShouldBeBetween", {
+            message: intl(opts?.smallError ? "valueShouldBeBetweenSmall" : "valueShouldBeBetween", {
               first: `${!isPercentage ? first : `${first}%`}`,
               second: `${!isPercentage ? second : `${second}%`}`,
             }),

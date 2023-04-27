@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledPayoutAllocation = styled.div`
+export const StyledSinglePayoutAllocation = styled.div`
   .result-divider {
     display: flex;
     align-items: center;

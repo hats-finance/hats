@@ -22,9 +22,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
-import { getPayoutDataYupSchema } from "./formSchema";
-import { SinglePayoutForm } from "./forms/SinglePayoutForm";
-import { SplitPayoutForm } from "./forms/SplitPayoutForm";
+import { getSinglePayoutDataYupSchema, getSplitPayoutDataYupSchema } from "./formSchema";
+import { SinglePayoutForm, SplitPayoutForm } from "./forms";
 import { IPayoutFormContext, PayoutFormContext } from "./store";
 import { StyledPayoutForm, StyledPayoutFormPage } from "./styles";
 
@@ -46,7 +45,11 @@ export const PayoutFormPage = () => {
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
   const methods = useForm<IPayoutData>({
-    resolver: yupResolver(getPayoutDataYupSchema(t)),
+    resolver: payout
+      ? payout.payoutData.type === "single"
+        ? yupResolver(getSinglePayoutDataYupSchema(t, vault))
+        : yupResolver(getSplitPayoutDataYupSchema(t, vault))
+      : undefined,
     mode: "onChange",
   });
   const { reset: handleReset, handleSubmit, formState } = methods;
@@ -69,8 +72,8 @@ export const PayoutFormPage = () => {
 
     if (vault.description) {
       const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
-        label: `${severity.name} ${vault.version === "v1" ? t("severity") : ""}`,
-        value: severity.name,
+        label: severity.name.toLowerCase().replace("severity", "").trim(),
+        value: severity.name.toLowerCase(),
       }));
 
       // if the current severity is not in the list of severities, add it
@@ -78,8 +81,8 @@ export const PayoutFormPage = () => {
         const payoutData = payout.payoutData;
         if (payoutData.severity && !severities.find((severity) => severity.value === payoutData.severity)) {
           severities.push({
-            label: `${payoutData.severity} ${vault.version === "v1" ? t("severity") : ""}`,
-            value: payoutData.severity,
+            label: payoutData.severity.toLowerCase().replace("severity", "").trim(),
+            value: payoutData.severity.toLowerCase(),
           });
         }
       } else {
@@ -89,8 +92,8 @@ export const PayoutFormPage = () => {
             !severities.find((severity) => severity.value === splitPayoutBeneficiary.severity)
           ) {
             severities.push({
-              label: `${splitPayoutBeneficiary.severity} ${vault.version === "v1" ? t("severity") : ""}`,
-              value: splitPayoutBeneficiary.severity,
+              label: splitPayoutBeneficiary.severity.toLowerCase().replace("severity", "").trim(),
+              value: splitPayoutBeneficiary.severity.toLowerCase(),
             });
           }
         }
@@ -123,14 +126,16 @@ export const PayoutFormPage = () => {
 
   const handleLockPayout = async () => {
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
+    console.log(methods.getValues());
+    return;
 
-    try {
-      await handleSavePayout();
-      const wasLocked = await lockPayout.mutateAsync({ payoutId });
-      if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   await handleSavePayout();
+    //   const wasLocked = await lockPayout.mutateAsync({ payoutId });
+    //   if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   if (!address) return <PayoutsWelcome />;

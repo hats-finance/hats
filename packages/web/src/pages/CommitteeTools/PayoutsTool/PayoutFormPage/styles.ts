@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledPayoutFormPage = styled.div`
   position: relative;
@@ -83,15 +84,26 @@ export const StyledPayoutForm = styled.div`
 
     .w-60 {
       width: 60%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
     }
 
     .w-40 {
       width: 40%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
     }
 
     .row {
       display: flex;
       gap: ${getSpacing(2)};
+    }
+
+    .beneficiaries-table {
     }
   }
 

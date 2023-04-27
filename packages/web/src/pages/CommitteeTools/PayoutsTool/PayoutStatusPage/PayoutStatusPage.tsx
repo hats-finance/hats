@@ -1,8 +1,3 @@
-import { useEffect, useMemo, useState } from "react";
-import { ethers } from "ethers";
-import { useAccount, useWaitForTransaction } from "wagmi";
-import { useNavigate, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import {
   HATSVaultV2_abi,
   IVulnerabilitySeverityV1,
@@ -10,23 +5,28 @@ import {
   PayoutStatus,
   getSafeHomeLink,
 } from "@hats-finance/shared";
-import DOMPurify from "dompurify";
-import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert, SafePeriodBar } from "components";
-import { ExecutePayoutContract } from "contracts";
+import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { ExecutePayoutContract } from "contracts";
+import DOMPurify from "dompurify";
+import { ethers } from "ethers";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
-import { usePayoutStatus } from "../utils/usePayoutStatus";
-import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
-import { PayoutCard, SignerCard, PayoutAllocation } from "../components";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { useSignPayout } from "./useSignPayout";
+import { PayoutCard, SignerCard, SinglePayoutAllocation } from "../components";
+import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
+import { usePayoutStatus } from "../utils/usePayoutStatus";
 import { StyledPayoutStatusPage } from "./styles";
-import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { useSignPayout } from "./useSignPayout";
 
 const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
 
@@ -232,7 +232,7 @@ export const PayoutStatusPage = () => {
             </div>
 
             <div className="my-5">
-              <PayoutAllocation
+              <SinglePayoutAllocation
                 vault={vault}
                 payout={payout}
                 percentageToPay={payout?.payoutData.percentageToPay}
