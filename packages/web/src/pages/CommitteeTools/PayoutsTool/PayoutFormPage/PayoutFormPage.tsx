@@ -101,6 +101,7 @@ export const PayoutFormPage = () => {
   }, [allVaults, payout, vault, t]);
 
   const handleSavePayout = async () => {
+    if (isPayoutCreated) return;
     if (!payoutId || !payout || !isAuthenticated || !formState.isDirty || !vault) return;
 
     try {

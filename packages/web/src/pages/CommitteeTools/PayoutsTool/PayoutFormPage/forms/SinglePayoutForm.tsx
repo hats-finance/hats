@@ -1,4 +1,10 @@
-import { DefaultIndexArray, IPayoutData, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import {
+  DefaultIndexArray,
+  IPayoutData,
+  ISinglePayoutData,
+  IVulnerabilitySeverityV1,
+  IVulnerabilitySeverityV2,
+} from "@hats-finance/shared";
 import { FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
@@ -13,7 +19,7 @@ export const SinglePayoutForm = () => {
   const { t } = useTranslation();
   const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
-  const methods = useEnhancedFormContext();
+  const methods = useEnhancedFormContext<ISinglePayoutData>();
   const { register, control, setValue } = methods;
 
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
@@ -49,7 +55,7 @@ export const SinglePayoutForm = () => {
           placeholder={t("Payouts.payoutNamePlaceholder")}
           disabled={isPayoutCreated}
           colorable
-          className="no-expanded-input"
+          className="w-60"
         />
 
         <FormInput
@@ -82,8 +88,8 @@ export const SinglePayoutForm = () => {
             {...register("percentageToPay")}
             label={t("Payouts.percentageToPay")}
             placeholder={t("Payouts.percentageToPayPlaceholder")}
-            readOnly
             helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+            readOnly
           />
         </div>
 

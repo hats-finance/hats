@@ -81,8 +81,12 @@ export const StyledPayoutForm = styled.div`
       }
     }
 
-    .no-expanded-input {
+    .w-60 {
       width: 60%;
+    }
+
+    .w-40 {
+      width: 40%;
     }
 
     .row {
@@ -102,6 +106,7 @@ export const StyledPayoutForm = styled.div`
 
     &.no-line {
       border-top: none;
+      padding-top: 0;
     }
   }
 
