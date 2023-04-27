@@ -3,9 +3,9 @@ import { getSpacing } from "styles";
 
 export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
   ({ hasError }) => css`
-    width: 100%;
     position: relative;
     margin-bottom: ${getSpacing(3)};
+    width: 100%;
 
     label.input-label {
       display: block;
@@ -32,8 +32,10 @@ export const SelectButton = styled.div<{
   isOpen: boolean;
   isFilled: boolean;
   disabled: boolean;
+  readOnly: boolean;
 }>(
-  ({ isDirty, isOpen, hasError, isFilled, disabled }) => css`
+  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly }) => css`
+    position: relative;
     width: 100%;
     display: flex;
     align-items: center;
@@ -55,11 +57,16 @@ export const SelectButton = styled.div<{
         left: 0;
         width: 100%;
         height: calc(100% - ${hasError ? "20px" : "0px"});
-        background-color: var(--grey-700);
+        background-color: var(--disabled-input);
         opacity: 0.4;
         z-index: 1;
         cursor: not-allowed;
       }
+    `}
+
+    ${readOnly &&
+    css`
+      cursor: not-allowed;
     `}
 
     ${isDirty &&
@@ -84,6 +91,7 @@ export const SelectButton = styled.div<{
       white-space: nowrap;
       flex-basis: 100%;
       color: ${isFilled ? "var(--white)" : "var(--grey-500)"};
+      text-transform: capitalize;
     }
 
     .icon {
@@ -93,8 +101,8 @@ export const SelectButton = styled.div<{
       justify-content: center;
       align-items: center;
       transition: 0.2s;
-      filter: grayscale(1);
       transform: translateY(-40%);
+      color: ${readOnly ? "transparent" : "unherit"};
 
       ${isOpen &&
       css`

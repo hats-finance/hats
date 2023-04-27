@@ -91,7 +91,7 @@ export const useVaultEditorSteps = (
 
   // This function will go through all the steps and check if they are valid or not
   const initFormSteps = useCallback(
-    async (isEditingExitingVault: boolean) => {
+    async (isEditingExistingVault: boolean) => {
       setLoadingSteps(true);
       let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
 
@@ -115,7 +115,7 @@ export const useVaultEditorSteps = (
         }
       }
 
-      if (!firstInvalidStep) firstInvalidStep = allSteps[isEditingExitingVault ? 0 : allSteps.length - 1];
+      if (!firstInvalidStep) firstInvalidStep = allSteps[isEditingExistingVault ? 0 : allSteps.length - 1];
 
       setCurrentSection(firstInvalidStep.section);
       setCurrentStepNumber(firstInvalidStep.index);

@@ -18,6 +18,23 @@
       opacity: 1;
     }
   }
+
+  .active-claim {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--white);
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    .icon {
+      color: var(--warning-yellow);
+    }
+  }
 }
 
 @media only screen and (max-width: $mobile-breakpoint) {

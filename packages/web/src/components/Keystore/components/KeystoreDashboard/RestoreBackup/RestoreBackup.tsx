@@ -50,7 +50,7 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
       removeAnimation
       titleIcon={<RestoreIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.uploadBackup")}
-      pgpKeystoreStyles
+      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

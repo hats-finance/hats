@@ -14,5 +14,4 @@ export const ENCRYPTED_STORAGE_KEY = process.env.REACT_APP_ENCRYPTED_STORAGE_KEY
 
 export const defaultChain: IChainConfiguration = ChainsConfig[mainnet.id];
 
-// If we're in production, only mainnet is enabled
 export const appChains = ChainsConfig;

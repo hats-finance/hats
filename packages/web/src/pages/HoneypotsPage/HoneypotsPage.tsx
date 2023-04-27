@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { formatUnits } from "ethers/lib/utils";
 import { IVault } from "types";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -11,11 +12,14 @@ import { DepositWithdraw } from "./DepositWithdraw";
 import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
 
+const VAULT_GROUPS_ORDER = ["pendingReward", "audit", "normal", ""];
+
 interface HoneypotsPageProps {
   showDeposit?: boolean;
 }
 
 const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
+  const { t } = useTranslation();
   const { vaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
@@ -47,64 +51,68 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
 
   const vaultsByGroup = vaultsMatchSearch?.reduce((groups, vault) => {
     if (vault.registered) {
-      const key = vault.description?.["project-metadata"].type || normalVaultKey;
-      (groups[key] = groups[key] || []).push(vault);
+      let vaultTypeKey = normalVaultKey;
+      if (vault.activeClaim) vaultTypeKey = "pendingReward";
+      if (vault.description?.["project-metadata"].type) vaultTypeKey = vault.description?.["project-metadata"].type;
+
+      groups[vaultTypeKey] = groups[vaultTypeKey] || [];
+      groups[vaultTypeKey].push(vault);
     }
     return groups;
-  }, [] as IVault[][])!;
-
-  function capitalizeFirstLetter(val: string) {
-    return val.charAt(0).toUpperCase() + val.slice(1);
-  }
+  }, [] as IVault[][]);
 
   return (
     <StyledHoneypotsPage className="content-wrapper">
       {vaults === undefined ? (
         <Loading fixed />
       ) : (
-        <table>
-          <tbody>
-            <SafePeriodBar />
-            <tr>
-              <th colSpan={2} className="search-cell">
-                <div className="search-wrapper">
-                  <SearchIcon />
-                  <input
-                    type="text"
-                    value={userSearch}
-                    onChange={(e) => setUserSearch(e.target.value)}
-                    className="search-input"
-                    placeholder="Search vault..."
-                  />
-                </div>
-              </th>
-              <th className="onlyDesktop">TOTAL VAULT</th>
-              <th className="onlyDesktop">APY</th>
-              <th className="onlyDesktop"></th>
-            </tr>
-            {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
-            {vaultsByGroup &&
-              Object.entries(vaultsByGroup)
-                .sort()
-                .map(([type, groupVaults]) => (
-                  <React.Fragment key={type}>
-                    <tr className="transparent-row">
-                      <td colSpan={7}>{type === normalVaultKey ? "Bounty" : capitalizeFirstLetter(type)} Vaults</td>
-                    </tr>
-                    {groupVaults &&
-                      groupVaults.map((vault) => (
-                        <Vault
-                          ref={vault.id === vaultId ? scrollRef : null}
-                          expanded={expanded === vault.id}
-                          setExpanded={setExpanded}
-                          key={vault.id}
-                          vault={vault}
-                        />
-                      ))}
-                  </React.Fragment>
-                ))}
-          </tbody>
-        </table>
+        <>
+          <SafePeriodBar />
+          <table>
+            <tbody>
+              <tr>
+                <th colSpan={2} className="search-cell">
+                  <div className="search-wrapper">
+                    <SearchIcon />
+                    <input
+                      type="text"
+                      value={userSearch}
+                      onChange={(e) => setUserSearch(e.target.value)}
+                      className="search-input"
+                      placeholder="Search vault..."
+                    />
+                  </div>
+                </th>
+                <th className="onlyDesktop">TOTAL VAULT</th>
+                <th className="onlyDesktop">APY</th>
+                <th className="onlyDesktop"></th>
+              </tr>
+              {/* Bounty vaults should be last - we assume bounty vaults type is "" */}
+              {vaultsByGroup &&
+                Object.entries(vaultsByGroup)
+                  .sort(([aType], [bType]) =>
+                    VAULT_GROUPS_ORDER.findIndex((v) => v === aType) > VAULT_GROUPS_ORDER.findIndex((v) => v === bType) ? 1 : -1
+                  )
+                  .map(([type, groupVaults]) => (
+                    <React.Fragment key={type}>
+                      <tr className="transparent-row">
+                        <td colSpan={7}>{t(type === normalVaultKey ? "bounty" : type)} Vaults</td>
+                      </tr>
+                      {groupVaults &&
+                        groupVaults.map((vault) => (
+                          <Vault
+                            ref={vault.id === vaultId ? scrollRef : null}
+                            expanded={expanded === vault.id}
+                            setExpanded={setExpanded}
+                            key={vault.id}
+                            vault={vault}
+                          />
+                        ))}
+                    </React.Fragment>
+                  ))}
+            </tbody>
+          </table>
+        </>
       )}
 
       {selectedVault && (

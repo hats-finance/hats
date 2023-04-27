@@ -46,6 +46,7 @@ function FormInputComponent(
     error,
     prefixIcon,
     helper,
+    readOnly,
     ...props
   }: FormInputProps,
   ref
@@ -103,6 +104,7 @@ function FormInputComponent(
           rows={rows}
           onChange={handleOnChange}
           onClick={onClick}
+          readOnly={readOnly}
         />
       );
     } else if (inputType === "number") {
@@ -116,6 +118,7 @@ function FormInputComponent(
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
           onClick={onClick}
+          readOnly={readOnly}
         />
       );
     } else if (inputType === "whole-number") {
@@ -129,6 +132,7 @@ function FormInputComponent(
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
           onClick={onClick}
+          readOnly={readOnly}
         />
       );
     } else {
@@ -141,6 +145,7 @@ function FormInputComponent(
           ref={setRef}
           onChange={handleOnChange}
           onClick={onClick}
+          readOnly={readOnly}
         />
       );
     }
@@ -158,6 +163,8 @@ function FormInputComponent(
       noMargin={noMargin}
       withPrefixIcon={!!prefixIcon}
       withExtraicons={extraIcons}
+      colorable={colorable}
+      readOnly={readOnly}
     >
       <div className="main-container">
         {label && (

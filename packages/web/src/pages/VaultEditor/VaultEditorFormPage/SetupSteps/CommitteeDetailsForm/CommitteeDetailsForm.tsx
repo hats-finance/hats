@@ -17,7 +17,7 @@ export function CommitteeDetailsForm() {
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
   const committeeChainId = useWatch({ control, name: "committee.chainId" });
 
-  const { isEditingExitingVault, allFormDisabled } = useContext(VaultEditorFormContext);
+  const { isEditingExistingVault, allFormDisabled } = useContext(VaultEditorFormContext);
 
   const showTestnets = address && chain?.testnet;
   const supportedNetworksOptions = Object.values(appChains)
@@ -50,7 +50,7 @@ export function CommitteeDetailsForm() {
                 label={t("VaultEditor.vault-details.chain")}
                 placeholder={t("VaultEditor.vault-details.chain-placeholder")}
                 colorable
-                disabled={isEditingExitingVault || allFormDisabled}
+                disabled={isEditingExistingVault || allFormDisabled}
                 options={supportedNetworksOptions}
                 {...field}
                 value={field.value ?? ""}
@@ -63,7 +63,7 @@ export function CommitteeDetailsForm() {
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}
-        disabled={!committeeChainId || isEditingExitingVault || allFormDisabled}
+        disabled={!committeeChainId || isEditingExistingVault || allFormDisabled}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

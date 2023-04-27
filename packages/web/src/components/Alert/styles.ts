@@ -9,6 +9,8 @@ type StyledAlertProps = {
 const alertColors = {
   warning: "--warning-yellow",
   error: "--error-red",
+  info: "--turquoise",
+  success: "--turquoise",
 };
 
 export const StyledAlert = styled.div<StyledAlertProps>(
@@ -37,6 +39,8 @@ export const StyledAlert = styled.div<StyledAlertProps>(
 
     .alert-content {
       margin-top: ${getSpacing(1.5)};
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   `
 );

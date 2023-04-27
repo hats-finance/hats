@@ -11,12 +11,27 @@ type StyledFormInputProps = {
   withExtraicons?: boolean;
   withPrefixIcon?: boolean;
   isCheckOrRadio?: boolean;
+  colorable?: boolean;
+  readOnly?: boolean;
   disabled?: boolean;
   type?: FormInputType;
 };
 
 export const StyledFormInput = styled.div<StyledFormInputProps>(
-  ({ isDirty, type, withExtraicons, hasError, isCheckOrRadio, noMargin, withPrefixIcon, isChecked, noLabel, disabled }) => css`
+  ({
+    isDirty,
+    type,
+    withExtraicons,
+    hasError,
+    isCheckOrRadio,
+    noMargin,
+    withPrefixIcon,
+    isChecked,
+    noLabel,
+    disabled,
+    colorable,
+    readOnly,
+  }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
@@ -51,9 +66,16 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: var(--grey-700);
+        background-color: var(--disabled-input);
         opacity: 0.4;
         z-index: 1;
+        cursor: not-allowed;
+      }
+    `}
+
+    ${readOnly &&
+    css`
+      * {
         cursor: not-allowed;
       }
     `}
@@ -70,15 +92,19 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       border-radius: 0;
       font-family: inherit;
       color-scheme: dark;
+      font-size: var(--xsmall);
 
       &::placeholder {
         color: var(--grey-500);
         font-family: RobotoMono;
       }
 
-      &:focus {
-        border-color: var(--turquoise);
-      }
+      ${colorable &&
+      css`
+        &:focus {
+          border-color: var(--turquoise);
+        }
+      `}
 
       ${isDirty &&
       css`

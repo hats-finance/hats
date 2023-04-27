@@ -110,7 +110,7 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
       removeAnimation
       titleIcon={<UploadIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.importKey")}
-      pgpKeystoreStyles
+      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

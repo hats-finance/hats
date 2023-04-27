@@ -1,10 +1,12 @@
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 import styled from "styled-components";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
+import { getSpacing } from "styles";
 
 export const StyledHoneypotsPage = styled.div`
   position: relative;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: ${getSpacing(0.5)};
 
   .search-cell {
     .search-wrapper {

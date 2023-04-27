@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import DOMPurify from "dompurify";
 import { useAccount } from "wagmi";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 import { isAddress } from "utils/addresses.utils";
 import { CopyToClipboard, Loading } from "components";
 import {
@@ -14,8 +16,6 @@ import {
 } from "./VaultStatusCards";
 import * as VaultStatusService from "../vaultEditorService";
 import { checkIfAddressCanEditTheVault, vaultEditorRoleToIntlKey } from "../utils";
-import { VaultEditorAddressRole } from "../types";
-import { IVaultStatusData } from "./types";
 import { StyledVaultStatusPage } from "./styles";
 import { VaultStatusContext } from "./store";
 
@@ -29,7 +29,7 @@ export const VaultStatusPage = () => {
   const { vaultAddress, vaultChainId } = useParams();
 
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
-  const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: VaultEditorAddressRole }>();
+  const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: IAddressRoleInVault }>();
 
   useEffect(() => {
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
@@ -43,11 +43,11 @@ export const VaultStatusPage = () => {
     const getPermissionData = async () => {
       if (!vaultData) return;
 
-      const permissionData = await checkIfAddressCanEditTheVault(address, vaultData);
+      const permissionData = await checkIfAddressCanEditTheVault(address, vaultChainId, vaultData.committeeMulsitigAddress);
       setUserPermissionData(permissionData);
     };
     getPermissionData();
-  }, [address, vaultData]);
+  }, [address, vaultChainId, vaultData]);
 
   const loadVaultData = async (address: string, chainId: number) => {
     const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);
@@ -74,7 +74,7 @@ export const VaultStatusPage = () => {
   };
 
   return (
-    <StyledVaultStatusPage className="content-wrapper">
+    <StyledVaultStatusPage className="content-wrapper-md">
       <div className="status-title">
         <div className="leftSide">
           <div className="title">
@@ -83,7 +83,7 @@ export const VaultStatusPage = () => {
           </div>
           <div className="role">{t(vaultEditorRoleToIntlKey(userPermissionData.role))}</div>
         </div>
-        <CopyToClipboard valueToCopy={document.location.href} overlayText={t("copyVaultLink")} />
+        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyVaultLink")} />
       </div>
 
       {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}

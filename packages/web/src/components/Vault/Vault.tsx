@@ -10,15 +10,18 @@ import ArrowIcon from "assets/icons/arrow.icon";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultActions from "./VaultActions/VaultActions";
 import VaultTokens from "./VaultTokens/VaultTokens";
-import { useVaultsTotalPrices } from "./hooks/useVaultsTotalPrices";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
-import { StyledVault, StyledVersionFlag, StyledVaultExpandAction } from "./styles";
+import { StyledVault, StyledVersionFlag, StyledVaultExpandAction, StyledActiveClaimFlag } from "./styles";
 import { appChains } from "settings";
+import WarnIcon from "@mui/icons-material/WarningAmberRounded";
+import { WithTooltip } from "components/WithTooltip/WithTooltip";
 
 interface VaultComponentProps {
   vault: IVault;
   expanded: boolean;
+  noActions?: boolean;
   setExpanded?: any;
   preview?: boolean;
   selected?: boolean;
@@ -26,7 +29,7 @@ interface VaultComponentProps {
 }
 
 const VaultComponent = (
-  { vault, expanded, preview, setExpanded, onSelect, selected = false }: VaultComponentProps,
+  { vault, expanded, preview, setExpanded, onSelect, selected = false, noActions = false }: VaultComponentProps,
   ref: ForwardedRef<HTMLTableRowElement>
 ) => {
   const { t } = useTranslation();
@@ -69,6 +72,22 @@ const VaultComponent = (
     </div>
   );
 
+  const getVersionFlag = () => {
+    return vault.version === "v2" && !vault.activeClaim && <StyledVersionFlag>{vault.version}</StyledVersionFlag>;
+  };
+
+  const getActiveClaimFlag = () => {
+    return (
+      vault.activeClaim && (
+        <WithTooltip text={t("vaultPausedActiveClaimExplanation")}>
+          <StyledActiveClaimFlag>
+            <WarnIcon />
+          </StyledActiveClaimFlag>
+        </WithTooltip>
+      )
+    );
+  };
+
   return (
     <>
       <StyledVault
@@ -79,12 +98,16 @@ const VaultComponent = (
         onClick={onSelect ? () => onSelect() : undefined}
       >
         <td className="onlyDesktop" onClick={expandVault}>
-          {vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}
+          {getVersionFlag()}
+          {getActiveClaimFlag()}
           {!onSelect && <span>{vaultExpandAction}</span>}
         </td>
 
         <td className="relative-column">
-          <div className="onlyMobile">{vault.version === "v2" && <StyledVersionFlag>{vault.version}</StyledVersionFlag>}</div>
+          <div className="onlyMobile">
+            {getVersionFlag()}
+            {getActiveClaimFlag()}
+          </div>
           <div className="project-name-wrapper">
             <div className="vault-icon">
               {vaultIcon && (
@@ -110,7 +133,7 @@ const VaultComponent = (
         )}
         {!onSelect && (
           <td className="onlyDesktop">
-            <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />
+            {!noActions && <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
           </td>
         )}
 
@@ -118,7 +141,7 @@ const VaultComponent = (
           {vaultExpandAction}
         </td>
       </StyledVault>
-      {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} />}
+      {expanded && <VaultExpanded data={vault} withdrawRequests={withdrawRequests} preview={preview} noActions={noActions} />}
     </>
   );
 };

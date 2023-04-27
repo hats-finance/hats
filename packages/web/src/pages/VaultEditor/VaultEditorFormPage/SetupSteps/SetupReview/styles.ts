@@ -16,4 +16,15 @@ export const StyledSetupReview = styled.div`
       margin-left: ${getSpacing(3.5)};
     }
   }
+
+  .preview-vault {
+    margin-top: ${getSpacing(5)};
+    border: 1px solid var(--turquoise);
+    box-sizing: border-box;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  }
 `;

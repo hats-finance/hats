@@ -8,9 +8,10 @@ import { StyledCopyToClipboard } from "./styles";
 interface IProps {
   valueToCopy: string;
   overlayText?: string;
+  tooltipPlacement?: "top" | "bottom" | "left" | "right";
 }
 
-export function CopyToClipboard({ valueToCopy, overlayText }: IProps) {
+export function CopyToClipboard({ valueToCopy, overlayText, tooltipPlacement = "left" }: IProps) {
   const { t } = useTranslation();
 
   const [hasClicked, setHasClicked] = useState(false);
@@ -27,7 +28,7 @@ export function CopyToClipboard({ valueToCopy, overlayText }: IProps) {
 
   return (
     <StyledCopyToClipboard>
-      <WithTooltip text={hasClicked ? t("copied") : overlayText ?? t("copyToClipboard")}>
+      <WithTooltip placement={tooltipPlacement} text={hasClicked ? t("copied") : overlayText ?? t("copyToClipboard")}>
         <div className="copy-button" onClick={handleCopy}>
           {hasClicked ? <CheckIcon fontSize="small" /> : <CopyIcon fontSize="small" />}
         </div>

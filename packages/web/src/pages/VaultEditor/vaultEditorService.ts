@@ -1,17 +1,18 @@
 import { getContract, getProvider, readContracts } from "wagmi/actions";
+import { BigNumber } from "ethers";
 import {
   HATSVaultsRegistry_abi,
   HATSVaultV2_abi,
   IEditedSessionResponse,
   IEditedVaultDescription,
   IVaultDescription,
+  IVaultStatusData,
 } from "@hats-finance/shared";
 import { getPath, setPath } from "utils/objects.utils";
 import { isBlob } from "utils/files.utils";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { IVaultStatusData } from "./VaultStatusPage/types";
 
 /**
  * Gets an edit session data
@@ -163,7 +164,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
       { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
       { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
       { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
-      { ...vaultContractInfo, functionName: "totalSupply" }, // Deposited amount
+      { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
       { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
       { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
       { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
@@ -171,7 +172,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
       { ...vaultContractInfo, functionName: "asset" }, // asset
       { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
     ],
-  });
+  }) as Promise<any[]>;
 
   const promisesData = await Promise.all([allDescriptionsHashesPromise, allContractCallsPromises]);
 
@@ -260,5 +261,15 @@ export async function getCurrentValidEditSession(
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/all/${chainId}/${vaultAddress}`);
+  return response.data ?? [];
+}
+
+/**
+ * Sets the edit session as clicked to create the new vault on-chain
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function setLastCreationOnChainRequest(editSessionId: string): Promise<boolean[]> {
+  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-last-creation-onchain-request`);
   return response.data ?? [];
 }

@@ -1,6 +1,6 @@
 {
   "name": "@hats-finance/shared",
-  "version": "1.0.42",
+  "version": "1.0.70",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,6 +18,10 @@
   },
   "dependencies": {
     "@wagmi/chains": "0.1.9-cjs",
+    "@safe-global/safe-core-sdk": "^3.3.2",
+    "@safe-global/safe-core-sdk-types": "^1.10.1",
+    "@safe-global/safe-ethers-lib": "^1.9.2",
+    "ethers": "^5.7.2",
     "uuid": "^9.0.0"
   }
 }

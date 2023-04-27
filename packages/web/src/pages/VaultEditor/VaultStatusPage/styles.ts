@@ -173,6 +173,17 @@ export const StyledVaultStatusPage = styled.div`
           }
         }
       }
+
+      .preview-vault {
+        margin-top: 10px;
+        border: 1px solid var(--turquoise);
+        box-sizing: border-box;
+
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+      }
     }
   }
 

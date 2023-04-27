@@ -1,6 +1,5 @@
 import { createContext } from "react";
-import { VaultEditorAddressRole } from "../types";
-import { IVaultStatusData } from "./types";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 
 interface IVaultStatusContext {
   vaultAddress: string;
@@ -8,7 +7,7 @@ interface IVaultStatusContext {
   vaultData: IVaultStatusData;
   loadVaultData: (vaultAddress: string, chainId: number) => Promise<void>;
   refreshVaultData: () => Promise<void>;
-  userPermissionData: { canEditVault: boolean; role: VaultEditorAddressRole };
+  userPermissionData: { canEditVault: boolean; role: IAddressRoleInVault };
 }
 
 export const VaultStatusContext = createContext<IVaultStatusContext>(undefined as any);
