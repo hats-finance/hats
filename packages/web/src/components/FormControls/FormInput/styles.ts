@@ -128,7 +128,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     }
 
     input {
-      padding: ${getSpacing(noLabel ? 1.2 : 3.6)} ${getSpacing(noLabel ? 1.5 : 2)} ${getSpacing(1.2)};
+      padding: ${getSpacing(noLabel ? 1.8 : 3.6)} ${getSpacing(noLabel ? 1.5 : 2)} ${getSpacing(noLabel ? 1.8 : 1.2)};
 
       ${withExtraicons &&
       css`
