@@ -39,7 +39,6 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
 
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
-    console.log(selectedSeverityName);
     if (!selectedSeverityData) return;
     if (prevSelected === undefined || newSelected === undefined) return;
     setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);

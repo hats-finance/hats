@@ -22,11 +22,13 @@ export const SplitPayoutForm = () => {
   const {
     fields: beneficiaries,
     append: appendBeneficiary,
+    prepend: prependBeneficiary,
     remove: removeBeneficiary,
   } = useFieldArray({ control, name: `beneficiaries` });
   const watchedBeneficiaries = useWatch({ control, name: `beneficiaries` });
 
   const [beneficiariesToImport, setBeneficiariesToImport] = useState<CSVBeneficiary[] | undefined>();
+  const [csvFileInputKey, setCsvFileInputKey] = useState(1);
 
   const handleDownloadCsvTemplate = () => {
     if (!severitiesOptions) return;
@@ -73,9 +75,23 @@ export const SplitPayoutForm = () => {
   };
 
   const handleImportBeneficiaries = () => {
-    if (!beneficiariesToImport || beneficiariesToImport.length === 0) return;
+    if (!beneficiariesToImport || beneficiariesToImport.length === 0 || !severitiesOptions) return;
 
-    console.log(beneficiariesToImport);
+    for (const beneficiaryToImport of beneficiariesToImport) {
+      const severityFound = severitiesOptions.find((sev) =>
+        sev.value.toLowerCase().includes(beneficiaryToImport.severity.toLowerCase())
+      );
+
+      prependBeneficiary({
+        beneficiary: beneficiaryToImport.beneficiary,
+        severity: severityFound ? severityFound.value.toLowerCase() : "",
+        percentageOfPayout: Number(beneficiaryToImport.percentageToPay).toString() ?? "",
+        nftUrl: "",
+      });
+    }
+
+    setBeneficiariesToImport(undefined);
+    setCsvFileInputKey((prev) => prev + 1);
   };
 
   const severitiesSummary = useMemo(
@@ -116,6 +132,7 @@ export const SplitPayoutForm = () => {
 
         <div className="mt-5 mb-5">
           <FormJSONCSVFileInput
+            key={csvFileInputKey}
             small
             name="split-payout-csv"
             fileType="CSV"
