@@ -1,15 +1,20 @@
+import { ISplitPayoutData } from "@hats-finance/shared";
 import DownloadIcon from "@mui/icons-material/SaveAltOutlined";
-import { Button, FormJSONCSVFileInput } from "components";
+import { Button, FormInput, FormJSONCSVFileInput } from "components";
+import { useEnhancedFormContext } from "hooks/form";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PayoutFormContext } from "../store";
 import { StyledPayoutForm } from "../styles";
 
-type CSVBeneficiary = { beneficiary: string; severity: string };
+type CSVBeneficiary = { beneficiary: string; severity: string; percentageToPay: number | string };
 
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
   const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+
+  const methods = useEnhancedFormContext<ISplitPayoutData>();
+  const { register, control, setValue } = methods;
 
   const [beneficiariesToImport, setBeneficiariesToImport] = useState<CSVBeneficiary[] | undefined>();
 
@@ -17,10 +22,11 @@ export const SplitPayoutForm = () => {
     if (!severitiesOptions) return;
 
     const csvString = [
-      ["beneficiary", "severity"],
+      ["beneficiary", "severity", "percentageToPay"],
       ...severitiesOptions.map((severity, idx) => [
         `0x000000000000000000000000000000000000000${idx}`,
         severity.value.toLowerCase(),
+        (100 / severitiesOptions.length).toFixed(2),
       ]),
     ]
       .map((e) => e.join(","))
@@ -38,12 +44,21 @@ export const SplitPayoutForm = () => {
     const beneficiariesOnFile = JSON.parse(csvString) as CSVBeneficiary[] | undefined;
 
     const isArray = Array.isArray(beneficiariesOnFile) && beneficiariesOnFile.length > 0;
-    const validFormat = beneficiariesOnFile?.every((item) => item.beneficiary && item.severity);
+    const validFormat = beneficiariesOnFile?.every((item) => item.beneficiary && item.severity && item.percentageToPay);
 
     if (!isArray || !validFormat) return setBeneficiariesToImport([]);
     setBeneficiariesToImport(
-      // Remove duplicates by beneficiary address
-      beneficiariesOnFile.filter((item, index, self) => index === self.findIndex((t) => t.beneficiary === item.beneficiary))
+      // Group and sum percentageToPay by beneficiary address
+      beneficiariesOnFile.reduce((acc, item) => {
+        const beneficiary = acc.find((e) => e.beneficiary === item.beneficiary);
+        if (beneficiary) {
+          beneficiary.percentageToPay = Number(beneficiary.percentageToPay) + Number(item.percentageToPay);
+        } else {
+          item.percentageToPay = Number(item.percentageToPay);
+          acc.push(item);
+        }
+        return acc;
+      }, [] as CSVBeneficiary[])
     );
   };
 
@@ -90,6 +105,33 @@ export const SplitPayoutForm = () => {
             {t("Payouts.importBeneficiaries")}
           </Button>
         </div>
+      </div>
+
+      <div className="form-container mt-5">
+        <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
+
+        <FormInput
+          {...register("title")}
+          label={t("Payouts.payoutName")}
+          placeholder={t("Payouts.payoutNamePlaceholder")}
+          disabled={isPayoutCreated}
+          colorable
+          className="w-60"
+        />
+
+        <p className="mt-3 mb-2">{t("Payouts.percentageToPayExplanation")}</p>
+
+        <FormInput
+          {...register("percentageToPay")}
+          label={t("Payouts.percentageToPay")}
+          placeholder={t("Payouts.percentageToPayPlaceholder")}
+          helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+          disabled={isPayoutCreated}
+          colorable
+          className="w-40"
+        />
+
+        <p className="mt-3">{t("Payouts.editPayoutOfEachBeneficiary")}</p>
       </div>
     </StyledPayoutForm>
   );
