@@ -3,6 +3,7 @@ import MoreIcon from "@mui/icons-material/MoreVertOutlined";
 import { FormInput, FormSelectInput } from "components";
 import { BigNumber } from "ethers";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import { useOnChange } from "hooks/usePrevious";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useContext, useMemo } from "react";
@@ -21,13 +22,28 @@ type BeneficiaryRowFormProps = {
 export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: BeneficiaryRowFormProps) => {
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
-  const { payout, vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+  const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
-  const { register, control } = useEnhancedFormContext<ISplitPayoutData>();
+  const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
   const isHeader = index === -1;
 
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
+
+  const vaultSeverities = vault?.description?.severities ?? [];
+  const selectedSeverityName = useWatch({ control, name: `beneficiaries.${index}.severity`, defaultValue: undefined });
+  const selectedSeverityIndex = vaultSeverities.findIndex(
+    (severity) => severity.name.toLowerCase() === selectedSeverityName?.toLowerCase()
+  );
+  const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
+
+  // Edit the payout percentage and NFT info based on the selected severity
+  useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
+    console.log(selectedSeverityName);
+    if (!selectedSeverityData) return;
+    if (prevSelected === undefined || newSelected === undefined) return;
+    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);
+  });
 
   const amountInTokens = useMemo(() => {
     if (!percentageToPayOfTheVault || !percentageOfPayout || !vault) return undefined;
@@ -43,8 +59,6 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
     const tokenPrice = tokenPrices?.[vault?.stakingToken] ?? 0;
     return amountInTokens * tokenPrice;
   }, [amountInTokens, tokenPrices, vault]);
-
-  console.log(amountInUsd);
 
   return (
     <StyledBeneficiaryRowForm isHeader={isHeader} role="rowgroup">

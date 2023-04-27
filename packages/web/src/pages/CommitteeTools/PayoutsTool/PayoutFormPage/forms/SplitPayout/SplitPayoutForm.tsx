@@ -15,7 +15,7 @@ type CSVBeneficiary = { beneficiary: string; severity: string; percentageToPay: 
 
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
-  const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+  const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
   const { register, control } = methods;

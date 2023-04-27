@@ -26,7 +26,9 @@ export const SinglePayoutForm = () => {
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = useWatch({ control, name: "severity", defaultValue: undefined });
-  const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
+  const selectedSeverityIndex = vaultSeverities.findIndex(
+    (severity) => severity.name.toLowerCase() === selectedSeverityName?.toLowerCase()
+  );
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   // Edit the payout percentage and NFT info based on the selected severity
