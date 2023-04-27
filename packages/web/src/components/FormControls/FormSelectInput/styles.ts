@@ -43,6 +43,7 @@ export const SelectButton = styled.div<{
     text-align: left;
     padding: ${getSpacing(3.4)} ${getSpacing(2)} ${getSpacing(0.8)};
     border: 1px solid var(--grey-500);
+    font-size: var(--xsmall);
 
     ${noLabel &&
     css`
