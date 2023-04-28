@@ -9,7 +9,7 @@ export const StyledBeneficiariesTable = styled.div`
   gap: ${getSpacing(2)};
 `;
 
-export const StyledBeneficiaryRowForm = styled.div<{ isHeader: boolean }>(
+export const StyledSplitPayoutBeneficiaryForm = styled.div<{ isHeader: boolean }>(
   ({ isHeader }) => css`
     display: flex;
     align-items: ${isHeader ? "center" : "baseline"};

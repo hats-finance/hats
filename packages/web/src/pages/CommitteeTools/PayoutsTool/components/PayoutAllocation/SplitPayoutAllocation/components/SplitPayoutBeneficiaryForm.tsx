@@ -13,15 +13,15 @@ import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
 import { PayoutFormContext } from "../../../../PayoutFormPage/store";
-import { StyledBeneficiaryRowForm } from "../styles";
+import { StyledSplitPayoutBeneficiaryForm } from "../styles";
 
-type BeneficiaryRowFormProps = {
+type SplitPayoutBeneficiaryFormProps = {
   index: number;
   beneficiariesCount?: number;
   remove?: UseFieldArrayRemove;
 };
 
-export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: BeneficiaryRowFormProps) => {
+export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
@@ -93,7 +93,7 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
   };
 
   return (
-    <StyledBeneficiaryRowForm isHeader={isHeader} role="rowgroup">
+    <StyledSplitPayoutBeneficiaryForm isHeader={isHeader} role="rowgroup">
       <div className="cell" role="cell">
         {isHeader ? "#" : index + 1}
       </div>
@@ -174,6 +174,6 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
         {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
         <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
       </div>
-    </StyledBeneficiaryRowForm>
+    </StyledSplitPayoutBeneficiaryForm>
   );
 };

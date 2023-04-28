@@ -18,7 +18,7 @@ import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
-import { BeneficiaryRowForm } from "./components/BeneficiaryRowForm";
+import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
 
 type SplitPayoutAllocationProps = {
@@ -154,9 +154,9 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
   return (
     <>
       <StyledBeneficiariesTable className="mt-4" role="table">
-        <BeneficiaryRowForm index={-1} />
+        <SplitPayoutBeneficiaryForm index={-1} />
         {beneficiaries.map((beneficiary, idx) => (
-          <BeneficiaryRowForm
+          <SplitPayoutBeneficiaryForm
             key={beneficiary.id}
             index={idx}
             beneficiariesCount={beneficiaries.length}
