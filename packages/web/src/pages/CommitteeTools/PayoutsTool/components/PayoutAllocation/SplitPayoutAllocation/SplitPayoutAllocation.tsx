@@ -118,7 +118,7 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
   );
 
   const totalPayoutAmount = useMemo(() => {
-    if (!vault) return undefined;
+    if (!vault || !percentageToPayOfTheVault) return undefined;
 
     const tokenPrice = tokenPrices?.[vault?.stakingToken] ?? 0;
     // Check if this payout is already created on chain
@@ -153,10 +153,11 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
 
   return (
     <>
-      <StyledBeneficiariesTable className="mt-4" role="table">
+      <StyledBeneficiariesTable className="mt-4 mb-5" role="table">
         <SplitPayoutBeneficiaryForm index={-1} />
         {beneficiaries.map((beneficiary, idx) => (
           <SplitPayoutBeneficiaryForm
+            readOnly={readOnly}
             key={beneficiary.id}
             index={idx}
             beneficiariesCount={beneficiaries.length}
@@ -165,10 +166,12 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
         ))}
       </StyledBeneficiariesTable>
 
-      <Button styleType="invisible" className="mt-5" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
-        <AddIcon />
-        {t("Payouts.addBeneficiary")}
-      </Button>
+      {!readOnly && (
+        <Button styleType="invisible" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
+          <AddIcon />
+          {t("Payouts.addBeneficiary")}
+        </Button>
+      )}
 
       {sumPercentagesPayout !== 100 && <p className="error mt-4">{t("Payouts.sumPercentagesPayoutShouldBe100")}</p>}
       <StyledSplitPayoutSummary className="mt-3">

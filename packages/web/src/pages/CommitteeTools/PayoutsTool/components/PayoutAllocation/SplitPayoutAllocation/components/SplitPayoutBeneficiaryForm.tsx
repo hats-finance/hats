@@ -19,9 +19,10 @@ type SplitPayoutBeneficiaryFormProps = {
   index: number;
   beneficiariesCount?: number;
   remove?: UseFieldArrayRemove;
+  readOnly?: boolean;
 };
 
-export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }: SplitPayoutBeneficiaryFormProps) => {
+export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, readOnly }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
@@ -68,7 +69,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
 
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
-    if (beneficiariesCount > 1) {
+    if (beneficiariesCount > 1 && !readOnly) {
       return [
         {
           icon: <InfoIcon />,
@@ -105,7 +106,8 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
             {...register(`beneficiaries.${index}.beneficiary`)}
             placeholder={t("Payouts.beneficiary")}
             disabled={isPayoutCreated}
-            colorable
+            readOnly={readOnly}
+            colorable={!readOnly}
             noMargin
           />
         )}
@@ -120,10 +122,11 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
             render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
               <FormSelectInput
                 disabled={isPayoutCreated}
+                readOnly={readOnly}
                 isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
                 error={error}
                 placeholder={t("Payouts.severity")}
-                colorable
+                colorable={!readOnly}
                 options={severitiesOptions ?? []}
                 noMargin
                 {...field}
@@ -140,8 +143,9 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
             {...register(`beneficiaries.${index}.percentageOfPayout`)}
             placeholder={t("Payouts.percentageToPayLabel")}
             disabled={isPayoutCreated}
+            readOnly={readOnly}
             type="number"
-            colorable
+            colorable={!readOnly}
             noMargin
           />
         )}
@@ -152,7 +156,6 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
         ) : (
           <FormInput
             disabled
-            colorable
             noMargin
             value={`${amountInTokens !== undefined ? `≈ ${millify(amountInTokens, { precision: 5 })}` : "--"}`}
           />
@@ -164,7 +167,6 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove }
         ) : (
           <FormInput
             disabled
-            colorable
             noMargin
             value={`${amountInUsd !== undefined ? `≈ ${millify(amountInUsd, { precision: 2 })}` : "--"} $`}
           />

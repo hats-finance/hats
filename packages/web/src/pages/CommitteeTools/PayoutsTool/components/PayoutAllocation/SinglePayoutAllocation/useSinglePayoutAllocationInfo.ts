@@ -1,7 +1,7 @@
-import { BigNumber, ethers } from "ethers";
-import millify from "millify";
 import { IPayoutResponse, IVault } from "@hats-finance/shared";
+import { BigNumber, ethers } from "ethers";
 import { useVaults } from "hooks/vaults/useVaults";
+import millify from "millify";
 import { Amount } from "utils/amounts.utils";
 
 const DEFAULT_RETURN = {
@@ -13,7 +13,7 @@ const DEFAULT_RETURN = {
   totalAmount: undefined,
 };
 
-export const usePayoutAmountsInfo = (
+export const useSinglePayoutAllocationInfo = (
   vault: IVault | undefined,
   payout: IPayoutResponse | undefined,
   percentageToPay: string | undefined
