@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { StyledDropdownSelector } from "./styles";
 
 type DropdownSelectorProps = {
-  options: { icon?: string; label: string; onClick: Function }[];
+  options: { icon?: string | JSX.Element; label: string; onClick: Function }[];
   show: boolean;
   onClose: Function;
 };
@@ -27,7 +27,7 @@ export const DropdownSelector = ({ options, show, onClose }: DropdownSelectorPro
 
           return (
             <div className="option" key={opt.label} onClick={onClick}>
-              {opt.icon && <img src={opt.icon} alt={opt.label} />}
+              {opt.icon && (typeof opt.icon === "string" ? <img src={opt.icon} alt={opt.label} /> : opt.icon)}
               <span>{opt.label}</span>
             </div>
           );
