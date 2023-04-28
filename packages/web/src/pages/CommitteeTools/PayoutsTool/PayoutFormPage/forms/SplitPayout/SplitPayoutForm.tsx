@@ -1,8 +1,10 @@
 import { ISplitPayoutData, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
 import AddIcon from "@mui/icons-material/AddOutlined";
+import GenerateIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
 import DownloadIcon from "@mui/icons-material/SaveAltOutlined";
 import { Button, FormInput, FormJSONCSVFileInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
+import useConfirm from "hooks/useConfirm";
 import { useContext, useMemo, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -15,14 +17,14 @@ type CSVBeneficiary = { beneficiary: string; severity: string; percentageToPay: 
 
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { register, control } = methods;
+  const { register, control, setValue } = methods;
   const {
     fields: beneficiaries,
     append: appendBeneficiary,
-    prepend: prependBeneficiary,
     remove: removeBeneficiary,
   } = useFieldArray({ control, name: `beneficiaries` });
   const watchedBeneficiaries = useWatch({ control, name: `beneficiaries` });
@@ -77,12 +79,20 @@ export const SplitPayoutForm = () => {
   const handleImportBeneficiaries = () => {
     if (!beneficiariesToImport || beneficiariesToImport.length === 0 || !severitiesOptions) return;
 
+    // Remove empty beneficiaries
+    const idxsToRemove = beneficiaries.reduce((acc, beneficiary, idx) => {
+      if (!beneficiary.beneficiary) acc.push(idx);
+      return acc;
+    }, [] as number[]);
+    for (const indexToRemove of idxsToRemove.reverse()) removeBeneficiary(indexToRemove);
+
+    // Append new beneficiaries
     for (const beneficiaryToImport of beneficiariesToImport) {
       const severityFound = severitiesOptions.find((sev) =>
         sev.value.toLowerCase().includes(beneficiaryToImport.severity.toLowerCase())
       );
 
-      prependBeneficiary({
+      appendBeneficiary({
         beneficiary: beneficiaryToImport.beneficiary,
         severity: severityFound ? severityFound.value.toLowerCase() : "",
         percentageOfPayout: Number(beneficiaryToImport.percentageToPay).toString() ?? "",
@@ -92,6 +102,31 @@ export const SplitPayoutForm = () => {
 
     setBeneficiariesToImport(undefined);
     setCsvFileInputKey((prev) => prev + 1);
+  };
+
+  const handleGenerateExplanationTemplate = async () => {
+    const wantsToGenerate = await confirm({
+      title: t("Payouts.generateExplanation"),
+      titleIcon: <GenerateIcon className="mr-2" fontSize="large" />,
+      description: t("Payouts.generateExplanationDescription"),
+      cancelText: t("cancel"),
+      confirmText: t("generate"),
+    });
+    if (!wantsToGenerate) return;
+
+    let explanationString = "";
+    for (const [idx, item] of beneficiaries.entries()) {
+      const severityFound = severitiesOptions?.find((sev) => sev.value.toLowerCase().includes(item.severity.toLowerCase()));
+      const beneficiaryExplanation = `#${idx + 1} Beneficiary: ${item.beneficiary}
+Severity: ${severityFound?.label}
+Reasoning: Type your explanation here...\n\n`;
+
+      explanationString = explanationString.concat(beneficiaryExplanation);
+    }
+
+    console.log(beneficiaries);
+    console.log(explanationString);
+    setValue("explanation", explanationString);
   };
 
   const severitiesSummary = useMemo(
@@ -237,13 +272,18 @@ export const SplitPayoutForm = () => {
           <span>{t("pleaseNote")}:</span> {t("thisInformationWillAppearOnChain")}
         </p>
 
+        <Button styleType="invisible" className="mb-3" onClick={handleGenerateExplanationTemplate}>
+          <GenerateIcon className="mr-3" />
+          {t("Payouts.generateSplitExplanationTemplate")}
+        </Button>
+
         <FormInput
           {...register("explanation")}
           label={t("Payouts.explanation")}
           placeholder={t("Payouts.explanationPlaceholder")}
           disabled={isPayoutCreated}
           type="textarea"
-          rows={beneficiaries.length * 3}
+          rows={beneficiaries.length * 4.5}
           colorable
         />
       </div>
