@@ -13,6 +13,7 @@ import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
 import { PayoutFormContext } from "../../../../PayoutFormPage/store";
+import { usePayoutAllocation } from "../../usePayoutAllocation";
 import { StyledSplitPayoutBeneficiaryForm } from "../styles";
 
 type SplitPayoutBeneficiaryFormProps = {
@@ -25,7 +26,7 @@ type SplitPayoutBeneficiaryFormProps = {
 export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, readOnly }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
-  const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+  const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
@@ -34,6 +35,9 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
 
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
+
+  const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
+  console.log(payoutAllocation);
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = useWatch({ control, name: `beneficiaries.${index}.severity`, defaultValue: undefined });

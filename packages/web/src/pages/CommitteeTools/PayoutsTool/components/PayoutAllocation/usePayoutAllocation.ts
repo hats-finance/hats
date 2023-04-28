@@ -4,7 +4,17 @@ import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { Amount } from "utils/amounts.utils";
 
-const DEFAULT_RETURN = {
+type PayoutAllocation = {
+  immediateAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  vestedAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  hatsRewardAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  committeeAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  governanceAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  totalAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  totalHackerAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+};
+
+const DEFAULT_RETURN: PayoutAllocation = {
   immediateAmount: undefined,
   vestedAmount: undefined,
   hatsRewardAmount: undefined,
@@ -14,14 +24,30 @@ const DEFAULT_RETURN = {
   totalHackerAmount: undefined,
 };
 
-export const useSinglePayoutAllocation = (
+/**
+ * This hook is used to calculate the payout allocation for a specific payout.
+ *
+ * @remarks It works with single and split payout. And with V1 and V2 vaults.
+ *
+ * @param vault The vault that the payout is related to
+ * @param payout The payout that we want to calculate the allocation
+ * @param percentageToPayOfTheVault The percentage of the vault that we want to pay for this specific payout
+ * @param percentageOfPayout The percentage of the whole payout that we want to pay for this specific beneficiary. This
+ * is only used when the payout is splitted between multiple beneficiaries.
+ */
+export const usePayoutAllocation = (
   vault: IVault | undefined,
   payout: IPayoutResponse | undefined,
-  percentageToPay: string | undefined
-) => {
+  percentageToPayOfTheVault: string | undefined,
+  percentageOfPayout?: string | undefined
+): PayoutAllocation => {
   const { payouts, tokenPrices } = useVaults();
 
-  if (!payout || !vault || !percentageToPay) return DEFAULT_RETURN;
+  // We need to multiply the results by the percentage of the payout that we want to pay for this specific beneficiary. This is
+  // only used when we want to split the payout between multiple beneficiaries
+  const beneficiaryFactor = percentageOfPayout ? Number(percentageOfPayout) / 100 : 1;
+
+  if (!payout || !vault || !percentageToPayOfTheVault) return DEFAULT_RETURN;
 
   const tokenAddress = vault.stakingToken;
   const tokenSymbol = vault.stakingTokenSymbol;
@@ -33,11 +59,31 @@ export const useSinglePayoutAllocation = (
 
   if (payoutOnChainData?.approvedAt) {
     // If payout is already created on chain, we can use the data from the contract
-    const immediateSplit = new Amount(BigNumber.from(payoutOnChainData.hackerReward), tokenDecimals, tokenSymbol);
-    const vestedSplit = new Amount(BigNumber.from(payoutOnChainData.hackerVestedReward), tokenDecimals, tokenSymbol);
-    const hatsRewardSplit = new Amount(BigNumber.from(payoutOnChainData.hackerHatReward), tokenDecimals, tokenSymbol);
-    const committeeSplit = new Amount(BigNumber.from(payoutOnChainData.committeeReward), tokenDecimals, tokenSymbol);
-    const governanceSplit = new Amount(BigNumber.from(payoutOnChainData.governanceHatReward), tokenDecimals, tokenSymbol);
+    const immediateSplit = new Amount(
+      BigNumber.from(payoutOnChainData.hackerReward).mul(beneficiaryFactor),
+      tokenDecimals,
+      tokenSymbol
+    );
+    const vestedSplit = new Amount(
+      BigNumber.from(payoutOnChainData.hackerVestedReward).mul(beneficiaryFactor),
+      tokenDecimals,
+      tokenSymbol
+    );
+    const hatsRewardSplit = new Amount(
+      BigNumber.from(payoutOnChainData.hackerHatReward).mul(beneficiaryFactor),
+      tokenDecimals,
+      tokenSymbol
+    );
+    const committeeSplit = new Amount(
+      BigNumber.from(payoutOnChainData.committeeReward).mul(beneficiaryFactor),
+      tokenDecimals,
+      tokenSymbol
+    );
+    const governanceSplit = new Amount(
+      BigNumber.from(payoutOnChainData.governanceHatReward).mul(beneficiaryFactor),
+      tokenDecimals,
+      tokenSymbol
+    );
     const totalHackerSplit = new Amount(immediateSplit.bigNumber.add(vestedSplit.bigNumber), tokenDecimals, tokenSymbol);
     const totalSplit = new Amount(
       immediateSplit.bigNumber
@@ -123,12 +169,13 @@ export const useSinglePayoutAllocation = (
     // In v1 this is not a probem. So the factor is 1.
     const splitFactor = vault.version === "v1" ? 1 : 1 - Number(governancePercentage) - Number(hatsRewardPercentage);
     const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), tokenDecimals, tokenSymbol).number;
+    const payoutFactor = (+percentageToPayOfTheVault / 100) * beneficiaryFactor;
 
-    const immediateSplit = vaultBalance * immediatePercentage * splitFactor * (+percentageToPay / 100);
-    const vestedSplit = vaultBalance * vestedPercentage * splitFactor * (+percentageToPay / 100);
-    const committeeSplit = vaultBalance * committeePercentage * splitFactor * (+percentageToPay / 100);
-    const governanceSplit = vaultBalance * governancePercentage * (+percentageToPay / 100);
-    const hatsRewardSplit = vaultBalance * hatsRewardPercentage * (+percentageToPay / 100);
+    const immediateSplit = vaultBalance * immediatePercentage * splitFactor * payoutFactor;
+    const vestedSplit = vaultBalance * vestedPercentage * splitFactor * payoutFactor;
+    const committeeSplit = vaultBalance * committeePercentage * splitFactor * payoutFactor;
+    const governanceSplit = vaultBalance * governancePercentage * payoutFactor;
+    const hatsRewardSplit = vaultBalance * hatsRewardPercentage * payoutFactor;
     const totalHackerSplit = immediateSplit + vestedSplit;
     const totalSplit = immediateSplit + vestedSplit + hatsRewardSplit + committeeSplit + governanceSplit;
 

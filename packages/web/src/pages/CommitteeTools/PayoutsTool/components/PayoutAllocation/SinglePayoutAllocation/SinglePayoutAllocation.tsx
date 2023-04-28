@@ -4,8 +4,8 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { FormInput, WithTooltip } from "components";
 import { useTranslation } from "react-i18next";
 import { NftPreview } from "../../NftPreview/NftPreview";
+import { usePayoutAllocation } from "../usePayoutAllocation";
 import { StyledSinglePayoutAllocation } from "./styles";
-import { useSinglePayoutAllocation } from "./useSinglePayoutAllocation";
 
 type SinglePayoutAllocationProps = {
   selectedSeverity: IVulnerabilitySeverity | undefined;
@@ -17,8 +17,11 @@ type SinglePayoutAllocationProps = {
 export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selectedSeverity }: SinglePayoutAllocationProps) => {
   const { t } = useTranslation();
 
-  const { immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount } =
-    useSinglePayoutAllocation(vault, payout, percentageToPay);
+  const { immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount } = usePayoutAllocation(
+    vault,
+    payout,
+    percentageToPay
+  );
 
   if (!vault || !totalAmount) return null;
   return (
