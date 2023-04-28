@@ -1,12 +1,14 @@
 import { ISplitPayoutData } from "@hats-finance/shared";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { FormInput, FormSelectInput } from "components";
+import { DropdownSelector, FormInput, FormSelectInput } from "components";
 import { BigNumber } from "ethers";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
@@ -23,6 +25,8 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
   const isHeader = index === -1;
@@ -44,20 +48,38 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
     setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);
   });
 
+  // The amount in tokens is calculated directly from the honeyPotBalance of the vault
   const amountInTokens = useMemo(() => {
     if (!percentageToPayOfTheVault || !percentageOfPayout || !vault) return undefined;
+
     const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), vault.stakingTokenDecimals, vault.stakingTokenSymbol)
       .number;
     const amount = (((Number(percentageToPayOfTheVault) / 100) * Number(percentageOfPayout)) / 100) * vaultBalance;
     return amount;
   }, [percentageToPayOfTheVault, percentageOfPayout, vault]);
 
+  // The amount in USD is calculated from the amount in tokens and the token price
   const amountInUsd = useMemo(() => {
     if (!amountInTokens || !vault) return undefined;
 
     const tokenPrice = tokenPrices?.[vault?.stakingToken] ?? 0;
     return amountInTokens * tokenPrice;
   }, [amountInTokens, tokenPrices, vault]);
+
+  const getMoreOptions = () => {
+    return [
+      {
+        icon: <InfoIcon />,
+        label: t("Payouts.allocationInfo"),
+        onClick: () => {},
+      },
+      {
+        icon: <DeleteIcon />,
+        label: t("remove"),
+        onClick: () => remove?.(index),
+      },
+    ];
+  };
 
   return (
     <StyledBeneficiaryRowForm isHeader={isHeader} role="rowgroup">
@@ -138,7 +160,8 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
         )}
       </div>
       <div className="cell" role="cell">
-        {isHeader ? "" : <MoreIcon />}
+        {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
+        <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
       </div>
     </StyledBeneficiaryRowForm>
   );

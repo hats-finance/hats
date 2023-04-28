@@ -23,6 +23,7 @@ export const StyledBeneficiaryRowForm = styled.div<{ isHeader: boolean }>(
     `}
 
     .cell {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -34,6 +35,15 @@ export const StyledBeneficiaryRowForm = styled.div<{ isHeader: boolean }>(
 
       &.big {
         width: 25%;
+      }
+
+      .more-icon {
+        cursor: pointer;
+        transition: 0.3s;
+
+        &:hover {
+          color: var(--turquoise);
+        }
       }
     }
   `
