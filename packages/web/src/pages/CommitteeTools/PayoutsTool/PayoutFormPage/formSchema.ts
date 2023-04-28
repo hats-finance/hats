@@ -27,9 +27,14 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
     explanation: Yup.string().required(intl("required")),
     beneficiaries: Yup.array().of(
       Yup.object({
-        beneficiary: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+        beneficiary: Yup.string()
+          .test(getTestWalletAddress(intl))
+          .test("duplicatedBeneficiary", intl("duplicated"), (val, ctx: any) => {
+            const sameAddressBeneficiaries = ctx.from[1].value.beneficiaries.filter((b: any) => b.beneficiary === val);
+            return sameAddressBeneficiaries.length === 1;
+          })
+          .required(intl("required")),
         severity: Yup.string().required(intl("required")),
-
         percentageOfPayout: Yup.number()
           .test(getTestNumberInBetween(intl, 0, 100, true, { smallError: true }))
           .required(intl("required"))
