@@ -67,6 +67,23 @@ export const StyledSplitPayoutSummary = styled.div`
     &.error {
       color: var(--error-red);
     }
+
+    &.bold {
+      font-weight: 700;
+    }
+
+    &.light {
+      color: var(--grey-500);
+    }
+
+    span {
+      cursor: pointer;
+      text-transform: uppercase;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 
   .severities {

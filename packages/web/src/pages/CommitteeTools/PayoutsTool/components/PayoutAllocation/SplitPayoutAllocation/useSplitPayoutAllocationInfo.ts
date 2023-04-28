@@ -13,7 +13,7 @@ const DEFAULT_RETURN = {
   totalAmount: undefined,
 };
 
-export const useSinglePayoutAllocationInfo = (
+export const useSplitPayoutAllocationInfo = (
   vault: IVault | undefined,
   payout: IPayoutResponse | undefined,
   percentageToPay: string | undefined

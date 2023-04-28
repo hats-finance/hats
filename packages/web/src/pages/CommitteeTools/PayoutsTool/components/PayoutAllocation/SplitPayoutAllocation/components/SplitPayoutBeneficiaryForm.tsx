@@ -168,7 +168,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
           <FormInput
             disabled
             noMargin
-            value={`${amountInUsd !== undefined ? `≈ ${millify(amountInUsd, { precision: 2 })}` : "--"} $`}
+            value={`${amountInUsd !== undefined ? `≈ ${millify(amountInUsd, { precision: 2 })}` : "--"}$`}
           />
         )}
       </div>

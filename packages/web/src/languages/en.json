@@ -339,6 +339,8 @@
     "audit": "Audit",
     "grants": "Grants",
     "vaultPausedActiveClaimExplanation": "Vault is paused to withdraws due to an ongoing payout.",
+    "seeMore": "See more",
+    "seeLess": "See less",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -497,6 +499,9 @@
       "generateExplanation": "Generate explanation",
       "generateExplanationDescription": "Generate an explanation template. This will help you to fill the explanation field for each beneficiary.",
       "allocationInfo": "Allocation info",
+      "totalHackersPayment": "Total hackers payment",
+      "totalCommitteePayment": "Total committee payment",
+      "totalGovernancePayment": "Total governance payment",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

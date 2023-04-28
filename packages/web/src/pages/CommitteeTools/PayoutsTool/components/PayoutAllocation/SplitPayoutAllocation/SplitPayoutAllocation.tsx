@@ -1,23 +1,15 @@
-import {
-  IPayoutResponse,
-  ISplitPayoutBeneficiary,
-  ISplitPayoutData,
-  IVault,
-  createNewSplitPayoutBeneficiary,
-} from "@hats-finance/shared";
+import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { Button } from "components";
-import { BigNumber } from "ethers";
 import { useEnhancedFormContext } from "hooks/form";
-import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
-import { useContext, useMemo } from "react";
+import { useContext, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Amount } from "utils/amounts.utils";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
+import { useSinglePayoutAllocationInfo } from "../SinglePayoutAllocation/useSinglePayoutAllocationInfo";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
 
@@ -79,8 +71,6 @@ type SplitPayoutAllocationSharedProps = {
 function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOptions }: SplitPayoutAllocationSharedProps) {
   const { t } = useTranslation();
 
-  const { payouts, tokenPrices } = useVaults();
-
   const methods = useEnhancedFormContext<ISplitPayoutData>();
   const { control } = methods;
   const {
@@ -89,8 +79,16 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
     remove: removeBeneficiary,
   } = useFieldArray({ control, name: `beneficiaries` });
 
+  const [showGeneralAllocation, setShowGeneralAllocation] = useState(false);
   const watchedBeneficiaries = useWatch({ control, name: `beneficiaries` });
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
+
+  /**
+   * This calculations are for the general payout. A split payout is behind the scenes a single payout with a payment
+   * splitter as the beneficiary. The allocation calculation for each individual beneficiaty is done on the component
+   * `SplitPayoutBeneficiaryForm.tsx`
+   */
+  const generalPayoutAllocation = useSinglePayoutAllocationInfo(vault, payout, percentageToPayOfTheVault);
 
   const severitiesSummary = useMemo(
     () =>
@@ -118,38 +116,24 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
   );
 
   const totalPayoutAmount = useMemo(() => {
-    if (!vault || !percentageToPayOfTheVault) return undefined;
+    if (!generalPayoutAllocation.totalAmount) return undefined;
+    return `≈ ${generalPayoutAllocation.totalAmount?.tokens} ~ ${generalPayoutAllocation.totalAmount?.usd}`;
+  }, [generalPayoutAllocation]);
 
-    const tokenPrice = tokenPrices?.[vault?.stakingToken] ?? 0;
-    // Check if this payout is already created on chain
-    const payoutOnChainData = payouts?.find((p) => p.id === payout?.payoutClaimId);
+  const totalHackerAmount = useMemo(() => {
+    if (!generalPayoutAllocation.totalHackerAmount) return undefined;
+    return `≈ ${generalPayoutAllocation.totalHackerAmount?.tokens} ~ ${generalPayoutAllocation.totalHackerAmount?.usd}`;
+  }, [generalPayoutAllocation]);
 
-    let amountInTokens = 0;
-    if (payoutOnChainData?.approvedAt) {
-      // If payout is already created on chain, we can use the data from the contract
-      const totalSplit = new Amount(
-        BigNumber.from(payoutOnChainData.hackerReward)
-          .add(BigNumber.from(payoutOnChainData.hackerVestedReward))
-          .add(BigNumber.from(payoutOnChainData.hackerHatReward))
-          .add(BigNumber.from(payoutOnChainData.committeeReward))
-          .add(BigNumber.from(payoutOnChainData.governanceHatReward)),
-        vault.stakingTokenDecimals,
-        vault.stakingTokenSymbol
-      );
+  const totalCommitteeAmount = useMemo(() => {
+    if (!generalPayoutAllocation.committeeAmount) return undefined;
+    return `≈ ${generalPayoutAllocation.committeeAmount?.tokens} ~ ${generalPayoutAllocation.committeeAmount?.usd}`;
+  }, [generalPayoutAllocation]);
 
-      amountInTokens = totalSplit.number;
-    } else {
-      const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), vault.stakingTokenDecimals, vault.stakingTokenSymbol)
-        .number;
-
-      amountInTokens = (Number(percentageToPayOfTheVault) / 100) * vaultBalance;
-    }
-
-    const amountInUsd = amountInTokens * tokenPrice;
-    const tokensFormatted = millify(amountInTokens, { precision: 5 });
-    const usdFormatted = millify(amountInUsd, { precision: 2 });
-    return `≈ ${tokensFormatted}${vault.stakingTokenSymbol} ~ ${usdFormatted}$`;
-  }, [percentageToPayOfTheVault, tokenPrices, vault, payout, payouts]);
+  const totalGovernanceAmount = useMemo(() => {
+    if (!generalPayoutAllocation.governanceAmount) return undefined;
+    return `≈ ${generalPayoutAllocation.governanceAmount?.tokens} ~ ${generalPayoutAllocation.governanceAmount?.usd}`;
+  }, [generalPayoutAllocation]);
 
   return (
     <>
@@ -183,10 +167,40 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
           <p>{t("Payouts.totalNumberPayouts")}:</p>
           <p>{beneficiaries.length}</p>
         </div>
-        <div className="item">
-          <p>{t("Payouts.totalPayoutAmount")}:</p>
+        <div className="item bold">
+          <p onClick={() => setShowGeneralAllocation((prev) => !prev)}>
+            {t("Payouts.totalPayoutAmount")}: <span>{showGeneralAllocation ? `[${t("seeLess")}]` : `[${t("seeMore")}]`}</span>
+          </p>
           <p>{totalPayoutAmount ?? "--"}</p>
         </div>
+        {showGeneralAllocation && (
+          <>
+            {totalHackerAmount && (
+              <div className="item light">
+                <p>
+                  - {t("Payouts.totalHackersPayment")} ({generalPayoutAllocation.totalHackerAmount?.percentage}):
+                </p>
+                <p>{totalHackerAmount}</p>
+              </div>
+            )}
+            {totalCommitteeAmount && (
+              <div className="item light">
+                <p>
+                  - {t("Payouts.totalCommitteePayment")} ({generalPayoutAllocation.committeeAmount?.percentage}):
+                </p>
+                <p>{totalCommitteeAmount}</p>
+              </div>
+            )}
+            {totalGovernanceAmount && (
+              <div className="item light">
+                <p>
+                  - {t("Payouts.totalGovernancePayment")} ({generalPayoutAllocation.governanceAmount?.percentage}):
+                </p>
+                <p>{totalGovernanceAmount}</p>
+              </div>
+            )}
+          </>
+        )}
 
         <div className="severities">
           {severitiesSummary?.map((severitySummary, idx) => (
