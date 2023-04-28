@@ -9,7 +9,7 @@ import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
-import { useSinglePayoutAllocationInfo } from "../SinglePayoutAllocation/useSinglePayoutAllocationInfo";
+import { useSinglePayoutAllocation } from "../SinglePayoutAllocation/useSinglePayoutAllocation";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
 
@@ -84,11 +84,11 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
 
   /**
-   * This calculations are for the general payout. A split payout is behind the scenes a single payout with a payment
-   * splitter as the beneficiary. The allocation calculation for each individual beneficiaty is done on the component
+   * These calculations are for the general payout. A split payout behind the scenes is a single payout with a payment
+   * splitter as the beneficiary. The allocation calculation for each individual beneficiary is done on the component
    * `SplitPayoutBeneficiaryForm.tsx`
    */
-  const generalPayoutAllocation = useSinglePayoutAllocationInfo(vault, payout, percentageToPayOfTheVault);
+  const generalPayoutAllocation = useSinglePayoutAllocation(vault, payout, percentageToPayOfTheVault);
 
   const severitiesSummary = useMemo(
     () =>

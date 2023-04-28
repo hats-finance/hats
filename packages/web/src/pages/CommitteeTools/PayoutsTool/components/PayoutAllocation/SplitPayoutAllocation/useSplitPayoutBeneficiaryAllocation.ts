@@ -11,10 +11,9 @@ const DEFAULT_RETURN = {
   committeeAmount: undefined,
   governanceAmount: undefined,
   totalAmount: undefined,
-  totalHackerAmount: undefined,
 };
 
-export const useSinglePayoutAllocationInfo = (
+export const useSplitPayoutBeneficiaryAllocation = (
   vault: IVault | undefined,
   payout: IPayoutResponse | undefined,
   percentageToPay: string | undefined
@@ -38,7 +37,6 @@ export const useSinglePayoutAllocationInfo = (
     const hatsRewardSplit = new Amount(BigNumber.from(payoutOnChainData.hackerHatReward), tokenDecimals, tokenSymbol);
     const committeeSplit = new Amount(BigNumber.from(payoutOnChainData.committeeReward), tokenDecimals, tokenSymbol);
     const governanceSplit = new Amount(BigNumber.from(payoutOnChainData.governanceHatReward), tokenDecimals, tokenSymbol);
-    const totalHackerSplit = new Amount(immediateSplit.bigNumber.add(vestedSplit.bigNumber), tokenDecimals, tokenSymbol);
     const totalSplit = new Amount(
       immediateSplit.bigNumber
         .add(vestedSplit.bigNumber)
@@ -90,14 +88,6 @@ export const useSinglePayoutAllocationInfo = (
               percentage: `${millify((governanceSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
-      totalHackerAmount:
-        totalHackerSplit.number > 0
-          ? {
-              tokens: totalHackerSplit.formatted(),
-              usd: `${millify(totalHackerSplit.number * tokenPrice, { precision: 2 })}$`,
-              percentage: `${millify((totalHackerSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
-            }
-          : undefined,
       totalAmount:
         totalSplit.number > 0
           ? {
@@ -129,7 +119,6 @@ export const useSinglePayoutAllocationInfo = (
     const committeeSplit = vaultBalance * committeePercentage * splitFactor * (+percentageToPay / 100);
     const governanceSplit = vaultBalance * governancePercentage * (+percentageToPay / 100);
     const hatsRewardSplit = vaultBalance * hatsRewardPercentage * (+percentageToPay / 100);
-    const totalHackerSplit = immediateSplit + vestedSplit;
     const totalSplit = immediateSplit + vestedSplit + hatsRewardSplit + committeeSplit + governanceSplit;
 
     return {
@@ -171,14 +160,6 @@ export const useSinglePayoutAllocationInfo = (
               tokens: `${millify(governanceSplit, { precision: 5 })} ${tokenSymbol}`,
               usd: `${millify(governanceSplit * tokenPrice, { precision: 2 })}$`,
               percentage: `${millify((governanceSplit / totalSplit) * 100, { precision: 2 })}%`,
-            }
-          : undefined,
-      totalHackerAmount:
-        totalHackerSplit > 0
-          ? {
-              tokens: `${millify(totalHackerSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(totalHackerSplit * tokenPrice, { precision: 2 })}$`,
-              percentage: `${millify((totalHackerSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       totalAmount:
