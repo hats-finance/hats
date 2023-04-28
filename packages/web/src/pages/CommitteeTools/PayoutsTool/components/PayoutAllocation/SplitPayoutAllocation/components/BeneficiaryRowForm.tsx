@@ -12,7 +12,7 @@ import { useContext, useMemo, useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
-import { PayoutFormContext } from "../../../store";
+import { PayoutFormContext } from "../../../../PayoutFormPage/store";
 import { StyledBeneficiaryRowForm } from "../styles";
 
 type BeneficiaryRowFormProps = {
@@ -54,7 +54,7 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
 
     const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), vault.stakingTokenDecimals, vault.stakingTokenSymbol)
       .number;
-    const amount = (((Number(percentageToPayOfTheVault) / 100) * Number(percentageOfPayout)) / 100) * vaultBalance;
+    const amount = (Number(percentageToPayOfTheVault) / 100) * (Number(percentageOfPayout) / 100) * vaultBalance;
     return amount;
   }, [percentageToPayOfTheVault, percentageOfPayout, vault]);
 
@@ -67,16 +67,27 @@ export const BeneficiaryRowForm = ({ index, beneficiariesCount, remove }: Benefi
   }, [amountInTokens, tokenPrices, vault]);
 
   const getMoreOptions = () => {
+    if (beneficiariesCount === undefined) return [];
+    if (beneficiariesCount > 1) {
+      return [
+        {
+          icon: <InfoIcon />,
+          label: t("Payouts.allocationInfo"),
+          onClick: () => {},
+        },
+        {
+          icon: <DeleteIcon />,
+          label: t("remove"),
+          onClick: () => remove?.(index),
+        },
+      ];
+    }
+
     return [
       {
         icon: <InfoIcon />,
         label: t("Payouts.allocationInfo"),
         onClick: () => {},
-      },
-      {
-        icon: <DeleteIcon />,
-        label: t("remove"),
-        onClick: () => remove?.(index),
       },
     ];
   };

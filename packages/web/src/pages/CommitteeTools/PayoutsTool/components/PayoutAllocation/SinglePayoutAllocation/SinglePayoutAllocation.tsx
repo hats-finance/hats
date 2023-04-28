@@ -3,8 +3,8 @@ import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { FormInput, WithTooltip } from "components";
 import { useTranslation } from "react-i18next";
-import { usePayoutAmountsInfo } from "../../utils/usePayoutAmountsInfo";
-import { NftPreview } from "../NftPreview/NftPreview";
+import { usePayoutAmountsInfo } from "../../../utils/usePayoutAmountsInfo";
+import { NftPreview } from "../../NftPreview/NftPreview";
 import { StyledSinglePayoutAllocation } from "./styles";
 
 type SinglePayoutAllocationProps = {

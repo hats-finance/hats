@@ -82,7 +82,6 @@ export const PayoutStatusPage = () => {
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
-  const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = payout?.payoutData.severity;
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
@@ -91,28 +90,6 @@ export const PayoutStatusPage = () => {
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
-
-  // Get payout severities information from allVaults
-  useEffect(() => {
-    if (!payout || !vault || !vault.description || !allVaults) return;
-
-    if (vault.description) {
-      const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
-        label: severity.name,
-        value: severity.name,
-      }));
-
-      // if the current severity is not in the list of severities, add it
-      if (payout.payoutData.severity && !severities.find((severity) => severity.value === payout.payoutData.severity)) {
-        severities.push({
-          label: payout.payoutData.severity,
-          value: payout.payoutData.severity,
-        });
-      }
-
-      setSeveritiesOptions(severities);
-    }
-  }, [allVaults, payout, vault]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
@@ -217,7 +194,12 @@ export const PayoutStatusPage = () => {
                   value={payout.payoutData.severity}
                   label={t("Payouts.severity")}
                   placeholder={t("Payouts.severityPlaceholder")}
-                  options={severitiesOptions ?? []}
+                  options={[
+                    {
+                      label: payout.payoutData.severity,
+                      value: payout.payoutData.severity,
+                    },
+                  ]}
                   readOnly
                 />
               )}
