@@ -84,7 +84,7 @@ export async function upsertEditSession(
 export async function setEditSessionSubmittedToCreation(editSessionId: string | undefined): Promise<boolean> {
   if (!editSessionId) throw new Error("Edit session id is required");
 
-  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-awaiting-creation`);
+  const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-awaiting-creation`);
 
   return response.data.ok;
 }
