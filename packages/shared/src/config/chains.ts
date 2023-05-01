@@ -1,8 +1,9 @@
-import { Chain, arbitrum, goerli, mainnet, optimism, optimismGoerli, polygon, bsc } from "@wagmi/chains";
+import { Chain, arbitrum, bsc, goerli, mainnet, optimism, optimismGoerli, polygon } from "@wagmi/chains";
 
 export interface IChainConfiguration {
   vaultsNFTContract?: string;
   vaultsCreatorContract?: string;
+  paymentSplitterFactory?: string;
   rewardController?: string;
   govMultisig?: string;
   chain: Chain;
@@ -35,6 +36,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: undefined,
     govMultisig: "0xFc9F1d127f8047B0F41e9eAC2Adc2e5279C568B7",
     uniswapSubgraph: undefined,
+    paymentSplitterFactory: "0x728654Bb8E69b9978E79657332a0843606d64FF4",
   },
   [optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
