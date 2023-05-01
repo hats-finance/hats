@@ -36,8 +36,9 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
 
+  // TODO: Implement this with a modal
   const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
-  console.log(payoutAllocation);
+  // console.log(payoutAllocation);
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = useWatch({ control, name: `beneficiaries.${index}.severity`, defaultValue: undefined });
