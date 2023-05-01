@@ -117,22 +117,22 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
 
   const totalPayoutAmount = useMemo(() => {
     if (!generalPayoutAllocation.totalAmount) return undefined;
-    return `≈ ${generalPayoutAllocation.totalAmount?.tokens} ~ ${generalPayoutAllocation.totalAmount?.usd}`;
+    return `≈ ${generalPayoutAllocation.totalAmount?.tokens.formatted} ~ ${generalPayoutAllocation.totalAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
   const totalHackerAmount = useMemo(() => {
     if (!generalPayoutAllocation.totalHackerAmount) return undefined;
-    return `≈ ${generalPayoutAllocation.totalHackerAmount?.tokens} ~ ${generalPayoutAllocation.totalHackerAmount?.usd}`;
+    return `≈ ${generalPayoutAllocation.totalHackerAmount?.tokens.formatted} ~ ${generalPayoutAllocation.totalHackerAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
   const totalCommitteeAmount = useMemo(() => {
     if (!generalPayoutAllocation.committeeAmount) return undefined;
-    return `≈ ${generalPayoutAllocation.committeeAmount?.tokens} ~ ${generalPayoutAllocation.committeeAmount?.usd}`;
+    return `≈ ${generalPayoutAllocation.committeeAmount?.tokens.formatted} ~ ${generalPayoutAllocation.committeeAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
   const totalGovernanceAmount = useMemo(() => {
     if (!generalPayoutAllocation.governanceAmount) return undefined;
-    return `≈ ${generalPayoutAllocation.governanceAmount?.tokens} ~ ${generalPayoutAllocation.governanceAmount?.usd}`;
+    return `≈ ${generalPayoutAllocation.governanceAmount?.tokens.formatted} ~ ${generalPayoutAllocation.governanceAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
   return (

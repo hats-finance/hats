@@ -35,7 +35,11 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
       <div className="mb-5">{t("Payouts.resultDescription")}</div>
       <div className="result-container">
         <NftPreview vault={vault} severityName={selectedSeverity?.name} nftData={selectedSeverity?.["nft-metadata"]} />
-        <FormInput value={`≈ ${totalAmount?.tokens} ~ ${totalAmount?.usd}`} label={t("Payouts.totalPayoutSum")} readOnly />
+        <FormInput
+          value={`≈ ${totalAmount?.tokens.formatted} ~ ${totalAmount?.usd.formatted}`}
+          label={t("Payouts.totalPayoutSum")}
+          readOnly
+        />
       </div>
 
       <div className="allocations">
@@ -51,7 +55,7 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
             </WithTooltip>
             <div className="values">
               <div className="percentage">{immediateAmount.percentage}</div>
-              <div className="sum">{`≈ ${immediateAmount.tokens} ~ ${immediateAmount.usd}`}</div>
+              <div className="sum">{`≈ ${immediateAmount.tokens.formatted} ~ ${immediateAmount.usd.formatted}`}</div>
             </div>
           </div>
         )}
@@ -64,7 +68,7 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
             </WithTooltip>
             <div className="values">
               <div className="percentage">{vestedAmount.percentage}</div>
-              <div className="sum">{`≈ ${vestedAmount.tokens} ~ ${vestedAmount.usd}`}</div>
+              <div className="sum">{`≈ ${vestedAmount.tokens.formatted} ~ ${vestedAmount.usd.formatted}`}</div>
             </div>
           </div>
         )}
@@ -77,7 +81,7 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
             </WithTooltip>
             <div className="values">
               <div className="percentage">{hatsRewardAmount.percentage}</div>
-              <div className="sum">{`≈ ${hatsRewardAmount.tokens} ~ ${hatsRewardAmount.usd}`}</div>
+              <div className="sum">{`≈ ${hatsRewardAmount.tokens.formatted} ~ ${hatsRewardAmount.usd.formatted}`}</div>
             </div>
           </div>
         )}
@@ -90,7 +94,7 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
             </WithTooltip>
             <div className="values">
               <div className="percentage">{committeeAmount.percentage}</div>
-              <div className="sum">{`≈ ${committeeAmount.tokens} ~ ${committeeAmount.usd}`}</div>
+              <div className="sum">{`≈ ${committeeAmount.tokens.formatted} ~ ${committeeAmount.usd.formatted}`}</div>
             </div>
           </div>
         )}
@@ -103,7 +107,7 @@ export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selecte
             </WithTooltip>
             <div className="values">
               <div className="percentage">{governanceAmount.percentage}</div>
-              <div className="sum">{`≈ ${governanceAmount.tokens} ~ ${governanceAmount.usd}`}</div>
+              <div className="sum">{`≈ ${governanceAmount.tokens.formatted} ~ ${governanceAmount.usd.formatted}`}</div>
             </div>
           </div>
         )}

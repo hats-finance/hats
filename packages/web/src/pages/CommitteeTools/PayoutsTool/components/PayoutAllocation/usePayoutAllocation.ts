@@ -4,14 +4,20 @@ import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { Amount } from "utils/amounts.utils";
 
+type PayoutAllocationAmount = {
+  tokens: { formatted: string; number: string };
+  usd: { formatted: string; number: string };
+  percentage: string | undefined;
+};
+
 type PayoutAllocation = {
-  immediateAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  vestedAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  hatsRewardAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  committeeAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  governanceAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  totalAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
-  totalHackerAmount: { tokens: string; usd: string; percentage: string | undefined } | undefined;
+  immediateAmount: PayoutAllocationAmount | undefined;
+  vestedAmount: PayoutAllocationAmount | undefined;
+  hatsRewardAmount: PayoutAllocationAmount | undefined;
+  committeeAmount: PayoutAllocationAmount | undefined;
+  governanceAmount: PayoutAllocationAmount | undefined;
+  totalAmount: PayoutAllocationAmount | undefined;
+  totalHackerAmount: PayoutAllocationAmount | undefined;
 };
 
 const DEFAULT_RETURN: PayoutAllocation = {
@@ -99,56 +105,77 @@ export const usePayoutAllocation = (
       immediateAmount:
         immediateSplit.number > 0
           ? {
-              tokens: immediateSplit.formatted(5),
-              usd: `${millify(immediateSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: immediateSplit.formatted(5), number: immediateSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(immediateSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(immediateSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((immediateSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       vestedAmount:
         vestedSplit.number > 0
           ? {
-              tokens: vestedSplit.formatted(5),
-              usd: `${millify(vestedSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: vestedSplit.formatted(5), number: vestedSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(vestedSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(vestedSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((vestedSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       hatsRewardAmount:
         hatsRewardSplit.number > 0
           ? {
-              tokens: hatsRewardSplit.formatted(5),
-              usd: `${millify(hatsRewardSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: hatsRewardSplit.formatted(5), number: hatsRewardSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(hatsRewardSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(hatsRewardSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((hatsRewardSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       committeeAmount:
         committeeSplit.number > 0
           ? {
-              tokens: committeeSplit.formatted(5),
-              usd: `${millify(committeeSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: committeeSplit.formatted(5), number: committeeSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(committeeSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(committeeSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((committeeSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       governanceAmount:
         governanceSplit.number > 0
           ? {
-              tokens: governanceSplit.formatted(5),
-              usd: `${millify(governanceSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: governanceSplit.formatted(5), number: governanceSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(governanceSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(governanceSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((governanceSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       totalHackerAmount:
         totalHackerSplit.number > 0
           ? {
-              tokens: totalHackerSplit.formatted(),
-              usd: `${millify(totalHackerSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: totalHackerSplit.formatted(5), number: totalHackerSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(totalHackerSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(totalHackerSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((totalHackerSplit.number / totalSplit.number) * 100, { precision: 2 })}%`,
             }
           : undefined,
       totalAmount:
         totalSplit.number > 0
           ? {
-              tokens: totalSplit.formatted(),
-              usd: `${millify(totalSplit.number * tokenPrice, { precision: 2 })}$`,
+              tokens: { formatted: totalSplit.formatted(5), number: totalSplit.formattedWithoutSymbol(5) },
+              usd: {
+                formatted: `${millify(totalSplit.number * tokenPrice, { precision: 2 })}$`,
+                number: millify(totalSplit.number * tokenPrice, { precision: 2 }),
+              },
               percentage: undefined,
             }
           : undefined,
@@ -183,56 +210,98 @@ export const usePayoutAllocation = (
       immediateAmount:
         immediateSplit > 0
           ? {
-              tokens: `${millify(immediateSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(immediateSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(immediateSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(immediateSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(immediateSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(immediateSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((immediateSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       vestedAmount:
         vestedSplit > 0
           ? {
-              tokens: `${millify(vestedSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(vestedSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(vestedSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(vestedSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(vestedSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(vestedSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((vestedSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       hatsRewardAmount:
         hatsRewardSplit > 0
           ? {
-              tokens: `${millify(hatsRewardSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(hatsRewardSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(hatsRewardSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(hatsRewardSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(hatsRewardSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(hatsRewardSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((hatsRewardSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       committeeAmount:
         committeeSplit > 0
           ? {
-              tokens: `${millify(committeeSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(committeeSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(committeeSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(committeeSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(committeeSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(committeeSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((committeeSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       governanceAmount:
         governanceSplit > 0
           ? {
-              tokens: `${millify(governanceSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(governanceSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(governanceSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(governanceSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(governanceSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(governanceSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((governanceSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       totalHackerAmount:
         totalHackerSplit > 0
           ? {
-              tokens: `${millify(totalHackerSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(totalHackerSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(totalHackerSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(totalHackerSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(totalHackerSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(totalHackerSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: `${millify((totalHackerSplit / totalSplit) * 100, { precision: 2 })}%`,
             }
           : undefined,
       totalAmount:
         totalSplit > 0
           ? {
-              tokens: `${millify(totalSplit, { precision: 5 })} ${tokenSymbol}`,
-              usd: `${millify(totalSplit * tokenPrice, { precision: 2 })}$`,
+              tokens: {
+                formatted: `${millify(totalSplit, { precision: 5 })} ${tokenSymbol}`,
+                number: millify(totalSplit, { precision: 5 }),
+              },
+              usd: {
+                formatted: `${millify(totalSplit * tokenPrice, { precision: 2 })}$`,
+                number: millify(totalSplit * tokenPrice, { precision: 2 }),
+              },
               percentage: undefined,
             }
           : undefined,
