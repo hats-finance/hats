@@ -126,16 +126,14 @@ export const PayoutFormPage = () => {
 
   const handleLockPayout = async () => {
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
-    console.log(methods.getValues());
-    return;
 
-    // try {
-    //   await handleSavePayout();
-    //   const wasLocked = await lockPayout.mutateAsync({ payoutId });
-    //   if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      await handleSavePayout();
+      const wasLocked = await lockPayout.mutateAsync({ payoutId });
+      if (wasLocked) navigate(`${RoutePaths.payouts}/status/${payoutId}`);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!address) return <PayoutsWelcome />;

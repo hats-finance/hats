@@ -1,4 +1,4 @@
-import { IPayoutResponse, ISinglePayoutData, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
+import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
 import Safe from "@safe-global/safe-core-sdk";
 import { TransactionResult } from "@safe-global/safe-core-sdk-types";
 import EthSignSignature from "@safe-global/safe-core-sdk/dist/src/utils/signatures/SafeSignature";
@@ -47,19 +47,11 @@ export class ExecutePayoutContract {
           const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer as Signer });
           const safeSdk = await Safe.create({ ethAdapter, safeAddress: vault.committee });
 
-          const payoutBeneficiary =
-            payout.payoutData.type === "single" ? payout.payoutData.beneficiary : payout.payoutData.paymentSplitterBeneficiary;
-          if (!payoutBeneficiary) return console.error("No payout beneficiary");
-
-          const safeTransaction = await getExecutePayoutSafeTransaction(provider, vault.committee, payout.vaultInfo, {
-            beneficiary: payoutBeneficiary,
-            descriptionHash: payout.payoutDescriptionHash,
-            bountyPercentageOrSeverityIndex:
-              vault?.version === "v1"
-                ? (payout.payoutData as ISinglePayoutData).severityBountyIndex
-                : payout.payoutData.percentageToPay,
-          });
-          const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+          const { tx: safeTransaction, txHash: safeTransactionHash } = await getExecutePayoutSafeTransaction(
+            provider,
+            vault.committee,
+            payout
+          );
 
           // Check the safe transaction hash returned by the API
           if (safeTransactionHash !== payout.txToSign) {
