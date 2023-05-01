@@ -1,9 +1,10 @@
 import Safe from "@safe-global/safe-core-sdk";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import EthersAdapter from "@safe-global/safe-ethers-lib";
-import { ethers } from "ethers";
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
-import { IPayoutData, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, IVaultInfo, PayoutType } from "../types";
+import { BigNumber, ethers } from "ethers";
+import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
+import { IPayoutData, IPayoutResponse, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, PayoutType } from "../types";
+import { ChainsConfig } from "./../config/chains";
 
 export const createNewPayoutData = (type: PayoutType): IPayoutData => {
   if (type === "single") {
@@ -41,45 +42,100 @@ export const createNewSplitPayoutBeneficiary = (): ISplitPayoutBeneficiary => {
 export const getExecutePayoutSafeTransaction = async (
   provider: ethers.providers.Provider,
   committee: string,
-  vaultInfo: IVaultInfo,
-  params: {
-    beneficiary: string;
-    descriptionHash: string;
-    bountyPercentageOrSeverityIndex: string | number;
-  }
-): Promise<SafeTransaction> => {
+  payout: IPayoutResponse
+): Promise<{ tx: SafeTransaction; txHash: string }> => {
   const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: provider });
   const safeSdk = await Safe.create({ ethAdapter, safeAddress: committee });
 
-  const contractAddress = vaultInfo.version === "v1" ? vaultInfo.master : vaultInfo.address;
-  const vaultAbi = vaultInfo.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
-  const method = vaultInfo.version === "v1" ? "pendingApprovalClaim" : "submitClaim";
+  const vaultInfo = payout.vaultInfo;
 
-  const vaultInterface = new ethers.utils.Interface(vaultAbi);
-  let encodedExecPayoutData: string = "";
+  if (payout.payoutData.type === "single") {
+    // Single payout: only one TX calling the vault contract
+    const contractAddress = vaultInfo.version === "v1" ? vaultInfo.master : vaultInfo.address;
 
-  if (vaultInfo.version === "v1") {
-    encodedExecPayoutData = vaultInterface.encodeFunctionData(method, [
-      Number(vaultInfo.pid),
-      params.beneficiary as `0x${string}`,
-      Number(params.bountyPercentageOrSeverityIndex),
-    ]);
+    const payoutData = payout.payoutData as ISinglePayoutData;
+
+    let encodedExecPayoutData: string = "";
+    if (vaultInfo.version === "v1") {
+      const contractInterface = new ethers.utils.Interface(HATSVaultV1_abi);
+      encodedExecPayoutData = contractInterface.encodeFunctionData("pendingApprovalClaim", [
+        Number(vaultInfo.pid),
+        payoutData.beneficiary as `0x${string}`,
+        Number(payoutData.severityBountyIndex),
+      ]);
+    } else {
+      const contractInterface = new ethers.utils.Interface(HATSVaultV2_abi);
+      encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
+        payoutData.beneficiary as `0x${string}`,
+        Number(payoutData.percentageToPay) * 100,
+        payout.payoutDescriptionHash,
+      ]);
+    }
+
+    const safeTransaction = await safeSdk.createTransaction({
+      safeTransactionData: {
+        to: contractAddress,
+        data: encodedExecPayoutData,
+        value: "0",
+      },
+    });
+    const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+
+    return { tx: safeTransaction, txHash: safeTransactionHash };
   } else {
-    encodedExecPayoutData = vaultInterface.encodeFunctionData(method, [
-      params.beneficiary as `0x${string}`,
-      Number(params.bountyPercentageOrSeverityIndex) * 100,
-      params.descriptionHash,
+    // Only works with v2 vaults
+    // Split payout: two TXs with a batch on safe. One to create the payment splitter, and the other to execute the payout.
+    // First TX: create payment splitter (this will be the beneficiary of the vault)
+    // Second TX: execute payout
+    if (vaultInfo.version === "v1") throw new Error("Split payouts are only supported for v2 vaults");
+
+    const paymentSplitterFactoryAddress = ChainsConfig[Number(vaultInfo.chainId)].paymentSplitterFactory;
+    if (!paymentSplitterFactoryAddress) throw new Error("Payment splitter factory address not found");
+
+    const vaultContract = {
+      address: vaultInfo.address,
+      interface: new ethers.utils.Interface(HATSVaultV2_abi),
+    };
+
+    const paymentSplitterFactoryContract = {
+      address: paymentSplitterFactoryAddress,
+      interface: new ethers.utils.Interface(HATPaymentSplitterFactory_abi),
+    };
+
+    const payoutData = payout.payoutData as ISplitPayoutData;
+
+    // Payout payment splitter creation TX
+    const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
+      "createHATPaymentSplitter",
+      [
+        payoutData.beneficiaries.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
+        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Number(beneficiary.percentageOfPayout) * 1000)),
+      ]
+    );
+
+    // Payout execution TX
+    const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
+      payoutData.paymentSplitterBeneficiary as `0x${string}`,
+      Number(payoutData.percentageToPay) * 100,
+      payout.payoutDescriptionHash,
     ]);
+
+    const safeTransaction = await safeSdk.createTransaction({
+      safeTransactionData: [
+        {
+          to: paymentSplitterFactoryAddress,
+          data: encodedPaymentSplitterCreation,
+          value: "0",
+        },
+        {
+          to: vaultContract.address,
+          data: encodedExecutePayout,
+          value: "0",
+        },
+      ],
+    });
+    const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+
+    return { tx: safeTransaction, txHash: safeTransactionHash };
   }
-
-  const safeTransaction = await safeSdk.createTransaction({
-    safeTransactionData: {
-      to: contractAddress,
-      data: encodedExecPayoutData,
-      value: "0",
-      nonce: await safeSdk.getNonce(),
-    },
-  });
-
-  return safeTransaction;
 };
