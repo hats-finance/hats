@@ -1,18 +1,17 @@
-import { ISplitPayoutData } from "@hats-finance/shared";
+import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats-finance/shared";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput } from "components";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption } from "components";
 import { BigNumber } from "ethers";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
-import { useContext, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Amount } from "utils/amounts.utils";
-import { PayoutFormContext } from "../../../../PayoutFormPage/store";
 import { usePayoutAllocation } from "../../usePayoutAllocation";
 import { StyledSplitPayoutBeneficiaryForm } from "../styles";
 
@@ -21,12 +20,24 @@ type SplitPayoutBeneficiaryFormProps = {
   beneficiariesCount?: number;
   remove?: UseFieldArrayRemove;
   readOnly?: boolean;
+  vault?: IVault;
+  payout?: IPayoutResponse;
+  isPayoutCreated?: boolean;
+  severitiesOptions?: FormSelectInputOption[] | undefined;
 };
 
-export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, readOnly }: SplitPayoutBeneficiaryFormProps) => {
+export const SplitPayoutBeneficiaryForm = ({
+  index,
+  beneficiariesCount,
+  remove,
+  readOnly,
+  vault,
+  payout,
+  isPayoutCreated,
+  severitiesOptions,
+}: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
   const { tokenPrices } = useVaults();
-  const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
 
@@ -74,7 +85,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
 
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
-    if (beneficiariesCount > 1 && !readOnly) {
+    if (beneficiariesCount > 1 && !readOnly && !isPayoutCreated) {
       return [
         {
           icon: <InfoIcon />,
@@ -110,7 +121,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
           <FormInput
             {...register(`beneficiaries.${index}.beneficiary`)}
             placeholder={t("Payouts.beneficiary")}
-            disabled={isPayoutCreated}
+            disabled={isPayoutCreated && !readOnly}
             readOnly={readOnly}
             colorable={!readOnly}
             noMargin
@@ -126,7 +137,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
             name={`beneficiaries.${index}.severity`}
             render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
               <FormSelectInput
-                disabled={isPayoutCreated}
+                disabled={isPayoutCreated && !readOnly}
                 readOnly={readOnly}
                 isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
                 error={error}
@@ -147,7 +158,7 @@ export const SplitPayoutBeneficiaryForm = ({ index, beneficiariesCount, remove, 
           <FormInput
             {...register(`beneficiaries.${index}.percentageOfPayout`)}
             placeholder={t("Payouts.percentageToPayLabel")}
-            disabled={isPayoutCreated}
+            disabled={isPayoutCreated && !readOnly}
             readOnly={readOnly}
             type="number"
             colorable={!readOnly}

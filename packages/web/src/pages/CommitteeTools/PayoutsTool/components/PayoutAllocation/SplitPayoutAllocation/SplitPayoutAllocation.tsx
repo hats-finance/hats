@@ -1,7 +1,7 @@
 import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import { Button } from "components";
+import { Button, FormSelectInputOption } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import millify from "millify";
 import { useContext, useMemo, useState } from "react";
@@ -27,9 +27,16 @@ export const SplitPayoutAllocation = (props: SplitPayoutAllocationProps) => {
 };
 
 const SplitPayoutAllocationForm = () => {
-  const { severitiesOptions, vault, payout } = useContext(PayoutFormContext);
+  const { severitiesOptions, vault, payout, isPayoutCreated } = useContext(PayoutFormContext);
 
-  return <SplitPayoutAllocationShared severitiesOptions={severitiesOptions} vault={vault} payout={payout} />;
+  return (
+    <SplitPayoutAllocationShared
+      severitiesOptions={severitiesOptions}
+      vault={vault}
+      payout={payout}
+      isPayoutCreated={isPayoutCreated}
+    />
+  );
 };
 
 const SplitPayoutAllocationOnStatus = ({ payout, vault }: SplitPayoutAllocationProps) => {
@@ -47,9 +54,10 @@ const SplitPayoutAllocationOnStatus = ({ payout, vault }: SplitPayoutAllocationP
         payout={payout}
         vault={vault}
         readOnly
+        isPayoutCreated
         severitiesOptions={(payout?.payoutData as ISplitPayoutData).beneficiaries.map((ben) => ({
-          label: ben.severity,
-          value: ben.severity,
+          label: ben.severity.toLowerCase().replace("severity", "").trim(),
+          value: ben.severity.toLowerCase(),
         }))}
       />
     </FormProvider>
@@ -60,15 +68,17 @@ type SplitPayoutAllocationSharedProps = {
   payout?: IPayoutResponse;
   vault?: IVault;
   readOnly?: boolean;
-  severitiesOptions:
-    | {
-        label: string;
-        value: string;
-      }[]
-    | undefined;
+  isPayoutCreated?: boolean;
+  severitiesOptions: FormSelectInputOption[] | undefined;
 };
 
-function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOptions }: SplitPayoutAllocationSharedProps) {
+function SplitPayoutAllocationShared({
+  vault,
+  payout,
+  readOnly,
+  severitiesOptions,
+  isPayoutCreated,
+}: SplitPayoutAllocationSharedProps) {
   const { t } = useTranslation();
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
@@ -138,19 +148,23 @@ function SplitPayoutAllocationShared({ vault, payout, readOnly, severitiesOption
   return (
     <>
       <StyledBeneficiariesTable className="mt-4 mb-5" role="table">
-        <SplitPayoutBeneficiaryForm index={-1} />
+        <SplitPayoutBeneficiaryForm vault={vault} payout={payout} index={-1} />
         {beneficiaries.map((beneficiary, idx) => (
           <SplitPayoutBeneficiaryForm
-            readOnly={readOnly}
             key={beneficiary.id}
             index={idx}
             beneficiariesCount={beneficiaries.length}
             remove={removeBeneficiary}
+            readOnly={readOnly}
+            vault={vault}
+            payout={payout}
+            severitiesOptions={severitiesOptions}
+            isPayoutCreated={isPayoutCreated}
           />
         ))}
       </StyledBeneficiariesTable>
 
-      {!readOnly && (
+      {!readOnly && !isPayoutCreated && (
         <Button styleType="invisible" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
           <AddIcon />
           {t("Payouts.addBeneficiary")}

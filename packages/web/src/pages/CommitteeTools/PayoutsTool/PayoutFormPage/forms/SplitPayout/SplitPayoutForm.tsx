@@ -128,43 +128,45 @@ Reasoning: Type your explanation here...\n\n`;
 
   return (
     <StyledPayoutForm>
-      <div className="form-container">
-        <p className="subtitle">{t("Payouts.uploadCsv")}</p>
-        <p className="mt-3">{t("Payouts.uploadCsvExplanation")}</p>
+      {!isPayoutCreated && (
+        <div className="form-container">
+          <p className="subtitle">{t("Payouts.uploadCsv")}</p>
+          <p className="mt-3">{t("Payouts.uploadCsvExplanation")}</p>
 
-        <Button className="mt-2" onClick={handleDownloadCsvTemplate} styleType="invisible" disabled={!severitiesOptions}>
-          <DownloadIcon className="mr-3" />
-          {t("Payouts.downloadTemplateFile")}
-        </Button>
-
-        <div className="mt-5 mb-5">
-          <FormJSONCSVFileInput
-            key={csvFileInputKey}
-            small
-            name="split-payout-csv"
-            fileType="CSV"
-            label={t("Payouts.selectCsvFile")}
-            onChange={(e) => handleChangeCsvFile(e.target.value)}
-          />
-          {beneficiariesToImport && beneficiariesToImport.length > 0 && (
-            <p
-              className="mt-3"
-              dangerouslySetInnerHTML={{
-                __html: t("Payouts.fileContainsNumBeneficiaries", { numBeneficiaries: beneficiariesToImport.length }),
-              }}
-            />
-          )}
-          {beneficiariesToImport && beneficiariesToImport.length === 0 && (
-            <p className="mt-2 error">{t("Payouts.csvDoesNotHaveAnyBeneficiary")}</p>
-          )}
-        </div>
-
-        <div className="buttons no-line">
-          <Button onClick={handleImportBeneficiaries} disabled={!beneficiariesToImport || beneficiariesToImport.length === 0}>
-            {t("Payouts.importBeneficiaries")}
+          <Button className="mt-2" onClick={handleDownloadCsvTemplate} styleType="invisible" disabled={!severitiesOptions}>
+            <DownloadIcon className="mr-3" />
+            {t("Payouts.downloadTemplateFile")}
           </Button>
+
+          <div className="mt-5 mb-5">
+            <FormJSONCSVFileInput
+              key={csvFileInputKey}
+              small
+              name="split-payout-csv"
+              fileType="CSV"
+              label={t("Payouts.selectCsvFile")}
+              onChange={(e) => handleChangeCsvFile(e.target.value)}
+            />
+            {beneficiariesToImport && beneficiariesToImport.length > 0 && (
+              <p
+                className="mt-3"
+                dangerouslySetInnerHTML={{
+                  __html: t("Payouts.fileContainsNumBeneficiaries", { numBeneficiaries: beneficiariesToImport.length }),
+                }}
+              />
+            )}
+            {beneficiariesToImport && beneficiariesToImport.length === 0 && (
+              <p className="mt-2 error">{t("Payouts.csvDoesNotHaveAnyBeneficiary")}</p>
+            )}
+          </div>
+
+          <div className="buttons no-line">
+            <Button onClick={handleImportBeneficiaries} disabled={!beneficiariesToImport || beneficiariesToImport.length === 0}>
+              {t("Payouts.importBeneficiaries")}
+            </Button>
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="form-container mt-5">
         <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
@@ -205,10 +207,12 @@ Reasoning: Type your explanation here...\n\n`;
           <span>{t("pleaseNote")}:</span> {t("thisInformationWillAppearOnChain")}
         </p>
 
-        <Button styleType="invisible" className="mb-3" onClick={handleGenerateExplanationTemplate}>
-          <GenerateIcon className="mr-3" />
-          {t("Payouts.generateSplitExplanationTemplate")}
-        </Button>
+        {!isPayoutCreated && (
+          <Button styleType="invisible" className="mb-3" onClick={handleGenerateExplanationTemplate}>
+            <GenerateIcon className="mr-3" />
+            {t("Payouts.generateSplitExplanationTemplate")}
+          </Button>
+        )}
 
         <FormInput
           {...register("explanation")}
@@ -216,7 +220,7 @@ Reasoning: Type your explanation here...\n\n`;
           placeholder={t("Payouts.explanationPlaceholder")}
           disabled={isPayoutCreated}
           type="textarea"
-          rows={getValues("beneficiaries").length * 4.5}
+          rows={getValues("beneficiaries")?.length * 4.5}
           colorable
         />
       </div>

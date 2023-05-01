@@ -1,10 +1,4 @@
-import {
-  HATSVaultV2_abi,
-  IVulnerabilitySeverityV1,
-  IVulnerabilitySeverityV2,
-  PayoutStatus,
-  getSafeHomeLink,
-} from "@hats-finance/shared";
+import { HATSVaultV2_abi, PayoutStatus, getSafeHomeLink } from "@hats-finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar } from "components";
@@ -17,12 +11,12 @@ import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { PayoutCard, SignerCard, SinglePayoutAllocation } from "../components";
+import { PayoutCard, SignerCard, SinglePayoutAllocation, SplitPayoutAllocation } from "../components";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
 import { usePayoutStatus } from "../utils/usePayoutStatus";
 import { StyledPayoutStatusPage } from "./styles";
@@ -83,7 +77,7 @@ export const PayoutStatusPage = () => {
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const vaultSeverities = vault?.description?.severities ?? [];
-  const selectedSeverityName = payout?.payoutData.severity;
+  const selectedSeverityName = payout?.payoutData.type === "single" ? payout?.payoutData.severity : undefined;
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
@@ -181,15 +175,17 @@ export const PayoutStatusPage = () => {
           )}
 
           <div className="payout-status-container">
-            <FormInput
-              label={t("Payouts.beneficiary")}
-              placeholder={t("Payouts.beneficiaryPlaceholder")}
-              value={payout?.payoutData.beneficiary}
-              readOnly
-            />
+            {payout?.payoutData.type === "single" && (
+              <FormInput
+                label={t("Payouts.beneficiary")}
+                placeholder={t("Payouts.beneficiaryPlaceholder")}
+                value={payout?.payoutData.beneficiary}
+                readOnly
+              />
+            )}
 
             <div className="row">
-              {payout?.payoutData.severity && (
+              {payout?.payoutData.type === "single" && payout?.payoutData.severity && (
                 <FormSelectInput
                   value={payout.payoutData.severity}
                   label={t("Payouts.severity")}
@@ -214,12 +210,16 @@ export const PayoutStatusPage = () => {
             </div>
 
             <div className="my-5">
-              <SinglePayoutAllocation
-                vault={vault}
-                payout={payout}
-                percentageToPay={payout?.payoutData.percentageToPay}
-                selectedSeverity={selectedSeverityData}
-              />
+              {payout && payout.payoutData.type === "single" ? (
+                <SinglePayoutAllocation
+                  vault={vault}
+                  payout={payout}
+                  percentageToPay={payout?.payoutData.percentageToPay}
+                  selectedSeverity={selectedSeverityData}
+                />
+              ) : (
+                <SplitPayoutAllocation vault={vault} payout={payout} />
+              )}
             </div>
           </div>
 
@@ -227,11 +227,14 @@ export const PayoutStatusPage = () => {
             <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
 
             <FormInput
-              value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
+              value={
+                payout?.payoutData.explanation +
+                `${payout?.payoutData.additionalInfo ? `\n\n\n${payout?.payoutData.additionalInfo}` : ""}`
+              }
               label={t("Payouts.explanation")}
               placeholder={t("Payouts.explanationPlaceholder")}
               type="textarea"
-              rows={10}
+              rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
               readOnly
             />
           </div>

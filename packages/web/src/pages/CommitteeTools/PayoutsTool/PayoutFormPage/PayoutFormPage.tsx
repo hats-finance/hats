@@ -8,7 +8,7 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
-import { Alert, Button, CopyToClipboard, Loading, WithTooltip } from "components";
+import { Alert, Button, CopyToClipboard, FormSelectInputOption, Loading, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
 import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -54,7 +54,7 @@ export const PayoutFormPage = () => {
   });
   const { reset: handleReset, handleSubmit, formState } = methods;
 
-  const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
+  const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   useEffect(() => {
     tryAuthentication();
@@ -188,26 +188,32 @@ export const PayoutFormPage = () => {
               <StyledPayoutForm>
                 {payout?.payoutData.type === "split" ? <SplitPayoutForm /> : <SinglePayoutForm />}
 
-                {isAnotherActivePayout && (
+                {isAnotherActivePayout && !isPayoutCreated && (
                   <Alert type="warning" className="mt-5">
                     {t("Payouts.anotherActivePayout")}
                   </Alert>
                 )}
 
-                <div className="buttons">
-                  <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
-                    <Button disabled={!formState.isDirty || savePayout.isLoading} styleType="outlined" onClick={handleSavePayout}>
-                      {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                {!isPayoutCreated && (
+                  <div className="buttons">
+                    <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                      <Button
+                        disabled={!formState.isDirty || savePayout.isLoading}
+                        styleType="outlined"
+                        onClick={handleSavePayout}
+                      >
+                        {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                      </Button>
+                    </WithTooltip>
+                    <Button
+                      onClick={handleSubmit(handleLockPayout)}
+                      disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
+                    >
+                      {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
+                      <ArrowForwardIcon className="ml-3" />
                     </Button>
-                  </WithTooltip>
-                  <Button
-                    onClick={handleSubmit(handleLockPayout)}
-                    disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
-                  >
-                    {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
-                    <ArrowForwardIcon className="ml-3" />
-                  </Button>
-                </div>
+                  </div>
+                )}
               </StyledPayoutForm>
             </FormProvider>
           </>
