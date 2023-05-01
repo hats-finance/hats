@@ -47,6 +47,7 @@ function FormInputComponent(
     prefixIcon,
     helper,
     readOnly,
+    className,
     ...props
   }: FormInputProps,
   ref
@@ -165,6 +166,7 @@ function FormInputComponent(
       withExtraicons={extraIcons}
       colorable={colorable}
       readOnly={readOnly}
+      className={className}
     >
       <div className="main-container">
         {label && (
