@@ -19,7 +19,7 @@ export const SplitPayoutForm = () => {
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { register, control, setValue } = methods;
+  const { register, control, setValue, getValues } = methods;
   const {
     fields: beneficiaries,
     append: appendBeneficiary,
@@ -111,8 +111,10 @@ export const SplitPayoutForm = () => {
     });
     if (!wantsToGenerate) return;
 
+    const beneficiariesToUse = getValues("beneficiaries");
+
     let explanationString = "";
-    for (const [idx, item] of beneficiaries.entries()) {
+    for (const [idx, item] of beneficiariesToUse.entries()) {
       const severityFound = severitiesOptions?.find((sev) => sev.value.toLowerCase().includes(item.severity.toLowerCase()));
       const beneficiaryExplanation = `#${idx + 1} Beneficiary: ${item.beneficiary}
 Severity: ${severityFound?.label}
@@ -121,8 +123,6 @@ Reasoning: Type your explanation here...\n\n`;
       explanationString = explanationString.concat(beneficiaryExplanation);
     }
 
-    console.log(beneficiaries);
-    console.log(explanationString);
     setValue("explanation", explanationString);
   };
 
