@@ -100,3 +100,9 @@ export const StyledSplitPayoutSummary = styled.div`
     }
   }
 `;
+
+export const StyledSplitPayoutBeneficiaryAllocationModal = styled.div`
+  width: 550px;
+  max-width: 100%;
+  color: var(--white);
+`;

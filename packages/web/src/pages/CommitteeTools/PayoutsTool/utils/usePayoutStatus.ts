@@ -12,7 +12,7 @@ export const usePayoutStatus = (payout?: IPayoutResponse) => {
    * this with the subgraph data.
    */
   const payoutStatus = useMemo(() => {
-    if (!payout) return;
+    if (!payout || !vault) return;
 
     if (payout.status === PayoutStatus.Executed) {
       // Check the status on subgraph

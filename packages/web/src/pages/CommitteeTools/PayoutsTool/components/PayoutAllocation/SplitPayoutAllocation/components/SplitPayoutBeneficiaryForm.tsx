@@ -2,18 +2,16 @@ import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats-finance/shared"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption } from "components";
-import { BigNumber } from "ethers";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
-import { useVaults } from "hooks/vaults/useVaults";
-import millify from "millify";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Amount } from "utils/amounts.utils";
+import { SinglePayoutAllocation } from "../../SinglePayoutAllocation/SinglePayoutAllocation";
 import { usePayoutAllocation } from "../../usePayoutAllocation";
-import { StyledSplitPayoutBeneficiaryForm } from "../styles";
+import { StyledSplitPayoutBeneficiaryAllocationModal, StyledSplitPayoutBeneficiaryForm } from "../styles";
 
 type SplitPayoutBeneficiaryFormProps = {
   index: number;
@@ -37,9 +35,9 @@ export const SplitPayoutBeneficiaryForm = ({
   severitiesOptions,
 }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
-  const { tokenPrices } = useVaults();
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
 
   const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
   const isHeader = index === -1;
@@ -47,9 +45,7 @@ export const SplitPayoutBeneficiaryForm = ({
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
 
-  // TODO: Implement this with a modal
   const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
-  // console.log(payoutAllocation);
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = useWatch({ control, name: `beneficiaries.${index}.severity`, defaultValue: undefined });
@@ -65,24 +61,6 @@ export const SplitPayoutBeneficiaryForm = ({
     setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);
   });
 
-  // The amount in tokens is calculated directly from the honeyPotBalance of the vault
-  const amountInTokens = useMemo(() => {
-    if (!percentageToPayOfTheVault || !percentageOfPayout || !vault) return undefined;
-
-    const vaultBalance = new Amount(BigNumber.from(vault.honeyPotBalance), vault.stakingTokenDecimals, vault.stakingTokenSymbol)
-      .number;
-    const amount = (Number(percentageToPayOfTheVault) / 100) * (Number(percentageOfPayout) / 100) * vaultBalance;
-    return amount;
-  }, [percentageToPayOfTheVault, percentageOfPayout, vault]);
-
-  // The amount in USD is calculated from the amount in tokens and the token price
-  const amountInUsd = useMemo(() => {
-    if (!amountInTokens || !vault) return undefined;
-
-    const tokenPrice = tokenPrices?.[vault?.stakingToken] ?? 0;
-    return amountInTokens * tokenPrice;
-  }, [amountInTokens, tokenPrices, vault]);
-
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
     if (beneficiariesCount > 1 && !readOnly && !isPayoutCreated) {
@@ -90,7 +68,7 @@ export const SplitPayoutBeneficiaryForm = ({
         {
           icon: <InfoIcon />,
           label: t("Payouts.allocationInfo"),
-          onClick: () => {},
+          onClick: showAllocation,
         },
         {
           icon: <DeleteIcon />,
@@ -104,94 +82,108 @@ export const SplitPayoutBeneficiaryForm = ({
       {
         icon: <InfoIcon />,
         label: t("Payouts.allocationInfo"),
-        onClick: () => {},
+        onClick: showAllocation,
       },
     ];
   };
 
   return (
-    <StyledSplitPayoutBeneficiaryForm isHeader={isHeader} role="rowgroup">
-      <div className="cell" role="cell">
-        {isHeader ? "#" : index + 1}
-      </div>
-      <div className="cell big" role="cell">
-        {isHeader ? (
-          t("Payouts.beneficiary")
-        ) : (
-          <FormInput
-            {...register(`beneficiaries.${index}.beneficiary`)}
-            placeholder={t("Payouts.beneficiary")}
-            disabled={isPayoutCreated && !readOnly}
-            readOnly={readOnly}
-            colorable={!readOnly}
-            noMargin
+    <>
+      <StyledSplitPayoutBeneficiaryForm isHeader={isHeader} role="rowgroup">
+        <div className="cell" role="cell">
+          {isHeader ? "#" : index + 1}
+        </div>
+        <div className="cell big" role="cell">
+          {isHeader ? (
+            t("Payouts.beneficiary")
+          ) : (
+            <FormInput
+              {...register(`beneficiaries.${index}.beneficiary`)}
+              placeholder={t("Payouts.beneficiary")}
+              disabled={isPayoutCreated && !readOnly}
+              readOnly={readOnly}
+              colorable={!readOnly}
+              noMargin
+            />
+          )}
+        </div>
+        <div className="cell big" role="cell">
+          {isHeader ? (
+            t("Payouts.severity")
+          ) : (
+            <Controller
+              control={control}
+              name={`beneficiaries.${index}.severity`}
+              render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+                <FormSelectInput
+                  disabled={isPayoutCreated && !readOnly}
+                  readOnly={readOnly}
+                  isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
+                  error={error}
+                  placeholder={t("Payouts.severity")}
+                  colorable={!readOnly}
+                  options={severitiesOptions ?? []}
+                  noMargin
+                  {...field}
+                />
+              )}
+            />
+          )}
+        </div>
+        <div className="cell small" role="cell">
+          {isHeader ? (
+            t("Payouts.percentageToPayLabel")
+          ) : (
+            <FormInput
+              {...register(`beneficiaries.${index}.percentageOfPayout`)}
+              placeholder={t("Payouts.percentageToPayLabel")}
+              disabled={isPayoutCreated && !readOnly}
+              readOnly={readOnly}
+              type="number"
+              colorable={!readOnly}
+              noMargin
+            />
+          )}
+        </div>
+        <div className="cell small" role="cell">
+          {isHeader ? (
+            t("Payouts.tokensAmount", { token: vault?.stakingTokenSymbol })
+          ) : (
+            <FormInput
+              disabled
+              noMargin
+              value={payoutAllocation.totalAmount ? `≈ ${payoutAllocation.totalAmount.tokens.number}` : "--"}
+            />
+          )}
+        </div>
+        <div className="cell small" role="cell">
+          {isHeader ? (
+            t("Payouts.amountInUsd")
+          ) : (
+            <FormInput
+              disabled
+              noMargin
+              value={payoutAllocation.totalAmount ? `≈ ${payoutAllocation.totalAmount.usd.formatted}` : "--"}
+            />
+          )}
+        </div>
+        <div className="cell" role="cell">
+          {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
+          <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
+        </div>
+      </StyledSplitPayoutBeneficiaryForm>
+
+      <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation} newStyles>
+        <StyledSplitPayoutBeneficiaryAllocationModal>
+          <SinglePayoutAllocation
+            vault={vault}
+            payout={payout}
+            selectedSeverity={selectedSeverityData}
+            percentageToPay={percentageToPayOfTheVault}
+            percentageOfPayout={percentageOfPayout}
           />
-        )}
-      </div>
-      <div className="cell big" role="cell">
-        {isHeader ? (
-          t("Payouts.severity")
-        ) : (
-          <Controller
-            control={control}
-            name={`beneficiaries.${index}.severity`}
-            render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-              <FormSelectInput
-                disabled={isPayoutCreated && !readOnly}
-                readOnly={readOnly}
-                isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
-                error={error}
-                placeholder={t("Payouts.severity")}
-                colorable={!readOnly}
-                options={severitiesOptions ?? []}
-                noMargin
-                {...field}
-              />
-            )}
-          />
-        )}
-      </div>
-      <div className="cell small" role="cell">
-        {isHeader ? (
-          t("Payouts.percentageToPayLabel")
-        ) : (
-          <FormInput
-            {...register(`beneficiaries.${index}.percentageOfPayout`)}
-            placeholder={t("Payouts.percentageToPayLabel")}
-            disabled={isPayoutCreated && !readOnly}
-            readOnly={readOnly}
-            type="number"
-            colorable={!readOnly}
-            noMargin
-          />
-        )}
-      </div>
-      <div className="cell small" role="cell">
-        {isHeader ? (
-          t("Payouts.tokensAmount", { token: vault?.stakingTokenSymbol })
-        ) : (
-          <FormInput
-            disabled
-            noMargin
-            value={`${amountInTokens !== undefined ? `≈ ${millify(amountInTokens, { precision: 5 })}` : "--"}`}
-          />
-        )}
-      </div>
-      <div className="cell small" role="cell">
-        {isHeader ? (
-          t("Payouts.amountInUsd")
-        ) : (
-          <FormInput
-            disabled
-            noMargin
-            value={`${amountInUsd !== undefined ? `≈ ${millify(amountInUsd, { precision: 2 })}` : "--"}$`}
-          />
-        )}
-      </div>
-      <div className="cell" role="cell">
-        {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
-        <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
-      </div>
-    </StyledSplitPayoutBeneficiaryForm>
+        </StyledSplitPayoutBeneficiaryAllocationModal>
+      </Modal>
+    </>
   );
 };

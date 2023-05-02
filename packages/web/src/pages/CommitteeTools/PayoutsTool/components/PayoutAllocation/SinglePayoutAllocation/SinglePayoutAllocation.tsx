@@ -12,15 +12,23 @@ type SinglePayoutAllocationProps = {
   vault: IVault | undefined;
   payout: IPayoutResponse | undefined;
   percentageToPay: string | undefined;
+  percentageOfPayout?: string | undefined;
 };
 
-export const SinglePayoutAllocation = ({ vault, payout, percentageToPay, selectedSeverity }: SinglePayoutAllocationProps) => {
+export const SinglePayoutAllocation = ({
+  vault,
+  payout,
+  percentageToPay,
+  percentageOfPayout,
+  selectedSeverity,
+}: SinglePayoutAllocationProps) => {
   const { t } = useTranslation();
 
   const { immediateAmount, vestedAmount, committeeAmount, governanceAmount, hatsRewardAmount, totalAmount } = usePayoutAllocation(
     vault,
     payout,
-    percentageToPay
+    percentageToPay,
+    percentageOfPayout
   );
 
   if (!vault || !totalAmount) return null;

@@ -315,6 +315,7 @@
     "thisInformationWillAppearOnChain": "This information will appear on-chain",
     "progressSaved": "Progress saved",
     "nft": "NFT",
+    "nftPreview": "NFT preview",
     "nftDescription": "NFT description",
     "vaultName": "Vault name",
     "severity": "Severity",
@@ -502,6 +503,7 @@
       "totalHackersPayment": "Total hackers payment",
       "totalCommitteePayment": "Total committee payment",
       "totalGovernancePayment": "Total governance payment",
+      "payoutAllocationAndNft": "Payout allocation and NFT",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
