@@ -220,7 +220,7 @@ Reasoning: Type your explanation here...\n\n`;
           placeholder={t("Payouts.explanationPlaceholder")}
           disabled={isPayoutCreated}
           type="textarea"
-          rows={getValues("beneficiaries")?.length * 4.5}
+          rows={(getValues("beneficiaries")?.length ?? 1) * 4.5}
           colorable
         />
       </div>
