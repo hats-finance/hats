@@ -31,20 +31,39 @@ export const SinglePayoutForm = () => {
   );
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
+  const rewardLevelsV1 = vault?.rewardsLevels ?? DefaultIndexArray;
+  const severityBountyIndexOptions = rewardLevelsV1.map((val, idx) => ({
+    label: `Index ${idx} => ${val / 100}%`,
+    value: idx.toString(),
+  }));
+
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
     if (prevSelected === undefined || newSelected === undefined) return;
 
     setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
+
     if (vault?.version === "v2") {
       const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
       const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
       setValue("percentageToPay", percentage.toString());
     } else {
-      const indexArray = vault?.description?.indexArray ?? DefaultIndexArray;
+      const indexArray = vault?.rewardsLevels ?? DefaultIndexArray;
       setValue("percentageToPay", (+indexArray[(selectedSeverityData as IVulnerabilitySeverityV1).index] / 100).toString());
       setValue("severityBountyIndex", (selectedSeverityData as IVulnerabilitySeverityV1).index.toString());
+    }
+  });
+
+  // ONLY V1: Edit the payout percentage on severityBountyIndex change
+  const severityBountyIndex = useWatch({ control, name: "severityBountyIndex" });
+  useOnChange(severityBountyIndex, (newSelected, prevSelected) => {
+    if (!severityBountyIndex) return;
+    if (prevSelected === undefined || newSelected === undefined) return;
+
+    if (vault?.version === "v1") {
+      const indexArray = vault?.rewardsLevels ?? DefaultIndexArray;
+      setValue("percentageToPay", (+indexArray[severityBountyIndex] / 100).toString());
     }
   });
 
@@ -86,13 +105,36 @@ export const SinglePayoutForm = () => {
               />
             )}
           />
-          <FormInput
-            {...register("percentageToPay")}
-            label={t("Payouts.percentageToPay")}
-            placeholder={t("Payouts.percentageToPayPlaceholder")}
-            helper={t("Payouts.percentageOfTheTotalVaultToPay")}
-            readOnly
-          />
+
+          {vault && vault.version === "v1" && (
+            <Controller
+              control={control}
+              name={`severityBountyIndex`}
+              render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+                <FormSelectInput
+                  disabled={isPayoutCreated}
+                  isDirty={getCustomIsDirty<IPayoutData>(field.name, dirtyFields, defaultValues)}
+                  error={error}
+                  label={t("Payouts.percentageToPay")}
+                  placeholder={t("Payouts.percentageToPayPlaceholder")}
+                  colorable
+                  options={severityBountyIndexOptions ?? []}
+                  {...field}
+                />
+              )}
+            />
+          )}
+
+          {vault && vault.version === "v2" && (
+            <FormInput
+              {...register("percentageToPay")}
+              label={t("Payouts.percentageToPay")}
+              placeholder={t("Payouts.percentageToPayPlaceholder")}
+              helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+              disabled={isPayoutCreated}
+              colorable
+            />
+          )}
         </div>
 
         <SinglePayoutAllocation
