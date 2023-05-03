@@ -1,10 +1,10 @@
-import { ChangeEvent, forwardRef, KeyboardEvent, useRef, useState } from "react";
-import PasteIcon from "assets/icons/paste.icon.svg";
+import EyeIcon from "@mui/icons-material/VisibilityOutlined";
 import CopyIcon from "assets/icons/copy.icon.svg";
 import RemoveIcon from "assets/icons/delete.icon.svg";
-import { StyledFormInput } from "./styles";
+import PasteIcon from "assets/icons/paste.icon.svg";
+import { ChangeEvent, KeyboardEvent, forwardRef, useRef, useState } from "react";
 import { parseIsDirty } from "../utils";
-import EyeIcon from "@mui/icons-material/VisibilityOutlined";
+import { StyledFormInput } from "./styles";
 
 const DEFAULT_ROWS = 10;
 
@@ -47,6 +47,7 @@ function FormInputComponent(
     prefixIcon,
     helper,
     readOnly,
+    className,
     ...props
   }: FormInputProps,
   ref
@@ -165,6 +166,7 @@ function FormInputComponent(
       withExtraicons={extraIcons}
       colorable={colorable}
       readOnly={readOnly}
+      className={className}
     >
       <div className="main-container">
         {label && (
@@ -194,7 +196,7 @@ function FormInputComponent(
         </div>
       </div>
 
-      {error && !noErrorLabel && <span className="error">{error.message}</span>}
+      {error && error.message && !noErrorLabel && <span className="error">{error.message}</span>}
       {!error && helper && <span className="helper">{helper}</span>}
     </StyledFormInput>
   );

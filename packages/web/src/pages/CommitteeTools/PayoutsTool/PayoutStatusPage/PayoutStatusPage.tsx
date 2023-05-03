@@ -1,32 +1,26 @@
-import { useEffect, useMemo, useState } from "react";
-import { ethers } from "ethers";
-import { useAccount, useWaitForTransaction } from "wagmi";
-import { useNavigate, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import {
-  HATSVaultV2_abi,
-  IVulnerabilitySeverityV1,
-  IVulnerabilitySeverityV2,
-  PayoutStatus,
-  getSafeHomeLink,
-} from "@hats-finance/shared";
-import DOMPurify from "dompurify";
-import { CopyToClipboard, Button, Loading, FormInput, FormSelectInput, Alert, SafePeriodBar } from "components";
-import { ExecutePayoutContract } from "contracts";
+import { HATSVaultV2_abi, PayoutStatus, getSafeHomeLink } from "@hats-finance/shared";
+import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { ExecutePayoutContract } from "contracts";
+import DOMPurify from "dompurify";
+import { ethers } from "ethers";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
-import { usePayoutStatus } from "../utils/usePayoutStatus";
-import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
-import { PayoutCard, SignerCard, PayoutAllocation } from "../components";
+import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { useSignPayout } from "./useSignPayout";
+import { PayoutCard, SignerCard, SinglePayoutAllocation, SplitPayoutAllocation } from "../components";
+import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
+import { usePayoutStatus } from "../utils/usePayoutStatus";
 import { StyledPayoutStatusPage } from "./styles";
-import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
-import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { useSignPayout } from "./useSignPayout";
 
 const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
 
@@ -82,37 +76,14 @@ export const PayoutStatusPage = () => {
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
-  const [severitiesOptions, setSeveritiesOptions] = useState<{ label: string; value: string }[] | undefined>();
   const vaultSeverities = vault?.description?.severities ?? [];
-  const selectedSeverityName = payout?.payoutData.severity;
+  const selectedSeverityName = payout?.payoutData.type === "single" ? payout?.payoutData.severity : undefined;
   const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
-
-  // Get payout severities information from allVaults
-  useEffect(() => {
-    if (!payout || !vault || !vault.description || !allVaults) return;
-
-    if (vault.description) {
-      const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
-        label: severity.name,
-        value: severity.name,
-      }));
-
-      // if the current severity is not in the list of severities, add it
-      if (payout.payoutData.severity && !severities.find((severity) => severity.value === payout.payoutData.severity)) {
-        severities.push({
-          label: payout.payoutData.severity,
-          value: payout.payoutData.severity,
-        });
-      }
-
-      setSeveritiesOptions(severities);
-    }
-  }, [allVaults, payout, vault]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
@@ -204,20 +175,27 @@ export const PayoutStatusPage = () => {
           )}
 
           <div className="payout-status-container">
-            <FormInput
-              label={t("Payouts.beneficiary")}
-              placeholder={t("Payouts.beneficiaryPlaceholder")}
-              value={payout?.payoutData.beneficiary}
-              readOnly
-            />
+            {payout?.payoutData.type === "single" && (
+              <FormInput
+                label={t("Payouts.beneficiary")}
+                placeholder={t("Payouts.beneficiaryPlaceholder")}
+                value={payout?.payoutData.beneficiary}
+                readOnly
+              />
+            )}
 
             <div className="row">
-              {payout?.payoutData.severity && (
+              {payout?.payoutData.type === "single" && payout?.payoutData.severity && (
                 <FormSelectInput
                   value={payout.payoutData.severity}
                   label={t("Payouts.severity")}
                   placeholder={t("Payouts.severityPlaceholder")}
-                  options={severitiesOptions ?? []}
+                  options={[
+                    {
+                      label: payout.payoutData.severity,
+                      value: payout.payoutData.severity,
+                    },
+                  ]}
                   readOnly
                 />
               )}
@@ -232,12 +210,16 @@ export const PayoutStatusPage = () => {
             </div>
 
             <div className="my-5">
-              <PayoutAllocation
-                vault={vault}
-                payout={payout}
-                percentageToPay={payout?.payoutData.percentageToPay}
-                selectedSeverity={selectedSeverityData}
-              />
+              {payout && payout.payoutData.type === "single" ? (
+                <SinglePayoutAllocation
+                  vault={vault}
+                  payout={payout}
+                  percentageToPay={payout?.payoutData.percentageToPay}
+                  selectedSeverity={selectedSeverityData}
+                />
+              ) : (
+                <SplitPayoutAllocation vault={vault} payout={payout} />
+              )}
             </div>
           </div>
 
@@ -245,11 +227,14 @@ export const PayoutStatusPage = () => {
             <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
 
             <FormInput
-              value={payout?.payoutData.explanation + "\n\n\n" + payout?.payoutData.additionalInfo}
+              value={
+                payout?.payoutData.explanation +
+                `${payout?.payoutData.additionalInfo ? `\n\n\n${payout?.payoutData.additionalInfo}` : ""}`
+              }
               label={t("Payouts.explanation")}
               placeholder={t("Payouts.explanationPlaceholder")}
               type="textarea"
-              rows={10}
+              rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
               readOnly
             />
           </div>

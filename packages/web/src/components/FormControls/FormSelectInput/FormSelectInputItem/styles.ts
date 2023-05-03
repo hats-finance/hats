@@ -1,5 +1,5 @@
-import { getSpacing } from "styles";
 import styled from "styled-components";
+import { getSpacing } from "styles";
 
 export const StyledFormSelectInputItem = styled.label`
   cursor: pointer;
@@ -10,6 +10,7 @@ export const StyledFormSelectInputItem = styled.label`
   padding: ${getSpacing(2)} ${getSpacing(1.5)};
   user-select: none;
   color: var(--white);
+  font-size: var(--xsmall);
 
   &:hover {
     background-color: var(--moderate-blue);

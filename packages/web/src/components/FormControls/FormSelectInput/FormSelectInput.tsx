@@ -1,10 +1,10 @@
-import React, { forwardRef, useRef, useState } from "react";
-import useOnClickOutside from "hooks/useOnClickOutside";
-import { useTranslation } from "react-i18next";
-import { FormSelectInputItem } from "./FormSelectInputItem/FormSelectInputItem";
-import { parseIsDirty } from "../utils";
-import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles";
 import DropdownArrow from "@mui/icons-material/KeyboardArrowDownOutlined";
+import useOnClickOutside from "hooks/useOnClickOutside";
+import React, { forwardRef, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { parseIsDirty } from "../utils";
+import { FormSelectInputItem } from "./FormSelectInputItem/FormSelectInputItem";
+import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles";
 
 export interface FormSelectInputOption {
   label: string;
@@ -21,6 +21,7 @@ interface FormSelectInputProps {
   multiple?: boolean;
   colorable?: boolean;
   disabled?: boolean;
+  noMargin?: boolean;
   readOnly?: boolean;
   isDirty?: boolean | boolean[];
   value: string | string[];
@@ -40,6 +41,7 @@ export function FormSelectInputComponent(
     disabled = false,
     isDirty = false,
     readOnly = false,
+    noMargin = false,
     emptyState,
     error,
     placeholder,
@@ -81,7 +83,7 @@ export function FormSelectInputComponent(
   };
 
   return (
-    <StyledFormSelectInput ref={menuRef} hasError={!!error && colorable}>
+    <StyledFormSelectInput ref={menuRef} noMargin={noMargin}>
       {label && <label className="input-label">{label}</label>}
 
       <SelectButton
@@ -92,6 +94,7 @@ export function FormSelectInputComponent(
         isFilled={!!value}
         isOpen={isOpen}
         readOnly={readOnly}
+        noLabel={!label}
       >
         <span className="text">{getRenderValue()}</span>
         <span className="icon">

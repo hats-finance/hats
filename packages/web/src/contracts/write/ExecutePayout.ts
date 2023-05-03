@@ -1,14 +1,14 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
 import Safe from "@safe-global/safe-core-sdk";
-import EthersAdapter from "@safe-global/safe-ethers-lib";
-import EthSignSignature from "@safe-global/safe-core-sdk/dist/src/utils/signatures/SafeSignature";
 import { TransactionResult } from "@safe-global/safe-core-sdk-types";
-import { ethers, Signer } from "ethers";
-import { useNetwork, useProvider, useSigner } from "wagmi";
+import EthSignSignature from "@safe-global/safe-core-sdk/dist/src/utils/signatures/SafeSignature";
+import EthersAdapter from "@safe-global/safe-ethers-lib";
+import { Signer, ethers } from "ethers";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { useNetwork, useProvider, useSigner } from "wagmi";
 
 export class ExecutePayoutContract {
   /**
@@ -47,13 +47,11 @@ export class ExecutePayoutContract {
           const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer as Signer });
           const safeSdk = await Safe.create({ ethAdapter, safeAddress: vault.committee });
 
-          const safeTransaction = await getExecutePayoutSafeTransaction(provider, vault.committee, payout.vaultInfo, {
-            beneficiary: payout.payoutData.beneficiary,
-            descriptionHash: payout.payoutDescriptionHash,
-            bountyPercentageOrSeverityIndex:
-              vault?.version === "v1" ? payout.payoutData.severityBountyIndex : payout.payoutData.percentageToPay,
-          });
-          const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
+          const { tx: safeTransaction, txHash: safeTransactionHash } = await getExecutePayoutSafeTransaction(
+            provider,
+            vault.committee,
+            payout
+          );
 
           // Check the safe transaction hash returned by the API
           if (safeTransactionHash !== payout.txToSign) {

@@ -1,11 +1,11 @@
+import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
+import { Button, FormJSONCSVFileInput, Modal } from "components";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, FormJSONFileInput, Modal } from "components";
 import { useKeystore } from "../../../KeystoreProvider";
-import { IStoredKey, IKeystoreData } from "../../../types";
 import { StyledBaseKeystoreContainer } from "../../../styles";
+import { IKeystoreData, IStoredKey } from "../../../types";
 import { formatKeyWithId } from "../../../utils";
-import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
 
 type RestoreBackupProps = {
   onClose: () => void;
@@ -58,7 +58,13 @@ export const RestoreBackup = ({ onClose }: RestoreBackupProps) => {
       <StyledBaseKeystoreContainer>
         <p className="mb-4">{t("PGPTool.restoreBackupDescription")}</p>
 
-        <FormJSONFileInput label={t("PGPTool.selectBackupFile")} onChange={(e) => handleChangeJsonFile(e.target.value)} />
+        <FormJSONCSVFileInput
+          small
+          name="restore-pgp-keys"
+          fileType="JSON"
+          label={t("PGPTool.selectBackupFile")}
+          onChange={(e) => handleChangeJsonFile(e.target.value)}
+        />
 
         {keysToImport && keysToImport.length > 0 && (
           <p

@@ -26,17 +26,16 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
     .options {
       position: absolute;
       z-index: 100;
-      padding: ${getSpacing(1)};
       top: calc(100% + ${getSpacing(1)});
       right: ${isOutsideScreen ? "unset" : 0};
       left: ${isOutsideScreen ? "0" : "unset"};
-      background-color: var(--blue);
-      width: 260px;
+      background-color: var(--dark-blue);
+      width: max-content;
       border-radius: 2px;
-      box-shadow: 2px 2px 4px black;
+      border: 1px solid var(--turquoise);
 
       .option {
-        padding: ${getSpacing(1)};
+        padding: ${getSpacing(2)};
         border-radius: 2px;
         cursor: pointer;
         display: flex;

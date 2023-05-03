@@ -106,7 +106,7 @@ export const StyledPayoutsWelcome = styled.div`
 `;
 
 export const StyledPayoutCreateModal = styled.div`
-  width: 380px;
+  width: 400px;
   color: var(--white);
 
   .vault-selection {
