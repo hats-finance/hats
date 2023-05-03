@@ -164,10 +164,6 @@ export const PayoutStatusPage = () => {
             <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
           )}
 
-          {/* {!userHasAlreadySigned && isCollectingSignatures && (
-            <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
-          )} */}
-
           {payout && (
             <div className="pt-4">
               <PayoutCard viewOnly showVaultAddress payout={payout} />
