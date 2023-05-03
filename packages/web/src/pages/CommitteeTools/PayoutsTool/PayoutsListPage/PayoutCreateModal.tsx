@@ -20,7 +20,7 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
 
   const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
   const [selectedVaultAddress, setSelectedVaultAddress] = useState<string>();
-  const [payoutType, setPayoutType] = useState<PayoutType>("single");
+  const [payoutType, setPayoutType] = useState<PayoutType>();
   const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
 
   const handleCreatePayout = async () => {
@@ -33,13 +33,19 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   };
 
   const payoutTypeOptions = useMemo(() => {
-    if (selectedVault?.description?.["project-metadata"].type === "audit") {
+    if (!selectedVault) return [];
+
+    if (selectedVault.version === "v1") {
       return [{ label: t("Payouts.singlePayout"), value: "single" }];
     } else {
-      return [
-        { label: t("Payouts.singlePayout"), value: "single" },
-        { label: t("Payouts.splitPayout"), value: "split" },
-      ];
+      if (selectedVault?.description?.["project-metadata"].type === "audit") {
+        return [{ label: t("Payouts.splitPayout"), value: "split" }];
+      } else {
+        return [
+          { label: t("Payouts.singlePayout"), value: "single" },
+          { label: t("Payouts.splitPayout"), value: "split" },
+        ];
+      }
     }
   }, [selectedVault, t]);
 
@@ -58,14 +64,16 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           options={vaultsOptions}
         />
 
-        {/* <FormRadioInput
-          name="payoutType"
-          label={t("Payouts.choosePayoutType")}
-          radioOptions={payoutTypeOptions}
-          onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
-        />
+        {payoutTypeOptions.length > 0 && (
+          <FormRadioInput
+            name="payoutType"
+            label={t("Payouts.choosePayoutType")}
+            radioOptions={payoutTypeOptions}
+            onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
+          />
+        )}
 
-        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>} */}
+        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>}
 
         <div className="options">
           <Button disabled={!selectedVaultAddress || !payoutType} onClick={handleCreatePayout}>

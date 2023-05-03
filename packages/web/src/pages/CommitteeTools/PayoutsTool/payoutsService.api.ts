@@ -68,6 +68,7 @@ export async function getInProgressPayoutsByVault(vaultInfo?: IVaultInfo): Promi
 /**
  * Creates a new payout
  * @param vaultInfo - The vault info to create the payout
+ * @param type - The payout type to create
  *
  * @returns The id of the created payout
  */

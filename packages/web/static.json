@@ -4,9 +4,9 @@
     "/**": "index.html"
   },
   "https_only": true,
- "headers": {
-   "/**": {
-     "X-Frame-Options": "DENY"
-   }
- }
+  "headers": {
+    "/**": {
+      "X-Frame-Options": "DENY"
+    }
+  }
 }

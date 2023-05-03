@@ -1,10 +1,10 @@
 import { INFTMetaData, IVault } from "@hats-finance/shared";
-import { useTranslation } from "react-i18next";
+import OpenIcon from "@mui/icons-material/FitScreenOutlined";
 import { Button, Media, Modal } from "components";
 import useModal from "hooks/useModal";
+import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import { StyledNFTDetailsModal, StyledNftPreview } from "./styles";
-import OpenIcon from "@mui/icons-material/FitScreenOutlined";
 
 export type NftPreviewProps = {
   nftData: INFTMetaData | undefined;
@@ -26,7 +26,7 @@ export const NftPreview = ({ nftData, severityName, vault, size = "normal" }: Nf
       </StyledNftPreview>
 
       {nftData && (
-        <Modal newStyles isShowing={isShowingNFTModal} title={t("nft")} onHide={hideNFTModal}>
+        <Modal newStyles isShowing={isShowingNFTModal} title={t("nftPreview")} onHide={hideNFTModal}>
           <StyledNFTDetailsModal>
             <Media className="big-preview" link={ipfsTransformUri(nftData.image)} />
 

@@ -1,7 +1,8 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledPayoutAllocation = styled.div`
+export const StyledSinglePayoutAllocation = styled.div`
   .result-divider {
     display: flex;
     align-items: center;
@@ -20,6 +21,10 @@ export const StyledPayoutAllocation = styled.div`
     display: flex;
     gap: ${getSpacing(3)};
     margin: ${getSpacing(1)} 0 ${getSpacing(2)};
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      flex-direction: column;
+    }
   }
 
   .allocations {
@@ -35,6 +40,11 @@ export const StyledPayoutAllocation = styled.div`
     .allocation {
       display: flex;
       justify-content: space-between;
+
+      @media (max-width: ${breakpointsDefinition.smallMobile}) {
+        flex-direction: column;
+        gap: ${getSpacing(1)};
+      }
 
       .name {
         display: flex;

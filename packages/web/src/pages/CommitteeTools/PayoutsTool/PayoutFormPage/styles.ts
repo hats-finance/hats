@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledPayoutFormPage = styled.div`
   position: relative;
@@ -60,11 +61,12 @@ export const StyledPayoutFormPage = styled.div`
   }
 `;
 
-export const StyledPayoutForm = styled.form`
+export const StyledPayoutForm = styled.div`
   .form-container {
     background: var(--background-clearer-blue);
     border-radius: 4px;
     padding: ${getSpacing(2.5)};
+    padding-top: ${getSpacing(3.5)};
 
     .subtitle {
       text-transform: uppercase;
@@ -80,13 +82,28 @@ export const StyledPayoutForm = styled.form`
       }
     }
 
-    .no-expanded-input {
+    .w-60 {
       width: 60%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
+    }
+
+    .w-40 {
+      width: 40%;
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        width: 100%;
+      }
     }
 
     .row {
       display: flex;
       gap: ${getSpacing(2)};
+    }
+
+    .beneficiaries-table {
     }
   }
 
@@ -98,5 +115,19 @@ export const StyledPayoutForm = styled.form`
     border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
     margin-top: ${getSpacing(5)};
+
+    &.no-line {
+      border-top: none;
+      padding-top: 0;
+    }
+  }
+
+  p.error {
+    font-size: var(--xxsmall);
+    color: var(--error-red);
+  }
+
+  strong.turquoise {
+    color: var(--turquoise);
   }
 `;

@@ -1,10 +1,10 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledFormSelectInput = styled.div<{ hasError: boolean }>(
-  ({ hasError }) => css`
+export const StyledFormSelectInput = styled.div<{ noMargin: boolean }>(
+  ({ noMargin }) => css`
     position: relative;
-    margin-bottom: ${getSpacing(3)};
+    margin-bottom: ${noMargin ? 0 : getSpacing(3)};
     width: 100%;
 
     label.input-label {
@@ -33,15 +33,22 @@ export const SelectButton = styled.div<{
   isFilled: boolean;
   disabled: boolean;
   readOnly: boolean;
+  noLabel: boolean;
 }>(
-  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly }) => css`
+  ({ isDirty, isOpen, hasError, isFilled, disabled, readOnly, noLabel }) => css`
     position: relative;
     width: 100%;
     display: flex;
     align-items: center;
     text-align: left;
-    padding: ${getSpacing(3.4)} ${getSpacing(2)} ${getSpacing(0.6)};
+    padding: ${getSpacing(3.4)} ${getSpacing(2)} ${getSpacing(0.8)};
     border: 1px solid var(--grey-500);
+    font-size: var(--xsmall);
+
+    ${noLabel &&
+    css`
+      padding: ${getSpacing(1.5)} ${getSpacing(1.5)} ${getSpacing(1.5)};
+    `}
 
     &:hover {
       opacity: 1;
@@ -101,12 +108,12 @@ export const SelectButton = styled.div<{
       justify-content: center;
       align-items: center;
       transition: 0.2s;
-      transform: translateY(-40%);
+      transform: ${noLabel ? "translateY(0)" : "translateY(-40%)"};
       color: ${readOnly ? "transparent" : "unherit"};
 
       ${isOpen &&
       css`
-        transform: translateY(-40%) rotateX(180deg);
+        transform: ${noLabel ? "translateY(0) rotateX(180deg)" : "translateY(-40%) rotateX(180deg)"};
       `}
     }
   `
