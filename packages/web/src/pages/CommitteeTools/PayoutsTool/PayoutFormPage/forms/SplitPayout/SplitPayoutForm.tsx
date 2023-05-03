@@ -1,11 +1,10 @@
-import { ISplitPayoutData } from "@hats-finance/shared";
+import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats-finance/shared";
 import GenerateIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
 import DownloadIcon from "@mui/icons-material/SaveAltOutlined";
 import { Button, FormInput, FormJSONCSVFileInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
 import { useContext, useState } from "react";
-import { useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
 import { PayoutFormContext } from "../../store";
@@ -19,12 +18,7 @@ export const SplitPayoutForm = () => {
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { register, control, setValue, getValues } = methods;
-  const {
-    fields: beneficiaries,
-    append: appendBeneficiary,
-    remove: removeBeneficiary,
-  } = useFieldArray({ control, name: `beneficiaries` });
+  const { register, setValue, getValues } = methods;
 
   const [beneficiariesToImport, setBeneficiariesToImport] = useState<CSVBeneficiary[] | undefined>();
   const [csvFileInputKey, setCsvFileInputKey] = useState(1);
@@ -75,13 +69,14 @@ export const SplitPayoutForm = () => {
 
   const handleImportBeneficiaries = () => {
     if (!beneficiariesToImport || beneficiariesToImport.length === 0 || !severitiesOptions) return;
+    const beneficiaries = getValues("beneficiaries");
 
-    // Remove empty beneficiaries
-    const idxsToRemove = beneficiaries.reduce((acc, beneficiary, idx) => {
-      if (!beneficiary.beneficiary) acc.push(idx);
-      return acc;
-    }, [] as number[]);
-    for (const indexToRemove of idxsToRemove.reverse()) removeBeneficiary(indexToRemove);
+    const newBeneficiaries: ISplitPayoutBeneficiary[] = [];
+
+    // Add existing and non-empty beneficiaries
+    for (const beneficiary of beneficiaries) {
+      if (beneficiary.beneficiary) newBeneficiaries.push(beneficiary);
+    }
 
     // Append new beneficiaries
     for (const beneficiaryToImport of beneficiariesToImport) {
@@ -89,14 +84,21 @@ export const SplitPayoutForm = () => {
         sev.value.toLowerCase().includes(beneficiaryToImport.severity.toLowerCase())
       );
 
-      appendBeneficiary({
+      const vaultSeverities = vault?.description?.severities ?? [];
+      const selectedSeverityIndex = vaultSeverities.findIndex(
+        (severity) => severity.name.toLowerCase() === severityFound?.value?.toLowerCase()
+      );
+      const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
+
+      newBeneficiaries.push({
         beneficiary: beneficiaryToImport.beneficiary,
         severity: severityFound ? severityFound.value.toLowerCase() : "",
         percentageOfPayout: Number(beneficiaryToImport.percentageToPay).toString() ?? "",
-        nftUrl: "",
+        nftUrl: selectedSeverityData ? selectedSeverityData["nft-metadata"].image : "",
       });
     }
 
+    setValue("beneficiaries", newBeneficiaries);
     setBeneficiariesToImport(undefined);
     setCsvFileInputKey((prev) => prev + 1);
   };
