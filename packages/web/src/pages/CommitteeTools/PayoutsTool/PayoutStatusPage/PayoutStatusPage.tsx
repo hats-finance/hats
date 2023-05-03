@@ -78,7 +78,9 @@ export const PayoutStatusPage = () => {
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = payout?.payoutData.type === "single" ? payout?.payoutData.severity : undefined;
-  const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
+  const selectedSeverityIndex = vaultSeverities.findIndex(
+    (severity) => severity.name.toLowerCase() === selectedSeverityName?.toLowerCase()
+  );
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   useEffect(() => {
