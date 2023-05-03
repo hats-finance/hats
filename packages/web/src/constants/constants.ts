@@ -58,7 +58,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
 
-export const IPFS_PREFIX = "https://hats-finance.mypinata.cloud/ipfs";
+export const IPFS_PREFIX = "https://ipfs2.hats.finance/ipfs";
 
 export const HATS_WEBSITE = "https://hats.finance";
 
