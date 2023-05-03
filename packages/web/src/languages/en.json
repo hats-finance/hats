@@ -441,6 +441,7 @@
       "percentageToPayLabel": "% to pay",
       "percentageToPay": "Payout percentage (%)",
       "percentageToPayPlaceholder": "Enter payout percentage",
+      "severityBountyIndexPlaceholder": "Select bounty index",
       "reasoning": "Reasoning",
       "reasoningDescription": "Provide a clear explanation of the reasons behind your decision to help the submitter understand the classification of the vulnerability.",
       "explanation": "Explanation",
