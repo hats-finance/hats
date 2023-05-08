@@ -1,12 +1,12 @@
+import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
+import { WithTooltip } from "components";
+import { useVaults } from "hooks/vaults/useVaults";
+import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
-import moment from "moment";
-import { useVaults } from "hooks/vaults/useVaults";
-import { RoutePaths } from "navigation";
-import { WithTooltip } from "components";
-import { ipfsTransformUri } from "utils";
 import { appChains } from "settings";
+import { ipfsTransformUri } from "utils";
 import { usePayoutStatus } from "../../utils/usePayoutStatus";
 import { StyledPayoutCard, StyledVersionFlag } from "./styles";
 
