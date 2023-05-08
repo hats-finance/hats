@@ -23,6 +23,7 @@ import { StyledPayoutStatusPage } from "./styles";
 import { useSignPayout } from "./useSignPayout";
 
 const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
+const SIGNABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
@@ -74,6 +75,7 @@ export const PayoutStatusPage = () => {
   const isReadyToExecute = payoutStatus === PayoutStatus.ReadyToExecute;
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
+  const canBesigned = payoutStatus && SIGNABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const vaultSeverities = vault?.description?.severities ?? [];
@@ -290,7 +292,7 @@ export const PayoutStatusPage = () => {
                 </Button>
               )}
 
-              {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
+              {canBesigned && !userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
               {isReadyToExecute && (
                 <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
                   {t("Payouts.executePayout")}
