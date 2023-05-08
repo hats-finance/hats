@@ -473,7 +473,7 @@
       "goToPayoutCreator": "Go to payout creator",
       "executingPayout": "Executing payout (this can take more than usual, do not refresh the page)",
       "executePayoutError": "There was an error executing the payout. You can only execute the payout if: \n - You are connected with a committee wallet. \n - This vault has no other active claim \n - The safety period is on.",
-      "thisVaultHasAnActivePayout": "This vault has an active payout. You can't execute a new payout for this vault until the active one is resolved.",
+      "thisVaultHasAnActivePayout": "This vault has an active payout. You can't execute a new payout for this vault until the active one is resolved (approved or dismissed).",
       "payoutAllocationExplanation": "This is exactly how the 'Total payout sum' amount will be distributed.",
       "choosePayoutType": "Choose payout type",
       "singlePayout": "Single payout",

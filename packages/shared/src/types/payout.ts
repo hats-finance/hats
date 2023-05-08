@@ -102,7 +102,7 @@ export const payoutStatusInfo = {
     color: "--turquoise",
   },
   [PayoutStatus.Executed]: {
-    label: "executed",
+    label: "waitingApproval",
     color: "--warning-yellow",
   },
   [PayoutStatus.Approved]: {
