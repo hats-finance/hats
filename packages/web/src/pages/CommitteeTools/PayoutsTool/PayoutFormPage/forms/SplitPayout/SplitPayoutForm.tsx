@@ -4,7 +4,7 @@ import DownloadIcon from "@mui/icons-material/SaveAltOutlined";
 import { Button, FormInput, FormJSONCSVFileInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
 import { PayoutFormContext } from "../../store";
@@ -16,6 +16,9 @@ export const SplitPayoutForm = () => {
   const { t } = useTranslation();
   const confirm = useConfirm();
   const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+
+  const splitAllocationRef = useRef<any>(null);
+  const scrollToAllocation = () => splitAllocationRef?.current?.scrollIntoView();
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
   const { register, setValue, getValues } = methods;
@@ -98,6 +101,7 @@ export const SplitPayoutForm = () => {
       });
     }
 
+    scrollToAllocation();
     setValue("beneficiaries", newBeneficiaries);
     setBeneficiariesToImport(undefined);
     setCsvFileInputKey((prev) => prev + 1);
@@ -182,7 +186,7 @@ Reasoning: Type your explanation here...\n\n`;
           className="w-60"
         />
 
-        <p className="mt-3 mb-2">
+        <p className="mt-3 mb-2" ref={splitAllocationRef}>
           {t("Payouts.percentageToPayExplanation", { maxBounty: `${Number(vault?.maxBounty) / 100 ?? 100}%` })}
         </p>
 

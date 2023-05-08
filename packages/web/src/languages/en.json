@@ -454,7 +454,7 @@
       "payoutSum": "Payout sum",
       "totalPayoutSum": "Total payout sum",
       "percentageOfTheTotalVaultToPay": "% of the whole vault",
-      "anotherActivePayout": "You can't create a new payout for this vault while it has an active one. Please wait for the current payout to finish, or delete it.",
+      "anotherActivePayout": "You can't create a new payout for this vault while you are creating another one. Please wait for the current payout to finish, or delete it.",
       "deletePayout": "Delete payout",
       "deletePayoutDescription": "Are you sure you want to delete the payout?. This action will permanently delete the payout.",
       "deletePayoutConfirmText": "Confirm deletion vault name to continue",
