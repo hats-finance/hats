@@ -499,7 +499,7 @@
       "sumPercentagesPayoutShouldBe100": "Sum of percentages of the payout should be 100%",
       "generateSplitExplanationTemplate": "Generate explanation template",
       "generateExplanation": "Generate explanation",
-      "generateExplanationDescription": "Generate an explanation template. This will help you to fill the explanation field for each beneficiary.",
+      "generateExplanationDescription": "Generate an explanation template. This will help you to fill the explanation field for each beneficiary. \n\nAttention: you will lose all the data you have already filled.",
       "allocationInfo": "Allocation info",
       "totalHackersPayment": "Total hackers payment",
       "totalCommitteePayment": "Total committee payment",
