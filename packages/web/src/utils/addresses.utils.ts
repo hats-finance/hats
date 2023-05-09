@@ -9,10 +9,14 @@ type ShortenOptions = {
 export const isAddress = isAddressEthers;
 
 export const shortenIfAddress = (address?: string, opts?: ShortenOptions): string => {
-  if (typeof address === "string" && address.length > 0) {
-    return shortenAddress(address, opts);
+  try {
+    if (typeof address === "string" && address.length > 0) {
+      return shortenAddress(address, opts);
+    }
+    return "";
+  } catch (error) {
+    return "";
   }
-  return "";
 };
 
 export const shortenAddress = (address: string, opts?: ShortenOptions): string => {

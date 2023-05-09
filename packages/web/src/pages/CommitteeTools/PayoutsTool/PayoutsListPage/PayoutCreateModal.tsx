@@ -1,5 +1,6 @@
 import { PayoutType, getVaultInfoFromVault } from "@hats-finance/shared";
-import { Button, FormRadioInput, FormSelectInput, Loading } from "components";
+import { Alert, Button, FormRadioInput, FormSelectInput, Loading } from "components";
+import { BigNumber } from "ethers";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { RoutePaths } from "navigation";
 import { useMemo, useState } from "react";
@@ -23,8 +24,12 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const [payoutType, setPayoutType] = useState<PayoutType>();
   const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
 
+  const isVaultDepositedAndCheckedIn = useMemo(() => {
+    return selectedVault ? selectedVault.committeeCheckedIn && BigNumber.from(selectedVault?.honeyPotBalance).gt(0) : true;
+  }, [selectedVault]);
+
   const handleCreatePayout = async () => {
-    if (!selectedVault || !payoutType) return;
+    if (!selectedVault || !payoutType || !isVaultDepositedAndCheckedIn) return;
 
     const payoutId = await createDraftPayout.mutateAsync({ vaultInfo: getVaultInfoFromVault(selectedVault), type: payoutType });
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
@@ -64,19 +69,27 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
           options={vaultsOptions}
         />
 
-        {payoutTypeOptions.length > 0 && (
-          <FormRadioInput
-            name="payoutType"
-            label={t("Payouts.choosePayoutType")}
-            radioOptions={payoutTypeOptions}
-            onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
-          />
+        {isVaultDepositedAndCheckedIn && (
+          <>
+            {payoutTypeOptions.length > 0 && (
+              <FormRadioInput
+                name="payoutType"
+                label={t("Payouts.choosePayoutType")}
+                radioOptions={payoutTypeOptions}
+                onChange={(e) => setPayoutType(e.target.value as "single" | "split")}
+              />
+            )}
+
+            {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>}
+          </>
         )}
 
-        {payoutType && <p className="mb-5">{t(`Payouts.${payoutType}PayoutExplanation`)}</p>}
+        {!isVaultDepositedAndCheckedIn && (
+          <Alert className="mb-4" type="error" content={t("Payouts.cantCreatePayoutNoDepositors")} />
+        )}
 
         <div className="options">
-          <Button disabled={!selectedVaultAddress || !payoutType} onClick={handleCreatePayout}>
+          <Button disabled={!selectedVaultAddress || !payoutType || !isVaultDepositedAndCheckedIn} onClick={handleCreatePayout}>
             {t("Payouts.createPayout")}
           </Button>
         </div>

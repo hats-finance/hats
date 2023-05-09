@@ -22,4 +22,5 @@ export { CopyToClipboard } from "./CopyToClipboard/CopyToClipboard";
 export { CollapsableTextContent } from "./CollapsableTextContent/CollapsableTextContent";
 export { Pill, type PillProps } from "./Pill/Pill";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
+export { VaultInfoCard } from "./VaultInfoCard/VaultInfoCard";
 export * from "./FormControls";

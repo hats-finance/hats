@@ -244,6 +244,8 @@ export interface IWithdrawSafetyPeriod {
   isSafetyPeriod: boolean;
   nextSafetyStartsAt: number;
   ongoingSafetyEndsAt: number;
+  safetyPeriod: number;
+  withdrawPeriod: number;
 }
 
 export type TokenPriceResponse = { [token: string]: undefined | {} | { usd?: number } };

@@ -12,7 +12,8 @@ type SinglePayoutAllocationProps = {
   vault: IVault | undefined;
   payout: IPayoutResponse | undefined;
   percentageToPay: string | undefined;
-  percentageOfPayout?: string | undefined;
+  percentageOfPayout?: string;
+  noArrow?: boolean;
 };
 
 export const SinglePayoutAllocation = ({
@@ -21,6 +22,7 @@ export const SinglePayoutAllocation = ({
   percentageToPay,
   percentageOfPayout,
   selectedSeverity,
+  noArrow = false,
 }: SinglePayoutAllocationProps) => {
   const { t } = useTranslation();
 
@@ -34,11 +36,13 @@ export const SinglePayoutAllocation = ({
   if (!vault || !totalAmount) return null;
   return (
     <StyledSinglePayoutAllocation>
-      <div className="result-divider">
-        <div />
-        <ArrowDownIcon />
-        <div />
-      </div>
+      {!noArrow && (
+        <div className="result-divider">
+          <div />
+          <ArrowDownIcon />
+          <div />
+        </div>
+      )}
 
       <div className="mb-5">{t("Payouts.resultDescription")}</div>
       <div className="result-container">

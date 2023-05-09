@@ -64,18 +64,28 @@ export const SplitPayoutBeneficiaryForm = ({
   const getMoreOptions = () => {
     if (beneficiariesCount === undefined) return [];
     if (beneficiariesCount > 1 && !readOnly && !isPayoutCreated) {
-      return [
-        {
-          icon: <InfoIcon />,
-          label: t("Payouts.allocationInfo"),
-          onClick: showAllocation,
-        },
-        {
-          icon: <DeleteIcon />,
-          label: t("remove"),
-          onClick: () => remove?.(index),
-        },
-      ];
+      if (payoutAllocation.totalAmount === undefined) {
+        return [
+          {
+            icon: <DeleteIcon />,
+            label: t("remove"),
+            onClick: () => remove?.(index),
+          },
+        ];
+      } else {
+        return [
+          {
+            icon: <InfoIcon />,
+            label: t("Payouts.allocationInfo"),
+            onClick: showAllocation,
+          },
+          {
+            icon: <DeleteIcon />,
+            label: t("remove"),
+            onClick: () => remove?.(index),
+          },
+        ];
+      }
     }
 
     return [
@@ -176,6 +186,7 @@ export const SplitPayoutBeneficiaryForm = ({
       <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation} newStyles>
         <StyledSplitPayoutBeneficiaryAllocationModal>
           <SinglePayoutAllocation
+            noArrow
             vault={vault}
             payout={payout}
             selectedSeverity={selectedSeverityData}
