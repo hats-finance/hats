@@ -1,24 +1,25 @@
 import SearchIcon from "assets/icons/search.icon";
 import { Loading, Vault } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { VulnerabilityFormContext } from "pages/VulnerabilityFormPage/store";
+import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IVault } from "types";
 import { StyledProjectSelect } from "./styles";
 
 export default function ProjectSelect() {
-  const { vulnerabilityData, setVulnerabilityData } = useContext(VulnerabilityFormContext);
+  const { t } = useTranslation();
+  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [userInput, setUserInput] = useState("");
   const { vaults: vaultsData } = useVaults();
 
   const handleSelectedProject = (vault: IVault) => {
-    setVulnerabilityData((prev) => ({
+    setSubmissionData((prev) => ({
       ...prev!,
       project: {
         verified: true,
         projectName: vault.description?.["project-metadata"].name!,
         projectId: vault.id,
-        contractAddress: vault.master.address,
       },
       description: undefined,
       submission: undefined,
@@ -35,7 +36,7 @@ export default function ProjectSelect() {
           vault={vault}
           expanded={false}
           onSelect={() => handleSelectedProject(vault)}
-          selected={vulnerabilityData?.project?.projectId === vault.id}
+          selected={submissionData?.project?.projectId === vault.id}
         />
       );
     }
@@ -50,19 +51,23 @@ export default function ProjectSelect() {
         <>
           <div className="search-wrapper">
             <SearchIcon />
-            <input type="text" placeholder="Search or select project" onChange={(e) => setUserInput(e.target.value)} />
+            <input
+              type="text"
+              placeholder={t("Submissions.searchOrSelectProject")}
+              onChange={(e) => setUserInput(e.target.value)}
+            />
           </div>
 
           {vaults.every((value: any) => value === undefined) ? (
-            <div className="no-results">No projects found</div>
+            <div className="no-results">{t("Submissions.noProjectsFound")}</div>
           ) : (
             <div className="table-wrapper">
               <table>
                 <tbody>
                   <tr className="onlyDesktop">
                     <th></th>
-                    <th>PROJECT NAME</th>
-                    <th>VAULT TOTAL</th>
+                    <th>{t("projectName")}</th>
+                    <th>{t("vaultTotal")}</th>
                   </tr>
                   {vaults}
                 </tbody>

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const StyledVulnerabilityFormPage = styled.div`
+export const StyledSubmissionFormPage = styled.div`
   position: relative;
 
   .accordion-wrapper {

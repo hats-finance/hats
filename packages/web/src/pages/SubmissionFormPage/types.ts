@@ -1,6 +1,6 @@
 import { SessionKey } from "openpgp";
 
-export enum VulnerabilityStep {
+export enum SubmissionStep {
   project,
   contact,
   description,
@@ -12,7 +12,6 @@ export interface ISubmissionProjectData {
   verified: boolean;
   projectName: string;
   projectId: string;
-  contractAddress: string;
 }
 
 export interface ISubmissionContactData {
@@ -43,17 +42,32 @@ export interface ISubmissionResultData {
   chainId: number;
 }
 
-export interface IVulnerabilityData {
+export interface ISubmissionData {
   version: string;
   project?: ISubmissionProjectData;
   contact?: ISubmissionContactData;
   description?: ISubmissionDescriptionData;
   terms?: ISubmissionTermsData;
-  submission?: ISubmissionResultData;
+  submissionResult?: ISubmissionResultData;
 }
 
 export enum SubmissionOpStatus {
   Pending,
   Success,
   Fail,
+}
+
+export interface ISubmitSubmissionRequest {
+  submitVulnerabilityRequest: {
+    chainId: number;
+    msg: string;
+    txHash: string;
+    route: string;
+    projectId: string;
+  };
+  createIssueRequest: {
+    issueTitle: string;
+    issueDescription: string;
+    issueFiles: any[];
+  };
 }

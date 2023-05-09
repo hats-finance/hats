@@ -318,6 +318,8 @@
     "thisInformationWillAppearOnChain": "This information will appear on-chain",
     "progressSaved": "Progress saved",
     "nft": "NFT",
+    "projectName": "Project name",
+    "vaultTotal": "Vault total",
     "nftPreview": "NFT preview",
     "nftDescription": "NFT description",
     "vaultName": "Vault name",
@@ -349,6 +351,8 @@
     "beneficiaryWalletAddressPlaceholder": "Enter the beneficiary wallet address",
     "githubUsername": "GitHub username",
     "githubUsernamePlaceholder": "Enter the GitHub username",
+    "enterCommunicationChannel": "Enter your communication channel",
+    "platformUsername": "{{platform}} username",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -526,7 +530,9 @@
       "addPreferredCommunicationChannel": "Add your preferred communication channel",
       "addGithubAccountConnectIssue": "Add your GitHub account if you want to connect the issue/s submitted (optional)",
       "contactDataWillBePublishedNote": "Note: The data you have provided will be pined on IPFS in plain text.",
-      "saveContactInformation": "Save contact information"
+      "saveContactInformation": "Save contact information",
+      "searchOrSelectProject": "Search or select project",
+      "noProjectsFound": "No projects found"
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",

@@ -1,11 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormInput, FormRadioInput } from "components";
 import { useEnhancedForm } from "hooks/form";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
-import { VulnerabilityFormContext } from "../../store";
+import { SubmissionFormContext } from "../../store";
 import { ISubmissionContactData } from "../../types";
 import { getCreateContactInfoSchema } from "./formSchema";
 import { StyledContactInfo } from "./styles";
@@ -13,7 +13,7 @@ import { StyledContactInfo } from "./styles";
 export default function ContactInfo() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-  const { vulnerabilityData, setVulnerabilityData } = useContext(VulnerabilityFormContext);
+  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
 
   const {
     register,
@@ -38,8 +38,8 @@ export default function ContactInfo() {
 
   // Reset form with saved data
   useEffect(() => {
-    if (vulnerabilityData?.contact) reset(vulnerabilityData?.contact);
-  }, [vulnerabilityData, reset]);
+    if (submissionData?.contact) reset(submissionData?.contact);
+  }, [submissionData, reset]);
 
   // Change beneficiary to current account (only if not set yet)
   useEffect(() => {
@@ -48,10 +48,24 @@ export default function ContactInfo() {
   }, [account, setValue, getValues]);
 
   const handleAddContactData = (contactData: ISubmissionContactData) => {
-    setVulnerabilityData((prev) => {
+    setSubmissionData((prev) => {
       if (prev) return { ...prev!, contact: { ...contactData, verified: true } };
     });
   };
+
+  const communicationChannelLabel = useMemo(() => {
+    switch (communicationChannelType) {
+      case "discord":
+        return t("platformUsername", { platform: t("discord") });
+      case "telegram":
+        return t("platformUsername", { platform: t("telegram") });
+      case "email":
+        return t("emailAddress");
+
+      default:
+        return t("platformUsername", { platform: "Discord" });
+    }
+  }, [communicationChannelType, t]);
 
   return (
     <StyledContactInfo>
@@ -68,7 +82,6 @@ export default function ContactInfo() {
       <FormRadioInput
         {...register("communicationChannelType")}
         label={t("Submissions.addPreferredCommunicationChannel")}
-        colorable
         radioOptions={[
           { label: t("discord"), value: "discord" },
           { label: t("emailAddress"), value: "email" },
@@ -78,8 +91,8 @@ export default function ContactInfo() {
 
       <FormInput
         {...register("communicationChannel")}
-        label={`${t("beneficiaryWalletAddress")}`}
-        placeholder={t("beneficiaryWalletAddressPlaceholder")}
+        label={communicationChannelLabel}
+        placeholder={t("enterCommunicationChannel")}
         colorable
       />
 

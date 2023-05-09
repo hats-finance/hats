@@ -1,19 +1,19 @@
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-type StyledVulnerabilityFormCardProps = {
+type StyledSubmissionFormCardProps = {
   isCollapsed: boolean;
   isVerified: boolean;
   isDisabled: boolean;
 };
 
-export const StyledVulnerabilityFormCard = styled.div<StyledVulnerabilityFormCardProps>(
+export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps>(
   ({ isCollapsed, isVerified, isDisabled }) => css`
     margin-bottom: 10px;
 
     .card-header {
       background-color: var(--light-blue);
-      padding: 15px 30px;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -35,8 +35,12 @@ export const StyledVulnerabilityFormCard = styled.div<StyledVulnerabilityFormCar
       `}
 
       .card-number {
-        margin-right: 30px;
+        width: ${getSpacing(6)};
         font-weight: bold;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: var(--small);
       }
     }
 
@@ -44,6 +48,8 @@ export const StyledVulnerabilityFormCard = styled.div<StyledVulnerabilityFormCar
       color: var(--white);
       margin-right: 50px;
       font-weight: bold;
+      border-left: 6px solid var(--dark-blue);
+      padding: ${getSpacing(2)} ${getSpacing(3)};
 
       ${!isCollapsed &&
       css`
@@ -61,6 +67,7 @@ export const StyledVulnerabilityFormCard = styled.div<StyledVulnerabilityFormCar
       transform: rotate(0deg);
       transition: transform 0.1s linear;
       margin-left: auto;
+      padding: ${getSpacing(2)};
 
       ${!isCollapsed &&
       css`
@@ -70,7 +77,7 @@ export const StyledVulnerabilityFormCard = styled.div<StyledVulnerabilityFormCar
     }
 
     .card-body {
-      padding: 20px 70px;
+      padding: 20px 0 20px 55px;
 
       ${isCollapsed &&
       css`

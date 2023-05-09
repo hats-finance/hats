@@ -1,37 +1,37 @@
-import { useContext, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useVaults } from "hooks/vaults/useVaults";
+import BugIcon from "assets/icons/bug-icon.svg";
+import ErrosIcon from "assets/icons/error-icon.svg";
+import QuestionIcon from "assets/icons/question-icon.svg";
+import RewardIcon from "assets/icons/reward-icon.svg";
+import TimelineIcon from "assets/icons/timeline-icon.svg";
 import { TERMS_OF_USE } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import { VulnerabilityFormContext } from "pages/VulnerabilityFormPage/store";
-import QuestionIcon from "assets/icons/question-icon.svg";
-import ErrosIcon from "assets/icons/error-icon.svg";
-import TimelineIcon from "assets/icons/timeline-icon.svg";
-import BugIcon from "assets/icons/bug-icon.svg";
-import RewardIcon from "assets/icons/reward-icon.svg";
+import { useVaults } from "hooks/vaults/useVaults";
+import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
+import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Award from "./components/Award/Award";
 import "./index.scss";
 
 export default function TermsAndProcess() {
-  const { vulnerabilityData, setVulnerabilityData } = useContext(VulnerabilityFormContext);
+  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
   const { t } = useTranslation();
 
-  const projectId = vulnerabilityData?.project?.projectId;
+  const projectId = submissionData?.project?.projectId;
   const { vaults } = useVaults();
   const vault = vaults?.find((vault) => vault.id === projectId);
   const description = vault && vault.description;
 
   useEffect(() => {
-    setAcceptedTermsOfUse(vulnerabilityData?.terms?.verified || false);
-  }, [vulnerabilityData]);
+    setAcceptedTermsOfUse(submissionData?.terms?.verified || false);
+  }, [submissionData]);
 
   const awards = description?.severities.map((severity, index) => {
     return <Award key={index} vault={vault!} index={index} />;
   });
 
   const handleTermsAccepted = () => {
-    setVulnerabilityData((prev) => {
+    setSubmissionData((prev) => {
       if (prev) return { ...prev, terms: { verified: true } };
     });
   };
@@ -77,7 +77,7 @@ export default function TermsAndProcess() {
       <div className="section-title awards">3 {t("SubmitVulnerability.TermsAndProcess.awards-sub-title")}</div>
       <div className="section-content awards">
         {t("SubmitVulnerability.TermsAndProcess.awards-text-1")}
-        {vulnerabilityData?.project?.verified ? (
+        {submissionData?.project?.verified ? (
           <table>
             <tbody>
               <tr>

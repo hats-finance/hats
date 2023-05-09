@@ -1,10 +1,10 @@
-import millify from "millify";
+import { IPFS_PREFIX, LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "constants/constants";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+import millify from "millify";
+import { SUBMISSION_INIT_DATA } from "pages/SubmissionFormPage/store";
+import { ISubmissionData } from "pages/SubmissionFormPage/types";
 import { BASE_SERVICE_URL } from "settings";
-import { IVulnerabilityData } from "pages/VulnerabilityFormPage/types";
-import { VULNERABILITY_INIT_DATA } from "pages/VulnerabilityFormPage/store";
-import { ScreenSize, SMALL_SCREEN_BREAKPOINT, IPFS_PREFIX, LocalStorage } from "constants/constants";
 
 /**
  * Adds commas to a given number
@@ -145,19 +145,18 @@ export const parseJSONToObject = (dataString: string) => {
  * @param {string} projectId
  */
 export const setVulnerabilityProject = (projectName: string, projectId: string, contractAddress: string) => {
-  let cachedData: IVulnerabilityData = JSON.parse(
-    localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(VULNERABILITY_INIT_DATA)
+  let cachedData: ISubmissionData = JSON.parse(
+    localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(SUBMISSION_INIT_DATA)
   );
 
   if (cachedData.version !== getAppVersion()) {
-    cachedData = VULNERABILITY_INIT_DATA;
+    cachedData = SUBMISSION_INIT_DATA;
   }
 
   cachedData.project = {
     verified: true,
     projectName: projectName,
     projectId: projectId,
-    contractAddress: contractAddress,
   };
   localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 };

@@ -8,19 +8,24 @@ export const StyledProjectSelect = styled.div`
   .table-wrapper {
     max-height: 500px;
     overflow: auto;
+
     table {
       width: 100%;
       border-collapse: collapse;
+
       tr {
         border-bottom: 2px solid var(--dark-blue);
       }
+
       th {
         color: var(--white);
         text-align: left;
         padding: 15px 25px;
         background-color: var(--field-blue);
         border-bottom: 1px solid var(--dark-turquoise);
+        text-transform: uppercase;
       }
+
       td {
         padding: 15px 25px;
 
