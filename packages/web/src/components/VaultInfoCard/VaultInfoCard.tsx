@@ -14,6 +14,7 @@ type VaultInfoCardProps = {
 export const VaultInfoCard = ({ vault }: VaultInfoCardProps) => {
   const { t } = useTranslation();
 
+  // Open block explorer on vault's chain
   const handleOpenBlockExplorer = () => {
     const network = vault.chainId ? appChains[vault.chainId] : null;
 
