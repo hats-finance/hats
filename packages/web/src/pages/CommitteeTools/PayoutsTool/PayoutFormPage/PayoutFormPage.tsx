@@ -8,9 +8,11 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
+import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Alert, Button, FormSelectInputOption, Loading, VaultInfoCard, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import useConfirm from "hooks/useConfirm";
 import { useVaults } from "hooks/vaults/useVaults";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -20,7 +22,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
-import { useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
+import { useDeletePayout, useLockPayout, usePayout, useSavePayout, useVaultInProgressPayouts } from "../payoutsService.hooks";
 import { getSinglePayoutDataYupSchema, getSplitPayoutDataYupSchema } from "./formSchema";
 import { SinglePayoutForm, SplitPayoutForm } from "./forms";
 import { IPayoutFormContext, PayoutFormContext } from "./store";
@@ -28,6 +30,7 @@ import { StyledPayoutForm, StyledPayoutFormPage } from "./styles";
 
 export const PayoutFormPage = () => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const navigate = useNavigate();
   const { address } = useAccount();
   const { allVaults } = useVaults();
@@ -36,6 +39,7 @@ export const PayoutFormPage = () => {
   const { payoutId } = useParams();
   const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
   const { data: vaultActivePayouts } = useVaultInProgressPayouts(payout?.vaultInfo);
+  const deletePayout = useDeletePayout();
   const savePayout = useSavePayout();
   const lockPayout = useLockPayout();
 
@@ -101,6 +105,24 @@ export const PayoutFormPage = () => {
       setSeveritiesOptions(severities);
     }
   }, [allVaults, payout, vault, t]);
+
+  const handleDeletePayout = async () => {
+    if (isPayoutCreated) return;
+    if (!payoutId || !payout) return;
+
+    const wantsToDelete = await confirm({
+      title: t("Payouts.deletePayout"),
+      titleIcon: <RemoveIcon className="mr-2" fontSize="large" />,
+      description: t("Payouts.deletePayoutDescription"),
+      cancelText: t("no"),
+      confirmText: t("delete"),
+    });
+
+    if (!wantsToDelete) return;
+
+    const wasDeleted = await deletePayout.mutateAsync({ payoutId });
+    if (wasDeleted) navigate(`${RoutePaths.payouts}`);
+  };
 
   const handleSavePayout = async () => {
     if (isPayoutCreated) return;
@@ -194,6 +216,9 @@ export const PayoutFormPage = () => {
 
                 {!isPayoutCreated && (
                   <div className="buttons">
+                    <Button className="mr-5" styleType="outlined" onClick={handleDeletePayout}>
+                      <RemoveIcon />
+                    </Button>
                     <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
                       <Button
                         disabled={!formState.isDirty || savePayout.isLoading}
@@ -207,7 +232,7 @@ export const PayoutFormPage = () => {
                       onClick={handleSubmit(handleLockPayout)}
                       disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
                     >
-                      {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}{" "}
+                      {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
                       <ArrowForwardIcon className="ml-3" />
                     </Button>
                   </div>
