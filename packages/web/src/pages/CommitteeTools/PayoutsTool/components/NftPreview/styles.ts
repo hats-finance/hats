@@ -57,7 +57,13 @@ export const StyledNFTDetailsModal = styled.div`
 
   .details {
     display: flex;
+    flex-direction: column;
     gap: ${getSpacing(3)};
+
+    .first {
+      display: flex;
+      justify-content: space-between;
+    }
 
     .item {
       .title {

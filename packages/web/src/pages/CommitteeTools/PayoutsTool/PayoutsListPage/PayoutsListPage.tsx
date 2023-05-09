@@ -1,21 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
 import { IPayoutResponse, PayoutStatus } from "@hats-finance/shared";
-import { useAccount } from "wagmi";
-import moment from "moment";
-import { useTranslation } from "react-i18next";
+import AddIcon from "@mui/icons-material/AddOutlined";
 import { Alert, Button, HatSpinner, Modal } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useModal from "hooks/useModal";
-import { PayoutsWelcome } from "./PayoutsWelcome";
-import { PayoutCreateModal } from "./PayoutCreateModal";
+import moment from "moment";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import { PayoutCard } from "../components";
 import { usePayoutsByVaults } from "../payoutsService.hooks";
-import { StyledPayoutsListPage, PayoutListSections, PayoutListSection } from "./styles";
-import AddIcon from "@mui/icons-material/AddOutlined";
+import { PayoutCreateModal } from "./PayoutCreateModal";
+import { PayoutsWelcome } from "./PayoutsWelcome";
+import { PayoutListSection, PayoutListSections, StyledPayoutsListPage } from "./styles";
 
 const DraftStatus = [PayoutStatus.Creating];
-const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute, PayoutStatus.Approved];
-const FinishedStatus = [PayoutStatus.Executed, PayoutStatus.Rejected];
+const InProgressStatus = [PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
+const FinishedStatus = [PayoutStatus.Executed, PayoutStatus.Rejected, PayoutStatus.Approved];
 
 export const PayoutsListPage = () => {
   const { t } = useTranslation();

@@ -1,8 +1,9 @@
-import { useTranslation } from "react-i18next";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { WithTooltip } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
+import moment from "moment";
+import { useTranslation } from "react-i18next";
 import { StyledSafePeriodBar } from "./styles";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
 
 export function SafePeriodBar() {
   const { t } = useTranslation();
@@ -16,6 +17,9 @@ export function SafePeriodBar() {
     minute: "2-digit",
   });
 
+  const safetyDuration = moment.duration(withdrawSafetyPeriod.safetyPeriod, "seconds").humanize();
+  const withdrawDuration = moment.duration(withdrawSafetyPeriod.withdrawPeriod, "seconds").humanize();
+
   return (
     <StyledSafePeriodBar isSafetyPeriod={isSafetyPeriod}>
       <div className="info">
@@ -23,7 +27,7 @@ export function SafePeriodBar() {
           ? t("withdrawalSafePeriodOnUntil", { safetyPeriodDate })
           : t("nextSafePeriodStartsAt", { safetyPeriodDate })}
       </div>
-      <WithTooltip text={t("safePeriodExplanation")}>
+      <WithTooltip text={t("safePeriodExplanation", { safetyDuration, withdrawDuration })}>
         <InfoIcon className="icon" />
       </WithTooltip>
     </StyledSafePeriodBar>
