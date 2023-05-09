@@ -81,6 +81,9 @@
     "awaitingCheckin": "Awaiting check-in",
     "parametersEditable": "Parameters editable",
     "multisig": "Multisig",
+    "discord": "Discord",
+    "emailAddress": "Email address",
+    "telegram": "Telegram",
     "vaultEditorCommitteeMembersSafeExplanation": "<strong>Fill the information for each committee member and create PGP key-pair on Hats dedicated tool or any other trusted tool.</strong> \n\n <ul><li>The PGP keys will permit decrypt submissions.</li> \n <li>Share this page with committee members to generate their own set of keys.</li> \n <li><strong>Please be aware</strong> you can decrypt submissions on the browser you created the keys on. You can open as many keys as you wish on multiple browser & devices.</li></ul>",
     "vaultEditorCommitteeDetailsSafeExplanation": "<strong>Add Safe committee multi-sig address.</strong> \n Don't have a Safe? open one <a href='https://app.safe.global/welcome'>in the Safe web-app</a>. \n\n The committee members of your vault will automatically be added in the next page. \n\n <strong>Committee requirements:</strong> \n <ul><li>Minimum amount of committee members is 3.</li> <li>The minimum amount of signers is 2.</li></ul>",
     "vaultEditorSeveritiesExplanation": "<strong>Set the severities for the vault or use an existing vaults severities as a template.</strong> \n\n <ul><li>The description of the severity level will serve as the primary criteria for determining whether the report aligns with this level of severity.</li> \n <li>The maximum severity reward (%) will indicate the reward pay-out of each severity taking into account the available % allocated for bounties (the maximum bounty field below).</li> \n <li>On the dApp will appear the maximum severity reward based on the available for bounties (the multiplication between maximum severity reward (%) and maximum bounty of the vault (%)). Basically it's the maximum % of the whole vault allocated fot that severity.</li> </ul>",
@@ -342,6 +345,10 @@
     "vaultPausedActiveClaimExplanation": "Vault is paused to withdraws due to an ongoing payout.",
     "seeMore": "See more",
     "seeLess": "See less",
+    "beneficiaryWalletAddress": "Beneficiary wallet address",
+    "beneficiaryWalletAddressPlaceholder": "Enter the beneficiary wallet address",
+    "githubUsername": "GitHub username",
+    "githubUsernamePlaceholder": "Enter the GitHub username",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -512,6 +519,14 @@
         "approved": "Your payout was approved, the beneficiaries received the payout.",
         "rejected": "Your payout was rejected."
       }
+    },
+    "Submissions": {
+      "addBeneficiaryAddress": "Add your beneficiary wallet address",
+      "beneficiaryAddressNote": "Note: The prize will be transferred to the beneficiary wallet address you provide.",
+      "addPreferredCommunicationChannel": "Add your preferred communication channel",
+      "addGithubAccountConnectIssue": "Add your GitHub account if you want to connect the issue/s submitted (optional)",
+      "contactDataWillBePublishedNote": "Note: The data you have provided will be pined on IPFS in plain text.",
+      "saveContactInformation": "Save contact information"
     },
     "DecryptionTool": {
       "welcomeTitle": "Welcome to the decryption tool",
