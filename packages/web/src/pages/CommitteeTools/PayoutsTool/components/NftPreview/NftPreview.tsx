@@ -30,28 +30,31 @@ export const NftPreview = ({ nftData, severityName, vault, size = "normal" }: Nf
           <StyledNFTDetailsModal>
             <Media className="big-preview" link={ipfsTransformUri(nftData.image)} />
 
-            <p className="nft-name mt-5">{nftData.name}</p>
+            <p className="nft-name mt-3 ">{nftData.name}</p>
 
             <div className="details mt-5">
+              <div className="first">
+                {vault && (
+                  <div className="item">
+                    <div className="title">{t("vaultName")}</div>
+                    <div className="info">
+                      <img src={ipfsTransformUri(vault.description?.["project-metadata"].icon)} alt="vault name" />
+                      <p>{vault.description?.["project-metadata"].name}</p>
+                    </div>
+                  </div>
+                )}
+                {severityName && (
+                  <div className="item">
+                    <div className="title">{t("severity")}</div>
+                    <div className="info">{severityName}</div>
+                  </div>
+                )}
+              </div>
+
               {nftData.description && (
                 <div className="item">
                   <div className="title">{t("nftDescription")}</div>
                   <div className="info">{nftData.description}</div>
-                </div>
-              )}
-              {vault && (
-                <div className="item">
-                  <div className="title">{t("vaultName")}</div>
-                  <div className="info">
-                    <img src={ipfsTransformUri(vault.description?.["project-metadata"].icon)} alt="vault name" />
-                    <p>{vault.description?.["project-metadata"].name}</p>
-                  </div>
-                </div>
-              )}
-              {severityName && (
-                <div className="item">
-                  <div className="title">{t("severity")}</div>
-                  <div className="info">{severityName}</div>
                 </div>
               )}
             </div>

@@ -9,7 +9,7 @@ export const getSinglePayoutDataYupSchema = (intl: TFunction, vault: IVault | un
     title: Yup.string().required(intl("required")),
     severity: Yup.string().required(intl("required")),
     percentageToPay: Yup.number()
-      .test(getTestNumberInBetween(intl, 0, Number(vault?.maxBounty) / 100 ?? 100, true))
+      .test(getTestNumberInBetween(intl, 0, vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100, true))
       .required(intl("required"))
       .typeError(intl("required")),
     explanation: Yup.string().required(intl("required")),
@@ -21,7 +21,7 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
   Yup.object({
     title: Yup.string().required(intl("required")),
     percentageToPay: Yup.number()
-      .test(getTestNumberInBetween(intl, 0, Number(vault?.maxBounty) / 100 ?? 100, true))
+      .test(getTestNumberInBetween(intl, 0, vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100, true))
       .required(intl("required"))
       .typeError(intl("required")),
     explanation: Yup.string().required(intl("required")),

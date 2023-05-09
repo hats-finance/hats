@@ -1,7 +1,7 @@
 import { HATSVaultV2_abi, PayoutStatus, getSafeHomeLink } from "@hats-finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar } from "components";
+import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar, VaultInfoCard } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ExecutePayoutContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -14,7 +14,8 @@ import { RoutePaths } from "navigation";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAccount, useWaitForTransaction } from "wagmi";
+import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { PayoutCard, SignerCard, SinglePayoutAllocation, SplitPayoutAllocation } from "../components";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
@@ -23,10 +24,12 @@ import { StyledPayoutStatusPage } from "./styles";
 import { useSignPayout } from "./useSignPayout";
 
 const DELETABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
+const SIGNABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStatus.ReadyToExecute];
 
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { chain } = useNetwork();
   const navigate = useNavigate();
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
@@ -74,16 +77,24 @@ export const PayoutStatusPage = () => {
   const isReadyToExecute = payoutStatus === PayoutStatus.ReadyToExecute;
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
+  const canBesigned = payoutStatus && SIGNABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = payout?.payoutData.type === "single" ? payout?.payoutData.severity : undefined;
-  const selectedSeverityIndex = vaultSeverities.findIndex((severity) => severity.name === selectedSeverityName);
+  const selectedSeverityIndex = vaultSeverities.findIndex(
+    (severity) => severity.name.toLowerCase() === selectedSeverityName?.toLowerCase()
+  );
   const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
 
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
+
+  useEffect(() => {
+    if (!chain || !vault) return;
+    switchNetworkAndValidate(chain.id, vault.chainId as number);
+  }, [chain, vault]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
@@ -127,16 +138,19 @@ export const PayoutStatusPage = () => {
 
   return (
     <StyledPayoutStatusPage className="content-wrapper-md">
+      <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
+
       <div className="title-container">
         <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
           <BackIcon />
           <p>{t("payouts")}</p>
         </div>
-
-        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
       </div>
 
-      <div className="section-title">{t("Payouts.payoutStatus")}</div>
+      <div className="section-title">
+        {t("Payouts.payoutStatus")}
+        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
+      </div>
 
       {!isAuthenticated && (
         <>
@@ -164,13 +178,9 @@ export const PayoutStatusPage = () => {
             <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
           )}
 
-          {!userHasAlreadySigned && isCollectingSignatures && (
-            <Alert type="warning" className="mb-5" content={t("Payouts.pleaseSignTheTransaction")} />
-          )}
-
           {payout && (
             <div className="pt-4">
-              <PayoutCard viewOnly showVaultAddress payout={payout} />
+              <PayoutCard viewOnly noVaultInfo payout={payout} />
             </div>
           )}
 
@@ -292,7 +302,7 @@ export const PayoutStatusPage = () => {
                 </Button>
               )}
 
-              {!userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
+              {canBesigned && !userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
               {isReadyToExecute && (
                 <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
                   {t("Payouts.executePayout")}

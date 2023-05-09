@@ -132,6 +132,7 @@ export const SinglePayoutForm = () => {
               placeholder={t("Payouts.percentageToPayPlaceholder")}
               helper={t("Payouts.percentageOfTheTotalVaultToPay")}
               disabled={isPayoutCreated}
+              type="number"
               colorable
             />
           )}

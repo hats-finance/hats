@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
-import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
 import CheckIcon from "@mui/icons-material/CheckOutlined";
-import { WithTooltip } from "../WithTooltip/WithTooltip";
+import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { WithTooltip } from "../WithTooltip/WithTooltip";
 import { StyledCopyToClipboard } from "./styles";
 
 interface IProps {
   valueToCopy: string;
   overlayText?: string;
   tooltipPlacement?: "top" | "bottom" | "left" | "right";
+  simple?: boolean;
 }
 
-export function CopyToClipboard({ valueToCopy, overlayText, tooltipPlacement = "left" }: IProps) {
+export function CopyToClipboard({ valueToCopy, overlayText, tooltipPlacement = "left", simple = false }: IProps) {
   const { t } = useTranslation();
 
   const [hasClicked, setHasClicked] = useState(false);
@@ -27,7 +28,7 @@ export function CopyToClipboard({ valueToCopy, overlayText, tooltipPlacement = "
   };
 
   return (
-    <StyledCopyToClipboard>
+    <StyledCopyToClipboard simple={simple}>
       <WithTooltip placement={tooltipPlacement} text={hasClicked ? t("copied") : overlayText ?? t("copyToClipboard")}>
         <div className="copy-button" onClick={handleCopy}>
           {hasClicked ? <CheckIcon fontSize="small" /> : <CopyIcon fontSize="small" />}

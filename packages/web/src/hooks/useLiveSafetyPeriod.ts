@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
 import { IWithdrawSafetyPeriod } from "@hats-finance/shared";
+import { useCallback, useEffect, useState } from "react";
 
 /**
  * Computes the safety period of a registry
@@ -16,6 +16,8 @@ import { IWithdrawSafetyPeriod } from "@hats-finance/shared";
  *   isSafetyPeriod: boolean - If the current time is in the safety period
  *   ongoingSafetyEndsAt: number - Timestamp of when the ongoing safety period ends
  *   nextSafetyStartsAt: number - Timestamp of when the next safety period starts
+ *   safetyPeriod: number - Duration of the safety period in milliseconds
+ *   withdrawPeriod: number - Duration of the withdraw period in milliseconds
  * }
  */
 export function useLiveSafetyPeriod(safetyPeriod: string, withdrawPeriod: string): IWithdrawSafetyPeriod | undefined {
@@ -45,7 +47,13 @@ export function useLiveSafetyPeriod(safetyPeriod: string, withdrawPeriod: string
       nextSafetyStartsAt = (currentTimestamp + secondsLeftOnWithdrawPeriod) * 1000;
     }
 
-    setWithdrawSafetyPeriod({ isSafetyPeriod, ongoingSafetyEndsAt, nextSafetyStartsAt });
+    setWithdrawSafetyPeriod({
+      isSafetyPeriod,
+      ongoingSafetyEndsAt,
+      nextSafetyStartsAt,
+      safetyPeriod: Number(safetyPeriod),
+      withdrawPeriod: Number(withdrawPeriod),
+    });
   }, [safetyPeriod, withdrawPeriod]);
 
   useEffect(() => {
