@@ -11,7 +11,7 @@ export const StyledVaultInfoCard = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: ${getSpacing(2)};
+    gap: ${getSpacing(1)};
 
     &.grey {
       color: var(--grey-500);
@@ -21,6 +21,12 @@ export const StyledVaultInfoCard = styled.div`
       width: ${getSpacing(5)};
       height: ${getSpacing(5)};
       object-fit: contain;
+    }
+
+    .address {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(0.5)};
     }
 
     .icon {
