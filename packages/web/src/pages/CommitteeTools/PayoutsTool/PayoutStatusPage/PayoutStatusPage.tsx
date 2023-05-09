@@ -14,7 +14,8 @@ import { RoutePaths } from "navigation";
 import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAccount, useWaitForTransaction } from "wagmi";
+import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import { PayoutsWelcome } from "../PayoutsListPage/PayoutsWelcome";
 import { PayoutCard, SignerCard, SinglePayoutAllocation, SplitPayoutAllocation } from "../components";
 import { useAddSignature, useDeletePayout, useMarkPayoutAsExecuted, usePayout } from "../payoutsService.hooks";
@@ -28,6 +29,7 @@ const SIGNABLE_STATUS = [PayoutStatus.Creating, PayoutStatus.Pending, PayoutStat
 export const PayoutStatusPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { chain } = useNetwork();
   const navigate = useNavigate();
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
@@ -88,6 +90,11 @@ export const PayoutStatusPage = () => {
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
+
+  useEffect(() => {
+    if (!chain || !vault) return;
+    switchNetworkAndValidate(chain.id, vault.chainId as number);
+  }, [chain, vault]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
