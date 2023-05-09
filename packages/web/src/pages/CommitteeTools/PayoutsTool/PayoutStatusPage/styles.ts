@@ -12,12 +12,12 @@ export const StyledPayoutStatusPage = styled.div`
   .title-container {
     display: flex;
     justify-content: space-between;
+    margin-bottom: ${getSpacing(3)};
 
     .title {
       display: flex;
       align-items: center;
       font-size: var(--moderate);
-      margin-bottom: ${getSpacing(5)};
       cursor: pointer;
       transition: 0.2s;
 
@@ -36,6 +36,9 @@ export const StyledPayoutStatusPage = styled.div`
   }
 
   .section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: var(--small);
     text-transform: uppercase;
     font-weight: 700;

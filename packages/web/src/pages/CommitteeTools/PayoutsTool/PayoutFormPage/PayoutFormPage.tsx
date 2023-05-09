@@ -9,8 +9,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Alert, Button, FormSelectInputOption, Loading, VaultInfoCard, WithTooltip } from "components";
+import { Alert, Button, CopyToClipboard, FormSelectInputOption, Loading, VaultInfoCard, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
+import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -183,12 +184,14 @@ export const PayoutFormPage = () => {
             <BackIcon />
             <p>{t("payouts")}</p>
           </div>
-
-          {/* <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} /> */}
         </div>
+
         <div className="section-title">
-          {t(payout?.payoutData.type === "single" ? "Payouts.creatingSinglePayout" : "Payouts.creatingSplitPayout")}{" "}
-          {!isPayoutCreated && `[${t("draft")}]`}
+          <p>
+            {t(payout?.payoutData.type === "single" ? "Payouts.creatingSinglePayout" : "Payouts.creatingSplitPayout")}{" "}
+            {!isPayoutCreated && `[${t("draft")}]`}
+          </p>
+          <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
         </div>
         {!isAuthenticated && (
           <>

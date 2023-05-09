@@ -1,16 +1,21 @@
-import styled, { css } from "styled-components";
 import { PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
+import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledPayoutCard = styled.div<{ status: PayoutStatus; minSignersReached: boolean; viewOnly: boolean }>(
-  ({ status, minSignersReached, viewOnly }) => css`
+export const StyledPayoutCard = styled.div<{
+  status: PayoutStatus;
+  minSignersReached: boolean;
+  viewOnly: boolean;
+  noVaultInfo: boolean;
+}>(
+  ({ status, minSignersReached, viewOnly, noVaultInfo }) => css`
     position: relative;
     background: var(--background-clearer-blue);
     padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(5)};
     display: grid;
     align-items: center;
     gap: ${getSpacing(4)};
-    grid-template-columns: auto auto 2fr 2fr 1fr 2fr;
+    grid-template-columns: ${noVaultInfo ? "auto 2fr 2fr 1fr 2fr" : "auto auto 2fr 2fr 1fr 2fr"};
     cursor: ${viewOnly ? "default" : "pointer"};
     transition: 0.2s;
 

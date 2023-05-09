@@ -1,7 +1,7 @@
 import { HATSVaultV2_abi, PayoutStatus, getSafeHomeLink } from "@hats-finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar } from "components";
+import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar, VaultInfoCard } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ExecutePayoutContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -138,16 +138,19 @@ export const PayoutStatusPage = () => {
 
   return (
     <StyledPayoutStatusPage className="content-wrapper-md">
+      <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
+
       <div className="title-container">
         <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
           <BackIcon />
           <p>{t("payouts")}</p>
         </div>
-
-        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
       </div>
 
-      <div className="section-title">{t("Payouts.payoutStatus")}</div>
+      <div className="section-title">
+        {t("Payouts.payoutStatus")}
+        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
+      </div>
 
       {!isAuthenticated && (
         <>
@@ -177,7 +180,7 @@ export const PayoutStatusPage = () => {
 
           {payout && (
             <div className="pt-4">
-              <PayoutCard viewOnly showVaultAddress payout={payout} />
+              <PayoutCard viewOnly noVaultInfo payout={payout} />
             </div>
           )}
 

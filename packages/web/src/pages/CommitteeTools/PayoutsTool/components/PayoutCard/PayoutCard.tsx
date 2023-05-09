@@ -14,9 +14,10 @@ type PayoutCardProps = {
   payout: IPayoutResponse;
   viewOnly?: boolean;
   showVaultAddress?: boolean;
+  noVaultInfo?: boolean;
 };
 
-export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false }: PayoutCardProps) => {
+export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false, noVaultInfo = false }: PayoutCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const payoutStatus = usePayoutStatus(payout);
@@ -71,14 +72,15 @@ export const PayoutCard = ({ payout, viewOnly = false, showVaultAddress = false 
       status={payoutStatus}
       onClick={viewOnly ? undefined : handleGoToPayout}
       minSignersReached={payout.signatures.length >= payout.minSignaturesNeeded}
+      noVaultInfo={noVaultInfo}
     >
       {showVaultAddress && (
         <div className="vault-address">
           <strong>{t("vaultId")}</strong>: {getVaultId()}
         </div>
       )}
-      <StyledVersionFlag>{selectedVault.version}</StyledVersionFlag>
-      <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>
+      {!noVaultInfo && <StyledVersionFlag>{selectedVault.version}</StyledVersionFlag>}
+      {!noVaultInfo && <div className="col vault-icon">{getVaultLogo(selectedVault)}</div>}
       <div className="col nonce">
         <p className="title">{t("nonce")}</p>
         <p className="content">{isCreating ? "-" : payout.nonce}</p>
