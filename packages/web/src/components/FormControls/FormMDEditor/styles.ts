@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledFormMDEditor = styled.div<{
@@ -47,6 +48,14 @@ export const StyledFormMDEditor = styled.div<{
           background-color: transparent;
         }
       }
+    }
+
+    span.error {
+      display: block;
+      color: var(--error-red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
     }
   `
 );

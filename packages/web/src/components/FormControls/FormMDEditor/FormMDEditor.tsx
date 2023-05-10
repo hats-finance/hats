@@ -18,6 +18,7 @@ export const FormMDEditor = ({ colorable = false, isDirty = false, value, onChan
         previewOptions={{ disallowedElements: ["script", "iframe"] }}
         onChange={(value) => onChange(value ?? "")}
       />
+      {error && <span className="error">{error.message}</span>}
     </StyledFormMDEditor>
   );
 };
