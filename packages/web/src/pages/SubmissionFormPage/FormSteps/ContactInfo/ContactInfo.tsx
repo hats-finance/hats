@@ -38,7 +38,7 @@ export default function ContactInfo() {
 
   // Reset form with saved data
   useEffect(() => {
-    if (submissionData?.contact) reset(submissionData?.contact);
+    if (submissionData?.contact) reset(submissionData.contact);
   }, [submissionData, reset]);
 
   // Change beneficiary to current account (only if not set yet)
@@ -61,9 +61,6 @@ export default function ContactInfo() {
         return t("platformUsername", { platform: t("telegram") });
       case "email":
         return t("emailAddress");
-
-      default:
-        return t("platformUsername", { platform: "Discord" });
     }
   }, [communicationChannelType, t]);
 

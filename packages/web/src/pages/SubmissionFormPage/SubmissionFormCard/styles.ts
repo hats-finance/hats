@@ -98,17 +98,6 @@ export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps
           line-height: 30px;
         }
       }
-
-      button {
-        margin-left: auto;
-        border: 1px solid;
-        color: var(--turquoise);
-        background-color: transparent;
-
-        @media (max-width: ${breakpointsDefinition.mobile}) {
-          width: 100%;
-        }
-      }
     }
   `
 );
