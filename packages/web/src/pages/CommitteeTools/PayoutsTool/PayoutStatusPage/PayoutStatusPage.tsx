@@ -198,8 +198,8 @@ export const PayoutStatusPage = () => {
               {payout?.payoutData.type === "single" && payout?.payoutData.severity && (
                 <FormSelectInput
                   value={payout.payoutData.severity}
-                  label={t("Payouts.severity")}
-                  placeholder={t("Payouts.severityPlaceholder")}
+                  label={t("severity")}
+                  placeholder={t("severityPlaceholder")}
                   options={[
                     {
                       label: payout.payoutData.severity,
