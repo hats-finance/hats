@@ -1,3 +1,4 @@
+import { ISavedFile } from "components";
 import { SessionKey } from "openpgp";
 
 export enum SubmissionStep {
@@ -26,7 +27,9 @@ export interface ISubmissionDescriptionData {
   verified: boolean;
   title: string;
   description: string;
+  severity: string;
   encryptedData: string;
+  files: ISavedFile[];
   sessionKey: SessionKey;
 }
 
