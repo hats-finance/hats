@@ -5,8 +5,11 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledFormMDEditor = styled.div<{
   hasError: boolean;
   isDirty: boolean;
+  noMargin: boolean;
 }>(
-  ({ hasError, isDirty }) => css`
+  ({ hasError, isDirty, noMargin }) => css`
+    margin-bottom: ${noMargin ? 0 : getSpacing(3)};
+
     .w-md-editor {
       background-color: var(--dark-blue);
       border-radius: 0;
@@ -36,6 +39,11 @@ export const StyledFormMDEditor = styled.div<{
         background-color: var(--dark-blue);
         border-radius: 0;
         border-color: var(--grey-500);
+
+        ul {
+          display: flex;
+          align-items: flex-start;
+        }
       }
 
       .w-md-editor-preview {
