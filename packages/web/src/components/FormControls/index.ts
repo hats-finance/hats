@@ -5,5 +5,6 @@ export { FormJSONCSVFileInput } from "./FormJSONCSVFileInput/FormJSONCSVFileInpu
 export { FormPgpPublicKeyInput } from "./FormPgpPublicKeyInput/FormPgpPublicKeyInput";
 export { FormRadioInput } from "./FormRadioInput/FormRadioInput";
 export { FormMDEditor } from "./FormMDEditor/FormMDEditor";
+export { FormSupportFilesInput, type ISavedFile } from "./FormSupportFilesInput/FormSupportFilesInput";
 export { FormSelectInput, type FormSelectInputOption } from "./FormSelectInput/FormSelectInput";
 export * from "./utils";
