@@ -149,7 +149,9 @@ ${formData.descriptions.map(
     <StyledSubmissionDescriptionsList>
       {submissionsDescriptions.map((submissionDescription, index) => (
         <StyledSubmissionDescription key={submissionDescription.id}>
-          <p className="bold mb-2">{t("submission")} #1</p>
+          <p className="bold mb-2">
+            {t("submission")} #{index + 1}
+          </p>
           <p className="mb-4">{t("Submissions.provideExplanation")}</p>
 
           <div className="row">
