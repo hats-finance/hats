@@ -18,4 +18,17 @@ export const SubmissionFormContext = createContext<ISubmissionFormContext>(undef
 
 export const SUBMISSION_INIT_DATA: ISubmissionData = {
   version: packageJSON.version,
+  submissionsDescriptions: {
+    verified: false,
+    submissionMessage: "",
+    descriptions: [
+      {
+        title: "",
+        description: "",
+        severity: "",
+        files: [],
+        sessionKey: "" as any,
+      },
+    ],
+  },
 };

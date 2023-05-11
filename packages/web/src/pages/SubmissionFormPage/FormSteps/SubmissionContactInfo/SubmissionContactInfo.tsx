@@ -10,7 +10,7 @@ import { ISubmissionContactData } from "../../types";
 import { getCreateContactInfoSchema } from "./formSchema";
 import { StyledContactInfo } from "./styles";
 
-export default function ContactInfo() {
+export function SubmissionContactInfo() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);

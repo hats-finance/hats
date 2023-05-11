@@ -7,23 +7,24 @@ import { useCallback, useEffect, useState } from "react";
 import { BASE_SERVICE_URL } from "settings";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
-import ContactInfo from "./FormSteps/ContactInfo/ContactInfo";
-import ProjectSelect from "./FormSteps/ProjectSelect/ProjectSelect";
-import TermsAndProcess from "./FormSteps/TermsAndProcess/TermsAndProcess";
-import VulnerabilityDescription from "./FormSteps/VulnerabilityDescription/VulnerabilityDescription";
-import VulnerabilitySubmit from "./FormSteps/VulnerabilitySubmit/VulnerabilitySubmit";
-// Components
+import {
+  SubmissionContactInfo,
+  SubmissionDescriptions,
+  SubmissionProject,
+  SubmissionSubmit,
+  SubmissionTermsAndProcess,
+} from "./FormSteps";
 import SubmissionFormCard from "./SubmissionFormCard/SubmissionFormCard";
 import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } from "./store";
 import { StyledSubmissionFormPage } from "./styles";
 import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 
 const steps = [
-  { title: "SELECT PROJECT", component: ProjectSelect, card: SubmissionStep.project },
-  { title: "CONTACT INFORMATION", component: ContactInfo, card: SubmissionStep.contact },
-  { title: "DESCRIBE VULNERABILITY", component: VulnerabilityDescription, card: SubmissionStep.description },
-  { title: "TERMS AND PROCESS", component: TermsAndProcess, card: SubmissionStep.terms },
-  { title: "SUBMIT", component: VulnerabilitySubmit, card: SubmissionStep.submission },
+  { title: "SELECT PROJECT", component: SubmissionProject, card: SubmissionStep.project },
+  { title: "CONTACT INFORMATION", component: SubmissionContactInfo, card: SubmissionStep.contact },
+  { title: "DESCRIBE VULNERABILITY", component: SubmissionDescriptions, card: SubmissionStep.description },
+  { title: "TERMS AND PROCESS", component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
+  { title: "SUBMIT", component: SubmissionSubmit, card: SubmissionStep.submission },
 ];
 
 export const SubmissionFormPage = () => {

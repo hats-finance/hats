@@ -2,10 +2,25 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVulnerabilityDescription = styled.div`
+export const StyledSubmissionDescriptionsList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${getSpacing(2)};
+  margin-bottom: ${getSpacing(2)};
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+`;
+
+export const StyledSubmissionDescription = styled.div`
   display: flex;
   flex-direction: column;
   color: var(--white);
+  padding: ${getSpacing(3)} ${getSpacing(2.5)};
+  background: var(--background-clear-blue);
+  border-radius: 4px;
 
   .row {
     display: grid;

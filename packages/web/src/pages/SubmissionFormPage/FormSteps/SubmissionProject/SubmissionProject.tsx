@@ -5,9 +5,9 @@ import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
-import { StyledProjectSelect } from "./styles";
+import { StyledSubmissionProject } from "./styles";
 
-export default function ProjectSelect() {
+export function SubmissionProject() {
   const { t } = useTranslation();
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [userInput, setUserInput] = useState("");
@@ -44,7 +44,7 @@ export default function ProjectSelect() {
   });
 
   return (
-    <StyledProjectSelect>
+    <StyledSubmissionProject>
       {!vaults ? (
         <Loading />
       ) : (
@@ -76,6 +76,6 @@ export default function ProjectSelect() {
           )}
         </>
       )}
-    </StyledProjectSelect>
+    </StyledSubmissionProject>
   );
 }

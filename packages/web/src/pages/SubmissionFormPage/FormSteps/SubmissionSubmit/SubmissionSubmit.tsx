@@ -1,10 +1,10 @@
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext } from "react";
-import SubmitProcessed from "./components/SubmitProcessed/SubmitProcessed";
-import SubmitReview from "./components/SubmitReview/SubmitReview";
+import SubmitProcessed from "./components/SubmissionProcessed/SubmissionProcessed";
+import SubmitReview from "./components/SubmissionReview/SubmissionReview";
 import "./index.scss";
 
-export default function VulnerabilitySubmit() {
+export function SubmissionSubmit() {
   const { submissionData } = useContext(SubmissionFormContext);
 
   return (

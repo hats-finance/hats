@@ -23,14 +23,16 @@ export interface ISubmissionContactData {
   verified: boolean;
 }
 
-export interface ISubmissionDescriptionData {
+export interface ISubmissionsDescriptionsData {
   verified: boolean;
-  title: string;
-  description: string;
-  severity: string;
-  encryptedData: string;
-  files: ISavedFile[];
-  sessionKey: SessionKey;
+  submissionMessage: string;
+  descriptions: {
+    title: string;
+    description: string;
+    severity: string;
+    files: ISavedFile[];
+    sessionKey: SessionKey;
+  }[];
 }
 
 export interface ISubmissionTermsData {
@@ -49,7 +51,7 @@ export interface ISubmissionData {
   version: string;
   project?: ISubmissionProjectData;
   contact?: ISubmissionContactData;
-  description?: ISubmissionDescriptionData;
+  submissionsDescriptions: ISubmissionsDescriptionsData;
   terms?: ISubmissionTermsData;
   submissionResult?: ISubmissionResultData;
 }

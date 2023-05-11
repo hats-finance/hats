@@ -28,7 +28,6 @@ export const FormSupportFilesInputComponent = (
 ) => {
   const { t } = useTranslation();
 
-  // const [uploadedFiles, setUploadedFiles] = useState<ISavedFile[]>([]);
   const [isUploadingFiles, setIsUploadingFiles] = useState(false);
 
   const handleOnChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,8 +69,6 @@ export const FormSupportFilesInputComponent = (
 
   return (
     <StyledFormSupportFilesInput isDirty={parseIsDirty(isDirty) && colorable} hasError={!!error && colorable}>
-      <input type="hidden" />
-
       <input id={name} className="file-input" accept=".ts,.sol" type="file" multiple onChange={handleOnChange} />
 
       <label htmlFor={name} className="icon-add">

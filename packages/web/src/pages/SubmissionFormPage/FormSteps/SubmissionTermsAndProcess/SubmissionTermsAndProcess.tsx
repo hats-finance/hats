@@ -12,7 +12,7 @@ import { useTranslation } from "react-i18next";
 import Award from "./components/Award/Award";
 import "./index.scss";
 
-export default function TermsAndProcess() {
+export function SubmissionTermsAndProcess() {
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
   const { t } = useTranslation();

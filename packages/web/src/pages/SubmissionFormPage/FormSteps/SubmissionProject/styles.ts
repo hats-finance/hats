@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledProjectSelect = styled.div`
+export const StyledSubmissionProject = styled.div`
   position: relative;
   min-height: 50px;
 
