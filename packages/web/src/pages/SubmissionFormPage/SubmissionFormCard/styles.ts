@@ -50,6 +50,7 @@ export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps
       font-weight: bold;
       border-left: 6px solid var(--dark-blue);
       padding: ${getSpacing(2)} ${getSpacing(3)};
+      text-transform: uppercase;
 
       ${!isCollapsed &&
       css`

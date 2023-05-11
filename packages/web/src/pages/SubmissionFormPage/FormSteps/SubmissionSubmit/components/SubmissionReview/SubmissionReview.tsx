@@ -21,7 +21,7 @@ export default function SubmitReview() {
   const isVerified =
     submissionData?.project?.verified &&
     submissionData?.contact?.verified &&
-    submissionData?.description?.verified &&
+    submissionData?.submissionsDescriptions?.verified &&
     submissionData?.terms?.verified;
   const committeeCheckedIn = vault && vault.committeeCheckedIn;
 
@@ -59,7 +59,7 @@ export default function SubmitReview() {
               <span>Vulnerability Description:</span>
               <img src={EditIcon} alt="edit" onClick={() => setCurrentStep(2)} />
             </div>
-            <span className="item-value">{submissionData?.description?.description}</span>
+            <span className="item-value">{submissionData?.submissionsDescriptions?.description}</span>
           </div>
         </div>
       </div>

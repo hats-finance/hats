@@ -530,6 +530,11 @@
       }
     },
     "Submissions": {
+      "selectProject": "Select project",
+      "contactInformation": "Contact information",
+      "describeVulnerability": "Describe the vulnerability",
+      "termsAndProcess": "Terms and process",
+      "submit": "Submit",
       "addBeneficiaryAddress": "Add your beneficiary wallet address",
       "beneficiaryAddressNote": "Note: The prize will be transferred to the beneficiary wallet address you provide.",
       "addPreferredCommunicationChannel": "Add your preferred communication channel",

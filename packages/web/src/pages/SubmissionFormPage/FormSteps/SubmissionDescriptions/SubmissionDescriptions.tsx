@@ -20,10 +20,11 @@ export function SubmissionDescriptions() {
   const { t } = useTranslation();
 
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+  const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   const { vaults } = useVaults();
   const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
-  const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
+  const isPublicSubmission = vault?.description?.["project-metadata"].type === "audit";
 
   const {
     register,
@@ -84,8 +85,7 @@ export function SubmissionDescriptions() {
     let decrypted: string | undefined = undefined;
 
     // Submission on audit vaults are public and they have files
-    // if (vault.description?.["project-metadata"].type === "audit") {
-    if (1 + 1 === 2) {
+    if (isPublicSubmission) {
       toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})`;
       decrypted = `
 **Project Name:** ${submissionData.project?.projectName}
@@ -189,13 +189,15 @@ ${formData.descriptions.map(
             )}
           />
 
-          <Controller
-            control={control}
-            name={`descriptions.${index}.files`}
-            render={({ field, fieldState: { error } }) => (
-              <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
-            )}
-          />
+          {isPublicSubmission && (
+            <Controller
+              control={control}
+              name={`descriptions.${index}.files`}
+              render={({ field, fieldState: { error } }) => (
+                <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
+              )}
+            />
+          )}
 
           {submissionsDescriptions.length > 1 && (
             <div className="buttons mt-3">

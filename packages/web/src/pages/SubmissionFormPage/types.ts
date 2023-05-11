@@ -4,7 +4,7 @@ import { SessionKey } from "openpgp";
 export enum SubmissionStep {
   project,
   contact,
-  description,
+  submissionsDescriptions,
   terms,
   submission,
 }

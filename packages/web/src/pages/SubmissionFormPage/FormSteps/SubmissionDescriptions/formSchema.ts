@@ -6,7 +6,7 @@ export const getCreateDescriptionSchema = (intl: TFunction) =>
     descriptions: Yup.array().of(
       Yup.object({
         title: Yup.string()
-          .min(8, intl("min-characters", { min: 8 }))
+          .min(5, intl("min-characters", { min: 5 }))
           .required(intl("required")),
         severity: Yup.string().required(intl("required")),
         description: Yup.string()

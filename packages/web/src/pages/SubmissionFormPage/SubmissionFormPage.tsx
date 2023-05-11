@@ -3,7 +3,8 @@ import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/vaults/useVaults";
 import { calcCid } from "pages/SubmissionFormPage/encrypt";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { BASE_SERVICE_URL } from "settings";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
@@ -19,22 +20,31 @@ import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } f
 import { StyledSubmissionFormPage } from "./styles";
 import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 
-const steps = [
-  { title: "SELECT PROJECT", component: SubmissionProject, card: SubmissionStep.project },
-  { title: "CONTACT INFORMATION", component: SubmissionContactInfo, card: SubmissionStep.contact },
-  { title: "DESCRIBE VULNERABILITY", component: SubmissionDescriptions, card: SubmissionStep.description },
-  { title: "TERMS AND PROCESS", component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
-  { title: "SUBMIT", component: SubmissionSubmit, card: SubmissionStep.submission },
-];
-
 export const SubmissionFormPage = () => {
+  const { t } = useTranslation();
+
   const { vaults } = useVaults();
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
   const vault = (vaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
-  const { data: callData, reset: callReset, send: sendVulnerability } = LogClaimContract.hook(vault);
+  const steps = useMemo(
+    () => [
+      { title: t("Submissions.selectProject"), component: SubmissionProject, card: SubmissionStep.project },
+      { title: t("Submissions.contactInformation"), component: SubmissionContactInfo, card: SubmissionStep.contact },
+      {
+        title: t("Submissions.describeVulnerability"),
+        component: SubmissionDescriptions,
+        card: SubmissionStep.submissionsDescriptions,
+      },
+      { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
+      { title: t("Submissions.submit"), component: SubmissionSubmit, card: SubmissionStep.submission },
+    ],
+    [t]
+  );
+
+  const { data: callData, reset: callReset, send: sendVulnerabilityOnChain } = LogClaimContract.hook(vault);
   const { isLoading: isSubmitting } = useWaitForTransaction({
     hash: callData?.hash,
     onSettled(data, error) {
@@ -96,10 +106,11 @@ export const SubmissionFormPage = () => {
   // Finds current step and set it
   useEffect(() => {
     if (!submissionData) return;
-    const index = steps.findIndex((step) => !submissionData[`${SubmissionStep[step.card]}`]);
+
+    const index = steps.findIndex((step) => !submissionData[SubmissionStep[step.card]]);
     if (index === -1) setCurrentStep(steps.length - 1);
     else setCurrentStep(index);
-  }, [submissionData]);
+  }, [submissionData, steps]);
 
   const sendSubmissionToServer = useCallback(async (data: ISubmissionData) => {
     if (!data) return;
@@ -112,7 +123,7 @@ export const SubmissionFormPage = () => {
       const payload = {
         txHash: data.submissionResult?.transactionHash,
         chainId: data.submissionResult?.chainId,
-        msg: data.description?.encryptedData,
+        msg: data.submissionsDescriptions?.submissionMessage,
         route: data.project?.projectName,
         projectId: data.project?.projectId,
       };
@@ -139,11 +150,11 @@ export const SubmissionFormPage = () => {
   }, []);
 
   const submitSubmission = useCallback(async () => {
-    if (!submissionData?.description?.encryptedData) return;
-    const encryptedData = submissionData?.description?.encryptedData;
-    const calculatedCid = await calcCid(encryptedData);
-    sendVulnerability(calculatedCid);
-  }, [sendVulnerability, submissionData]);
+    if (!submissionData?.submissionsDescriptions?.submissionMessage) return;
+    const submissionMessage = submissionData?.submissionsDescriptions?.submissionMessage;
+    const calculatedCid = await calcCid(submissionMessage);
+    sendVulnerabilityOnChain(calculatedCid);
+  }, [sendVulnerabilityOnChain, submissionData]);
 
   const context: ISubmissionFormContext = {
     reset,
