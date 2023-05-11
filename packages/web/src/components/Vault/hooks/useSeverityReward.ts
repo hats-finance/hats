@@ -1,8 +1,8 @@
-import { useVaults } from "hooks/vaults/useVaults";
-import { IVault } from "types";
-import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
-import { formatUnits } from "ethers/lib/utils";
 import { VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
+import { formatUnits } from "ethers/lib/utils";
+import { useVaults } from "hooks/vaults/useVaults";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
+import { IVault } from "types";
 
 const defaultColor = VAULTS_TYPE_SEVERITIES_COLORS["normal"][0];
 
@@ -32,7 +32,7 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.percentage).sort((a, b) => a - b);
     const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType] ?? VAULTS_TYPE_SEVERITIES_COLORS["normal"];
-    const rewardColor = severitiesColors[orderedSeverities.indexOf(severity.percentage) ?? 0];
+    const rewardColor: string = severitiesColors[orderedSeverities.indexOf(severity.percentage) ?? 0];
 
     return { rewardPrice, rewardPercentage, rewardColor };
   } else {
@@ -56,7 +56,7 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.index).sort((a, b) => a - b);
     const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType] ?? VAULTS_TYPE_SEVERITIES_COLORS["normal"];
-    const rewardColor = severitiesColors[orderedSeverities.indexOf(severity.index) ?? 0];
+    const rewardColor: string = severitiesColors[orderedSeverities.indexOf(severity.index) ?? 0];
 
     return { rewardPrice, rewardPercentage, rewardColor };
   }

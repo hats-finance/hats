@@ -7,13 +7,15 @@ const getSize = (size: NftPreviewProps["size"]) => {
     return "140px";
   } else if (size === "normal") {
     return "180px";
+  } else if (size === "tiny") {
+    return "60px";
   }
 };
 
 export const StyledNftPreview = styled.div<{ size: NftPreviewProps["size"] }>(
   ({ size }) => css`
     border: 1px solid var(--grey-600);
-    padding: ${getSpacing(1)};
+    padding: ${size === "tiny" ? "1px" : getSpacing(1)};
     position: relative;
     cursor: pointer;
     transition: 0.2s;
@@ -35,8 +37,8 @@ export const StyledNftPreview = styled.div<{ size: NftPreviewProps["size"] }>(
 
     .icon {
       position: absolute;
-      bottom: ${getSpacing(1.5)};
-      right: ${getSpacing(1.5)};
+      bottom: ${size === "tiny" ? "2px" : getSpacing(1.5)};
+      right: ${size === "tiny" ? "2px" : getSpacing(1.5)};
     }
   `
 );

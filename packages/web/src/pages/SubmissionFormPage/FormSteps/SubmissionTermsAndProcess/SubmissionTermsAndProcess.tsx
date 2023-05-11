@@ -1,21 +1,19 @@
-import BugIcon from "assets/icons/bug-icon.svg";
-import ErrosIcon from "assets/icons/error-icon.svg";
-import QuestionIcon from "assets/icons/question-icon.svg";
-import RewardIcon from "assets/icons/reward-icon.svg";
-import TimelineIcon from "assets/icons/timeline-icon.svg";
+import { IVulnerabilitySeverity } from "@hats-finance/shared";
 import { TERMS_OF_USE } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import Award from "./components/Award/Award";
-import "./index.scss";
+import { VaultRewardCard } from "./VaultRewardCard/VaultRewardCard";
+import { getSubmissionAwardsContent, getSubmissionFixRemedyContent, getSubmissionTermsContent } from "./data";
+import { StyledSubmissionTermsAndProcess, StyledTermsSection } from "./styles";
 
 export function SubmissionTermsAndProcess() {
+  const { t } = useTranslation();
+
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
-  const { t } = useTranslation();
 
   const projectId = submissionData?.project?.projectId;
   const { vaults } = useVaults();
@@ -26,24 +24,46 @@ export function SubmissionTermsAndProcess() {
     setAcceptedTermsOfUse(submissionData?.terms?.verified || false);
   }, [submissionData]);
 
-  const awards = description?.severities.map((severity, index) => {
-    return <Award key={index} vault={vault!} index={index} />;
-  });
-
   const handleTermsAccepted = () => {
     setSubmissionData((prev) => {
       if (prev) return { ...prev, terms: { verified: true } };
     });
   };
 
+  if (!vault) return null;
+
   return (
-    <div className="terms-and-process-wrapper">
-      <div>{t("SubmitVulnerability.TermsAndProcess.pre-submission")}</div>
+    <StyledSubmissionTermsAndProcess>
+      <p>{t("Submissions.termsDescription")}</p>
 
-      <div className="section-title submission">1 {t("SubmitVulnerability.TermsAndProcess.submission-sub-title")}</div>
-      <div className="section-content submission">{t("SubmitVulnerability.TermsAndProcess.submission")}</div>
+      <StyledTermsSection type="submission">
+        <div className="section-title">1 {t("Submissions.submission")}</div>
+        <div className="section-content">{getSubmissionTermsContent(vault, t)}</div>
+      </StyledTermsSection>
 
-      <div className="section-title fix">2 {t("SubmitVulnerability.TermsAndProcess.fix-sub-title")}</div>
+      <StyledTermsSection type="fix">
+        <div className="section-title">2 {t("Submissions.fixRemedy")}</div>
+        <div className="section-content">{getSubmissionFixRemedyContent(vault, t)}</div>
+      </StyledTermsSection>
+
+      <StyledTermsSection type="rewards">
+        <div className="section-title">3 {t("Submissions.rewards")}</div>
+        <div className="section-content">
+          <div>{getSubmissionAwardsContent(vault, t)}</div>
+          <div className="rewards-list">
+            <div className="titles">
+              <div>Level</div>
+              <div>Prize</div>
+              <div>NFT</div>
+            </div>
+            {description?.severities.map((severity: IVulnerabilitySeverity, idx: number) => {
+              return <VaultRewardCard key={idx} vault={vault} severity={severity} severityIndex={idx} />;
+            })}
+          </div>
+        </div>
+      </StyledTermsSection>
+
+      {/* <div className="section-title fix">2 {t("SubmitVulnerability.TermsAndProcess.fix-sub-title")}</div>
       <div className="section-content fix">
         {t("SubmitVulnerability.TermsAndProcess.fix")}
         <div className="icon-text-wrapper">
@@ -72,9 +92,9 @@ export function SubmissionTermsAndProcess() {
           <img src={RewardIcon} alt="rewards icon" />
           {t("SubmitVulnerability.TermsAndProcess.fix-rewards")}
         </div>
-      </div>
+      </div> */}
 
-      <div className="section-title awards">3 {t("SubmitVulnerability.TermsAndProcess.awards-sub-title")}</div>
+      {/* <div className="section-title awards">3 {t("SubmitVulnerability.TermsAndProcess.awards-sub-title")}</div>
       <div className="section-content awards">
         {t("SubmitVulnerability.TermsAndProcess.awards-text-1")}
         {submissionData?.project?.verified ? (
@@ -92,9 +112,9 @@ export function SubmissionTermsAndProcess() {
           "Please choose project to view prizes"
         )}
         {t("SubmitVulnerability.TermsAndProcess.awards-text-2")}
-      </div>
+      </div> */}
 
-      <div className="warning-notice">{t("SubmitVulnerability.TermsAndProcess.warning-notice")}</div>
+      {/* <div className="warning-notice">{t("SubmitVulnerability.TermsAndProcess.warning-notice")}</div>
 
       <div className="accept-terms-wrapper">
         <div className="checkbox-container">
@@ -111,7 +131,7 @@ export function SubmissionTermsAndProcess() {
         <button disabled={!acceptedTermsOfUse} onClick={handleTermsAccepted}>
           NEXT
         </button>
-      </div>
-    </div>
+      </div> */}
+    </StyledSubmissionTermsAndProcess>
   );
 }

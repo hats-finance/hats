@@ -10,9 +10,12 @@ export type NftPreviewProps = {
   nftData: INFTMetaData | undefined;
   severityName?: string;
   vault?: IVault;
-  size?: "small" | "normal";
+  size?: "small" | "normal" | "tiny";
 };
 
+/**
+ * This component is used to preview a NFT based on a severity and vault.
+ */
 export const NftPreview = ({ nftData, severityName, vault, size = "normal" }: NftPreviewProps) => {
   const { t } = useTranslation();
 
