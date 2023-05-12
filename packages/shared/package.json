@@ -1,6 +1,6 @@
 {
   "name": "@hats-finance/shared",
-  "version": "1.0.74",
+  "version": "1.0.76",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "publish": "npm run build && npm publish"
   },
   "keywords": [],
-  "author": "leviyehonatan",
+  "author": "fonstack",
   "license": "ISC",
   "private": false,
   "devDependencies": {
