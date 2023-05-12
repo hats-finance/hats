@@ -81,7 +81,7 @@ export function SubmissionTermsAndProcess() {
           <p className="mb-5" dangerouslySetInnerHTML={{ __html: t("Submissions.pleaseBeforeMovingCheckTerms") }} />
           <FormInput
             name="termsOfUse"
-            value={`${acceptedTermsOfUse}`}
+            checked={acceptedTermsOfUse}
             onChange={(e) => setAcceptedTermsOfUse(e.target.checked)}
             label={t("Submissions.understandTermsOfUse")}
             type="checkbox"

@@ -220,9 +220,7 @@ ${formData.descriptions.map(
           <AddIcon className="mr-3" />
           {t("Submissions.addAnotherVulnerability")}
         </Button>
-        <Button disabled={!isValid} onClick={handleSubmit(handleSaveAndDownloadDescription)}>
-          {t("Submissions.saveAndDownload")}
-        </Button>
+        <Button onClick={handleSubmit(handleSaveAndDownloadDescription)}>{t("Submissions.saveAndDownload")}</Button>
       </div>
     </StyledSubmissionDescriptionsList>
   );

@@ -112,7 +112,7 @@ export const OnChainDataStatusCard = () => {
         <>
           <FormInput
             name="editVaultParameters"
-            value={`${editVaultParameters}`}
+            checked={editVaultParameters}
             onChange={(e) => setEditVaultParameters(e.target.checked)}
             type="toggle"
             label={t("editVaultParameters")}
