@@ -33,6 +33,7 @@ export function SubmissionDescriptions() {
   const { vaults } = useVaults();
   const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isPublicSubmission = vault?.description?.["project-metadata"].type === "audit";
+  // const isPublicSubmission = true;
 
   const { register, handleSubmit, control, reset } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
@@ -93,7 +94,7 @@ export function SubmissionDescriptions() {
       decrypted = `**Project Name:** ${submissionData.project?.projectName}
 **Project Id:** ${submissionData.project?.projectId}
 **Beneficiary:** ${submissionData.contact?.beneficiary}
-**Github username:** ${submissionData.contact?.githubUsername ?? "no provided"}
+**Github username:** ${submissionData.contact?.githubUsername ?? "---"}
     
 ${formData.descriptions
   .map(
@@ -104,7 +105,7 @@ ${formData.descriptions
 **Description:**
 ${description.description}
 **Files:** 
-${description.files.map((file) => `  -> ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}
+${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}
 `
   )
   .join("\n")}`;

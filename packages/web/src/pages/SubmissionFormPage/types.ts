@@ -71,7 +71,7 @@ export interface ISubmitSubmissionRequest {
     route: string;
     projectId: string;
   };
-  createIssueRequest: {
+  createIssueRequests: {
     issueTitle: string;
     issueDescription: string;
     issueFiles: string[];
