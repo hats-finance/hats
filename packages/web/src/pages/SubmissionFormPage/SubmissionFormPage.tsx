@@ -32,13 +32,13 @@ export const SubmissionFormPage = () => {
   const steps = useMemo(
     () => [
       { title: t("Submissions.selectProject"), component: SubmissionProject, card: SubmissionStep.project },
+      { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
       { title: t("Submissions.contactInformation"), component: SubmissionContactInfo, card: SubmissionStep.contact },
       {
         title: t("Submissions.describeVulnerability"),
         component: SubmissionDescriptions,
         card: SubmissionStep.submissionsDescriptions,
       },
-      { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
       { title: t("Submissions.submit"), component: SubmissionSubmit, card: SubmissionStep.submission },
     ],
     [t]
@@ -107,9 +107,11 @@ export const SubmissionFormPage = () => {
   useEffect(() => {
     if (!submissionData) return;
 
-    const index = steps.findIndex((step) => !submissionData[SubmissionStep[step.card]]);
-    if (index === -1) setCurrentStep(steps.length - 1);
-    else setCurrentStep(index);
+    const firstInvalidStepIdx = steps.findIndex(
+      (step) => !submissionData[SubmissionStep[step.card]] || !submissionData[SubmissionStep[step.card]].verified
+    );
+    if (firstInvalidStepIdx === -1) setCurrentStep(steps.length - 1);
+    else setCurrentStep(firstInvalidStepIdx);
   }, [submissionData, steps]);
 
   const sendSubmissionToServer = useCallback(async (data: ISubmissionData) => {
@@ -178,7 +180,7 @@ export const SubmissionFormPage = () => {
               key={index}
               title={step.title}
               collapsed={currentStep !== index}
-              verified={submissionData?.[SubmissionStep[step.card]] !== undefined}
+              verified={submissionData?.[SubmissionStep[step.card]]?.verified}
               disabled={isSubmitting}
             >
               {<step.component />}

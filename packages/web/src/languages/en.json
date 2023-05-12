@@ -544,7 +544,7 @@
       "beneficiaryAddressNote": "Note: The prize will be transferred to the beneficiary wallet address you provide.",
       "addPreferredCommunicationChannel": "Add your preferred communication channel",
       "addGithubAccountConnectIssue": "Add your GitHub account if you want to connect the issue/s submitted (optional)",
-      "contactDataWillBePublishedNote": "Note: The data you have provided will be pined on IPFS in plain text.",
+      "contactDataIsEncrypted": "Your communication channel is encrypted and safe, only committee can have access to it.",
       "saveContactInformation": "Save contact information",
       "searchOrSelectProject": "Search or select project",
       "noProjectsFound": "No projects found",

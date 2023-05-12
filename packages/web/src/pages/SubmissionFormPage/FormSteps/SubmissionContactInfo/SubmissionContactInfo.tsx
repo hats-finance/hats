@@ -1,5 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, FormInput, FormRadioInput } from "components";
+import { Alert, Button, FormInput, FormRadioInput } from "components";
 import { useEnhancedForm } from "hooks/form";
 import { useContext, useEffect, useMemo } from "react";
 import { useWatch } from "react-hook-form";
@@ -100,7 +100,10 @@ export function SubmissionContactInfo() {
         placeholder={t("githubUsernamePlaceholder")}
         colorable
       />
-      <p className="mb-5">{t("Submissions.contactDataWillBePublishedNote")}</p>
+
+      <Alert type="warning" className="mb-4">
+        {t("Submissions.contactDataIsEncrypted")}
+      </Alert>
 
       <div className="buttons">
         <Button disabled={!isValid} onClick={handleSubmit(handleAddContactData)}>
