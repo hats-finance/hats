@@ -162,41 +162,78 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       ${isCheckOrRadio &&
       css`
-        display: flex;
-        align-items: center;
-        gap: ${getSpacing(1.5)};
-        cursor: pointer;
+        ${type === "checkbox" &&
+        css`
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1.5)};
+          cursor: pointer;
 
-        .checkbox-inner {
-          position: relative;
-          display: block;
-          width: ${getSpacing(4.4)};
-          height: ${getSpacing(2.4)};
-          border-radius: 100px;
-          background: var(--grey-500);
-
-          ${isChecked &&
-          css`
-            background: var(--teal);
-          `}
-
-          .checkbox-switch {
-            top: 50%;
-            transform: translateY(-50%);
-            position: absolute;
-            height: ${getSpacing(1.8)};
-            width: ${getSpacing(1.8)};
-            background: var(--white);
+          .checkbox-inner {
+            position: relative;
+            display: block;
+            width: ${getSpacing(4.4)};
+            height: ${getSpacing(2.4)};
             border-radius: 100px;
-            left: 3px;
-            transition: ease-in-out 0.2s;
+            background: var(--grey-500);
 
             ${isChecked &&
             css`
-              left: ${getSpacing(2.1)};
+              background: var(--teal);
             `}
+
+            .checkbox-switch {
+              top: 50%;
+              transform: translateY(-50%);
+              position: absolute;
+              height: ${getSpacing(1.8)};
+              width: ${getSpacing(1.8)};
+              background: var(--white);
+              border-radius: 100px;
+              left: 3px;
+              transition: ease-in-out 0.2s;
+
+              ${isChecked &&
+              css`
+                left: ${getSpacing(2.1)};
+              `}
+            }
           }
-        }
+        `}
+
+        ${type === "toggle" &&
+        css`
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1.5)};
+          cursor: pointer;
+
+          .checkbox-inner {
+            position: relative;
+            display: block;
+            width: ${getSpacing(2.6)};
+            height: ${getSpacing(2.6)};
+            border-radius: 4px;
+            border: 2px solid var(--white);
+
+            .checkbox-switch {
+              display: none;
+              position: absolute;
+              top: 10%;
+              left: 35%;
+              transform: rotate(45deg);
+              height: ${getSpacing(1.4)};
+              width: ${getSpacing(0.6)};
+              border-bottom: ${getSpacing(0.3)} solid var(--white);
+              border-right: ${getSpacing(0.3)} solid var(--white);
+
+              ${isChecked &&
+              css`
+                display: inline-block;
+              `}
+            }
+          }
+        `}
       `}
     }
 
