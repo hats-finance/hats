@@ -1,50 +1,50 @@
-import { useEffect, useState, useCallback } from "react";
-import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
-import DOMPurify from "dompurify";
-import moment from "moment";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import {
-  createNewCommitteeMember,
-  createNewVaultDescription,
-  convertVulnerabilitySeverityV1ToV2,
-  editedFormToCreateVaultOnChainCall,
-  nonEditableEditionStatus,
-  getGnosisSafeInfo,
-  isAGnosisSafeTx,
+  IEditedSessionResponse,
   IEditedVaultDescription,
   IEditedVulnerabilitySeverityV1,
   IVaultEditionStatus,
-  IEditedSessionResponse,
+  convertVulnerabilitySeverityV1ToV2,
+  createNewCommitteeMember,
+  createNewVaultDescription,
+  editedFormToCreateVaultOnChainCall,
+  getGnosisSafeInfo,
+  isAGnosisSafeTx,
+  nonEditableEditionStatus,
 } from "@hats-finance/shared";
-import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
-import { CreateVaultContract } from "contracts";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { useVaults } from "hooks/vaults/useVaults";
-import { isValidIpfsHash } from "utils/ipfs.utils";
-import { appChains, BASE_SERVICE_URL } from "settings";
-import { RoutePaths } from "navigation";
-import useConfirm from "hooks/useConfirm";
-import * as VaultEditorService from "../vaultEditorService";
-import { getEditedDescriptionYupSchema } from "./formSchema";
-import { VerifiedEmailModal } from "./VerifiedEmailModal";
-import { useVaultEditorSteps } from "./useVaultEditorSteps";
-import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { VaultEditorFormContext } from "./store";
-import { checkIfAddressCanEditTheVault } from "../utils";
-import {
-  Section,
-  StyledVaultEditorForm,
-  VaultEditorStepController,
-  VaultEditorSectionController,
-  VaultEditorStepper,
-  StyledVaultEditorContainer,
-} from "./styles";
+import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
+import { CreateVaultContract } from "contracts";
+import DOMPurify from "dompurify";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import useConfirm from "hooks/useConfirm";
+import { useVaults } from "hooks/vaults/useVaults";
+import moment from "moment";
+import { RoutePaths } from "navigation";
+import { useCallback, useEffect, useState } from "react";
+import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { BASE_SERVICE_URL, appChains } from "settings";
+import { isValidIpfsHash } from "utils/ipfs.utils";
+import { useAccount } from "wagmi";
+import { checkIfAddressCanEditTheVault } from "../utils";
+import * as VaultEditorService from "../vaultEditorService";
+import { VerifiedEmailModal } from "./VerifiedEmailModal";
+import { getEditedDescriptionYupSchema } from "./formSchema";
+import { AllEditorSections, IEditorSectionsStep } from "./steps";
+import { VaultEditorFormContext } from "./store";
+import {
+  Section,
+  StyledVaultEditorContainer,
+  StyledVaultEditorForm,
+  VaultEditorSectionController,
+  VaultEditorStepController,
+  VaultEditorStepper,
+} from "./styles";
+import { useVaultEditorSteps } from "./useVaultEditorSteps";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
@@ -270,6 +270,9 @@ const VaultEditorFormPage = () => {
     if (!wasEditedSinceCreated) return;
     if (!editSessionId) return;
 
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
     const wantsToEdit = await confirm({
       confirmText: t("requestApproval"),
       description: t("areYouSureYouWantToEditThisVault"),
@@ -288,6 +291,9 @@ const VaultEditorFormPage = () => {
   const cancelApprovalRequest = async () => {
     if (!userHasPermissions) return;
     if (!editSessionId) return;
+
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
 
     const wantsToCancel = await confirm({
       confirmText: t("cancelApprovalRequest"),
@@ -548,7 +554,7 @@ const VaultEditorFormPage = () => {
             <Button onClick={goToStatusPage} styleType="outlined">
               <BackIcon className="mr-2" /> {t("goToStatusPage")}
             </Button>
-            <Button disabled={!userHasPermissions} onClick={cancelApprovalRequest} filledColor="error">
+            <Button disabled={!userHasPermissions} onClick={() => cancelApprovalRequest()} filledColor="error">
               {t("cancelApprovalRequest")}
             </Button>
           </div>
