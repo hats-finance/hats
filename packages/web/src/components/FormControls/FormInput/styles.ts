@@ -162,7 +162,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       ${isCheckOrRadio &&
       css`
-        ${type === "checkbox" &&
+        ${type === "toggle" &&
         css`
           display: flex;
           align-items: center;
@@ -201,7 +201,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
           }
         `}
 
-        ${type === "toggle" &&
+        ${type === "checkbox" &&
         css`
           display: flex;
           align-items: center;
