@@ -1,7 +1,6 @@
 import EditIcon from "assets/icons/edit.svg";
-import { Loading } from "components";
+import { Alert, Loading } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -15,21 +14,21 @@ export default function SubmitReview() {
   const { submissionData, submittingSubmission, submitSubmission, setCurrentStep } = useContext(SubmissionFormContext);
 
   const { vaults } = useVaults();
-  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId)!;
+  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
 
-  const isSupportedNetwork = useSupportedNetwork();
-  const isVerified =
+  const areAllStepsVerified =
     submissionData?.project?.verified &&
     submissionData?.contact?.verified &&
     submissionData?.submissionsDescriptions?.verified &&
     submissionData?.terms?.verified;
-  const committeeCheckedIn = vault && vault.committeeCheckedIn;
-
-  const showSubmitWarning = !isVerified || !account;
 
   const handleSubmit = async () => {
     submitSubmission();
   };
+
+  if (vault && !vault.committeeCheckedIn) return <Alert type="error">{t("Submissions.committeeNotCheckedInError")}</Alert>;
+  if (!account) return <Alert type="error">{t("Submissions.pleaseConnectYourWallet")}</Alert>;
+  if (!areAllStepsVerified) return <Alert type="error">{t("Submissions.firstCompleteAllTheSteps")}</Alert>;
 
   return (
     <div className="submit-review-wrapper">
@@ -64,16 +63,10 @@ export default function SubmitReview() {
         </div>
       </div>
 
-      <button
-        disabled={!isVerified || submittingSubmission || !account || (vault && !committeeCheckedIn) || !isSupportedNetwork}
-        onClick={handleSubmit}
-      >
+      <button disabled={submittingSubmission || !account || !vault} onClick={() => submitSubmission()}>
         SUBMIT
       </button>
-      {vault && !committeeCheckedIn && <span className="error-label">COMMITTEE IS NOT CHECKED IN YET!</span>}
-      {showSubmitWarning && (
-        <span className="error-label">{`Please make sure you completed all steps and your wallet is connected.`}</span>
-      )}
+
       {submittingSubmission && (
         <Loading
           fixed

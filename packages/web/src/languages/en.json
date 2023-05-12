@@ -559,6 +559,10 @@
       "termsDescription": "Before submitting vulnerability please read the steps and process that your request will go through.",
       "pleaseBeforeMovingCheckTerms": "<p>Please before moving forward, check the <a href='https://docs.hats.finance/terms-of-use-1' target='_blank' rel='noopener noreferrer'>terms of use</a></p>",
       "understandTermsOfUse": "I understand and agree the committee process and the terms of use",
+      "firstYouNeedToSelectAProject": "First you need to select a project.",
+      "firstCompleteAllTheSteps": "First complete all the steps.",
+      "pleaseConnectYourWallet": "Please connect your wallet. You'll need to execute the transaction to submit the vulnerability.",
+      "committeeNotCheckedInError": "The committee did not check in yet. Please try again later.",
       "terms": {
         "bugBounty": {
           "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",

@@ -2,7 +2,15 @@ import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-financ
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
-import { Button, FormInput, FormMDEditor, FormSelectInput, FormSelectInputOption, FormSupportFilesInput } from "components";
+import {
+  Alert,
+  Button,
+  FormInput,
+  FormMDEditor,
+  FormSelectInput,
+  FormSelectInputOption,
+  FormSupportFilesInput,
+} from "components";
 import download from "downloadjs";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -26,13 +34,7 @@ export function SubmissionDescriptions() {
   const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isPublicSubmission = vault?.description?.["project-metadata"].type === "audit";
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    reset,
-    formState: { isValid },
-  } = useEnhancedForm<ISubmissionsDescriptionsData>({
+  const { register, handleSubmit, control, reset } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
     mode: "onChange",
   });
@@ -144,6 +146,8 @@ ${formData.descriptions.map(
       };
     });
   };
+
+  if (!vault) return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
 
   return (
     <StyledSubmissionDescriptionsList>

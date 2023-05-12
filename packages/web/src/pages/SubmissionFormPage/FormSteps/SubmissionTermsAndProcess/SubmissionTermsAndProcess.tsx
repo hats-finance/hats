@@ -1,5 +1,5 @@
 import { IVulnerabilitySeverity } from "@hats-finance/shared";
-import { Button, FormInput } from "components";
+import { Alert, Button, FormInput } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
@@ -37,7 +37,7 @@ export function SubmissionTermsAndProcess() {
     });
   };
 
-  if (!vault) return null;
+  if (!vault) return <Alert type="error">{t("Submissions.firstYouNeedToSelectAProject")}</Alert>;
 
   return (
     <StyledSubmissionTermsAndProcess>
