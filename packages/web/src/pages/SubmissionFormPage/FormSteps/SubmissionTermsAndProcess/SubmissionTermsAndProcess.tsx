@@ -20,9 +20,7 @@ export function SubmissionTermsAndProcess() {
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
 
   const { vaults } = useVaults();
-  const projectId = submissionData?.project?.projectId;
-  const vault = vaults?.find((vault) => vault.id === projectId);
-
+  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   useEffect(() => {

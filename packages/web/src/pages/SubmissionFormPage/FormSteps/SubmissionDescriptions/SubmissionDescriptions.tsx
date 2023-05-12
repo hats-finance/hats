@@ -83,44 +83,50 @@ export function SubmissionDescriptions() {
     keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
     if (keyOrKeys.length === 0) return alert("This project has no keys to encrypt the description. Please contact HATS team.");
 
-    let toEncrypt: string | undefined = undefined;
+    let toEncrypt: string = "";
     let decrypted: string | undefined = undefined;
+    let submissionMessage = "";
 
     // Submission on audit vaults are public and they have files
     if (isPublicSubmission) {
       toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})`;
-      decrypted = `
-**Project Name:** ${submissionData.project?.projectName}
+      decrypted = `**Project Name:** ${submissionData.project?.projectName}
 **Project Id:** ${submissionData.project?.projectId}
 **Beneficiary:** ${submissionData.contact?.beneficiary}
+**Github username:** ${submissionData.contact?.githubUsername ?? "no provided"}
     
-${formData.descriptions.map(
-  (description, idx) => `
+${formData.descriptions
+  .map(
+    (description, idx) => `
 **SUBMISSION #${idx + 1}**
 **Title:** ${description.title}
 **Severity:** ${description.severity}
-**Description:** ${description.description}
+**Description:**
+${description.description}
 **Files:** 
 ${description.files.map((file) => `  -> ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}
-
 `
-)}`;
+  )
+  .join("\n")}`;
+      submissionMessage = toEncrypt + decrypted;
     } else {
-      toEncrypt = `
-**Project Name:** ${submissionData.project?.projectName}
+      toEncrypt = `**Project Name:** ${submissionData.project?.projectName}
 **Project Id:** ${submissionData.project?.projectId}
 **Beneficiary:** ${submissionData.contact?.beneficiary}
 **Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
     
-${formData.descriptions.map(
-  (description, idx) => `
+${formData.descriptions
+  .map(
+    (description, idx) => `
 **SUBMISSION #${idx + 1}**
 **Title:** ${description.title}
 **Severity:** ${description.severity}
-**Description:** ${description.description}
-
+**Description:**
+${description.description}
 `
-)}`;
+  )
+  .join("\n")}`;
+      submissionMessage = toEncrypt;
     }
 
     const { encryptedData, sessionKey } = await encryptWithKeys(keyOrKeys, toEncrypt);
@@ -140,9 +146,11 @@ ${formData.descriptions.map(
         ...prev,
         submissionsDescriptions: {
           verified: true,
-          submissionMessage: JSON.stringify(submissionInfo),
+          submission: JSON.stringify(submissionInfo),
+          submissionMessage: submissionMessage,
           descriptions: formData.descriptions,
         },
+        submissionResult: undefined,
       };
     });
   };

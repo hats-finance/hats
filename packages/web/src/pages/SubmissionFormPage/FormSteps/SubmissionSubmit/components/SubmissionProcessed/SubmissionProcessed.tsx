@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import { SubmissionSuccessModal } from "../SubmissionSuccessModal/SubmissionSuccessModal";
 import "./index.scss";
 
-export default function SubmitProcessed() {
+export function SubmissionProcessed() {
   const { t } = useTranslation();
   const { isShowing: isShowingSuccessModal, show: showSuccessModal, hide: hideSuccessModal } = useModal();
   const { submissionData, sendSubmissionToServer, reset } = useContext(SubmissionFormContext);

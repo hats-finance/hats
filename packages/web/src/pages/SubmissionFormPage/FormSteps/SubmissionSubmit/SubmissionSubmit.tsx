@@ -1,15 +1,15 @@
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext } from "react";
-import SubmitProcessed from "./components/SubmissionProcessed/SubmissionProcessed";
-import SubmitReview from "./components/SubmissionReview/SubmissionReview";
-import "./index.scss";
+import { SubmissionProcessed } from "./components/SubmissionProcessed/SubmissionProcessed";
+import { SubmissionReview } from "./components/SubmissionReview/SubmissionReview";
+import { StyledSubmissionSubmitWrapper } from "./styles";
 
 export function SubmissionSubmit() {
   const { submissionData } = useContext(SubmissionFormContext);
 
   return (
-    <div className="submit-wrapper card-content">
-      {submissionData?.submissionResult?.verified ? <SubmitProcessed /> : <SubmitReview />}
-    </div>
+    <StyledSubmissionSubmitWrapper>
+      {submissionData?.submissionResult?.verified ? <SubmissionProcessed /> : <SubmissionReview />}
+    </StyledSubmissionSubmitWrapper>
   );
 }

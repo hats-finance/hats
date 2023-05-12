@@ -1,17 +1,17 @@
 import SearchIcon from "assets/icons/search.icon";
 import { Loading, Vault } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";
+import { SUBMISSION_INIT_DATA, SubmissionFormContext } from "../../store";
 import { StyledSubmissionProject } from "./styles";
 
 export function SubmissionProject() {
   const { t } = useTranslation();
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [userInput, setUserInput] = useState("");
-  const { vaults: vaultsData } = useVaults();
+  const { vaults } = useVaults();
 
   const handleSelectedProject = (vault: IVault) => {
     setSubmissionData((prev) => ({
@@ -21,13 +21,14 @@ export function SubmissionProject() {
         projectName: vault.description?.["project-metadata"].name!,
         projectId: vault.id,
       },
-      description: undefined,
-      submission: undefined,
+      submissionsDescriptions: SUBMISSION_INIT_DATA.submissionsDescriptions,
+      contact: undefined,
+      submissionResult: undefined,
       terms: undefined,
     }));
   };
 
-  const vaults = vaultsData?.map((vault: IVault, index: number) => {
+  const vaultsProjects = vaults?.map((vault: IVault, index: number) => {
     const projectName = vault.description?.["project-metadata"].name;
     if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.liquidityPool && vault.registered) {
       return (
@@ -45,7 +46,7 @@ export function SubmissionProject() {
 
   return (
     <StyledSubmissionProject>
-      {!vaults ? (
+      {!vaultsProjects ? (
         <Loading />
       ) : (
         <>
@@ -58,7 +59,7 @@ export function SubmissionProject() {
             />
           </div>
 
-          {vaults.every((value: any) => value === undefined) ? (
+          {vaultsProjects.every((value: any) => value === undefined) ? (
             <div className="no-results">{t("Submissions.noProjectsFound")}</div>
           ) : (
             <div className="table-wrapper">
@@ -69,7 +70,7 @@ export function SubmissionProject() {
                     <th>{t("projectName")}</th>
                     <th>{t("vaultTotal")}</th>
                   </tr>
-                  {vaults}
+                  {vaultsProjects}
                 </tbody>
               </table>
             </div>

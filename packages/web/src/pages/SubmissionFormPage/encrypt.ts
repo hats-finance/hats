@@ -1,5 +1,5 @@
-//const openpgp = require("openpgp");
-import { readKey, encrypt, createMessage, MaybeArray, Key, generateSessionKey } from "openpgp";
+import { Key, MaybeArray, createMessage, encrypt, generateSessionKey, readKey } from "openpgp";
+
 const IpfsHash = require("ipfs-only-hash");
 
 export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataToEncrypt: string) {

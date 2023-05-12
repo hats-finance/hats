@@ -1,3 +1,4 @@
+import { IVault } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
 import { ISubmissionData, ISubmitSubmissionRequest } from "./types";
@@ -5,11 +6,12 @@ import { ISubmissionData, ISubmitSubmissionRequest } from "./types";
 /**
  * Submits a new vulnerability submission
  * @param submissionData - The submission data to be submitted
+ * @param vault - The vault on which the submission will be submitted
  *
  * @returns True if the submission was successful, false otherwise
  */
-export async function submitVulnerabilitySubmission(submissionData: ISubmissionData): Promise<boolean> {
-  if (!submissionData.project || !submissionData.description || !submissionData.submissionResult) {
+export async function submitVulnerabilitySubmission(submissionData: ISubmissionData, vault: IVault): Promise<boolean> {
+  if (!submissionData.project || !submissionData.submissionsDescriptions || !submissionData.submissionResult) {
     throw new Error(`Invalid params on 'submitVulnerabilitySubmission' function: ${submissionData}`);
   }
 
@@ -17,15 +19,18 @@ export async function submitVulnerabilitySubmission(submissionData: ISubmissionD
     submitVulnerabilityRequest: {
       chainId: submissionData.submissionResult.chainId,
       txHash: submissionData.submissionResult.transactionHash,
-      msg: submissionData.description.encryptedData,
+      msg: submissionData.submissionsDescriptions.submission,
       route: submissionData.project.projectName,
       projectId: submissionData.project.projectId,
     },
-    createIssueRequest: {
-      issueTitle: "asd",
-      issueDescription: "asd",
-      issueFiles: [],
-    },
+    createIssueRequest:
+      vault.description?.["project-metadata"].type === "audit"
+        ? submissionData.submissionsDescriptions.descriptions.map((vulnerability) => ({
+            issueTitle: vulnerability.title,
+            issueDescription: vulnerability.description,
+            issueFiles: vulnerability.files.map((file) => file.ipfsHash),
+          }))
+        : [],
   };
 
   try {

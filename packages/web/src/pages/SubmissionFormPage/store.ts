@@ -5,7 +5,8 @@ const packageJSON = require("../../../package.json");
 
 export interface ISubmissionFormContext {
   currentStep?: number;
-  submittingSubmission: boolean;
+  isSigningSubmission: boolean;
+  isSubmitting: boolean;
   submissionData: ISubmissionData | undefined;
   setSubmissionData: Dispatch<SetStateAction<ISubmissionData | undefined>>;
   setCurrentStep: Dispatch<SetStateAction<number | undefined>>;
@@ -16,11 +17,12 @@ export interface ISubmissionFormContext {
 
 export const SubmissionFormContext = createContext<ISubmissionFormContext>(undefined as any);
 
-export const SUBMISSION_INIT_DATA: ISubmissionData = {
+export const SUBMISSION_INIT_DATA = {
   version: packageJSON.version,
   submissionsDescriptions: {
     verified: false,
     submissionMessage: "",
+    submission: "",
     descriptions: [
       {
         title: "",

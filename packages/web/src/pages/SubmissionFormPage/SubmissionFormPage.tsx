@@ -1,11 +1,9 @@
-import { axiosClient } from "config/axiosClient";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/vaults/useVaults";
 import { calcCid } from "pages/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BASE_SERVICE_URL } from "settings";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import {
@@ -18,6 +16,7 @@ import {
 import SubmissionFormCard from "./SubmissionFormCard/SubmissionFormCard";
 import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } from "./store";
 import { StyledSubmissionFormPage } from "./styles";
+import { submitVulnerabilitySubmission } from "./submissionsService.api";
 import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 
 export const SubmissionFormPage = () => {
@@ -33,27 +32,32 @@ export const SubmissionFormPage = () => {
     () => [
       { title: t("Submissions.selectProject"), component: SubmissionProject, card: SubmissionStep.project },
       { title: t("Submissions.termsAndProcess"), component: SubmissionTermsAndProcess, card: SubmissionStep.terms },
-      { title: t("Submissions.contactInformation"), component: SubmissionContactInfo, card: SubmissionStep.contact },
+      { title: t("Submissions.communicationChannel"), component: SubmissionContactInfo, card: SubmissionStep.contact },
       {
         title: t("Submissions.describeVulnerability"),
         component: SubmissionDescriptions,
         card: SubmissionStep.submissionsDescriptions,
       },
-      { title: t("Submissions.submit"), component: SubmissionSubmit, card: SubmissionStep.submission },
+      { title: t("submit"), component: SubmissionSubmit, card: SubmissionStep.submission },
     ],
     [t]
   );
 
-  const { data: callData, reset: callReset, send: sendVulnerabilityOnChain } = LogClaimContract.hook(vault);
+  const {
+    data: callData,
+    reset: callReset,
+    send: sendVulnerabilityOnChain,
+    isLoading: isSigningSubmission,
+  } = LogClaimContract.hook(vault);
   const { isLoading: isSubmitting } = useWaitForTransaction({
     hash: callData?.hash,
     onSettled(data, error) {
       if (error) return reset();
 
       if (submissionData && data?.transactionHash && chain?.id) {
-        const newVulnerabilityData = {
+        const newVulnerabilityData: ISubmissionData = {
           ...submissionData,
-          submission: {
+          submissionResult: {
             verified: true,
             txStatus: !error && data.status === 1 ? SubmissionOpStatus.Success : SubmissionOpStatus.Fail,
             botStatus: SubmissionOpStatus.Pending,
@@ -114,47 +118,39 @@ export const SubmissionFormPage = () => {
     else setCurrentStep(firstInvalidStepIdx);
   }, [submissionData, steps]);
 
-  const sendSubmissionToServer = useCallback(async (data: ISubmissionData) => {
-    if (!data) return;
-    setSubmissionData((prev) => ({
-      ...prev!,
-      submissionResult: { ...prev!.submissionResult!, botStatus: SubmissionOpStatus.Pending },
-    }));
+  const sendSubmissionToServer = useCallback(
+    async (data: ISubmissionData) => {
+      if (!vault || !data || !data.submissionResult) return;
 
-    try {
-      const payload = {
-        txHash: data.submissionResult?.transactionHash,
-        chainId: data.submissionResult?.chainId,
-        msg: data.submissionsDescriptions?.submissionMessage,
-        route: data.project?.projectName,
-        projectId: data.project?.projectId,
-      };
+      setSubmissionData({
+        ...data,
+        submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Pending },
+      });
 
-      const res = await axiosClient.post(`${BASE_SERVICE_URL}/messages/broadcast-message`, payload);
+      try {
+        const success = await submitVulnerabilitySubmission(data, vault);
 
-      if (res.status === 200) {
-        setSubmissionData((prev) => ({
-          ...prev!,
-          submissionResult: { ...prev!.submissionResult!, botStatus: SubmissionOpStatus.Success },
-        }));
-      } else {
-        setSubmissionData((prev) => ({
-          ...prev!,
-          submissionResult: { ...prev!.submissionResult!, botStatus: SubmissionOpStatus.Fail },
-        }));
+        if (success) {
+          setSubmissionData({
+            ...data,
+            submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Success },
+          });
+        } else throw new Error("Failed to submit vulnerability");
+      } catch {
+        setSubmissionData({
+          ...data,
+          submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Fail },
+        });
       }
-    } catch {
-      setSubmissionData((prev) => ({
-        ...prev!,
-        submissionResult: { ...prev!.submissionResult!, botStatus: SubmissionOpStatus.Fail },
-      }));
-    }
-  }, []);
+    },
+    [vault]
+  );
 
   const submitSubmission = useCallback(async () => {
-    if (!submissionData?.submissionsDescriptions?.submissionMessage) return;
-    const submissionMessage = submissionData?.submissionsDescriptions?.submissionMessage;
-    const calculatedCid = await calcCid(submissionMessage);
+    if (!submissionData?.submissionsDescriptions?.submission) return;
+    const submission = submissionData?.submissionsDescriptions?.submission;
+    const calculatedCid = await calcCid(submission);
+
     sendVulnerabilityOnChain(calculatedCid);
   }, [sendVulnerabilityOnChain, submissionData]);
 
@@ -166,7 +162,8 @@ export const SubmissionFormPage = () => {
     setSubmissionData,
     submitSubmission,
     sendSubmissionToServer,
-    submittingSubmission: isSubmitting,
+    isSubmitting,
+    isSigningSubmission,
   };
 
   return (

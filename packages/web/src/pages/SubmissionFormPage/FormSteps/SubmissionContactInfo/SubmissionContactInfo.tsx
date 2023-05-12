@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, FormInput, FormRadioInput } from "components";
 import { useEnhancedForm } from "hooks/form";
+import { useVaults } from "hooks/vaults/useVaults";
 import { useContext, useEffect, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -14,6 +15,10 @@ export function SubmissionContactInfo() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+
+  const { vaults } = useVaults();
+  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
+  const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   const {
     register,
@@ -49,7 +54,13 @@ export function SubmissionContactInfo() {
 
   const handleAddContactData = (contactData: ISubmissionContactData) => {
     setSubmissionData((prev) => {
-      if (prev) return { ...prev!, contact: { ...contactData, verified: true } };
+      if (prev)
+        return {
+          ...prev!,
+          contact: { ...contactData, verified: true },
+          submissionsDescriptions: { ...prev.submissionsDescriptions, verified: false },
+          submissionResult: undefined,
+        };
     });
   };
 
@@ -93,13 +104,17 @@ export function SubmissionContactInfo() {
         colorable
       />
 
-      <p className="mb-2">{t("Submissions.addGithubAccountConnectIssue")}</p>
-      <FormInput
-        {...register("githubUsername")}
-        label={`${t("githubUsername")}`}
-        placeholder={t("githubUsernamePlaceholder")}
-        colorable
-      />
+      {isAuditCompetition && (
+        <>
+          <p className="mb-2">{t("Submissions.addGithubAccountConnectIssue")}</p>
+          <FormInput
+            {...register("githubUsername")}
+            label={`${t("githubUsername")}`}
+            placeholder={t("githubUsernamePlaceholder")}
+            colorable
+          />
+        </>
+      )}
 
       <Alert type="warning" className="mb-4">
         {t("Submissions.contactDataIsEncrypted")}

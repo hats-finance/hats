@@ -25,6 +25,7 @@ export interface ISubmissionContactData {
 
 export interface ISubmissionsDescriptionsData {
   verified: boolean;
+  submission: string; // Submission object ({encrypted: string, decrypted: string})
   submissionMessage: string;
   descriptions: {
     title: string;
@@ -73,6 +74,6 @@ export interface ISubmitSubmissionRequest {
   createIssueRequest: {
     issueTitle: string;
     issueDescription: string;
-    issueFiles: any[];
-  };
+    issueFiles: string[];
+  }[];
 }

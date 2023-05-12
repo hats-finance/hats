@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Button, Modal, WhereverWidget } from "components";
-import { Colors, LocalStorage, SocialLinks } from "constants/constants";
-import { useKeyWhereverWidget } from "config/wherever";
 import CheckCircleFilled from "assets/icons/check-circle-filled.svg";
 import NewStars from "assets/icons/new-stars.svg";
 import DiscordIcon from "assets/icons/social/discord.icon";
+import { Button, Modal, WhereverWidget } from "components";
+import { useKeyWhereverWidget } from "config/wherever";
+import { Colors, LocalStorage, SocialLinks } from "constants/constants";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { StyledSubmissionSuccessModal } from "./styles";
 
 type SubmissionSuccessModalProps = {
