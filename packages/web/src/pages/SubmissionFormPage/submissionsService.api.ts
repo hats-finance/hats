@@ -46,7 +46,7 @@ const getIssueDescription = (submissionData: ISubmissionData, vulnerability: ISu
   return `
 **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
 **Beneficiary:** ${submissionData.contact?.beneficiary}
-**TX hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
+**Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
 **Severity:** ${vulnerability.severity}
 
 **Description:**
