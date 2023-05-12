@@ -2,77 +2,31 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledSubmissionTermsAndProcess = styled.div`
-  color: var(--white);
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 15px;
-
-    tr {
-      th {
-        text-align: left;
-        padding: 20px;
-        color: $dark-turquoise;
-      }
-      td {
-        padding: 0 20px;
-
-        > span {
-          color: $dark-turquoise;
-          font-weight: bold;
-        }
-      }
-    }
-
-    .nft-wrapper {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-
-      .media-wrapper {
-        margin-right: 15px;
-
-        .nft-wrapper__video {
-          width: 50px;
-          max-height: 350px;
-        }
-      }
-    }
-  }
-
-  .warning-notice {
-    border: 1px solid $red;
-    padding: 30px 80px;
-    margin: 30px 0;
-  }
-  .accept-terms-wrapper {
-    display: flex;
-    align-items: center;
-    button {
-      min-width: 150px;
-    }
-    .checkbox-container {
-      input[type="checkbox"] {
-        margin-right: 10px;
-      }
-    }
-  }
-`;
-
-type ISectionTypes = "submission" | "fix" | "rewards";
+type ISectionTypes = "submission" | "fix" | "rewards" | "alert" | "invisible";
 
 const getColorBySectionType = (type: ISectionTypes) => {
   switch (type) {
     case "submission":
-      return "--yellow";
+      return "var(--yellow)";
     case "fix":
-      return "--red";
+      return "var(--red)";
     case "rewards":
-      return "--dirty-turquoise";
+      return "var(--dirty-turquoise)";
+    case "alert":
+      return "var(--error-red)";
+    case "invisible":
+      return "transparent";
   }
 };
+
+export const StyledSubmissionTermsAndProcess = styled.div`
+  color: var(--white);
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
+`;
 
 export const StyledTermsSection = styled.div<{ type: ISectionTypes }>(
   ({ type }) => css`
@@ -82,11 +36,11 @@ export const StyledTermsSection = styled.div<{ type: ISectionTypes }>(
       color: var(--blue);
       font-weight: bold;
       padding: ${getSpacing(1.5)} ${getSpacing(3)};
-      background-color: var(${getColorBySectionType(type)});
+      background-color: ${getColorBySectionType(type)};
     }
 
     .section-content {
-      border: 1px solid var(${getColorBySectionType(type)});
+      border: 1px solid ${getColorBySectionType(type)};
       padding: ${getSpacing(3)} ${getSpacing(6)};
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -101,6 +55,10 @@ export const StyledTermsSection = styled.div<{ type: ISectionTypes }>(
         font-weight: 700;
         text-transform: uppercase;
         margin-top: ${getSpacing(4)};
+
+        &.small-margin-top {
+          margin-top: ${getSpacing(2)};
+        }
       }
 
       ul,
@@ -125,6 +83,11 @@ export const StyledTermsSection = styled.div<{ type: ISectionTypes }>(
             margin-right: ${getSpacing(2)};
           }
         }
+      }
+
+      a {
+        text-transform: uppercase;
+        text-decoration: underline;
       }
 
       .rewards-list {

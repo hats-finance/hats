@@ -19,9 +19,11 @@ export function VaultRewardCard({ vault, severity, severityIndex }: VaultRewardC
     <StyledVaultRewardCard color={rewardColor}>
       <div className="severity-name">{severity?.name}</div>
       <div className="severity-prize">
-        <span>{`${rewardPercentage.toFixed(2)}%`}</span>
-        <span className="tiny">&nbsp;{t("ofVault")}&nbsp;</span>
-        <span className="price">≈ {`$${formatNumber(rewardPrice)}`}</span>
+        <div>
+          <span>{`${rewardPercentage.toFixed(2)}%`}</span>
+          <span className="tiny">&nbsp;{t("ofVault")}&nbsp;</span>
+        </div>
+        <span className="price">≈{`$${formatNumber(rewardPrice)}`}</span>
       </div>
       <div className="severity-nft">
         <NftPreview vault={vault} severityName={severity.name} nftData={severity["nft-metadata"]} size="tiny" />

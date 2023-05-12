@@ -30,3 +30,9 @@ export const getSubmissionAwardsContent = (vault: IVault, t: TFunction) => {
 
   return <div dangerouslySetInnerHTML={{ __html: t(`Submissions.terms.${keyType}.awardsSection`) }} />;
 };
+
+export const getAlertTermsContent = (vault: IVault, t: TFunction) => {
+  const keyType = vault.description?.["project-metadata"].type === "audit" ? "auditCompetition" : "bugBounty";
+
+  return <div dangerouslySetInnerHTML={{ __html: t(`Submissions.terms.${keyType}.alertSection`) }} />;
+};

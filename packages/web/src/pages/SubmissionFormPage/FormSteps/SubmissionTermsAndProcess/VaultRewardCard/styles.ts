@@ -41,6 +41,10 @@ export const StyledVaultRewardCard = styled.div<{ color: string }>(
     .severity-prize {
       font-weight: 700;
 
+      @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+        flex-direction: column;
+      }
+
       .tiny {
         font-size: var(--xxsmall);
         font-weight: 400;

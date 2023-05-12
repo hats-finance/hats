@@ -1,12 +1,16 @@
 import { IVulnerabilitySeverity } from "@hats-finance/shared";
-import { TERMS_OF_USE } from "constants/constants";
-import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { Button, FormInput } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultRewardCard } from "./VaultRewardCard/VaultRewardCard";
-import { getSubmissionAwardsContent, getSubmissionFixRemedyContent, getSubmissionTermsContent } from "./data";
+import {
+  getAlertTermsContent,
+  getSubmissionAwardsContent,
+  getSubmissionFixRemedyContent,
+  getSubmissionTermsContent,
+} from "./data";
 import { StyledSubmissionTermsAndProcess, StyledTermsSection } from "./styles";
 
 export function SubmissionTermsAndProcess() {
@@ -15,16 +19,19 @@ export function SubmissionTermsAndProcess() {
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
 
-  const projectId = submissionData?.project?.projectId;
   const { vaults } = useVaults();
+  const projectId = submissionData?.project?.projectId;
   const vault = vaults?.find((vault) => vault.id === projectId);
-  const description = vault && vault.description;
+
+  const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   useEffect(() => {
     setAcceptedTermsOfUse(submissionData?.terms?.verified || false);
   }, [submissionData]);
 
   const handleTermsAccepted = () => {
+    if (!acceptedTermsOfUse) return;
+
     setSubmissionData((prev) => {
       if (prev) return { ...prev, terms: { verified: true } };
     });
@@ -52,86 +59,41 @@ export function SubmissionTermsAndProcess() {
           <div>{getSubmissionAwardsContent(vault, t)}</div>
           <div className="rewards-list">
             <div className="titles">
-              <div>Level</div>
-              <div>Prize</div>
-              <div>NFT</div>
+              <div>{t("level")}</div>
+              <div>{t("prize")}</div>
+              <div>{t("nft")}</div>
             </div>
-            {description?.severities.map((severity: IVulnerabilitySeverity, idx: number) => {
+            {vault.description?.severities.map((severity: IVulnerabilitySeverity, idx: number) => {
               return <VaultRewardCard key={idx} vault={vault} severity={severity} severityIndex={idx} />;
             })}
           </div>
         </div>
       </StyledTermsSection>
 
-      {/* <div className="section-title fix">2 {t("SubmitVulnerability.TermsAndProcess.fix-sub-title")}</div>
-      <div className="section-content fix">
-        {t("SubmitVulnerability.TermsAndProcess.fix")}
-        <div className="icon-text-wrapper">
-          <img src={QuestionIcon} alt="question icon" />
-          {t("SubmitVulnerability.TermsAndProcess.fix-question")}
+      {!isAuditCompetition && (
+        <StyledTermsSection type="alert">
+          <div className="section-content">{getAlertTermsContent(vault, t)}</div>
+        </StyledTermsSection>
+      )}
+
+      <StyledTermsSection type="invisible">
+        <div className="section-content">
+          <p className="mb-5" dangerouslySetInnerHTML={{ __html: t("Submissions.pleaseBeforeMovingCheckTerms") }} />
+          <FormInput
+            name="termsOfUse"
+            value={`${acceptedTermsOfUse}`}
+            onChange={(e) => setAcceptedTermsOfUse(e.target.checked)}
+            label={t("Submissions.understandTermsOfUse")}
+            type="checkbox"
+          />
         </div>
+      </StyledTermsSection>
 
-        <div className="icon-text-wrapper">
-          <img src={ErrosIcon} alt="error icon" />
-          {t("SubmitVulnerability.TermsAndProcess.fix-error")}
-        </div>
-
-        {t("SubmitVulnerability.TermsAndProcess.fix-text-1")}
-
-        <div className="icon-text-wrapper">
-          <img src={TimelineIcon} alt="timeline icon" />
-          {t("SubmitVulnerability.TermsAndProcess.fix-timeline")}
-        </div>
-
-        <div className="icon-text-wrapper">
-          <img src={BugIcon} alt="bugs icon" />
-          {t("SubmitVulnerability.TermsAndProcess.fix-bugs")}
-        </div>
-
-        <div className="icon-text-wrapper">
-          <img src={RewardIcon} alt="rewards icon" />
-          {t("SubmitVulnerability.TermsAndProcess.fix-rewards")}
-        </div>
-      </div> */}
-
-      {/* <div className="section-title awards">3 {t("SubmitVulnerability.TermsAndProcess.awards-sub-title")}</div>
-      <div className="section-content awards">
-        {t("SubmitVulnerability.TermsAndProcess.awards-text-1")}
-        {submissionData?.project?.verified ? (
-          <table>
-            <tbody>
-              <tr>
-                <th>Level</th>
-                <th>Prize</th>
-                <th>NFT</th>
-              </tr>
-              {awards}
-            </tbody>
-          </table>
-        ) : (
-          "Please choose project to view prizes"
-        )}
-        {t("SubmitVulnerability.TermsAndProcess.awards-text-2")}
-      </div> */}
-
-      {/* <div className="warning-notice">{t("SubmitVulnerability.TermsAndProcess.warning-notice")}</div>
-
-      <div className="accept-terms-wrapper">
-        <div className="checkbox-container">
-          <input type="checkbox" checked={acceptedTermsOfUse} onChange={() => setAcceptedTermsOfUse(!acceptedTermsOfUse)} />
-          <label>
-            I UNDERSTAND AND AGREE TO THE{" "}
-            <u>
-              <a {...defaultAnchorProps} href={TERMS_OF_USE}>
-                TERMS OF USE
-              </a>
-            </u>
-          </label>
-        </div>
-        <button disabled={!acceptedTermsOfUse} onClick={handleTermsAccepted}>
-          NEXT
-        </button>
-      </div> */}
+      <div className="buttons mt-3">
+        <Button disabled={!acceptedTermsOfUse} onClick={handleTermsAccepted} bigHorizontalPadding>
+          {t("next")}
+        </Button>
+      </div>
     </StyledSubmissionTermsAndProcess>
   );
 }
