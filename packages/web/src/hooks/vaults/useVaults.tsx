@@ -50,10 +50,12 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
   const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
 
+  console.log('--> Called useVaults');
   if (account && blacklistedWallets.indexOf(account) !== -1) {
     throw new Error("Blacklisted wallet");
   }
 
+  console.log('--> Calling useMultiChainVaultsV2');
   const { multiChainData } = useMultiChainVaultsV2();
 
   const getTokenPrices = async (vaultsToSearch: IVault[]) => {

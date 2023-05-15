@@ -24,6 +24,15 @@ export const useMultiChainVaultsV2 = () => {
 
   const [multiChainData, setMultiChainData] = useState<IGraphVaultsData>(INITIAL_VAULTS_DATA);
 
+  console.log('--> Called useMultiChainVaultsV2');
+
+  console.log('--> Queries', Object.keys(appChains).map((chainId) => ({
+    queryKey: ["subgraph", chainId],
+    queryFn: () => getSubgraphData(+chainId, account),
+    refetchInterval: DATA_REFRESH_TIME,
+    refetchIntervalInBackground: false,
+  })));
+
   const subgraphQueries = useQueries({
     queries: Object.keys(appChains).map((chainId) => ({
       queryKey: ["subgraph", chainId],
@@ -32,6 +41,8 @@ export const useMultiChainVaultsV2 = () => {
       refetchIntervalInBackground: false,
     })),
   });
+
+  console.log(subgraphQueries);
 
   useEffect(() => {
     if (subgraphQueries.some((a) => a.isLoading)) return;
