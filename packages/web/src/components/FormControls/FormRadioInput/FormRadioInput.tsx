@@ -1,4 +1,5 @@
 import { ChangeEvent, forwardRef, useRef } from "react";
+import { parseIsDirty } from "../utils";
 import { StyledFormRadioInput } from "./styles";
 
 type FormRadioInputProps = {
@@ -7,10 +8,20 @@ type FormRadioInputProps = {
   error?: { message?: string; type: string };
   radioOptions: { label: string; value: string }[];
   type?: "radio";
+  isDirty?: boolean | boolean[];
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>;
 
 function FormRadioInputComponent(
-  { colorable = false, disabled = false, label, error, type = "radio", radioOptions, ...props }: FormRadioInputProps,
+  {
+    colorable = false,
+    disabled = false,
+    isDirty = false,
+    label,
+    error,
+    type = "radio",
+    radioOptions,
+    ...props
+  }: FormRadioInputProps,
   ref
 ) {
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
@@ -49,7 +60,12 @@ function FormRadioInputComponent(
   };
 
   return (
-    <StyledFormRadioInput hasError={!!error && colorable} disabled={disabled} colorable={colorable}>
+    <StyledFormRadioInput
+      hasError={!!error && colorable}
+      isDirty={parseIsDirty(isDirty) && colorable}
+      disabled={disabled}
+      colorable={colorable}
+    >
       <div className="main-container">
         {label && <label className="main-label">{label}</label>}
         {getMainComponent()}

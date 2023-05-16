@@ -42,6 +42,8 @@ export const getAllRegistriesInfo = async (): Promise<IRegistryInfo[]> => {
   for (let i = 0; i < subgraphsData.length; i++) {
     const chainId = Object.values(ChainsConfig)[i].chain.id;
 
+    if (!subgraphsData[i].data || !subgraphsData[i].data.masters) continue;
+
     for (const registry of subgraphsData[i].data.masters) {
       const withdrawPeriod = +registry.withdrawPeriod;
       const safetyPeriod = +registry.safetyPeriod;

@@ -97,8 +97,8 @@ export const SinglePayoutForm = () => {
                 disabled={isPayoutCreated}
                 isDirty={getCustomIsDirty<IPayoutData>(field.name, dirtyFields, defaultValues)}
                 error={error}
-                label={t("Payouts.severity")}
-                placeholder={t("Payouts.severityPlaceholder")}
+                label={t("severity")}
+                placeholder={t("severityPlaceholder")}
                 colorable
                 options={severitiesOptions ?? []}
                 {...field}

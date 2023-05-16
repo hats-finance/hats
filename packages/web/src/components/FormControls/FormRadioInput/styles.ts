@@ -5,10 +5,11 @@ type StyledFormRadioInputProps = {
   hasError: boolean;
   disabled: boolean;
   colorable: boolean;
+  isDirty: boolean;
 };
 
 export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
-  ({ hasError, disabled, colorable }) => css`
+  ({ hasError, disabled, colorable, isDirty }) => css`
     position: relative;
 
     .main-container {
@@ -17,12 +18,6 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
       label.main-label {
         display: block;
         margin-bottom: ${getSpacing(1.5)};
-
-        ${hasError &&
-        colorable &&
-        css`
-          color: var(--error-red);
-        `}
       }
 
       .input-container {
@@ -70,9 +65,21 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
             height: ${getSpacing(2.5)};
             width: ${getSpacing(2.5)};
             border-radius: 50%;
-            background-color: var(--dark-blue);
+            background: var(--dark-blue);
             border: 1px solid var(--turquoise);
             transition: 0.2s;
+
+            ${hasError &&
+            colorable &&
+            css`
+              border-color: var(--error-red);
+            `}
+
+            ${isDirty &&
+            colorable &&
+            css`
+              border-color: var(--yellow);
+            `}
 
             &:after {
               content: "";
@@ -85,6 +92,18 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
               width: ${getSpacing(1.3)};
               background: var(--turquoise);
               transform: translate(-50%, -50%);
+
+              ${hasError &&
+              colorable &&
+              css`
+                background: var(--error-red);
+              `}
+
+              ${isDirty &&
+              colorable &&
+              css`
+                background: var(--yellow);
+              `}
             }
           }
         }

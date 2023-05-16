@@ -119,7 +119,7 @@ export const SplitPayoutBeneficiaryForm = ({
         </div>
         <div className="cell big" role="cell">
           {isHeader ? (
-            t("Payouts.severity")
+            t("severity")
           ) : (
             <Controller
               control={control}
@@ -130,7 +130,7 @@ export const SplitPayoutBeneficiaryForm = ({
                   readOnly={readOnly}
                   isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
                   error={error}
-                  placeholder={t("Payouts.severity")}
+                  placeholder={t("severity")}
                   colorable={!readOnly}
                   options={severitiesOptions ?? []}
                   noMargin

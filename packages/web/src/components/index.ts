@@ -23,4 +23,5 @@ export { CollapsableTextContent } from "./CollapsableTextContent/CollapsableText
 export { Pill, type PillProps } from "./Pill/Pill";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
 export { VaultInfoCard } from "./VaultInfoCard/VaultInfoCard";
+export { NftPreview } from "./NftPreview/NftPreview";
 export * from "./FormControls";

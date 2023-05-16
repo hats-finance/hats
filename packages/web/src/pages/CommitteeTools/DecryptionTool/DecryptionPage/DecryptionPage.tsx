@@ -1,17 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useTranslation } from "react-i18next";
-import { decrypt, readMessage } from "openpgp";
-import { getPath } from "utils/objects.utils";
-import { Alert, Button, FormInput } from "components";
-import { useKeystore, readPrivateKeyFromStoredKey, IStoredKey, PgpKeyCard } from "components/Keystore";
-import { useEnhancedForm } from "hooks/form";
-import { getDecryptMessageSchema } from "./formSchema";
-import { StyledDecryptionPage } from "./styles";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";
+import { Alert, Button, FormInput } from "components";
+import { IStoredKey, PgpKeyCard, readPrivateKeyFromStoredKey, useKeystore } from "components/Keystore";
+import { useEnhancedForm } from "hooks/form";
+import { decrypt, readMessage } from "openpgp";
+import { useCallback, useEffect, useState } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
+import { getPath } from "utils/objects.utils";
+import { getDecryptMessageSchema } from "./formSchema";
+import { StyledDecryptionPage } from "./styles";
 
 type IDecryptMessageForm = {
   encryptedMessage: string;
@@ -49,18 +49,31 @@ export const DecryptionPage = () => {
       if (!dataToUse.encryptedMessage) return;
       if (!keystore) return;
 
+      let decryptedPart = "";
+      let encryptedPart = "";
+
+      try {
+        const messageObject = JSON.parse(dataToUse.encryptedMessage);
+        decryptedPart = messageObject.decrypted ?? "";
+        encryptedPart = messageObject.encrypted ?? "";
+      } catch (error) {
+        encryptedPart = dataToUse.encryptedMessage;
+      }
+
       // Iterate over all stored keys and try to decrypt the message
       for (const keypair of keystore.storedKeys) {
         try {
           const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, keypair.passphrase);
-          const message = await readMessage({ armoredMessage: dataToUse.encryptedMessage });
+          const message = await readMessage({ armoredMessage: encryptedPart });
 
           const { data: decrypted } = await decrypt({
             message,
             decryptionKeys: privateKey,
           });
 
-          setValue("decryptedMessage", decrypted as string);
+          const decryptedMessage = (decrypted as string) + (decryptedPart ? `\n\n${decryptedPart}` : "");
+
+          setValue("decryptedMessage", decryptedMessage);
           setDecryptedWith(keypair);
           return;
         } catch (error) {

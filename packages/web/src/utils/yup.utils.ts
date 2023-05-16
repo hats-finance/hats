@@ -204,12 +204,18 @@ export const getTestPGPMessageFormat = (intl) => {
         const timeout = (cb, interval) => () => new Promise<undefined>((resolve) => setTimeout(() => cb(resolve), interval));
         const onTimeout = timeout((resolve) => resolve(undefined), 200);
 
-        const messageData = await Promise.race([readMessage({ armoredMessage: value }), onTimeout()]);
-        return messageData ? true : ctx.createError({ message: intl("pgp-message-badly-formatted") });
+        const isValidPGPMessage = await Promise.race([readMessage({ armoredMessage: value }), onTimeout()]);
+
+        return isValidPGPMessage ? true : ctx.createError({ message: intl("pgp-message-badly-formatted") });
       } catch (error) {
-        return ctx.createError({
-          message: intl("pgp-message-badly-formatted"),
-        });
+        try {
+          const isValidJSONDecryptionMessage = JSON.parse(value) && (JSON.parse(value).decrypted || JSON.parse(value).encrypted);
+          return isValidJSONDecryptionMessage ? true : ctx.createError({ message: intl("pgp-message-badly-formatted") });
+        } catch (error) {
+          return ctx.createError({
+            message: intl("pgp-message-badly-formatted"),
+          });
+        }
       }
     },
   };

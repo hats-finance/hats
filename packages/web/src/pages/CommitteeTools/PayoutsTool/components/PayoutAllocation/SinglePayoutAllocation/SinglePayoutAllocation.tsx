@@ -3,7 +3,7 @@ import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { FormInput, WithTooltip } from "components";
 import { useTranslation } from "react-i18next";
-import { NftPreview } from "../../NftPreview/NftPreview";
+import { NftPreview } from "../../../../../../components/NftPreview/NftPreview";
 import { usePayoutAllocation } from "../usePayoutAllocation";
 import { StyledSinglePayoutAllocation } from "./styles";
 
