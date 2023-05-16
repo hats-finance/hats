@@ -10,7 +10,10 @@ import { ISubmissionData, ISubmissionsDescriptionsData, ISubmitSubmissionRequest
  *
  * @returns True if the submission was successful, false otherwise
  */
-export async function submitVulnerabilitySubmission(submissionData: ISubmissionData, vault: IVault): Promise<boolean> {
+export async function submitVulnerabilitySubmission(
+  submissionData: ISubmissionData,
+  vault: IVault
+): Promise<{ success: boolean; auditCompetitionRepo?: string }> {
   if (!submissionData.project || !submissionData.submissionsDescriptions || !submissionData.submissionResult) {
     throw new Error(`Invalid params on 'submitVulnerabilitySubmission' function: ${submissionData}`);
   }
@@ -36,9 +39,9 @@ export async function submitVulnerabilitySubmission(submissionData: ISubmissionD
 
   try {
     const res = await axiosClient.post(`${BASE_SERVICE_URL}/submissions/submit-vulnerability`, submissionRequest);
-    return res.status === 200;
+    return { success: res.status === 200, auditCompetitionRepo: res.data.auditCompetitionRepo };
   } catch (error) {
-    return false;
+    return { success: false };
   }
 }
 

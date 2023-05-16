@@ -63,6 +63,7 @@ export const SubmissionFormPage = () => {
             botStatus: SubmissionOpStatus.Pending,
             transactionHash: data?.transactionHash,
             chainId: chain?.id,
+            auditCompetitionRepo: undefined,
           },
         };
 
@@ -124,22 +125,26 @@ export const SubmissionFormPage = () => {
 
       setSubmissionData({
         ...data,
-        submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Pending },
+        submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Pending, auditCompetitionRepo: undefined },
       });
 
       try {
-        const success = await submitVulnerabilitySubmission(data, vault);
+        const res = await submitVulnerabilitySubmission(data, vault);
 
-        if (success) {
+        if (res.success) {
           setSubmissionData({
             ...data,
-            submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Success },
+            submissionResult: {
+              ...data.submissionResult,
+              botStatus: SubmissionOpStatus.Success,
+              auditCompetitionRepo: res.auditCompetitionRepo,
+            },
           });
         } else throw new Error("Failed to submit vulnerability");
       } catch {
         setSubmissionData({
           ...data,
-          submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Fail },
+          submissionResult: { ...data.submissionResult, botStatus: SubmissionOpStatus.Fail, auditCompetitionRepo: undefined },
         });
       }
     },

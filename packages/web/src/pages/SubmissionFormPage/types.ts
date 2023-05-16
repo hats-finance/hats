@@ -45,6 +45,7 @@ export interface ISubmissionResultData {
   txStatus: SubmissionOpStatus | undefined;
   botStatus: SubmissionOpStatus | undefined;
   transactionHash: string;
+  auditCompetitionRepo?: string;
   chainId: number;
 }
 
