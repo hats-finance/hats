@@ -17,12 +17,12 @@ import { useVaults } from "hooks/vaults/useVaults";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { BASE_SERVICE_URL } from "settings";
 import { encryptWithKeys } from "../../encrypt";
 import { SUBMISSION_INIT_DATA, SubmissionFormContext } from "../../store";
 import { ISubmissionsDescriptionsData } from "../../types";
 import { getCreateDescriptionSchema } from "./formSchema";
 import { StyledSubmissionDescription, StyledSubmissionDescriptionsList } from "./styles";
+import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
 
 export function SubmissionDescriptions() {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export function SubmissionDescriptions() {
 
   const { vaults } = useVaults();
   const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
-  const isPublicSubmission = vault?.description?.["project-metadata"].type === "audit";
+  const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
   // const isPublicSubmission = true;
 
   const { register, handleSubmit, control, reset } = useEnhancedForm<ISubmissionsDescriptionsData>({
@@ -84,51 +84,12 @@ export function SubmissionDescriptions() {
     keyOrKeys = typeof keyOrKeys === "string" ? keyOrKeys : keyOrKeys.filter((key) => !!key);
     if (keyOrKeys.length === 0) return alert("This project has no keys to encrypt the description. Please contact HATS team.");
 
-    let toEncrypt: string = "";
-    let decrypted: string | undefined = undefined;
-    let submissionMessage = "";
+    const getSubmissionTextsFunction = isAuditSubmission ? getAuditSubmissionTexts : getBountySubmissionTexts;
+    const submissionTexts = getSubmissionTextsFunction(submissionData, formData.descriptions);
 
-    // Submission on audit vaults are public and they have files
-    if (isPublicSubmission) {
-      toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})`;
-      decrypted = `**Project Name:** ${submissionData.project?.projectName}
-**Project Id:** ${submissionData.project?.projectId}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
-**Github username:** ${submissionData.contact?.githubUsername ?? "---"}
-    
-${formData.descriptions
-  .map(
-    (description, idx) => `
-**SUBMISSION #${idx + 1}**
-**Title:** ${description.title}
-**Severity:** ${description.severity}
-**Description:**
-${description.description}
-**Files:** 
-${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}
-`
-  )
-  .join("\n")}`;
-      submissionMessage = toEncrypt + decrypted;
-    } else {
-      toEncrypt = `**Project Name:** ${submissionData.project?.projectName}
-**Project Id:** ${submissionData.project?.projectId}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
-**Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
-    
-${formData.descriptions
-  .map(
-    (description, idx) => `
-**SUBMISSION #${idx + 1}**
-**Title:** ${description.title}
-**Severity:** ${description.severity}
-**Description:**
-${description.description}
-`
-  )
-  .join("\n")}`;
-      submissionMessage = toEncrypt;
-    }
+    const toEncrypt = submissionTexts.toEncrypt;
+    const decrypted = submissionTexts.decrypted;
+    const submissionMessage = submissionTexts.submissionMessage;
 
     const { encryptedData, sessionKey } = await encryptWithKeys(keyOrKeys, toEncrypt);
     const submissionInfo = {
@@ -163,7 +124,7 @@ ${description.description}
       {submissionsDescriptions.map((submissionDescription, index) => (
         <StyledSubmissionDescription key={submissionDescription.id}>
           <p className="bold mb-2">
-            {t("submission")} #{index + 1}
+            {t("issue")} #{index + 1}
           </p>
           <p className="mb-4">{t("Submissions.provideExplanation")}</p>
 
@@ -204,7 +165,7 @@ ${description.description}
             )}
           />
 
-          {isPublicSubmission && (
+          {isAuditSubmission && (
             <Controller
               control={control}
               name={`descriptions.${index}.files`}
@@ -218,7 +179,7 @@ ${description.description}
             <div className="buttons mt-3">
               <Button onClick={() => removeSubmissionDescription(index)} styleType="invisible">
                 <RemoveIcon className="mr-3" />
-                {t("Submissions.removeVulnerability")}
+                {t("Submissions.removeIssue")}
               </Button>
             </div>
           )}
