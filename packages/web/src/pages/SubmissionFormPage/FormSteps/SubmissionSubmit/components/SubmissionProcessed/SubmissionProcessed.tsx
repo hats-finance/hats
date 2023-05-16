@@ -17,8 +17,7 @@ export function SubmissionProcessed() {
   const { vaults } = useVaults();
   const { submissionData, sendSubmissionToServer, reset } = useContext(SubmissionFormContext);
   const vault = (vaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
-  // const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
-  const isAuditCompetition = false;
+  const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   const submissionStatus = {
     onChain: submissionData?.submissionResult?.txStatus,
@@ -124,7 +123,7 @@ export function SubmissionProcessed() {
         {getSubmissionOnServerStatus()}
       </div>
 
-      {getAuditCompetitionRepoButton()}
+      {isAuditCompetition && getAuditCompetitionRepoButton()}
 
       {!isAuditCompetition && <Alert type="warning">{t("Submissions.responseNotice")}</Alert>}
 
