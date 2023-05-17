@@ -1,11 +1,15 @@
-import { EIP712_SAFE_TX_TYPE, IPayoutResponse, IVault, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
+import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
+import Safe from "@safe-global/safe-core-sdk";
+import EthersAdapter from "@safe-global/safe-ethers-lib";
+import { Signer, ethers } from "ethers";
 import { useState } from "react";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { useNetwork, useProvider, useSignTypedData } from "wagmi";
+import { useNetwork, useProvider, useSignTypedData, useSigner } from "wagmi";
 
 export const useSignPayout = (vault?: IVault, payout?: IPayoutResponse) => {
-  const provider = useProvider();
   const { chain } = useNetwork();
+  const provider = useProvider();
+  const { data: signer } = useSigner();
   const signPayout = useSignTypedData();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -17,13 +21,14 @@ export const useSignPayout = (vault?: IVault, payout?: IPayoutResponse) => {
     try {
       await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
+      const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer as Signer });
+      const safeSdk = await Safe.create({ ethAdapter, safeAddress: vault.committee });
+
       const { tx: safeTransaction } = await getExecutePayoutSafeTransaction(provider, vault.committee, payout);
 
-      return signPayout.signTypedDataAsync({
-        domain: { verifyingContract: vault.committee as `0x${string}`, chainId: vault.chainId },
-        types: EIP712_SAFE_TX_TYPE,
-        value: safeTransaction.data as any,
-      });
+      const signature = await safeSdk.signTypedData(safeTransaction);
+
+      return signature.data;
     } catch (error) {
       console.log(error);
     } finally {
