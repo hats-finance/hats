@@ -60,3 +60,24 @@ ${description.description.trim()}
 
   return { decrypted: undefined, toEncrypt, submissionMessage };
 };
+
+export const getGithubIssueDescription = (
+  submissionData: ISubmissionData,
+  description: ISubmissionsDescriptionsData["descriptions"][0]
+) => {
+  return `
+**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+**Beneficiary:** ${submissionData.contact?.beneficiary}
+**Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
+**Severity:** ${description.severity}
+
+**Description:**
+${description.description.trim()}
+  
+${
+  description.files && description.files.length > 0
+    ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
+    : ""
+}
+`;
+};

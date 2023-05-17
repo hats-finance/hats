@@ -1,7 +1,8 @@
 import { IVault } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
-import { ISubmissionData, ISubmissionsDescriptionsData, ISubmitSubmissionRequest } from "./types";
+import { getGithubIssueDescription } from "./FormSteps/SubmissionDescriptions/utils";
+import { ISubmissionData, ISubmitSubmissionRequest } from "./types";
 
 /**
  * Submits a new vulnerability submission
@@ -28,11 +29,10 @@ export async function submitVulnerabilitySubmission(
     },
     createIssueRequests:
       vault.description?.["project-metadata"].type === "audit"
-        ? // true
-          submissionData.submissionsDescriptions.descriptions.map((vulnerability) => ({
-            issueTitle: vulnerability.title,
-            issueDescription: getIssueDescription(submissionData, vulnerability),
-            issueFiles: vulnerability.files.map((file) => file.ipfsHash),
+        ? submissionData.submissionsDescriptions.descriptions.map((description) => ({
+            issueTitle: description.title,
+            issueDescription: getGithubIssueDescription(submissionData, description),
+            issueFiles: description.files.map((file) => file.ipfsHash),
           }))
         : [],
   };
@@ -44,18 +44,3 @@ export async function submitVulnerabilitySubmission(
     return { success: false };
   }
 }
-
-const getIssueDescription = (submissionData: ISubmissionData, vulnerability: ISubmissionsDescriptionsData["descriptions"][0]) => {
-  return `
-**Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
-**Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
-**Severity:** ${vulnerability.severity}
-
-**Description:**
-${vulnerability.description}
-  
-**Files:**
-${vulnerability.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}
-`;
-};
