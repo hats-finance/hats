@@ -29,7 +29,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
     infuraKey: "mainnet",
-    provider: "eth-mainnet.g.alchemy.com/v2/gRQ81Lr6Vnbm5WgD4Et6csRjnEv3V83Z",
+    provider: "https://eth-mainnet.g.alchemy.com/v2/gRQ81Lr6Vnbm5WgD4Et6csRjnEv3V83Z",
   },
   [goerli.id]: {
     vaultsCreatorContract: "0x357D2B22A235E0b0F83926ceE9b0D0fF8489e03b",
@@ -42,7 +42,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     uniswapSubgraph: undefined,
     paymentSplitterFactory: "0x728654Bb8E69b9978E79657332a0843606d64FF4",
     infuraKey: "goerli",
-    provider: "eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
+    provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   },
   [optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -54,7 +54,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
     infuraKey: "optimism-mainnet",
-    provider: "winter-alien-reel.optimism.quiknode.pro/67c989673429f10875e3c33c4fada905d65f8596",
+    provider: "https://winter-alien-reel.optimism.quiknode.pro/67c989673429f10875e3c33c4fada905d65f8596",
   },
   [optimismGoerli.id]: {
     vaultsCreatorContract: "0x8633212777Da1394bb379Df9520f098B014fB77b",
@@ -65,7 +65,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: undefined,
     uniswapSubgraph: undefined,
     infuraKey: "optimism-goerli",
-    provider: "ultra-convincing-bridge.optimism-goerli.quiknode.pro/c9541e51b0a7432c1cd61a2c1c8d8f56c9dc07c0",
+    provider: "https://ultra-convincing-bridge.optimism-goerli.quiknode.pro/c9541e51b0a7432c1cd61a2c1c8d8f56c9dc07c0",
   },
   [arbitrum.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -77,7 +77,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0x022B95b4c02bbA85604506E6114485615b0aD09A",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
     infuraKey: "arbitrum-mainnet",
-    provider: "few-maximum-voice.arbitrum-mainnet.quiknode.pro/54a8151a31505218a22ac84ac688e3f5e6584cd1",
+    provider: "https://few-maximum-voice.arbitrum-mainnet.quiknode.pro/54a8151a31505218a22ac84ac688e3f5e6584cd1",
   },
   [polygon.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
@@ -89,7 +89,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
     infuraKey: "polygon-mainnet",
-    provider: "frequent-billowing-smoke.matic.quiknode.pro/7c8df8ebd0e2c06e4559485d777e99c0350208c8",
+    provider: "https://frequent-billowing-smoke.matic.quiknode.pro/7c8df8ebd0e2c06e4559485d777e99c0350208c8",
   },
   // [bsc.id]: {
   //   vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
