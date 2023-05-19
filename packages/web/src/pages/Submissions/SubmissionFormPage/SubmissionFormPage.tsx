@@ -1,7 +1,7 @@
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/vaults/useVaults";
-import { calcCid } from "pages/SubmissionFormPage/encrypt";
+import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getAppVersion } from "utils";
@@ -12,8 +12,8 @@ import {
   SubmissionProject,
   SubmissionSubmit,
   SubmissionTermsAndProcess,
-} from "./FormSteps";
-import SubmissionFormCard from "./SubmissionFormCard/SubmissionFormCard";
+} from "../SubmissionFormPage/FormSteps";
+import SubmissionFormCard from "../SubmissionFormPage/SubmissionFormCard/SubmissionFormCard";
 import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } from "./store";
 import { StyledSubmissionFormPage } from "./styles";
 import { submitVulnerabilitySubmission } from "./submissionsService.api";

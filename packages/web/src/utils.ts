@@ -2,8 +2,8 @@ import { IPFS_PREFIX, LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import millify from "millify";
-import { SUBMISSION_INIT_DATA } from "pages/SubmissionFormPage/store";
-import { ISubmissionData } from "pages/SubmissionFormPage/types";
+import { SUBMISSION_INIT_DATA } from "pages/Submissions/SubmissionFormPage/store";
+import { ISubmissionData } from "pages/Submissions/SubmissionFormPage/types";
 import { BASE_SERVICE_URL } from "settings";
 
 /**

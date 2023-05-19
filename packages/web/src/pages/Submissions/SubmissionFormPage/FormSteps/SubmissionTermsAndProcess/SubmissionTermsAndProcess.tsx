@@ -1,7 +1,7 @@
 import { IVulnerabilitySeverity } from "@hats-finance/shared";
 import { Alert, Button, FormInput } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
+import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultRewardCard } from "./VaultRewardCard/VaultRewardCard";

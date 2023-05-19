@@ -1,7 +1,7 @@
 import { IVault } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
-import { getGithubIssueDescription } from "./FormSteps/SubmissionDescriptions/utils";
+import { getGithubIssueDescription } from "../SubmissionFormPage/FormSteps/SubmissionDescriptions/utils";
 import { ISubmissionData, ISubmitSubmissionRequest } from "./types";
 
 /**

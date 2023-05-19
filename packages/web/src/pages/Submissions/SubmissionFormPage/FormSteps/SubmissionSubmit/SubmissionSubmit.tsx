@@ -1,4 +1,4 @@
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
+import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { SubmissionProcessed } from "./components/SubmissionProcessed/SubmissionProcessed";
 import { SubmissionReview } from "./components/SubmissionReview/SubmissionReview";

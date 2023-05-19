@@ -3,10 +3,10 @@ import { Alert, Button, Dot } from "components";
 import { Colors, SocialLinks } from "constants/constants";
 import useModal from "hooks/useModal";
 import { useVaults } from "hooks/vaults/useVaults";
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
-import { SubmissionOpStatus } from "pages/SubmissionFormPage/types";
+import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { SubmissionOpStatus } from "../../../../types";
 import { SubmissionSuccessModal } from "../SubmissionSuccessModal/SubmissionSuccessModal";
 import { StyledSubmissionProcessed } from "./styles";
 

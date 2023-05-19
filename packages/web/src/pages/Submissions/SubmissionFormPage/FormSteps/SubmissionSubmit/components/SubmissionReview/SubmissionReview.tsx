@@ -1,6 +1,6 @@
 import { Alert, Button, FormInput, Loading } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
+import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";

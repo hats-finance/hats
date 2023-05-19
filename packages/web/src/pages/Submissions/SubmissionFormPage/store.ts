@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, createContext } from "react";
 import { ISubmissionData } from "./types";
 
-const packageJSON = require("../../../package.json");
+const packageJSON = require("../../../../package.json");
 
 export interface ISubmissionFormContext {
   currentStep?: number;

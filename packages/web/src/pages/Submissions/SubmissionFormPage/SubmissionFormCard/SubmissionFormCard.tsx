@@ -1,7 +1,7 @@
 import ArrowIcon from "assets/icons/arrow.icon";
 import CheckmarkIcon from "assets/icons/checkmark.icon";
 import { Colors } from "constants/constants";
-import { SubmissionFormContext } from "pages/SubmissionFormPage/store";
+import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import React, { useContext } from "react";
 import { StyledSubmissionFormCard } from "./styles";
 
