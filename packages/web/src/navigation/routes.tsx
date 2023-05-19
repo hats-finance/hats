@@ -1,6 +1,7 @@
 import { BasicLayout } from "layout";
 import { HoneypotsPage } from "pages";
 import { committeeToolsRouter } from "pages/CommitteeTools/router";
+import { honeypotsRouter } from "pages/Honeypots/router";
 import { submissionsRouter } from "pages/Submissions/router";
 import { vaultEditorRouter } from "pages/VaultEditor/router";
 import { Navigate, RouteObject } from "react-router-dom";
@@ -15,7 +16,7 @@ const routes: RouteObject[] = [
         element: <Navigate to={RoutePaths.vaults} replace={true} />,
       },
       {
-        path: `${RoutePaths.vaults}`,
+        path: `${RoutePaths.vaults}-old`,
         children: [
           {
             path: "",
@@ -31,6 +32,7 @@ const routes: RouteObject[] = [
           },
         ],
       },
+      honeypotsRouter(),
       submissionsRouter(),
       committeeToolsRouter(),
       vaultEditorRouter(),
