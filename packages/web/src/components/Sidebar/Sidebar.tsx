@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { RootState } from "reducers";
 import Logo from "assets/icons/logo.icon";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { RootState } from "reducers";
+import Menu from "./Menu/Menu";
 import NavLinks from "./NavLinks/NavLinks";
 import SocialAndLegal from "./SocialAndLegal/SocialAndLegal";
-import Menu from "./Menu/Menu";
 import { StyledSidebar } from "./styles";
 
 export default function Sidebar() {

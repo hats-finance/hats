@@ -1,14 +1,13 @@
-import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledNavLink = styled(NavLink)`
-  height: 50px;
-  line-height: 50px;
-  padding-left: 15px;
-  border-left: 4px solid transparent;
-  margin: 10px 0px;
-  color: var(--dirty-turquoise);
+  padding: ${getSpacing(2)};
+  border-left: ${getSpacing(0.8)} solid transparent;
+  margin: ${getSpacing(1.5)} 0px;
+  color: var(--white);
   font-size: var(--xsmall);
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
@@ -27,7 +26,6 @@ export const StyledNavLink = styled(NavLink)`
 
   &.active {
     border-left-color: var(--turquoise);
-    color: var(--turquoise);
     background-color: var(--blue);
     font-weight: bold;
   }
