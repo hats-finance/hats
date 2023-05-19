@@ -13,13 +13,13 @@ export default function NavLinks() {
 
   return (
     <>
-      <StyledNavLink to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.bugBounties}`} onClick={handleClick}>
+      <StyledNavLink className="bounties" to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.bugBounties}`} onClick={handleClick}>
         {t("bugBounties")}
       </StyledNavLink>
-      <StyledNavLink to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.audits}`} onClick={handleClick}>
+      <StyledNavLink className="audits" to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.audits}`} onClick={handleClick}>
         {t("auditCompetitions")}
       </StyledNavLink>
-      <StyledNavLink to={RoutePaths.vulnerability} className="vulnerability" onClick={handleClick}>
+      <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
         {t("submitVulnerability")}
       </StyledNavLink>
       <StyledNavLink to={RoutePaths.committee_tools} className="hidden" onClick={handleClick}>

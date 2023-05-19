@@ -12,7 +12,7 @@ export const StyledMenu = styled.div<StyledMenuProps>(
     display: ${show ? "flex" : "none"};
     flex-direction: column;
     z-index: 5;
-    background-color: var(--dark-blue);
+    background-color: var(--background);
     top: var(--header-height);
     border-bottom: 2px solid var(--turquoise);
     overflow-x: scroll;

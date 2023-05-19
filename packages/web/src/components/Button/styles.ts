@@ -1,5 +1,5 @@
-import { getSpacing } from "styles";
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 import { ButtonProps } from "./Button";
 
 type StyledButtonProps = {
@@ -15,12 +15,24 @@ type StyledButtonProps = {
 
 const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
   switch (filledColor) {
-    case "primary":
-      return { backgound: "--turquoise", text: "--dark-blue" };
     case "error":
       return { backgound: "--error-red", text: "--white" };
+    case "secondary":
+      return { backgound: "--secondary", text: "--background" };
+    case "primary":
     default:
-      return { backgound: "--turquoise", text: "--dark-blue" };
+      return { backgound: "--primary", text: "--white" };
+  }
+};
+
+const getVariableByTextColor = (filledColor: ButtonProps["textColor"]) => {
+  switch (filledColor) {
+    case "secondary":
+      return "--secondary";
+    case "primary":
+      return "--primary";
+    default:
+      return "--white";
   }
 };
 
@@ -51,7 +63,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(0.5)};
       margin: 0;
       text-decoration: underline;
-      color: ${textColor === "primary" ? "var(--turquoise)" : `var(--${textColor})`}};
+      color: ${getVariableByTextColor(textColor)};
     `}
 
     ${styleType === "filled" &&
@@ -64,15 +76,15 @@ export const StyledButton = styled.button<StyledButtonProps>(
     ${styleType === "outlined" &&
     css`
       background-color: transparent;
-      border: 1px solid var(--turquoise);
-      color: var(--turquoise);
+      border: 1px solid var(${getVariableByFilledColor(filledColor).backgound});
+      color: var(--white);
     `}
       
     ${styleType === "invisible" &&
     css`
       background-color: transparent;
       border: none;
-      color: ${textColor === "primary" || !textColor ? "var(--turquoise)" : `var(--${textColor})`}};
+      color: ${getVariableByTextColor(textColor)};
     `}
       
     ${styleType === "icon" &&
@@ -81,7 +93,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       background-color: var(--grey-700);
       border: none;
       border-radius: ${getSpacing(0.5)};
-      color: var(--turquoise);
+      color: var(--primary);
     `}
       
     ${noPadding &&

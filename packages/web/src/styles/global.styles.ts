@@ -1,7 +1,7 @@
 import { createGlobalStyle } from "styled-components";
 import { breakpointsDefinition, responsiveUtilityClasses } from "./breakpoints.styles";
-import { variables } from "./variables.styles";
 import { utilityClasses } from "./utilities.styles";
+import { variables } from "./variables.styles";
 
 export const GlobalStyle = createGlobalStyle`
     ${variables}
@@ -38,7 +38,7 @@ export const GlobalStyle = createGlobalStyle`
     }
     
     body {
-        background-color: var(--dark-blue);
+        background-color: var(--background);
         margin: 0;
         font-family: RobotoMono;
         -webkit-font-smoothing: antialiased;

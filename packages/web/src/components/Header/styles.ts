@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledHeader = styled.header`
   position: sticky;
@@ -9,7 +9,7 @@ export const StyledHeader = styled.header`
   padding: ${getSpacing(3)} ${getSpacing(5)};
   display: flex;
   justify-content: space-between;
-  background-color: var(--dark-blue);
+  background-color: var(--background);
   align-items: center;
   z-index: 3;
 

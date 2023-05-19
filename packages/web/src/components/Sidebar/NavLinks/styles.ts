@@ -4,9 +4,9 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledNavLink = styled(NavLink)`
-  padding: ${getSpacing(2)};
+  padding: ${getSpacing(1.6)} ${getSpacing(2)};
   border-left: ${getSpacing(0.8)} solid transparent;
-  margin: ${getSpacing(1.5)} 0px;
+  margin: ${getSpacing(2)} 0px;
   color: var(--white);
   font-size: var(--xsmall);
 
@@ -14,20 +14,18 @@ export const StyledNavLink = styled(NavLink)`
     border-left: unset;
   }
 
-  &.vulnerability {
-    color: var(--bright-green);
-
-    &.active {
-      border-color: var(--bright-green);
-      font-weight: bold;
-      color: var(--bright-green);
-    }
+  &.active {
+    border-left-color: var(--secondary);
+    background-color: var(--background-1);
+    font-weight: bold;
   }
 
-  &.active {
-    border-left-color: var(--turquoise);
-    background-color: var(--blue);
-    font-weight: bold;
+  &.audits.active {
+    border-color: var(--primary);
+  }
+
+  &.vulnerability.active {
+    border-color: var(--warning-yellow);
   }
 
   &.hidden:not(.active) {

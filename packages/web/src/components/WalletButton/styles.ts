@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import { getSpacing } from "styles";
+import { getPrimaryGradient, getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 type StyledWalletButtonProps = {
@@ -14,11 +14,10 @@ export const WalletButtonWrapper = styled.div`
 
 export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
   ({ existsPendingTransaction, connected, expanded }) => css`
-    border: 1px solid;
+    border: 1px solid var(--primary);
     color: var(--white);
-    background-color: var(--blue);
-    border: none;
-    padding: 18px;
+    background: ${getPrimaryGradient()};
+    padding: ${getSpacing(1.5)} ${getSpacing(3)};
     display: flex;
     align-items: center;
     justify-content: center;
@@ -34,7 +33,7 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     ${connected &&
     css`
       gap: ${getSpacing(1.5)};
-      padding: ${getSpacing(2)};
+      /* padding: ${getSpacing(2)}; */
     `}
 
     &:hover {
@@ -82,7 +81,8 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
       bottom: 0;
       transform: translate(-50%, 100%);
       left: 50%;
-      background-color: var(--blue);
+      border: 1px solid var(--primary);
+      background: var(--primary);
       padding: 4px 12px;
       opacity: 0;
       transition: 0.2s;

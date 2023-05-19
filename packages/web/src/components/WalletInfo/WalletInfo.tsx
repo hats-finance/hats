@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { MyAccount, Modal } from "components";
+import { Button, Modal, MyAccount } from "components";
 import useModal from "hooks/useModal";
+import { useTranslation } from "react-i18next";
 import { StyledWalletInfo } from "./styles";
 
 export default function WalletInfo() {
@@ -11,11 +11,9 @@ export default function WalletInfo() {
 
   return (
     <StyledWalletInfo>
-      <button className="wallet-info__my-account-btn" onClick={show}>
+      <Button styleType="outlined" onClick={show}>
         {t("Header.WalletInfo.my-account")}
-        {/* {userNfts && userNfts.length > 0 && <Dot className="wallet-info__my-account-btn-notification" color={Colors.gray} />}
-        {false && <Dot className="wallet-info__my-account-btn-notification" color={Colors.strongRed} />} */}
-      </button>
+      </Button>
 
       {/* {transaction && <TransactionInfo />} */}
 

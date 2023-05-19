@@ -14,12 +14,24 @@ export const variables = css`
     --notifications-container-z-index: 20000;
     --nft-card-z-index: 9999;
 
+    /* NEW COLORS */
+    --primary: #614fda;
+    --primary-light: #2d3271;
+    --secondary: #24e8c5;
+    --background: #0e0e18;
+    --background-1: #171936;
+    --background-2: #24285f;
+
+    --error-red: #ff6464;
+    --warning-yellow: #f2c94c;
+
     /* colors */
     --white: #ffffff;
     --black: #000206;
     --dark-blue: #000723;
     --moderate-blue: #000930;
     --strong-blue: #001571;
+    --turquoise: #8afcfd;
     --teal: #00a1a3;
     --blue: #000c3b;
     --blue-2: #101b4e;
@@ -30,7 +42,6 @@ export const variables = css`
     --light-blue-2: #4c80d0;
     --purple-blue: #1f2748;
     --vault-blue: #0524a7;
-    --turquoise: #8afcfd;
     --turquoise-1: #58ccb1;
     --turquoise-2: #428a8d;
     --turquoise-3: #24a19b;
@@ -62,8 +73,6 @@ export const variables = css`
     --grey-700: #343841;
     --grey-800: #282c33;
     --grey-900: #424751;
-    --error-red: #ff6464;
-    --warning-yellow: #f2c94c;
 
     /* pie chart colors */
     --token: #14595b;

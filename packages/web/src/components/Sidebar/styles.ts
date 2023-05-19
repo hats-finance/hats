@@ -6,8 +6,8 @@ export const StyledSidebar = styled.nav`
   padding-top: 42px;
   display: flex;
   flex-direction: column;
-  background-color: var(--dark-blue);
-  border-right: 1px solid var(--blue);
+  background-color: var(--background);
+  border-right: 1px solid var(--primary-light);
   box-shadow: 0px 4px 38px -1px var(--sidebar-shadow);
   z-index: 2;
 
