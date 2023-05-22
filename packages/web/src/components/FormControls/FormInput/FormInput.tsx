@@ -8,7 +8,7 @@ import { StyledFormInput } from "./styles";
 
 const DEFAULT_ROWS = 10;
 
-export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "checkbox" | "radio" | "password";
+export type FormInputType = "text" | "textarea" | "number" | "whole-number" | "checkbox" | "toggle" | "radio" | "password";
 
 type FormInputProps = {
   type?: FormInputType;
@@ -58,9 +58,10 @@ function FormInputComponent(
   const extraIcons = pastable || copyable || removable || type === "password";
 
   const areAvailableExtraIcons = inputType === "text" || inputType === "textarea" || inputType === "password";
-  const isCheckOrRadio = inputType === "checkbox" || inputType === "radio";
+  const isCheckOrRadio = inputType === "checkbox" || inputType === "toggle" || inputType === "radio";
 
-  const isChecked = inputType === "checkbox" || inputType === "radio" ? (localRef.current as any)?.checked : undefined;
+  const isChecked =
+    inputType === "checkbox" || inputType === "toggle" || inputType === "radio" ? (localRef.current as any)?.checked : undefined;
 
   const handleOnChange = (e: ChangeEvent<any>) => {
     if (props.onChange) props.onChange(e);
@@ -132,6 +133,19 @@ function FormInputComponent(
           ref={setRef}
           onChange={handleOnChange}
           onKeyDown={removeNotNumber}
+          onClick={onClick}
+          readOnly={readOnly}
+        />
+      );
+    } else if (inputType === "toggle") {
+      return (
+        <input
+          {...props}
+          disabled={disabled}
+          id={props.name}
+          type="checkbox"
+          ref={setRef}
+          onChange={handleOnChange}
           onClick={onClick}
           readOnly={readOnly}
         />

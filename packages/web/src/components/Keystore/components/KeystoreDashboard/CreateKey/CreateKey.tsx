@@ -1,18 +1,18 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import AddIcon from "@mui/icons-material/Add";
+import { Button, FormInput, Modal } from "components";
+import { useEnhancedForm } from "hooks/form";
+import { generateKey } from "openpgp";
 import { useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
-import { generateKey } from "openpgp";
-import { v4 as uuid } from "uuid";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { useEnhancedForm } from "hooks/form";
 import { removeEmpty } from "utils/objects.utils";
-import { Button, FormInput, Modal } from "components";
-import { AdvancedModeContainer } from "./styles";
-import { getCreateKeySchema } from "./formSchema";
+import { v4 as uuid } from "uuid";
 import { useKeystore } from "../../../KeystoreProvider";
-import { IStoredKey } from "../../../types";
 import { StyledBaseKeystoreContainer } from "../../../styles";
-import AddIcon from "@mui/icons-material/Add";
+import { IStoredKey } from "../../../types";
+import { getCreateKeySchema } from "./formSchema";
+import { AdvancedModeContainer } from "./styles";
 
 type CreateKeyProps = {
   onClose: () => void;
@@ -115,7 +115,7 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
     >
       <StyledBaseKeystoreContainer>
         <AdvancedModeContainer>
-          <FormInput {...register("advancedMode")} type="checkbox" label={t("advanced")} noMargin />
+          <FormInput {...register("advancedMode")} type="toggle" label={t("advanced")} noMargin />
         </AdvancedModeContainer>
 
         <p className="mb-4">{t("PGPTool.createNewKeyPairDescription")}</p>

@@ -1,17 +1,17 @@
-import { useContext, useEffect } from "react";
-import { Controller, useWatch } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import {
   IEditedVaultDescription,
   IEditedVulnerabilitySeverity,
   createNewCoveredContract,
   getVulnerabilitySeveritiesTemplate,
 } from "@hats-finance/shared";
+import { FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
-import { FormInput, FormIconInput, FormDateInput, FormSelectInput } from "components";
-import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
+import { useContext, useEffect } from "react";
+import { Controller, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
+import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
 import { StyledVaultDetails } from "./styles";
 
 export function VaultDetailsForm() {
@@ -134,7 +134,7 @@ export function VaultDetailsForm() {
       <FormInput
         {...register("includesStartAndEndTime")}
         disabled={allFormDisabled}
-        type="checkbox"
+        type="toggle"
         label={t("VaultEditor.addStartAndEndDate")}
       />
 

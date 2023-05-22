@@ -3,12 +3,14 @@ import { css } from "styled-components";
 export type BreakpointsDefinition = {
   smallMobile: string;
   mobile: string;
+  mediumMobile: string;
   smallScreen: string;
 };
 
 export const breakpointsDefinition: BreakpointsDefinition = {
   smallScreen: "100rem", // 1600px
   mobile: "68.75rem", // 1100px
+  mediumMobile: "50rem", // 800px
   smallMobile: "37.5rem", // 600px
 };
 

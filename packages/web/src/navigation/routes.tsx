@@ -1,10 +1,10 @@
-import { Navigate, RouteObject } from "react-router-dom";
-import { RoutePaths } from "./paths";
 // Page Components
 import { BasicLayout } from "layout";
-import { HoneypotsPage, GovPage, VulnerabilityFormPage, AirdropMachinePage } from "pages";
+import { AirdropMachinePage, GovPage, HoneypotsPage, SubmissionFormPage } from "pages";
 import { committeeToolsRouter } from "pages/CommitteeTools/router";
 import { vaultEditorRouter } from "pages/VaultEditor/router";
+import { Navigate, RouteObject } from "react-router-dom";
+import { RoutePaths } from "./paths";
 
 const routes: RouteObject[] = [
   {
@@ -40,7 +40,7 @@ const routes: RouteObject[] = [
         children: [
           {
             path: "",
-            element: <VulnerabilityFormPage />,
+            element: <SubmissionFormPage />,
           },
           // {
           //   path: '',
