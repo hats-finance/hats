@@ -22,7 +22,7 @@ export function VaultDetailsForm() {
 
   const { register, control, resetField, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
   const { fields, append: appendRepo, remove: removeRepo } = useFieldArray({ control, name: `scope.reposInformation` });
-  const watchFieldArray = useWatch({ control, name: `scope.reposInformation` });
+  const watchFieldArray = useWatch({ control, name: `scope.reposInformation`, defaultValue: [] });
   const repos = useMemo(
     () =>
       fields.map((field, index) => {

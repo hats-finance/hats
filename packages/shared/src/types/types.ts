@@ -105,6 +105,9 @@ interface IBaseVaultDescription {
     members: Array<ICommitteeMember>;
     chainId?: string;
   };
+  scope?: {
+    reposInformation: IVaultRepoInformation[];
+  };
   source: {
     name: string;
     url: string;
@@ -133,6 +136,12 @@ export interface ICommitteeMember {
   "image-ipfs-link"?: string;
   linkedMultisigAddress?: string;
   "pgp-keys": Array<{ publicKey: string }>;
+}
+
+export interface IVaultRepoInformation {
+  url: string;
+  commitHash: string;
+  isMain: boolean;
 }
 
 export interface IBaseVulnerabilitySeverity {
