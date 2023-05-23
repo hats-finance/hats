@@ -79,7 +79,7 @@ export interface IBaseEditedVaultDescription {
     "pgp-pk": string | string[];
   };
   scope: {
-    reposInformation?: IEditedRepoInformation[];
+    reposInformation: IEditedRepoInformation[];
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];
