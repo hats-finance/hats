@@ -100,6 +100,9 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       type: "",
       emails: [{ address: "", status: "unverified" }] as IEditedCommunicationEmail[],
     },
+    scope: {
+      reposInformation: [{ isMain: true, url: "", commitHash: "" }],
+    },
     committee: {
       chainId: "",
       "multisig-address": "",
@@ -187,6 +190,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
       emails: withDefaultData ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
+    scope: defaultDescription.scope,
     assets: defaultDescription.assets,
     parameters: defaultDescription.parameters,
     severitiesOptions,
