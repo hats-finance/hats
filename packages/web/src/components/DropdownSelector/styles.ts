@@ -43,7 +43,7 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
         gap: ${getSpacing(1.5)};
 
         &:hover {
-          background-color: var(--background-1);
+          background-color: var(--background-2);
         }
 
         &:active {

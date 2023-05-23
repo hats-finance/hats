@@ -183,7 +183,7 @@ export const SplitPayoutBeneficiaryForm = ({
         </div>
       </StyledSplitPayoutBeneficiaryForm>
 
-      <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation} newStyles>
+      <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation}>
         <StyledSplitPayoutBeneficiaryAllocationModal>
           <SinglePayoutAllocation
             noArrow

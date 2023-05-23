@@ -1,18 +1,18 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import UploadIcon from "@mui/icons-material/FileUploadOutlined";
+import SaveIcon from "@mui/icons-material/SaveAltOutlined";
+import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
 import { Button, Modal, WithTooltip } from "components";
 import useConfirm from "hooks/useConfirm";
-import { PgpKeyCard } from "./components";
-import { CreateKey, ImportKey, CreateBackup, RestoreBackup, KeyDetails } from ".";
-import { IStoredKey } from "../../types";
-import { StyledBaseKeystoreContainer } from "../../styles";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { CreateBackup, CreateKey, ImportKey, KeyDetails, RestoreBackup } from ".";
 import { useKeystore } from "../../KeystoreProvider";
-import { StyledKeystoreActions, StyledStoredKeys, StyledBackupOption } from "./styles";
-import AddIcon from "@mui/icons-material/Add";
-import UploadIcon from "@mui/icons-material/FileUploadOutlined";
-import RestoreIcon from "@mui/icons-material/UploadFileOutlined";
-import SaveIcon from "@mui/icons-material/SaveAltOutlined";
-import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { StyledBaseKeystoreContainer } from "../../styles";
+import { IStoredKey } from "../../types";
+import { PgpKeyCard } from "./components";
+import { StyledBackupOption, StyledKeystoreActions, StyledStoredKeys } from "./styles";
 
 type KeystoreDashboardAction = "create" | "import" | "create_backup" | "restore_backup" | "key_details";
 
@@ -130,7 +130,7 @@ export const KeystoreDashboard = ({ onClose, onPublicKeySelected }: KeystoreDash
 
   return (
     <>
-      <Modal removeAnimation title={t("PGPTool.title")} newStyles capitalizeTitle isShowing={true} onHide={onClose}>
+      <Modal removeAnimation title={t("PGPTool.title")} capitalizeTitle isShowing={true} onHide={onClose}>
         <StyledBaseKeystoreContainer size="medium">
           <div className="mb-4">{t("PGPTool.usePgpToolFor")}</div>
           {_getActions()}

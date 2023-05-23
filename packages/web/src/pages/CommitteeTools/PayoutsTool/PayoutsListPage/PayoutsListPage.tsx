@@ -168,7 +168,6 @@ export const PayoutsListPage = () => {
         title={t("Payouts.createNewPayout")}
         titleIcon={<AddIcon className="mr-2" />}
         onHide={hideCreateModal}
-        newStyles
         overflowVisible
       >
         <PayoutCreateModal closeModal={hideCreateModal} />

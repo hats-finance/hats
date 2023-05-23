@@ -19,8 +19,9 @@ export const variables = css`
     --primary-light: #2d3271;
     --secondary: #24e8c5;
     --background: #0e0e18;
-    --background-1: #171936;
-    --background-2: #24285f;
+    --background-1: #0b0b23;
+    --background-2: #171936;
+    --background-3: #24285f;
 
     --error-red: #ff6464;
     --warning-yellow: #f2c94c;

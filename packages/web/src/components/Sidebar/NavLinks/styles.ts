@@ -16,7 +16,7 @@ export const StyledNavLink = styled(NavLink)`
 
   &.active {
     border-left-color: var(--secondary);
-    background-color: var(--background-1);
+    background-color: var(--background-2);
     font-weight: bold;
   }
 

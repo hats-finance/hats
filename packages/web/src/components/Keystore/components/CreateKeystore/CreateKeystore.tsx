@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, FormInput, Modal } from "components";
 import { useEnhancedForm } from "hooks/form";
-import { getCreateKeystoreSchema } from "./formSchema";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyledBaseKeystoreContainer } from "../../styles";
+import { getCreateKeystoreSchema } from "./formSchema";
 
 type CreateKeystoreProps = {
   onClose?: () => void;
@@ -36,7 +36,7 @@ export const CreateKeystore = ({ onClose, onKeystoreCreated }: CreateKeystorePro
   };
 
   return (
-    <Modal removeAnimation title={t("PGPTool.title")} newStyles capitalizeTitle isShowing={true} onHide={onClose}>
+    <Modal removeAnimation title={t("PGPTool.title")} capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledBaseKeystoreContainer>
         <div className="mb-4">{t("PGPTool.createStrongPasswordForKeystore")}</div>
 

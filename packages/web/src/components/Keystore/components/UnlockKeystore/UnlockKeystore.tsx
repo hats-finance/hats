@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useEnhancedForm } from "hooks/form";
 import { Button, FormInput, Modal } from "components";
-import { getUnlockKeystoreSchema } from "./formSchema";
+import { useEnhancedForm } from "hooks/form";
+import { useEffect, useState } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { StyledBaseKeystoreContainer } from "../../styles";
+import { getUnlockKeystoreSchema } from "./formSchema";
 
 type UnlockKeystoreProps = {
   onClose?: () => void;
@@ -47,7 +47,7 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
   };
 
   return (
-    <Modal removeAnimation title={t("PGPTool.title")} newStyles capitalizeTitle isShowing={true} onHide={onClose}>
+    <Modal removeAnimation title={t("PGPTool.title")} capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledBaseKeystoreContainer>
         <div className="mb-4">{t("PGPTool.unlockPgpTool")}</div>
 

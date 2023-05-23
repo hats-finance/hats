@@ -25,7 +25,7 @@ export function SubmissionSuccessModal({ isShowing, onHide }: SubmissionSuccessM
   }, [showWhereverCTA, isShowing]);
 
   return (
-    <Modal newStyles isShowing={isShowing} onHide={onHide} overflowVisible>
+    <Modal isShowing={isShowing} onHide={onHide} overflowVisible>
       <StyledSubmissionSuccessModal>
         <img className="successIcon" src={CheckCircleFilled} alt="success" />
         <p className="title">{t("vulnerabilitySubmitted")}</p>

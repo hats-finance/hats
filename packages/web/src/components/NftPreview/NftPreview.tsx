@@ -29,7 +29,7 @@ export const NftPreview = ({ nftData, severityName, vault, size = "normal" }: Nf
       </StyledNftPreview>
 
       {nftData && (
-        <Modal newStyles isShowing={isShowingNFTModal} title={t("nftPreview")} onHide={hideNFTModal}>
+        <Modal isShowing={isShowingNFTModal} title={t("nftPreview")} onHide={hideNFTModal}>
           <StyledNFTDetailsModal>
             <Media className="big-preview" link={ipfsTransformUri(nftData.image)} />
 
