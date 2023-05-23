@@ -190,7 +190,6 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
       emails: withDefaultData ? [{ address: "", status: "unverified" as IEditedCommunicationEmail["status"] }] : [],
     },
     "contracts-covered": severitiesToContractsCoveredForm(severitiesWithIds),
-    scope: defaultDescription.scope,
     assets: defaultDescription.assets,
     parameters: defaultDescription.parameters,
     severitiesOptions,
