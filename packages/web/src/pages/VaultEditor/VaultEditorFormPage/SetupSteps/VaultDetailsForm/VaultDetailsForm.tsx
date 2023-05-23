@@ -4,11 +4,13 @@ import {
   createNewCoveredContract,
   getVulnerabilitySeveritiesTemplate,
 } from "@hats-finance/shared";
-import { FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
+import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Alert, Button, FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
-import { useContext, useEffect } from "react";
-import { Controller, useWatch } from "react-hook-form";
+import { useContext, useEffect, useMemo } from "react";
+import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
@@ -19,6 +21,18 @@ export function VaultDetailsForm() {
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const { register, control, resetField, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { fields, append: appendRepo, remove: removeRepo } = useFieldArray({ control, name: `scope.reposInformation` });
+  const watchFieldArray = useWatch({ control, name: `scope.reposInformation` });
+  const repos = useMemo(
+    () =>
+      fields.map((field, index) => {
+        return {
+          ...field,
+          ...watchFieldArray[index],
+        };
+      }),
+    [watchFieldArray, fields]
+  );
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
   const vaultType = useWatch({ control, name: "project-metadata.type" });
@@ -29,6 +43,7 @@ export function VaultDetailsForm() {
     { label: t("grant"), value: "grants" },
   ];
 
+  // Change the start and end time if the showDateInputs property changes
   useEffect(() => {
     if (showDateInputs) {
       resetField("project-metadata.starttime");
@@ -39,6 +54,7 @@ export function VaultDetailsForm() {
     }
   }, [showDateInputs, setValue, resetField]);
 
+  // Show the start and end time if the vault type is audit or grants
   useEffect(() => {
     const data = getValues();
     if (!data["project-metadata"]) return;
@@ -47,6 +63,7 @@ export function VaultDetailsForm() {
 
     if (starttime || endtime) return;
 
+    // Set includesStartAndEndTime property
     if (vaultType === "audit" || vaultType === "grants") setValue("includesStartAndEndTime", true);
     else setValue("includesStartAndEndTime", false);
   }, [vaultType, getValues, setValue]);
@@ -69,6 +86,37 @@ export function VaultDetailsForm() {
     setValue("vulnerability-severities-spec", vulnerabilitySeveritiesTemplate);
     setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
+  });
+
+  // Only one repo can be the main repo
+  useOnChange(repos, (newRepos, prevRepos) => {
+    if (!newRepos || !prevRepos) return;
+    if (prevRepos?.length === 0 || newRepos?.length === 0) return;
+
+    // If the length of the repos is the same, check if the main repo has changed
+    if (prevRepos?.length === newRepos?.length) {
+      const prevMainRepo = prevRepos.find((repo) => repo.isMain);
+      if (!prevMainRepo) return;
+
+      const newMainRepo = newRepos.find((repo) => repo.isMain && repo.id !== prevMainRepo?.id);
+      const isMainInNewRepos = newRepos.some((repo) => repo.isMain);
+
+      if (!newMainRepo && isMainInNewRepos) return;
+      if (!newMainRepo && !isMainInNewRepos) {
+        const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
+        setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, true);
+        return;
+      }
+
+      const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
+      setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, false);
+    } else {
+      // If the length of the repos is different, check if the main repo has been removed
+      const isMainInNew = newRepos.some((repo) => repo.isMain);
+      if (isMainInNew) return;
+
+      setValue(`scope.reposInformation.${0}.isMain`, true);
+    }
   });
 
   return (
@@ -174,6 +222,68 @@ export function VaultDetailsForm() {
           />
         </div>
       )}
+
+      <>
+        <p className="section-title mt-3">{t("VaultEditor.vault-details.repoInformation")}</p>
+        <div
+          className="helper-text"
+          dangerouslySetInnerHTML={{
+            __html: t(vaultType === "audit" ? "vaultRepoInformationExplanationAudit" : "vaultRepoInformationExplanation"),
+          }}
+        />
+
+        <div className="repos-information">
+          {repos.map((repo, index) => (
+            <div className="repo" key={repo.id}>
+              <div className="toggle">
+                <FormInput
+                  {...register(`scope.reposInformation.${index}.isMain`)}
+                  label={t("mainRepo")}
+                  type="toggle"
+                  colorable
+                  noMargin
+                  disabled={allFormDisabled}
+                />
+              </div>
+              <div className="flex">
+                <FormInput
+                  {...register(`scope.reposInformation.${index}.url`)}
+                  label={t("VaultEditor.vault-details.repoUrl")}
+                  colorable
+                  helper="ie. https://github.com/hats-finance/hats-contracts"
+                  disabled={allFormDisabled}
+                  placeholder={t("VaultEditor.vault-details.repoUrl-placeholder")}
+                />
+                <FormInput
+                  {...register(`scope.reposInformation.${index}.commitHash`)}
+                  label={t("VaultEditor.vault-details.commitHash")}
+                  colorable
+                  helper="ie. 9770535cb9.....b63c081cbc"
+                  disabled={allFormDisabled}
+                  placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
+                />
+                <Button styleType="invisible" onClick={() => removeRepo(index)}>
+                  <DeleteIcon className="mr-2" />
+                  <span>{t("remove")}</span>
+                </Button>
+              </div>
+            </div>
+          ))}
+
+          {repos.length === 0 && <Alert type="info">{t("youHaveNotSelectedRepos")}</Alert>}
+
+          <div className="buttons">
+            <Button
+              className="mt-4"
+              styleType="invisible"
+              onClick={() => appendRepo({ commitHash: "", url: "", isMain: !repos.some((r) => r.isMain) })}
+            >
+              <AddIcon className="mr-2" />
+              <span>{t("newRepo")}</span>
+            </Button>
+          </div>
+        </div>
+      </>
     </StyledVaultDetails>
   );
 }

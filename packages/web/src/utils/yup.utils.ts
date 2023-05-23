@@ -11,6 +11,11 @@ function checkUrl(url: string) {
   return urlRegex.test(url);
 }
 
+function checkCommitHash(commitHash: string) {
+  const commitHashRegex = new RegExp(/\b([a-f0-9]{40})\b/);
+  return commitHashRegex.test(commitHash);
+}
+
 export const getTestWalletAddress = (intl) => {
   return {
     name: "is-address",
@@ -31,6 +36,44 @@ export const getTestUrl = (intl) => {
       const isEmpty = value === "";
 
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
+    },
+  };
+};
+
+export const getTestGithubRepoUrl = (intl) => {
+  return {
+    name: "is-github-repo-url",
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const isUrl = checkUrl(value ?? "");
+      const isEmpty = !value;
+
+      // Normal URL validation
+      if (!isUrl && !isEmpty) return ctx.createError({ message: intl("invalid-url") });
+      if (isEmpty) return true;
+
+      // Should be:
+      // [0] -> github.com
+      // [1] -> organization name
+      // [2] -> repo name
+      const repoSections = value.replace("https://", "").replace("http://", "").split("/");
+
+      if (repoSections[0] !== "github.com") return ctx.createError({ message: intl("not-github-url") });
+      if (repoSections.length !== 3 || repoSections.some((sec) => !sec))
+        return ctx.createError({ message: intl("invalid-github-url") });
+
+      return true;
+    },
+  };
+};
+
+export const getTestGitCommitHash = (intl) => {
+  return {
+    name: "is-commit-hash",
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const isCommitHash = checkCommitHash(value ?? "");
+      const isEmpty = value === "";
+
+      return isCommitHash || isEmpty ? true : ctx.createError({ message: intl("invalid-commit-hash") });
     },
   };
 };

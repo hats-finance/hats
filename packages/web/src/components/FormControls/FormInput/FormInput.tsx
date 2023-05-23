@@ -53,6 +53,7 @@ function FormInputComponent(
   ref
 ) {
   const [inputType, setInputType] = useState<FormInputType>(type);
+  const [, setChanged] = useState(false);
 
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
   const extraIcons = pastable || copyable || removable || type === "password";
@@ -65,6 +66,9 @@ function FormInputComponent(
 
   const handleOnChange = (e: ChangeEvent<any>) => {
     if (props.onChange) props.onChange(e);
+
+    // Handle rerender, only with checkboxes
+    if (isCheckOrRadio) setChanged((prev) => !prev);
   };
 
   const handleOnPaste = () => {

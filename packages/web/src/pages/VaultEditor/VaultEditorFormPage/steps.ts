@@ -49,7 +49,7 @@ export const AllEditorSections: IEditorSections = {
         name: "details",
         title: { creation: "vaultDescription", editing: "vaultDescription" },
         component: VaultDetailsForm,
-        formFields: ["project-metadata"],
+        formFields: ["project-metadata", "scope"],
       },
       {
         id: "committee",
