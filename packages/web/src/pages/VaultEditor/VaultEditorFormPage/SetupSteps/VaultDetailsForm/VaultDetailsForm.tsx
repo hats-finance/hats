@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Alert, Button, FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
@@ -22,13 +22,17 @@ export function VaultDetailsForm() {
 
   const { register, control, resetField, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
   const { fields, append: appendRepo, remove: removeRepo } = useFieldArray({ control, name: `scope.reposInformation` });
-  const watchFieldArray = useWatch({ control, name: `scope.reposInformation` }) ?? [];
-  const repos = fields.map((field, index) => {
-    return {
-      ...field,
-      ...watchFieldArray[index],
-    };
-  });
+  const watchFieldArray = useWatch({ control, name: `scope.reposInformation` });
+  const repos = useMemo(
+    () =>
+      fields.map((field, index) => {
+        return {
+          ...field,
+          ...watchFieldArray[index],
+        };
+      }),
+    [watchFieldArray, fields]
+  );
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
   const vaultType = useWatch({ control, name: "project-metadata.type" });
@@ -89,18 +93,30 @@ export function VaultDetailsForm() {
     if (!newRepos || !prevRepos) return;
     if (prevRepos?.length === 0 || newRepos?.length === 0) return;
 
-    const prevMainRepo = prevRepos.find((repo) => repo.isMain);
-    if (!prevMainRepo) return;
+    // If the length of the repos is the same, check if the main repo has changed
+    if (prevRepos?.length === newRepos?.length) {
+      const prevMainRepo = prevRepos.find((repo) => repo.isMain);
+      if (!prevMainRepo) return;
 
-    const newMainRepo = newRepos.find((repo) => repo.isMain && repo.id !== prevMainRepo?.id);
-    if (!newMainRepo) {
-      const prevMainRepoIndex = repos.findIndex((repo) => repo.id === prevMainRepo.id);
-      setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, true);
-      return;
+      const newMainRepo = newRepos.find((repo) => repo.isMain && repo.id !== prevMainRepo?.id);
+      const isMainInNewRepos = newRepos.some((repo) => repo.isMain);
+
+      if (!newMainRepo && isMainInNewRepos) return;
+      if (!newMainRepo && !isMainInNewRepos) {
+        const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
+        setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, true);
+        return;
+      }
+
+      const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
+      setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, false);
+    } else {
+      // If the length of the repos is different, check if the main repo has been removed
+      const isMainInNew = newRepos.some((repo) => repo.isMain);
+      if (isMainInNew) return;
+
+      setValue(`scope.reposInformation.${0}.isMain`, true);
     }
-
-    const prevMainRepoIndex = repos.findIndex((repo) => repo.id === prevMainRepo.id);
-    setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, false);
   });
 
   return (
