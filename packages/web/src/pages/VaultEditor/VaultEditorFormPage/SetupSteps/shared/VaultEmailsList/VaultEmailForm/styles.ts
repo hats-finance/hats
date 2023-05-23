@@ -3,6 +3,7 @@ import { getSpacing } from "styles";
 
 export const StyledVaultEmail = styled.div`
   display: flex;
+  align-items: baseline;
 
   & > :nth-child(1) {
     width: calc(100% - 160px);

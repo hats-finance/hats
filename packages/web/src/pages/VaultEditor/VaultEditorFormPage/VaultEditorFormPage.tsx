@@ -679,9 +679,11 @@ const VaultEditorFormPage = () => {
                 </div>
               </Section>
             ))}
+
             {/* Alert section */}
             {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
             {editSessionSubmittedCreation && <Alert content={t("vaultBlockedBecauseIsPendingCreation")} type="warning" />}
+
             {/* Action buttons */}
             <div className="buttons-container">
               <div>
@@ -703,6 +705,7 @@ const VaultEditorFormPage = () => {
                 )}
               </div>
             </div>
+
             {/* Editing existing vault action button */}
             {isEditingExistingVault && (
               <div className="editing-existing-buttons">

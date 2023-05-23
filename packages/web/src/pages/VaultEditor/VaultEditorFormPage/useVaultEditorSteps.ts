@@ -1,9 +1,9 @@
+import { IEditedVaultDescription } from "@hats-finance/shared";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useParams, useSearchParams } from "react-router-dom";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { IEditedVaultDescription } from "types";
 
 export const useVaultEditorSteps = (
   formMethods: UseFormReturn<IEditedVaultDescription>,

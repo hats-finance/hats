@@ -1,7 +1,7 @@
-import { mainnet, goerli, optimism, arbitrum, polygon, avalanche, bsc } from "@wagmi/chains";
+import { arbitrum, avalanche, bsc, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
 import axios from "axios";
-import { isServer } from "./general.utils";
 import { utils } from "ethers";
+import { isServer } from "./general.utils";
 
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
 
@@ -142,12 +142,12 @@ export const getAddressSafes = async (walletAddress: string, chainId: number | u
 
     if (!data) throw new Error("No data");
 
-    return data.safes;
+    return data.safes ?? [];
   } catch (error) {
     console.log(error);
-    const defaultData: string[] = [];
+    const defaultData: { safes: string[] } = { safes: [] };
 
     !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(defaultData));
-    return defaultData;
+    return defaultData.safes;
   }
 };
