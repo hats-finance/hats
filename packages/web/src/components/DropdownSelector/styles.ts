@@ -29,7 +29,7 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
       top: calc(100% + ${getSpacing(1)});
       right: ${isOutsideScreen ? "unset" : 0};
       left: ${isOutsideScreen ? "0" : "unset"};
-      background-color: var(--background);
+      background-color: var(--background-1);
       width: max-content;
       border-radius: 2px;
       border: 1px solid var(--primary);

@@ -124,10 +124,10 @@ export const SelectMenuOptions = styled.div`
   flex-direction: column;
   width: 100%;
   position: absolute;
-  border: 1px solid var(--turquoise);
+  border: 1px solid var(--primary-light);
   top: calc(100% + ${getSpacing(1)});
   z-index: 2;
-  background-color: var(--dark-blue);
+  background-color: var(--background-1);
   max-height: ${getSpacing(39)};
   overflow: auto;
 `;
