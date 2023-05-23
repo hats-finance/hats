@@ -67,7 +67,7 @@ export const getExecutePayoutSafeTransaction = async (
       const contractInterface = new ethers.utils.Interface(HATSVaultV2_abi);
       encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
         payoutData.beneficiary as `0x${string}`,
-        Number(payoutData.percentageToPay) * 100,
+        Math.round(Number(payoutData.percentageToPay) * 100),
         payout.payoutDescriptionHash,
       ]);
     }
@@ -104,19 +104,28 @@ export const getExecutePayoutSafeTransaction = async (
 
     const payoutData = payout.payoutData as ISplitPayoutData;
 
+    let exp = 3;
+
+    for (const beneficiary of payoutData.beneficiaries) {
+      const percentageOfPayoutSplittedStr = beneficiary.percentageOfPayout.toString().split(".");
+      if (percentageOfPayoutSplittedStr.length == 2 && percentageOfPayoutSplittedStr[1].length > exp) {
+        exp = percentageOfPayoutSplittedStr[1].length;
+      }
+    }
+
     // Payout payment splitter creation TX
     const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
       "createHATPaymentSplitter",
       [
         payoutData.beneficiaries.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
-        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Number(beneficiary.percentageOfPayout) * 1000)),
+        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Number(beneficiary.percentageOfPayout) * 10 ** exp)),
       ]
     );
 
     // Payout execution TX
     const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
       payoutData.paymentSplitterBeneficiary as `0x${string}`,
-      Number(payoutData.percentageToPay) * 100,
+      Math.round(Number(payoutData.percentageToPay) * 100),
       payout.payoutDescriptionHash,
     ]);
 
