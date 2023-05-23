@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultDetails = styled.div`
   display: flex;
@@ -18,6 +18,14 @@ export const StyledVaultDetails = styled.div`
     align-items: flex-start;
     gap: 0 ${getSpacing(2)};
 
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      flex-direction: column;
+
+      & > div {
+        width: 100% !important;
+      }
+    }
+
     &.col-sm {
       @media (max-width: ${breakpointsDefinition.smallMobile}) {
         flex-direction: column;
@@ -29,5 +37,22 @@ export const StyledVaultDetails = styled.div`
     display: flex;
     justify-content: center;
     gap: ${getSpacing(2)};
+  }
+
+  .repos-information {
+    margin-top: ${getSpacing(2)};
+
+    .repo {
+      .toggle {
+        width: 100%;
+        margin-bottom: ${getSpacing(1)};
+      }
+
+      .flex {
+        display: flex;
+        align-items: baseline;
+        gap: ${getSpacing(2)};
+      }
+    }
   }
 `;
