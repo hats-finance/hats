@@ -1,14 +1,16 @@
 import { TFunction } from "react-i18next";
-import * as Yup from "yup";
 import {
   getTestAddressOrUrl,
-  getTestEmailAddress,
-  getTestNumberInBetween,
   getTestCommitteeMultisigForVault,
+  getTestEmailAddress,
+  getTestGitCommitHash,
+  getTestGithubRepoUrl,
+  getTestMinAmountOfKeysOnMembers,
+  getTestNumberInBetween,
   getTestTokenAddress,
   getTestUrl,
-  getTestMinAmountOfKeysOnMembers,
 } from "utils/yup.utils";
+import * as Yup from "yup";
 
 export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
@@ -45,6 +47,15 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           !!ctx.from[1].value.vaultCreatedInfo?.vaultAddress ? true : (val?.length ?? 0) > 0
         )
         .required(intl("required")),
+    }),
+    scope: Yup.object({
+      reposInformation: Yup.array().of(
+        Yup.object({
+          url: Yup.string().test(getTestGithubRepoUrl(intl)).required(intl("required")),
+          commitHash: Yup.string().test(getTestGitCommitHash(intl)).required(intl("required")),
+          isMain: Yup.boolean(),
+        })
+      ),
     }),
     committee: Yup.object({
       chainId: Yup.string().required(intl("required")),
