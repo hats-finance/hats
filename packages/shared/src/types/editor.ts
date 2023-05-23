@@ -12,6 +12,12 @@ export interface IEditedCommunicationEmail {
   status: "verified" | "unverified" | "verifying";
 }
 
+export interface IEditedRepoInformation {
+  url: string;
+  commitHash: string;
+  isMain: boolean;
+}
+
 export interface IEditedVaultAsset {
   address: string;
   symbol: string;
@@ -71,6 +77,9 @@ export interface IBaseEditedVaultDescription {
   };
   "communication-channel": {
     "pgp-pk": string | string[];
+  };
+  scope: {
+    reposInformation?: IEditedRepoInformation[];
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];
