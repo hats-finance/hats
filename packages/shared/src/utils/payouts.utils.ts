@@ -104,21 +104,13 @@ export const getExecutePayoutSafeTransaction = async (
 
     const payoutData = payout.payoutData as ISplitPayoutData;
 
-    let exp = 3;
-
-    for (const beneficiary of payoutData.beneficiaries) {
-      const percentageOfPayoutSplittedStr = beneficiary.percentageOfPayout.toString().split(".");
-      if (percentageOfPayoutSplittedStr.length == 2 && percentageOfPayoutSplittedStr[1].length > exp) {
-        exp = percentageOfPayoutSplittedStr[1].length;
-      }
-    }
 
     // Payout payment splitter creation TX
     const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
       "createHATPaymentSplitter",
       [
         payoutData.beneficiaries.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
-        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Number(beneficiary.percentageOfPayout) * 10 ** exp)),
+        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Math.round(Number(beneficiary.percentageOfPayout) * 10 ** 10))),
       ]
     );
 
