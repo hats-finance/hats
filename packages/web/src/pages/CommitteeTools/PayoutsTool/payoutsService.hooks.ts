@@ -1,12 +1,12 @@
-import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType, getVaultInfoFromVault } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats-finance/shared";
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { useUserVaults } from "hooks/vaults/useUserVaults";
 import * as PayoutsService from "./payoutsService.api";
 
 // ------------------------
 // QUERIES
-export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse> => {
+export const usePayout = (payoutId?: string): UseQueryResult<IPayoutResponse, AxiosError> => {
   const { isAuthenticated } = useSiweAuth();
 
   return useQuery({
@@ -28,23 +28,19 @@ export const useVaultInProgressPayouts = (vaultInfo?: IVaultInfo): UseQueryResul
   });
 };
 
-export const usePayoutsByVaults = (): UseQueryResult<IPayoutResponse[]> => {
-  const { isAuthenticated } = useSiweAuth();
-  const { userVaults, isLoading: isLoadingUserVaults } = useUserVaults("all");
-
-  const vaultsIds = userVaults?.map((vault) => `${vault.chainId}-${vault.id}`) ?? [];
-  const vaultsInfo: IVaultInfo[] = userVaults?.map((vault) => getVaultInfoFromVault(vault)) ?? [];
+export const usePayoutsBySiweUser = (): UseQueryResult<IPayoutResponse[]> => {
+  const { isAuthenticated, profileData } = useSiweAuth();
 
   const queryResult = useQuery({
-    queryKey: ["payouts-by-vaults", ...vaultsIds],
-    queryFn: () => PayoutsService.getPayoutsByVaults(vaultsInfo),
-    enabled: isAuthenticated && userVaults && userVaults.length > 0,
+    queryKey: ["payouts-by-siwe-user", profileData.address],
+    queryFn: () => PayoutsService.getAllPayoutsBySiweUser(),
+    enabled: isAuthenticated && !!profileData.address,
     refetchOnWindowFocus: false,
   });
 
   return {
     ...queryResult,
-    isLoading: queryResult.isLoading || isLoadingUserVaults,
+    isLoading: queryResult.isLoading,
   } as UseQueryResult<IPayoutResponse[]>;
 };
 
