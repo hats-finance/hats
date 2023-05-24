@@ -1,9 +1,9 @@
 import { Chain, arbitrum, bsc, goerli, mainnet, optimism, optimismGoerli, polygon } from "@wagmi/chains";
 
 export interface IChainConfiguration {
-  vaultsNFTContract?: string;
-  vaultsCreatorContract?: string;
-  paymentSplitterFactory?: string;
+  vaultsNFTContract: string;
+  vaultsCreatorContract: string;
+  paymentSplitterFactory: string;
   rewardController?: string;
   govMultisig?: string;
   chain: Chain;
@@ -54,6 +54,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: "optimistic-ethereum",
     govMultisig: "0x5A6910528b047d3371970dF764ba4046b7DfAd6a",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
+    paymentSplitterFactory: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
     infuraKey: "optimism-mainnet",
     provider: "https://winter-alien-reel.optimism.quiknode.pro/67c989673429f10875e3c33c4fada905d65f8596",
   },
@@ -65,6 +66,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
     coingeckoId: undefined,
     uniswapSubgraph: undefined,
+    paymentSplitterFactory: "0x83E0dfc2c1891Ada906D8F266029F2a416BC8b3f",
     infuraKey: "optimism-goerli",
     provider: "https://ultra-convincing-bridge.optimism-goerli.quiknode.pro/c9541e51b0a7432c1cd61a2c1c8d8f56c9dc07c0",
   },
@@ -90,6 +92,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: "polygon-pos",
     govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
     uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
+    paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     infuraKey: "polygon-mainnet",
     provider: "https://frequent-billowing-smoke.matic.quiknode.pro/7c8df8ebd0e2c06e4559485d777e99c0350208c8",
   },
