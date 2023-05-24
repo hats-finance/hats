@@ -34,7 +34,7 @@ export const VaultInfoCard = ({ vault }: VaultInfoCardProps) => {
         <div className="grey">
           <p className="address">
             <span>{shortenIfAddress(vault.id)}</span>
-            <span>{vault.chainId && <p className="address">({appChains[vault.chainId].chain.name})</p>}</span>
+            <span>{vault.chainId && <span className="address">({appChains[vault.chainId].chain.name})</span>}</span>
           </p>
 
           <CopyToClipboard valueToCopy={vault.id} overlayText={t("copyAddress")} simple />

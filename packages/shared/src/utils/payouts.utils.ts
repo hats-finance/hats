@@ -48,6 +48,7 @@ export const getExecutePayoutSafeTransaction = async (
   const safeSdk = await Safe.create({ ethAdapter, safeAddress: committee });
 
   const vaultInfo = payout.vaultInfo;
+  const percentageToPay = Math.round(Number(payout.payoutData.percentageToPay) * 100);
 
   if (payout.payoutData.type === "single") {
     // Single payout: only one TX calling the vault contract
@@ -67,7 +68,7 @@ export const getExecutePayoutSafeTransaction = async (
       const contractInterface = new ethers.utils.Interface(HATSVaultV2_abi);
       encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
         payoutData.beneficiary as `0x${string}`,
-        Number(payoutData.percentageToPay) * 100,
+        percentageToPay,
         payout.payoutDescriptionHash,
       ]);
     }
@@ -109,14 +110,16 @@ export const getExecutePayoutSafeTransaction = async (
       "createHATPaymentSplitter",
       [
         payoutData.beneficiaries.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
-        payoutData.beneficiaries.map((beneficiary) => BigNumber.from(Number(beneficiary.percentageOfPayout) * 1000)),
+        payoutData.beneficiaries.map((beneficiary) =>
+          BigNumber.from(Math.round(Number(beneficiary.percentageOfPayout) * 10 ** 10))
+        ),
       ]
     );
 
     // Payout execution TX
     const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
       payoutData.paymentSplitterBeneficiary as `0x${string}`,
-      Number(payoutData.percentageToPay) * 100,
+      percentageToPay,
       payout.payoutDescriptionHash,
     ]);
 
