@@ -38,7 +38,7 @@ export const PayoutFormPage = () => {
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
   const { payoutId } = useParams();
-  const { data: payout, isLoading: isLoadingPayout } = usePayout(payoutId);
+  const { data: payout, isFetching: isLoadingPayout, error: payoutError, refetch: refetchPayout } = usePayout(payoutId);
   const { data: vaultActivePayouts } = useVaultInProgressPayouts(payout?.vaultInfo);
   const deletePayout = useDeletePayout();
   const savePayout = useSavePayout();
@@ -63,6 +63,10 @@ export const PayoutFormPage = () => {
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
+
+  useEffect(() => {
+    refetchPayout();
+  }, [address, refetchPayout]);
 
   // Handle reset form when payout changes
   useEffect(() => {
@@ -158,6 +162,17 @@ export const PayoutFormPage = () => {
     }
   };
 
+  if (payoutError?.response?.status === 403)
+    return (
+      <>
+        <Alert type="error">{t("Payouts.connectedAccountNoPermissionsOnThisPayout")}</Alert>
+        {!isAuthenticated && (
+          <Button onClick={tryAuthentication} className="mt-4">
+            {t("signInWithEthereum")}
+          </Button>
+        )}
+      </>
+    );
   if (!address) return <PayoutsWelcome />;
   if (isLoadingPayout || allVaults?.length === 0) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
