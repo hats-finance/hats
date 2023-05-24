@@ -1,4 +1,10 @@
-import { HATSVaultV2_abi, PayoutStatus, getSafeHomeLink } from "@hats-finance/shared";
+import {
+  HATSVaultV2_abi,
+  PayoutStatus,
+  getSafeHomeLink,
+  getVaultInfoWithCommittee,
+  isAddressAMultisigMember,
+} from "@hats-finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar, VaultInfoCard } from "components";
@@ -11,7 +17,7 @@ import useConfirm from "hooks/useConfirm";
 import { useVaultSafeInfo } from "hooks/vaults/useVaultSafeInfo";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
@@ -42,6 +48,7 @@ export const PayoutStatusPage = () => {
     isLoading: isLoadingPayout,
     isRefetching: isRefetchingPayout,
     refetch: refetchPayout,
+    error: payoutError,
   } = usePayout(payoutId);
   const payoutStatus = usePayoutStatus(payout);
   const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultInfo.address), [allVaults, payout]);
@@ -79,6 +86,7 @@ export const PayoutStatusPage = () => {
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const canBesigned = payoutStatus && SIGNABLE_STATUS.includes(payoutStatus);
   const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
+  const [isUserCommitteeMember, setIsUserCommitteeMember] = useState(false);
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = payout?.payoutData.type === "single" ? payout?.payoutData.severity : undefined;
@@ -92,9 +100,28 @@ export const PayoutStatusPage = () => {
   }, [tryAuthentication]);
 
   useEffect(() => {
+    refetchPayout();
+  }, [address, refetchPayout]);
+
+  useEffect(() => {
     if (!chain || !vault) return;
     switchNetworkAndValidate(chain.id, vault.chainId as number);
   }, [chain, vault]);
+
+  useEffect(() => {
+    if (!vault) return;
+
+    const checkCommitteeMember = async () => {
+      if (address && chain && chain.id) {
+        const vaultInfo = await getVaultInfoWithCommittee(vault.id, vault.chainId as number);
+        if (!vaultInfo) return;
+
+        const isCommitteeMember = await isAddressAMultisigMember(vaultInfo.committee, address, vaultInfo.chainId);
+        setIsUserCommitteeMember(isCommitteeMember);
+      }
+    };
+    checkCommitteeMember();
+  }, [address, chain, vault]);
 
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
@@ -119,6 +146,7 @@ export const PayoutStatusPage = () => {
   };
 
   const handleSignPayout = async () => {
+    if (!isUserCommitteeMember) return;
     if (userHasAlreadySigned || !payoutId || !payout || !vault) return;
 
     const signature = await signPayout.signTypedData();
@@ -133,6 +161,17 @@ export const PayoutStatusPage = () => {
     await executePayout.send();
   };
 
+  if (payoutError?.response?.status === 403)
+    return (
+      <>
+        <Alert type="error">{t("Payouts.connectedAccountNoPermissionsOnThisPayout")}</Alert>
+        {!isAuthenticated && (
+          <Button onClick={tryAuthentication} className="mt-4">
+            {t("signInWithEthereum")}
+          </Button>
+        )}
+      </>
+    );
   if (!address) return <PayoutsWelcome />;
   if (isLoadingPayout || isLoadingSafeInfo) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
@@ -294,6 +333,9 @@ export const PayoutStatusPage = () => {
             )}
 
             {executePayout.error && <Alert className="mt-5" type="error" content={executePayout.error} />}
+            {!isUserCommitteeMember && (
+              <Alert className="mt-5" type="warning" content={t("Payouts.youAreNotACommitteeMemberCantSign")} />
+            )}
 
             <div className="buttons">
               {canBeDeleted && (
@@ -302,7 +344,11 @@ export const PayoutStatusPage = () => {
                 </Button>
               )}
 
-              {canBesigned && !userHasAlreadySigned && <Button onClick={handleSignPayout}>{t("Payouts.signPayout")}</Button>}
+              {canBesigned && !userHasAlreadySigned && (
+                <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
+                  {t("Payouts.signPayout")}
+                </Button>
+              )}
               {isReadyToExecute && (
                 <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
                   {t("Payouts.executePayout")}
