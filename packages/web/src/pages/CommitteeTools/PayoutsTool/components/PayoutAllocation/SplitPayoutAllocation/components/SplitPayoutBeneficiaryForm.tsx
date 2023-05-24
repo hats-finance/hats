@@ -88,6 +88,8 @@ export const SplitPayoutBeneficiaryForm = ({
       }
     }
 
+    if (payoutAllocation.totalAmount === undefined) return [];
+
     return [
       {
         icon: <InfoIcon />,
@@ -177,10 +179,12 @@ export const SplitPayoutBeneficiaryForm = ({
             />
           )}
         </div>
-        <div className="cell" role="cell">
-          {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
-          <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
-        </div>
+        {getMoreOptions().length > 0 && (
+          <div className="cell" role="cell">
+            {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
+            <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
+          </div>
+        )}
       </StyledSplitPayoutBeneficiaryForm>
 
       <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation} newStyles>
