@@ -3,7 +3,6 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { Button, FormSelectInputOption } from "components";
 import { useEnhancedFormContext } from "hooks/form";
-import millify from "millify";
 import { useContext, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -118,10 +117,12 @@ function SplitPayoutAllocationShared({
 
   const sumPercentagesPayout = useMemo(
     () =>
-      watchedBeneficiaries?.reduce((acc, beneficiary) => {
-        if (beneficiary.percentageOfPayout) return acc + Number(beneficiary.percentageOfPayout);
-        return acc;
-      }, 0),
+      +watchedBeneficiaries
+        ?.reduce((acc, beneficiary) => {
+          if (beneficiary.percentageOfPayout) return acc + Number(beneficiary.percentageOfPayout);
+          return acc;
+        }, 0)
+        .toFixed(6),
     [watchedBeneficiaries]
   );
 
@@ -171,11 +172,15 @@ function SplitPayoutAllocationShared({
         </Button>
       )}
 
-      {sumPercentagesPayout !== 100 && <p className="error mt-4">{t("Payouts.sumPercentagesPayoutShouldBe100")}</p>}
+      {sumPercentagesPayout !== 100 && (
+        <p className="error mt-4">
+          {t("Payouts.sumPercentagesPayoutShouldBe100", { missingPercentage: +(100 - sumPercentagesPayout).toFixed(6) })}
+        </p>
+      )}
       <StyledSplitPayoutSummary className="mt-3">
         <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
           <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
-          <p>{sumPercentagesPayout ? `${millify(sumPercentagesPayout, { precision: 2 })}%` : "--"}</p>
+          <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
         </div>
         <div className="item">
           <p>{t("Payouts.totalNumberPayouts")}:</p>
