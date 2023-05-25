@@ -340,20 +340,23 @@ export const PayoutStatusPage = () => {
             <div className="buttons">
               {canBeDeleted && (
                 <Button styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
-                  <RemoveIcon />
+                  <RemoveIcon className="mr-3" />
+                  {t("Payouts.deletePayout")}
                 </Button>
               )}
 
-              {canBesigned && !userHasAlreadySigned && (
-                <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
-                  {t("Payouts.signPayout")}
-                </Button>
-              )}
-              {isReadyToExecute && (
-                <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
-                  {t("Payouts.executePayout")}
-                </Button>
-              )}
+              <div className="sub-container">
+                {canBesigned && !userHasAlreadySigned && (
+                  <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
+                    {t("Payouts.signPayout")}
+                  </Button>
+                )}
+                {isReadyToExecute && (
+                  <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
+                    {t("Payouts.executePayout")}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>

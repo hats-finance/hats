@@ -109,9 +109,14 @@ export const StyledPayoutStatusPage = styled.div`
 
     .buttons {
       display: flex;
+      justify-content: space-between;
       gap: ${getSpacing(2)};
-      justify-content: flex-end;
       padding-top: ${getSpacing(4)};
+
+      .sub-container {
+        display: flex;
+        gap: ${getSpacing(2)};
+      }
     }
   }
 `;

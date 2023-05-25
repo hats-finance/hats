@@ -4,7 +4,7 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledPayoutFormPage = styled.div`
   position: relative;
-  background: var(--background-clear-blue);
+  background: var(--background-2);
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(6)};
@@ -66,7 +66,7 @@ export const StyledPayoutFormPage = styled.div`
 
 export const StyledPayoutForm = styled.div`
   .form-container {
-    background: var(--background-clearer-blue);
+    background: var(--background-3);
     border-radius: 4px;
     padding: ${getSpacing(2.5)};
     padding-top: ${getSpacing(3.5)};
@@ -81,7 +81,7 @@ export const StyledPayoutForm = styled.div`
       font-size: var(--xxsmall);
 
       span {
-        color: var(--teal);
+        color: var(--secondary-light);
       }
     }
 
@@ -104,9 +104,6 @@ export const StyledPayoutForm = styled.div`
     .row {
       display: flex;
       gap: ${getSpacing(2)};
-    }
-
-    .beneficiaries-table {
     }
   }
 
@@ -137,9 +134,5 @@ export const StyledPayoutForm = styled.div`
   p.error {
     font-size: var(--xxsmall);
     color: var(--error-red);
-  }
-
-  strong.turquoise {
-    color: var(--turquoise);
   }
 `;
