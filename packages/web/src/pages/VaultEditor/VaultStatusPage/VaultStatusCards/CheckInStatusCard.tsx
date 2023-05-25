@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
 import { isAGnosisSafeTx } from "@hats-finance/shared";
-import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
+import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
+import { useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import { VaultStatusContext } from "../store";
-import SyncIcon from "@mui/icons-material/Sync";
 
 export const CheckInStatusCard = () => {
   const { t } = useTranslation();

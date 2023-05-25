@@ -1,16 +1,16 @@
+import SyncIcon from "@mui/icons-material/Sync";
+import { Alert, Button, Modal, Pill } from "components";
+import { BigNumber } from "ethers";
+import useModal from "hooks/useModal";
+import { useVaults } from "hooks/vaults/useVaults";
+import millify from "millify";
+import { DepositWithdraw } from "pages/HoneypotsPage/DepositWithdraw";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { BigNumber } from "ethers";
-import millify from "millify";
-import { Alert, Button, Modal, Pill } from "components";
 import { ipfsTransformUri } from "utils";
-import { useVaults } from "hooks/vaults/useVaults";
-import useModal from "hooks/useModal";
-import { DepositWithdraw } from "pages/HoneypotsPage/DepositWithdraw";
-import { getTokenInfo } from "utils/tokens.utils";
 import { Amount } from "utils/amounts.utils";
+import { getTokenInfo } from "utils/tokens.utils";
 import { VaultStatusContext } from "../store";
-import SyncIcon from "@mui/icons-material/Sync";
 
 export const DepositStatusCard = () => {
   const { t } = useTranslation();

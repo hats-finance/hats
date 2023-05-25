@@ -1,14 +1,14 @@
+import ViewIcon from "@mui/icons-material/VisibilityOutlined";
+import { Alert, Button, Loading, Pill, PillProps } from "components";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
-import { Alert, Button, Loading, Pill, PillProps } from "components";
-import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { VaultStatusContext } from "../store";
 import * as VaultEditorService from "../../vaultEditorService";
-import ViewIcon from "@mui/icons-material/VisibilityOutlined";
+import { VaultStatusContext } from "../store";
 
 export const EditVaultStatusCard = () => {
   const { t } = useTranslation();

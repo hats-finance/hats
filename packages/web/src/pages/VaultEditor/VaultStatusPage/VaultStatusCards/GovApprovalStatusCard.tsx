@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { useTranslation } from "react-i18next";
 import { Pill, Vault } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
+import { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import { VaultStatusContext } from "../store";
 
 export const GovApprovalStatusCard = () => {
