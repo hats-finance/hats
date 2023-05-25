@@ -1,17 +1,17 @@
-import { useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { Controller, useFieldArray, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { getSafeDashboardLink } from "@hats-finance/shared";
-import { FormInput, FormIconInput, FormPgpPublicKeyInput, Button, WithTooltip } from "components";
-import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
-import useConfirm from "hooks/useConfirm";
-import { IEditedVaultDescription } from "types";
-import { StyledCommitteeMemberForm } from "./styles";
-import { VaultEditorFormContext } from "../../../store";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import GroupIcon from "@mui/icons-material/Groups";
+import { Button, FormIconInput, FormInput, FormPgpPublicKeyInput, WithTooltip } from "components";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import useConfirm from "hooks/useConfirm";
+import { useContext } from "react";
+import { Controller, UseFieldArrayRemove, useFieldArray, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { IEditedVaultDescription } from "types";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { VaultEditorFormContext } from "../../../store";
+import { StyledCommitteeMemberForm } from "./styles";
 
 type CommitteeMemberFormProps = {
   index: number;
@@ -42,6 +42,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
 
   const handleRemoveMember = async () => {
     const wantsToDelete = await confirm({
+      title: t("removeMember"),
       confirmText: t("remove"),
       description: t("areYouSureYouWantToRemoveThisMember"),
     });
@@ -51,6 +52,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
 
   const handleRemovePgpKey = async (keyIndex: number) => {
     const wantsToDelete = await confirm({
+      title: t("removePgpKey"),
       confirmText: t("remove"),
       description: t("areYouSureYouWantToRemoveThisPgpKey"),
     });
@@ -164,7 +166,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
         </div>
         {membersCount > 1 && (
           <div className="controller-buttons">
-            <Button styleType="filled" onClick={handleRemoveMember}>
+            <Button styleType="outlined" onClick={handleRemoveMember}>
               <DeleteIcon className="mr-1" />
               <span>{t("removeMember")}</span>
             </Button>

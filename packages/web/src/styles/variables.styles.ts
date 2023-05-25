@@ -18,16 +18,26 @@ export const variables = css`
     --primary: #614fda;
     --primary-light: #2d3271;
     --secondary: #24e8c5;
+    --secondary-light: #74baae;
     --background: #0e0e18;
     --background-1: #0b0b23;
-    --background-2: #171936;
-    --background-3: #24285f;
+    --background-2: #151731;
+    --background-3: #22233e;
+    --disabled-input: #070a14;
 
+    --white: #ffffff;
     --error-red: #ff6464;
     --warning-yellow: #f2c94c;
 
+    --grey-400: #d0d5dd;
+    --grey-500: #667085;
+    --grey-600: #424751;
+    --grey-700: #343841;
+    --grey-800: #282c33;
+    --grey-900: #424751;
+    /* ----------------------- */
+
     /* colors */
-    --white: #ffffff;
     --black: #000206;
     --dark-blue: #000723;
     --moderate-blue: #000930;
@@ -65,15 +75,8 @@ export const variables = css`
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
 
-    --disabled-input: #070a14;
     --background-clear-blue: #161b2f;
     --background-clearer-blue: #212639;
-    --grey-400: #d0d5dd;
-    --grey-500: #667085;
-    --grey-600: #424751;
-    --grey-700: #343841;
-    --grey-800: #282c33;
-    --grey-900: #424751;
 
     /* pie chart colors */
     --token: #14595b;

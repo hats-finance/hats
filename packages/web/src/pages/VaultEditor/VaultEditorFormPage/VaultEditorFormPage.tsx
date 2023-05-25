@@ -670,10 +670,13 @@ const VaultEditorFormPage = () => {
                   </VaultEditorStepController>
                 ))}
             </VaultEditorStepper>
+
             {/* Section */}
             {steps.map((step) => (
               <Section key={step.id} visible={step.id === currentStepInfo.id}>
-                <p className="section-title">{t(isEditingExistingVault ? step.title.editing : step.title.creation)}</p>
+                {step.title && (
+                  <p className="section-title">{t(isEditingExistingVault ? step.title.editing : step.title.creation)}</p>
+                )}
                 <div className="section-content">
                   <step.component />
                 </div>

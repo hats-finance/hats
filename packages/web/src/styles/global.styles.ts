@@ -17,11 +17,10 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     html {
-        color: var(--turquoise);
+        color: var(--white);
         font-size: var(--small);
         scrollbar-width: none;
         -ms-overflow-style: none;
-        
         
         @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
             font-size: var(--xsmall);

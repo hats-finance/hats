@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { useFieldArray } from "react-hook-form";
-import { VaultEmailForm } from "./VaultEmailForm/VaultEmailForm";
-import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
+import AddIcon from "@mui/icons-material/Add";
 import { Button } from "components";
+import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
+import { useContext } from "react";
+import { useFieldArray } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { IEditedVaultDescription } from "types";
 import { getPath } from "utils/objects.utils";
 import { VaultEditorFormContext } from "../../../store";
+import { VaultEmailForm } from "./VaultEmailForm/VaultEmailForm";
 import { StyledVaultEmailsForm } from "./styles";
-import AddIcon from "@mui/icons-material/Add";
 
 type VaultEmailsFormProps = {
   onlyNotVerifiedEmails?: boolean;

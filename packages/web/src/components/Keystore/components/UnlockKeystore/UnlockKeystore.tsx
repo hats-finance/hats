@@ -58,10 +58,11 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
             placeholder={t("PGPTool.enterYourPgpToolPassword")}
             label={t("PGPTool.pgpToolPassword")}
             colorable
+            noMargin
           />
 
-          <p className="error mb-2">{error}</p>
-          <Button disabled={!isValid} type="submit" expanded>
+          <p className="error mt-2">{error}</p>
+          <Button className="mt-5" disabled={!isValid} type="submit" expanded>
             {t("PGPTool.unlockKeystore")}
           </Button>
         </form>

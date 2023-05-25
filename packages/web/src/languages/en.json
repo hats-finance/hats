@@ -77,6 +77,7 @@
     "addMember": "Add new member",
     "addSeverity": "Add new severity",
     "removeMember": "Remove committee member",
+    "removePgpKey": "Remove PGP Key",
     "addContractAsset": "Add new contract/asset",
     "removeContractAsset": "Remove contract/asset",
     "removeSeverity": "Remove severity",

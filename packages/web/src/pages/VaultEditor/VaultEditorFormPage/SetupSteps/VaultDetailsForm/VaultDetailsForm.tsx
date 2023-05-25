@@ -262,7 +262,7 @@ export function VaultDetailsForm() {
                   disabled={allFormDisabled}
                   placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
                 />
-                <Button styleType="invisible" onClick={() => removeRepo(index)}>
+                <Button styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
                   <DeleteIcon className="mr-2" />
                   <span>{t("remove")}</span>
                 </Button>

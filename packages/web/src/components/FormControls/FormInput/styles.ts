@@ -255,6 +255,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       justify-content: center;
       align-items: center;
       padding: ${getSpacing(1)};
+      color: var(--secondary);
 
       ${(type === "text" || type === "password") &&
       css`
@@ -297,7 +298,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     span.helper {
       display: block;
-      color: var(--secondary);
+      color: var(--secondary-light);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);

@@ -83,7 +83,7 @@ export const SelectButton = styled.div<{
 
     ${isOpen &&
     css`
-      border-color: var(--turquoise);
+      border-color: var(--primary);
     `}
 
     ${hasError &&

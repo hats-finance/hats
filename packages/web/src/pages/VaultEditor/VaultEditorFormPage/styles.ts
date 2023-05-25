@@ -10,11 +10,11 @@ export const StyledVaultEditorContainer = styled.div`
   }
 `;
 
-export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean }>(
-  ({ withoutMargin }) => css`
+export const StyledVaultEditorForm = styled.div<{ withoutMargin?: boolean; noPadding?: boolean }>(
+  ({ withoutMargin, noPadding }) => css`
     position: relative;
-    background: var(--background-clear-blue);
-    padding: ${getSpacing(3)};
+    background: var(--background-2);
+    padding: ${noPadding ? "0" : getSpacing(3)};
     border-radius: ${getSpacing(0.5)};
     margin-bottom: ${withoutMargin ? "0" : `${getSpacing(6)} !important`};
 
@@ -161,12 +161,12 @@ export const VaultEditorStepController = styled.div<{ active?: boolean; passed?:
 
     ${active &&
     css`
-      border-bottom-color: var(--turquoise);
+      border-bottom-color: var(--secondary);
     `}
 
     ${passed &&
     css`
-      color: var(--turquoise);
+      color: var(--secondary);
     `}
       
       ${disabled &&
@@ -196,7 +196,7 @@ export const VaultEditorSectionController = styled.div<{ active?: boolean }>(
     ${active &&
     css`
       font-weight: 700;
-      color: var(--turquoise);
+      color: var(--secondary);
     `}
 
     &:hover {

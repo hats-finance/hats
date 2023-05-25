@@ -32,7 +32,7 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
       background-color: var(--background-1);
       width: max-content;
       border-radius: 2px;
-      border: 1px solid var(--primary);
+      border: 1px solid var(--primary-light);
 
       .option {
         padding: ${getSpacing(1.5)} ${getSpacing(2)};

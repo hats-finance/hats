@@ -6,11 +6,11 @@ export const StyledCollapsableTextContent = styled.div<{ isOpen: boolean; noCont
     .title-container {
       display: flex;
       gap: ${getSpacing(1)};
-      color: var(--dark-turquoise);
+      color: var(--secondary-light);
       cursor: pointer;
 
       &:hover {
-        color: var(--turquoise-1);
+        color: var(--secondary);
       }
 
       .arrow {

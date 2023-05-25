@@ -1,17 +1,17 @@
-import { useContext, useEffect, useState } from "react";
-import { Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { Button, FormInput, WithTooltip } from "components";
-import { IEditedCommunicationEmail, IEditedVaultDescription } from "types";
-import { isEmailAddress } from "utils/emails.utils";
-import { VaultEditorFormContext } from "pages/VaultEditor/VaultEditorFormPage/store";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
-import * as VaultEditorService from "../../../../../vaultEditorService";
-import { StyledVaultEmail } from "./styles";
+import CheckIcon from "@mui/icons-material/CheckOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import VerifyEmailIcon from "@mui/icons-material/ForwardToInboxOutlined";
 import ReverifyEmailIcon from "@mui/icons-material/Replay";
-import CheckIcon from "@mui/icons-material/CheckOutlined";
+import { Button, FormInput, WithTooltip } from "components";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import { VaultEditorFormContext } from "pages/VaultEditor/VaultEditorFormPage/store";
+import { useContext, useEffect, useState } from "react";
+import { Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { IEditedCommunicationEmail, IEditedVaultDescription } from "types";
+import { isEmailAddress } from "utils/emails.utils";
+import * as VaultEditorService from "../../../../../vaultEditorService";
+import { StyledVaultEmail } from "./styles";
 
 type VaultEmailFormProps = {
   index: number;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 
 export const StyledContractCoveredForm = styled.div`
-  background: var(--background-clearer-blue);
+  background: var(--background-3);
   border-radius: 4px;
   padding: ${getSpacing(2.5)};
 

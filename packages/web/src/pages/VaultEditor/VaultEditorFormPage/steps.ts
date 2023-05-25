@@ -25,7 +25,7 @@ export type IEditorSections = {
 export type IEditorSectionsStep = {
   id: string;
   name: string;
-  title: { creation: string; editing: string };
+  title?: { creation: string; editing: string };
   backButtonTextKey?: { creation?: string; editing?: string };
   nextButtonTextKey?: { creation?: string; editing?: string };
   isAdvanced?: boolean;
@@ -109,7 +109,7 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "params",
         name: "parameters",
-        title: { creation: "vaultParameters", editing: "vaultParameters" },
+        title: undefined,
         component: VaultParametersForm,
         formFields: ["parameters"],
       },

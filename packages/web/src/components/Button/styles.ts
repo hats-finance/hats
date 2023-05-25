@@ -26,8 +26,8 @@ const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
   }
 };
 
-const getVariableByTextColor = (filledColor: ButtonProps["textColor"]) => {
-  switch (filledColor) {
+const getVariableByTextColor = (textColor: ButtonProps["textColor"], styleType: ButtonProps["styleType"]) => {
+  switch (textColor) {
     case "secondary":
       return "--secondary";
     case "primary":
@@ -35,6 +35,7 @@ const getVariableByTextColor = (filledColor: ButtonProps["textColor"]) => {
     case "error":
       return "--error-red";
     default:
+      if (styleType === "invisible") return "--secondary";
       return "--white";
   }
 };
@@ -67,7 +68,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(0.5)};
       margin: 0;
       text-decoration: underline;
-      color: var(${getVariableByTextColor(textColor)});
+      color: var(${getVariableByTextColor(textColor, styleType)});
     `}
 
     ${styleType === "filled" &&
@@ -88,7 +89,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     css`
       background-color: transparent;
       border: none;
-      color: var(${getVariableByTextColor(textColor)});
+      color: var(${getVariableByTextColor(textColor, styleType)});
     `}
       
     ${styleType === "icon" &&
