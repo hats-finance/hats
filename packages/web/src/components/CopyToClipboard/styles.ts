@@ -11,7 +11,7 @@ export const StyledCopyToClipboard = styled.div<{ simple: boolean }>(
       height: ${getSpacing(4)};
       padding: ${getSpacing(1)};
       font-size: var(--xsmall);
-      background: ${simple ? "transparent" : "var(--grey-700)"};
+      background: ${simple ? "transparent" : "var(--background-3)"};
       color: ${simple ? "inherit" : "var(--secondary)"};
       border-radius: ${getSpacing(0.5)};
       cursor: pointer;
