@@ -7,7 +7,7 @@ const getVarColor = (color: PillProps["color"]) => {
     case "red":
       return "var(--error-red)";
     case "blue":
-      return "var(--turquoise)";
+      return "var(--secondary)";
     case "yellow":
       return "var(--warning-yellow)";
   }
@@ -15,14 +15,14 @@ const getVarColor = (color: PillProps["color"]) => {
 
 export const StyledPill = styled.div<{ transparent: boolean }>(
   ({ transparent }) => css`
-    color: ${transparent ? "var(--white)" : "var(--turquoise)"};
+    color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
     font-weight: 400;
     display: flex;
     align-items: center;
     gap: ${getSpacing(0.8)};
-    background: ${transparent ? "transparent" : "var(--dark-blue)"};
+    background: ${transparent ? "transparent" : "var(--background-2)"};
     padding: ${getSpacing(0.8)} ${getSpacing(1.4)};
     border-radius: 100px;
     width: fit-content;
