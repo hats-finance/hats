@@ -177,7 +177,7 @@ export function SubmissionDescriptions() {
 
           {submissionsDescriptions.length > 1 && (
             <div className="buttons mt-3">
-              <Button onClick={() => removeSubmissionDescription(index)} styleType="invisible" textColor="secondary">
+              <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
                 <RemoveIcon className="mr-3" />
                 {t("Submissions.removeIssue")}
               </Button>

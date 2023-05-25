@@ -339,7 +339,7 @@ export const PayoutStatusPage = () => {
 
             <div className="buttons">
               {canBeDeleted && (
-                <Button styleType="outlined" onClick={handleDeletePayout}>
+                <Button styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
                   <RemoveIcon />
                 </Button>
               )}

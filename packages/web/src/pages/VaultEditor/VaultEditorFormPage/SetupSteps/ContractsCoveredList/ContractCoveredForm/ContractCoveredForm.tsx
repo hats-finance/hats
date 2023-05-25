@@ -1,12 +1,12 @@
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Button, FormInput, FormSelectInput } from "components";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useContext, useEffect, useMemo } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Button, FormInput, FormSelectInput } from "components";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
 import { IEditedVaultDescription } from "types";
-import { StyledContractCoveredForm } from "./styles";
 import { VaultEditorFormContext } from "../../../store";
-import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { StyledContractCoveredForm } from "./styles";
 
 type ContractCoveredFormProps = {
   index: number;
@@ -78,7 +78,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
 
       {!allFormDisabled && contractsCount > 1 && (
         <div className="controller-buttons no-line">
-          <Button styleType="filled" onClick={() => remove(index)}>
+          <Button styleType="outlined" filledColor="secondary" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />
             <span>{t("removeContractAsset")}</span>
           </Button>

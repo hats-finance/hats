@@ -3,11 +3,10 @@ import { getSpacing } from "styles";
 
 export const StyledPayoutsListPage = styled.div`
   position: relative;
-  background: var(--background-clear-blue);
+  background: var(--background-2);
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(6)};
-  color: var(--white);
 
   .title-container {
     display: flex;
@@ -64,7 +63,7 @@ export const PayoutListSection = styled.div<{ active: boolean }>(
 
     ${active &&
     css`
-      border-bottom-color: var(--turquoise);
+      border-bottom-color: var(--secondary);
     `}
 
     &:hover {

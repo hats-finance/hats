@@ -3,7 +3,7 @@ import { getSpacing } from "styles";
 
 export const StyledPayoutStatusPage = styled.div`
   position: relative;
-  background: var(--background-clear-blue);
+  background: var(--background-2);
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(6)};
@@ -52,7 +52,7 @@ export const StyledPayoutStatusPage = styled.div`
   }
 
   .payout-status-container {
-    background: var(--background-clearer-blue);
+    background: var(--background-3);
     padding: ${getSpacing(3)};
     margin-bottom: ${getSpacing(3)};
     position: relative;
@@ -96,7 +96,7 @@ export const StyledPayoutStatusPage = styled.div`
       font-size: var(--xxsmall);
 
       span {
-        color: var(--teal);
+        color: var(--secondary-light);
       }
     }
 

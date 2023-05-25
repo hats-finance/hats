@@ -113,7 +113,7 @@ export const StyledPayoutForm = styled.div`
   .buttons {
     width: 100%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     gap: ${getSpacing(2)};
     border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
@@ -122,6 +122,15 @@ export const StyledPayoutForm = styled.div`
     &.no-line {
       border-top: none;
       padding-top: 0;
+    }
+
+    &.end {
+      justify-content: flex-end;
+    }
+
+    .sub-container {
+      display: flex;
+      gap: ${getSpacing(2)};
     }
   }
 

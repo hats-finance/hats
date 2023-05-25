@@ -234,25 +234,28 @@ export const PayoutFormPage = () => {
 
                 {!isPayoutCreated && (
                   <div className="buttons">
-                    <Button className="mr-5" styleType="outlined" onClick={handleDeletePayout}>
-                      <RemoveIcon />
+                    <Button className="mr-5" styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
+                      <RemoveIcon className="mr-3" />
+                      {t("Payouts.deletePayout")}
                     </Button>
-                    <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                    <div className="sub-container">
+                      <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                        <Button
+                          disabled={!formState.isDirty || savePayout.isLoading}
+                          styleType="outlined"
+                          onClick={handleSavePayout}
+                        >
+                          {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                        </Button>
+                      </WithTooltip>
                       <Button
-                        disabled={!formState.isDirty || savePayout.isLoading}
-                        styleType="outlined"
-                        onClick={handleSavePayout}
+                        onClick={handleSubmit(handleLockPayout)}
+                        disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
                       >
-                        {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                        {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
+                        <ArrowForwardIcon className="ml-3" />
                       </Button>
-                    </WithTooltip>
-                    <Button
-                      onClick={handleSubmit(handleLockPayout)}
-                      disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
-                    >
-                      {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
-                      <ArrowForwardIcon className="ml-3" />
-                    </Button>
+                    </div>
                   </div>
                 )}
               </StyledPayoutForm>

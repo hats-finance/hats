@@ -166,7 +166,7 @@ const CommitteeMemberForm = ({ index, remove, membersCount, isLastMultisigMember
         </div>
         {membersCount > 1 && (
           <div className="controller-buttons">
-            <Button styleType="outlined" onClick={handleRemoveMember}>
+            <Button styleType="outlined" filledColor="secondary" onClick={handleRemoveMember}>
               <DeleteIcon className="mr-1" />
               <span>{t("removeMember")}</span>
             </Button>
