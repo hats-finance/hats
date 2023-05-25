@@ -177,7 +177,7 @@ export function SubmissionDescriptions() {
 
           {submissionsDescriptions.length > 1 && (
             <div className="buttons mt-3">
-              <Button onClick={() => removeSubmissionDescription(index)} styleType="invisible">
+              <Button onClick={() => removeSubmissionDescription(index)} styleType="invisible" textColor="error">
                 <RemoveIcon className="mr-3" />
                 {t("Submissions.removeIssue")}
               </Button>
@@ -190,6 +190,7 @@ export function SubmissionDescriptions() {
         <Button
           onClick={() => appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0])}
           styleType="invisible"
+          textColor="secondary"
         >
           <AddIcon className="mr-3" />
           {t("Submissions.addAnotherVulnerability")}

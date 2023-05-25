@@ -11,6 +11,7 @@ type StyledButtonProps = {
   bigHorizontalPadding: ButtonProps["bigHorizontalPadding"];
   lowercase: ButtonProps["lowercase"];
   textColor: ButtonProps["textColor"];
+  noRadius: ButtonProps["noRadius"];
 };
 
 const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
@@ -31,29 +32,32 @@ const getVariableByTextColor = (filledColor: ButtonProps["textColor"]) => {
       return "--secondary";
     case "primary":
       return "--primary";
+    case "error":
+      return "--error-red";
     default:
       return "--white";
   }
 };
 
 export const StyledButton = styled.button<StyledButtonProps>(
-  ({ styleType, filledColor, size, expanded, lowercase, textColor, noPadding, bigHorizontalPadding }) => css`
+  ({ styleType, filledColor, size, expanded, lowercase, textColor, noPadding, bigHorizontalPadding, noRadius }) => css`
     display: flex;
     align-items: center;
     width: ${expanded ? "100%" : "fit-content"};
-    padding: ${getSpacing(1.2)} ${getSpacing(2)};
+    padding: ${getSpacing(1.4)} ${getSpacing(3)};
     text-transform: ${lowercase ? "lowercase" : "none"};
     font-weight: 600;
     justify-content: ${expanded ? "center" : "unset"};
+    border-radius: ${noRadius ? "0" : "500px"};
 
     ${size === "small" &&
     css`
-      padding: ${getSpacing(0.8)} ${getSpacing(1.4)};
+      padding: ${getSpacing(0)} ${getSpacing(1.8)};
     `}
 
     ${size === "big" &&
     css`
-      padding: ${getSpacing(1.8)} ${getSpacing(1.4)};
+      padding: ${getSpacing(1.8)} ${getSpacing(3.6)};
     `}
 
     ${styleType === "text" &&
@@ -63,7 +67,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(0.5)};
       margin: 0;
       text-decoration: underline;
-      color: ${getVariableByTextColor(textColor)};
+      color: var(${getVariableByTextColor(textColor)});
     `}
 
     ${styleType === "filled" &&
@@ -84,7 +88,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     css`
       background-color: transparent;
       border: none;
-      color: ${getVariableByTextColor(textColor)};
+      color: var(${getVariableByTextColor(textColor)});
     `}
       
     ${styleType === "icon" &&

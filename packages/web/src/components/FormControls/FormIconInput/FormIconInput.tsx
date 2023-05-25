@@ -1,9 +1,9 @@
+import AddIcon from "assets/icons/add.icon.svg";
 import React, { forwardRef, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
-import AddIcon from "assets/icons/add.icon.svg";
-import { StyledFormIconInput } from "./styles";
 import { parseIsDirty } from "../utils";
+import { StyledFormIconInput } from "./styles";
 
 const MAX_SIZE_ICON = 50000;
 const MAX_SIZE_IMAGE = 50000;
@@ -100,7 +100,14 @@ function FormIconInputComponent(
         }}
       />
 
-      <input disabled={disabled} id={id} className="file-input" accept="image/*" type="file" onChange={handleOnChange} />
+      <input
+        disabled={disabled}
+        id={id}
+        className="file-input"
+        accept={type === "icon" ? ".svg" : "image/*"}
+        type="file"
+        onChange={handleOnChange}
+      />
 
       {value ? (
         <label htmlFor={id} className="icon-preview">

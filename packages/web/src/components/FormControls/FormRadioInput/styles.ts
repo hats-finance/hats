@@ -66,7 +66,7 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
             width: ${getSpacing(2.5)};
             border-radius: 50%;
             background: var(--dark-blue);
-            border: 1px solid var(--turquoise);
+            border: 1px solid var(--primary);
             transition: 0.2s;
 
             ${hasError &&
@@ -90,7 +90,7 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
               border-radius: 50%;
               height: ${getSpacing(1.3)};
               width: ${getSpacing(1.3)};
-              background: var(--turquoise);
+              background: var(--primary);
               transform: translate(-50%, -50%);
 
               ${hasError &&
@@ -119,7 +119,7 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
 
     span.helper {
       display: block;
-      color: var(--turquoise);
+      color: var(--secondary);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);

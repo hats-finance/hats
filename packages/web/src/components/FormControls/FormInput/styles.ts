@@ -102,7 +102,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       ${colorable &&
       css`
         &:focus {
-          border-color: var(--turquoise);
+          border-color: var(--primary);
         }
       `}
 
@@ -179,7 +179,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
             ${isChecked &&
             css`
-              background: var(--teal);
+              background: var(--primary);
             `}
 
             .checkbox-switch {
@@ -297,7 +297,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     span.helper {
       display: block;
-      color: var(--turquoise);
+      color: var(--secondary);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);

@@ -76,7 +76,7 @@ export const StyledFormSupportFilesInput = styled.div<StyledFormSupportFilesInpu
           align-items: center;
           gap: ${getSpacing(1)};
           list-style: none;
-          border: 1px solid var(--turquoise);
+          border: 1px solid var(--primary);
           border-radius: 50px;
           padding: ${getSpacing(0.5)} ${getSpacing(1)};
           font-size: var(--xxsmall);

@@ -20,16 +20,7 @@ export function SubmissionContactInfo() {
   const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
-  const {
-    register,
-    getValues,
-    setValue,
-    reset,
-    handleSubmit,
-    control,
-    trigger,
-    formState: { isValid },
-  } = useEnhancedForm<ISubmissionContactData>({
+  const { register, getValues, setValue, reset, handleSubmit, control, trigger } = useEnhancedForm<ISubmissionContactData>({
     resolver: yupResolver(getCreateContactInfoSchema(t)),
     mode: "onChange",
     defaultValues: { communicationChannelType: "discord" },
@@ -121,9 +112,7 @@ export function SubmissionContactInfo() {
       </Alert>
 
       <div className="buttons">
-        <Button disabled={!isValid} onClick={handleSubmit(handleAddContactData)}>
-          {t("Submissions.saveContactInformation")}
-        </Button>
+        <Button onClick={handleSubmit(handleAddContactData)}>{t("Submissions.saveContactInformation")}</Button>
       </div>
     </StyledContactInfo>
   );
