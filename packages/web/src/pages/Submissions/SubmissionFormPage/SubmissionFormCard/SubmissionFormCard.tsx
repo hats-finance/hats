@@ -1,6 +1,5 @@
-import ArrowIcon from "assets/icons/arrow.icon";
-import CheckmarkIcon from "assets/icons/checkmark.icon";
-import { Colors } from "constants/constants";
+import ArrowIcon from "@mui/icons-material/ArrowForwardIosOutlined";
+import CheckmarkIcon from "@mui/icons-material/CheckOutlined";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import React, { useContext } from "react";
 import { StyledSubmissionFormCard } from "./styles";
@@ -33,7 +32,7 @@ export default function SubmissionFormCard({
         <span className="card-title">{title}</span>
         {extraInfoTitle && <span>{`(${extraInfoTitle})`}</span>}
         <div className="card-arrow">
-          <ArrowIcon fill={verified ? Colors.darkBlue : Colors.turquoise} />
+          <ArrowIcon fontSize="small" />
         </div>
       </div>
 

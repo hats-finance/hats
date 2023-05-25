@@ -11,7 +11,7 @@ export const StyledFormMDEditor = styled.div<{
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
     .w-md-editor {
-      background-color: var(--background-clear-blue);
+      background-color: transparent;
       border-radius: 0;
       border: 1px solid var(--grey-500);
       box-shadow: none;
@@ -36,7 +36,7 @@ export const StyledFormMDEditor = styled.div<{
       }
 
       .w-md-editor-toolbar {
-        background-color: var(--background-clear-blue);
+        background-color: transparent;
         border-radius: 0;
         border-color: var(--grey-500);
 
@@ -47,7 +47,7 @@ export const StyledFormMDEditor = styled.div<{
       }
 
       .w-md-editor-preview {
-        background-color: var(--background-clear-blue);
+        background-color: transparent;
         border-radius: 0;
         border-left: 1px solid var(--grey-500);
         box-shadow: none;

@@ -13,10 +13,11 @@ export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps
     margin-bottom: 10px;
 
     .card-header {
-      background-color: var(--light-blue);
+      background-color: var(--background-2);
       cursor: pointer;
       display: flex;
       align-items: center;
+      color: var(--white);
 
       &:hover {
         opacity: 0.8;
@@ -24,8 +25,7 @@ export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps
 
       ${isVerified &&
       css`
-        background-color: var(--turquoise);
-        color: var(--dark-blue);
+        background-color: var(--primary);
       `}
 
       ${isDisabled &&
@@ -45,30 +45,18 @@ export const StyledSubmissionFormCard = styled.div<StyledSubmissionFormCardProps
     }
 
     .card-title {
-      color: var(--white);
       margin-right: 50px;
       font-weight: bold;
-      border-left: 6px solid var(--dark-blue);
-      padding: ${getSpacing(2)} ${getSpacing(3)};
+      border-left: 6px solid var(--background);
+      padding: ${getSpacing(2.4)} ${getSpacing(3)};
       text-transform: uppercase;
-
-      ${!isCollapsed &&
-      css`
-        color: var(--turquoise);
-        font-weight: bold;
-      `}
-
-      ${isVerified &&
-      css`
-        color: var(--dark-blue);
-      `}
     }
 
     .card-arrow {
       transform: rotate(0deg);
       transition: transform 0.1s linear;
       margin-left: auto;
-      padding: ${getSpacing(2)};
+      padding: 0 ${getSpacing(3)};
 
       ${!isCollapsed &&
       css`

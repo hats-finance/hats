@@ -7,11 +7,11 @@ type ISectionTypes = "submission" | "fix" | "rewards" | "alert" | "invisible";
 const getColorBySectionType = (type: ISectionTypes) => {
   switch (type) {
     case "submission":
-      return "var(--yellow)";
+      return "var(--warning-yellow)";
     case "fix":
-      return "var(--red)";
+      return "var(--error-red)";
     case "rewards":
-      return "var(--dirty-turquoise)";
+      return "var(--secondary)";
     case "alert":
       return "var(--error-red)";
     case "invisible":
