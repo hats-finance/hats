@@ -40,9 +40,11 @@ export function SubmissionReview() {
 
       <FormInput readOnly type="textarea" rows={20} value={submissionData?.submissionsDescriptions?.submissionMessage} />
 
-      <Button disabled={isSubmitting || isSigningSubmission} expanded onClick={() => submitSubmission()}>
-        {t("submit")}
-      </Button>
+      <div className="buttons">
+        <Button disabled={isSubmitting || isSigningSubmission} bigHorizontalPadding onClick={() => submitSubmission()}>
+          {t("submit")}
+        </Button>
+      </div>
 
       {isSigningSubmission && <Loading fixed extraText={`${t("Submissions.executeTransactionInYourWallet")}...`} />}
       {isSubmitting && <Loading fixed extraText={`${t("Submissions.submittingVulnerabilities")}...`} />}

@@ -9,4 +9,9 @@ export const StyledSubmissionReview = styled.div`
     display: flex;
     gap: ${getSpacing(2)};
   }
+
+  .buttons {
+    display: flex;
+    justify-content: flex-end;
+  }
 `;
