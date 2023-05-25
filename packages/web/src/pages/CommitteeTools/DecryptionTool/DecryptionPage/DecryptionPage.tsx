@@ -1,7 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";
-import { Alert, Button, FormInput } from "components";
+import { Alert, Button, FormInput, Loading } from "components";
 import { IStoredKey, PgpKeyCard, readPrivateKeyFromStoredKey, useKeystore } from "components/Keystore";
 import { useEnhancedForm } from "hooks/form";
 import { decrypt, readMessage } from "openpgp";
@@ -25,6 +25,7 @@ export const DecryptionPage = () => {
   const { keystore, openKeystore } = useKeystore();
   const [errorDecrypting, setErrorDecrypting] = useState(false);
   const [decryptedWith, setDecryptedWith] = useState<IStoredKey | undefined>();
+  const [isLoadingMessage, setIsLoadingMessage] = useState(false);
 
   const {
     control,
@@ -44,6 +45,7 @@ export const DecryptionPage = () => {
   const handleDecryptMessage = useCallback(
     async (data?: IDecryptMessageForm) => {
       setErrorDecrypting(false);
+
       const dataToUse = data || getValues();
 
       if (!dataToUse.encryptedMessage) return;
@@ -102,10 +104,12 @@ export const DecryptionPage = () => {
 
     if (encryptedMessageIpfs) {
       const getEncryptedMessage = async () => {
+        setIsLoadingMessage(true);
         const response = await fetch(encryptedMessageIpfs);
         const message = await response.text();
 
         setValue("encryptedMessage", message, { shouldValidate: true });
+        setIsLoadingMessage(false);
         handleDecryptMessage();
       };
       getEncryptedMessage();
@@ -170,6 +174,8 @@ export const DecryptionPage = () => {
           />
         </div>
       )}
+
+      {isLoadingMessage && <Loading fixed extraText={`${t("loading")}...`} />}
     </StyledDecryptionPage>
   );
 };
