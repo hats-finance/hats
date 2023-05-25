@@ -40,8 +40,11 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
           .required(intl("required"))
           .typeError(intl("required")),
         sumPercentagesOfPayouts: Yup.number().test("sumShouldBe100", "", (_, ctx: any) => {
-          const sumOfPercentages = ctx.from[1].value.beneficiaries.reduce((acc, cur) => acc + Number(cur.percentageOfPayout), 0);
-          return sumOfPercentages === 100;
+          const sumOfPercentages: number = ctx.from[1].value.beneficiaries.reduce(
+            (acc, cur) => acc + Number(cur.percentageOfPayout ?? 0),
+            0
+          );
+          return +sumOfPercentages.toFixed(6) === 100;
         }),
         nftUrl: Yup.string().required(intl("required")),
       })

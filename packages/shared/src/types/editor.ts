@@ -1,5 +1,11 @@
 import { BigNumber } from "ethers";
-import { ICommitteeMember, IVaultDescription, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "./types";
+import {
+  ICommitteeMember,
+  IVaultDescription,
+  IVaultRepoInformation,
+  IVulnerabilitySeverityV1,
+  IVulnerabilitySeverityV2,
+} from "./types";
 
 export interface IEditedContractCovered {
   name: string;
@@ -10,12 +16,6 @@ export interface IEditedContractCovered {
 export interface IEditedCommunicationEmail {
   address: string;
   status: "verified" | "unverified" | "verifying";
-}
-
-export interface IEditedRepoInformation {
-  url: string;
-  commitHash: string;
-  isMain: boolean;
 }
 
 export interface IEditedVaultAsset {
@@ -78,8 +78,8 @@ export interface IBaseEditedVaultDescription {
   "communication-channel": {
     "pgp-pk": string | string[];
   };
-  scope: {
-    reposInformation: IEditedRepoInformation[];
+  scope?: {
+    reposInformation: IVaultRepoInformation[];
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];

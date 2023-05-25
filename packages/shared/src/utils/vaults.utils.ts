@@ -1,6 +1,117 @@
+import axios from "axios";
 import { ChainsConfig } from "../config";
 import { IAddressRoleInVault, IVault, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
+
+export type IVaultInfoWithCommittee = IVaultInfo & { committee: string };
+
+export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommittee[]> => {
+  try {
+    const GET_ALL_VAULTS = `
+      query getVaults {
+        vaults {
+          id
+          pid
+          version
+          committee
+          master {
+            id
+          }
+        }
+      }
+    `;
+
+    const subgraphsRequests = Object.values(ChainsConfig).map((chain) => {
+      return axios.post(
+        chain.subgraph,
+        JSON.stringify({
+          query: GET_ALL_VAULTS,
+        }),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+    });
+
+    const subgraphsResponses = await Promise.all(subgraphsRequests);
+    const subgraphsData = subgraphsResponses.map((res) => res.data);
+
+    const vaults: IVaultInfoWithCommittee[] = [];
+    for (let i = 0; i < subgraphsData.length; i++) {
+      const chainId = Object.values(ChainsConfig)[i].chain.id;
+
+      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+
+      for (const vault of subgraphsData[i].data.vaults) {
+        vaults.push({
+          chainId,
+          address: vault.id,
+          master: vault.master.id,
+          pid: vault.pid,
+          version: vault.version,
+          committee: vault.committee,
+        });
+      }
+    }
+
+    return vaults;
+  } catch (error) {
+    return [];
+  }
+};
+
+export const getVaultInfoWithCommittee = async (
+  vaultId: string,
+  chainId: number
+): Promise<IVaultInfoWithCommittee | undefined> => {
+  try {
+    if (!vaultId || !chainId) return undefined;
+
+    const GET_VAULT_BY_ID = `
+      query getVaults($vaultId: String) {
+        vaults(where: {id: $vaultId}) {
+          id
+          pid
+          version
+          committee
+          master {
+            id
+          }
+        }
+      }
+    `;
+
+    const subgraphResponse = axios.post(
+      ChainsConfig[chainId].subgraph,
+      JSON.stringify({
+        query: GET_VAULT_BY_ID,
+        variables: { vaultId },
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const subgraphData = (await subgraphResponse).data;
+    const vault = subgraphData?.data?.vaults?.[0];
+
+    if (!vault) return undefined;
+
+    return {
+      chainId,
+      address: vault.id,
+      master: vault.master.id,
+      pid: vault.pid,
+      version: vault.version,
+      committee: vault.committee,
+    };
+  } catch (error) {
+    return undefined;
+  }
+};
 
 export const getAddressRoleOnVault = async (
   address: string | undefined,

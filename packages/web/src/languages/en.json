@@ -533,7 +533,7 @@
       "sumPercentageOfThePayout": "Sum percentages of the payout",
       "totalNumberPayouts": "Total number of payouts",
       "totalPayoutAmount": "Total payout amount",
-      "sumPercentagesPayoutShouldBe100": "Sum of percentages of the payout should be 100%",
+      "sumPercentagesPayoutShouldBe100": "Sum of percentages of the payout should be 100% (missing {{missingPercentage}}%)",
       "generateSplitExplanationTemplate": "Generate explanation template",
       "generateExplanation": "Generate explanation",
       "generateExplanationDescription": "Generate an explanation template. This will help you to fill the explanation field for each beneficiary. \n\nAttention: you will lose all the data you have already filled.",
@@ -543,6 +543,8 @@
       "totalGovernancePayment": "Total governance payment",
       "payoutAllocationAndNft": "Payout allocation and NFT",
       "cantCreatePayoutNoDepositors": "You can't create a payout for this vault because it has no deposits.",
+      "connectedAccountNoPermissionsOnThisPayout": "The connected wallet has no permissions to view/edit this payout. Please connect the right wallet.",
+      "youAreNotACommitteeMemberCantSign": "You are not a committee member, you can't sign this payout.",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { PayoutCard } from "../components";
-import { usePayoutsByVaults } from "../payoutsService.hooks";
+import { usePayoutsBySiweUser } from "../payoutsService.hooks";
 import { PayoutCreateModal } from "./PayoutCreateModal";
 import { PayoutsWelcome } from "./PayoutsWelcome";
 import { PayoutListSection, PayoutListSections, StyledPayoutsListPage } from "./styles";
@@ -26,7 +26,7 @@ export const PayoutsListPage = () => {
 
   const [section, setSection] = useState<"drafts" | "in_progress" | "finished">("in_progress");
 
-  const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsByVaults();
+  const { data: allPayouts, isLoading: isLoadingPayouts } = usePayoutsBySiweUser();
 
   useEffect(() => {
     tryAuthentication();
