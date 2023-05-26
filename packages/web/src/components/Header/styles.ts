@@ -14,7 +14,8 @@ export const StyledHeader = styled.header`
   z-index: 3;
 
   @media (max-width: ${breakpointsDefinition.mobile}) {
-    padding: ${getSpacing(1.5)} ${getSpacing(1.5)} ${getSpacing(3)} ${getSpacing(1.5)};
+    justify-content: flex-end;
+    padding: ${getSpacing(2)} ${getSpacing(3)};
   }
 
   .page-title {
@@ -31,11 +32,23 @@ export const StyledHeader = styled.header`
     }
   }
 
-  .menu-button {
-    margin-left: 10px;
+  .buttons {
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(2.5)};
 
-    @media (min-width: ${breakpointsDefinition.mobile}) {
-      display: none;
+    .wallet-info {
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        display: none;
+      }
+    }
+
+    .menu-button {
+      color: var(--primary);
+
+      @media (min-width: ${breakpointsDefinition.mobile}) {
+        display: none;
+      }
     }
   }
 `;

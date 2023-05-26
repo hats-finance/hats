@@ -24,6 +24,7 @@ export const StyledWalletButton = styled.button<StyledWalletButtonProps>(
     gap: ${getSpacing(1)};
     border-radius: 2px;
     position: relative;
+    transition: 0.2s;
 
     ${expanded &&
     css`

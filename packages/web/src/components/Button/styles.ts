@@ -50,6 +50,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     font-weight: 600;
     justify-content: ${expanded ? "center" : "unset"};
     border-radius: ${noRadius ? "0" : "500px"};
+    transition: 0.2s;
 
     ${size === "small" &&
     css`

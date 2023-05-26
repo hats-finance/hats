@@ -1,13 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useAccount } from "wagmi";
-import { useLocation } from "react-router-dom";
-import { WalletButton, WhereverWidget } from "components";
+import CloseIcon from "@mui/icons-material/Close";
+import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { getMainPath } from "utils";
-import { RootState } from "reducers";
+import { WalletButton, WhereverWidget } from "components";
 import { Pages } from "constants/constants";
-import MenuIcon from "assets/icons/hamburger.icon";
-import CloseIcon from "assets/icons/close.icon";
+import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { RootState } from "reducers";
+import { getMainPath } from "utils";
+import { useAccount } from "wagmi";
 import WalletInfo from "../WalletInfo/WalletInfo";
 import { StyledHeader } from "./styles";
 
@@ -18,16 +18,22 @@ const Header = () => {
   const { address: account } = useAccount();
 
   return (
-    <StyledHeader data-testid="Header">
+    <StyledHeader>
       <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
-      {account && <WalletInfo />}
 
-      <WhereverWidget />
+      <div className="buttons">
+        {account && (
+          <div className="wallet-info">
+            <WalletInfo />
+          </div>
+        )}
 
-      <WalletButton />
+        <WhereverWidget />
+        <WalletButton />
 
-      <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
-        {showMenu ? <CloseIcon /> : <MenuIcon />}
+        <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
+          {showMenu ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+        </div>
       </div>
     </StyledHeader>
   );

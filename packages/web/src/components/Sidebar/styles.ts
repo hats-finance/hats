@@ -1,66 +1,43 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "./../../styles/breakpoints.styles";
 
-export const StyledSidebar = styled.nav`
-  width: var(--sidebar-width);
-  height: 100%;
-  padding-top: 42px;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--background);
-  border-right: 1px solid var(--primary-light);
-  box-shadow: 0px 4px 38px -1px var(--sidebar-shadow);
-  z-index: 2;
-
-  .logo {
-    align-self: center;
-    margin-bottom: 50px;
-  }
-
-  .pools {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .arrow {
-      cursor: pointer;
-      transform: rotate(0deg);
-      transition: transform 0.1s linear;
-      margin: 15px;
-
-      &.open {
-        transform: rotate(90deg);
-        transition: transform 0.1s linear;
-      }
-    }
-
-    &.selected {
-      background-color: var(--blue);
-    }
-  }
-
-  .pools-links-wrapper {
+export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
+  ({ showFullScreen }) => css`
+    width: var(--sidebar-width);
+    height: 100%;
+    padding-top: ${getSpacing(5)};
     display: flex;
     flex-direction: column;
-    padding-left: 25px;
+    background-color: var(--background);
+    border-right: 1px solid var(--primary-light);
+    z-index: 2;
 
-    .pool-link-wrapper {
-      display: flex;
-      cursor: pointer;
-      color: var(--white);
-      margin: 10px;
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      display: none;
+      border: none;
+      position: fixed;
+      padding-top: ${getSpacing(11)};
 
-      &:hover {
-        opacity: 0.9;
-      }
+      ${showFullScreen &&
+      css`
+        display: flex;
+        width: 100%;
+      `}
+    }
 
-      .selected {
-        font-weight: bold;
+    .logo {
+      align-self: center;
+      margin-bottom: ${getSpacing(6)};
+
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        display: none;
       }
     }
-  }
 
-  .bottom-wrapper {
-    margin: auto;
-    margin-bottom: 80px;
-  }
-`;
+    .bottom-wrapper {
+      margin: auto;
+      margin-bottom: 80px;
+    }
+  `
+);

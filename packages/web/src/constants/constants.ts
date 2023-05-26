@@ -86,6 +86,15 @@ export enum Colors {
   black = "#000000",
   fieldBlue = "#0C1436",
   lightTurquoise = "9BC8CA",
+  // New colors
+  primary = "#614fda",
+  primarylight = "#2d3271",
+  secondary = "#24e8c5",
+  secondaryLight = "#74baae",
+  background = "#0e0e18",
+  background1 = "#0b0b23",
+  background2 = "#151731",
+  background3 = "#22233e",
 }
 
 export enum PieChartColors {
