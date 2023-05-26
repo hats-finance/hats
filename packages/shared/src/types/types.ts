@@ -42,7 +42,7 @@ export interface IBaseVault {
   multipleVaults?: IVault[];
   description?: IVaultDescription;
   chainId: number;
-  onTime: boolean;
+  dateStatus: "on_time" | "upcoming" | "finished";
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
 }

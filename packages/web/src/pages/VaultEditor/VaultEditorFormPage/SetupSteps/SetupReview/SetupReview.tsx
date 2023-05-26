@@ -98,7 +98,7 @@ export function SetupReview() {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
-      onTime: true,
+      dateStatus: "on_time" as const,
       chainId: editedVaultDescriptionForm.committee.chainId ? +editedVaultDescriptionForm.committee.chainId : 1,
     };
 

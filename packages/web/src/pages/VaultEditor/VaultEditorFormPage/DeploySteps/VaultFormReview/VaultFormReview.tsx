@@ -94,14 +94,14 @@ export function VaultFormReview() {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
-      onTime: true,
+      dateStatus: "on_time" as const,
       chainId: editedVaultDescriptionForm.committee.chainId ? +editedVaultDescriptionForm.committee.chainId : 1,
     };
 
     if (editedVaultDescriptionForm.version === "v1") {
       return {
         ...bothVersionsVault,
-        version: editedVaultDescriptionForm.version,
+        version: "v1",
         description: description as IVaultDescriptionV1,
         maxBounty: null,
       };

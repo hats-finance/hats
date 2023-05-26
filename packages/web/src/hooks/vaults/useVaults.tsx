@@ -153,27 +153,27 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     const allVaultsData = await getVaultsData(vaultsData);
     const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
-      const isOnTime = (() => {
+      const getVaultDateStatus = (): IVault["dateStatus"] => {
         const startTime = vault.description?.["project-metadata"].starttime;
         const endTime = vault.description?.["project-metadata"].endtime;
 
-        if (startTime && startTime > Date.now() / 1000) return false;
-        if (endTime && endTime < Date.now() / 1000) return false;
+        if (startTime && startTime > Date.now() / 1000) return "upcoming";
+        if (endTime && endTime < Date.now() / 1000) return "finished";
 
-        return true;
-      })();
+        return "on_time";
+      };
 
       return {
         ...vault,
-        onTime: isOnTime,
-      };
+        dateStatus: getVaultDateStatus(),
+      } as IVault;
     });
 
     const filteredByChain = allVaultsDataWithDatesInfo.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
-    const filteredByChainAndDate = filteredByChain.filter((vault) => vault.onTime);
+    const filteredByChainAndDate = filteredByChain.filter((vault) => vault.dateStatus === "on_time");
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
@@ -245,6 +245,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const context: IVaultsContext = {
     activeVaults,
     allVaults,
+    allVaultsOnEnv,
     userNfts,
     allUserNfts,
     tokenPrices,
