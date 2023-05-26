@@ -6,7 +6,7 @@ import NavLinks from "./NavLinks/NavLinks";
 import SocialAndLegal from "./SocialAndLegal/SocialAndLegal";
 import { StyledSidebar } from "./styles";
 
-export default function Sidebar() {
+export function Sidebar() {
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
 
   return (

@@ -5,7 +5,7 @@ const getSpacing = (spacing: number) => {
 };
 
 const getPrimaryGradient = () => {
-  return `linear-gradient(90deg, var(--background) 0%, var(--primary) 100%);`;
+  return `linear-gradient(90deg, var(--background-2) 0%, var(--primary) 100%);`;
 };
 
 export { getSpacing, getPrimaryGradient };

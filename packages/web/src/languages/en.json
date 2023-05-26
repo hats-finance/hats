@@ -356,7 +356,7 @@
     "pleaseConnectYourWallet": "Please connect your wallet.",
     "youAreNotACommitteeMember": "You are not a committee member.",
     "withdrawalSafePeriodOnUntil": "Withdrawal safe period on until {{safetyPeriodDate}}",
-    "nextSafePeriodStartsAt": "Next safe period starts at {{safetyPeriodDate}}",
+    "nextSafePeriodStartsAt": "The next safe period will start at {{safetyPeriodDate}}",
     "safePeriodExplanation": "Each {{withdrawDuration}} and for {{safetyDuration}} the committee gathers. During that time withdrawals are disabled.",
     "vaultAddress": "Vault address",
     "vaultId": "Vault ID",
@@ -659,15 +659,6 @@
       "apy-explain": "Estimated yearly earnings based on total staked amount and rate reward",
       "wallet-not-connected": "Please connect to your wallet first",
       "network-not-supported": "Please connect to a supported network"
-    },
-    "Welcome": {
-      "title": "Hats",
-      "description": "We are changing the way security works to fit the culture, nature, and de-facto development processes of Ethereum by incentivizing black hat to become white hat hackers.",
-      "button": "ENTER"
-    },
-    "EmbassyNotificationBar": {
-      "title": "HEY PROTECTOR, JOIN YOUR EMBASSY",
-      "learn-more": "LEARN MORE"
     },
     "Header": {
       "WalletInfo": {

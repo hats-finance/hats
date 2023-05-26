@@ -1,15 +1,14 @@
-import React, { useCallback, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { formatUnits } from "ethers/lib/utils";
-import { IVault } from "types";
-import { useVaults } from "hooks/vaults/useVaults";
-import { ipfsTransformUri } from "utils";
-import { RoutePaths } from "navigation";
 import SearchIcon from "assets/icons/search.icon";
-import { Loading, Vault, Modal } from "components";
+import { Loading, Modal, SafePeriodBar, Vault } from "components";
+import { formatUnits } from "ethers/lib/utils";
+import { useVaults } from "hooks/vaults/useVaults";
+import { RoutePaths } from "navigation";
+import React, { useCallback, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useParams } from "react-router-dom";
+import { IVault } from "types";
+import { ipfsTransformUri } from "utils";
 import { DepositWithdraw } from "./DepositWithdraw";
-import { SafePeriodBar } from "components";
 import { StyledHoneypotsPage } from "./styles";
 
 const VAULT_GROUPS_ORDER = ["pendingReward", "audit", "normal", ""];

@@ -1,4 +1,5 @@
 export { Header } from "./Header/Header";
+export { Sidebar } from "./Sidebar/Sidebar";
 export { CookiesBanner } from "./CookiesBanner/CookiesBanner";
 export { WalletButton } from "./WalletButton/WalletButton";
 export { Vault } from "./Vault/Vault";
@@ -11,7 +12,6 @@ export { CountdownTimer } from "./CountdownTimer/CountdownTimer";
 export { RedeemNftSuccess } from "./RedeemNftSuccess/RedeemNftSuccess";
 export { Dot } from "./Dot/Dot";
 export { MyAccount } from "./MyAccount/MyAccount";
-export { TransactionInfo } from "./TransactionInfo/TransactionInfo";
 export { SafePeriodBar } from "./SafePeriodBar/SafePeriodBar";
 export { Modal } from "./Modal/Modal";
 export { DropdownSelector } from "./DropdownSelector/DropdownSelector";

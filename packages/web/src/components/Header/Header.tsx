@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { WalletButton, WhereverWidget } from "components";
+import { SafePeriodBar, WalletButton, WhereverWidget } from "components";
 import { Pages } from "constants/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -19,20 +19,26 @@ const Header = () => {
 
   return (
     <StyledHeader>
-      <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
+      <div className="safety-period-banner">
+        <SafePeriodBar type="banner" />
+      </div>
 
-      <div className="buttons">
-        {account && (
-          <div className="wallet-info">
-            <WalletInfo />
+      <div className="content">
+        <div className="page-title">{Pages[getMainPath(location.pathname)]}</div>
+
+        <div className="buttons">
+          {account && (
+            <div className="wallet-info">
+              <WalletInfo />
+            </div>
+          )}
+
+          <WhereverWidget />
+          <WalletButton />
+
+          <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
+            {showMenu ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
           </div>
-        )}
-
-        <WhereverWidget />
-        <WalletButton />
-
-        <div className="menu-button" onClick={() => dispatch(toggleMenu(!showMenu))}>
-          {showMenu ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
         </div>
       </div>
     </StyledHeader>

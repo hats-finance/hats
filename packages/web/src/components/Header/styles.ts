@@ -5,49 +5,57 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledHeader = styled.header`
   position: sticky;
   top: 0;
-  width: 100%;
-  padding: ${getSpacing(3)} ${getSpacing(5)};
-  display: flex;
-  justify-content: space-between;
-  background-color: var(--background);
-  align-items: center;
   z-index: 3;
 
-  @media (max-width: ${breakpointsDefinition.mobile}) {
-    justify-content: flex-end;
-    padding: ${getSpacing(2)} ${getSpacing(3)};
+  .safety-period-banner {
+    width: 100%;
+    z-index: 1;
   }
 
-  .page-title {
-    font-size: var(--large);
-    color: var(--white);
-    margin-right: 20px;
-
-    @media (max-width: ${breakpointsDefinition.smallScreen}) {
-      font-size: var(--medium);
-    }
+  .content {
+    width: 100%;
+    padding: ${getSpacing(3)} ${getSpacing(5)};
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--background);
+    align-items: center;
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
-      display: none;
+      justify-content: flex-end;
+      padding: ${getSpacing(2)} ${getSpacing(3)};
     }
-  }
 
-  .buttons {
-    display: flex;
-    align-items: center;
-    gap: ${getSpacing(2.5)};
+    .page-title {
+      font-size: var(--large);
+      color: var(--white);
+      margin-right: 20px;
 
-    .wallet-info {
+      @media (max-width: ${breakpointsDefinition.smallScreen}) {
+        font-size: var(--medium);
+      }
+
       @media (max-width: ${breakpointsDefinition.mobile}) {
         display: none;
       }
     }
 
-    .menu-button {
-      color: var(--primary);
+    .buttons {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(2.5)};
 
-      @media (min-width: ${breakpointsDefinition.mobile}) {
-        display: none;
+      .wallet-info {
+        @media (max-width: ${breakpointsDefinition.mobile}) {
+          display: none;
+        }
+      }
+
+      .menu-button {
+        color: var(--primary);
+
+        @media (min-width: ${breakpointsDefinition.mobile}) {
+          display: none;
+        }
       }
     }
   }
