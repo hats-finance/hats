@@ -31,13 +31,6 @@ export const NFTContractDataProxy = {
   ["0xbf5A12c4dD49f81cF5827290Ac9d94470C0E7759".toLowerCase()]: "0x5E32BF5A465A881E217Ef816506D7ecddB53F48F",
 };
 
-export enum Pages {
-  vaults = "Vaults",
-  gov = "Gov",
-  vulnerability = "Submit Vulnerability",
-  airdrop_machine = "Airdrop Machine",
-}
-
 export const SMALL_SCREEN_BREAKPOINT = "1100px";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;

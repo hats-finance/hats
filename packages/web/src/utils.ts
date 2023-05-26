@@ -23,14 +23,6 @@ export const getScreenSize = () => {
 };
 
 /**
- * Given the current URL returns the main path
- * @param {string} path
- */
-export const getMainPath = (path: string) => {
-  return path.split("/")[1];
-};
-
-/**
  * Formats a WEI value.
  * If the value is null/undefined, the function returns "-"
  * If the value is too small to be represented by the given precision, the function returns "+0".
