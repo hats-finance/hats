@@ -382,6 +382,9 @@
     "submitVulnerability": "Submit Vulnerability",
     "committeeTools": "Committee tools",
     "vaultEditor": "Vault editor",
+    "cookiesExplanation": "This website uses cookies to ensure you the best experience on our website.",
+    "cookiesPolicy": "Cookies policy",
+    "accept": "Accept",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

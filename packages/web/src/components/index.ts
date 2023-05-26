@@ -1,4 +1,5 @@
 export { Header } from "./Header/Header";
+export { CookiesBanner } from "./CookiesBanner/CookiesBanner";
 export { WalletButton } from "./WalletButton/WalletButton";
 export { Vault } from "./Vault/Vault";
 export { NFTCard } from "./NFTCard/NFTCard";
