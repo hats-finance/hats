@@ -2,7 +2,6 @@ import DiscordIcon from "assets/icons/social/discord.icon";
 import { Alert, Button, Dot } from "components";
 import { Colors, SocialLinks } from "constants/constants";
 import useModal from "hooks/useModal";
-import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -14,9 +13,7 @@ export function SubmissionProcessed() {
   const { t } = useTranslation();
   const { isShowing: isShowingSuccessModal, show: showSuccessModal, hide: hideSuccessModal } = useModal();
 
-  const { vaults } = useVaults();
-  const { submissionData, sendSubmissionToServer, reset } = useContext(SubmissionFormContext);
-  const vault = (vaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
+  const { submissionData, sendSubmissionToServer, reset, vault } = useContext(SubmissionFormContext);
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   const submissionStatus = {

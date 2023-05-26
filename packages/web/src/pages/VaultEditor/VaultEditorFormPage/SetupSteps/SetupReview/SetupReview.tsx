@@ -1,6 +1,3 @@
-import { useCallback, useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { useWatch } from "react-hook-form";
 import {
   IEditedVaultDescription,
   IVault,
@@ -8,11 +5,14 @@ import {
   IVaultDescriptionV2,
   editedFormToDescription,
 } from "@hats-finance/shared";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { Vault } from "components";
 import { useEnhancedFormContext } from "hooks/form";
+import { useCallback, useContext } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
 import { StyledSetupReview } from "./styles";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export function SetupReview() {
   const { t } = useTranslation();
@@ -98,6 +98,8 @@ export function SetupReview() {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
+      onTime: true,
+      chainId: editedVaultDescriptionForm.committee.chainId ? +editedVaultDescriptionForm.committee.chainId : 1,
     };
 
     if (editedVaultDescriptionForm.version === "v1") {

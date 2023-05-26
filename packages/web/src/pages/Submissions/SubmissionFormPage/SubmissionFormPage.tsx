@@ -22,11 +22,11 @@ import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
 
-  const { vaults } = useVaults();
+  const { activeVaults } = useVaults();
+  const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
-  const vault = (vaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
   const steps = useMemo(
     () => [
@@ -81,7 +81,7 @@ export const SubmissionFormPage = () => {
 
   // Loads initial state of the vault
   useEffect(() => {
-    if (!vaults || vaults.length === 0) return;
+    if (!activeVaults || activeVaults.length === 0) return;
 
     try {
       let cachedData: ISubmissionData = JSON.parse(
@@ -90,7 +90,7 @@ export const SubmissionFormPage = () => {
 
       if (cachedData.submissionResult && cachedData.submissionResult?.chainId !== chain?.id) {
         setSubmissionData(SUBMISSION_INIT_DATA);
-      } else if (cachedData.project?.projectId && !vaults?.find((vault) => vault.id === cachedData.project?.projectId)) {
+      } else if (cachedData.project?.projectId && !activeVaults?.find((vault) => vault.id === cachedData.project?.projectId)) {
         setSubmissionData(SUBMISSION_INIT_DATA);
       } else if (cachedData.version !== getAppVersion()) {
         setSubmissionData(SUBMISSION_INIT_DATA);
@@ -100,7 +100,7 @@ export const SubmissionFormPage = () => {
     } catch (e) {
       setSubmissionData(SUBMISSION_INIT_DATA);
     }
-  }, [vaults, chain]);
+  }, [activeVaults, chain]);
 
   // Save data to local storage
   useEffect(() => {
@@ -161,6 +161,7 @@ export const SubmissionFormPage = () => {
 
   const context: ISubmissionFormContext = {
     reset,
+    vault,
     currentStep,
     setCurrentStep,
     submissionData,

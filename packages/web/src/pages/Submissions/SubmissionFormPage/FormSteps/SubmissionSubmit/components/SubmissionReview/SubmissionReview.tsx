@@ -1,5 +1,4 @@
 import { Alert, Button, FormInput, Loading } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -10,10 +9,7 @@ export function SubmissionReview() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
 
-  const { submissionData, isSubmitting, isSigningSubmission, submitSubmission } = useContext(SubmissionFormContext);
-
-  const { vaults } = useVaults();
-  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
+  const { submissionData, isSubmitting, isSigningSubmission, submitSubmission, vault } = useContext(SubmissionFormContext);
 
   const areAllStepsVerified =
     submissionData?.project?.verified &&

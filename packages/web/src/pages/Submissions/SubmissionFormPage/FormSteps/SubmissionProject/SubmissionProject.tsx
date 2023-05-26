@@ -11,7 +11,7 @@ export function SubmissionProject() {
   const { t } = useTranslation();
   const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
   const [userInput, setUserInput] = useState("");
-  const { vaults } = useVaults();
+  const { activeVaults } = useVaults();
 
   const handleSelectedProject = (vault: IVault) => {
     setSubmissionData((prev) => ({
@@ -28,7 +28,7 @@ export function SubmissionProject() {
     }));
   };
 
-  const vaultsProjects = vaults?.map((vault: IVault, index: number) => {
+  const vaultsProjects = activeVaults?.map((vault: IVault, index: number) => {
     const projectName = vault.description?.["project-metadata"].name;
     if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.liquidityPool && vault.registered) {
       return (

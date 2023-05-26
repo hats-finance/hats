@@ -1,4 +1,4 @@
-import { IMaster, IUserNft, IVault, IPayoutGraph } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
   return masters.map((master) => ({

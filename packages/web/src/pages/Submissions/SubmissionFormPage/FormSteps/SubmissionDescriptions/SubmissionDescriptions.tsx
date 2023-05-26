@@ -13,7 +13,6 @@ import {
 } from "components";
 import download from "downloadjs";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
-import { useVaults } from "hooks/vaults/useVaults";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -27,11 +26,9 @@ import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
 export function SubmissionDescriptions() {
   const { t } = useTranslation();
 
-  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, vault } = useContext(SubmissionFormContext);
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
-  const { vaults } = useVaults();
-  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
   // const isPublicSubmission = true;
 

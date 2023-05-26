@@ -1,6 +1,5 @@
 import { IVulnerabilitySeverity } from "@hats-finance/shared";
 import { Alert, Button, FormInput } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,11 +15,9 @@ import { StyledSubmissionTermsAndProcess, StyledTermsSection } from "./styles";
 export function SubmissionTermsAndProcess() {
   const { t } = useTranslation();
 
-  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, vault } = useContext(SubmissionFormContext);
   const [acceptedTermsOfUse, setAcceptedTermsOfUse] = useState(false);
 
-  const { vaults } = useVaults();
-  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   useEffect(() => {

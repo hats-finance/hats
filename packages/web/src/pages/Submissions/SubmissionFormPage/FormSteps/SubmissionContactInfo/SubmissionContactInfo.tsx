@@ -1,7 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, FormInput, FormRadioInput } from "components";
 import { useEnhancedForm } from "hooks/form";
-import { useVaults } from "hooks/vaults/useVaults";
 import { useContext, useEffect, useMemo } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -14,10 +13,8 @@ import { StyledContactInfo } from "./styles";
 export function SubmissionContactInfo() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, vault } = useContext(SubmissionFormContext);
 
-  const { vaults } = useVaults();
-  const vault = vaults?.find((vault) => vault.id === submissionData?.project?.projectId);
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
   const { register, getValues, setValue, reset, handleSubmit, control, trigger } = useEnhancedForm<ISubmissionContactData>({

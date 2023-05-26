@@ -1,13 +1,13 @@
-import { useTranslation } from "react-i18next";
-import { useWatch } from "react-hook-form";
-import { Vault } from "components";
-import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
-import { IEditedVaultDescription } from "types";
 import { editedFormToDescription } from "@hats-finance/shared";
-import { StyledVaultFormReview } from "./styles";
+import { Vault } from "components";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useCallback } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
+import { IEditedVaultDescription } from "types";
 import { VaultEmailsForm } from "../../SetupSteps/shared/VaultEmailsList/VaultEmailsList";
+import { StyledVaultFormReview } from "./styles";
 
 export function VaultFormReview() {
   const { t } = useTranslation();
@@ -94,6 +94,8 @@ export function VaultFormReview() {
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
+      onTime: true,
+      chainId: editedVaultDescriptionForm.committee.chainId ? +editedVaultDescriptionForm.committee.chainId : 1,
     };
 
     if (editedVaultDescriptionForm.version === "v1") {

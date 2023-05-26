@@ -41,7 +41,8 @@ export interface IBaseVault {
   committeeCheckedIn: boolean;
   multipleVaults?: IVault[];
   description?: IVaultDescription;
-  chainId?: number;
+  chainId: number;
+  onTime: boolean;
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
 }

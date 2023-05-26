@@ -1,26 +1,27 @@
-import { useEffect, useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IMaster,
+  IPayoutGraph,
   IUserNft,
   IVault,
   IVaultDescription,
   IWithdrawSafetyPeriod,
   fixObject,
-  IPayoutGraph,
 } from "@hats-finance/shared";
-import { useAccount, useNetwork } from "wagmi";
-import { appChains, IS_PROD } from "settings";
+import { blacklistedWallets } from "data/blacklistedWallets";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
-import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
-import { ipfsTransformUri } from "utils";
-import { blacklistedWallets } from "data/blacklistedWallets";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { IS_PROD, appChains } from "settings";
+import { ipfsTransformUri } from "utils";
+import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
-  vaults?: IVault[];
+  activeVaults?: IVault[]; // Vaults filtered by dates and chains
+  allVaultsOnEnv?: IVault[]; // Vaults filtered chains but not dates
   allVaults?: IVault[]; // Vaults without dates and chains filtering
   userNfts?: IUserNft[];
   allUserNfts?: IUserNft[]; // User nfts without chains filtering
@@ -41,7 +42,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { chain } = useNetwork();
 
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
-  const [vaults, setVaults] = useState<IVault[]>([]);
+  const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
+  const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
@@ -150,25 +152,34 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       );
 
     const allVaultsData = await getVaultsData(vaultsData);
+    const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
+      const isOnTime = (() => {
+        const startTime = vault.description?.["project-metadata"].starttime;
+        const endTime = vault.description?.["project-metadata"].endtime;
 
-    const vaultsFilteredByDate = allVaultsData.filter((vault) => {
-      const startTime = vault.description?.["project-metadata"].starttime;
-      const endTime = vault.description?.["project-metadata"].endtime;
+        if (startTime && startTime > Date.now() / 1000) return false;
+        if (endTime && endTime < Date.now() / 1000) return false;
 
-      if (startTime && startTime > Date.now() / 1000) return false;
-      if (endTime && endTime < Date.now() / 1000) return false;
+        return true;
+      })();
 
-      return true;
+      return {
+        ...vault,
+        onTime: isOnTime,
+      };
     });
 
-    const vaultsFilteredByNetwork = vaultsFilteredByDate.filter((vault) => {
+    const filteredByChain = allVaultsDataWithDatesInfo.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
+    const filteredByChainAndDate = filteredByChain.filter((vault) => vault.onTime);
+
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsData)) setAllVaults(allVaultsData);
-    if (JSON.stringify(vaults) !== JSON.stringify(vaultsFilteredByNetwork)) setVaults(vaultsFilteredByNetwork);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithDatesInfo)) setAllVaults(allVaultsDataWithDatesInfo);
+    if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
+    if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
   };
 
   const setUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
@@ -232,7 +243,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    vaults,
+    activeVaults,
     allVaults,
     userNfts,
     allUserNfts,

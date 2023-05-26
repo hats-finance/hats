@@ -19,11 +19,11 @@ interface HoneypotsPageProps {
 
 const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { t } = useTranslation();
-  const { vaults, tokenPrices } = useVaults();
+  const { activeVaults, tokenPrices } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const { vaultId } = useParams();
-  const selectedVault = vaultId ? vaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
+  const selectedVault = vaultId ? activeVaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
   const navigate = useNavigate();
 
   const vaultValue = useCallback(
@@ -41,7 +41,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     if (element) element.scrollIntoView();
   };
 
-  const sortedVaults = vaults?.sort((a: IVault, b: IVault) => vaultValue(b) - vaultValue(a));
+  const sortedVaults = activeVaults?.sort((a: IVault, b: IVault) => vaultValue(b) - vaultValue(a));
   const vaultsMatchSearch = sortedVaults?.filter((vault) =>
     vault.description?.["project-metadata"].name.toLowerCase().includes(userSearch.toLowerCase())
   );
@@ -62,7 +62,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
 
   return (
     <StyledHoneypotsPage className="content-wrapper">
-      {vaults === undefined ? (
+      {activeVaults === undefined ? (
         <Loading fixed />
       ) : (
         <>

@@ -1,3 +1,4 @@
+import { IVault } from "@hats-finance/shared";
 import { Dispatch, SetStateAction, createContext } from "react";
 import { ISubmissionData } from "./types";
 
@@ -5,6 +6,7 @@ const packageJSON = require("../../../../package.json");
 
 export interface ISubmissionFormContext {
   currentStep?: number;
+  vault: IVault | undefined;
   isSigningSubmission: boolean;
   isSubmitting: boolean;
   submissionData: ISubmissionData | undefined;
