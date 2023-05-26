@@ -1,15 +1,15 @@
-import { useState } from "react";
+import ArrowIcon from "assets/icons/arrow.icon";
+import { Media, Modal, NFTPrize } from "components";
 import { BigNumber, ethers } from "ethers";
-import { useTranslation } from "react-i18next";
-import humanizeDuration from "humanize-duration";
-import { Modal, NFTPrize, Media } from "components";
 import useModal from "hooks/useModal";
+import humanizeDuration from "humanize-duration";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { IVault, IVulnerabilitySeverity } from "types";
 import { formatNumber, ipfsTransformUri } from "utils";
-import ArrowIcon from "assets/icons/arrow.icon";
 import { useSeverityReward } from "../../hooks/useSeverityReward";
-import "./Severity.scss";
 import { ContractsCovered } from "../ContractsCovered/ContractsCovered";
+import "./Severity.scss";
 
 interface IProps {
   severity: IVulnerabilitySeverity;
@@ -44,10 +44,7 @@ export default function Severity(props: IProps) {
   const [modalContractsData, setModalContractsData] = useState(null);
   const { rewardPrice, rewardPercentage, rewardColor } = useSeverityReward(props.vault, severityIndex);
 
-  const isNormalVault =
-    !description?.["project-metadata"].type ||
-    description?.["project-metadata"].type === "" ||
-    description?.["project-metadata"].type === "normal";
+  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "normal";
 
   const getPrizeContentDivision = () => {
     const bountyVestingDuration = humanizeDuration(Number(vestingDuration) * 1000, {

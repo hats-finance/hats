@@ -3,6 +3,7 @@ import {
   ICommitteeMember,
   IVaultDescription,
   IVaultRepoInformation,
+  IVaultType,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "./types";
@@ -65,7 +66,7 @@ export interface IBaseEditedVaultDescription {
     website: string;
     name: string;
     tokenIcon: string;
-    type?: string;
+    type?: IVaultType;
     endtime?: number;
     starttime?: number;
     emails: IEditedCommunicationEmail[];

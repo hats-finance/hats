@@ -97,7 +97,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       icon: "",
       tokenIcon: "",
       website: "",
-      type: "",
+      type: undefined,
       emails: [{ address: "", status: "unverified" }] as IEditedCommunicationEmail[],
     },
     scope: {
@@ -302,9 +302,23 @@ export function fixObject(description: any): IVaultDescription {
     description["project-metadata"] = description["Project-metadata"];
     delete description["Project-metadata"];
   }
+
   if ("gamification" in description["project-metadata"] && description["project-metadata"].gamification) {
     description["project-metadata"].type = "gamification";
   }
+
+  if (!description["project-metadata"].type || description["project-metadata"].type === "") {
+    description["project-metadata"].type = "normal";
+  }
+
+  if (description["project-metadata"].type === "Grants") {
+    description["project-metadata"].type = "grants";
+  }
+
+  if (description["project-metadata"].type === "Audit competition") {
+    description["project-metadata"].type = "audit";
+  }
+
   return description;
 }
 

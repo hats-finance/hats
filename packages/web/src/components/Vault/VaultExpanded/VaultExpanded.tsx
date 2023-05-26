@@ -1,22 +1,22 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import ArrowIcon from "assets/icons/arrow.icon";
+import { PieChartColors, ScreenSize } from "constants/constants";
 import { BigNumber, ethers } from "ethers";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { PieChart } from "react-minimal-pie-chart";
 import humanizeDuration from "humanize-duration";
 import { RoutePaths } from "navigation";
-import { isMobile } from "web3modal";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { PieChart } from "react-minimal-pie-chart";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { RootState } from "reducers";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "types";
 import { setVulnerabilityProject } from "utils";
-import { PieChartColors, ScreenSize } from "constants/constants";
-import { RootState } from "reducers";
-import ArrowIcon from "assets/icons/arrow.icon";
-import "./VaultExpanded.scss";
+import { isMobile } from "web3modal";
+import VaultActions from "../VaultActions/VaultActions";
 import Members from "./Members/Members";
 import Multisig from "./Multisig/Multisig";
-import VaultActions from "../VaultActions/VaultActions";
 import Severities from "./Severities/Severities";
+import "./VaultExpanded.scss";
 
 interface IProps {
   data: IVault;
@@ -44,10 +44,7 @@ export default function VaultExpanded(props: IProps) {
   } = props.data;
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
-  const isNormalVault =
-    !description?.["project-metadata"].type ||
-    description?.["project-metadata"].type === "" ||
-    description?.["project-metadata"].type === "normal";
+  const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "normal";
 
   const getPieChartData = () => {
     const bountyVestingDuration = humanizeDuration(Number(vestingDuration) * 1000, {

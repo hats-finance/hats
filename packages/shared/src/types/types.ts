@@ -6,6 +6,8 @@ export interface IVaultInfo {
   pid: string;
 }
 
+export type IVaultType = "normal" | "audit" | "grants" | "gamification";
+
 export interface IBaseVault {
   id: string;
   name: string;
@@ -94,7 +96,7 @@ interface IBaseVaultDescription {
     website: string;
     name: string;
     tokenIcon: string;
-    type?: string;
+    type?: IVaultType;
     endtime?: number;
     starttime?: number;
   };
