@@ -14,15 +14,17 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
     z-index: 2;
 
     @media (max-width: ${breakpointsDefinition.mobile}) {
-      display: none;
+      width: 100%;
+      transform: translateX(-110%);
       border: none;
       position: fixed;
       padding-top: ${getSpacing(11)};
+      transition: transform 0.2s ease-in-out;
 
       ${showFullScreen &&
       css`
+        transform: translateX(0%);
         display: flex;
-        width: 100%;
       `}
     }
 
