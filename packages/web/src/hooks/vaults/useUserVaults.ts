@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { getAddressSafes, IVault } from "@hats-finance/shared";
-import { useAccount } from "wagmi";
+import { IVault, getAddressSafes } from "@hats-finance/shared";
 import { FormSelectInputOption } from "components";
-import { useVaults } from "./useVaults";
+import { useEffect, useState } from "react";
 import { appChains } from "settings";
+import { useAccount } from "wagmi";
+import { useVaults } from "./useVaults";
 
 type UserVaultsVersion = "v1" | "v2" | "all";
 
@@ -42,8 +42,9 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
 
       const userSafes = await getAddressSafes(address, vault.chainId);
       const isSafeMember = userSafes.some((safeAddress) => safeAddress.toLowerCase() === vault.committee.toLowerCase());
+      const isGovInVaultChain = userSafes.includes(appChains[vault.chainId as number].govMultisig ?? "none");
 
-      if (isSafeMember && (version !== "all" ? vault.version === version : true)) foundVaults.push(vault);
+      if ((isGovInVaultChain || isSafeMember) && (version !== "all" ? vault.version === version : true)) foundVaults.push(vault);
     }
 
     setUserVaults(foundVaults);
