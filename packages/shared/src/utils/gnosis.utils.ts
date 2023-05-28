@@ -47,38 +47,73 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
   }
 };
 
-export const getSafeWalletConnectLink = (address: string, chainId: number): string => {
-  return `${getSafeDashboardLink(address, chainId)}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
+export const getSafeWalletConnectLink = (address: string, chainId: number): string | undefined => {
+  const safeDashboardLink = getSafeDashboardLink(address, chainId);
+  if (!safeDashboardLink) return undefined;
+
+  return `${safeDashboardLink}&appUrl=https%3A%2F%2Fapps-portal.safe.global%2Fwallet-connect`;
 };
 
-export const getSafeDashboardLink = (address: string, chainId: number): string => {
-  return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
+export const getSafeDashboardLink = (address: string, chainId: number): string | undefined => {
+  try {
+    if (!chainId) return "";
+    const checksummedSafeAddress = utils.getAddress(address);
+    return `https://app.safe.global/apps/open?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
+  } catch (error) {
+    return undefined;
+  }
 };
 
-export const getSafeHomeLink = (address: string, chainId: number): string => {
-  return `https://app.safe.global/home?safe=${getGnosisChainPrefixByChainId(chainId)}:${address}`;
+export const getSafeHomeLink = (address: string, chainId: number): string | undefined => {
+  try {
+    if (!chainId) return "";
+    const checksummedSafeAddress = utils.getAddress(address);
+    return `https://app.safe.global/home?safe=${getGnosisChainPrefixByChainId(chainId)}:${checksummedSafeAddress}`;
+  } catch (error) {
+    return undefined;
+  }
 };
 
-const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string => {
-  if (!chainId) return "";
-  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;
+const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string | undefined => {
+  try {
+    if (!chainId) return "";
+    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;
+  } catch (error) {
+    return undefined;
+  }
+};
+
+const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): string | undefined => {
+  try {
+    if (!chainId) return "";
+    const checksummedSafeAddress = utils.getAddress(safeAddress);
+    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${checksummedSafeAddress}`;
+  } catch (error) {
+    return undefined;
+  }
+};
+
+const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string | undefined => {
+  try {
+    if (!chainId) return "";
+    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/owners/${walletAddress}/safes`;
+  } catch (error) {
+    return undefined;
+  }
 };
 
 export const isAGnosisSafeTx = async (tx: string, chainId: number | undefined): Promise<boolean> => {
   try {
     if (!chainId) throw new Error("Please provide chainId");
 
-    const res = await axios.get(getGnosisTxsApiEndpoint(tx, chainId));
+    const safeUrl = getGnosisTxsApiEndpoint(tx, chainId);
+    if (!safeUrl) throw new Error("No url");
+
+    const res = await axios.get(safeUrl);
     return !!res.data?.safeTxHash;
   } catch (error) {
     return false;
   }
-};
-
-const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): string => {
-  if (!chainId) return "";
-  const checksummedSafeAddress = utils.getAddress(safeAddress);
-  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${checksummedSafeAddress}`;
 };
 
 export const getGnosisSafeInfo = async (
@@ -89,7 +124,11 @@ export const getGnosisSafeInfo = async (
     if (!chainId || !address) throw new Error("Please provide address and chainId");
 
     const safeInfoStorage = isServer() ? null : JSON.parse(sessionStorage.getItem(`safeInfo-${chainId}-${address}`) ?? "null");
-    const data = safeInfoStorage ?? (await axios.get(getGnosisSafeStatusApiEndpoint(address, chainId))).data;
+
+    const safeUrl = getGnosisSafeStatusApiEndpoint(address, chainId);
+    if (!safeUrl) throw new Error("No url");
+
+    const data = safeInfoStorage ?? (await axios.get(safeUrl)).data;
     !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
@@ -100,7 +139,6 @@ export const getGnosisSafeInfo = async (
       threshold: data.threshold,
     };
   } catch (error) {
-    console.log(error);
     const defaultData = {
       isSafeAddress: false,
       owners: [],
@@ -125,11 +163,6 @@ export const isAddressAMultisigMember = async (
   return isMember;
 };
 
-const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string => {
-  if (!chainId) return "";
-  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/owners/${walletAddress}/safes`;
-};
-
 export const getAddressSafes = async (walletAddress: string, chainId: number | undefined): Promise<string[]> => {
   try {
     if (!chainId) throw new Error("Please provide chainId");
@@ -137,14 +170,17 @@ export const getAddressSafes = async (walletAddress: string, chainId: number | u
     const addressSafesStorage = isServer()
       ? null
       : JSON.parse(sessionStorage.getItem(`addressSafes-${chainId}-${walletAddress}`) ?? "null");
-    const data = addressSafesStorage ?? (await axios.get(getAddressSafesApiEndpoint(walletAddress, chainId))).data;
+
+    const safeUrl = getAddressSafesApiEndpoint(walletAddress, chainId);
+    if (!safeUrl) throw new Error("No url");
+
+    const data = addressSafesStorage ?? (await axios.get(safeUrl)).data;
     !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(data));
 
     if (!data) throw new Error("No data");
 
     return data.safes ?? [];
   } catch (error) {
-    console.log(error);
     const defaultData: { safes: string[] } = { safes: [] };
 
     !isServer() && sessionStorage.setItem(`addressSafes-${chainId}-${walletAddress}`, JSON.stringify(defaultData));

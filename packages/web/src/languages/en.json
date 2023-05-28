@@ -538,6 +538,8 @@
       "totalGovernancePayment": "Total governance payment",
       "payoutAllocationAndNft": "Payout allocation and NFT",
       "cantCreatePayoutNoDepositors": "You can't create a payout for this vault because it has no deposits.",
+      "connectedAccountNoPermissionsOnThisPayout": "The connected wallet has no permissions to view/edit this payout. Please connect the right wallet.",
+      "youAreNotACommitteeMemberCantSign": "You are not a committee member, you can't sign this payout.",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",
