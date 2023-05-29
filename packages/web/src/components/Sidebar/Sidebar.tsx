@@ -1,4 +1,4 @@
-import Logo from "assets/icons/logo.icon";
+import { ReactComponent as HatsLogo } from "assets/icons/custom/hats-with-name.svg";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "reducers";
@@ -13,7 +13,7 @@ export function Sidebar() {
     <>
       <StyledSidebar showFullScreen={showMenu}>
         <Link to="/" className="logo">
-          <Logo width="50px" />
+          <HatsLogo />
         </Link>
         <NavLinks />
         <div className="bottom-wrapper">

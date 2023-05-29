@@ -2,8 +2,6 @@ import { css } from "styled-components";
 
 export const variables = css`
   :root {
-    --header-height: 75px;
-    --sidebar-width: 260px;
     --element-padding-mobile: 20px;
     --modal-element-padding: 40px;
     --modal-element-padding-mobile: 20px;

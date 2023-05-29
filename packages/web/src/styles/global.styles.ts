@@ -18,13 +18,10 @@ export const GlobalStyle = createGlobalStyle`
 
     html {
         color: var(--white);
-        font-size: var(--small);
+        /* font-size: var(--small); */
+        font-size: var(--xsmall);
         scrollbar-width: none;
         -ms-overflow-style: none;
-        
-        @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
-            font-size: var(--xsmall);
-        }
     }
     
     -webkit-scrollbar {
@@ -57,7 +54,7 @@ export const GlobalStyle = createGlobalStyle`
 
     button {
         font-family: RobotoMono;
-        font-size: var(--small);
+        font-size: var(--xsmall);
         border: none;
         padding: 10px;
         cursor: pointer;
@@ -66,10 +63,6 @@ export const GlobalStyle = createGlobalStyle`
         color: var(--turquoise);
         font-family: RobotoMono;
         cursor: pointer;
-
-        @media only screen and (max-width: ${breakpointsDefinition.smallScreen}) {
-            font-size: var(--xsmall);
-        }
 
         &:hover {
             opacity: 0.8;
@@ -215,14 +208,6 @@ export const GlobalStyle = createGlobalStyle`
     /* additional className added to popup overlay (rc-tooltip) */
     .tooltip {
         opacity: 1 !important;
-    }
-
-    @media only screen and (max-width: ${breakpointsDefinition.mobile}) {
-        /* Prevent auto-zooming when focusing on an input element */
-        input,
-        textarea {
-            font-size: var(--small);
-        }
     }
 
 

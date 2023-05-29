@@ -26,13 +26,9 @@ export const StyledHeader = styled.header`
     }
 
     .page-title {
-      font-size: var(--large);
+      font-size: var(--medium);
       color: var(--white);
       margin-right: 20px;
-
-      @media (max-width: ${breakpointsDefinition.smallScreen}) {
-        font-size: var(--medium);
-      }
 
       @media (max-width: ${breakpointsDefinition.mobile}) {
         display: none;

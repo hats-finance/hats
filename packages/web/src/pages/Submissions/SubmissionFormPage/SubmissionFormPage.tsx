@@ -22,11 +22,12 @@ import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
 
-  const { activeVaults } = useVaults();
-  const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
+
+  const { activeVaults } = useVaults();
+  const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
   const steps = useMemo(
     () => [
