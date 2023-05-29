@@ -18,7 +18,7 @@ export const StyledSafePeriodBar = styled.div<{ isSafetyPeriod: boolean; type: S
     }
 
     .icon {
-      color: ${isSafetyPeriod ? "var(--background-1)" : "var(--secondary)"};
+      color: ${isSafetyPeriod ? "var(--background-1)" : "var(--white)"};
       font-size: var(--medium);
     }
 
