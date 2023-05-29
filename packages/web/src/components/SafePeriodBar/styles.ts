@@ -10,6 +10,7 @@ export const StyledSafePeriodBar = styled.div<{ isSafetyPeriod: boolean; type: S
     align-items: center;
     gap: ${getSpacing(2)};
     padding: ${getSpacing(2.5)};
+    border-bottom: 1px solid var(--primary-light);
 
     .info {
       text-transform: uppercase;
