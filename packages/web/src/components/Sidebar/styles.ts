@@ -12,6 +12,11 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
     border-right: 1px solid var(--primary-light);
     z-index: 2;
 
+    @media (max-width: ${breakpointsDefinition.smallScreen}) {
+      width: ${getSpacing(21)};
+      text-align: center;
+    }
+
     @media (max-width: ${breakpointsDefinition.mobile}) {
       width: 100%;
       transform: translateX(-110%);

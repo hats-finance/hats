@@ -2,7 +2,7 @@ import { useAuditCompetitionsVaults } from "./hooks";
 
 export const AuditVaultsPage = () => {
   const a = useAuditCompetitionsVaults();
-  console.log(a);
+  // console.log(a);
 
   return <div>AuditVaultsPage</div>;
 };

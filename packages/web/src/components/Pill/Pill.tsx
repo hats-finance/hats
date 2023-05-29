@@ -1,4 +1,4 @@
-import { StyledPill, StyledCircle } from "./styles";
+import { StyledCircle, StyledPill } from "./styles";
 
 export type PillProps = {
   color: "red" | "yellow" | "blue";

@@ -37,7 +37,7 @@ const Header = () => {
       </div>
 
       <div className="content">
-        <div className="page-title">{getPageTitle()}</div>
+        <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
           {account && (

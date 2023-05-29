@@ -26,9 +26,10 @@ export const StyledHeader = styled.header`
     }
 
     .page-title {
-      font-size: var(--medium);
+      font-size: var(--medium-2);
       color: var(--white);
       margin-right: 20px;
+      font-weight: 700;
 
       @media (max-width: ${breakpointsDefinition.mobile}) {
         display: none;
