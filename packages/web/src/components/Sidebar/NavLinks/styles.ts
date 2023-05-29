@@ -43,12 +43,12 @@ export const StyledNavLink = styled(NavLink)`
   }
 
   &.active {
-    border-color: var(--primary-light);
+    border-color: var(--secondary-light);
     background-color: var(--background-2);
     font-weight: bold;
 
     svg path {
-      fill: var(--primary-light);
+      fill: var(--secondary-light);
     }
   }
 

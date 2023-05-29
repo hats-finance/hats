@@ -1,7 +1,9 @@
 import { toggleMenu } from "actions";
 import { ReactComponent as AuditsIcon } from "assets/icons/custom/audits.svg";
 import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg";
+import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
 import { ReactComponent as SubmissionsIcon } from "assets/icons/custom/submissions.svg";
+import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
 // import GovIcon from "assets/icons/custom/gov.svg";
 import { RoutePaths } from "navigation";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
@@ -33,10 +35,12 @@ export default function NavLinks() {
         <p className="collapsed">{t("submit")}</p>
       </StyledNavLink>
       <StyledNavLink to={RoutePaths.committee_tools} className="hidden" onClick={handleClick}>
+        <CommitteeToolsIcon />
         <p className="normal">{t("committeeTools")}</p>
         <p className="collapsed">{t("committeeTools")}</p>
       </StyledNavLink>
       <StyledNavLink to={RoutePaths.vault_editor} className="hidden" onClick={handleClick}>
+        <VaultEditorIcon />
         <p className="normal">{t("vaultEditor")}</p>
         <p className="collapsed">{t("vaultEditor")}</p>
       </StyledNavLink>
