@@ -6,24 +6,26 @@ import { StyledVaultsPage } from "./styles";
 export const BugBountyVaultsPage = () => {
   const { t } = useTranslation();
 
-  const { live: liveAuditCompetitions } = useAuditCompetitionsVaults();
+  const { live: liveAuditCompetitions, upcoming: upcomingAuditCompetitions } = useAuditCompetitionsVaults();
   const bugBounties = useBugBountiesVaults();
 
   return (
     <StyledVaultsPage className="content-wrapper-md">
-      <h2 className="subtitle">
-        {t("auditCompetitions")}
-        <Pill color="blue" text={t("new")} transparent />
-      </h2>
-
-      <div className="vaults-container mt-4">
-        {liveAuditCompetitions.map((auditVault, idx) => (
-          <VaultCard key={auditVault.id + idx} vault={auditVault} />
-        ))}
-      </div>
+      {[...liveAuditCompetitions, ...upcomingAuditCompetitions].length > 0 && (
+        <>
+          <h2 className="subtitle">
+            {t("auditCompetitions")}
+            <Pill color="blue" text={t("new")} transparent />
+          </h2>
+          <div className="vaults-container mt-4">
+            {(liveAuditCompetitions.length > 0 ? liveAuditCompetitions : upcomingAuditCompetitions).map((auditVault, idx) => (
+              <VaultCard key={auditVault.id + idx} vault={auditVault} />
+            ))}
+          </div>
+        </>
+      )}
 
       <h2 className="subtitle mt-5">{t("bugBounties")}</h2>
-
       <div className="vaults-container mt-4">
         {bugBounties.map((bountyVault, idx) => (
           <VaultCard key={bountyVault.id + idx} vault={bountyVault} />
