@@ -57,6 +57,11 @@ export const StyledButton = styled.button<StyledButtonProps>(
       padding: ${getSpacing(0)} ${getSpacing(1.8)};
     `}
 
+    ${size === "medium" &&
+    css`
+      padding: ${getSpacing(1)} ${getSpacing(2)};
+    `}
+
     ${size === "big" &&
     css`
       padding: ${getSpacing(1.8)} ${getSpacing(3.6)};
