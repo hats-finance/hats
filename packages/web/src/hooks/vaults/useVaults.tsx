@@ -17,6 +17,7 @@ import { ipfsTransformUri } from "utils";
 import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
+import { populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
@@ -243,9 +244,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    activeVaults,
-    allVaults,
-    allVaultsOnEnv,
+    activeVaults: populateVaultsWithPricing(activeVaults, tokenPrices),
+    allVaults: populateVaultsWithPricing(activeVaults, tokenPrices),
+    allVaultsOnEnv: populateVaultsWithPricing(activeVaults, tokenPrices),
     userNfts,
     allUserNfts,
     tokenPrices,
@@ -256,6 +257,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;
 }
+
 // const addMultiVaults = (vaults: IVault[]) =>
 //   vaults.map((vault) => {
 //     const additionalVaults = vault.description?.["additional-vaults"] ?? [];

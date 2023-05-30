@@ -47,6 +47,9 @@ export interface IBaseVault {
   dateStatus: "on_time" | "upcoming" | "finished";
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
+  // Computed values
+  depositedAmount?: number;
+  depositedAmountValue?: number;
 }
 
 export interface IVaultV1 extends IBaseVault {
