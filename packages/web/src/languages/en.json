@@ -394,6 +394,11 @@
     "totalRewards": "Total rewards",
     "totalDeposits": "Total deposits",
     "deposited": "Deposited",
+    "liveCompetitions": "Live competitions",
+    "upcomingCompetitions": "Upcoming competitions",
+    "finishedCompetitions": "Finished competitions",
+    "liveNow": "Live now",
+    "endingSoon": "Ending soon",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

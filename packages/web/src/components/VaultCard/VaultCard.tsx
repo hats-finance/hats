@@ -1,5 +1,5 @@
 import { IVault } from "@hats-finance/shared";
-import { Button } from "components";
+import { Button, Pill } from "components";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import millify from "millify";
 import moment from "moment";
@@ -71,8 +71,24 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
     );
   };
 
+  const getAuditStatusPill = () => {
+    if (!vault.description) return null;
+    if (vault.dateStatus !== "on_time") return null;
+    if (!vault.description["project-metadata"].endtime) return null;
+
+    const endTime = moment(vault.description["project-metadata"].endtime * 1000);
+
+    if (endTime.diff(moment(), "hours") <= 24) {
+      return <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.format("HH:mm")}h`} />;
+    } else {
+      return <Pill transparent color="blue" text={t("liveNow")} />;
+    }
+  };
+
   return (
     <StyledVaultCard isAudit={isAudit}>
+      {isAudit && <div className="mb-4">{getAuditStatusPill()}</div>}
+
       <div className="vault-info">
         <div className="metadata">
           <img src={ipfsTransformUri(logo)} alt="logo" />

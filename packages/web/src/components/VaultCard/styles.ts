@@ -8,7 +8,7 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
     flex-direction: column;
     background: var(--background-2);
     border: 1px solid var(--primary-light);
-    padding: ${getSpacing(4)};
+    padding: ${getSpacing(3)} ${getSpacing(4)};
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(2.5)} ${getSpacing(3)};
