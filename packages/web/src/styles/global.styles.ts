@@ -1,5 +1,6 @@
 import { createGlobalStyle } from "styled-components";
 import { breakpointsDefinition, responsiveUtilityClasses } from "./breakpoints.styles";
+import { fonts } from "./fonts.styles";
 import { utilityClasses } from "./utilities.styles";
 import { variables } from "./variables.styles";
 
@@ -7,6 +8,7 @@ export const GlobalStyle = createGlobalStyle`
     ${variables}
     ${responsiveUtilityClasses}
     ${utilityClasses}
+    ${fonts}
     
     *,
     *::before,
@@ -36,7 +38,6 @@ export const GlobalStyle = createGlobalStyle`
     body {
         background-color: var(--background);
         margin: 0;
-        font-family: RobotoMono;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         letter-spacing: 1px;
@@ -53,7 +54,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     button {
-        font-family: RobotoMono;
         font-size: var(--xsmall);
         border: none;
         padding: 10px;
@@ -61,7 +61,6 @@ export const GlobalStyle = createGlobalStyle`
         background-color: transparent;
         border: 1px solid var(--turquoise);
         color: var(--turquoise);
-        font-family: RobotoMono;
         cursor: pointer;
 
         &:hover {
@@ -159,7 +158,6 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     input {
-        font-family: RobotoMono;
         background-color: var(--purple-blue);
         border: 1px solid var(--purple-blue);
         color: var(--white);

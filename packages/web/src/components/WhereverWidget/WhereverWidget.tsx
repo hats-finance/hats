@@ -28,7 +28,7 @@ const WhereverWidget = ({ type = "bell" }: WhereverWidgetProps) => {
           buttonTextColor: Colors.black,
           borderRadius: "none",
           uppercasePageTitles: true,
-          fontFamily: '"RobotoMono", sans-serif',
+          fontFamily: '"IBM Plex Sans", sans-serif',
         }}
         partnerKey={whereverKey}
       >
