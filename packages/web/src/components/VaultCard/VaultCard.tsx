@@ -67,42 +67,6 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
             <span>{token}</span>
           </div>
         </WithTooltip>
-        <WithTooltip text={`${vault.version} ~ ${tokenNetwork?.chain.name}`}>
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
-        <WithTooltip text={`${vault.version} ~ ${tokenNetwork?.chain.name}`}>
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
-        <WithTooltip text={`${vault.version} ~ ${tokenNetwork?.chain.name}`}>
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
-        <WithTooltip text={`${vault.version} ~ ${tokenNetwork?.chain.name}`}>
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
       </>
     );
   };

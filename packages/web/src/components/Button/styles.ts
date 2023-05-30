@@ -48,7 +48,7 @@ export const StyledButton = styled.button<StyledButtonProps>(
     padding: ${getSpacing(1.4)} ${getSpacing(3)};
     text-transform: ${lowercase ? "lowercase" : "none"};
     font-weight: 600;
-    justify-content: ${expanded ? "center" : "unset"};
+    justify-content: center;
     border-radius: ${noRadius ? "0" : "500px"};
     transition: 0.2s;
 
