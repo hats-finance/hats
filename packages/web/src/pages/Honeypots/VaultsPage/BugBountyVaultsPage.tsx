@@ -8,8 +8,6 @@ export const BugBountyVaultsPage = () => {
 
   const { live: liveAuditCompetitions } = useAuditCompetitionsVaults();
   const bugBounties = useBugBountiesVaults();
-  console.log("bugBounties", bugBounties);
-  console.log("liveAuditCompetitions", liveAuditCompetitions);
 
   return (
     <StyledVaultsPage className="content-wrapper-md">
@@ -18,17 +16,17 @@ export const BugBountyVaultsPage = () => {
         <Pill color="blue" text={t("new")} transparent />
       </h2>
 
-      <div className="vaults-container">
-        {/* {bugBounties.map((vault) => (
-          <VaultCard vault={vault} />
-        ))} */}
+      <div className="vaults-container mt-4">
+        {liveAuditCompetitions.map((auditVault, idx) => (
+          <VaultCard key={auditVault.id + idx} vault={auditVault} />
+        ))}
       </div>
 
       <h2 className="subtitle mt-5">{t("bugBounties")}</h2>
 
-      <div className="vaults-container mt-3">
-        {bugBounties.map((vault) => (
-          <VaultCard vault={vault} />
+      <div className="vaults-container mt-4">
+        {bugBounties.map((bountyVault, idx) => (
+          <VaultCard key={bountyVault.id + idx} vault={bountyVault} />
         ))}
       </div>
     </StyledVaultsPage>

@@ -12,5 +12,6 @@ export const StyledVaultsPage = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${getSpacing(2.5)};
+    margin-bottom: ${getSpacing(8)};
   }
 `;

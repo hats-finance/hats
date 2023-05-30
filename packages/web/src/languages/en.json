@@ -387,6 +387,13 @@
     "accept": "Accept",
     "competitions": "Competitions",
     "new": "New",
+    "deposits": "Deposits",
+    "competitionDetails": "Competition details",
+    "bountyDetails": "Bounty details",
+    "maxRewards": "Max rewards",
+    "totalRewards": "Total rewards",
+    "totalDeposits": "Total deposits",
+    "deposited": "Deposited",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
