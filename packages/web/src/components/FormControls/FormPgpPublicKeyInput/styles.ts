@@ -71,7 +71,6 @@ export const StyledFormPgpPublicKeyInput = styled.div<{
 
           &.placeholder {
             color: var(--grey-500);
-            font-family: RobotoMono;
           }
         }
       }

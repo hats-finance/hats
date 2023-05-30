@@ -96,7 +96,6 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       &::placeholder {
         color: var(--grey-500);
-        font-family: RobotoMono;
       }
 
       ${colorable &&
