@@ -37,12 +37,20 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
 
   return vaults.map((vault) => {
     const tokenPrice = tokenPrices[vault.stakingToken] ?? 0;
-    const depositedAmount = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
+    const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
+
+    const maxRewardFactor = vault.version === "v1" ? +vault.rewardsLevels[vault.rewardsLevels.length - 1] : +vault.maxBounty;
 
     return {
       ...vault,
-      depositedAmount,
-      depositedAmountValue: depositedAmount * tokenPrice,
+      depositedAmount: {
+        tokens: depositedAmountTokens,
+        value: depositedAmountTokens * tokenPrice,
+      },
+      maxRewardAmount: {
+        tokens: depositedAmountTokens * (maxRewardFactor / 100 / 100),
+        value: depositedAmountTokens * tokenPrice * (maxRewardFactor / 100 / 100),
+      },
     } as IVault;
   });
 };

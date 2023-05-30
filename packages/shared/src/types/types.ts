@@ -48,8 +48,14 @@ export interface IBaseVault {
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
   // Computed values
-  depositedAmount?: number;
-  depositedAmountValue?: number;
+  depositedAmount?: {
+    tokens: number;
+    value: number;
+  };
+  maxRewardAmount?: {
+    tokens: number;
+    value: number;
+  };
 }
 
 export interface IVaultV1 extends IBaseVault {
