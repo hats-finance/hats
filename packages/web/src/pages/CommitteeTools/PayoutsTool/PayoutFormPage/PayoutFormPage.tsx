@@ -139,7 +139,10 @@ export const PayoutFormPage = () => {
       const payoutResponse = await savePayout.mutateAsync({
         payoutId,
         vaultInfo: getVaultInfoFromVault(vault),
-        payoutData,
+        payoutData: {
+          ...payoutData,
+          vault,
+        },
       });
 
       // Reset after 3 seconds for the user to see the success message

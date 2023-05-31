@@ -1,4 +1,4 @@
-import { IVaultInfo } from "./types";
+import { IVault, IVaultInfo } from "./types";
 
 export interface IPayoutGraph {
   id: string;
@@ -46,6 +46,7 @@ interface IPayoutDataBase {
   percentageToPay: string; // Percentage of the whole vault: number between 0 and 100
   explanation: string;
   additionalInfo: string;
+  vault?: IVault;
 }
 
 export interface ISinglePayoutData extends IPayoutDataBase {
