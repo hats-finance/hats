@@ -245,8 +245,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const context: IVaultsContext = {
     activeVaults: populateVaultsWithPricing(activeVaults, tokenPrices),
-    allVaults: populateVaultsWithPricing(activeVaults, tokenPrices),
-    allVaultsOnEnv: populateVaultsWithPricing(activeVaults, tokenPrices),
+    allVaults: populateVaultsWithPricing(allVaults, tokenPrices),
+    allVaultsOnEnv: populateVaultsWithPricing(allVaultsOnEnv, tokenPrices),
     userNfts,
     allUserNfts,
     tokenPrices,
