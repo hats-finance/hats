@@ -31,7 +31,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
 
     return {
       date: startMonth !== endMonth ? `${startMonth} ${startDay}-${endMonth} ${endDay}` : `${startMonth} ${startDay}-${endDay}`,
-      time: moment(endtime).format("HH:mm"),
+      time: moment(endtime).format("HH:mm[h]"),
     };
   }, [vault]);
 
@@ -79,7 +79,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
     if (endTime.diff(moment(), "hours") <= 24) {
-      return <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.format("HH:mm")}h`} />;
+      return <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />;
     } else {
       return <Pill transparent color="blue" text={t("liveNow")} />;
     }
@@ -109,7 +109,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
             {isAudit ? (
               <>
                 <h3 className="value">{vaultDate?.date}</h3>
-                <div className="sub-value">{vaultDate?.time}h</div>
+                <div className="sub-value">{vaultDate?.time}</div>
               </>
             ) : (
               <>
