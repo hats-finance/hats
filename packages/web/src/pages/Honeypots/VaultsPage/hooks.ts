@@ -7,7 +7,7 @@ export const useAuditCompetitionsVaults = () => {
       ?.filter((vault) => vault.registered)
       .filter((vault) => vault.description?.["project-metadata"].type === "audit") ?? [];
 
-  auditCompetitions.sort((a, b) => (b.maxRewardAmount?.value ?? 0) - (a.maxRewardAmount?.value ?? 0));
+  auditCompetitions.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
 
   return {
     live: auditCompetitions?.filter((vault) => vault.dateStatus === "on_time") ?? [],
@@ -26,7 +26,7 @@ export const useBugBountiesVaults = () => {
         (vault) => !vault.description?.["project-metadata"].type || vault.description?.["project-metadata"].type === "normal"
       ) ?? [];
 
-  bugBounties.sort((a, b) => (b.maxRewardAmount?.value ?? 0) - (a.maxRewardAmount?.value ?? 0));
+  bugBounties.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
 
   return bugBounties;
 };

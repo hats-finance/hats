@@ -58,7 +58,9 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
 
     return (
       <>
-        <WithTooltip text={`${vault.version} | ${t("deposited")} ~${millify(vault.depositedAmount?.tokens ?? 0)} ${token}`}>
+        <WithTooltip
+          text={`${vault.version} | ${t("deposited")} ~${millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} ${token}`}
+        >
           <div className="token" onClick={goToTokenInformation}>
             <div className="images">
               <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
@@ -113,7 +115,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
               </>
             ) : (
               <>
-                <h3 className="value">~${vault.depositedAmount ? millify(vault.depositedAmount.value) : "-"}</h3>
+                <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.depositedAmount.usd) : "-"}</h3>
                 <div className="sub-value">{t("totalDeposits")}</div>
               </>
             )}
@@ -121,12 +123,12 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
           <div className="stats__stat">
             {isAudit ? (
               <>
-                <h3 className="value">~${vault.depositedAmount ? millify(vault.depositedAmount.value) : "-"}</h3>
+                <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.depositedAmount.usd) : "-"}</h3>
                 <div className="sub-value">{t("maxRewards")}</div>
               </>
             ) : (
               <>
-                <h3 className="value">~${vault.maxRewardAmount ? millify(vault.maxRewardAmount.value) : "-"}</h3>
+                <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
                 <div className="sub-value">{t("totalRewards")}</div>
               </>
             )}

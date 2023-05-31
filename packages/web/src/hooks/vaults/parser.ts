@@ -33,23 +33,24 @@ export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
 };
 
 export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[] | undefined): IVault[] => {
-  if (!tokenPrices) return vaults;
-
   return vaults.map((vault) => {
-    const tokenPrice = tokenPrices[vault.stakingToken] ?? 0;
+    const tokenPrice: number = (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
 
     const maxRewardFactor = vault.version === "v1" ? +vault.rewardsLevels[vault.rewardsLevels.length - 1] : +vault.maxBounty;
 
     return {
       ...vault,
-      depositedAmount: {
-        tokens: depositedAmountTokens,
-        value: depositedAmountTokens * tokenPrice,
-      },
-      maxRewardAmount: {
-        tokens: depositedAmountTokens * (maxRewardFactor / 100 / 100),
-        value: depositedAmountTokens * tokenPrice * (maxRewardFactor / 100 / 100),
+      amountsInfo: {
+        tokenPriceUsd: tokenPrice,
+        depositedAmount: {
+          tokens: depositedAmountTokens,
+          usd: depositedAmountTokens * tokenPrice,
+        },
+        maxRewardAmount: {
+          tokens: depositedAmountTokens * (maxRewardFactor / 100 / 100),
+          usd: depositedAmountTokens * tokenPrice * (maxRewardFactor / 100 / 100),
+        },
       },
     } as IVault;
   });
