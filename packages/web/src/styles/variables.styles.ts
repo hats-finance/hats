@@ -15,12 +15,13 @@ export const variables = css`
     /* NEW COLORS */
     --primary: #614fda;
     --primary-light: #2d3271;
+    --primary-lighter: #8674ff;
     --secondary: #24e8c5;
     --secondary-light: #74baae;
     --background: #0e0e18;
     --background-1: #0b0b23;
     --background-2: #151731;
-    --background-3: #22233e;
+    --background-3: #242541;
     --disabled-input: #070a14;
 
     --white: #ffffff;

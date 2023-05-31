@@ -86,7 +86,7 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
 
           .sub-value {
             font-size: var(--xxsmall);
-            color: var(--grey-500);
+            color: var(--grey-400);
           }
         }
       }
@@ -117,7 +117,7 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
         }
 
         .subtitle {
-          color: var(--grey-500);
+          color: var(--grey-400);
           font-size: var(--xxsmall);
 
           @media (max-width: ${breakpointsDefinition.mediumMobile}) {

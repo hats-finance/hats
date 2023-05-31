@@ -170,7 +170,12 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       } as IVault;
     });
 
-    const filteredByChain = allVaultsDataWithDatesInfo.filter((vault) => {
+    const prices = showTestnets ? [] : await getTokenPrices(allVaultsDataWithDatesInfo);
+    if (JSON.stringify(tokenPrices) !== JSON.stringify(prices)) setTokenPrices(prices);
+
+    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataWithDatesInfo, prices);
+
+    const filteredByChain = allVaultsDataWithPrices.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
@@ -178,7 +183,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithDatesInfo)) setAllVaults(allVaultsDataWithDatesInfo);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithPrices)) setAllVaults(allVaultsDataWithPrices);
     if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
     if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
   };
@@ -219,19 +224,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    if (allVaults && !showTestnets) {
-      getTokenPrices(allVaults).then((prices) => {
-        if (!cancelled) setTokenPrices(prices);
-      });
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [allVaults, showTestnets]);
-
-  useEffect(() => {
     setVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
     setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
 
@@ -244,9 +236,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    activeVaults: populateVaultsWithPricing(activeVaults, tokenPrices),
-    allVaults: populateVaultsWithPricing(allVaults, tokenPrices),
-    allVaultsOnEnv: populateVaultsWithPricing(allVaultsOnEnv, tokenPrices),
+    activeVaults,
+    allVaults,
+    allVaultsOnEnv,
     userNfts,
     allUserNfts,
     tokenPrices,

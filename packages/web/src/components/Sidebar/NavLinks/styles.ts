@@ -61,10 +61,10 @@ export const StyledNavLink = styled(NavLink)`
   }
 
   &.audits.active {
-    border-color: var(--primary);
+    border-color: var(--primary-lighter);
 
     svg path {
-      fill: var(--primary);
+      fill: var(--primary-lighter);
     }
   }
 

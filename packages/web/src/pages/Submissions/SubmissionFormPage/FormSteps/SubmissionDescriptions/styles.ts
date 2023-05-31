@@ -19,8 +19,8 @@ export const StyledSubmissionDescription = styled.div`
   flex-direction: column;
   color: var(--white);
   padding: ${getSpacing(3)} ${getSpacing(2.5)};
-  background: var(--background-3);
   border-radius: 4px;
+  border: 1px solid var(--primary-light);
 
   .row {
     display: grid;

@@ -129,7 +129,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
             ) : (
               <>
                 <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
-                <div className="sub-value">{t("totalRewards")}</div>
+                <div className="sub-value">{t("maxRewards")}</div>
               </>
             )}
           </div>

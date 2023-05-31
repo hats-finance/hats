@@ -33,6 +33,8 @@ export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
 };
 
 export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[] | undefined): IVault[] => {
+  if (vaults.some((vault) => vault.amountsInfo)) return vaults;
+
   return vaults.map((vault) => {
     const tokenPrice: number = (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
