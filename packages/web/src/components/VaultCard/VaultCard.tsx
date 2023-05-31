@@ -81,15 +81,23 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
     if (endTime.diff(moment(), "hours") <= 24) {
-      return <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />;
+      return (
+        <div className="mb-4">
+          <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
+        </div>
+      );
     } else {
-      return <Pill transparent color="blue" text={t("liveNow")} />;
+      return (
+        <div className="mb-4">
+          <Pill transparent color="blue" text={t("liveNow")} />
+        </div>
+      );
     }
   };
 
   return (
     <StyledVaultCard isAudit={isAudit}>
-      {isAudit && <div className="mb-4">{getAuditStatusPill()}</div>}
+      {isAudit && getAuditStatusPill()}
 
       <div className="vault-info">
         <div className="metadata">
