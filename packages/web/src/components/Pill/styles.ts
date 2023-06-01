@@ -10,6 +10,8 @@ const getVarColor = (color: PillProps["color"]) => {
       return "var(--secondary)";
     case "yellow":
       return "var(--warning-yellow)";
+    case "green":
+      return "var(--success-green)";
   }
 };
 

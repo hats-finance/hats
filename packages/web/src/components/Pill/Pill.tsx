@@ -1,7 +1,7 @@
 import { StyledCircle, StyledPill } from "./styles";
 
 export type PillProps = {
-  color: "red" | "yellow" | "blue";
+  color: "red" | "yellow" | "blue" | "green";
   text: string;
   transparent?: boolean;
 };
