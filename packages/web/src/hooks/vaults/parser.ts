@@ -1,5 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
+import { BigNumber } from "ethers";
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
   return masters.map((master) => ({
@@ -25,10 +26,18 @@ export const parseVaults = (vaults: IVault[], chainId: number) => {
 export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
   return payouts.map((payout) => ({
     ...payout,
+    chainId,
     isActive: !payout.dismissedAt && !payout.approvedAt,
     isApproved: !!payout.approvedAt,
     isDismissed: !!payout.dismissedAt,
-    chainId,
+    totalPaidOut: !!payout.approvedAt
+      ? BigNumber.from(payout.committeeReward ?? "0")
+          .add(BigNumber.from(payout.hackerReward ?? "0"))
+          .add(BigNumber.from(payout.hackerVestedReward ?? "0"))
+          .add(BigNumber.from(payout.governanceHatReward ?? "0"))
+          .add(BigNumber.from(payout.hackerHatReward ?? "0"))
+          .toString()
+      : undefined,
   }));
 };
 

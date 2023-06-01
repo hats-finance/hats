@@ -21,6 +21,7 @@ export interface IPayoutGraph {
   isActive?: boolean; // Is active claim
   isApproved?: boolean; // Is approved claim
   isDismissed?: boolean; // Is dismissed claim
+  totalPaidOut?: string; // Total paid out
 }
 
 export interface IPayoutResponse {
