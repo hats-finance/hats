@@ -27,6 +27,7 @@ export const variables = css`
     --white: #ffffff;
     --error-red: #ff6464;
     --warning-yellow: #f2c94c;
+    --success-green: #00ff0a;
 
     --grey-400: #d0d5dd;
     --grey-500: #667085;

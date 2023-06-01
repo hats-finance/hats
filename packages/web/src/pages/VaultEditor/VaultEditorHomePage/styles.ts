@@ -57,7 +57,7 @@ export const StyledVaultReadyModal = styled.div`
   }
 
   .info {
-    background: var(--strong-blue);
+    background: var(--background-2);
     font-size: var(--small);
     line-height: 1.6;
     border-radius: ${getSpacing(1)};

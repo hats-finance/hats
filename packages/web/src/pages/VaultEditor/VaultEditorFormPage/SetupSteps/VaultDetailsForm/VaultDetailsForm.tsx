@@ -262,26 +262,30 @@ export function VaultDetailsForm() {
                   disabled={allFormDisabled}
                   placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
                 />
-                <Button styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
-                  <DeleteIcon className="mr-2" />
-                  <span>{t("remove")}</span>
-                </Button>
+                {!allFormDisabled && (
+                  <Button styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
+                    <DeleteIcon className="mr-2" />
+                    <span>{t("remove")}</span>
+                  </Button>
+                )}
               </div>
             </div>
           ))}
 
           {repos.length === 0 && <Alert type="info">{t("youHaveNotSelectedRepos")}</Alert>}
 
-          <div className="buttons">
-            <Button
-              className="mt-4"
-              styleType="invisible"
-              onClick={() => appendRepo({ commitHash: "", url: "", isMain: !repos.some((r) => r.isMain) })}
-            >
-              <AddIcon className="mr-2" />
-              <span>{t("newRepo")}</span>
-            </Button>
-          </div>
+          {!allFormDisabled && (
+            <div className="buttons">
+              <Button
+                className="mt-4"
+                styleType="invisible"
+                onClick={() => appendRepo({ commitHash: "", url: "", isMain: !repos.some((r) => r.isMain) })}
+              >
+                <AddIcon className="mr-2" />
+                <span>{t("newRepo")}</span>
+              </Button>
+            </div>
+          )}
         </div>
       </>
     </StyledVaultDetails>
