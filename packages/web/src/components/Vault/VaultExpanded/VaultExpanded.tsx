@@ -42,8 +42,14 @@ export default function VaultExpanded(props: IProps) {
     version,
     committee,
   } = props.data;
+
   const navigate = useNavigate();
   const screenSize = useSelector((state: RootState) => state.layoutReducer.screenSize);
+
+  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
+  const [chartMouseOver, setChartMouseOver] = useState(false);
+
+  if (!description) return null;
   const isNormalVault = !description?.["project-metadata"].type || description?.["project-metadata"].type === "normal";
 
   const getPieChartData = () => {
@@ -103,8 +109,6 @@ export default function VaultExpanded(props: IProps) {
   };
 
   const pieChartNonZeroVaules = getPieChartData().filter((obj) => obj.value !== 0);
-  const [selectedSegmentIndex, setSelectedSegmentIndex] = useState(0);
-  const [chartMouseOver, setChartMouseOver] = useState(false);
 
   const nextSegement = () => {
     if (selectedSegmentIndex + 1 === pieChartNonZeroVaules.length) {
