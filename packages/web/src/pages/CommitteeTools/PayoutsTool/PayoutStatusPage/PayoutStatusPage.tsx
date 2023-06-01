@@ -40,7 +40,7 @@ export const PayoutStatusPage = () => {
   const confirm = useConfirm();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { allVaults, payouts, withdrawSafetyPeriod } = useVaults();
+  const { allVaults, allPayouts, withdrawSafetyPeriod } = useVaults();
 
   const { payoutId } = useParams();
   const {
@@ -85,7 +85,7 @@ export const PayoutStatusPage = () => {
   const isCollectingSignatures = payoutStatus === PayoutStatus.Pending;
   const canBeDeleted = payoutStatus && DELETABLE_STATUS.includes(payoutStatus);
   const canBesigned = payoutStatus && SIGNABLE_STATUS.includes(payoutStatus);
-  const isAnyActivePayout = payouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
+  const isAnyActivePayout = allPayouts?.some((payout) => payout.vault.id === vault?.id && payout.isActive);
   const [isUserCommitteeMember, setIsUserCommitteeMember] = useState(false);
 
   const vaultSeverities = vault?.description?.severities ?? [];

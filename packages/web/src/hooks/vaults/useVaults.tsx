@@ -1,5 +1,6 @@
 import {
   IMaster,
+  IPayoutData,
   IPayoutGraph,
   IUserNft,
   IVault,
@@ -22,13 +23,14 @@ import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
   activeVaults?: IVault[]; // Vaults filtered by dates and chains
-  allVaultsOnEnv?: IVault[]; // Vaults filtered chains but not dates
+  allVaultsOnEnv?: IVault[]; // Vaults filtered by chains but not dates
   allVaults?: IVault[]; // Vaults without dates and chains filtering
   userNfts?: IUserNft[];
   allUserNfts?: IUserNft[]; // User nfts without chains filtering
   tokenPrices?: number[];
   masters?: IMaster[];
-  payouts?: IPayoutGraph[];
+  allPayouts?: IPayoutGraph[]; // Payouts without chains filtering
+  allPayoutsOnEnv?: IPayoutGraph[]; // Payouts filtered by chainsPayouts without chains filtering
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -46,6 +48,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
   const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
+  const [allPayouts, setAllPayouts] = useState<IPayoutGraph[]>([]);
+  const [allPayoutsOnEnv, setAllPayoutsOnEnv] = useState<IPayoutGraph[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
 
@@ -188,6 +192,47 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
   };
 
+  const setPayoutsWithDetails = async (payoutsData: IPayoutGraph[]) => {
+    const loadPayoutData = async (payout: IPayoutGraph): Promise<IPayoutData | undefined> => {
+      if (payout.payoutDataHash && payout.payoutDataHash !== "") {
+        try {
+          const dataResponse = await fetch(ipfsTransformUri(payout.payoutDataHash)!);
+          if (dataResponse.status === 200) {
+            const object = await dataResponse.json();
+            return object as IPayoutData;
+          }
+          return undefined;
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    const getPayoutsData = async (payoutsToFetch: IPayoutGraph[]): Promise<IPayoutGraph[]> =>
+      Promise.all(
+        payoutsToFetch.map(async (payout) => {
+          const existsPayoutData = allPayouts.find((p) => p.id === payout.id)?.payoutDataHash;
+          const payoutData = existsPayoutData ?? ((await loadPayoutData(payout)) as IPayoutData);
+
+          return {
+            ...payout,
+            payoutData,
+          } as IPayoutGraph;
+        })
+      );
+
+    const allPayoutsData = await getPayoutsData(payoutsData);
+
+    const filteredByChain = allPayoutsData.filter((vault) => {
+      return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
+    });
+
+    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsData)) setAllPayouts(allPayoutsData);
+    if (JSON.stringify(allPayoutsOnEnv) !== JSON.stringify(filteredByChain)) setAllPayoutsOnEnv(filteredByChain);
+  };
+
   const setUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
     const loadNftMetadata = async (userNft: IUserNft): Promise<INFTTokenMetadata | undefined> => {
       if (userNft.nft.tokenURI && userNft.nft.tokenURI !== "") {
@@ -226,6 +271,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   useEffect(() => {
     setVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
     setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
+    setPayoutsWithDetails([...multiChainData.prod.payouts, ...multiChainData.test.payouts]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
@@ -243,8 +289,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     allUserNfts,
     tokenPrices,
     withdrawSafetyPeriod,
+    allPayouts,
+    allPayoutsOnEnv,
     masters: [...multiChainData.prod.masters, ...multiChainData.test.masters],
-    payouts: [...multiChainData.prod.payouts, ...multiChainData.test.payouts],
   };
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;

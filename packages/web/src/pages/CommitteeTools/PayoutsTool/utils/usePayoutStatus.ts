@@ -3,7 +3,7 @@ import { useVaults } from "hooks/vaults/useVaults";
 import { useMemo } from "react";
 
 export const usePayoutStatus = (payout?: IPayoutResponse) => {
-  const { payouts, allVaults } = useVaults();
+  const { allPayouts, allVaults } = useVaults();
 
   const vault = useMemo(() => allVaults?.find((vault) => vault.id === payout?.vaultInfo.address), [allVaults, payout]);
 
@@ -17,13 +17,13 @@ export const usePayoutStatus = (payout?: IPayoutResponse) => {
     if (payout.status === PayoutStatus.Executed) {
       // Check the status on subgraph
       if (vault?.version === "v2") {
-        const payoutOnSubgraph = payouts?.find((p) => p.id === payout.payoutClaimId);
+        const payoutOnSubgraph = allPayouts?.find((p) => p.id === payout.payoutClaimId);
         if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
           return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
         }
       } else {
         const payoutData = payout.payoutData as ISinglePayoutData;
-        const payoutOnSubgraph = payouts?.find(
+        const payoutOnSubgraph = allPayouts?.find(
           (p) =>
             p.vault.id.toLowerCase() === payout.vaultInfo.address.toLowerCase() &&
             p.beneficiary.toLowerCase() === payoutData.beneficiary.toLowerCase() &&
@@ -38,7 +38,7 @@ export const usePayoutStatus = (payout?: IPayoutResponse) => {
 
     // Return status saved on database
     return payout.status;
-  }, [payout, payouts, vault]);
+  }, [payout, allPayouts, vault]);
 
   return payoutStatus;
 };

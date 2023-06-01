@@ -5,8 +5,9 @@ export interface IPayoutGraph {
   vault: { id: string };
   chainId: number;
   beneficiary: string;
-  approvedAt: string; // Date in seconds
-  dismissedAt: string; // Date in seconds
+  payoutDataHash?: string; // Only for v2, null for v1
+  approvedAt?: string; // Date in seconds
+  dismissedAt?: string; // Date in seconds
   bountyPercentage: string; // Number between 0 and 10000 (for V2 vaults)
   severityIndex: string; // Severity index (for V1 vaults)
   isChallenged: boolean;
@@ -16,6 +17,7 @@ export interface IPayoutGraph {
   hackerHatReward: string;
   committeeReward: string;
   // Computed
+  payoutData?: IPayoutData;
   isActive?: boolean; // Is active claim
   isApproved?: boolean; // Is approved claim
   isDismissed?: boolean; // Is dismissed claim
