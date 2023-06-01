@@ -1,18 +1,28 @@
 import { useVaults } from "hooks/vaults/useVaults";
 
+/**
+ * Returns the live/upcoming/finished audit competitions
+ *
+ * @remarks
+ * The finished competitions are gotten from the payouts.
+ */
 export const useAuditCompetitionsVaults = () => {
-  const { allVaultsOnEnv } = useVaults();
-  const auditCompetitions =
+  const { allVaultsOnEnv, allPayoutsOnEnv } = useVaults();
+  const auditCompetitionsVaults =
     allVaultsOnEnv
       ?.filter((vault) => vault.registered)
       .filter((vault) => vault.description?.["project-metadata"].type === "audit") ?? [];
 
-  auditCompetitions.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
+  const paidPayoutsFromAudits = allPayoutsOnEnv?.filter(
+    (payout) => payout.isApproved && payout.payoutData?.vault?.description?.["project-metadata"].type === "audit"
+  );
+
+  auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
 
   return {
-    live: auditCompetitions?.filter((vault) => vault.dateStatus === "on_time") ?? [],
-    upcoming: auditCompetitions?.filter((vault) => vault.dateStatus === "upcoming") ?? [],
-    finished: auditCompetitions?.filter((vault) => vault.dateStatus === "finished") ?? [],
+    live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
+    upcoming: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "upcoming") ?? [],
+    finished: paidPayoutsFromAudits ?? [],
   };
 };
 
