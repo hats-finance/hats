@@ -19,7 +19,7 @@ export const BugBountyVaultsPage = () => {
           </h2>
           <div className="vaults-container mt-4">
             {(liveAuditCompetitions.length > 0 ? liveAuditCompetitions : upcomingAuditCompetitions).map((auditVault, idx) => (
-              <VaultCard key={auditVault.id + idx} vault={auditVault} />
+              <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
             ))}
           </div>
         </>
@@ -28,7 +28,7 @@ export const BugBountyVaultsPage = () => {
       <h2 className="subtitle mt-5">{t("bugBounties")}</h2>
       <div className="vaults-container mt-4">
         {bugBounties.map((bountyVault, idx) => (
-          <VaultCard key={bountyVault.id + idx} vault={bountyVault} />
+          <VaultCard key={bountyVault.id + idx} vaultData={bountyVault} />
         ))}
       </div>
     </StyledVaultsPage>

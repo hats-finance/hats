@@ -1,6 +1,7 @@
-import { IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import { Button, Pill } from "components";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import { ethers } from "ethers";
 import millify from "millify";
 import moment from "moment";
 import { useMemo } from "react";
@@ -10,14 +11,27 @@ import { ipfsTransformUri } from "utils";
 import { StyledVaultCard } from "./styles";
 
 type VaultCardProps = {
-  vault: IVault;
+  vaultData?: IVault;
+  auditPayout?: IPayoutGraph;
 };
 
-export const VaultCard = ({ vault }: VaultCardProps) => {
+/**
+ * Render the vault card. It works with bug bounty vaults and audit competitions.
+ *
+ * @param vaultData - The vault data.
+ * @param auditPayout - The payout data for finished audit competitions.
+ *
+ * @remarks
+ * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
+ * For finished audit competitions, this component uses the payout data, and is passed as `auditPayout`.
+ */
+export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
   const { t } = useTranslation();
 
+  const vault = vaultData ?? auditPayout?.payoutData?.vault;
+
   const vaultDate = useMemo(() => {
-    if (!vault.description) return null;
+    if (!vault || !vault.description) return null;
 
     const starttime = (vault.description["project-metadata"].starttime ?? 0) * 1000;
     const endtime = (vault.description["project-metadata"].endtime ?? 0) * 1000;
@@ -29,13 +43,32 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
     const startDay = moment(starttime).format("DD");
     const endDay = moment(endtime).format("DD");
 
+    if (auditPayout) {
+      return {
+        date: moment(endtime).fromNow(),
+        time: `${moment(endtime).diff(moment(starttime), "days")} days`,
+      };
+    }
+
     return {
       date: startMonth !== endMonth ? `${startMonth} ${startDay}-${endMonth} ${endDay}` : `${startMonth} ${startDay}-${endDay}`,
       time: moment(endtime).format("HH:mm[h]"),
     };
-  }, [vault]);
+  }, [vault, auditPayout]);
 
-  if (!vault.description) return null;
+  const totalPaidOutOnAudit = useMemo(() => {
+    if (!vault) return undefined;
+    if (!auditPayout) return undefined;
+
+    const inTokens = +ethers.utils.formatUnits(auditPayout.totalPaidOut ?? "0", vault.stakingTokenDecimals);
+
+    return {
+      tokens: inTokens,
+      usd: inTokens * (auditPayout.payoutData?.vault?.amountsInfo?.tokenPriceUsd ?? 0),
+    };
+  }, [auditPayout, vault]);
+
+  if (!vault || !vault.description) return null;
 
   const isAudit = vault.description["project-metadata"].type === "audit";
   const logo = vault.description["project-metadata"].icon;
@@ -56,10 +89,12 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
       window.open(tokenNetwork.chain.blockExplorers?.default.url + "/token/" + tokenAddress, "_blank");
     };
 
+    const amountToShowInTokens = auditPayout ? totalPaidOutOnAudit?.tokens : vault.amountsInfo?.depositedAmount.tokens;
+
     return (
       <>
         <WithTooltip
-          text={`${vault.version} | ${t("deposited")} ~${millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} ${token}`}
+          text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${millify(amountToShowInTokens ?? 0)} ${token}`}
         >
           <div className="token" onClick={goToTokenInformation}>
             <div className="images">
@@ -77,6 +112,14 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
     if (!vault.description) return null;
     if (vault.dateStatus !== "on_time") return null;
     if (!vault.description["project-metadata"].endtime) return null;
+
+    if (auditPayout) {
+      return (
+        <div className="mb-4">
+          <Pill transparent color="green" text={t("paidCompetition")} />
+        </div>
+      );
+    }
 
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
@@ -131,8 +174,10 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
           <div className="stats__stat">
             {isAudit ? (
               <>
-                <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.depositedAmount.usd) : "-"}</h3>
-                <div className="sub-value">{t("maxRewards")}</div>
+                <h3 className="value">
+                  ~${auditPayout ? millify(totalPaidOutOnAudit?.usd ?? 0) : millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}
+                </h3>
+                <div className="sub-value">{auditPayout ? t("paidRewards") : t("maxRewards")}</div>
               </>
             ) : (
               <>
@@ -146,7 +191,7 @@ export const VaultCard = ({ vault }: VaultCardProps) => {
 
       <div className="vault-actions">
         <div className="assets">
-          <span className="subtitle">{t("assetsInVault")}</span>
+          <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
           {getVaultAssets()}
         </div>
         <div className="actions">

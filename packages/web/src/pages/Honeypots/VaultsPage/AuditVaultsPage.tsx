@@ -9,7 +9,7 @@ export const AuditVaultsPage = () => {
   const {
     live: liveAuditCompetitions,
     upcoming: upcomingAuditCompetitions,
-    finished: finishedAuditCompetitions,
+    finished: finishedAuditPayouts,
   } = useAuditCompetitionsVaults();
 
   return (
@@ -19,7 +19,7 @@ export const AuditVaultsPage = () => {
           <h2 className="subtitle">{t("liveCompetitions")}</h2>
           <div className="vaults-container mt-4">
             {liveAuditCompetitions.map((auditVault, idx) => (
-              <VaultCard key={auditVault.id + idx} vault={auditVault} />
+              <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
             ))}
           </div>
         </>
@@ -30,18 +30,18 @@ export const AuditVaultsPage = () => {
           <h2 className="subtitle">{t("upcomingCompetitions")}</h2>
           <div className="vaults-container mt-4">
             {upcomingAuditCompetitions.map((auditVault, idx) => (
-              <VaultCard key={auditVault.id + idx} vault={auditVault} />
+              <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
             ))}
           </div>
         </>
       )}
 
-      {finishedAuditCompetitions.length > 0 && (
+      {finishedAuditPayouts.length > 0 && (
         <>
           <h2 className="subtitle">{t("finishedCompetitions")}</h2>
           <div className="vaults-container mt-4">
-            {finishedAuditCompetitions.map((auditVault, idx) => (
-              <VaultCard key={auditVault.id + idx} vault={auditVault} />
+            {finishedAuditPayouts.map((auditPayout, idx) => (
+              <VaultCard key={auditPayout.id + idx} auditPayout={auditPayout} />
             ))}
           </div>
         </>

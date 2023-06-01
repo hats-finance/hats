@@ -391,6 +391,7 @@
     "competitionDetails": "Competition details",
     "bountyDetails": "Bounty details",
     "maxRewards": "Max rewards",
+    "paidRewards": "Paid rewards",
     "totalRewards": "Total rewards",
     "totalDeposits": "Total deposits",
     "deposited": "Deposited",
@@ -399,6 +400,9 @@
     "finishedCompetitions": "Finished competitions",
     "liveNow": "Live now",
     "endingSoon": "Ending soon",
+    "paidCompetition": "Paid competition",
+    "paidAssets": "Paid assets",
+    "paid": "Paid",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
