@@ -8,12 +8,13 @@ import {
   IWithdrawSafetyPeriod,
   fixObject,
 } from "@hats-finance/shared";
+import { axiosClient } from "config/axiosClient";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { INFTTokenMetadata } from "hooks/nft/types";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
-import { IS_PROD, appChains } from "settings";
+import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
@@ -198,8 +199,20 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
         try {
           const dataResponse = await fetch(ipfsTransformUri(payout.payoutDataHash)!);
           if (dataResponse.status === 200) {
-            const object = await dataResponse.json();
-            return object as IPayoutData;
+            const payoutData = (await dataResponse.json()) as IPayoutData;
+
+            // If there is no vault data, try to get it from the fallback database
+            if (!payoutData.vault) {
+              const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/audit-fallback/${payout.id}`);
+              const vaultFound = res.data.vault as IVault | null;
+
+              return {
+                ...payoutData,
+                vault: vaultFound ?? undefined,
+              };
+            }
+
+            return payoutData;
           }
           return undefined;
         } catch (error) {
@@ -213,7 +226,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const getPayoutsData = async (payoutsToFetch: IPayoutGraph[]): Promise<IPayoutGraph[]> =>
       Promise.all(
         payoutsToFetch.map(async (payout) => {
-          const existsPayoutData = allPayouts.find((p) => p.id === payout.id)?.payoutDataHash;
+          const existsPayoutData = allPayouts.find((p) => p.id === payout.id)?.payoutData;
           const payoutData = existsPayoutData ?? ((await loadPayoutData(payout)) as IPayoutData);
 
           return {

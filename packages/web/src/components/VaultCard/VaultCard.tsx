@@ -110,13 +110,20 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
 
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
-    if (vault.dateStatus !== "on_time") return null;
     if (!vault.description["project-metadata"].endtime) return null;
 
     if (auditPayout) {
       return (
         <div className="mb-4">
           <Pill transparent color="green" text={t("paidCompetition")} />
+        </div>
+      );
+    }
+
+    if (vault.dateStatus === "upcoming") {
+      return (
+        <div className="mb-4">
+          <Pill transparent color="yellow" text={t("upcoming")} />
         </div>
       );
     }
