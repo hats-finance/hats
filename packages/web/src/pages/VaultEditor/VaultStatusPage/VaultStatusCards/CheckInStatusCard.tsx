@@ -2,9 +2,9 @@ import { isAGnosisSafeTx } from "@hats-finance/shared";
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { VaultStatusContext } from "../store";
 
 export const CheckInStatusCard = () => {
@@ -19,21 +19,20 @@ export const CheckInStatusCard = () => {
   const isMultisigConnected = address === committeeMulsitigAddress;
 
   const checkInCall = CommitteeCheckInContract.hook(undefined, { address: vaultAddress, chainId: vaultChainId });
+  useWaitForTransaction({
+    hash: checkInCall.data?.hash as `0x${string}`,
+    onSuccess: async (data) => {
+      const isSafeTx = await isAGnosisSafeTx(data.transactionHash, vaultChainId);
+
+      if (isSafeTx) setIsBeingExecuted(true);
+      setTimeout(() => refreshVaultData(), 2000);
+    },
+  });
+
   const handleCheckIn = () => {
     if (isCommitteeCheckedIn || !isMultisigConnected) return;
     checkInCall?.send();
   };
-
-  useEffect(() => {
-    const txHash = checkInCall?.data?.hash;
-    if (!txHash) return;
-
-    isAGnosisSafeTx(txHash, vaultChainId).then((isSafeTx) => {
-      if (isSafeTx) setIsBeingExecuted(true);
-      setTimeout(() => refreshVaultData(), 2000);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkInCall]);
 
   return (
     <div className="status-card">
