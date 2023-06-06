@@ -5,9 +5,19 @@ import { AuditVaultsPage } from "./VaultsPage/AuditVaultsPage";
 import { BugBountyVaultsPage } from "./VaultsPage/BugBountyVaultsPage";
 
 export enum HoneypotsRoutePaths {
-  bugBounties = "bug-bounties",
-  audits = "audits",
+  bugBounties = "bug-bounty",
+  audits = "audit-competition",
 }
+
+const vaultDetailsRoute: RouteObject = {
+  path: ":vaultSlug", // vaultName-vaultId,
+  children: [
+    {
+      path: "",
+      element: <VaultDetailsPage />,
+    },
+  ],
+};
 
 export const honeypotsRouter = (): RouteObject => ({
   path: `${RoutePaths.vaults}`,
@@ -23,10 +33,7 @@ export const honeypotsRouter = (): RouteObject => ({
           path: "",
           element: <BugBountyVaultsPage />,
         },
-        {
-          path: ":vaultId",
-          element: <VaultDetailsPage />,
-        },
+        vaultDetailsRoute,
       ],
     },
     {
@@ -36,10 +43,7 @@ export const honeypotsRouter = (): RouteObject => ({
           path: "",
           element: <AuditVaultsPage />,
         },
-        {
-          path: ":vaultId",
-          element: <VaultDetailsPage />,
-        },
+        vaultDetailsRoute,
       ],
     },
   ],

@@ -34,7 +34,6 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
   const navigate = useNavigate();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
-  console.log(auditPayout);
 
   const vaultDate = useMemo(() => {
     if (!vault || !vault.description) return null;
