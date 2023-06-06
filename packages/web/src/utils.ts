@@ -1,9 +1,7 @@
-import { IPFS_PREFIX, LocalStorage, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "constants/constants";
+import { IPFS_PREFIX, SMALL_SCREEN_BREAKPOINT, ScreenSize } from "constants/constants";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import millify from "millify";
-import { SUBMISSION_INIT_DATA } from "pages/Submissions/SubmissionFormPage/store";
-import { ISubmissionData } from "pages/Submissions/SubmissionFormPage/types";
 import { BASE_SERVICE_URL } from "settings";
 
 /**
@@ -129,28 +127,6 @@ export const parseJSONToObject = (dataString: string) => {
     // In case the given string is an invalid JSON.
     console.error(error);
   }
-};
-
-/**
- * Used to set the current project which the user selects from the vaults lists to submit a vulnerability
- * @param {string} projectName
- * @param {string} projectId
- */
-export const setVulnerabilityProject = (projectName: string, projectId: string, contractAddress: string) => {
-  let cachedData: ISubmissionData = JSON.parse(
-    localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(SUBMISSION_INIT_DATA)
-  );
-
-  if (cachedData.version !== getAppVersion()) {
-    cachedData = SUBMISSION_INIT_DATA;
-  }
-
-  cachedData.project = {
-    verified: true,
-    projectName: projectName,
-    projectId: projectId,
-  };
-  localStorage.setItem(LocalStorage.SubmitVulnerability, JSON.stringify(cachedData));
 };
 
 export const ipfsTransformUri = (uri: string | undefined, { isPinned } = { isPinned: true }) => {

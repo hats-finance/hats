@@ -4,10 +4,14 @@ import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import { ethers } from "ethers";
 import millify from "millify";
 import moment from "moment";
+import { RoutePaths } from "navigation";
+import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
+import { slugify } from "utils/slug.utils";
 import { StyledVaultCard } from "./styles";
 
 type VaultCardProps = {
@@ -27,8 +31,10 @@ type VaultCardProps = {
  */
 export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
+  console.log(auditPayout);
 
   const vaultDate = useMemo(() => {
     if (!vault || !vault.description) return null;
@@ -145,6 +151,28 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
     }
   };
 
+  const goToDeposits = () => {
+    if (!vault) return;
+
+    const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}?section=deposits`);
+  };
+
+  const goToSubmitVulnerability = () => {
+    navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
+  };
+
+  const goToDetails = () => {
+    if (!vault) return;
+
+    const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+  };
+
   return (
     <StyledVaultCard isAudit={isAudit}>
       {isAudit && getAuditStatusPill()}
@@ -168,8 +196,17 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
           <div className="stats__stat">
             {isAudit ? (
               <>
-                <h3 className="value">{vaultDate?.date}</h3>
-                <div className="sub-value">{vaultDate?.time}</div>
+                {auditPayout ? (
+                  <>
+                    <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
+                    <div className="sub-value">{t("maxRewards")}</div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="value">{vaultDate?.date}</h3>
+                    <div className="sub-value">{vaultDate?.time}</div>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -203,16 +240,21 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
         </div>
         <div className="actions">
           {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (
-            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
+            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined" onClick={goToDeposits}>
               {t("deposits")}
             </Button>
           )}
           {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
-            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
+            <Button
+              size="medium"
+              filledColor={isAudit ? "primary" : "secondary"}
+              styleType="outlined"
+              onClick={goToSubmitVulnerability}
+            >
               {t("submitVulnerability")}
             </Button>
           )}
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"}>
+          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
             {isAudit ? t("competitionDetails") : t("bountyDetails")}
           </Button>
         </div>

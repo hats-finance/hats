@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
 import { IPoolWithdrawRequest, IVault, IVaultDescription } from "types";
-import { setVulnerabilityProject } from "utils";
 import { isMobile } from "web3modal";
 import VaultActions from "../VaultActions/VaultActions";
 import Members from "./Members/Members";
@@ -147,8 +146,7 @@ export default function VaultExpanded(props: IProps) {
                   <div className="submit-vulnerability-button-wrapper">
                     <button
                       onClick={() => {
-                        setVulnerabilityProject(description!["project-metadata"].name, id, props.data.master.address);
-                        navigate(RoutePaths.vulnerability);
+                        navigate(`${RoutePaths.vulnerability}?projectId=${id}`);
                       }}
                       disabled={props.preview}
                     >
