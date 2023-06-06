@@ -202,12 +202,16 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
           {getVaultAssets()}
         </div>
         <div className="actions">
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
-            {t("deposits")}
-          </Button>
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
-            {t("submitVulnerability")}
-          </Button>
+          {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (
+            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
+              {t("deposits")}
+            </Button>
+          )}
+          {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
+            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
+              {t("submitVulnerability")}
+            </Button>
+          )}
           <Button size="medium" filledColor={isAudit ? "primary" : "secondary"}>
             {isAudit ? t("competitionDetails") : t("bountyDetails")}
           </Button>
