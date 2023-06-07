@@ -7,7 +7,17 @@ import {
 } from "@hats-finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Alert, Button, CopyToClipboard, FormInput, FormSelectInput, Loading, SafePeriodBar, VaultInfoCard } from "components";
+import {
+  Alert,
+  Button,
+  CopyToClipboard,
+  FormInput,
+  FormSelectInput,
+  Loading,
+  SafePeriodBar,
+  Seo,
+  VaultInfoCard,
+} from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ExecutePayoutContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -176,200 +186,203 @@ export const PayoutStatusPage = () => {
   if (isLoadingPayout || isLoadingSafeInfo) return <Loading extraText={`${t("Payouts.loadingPayoutData")}...`} />;
 
   return (
-    <StyledPayoutStatusPage className="content-wrapper-md">
-      <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
+    <>
+      <Seo title={t("seo.payoutsDashboardTitle")} />
+      <StyledPayoutStatusPage className="content-wrapper-md">
+        <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
 
-      <div className="title-container">
-        <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
-          <BackIcon />
-          <p>{t("payouts")}</p>
+        <div className="title-container">
+          <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
+            <BackIcon />
+            <p>{t("payouts")}</p>
+          </div>
         </div>
-      </div>
 
-      <div className="section-title">
-        {t("Payouts.payoutStatus")}
-        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
-      </div>
+        <div className="section-title">
+          {t("Payouts.payoutStatus")}
+          <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
+        </div>
 
-      {!isAuthenticated && (
-        <>
-          <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
-          <Button onClick={tryAuthentication} className="mt-4">
-            {t("signInWithEthereum")}
-          </Button>
-        </>
-      )}
+        {!isAuthenticated && (
+          <>
+            <Alert type="warning">{t("Payouts.signInToSeePayouts")}</Alert>
+            <Button onClick={tryAuthentication} className="mt-4">
+              {t("signInWithEthereum")}
+            </Button>
+          </>
+        )}
 
-      {payoutStatus === PayoutStatus.Creating && (
-        <>
-          <Alert type="warning">{t("Payouts.yourPayoutIsNotYetCreated")}</Alert>
-          <Button onClick={() => navigate(`${RoutePaths.payouts}`)} className="mt-4">
-            {t("Payouts.goToPayoutCreator")}
-          </Button>
-        </>
-      )}
+        {payoutStatus === PayoutStatus.Creating && (
+          <>
+            <Alert type="warning">{t("Payouts.yourPayoutIsNotYetCreated")}</Alert>
+            <Button onClick={() => navigate(`${RoutePaths.payouts}`)} className="mt-4">
+              {t("Payouts.goToPayoutCreator")}
+            </Button>
+          </>
+        )}
 
-      {isAuthenticated && payoutStatus !== PayoutStatus.Creating && (
-        <div className="status-content">
-          <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payoutStatus}`)}</p>
+        {isAuthenticated && payoutStatus !== PayoutStatus.Creating && (
+          <div className="status-content">
+            <p className="status-description">{t(`Payouts.payoutStatusDescriptions.${payoutStatus}`)}</p>
 
-          {userHasAlreadySigned && isCollectingSignatures && (
-            <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
-          )}
-
-          {payout && (
-            <div className="pt-4">
-              <PayoutCard viewOnly noVaultInfo payout={payout} />
-            </div>
-          )}
-
-          <div className="payout-status-container">
-            {payout?.payoutData.type === "single" && (
-              <FormInput
-                label={t("Payouts.beneficiary")}
-                placeholder={t("Payouts.beneficiaryPlaceholder")}
-                value={payout?.payoutData.beneficiary}
-                readOnly
-              />
+            {userHasAlreadySigned && isCollectingSignatures && (
+              <Alert type="info" className="mb-5" content={t("Payouts.youHaveAlredySignedWaitingForOthers")} />
             )}
 
-            <div className="row">
-              {payout?.payoutData.type === "single" && payout?.payoutData.severity && (
-                <FormSelectInput
-                  value={payout.payoutData.severity}
-                  label={t("severity")}
-                  placeholder={t("severityPlaceholder")}
-                  options={[
-                    {
-                      label: payout.payoutData.severity,
-                      value: payout.payoutData.severity,
-                    },
-                  ]}
+            {payout && (
+              <div className="pt-4">
+                <PayoutCard viewOnly noVaultInfo payout={payout} />
+              </div>
+            )}
+
+            <div className="payout-status-container">
+              {payout?.payoutData.type === "single" && (
+                <FormInput
+                  label={t("Payouts.beneficiary")}
+                  placeholder={t("Payouts.beneficiaryPlaceholder")}
+                  value={payout?.payoutData.beneficiary}
                   readOnly
                 />
               )}
 
+              <div className="row">
+                {payout?.payoutData.type === "single" && payout?.payoutData.severity && (
+                  <FormSelectInput
+                    value={payout.payoutData.severity}
+                    label={t("severity")}
+                    placeholder={t("severityPlaceholder")}
+                    options={[
+                      {
+                        label: payout.payoutData.severity,
+                        value: payout.payoutData.severity,
+                      },
+                    ]}
+                    readOnly
+                  />
+                )}
+
+                <FormInput
+                  value={`${payout?.payoutData.percentageToPay}%`}
+                  label={t("Payouts.percentageToPay")}
+                  placeholder={t("Payouts.percentageToPayPlaceholder")}
+                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+                  readOnly
+                />
+              </div>
+
+              <div className="my-5">
+                {payout && payout.payoutData.type === "single" ? (
+                  <SinglePayoutAllocation
+                    vault={vault}
+                    payout={payout}
+                    percentageToPay={payout?.payoutData.percentageToPay}
+                    selectedSeverity={selectedSeverityData}
+                  />
+                ) : (
+                  <SplitPayoutAllocation vault={vault} payout={payout} />
+                )}
+              </div>
+            </div>
+
+            <div className="payout-status-container">
+              <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
+
               <FormInput
-                value={`${payout?.payoutData.percentageToPay}%`}
-                label={t("Payouts.percentageToPay")}
-                placeholder={t("Payouts.percentageToPayPlaceholder")}
-                helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+                value={
+                  payout?.payoutData.explanation +
+                  `${payout?.payoutData.additionalInfo ? `\n\n\n${payout?.payoutData.additionalInfo}` : ""}`
+                }
+                label={t("Payouts.explanation")}
+                placeholder={t("Payouts.explanationPlaceholder")}
+                type="textarea"
+                rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
                 readOnly
               />
             </div>
 
-            <div className="my-5">
-              {payout && payout.payoutData.type === "single" ? (
-                <SinglePayoutAllocation
-                  vault={vault}
-                  payout={payout}
-                  percentageToPay={payout?.payoutData.percentageToPay}
-                  selectedSeverity={selectedSeverityData}
-                />
+            <div className="payout-status-container top-separation">
+              {vault && (
+                <a
+                  className="mulsitig-address"
+                  href={getSafeHomeLink(vault.committee, vault.chainId as number)}
+                  {...defaultAnchorProps}
+                >
+                  <strong>{t("multisigAddress")}</strong>: {vault?.committee}
+                </a>
+              )}
+              <p className="section-title">{t("Payouts.signAndExecute")}</p>
+
+              <div className="signers-list">
+                {vault &&
+                  safeInfo?.owners.map((signerAddress) => (
+                    <SignerCard
+                      key={signerAddress}
+                      signerAddress={signerAddress}
+                      chainId={vault.chainId as number}
+                      signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
+                    />
+                  ))}
+              </div>
+
+              {isReadyToExecute && isAnyActivePayout ? (
+                <Alert type="warning" content={t("Payouts.thisVaultHasAnActivePayout")} />
               ) : (
-                <SplitPayoutAllocation vault={vault} payout={payout} />
-              )}
-            </div>
-          </div>
+                <>
+                  {isReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
+                    <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
+                  )}
 
-          <div className="payout-status-container">
-            <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
-
-            <FormInput
-              value={
-                payout?.payoutData.explanation +
-                `${payout?.payoutData.additionalInfo ? `\n\n\n${payout?.payoutData.additionalInfo}` : ""}`
-              }
-              label={t("Payouts.explanation")}
-              placeholder={t("Payouts.explanationPlaceholder")}
-              type="textarea"
-              rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
-              readOnly
-            />
-          </div>
-
-          <div className="payout-status-container top-separation">
-            {vault && (
-              <a
-                className="mulsitig-address"
-                href={getSafeHomeLink(vault.committee, vault.chainId as number)}
-                {...defaultAnchorProps}
-              >
-                <strong>{t("multisigAddress")}</strong>: {vault?.committee}
-              </a>
-            )}
-            <p className="section-title">{t("Payouts.signAndExecute")}</p>
-
-            <div className="signers-list">
-              {vault &&
-                safeInfo?.owners.map((signerAddress) => (
-                  <SignerCard
-                    key={signerAddress}
-                    signerAddress={signerAddress}
-                    chainId={vault.chainId as number}
-                    signed={payout?.signatures.some((sig) => sig.signerAddress === signerAddress) ?? false}
-                  />
-                ))}
-            </div>
-
-            {isReadyToExecute && isAnyActivePayout ? (
-              <Alert type="warning" content={t("Payouts.thisVaultHasAnActivePayout")} />
-            ) : (
-              <>
-                {isReadyToExecute && !withdrawSafetyPeriod?.isSafetyPeriod && (
-                  <Alert type="warning" content={t("Payouts.payoutReadyToExecuteButWaitingForSafetyPeriod")} />
-                )}
-
-                {isReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
-                  <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
-                )}
-              </>
-            )}
-
-            {isReadyToExecute && (
-              <div className="mt-3">
-                <SafePeriodBar />
-              </div>
-            )}
-
-            {executePayout.error && <Alert className="mt-5" type="error" content={executePayout.error} />}
-            {!isUserCommitteeMember && (
-              <Alert className="mt-5" type="warning" content={t("Payouts.youAreNotACommitteeMemberCantSign")} />
-            )}
-
-            <div className="buttons">
-              {canBeDeleted && (
-                <Button styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
-                  <RemoveIcon className="mr-3" />
-                  {t("Payouts.deletePayout")}
-                </Button>
+                  {isReadyToExecute && withdrawSafetyPeriod?.isSafetyPeriod && (
+                    <Alert type="success" content={t("Payouts.safetyPeriodOnYouCanExecutePayout")} />
+                  )}
+                </>
               )}
 
-              <div className="sub-container">
-                {canBesigned && !userHasAlreadySigned && (
-                  <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
-                    {t("Payouts.signPayout")}
+              {isReadyToExecute && (
+                <div className="mt-3">
+                  <SafePeriodBar />
+                </div>
+              )}
+
+              {executePayout.error && <Alert className="mt-5" type="error" content={executePayout.error} />}
+              {!isUserCommitteeMember && (
+                <Alert className="mt-5" type="warning" content={t("Payouts.youAreNotACommitteeMemberCantSign")} />
+              )}
+
+              <div className="buttons">
+                {canBeDeleted && (
+                  <Button styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
+                    <RemoveIcon className="mr-3" />
+                    {t("Payouts.deletePayout")}
                   </Button>
                 )}
-                {isReadyToExecute && (
-                  <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
-                    {t("Payouts.executePayout")}
-                  </Button>
-                )}
+
+                <div className="sub-container">
+                  {canBesigned && !userHasAlreadySigned && (
+                    <Button disabled={!isUserCommitteeMember} onClick={handleSignPayout}>
+                      {t("Payouts.signPayout")}
+                    </Button>
+                  )}
+                  {isReadyToExecute && (
+                    <Button disabled={!withdrawSafetyPeriod?.isSafetyPeriod || isAnyActivePayout} onClick={handleExecutePayout}>
+                      {t("Payouts.executePayout")}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
-      {isRefetchingPayout && <Loading fixed extraText={`${t("Payouts.loadingPayoutData")}...`} />}
-      {(addSignature.isLoading || signPayout.isLoading) && (
-        <Loading fixed extraText={`${t("Payouts.signingPayoutTransaction")}...`} />
-      )}
-      {(executePayout.isLoading || waitingPayoutExecution.isLoading || markPayoutAsExecuted.isLoading) && (
-        <Loading fixed extraText={`${t("Payouts.executingPayout")}`} />
-      )}
-    </StyledPayoutStatusPage>
+        {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
+        {isRefetchingPayout && <Loading fixed extraText={`${t("Payouts.loadingPayoutData")}...`} />}
+        {(addSignature.isLoading || signPayout.isLoading) && (
+          <Loading fixed extraText={`${t("Payouts.signingPayoutTransaction")}...`} />
+        )}
+        {(executePayout.isLoading || waitingPayoutExecution.isLoading || markPayoutAsExecuted.isLoading) && (
+          <Loading fixed extraText={`${t("Payouts.executingPayout")}`} />
+        )}
+      </StyledPayoutStatusPage>
+    </>
   );
 };

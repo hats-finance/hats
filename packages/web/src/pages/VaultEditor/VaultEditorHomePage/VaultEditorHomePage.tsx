@@ -1,12 +1,12 @@
+import { Button, FormSelectInput, Modal, Seo } from "components";
+import { useUserVaults } from "hooks/vaults/useUserVaults";
+import { RoutePaths } from "navigation";
 import { useState } from "react";
-import { useAccount } from "wagmi";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Button, FormSelectInput, Modal } from "components";
-import { RoutePaths } from "navigation";
-import { useUserVaults } from "hooks/vaults/useUserVaults";
-import { StyledVaultEditorHome } from "./styles";
+import { useAccount } from "wagmi";
 import { VaultReadyModal } from "./VaultReadyModal";
+import { StyledVaultEditorHome } from "./styles";
 
 export const VaultEditorHomePage = () => {
   const { t } = useTranslation();
@@ -30,46 +30,49 @@ export const VaultEditorHomePage = () => {
   };
 
   return (
-    <StyledVaultEditorHome>
-      <div className="container">
-        <p className="title">{t("welcomeVaultEditorHome")}</p>
-        <Button expanded size="big" onClick={createNewVault}>
-          {t("createNewVault")}
-        </Button>
-        <div className="divider">
-          <div />
-          <p>{t("or")}</p>
-          <div />
+    <>
+      <Seo title={t("seo.createNewVaultTitle")} />
+      <StyledVaultEditorHome>
+        <div className="container">
+          <p className="title">{t("welcomeVaultEditorHome")}</p>
+          <Button expanded size="big" onClick={createNewVault}>
+            {t("createNewVault")}
+          </Button>
+          <div className="divider">
+            <div />
+            <p>{t("or")}</p>
+            <div />
+          </div>
+
+          <p>{t("editExistingVaultExplanation")}</p>
+
+          {address && (
+            <>
+              <div className="vault-selection">
+                <FormSelectInput
+                  label={t("vault")}
+                  emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
+                  placeholder={t("selectVault")}
+                  name="editSessionId"
+                  value={selectedVaultAddress}
+                  onChange={(e) => setSelectedVaultAddress(e as string)}
+                  options={vaultsOptions}
+                />
+
+                <div className="options">
+                  <Button disabled={!selectedVaultAddress} onClick={goToStatusPage}>
+                    {t("statusPage")}
+                  </Button>
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
-        <p>{t("editExistingVaultExplanation")}</p>
-
-        {address && (
-          <>
-            <div className="vault-selection">
-              <FormSelectInput
-                label={t("vault")}
-                emptyState={isLoadingUserVaults ? `${t("loadingVaults")}...` : t("youHaveNoVaults")}
-                placeholder={t("selectVault")}
-                name="editSessionId"
-                value={selectedVaultAddress}
-                onChange={(e) => setSelectedVaultAddress(e as string)}
-                options={vaultsOptions}
-              />
-
-              <div className="options">
-                <Button disabled={!selectedVaultAddress} onClick={goToStatusPage}>
-                  {t("statusPage")}
-                </Button>
-              </div>
-            </div>
-          </>
-        )}
-      </div>
-
-      <Modal isShowing={isVaultCreated} onHide={() => navigate(RoutePaths.vault_editor)} disableOnOverlayClose>
-        <VaultReadyModal closeModal={() => navigate(RoutePaths.vault_editor)} />
-      </Modal>
-    </StyledVaultEditorHome>
+        <Modal isShowing={isVaultCreated} onHide={() => navigate(RoutePaths.vault_editor)} disableOnOverlayClose>
+          <VaultReadyModal closeModal={() => navigate(RoutePaths.vault_editor)} />
+        </Modal>
+      </StyledVaultEditorHome>
+    </>
   );
 };

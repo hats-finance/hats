@@ -1,6 +1,6 @@
 import { IPayoutResponse, PayoutStatus } from "@hats-finance/shared";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import { Alert, Button, HatSpinner, Modal } from "components";
+import { Alert, Button, HatSpinner, Modal, Seo } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useModal from "hooks/useModal";
 import moment from "moment";
@@ -92,6 +92,7 @@ export const PayoutsListPage = () => {
 
   return (
     <>
+      <Seo title={t("seo.payoutsDashboardTitle")} />
       <StyledPayoutsListPage className="content-wrapper-md">
         <div className="title-container">
           <div className="title">

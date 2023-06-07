@@ -26,4 +26,5 @@ export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmD
 export { VaultInfoCard } from "./VaultInfoCard/VaultInfoCard";
 export { VaultCard } from "./VaultCard/VaultCard";
 export { NftPreview } from "./NftPreview/NftPreview";
+export { Seo } from "./Seo/Seo";
 export * from "./FormControls";

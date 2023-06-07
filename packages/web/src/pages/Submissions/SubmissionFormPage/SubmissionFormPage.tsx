@@ -1,3 +1,4 @@
+import { Seo } from "components";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/vaults/useVaults";
@@ -188,24 +189,27 @@ export const SubmissionFormPage = () => {
   };
 
   return (
-    <StyledSubmissionFormPage className="content-wrapper">
-      <div id="vulnerabilityFormWrapper" className="accordion-wrapper">
-        <SubmissionFormContext.Provider value={context}>
-          {steps.map((step, index) => (
-            <SubmissionFormCard
-              extraInfoTitle={index === 0 ? submissionData?.project?.projectName : ""}
-              id={index}
-              key={index}
-              title={step.title}
-              collapsed={currentStep !== index}
-              verified={submissionData?.[SubmissionStep[step.card]]?.verified}
-              disabled={isSubmitting}
-            >
-              {<step.component />}
-            </SubmissionFormCard>
-          ))}
-        </SubmissionFormContext.Provider>
-      </div>
-    </StyledSubmissionFormPage>
+    <>
+      <Seo title={t("seo.submitVulnerabilityTitle")} />
+      <StyledSubmissionFormPage className="content-wrapper">
+        <div id="vulnerabilityFormWrapper" className="accordion-wrapper">
+          <SubmissionFormContext.Provider value={context}>
+            {steps.map((step, index) => (
+              <SubmissionFormCard
+                extraInfoTitle={index === 0 ? submissionData?.project?.projectName : ""}
+                id={index}
+                key={index}
+                title={step.title}
+                collapsed={currentStep !== index}
+                verified={submissionData?.[SubmissionStep[step.card]]?.verified}
+                disabled={isSubmitting}
+              >
+                {<step.component />}
+              </SubmissionFormCard>
+            ))}
+          </SubmissionFormContext.Provider>
+        </div>
+      </StyledSubmissionFormPage>
+    </>
   );
 };

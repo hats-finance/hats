@@ -1,5 +1,17 @@
 {
   "translation": {
+    "seo": {
+      "title": "Web3 Audit Competitions and Bug Bounties",
+      "description": "Hats.Finance is a decentralized smart bug bounty and audit competitions marketplace. Permissionless, scalable, and allows anyone to provide liquidity.",
+      "bugBountiesTitle": "Web3 Bug Bounties",
+      "auditCompetitionsTitle": "Web3 Audit Competitions",
+      "submitVulnerabilityTitle": "Submit a vulnerability",
+      "createNewVaultTitle": "Create new Audit Competition/Bug Bounty vault",
+      "vaultStatusTitle": "{{vaultName}} vault dashboard",
+      "decryptionToolTitle": "Submissions decryption tool",
+      "payoutsDashboardTitle": "Payouts dashboard",
+      "createPayoutTitle": "Create a new payout"
+    },
     "version": "Version",
     "required": "Required",
     "cantChangeThisValue": "You can't change this value",
