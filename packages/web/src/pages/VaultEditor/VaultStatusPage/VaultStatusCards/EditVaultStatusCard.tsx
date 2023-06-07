@@ -147,7 +147,7 @@ export const EditVaultStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("setup")}</span>
+          <h3>{t("setup")}</h3>
           <Pill
             color={lastEditionIsWaitingApproval ? "yellow" : "blue"}
             text={lastEditionIsWaitingApproval ? t("waitingApproval") : t("completed")}

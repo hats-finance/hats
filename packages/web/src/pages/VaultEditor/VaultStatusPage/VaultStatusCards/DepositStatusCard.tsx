@@ -40,7 +40,7 @@ export const DepositStatusCard = () => {
       <div className="status-card">
         <div className="status-card__title">
           <div className="leftSide">
-            <span>{t("deposit")}</span>
+            <h3>{t("deposit")}</h3>
             <Pill
               color={isVaultDeposited ? "blue" : "red"}
               text={

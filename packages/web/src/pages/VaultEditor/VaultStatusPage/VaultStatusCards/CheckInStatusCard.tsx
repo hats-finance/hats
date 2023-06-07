@@ -38,7 +38,7 @@ export const CheckInStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("checkIn")}</span>
+          <h3>{t("checkIn")}</h3>
           <Pill
             color={isCommitteeCheckedIn ? "blue" : "red"}
             text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")}
