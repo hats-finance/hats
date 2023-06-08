@@ -27,6 +27,8 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn install --ignore-engines
+      - name: Install ipfs-deploy
+        run: npm install -g ipfs-deploy
       - name: Deploy to IPFS
         run: ipd build --path-to-deploy=build/ --pinata
         env:
