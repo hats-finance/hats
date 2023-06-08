@@ -3,7 +3,7 @@ name: Deploy to IPFS
 on:
   push:
     branches:
-      - test  # or your default branch
+      - shayzluf-patch-1  # or your default branch
 
 jobs:
   deploy:
