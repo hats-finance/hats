@@ -5,8 +5,8 @@ import { AuditVaultsPage } from "./VaultsPage/AuditVaultsPage";
 import { BugBountyVaultsPage } from "./VaultsPage/BugBountyVaultsPage";
 
 export enum HoneypotsRoutePaths {
-  bugBounties = "bug-bounty",
-  audits = "audit-competition",
+  bugBounties = "bug-bounties",
+  audits = "audit-competitions",
 }
 
 const vaultDetailsRoute: RouteObject = {
