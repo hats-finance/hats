@@ -32,7 +32,7 @@ jobs:
         env:
           CI: false
       - name: List directory contents
-        run: ls -la
+        run: ls -la -R
       - name: Install ipfs-deploy
         run: npm install -g ipfs-deploy
       - name: Deploy to IPFS
