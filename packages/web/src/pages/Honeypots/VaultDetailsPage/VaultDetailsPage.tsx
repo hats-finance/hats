@@ -1,9 +1,8 @@
-import { Loading } from "components";
+import { Loading, VaultCard } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
 import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";
-import { ipfsTransformUri } from "utils";
 import { HoneypotsRoutePaths } from "../router";
 import { StyledVaultDetailsPage } from "./styles";
 
@@ -31,7 +30,7 @@ export const VaultDetailsPage = () => {
   };
 
   return (
-    <StyledVaultDetailsPage isAudit={isAudit}>
+    <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit}>
       <div className="breadcrumb">
         <span className="type" onClick={navigateToType}>
           {isAudit ? t("auditCompetitions") : t("bugBounties")}/
@@ -39,8 +38,8 @@ export const VaultDetailsPage = () => {
         <span className="name">{vaultName}</span>
       </div>
 
-      <div className="header">
-        <img src={ipfsTransformUri(vaultLogo)} alt={vaultName} className="logo" />
+      <div className="vaultCard">
+        <VaultCard reducedStyles vaultData={vault} />
       </div>
     </StyledVaultDetailsPage>
   );

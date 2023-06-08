@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 
 export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
   ({ isAudit }) => css`
@@ -16,6 +17,10 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
       span.name {
         color: ${isAudit ? "var(--primary-lighter)" : "var(--secondary)"};
       }
+    }
+
+    .vaultCard {
+      margin-top: ${getSpacing(4)};
     }
   `
 );

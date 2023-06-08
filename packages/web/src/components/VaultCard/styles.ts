@@ -2,13 +2,13 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
-  ({ isAudit }) => css`
+export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boolean }>(
+  ({ isAudit, reducedStyles }) => css`
     display: flex;
     flex-direction: column;
-    background: var(--background-2);
-    border: 1px solid var(--primary-light);
-    padding: ${getSpacing(3)} ${getSpacing(4)};
+    background: ${reducedStyles ? "transparent" : "var(--background-2)"};
+    border: ${reducedStyles ? "none" : "1px solid var(--primary-light)"};
+    padding: ${reducedStyles ? "0" : `${getSpacing(3)} ${getSpacing(4)}`};
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(2.5)} ${getSpacing(3)};
@@ -17,7 +17,7 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
     .vault-info {
       display: grid;
       gap: ${getSpacing(2)};
-      grid-template-columns: 3fr 2fr;
+      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "3fr 2fr"};
       align-items: center;
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -54,7 +54,9 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
 
       .stats {
         display: grid;
-        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"};
+        grid-template-columns: ${reducedStyles
+          ? `${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"}`
+          : `${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}`};
         gap: ${getSpacing(1)};
         align-items: center;
 
