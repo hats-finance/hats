@@ -1,4 +1,4 @@
-import { Loading, VaultCard } from "components";
+import { Alert, Loading, VaultCard } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
 import { useTranslation } from "react-i18next";
@@ -21,6 +21,7 @@ export const VaultDetailsPage = () => {
     return null;
   }
 
+  const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
   const vaultLogo = vault.description["project-metadata"].icon;
   const vaultName = vault.description["project-metadata"].name;
@@ -37,6 +38,12 @@ export const VaultDetailsPage = () => {
         </span>
         <span className="name">{vaultName}</span>
       </div>
+
+      {!!activeClaim && (
+        <Alert className="mt-5 mb-5" type="warning">
+          {t("vaultPausedActiveClaimExplanationLong")}
+        </Alert>
+      )}
 
       <div className="vaultCard">
         <VaultCard reducedStyles vaultData={vault} />

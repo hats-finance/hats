@@ -377,6 +377,7 @@
     "audit": "Audit",
     "grants": "Grants",
     "vaultPausedActiveClaimExplanation": "Committee is paying out a reward, the vault is paused for withdrawals.",
+    "vaultPausedActiveClaimExplanationLong": "This vault is currently pause for withdrawals because committee is paying out a reward.",
     "seeMore": "See more",
     "seeLess": "See less",
     "beneficiaryWalletAddress": "Beneficiary wallet address",
