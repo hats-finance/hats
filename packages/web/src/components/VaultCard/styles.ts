@@ -9,7 +9,7 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
     flex-direction: column;
     background: var(--background-2);
     border: 1px solid var(--primary-light);
-    padding: ${getSpacing(4)} ${getSpacing(4)};
+    padding: ${getSpacing(3)} ${getSpacing(4)};
 
     ${hasActiveClaim &&
     css`
