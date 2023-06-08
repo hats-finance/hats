@@ -416,6 +416,7 @@
     "paidAssets": "Paid assets",
     "paid": "Paid",
     "upcoming": "Upcoming",
+    "loadingVaultDetails": "Loading vault details",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
