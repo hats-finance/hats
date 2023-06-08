@@ -19,6 +19,7 @@ export function SafePeriodBar({ type = "bar" }: SafePeriodBarProps) {
   const safetyPeriodDate = new Date(isSafetyPeriod ? ongoingSafetyEndsAt : nextSafetyStartsAt).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+    timeZoneName: "shortOffset",
   });
 
   const safetyDuration = moment.duration(withdrawSafetyPeriod.safetyPeriod, "seconds").humanize();

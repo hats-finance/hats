@@ -57,7 +57,11 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
 
     return {
       date: startMonth !== endMonth ? `${startMonth} ${startDay}-${endMonth} ${endDay}` : `${startMonth} ${startDay}-${endDay}`,
-      time: moment(endtime).format("HH:mm[h]"),
+      time: moment(endtime).toDate().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "shortOffset",
+      }),
     };
   }, [vault, auditPayout]);
 
@@ -253,9 +257,11 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
               {t("submitVulnerability")}
             </Button>
           )}
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
-            {isAudit ? t("competitionDetails") : t("bountyDetails")}
-          </Button>
+          {!auditPayout && (
+            <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
+              {isAudit ? t("competitionDetails") : t("bountyDetails")}
+            </Button>
+          )}
         </div>
       </div>
     </StyledVaultCard>
