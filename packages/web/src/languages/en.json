@@ -376,7 +376,7 @@
     "bounty": "Bounty",
     "audit": "Audit",
     "grants": "Grants",
-    "vaultPausedActiveClaimExplanation": "Vault is paused to withdraws due to an ongoing payout.",
+    "vaultPausedActiveClaimExplanation": "Committee is paying out a reward, the vault is paused for withdrawals.",
     "seeMore": "See more",
     "seeLess": "See less",
     "beneficiaryWalletAddress": "Beneficiary wallet address",

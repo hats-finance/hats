@@ -2,16 +2,52 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boolean }>(
-  ({ isAudit, reducedStyles }) => css`
+export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boolean; hasActiveClaim: boolean }>(
+  ({ isAudit, reducedStyles, hasActiveClaim }) => css`
+    position: relative;
     display: flex;
     flex-direction: column;
-    background: ${reducedStyles ? "transparent" : "var(--background-2)"};
-    border: ${reducedStyles ? "none" : "1px solid var(--primary-light)"};
-    padding: ${reducedStyles ? "0" : `${getSpacing(3)} ${getSpacing(4)}`};
+    background: var(--background-2);
+    border: 1px solid var(--primary-light);
+    padding: ${getSpacing(4)} ${getSpacing(4)};
+
+    ${hasActiveClaim &&
+    css`
+      padding: ${getSpacing(5.5)} ${getSpacing(4)} ${getSpacing(4)} ${getSpacing(4)};
+      border-color: var(--error-red);
+    `}
+
+    ${reducedStyles &&
+    css`
+      padding: 0;
+      border: none;
+      background: transparent;
+    `}
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(2.5)} ${getSpacing(3)};
+    }
+
+    .active-claim-banner {
+      background: var(--error-red);
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(1)};
+      justify-content: center;
+      width: max-content;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: ${getSpacing(0.5)} ${getSpacing(1.5)};
+      border-radius: 0 0 ${getSpacing(1)} ${getSpacing(1)};
+      font-size: var(--xxsmall);
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
     .vault-info {

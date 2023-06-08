@@ -1,6 +1,8 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill } from "components";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import { IPFS_PREFIX } from "constants/constants";
 import { ethers } from "ethers";
 import millify from "millify";
 import moment from "moment";
@@ -81,6 +83,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
 
   if (!vault || !vault.description) return null;
 
+  const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
@@ -156,6 +159,17 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
     }
   };
 
+  const getActiveClaimBanner = () => {
+    const openClaimDescription = () => window.open(`${IPFS_PREFIX}/${vault.activeClaim?.claim}`, "_blank");
+
+    return (
+      <div className="active-claim-banner" onClick={openClaimDescription}>
+        <WarnIcon />
+        <p>{t("vaultPausedActiveClaimExplanation")}</p>
+      </div>
+    );
+  };
+
   const goToDeposits = () => {
     if (!vault) return;
 
@@ -179,8 +193,9 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
   };
 
   return (
-    <StyledVaultCard isAudit={isAudit} reducedStyles={reducedStyles}>
+    <StyledVaultCard isAudit={isAudit} reducedStyles={reducedStyles} hasActiveClaim={!!activeClaim}>
       {isAudit && getAuditStatusPill()}
+      {!!activeClaim && !reducedStyles && getActiveClaimBanner()}
 
       <div className="vault-info">
         <div className="metadata">
