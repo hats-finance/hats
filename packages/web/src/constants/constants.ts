@@ -90,15 +90,6 @@ export enum Colors {
   background3 = "#22233e",
 }
 
-export enum PieChartColors {
-  token = "#14595B",
-  vestedToken = "#296B6D",
-  committee = "#3E7D7F",
-  vestedHats = "#548E91",
-  governance = "#69A0A3",
-  swapAndBurn = "#7EB2B5",
-}
-
 export enum SocialLinks {
   Discord = "https://discord.gg/xDphwRGyW7",
   Twitter = "https://twitter.com/HatsFinance",
