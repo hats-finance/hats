@@ -20,12 +20,16 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
     }
 
     .sections-tabs {
-      /* border-top: 1px solid var(--primary-light); */
+      border-top: 1px solid var(--primary-light);
       border-bottom: 1px solid var(--primary-light);
       padding-top: ${getSpacing(4)};
       margin-top: ${getSpacing(4)};
       display: grid;
       grid-template-columns: repeat(4, 1fr);
+    }
+
+    .section-container {
+      margin-top: ${getSpacing(4)};
     }
   `
 );
