@@ -50,11 +50,15 @@ export const StyledSectionTab = styled.div<{ active: boolean }>(
       background: var(--background-2);
     }
 
+    h4 {
+      font-weight: 400;
+    }
+
     ${active &&
     css`
       border-bottom: 1px solid var(--primary);
 
-      span {
+      h4 {
         font-weight: 700;
       }
     `}

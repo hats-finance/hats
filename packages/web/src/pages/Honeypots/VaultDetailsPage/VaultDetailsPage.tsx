@@ -77,7 +77,7 @@ export const VaultDetailsPage = () => {
           <div className="sections-tabs">
             {DETAILS_SECTIONS.map((section, idx) => (
               <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
-                <span>{t(section.title)}</span>
+                <h4>{t(section.title)}</h4>
               </StyledSectionTab>
             ))}
           </div>
