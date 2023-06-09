@@ -32,7 +32,7 @@ export const VaultRewardsSection = () => {
             </div>
           </div>
         </div>
-        <div className="severities">
+        <div className="severities-rewards">
           <div className="card">
             <h4 className="title">{t("severityRewards")}</h4>
             <VaultSeverityRewards vault={vault} />

@@ -1,12 +1,19 @@
 import { IVault } from "@hats-finance/shared";
-import { generateColorsArrayInBetween } from "utils/colors.utils";
+import { VaultSeverityRewardCard } from "components";
+import { StyledVaultSeverityRewards } from "./styles";
 
 type VaultSeverityRewardsProps = {
   vault: IVault;
 };
 
 export const VaultSeverityRewards = ({ vault }: VaultSeverityRewardsProps) => {
-  console.log(generateColorsArrayInBetween("24E8C5", "6652F7", 10));
+  if (!vault.description) return null;
 
-  return <div>VaultSeverityRewards</div>;
+  return (
+    <StyledVaultSeverityRewards>
+      {vault.description.severities.map((severity, idx) => (
+        <VaultSeverityRewardCard key={idx} noNft vault={vault} severity={severity} severityIndex={idx} />
+      ))}
+    </StyledVaultSeverityRewards>
+  );
 };

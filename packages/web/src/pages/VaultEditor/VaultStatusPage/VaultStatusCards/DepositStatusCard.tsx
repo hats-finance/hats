@@ -42,7 +42,7 @@ export const DepositStatusCard = () => {
           <div className="leftSide">
             <h3>{t("deposit")}</h3>
             <Pill
-              color={isVaultDeposited ? "blue" : "red"}
+              dotColor={isVaultDeposited ? "blue" : "red"}
               text={
                 isVaultDeposited ? t("completed") : vaultData.isCommitteeCheckedIn ? t("awaitingAction") : t("awaitingCheckin")
               }

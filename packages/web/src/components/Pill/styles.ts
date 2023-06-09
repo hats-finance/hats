@@ -2,7 +2,7 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { PillProps } from "./Pill";
 
-const getVarColor = (color: PillProps["color"]) => {
+const getVarColor = (color: PillProps["dotColor"]) => {
   switch (color) {
     case "red":
       return "var(--error-red)";
@@ -15,8 +15,8 @@ const getVarColor = (color: PillProps["color"]) => {
   }
 };
 
-export const StyledPill = styled.div<{ transparent: boolean }>(
-  ({ transparent }) => css`
+export const StyledPill = styled.div<{ transparent: boolean; textColor: PillProps["textColor"]; isSeverity: boolean }>(
+  ({ transparent, textColor, isSeverity }) => css`
     color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
@@ -29,10 +29,32 @@ export const StyledPill = styled.div<{ transparent: boolean }>(
     border-radius: 100px;
     width: fit-content;
     border: 1px solid var(--grey-600);
+
+    ${!!textColor &&
+    css`
+      color: ${textColor};
+    `}
+
+    ${isSeverity &&
+    css`
+      font-size: var(--xsmall);
+      font-weight: 700;
+      padding: ${getSpacing(0.8)} ${getSpacing(4)};
+      border: 1px solid var(--primary-light);
+    `}
+
+    span {
+      overflow: hidden;
+      display: -webkit-box;
+      line-clamp: 1;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      text-transform: capitalize;
+    }
   `
 );
 
-export const StyledCircle = styled.div<{ color: PillProps["color"] }>(
+export const StyledDot = styled.div<{ color: PillProps["dotColor"] }>(
   ({ color }) => css`
     width: ${getSpacing(1.6)};
     height: ${getSpacing(1.6)};

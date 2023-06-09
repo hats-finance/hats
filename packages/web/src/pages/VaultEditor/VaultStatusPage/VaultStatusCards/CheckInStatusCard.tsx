@@ -40,7 +40,7 @@ export const CheckInStatusCard = () => {
         <div className="leftSide">
           <h3>{t("checkIn")}</h3>
           <Pill
-            color={isCommitteeCheckedIn ? "blue" : "red"}
+            dotColor={isCommitteeCheckedIn ? "blue" : "red"}
             text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")}
           />
         </div>

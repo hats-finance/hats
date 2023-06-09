@@ -17,7 +17,7 @@ export const BugBountyVaultsPage = () => {
           <>
             <h2 className="subtitle">
               {t("auditCompetitions")}
-              <Pill color="blue" text={t("new")} transparent />
+              <Pill dotColor="blue" text={t("new")} transparent />
             </h2>
             <div className="vaults-container mt-4">
               {(liveAuditCompetitions.length > 0 ? liveAuditCompetitions : upcomingAuditCompetitions).map((auditVault, idx) => (

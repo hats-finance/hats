@@ -129,7 +129,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
     if (auditPayout) {
       return (
         <div className="mb-4">
-          <Pill transparent color="green" text={t("paidCompetition")} />
+          <Pill transparent dotColor="green" text={t("paidCompetition")} />
         </div>
       );
     }
@@ -137,7 +137,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
     if (vault.dateStatus === "upcoming") {
       return (
         <div className="mb-4">
-          <Pill transparent color="yellow" text={t("upcoming")} />
+          <Pill transparent dotColor="yellow" text={t("upcoming")} />
         </div>
       );
     }
@@ -147,13 +147,13 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
     if (endTime.diff(moment(), "hours") <= 24) {
       return (
         <div className="mb-4">
-          <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
+          <Pill transparent dotColor="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
       return (
         <div className="mb-4">
-          <Pill transparent color="blue" text={t("liveNow")} />
+          <Pill transparent dotColor="blue" text={t("liveNow")} />
         </div>
       );
     }

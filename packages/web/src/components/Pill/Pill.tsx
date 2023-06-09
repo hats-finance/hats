@@ -1,16 +1,18 @@
-import { StyledCircle, StyledPill } from "./styles";
+import { StyledDot, StyledPill } from "./styles";
 
 export type PillProps = {
-  color: "red" | "yellow" | "blue" | "green";
+  dotColor?: "red" | "yellow" | "blue" | "green";
+  textColor?: string;
   text: string;
   transparent?: boolean;
+  isSeverity?: boolean;
 };
 
-export const Pill = ({ color, text, transparent = false }: PillProps) => {
+export const Pill = ({ dotColor = "blue", text, textColor, transparent = false, isSeverity = false }: PillProps) => {
   return (
-    <StyledPill transparent={transparent}>
-      <StyledCircle color={color} />
-      <span>{text}</span>
+    <StyledPill transparent={transparent} textColor={textColor} isSeverity={isSeverity}>
+      {!isSeverity && <StyledDot color={dotColor} />}
+      <span title={text}>{isSeverity ? text.toLowerCase().replace("severity", "") : text}</span>
     </StyledPill>
   );
 };

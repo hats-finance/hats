@@ -26,6 +26,9 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
       margin-top: ${getSpacing(4)};
       display: grid;
       grid-template-columns: repeat(4, 1fr);
+      gap: ${getSpacing(2)};
+      overflow-x: auto;
+      overflow-y: hidden;
     }
 
     .section-container {
@@ -41,7 +44,7 @@ export const StyledSectionTab = styled.div<{ active: boolean }>(
     align-items: center;
     border-bottom: 1px solid transparent;
     cursor: pointer;
-    padding: ${getSpacing(2)} 0;
+    padding: ${getSpacing(2)} ${getSpacing(2)};
     transition: 0.2s;
     border-radius: ${getSpacing(1)} ${getSpacing(1)} 0 0;
 

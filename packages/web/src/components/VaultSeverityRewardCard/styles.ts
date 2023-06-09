@@ -1,38 +1,32 @@
 import styled, { css } from "styled-components";
-import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultSeverityRewardCard = styled.div<{ color: string }>(
-  ({ color }) => css`
-    display: flex;
-    justify-content: space-between;
+export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: boolean }>(
+  ({ color, noNft }) => css`
+    display: grid;
+    grid-template-columns: ${noNft ? "1fr 1fr" : "1fr 1fr 1fr"};
     align-items: center;
-    padding: ${getSpacing(1)} ${getSpacing(4)};
-    background-color: ${color};
-    color: var(--background);
-
-    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-      padding: ${getSpacing(1)} ${getSpacing(2)};
-    }
+    justify-content: space-between;
 
     .severity-name,
     .severity-prize,
     .severity-nft {
-      width: 33%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-      .severity-name,
-      .severity-prize {
-        width: 40%;
-      }
+    .severity-nft,
+    .severity-prize {
+      justify-content: flex-end;
+    }
 
-      .severity-nft {
-        width: 20%;
-      }
+    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+      grid-template-columns: ${noNft ? "1fr 1fr" : "2fr 1fr 1fr"};
+    }
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      grid-template-columns: ${noNft ? "1fr 1fr" : "4fr 4fr 3fr"};
     }
 
     .severity-name {
@@ -46,6 +40,7 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string }>(
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
         flex-direction: column;
+        align-items: flex-end;
       }
 
       .tiny {
@@ -54,7 +49,7 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string }>(
       }
 
       .price {
-        color: var(--background-2);
+        color: ${color};
         font-weight: 700;
       }
     }
