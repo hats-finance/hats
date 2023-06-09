@@ -28,22 +28,14 @@ jobs:
       - name: Install dependencies
         run: yarn install --ignore-engines
       - name: Build
+        working-directory: ./packages/web
         run: yarn build
         env:
           CI: false
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: build
-          path: build/
-      - name: Download build artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: build
       - name: Install ipfs-deploy
         run: npm install -g ipfs-deploy
       - name: Deploy to IPFS
-        run: ipd build --path-to-deploy=build/ --pinata
+        run: ipd build --path-to-deploy=packages/web/build/ --pinata
         env:
           IPFS_DEPLOY_PINATA__API_KEY: ${{ secrets.PINATA_API_KEY }}
           IPFS_DEPLOY_PINATA__SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
