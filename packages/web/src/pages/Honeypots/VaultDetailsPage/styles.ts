@@ -22,7 +22,7 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
     .sections-tabs {
       border-top: 1px solid var(--primary-light);
       border-bottom: 1px solid var(--primary-light);
-      padding-top: ${getSpacing(4)};
+      padding-top: ${getSpacing(6)};
       margin-top: ${getSpacing(4)};
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -52,6 +52,7 @@ export const StyledSectionTab = styled.div<{ active: boolean }>(
 
     h4 {
       font-weight: 400;
+      font-size: var(--small);
     }
 
     ${active &&

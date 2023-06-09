@@ -30,6 +30,7 @@ export const StyledRewardsSection = styled.div`
 
       h4.title {
         color: var(--grey-400);
+        font-size: var(--small);
       }
 
       h4.value {
