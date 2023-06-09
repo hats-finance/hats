@@ -418,6 +418,10 @@
     "paid": "Paid",
     "upcoming": "Upcoming",
     "loadingVaultDetails": "Loading vault details",
+    "rewards": "Rewards",
+    "scope": "Scope",
+    "submissions": "Submissions",
+    "bugBounty": "Bug bounty",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
