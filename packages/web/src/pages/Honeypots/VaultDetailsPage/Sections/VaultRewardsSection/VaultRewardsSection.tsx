@@ -35,7 +35,7 @@ export const VaultRewardsSection = () => {
         <div className="severities">
           <div className="card">
             <h4 className="title">{t("severityRewards")}</h4>
-            <VaultSeverityRewards />
+            <VaultSeverityRewards vault={vault} />
           </div>
         </div>
       </div>

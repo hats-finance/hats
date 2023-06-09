@@ -1,33 +1,33 @@
 import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
 import { NftPreview } from "components";
-import { useSeverityReward } from "components/Vault/hooks/useSeverityReward";
+import { useSeverityRewardInfo } from "hooks/severities/useSeverityRewardInfo";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "utils";
-import { StyledVaultRewardCard } from "./styles";
+import { StyledVaultSeverityRewardCard } from "./styles";
 
-interface VaultRewardCardProps {
+interface VaultSeverityRewardCardProps {
   vault: IVault;
   severity: IVulnerabilitySeverity;
   severityIndex: number;
 }
 
-export function VaultRewardCard({ vault, severity, severityIndex }: VaultRewardCardProps) {
+export function VaultSeverityRewardCard({ vault, severity, severityIndex }: VaultSeverityRewardCardProps) {
   const { t } = useTranslation();
-  const { rewardPercentage, rewardPrice, rewardColor } = useSeverityReward(vault, severityIndex);
+  const { rewardPercentage, rewardPrice, rewardColor } = useSeverityRewardInfo(vault, severityIndex);
 
   return (
-    <StyledVaultRewardCard color={rewardColor}>
+    <StyledVaultSeverityRewardCard color={rewardColor}>
       <div className="severity-name">{severity?.name}</div>
       <div className="severity-prize">
         <div>
           <span>{`${rewardPercentage.toFixed(2)}%`}</span>
           <span className="tiny">&nbsp;{t("ofVault")}&nbsp;</span>
         </div>
-        <span className="price">≈{`$${formatNumber(rewardPrice)}`}</span>
+        <span className="price">~{`$${formatNumber(rewardPrice)}`}</span>
       </div>
       <div className="severity-nft">
         <NftPreview vault={vault} severityName={severity.name} nftData={severity["nft-metadata"]} size="tiny" />
       </div>
-    </StyledVaultRewardCard>
+    </StyledVaultSeverityRewardCard>
   );
 }

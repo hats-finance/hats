@@ -1,18 +1,25 @@
-import { VAULTS_TYPE_SEVERITIES_COLORS } from "constants/constants";
 import { formatUnits } from "ethers/lib/utils";
 import { useVaults } from "hooks/vaults/useVaults";
 import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import { IVault } from "types";
+import { generateColorsArrayInBetween } from "utils/colors.utils";
 
-const defaultColor = VAULTS_TYPE_SEVERITIES_COLORS["normal"][0];
+const INITIAL_SEVERITY_COLOR = "#24E8C5";
+const FINAL_SEVERITY_COLOR = "#6652F7";
 
-export function useSeverityReward(vault: IVault, severityIndex: number) {
+export function useSeverityRewardInfo(vault: IVault, severityIndex: number) {
   const { tokenPrices } = useVaults();
   const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ?? [vault]);
 
-  if (vault.version === "v2") {
-    if (!vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: defaultColor };
+  if (!vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
 
+  const SEVERITIES_COLORS = generateColorsArrayInBetween(
+    INITIAL_SEVERITY_COLOR,
+    FINAL_SEVERITY_COLOR,
+    vault.description.severities.length
+  );
+
+  if (vault.version === "v2") {
     const severity = vault.description.severities[severityIndex];
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     const maxBountyPercentage = Number(vault.maxBounty) / 10000; // Number between 0 and 1;
@@ -28,16 +35,11 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
         tokenPrices[vault.stakingToken];
     }
 
-    const projectType = vault.description?.["project-metadata"].type ?? "normal";
-
     const orderedSeverities = vault.description.severities.map((severity) => severity.percentage).sort((a, b) => a - b);
-    const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType] ?? VAULTS_TYPE_SEVERITIES_COLORS["normal"];
-    const rewardColor: string = severitiesColors[orderedSeverities.indexOf(severity.percentage) ?? 0];
+    const rewardColor: string = SEVERITIES_COLORS[orderedSeverities.indexOf(severity.percentage) ?? 0];
 
     return { rewardPrice, rewardPercentage, rewardColor };
   } else {
-    if (!vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: defaultColor };
-
     const severity = vault.description.severities[severityIndex];
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     const rewardPercentage = (Number(vault.rewardsLevels[severity.index]) / 10000) * 100;
@@ -52,11 +54,8 @@ export function useSeverityReward(vault: IVault, severityIndex: number) {
         tokenPrices[vault.stakingToken];
     }
 
-    const projectType = vault.description?.["project-metadata"].type ?? "normal";
-
     const orderedSeverities = vault.description.severities.map((severity) => severity.index).sort((a, b) => a - b);
-    const severitiesColors = VAULTS_TYPE_SEVERITIES_COLORS[projectType] ?? VAULTS_TYPE_SEVERITIES_COLORS["normal"];
-    const rewardColor: string = severitiesColors[orderedSeverities.indexOf(severity.index) ?? 0];
+    const rewardColor: string = SEVERITIES_COLORS[orderedSeverities.indexOf(severity.index) ?? 0];
 
     return { rewardPrice, rewardPercentage, rewardColor };
   }

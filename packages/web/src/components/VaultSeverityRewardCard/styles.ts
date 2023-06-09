@@ -2,13 +2,14 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultRewardCard = styled.div<{ color: string }>(
+export const StyledVaultSeverityRewardCard = styled.div<{ color: string }>(
   ({ color }) => css`
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: ${getSpacing(1)} ${getSpacing(4)};
     background-color: ${color};
+    color: var(--background);
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(1)} ${getSpacing(2)};
@@ -36,6 +37,8 @@ export const StyledVaultRewardCard = styled.div<{ color: string }>(
 
     .severity-name {
       justify-content: flex-start;
+      text-transform: capitalize;
+      font-weight: 700;
     }
 
     .severity-prize {
@@ -51,8 +54,8 @@ export const StyledVaultRewardCard = styled.div<{ color: string }>(
       }
 
       .price {
-        color: var(--turquoise);
-        font-weight: 400;
+        color: var(--background-2);
+        font-weight: 700;
       }
     }
   `
