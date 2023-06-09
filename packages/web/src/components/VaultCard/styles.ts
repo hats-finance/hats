@@ -90,11 +90,15 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
 
       .stats {
         display: grid;
-        grid-template-columns: ${reducedStyles
-          ? `${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"}`
-          : `${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}`};
+        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"};
         gap: ${getSpacing(1)};
         align-items: center;
+
+        ${reducedStyles &&
+        css`
+          row-gap: ${getSpacing(3)};
+          grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"};
+        `}
 
         @media (max-width: ${breakpointsDefinition.mediumMobile}) {
           grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr 1fr"};
@@ -102,6 +106,11 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
           border-width: 1px 0 1px;
           border-style: solid;
           padding: ${getSpacing(3)} 0;
+
+          ${reducedStyles &&
+          css`
+            border-bottom: none;
+          `}
         }
 
         &__stat {
