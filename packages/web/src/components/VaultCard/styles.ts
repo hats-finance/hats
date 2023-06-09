@@ -90,18 +90,21 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
 
       .stats {
         display: grid;
-        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"};
+        /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}; */
+        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
         gap: ${getSpacing(1)};
         align-items: center;
 
         ${reducedStyles &&
         css`
           row-gap: ${getSpacing(3)};
-          grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"};
+          /* grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"}; */
+          grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 1fr 1fr"};
         `}
 
         @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-          grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr 1fr"};
+          /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr 1fr"}; */
+          grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
           border-color: var(--primary-light);
           border-width: 1px 0 1px;
           border-style: solid;
@@ -122,7 +125,8 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
           @media (max-width: ${breakpointsDefinition.mediumMobile}) {
             &:nth-child(2) {
               border-color: var(--primary-light);
-              border-width: ${isAudit ? "0 0 0 1px" : "0 1px 0"};
+              /* border-width: ${isAudit ? "0 0 0 1px" : "0 1px 0"}; */
+              border-width: ${isAudit ? "0 0 0 1px" : "0 0 0 1px"};
               border-style: solid;
             }
           }

@@ -1,28 +1,35 @@
 import { Alert, Loading, Seo, VaultCard } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";
 import { HoneypotsRoutePaths } from "../router";
-import { StyledVaultDetailsPage } from "./styles";
+import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
+import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
-const SECTIONS = [
+const DETAILS_SECTIONS = [
   {
     title: "rewards",
+    component: <VaultRewardsSection />,
   },
   {
     title: "scope",
+    component: <VaultScopeSection />,
   },
   {
     title: "deposits",
+    component: <VaultDepositsSection />,
   },
   {
     title: "submissions",
+    component: <VaultSubmissionsSection />,
   },
 ];
 
 export const VaultDetailsPage = () => {
   const { t } = useTranslation();
+  const [openSection, setOpenSection] = useState(0);
 
   const { allVaults } = useVaults();
   const navigate = useNavigate();
@@ -65,6 +72,16 @@ export const VaultDetailsPage = () => {
         <div className="mt-5">
           <VaultCard reducedStyles vaultData={vault} />
         </div>
+
+        <div className="sections-tabs">
+          {DETAILS_SECTIONS.map((section, idx) => (
+            <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
+              <span>{t(section.title)}</span>
+            </StyledSectionTab>
+          ))}
+        </div>
+
+        <div className="section-container">{DETAILS_SECTIONS[openSection].component}</div>
       </StyledVaultDetailsPage>
     </>
   );

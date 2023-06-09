@@ -207,12 +207,12 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
         </div>
 
         <div className="stats">
-          {!isAudit && (
+          {/* {!isAudit && (
             <div className="stats__stat">
-              {/* <h3 className="value">5%</h3>
-              <div className="sub-value">APY</div> */}
+              <h3 className="value">5%</h3>
+              <div className="sub-value">APY</div>
             </div>
-          )}
+          )} */}
           <div className="stats__stat">
             {isAudit ? (
               <>
