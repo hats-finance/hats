@@ -35,7 +35,7 @@ jobs:
         run: npm install -g ipfs-deploy
       - name: Deploy to IPFS
         working-directory: ./packages/web
-        run: ipd build --path-to-deploy=build --pinata
+        run: ipd build --path-to-deploy=build -p pinata
         env:
           IPFS_DEPLOY_PINATA__API_KEY: ${{ secrets.PINATA_API_KEY }}
           IPFS_DEPLOY_PINATA__SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
