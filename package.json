@@ -1,6 +1,7 @@
 {
   "name": "hats-frontend",
   "private": true,
+  "homepage": "./",
   "scripts": {
     "dev": "cd packages/shared && yarn build && cd ../.. && cd packages/web && yarn start",
     "build": "yarn workspaces run build",
