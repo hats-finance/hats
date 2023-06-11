@@ -31,6 +31,7 @@ jobs:
         run: yarn build
         env:
           CI: false
+          PUBLIC_URL: ./
       - name: Install ipfs-deploy
         run: npm install -g ipfs-deploy
       - name: Deploy to IPFS
