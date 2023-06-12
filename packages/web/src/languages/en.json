@@ -954,6 +954,7 @@
       "percentage-bounty": "Maximum severity reward (0%-100%)",
       "percentage-bounty-placeholder": "Maximum severity reward",
       "addStartAndEndDate": "Add start and end date",
+      "decryptSubmissions": "Should submissions be decrypted?",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
