@@ -35,8 +35,8 @@ function Root() {
     "https://*.infura.io",
     "https://api.coingecko.com/",
     "https://cloudflare-eth.com/",
-    stagingServiceUrl,
-    prodServiceUrl,
+    new URL(stagingServiceUrl).protocol + '//' + new URL(stagingServiceUrl).host,
+    new URL(prodServiceUrl).protocol + '//' + new URL(prodServiceUrl).host,
     ...Object.values(ChainsConfig).map((chain) => chain.subgraph),
     ...Object.values(ChainsConfig).map((chain) => chain.uniswapSubgraph),
   ];
