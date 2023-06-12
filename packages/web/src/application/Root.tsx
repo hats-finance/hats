@@ -4,7 +4,7 @@ import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import HttpsRedirect from "react-https-redirect";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
 import { queryClient } from "config/reactQuery";
 import { wagmiClient } from "config/wagmi";
@@ -32,7 +32,7 @@ function Root() {
         <Provider store={store}>
           <VaultsProvider>
             <HttpsRedirect>
-              <BrowserRouter>
+              <HashRouter>
                 <GlobalStyle />
                 <ThemeProvider theme={theme}>
                   <NotificationProvider>
@@ -45,7 +45,7 @@ function Root() {
                     </ConfirmDialogProvider>
                   </NotificationProvider>
                 </ThemeProvider>
-              </BrowserRouter>
+              </HashRouter>
             </HttpsRedirect>
           </VaultsProvider>
         </Provider>
