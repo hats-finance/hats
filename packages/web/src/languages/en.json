@@ -591,6 +591,10 @@
       "submitNewIssues": "Submit new issues",
       "whileWaitingJoinCommunity": "While waiting, become an active member of our community and let us know what you think.",
       "checkAuditCompetitionRepo": "Check here the audit competition repo",
+      "decryptedSubmission": "Decrypted submission",
+      "encryptedSubmission": "Encrypted submission",
+      "encryptedSubmissionExplanation": "The submission is encrypted and only the committee can decrypt it.",
+      "decryptedSubmissionExplanation": "The submission is decrypted and public. This normally happens on Audit Competitions.",
       "terms": {
         "bugBounty": {
           "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
