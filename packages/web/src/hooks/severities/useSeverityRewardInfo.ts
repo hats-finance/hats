@@ -7,11 +7,11 @@ import { generateColorsArrayInBetween } from "utils/colors.utils";
 const INITIAL_SEVERITY_COLOR = "#24E8C5";
 const FINAL_SEVERITY_COLOR = "#6652F7";
 
-export function useSeverityRewardInfo(vault: IVault, severityIndex: number) {
+export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: number) {
   const { tokenPrices } = useVaults();
-  const { totalPrices } = useVaultsTotalPrices(vault.multipleVaults ?? [vault]);
+  const { totalPrices } = useVaultsTotalPrices(vault && vault.multipleVaults ? [vault] : []);
 
-  if (!vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
+  if (!vault || !vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
 
   const SEVERITIES_COLORS = generateColorsArrayInBetween(
     INITIAL_SEVERITY_COLOR,

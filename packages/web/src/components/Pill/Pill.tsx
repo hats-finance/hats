@@ -12,7 +12,7 @@ export const Pill = ({ dotColor = "blue", text, textColor, transparent = false, 
   return (
     <StyledPill transparent={transparent} textColor={textColor} isSeverity={isSeverity}>
       {!isSeverity && <StyledDot color={dotColor} />}
-      <span title={text}>{isSeverity ? text.toLowerCase().replace("severity", "") : text}</span>
+      <span title={text}>{text}</span>
     </StyledPill>
   );
 };

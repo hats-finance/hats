@@ -1,9 +1,9 @@
-@import "styles/constants.scss";
+import styled from "styled-components";
 
-.media-wrapper {
+export const StyledMedia = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
-}
+`;

@@ -1,5 +1,5 @@
 import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
-import { NftPreview, Pill } from "components";
+import { Pill, VaultNftRewardCard } from "components";
 import { useSeverityRewardInfo } from "hooks/severities/useSeverityRewardInfo";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "utils";
@@ -16,9 +16,11 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
   const { t } = useTranslation();
   const { rewardPercentage, rewardPrice, rewardColor } = useSeverityRewardInfo(vault, severityIndex);
 
+  const severityName = severity?.name.toLowerCase().replace("severity", "") ?? "";
+
   return (
     <StyledVaultSeverityRewardCard color={rewardColor} noNft={noNft}>
-      <Pill isSeverity transparent textColor={rewardColor} text={severity?.name} />
+      <Pill isSeverity transparent textColor={rewardColor} text={severityName} />
       <div className="severity-prize">
         <div>
           <span>{`${rewardPercentage.toFixed(2)}%`}</span>
@@ -28,7 +30,7 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
       </div>
       {!noNft && (
         <div className="severity-nft">
-          <NftPreview vault={vault} severityName={severity.name} nftData={severity["nft-metadata"]} size="tiny" />
+          <VaultNftRewardCard vault={vault} severity={severity} type="tiny" />
         </div>
       )}
     </StyledVaultSeverityRewardCard>

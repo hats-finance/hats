@@ -424,6 +424,7 @@
     "bugBounty": "Bug bounty",
     "rewardsDivision": "Rewards division",
     "severityRewards": "Severity rewards",
+    "nftRewards": "NFT rewards",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

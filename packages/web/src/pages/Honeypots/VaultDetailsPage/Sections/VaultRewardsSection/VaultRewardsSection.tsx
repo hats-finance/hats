@@ -3,6 +3,7 @@ import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultDetailsContext } from "../../store";
 import { VaultRewardDivision, VaultSeverityRewards } from "./components";
+import { VaultNftRewards } from "./components/VaultNftRewards/VaultNftRewards";
 import { StyledRewardsSection } from "./styles";
 
 export const VaultRewardsSection = () => {
@@ -12,7 +13,6 @@ export const VaultRewardsSection = () => {
   return (
     <StyledRewardsSection>
       <h2>{t("rewards")}</h2>
-
       <div className="rewards-containers mt-4">
         <div className="amounts">
           <div className="card bigPadding">
@@ -38,6 +38,11 @@ export const VaultRewardsSection = () => {
             <VaultSeverityRewards vault={vault} />
           </div>
         </div>
+      </div>
+
+      <h2 className="mt-5">{t("nftRewards")}</h2>
+      <div className="nft-rewards-container mt-4">
+        <VaultNftRewards vault={vault} />
       </div>
     </StyledRewardsSection>
   );

@@ -3,6 +3,8 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledRewardsSection = styled.div`
+  padding-bottom: ${getSpacing(10)};
+
   .rewards-containers {
     display: grid;
     grid-template-columns: auto 1fr 1fr;
