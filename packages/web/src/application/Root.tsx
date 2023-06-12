@@ -4,6 +4,9 @@ import { Provider } from "react-redux";
 import { ThemeProvider } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import HttpsRedirect from "react-https-redirect";
+import { ChainsConfig } from "@hats-finance/shared";
+import { stagingServiceUrl, prodServiceUrl } from "../constants/constants";
+import { Helmet } from 'react-helmet';
 import { HashRouter } from "react-router-dom";
 import { WagmiConfig } from "wagmi";
 import { queryClient } from "config/reactQuery";
@@ -25,32 +28,67 @@ function Root() {
     const language = window.localStorage.getItem("i18nextLng");
     if (language && language !== i18n.language) i18n.changeLanguage(language);
   }, [i18n]);
+  // Define your allowed endpoints
+  const allowedEndpoints = [
+    "'self'",
+    "https://*.hats.finance",
+    "https://*.infura.io",
+    "https://api.coingecko.com/",
+    "https://cloudflare-eth.com/",
+    stagingServiceUrl,
+    prodServiceUrl,
+    ...Object.values(ChainsConfig).map((chain) => chain.subgraph),
+    ...Object.values(ChainsConfig).map((chain) => chain.uniswapSubgraph),
+  ];
+  const allowedImageSources = [
+    "'self'",
+    "data:",
+    "https://*.hats.finance",
+    "https://ipfs.io",
+    "https://cloudflare-ipfs.com",
+    "https://*.mypinata.cloud/",
+    "https://raw.githubusercontent.com",
+    "https://svgshare.com",
+    "https://avatars.githubusercontent.com",
+    "https://ipfs.kleros.io",
+  ];
 
+  // Join the endpoints into a string
+  const connectSrc = allowedEndpoints.join(' ');
+  const connectImgSrc = allowedImageSources.join(' ');
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiConfig client={wagmiClient}>
-        <Provider store={store}>
-          <VaultsProvider>
-            <HttpsRedirect>
-              <HashRouter>
-                <GlobalStyle />
-                <ThemeProvider theme={theme}>
-                  <NotificationProvider>
-                    <ConfirmDialogProvider>
-                      <KeystoreProvider>
-                        <SiweAuthProvider>
-                          <App />
-                        </SiweAuthProvider>
-                      </KeystoreProvider>
-                    </ConfirmDialogProvider>
-                  </NotificationProvider>
-                </ThemeProvider>
-              </HashRouter>
-            </HttpsRedirect>
-          </VaultsProvider>
-        </Provider>
-      </WagmiConfig>
-    </QueryClientProvider>
+    <>
+      <Helmet>
+        <meta 
+          http-equiv="Content-Security-Policy" 
+          content={`default-src 'self'; connect-src ${connectSrc}; style-src 'self' 'unsafe-inline'; img-src ${connectImgSrc};`}
+        />
+      </Helmet>
+      <QueryClientProvider client={queryClient}>
+        <WagmiConfig client={wagmiClient}>
+          <Provider store={store}>
+            <VaultsProvider>
+              <HttpsRedirect>
+                <HashRouter>
+                  <GlobalStyle />
+                  <ThemeProvider theme={theme}>
+                    <NotificationProvider>
+                      <ConfirmDialogProvider>
+                        <KeystoreProvider>
+                          <SiweAuthProvider>
+                            <App />
+                          </SiweAuthProvider>
+                        </KeystoreProvider>
+                      </ConfirmDialogProvider>
+                    </NotificationProvider>
+                  </ThemeProvider>
+                </HashRouter>
+              </HttpsRedirect>
+            </VaultsProvider>
+          </Provider>
+        </WagmiConfig>
+      </QueryClientProvider>
+    </>
   );
 }
 
