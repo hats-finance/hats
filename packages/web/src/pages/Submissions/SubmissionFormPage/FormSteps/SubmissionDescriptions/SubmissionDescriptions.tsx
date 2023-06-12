@@ -1,4 +1,4 @@
-import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { IVulnerabilitySeverity } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
@@ -52,7 +52,7 @@ export function SubmissionDescriptions() {
     if (!vault || !vault.description) return;
 
     if (vault.description) {
-      const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
+      const severities = vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
         label: severity.name.toLowerCase().replace("severity", "").trim(),
         value: severity.name.toLowerCase(),
       }));
