@@ -68,14 +68,14 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
   }
 };
 
-const getDefaultVaultParameters = (): IEditedVaultParameters => {
+export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParameters => {
   return {
     fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
     fixedHatsGovPercetange: HATS_GOV_SPLIT,
     fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
-    committeePercentage: 5,
-    immediatePercentage: 35,
-    vestedPercentage: 60,
+    committeePercentage: isAudit ? 0 : 5,
+    immediatePercentage: isAudit ? 100 : 35,
+    vestedPercentage: isAudit ? 0 : 60,
     maxBountyPercentage: 90,
   };
 };
