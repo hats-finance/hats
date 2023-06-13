@@ -2,6 +2,7 @@ import {
   IEditedVaultDescription,
   IEditedVulnerabilitySeverity,
   createNewCoveredContract,
+  getDefaultVaultParameters,
   getVulnerabilitySeveritiesTemplate,
 } from "@hats-finance/shared";
 import AddIcon from "@mui/icons-material/Add";
@@ -68,12 +69,13 @@ export function VaultDetailsForm() {
     else setValue("includesStartAndEndTime", false);
   }, [vaultType, getValues, setValue]);
 
-  // Change the vulnerability template if the vault type changes
+  // Change the vulnerability template and default on-chain params if the vault type changes
   useOnChange(vaultType, (_, prevVal) => {
     if (prevVal === undefined) return;
 
     const data = getValues();
     const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version, vaultType === "audit");
+    const defaultOnChainParams = getDefaultVaultParameters(vaultType === "audit");
 
     const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
     const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
@@ -86,6 +88,7 @@ export function VaultDetailsForm() {
     setValue("vulnerability-severities-spec", vulnerabilitySeveritiesTemplate);
     setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
+    setValue("parameters", defaultOnChainParams);
   });
 
   // Only one repo can be the main repo

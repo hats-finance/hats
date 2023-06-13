@@ -146,6 +146,7 @@ export interface IVaultRepoInformation {
 
 export interface IBaseVulnerabilitySeverity {
   name: string;
+  decryptSubmissions?: boolean;
   "contracts-covered": { [key: string]: string }[];
   "nft-metadata": INFTMetaData;
   description: string;

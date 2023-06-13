@@ -25,6 +25,7 @@ export const SUBMISSION_INIT_DATA = {
     submission: "",
     descriptions: [
       {
+        isEncrypted: true,
         title: "",
         description: "",
         severity: "",
