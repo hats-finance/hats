@@ -1,23 +1,24 @@
+import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
+import { CopyToClipboard, Loading } from "components";
+import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import DOMPurify from "dompurify";
-import { useAccount } from "wagmi";
-import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 import { isAddress } from "utils/addresses.utils";
-import { CopyToClipboard, Loading } from "components";
-import {
-  OnChainDataStatusCard,
-  CongratsStatusCard,
-  EditVaultStatusCard,
-  CheckInStatusCard,
-  DepositStatusCard,
-  GovApprovalStatusCard,
-} from "./VaultStatusCards";
-import * as VaultStatusService from "../vaultEditorService";
+import { useAccount } from "wagmi";
 import { checkIfAddressCanEditTheVault, vaultEditorRoleToIntlKey } from "../utils";
-import { StyledVaultStatusPage } from "./styles";
+import * as VaultStatusService from "../vaultEditorService";
+import {
+  CheckInStatusCard,
+  CongratsStatusCard,
+  DepositStatusCard,
+  EditVaultStatusCard,
+  GenerateNftsAssetsCard,
+  GovApprovalStatusCard,
+  OnChainDataStatusCard,
+} from "./VaultStatusCards";
 import { VaultStatusContext } from "./store";
+import { StyledVaultStatusPage } from "./styles";
 
 /**
  * Attetion: This page only works with V2 vaults
@@ -92,6 +93,7 @@ export const VaultStatusPage = () => {
         <VaultStatusContext.Provider value={vaultStatusContext}>
           <CongratsStatusCard />
           <EditVaultStatusCard />
+          {userPermissionData.role === "gov" && <GenerateNftsAssetsCard />}
           <OnChainDataStatusCard />
           <CheckInStatusCard />
           <DepositStatusCard />

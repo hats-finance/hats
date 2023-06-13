@@ -33,6 +33,7 @@ export interface ISubmissionsDescriptionsData {
     severity: string;
     files: ISavedFile[];
     sessionKey: SessionKey;
+    isEncrypted?: boolean;
   }[];
 }
 

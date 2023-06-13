@@ -29,11 +29,13 @@ export async function submitVulnerabilitySubmission(
     },
     createIssueRequests:
       vault.description?.["project-metadata"].type === "audit"
-        ? submissionData.submissionsDescriptions.descriptions.map((description) => ({
-            issueTitle: description.title,
-            issueDescription: getGithubIssueDescription(submissionData, description),
-            issueFiles: description.files.map((file) => file.ipfsHash),
-          }))
+        ? submissionData.submissionsDescriptions.descriptions
+            .filter((desc) => !desc.isEncrypted)
+            .map((description) => ({
+              issueTitle: description.title,
+              issueDescription: getGithubIssueDescription(submissionData, description),
+              issueFiles: description.files.map((file) => file.ipfsHash),
+            }))
         : [],
   };
 
