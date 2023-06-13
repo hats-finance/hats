@@ -2,14 +2,13 @@ import { Button, Loading, Pill } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { IEditedSessionResponse } from "types";
 import * as VaultEditorService from "../../vaultEditorService";
 import { VaultStatusContext } from "../store";
 
 export const GenerateNftsAssetsCard = () => {
   const { t } = useTranslation();
-  const { vaultAddress, vaultChainId, userPermissionData, vaultData } = useContext(VaultStatusContext);
+  const { vaultAddress, vaultChainId, vaultData } = useContext(VaultStatusContext);
 
   const { tryAuthentication } = useSiweAuth();
 
