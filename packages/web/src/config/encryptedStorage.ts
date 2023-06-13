@@ -1,4 +1,8 @@
 import { EncryptStorage } from "encrypt-storage";
-import { ENCRYPTED_STORAGE_KEY } from "settings";
 
-export const encryptedStorage = new EncryptStorage(ENCRYPTED_STORAGE_KEY?ENCRYPTED_STORAGE_KEY:"hjsdfhkjfhfkju4567834687345", { storageType: "sessionStorage" });
+// Generate a cryptographically secure random key
+const array = new Uint32Array(10);
+window.crypto.getRandomValues(array);
+const encryptionKey = Array.from(array).join('');
+
+export const encryptedStorage = new EncryptStorage(encryptionKey, { storageType: "sessionStorage" });
