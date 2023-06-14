@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { StyledMedia } from "./styles";
 
 interface MediaProps {
@@ -19,13 +19,6 @@ export function Media({ link, poster, className, playOnHover }: MediaProps) {
     if (playOnHover) (videoRef?.current as any)?.pause();
   };
 
-  useEffect(() => {
-    if (videoRef && playOnHover) {
-      (videoRef?.current as any)?.play();
-      setTimeout(() => (videoRef?.current as any)?.pause(), 100);
-    }
-  }, [videoRef, playOnHover]);
-
   return (
     <StyledMedia key={link}>
       {/* The poster is needed here in case the media is not a video */}
@@ -39,6 +32,12 @@ export function Media({ link, poster, className, playOnHover }: MediaProps) {
         className={className}
         playsInline
         poster={poster ? poster : link}
+        onLoadedData={() => {
+          if (videoRef && playOnHover) {
+            (videoRef?.current as any)?.play();
+            (videoRef?.current as any)?.pause();
+          }
+        }}
       >
         <source src={link} type="video/mp4" />
       </video>
