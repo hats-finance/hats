@@ -25,6 +25,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       oneLiner: Yup.string()
         .required(intl("required"))
         .typeError(intl("required"))
+        .min(40, intl("min-characters", { min: 40 }))
         .max(120, intl("max-characters", { max: 120 })),
       starttime: Yup.number()
         .positive(intl("required"))
