@@ -16,6 +16,11 @@ import {
   IVulnerabilitySeverityV2,
 } from "../types";
 
+export const CODE_LANGUAGES = {
+  solidity: ["solidity", "cairo", "go", "rust", "vyper", "simplicity"],
+  other: ["javascript", "typescript", "python", "react"],
+};
+
 export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
 export const HATS_REWARD_SPLIT = 5;

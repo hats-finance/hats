@@ -57,10 +57,16 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       reposInformation: Yup.array().of(
         Yup.object({
           url: Yup.string().test(getTestGithubRepoUrl(intl)).required(intl("required")),
-          commitHash: Yup.string().test(getTestGitCommitHash(intl)).required(intl("required")),
+          commitHash: Yup.string()
+            .test(getTestGitCommitHash(intl))
+            // Only required if the vault is and audit competition
+            .test("isRequired", intl("required"), (val, ctx: any) =>
+              ctx.from[2].value["project-metadata"].type === "audit" ? !!val : true
+            ),
           isMain: Yup.boolean(),
         })
       ),
+      description: Yup.string().required(intl("required")),
     }),
     committee: Yup.object({
       chainId: Yup.string().required(intl("required")),

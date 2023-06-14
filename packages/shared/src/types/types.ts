@@ -122,7 +122,15 @@ interface IBaseVaultDescription {
     chainId?: string;
   };
   scope?: {
+    description: string;
+    codeLangs: string[];
     reposInformation: IVaultRepoInformation[];
+    docsLink: string;
+    outOfScope: string;
+    protocolSetupInstructions: {
+      tooling: "foundry" | "hardhat" | "other";
+      instructions: string;
+    };
   };
   source: {
     name: string;
@@ -156,7 +164,7 @@ export interface ICommitteeMember {
 
 export interface IVaultRepoInformation {
   url: string;
-  commitHash: string;
+  commitHash?: string;
   isMain: boolean;
 }
 
