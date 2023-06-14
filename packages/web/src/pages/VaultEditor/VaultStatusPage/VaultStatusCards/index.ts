@@ -4,3 +4,4 @@ export { OnChainDataStatusCard } from "./OnChainDataStatusCard";
 export { CheckInStatusCard } from "./CheckInStatusCard";
 export { DepositStatusCard } from "./DepositStatusCard";
 export { GovApprovalStatusCard } from "./GovApprovalStatusCard";
+export { GenerateNftsAssetsCard } from "./GenerateNftsAssetsCard";

@@ -36,6 +36,7 @@ export const getVulnerabilitySeveritiesTemplate = (
     severities: [
       {
         id: uuid(),
+        decryptSubmissions: false,
         name: "Gas Saving",
         index: 7,
         "contracts-covered": [],
@@ -55,6 +56,7 @@ The guidelines are as follows:
       },
       {
         id: uuid(),
+        decryptSubmissions: true,
         name: "Low Severity",
         index: 14,
         "contracts-covered": [],
@@ -88,6 +90,7 @@ Reporters will not receive a bounty for:
       },
       {
         id: uuid(),
+        decryptSubmissions: true,
         name: "Medium Severity",
         index: 16,
         "contracts-covered": [],
@@ -126,6 +129,7 @@ Reporters will not receive a bounty for:
       },
       {
         id: uuid(),
+        decryptSubmissions: true,
         name: "High Severity",
         index: 20,
         "contracts-covered": [],
@@ -172,6 +176,7 @@ Reporters will not receive a bounty for:
     severities: [
       {
         id: uuid(),
+        decryptSubmissions: false,
         name: "Low Severity",
         index: 7,
         "contracts-covered": [],
@@ -187,6 +192,7 @@ Reporters will not receive a bounty for:
       },
       {
         id: uuid(),
+        decryptSubmissions: false,
         name: "Medium Severity",
         index: 14,
         "contracts-covered": [],
@@ -202,6 +208,7 @@ Reporters will not receive a bounty for:
       },
       {
         id: uuid(),
+        decryptSubmissions: false,
         name: "High Severity",
         index: 16,
         "contracts-covered": [],
@@ -217,6 +224,7 @@ Reporters will not receive a bounty for:
           "Token holders temporarily unable to transfer holdings ,users spoof each other, theft of yield - Transient consensus failures. Prize will be capped to 30% of the amount that could be frozen, extracted or at risk in production at the time of disclosure.",
       },
       {
+        decryptSubmissions: false,
         id: uuid(),
         name: "Critical Severity",
         index: 20,

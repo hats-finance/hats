@@ -13,6 +13,7 @@ import {
   CongratsStatusCard,
   DepositStatusCard,
   EditVaultStatusCard,
+  GenerateNftsAssetsCard,
   GovApprovalStatusCard,
   OnChainDataStatusCard,
 } from "./VaultStatusCards";

@@ -120,6 +120,7 @@ export interface IEditedSessionResponse {
   submittedToCreation?: boolean;
   lastCreationOnChainRequest?: Date;
   vaultEditionStatus?: IVaultEditionStatus;
+  nftAssetsIpfsHash?: string;
 }
 
 export interface ICreateVaultOnChainCall {

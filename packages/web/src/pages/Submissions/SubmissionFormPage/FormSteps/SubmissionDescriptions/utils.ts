@@ -5,13 +5,31 @@ export const getAuditSubmissionTexts = (
   submissionData: ISubmissionData,
   descriptions: ISubmissionsDescriptionsData["descriptions"]
 ) => {
-  const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})`;
+  const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${
+    submissionData.contact?.communicationChannelType
+  })
+
+  ${descriptions
+    .filter((description) => description.isEncrypted)
+    .map(
+      (description, idx) => `
+-------------
+**[ISSUE #${idx + 1}]**
+**Title:** ${description.title}
+**Severity:** ${description.severity}
+**Description:**
+${description.description.trim()}
+`
+    )
+    .join("\n")}`;
+
   const decrypted = `**Project Name:** ${submissionData.project?.projectName}
 **Project Id:** ${submissionData.project?.projectId}
 **Beneficiary:** ${submissionData.contact?.beneficiary}
-**Github username:** ${submissionData.contact?.githubUsername ?? "---"}
+**Github username:** ${submissionData.contact?.githubUsername || "---"}
     
     ${descriptions
+      .filter((description) => !description.isEncrypted)
       .map(
         (description, idx) => `
 -------------

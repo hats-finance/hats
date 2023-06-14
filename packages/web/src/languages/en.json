@@ -425,6 +425,18 @@
     "rewardsDivision": "Rewards division",
     "severityRewards": "Severity rewards",
     "nftRewards": "NFT rewards",
+    "generateNftsAssets": "Generate NFTs assets",
+    "nftsGenerated": "NFTs generated",
+    "generatingNfts": "Generating NFTs",
+    "noNftsGenerated": "No NFTs generated",
+    "generateNfts": "Generate NFTs assets",
+    "regenerateNfts": "Regenerate NFTs assets",
+    "noNftsGeneratedInfo": "No NFTs generated yet. Click on 'Generate NFTs' to generate them.",
+    "nftsRegenerateInfo": "NFTs already generated on a previous edit session of the vault. Click on 'Generate NFTs' to regenerate them with the current version.",
+    "nftsGeneratedInfo": "NFTs generated successfully",
+    "generatingNftsInfo": "Generating NFTs. This may take a few minutes.",
+    "nftsGeneratedWithEditSessionId": "NFTs generated with edit session ID",
+    "nftsIpfsHash": "NFTs IPFS hash",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -640,6 +652,10 @@
       "submitNewIssues": "Submit new issues",
       "whileWaitingJoinCommunity": "While waiting, become an active member of our community and let us know what you think.",
       "checkAuditCompetitionRepo": "Check here the audit competition repo",
+      "decryptedSubmission": "Decrypted submission",
+      "encryptedSubmission": "Encrypted submission",
+      "encryptedSubmissionExplanation": "The submission is encrypted and only the committee can decrypt it.",
+      "decryptedSubmissionExplanation": "The submission is decrypted and public. This normally happens on Audit Competitions.",
       "terms": {
         "bugBounty": {
           "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
@@ -961,6 +977,7 @@
       "percentage-bounty": "Maximum severity reward (0%-100%)",
       "percentage-bounty-placeholder": "Maximum severity reward",
       "addStartAndEndDate": "Add start and end date",
+      "decryptSubmissions": "Should submissions be decrypted?",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
