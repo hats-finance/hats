@@ -111,6 +111,7 @@ interface IBaseVaultDescription {
     type?: IVaultType;
     endtime?: number;
     starttime?: number;
+    oneLiner?: string;
   };
   "communication-channel": {
     "pgp-pk": string | string[];

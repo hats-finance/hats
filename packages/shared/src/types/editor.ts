@@ -70,6 +70,7 @@ export interface IBaseEditedVaultDescription {
     endtime?: number;
     starttime?: number;
     emails: IEditedCommunicationEmail[];
+    oneLiner?: string;
   };
   committee: {
     chainId?: string;

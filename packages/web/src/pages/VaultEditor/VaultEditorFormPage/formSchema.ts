@@ -21,7 +21,11 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       tokenIcon: Yup.string().required(intl("required")),
       website: Yup.string().test(getTestUrl(intl)).required(intl("required")),
       name: Yup.string().required(intl("required")),
-      type: Yup.string().required(intl("required")),
+      type: Yup.string().required(intl("required")).typeError(intl("required")),
+      oneLiner: Yup.string()
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .max(120, intl("max-characters", { max: 120 })),
       starttime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))

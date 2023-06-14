@@ -34,6 +34,7 @@
     "not-safe-address": "Not a multisig address (check address or network)",
     "select-chain-first": "Please select the network first",
     "min-characters": "Minimum {{min}} characters",
+    "max-characters": "Maximum {{max}} characters",
     "not-enough-safe-members": "Not enough members (minimum is {{min}} and now is only {{now}})",
     "not-enough-safe-signers": "Not enough multisig signers (minimum is {{min}} and now is only {{now}})",
     "email-verification-sent": "Verification email sent",
@@ -915,7 +916,10 @@
         "repoUrl-placeholder": "Enter github repo URL",
         "commitHash": "Repository commit hash",
         "commitHash-placeholder": "Enter github commit hash",
-        "repoInformation": "Repositories Information"
+        "repoInformation": "Repositories Information",
+        "oneLinerExplanation": "Provide a brief introductory sentence for your protocol (max 120 char)",
+        "oneLiner": "One liner (brief description)",
+        "oneLiner-placeholder": "Enter a brief description about your project"
       },
       "signatureMessage": "I hereby confirm the details in ipfs hash {{ipfsHash}}.",
       "committee-details": "Committee Details",
