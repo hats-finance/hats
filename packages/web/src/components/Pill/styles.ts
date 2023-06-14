@@ -64,7 +64,7 @@ export const StyledPill = styled.div<{
     css`
       color: var(--secondary);
       background: var(--secondary-lighter);
-      border: none;
+      border-color: transparent;
     `}
       
       ${isChecked !== undefined &&
@@ -72,7 +72,6 @@ export const StyledPill = styled.div<{
     css`
       color: var(--white);
       background: transparent;
-      /* border: none; */
     `}
 
     span {

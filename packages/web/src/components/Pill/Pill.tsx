@@ -9,7 +9,7 @@ export type PillProps = {
   transparent?: boolean;
   isSeverity?: boolean;
   isChecked?: boolean;
-  onClick?: () => void;
+  onClick?: (checked: boolean) => void;
 };
 
 export const Pill = ({
@@ -28,6 +28,7 @@ export const Pill = ({
       textColor={textColor}
       isSeverity={isSeverity}
       onClickEnabled={!!onClick}
+      onClick={() => onClick?.(!isChecked)}
     >
       {isChecked !== undefined ? isChecked ? <CheckIcon /> : <EmptyIcon /> : undefined}
       {isChecked === undefined && !isSeverity && <StyledDot color={dotColor} />}
