@@ -15,8 +15,13 @@ const getVarColor = (color: PillProps["dotColor"]) => {
   }
 };
 
-export const StyledPill = styled.div<{ transparent: boolean; textColor: PillProps["textColor"]; isSeverity: boolean }>(
-  ({ transparent, textColor, isSeverity }) => css`
+export const StyledPill = styled.div<{
+  transparent: PillProps["transparent"];
+  textColor: PillProps["textColor"];
+  isSeverity: PillProps["isSeverity"];
+  isChecked: PillProps["isChecked"];
+}>(
+  ({ transparent, textColor, isSeverity, isChecked }) => css`
     color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
@@ -41,6 +46,22 @@ export const StyledPill = styled.div<{ transparent: boolean; textColor: PillProp
       font-weight: 700;
       padding: ${getSpacing(0.8)} ${getSpacing(4)};
       border: 1px solid var(--primary-light);
+    `}
+
+    ${isChecked !== undefined &&
+    isChecked &&
+    css`
+      color: var(--secondary);
+      background: var(--secondary-lighter);
+      border: none;
+    `}
+      
+      ${isChecked !== undefined &&
+    !isChecked &&
+    css`
+      color: var(--error-red);
+      background: var(--error-red-background);
+      border: none;
     `}
 
     span {
