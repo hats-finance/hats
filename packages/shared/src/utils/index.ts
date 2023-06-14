@@ -4,3 +4,4 @@ export * from "./general.utils";
 export * from "./vaults.utils";
 export * from "./payouts.utils";
 export * from "./registries.utils";
+export * from "./statistics.utils";
