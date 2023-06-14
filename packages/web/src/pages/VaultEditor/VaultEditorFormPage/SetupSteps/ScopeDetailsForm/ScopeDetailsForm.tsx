@@ -4,6 +4,7 @@ import { useEnhancedFormContext } from "hooks/form";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
+import { ScopeReposInformation } from "./ScopeReposInformation/ScopeReposInformation";
 import { StyledScopeDetailsForm } from "./styles";
 
 export const ScopeDetailsForm = () => {
@@ -28,6 +29,7 @@ export const ScopeDetailsForm = () => {
     <StyledScopeDetailsForm>
       <div className="helper-text">{t("vaultEditorScopeExplanation")}</div>
 
+      {/* Project Outline */}
       <p className="mb-3 bold">{t("offerDescriptionHowTheProtocolWorks")}</p>
       <FormInput
         {...register(`scope.description`)}
@@ -39,6 +41,7 @@ export const ScopeDetailsForm = () => {
         placeholder={t("VaultEditor.scopeDescription-placeholder")}
       />
 
+      {/* Project Coding languages */}
       <p className="mb-3 bold">{t("VaultEditor.selectCodeLanguages")}</p>
       <div className="code-langs mb-3">
         {CODE_LANGUAGES.solidity.map((codeLang) => (
@@ -58,6 +61,12 @@ export const ScopeDetailsForm = () => {
           />
         ))}
       </div>
+
+      <br />
+
+      {/* Repos and documentation */}
+      <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
+      <ScopeReposInformation />
     </StyledScopeDetailsForm>
   );
 };

@@ -240,7 +240,7 @@
     "existingEditSessionsHelperNoPendingApproval": "These are the editions request you did to your vault. If you want to edit this vault, please click on the 'Edit vault' button below.",
     "existingEditSessionsHelperPendingApproval": "These are the editions request you did to your vault. You have currently one edition waiting for approval, please wait until governance approve it or if you want you can cancel the approval request.",
     "cancelApprovalRequest": "Cancel approval request",
-    "vaultRepoInformationExplanation": "Please put here all the code repositories where the contracts are, along with the specific commit hash.",
+    "vaultRepoInformationExplanation": "Please put here all the code repositories where the code/contracts are.",
     "vaultRepoInformationExplanationAudit": "Please put here all the code repositories where the contracts are, along with the specific commit hash. \n\nThis is used for creating a fork of the repo (the one you selected as <strong>main</strong>) and creating issues for each security researcher submission.",
     "youHaveNotSelectedRepos": "You have not specified any repository information.",
     "cancel": "Cancel",
@@ -990,6 +990,7 @@
       "scopeDescription": "Project outline",
       "scopeDescription-placeholder": "The goal on the outline is to give the security researcher context of the protocol operations.",
       "selectCodeLanguages": "Select code language tags best connecting to your protocol",
+      "reposAndDocumentation": "Repositories and Documentation",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
