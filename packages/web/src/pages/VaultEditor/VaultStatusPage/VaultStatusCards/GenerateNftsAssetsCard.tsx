@@ -83,7 +83,7 @@ export const GenerateNftsAssetsCard = () => {
         <div className="leftSide">
           <span>{t("generateNftsAssets")}</span>
           <Pill
-            color={nftsGeneratedInfo ? "blue" : nftsAreBeingGenerated ? "yellow" : "red"}
+            dotColor={nftsGeneratedInfo ? "blue" : nftsAreBeingGenerated ? "yellow" : "red"}
             text={
               nftsGeneratedInfo ? t("nftsGenerated") : nftsAreBeingGenerated ? `${t("generatingNfts")}..` : t("noNftsGenerated")
             }
