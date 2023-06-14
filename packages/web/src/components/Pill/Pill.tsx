@@ -1,5 +1,5 @@
-import CheckIcon from "@mui/icons-material/CheckOutlined";
-import ClearIcon from "@mui/icons-material/ClearOutlined";
+import CheckIcon from "@mui/icons-material/CheckCircleOutlineOutlined";
+import EmptyIcon from "@mui/icons-material/RadioButtonUncheckedOutlined";
 import { StyledDot, StyledPill } from "./styles";
 
 export type PillProps = {
@@ -9,12 +9,27 @@ export type PillProps = {
   transparent?: boolean;
   isSeverity?: boolean;
   isChecked?: boolean;
+  onClick?: () => void;
 };
 
-export const Pill = ({ dotColor = "blue", text, textColor, isChecked, transparent = false, isSeverity = false }: PillProps) => {
+export const Pill = ({
+  dotColor = "blue",
+  text,
+  textColor,
+  isChecked,
+  transparent = false,
+  isSeverity = false,
+  onClick,
+}: PillProps) => {
   return (
-    <StyledPill isChecked={isChecked} transparent={transparent} textColor={textColor} isSeverity={isSeverity}>
-      {isChecked !== undefined ? isChecked ? <CheckIcon /> : <ClearIcon /> : undefined}
+    <StyledPill
+      isChecked={isChecked}
+      transparent={transparent}
+      textColor={textColor}
+      isSeverity={isSeverity}
+      onClickEnabled={!!onClick}
+    >
+      {isChecked !== undefined ? isChecked ? <CheckIcon /> : <EmptyIcon /> : undefined}
       {isChecked === undefined && !isSeverity && <StyledDot color={dotColor} />}
       <span title={text}>{text}</span>
     </StyledPill>
