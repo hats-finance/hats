@@ -73,13 +73,6 @@ export const AllEditorSections: IEditorSections = {
         formFields: ["vulnerability-severities-spec"],
         isAdvanced: true,
       },
-      // {
-      //   id: "contracts",
-      //   name: "contracts",
-      //   title: { creation: "contractsAssetsCovered", editing: "contractsAssetsCovered" },
-      //   component: ContractsCoveredList,
-      //   formFields: ["contracts-covered"],
-      // },
       {
         id: "scope",
         name: "scope",

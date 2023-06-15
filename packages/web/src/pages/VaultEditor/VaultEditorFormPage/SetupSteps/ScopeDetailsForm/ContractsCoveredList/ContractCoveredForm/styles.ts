@@ -19,5 +19,11 @@ export const StyledContractCoveredForm = styled.div`
       justify-content: space-between;
       gap: ${getSpacing(3)};
     }
+
+    .flex {
+      display: flex;
+      align-items: baseline;
+      gap: ${getSpacing(2)};
+    }
   }
 `;

@@ -4,6 +4,7 @@ import { useEnhancedFormContext } from "hooks/form";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
+import { ContractsCoveredList } from "./ContractsCoveredList/ContractsCoveredList";
 import { ScopeReposInformation } from "./ScopeReposInformation/ScopeReposInformation";
 import { StyledScopeDetailsForm } from "./styles";
 
@@ -75,6 +76,12 @@ export const ScopeDetailsForm = () => {
         disabled={allFormDisabled}
         placeholder={t("VaultEditor.linkToProtocolDocs-placeholder")}
       />
+
+      <br />
+
+      {/* Contracts/assets covered */}
+      <p className="section-title mt-5">{t("VaultEditor.contractsAssetsCovered")}</p>
+      <ContractsCoveredList />
     </StyledScopeDetailsForm>
   );
 };

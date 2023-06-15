@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription } from "..";
 import { getVulnerabilitySeveritiesTemplate } from "../severities";
 import {
+  IBaseVulnerabilitySeverity,
   ICreateVaultOnChainCall,
   IEditedCommunicationEmail,
   IEditedContractCovered,
@@ -42,6 +43,8 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
     name: "",
     address: "",
     severities: severitiesIds,
+    description: "",
+    deploymentInfo: [{ contractAddress: "", chainId: "" }],
   };
 };
 
@@ -50,6 +53,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
     id: uuid(),
     name: "",
     "contracts-covered": [],
+    contractsCoveredNew: [],
     "nft-metadata": {
       name: "",
       description: "",
@@ -58,7 +62,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
       external_url: "",
     },
     description: "",
-  };
+  } as IBaseVulnerabilitySeverity;
 
   if (version === "v1") {
     return {
@@ -107,6 +111,14 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     },
     scope: {
       reposInformation: [{ isMain: true, url: "", commitHash: "" }],
+      description: "",
+      codeLangs: [] as string[],
+      docsLink: "",
+      outOfScope: "",
+      protocolSetupInstructions: {
+        tooling: "hardhat",
+        instructions: "",
+      },
     },
     committee: {
       chainId: "",
@@ -130,25 +142,31 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
   let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
-    const contractsCovered = severity["contracts-covered"];
+    const contractsCovered = severity.contractsCoveredNew ?? severity["contracts-covered"];
 
     if (contractsCovered && contractsCovered.length > 0) {
       contractsCovered.forEach((contractCovered) => {
-        const name = Object.keys(contractCovered)[0];
-        const address = Object.values(contractCovered)[0] as string;
-        const contract = contractsForm.find((c) => c.name === name && c.address === address);
+        const address = contractCovered.link ?? (Object.values(contractCovered)[0] as string);
+        const contract = contractsForm.find((c) => c.address === address);
+
+        const data = severity.contractsCoveredNew
+          ? {
+              name: "",
+              address: contractCovered.link,
+              description: contractCovered.description,
+              deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
+            }
+          : { ...createNewCoveredContract(), name: Object.keys(contractCovered)[0], address };
 
         if (contract) {
           const contractIndex = contractsForm.indexOf(contract);
           contractsForm[contractIndex] = {
-            name,
-            address,
+            ...data,
             severities: [...contract.severities, severity.id as string],
           };
         } else {
           contractsForm.push({
-            name,
-            address,
+            ...data,
             severities: [severity.id as string],
           });
         }
@@ -246,9 +264,16 @@ function editedSeveritiesToSeverities(severities: IEditedVulnerabilitySeverityV1
     if (newSeverity.id) delete newSeverity.id;
     return {
       ...newSeverity,
-      "contracts-covered": contractsCovered
+      // "contracts-covered": contractsCovered
+      //   .filter((contract) => contract.severities?.includes(severityId))
+      //   .map((contract) => ({ [contract.name]: contract.address })),
+      contractsCoveredNew: contractsCovered
         .filter((contract) => contract.severities?.includes(severityId))
-        .map((contract) => ({ [contract.name]: contract.address })),
+        .map((contract) => ({
+          link: contract.address,
+          description: contract.description,
+          deploymentInfo: contract.deploymentInfo,
+        })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
   }) as IVulnerabilitySeverityV1[];
 }
@@ -264,9 +289,16 @@ function editedSeveritiesToSeveritiesv2(
     if (newSeverity.id) delete newSeverity.id;
     return {
       ...newSeverity,
-      "contracts-covered": contractsCovered
+      // "contracts-covered": contractsCovered
+      //   .filter((contract) => contract.severities?.includes(severityId))
+      //   .map((contract) => ({ [contract.name]: contract.address })),
+      contractsCoveredNew: contractsCovered
         .filter((contract) => contract.severities?.includes(severityId))
-        .map((contract) => ({ [contract.name]: contract.address })),
+        .map((contract) => ({
+          link: contract.address,
+          description: contract.description,
+          deploymentInfo: contract.deploymentInfo,
+        })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
   }) as IVulnerabilitySeverityV2[];
 }
@@ -277,7 +309,6 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
   if (editedVaultDescription.version === "v1") {
     return {
       version: editedVaultDescription.version,
-
       "project-metadata": projectMetadata,
       "communication-channel": editedVaultDescription["communication-channel"],
       committee: editedVaultDescription.committee,

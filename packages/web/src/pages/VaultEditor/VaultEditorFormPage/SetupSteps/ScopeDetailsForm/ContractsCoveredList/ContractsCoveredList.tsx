@@ -1,13 +1,13 @@
-import { useContext, useMemo } from "react";
-import { useFieldArray, useWatch } from "react-hook-form";
 import { createNewCoveredContract } from "@hats-finance/shared";
-import { useTranslation } from "react-i18next";
+import AddIcon from "@mui/icons-material/Add";
 import { Button } from "components";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
-import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
+import { useContext, useMemo } from "react";
+import { useFieldArray, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { IEditedVaultDescription } from "types";
-import { VaultEditorFormContext } from "../../store";
-import AddIcon from "@mui/icons-material/Add";
+import { VaultEditorFormContext } from "../../../store";
+import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
 
 export function ContractsCoveredList() {
   const { t } = useTranslation();
@@ -32,7 +32,7 @@ export function ContractsCoveredList() {
       ))}
 
       {!allFormDisabled && (
-        <Button styleType="invisible" onClick={() => append(createNewCoveredContract(severitiesFormIds))}>
+        <Button className="mt-4" styleType="invisible" onClick={() => append(createNewCoveredContract(severitiesFormIds))}>
           <AddIcon className="mr-1" />
           <span>{t("addContractAsset")}</span>
         </Button>

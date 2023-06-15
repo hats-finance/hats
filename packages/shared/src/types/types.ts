@@ -172,6 +172,14 @@ export interface IBaseVulnerabilitySeverity {
   name: string;
   decryptSubmissions?: boolean;
   "contracts-covered": { [key: string]: string }[];
+  contractsCoveredNew?: {
+    link: string;
+    description: string;
+    deploymentInfo: {
+      contractAddress: string;
+      chainId: string;
+    }[];
+  }[];
   "nft-metadata": INFTMetaData;
   description: string;
 }

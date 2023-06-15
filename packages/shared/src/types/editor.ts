@@ -12,6 +12,11 @@ export interface IEditedContractCovered {
   name: string;
   address: string;
   severities: string[]; // IVulnerabilitySeverity.name
+  description?: string;
+  deploymentInfo?: {
+    contractAddress: string;
+    chainId: string;
+  }[];
 }
 
 export interface IEditedCommunicationEmail {
