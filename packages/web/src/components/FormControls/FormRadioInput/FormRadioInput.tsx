@@ -24,6 +24,7 @@ function FormRadioInputComponent(
   }: FormRadioInputProps,
   ref
 ) {
+  console.log(props);
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
 
   const handleOnChange = (e: ChangeEvent<any>) => {
@@ -44,6 +45,7 @@ function FormRadioInputComponent(
             {option.label}
             <input
               {...props}
+              checked={props.value === option.value}
               ref={setRef}
               type={type}
               disabled={disabled}
