@@ -59,6 +59,15 @@ export const StyledPill = styled.div<{
       }
     `}
 
+    ${!isOnClickEnabled &&
+    css`
+      cursor: default;
+
+      &:hover {
+        opacity: 1;
+      }
+    `}
+
     ${isChecked !== undefined &&
     isChecked &&
     css`
