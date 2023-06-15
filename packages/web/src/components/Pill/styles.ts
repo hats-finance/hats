@@ -20,9 +20,9 @@ export const StyledPill = styled.div<{
   textColor: PillProps["textColor"];
   isSeverity: PillProps["isSeverity"];
   isChecked: PillProps["isChecked"];
-  onClickEnabled: boolean;
+  isOnClickEnabled: boolean;
 }>(
-  ({ transparent, textColor, isSeverity, isChecked, onClickEnabled }) => css`
+  ({ transparent, textColor, isSeverity, isChecked, isOnClickEnabled }) => css`
     color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
@@ -49,7 +49,7 @@ export const StyledPill = styled.div<{
       border: 1px solid var(--primary-light);
     `}
 
-    ${onClickEnabled !== undefined &&
+    ${isOnClickEnabled !== undefined &&
     css`
       cursor: pointer;
       transition: 0.2s;

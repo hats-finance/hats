@@ -27,7 +27,7 @@ export const Pill = ({
       transparent={transparent}
       textColor={textColor}
       isSeverity={isSeverity}
-      onClickEnabled={!!onClick}
+      isOnClickEnabled={!!onClick}
       onClick={() => onClick?.(!isChecked)}
     >
       {isChecked !== undefined ? isChecked ? <CheckIcon /> : <EmptyIcon /> : undefined}
