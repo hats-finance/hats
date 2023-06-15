@@ -7,21 +7,27 @@ type FormMDEditorProps = {
   colorable?: boolean;
   isDirty?: boolean;
   noMargin?: boolean;
+  disabled?: boolean;
   value: string;
   onChange: (data: string) => void;
   error?: { message?: string; type: string };
 };
 
 export const FormMDEditorComponent = (
-  { colorable = false, isDirty = false, noMargin = false, value, onChange, error }: FormMDEditorProps,
+  { colorable = false, isDirty = false, noMargin = false, disabled = false, value, onChange, error }: FormMDEditorProps,
   ref
 ) => {
   return (
-    <StyledFormMDEditor hasError={!!error && colorable} isDirty={parseIsDirty(isDirty) && colorable} noMargin={noMargin}>
+    <StyledFormMDEditor
+      hasError={!!error && colorable}
+      isDirty={parseIsDirty(isDirty) && colorable}
+      noMargin={noMargin}
+      disabled={disabled}
+    >
       <MDEditor
         value={value}
         previewOptions={{ disallowedElements: ["script", "iframe"] }}
-        onChange={(value) => onChange(value ?? "")}
+        onChange={(value) => (disabled ? undefined : onChange(value ?? ""))}
       />
       {error && <span className="error">{error.message}</span>}
     </StyledFormMDEditor>

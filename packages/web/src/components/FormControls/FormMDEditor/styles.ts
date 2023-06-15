@@ -6,8 +6,9 @@ export const StyledFormMDEditor = styled.div<{
   hasError: boolean;
   isDirty: boolean;
   noMargin: boolean;
+  disabled: boolean;
 }>(
-  ({ hasError, isDirty, noMargin }) => css`
+  ({ hasError, isDirty, noMargin, disabled }) => css`
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
     .w-md-editor {
@@ -16,6 +17,23 @@ export const StyledFormMDEditor = styled.div<{
       border: 1px solid var(--grey-500);
       box-shadow: none;
       overflow: hidden;
+
+      ${disabled &&
+      css`
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--disabled-input);
+          opacity: 0.4;
+          z-index: 1;
+          cursor: not-allowed;
+        }
+      `}
 
       * {
         font-size: var(--xsmall) !important;
