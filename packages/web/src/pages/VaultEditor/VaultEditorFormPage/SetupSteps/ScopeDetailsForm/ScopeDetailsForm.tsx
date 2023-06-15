@@ -57,7 +57,7 @@ export const ScopeDetailsForm = () => {
         {CODE_LANGUAGES.solidity.map((codeLang) => (
           <Pill
             key={codeLang}
-            onClick={(checked) => handleClickOnCodeLang(codeLang, checked)}
+            onClick={allFormDisabled ? undefined : (checked) => handleClickOnCodeLang(codeLang, checked)}
             isChecked={watch("scope.codeLangs", []).some((lang) => lang === codeLang)}
             text={codeLang}
           />
@@ -67,7 +67,7 @@ export const ScopeDetailsForm = () => {
         {CODE_LANGUAGES.other.map((codeLang) => (
           <Pill
             key={codeLang}
-            onClick={(checked) => handleClickOnCodeLang(codeLang, checked)}
+            onClick={allFormDisabled ? undefined : (checked) => handleClickOnCodeLang(codeLang, checked)}
             isChecked={watch("scope.codeLangs", []).some((lang) => lang === codeLang)}
             text={codeLang}
           />
@@ -104,6 +104,7 @@ export const ScopeDetailsForm = () => {
         name={`scope.outOfScope`}
         render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
           <FormMDEditor
+            disabled={allFormDisabled}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
             error={error}
             colorable
@@ -120,13 +121,21 @@ export const ScopeDetailsForm = () => {
       <Controller
         control={control}
         name={`scope.protocolSetupInstructions.tooling`}
-        render={({ field }) => <FormRadioInput label={t("Payouts.choosePayoutType")} radioOptions={toolingOptions} {...field} />}
+        render={({ field }) => (
+          <FormRadioInput
+            disabled={allFormDisabled}
+            label={t("Payouts.choosePayoutType")}
+            radioOptions={toolingOptions}
+            {...field}
+          />
+        )}
       />
       <Controller
         control={control}
         name={`scope.protocolSetupInstructions.instructions`}
         render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
           <FormMDEditor
+            disabled={allFormDisabled}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
             error={error}
             colorable

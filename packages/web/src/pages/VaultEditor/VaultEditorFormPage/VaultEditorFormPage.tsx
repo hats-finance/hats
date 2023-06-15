@@ -106,6 +106,7 @@ const VaultEditorFormPage = () => {
     loadingSteps,
     presetIsEditingExistingVault,
   } = useVaultEditorSteps(methods, {
+    allFormDisabled,
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
     onFinalEditSubmit: () => sendEditionToGovApproval(),
