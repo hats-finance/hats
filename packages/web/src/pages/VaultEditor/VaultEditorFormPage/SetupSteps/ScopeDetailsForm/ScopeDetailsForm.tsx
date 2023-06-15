@@ -67,6 +67,14 @@ export const ScopeDetailsForm = () => {
       {/* Repos and documentation */}
       <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
       <ScopeReposInformation />
+      <p className="mb-3 mt-5 bold">{t("VaultEditor.linkToProtocolDocs")}</p>
+      <FormInput
+        {...register(`scope.docsLink`)}
+        label={t("VaultEditor.protocolDocs")}
+        colorable
+        disabled={allFormDisabled}
+        placeholder={t("VaultEditor.linkToProtocolDocs-placeholder")}
+      />
     </StyledScopeDetailsForm>
   );
 };

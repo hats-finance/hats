@@ -991,6 +991,9 @@
       "scopeDescription-placeholder": "The goal on the outline is to give the security researcher context of the protocol operations.",
       "selectCodeLanguages": "Select code language tags best connecting to your protocol",
       "reposAndDocumentation": "Repositories and Documentation",
+      "protocolDocs": "Project documentation",
+      "linkToProtocolDocs": "Link to project documentation",
+      "linkToProtocolDocs-placeholder": "Insert link here",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
