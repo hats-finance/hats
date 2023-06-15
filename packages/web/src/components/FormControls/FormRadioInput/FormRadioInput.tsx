@@ -24,7 +24,6 @@ function FormRadioInputComponent(
   }: FormRadioInputProps,
   ref
 ) {
-  console.log(props);
   const localRef = useRef<HTMLTextAreaElement | HTMLInputElement>();
 
   const handleOnChange = (e: ChangeEvent<any>) => {
