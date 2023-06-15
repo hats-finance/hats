@@ -42,6 +42,13 @@ export const StyledFormRadioInput = styled.div<StyledFormRadioInputProps>(
             }
           }
 
+          ${disabled &&
+          css`
+            &:hover {
+              opacity: 1 !important;
+            }
+          `}
+
           & * {
             ${disabled ? "cursor: not-allowed;" : "cursor: pointer;"}
           }
