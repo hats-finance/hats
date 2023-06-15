@@ -17,6 +17,7 @@ export const StyledFormMDEditor = styled.div<{
       border: 1px solid var(--grey-500);
       box-shadow: none;
       overflow: hidden;
+      white-space: normal;
 
       ${disabled &&
       css`
