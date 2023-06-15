@@ -1,7 +1,8 @@
 import { CODE_LANGUAGES, IEditedVaultDescription } from "@hats-finance/shared";
-import { FormInput, Pill } from "components";
-import { useEnhancedFormContext } from "hooks/form";
-import { useContext } from "react";
+import { FormInput, FormMDEditor, FormRadioInput, Pill } from "components";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
+import { useContext, useMemo } from "react";
+import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
 import { ContractsCoveredList } from "./ContractsCoveredList/ContractsCoveredList";
@@ -12,7 +13,7 @@ export const ScopeDetailsForm = () => {
   const { t } = useTranslation();
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 
-  const { register, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { control, register, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const handleClickOnCodeLang = (codeLang: string, checked: boolean) => {
     const codeLangs = getValues("scope.codeLangs") ?? [];
@@ -25,6 +26,14 @@ export const ScopeDetailsForm = () => {
       );
     }
   };
+
+  const toolingOptions = useMemo(() => {
+    return [
+      { value: "hardhat", label: "Hardhat" },
+      { value: "foundry", label: "Foundry" },
+      { value: "custom", label: t("custom") },
+    ];
+  }, [t]);
 
   return (
     <StyledScopeDetailsForm>
@@ -82,6 +91,47 @@ export const ScopeDetailsForm = () => {
       {/* Contracts/assets covered */}
       <p className="section-title mt-5">{t("VaultEditor.contractsAssetsCovered")}</p>
       <ContractsCoveredList />
+
+      <br />
+
+      {/* Out of scope */}
+      <p className="section-title mt-5">{t("VaultEditor.outOfScope")}</p>
+      <p className="mb-3 mt-5 bold">{t("VaultEditor.outOfScopeExplanation")}</p>
+      <Controller
+        control={control}
+        name={`scope.outOfScope`}
+        render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+          <FormMDEditor
+            isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+            error={error}
+            colorable
+            {...field}
+          />
+        )}
+      />
+
+      <br />
+
+      {/* Steps to run project */}
+      <p className="section-title mt-5">{t("VaultEditor.stepsToRunProject")}</p>
+      <p className="mb-3 mt-5 bold">{t("VaultEditor.stepsToRunProjectExplanation")}</p>
+      <Controller
+        control={control}
+        name={`scope.protocolSetupInstructions.tooling`}
+        render={({ field }) => <FormRadioInput label={t("Payouts.choosePayoutType")} radioOptions={toolingOptions} {...field} />}
+      />
+      <Controller
+        control={control}
+        name={`scope.protocolSetupInstructions.instructions`}
+        render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+          <FormMDEditor
+            isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+            error={error}
+            colorable
+            {...field}
+          />
+        )}
+      />
     </StyledScopeDetailsForm>
   );
 };

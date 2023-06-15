@@ -69,6 +69,11 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       ),
       description: Yup.string().required(intl("required")),
       docsLink: Yup.string().test(getTestUrl(intl)).required(intl("required")),
+      outOfScope: Yup.string(),
+      protocolSetupInstructions: Yup.object({
+        tooling: Yup.string(),
+        instructions: Yup.string(),
+      }),
     }),
     committee: Yup.object({
       chainId: Yup.string().required(intl("required")),

@@ -142,6 +142,7 @@
     "deployVaultHelper": "Continue and fill-out the info needed for to deploy the vault on-chain",
     "back": "Back",
     "next": "Next",
+    "custom": "Custom",
     "continueToVaultCreation": "Continue to Vault Creation",
     "sendToGovernanceApproval": "Send to governance approval",
     "assetsInVault": "Assets in Vault",
@@ -1005,6 +1006,10 @@
       "contractAddress-placeholder": "Insert address here",
       "chain": "Chain",
       "chain-placeholder": "Select chain",
+      "outOfScope": "Out of scope",
+      "outOfScopeExplanation": "Review and edit the out of scope template as needed.",
+      "stepsToRunProject": "Steps to run the project",
+      "stepsToRunProjectExplanation": "Select the dev tool you are using and provide a testing and installation instructions.",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",
