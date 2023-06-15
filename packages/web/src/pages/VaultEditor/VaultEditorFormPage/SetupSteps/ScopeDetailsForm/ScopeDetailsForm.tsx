@@ -56,6 +56,7 @@ export const ScopeDetailsForm = () => {
       <div className="code-langs mb-3">
         {CODE_LANGUAGES.solidity.map((codeLang) => (
           <Pill
+            key={codeLang}
             onClick={(checked) => handleClickOnCodeLang(codeLang, checked)}
             isChecked={watch("scope.codeLangs", []).some((lang) => lang === codeLang)}
             text={codeLang}
@@ -65,6 +66,7 @@ export const ScopeDetailsForm = () => {
       <div className="code-langs">
         {CODE_LANGUAGES.other.map((codeLang) => (
           <Pill
+            key={codeLang}
             onClick={(checked) => handleClickOnCodeLang(codeLang, checked)}
             isChecked={watch("scope.codeLangs", []).some((lang) => lang === codeLang)}
             text={codeLang}

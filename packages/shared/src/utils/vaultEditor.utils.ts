@@ -317,6 +317,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         editedVaultDescription["vulnerability-severities-spec"].severities,
         editedVaultDescription["contracts-covered"]
       ),
+      scope: editedVaultDescription.scope,
     };
   } else {
     return {
@@ -329,6 +330,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         editedVaultDescription["vulnerability-severities-spec"].severities,
         editedVaultDescription["contracts-covered"]
       ),
+      scope: editedVaultDescription.scope,
     };
   }
 }

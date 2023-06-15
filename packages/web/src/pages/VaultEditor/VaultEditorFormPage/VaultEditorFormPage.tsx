@@ -667,7 +667,7 @@ const VaultEditorFormPage = () => {
                       onClick={() => onGoToStep(index)}
                     >
                       {step.isValid && <CheckIcon className="ml-2" />}
-                      {step.isValid ? "" : `${index + 1}.`}
+                      {/* {step.isValid ? "" : `${index + 1}.`} */}
                       {t(step.name)}
                     </VaultEditorStepController>
                   ))}

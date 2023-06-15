@@ -64,18 +64,20 @@ export const useVaultEditorSteps = (
 
     for (const section in editorSections) {
       const sectionSteps = editorSections[section]["steps"];
-      const sectionStepsWithExtraData = sectionSteps.map((step, index) => ({
-        ...step,
-        section,
-        index,
-        onlyCreation: editorSections[section].onlyInCreation ?? false,
-      }));
+      const sectionStepsWithExtraData = sectionSteps
+        .filter((step) => (isAdvancedMode ? true : !step.isAdvanced))
+        .map((step, index) => ({
+          ...step,
+          section,
+          index,
+          onlyCreation: editorSections[section].onlyInCreation ?? false,
+        }));
 
       steps.push(...sectionStepsWithExtraData);
     }
 
     return steps;
-  }, [editorSections]);
+  }, [editorSections, isAdvancedMode]);
 
   const editStepStatus = useCallback(
     async (property: "isValid" | "isChecked", value: boolean = true, step: number, section: keyof typeof editorSections) => {

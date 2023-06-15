@@ -114,7 +114,11 @@ export const ScopeReposInformation = () => {
           </div>
         ))}
 
-        {repos.length === 0 && <Alert type="info">{t("youHaveNotSelectedRepos")}</Alert>}
+        {repos.length === 0 && (
+          <Alert type="info" className="mb-4">
+            {t("youHaveNotSelectedRepos")}
+          </Alert>
+        )}
 
         {!allFormDisabled && (
           <div className="buttons">
