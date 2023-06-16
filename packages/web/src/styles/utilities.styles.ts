@@ -9,7 +9,7 @@ export const utilityClasses = css`
   .flex-horizontal {
     display: flex;
     align-items: center;
-    gap: ${getSpacing(2)};
+    gap: ${getSpacing(1)};
   }
 
   .m-0 {

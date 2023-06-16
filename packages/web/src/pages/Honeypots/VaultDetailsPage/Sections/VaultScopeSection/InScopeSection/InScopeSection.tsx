@@ -6,7 +6,7 @@ import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
 import MDEditor from "@uiw/react-md-editor";
-import { Button, Pill, WithTooltip } from "components";
+import { Button, CopyToClipboard, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
@@ -59,13 +59,15 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               {/* If the contract has contract.name is because is the old version */}
               {contract.name ? (
                 <>
-                  <div>{contract.name}</div>
+                  <div className="text-ellipsis">{contract.name}</div>
                   {checkUrl(contract.address) ? (
-                    <a href={contractHref} {...defaultAnchorProps}>
+                    <a className="text-ellipsis" href={contractHref} {...defaultAnchorProps}>
                       {contract.address}
                     </a>
                   ) : (
-                    <div>{contract.address}</div>
+                    <div className="text-ellipsis flex-horizontal">
+                      <CopyToClipboard simple valueToCopy={contract.address} /> {contract.address}
+                    </div>
                   )}
                 </>
               ) : (

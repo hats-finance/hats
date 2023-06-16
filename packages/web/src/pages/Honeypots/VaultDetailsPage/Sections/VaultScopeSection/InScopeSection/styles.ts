@@ -52,7 +52,7 @@ export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
       display: grid;
       gap: ${getSpacing(1)};
       align-items: center;
-      grid-template-columns: ${isOldVersion ? "1fr 1fr" : "4fr 1fr 4fr 4fr"};
+      grid-template-columns: ${isOldVersion ? "2fr 3fr" : "4fr 1fr 4fr 4fr"};
       padding: ${getSpacing(2)} ${getSpacing(3)};
     }
 
@@ -63,7 +63,7 @@ export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
 
       .contract {
         gap: ${getSpacing(2)};
-        grid-template-columns: ${isOldVersion ? "1fr 1fr" : "1fr 1fr"};
+        grid-template-columns: ${isOldVersion ? "2fr 3fr" : "1fr 1fr"};
 
         .loc {
           display: none;
@@ -84,6 +84,12 @@ export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
 
       &:last-child {
         border-bottom: 1px solid var(--primary-light);
+      }
+
+      .text-ellipsis {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
       }
     }
 
