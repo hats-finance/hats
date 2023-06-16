@@ -462,6 +462,7 @@
     "noDeploymentsInfo": "No deployments info",
     "name": "name",
     "goToText": "Go to {{text}}",
+    "toolUsed": "Tool used",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
