@@ -23,7 +23,6 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
   const contractsCovered = severitiesToContractsCoveredForm(vault.description?.severities);
   const docsLink = vault.description.scope?.docsLink;
-  console.log(contractsCovered);
 
   const goToRepo = (repo: IVaultRepoInformation) => {
     if (repo.commitHash) {
@@ -115,10 +114,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {/* Overview */}
       {vault.description.scope?.description && (
         <>
-          <h3 className="section-subtitle">
+          <h4 className="section-subtitle">
             <OverviewIcon className="icon" />
             <span>{t("overview")}</span>
-          </h3>
+          </h4>
 
           <div className="section-content">
             <p>{vault.description?.scope?.description}</p>
@@ -135,10 +134,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {/* Repos information */}
       {vault.description.scope?.reposInformation.length && (
         <>
-          <h3 className="section-subtitle">
+          <h4 className="section-subtitle">
             <TerminalIcon className="icon" />
             <span>{t("repositories")}</span>
-          </h3>
+          </h4>
 
           <div className="section-content repos">
             {vault.description.scope?.reposInformation.map((repo, idx) => (
@@ -164,10 +163,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {/* Contracts covered */}
       {contractsCovered.length && (
         <>
-          <h3 className="section-subtitle">
+          <h4 className="section-subtitle">
             <ContractsIcon className="icon" />
             <span>{t("contractsAssetsCovered")}</span>
-          </h3>
+          </h4>
 
           <StyledContractsList className="section-content" isOldVersion={!!contractsCovered[0].name}>
             {getContractsCoveredList()}
@@ -179,10 +178,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {/* Documentation */}
       {docsLink && (
         <>
-          <h3 className="section-subtitle">
+          <h4 className="section-subtitle">
             <DocumentIcon className="icon" />
             <span>{t("documentation")}</span>
-          </h3>
+          </h4>
 
           <div className="section-content">
             <a href={docsLink.includes("http") ? docsLink : `//${docsLink}`} {...defaultAnchorProps}>

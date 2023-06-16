@@ -2,20 +2,23 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 
 export const StyledVaultScopeSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${getSpacing(6)};
   padding-bottom: ${getSpacing(8)};
 
   .scope-section-container {
     border: 1px solid var(--primary-light);
-    padding: ${getSpacing(3)} ${getSpacing(2.5)};
+    padding: ${getSpacing(2.5)} ${getSpacing(4)};
     margin-top: ${getSpacing(2)};
 
-    h3.section-subtitle {
+    h4.section-subtitle {
       display: flex;
       align-items: center;
       gap: ${getSpacing(1.5)};
 
       .icon {
-        font-size: var(--medium-2);
+        font-size: var(--medium);
       }
     }
 

@@ -16,41 +16,37 @@ export const VaultScopeSection = () => {
 
   return (
     <StyledVaultScopeSection>
-      <>
+      <div>
         <h2>{t("inScope")}</h2>
         <InScopeSection vault={vault} />
-        <br />
-      </>
+      </div>
 
       {vault.description?.scope?.outOfScope && (
-        <>
+        <div>
           <h2>{t("outOfScope")}</h2>
           <OutOfScopeSection vault={vault} />
-          <br />
-        </>
+        </div>
       )}
 
       {vault.description?.scope?.protocolSetupInstructions.instructions && (
-        <>
+        <div>
           <h2>{t("envSetupInstructions")}</h2>
           <EnvSetupSection vault={vault} />
-          <br />
-        </>
+        </div>
       )}
 
       {vault.description?.severities.length && (
-        <>
+        <div>
           <h2>{t("severityLevels")}</h2>
           <SeverityLevelsSection vault={vault} />
-          <br />
-        </>
+        </div>
       )}
 
       {vault.description?.committee?.members?.length && (
-        <>
+        <div>
           <h2>{t("committeeInfo")}</h2>
           <CommitteeInfoSection vault={vault} />
-        </>
+        </div>
       )}
     </StyledVaultScopeSection>
   );
