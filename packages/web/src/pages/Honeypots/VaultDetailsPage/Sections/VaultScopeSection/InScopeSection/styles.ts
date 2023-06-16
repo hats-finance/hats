@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledInScopeSection = styled.div`
   .code-languages {
@@ -19,6 +20,13 @@ export const StyledInScopeSection = styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+        padding: ${getSpacing(3)} ${getSpacing(3)};
+        flex-direction: column;
+        align-items: flex-start;
+        gap: ${getSpacing(2)};
+      }
 
       .info {
         display: flex;
@@ -44,8 +52,30 @@ export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
       display: grid;
       gap: ${getSpacing(1)};
       align-items: center;
-      grid-template-columns: ${isOldVersion ? "1fr 1fr" : "2fr 1fr 2fr 2fr"};
+      grid-template-columns: ${isOldVersion ? "1fr 1fr" : "4fr 1fr 4fr 4fr"};
       padding: ${getSpacing(2)} ${getSpacing(3)};
+    }
+
+    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+      .header-titles {
+        display: none;
+      }
+
+      .contract {
+        gap: ${getSpacing(2)};
+        grid-template-columns: ${isOldVersion ? "1fr 1fr" : "1fr 1fr"};
+
+        .loc {
+          display: none;
+        }
+      }
+    }
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      .contract {
+        gap: ${getSpacing(2)};
+        grid-template-columns: 1fr;
+      }
     }
 
     .contract {

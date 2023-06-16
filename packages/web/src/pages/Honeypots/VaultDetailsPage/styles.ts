@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
   ({ isAudit }) => css`
@@ -29,6 +30,10 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
       gap: ${getSpacing(2)};
       overflow-x: auto;
       overflow-y: hidden;
+
+      @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+        margin-top: 0;
+      }
     }
 
     .section-container {
