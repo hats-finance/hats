@@ -18,6 +18,11 @@ export const StyledFormMDEditor = styled.div<{
       box-shadow: none;
       overflow: hidden;
       white-space: normal;
+      color: var(--white);
+
+      * {
+        font-family: "IBM Plex Sans", sans-serif !important;
+      }
 
       ${disabled &&
       css`
@@ -77,6 +82,7 @@ export const StyledFormMDEditor = styled.div<{
         border-radius: 0;
         border-left: 1px solid var(--grey-500);
         box-shadow: none;
+        color: var(--white);
 
         .wmde-markdown.wmde-markdown-color {
           background-color: transparent;
