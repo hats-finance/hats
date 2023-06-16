@@ -5,6 +5,7 @@ import OpenIcon from "@mui/icons-material/LaunchOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
+import MDEditor from "@uiw/react-md-editor";
 import { Button, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useTranslation } from "react-i18next";
@@ -120,7 +121,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           </h4>
 
           <div className="section-content">
-            <p>{vault.description?.scope?.description}</p>
+            <MDEditor.Markdown
+              source={vault.description?.scope?.description}
+              style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
+            />
             <div className="code-languages">
               {vault.description.scope.codeLangs.map((codeLang) => (
                 <Pill key={codeLang} isChecked text={codeLang} />

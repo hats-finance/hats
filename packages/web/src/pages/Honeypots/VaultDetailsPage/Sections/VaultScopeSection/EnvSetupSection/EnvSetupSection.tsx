@@ -20,7 +20,7 @@ export const EnvSetupSection = ({ vault }: EnvSetupSectionProps) => {
 
       <MDEditor.Markdown
         source={vault.description?.scope?.protocolSetupInstructions.instructions}
-        style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent" }}
+        style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       />
     </div>
   );

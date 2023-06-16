@@ -41,14 +41,20 @@ export const ScopeDetailsForm = () => {
 
       {/* Project Outline */}
       <p className="mb-3 bold">{t("offerDescriptionHowTheProtocolWorks")}</p>
-      <FormInput
-        {...register(`scope.description`)}
-        disabled={allFormDisabled}
-        label={t("VaultEditor.scopeDescription")}
-        rows={Math.ceil(watch(`scope.description`, "").length / 65) + 2}
-        type="textarea"
-        colorable
-        placeholder={t("VaultEditor.scopeDescription-placeholder")}
+
+      <Controller
+        control={control}
+        name={`scope.description`}
+        render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+          <FormMDEditor
+            disabled={allFormDisabled}
+            isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+            error={error}
+            initialState="edit"
+            colorable
+            {...field}
+          />
+        )}
       />
 
       {/* Project Coding languages */}
@@ -107,6 +113,7 @@ export const ScopeDetailsForm = () => {
             disabled={allFormDisabled}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
             error={error}
+            initialState="edit"
             colorable
             {...field}
           />
@@ -138,6 +145,7 @@ export const ScopeDetailsForm = () => {
             disabled={allFormDisabled}
             isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
             error={error}
+            initialState="edit"
             colorable
             {...field}
           />

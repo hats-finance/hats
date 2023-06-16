@@ -12,7 +12,7 @@ export const OutOfScopeSection = ({ vault }: OutOfScopeSectionProps) => {
     <div className="scope-section-container">
       <MDEditor.Markdown
         source={vault.description.scope.outOfScope}
-        style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent" }}
+        style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       />
     </div>
   );
