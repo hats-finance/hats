@@ -444,6 +444,10 @@
     "nftsIpfsHash": "NFTs IPFS hash",
     "editSeverities": "Edit severities",
     "inScope": "In-scope",
+    "outOfScope": "Out of scope",
+    "envSetupInstructions": "Environment setup instructions",
+    "severityLevels": "Severity levels",
+    "committeeInfo": "Committee info",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
