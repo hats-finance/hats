@@ -114,10 +114,12 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       description: "",
       codeLangs: [] as string[],
       docsLink: "",
-      outOfScope: "",
+      outOfScope:
+        "Reporters will not receive a bounty for:\n\n* Any known issue, such as:\n  * Issues that are mentioned in any of the audit reports [LINK TO AUDIT REPORT].\n  * Vulnerabilities that were already made public (either by the project or by a third party)\n* Vulnerabilities that are exploited by the reporter themselves.\n* Attacks requiring access to leaked private keys or trusted addresses.\n* Issues that are not responsibly disclosed (issues should typically be reported through our platform).",
       protocolSetupInstructions: {
         tooling: "hardhat",
-        instructions: "",
+        instructions:
+          "### Usage\n\nInstallation:\n```\nnpm install\n```\n\nCreate `.env` files as needed. There is a file called `.env.example` that you can use as a template.\n\nRun the tests:\n```\nnpx hardhat test\n```",
       },
     },
     committee: {
