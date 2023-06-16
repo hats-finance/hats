@@ -6,7 +6,7 @@ import { EnvSetupSection } from "./EnvSetupSection/EnvSetupSection";
 import { InScopeSection } from "./InScopeSection/InScopeSection";
 import { OutOfScopeSection } from "./OutOfScopeSection/OutOfScopeSection";
 import { SeverityLevelsSection } from "./SeverityLevelsSection/SeverityLevelsSection";
-import { StyledScopeSection } from "./styles";
+import { StyledVaultScopeSection } from "./styles";
 
 export const VaultScopeSection = () => {
   const { t } = useTranslation();
@@ -15,7 +15,7 @@ export const VaultScopeSection = () => {
   console.log(vault);
 
   return (
-    <StyledScopeSection>
+    <StyledVaultScopeSection>
       <>
         <h2>{t("inScope")}</h2>
         <InScopeSection vault={vault} />
@@ -52,6 +52,6 @@ export const VaultScopeSection = () => {
           <CommitteeInfoSection vault={vault} />
         </>
       )}
-    </StyledScopeSection>
+    </StyledVaultScopeSection>
   );
 };

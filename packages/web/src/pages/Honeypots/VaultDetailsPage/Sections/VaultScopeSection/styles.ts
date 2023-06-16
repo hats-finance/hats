@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledScopeSection = styled.div`
+export const StyledVaultScopeSection = styled.div`
+  padding-bottom: ${getSpacing(8)};
+
   .scope-section-container {
     border: 1px solid var(--primary-light);
     padding: ${getSpacing(3)} ${getSpacing(2.5)};
