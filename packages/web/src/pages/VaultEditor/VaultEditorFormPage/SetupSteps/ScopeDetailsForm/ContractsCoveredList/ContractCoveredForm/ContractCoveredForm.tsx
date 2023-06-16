@@ -1,3 +1,4 @@
+import { ALL_CHAINS, IEditedVaultDescription } from "@hats-finance/shared";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Button, FormInput, FormSelectInput, FormSelectInputOption } from "components";
@@ -5,8 +6,6 @@ import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useContext, useEffect, useMemo } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { IEditedVaultDescription } from "types";
-import * as wagmiChains from "wagmi/chains";
 import { VaultEditorFormContext } from "../../../../store";
 import { StyledContractCoveredForm } from "./styles";
 
@@ -34,17 +33,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
     [severitiesOptions]
   );
 
-  const chains = [
-    wagmiChains.mainnet,
-    wagmiChains.arbitrum,
-    wagmiChains.optimism,
-    wagmiChains.polygon,
-    wagmiChains.bsc,
-    wagmiChains.avalanche,
-    wagmiChains.fantom,
-    wagmiChains.gnosis,
-  ];
-  const chainsOptions: FormSelectInputOption[] = chains.map((chain) => ({
+  const chainsOptions: FormSelectInputOption[] = Object.values(ALL_CHAINS).map((chain) => ({
     label: chain.name,
     value: `${chain.id}`,
   }));

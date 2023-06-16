@@ -138,7 +138,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   } as IEditedVaultDescription;
 };
 
-function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
+export function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
   let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
@@ -152,7 +152,7 @@ function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeveri
         const data = severity.contractsCoveredNew
           ? {
               name: "",
-              address: contractCovered.link,
+              address,
               description: contractCovered.description,
               deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
             }

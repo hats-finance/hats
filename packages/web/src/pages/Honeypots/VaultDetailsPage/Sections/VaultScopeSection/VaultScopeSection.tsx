@@ -16,13 +16,11 @@ export const VaultScopeSection = () => {
 
   return (
     <StyledScopeSection>
-      {vault.description?.scope && (
-        <>
-          <h2>{t("inScope")}</h2>
-          <InScopeSection vault={vault} />
-          <br />
-        </>
-      )}
+      <>
+        <h2>{t("inScope")}</h2>
+        <InScopeSection vault={vault} />
+        <br />
+      </>
 
       {vault.description?.scope?.outOfScope && (
         <>

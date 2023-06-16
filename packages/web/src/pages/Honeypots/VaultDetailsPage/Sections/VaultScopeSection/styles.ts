@@ -10,11 +10,27 @@ export const StyledScopeSection = styled.div`
     h3.section-subtitle {
       display: flex;
       align-items: center;
-      gap: ${getSpacing(1)};
+      gap: ${getSpacing(1.5)};
 
       .icon {
         font-size: var(--medium-2);
       }
+    }
+
+    .section-content {
+      margin-top: ${getSpacing(2)};
+      padding-left: ${getSpacing(2)};
+
+      a {
+        text-decoration: underline;
+      }
+    }
+
+    .separator {
+      height: 1px;
+      width: 100%;
+      background-color: var(--primary-light);
+      margin: ${getSpacing(5)} 0;
     }
   }
 `;
