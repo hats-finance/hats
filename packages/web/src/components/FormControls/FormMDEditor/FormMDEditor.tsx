@@ -38,7 +38,8 @@ export const FormMDEditorComponent = (
         value={value}
         previewOptions={{ disallowedElements: ["script", "iframe"] }}
         onChange={(value) => (disabled ? undefined : onChange(value ?? ""))}
-        minHeight={400}
+        minHeight={200}
+        height={400}
         preview={initialState}
       />
       {error && <span className="error">{error.message}</span>}
