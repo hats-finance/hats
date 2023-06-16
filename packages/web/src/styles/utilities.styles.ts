@@ -1,7 +1,17 @@
-import { getSpacing } from "./utils.styles";
 import { css } from "styled-components";
+import { getSpacing } from "./utils.styles";
 
 export const utilityClasses = css`
+  .bold {
+    font-weight: 700;
+  }
+
+  .flex-horizontal {
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(2)};
+  }
+
   .m-0 {
     margin: 0 !important;
   }
