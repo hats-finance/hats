@@ -1,6 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
+import { appChains } from "settings";
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
   return masters.map((master) => ({
@@ -45,7 +46,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
   if (vaults.some((vault) => vault.amountsInfo)) return vaults;
 
   return vaults.map((vault) => {
-    const tokenPrice: number = (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
+    const isTestnet = appChains[vault.chainId].chain.testnet;
+    const tokenPrice: number = isTestnet ? 123456 : (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
 
     const maxRewardFactor = vault.version === "v1" ? +vault.rewardsLevels[vault.rewardsLevels.length - 1] : +vault.maxBounty;
