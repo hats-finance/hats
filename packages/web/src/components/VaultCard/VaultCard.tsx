@@ -3,6 +3,7 @@ import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill } from "components";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import { IPFS_PREFIX } from "constants/constants";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
 import millify from "millify";
 import moment from "moment";
@@ -87,6 +88,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
   const isAudit = vault.description["project-metadata"].type === "audit";
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
+  const projectWebsite = vault.description["project-metadata"].website;
   const description =
     "Hats is a security protocol that aligns incentives, creating a scalable primitive for a safer Web3 ecosystem.";
 
@@ -203,6 +205,15 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
           <div className="name-description">
             <h3 className="name">{name}</h3>
             {!reducedStyles && <p className="description">{description}</p>}
+            {reducedStyles && (
+              <a
+                className="website"
+                href={projectWebsite.includes("http") ? projectWebsite : `//${projectWebsite}`}
+                {...defaultAnchorProps}
+              >
+                {projectWebsite}
+              </a>
+            )}
           </div>
         </div>
 
