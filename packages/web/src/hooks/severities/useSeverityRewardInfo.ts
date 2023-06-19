@@ -6,16 +6,18 @@ import { generateColorsArrayInBetween } from "utils/colors.utils";
 const INITIAL_SEVERITY_COLOR = "#24E8C5";
 const FINAL_SEVERITY_COLOR = "#6652F7";
 
+export const getSeveritiesColorsArray = (vault: IVault): string[] => {
+  if (!vault || !vault?.description?.severities) return [];
+
+  return generateColorsArrayInBetween(INITIAL_SEVERITY_COLOR, FINAL_SEVERITY_COLOR, vault.description.severities.length ?? 4);
+};
+
 export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: number) {
   const { totalPrices } = useVaultsTotalPrices(vault ? vault.multipleVaults ?? [vault] : []);
 
   if (!vault || !vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
 
-  const SEVERITIES_COLORS = generateColorsArrayInBetween(
-    INITIAL_SEVERITY_COLOR,
-    FINAL_SEVERITY_COLOR,
-    vault.description.severities.length
-  );
+  const SEVERITIES_COLORS = getSeveritiesColorsArray(vault);
 
   if (vault.version === "v2") {
     const severity = vault.description.severities[severityIndex];

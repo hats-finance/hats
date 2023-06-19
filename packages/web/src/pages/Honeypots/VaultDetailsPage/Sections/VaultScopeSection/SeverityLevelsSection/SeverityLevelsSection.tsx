@@ -1,4 +1,7 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
+import MDEditor from "@uiw/react-md-editor";
+import { Pill } from "components";
+import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import { StyledSeverityLevelsSection } from "./styles";
 
 type SeverityLevelsSectionProps = {
@@ -6,5 +9,22 @@ type SeverityLevelsSectionProps = {
 };
 
 export const SeverityLevelsSection = ({ vault }: SeverityLevelsSectionProps) => {
-  return <StyledSeverityLevelsSection className="scope-section-container">SeverityLevelsSection</StyledSeverityLevelsSection>;
+  if (!vault.description) return null;
+
+  const severityColors = getSeveritiesColorsArray(vault);
+
+  return (
+    <StyledSeverityLevelsSection className="scope-section-container severities">
+      {vault.description.severities.map((severity: IVulnerabilitySeverity, idx: number) => (
+        <div className="severity">
+          <Pill isSeverity transparent text={severity.name} textColor={severityColors[idx]} />
+          <MDEditor.Markdown
+            className="mt-4 pl-2"
+            source={severity.description}
+            style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
+          />
+        </div>
+      ))}
+    </StyledSeverityLevelsSection>
+  );
 };

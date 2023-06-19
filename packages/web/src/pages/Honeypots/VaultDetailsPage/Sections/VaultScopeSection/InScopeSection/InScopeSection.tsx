@@ -73,7 +73,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               ) : (
                 <>
                   {checkUrl(contract.address) ? (
-                    <a href={contractHref} {...defaultAnchorProps}>
+                    <a title={contract.address} href={contractHref} {...defaultAnchorProps}>
                       .../{contract.address.split("/").slice(-1)}
                     </a>
                   ) : (

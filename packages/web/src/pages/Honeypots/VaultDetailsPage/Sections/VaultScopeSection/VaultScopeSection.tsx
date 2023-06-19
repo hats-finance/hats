@@ -12,8 +12,6 @@ export const VaultScopeSection = () => {
   const { t } = useTranslation();
   const { vault } = useContext(VaultDetailsContext);
 
-  console.log(vault);
-
   return (
     <StyledVaultScopeSection>
       <div>
