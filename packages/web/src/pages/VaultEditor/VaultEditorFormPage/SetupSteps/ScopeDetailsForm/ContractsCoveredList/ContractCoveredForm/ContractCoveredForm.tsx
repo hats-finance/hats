@@ -64,7 +64,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
             helper="https://github.com/hats-finance/hats-contracts/blob/develop/contracts/HATVault.sol"
             placeholder={t("VaultEditor.contractUrl-placeholder")}
           />
-          {severitiesOptions && (
+          {/* {severitiesOptions && (
             <Controller
               control={control}
               name={`contracts-covered.${index}.severities`}
@@ -82,7 +82,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
                 />
               )}
             />
-          )}
+          )} */}
         </div>
 
         <FormInput
