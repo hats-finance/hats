@@ -1,5 +1,4 @@
 import { formatUnits } from "ethers/lib/utils";
-import { useVaults } from "hooks/vaults/useVaults";
 import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import { IVault } from "types";
 import { generateColorsArrayInBetween } from "utils/colors.utils";
@@ -8,8 +7,7 @@ const INITIAL_SEVERITY_COLOR = "#24E8C5";
 const FINAL_SEVERITY_COLOR = "#6652F7";
 
 export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: number) {
-  const { tokenPrices } = useVaults();
-  const { totalPrices } = useVaultsTotalPrices(vault && vault.multipleVaults ? [vault] : []);
+  const { totalPrices } = useVaultsTotalPrices(vault ? vault.multipleVaults ?? [vault] : []);
 
   if (!vault || !vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
 
@@ -28,11 +26,11 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     let rewardPrice: number = 0;
     if (vault.multipleVaults && sumTotalPrices) {
       rewardPrice = sumTotalPrices * (rewardPercentage / 100);
-    } else if (tokenPrices?.[vault.stakingToken]) {
+    } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
         Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) *
         (rewardPercentage / 100) *
-        tokenPrices[vault.stakingToken];
+        vault.amountsInfo?.tokenPriceUsd;
     }
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.percentage).sort((a, b) => a - b);
@@ -47,11 +45,11 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     let rewardPrice: number = 0;
     if (vault.multipleVaults && sumTotalPrices) {
       rewardPrice = sumTotalPrices * (rewardPercentage / 100);
-    } else if (tokenPrices?.[vault.stakingToken]) {
+    } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
         Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) *
         (rewardPercentage / 100) *
-        tokenPrices[vault.stakingToken];
+        vault.amountsInfo?.tokenPriceUsd;
     }
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.index).sort((a, b) => a - b);

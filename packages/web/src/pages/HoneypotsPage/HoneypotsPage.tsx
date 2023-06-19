@@ -19,21 +19,18 @@ interface HoneypotsPageProps {
 
 const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
   const { t } = useTranslation();
-  const { activeVaults, tokenPrices } = useVaults();
+  const { activeVaults } = useVaults();
   const [expanded, setExpanded] = useState();
   const [userSearch, setUserSearch] = useState("");
   const { vaultId } = useParams();
   const selectedVault = vaultId ? activeVaults?.find((v) => v.id.toLowerCase() === vaultId.toLowerCase()) : undefined;
   const navigate = useNavigate();
 
-  const vaultValue = useCallback(
-    (vault: IVault) => {
-      const { honeyPotBalance, stakingTokenDecimals } = vault;
-      const tokenPrice = tokenPrices?.[vault.stakingToken];
-      return tokenPrice ? Number(formatUnits(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
-    },
-    [tokenPrices]
-  );
+  const vaultValue = useCallback((vault: IVault) => {
+    const { honeyPotBalance, stakingTokenDecimals } = vault;
+    const tokenPrice = vault.amountsInfo?.tokenPriceUsd ?? 0;
+    return tokenPrice ? Number(formatUnits(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
+  }, []);
 
   const closeDeposit = () => navigate(`${RoutePaths.vaults}`);
 
