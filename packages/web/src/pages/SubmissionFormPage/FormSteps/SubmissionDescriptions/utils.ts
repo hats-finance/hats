@@ -8,6 +8,7 @@ export const getAuditSubmissionTexts = (
   const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${
     submissionData.contact?.communicationChannelType
   })
+**Beneficiary:** ${submissionData.contact?.beneficiary}
 
   ${descriptions
     .filter((description) => description.isEncrypted)
@@ -25,7 +26,6 @@ ${description.description.trim()}
 
   const decrypted = `**Project Name:** ${submissionData.project?.projectName}
 **Project Id:** ${submissionData.project?.projectId}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
 **Github username:** ${submissionData.contact?.githubUsername || "---"}
     
     ${descriptions
@@ -85,7 +85,6 @@ export const getGithubIssueDescription = (
 ) => {
   return `
 **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
 **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
 **Severity:** ${description.severity}
 
