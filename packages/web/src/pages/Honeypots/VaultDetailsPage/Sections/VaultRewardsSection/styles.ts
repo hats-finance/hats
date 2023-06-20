@@ -59,7 +59,7 @@ export const StyledRewardsSection = styled.div`
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: ${getSpacing(1)};
+      gap: ${getSpacing(2)};
       width: 100%;
       height: 100%;
 

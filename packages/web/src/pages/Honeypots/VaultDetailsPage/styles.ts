@@ -26,7 +26,7 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
       padding-top: ${getSpacing(6)};
       margin-top: ${getSpacing(4)};
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(3, 1fr);
       gap: ${getSpacing(2)};
       overflow-x: auto;
       overflow-y: hidden;

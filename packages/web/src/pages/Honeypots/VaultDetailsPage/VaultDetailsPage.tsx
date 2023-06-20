@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";
 import { HoneypotsRoutePaths } from "../router";
-import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
+import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection } from "./Sections";
 import { VaultDetailsContext } from "./store";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
@@ -21,10 +21,6 @@ const DETAILS_SECTIONS = [
   {
     title: "deposits",
     component: <VaultDepositsSection />,
-  },
-  {
-    title: "submissions",
-    component: <VaultSubmissionsSection />,
   },
 ];
 

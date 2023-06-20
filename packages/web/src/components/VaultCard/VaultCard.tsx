@@ -1,7 +1,6 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { Button, Pill } from "components";
-import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import { Button, Pill, VaultAssetsList } from "components";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
@@ -12,7 +11,6 @@ import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { slugify } from "utils/slug.utils";
 import { StyledVaultCard } from "./styles";
@@ -91,38 +89,6 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
   const projectWebsite = vault.description["project-metadata"].website;
   const description =
     "Hats is a security protocol that aligns incentives, creating a scalable primitive for a safer Web3 ecosystem.";
-
-  const getVaultAssets = () => {
-    if (!vault.description) return null;
-
-    const tokenAddress = vault.stakingToken;
-    const token = vault.stakingTokenSymbol;
-    const tokenIcon = vault.description["project-metadata"].tokenIcon;
-    const tokenNetwork = vault.chainId ? appChains[vault.chainId] : null;
-
-    const goToTokenInformation = () => {
-      if (!tokenNetwork) return;
-      window.open(tokenNetwork.chain.blockExplorers?.default.url + "/token/" + tokenAddress, "_blank");
-    };
-
-    const amountToShowInTokens = auditPayout ? totalPaidOutOnAudit?.tokens : vault.amountsInfo?.depositedAmount.tokens;
-
-    return (
-      <>
-        <WithTooltip
-          text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${millify(amountToShowInTokens ?? 0)} ${token}`}
-        >
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
-      </>
-    );
-  };
 
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
@@ -280,7 +246,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
         <div className="vault-actions">
           <div className="assets">
             <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
-            {getVaultAssets()}
+            <VaultAssetsList auditPayout={auditPayout} vaultData={vaultData} />
           </div>
           <div className="actions">
             {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (

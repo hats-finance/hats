@@ -24,6 +24,7 @@ export { CollapsableTextContent } from "./CollapsableTextContent/CollapsableText
 export { Pill, type PillProps } from "./Pill/Pill";
 export { ConfirmDialog, type ConfirmDialogProps } from "./ConfirmDialog/ConfirmDialog";
 export { VaultSeverityRewardCard } from "./VaultSeverityRewardCard/VaultSeverityRewardCard";
+export { VaultAssetsList } from "./VaultAssetsList/VaultAssetsList";
 export { VaultInfoCard } from "./VaultInfoCard/VaultInfoCard";
 export { VaultCard } from "./VaultCard/VaultCard";
 export { VaultNftRewardCard } from "./VaultNftRewardCard/VaultNftRewardCard";
