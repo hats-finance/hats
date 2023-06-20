@@ -41,10 +41,6 @@ export const StyledFormMDEditor = styled.div<{
         }
       `}
 
-      * {
-        font-size: var(--xsmall) !important;
-      }
-
       &.w-md-editor-fullscreen {
         .w-md-editor-content,
         .w-md-editor-toolbar {
