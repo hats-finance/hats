@@ -12,6 +12,10 @@ export const utilityClasses = css`
     gap: ${getSpacing(1)};
   }
 
+  .hidden {
+    visibility: hidden;
+  }
+
   .m-0 {
     margin: 0 !important;
   }

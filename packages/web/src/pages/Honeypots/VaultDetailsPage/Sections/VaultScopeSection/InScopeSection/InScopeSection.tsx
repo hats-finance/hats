@@ -113,7 +113,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   };
 
   return (
-    <StyledInScopeSection className="scope-section-container">
+    <StyledInScopeSection className="subsection-container">
       {/* Overview */}
       {vault.description.scope?.description && (
         <>

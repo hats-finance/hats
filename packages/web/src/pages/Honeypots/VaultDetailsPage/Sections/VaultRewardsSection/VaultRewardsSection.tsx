@@ -1,4 +1,4 @@
-import { VaultAssetsList } from "components";
+import { VaultAssetsPillsList } from "components";
 import millify from "millify";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +23,7 @@ export const VaultRewardsSection = () => {
           </div>
           <div className="card">
             <h4 className="title">{t("assetsInVault")}</h4>
-            <VaultAssetsList vaultData={vault} />
+            <VaultAssetsPillsList vaultData={vault} />
           </div>
           <div className="card bigPadding">
             <h4 className="title">{t("maxRewards")}</h4>

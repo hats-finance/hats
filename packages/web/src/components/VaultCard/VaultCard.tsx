@@ -1,6 +1,6 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { Button, Pill, VaultAssetsList } from "components";
+import { Button, Pill, VaultAssetsPillsList } from "components";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
@@ -246,7 +246,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
         <div className="vault-actions">
           <div className="assets">
             <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
-            <VaultAssetsList auditPayout={auditPayout} vaultData={vaultData} />
+            <VaultAssetsPillsList auditPayout={auditPayout} vaultData={vaultData} />
           </div>
           <div className="actions">
             {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (

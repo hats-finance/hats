@@ -19,7 +19,7 @@ export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
   console.log(committee);
 
   return (
-    <StyledCommitteeInfoSection className="scope-section-container">
+    <StyledCommitteeInfoSection className="subsection-container">
       <p className="committee-address">
         <span className="bold">{t("committeeMultisigAddress")}:</span>
         <span>{shortenIfAddress(committee["multisig-address"], { startLength: 6, endLength: 6 })}</span>

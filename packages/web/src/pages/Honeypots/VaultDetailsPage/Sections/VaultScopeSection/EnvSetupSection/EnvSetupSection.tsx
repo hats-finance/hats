@@ -13,7 +13,7 @@ export const EnvSetupSection = ({ vault }: EnvSetupSectionProps) => {
   if (!vault.description?.scope?.protocolSetupInstructions.instructions) return null;
 
   return (
-    <div className="scope-section-container">
+    <div className="subsection-container">
       <div className="flex-horizontal mb-4">
         <span className="bold">{t("toolUsed")}:</span> <Pill text={vault.description?.scope?.protocolSetupInstructions.tooling} />
       </div>

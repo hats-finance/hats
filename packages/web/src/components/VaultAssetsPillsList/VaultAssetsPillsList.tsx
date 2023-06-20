@@ -6,14 +6,14 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { StyledVaultAssetsList } from "./styles";
+import { StyledVaultAssetsPillsList } from "./styles";
 
-type VaultAssetsListProps = {
+type VaultAssetsPillsListProps = {
   vaultData?: IVault;
   auditPayout?: IPayoutGraph;
 };
 
-export const VaultAssetsList = ({ vaultData, auditPayout }: VaultAssetsListProps) => {
+export const VaultAssetsPillsList = ({ vaultData, auditPayout }: VaultAssetsPillsListProps) => {
   const { t } = useTranslation();
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
 
@@ -44,7 +44,7 @@ export const VaultAssetsList = ({ vaultData, auditPayout }: VaultAssetsListProps
   const amountToShowInTokens = auditPayout ? totalPaidOutOnAudit?.tokens : vault.amountsInfo?.depositedAmount.tokens;
 
   return (
-    <StyledVaultAssetsList>
+    <StyledVaultAssetsPillsList>
       <WithTooltip
         text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${millify(amountToShowInTokens ?? 0)} ${token}`}
       >
@@ -56,6 +56,6 @@ export const VaultAssetsList = ({ vaultData, auditPayout }: VaultAssetsListProps
           <span>{token}</span>
         </div>
       </WithTooltip>
-    </StyledVaultAssetsList>
+    </StyledVaultAssetsPillsList>
   );
 };

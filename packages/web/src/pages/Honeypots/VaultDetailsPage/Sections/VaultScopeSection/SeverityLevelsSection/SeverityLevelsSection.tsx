@@ -14,7 +14,7 @@ export const SeverityLevelsSection = ({ vault }: SeverityLevelsSectionProps) => 
   const severityColors = getSeveritiesColorsArray(vault);
 
   return (
-    <StyledSeverityLevelsSection className="scope-section-container severities">
+    <StyledSeverityLevelsSection className="subsection-container severities">
       {vault.description.severities.map((severity: IVulnerabilitySeverity, idx: number) => (
         <div className="severity">
           <Pill isSeverity transparent text={severity.name} textColor={severityColors[idx]} />

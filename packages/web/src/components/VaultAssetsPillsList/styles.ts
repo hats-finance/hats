@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledVaultAssetsList = styled.div`
+export const StyledVaultAssetsPillsList = styled.div`
   .token {
     display: flex;
     align-items: center;
