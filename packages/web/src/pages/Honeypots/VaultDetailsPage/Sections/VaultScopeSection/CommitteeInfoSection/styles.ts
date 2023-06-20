@@ -10,14 +10,16 @@ export const StyledCommitteeInfoSection = styled.div`
 
   .members {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: ${getSpacing(4)};
     margin-top: ${getSpacing(4)};
+    margin-bottom: ${getSpacing(2)};
 
     .member {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: ${getSpacing(1)};
+      gap: ${getSpacing(0.5)};
 
       img {
         width: ${getSpacing(8)};
