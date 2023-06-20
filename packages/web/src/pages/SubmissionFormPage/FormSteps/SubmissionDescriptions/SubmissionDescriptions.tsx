@@ -53,8 +53,6 @@ export function SubmissionDescriptions() {
     };
   });
 
-  console.log(controlledDescriptions);
-
   // Reset form with saved data
   useEffect(() => {
     if (submissionData?.submissionsDescriptions) reset(submissionData.submissionsDescriptions);
