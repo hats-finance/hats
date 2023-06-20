@@ -17,10 +17,6 @@ export const StyledFormMDEditor = styled.div<{
       box-shadow: none;
       overflow: hidden;
 
-      * {
-        font-size: var(--xsmall) !important;
-      }
-
       ${hasError &&
       css`
         border-color: var(--error-red);
