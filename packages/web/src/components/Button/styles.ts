@@ -17,7 +17,7 @@ type StyledButtonProps = {
 const getVariableByFilledColor = (filledColor: ButtonProps["filledColor"]) => {
   switch (filledColor) {
     case "grey":
-      return { backgound: "--grey-800", text: "--white" };
+      return { backgound: "--grey-600", text: "--white" };
     case "error":
       return { backgound: "--error-red", text: "--white" };
     case "secondary":
