@@ -6,21 +6,20 @@ import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";
 import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection } from "./Sections";
-import { VaultDetailsContext } from "./store";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
   {
     title: "rewards",
-    component: <VaultRewardsSection />,
+    component: VaultRewardsSection,
   },
   {
     title: "scope",
-    component: <VaultScopeSection />,
+    component: VaultScopeSection,
   },
   {
     title: "deposits",
-    component: <VaultDepositsSection />,
+    component: VaultDepositsSection,
   },
 ];
 
@@ -48,39 +47,39 @@ export const VaultDetailsPage = () => {
     navigate(`${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
   };
 
+  const SectionToRender = DETAILS_SECTIONS[openSection].component;
+
   return (
     <>
       <Seo title={`${vaultName} ${isAudit ? t("auditCompetition") : t("bugBounty")}`} />
-      <VaultDetailsContext.Provider value={{ vault }}>
-        <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit}>
-          <div className="breadcrumb">
-            <span className="type" onClick={navigateToType}>
-              {isAudit ? t("auditCompetitions") : t("bugBounties")}/
-            </span>
-            <span className="name">{vaultName}</span>
-          </div>
+      <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit}>
+        <div className="breadcrumb">
+          <span className="type" onClick={navigateToType}>
+            {isAudit ? t("auditCompetitions") : t("bugBounties")}/
+          </span>
+          <span className="name">{vaultName}</span>
+        </div>
 
-          {!!activeClaim && (
-            <Alert className="mt-5 mb-5" type="warning">
-              {t("vaultPausedActiveClaimExplanationLong")}
-            </Alert>
-          )}
+        {!!activeClaim && (
+          <Alert className="mt-5 mb-5" type="warning">
+            {t("vaultPausedActiveClaimExplanationLong")}
+          </Alert>
+        )}
 
-          <div className="mt-5">
-            <VaultCard reducedStyles vaultData={vault} />
-          </div>
+        <div className="mt-5">
+          <VaultCard reducedStyles vaultData={vault} />
+        </div>
 
-          <div className="sections-tabs">
-            {DETAILS_SECTIONS.map((section, idx) => (
-              <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
-                <h4>{t(section.title)}</h4>
-              </StyledSectionTab>
-            ))}
-          </div>
+        <div className="sections-tabs">
+          {DETAILS_SECTIONS.map((section, idx) => (
+            <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
+              <h4>{t(section.title)}</h4>
+            </StyledSectionTab>
+          ))}
+        </div>
 
-          <div className="section-container">{DETAILS_SECTIONS[openSection].component}</div>
-        </StyledVaultDetailsPage>
-      </VaultDetailsContext.Provider>
+        <div className="section-container">{<SectionToRender vault={vault} />}</div>
+      </StyledVaultDetailsPage>
     </>
   );
 };

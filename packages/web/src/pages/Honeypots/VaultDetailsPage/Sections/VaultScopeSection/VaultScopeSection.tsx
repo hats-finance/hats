@@ -1,6 +1,5 @@
-import { useContext } from "react";
+import { IVault } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
-import { VaultDetailsContext } from "../../store";
 import { CommitteeInfoSection } from "./CommitteeInfoSection/CommitteeInfoSection";
 import { EnvSetupSection } from "./EnvSetupSection/EnvSetupSection";
 import { InScopeSection } from "./InScopeSection/InScopeSection";
@@ -8,9 +7,12 @@ import { OutOfScopeSection } from "./OutOfScopeSection/OutOfScopeSection";
 import { SeverityLevelsSection } from "./SeverityLevelsSection/SeverityLevelsSection";
 import { StyledVaultScopeSection } from "./styles";
 
-export const VaultScopeSection = () => {
+type VaultScopeSectionProps = {
+  vault: IVault;
+};
+
+export const VaultScopeSection = ({ vault }: VaultScopeSectionProps) => {
   const { t } = useTranslation();
-  const { vault } = useContext(VaultDetailsContext);
 
   return (
     <StyledVaultScopeSection>

@@ -1,16 +1,18 @@
+import { IVault } from "@hats-finance/shared";
 import { VaultAssetsPillsList } from "components";
 import millify from "millify";
-import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { VaultDetailsContext } from "../../store";
 import { VaultNftRewards } from "./VaultNftRewards/VaultNftRewards";
 import { VaultRewardDivision } from "./VaultRewardDivision/VaultRewardDivision";
 import { VaultSeverityRewards } from "./VaultSeverityRewards/VaultSeverityRewards";
 import { StyledRewardsSection } from "./styles";
 
-export const VaultRewardsSection = () => {
+type VaultRewardsSectionProps = {
+  vault: IVault;
+};
+
+export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
   const { t } = useTranslation();
-  const { vault } = useContext(VaultDetailsContext);
 
   return (
     <StyledRewardsSection>
