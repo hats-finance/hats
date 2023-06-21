@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultStatusPage = styled.div`
   position: relative;
@@ -195,5 +196,15 @@ export const StyledVaultStatusPage = styled.div`
     opacity: 0.8;
     width: fit-content;
     font-size: var(--xxsmall);
+  }
+`;
+
+export const StyledPreviewModal = styled.div`
+  width: calc(100vw - 64px - ${getSpacing(6)});
+  height: calc(100vh - 64px - ${getSpacing(6)});
+
+  @media (max-width: ${breakpointsDefinition.smallMobile}) {
+    width: calc(100vw - 64px - ${getSpacing(2)});
+    height: calc(100vh - 64px - ${getSpacing(2)});
   }
 `;

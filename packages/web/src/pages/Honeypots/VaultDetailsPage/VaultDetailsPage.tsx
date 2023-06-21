@@ -1,3 +1,4 @@
+import { IVault } from "@hats-finance/shared";
 import { Alert, Loading, Seo, VaultCard } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
 import { RoutePaths } from "navigation";
@@ -23,7 +24,12 @@ const DETAILS_SECTIONS = [
   },
 ];
 
-export const VaultDetailsPage = () => {
+type VaultDetailsPageProps = {
+  vaultToUse?: IVault;
+  noActions?: boolean;
+};
+
+export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetailsPageProps) => {
   const { t } = useTranslation();
   const [openSection, setOpenSection] = useState(0);
 
@@ -31,7 +37,7 @@ export const VaultDetailsPage = () => {
   const navigate = useNavigate();
   const { vaultSlug } = useParams();
   const vaultId = vaultSlug?.split("-").pop();
-  const vault = allVaults?.find((vault) => vault.id === vaultId);
+  const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
 
   if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   if (!vault || !vault.description) {
@@ -53,12 +59,14 @@ export const VaultDetailsPage = () => {
     <>
       <Seo title={`${vaultName} ${isAudit ? t("auditCompetition") : t("bugBounty")}`} />
       <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit}>
-        <div className="breadcrumb">
-          <span className="type" onClick={navigateToType}>
-            {isAudit ? t("auditCompetitions") : t("bugBounties")}/
-          </span>
-          <span className="name">{vaultName}</span>
-        </div>
+        {!noActions && (
+          <div className="breadcrumb">
+            <span className="type" onClick={navigateToType}>
+              {isAudit ? t("auditCompetitions") : t("bugBounties")}/
+            </span>
+            <span className="name">{vaultName}</span>
+          </div>
+        )}
 
         {!!activeClaim && (
           <Alert className="mt-5 mb-5" type="warning">
@@ -67,11 +75,11 @@ export const VaultDetailsPage = () => {
         )}
 
         <div className="mt-5">
-          <VaultCard reducedStyles vaultData={vault} />
+          <VaultCard noActions={noActions} reducedStyles vaultData={vault} />
         </div>
 
         <div className="sections-tabs">
-          {DETAILS_SECTIONS.map((section, idx) => (
+          {DETAILS_SECTIONS.filter((section) => (noActions ? section.title !== "deposits" : true)).map((section, idx) => (
             <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
               <h4>{t(section.title)}</h4>
             </StyledSectionTab>

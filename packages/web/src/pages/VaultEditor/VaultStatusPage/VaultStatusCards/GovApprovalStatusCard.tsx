@@ -1,33 +1,23 @@
-import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
-import { Button, Pill } from "components";
+import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
+import { Button, Modal, Pill } from "components";
+import useModal from "hooks/useModal";
 import { useVaults } from "hooks/vaults/useVaults";
-import { RoutePaths } from "navigation";
-import { HoneypotsRoutePaths } from "pages/Honeypots/router";
+import { VaultDetailsPage } from "pages/Honeypots/VaultDetailsPage/VaultDetailsPage";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { slugify } from "utils/slug.utils";
 import { VaultStatusContext } from "../store";
+import { StyledPreviewModal } from "../styles";
 
 export const GovApprovalStatusCard = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+
+  const { isShowing: isShowingPreview, show: showPreview, hide: hidePreview } = useModal();
 
   const { vaultData, vaultAddress } = useContext(VaultStatusContext);
   const { allVaults } = useVaults();
   const vault = allVaults?.find((vault) => vault.id === vaultAddress);
 
   const isApprovedByGov = vaultData.isRegistered;
-  const isAudit = vault && vault.description && vault.description["project-metadata"].type === "audit";
-
-  const goToDetails = () => {
-    if (!vault) return;
-
-    const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
-    const vaultSlug = slugify(vault?.description?.["project-metadata"].name ?? "");
-
-    navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
-  };
 
   return (
     <div className="status-card">
@@ -48,9 +38,16 @@ export const GovApprovalStatusCard = () => {
       )}
 
       {vault && (
-        <Button className="mt-5" onClick={goToDetails}>
-          {t("goToVaultDetailsPage")} <ArrowIcon className="ml-3" />
-        </Button>
+        <>
+          <Button className="mt-5" onClick={showPreview}>
+            {t("showVaultPreview")} <OpenIcon className="ml-3" />
+          </Button>
+          <Modal isShowing={isShowingPreview} onHide={hidePreview}>
+            <StyledPreviewModal>
+              <VaultDetailsPage vaultToUse={vault} noActions />
+            </StyledPreviewModal>
+          </Modal>
+        </>
       )}
     </div>
   );

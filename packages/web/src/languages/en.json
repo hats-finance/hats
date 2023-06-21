@@ -494,6 +494,7 @@
     "depositingTokens": "Depositing {{token}} tokens",
     "withdrawingTokens": "Withdrawing {{token}} tokens",
     "goToVaultDetailsPage": "Go to vault details page",
+    "showVaultPreview": "Show vault preview",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

@@ -3,6 +3,6 @@ import { getSpacing } from "styles";
 
 export const StyledVaultNftRewards = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: ${getSpacing(2)};
 `;

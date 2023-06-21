@@ -35,7 +35,7 @@ import * as VaultEditorService from "../vaultEditorService";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { VaultEditorFormContext } from "./store";
+import { IVaultEditorFormContext, VaultEditorFormContext } from "./store";
 import {
   Section,
   StyledVaultEditorContainer,
@@ -597,12 +597,13 @@ const VaultEditorFormPage = () => {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
   }
 
-  const vaultEditorFormContext = {
+  const vaultEditorFormContext: IVaultEditorFormContext = {
     editSessionId,
     committeeMembersFieldArray,
     saveEditSessionData: createOrSaveEditSession,
     isVaultCreated,
     isEditingExistingVault,
+    existingVault,
     allFormDisabled: allFormDisabled || isSomeoneCreatingTheVault,
   };
 
