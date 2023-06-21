@@ -27,18 +27,16 @@ export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
       </p>
 
       <div className="members">
-        {[...committee.members, ...committee.members, ...committee.members, ...committee.members, ...committee.members].map(
-          (member, idx) => (
-            <div className="member" key={idx}>
-              <img
-                src={member["image-ipfs-link"] ? ipfsTransformUri(member["image-ipfs-link"]) : profilePlaceholder}
-                alt={member.name}
-              />
-              <p className="bold mt-2">{member.name}</p>
-              <p>{member["twitter-link"]?.split("/").pop() ?? ""}</p>
-            </div>
-          )
-        )}
+        {committee.members.map((member, idx) => (
+          <div className="member" key={idx}>
+            <img
+              src={member["image-ipfs-link"] ? ipfsTransformUri(member["image-ipfs-link"]) : profilePlaceholder}
+              alt={member.name}
+            />
+            <p className="bold mt-2">{member.name}</p>
+            <p>{member["twitter-link"]?.split("/").pop() ?? ""}</p>
+          </div>
+        ))}
       </div>
     </StyledCommitteeInfoSection>
   );
