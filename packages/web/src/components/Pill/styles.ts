@@ -20,9 +20,10 @@ export const StyledPill = styled.div<{
   textColor: PillProps["textColor"];
   isSeverity: PillProps["isSeverity"];
   isChecked: PillProps["isChecked"];
+  canMultiline: PillProps["canMultiline"];
   isOnClickEnabled: boolean;
 }>(
-  ({ transparent, textColor, isSeverity, isChecked, isOnClickEnabled }) => css`
+  ({ transparent, textColor, isSeverity, isChecked, isOnClickEnabled, canMultiline }) => css`
     color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
@@ -90,6 +91,12 @@ export const StyledPill = styled.div<{
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
       text-transform: capitalize;
+
+      ${canMultiline &&
+      css`
+        line-clamp: unset;
+        -webkit-line-clamp: unset;
+      `}
     }
   `
 );
