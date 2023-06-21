@@ -40,17 +40,15 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
     }
   };
 
-  console.log(moment(1687620423000).format("MMM Mo HH:mm"));
-
   const getStatusPill = () => {
-    if (isUserInQueueToWithdraw) {
+    if (isUserInQueueToWithdraw || true) {
       const date = moment(withdrawStartTime ?? 0 * 1000).format("MMM Mo");
       const time = new Date(withdrawStartTime ?? 0 * 1000).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
         timeZoneName: "shortOffset",
       });
-      return <Pill dotColor="yellow" text={`${t("withdrawWindowWillOpenOn", { on: `${date} ${time}` })}`} />;
+      return <Pill canMultiline dotColor="yellow" text={`${t("withdrawWindowWillOpenOn", { on: `${date} ${time}` })}`} />;
     } else if (isUserInTimeToWithdraw) {
       const date = moment(withdrawEndTime ?? 0 * 1000).format("MMM Mo HH:mm");
       const time = new Date(withdrawEndTime ?? 0 * 1000).toLocaleTimeString([], {
@@ -58,7 +56,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
         minute: "2-digit",
         timeZoneName: "shortOffset",
       });
-      return <Pill dotColor="blue" text={`${t("withdrawWindowOpenUntil", { until: `${date} ${time}` })}`} />;
+      return <Pill canMultiline dotColor="blue" text={`${t("withdrawWindowOpenUntil", { until: `${date} ${time}` })}`} />;
     } else {
       return "-";
     }
@@ -69,7 +67,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
       <VaultTokenIcon vault={vault} />
       <div>{availableBalanceToWithdraw.formattedWithoutSymbol()}</div>
       <div>~${millify(availableBalanceToWithdraw.number * (vault.amountsInfo?.tokenPriceUsd ?? 0))}</div>
-      <div>{getStatusPill()}</div>
+      <div className="status">{getStatusPill()}</div>
       <div className="action-button">{getActionButton()}</div>
     </div>
   );

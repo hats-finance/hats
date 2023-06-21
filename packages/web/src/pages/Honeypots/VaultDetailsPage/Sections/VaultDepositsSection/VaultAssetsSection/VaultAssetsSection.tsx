@@ -17,7 +17,7 @@ export const VaultAssetsSection = ({ vault }: VaultAssetsSectionProps) => {
         <div>{t("token")}</div>
         <div>{t("totalDeposited")}</div>
         <div>{t("totalValue")} ($)</div>
-        <Button className="hidden" size="medium">
+        <Button className="hidden last" size="medium">
           {t("deposit")}
         </Button>
       </div>

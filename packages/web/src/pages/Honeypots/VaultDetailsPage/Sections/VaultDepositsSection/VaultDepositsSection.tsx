@@ -11,7 +11,6 @@ export const VaultDepositsSection = () => {
   const { vault } = useContext(VaultDetailsContext);
 
   const hasUserDeposited = useHasUserDepositedAmount([vault, vault]);
-  console.log("hasUserDeposited", hasUserDeposited);
 
   return (
     <StyledDepositsSection>

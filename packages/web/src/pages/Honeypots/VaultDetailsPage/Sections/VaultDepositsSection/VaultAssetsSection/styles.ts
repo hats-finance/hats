@@ -14,14 +14,25 @@ export const StyledVaultAssetsSection = styled.div`
     gap: ${getSpacing(1)};
     padding: ${getSpacing(0)} ${getSpacing(2)};
 
-    @media (max-width: ${breakpointsDefinition.smallMobile}) {
-      grid-template-columns: 1fr 1fr 1fr 100px;
-      padding: ${getSpacing(0)} ${getSpacing(1)};
-    }
-
     .action-button {
       display: flex;
       justify-content: flex-end;
+    }
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: ${getSpacing(3)};
+      padding: ${getSpacing(0)} ${getSpacing(1)};
+
+      .last {
+        display: none;
+      }
+
+      .action-button {
+        justify-content: center;
+        grid-column-start: 1;
+        grid-column-end: 4;
+      }
     }
   }
 

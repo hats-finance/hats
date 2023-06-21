@@ -475,6 +475,11 @@
     "requestPending": "Request pending",
     "withdrawWindowWillOpenOn": "Withdraw window will open on {{on}}",
     "withdrawWindowOpenUntil": "Withdraw window is open until {{until}}",
+    "howToWithdraw": "How to withdraw?",
+    "howToWithdrawExplanation": "To initiate a withdrawal, kindly submit a withdrawal request. This request will enter a pending status for a period of 7 days. Once the 7-day period concludes, you will be able to proceed with the withdrawal for another 7 days.",
+    "7days": "7-days",
+    "why7daysPeriods": "Why do we have a 7 days waiting period?",
+    "why7daysPeriodsExplanation": "The reason behind the 7-day waiting period is to implement additional protective measures that help prevent Front-running payouts. We prioritize the security of our users and hence have implemented this precautionary measure.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
