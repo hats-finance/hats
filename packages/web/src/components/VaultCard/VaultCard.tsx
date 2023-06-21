@@ -19,6 +19,7 @@ type VaultCardProps = {
   vaultData?: IVault;
   auditPayout?: IPayoutGraph;
   reducedStyles?: boolean;
+  noActions?: boolean;
 };
 
 /**
@@ -27,12 +28,13 @@ type VaultCardProps = {
  * @param vaultData - The vault data.
  * @param auditPayout - The payout data for finished audit competitions.
  * @param reduced - Reduced styles, showing less information. (used on vault details page)
+ * @param noActions - Disable the actions buttons. (mainly for vault preview)
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
  * For finished audit competitions, this component uses the payout data, and is passed as `auditPayout`.
  */
-export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: VaultCardProps) => {
+export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noActions = false }: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -140,6 +142,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
 
   const goToDeposits = () => {
     if (!vault) return;
+    if (noActions) return;
 
     const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
     const vaultSlug = slugify(name);
@@ -148,11 +151,13 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
   };
 
   const goToSubmitVulnerability = () => {
+    if (noActions) return;
     navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
   };
 
   const goToDetails = () => {
     if (!vault) return;
+    if (noActions) return;
 
     const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
     const vaultSlug = slugify(name);
@@ -232,7 +237,12 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
             <>
               {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
                 <div className="stats__stat">
-                  <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToSubmitVulnerability}>
+                  <Button
+                    disabled={noActions}
+                    size="medium"
+                    filledColor={isAudit ? "primary" : "secondary"}
+                    onClick={goToSubmitVulnerability}
+                  >
                     {t("submitVulnerability")}
                   </Button>
                 </div>
@@ -250,12 +260,19 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false }: Vau
           </div>
           <div className="actions">
             {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (
-              <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined" onClick={goToDeposits}>
+              <Button
+                disabled={noActions}
+                size="medium"
+                filledColor={isAudit ? "primary" : "secondary"}
+                styleType="outlined"
+                onClick={goToDeposits}
+              >
                 {t("deposits")}
               </Button>
             )}
             {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
               <Button
+                disabled={noActions}
                 size="medium"
                 filledColor={isAudit ? "primary" : "secondary"}
                 styleType="outlined"
