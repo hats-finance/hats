@@ -7,15 +7,16 @@ import { useHasUserDepositedAmount } from "./useHasUserDepositedAmount";
 
 type VaultDepositsSectionProps = {
   vault: IVault;
+  greyBorders?: boolean;
 };
 
-export const VaultDepositsSection = ({ vault }: VaultDepositsSectionProps) => {
+export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDepositsSectionProps) => {
   const { t } = useTranslation();
 
   const hasUserDeposited = useHasUserDepositedAmount([vault]);
 
   return (
-    <StyledDepositsSection>
+    <StyledDepositsSection greyBorders={greyBorders}>
       <div>
         <h2>{t("vaultAssets")}</h2>
         <VaultAssetsSection vault={vault} />

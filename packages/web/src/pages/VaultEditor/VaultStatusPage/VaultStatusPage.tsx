@@ -77,7 +77,7 @@ export const VaultStatusPage = () => {
   return (
     <>
       <Seo title={t("seo.vaultStatusTitle", { vaultName: vaultData.description?.["project-metadata"].name })} />
-      <StyledVaultStatusPage className="content-wrapper-md">
+      <StyledVaultStatusPage className="content-wrapper">
         <div className="status-title">
           <div className="leftSide">
             <div className="title">
