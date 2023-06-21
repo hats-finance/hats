@@ -91,14 +91,15 @@ export const GenerateNftsAssetsCard = () => {
         </div>
       </div>
 
-      <div>{getInfoText()}</div>
+      <div className="mb-4">{getInfoText()}</div>
+
       {nftsGeneratedInfo && (
         <div>
           <p>
-            {t("nftsGeneratedWithEditSessionId")}: {nftsGeneratedInfo.editSessionId}
+            <span className="bold">{t("nftsGeneratedWithEditSessionId")}:</span> {nftsGeneratedInfo.editSessionId}
           </p>
           <p>
-            {t("nftsIpfsHash")}: {nftsGeneratedInfo.nftsIpfsHash}
+            <span className="bold">{t("nftsIpfsHash")}:</span> {nftsGeneratedInfo.nftsIpfsHash}
           </p>
         </div>
       )}

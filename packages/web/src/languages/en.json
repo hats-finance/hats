@@ -444,7 +444,7 @@
     "generateNfts": "Generate NFTs assets",
     "regenerateNfts": "Regenerate NFTs assets",
     "noNftsGeneratedInfo": "No NFTs generated yet. Click on 'Generate NFTs' to generate them.",
-    "nftsRegenerateInfo": "NFTs already generated on a previous edit session of the vault. Click on 'Generate NFTs' to regenerate them with the current version.",
+    "nftsRegenerateInfo": "NFTs already generated on a previous edit session of the vault. \nClick on 'Regenerate NFTs' to regenerate them with the current version.",
     "nftsGeneratedInfo": "NFTs generated successfully",
     "generatingNftsInfo": "Generating NFTs. This may take a few minutes.",
     "nftsGeneratedWithEditSessionId": "NFTs generated with edit session ID",
