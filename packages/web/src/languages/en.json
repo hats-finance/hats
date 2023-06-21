@@ -493,6 +493,7 @@
     "approvingTokenSpending": "Approving {{token}} spending",
     "depositingTokens": "Depositing {{token}} tokens",
     "withdrawingTokens": "Withdrawing {{token}} tokens",
+    "goToVaultDetailsPage": "Go to vault details page",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
