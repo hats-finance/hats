@@ -1,11 +1,13 @@
 import { IVault } from "@hats-finance/shared";
-import { Button, Pill } from "components";
+import { Button, Loading, Modal, Pill } from "components";
+import { WithdrawRequestContract } from "contracts";
+import useModal from "hooks/useModal";
 import millify from "millify";
 import moment from "moment";
-import { useContext } from "react";
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { VaultTokenIcon } from "../../components";
-import { VaultDepositsSectionContext } from "../../store";
+import { useWaitForTransaction } from "wagmi";
+import { VaultDepositWithdrawModal, VaultTokenIcon } from "../../components";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
 
 type VaultHoldingsProps = {
@@ -14,8 +16,7 @@ type VaultHoldingsProps = {
 
 export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
   const { t } = useTranslation();
-
-  const { handleWithdrawRequest } = useContext(VaultDepositsSectionContext);
+  const { isShowing: isShowingWithdrawModal, show: showWithdrawModal, hide: hideWithdrawModal } = useModal();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
 
@@ -31,7 +32,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
       );
     } else if (isUserInTimeToWithdraw) {
       return (
-        <Button size="medium" filledColor={isAudit ? "primary" : "secondary"}>
+        <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={showWithdrawModal}>
           {t("withdraw")}
         </Button>
       );
@@ -66,13 +67,42 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
     }
   };
 
+  // -------> WITHDRAW REQUEST
+  const withdrawRequestCall = WithdrawRequestContract.hook(vault);
+  const waitingWithdrawRequestCall = useWaitForTransaction({
+    hash: withdrawRequestCall.data?.hash as `0x${string}`,
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+  const handleWithdrawRequest = useCallback(() => {
+    withdrawRequestCall.send();
+  }, [withdrawRequestCall]);
+
   return (
-    <div className="row">
-      <VaultTokenIcon vault={vault} />
-      <div>{availableBalanceToWithdraw.formattedWithoutSymbol()}</div>
-      <div>~${millify(availableBalanceToWithdraw.number * (vault.amountsInfo?.tokenPriceUsd ?? 0))}</div>
-      <div className="status">{getStatusPill()}</div>
-      <div className="action-button">{getActionButton()}</div>
-    </div>
+    <>
+      <div className="row">
+        <VaultTokenIcon vault={vault} />
+        <div>{availableBalanceToWithdraw.formattedWithoutSymbol()}</div>
+        <div>~${millify(availableBalanceToWithdraw.number * (vault.amountsInfo?.tokenPriceUsd ?? 0))}</div>
+        <div className="status">{getStatusPill()}</div>
+        <div className="action-button">{getActionButton()}</div>
+      </div>
+
+      <Modal
+        title={t("withdrawToken", { token: vault.stakingTokenSymbol })}
+        isShowing={isShowingWithdrawModal}
+        onHide={hideWithdrawModal}
+      >
+        {isShowingWithdrawModal ? (
+          <VaultDepositWithdrawModal action="WITHDRAW" vault={vault} closeModal={hideWithdrawModal} />
+        ) : (
+          <></>
+        )}
+      </Modal>
+
+      {withdrawRequestCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
+      {waitingWithdrawRequestCall.isLoading && <Loading fixed extraText={`${t("requestingWithdraw")}...`} />}
+    </>
   );
 };

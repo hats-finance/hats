@@ -1,8 +1,9 @@
 import { IVault } from "@hats-finance/shared";
-import { Button } from "components";
+import { Button, Modal } from "components";
+import useModal from "hooks/useModal";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
-import { VaultTokenIcon } from "../../components";
+import { VaultDepositWithdrawModal, VaultTokenIcon } from "../../components";
 
 type VaultAssetProps = {
   vault: IVault;
@@ -10,21 +11,36 @@ type VaultAssetProps = {
 
 export const VaultAsset = ({ vault }: VaultAssetProps) => {
   const { t } = useTranslation();
+  const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
 
   return (
-    <div className="row">
-      <VaultTokenIcon vault={vault} />
-      <div>
-        {millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} {vault.stakingTokenSymbol}
+    <>
+      <div className="row">
+        <VaultTokenIcon vault={vault} />
+        <div>
+          {millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} {vault.stakingTokenSymbol}
+        </div>
+        <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
+        <div className="action-button">
+          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={showDepositModal}>
+            {t("deposit")}
+          </Button>
+        </div>
       </div>
-      <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
-      <div className="action-button">
-        <Button size="medium" filledColor={isAudit ? "primary" : "secondary"}>
-          {t("deposit")}
-        </Button>
-      </div>
-    </div>
+
+      <Modal
+        title={t("depositToken", { token: vault.stakingTokenSymbol })}
+        isShowing={isShowingDepositModal}
+        onHide={hideDepositModal}
+      >
+        {isShowingDepositModal ? (
+          <VaultDepositWithdrawModal action="DEPOSIT" vault={vault} closeModal={hideDepositModal} />
+        ) : (
+          <></>
+        )}
+      </Modal>
+    </>
   );
 };

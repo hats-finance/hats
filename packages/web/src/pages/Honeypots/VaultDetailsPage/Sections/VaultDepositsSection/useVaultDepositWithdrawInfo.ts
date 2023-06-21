@@ -1,12 +1,12 @@
-import { useAccount } from "wagmi";
+import { HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1, MINIMUM_DEPOSIT } from "constants/constants";
+import { DepositWithdrawDataMulticall, SharesToBalanceMulticall, WithdrawRequestInfoContract } from "contracts";
 import { BigNumber } from "ethers";
-import { IVault } from "types";
-import { useTokenBalanceAmount } from "hooks/wagmi";
-import { MINIMUM_DEPOSIT, HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1 } from "constants/constants";
-import { Amount } from "utils/amounts.utils";
-import { DepositWithdrawDataMulticall, SharesToBalanceMulticall } from "contracts";
 import { useDepositTokens } from "hooks/nft/useDepositTokens";
 import { useVaultRegisteredNft } from "hooks/nft/useVaultRegistered";
+import { useTokenBalanceAmount } from "hooks/wagmi";
+import { IVault } from "types";
+import { Amount } from "utils/amounts.utils";
+import { useAccount } from "wagmi";
 
 /**
  * This hook will fetch all the data needed for the deposit/withdraw page. In total we have to read 5 different contracts:
@@ -90,8 +90,9 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
 export const getVaultWithdrawTime = (selectedVault: IVault) => {
   // Amount of time the user has to withdraw the funds
   const withdrawEnabledPeriod = +selectedVault.master.withdrawRequestEnablePeriod;
+  const withdrawRequestCall = WithdrawRequestInfoContract.hook(selectedVault);
 
-  let withdrawStartTime = selectedVault.userWithdrawRequest?.[0]?.withdrawEnableTime;
+  let withdrawStartTime = withdrawRequestCall?.toNumber();
   withdrawStartTime = withdrawStartTime ? +withdrawStartTime : undefined;
 
   const withdrawEndTime = withdrawStartTime ? withdrawStartTime + withdrawEnabledPeriod : undefined;
