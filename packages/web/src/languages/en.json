@@ -495,6 +495,8 @@
     "withdrawingTokens": "Withdrawing {{token}} tokens",
     "goToVaultDetailsPage": "Go to vault details page",
     "showVaultPreview": "Show vault preview",
+    "cantDepositBecauseCheckin": "Committee is not checked-in. You can't deposit tokens.",
+    "cantDepositBecausePause": "This vault is paused for deposits. You can't deposit tokens.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

@@ -14,6 +14,7 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
+  const depositsDisabled = !vault.committeeCheckedIn || vault.depositPause;
 
   return (
     <>
@@ -24,23 +25,30 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
         </div>
         <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
         <div className="action-button">
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={showDepositModal}>
+          <Button
+            disabled={depositsDisabled}
+            size="medium"
+            filledColor={isAudit ? "primary" : "secondary"}
+            onClick={!depositsDisabled ? showDepositModal : undefined}
+          >
             {t("deposit")}
           </Button>
         </div>
       </div>
 
-      <Modal
-        title={t("depositToken", { token: vault.stakingTokenSymbol })}
-        isShowing={isShowingDepositModal}
-        onHide={hideDepositModal}
-      >
-        {isShowingDepositModal ? (
-          <VaultDepositWithdrawModal action="DEPOSIT" vault={vault} closeModal={hideDepositModal} />
-        ) : (
-          <></>
-        )}
-      </Modal>
+      {!depositsDisabled && (
+        <Modal
+          title={t("depositToken", { token: vault.stakingTokenSymbol })}
+          isShowing={isShowingDepositModal}
+          onHide={hideDepositModal}
+        >
+          {isShowingDepositModal ? (
+            <VaultDepositWithdrawModal action="DEPOSIT" vault={vault} closeModal={hideDepositModal} />
+          ) : (
+            <></>
+          )}
+        </Modal>
+      )}
     </>
   );
 };
