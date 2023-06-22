@@ -1,8 +1,9 @@
 import { parseUnits } from "@ethersproject/units";
 import { IVault } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Loading } from "components";
+import { Alert, Button, Loading } from "components";
 import { DepositContract, TokenApproveAllowanceContract, WithdrawAndClaimContract } from "contracts";
+import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -23,7 +24,9 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
   const { t } = useTranslation();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
-  const { availableBalanceToWithdraw, tokenBalance, isUserInTimeToWithdraw, tokenAllowance } = useVaultDepositWithdrawInfo(vault);
+  const { withdrawSafetyPeriod } = useVaults();
+  const { availableBalanceToWithdraw, tokenBalance, isUserInTimeToWithdraw, isUserInQueueToWithdraw, tokenAllowance } =
+    useVaultDepositWithdrawInfo(vault);
 
   const {
     register,
@@ -42,6 +45,8 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
 
   const amountBigNumber = parseUnits(watch("amount") || "0", vault.stakingTokenDecimals);
   const hasAllowance = tokenAllowance && watch("amount") ? tokenAllowance.gte(amountBigNumber) : false;
+  const withdrawalsDisabled = action === "WITHDRAW" && withdrawSafetyPeriod?.isSafetyPeriod;
+  const depositsDisabled = action === "DEPOSIT" && (!vault.committeeCheckedIn || vault.depositPause);
 
   useEffect(() => {
     setTimeout(() => setFocus("amount"), 10);
@@ -126,8 +131,24 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
         </div>
         {errors.amount ? <span className="error">{errors.amount.message}</span> : <span className="error">&nbsp;</span>}
 
+        {action === "DEPOSIT" && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
+          <Alert className="mt-4" type="warning">
+            {t("depositWillCancelWithdraw")}
+          </Alert>
+        )}
+
+        {action === "WITHDRAW" && withdrawSafetyPeriod?.isSafetyPeriod && (
+          <Alert className="mt-4" type="warning">
+            {t("safePeriodOnCantWithdraw")}
+          </Alert>
+        )}
+
         <div className="buttons">
-          <Button disabled={!isValid} filledColor={isAudit ? "primary" : "secondary"} onClick={handleActionExecution}>
+          <Button
+            disabled={!isValid || withdrawalsDisabled || depositsDisabled}
+            filledColor={isAudit ? "primary" : "secondary"}
+            onClick={handleActionExecution}
+          >
             {action === "DEPOSIT" ? t("deposit") : t("withdraw")}
           </Button>
         </div>

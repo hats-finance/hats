@@ -496,7 +496,9 @@
     "goToVaultDetailsPage": "Go to vault details page",
     "showVaultPreview": "Show vault preview",
     "cantDepositBecauseCheckin": "Committee is not checked-in. You can't deposit tokens.",
-    "cantDepositBecausePause": "This vault is paused for deposits. You can't deposit tokens.",
+    "cantDepositBecausePause": "This vault is not open for deposits. You can't deposit tokens.",
+    "depositWillCancelWithdraw": "Depositing tokens will cancel your withdraw request.",
+    "safePeriodOnCantWithdraw": "You can't withdraw tokens during the safe period.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
