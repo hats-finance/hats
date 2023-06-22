@@ -1,5 +1,6 @@
 import { IVault } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import { HoldingsSection } from "./HoldingsSection/HoldingsSection";
 import { VaultAssetsSection } from "./VaultAssetsSection/VaultAssetsSection";
 import { StyledDepositsSection } from "./styles";
@@ -12,6 +13,7 @@ type VaultDepositsSectionProps = {
 
 export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDepositsSectionProps) => {
   const { t } = useTranslation();
+  const { address } = useAccount();
 
   const hasUserDeposited = useHasUserDepositedAmount([vault]);
 
@@ -22,7 +24,7 @@ export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDeposi
         <VaultAssetsSection vault={vault} />
       </div>
 
-      {hasUserDeposited && (
+      {address && hasUserDeposited && (
         <div>
           <h2>{t("yourHoldings")}</h2>
           <HoldingsSection vault={vault} />
