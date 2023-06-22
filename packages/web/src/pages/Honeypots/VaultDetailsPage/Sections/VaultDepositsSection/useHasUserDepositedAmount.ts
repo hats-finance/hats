@@ -10,6 +10,7 @@ export const useHasUserDepositedAmount = (vaults: IVault[]) => {
   const call = useContractReads({
     contracts: contractsInfo as any,
     enabled: !!address,
+    watch: true,
   });
 
   if (!address) return false;
