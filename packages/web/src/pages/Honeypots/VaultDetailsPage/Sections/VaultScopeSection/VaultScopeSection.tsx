@@ -28,14 +28,14 @@ export const VaultScopeSection = ({ vault }: VaultScopeSectionProps) => {
         </div>
       )}
 
-      {vault.description?.scope?.protocolSetupInstructions.instructions && (
+      {vault.description?.scope?.protocolSetupInstructions?.instructions && (
         <div>
           <h2>{t("envSetupInstructions")}</h2>
           <EnvSetupSection vault={vault} />
         </div>
       )}
 
-      {vault.description?.severities.length && (
+      {vault.description?.severities?.length && (
         <div>
           <h2>{t("severityLevels")}</h2>
           <SeverityLevelsSection vault={vault} />
