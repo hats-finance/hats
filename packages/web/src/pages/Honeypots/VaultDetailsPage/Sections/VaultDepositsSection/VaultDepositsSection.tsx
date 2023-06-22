@@ -15,7 +15,7 @@ export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDeposi
   const { t } = useTranslation();
   const { address } = useAccount();
 
-  const hasUserDeposited = useHasUserDepositedAmount([vault]);
+  const hasUserDeposited = useHasUserDepositedAmount([vault, vault]);
 
   return (
     <StyledDepositsSection greyBorders={greyBorders}>

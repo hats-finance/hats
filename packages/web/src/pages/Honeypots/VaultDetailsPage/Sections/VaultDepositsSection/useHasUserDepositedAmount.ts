@@ -13,5 +13,12 @@ export const useHasUserDepositedAmount = (vaults: IVault[]) => {
   });
 
   if (!address) return false;
-  return (call.data && call.data?.some((amount) => BigNumber.from(amount).gt(0))) ?? false;
+  return (
+    (call.data &&
+      call.data.some((data, idx) => {
+        const shareData = UserSharesPerVaultContract.mapResponseToData({ data }, vaults[idx]);
+        return shareData.gt(BigNumber.from(0));
+      })) ??
+    false
+  );
 };
