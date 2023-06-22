@@ -31,13 +31,14 @@ type VaultDetailsPageProps = {
 
 export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetailsPageProps) => {
   const { t } = useTranslation();
-  const [openSection, setOpenSection] = useState(0);
 
   const { allVaults } = useVaults();
   const navigate = useNavigate();
-  const { vaultSlug } = useParams();
+  const { vaultSlug, sectionId } = useParams();
   const vaultId = vaultSlug?.split("-").pop();
   const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
+
+  const [openSectionId, setOpenSectionId] = useState(sectionId ?? DETAILS_SECTIONS[0].title);
 
   if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   if (!vault || !vault.description) {
@@ -53,7 +54,21 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetails
     navigate(`${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
   };
 
-  const SectionToRender = DETAILS_SECTIONS[openSection].component;
+  const changeDetailsSection = (sectionTitle: string) => {
+    setOpenSectionId(sectionTitle);
+
+    if (vaultSlug) {
+      navigate(
+        `${RoutePaths.vaults}/${
+          isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties
+        }/${vaultSlug}/${sectionTitle}`,
+        { replace: true }
+      );
+    }
+  };
+
+  const SectionToRender =
+    DETAILS_SECTIONS.find((section) => section.title === openSectionId)?.component ?? DETAILS_SECTIONS[0].component;
 
   return (
     <>
@@ -79,14 +94,18 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetails
         </div>
 
         <div className="sections-tabs">
-          {DETAILS_SECTIONS.filter((section) => (noActions ? section.title !== "deposits" : true)).map((section, idx) => (
-            <StyledSectionTab onClick={() => setOpenSection(idx)} active={openSection === idx} key={section.title}>
+          {DETAILS_SECTIONS.filter((section) => (noActions ? section.title !== "deposits" : true)).map((section) => (
+            <StyledSectionTab
+              onClick={() => changeDetailsSection(section.title)}
+              active={openSectionId === section.title}
+              key={section.title}
+            >
               <h4>{t(section.title)}</h4>
             </StyledSectionTab>
           ))}
         </div>
 
-        <div className="section-container">{<SectionToRender vault={vault} />}</div>
+        <div className="section-container">{SectionToRender && <SectionToRender vault={vault} />}</div>
       </StyledVaultDetailsPage>
     </>
   );

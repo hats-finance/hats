@@ -9,15 +9,21 @@ export enum HoneypotsRoutePaths {
   audits = "audit-competitions",
 }
 
-const vaultDetailsRoute: RouteObject = {
-  path: ":vaultSlug", // vaultName-vaultId,
-  children: [
-    {
-      path: "",
-      element: <VaultDetailsPage />,
-    },
-  ],
-};
+const vaultDetailsRoutes: RouteObject[] = [
+  {
+    path: ":vaultSlug", // vaultName-vaultId,
+    children: [
+      {
+        path: "",
+        element: <Navigate to="rewards" replace={true} />,
+      },
+      {
+        path: ":sectionId",
+        element: <VaultDetailsPage />,
+      },
+    ],
+  },
+];
 
 export const honeypotsRouter = (): RouteObject => ({
   path: `${RoutePaths.vaults}`,
@@ -33,7 +39,7 @@ export const honeypotsRouter = (): RouteObject => ({
           path: "",
           element: <BugBountyVaultsPage />,
         },
-        vaultDetailsRoute,
+        ...vaultDetailsRoutes,
       ],
     },
     {
@@ -43,7 +49,7 @@ export const honeypotsRouter = (): RouteObject => ({
           path: "",
           element: <AuditVaultsPage />,
         },
-        vaultDetailsRoute,
+        ...vaultDetailsRoutes,
       ],
     },
   ],
