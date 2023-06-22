@@ -94,16 +94,14 @@ export const ScopeReposInformation = () => {
                 disabled={allFormDisabled}
                 placeholder={t("VaultEditor.vault-details.repoUrl-placeholder")}
               />
-              {vaultType === "audit" && (
-                <FormInput
-                  {...register(`scope.reposInformation.${index}.commitHash`)}
-                  label={t("VaultEditor.vault-details.commitHash")}
-                  colorable
-                  helper="ie. 9770535cb9.....b63c081cbc"
-                  disabled={allFormDisabled}
-                  placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
-                />
-              )}
+              <FormInput
+                {...register(`scope.reposInformation.${index}.commitHash`)}
+                label={t("VaultEditor.vault-details.commitHash")}
+                colorable
+                helper="ie. 9770535cb9.....b63c081cbc"
+                disabled={allFormDisabled}
+                placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
+              />
               {!allFormDisabled && (
                 <Button styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
                   <DeleteIcon className="mr-2" />
