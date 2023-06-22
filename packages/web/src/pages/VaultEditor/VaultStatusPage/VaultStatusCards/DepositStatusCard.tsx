@@ -33,7 +33,7 @@ export const DepositStatusCard = () => {
             <SyncIcon />
           </div>
         </div>
-        {isVaultDeposited && selectedVault && <VaultDepositsSection vault={selectedVault} greyBorders />}
+        {selectedVault && <VaultDepositsSection vault={selectedVault} greyBorders />}
         {vaultData.isCommitteeCheckedIn && !isVaultDeposited && (
           <p className="status-card__text mb-5">{t("depositOnVaultExplanation")}</p>
         )}
