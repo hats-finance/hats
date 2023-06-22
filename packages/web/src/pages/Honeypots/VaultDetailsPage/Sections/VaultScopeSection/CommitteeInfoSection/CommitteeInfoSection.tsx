@@ -16,7 +16,6 @@ export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
   if (!vault.description) return null;
 
   const committee = vault.description.committee;
-  console.log(committee);
 
   return (
     <StyledCommitteeInfoSection className="subsection-container">
