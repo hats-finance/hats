@@ -694,7 +694,7 @@
       "submissionTitlePlaceholder": "Add the title of your issue",
       "submissionDescriptionPlaceholder": "Provide a clear explanation of the issue",
       "saveAndDownload": "Save and download",
-      "selectSupportFiles": "Select support files",
+      "selectSupportFiles": "Select support files (.ts, .sol)",
       "removeIssue": "Remove issue",
       "addAnotherVulnerability": "Add another issue",
       "termsDescription": "Before submitting vulnerability please read the steps and process that your request will go through.",
