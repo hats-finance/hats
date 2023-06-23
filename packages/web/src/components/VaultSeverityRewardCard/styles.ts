@@ -4,7 +4,7 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: boolean }>(
   ({ color, noNft }) => css`
     display: grid;
-    grid-template-columns: ${noNft ? "1fr 1fr" : "1fr 1fr 1fr"};
+    grid-template-columns: ${noNft ? "3fr 4fr" : "1fr 1fr 1fr"};
     align-items: center;
     justify-content: space-between;
 

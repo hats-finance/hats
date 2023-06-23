@@ -1,6 +1,6 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { Button, Pill, VaultAssetsPillsList } from "components";
+import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
@@ -39,6 +39,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noAct
   const navigate = useNavigate();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
+  const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
 
   const vaultDate = useMemo(() => {
     if (!vault || !vault.description) return null;
@@ -166,7 +167,12 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noAct
   };
 
   return (
-    <StyledVaultCard isAudit={isAudit} reducedStyles={reducedStyles} hasActiveClaim={!!activeClaim}>
+    <StyledVaultCard
+      isAudit={isAudit}
+      reducedStyles={reducedStyles}
+      hasActiveClaim={!!activeClaim}
+      showIntendedAmount={showIntended}
+    >
       {isAudit && getAuditStatusPill()}
       {!!activeClaim && !reducedStyles && getActiveClaimBanner()}
 
@@ -217,13 +223,22 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noAct
               </>
             )}
           </div>
-          <div className="stats__stat">
+          <div className="stats__stat intended-on-audits">
             {isAudit ? (
               <>
-                <h3 className="value">
-                  ~${auditPayout ? millify(totalPaidOutOnAudit?.usd ?? 0) : millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}
-                </h3>
-                <div className="sub-value">{auditPayout ? t("paidRewards") : t("maxRewards")}</div>
+                <WithTooltip text={showIntended ? t("intendedValueExplanation") : undefined}>
+                  <h3 className="value">
+                    ~$
+                    {auditPayout
+                      ? millify(totalPaidOutOnAudit?.usd ?? 0)
+                      : showIntended
+                      ? millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)
+                      : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+                  </h3>
+                </WithTooltip>
+                <div className="sub-value">
+                  {auditPayout ? t("paidRewards") : showIntended ? t("intendedRewards") : t("maxRewards")}
+                </div>
               </>
             ) : (
               <>

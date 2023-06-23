@@ -2,8 +2,13 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boolean; hasActiveClaim: boolean }>(
-  ({ isAudit, reducedStyles, hasActiveClaim }) => css`
+export const StyledVaultCard = styled.div<{
+  isAudit: boolean;
+  reducedStyles: boolean;
+  hasActiveClaim: boolean;
+  showIntendedAmount: boolean;
+}>(
+  ({ isAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -129,6 +134,13 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean; reducedStyles: boo
               border-width: ${isAudit ? "0 0 0 1px" : "0 0 0 1px"};
               border-style: solid;
             }
+          }
+
+          &.intended-on-audits {
+            ${showIntendedAmount &&
+            css`
+              color: var(--warning-yellow);
+            `}
           }
 
           .value {

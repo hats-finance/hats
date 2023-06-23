@@ -49,6 +49,7 @@ export interface IBaseVault {
   activeClaim?: IVaultActiveClaim;
   // Computed values
   amountsInfo?: {
+    showCompetitionIntendedAmount: boolean;
     tokenPriceUsd: number;
     depositedAmount: {
       tokens: number;
@@ -57,6 +58,16 @@ export interface IBaseVault {
     maxRewardAmount: {
       tokens: number;
       usd: number;
+    };
+    competitionIntendedAmount?: {
+      deposited: {
+        tokens: number;
+        usd: number;
+      };
+      maxReward: {
+        tokens: number;
+        usd: number;
+      };
     };
   };
 }

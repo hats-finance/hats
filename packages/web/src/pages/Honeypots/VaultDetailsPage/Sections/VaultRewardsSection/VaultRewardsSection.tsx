@@ -1,5 +1,5 @@
 import { IVault } from "@hats-finance/shared";
-import { VaultAssetsPillsList } from "components";
+import { VaultAssetsPillsList, WithTooltip } from "components";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { VaultNftRewards } from "./VaultNftRewards/VaultNftRewards";
@@ -14,22 +14,36 @@ type VaultRewardsSectionProps = {
 export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
   const { t } = useTranslation();
 
+  const showIntended = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
+
   return (
-    <StyledRewardsSection>
+    <StyledRewardsSection showIntended={showIntended}>
       <h2>{t("rewards")}</h2>
       <div className="rewards-containers mt-4">
         <div className="amounts">
-          <div className="card bigPadding">
-            <h4 className="title">{t("totalDeposits")}</h4>
-            <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
+          <div className="card amount-card">
+            <h4 className="title">{showIntended ? t("intendedDeposits") : t("totalDeposits")}</h4>
+            {showIntended ? (
+              <WithTooltip text={t("intendedValueExplanation")}>
+                <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)}</h4>
+              </WithTooltip>
+            ) : (
+              <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
+            )}
           </div>
           <div className="card">
             <h4 className="title">{t("assetsInVault")}</h4>
             <VaultAssetsPillsList vaultData={vault} />
           </div>
-          <div className="card bigPadding">
-            <h4 className="title">{t("maxRewards")}</h4>
-            <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
+          <div className="card amount-card">
+            <h4 className="title">{showIntended ? t("intendedRewards") : t("maxRewards")}</h4>
+            {showIntended ? (
+              <WithTooltip text={t("intendedValueExplanation")}>
+                <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
+              </WithTooltip>
+            ) : (
+              <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
+            )}
           </div>
         </div>
         <div className="division">

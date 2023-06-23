@@ -19,6 +19,8 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
 
   const SEVERITIES_COLORS = getSeveritiesColorsArray(vault);
 
+  const showIntendedAmounts = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
+
   if (vault.version === "v2") {
     const severity = vault.description.severities[severityIndex];
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
@@ -30,7 +32,9 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
       rewardPrice = sumTotalPrices * (rewardPercentage / 100);
     } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
-        Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) *
+        (showIntendedAmounts
+          ? vault.amountsInfo.competitionIntendedAmount?.deposited.tokens ?? 0
+          : Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals))) *
         (rewardPercentage / 100) *
         vault.amountsInfo?.tokenPriceUsd;
     }
@@ -49,7 +53,9 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
       rewardPrice = sumTotalPrices * (rewardPercentage / 100);
     } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
-        Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals)) *
+        (showIntendedAmounts
+          ? vault.amountsInfo.competitionIntendedAmount?.deposited.tokens ?? 0
+          : Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals))) *
         (rewardPercentage / 100) *
         vault.amountsInfo?.tokenPriceUsd;
     }

@@ -500,6 +500,9 @@
     "depositWillCancelWithdraw": "Depositing tokens will cancel your withdraw request.",
     "safePeriodOnCantWithdraw": "You can't withdraw tokens during the safe period.",
     "activeClaimCantWithdraw": "You can't withdraw tokens while there is an active payout.",
+    "intendedDeposits": "Intended deposits",
+    "intendedRewards": "Intended rewards",
+    "intendedValueExplanation": "This is the value the committee intends to deposit and reward.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
