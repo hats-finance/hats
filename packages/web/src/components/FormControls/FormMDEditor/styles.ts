@@ -90,6 +90,10 @@ export const StyledFormMDEditor = styled.div<{
       }
     }
 
+    .wmde-markdown {
+      font-size: var(--xsmall);
+    }
+
     span.error {
       display: block;
       color: var(--error-red);

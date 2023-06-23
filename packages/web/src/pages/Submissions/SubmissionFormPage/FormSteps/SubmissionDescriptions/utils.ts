@@ -1,12 +1,11 @@
 import { BASE_SERVICE_URL } from "settings";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
-export const SUBMISSION_DESCRIPTION_TEMPLATE = `## Vulnerability Report
-**Description**
-<!-- Describe the context and the effect of the vulnerability. -->
+export const SUBMISSION_DESCRIPTION_TEMPLATE = `**Description**\\
+Describe the context and the effect of the vulnerability.
 
-**Attack Scenario**
-<!-- Describe how the vulnerability can be exploited. -->
+**Attack Scenario**\\
+Describe how the vulnerability can be exploited.
 
 **Attachments**
 
@@ -25,47 +24,43 @@ export const getAuditSubmissionTexts = (
 ) => {
   const toEncrypt = `**Communication channel:** ${submissionData.contact?.communicationChannel} (${
     submissionData.contact?.communicationChannelType
-  })
+  })\n
 **Beneficiary:** ${submissionData.contact?.beneficiary}
 
   ${descriptions
     .filter((description) => description.isEncrypted)
     .map(
       (description, idx) => `
--------------
-**[ISSUE #${idx + 1}]**
-**Title:** ${description.title}
-**Severity:** ${description.severity}
-**Description:**
+## [ISSUE #${idx + 1}]: ${description.title} (${
+        description.severity.includes("severity") ? description.severity : `${description.severity} severity`
+      })\n
 ${description.description.trim()}
-`
+##`
     )
     .join("\n")}`;
 
-  const decrypted = `**Project Name:** ${submissionData.project?.projectName}
-**Project Id:** ${submissionData.project?.projectId}
+  const decrypted = `**Project Name:** ${submissionData.project?.projectName}\n
+**Project Id:** ${submissionData.project?.projectId}\n
 **Github username:** ${submissionData.contact?.githubUsername || "---"}
     
     ${descriptions
       .filter((description) => !description.isEncrypted)
       .map(
         (description, idx) => `
--------------
-**[ISSUE #${idx + 1}]**
-**Title:** ${description.title}
-**Severity:** ${description.severity}
-**Description:**
+## [ISSUE #${idx + 1}]: ${description.title} (${
+          description.severity.includes("severity") ? description.severity : `${description.severity} severity`
+        })\n
 ${description.description.trim()}
 ${
   description.files && description.files.length > 0
     ? `**Files:**\n${description.files.map((file) => `  - ${file.name} (${BASE_SERVICE_URL}/files/${file.ipfsHash})`).join("\n")}`
     : ""
 }
-`
+##`
       )
       .join("\n")}`;
 
-  const submissionMessage = `--------[ENCRYPTED SECTION]--------\n${toEncrypt}\n\n\n--------[DECRYPTED SECTION]--------\n${decrypted}`;
+  const submissionMessage = `\`\`\`\n> [ENCRYPTED SECTION]\n\`\`\`\n\n${toEncrypt}\n\n\n \`\`\`\n> [DECRYPTED SECTION]\n\`\`\`\n\n${decrypted}`;
 
   return { decrypted, toEncrypt, submissionMessage };
 };
@@ -74,25 +69,23 @@ export const getBountySubmissionTexts = (
   submissionData: ISubmissionData,
   descriptions: ISubmissionsDescriptionsData["descriptions"]
 ) => {
-  const toEncrypt = `**Project Name:** ${submissionData.project?.projectName}
-**Project Id:** ${submissionData.project?.projectId}
-**Beneficiary:** ${submissionData.contact?.beneficiary}
+  const toEncrypt = `**Project Name:** ${submissionData.project?.projectName}\n
+**Project Id:** ${submissionData.project?.projectId}\n
+**Beneficiary:** ${submissionData.contact?.beneficiary}\n
 **Communication channel:** ${submissionData.contact?.communicationChannel} (${submissionData.contact?.communicationChannelType})
     
     ${descriptions
       .map(
         (description, idx) => `
--------------
-**[ISSUE #${idx + 1}]**
-**Title:** ${description.title}
-**Severity:** ${description.severity}
-**Description:**
+## [ISSUE #${idx + 1}]: ${description.title} (${
+          description.severity.includes("severity") ? description.severity : `${description.severity} severity`
+        })\n
 ${description.description.trim()}
-`
+##`
       )
       .join("\n")}`;
 
-  const submissionMessage = `--------[ENCRYPTED SECTION]--------\n${toEncrypt}`;
+  const submissionMessage = `\`\`\`\n> [ENCRYPTED SECTION]\n\`\`\`\n\n${toEncrypt}`;
 
   return { decrypted: undefined, toEncrypt, submissionMessage };
 };
