@@ -112,6 +112,7 @@ interface IBaseVaultDescription {
     endtime?: number;
     starttime?: number;
     oneLiner?: string;
+    intendedCompetitionAmount?: number;
   };
   "communication-channel": {
     "pgp-pk": string | string[];

@@ -6,6 +6,14 @@ export const StyledVaultDetails = styled.div`
   display: flex;
   flex-direction: column;
 
+  .w-50 {
+    width: 50%;
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      width: 100%;
+    }
+  }
+
   .sub-container {
     display: flex;
     justify-content: space-between;

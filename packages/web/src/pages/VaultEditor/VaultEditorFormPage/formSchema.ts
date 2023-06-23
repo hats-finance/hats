@@ -53,6 +53,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           !!ctx.from[1].value.vaultCreatedInfo?.vaultAddress ? true : (val?.length ?? 0) > 0
         )
         .required(intl("required")),
+      intendedCompetitionAmount: Yup.string().when("type", (type: string, schema: any) => {
+        if (!type || type !== "audit") return schema;
+        return schema.required(intl("required"));
+      }),
     }),
     scope: Yup.object({
       reposInformation: Yup.array().of(

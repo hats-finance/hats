@@ -959,6 +959,8 @@
         "title": "Vault Details",
         "name": "Vault name",
         "name-placeholder": "Enter vault name",
+        "intendedCompetitionAmount": "Intended competition rewards amount",
+        "intendedCompetitionAmount-placeholder": "Enter intended competition rewards amount",
         "type": "Vault type",
         "type-placeholder": "Enter vault type",
         "icon": "Vault Logo",

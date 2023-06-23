@@ -76,6 +76,7 @@ export interface IBaseEditedVaultDescription {
     starttime?: number;
     emails: IEditedCommunicationEmail[];
     oneLiner?: string;
+    intendedCompetitionAmount?: number;
   };
   committee: {
     chainId?: string;

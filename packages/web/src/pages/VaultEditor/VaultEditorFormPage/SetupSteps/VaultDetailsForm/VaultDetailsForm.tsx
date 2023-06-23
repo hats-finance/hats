@@ -27,7 +27,7 @@ export function VaultDetailsForm() {
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
     { label: t("auditCompetition"), value: "audit" },
-    { label: t("grant"), value: "grants" },
+    // { label: t("grant"), value: "grants" },
   ];
 
   // Change the start and end time if the showDateInputs property changes
@@ -104,6 +104,17 @@ export function VaultDetailsForm() {
                 value={field.value ?? ""}
               />
             )}
+          />
+        </div>
+
+        <div className="w-50">
+          <FormInput
+            {...register("project-metadata.intendedCompetitionAmount")}
+            type="number"
+            label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
+            colorable
+            disabled={allFormDisabled}
+            placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
           />
         </div>
 
