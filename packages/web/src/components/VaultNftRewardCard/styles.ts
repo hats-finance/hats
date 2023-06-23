@@ -24,6 +24,7 @@ export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardPro
       cursor: pointer;
       transition: 0.2s;
       width: ${getSize(type)};
+      height: ${getSize(type)};
       aspect-ratio: 1;
       display: flex;
       justify-content: center;
