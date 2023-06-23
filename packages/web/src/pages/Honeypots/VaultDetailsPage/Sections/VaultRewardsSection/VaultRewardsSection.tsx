@@ -9,6 +9,7 @@ import { StyledRewardsSection } from "./styles";
 
 type VaultRewardsSectionProps = {
   vault: IVault;
+  noDeployed?: boolean;
 };
 
 export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {

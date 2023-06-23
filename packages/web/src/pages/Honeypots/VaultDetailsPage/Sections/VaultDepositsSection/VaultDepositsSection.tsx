@@ -9,6 +9,7 @@ import { useHasUserDepositedAmount } from "./useHasUserDepositedAmount";
 type VaultDepositsSectionProps = {
   vault: IVault;
   greyBorders?: boolean;
+  noDeployed?: boolean;
 };
 
 export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDepositsSectionProps) => {

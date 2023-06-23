@@ -20,6 +20,7 @@ type VaultCardProps = {
   auditPayout?: IPayoutGraph;
   reducedStyles?: boolean;
   noActions?: boolean;
+  noDeployed?: boolean;
 };
 
 /**
@@ -29,12 +30,19 @@ type VaultCardProps = {
  * @param auditPayout - The payout data for finished audit competitions.
  * @param reduced - Reduced styles, showing less information. (used on vault details page)
  * @param noActions - Disable the actions buttons. (mainly for vault preview)
+ * @param noDeployed - if the vault is not deployed. (this is for showing images from the right source -> ipfs or backend)
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
  * For finished audit competitions, this component uses the payout data, and is passed as `auditPayout`.
  */
-export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noActions = false }: VaultCardProps) => {
+export const VaultCard = ({
+  vaultData,
+  auditPayout,
+  reducedStyles = false,
+  noActions = false,
+  noDeployed = false,
+}: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -178,7 +186,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noAct
 
       <div className="vault-info">
         <div className="metadata">
-          <img src={ipfsTransformUri(logo)} alt="logo" />
+          <img src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
           <div className="name-description">
             <h3 className="name">{name}</h3>
             {!reducedStyles && <p className="description">{description}</p>}

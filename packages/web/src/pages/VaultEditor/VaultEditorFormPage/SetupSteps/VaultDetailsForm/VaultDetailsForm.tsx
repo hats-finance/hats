@@ -107,16 +107,18 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        <div className="w-50">
-          <FormInput
-            {...register("project-metadata.intendedCompetitionAmount")}
-            type="number"
-            label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
-            colorable
-            disabled={allFormDisabled}
-            placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
-          />
-        </div>
+        {vaultType === "audit" && (
+          <div className="w-50">
+            <FormInput
+              {...register("project-metadata.intendedCompetitionAmount")}
+              type="number"
+              label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
+              colorable
+              disabled={allFormDisabled}
+              placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
+            />
+          </div>
+        )}
 
         <VaultEmailsForm />
 

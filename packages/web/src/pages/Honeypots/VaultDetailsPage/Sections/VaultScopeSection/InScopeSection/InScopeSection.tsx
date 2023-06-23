@@ -144,12 +144,13 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               ))}
             </div>
           </div>
-          {vault.description.scope?.reposInformation.length && <div className="separator" />}
+          {(vault.description.scope?.reposInformation.length > 0 ||
+            (contractsCovered.length > 0 && vault.description.scope?.reposInformation)) && <div className="separator" />}
         </>
       )}
 
       {/* Repos information */}
-      {vault.description.scope?.reposInformation.length && (
+      {vault.description.scope?.reposInformation && vault.description.scope?.reposInformation.length > 0 && (
         <>
           <h4 className="section-subtitle">
             <TerminalIcon className="icon" />
@@ -173,12 +174,12 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               </div>
             ))}
           </div>
-          {contractsCovered.length && <div className="separator" />}
+          {contractsCovered.length > 0 && <div className="separator" />}
         </>
       )}
 
       {/* Contracts covered */}
-      {contractsCovered.length && (
+      {contractsCovered.length > 0 && (
         <>
           <h4 className="section-subtitle">
             <ContractsIcon className="icon" />

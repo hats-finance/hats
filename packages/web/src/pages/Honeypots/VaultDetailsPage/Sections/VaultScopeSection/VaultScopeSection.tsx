@@ -9,9 +9,10 @@ import { StyledVaultScopeSection } from "./styles";
 
 type VaultScopeSectionProps = {
   vault: IVault;
+  noDeployed?: boolean;
 };
 
-export const VaultScopeSection = ({ vault }: VaultScopeSectionProps) => {
+export const VaultScopeSection = ({ vault, noDeployed = false }: VaultScopeSectionProps) => {
   const { t } = useTranslation();
 
   return (
@@ -45,7 +46,7 @@ export const VaultScopeSection = ({ vault }: VaultScopeSectionProps) => {
       {vault.description?.committee?.members?.length && (
         <div>
           <h2>{t("committeeInfo")}</h2>
-          <CommitteeInfoSection vault={vault} />
+          <CommitteeInfoSection vault={vault} noDeployed={noDeployed} />
         </div>
       )}
     </StyledVaultScopeSection>

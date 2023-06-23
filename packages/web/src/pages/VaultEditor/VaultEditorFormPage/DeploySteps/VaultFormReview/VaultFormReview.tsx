@@ -142,7 +142,7 @@ export function VaultFormReview() {
         </Button>
         <Modal isShowing={isShowingPreview} onHide={hidePreview}>
           <StyledPreviewModal>
-            <VaultDetailsPage vaultToUse={getVault()} noActions />
+            <VaultDetailsPage vaultToUse={getVault()} noActions noDeployed />
           </StyledPreviewModal>
         </Modal>
       </>

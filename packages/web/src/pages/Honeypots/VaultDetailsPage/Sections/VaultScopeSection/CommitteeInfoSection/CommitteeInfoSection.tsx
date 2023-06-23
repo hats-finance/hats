@@ -8,9 +8,10 @@ import { StyledCommitteeInfoSection } from "./styles";
 
 type CommitteeInfoSectionProps = {
   vault: IVault;
+  noDeployed?: boolean;
 };
 
-export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
+export const CommitteeInfoSection = ({ vault, noDeployed = false }: CommitteeInfoSectionProps) => {
   const { t } = useTranslation();
 
   if (!vault.description) return null;
@@ -29,7 +30,11 @@ export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
         {committee.members.map((member, idx) => (
           <div className="member" key={idx}>
             <img
-              src={member["image-ipfs-link"] ? ipfsTransformUri(member["image-ipfs-link"]) : profilePlaceholder}
+              src={
+                member["image-ipfs-link"]
+                  ? ipfsTransformUri(member["image-ipfs-link"], { isPinned: !noDeployed })
+                  : profilePlaceholder
+              }
               alt={member.name}
             />
             <p className="bold mt-2">{member.name}</p>

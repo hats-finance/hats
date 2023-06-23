@@ -27,9 +27,10 @@ const DETAILS_SECTIONS = [
 type VaultDetailsPageProps = {
   vaultToUse?: IVault;
   noActions?: boolean;
+  noDeployed?: boolean;
 };
 
-export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetailsPageProps) => {
+export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = false }: VaultDetailsPageProps) => {
   const { t } = useTranslation();
 
   const { allVaults } = useVaults();
@@ -90,7 +91,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetails
         )}
 
         <div className="mt-5">
-          <VaultCard noActions={noActions} reducedStyles vaultData={vault} />
+          <VaultCard noActions={noActions} reducedStyles vaultData={vault} noDeployed={noDeployed} />
         </div>
 
         <div className="sections-tabs">
@@ -105,7 +106,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false }: VaultDetails
           ))}
         </div>
 
-        <div className="section-container">{SectionToRender && <SectionToRender vault={vault} />}</div>
+        <div className="section-container">{SectionToRender && <SectionToRender vault={vault} noDeployed={noDeployed} />}</div>
       </StyledVaultDetailsPage>
     </>
   );
