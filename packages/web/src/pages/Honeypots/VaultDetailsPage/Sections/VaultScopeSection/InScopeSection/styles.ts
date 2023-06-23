@@ -42,8 +42,8 @@ export const StyledInScopeSection = styled.div`
   }
 `;
 
-export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
-  ({ isOldVersion }) => css`
+export const StyledContractsList = styled.div<{ extraColumns: number }>(
+  ({ extraColumns }) => css`
     display: flex;
     flex-direction: column;
 
@@ -52,18 +52,18 @@ export const StyledContractsList = styled.div<{ isOldVersion: boolean }>(
       display: grid;
       gap: ${getSpacing(1)};
       align-items: center;
-      grid-template-columns: ${isOldVersion ? "2fr 3fr" : "4fr 1fr 4fr 4fr"};
+      grid-template-columns: ${!extraColumns ? "1fr 1fr" : `4fr 1fr repeat(${extraColumns}, 4fr)`};
       padding: ${getSpacing(2)} ${getSpacing(3)};
     }
 
-    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+    @media (max-width: ${breakpointsDefinition.mobile}) {
       .header-titles {
         display: none;
       }
 
       .contract {
         gap: ${getSpacing(2)};
-        grid-template-columns: ${isOldVersion ? "2fr 3fr" : "1fr 1fr"};
+        grid-template-columns: ${!extraColumns ? "2fr 3fr" : "1fr 1fr"};
 
         .loc {
           display: none;

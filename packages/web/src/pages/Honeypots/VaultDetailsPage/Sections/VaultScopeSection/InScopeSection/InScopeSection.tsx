@@ -34,8 +34,15 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   };
 
   const getContractsCoveredList = () => {
+    const showDescription = !contractsCovered[0].name && contractsCovered.some((contract) => contract.description);
+    const showDeploymentInfo =
+      !contractsCovered[0].name &&
+      contractsCovered.some(
+        (contract) => contract.deploymentInfo && contract.deploymentInfo.some((info) => info.contractAddress)
+      );
+
     return (
-      <>
+      <StyledContractsList className="section-content" extraColumns={Number(showDescription) + Number(showDeploymentInfo)}>
         <div className="header-titles">
           {contractsCovered[0].name ? (
             <>
@@ -46,8 +53,8 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             <>
               <p>{t("nameOrLink")}</p>
               <p>{t("loc")}</p>
-              <p>{t("description")}</p>
-              <p>{t("deployment")}</p>
+              {showDescription && <p>{t("description")}</p>}
+              {showDeploymentInfo && <p>{t("deployment")}</p>}
             </>
           )}
         </div>
@@ -73,42 +80,46 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               ) : (
                 <>
                   {checkUrl(contract.address) ? (
-                    <a title={contract.address} href={contractHref} {...defaultAnchorProps}>
+                    <a className="text-ellipsis" title={contract.address} href={contractHref} {...defaultAnchorProps}>
                       .../{contract.address.split("/").slice(-1)}
                     </a>
                   ) : (
                     <div>{contract.address}</div>
                   )}
                   <div className="loc">200</div>
-                  <div>{contract.description}</div>
-                  <div className="deployments">
-                    {contract.deploymentInfo ? (
-                      contract.deploymentInfo.map((deployment, idx) => {
-                        const deploymentChain = ALL_CHAINS[+deployment.chainId];
-                        const blockExplorer = deploymentChain.blockExplorers?.default;
-                        const deploymentUrl = blockExplorer?.url + `/address/${deployment.contractAddress}`;
-                        const anchorTitle = t("goToText", { text: blockExplorer?.name });
+                  {showDescription && <div>{contract.description}</div>}
+                  {showDeploymentInfo && (
+                    <div className="deployments">
+                      {contract.deploymentInfo ? (
+                        contract.deploymentInfo.map((deployment, idx) => {
+                          if (!deployment.contractAddress || !deployment.chainId) return null;
 
-                        return (
-                          <WithTooltip text={anchorTitle} key={idx}>
-                            <a title={anchorTitle} href={deploymentUrl} {...defaultAnchorProps} className="deployment">
-                              <span className="chain">[{deploymentChain.name}]</span>
-                              <span>{shortenIfAddress(deployment.contractAddress)}</span>
-                              <OpenIcon className="icon" />
-                            </a>
-                          </WithTooltip>
-                        );
-                      })
-                    ) : (
-                      <>{t("noDeploymentsInfo")}</>
-                    )}
-                  </div>
+                          const deploymentChain = ALL_CHAINS[+deployment.chainId];
+                          const blockExplorer = deploymentChain.blockExplorers?.default;
+                          const deploymentUrl = blockExplorer?.url + `/address/${deployment.contractAddress}`;
+                          const anchorTitle = t("goToText", { text: blockExplorer?.name });
+
+                          return (
+                            <WithTooltip text={anchorTitle} key={idx}>
+                              <a title={anchorTitle} href={deploymentUrl} {...defaultAnchorProps} className="deployment">
+                                <span className="chain">[{deploymentChain.name}]</span>
+                                <span>{shortenIfAddress(deployment.contractAddress)}</span>
+                                <OpenIcon className="icon" />
+                              </a>
+                            </WithTooltip>
+                          );
+                        })
+                      ) : (
+                        <>{t("noDeploymentsInfo")}</>
+                      )}
+                    </div>
+                  )}
                 </>
               )}
             </div>
           );
         })}
-      </>
+      </StyledContractsList>
     );
   };
 
@@ -174,9 +185,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             <span>{t("contractsAssetsCovered")}</span>
           </h4>
 
-          <StyledContractsList className="section-content" isOldVersion={!!contractsCovered[0].name}>
-            {getContractsCoveredList()}
-          </StyledContractsList>
+          {getContractsCoveredList()}
           {docsLink && <div className="separator" />}
         </>
       )}

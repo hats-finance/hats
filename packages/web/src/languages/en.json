@@ -467,7 +467,7 @@
     "loc": "LOC",
     "deployment": "Deployment",
     "noDeploymentsInfo": "No deployments info",
-    "name": "name",
+    "name": "Name",
     "goToText": "Go to {{text}}",
     "toolUsed": "Tool used",
     "committeeMultisigAddress": "Committee multisig address",
