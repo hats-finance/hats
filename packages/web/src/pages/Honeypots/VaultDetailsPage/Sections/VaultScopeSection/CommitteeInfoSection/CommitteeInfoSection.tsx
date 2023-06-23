@@ -19,11 +19,11 @@ export const CommitteeInfoSection = ({ vault }: CommitteeInfoSectionProps) => {
 
   return (
     <StyledCommitteeInfoSection className="subsection-container">
-      <p className="committee-address">
+      <div className="committee-address">
         <span className="bold">{t("committeeMultisigAddress")}:</span>
         <span>{shortenIfAddress(committee["multisig-address"], { startLength: 6, endLength: 6 })}</span>
         <CopyToClipboard valueToCopy={committee["multisig-address"]} />
-      </p>
+      </div>
 
       <div className="members">
         {committee.members.map((member, idx) => (

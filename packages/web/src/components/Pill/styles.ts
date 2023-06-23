@@ -44,9 +44,9 @@ export const StyledPill = styled.div<{
 
     ${isSeverity &&
     css`
-      font-size: var(--xsmall);
+      font-size: var(--xxsmall);
       font-weight: 700;
-      padding: ${getSpacing(0.8)} ${getSpacing(4)};
+      padding: ${getSpacing(0.8)} ${getSpacing(2)};
       border: 1px solid var(--primary-light);
     `}
 
