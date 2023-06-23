@@ -30,11 +30,11 @@ export const StyledHoldingsSection = styled.div`
           grid-column-start: 1;
           grid-column-end: 4;
           display: flex;
-          justify-content: center;
+          justify-content: flex-start;
         }
 
         .action-button {
-          justify-content: center;
+          justify-content: flex-start;
           grid-column-start: 1;
           grid-column-end: 4;
         }

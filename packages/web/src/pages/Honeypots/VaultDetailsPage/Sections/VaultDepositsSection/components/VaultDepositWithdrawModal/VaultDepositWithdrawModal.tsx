@@ -45,7 +45,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
 
   const amountBigNumber = parseUnits(watch("amount") || "0", vault.stakingTokenDecimals);
   const hasAllowance = tokenAllowance && watch("amount") ? tokenAllowance.gte(amountBigNumber) : false;
-  const withdrawalsDisabled = action === "WITHDRAW" && withdrawSafetyPeriod?.isSafetyPeriod;
+  const withdrawalsDisabled = action === "WITHDRAW" && (withdrawSafetyPeriod?.isSafetyPeriod || !!vault.activeClaim);
   const depositsDisabled = action === "DEPOSIT" && (!vault.committeeCheckedIn || vault.depositPause);
 
   useEffect(() => {
@@ -77,10 +77,11 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
     onSuccess: () => closeModal(),
   });
   const handleDeposit = useCallback(() => {
+    if (depositsDisabled) return;
     if (!getValues().amount) return;
     const amountToDeposit = parseUnits(getValues().amount || "0", vault.stakingTokenDecimals);
     depositCall.send(amountToDeposit);
-  }, [depositCall, vault, getValues]);
+  }, [depositCall, vault, getValues, depositsDisabled]);
 
   // -------> WITHDRAW
   const withdrawCall = WithdrawAndClaimContract.hook(vault);
@@ -89,10 +90,11 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
     onSuccess: () => closeModal(),
   });
   const handleWithdraw = useCallback(() => {
+    if (withdrawalsDisabled) return;
     if (!getValues().amount) return;
     const amountToWithdraw = parseUnits(getValues().amount || "0", vault.stakingTokenDecimals);
     withdrawCall.send(amountToWithdraw);
-  }, [withdrawCall, vault, getValues]);
+  }, [withdrawCall, vault, getValues, withdrawalsDisabled]);
 
   const handleActionExecution = () => {
     if (action === "DEPOSIT") {
@@ -140,6 +142,12 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
         {action === "WITHDRAW" && withdrawSafetyPeriod?.isSafetyPeriod && (
           <Alert className="mt-4" type="warning">
             {t("safePeriodOnCantWithdraw")}
+          </Alert>
+        )}
+
+        {action === "WITHDRAW" && !!vault.activeClaim && (
+          <Alert className="mt-4" type="warning">
+            {t("activeClaimCantWithdraw")}
           </Alert>
         )}
 

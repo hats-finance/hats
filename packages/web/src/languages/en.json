@@ -499,6 +499,7 @@
     "cantDepositBecausePause": "This vault is not open for deposits. You can't deposit tokens.",
     "depositWillCancelWithdraw": "Depositing tokens will cancel your withdraw request.",
     "safePeriodOnCantWithdraw": "You can't withdraw tokens during the safe period.",
+    "activeClaimCantWithdraw": "You can't withdraw tokens while there is an active payout.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
