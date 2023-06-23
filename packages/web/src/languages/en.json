@@ -559,7 +559,7 @@
       "selectOne": "Select one",
       "selectPgpKey": "Select a PGP key",
       "whyDoINeedKeys": "Why do I need PGP keys?",
-      "whyDoINeedKeysExplanation": "We use PGP keys to encrypt and decrypt vulnerability submissions.",
+      "whyDoINeedKeysExplanation": "All submissions are fully encrypted so only the holders of the private PGP keys will be able to decrypt them.",
       "whereAreTheKeysStored": "Where are the keys stored?",
       "whereAreTheKeysStoredExplanation": "• The Keys are stored on your browser local storage. \n\n • Once created, a backup of the keys will available to download.",
       "useKeystoreForSelectCreate": "Use the keystore to select/create/import/upload keys and backup.",

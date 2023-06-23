@@ -605,6 +605,7 @@ const VaultEditorFormPage = () => {
     isEditingExistingVault,
     existingVault,
     allFormDisabled: allFormDisabled || isSomeoneCreatingTheVault,
+    isAdvancedMode,
   };
 
   return (

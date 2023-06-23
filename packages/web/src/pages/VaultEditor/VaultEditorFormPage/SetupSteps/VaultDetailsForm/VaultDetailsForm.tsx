@@ -17,7 +17,7 @@ import { StyledVaultDetails } from "./styles";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { allFormDisabled } = useContext(VaultEditorFormContext);
+  const { allFormDisabled, isAdvancedMode } = useContext(VaultEditorFormContext);
 
   const { register, control, resetField, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
@@ -149,12 +149,14 @@ export function VaultDetailsForm() {
 
       <br />
 
-      <FormInput
-        {...register("includesStartAndEndTime")}
-        disabled={allFormDisabled}
-        type="toggle"
-        label={t("VaultEditor.addStartAndEndDate")}
-      />
+      {(vaultType !== "audit" && isAdvancedMode) || vaultType === "audit" ? (
+        <FormInput
+          {...register("includesStartAndEndTime")}
+          disabled={allFormDisabled}
+          type="toggle"
+          label={t("VaultEditor.addStartAndEndDate")}
+        />
+      ) : null}
 
       {showDateInputs && (
         <div className="inputs">

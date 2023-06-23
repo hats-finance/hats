@@ -10,6 +10,7 @@ export interface IVaultEditorFormContext {
   isEditingExistingVault: boolean;
   existingVault: IVault | undefined;
   allFormDisabled: boolean;
+  isAdvancedMode: boolean;
 }
 
 export const VaultEditorFormContext = createContext<IVaultEditorFormContext>(undefined as any);
