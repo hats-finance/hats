@@ -14,6 +14,9 @@ const getSize = (type: VaultNftRewardCardProps["type"]) => {
 
 export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardProps["type"] }>(
   ({ type }) => css`
+    display: flex;
+    flex-direction: column;
+
     .nft-asset {
       border: 1px solid var(--grey-600);
       padding: ${type === "tiny" ? "1px" : getSpacing(1)};
@@ -35,7 +38,7 @@ export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardPro
         padding: 0;
         border-color: var(--primary-light);
         width: 100%;
-        height: unset;
+        height: 290px;
       `}
 
       .preview {
@@ -52,11 +55,20 @@ export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardPro
     }
 
     .nft-description {
+      flex: 1;
       border: 1px solid var(--primary-light);
       padding: ${getSpacing(3)} ${getSpacing(2)};
       display: flex;
       flex-direction: column;
       gap: ${getSpacing(2)};
+
+      p.details {
+        overflow: hidden;
+        display: -webkit-box;
+        line-clamp: 5;
+        -webkit-line-clamp: 5;
+        -webkit-box-orient: vertical;
+      }
 
       .name {
         font-weight: 700;
