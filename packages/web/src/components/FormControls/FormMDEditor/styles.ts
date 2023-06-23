@@ -11,6 +11,10 @@ export const StyledFormMDEditor = styled.div<{
   ({ hasError, isDirty, noMargin, disabled }) => css`
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
+    * {
+      color: var(--white);
+    }
+
     .w-md-editor {
       background-color: transparent;
       border-radius: 0;
