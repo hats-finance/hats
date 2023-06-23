@@ -147,7 +147,7 @@ export const VaultCard = ({ vaultData, auditPayout, reducedStyles = false, noAct
     const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
     const vaultSlug = slugify(name);
 
-    navigate(`${mainRoute}/${vaultSlug}-${vault.id}?section=deposits`);
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}/deposits`);
   };
 
   const goToSubmitVulnerability = () => {
