@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
 import { slugify } from "utils/slug.utils";
+import { ONE_LINER_FALLBACK } from "./oneLinerFallback";
 import { StyledVaultCard } from "./styles";
 
 type VaultCardProps = {
@@ -99,7 +100,8 @@ export const VaultCard = ({
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
   const description =
-    "Hats is a security protocol that aligns incentives, creating a scalable primitive for a safer Web3 ecosystem.";
+    ONE_LINER_FALLBACK[vault.id] ??
+    "Nulla facilisi. Donec nec dictum eros. Cras et velit viverra, dapibus velit fringilla, bibendum mi aptent. Class aptent taciti sociosqu ad litora.";
 
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
