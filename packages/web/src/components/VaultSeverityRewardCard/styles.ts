@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: boolean }>(
@@ -7,6 +8,7 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: 
     grid-template-columns: ${noNft ? "3fr 4fr" : "1fr 1fr 1fr"};
     align-items: center;
     justify-content: space-between;
+    gap: ${getSpacing(1)};
 
     .severity-name,
     .severity-prize,
