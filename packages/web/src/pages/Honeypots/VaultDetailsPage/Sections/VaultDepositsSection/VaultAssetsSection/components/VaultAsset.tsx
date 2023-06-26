@@ -42,11 +42,7 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
           isShowing={isShowingDepositModal}
           onHide={hideDepositModal}
         >
-          {isShowingDepositModal ? (
-            <VaultDepositWithdrawModal action="DEPOSIT" vault={vault} closeModal={hideDepositModal} />
-          ) : (
-            <></>
-          )}
+          <VaultDepositWithdrawModal action="DEPOSIT" vault={vault} closeModal={hideDepositModal} />
         </Modal>
       )}
     </>

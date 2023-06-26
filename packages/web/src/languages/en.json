@@ -503,6 +503,12 @@
     "intendedDeposits": "Intended deposits",
     "intendedRewards": "Intended rewards",
     "intendedValueExplanation": "This is the value the committee intends to deposit and reward.",
+    "successDepositModalTitle": "Deposit successful",
+    "successWithdrawModalTitle": "Withdraw successful",
+    "successWithdrawRequestModalTitle": "Withdraw was requested successfuly",
+    "successDepositModalContent": "Your just deposited {{amount}} to the vault. \n\n Thank you for supporting this project.",
+    "successWithdrawModalContent": "Your just withdraw {{amount}} from the vault.",
+    "successWithdrawRequestModalContent": "Your withdraw request was submitted successfuly. \n\n You will be able to withdraw your tokens in 7 days, during safety period.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

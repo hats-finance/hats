@@ -7,7 +7,7 @@ import moment from "moment";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useWaitForTransaction } from "wagmi";
-import { VaultDepositWithdrawModal, VaultTokenIcon } from "../../components";
+import { SuccessActionModal, VaultDepositWithdrawModal, VaultTokenIcon } from "../../components";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
 
 type VaultHoldingsProps = {
@@ -17,6 +17,7 @@ type VaultHoldingsProps = {
 export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
   const { t } = useTranslation();
   const { isShowing: isShowingWithdrawModal, show: showWithdrawModal, hide: hideWithdrawModal } = useModal();
+  const { isShowing: isShowingSuccessModal, show: showSuccessModal, hide: hideSuccessModal } = useModal();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
 
@@ -71,9 +72,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
   const withdrawRequestCall = WithdrawRequestContract.hook(vault);
   const waitingWithdrawRequestCall = useWaitForTransaction({
     hash: withdrawRequestCall.data?.hash as `0x${string}`,
-    onSuccess: (data) => {
-      console.log(data);
-    },
+    onSuccess: () => showSuccessModal(),
   });
   const handleWithdrawRequest = useCallback(() => {
     withdrawRequestCall.send();
@@ -94,15 +93,25 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
         isShowing={isShowingWithdrawModal}
         onHide={hideWithdrawModal}
       >
-        {isShowingWithdrawModal ? (
-          <VaultDepositWithdrawModal action="WITHDRAW" vault={vault} closeModal={hideWithdrawModal} />
-        ) : (
-          <></>
-        )}
+        <VaultDepositWithdrawModal action="WITHDRAW" vault={vault} closeModal={hideWithdrawModal} />
       </Modal>
 
       {withdrawRequestCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingWithdrawRequestCall.isLoading && <Loading fixed extraText={`${t("requestingWithdraw")}...`} />}
+
+      <Modal
+        isShowing={isShowingSuccessModal}
+        onHide={() => {
+          hideWithdrawModal();
+          hideSuccessModal();
+        }}
+      >
+        <SuccessActionModal
+          title={t("successWithdrawRequestModalTitle")}
+          content={t("successWithdrawRequestModalContent")}
+          closeModal={hideSuccessModal}
+        />
+      </Modal>
     </>
   );
 };

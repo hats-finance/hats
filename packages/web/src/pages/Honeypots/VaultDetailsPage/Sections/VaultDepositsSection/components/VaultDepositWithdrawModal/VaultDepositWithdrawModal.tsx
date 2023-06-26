@@ -1,14 +1,16 @@
 import { parseUnits } from "@ethersproject/units";
 import { IVault } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Alert, Button, Loading } from "components";
+import { Alert, Button, Loading, Modal } from "components";
 import { DepositContract, TokenApproveAllowanceContract, WithdrawAndClaimContract } from "contracts";
+import useModal from "hooks/useModal";
 import { useVaults } from "hooks/vaults/useVaults";
 import millify from "millify";
 import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useWaitForTransaction } from "wagmi";
+import { SuccessActionModal } from "..";
 import { useVaultDepositWithdrawInfo } from "../../useVaultDepositWithdrawInfo";
 import { VaultTokenIcon } from "../VaultTokenIcon/VaultTokenIcon";
 import { getDepositWithdrawYupSchema } from "./formSchema";
@@ -22,6 +24,8 @@ type VaultDepositWithdrawModalProps = {
 
 export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDepositWithdrawModalProps) => {
   const { t } = useTranslation();
+
+  const { isShowing: isShowingSuccessModal, show: showSuccessModal } = useModal();
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
   const { withdrawSafetyPeriod } = useVaults();
@@ -74,7 +78,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
   const depositCall = DepositContract.hook(vault);
   const waitingDepositCall = useWaitForTransaction({
     hash: depositCall.data?.hash as `0x${string}`,
-    onSuccess: () => closeModal(),
+    onSuccess: () => showSuccessModal(),
   });
   const handleDeposit = useCallback(() => {
     if (depositsDisabled) return;
@@ -87,7 +91,7 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
   const withdrawCall = WithdrawAndClaimContract.hook(vault);
   const waitingWithdrawCall = useWaitForTransaction({
     hash: withdrawCall.data?.hash as `0x${string}`,
-    onSuccess: () => closeModal(),
+    onSuccess: () => showSuccessModal(),
   });
   const handleWithdraw = useCallback(() => {
     if (withdrawalsDisabled) return;
@@ -174,6 +178,18 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
       {waitingWithdrawCall.isLoading && (
         <Loading fixed extraText={`${t("withdrawingTokens", { token: vault.stakingTokenSymbol })}...`} />
       )}
+
+      <Modal isShowing={isShowingSuccessModal} onHide={closeModal}>
+        <SuccessActionModal
+          title={action === "DEPOSIT" ? t("successDepositModalTitle") : t("successWithdrawModalTitle")}
+          content={
+            action === "DEPOSIT"
+              ? t("successDepositModalContent", { amount: `${millify(+(watch("amount") ?? "0"))} ${vault.stakingTokenSymbol}` })
+              : t("successWithdrawModalContent", { amount: `${millify(+(watch("amount") ?? "0"))} ${vault.stakingTokenSymbol}` })
+          }
+          closeModal={closeModal}
+        />
+      </Modal>
     </>
   );
 };
