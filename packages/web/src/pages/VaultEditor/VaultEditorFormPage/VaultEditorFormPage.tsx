@@ -69,6 +69,7 @@ const VaultEditorFormPage = () => {
 
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
+  const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
   const [creatingVault, setCreatingVault] = useState(false); // Is the vault being created on-chain?
   const [loading, setLoading] = useState(false); // Is any action loading?
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
@@ -120,12 +121,15 @@ const VaultEditorFormPage = () => {
   });
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
+    console.log(formState.isDirty);
     try {
       // If vault is already created or is isNonEditableStatus, edition is blocked
       if (isNonEditableStatus) return;
       if (allFormDisabled) return;
       if (isSomeoneCreatingTheVault) return;
+      if (!isCreation && !formState.isDirty) return;
       if (isCreation) setLoadingEditSession(true);
+      if (!isCreation) setSavingEditSession(true);
 
       let sessionIdOrSessionResponse: string | IEditedSessionResponse;
 
@@ -146,8 +150,10 @@ const VaultEditorFormPage = () => {
         refreshEditSessionData(sessionIdOrSessionResponse);
       }
 
+      setSavingEditSession(false);
       setLoadingEditSession(false);
     } catch (error) {
+      setSavingEditSession(false);
       setLoadingEditSession(false);
 
       if (!editSessionId) return;
@@ -201,7 +207,7 @@ const VaultEditorFormPage = () => {
         false
     );
 
-    if (withReset) handleReset(newEditSession.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+    if (withReset) handleReset(newEditSession.editedDescription, { keepErrors: true });
   };
 
   const createVaultOnChain = async () => {
@@ -727,6 +733,7 @@ const VaultEditorFormPage = () => {
 
         {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
         {loading && <Loading fixed extraText={`${t("loading")}...`} />}
+        {savingEditSession && <Loading fixed extraText={`${t("savingEditSession")}...`} />}
 
         <Modal isShowing={showVerifiedEmailModal} onHide={goBackToVaultEditor} disableOnOverlayClose>
           <VerifiedEmailModal closeModal={goBackToVaultEditor} />

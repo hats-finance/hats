@@ -18,7 +18,7 @@ type ContractCoveredFormProps = {
 export default function ContractCoveredForm({ index, remove, contractsCount }: ContractCoveredFormProps) {
   const { t } = useTranslation();
 
-  const { register, control, setValue, getValues } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
   const {
     fields: deployments,
     append: appendDeployment,
@@ -61,7 +61,11 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
             disabled={allFormDisabled}
             label={t("VaultEditor.contractUrl")}
             colorable
-            helper="https://github.com/hats-finance/hats-contracts/blob/develop/contracts/HATVault.sol"
+            helper={
+              !watch(`contracts-covered.${index}.address`)
+                ? "https://github.com/hats-finance/hats-contracts/blob/develop/contracts/HATVault.sol"
+                : `../${watch(`contracts-covered.${index}.address`).split("/").slice(-2).join("/")}`
+            }
             placeholder={t("VaultEditor.contractUrl-placeholder")}
           />
           {/* {severitiesOptions && (
@@ -85,13 +89,16 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
           )} */}
         </div>
 
-        <FormInput
-          {...register(`contracts-covered.${index}.description`)}
-          disabled={allFormDisabled}
-          label={t("VaultEditor.contractDescription")}
-          colorable
-          placeholder={t("VaultEditor.contractDescription-placeholder")}
-        />
+        <div className="w-40">
+          <FormInput
+            {...register(`contracts-covered.${index}.linesOfCode`)}
+            type="number"
+            disabled={allFormDisabled}
+            label={t("VaultEditor.contractLinesOfCode")}
+            colorable
+            placeholder={t("VaultEditor.contractLinesOfCode-placeholder")}
+          />
+        </div>
 
         <p className="bold mb-2">{t("VaultEditor.contractDeployment")}</p>
         <p className="mb-4">{t("VaultEditor.contractDeploymentsExplanation")}</p>
@@ -140,7 +147,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
         )}
       </div>
 
-      {!allFormDisabled && contractsCount > 1 && (
+      {!allFormDisabled && (
         <div className="controller-buttons no-line">
           <Button styleType="outlined" filledColor="secondary" onClick={() => remove(index)}>
             <DeleteIcon className="mr-1" />

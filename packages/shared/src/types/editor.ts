@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 import {
   ICommitteeMember,
+  IProtocolSetupInstructions,
   IVaultDescription,
   IVaultRepoInformation,
   IVaultType,
@@ -12,7 +13,7 @@ export interface IEditedContractCovered {
   name: string;
   address: string;
   severities: string[]; // IVulnerabilitySeverity.name
-  description?: string;
+  linesOfCode?: number;
   deploymentInfo?: {
     contractAddress: string;
     chainId: string;
@@ -92,10 +93,7 @@ export interface IBaseEditedVaultDescription {
     reposInformation: IVaultRepoInformation[];
     docsLink: string;
     outOfScope: string;
-    protocolSetupInstructions: {
-      tooling: "foundry" | "hardhat" | "other";
-      instructions: string;
-    };
+    protocolSetupInstructions?: IProtocolSetupInstructions;
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];

@@ -10,7 +10,7 @@ type EnvSetupSectionProps = {
 export const EnvSetupSection = ({ vault }: EnvSetupSectionProps) => {
   const { t } = useTranslation();
 
-  if (!vault.description?.scope?.protocolSetupInstructions.instructions) return null;
+  if (!vault.description?.scope?.protocolSetupInstructions?.instructions) return null;
 
   return (
     <div className="subsection-container">

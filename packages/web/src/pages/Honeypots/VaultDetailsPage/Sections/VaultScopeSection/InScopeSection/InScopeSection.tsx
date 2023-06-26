@@ -34,7 +34,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   };
 
   const getContractsCoveredList = () => {
-    const showDescription = !contractsCovered[0].name && contractsCovered.some((contract) => contract.description);
+    const showLinesOfCode = !contractsCovered[0].name && contractsCovered.some((contract) => contract.linesOfCode);
     const showDeploymentInfo =
       !contractsCovered[0].name &&
       contractsCovered.some(
@@ -42,7 +42,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       );
 
     return (
-      <StyledContractsList className="section-content" extraColumns={Number(showDescription) + Number(showDeploymentInfo)}>
+      <StyledContractsList className="section-content" extraColumns={Number(showLinesOfCode) + Number(showDeploymentInfo)}>
         <div className="header-titles">
           {contractsCovered[0].name ? (
             <>
@@ -52,8 +52,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           ) : (
             <>
               <p>{t("nameOrLink")}</p>
-              <p>{t("loc")}</p>
-              {showDescription && <p>{t("description")}</p>}
+              {showLinesOfCode && <p>{t("loc")}</p>}
               {showDeploymentInfo && <p>{t("deployment")}</p>}
             </>
           )}
@@ -86,8 +85,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                   ) : (
                     <div>{contract.address}</div>
                   )}
-                  <div className="loc">200</div>
-                  {showDescription && <div>{contract.description}</div>}
+                  {showLinesOfCode && <div className="loc">{contract.linesOfCode ?? "-"}</div>}
                   {showDeploymentInfo && (
                     <div className="deployments">
                       {contract.deploymentInfo ? (

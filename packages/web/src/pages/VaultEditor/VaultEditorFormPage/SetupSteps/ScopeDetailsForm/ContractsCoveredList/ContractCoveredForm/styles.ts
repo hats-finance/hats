@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledContractCoveredForm = styled.div`
   background: var(--background-3);
@@ -24,6 +25,14 @@ export const StyledContractCoveredForm = styled.div`
       display: flex;
       align-items: baseline;
       gap: ${getSpacing(2)};
+    }
+  }
+
+  .w-40 {
+    width: 40%;
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      width: 100%;
     }
   }
 `;

@@ -46,12 +46,12 @@ export const ScopeReposInformation = () => {
       if (!newMainRepo && isMainInNewRepos) return;
       if (!newMainRepo && !isMainInNewRepos) {
         const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
-        setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, true);
+        if (prevMainRepoIndex !== -1) setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, true);
         return;
       }
 
       const prevMainRepoIndex = newRepos.findIndex((repo) => repo.id === prevMainRepo.id);
-      setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, false);
+      if (prevMainRepoIndex !== -1) setValue(`scope.reposInformation.${prevMainRepoIndex}.isMain`, false);
     } else {
       // If the length of the repos is different, check if the main repo has been removed
       const isMainInNew = newRepos.some((repo) => repo.isMain);

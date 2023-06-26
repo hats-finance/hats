@@ -139,10 +139,7 @@ interface IBaseVaultDescription {
     reposInformation: IVaultRepoInformation[];
     docsLink: string;
     outOfScope: string;
-    protocolSetupInstructions: {
-      tooling: "foundry" | "hardhat" | "other";
-      instructions: string;
-    };
+    protocolSetupInstructions?: IProtocolSetupInstructions;
   };
   source: {
     name: string;
@@ -165,6 +162,11 @@ export interface IVaultDescriptionV2 extends IBaseVaultDescription {
 
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
 
+export interface IProtocolSetupInstructions {
+  tooling: "foundry" | "hardhat" | "other";
+  instructions: string;
+}
+
 export interface ICommitteeMember {
   name: string;
   address: string;
@@ -186,7 +188,7 @@ export interface IBaseVulnerabilitySeverity {
   "contracts-covered": { [key: string]: string }[];
   contractsCoveredNew?: {
     link: string;
-    description: string;
+    linesOfCode: number;
     deploymentInfo: {
       contractAddress: string;
       chainId: string;

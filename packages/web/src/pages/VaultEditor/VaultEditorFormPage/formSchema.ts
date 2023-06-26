@@ -66,8 +66,8 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           isMain: Yup.boolean(),
         })
       ),
-      description: Yup.string().required(intl("required")),
-      docsLink: Yup.string().test(getTestUrl(intl)).required(intl("required")),
+      description: Yup.string(),
+      docsLink: Yup.string().test(getTestUrl(intl)),
       outOfScope: Yup.string(),
       protocolSetupInstructions: Yup.object({
         tooling: Yup.string(),
@@ -96,9 +96,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       Yup.object({
         // name: Yup.string().required(intl("required")),
         address: Yup.string().test(getTestUrl(intl)).required(intl("required")),
-        description: Yup.string()
-          .required(intl("required"))
-          .max(100, intl("max-characters", { max: 100 })),
+        description: Yup.string().max(100, intl("max-characters", { max: 100 })),
         severities: Yup.array().min(1, intl("required")),
         deploymentInfo: Yup.array().of(
           Yup.object({

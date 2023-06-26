@@ -79,4 +79,8 @@ export const StyledNavLink = styled(NavLink)`
   &.hidden:not(.active) {
     display: none;
   }
+
+  &.active {
+    visibility: visible;
+  }
 `;

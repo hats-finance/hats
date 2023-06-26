@@ -59,9 +59,11 @@ export function VaultDetailsForm() {
   useOnChange(vaultType, (_, prevVal) => {
     if (prevVal === undefined) return;
 
+    const isAudit = vaultType === "audit";
+
     const data = getValues();
-    const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version, vaultType === "audit");
-    const defaultOnChainParams = getDefaultVaultParameters(vaultType === "audit");
+    const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version, isAudit);
+    const defaultOnChainParams = getDefaultVaultParameters(isAudit);
 
     const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
     const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
@@ -72,7 +74,8 @@ export function VaultDetailsForm() {
     );
 
     setValue("vulnerability-severities-spec", vulnerabilitySeveritiesTemplate);
-    setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
+    if (isAudit) setValue("contracts-covered", []);
+    else setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
     setValue("parameters", defaultOnChainParams);
   });

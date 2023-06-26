@@ -11,11 +11,18 @@ import {
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
-  IVulnerabilitySeveritiesTemplate,
-  IVulnerabilitySeverity,
+  IProtocolSetupInstructions,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "../types";
+
+export const DEFAULT_OUT_OF_SCOPE =
+  "Reporters will not receive a bounty for:\n\n* Any known issue, such as:\n  * Issues that are mentioned in any of the audit reports [LINK TO AUDIT REPORT].\n  * Vulnerabilities that were already made public (either by the project or by a third party)\n* Vulnerabilities that are exploited by the reporter themselves.\n* Attacks requiring access to leaked private keys or trusted addresses.\n* Issues that are not responsibly disclosed (issues should typically be reported through our platform).";
+export const DEFAULT_TOOLING_STEPS: IProtocolSetupInstructions = {
+  tooling: "hardhat",
+  instructions:
+    "### Usage\n\nInstallation:\n```\nnpm install\n```\n\nCreate `.env` files as needed. There is a file called `.env.example` that you can use as a template.\n\nRun the tests:\n```\nnpx hardhat test\n```",
+};
 
 export const CODE_LANGUAGES = {
   solidity: ["solidity", "cairo", "go", "rust", "vyper", "simplicity"],
@@ -43,7 +50,6 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
     name: "",
     address: "",
     severities: severitiesIds,
-    description: "",
     deploymentInfo: [{ contractAddress: "", chainId: "" }],
   };
 };
@@ -114,13 +120,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
       description: "",
       codeLangs: [] as string[],
       docsLink: "",
-      outOfScope:
-        "Reporters will not receive a bounty for:\n\n* Any known issue, such as:\n  * Issues that are mentioned in any of the audit reports [LINK TO AUDIT REPORT].\n  * Vulnerabilities that were already made public (either by the project or by a third party)\n* Vulnerabilities that are exploited by the reporter themselves.\n* Attacks requiring access to leaked private keys or trusted addresses.\n* Issues that are not responsibly disclosed (issues should typically be reported through our platform).",
-      protocolSetupInstructions: {
-        tooling: "hardhat",
-        instructions:
-          "### Usage\n\nInstallation:\n```\nnpm install\n```\n\nCreate `.env` files as needed. There is a file called `.env.example` that you can use as a template.\n\nRun the tests:\n```\nnpx hardhat test\n```",
-      },
+      outOfScope: "",
     },
     committee: {
       chainId: "",
@@ -155,7 +155,7 @@ export function severitiesToContractsCoveredForm(severities: IEditedVulnerabilit
           ? {
               name: "",
               address,
-              description: contractCovered.description,
+              linesOfCode: contractCovered.linesOfCode as number,
               deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
             }
           : { ...createNewCoveredContract(), name: Object.keys(contractCovered)[0], address };
@@ -273,7 +273,7 @@ function editedSeveritiesToSeverities(severities: IEditedVulnerabilitySeverityV1
         .filter((contract) => contract.severities?.includes(severityId))
         .map((contract) => ({
           link: contract.address,
-          description: contract.description,
+          linesOfCode: contract.linesOfCode,
           deploymentInfo: contract.deploymentInfo,
         })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
@@ -298,7 +298,7 @@ function editedSeveritiesToSeveritiesv2(
         .filter((contract) => contract.severities?.includes(severityId))
         .map((contract) => ({
           link: contract.address,
-          description: contract.description,
+          linesOfCode: contract.linesOfCode,
           deploymentInfo: contract.deploymentInfo,
         })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
