@@ -59,7 +59,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
           vault.description?.["project-metadata"].type === "audit" &&
           vault.description["project-metadata"].starttime &&
           vault.description["project-metadata"].starttime > new Date().getTime() / 1000 + 48 * 3600 && // 48 hours
-          !!vault.description?.["project-metadata"].intendedCompetitionAmount,
+          !!vault.description?.["project-metadata"].intendedCompetitionAmount &&
+          BigNumber.from(vault.honeyPotBalance).eq(0),
         tokenPriceUsd: tokenPrice,
         competitionIntendedAmount: vault.description?.["project-metadata"].intendedCompetitionAmount
           ? {
