@@ -524,6 +524,7 @@
     "contractsGeneratedExplanation": "Were generated {{generated}} contracts covered based on the repositories.",
     "noContractsGeneratedExplanation": "Your repository is not reachable (invalid/private repo) or there are no solidity files on the repository.",
     "savingEditSession": "Saving edit session",
+    "addYourProject": "Add your project",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

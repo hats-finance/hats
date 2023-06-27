@@ -41,8 +41,8 @@ export default function NavLinks() {
       </StyledNavLink>
       <StyledNavLink to={RoutePaths.vault_editor} onClick={handleClick}>
         <VaultEditorIcon />
-        <p className="normal">{t("vaultEditor")}</p>
-        <p className="collapsed">{t("vaultEditor")}</p>
+        <p className="normal">{t("addYourProject")}</p>
+        <p className="collapsed">{t("addYourProject")}</p>
       </StyledNavLink>
     </>
   );
