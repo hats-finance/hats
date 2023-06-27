@@ -39,7 +39,7 @@ export default function NavLinks() {
         <p className="normal">{t("committeeTools")}</p>
         <p className="collapsed">{t("committeeTools")}</p>
       </StyledNavLink>
-      <StyledNavLink to={RoutePaths.vault_editor} className="hidden" onClick={handleClick}>
+      <StyledNavLink to={RoutePaths.vault_editor} onClick={handleClick}>
         <VaultEditorIcon />
         <p className="normal">{t("vaultEditor")}</p>
         <p className="collapsed">{t("vaultEditor")}</p>
