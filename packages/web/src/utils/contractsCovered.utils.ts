@@ -20,13 +20,14 @@ export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]):
     sessionStorage.getItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`) ?? "null"
   );
 
+  console.log(dataInStorage);
+  if (dataInStorage) return dataInStorage;
+
   for (const repo of repos) {
     promises.push(
       axiosClient.get(`${BASE_SERVICE_URL}/utils/get-solidity-info-for-repo?repoUrl=${repo.url}/commit/${repo.commitHash}`)
     );
   }
-
-  if (dataInStorage) return dataInStorage;
 
   const data = await Promise.all(promises.map((p) => p.catch((e) => e)));
   const validData = data.filter((d) => !(d instanceof Error));
