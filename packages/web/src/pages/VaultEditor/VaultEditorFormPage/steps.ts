@@ -76,7 +76,7 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "scope",
         name: "scope",
-        title: { creation: "inScope", editing: "inScope " },
+        title: { creation: "inScope", editing: "inScope" },
         component: ScopeDetailsForm,
         formFields: ["scope", "contracts-covered"],
       },
