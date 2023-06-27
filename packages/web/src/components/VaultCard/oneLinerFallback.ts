@@ -63,4 +63,8 @@ export const ONE_LINER_FALLBACK = {
     "UMA is Web3's first optimistic oracle, connecting smart contracts to any data, anywhere.",
   "0x9f095a406e80e29a155dacad81bc9d0563b88f0a":
     "Leading a new standard of risk measurement in #DeFi and the first veTokenomics lending market with dynamic interest rates on #zkEVM",
+  "0xa9cb786e4d07117d11b4644f54c5a4f1567e3817":
+    "Gravita is an Open Source Protocol that allows borrowing assets interest-free using liquid staking tokens as collateral.",
+  "0x1e7e590f3a227ec5298995fdcd42b2d5361cfc06":
+    "Raft is a DeFi protocol that lets you generate R by depositing liquid staking tokens (LSDs) as collateral.",
 };
