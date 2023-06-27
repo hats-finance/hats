@@ -144,21 +144,23 @@ export function severitiesToContractsCoveredForm(severities: IEditedVulnerabilit
   let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
-    const contractsCovered = severity.contractsCoveredNew ?? severity["contracts-covered"];
+    const contractsCovered =
+      severity.contractsCoveredNew !== undefined ? severity.contractsCoveredNew : severity["contracts-covered"];
 
     if (contractsCovered && contractsCovered.length > 0) {
       contractsCovered.forEach((contractCovered) => {
         const address = contractCovered.link ?? (Object.values(contractCovered)[0] as string);
         const contract = contractsForm.find((c) => c.address === address);
 
-        const data = severity.contractsCoveredNew
-          ? {
-              name: "",
-              address,
-              linesOfCode: contractCovered.linesOfCode as number,
-              deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
-            }
-          : { ...createNewCoveredContract(), name: Object.keys(contractCovered)[0], address };
+        const data =
+          severity.contractsCoveredNew !== undefined
+            ? {
+                name: "",
+                address,
+                linesOfCode: contractCovered.linesOfCode as number,
+                deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
+              }
+            : { ...createNewCoveredContract(), name: Object.keys(contractCovered)[0], address };
 
         if (contract) {
           const contractIndex = contractsForm.indexOf(contract);
@@ -173,12 +175,13 @@ export function severitiesToContractsCoveredForm(severities: IEditedVulnerabilit
           });
         }
       });
-    } else {
-      contractsForm.push({
-        ...createNewCoveredContract(),
-        severities: [severity.id as string],
-      });
     }
+    // else {
+    //   contractsForm.push({
+    //     ...createNewCoveredContract(),
+    //     severities: [severity.id as string],
+    //   });
+    // }
   });
 
   return contractsForm;
@@ -288,7 +291,6 @@ function editedSeveritiesToSeveritiesv2(
     const newSeverity = { ...severity };
 
     const severityId = newSeverity.id as string;
-    if (newSeverity.id) delete newSeverity.id;
     return {
       ...newSeverity,
       // "contracts-covered": contractsCovered

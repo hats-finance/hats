@@ -121,7 +121,6 @@ const VaultEditorFormPage = () => {
   });
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
-    console.log(formState.isDirty);
     try {
       // If vault is already created or is isNonEditableStatus, edition is blocked
       if (isNonEditableStatus) return;

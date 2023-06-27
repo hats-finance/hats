@@ -35,8 +35,6 @@ export const getTestUrl = (intl) => {
       const isUrl = checkUrl(value ?? "");
       const isEmpty = value === "" || value === undefined;
 
-      console.log(value);
-
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
     },
   };
