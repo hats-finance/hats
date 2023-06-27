@@ -1,15 +1,24 @@
-import { ALL_CHAINS, IVault, IVaultRepoInformation, severitiesToContractsCoveredForm } from "@hats-finance/shared";
+import {
+  ALL_CHAINS,
+  IEditedContractCovered,
+  IVault,
+  IVaultRepoInformation,
+  severitiesToContractsCoveredForm,
+} from "@hats-finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DocumentIcon from "@mui/icons-material/DescriptionOutlined";
 import OpenIcon from "@mui/icons-material/LaunchOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
+import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
-import { Button, CopyToClipboard, Pill, WithTooltip } from "components";
+import { Alert, Button, CopyToClipboard, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { getContractsInfoFromRepos } from "utils/contractsCovered.utils";
 import { checkUrl } from "utils/yup.utils";
 import { StyledContractsList, StyledInScopeSection } from "./styles";
 
@@ -19,6 +28,26 @@ type InScopeSectionProps = {
 
 export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   const { t } = useTranslation();
+
+  const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">([]);
+
+  useEffect(() => {
+    const getRepoContractsList = async () => {
+      setRepoContractsList("loading");
+      const contractsList = await getContractsInfoFromRepos(vault.description?.scope?.reposInformation ?? []);
+      setRepoContractsList(
+        contractsList.map((contract) => ({
+          name: "",
+          link: "",
+          address: contract.path,
+          linesOfCode: contract.lines,
+          severities: [],
+          deploymentInfo: [],
+        }))
+      );
+    };
+    getRepoContractsList();
+  }, [vault.description?.scope?.reposInformation]);
 
   if (!vault.description) return null;
 
@@ -33,18 +62,16 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
     }
   };
 
-  const getContractsCoveredList = () => {
-    const showLinesOfCode = !contractsCovered[0].name && contractsCovered.some((contract) => contract.linesOfCode);
+  const getContractsCoveredList = (contractsToUse: IEditedContractCovered[]) => {
+    const showLinesOfCode = !contractsToUse[0].name && contractsToUse.some((contract) => contract.linesOfCode);
     const showDeploymentInfo =
-      !contractsCovered[0].name &&
-      contractsCovered.some(
-        (contract) => contract.deploymentInfo && contract.deploymentInfo.some((info) => info.contractAddress)
-      );
+      !contractsToUse[0].name &&
+      contractsToUse.some((contract) => contract.deploymentInfo && contract.deploymentInfo.some((info) => info.contractAddress));
 
     return (
       <StyledContractsList className="section-content" extraColumns={Number(showLinesOfCode) + Number(showDeploymentInfo)}>
         <div className="header-titles">
-          {contractsCovered[0].name ? (
+          {contractsToUse[0].name ? (
             <>
               <p>{t("name")}</p>
               <p>{t("addressOrLink")}</p>
@@ -57,7 +84,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             </>
           )}
         </div>
-        {contractsCovered.map((contract, idx) => {
+        {contractsToUse.map((contract, idx) => {
           const contractHref = contract.address.includes("http") ? contract.address : `//${contract.address}`;
 
           return (
@@ -172,8 +199,25 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               </div>
             ))}
           </div>
-          {contractsCovered.length > 0 && <div className="separator" />}
+          {(contractsCovered.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
         </>
+      )}
+
+      {/* Contracts on repo */}
+      {repoContractsList !== "loading" ? (
+        repoContractsList.length > 0 && (
+          <>
+            <h4 className="section-subtitle">
+              <ContractsTwoIcon className="icon" />
+              <span>{t("contractsOnRepo")}</span>
+            </h4>
+
+            {getContractsCoveredList(repoContractsList)}
+            {docsLink && <div className="separator" />}
+          </>
+        )
+      ) : (
+        <Alert type="info">{t("loadingContractsOnRepo")}</Alert>
       )}
 
       {/* Contracts covered */}
@@ -184,7 +228,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             <span>{t("contractsAssetsCovered")}</span>
           </h4>
 
-          {getContractsCoveredList()}
+          {getContractsCoveredList(contractsCovered)}
           {docsLink && <div className="separator" />}
         </>
       )}

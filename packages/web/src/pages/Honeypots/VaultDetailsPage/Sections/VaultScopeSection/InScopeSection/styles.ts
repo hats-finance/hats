@@ -52,7 +52,7 @@ export const StyledContractsList = styled.div<{ extraColumns: number }>(
       display: grid;
       gap: ${getSpacing(1)};
       align-items: center;
-      grid-template-columns: ${!extraColumns ? "1fr 1fr" : `4fr 1fr repeat(${extraColumns}, 4fr)`};
+      grid-template-columns: ${!extraColumns ? "1fr 1fr" : `4fr repeat(${extraColumns}, 4fr)`};
       padding: ${getSpacing(2)} ${getSpacing(3)};
     }
 

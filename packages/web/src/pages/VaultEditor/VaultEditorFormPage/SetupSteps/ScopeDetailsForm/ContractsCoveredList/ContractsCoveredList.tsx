@@ -10,9 +10,9 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { IEditedVaultDescription } from "types";
+import { getContractsInfoFromRepos } from "utils/contractsCovered.utils";
 import { VaultEditorFormContext } from "../../../store";
 import ContractCoveredForm from "./ContractCoveredForm/ContractCoveredForm";
-import * as ContractsCoveredSerice from "./contractsCoveredService.api";
 
 export function ContractsCoveredList() {
   const { t } = useTranslation();
@@ -49,7 +49,7 @@ export function ContractsCoveredList() {
     if (!wantsToGenerateContracts) return;
 
     setGeneratingContracts(true);
-    const contractsToCreate = await ContractsCoveredSerice.getContractsInfoFromRepos(reposInfo);
+    const contractsToCreate = await getContractsInfoFromRepos(reposInfo);
     append(
       contractsToCreate.map((contract) => ({
         link: "",

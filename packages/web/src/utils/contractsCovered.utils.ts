@@ -20,11 +20,6 @@ export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]):
     promises.push(
       axiosClient.get(`${BASE_SERVICE_URL}/utils/get-solidity-info-for-repo?repoUrl=${repo.url}/commit/${repo.commitHash}`)
     );
-    promises.push(
-      axiosClient.get(
-        `${BASE_SERVICE_URL}/utils/get-solidity-info-for-repo?repoUrl=${repo.url}/commit/b0501571cc53394a236c4f783g7fd5a27961c670`
-      )
-    );
   }
 
   const data = await Promise.all(promises.map((p) => p.catch((e) => e)));
