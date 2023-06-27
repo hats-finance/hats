@@ -16,15 +16,22 @@ export type IContractsCoveredData = {
 export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]): Promise<IContractsCoveredData[]> {
   const promises: Promise<AxiosResponse<any, any>>[] = [];
 
+  const dataInStorage = JSON.parse(
+    sessionStorage.getItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`) ?? "null"
+  );
+
   for (const repo of repos) {
     promises.push(
       axiosClient.get(`${BASE_SERVICE_URL}/utils/get-solidity-info-for-repo?repoUrl=${repo.url}/commit/${repo.commitHash}`)
     );
   }
 
+  if (dataInStorage) return dataInStorage;
+
   const data = await Promise.all(promises.map((p) => p.catch((e) => e)));
   const validData = data.filter((d) => !(d instanceof Error));
   const dataFlat = validData.flatMap((d) => d.data.files);
 
+  sessionStorage.setItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`, JSON.stringify(dataFlat));
   return dataFlat as IContractsCoveredData[];
 }
