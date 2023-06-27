@@ -58,7 +58,9 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
 
   const handleMaxButton = () => {
     const value = action === "DEPOSIT" ? tokenBalance.string : availableBalanceToWithdraw.string;
-    setValue("amount", value);
+    setValue("amount", value, {
+      shouldValidate: true,
+    });
   };
 
   // -------> TOKEN ALLOWANCE
