@@ -9,7 +9,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { Alert, Button, CopyToClipboard, FormSelectInputOption, Loading, VaultInfoCard, WithTooltip } from "components";
+import { Alert, Button, CopyToClipboard, FormSelectInputOption, Loading, Seo, VaultInfoCard, WithTooltip } from "components";
 import { queryClient } from "config/reactQuery";
 import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -187,86 +187,89 @@ export const PayoutFormPage = () => {
   };
 
   return (
-    <PayoutFormContext.Provider value={payoutFormContext}>
-      <StyledPayoutFormPage className="content-wrapper-md">
-        <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
+    <>
+      <Seo title={t("seo.createPayoutTitle")} />
+      <PayoutFormContext.Provider value={payoutFormContext}>
+        <StyledPayoutFormPage className="content-wrapper-md">
+          <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
 
-        <div className="title-container">
-          {payout?.updatedAt && (
-            <p className="lastModifiedOn">
-              <strong>{t("saved")}</strong> {moment(payout.updatedAt).fromNow()}
-            </p>
-          )}
+          <div className="title-container">
+            {payout?.updatedAt && (
+              <p className="lastModifiedOn">
+                <strong>{t("saved")}</strong> {moment(payout.updatedAt).fromNow()}
+              </p>
+            )}
 
-          <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
-            <BackIcon />
-            <p>{t("payouts")}</p>
+            <div className="title" onClick={() => navigate(`${RoutePaths.payouts}`)}>
+              <BackIcon />
+              <p>{t("payouts")}</p>
+            </div>
           </div>
-        </div>
 
-        <div className="section-title">
-          <p>
-            {t(payout?.payoutData.type === "single" ? "Payouts.creatingSinglePayout" : "Payouts.creatingSplitPayout")}{" "}
-            {!isPayoutCreated && `[${t("draft")}]`}
-          </p>
-          <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
-        </div>
-        {!isAuthenticated && (
-          <>
-            <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
-            <Button onClick={tryAuthentication} className="mt-4">
-              {t("signInWithEthereum")}
-            </Button>
-          </>
-        )}
-        {isAuthenticated && (
-          <>
-            <p className="mb-4">
-              {t(payout?.payoutData.type === "single" ? "Payouts.fillPayoutInfo" : "Payouts.fillSplitPayoutInfo")}
+          <div className="section-title">
+            <p>
+              {t(payout?.payoutData.type === "single" ? "Payouts.creatingSinglePayout" : "Payouts.creatingSplitPayout")}{" "}
+              {!isPayoutCreated && `[${t("draft")}]`}
             </p>
+            <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("Payouts.copyPayoutLink")} />
+          </div>
+          {!isAuthenticated && (
+            <>
+              <Alert type="warning">{t("Payouts.signInToSeePayout")}</Alert>
+              <Button onClick={tryAuthentication} className="mt-4">
+                {t("signInWithEthereum")}
+              </Button>
+            </>
+          )}
+          {isAuthenticated && (
+            <>
+              <p className="mb-4">
+                {t(payout?.payoutData.type === "single" ? "Payouts.fillPayoutInfo" : "Payouts.fillSplitPayoutInfo")}
+              </p>
 
-            <FormProvider {...methods}>
-              <StyledPayoutForm>
-                {payout?.payoutData.type === "split" ? <SplitPayoutForm /> : <SinglePayoutForm />}
+              <FormProvider {...methods}>
+                <StyledPayoutForm>
+                  {payout?.payoutData.type === "split" ? <SplitPayoutForm /> : <SinglePayoutForm />}
 
-                {isAnotherActivePayout && !isPayoutCreated && (
-                  <Alert type="warning" className="mt-5">
-                    {t("Payouts.anotherActivePayout")}
-                  </Alert>
-                )}
+                  {isAnotherActivePayout && !isPayoutCreated && (
+                    <Alert type="warning" className="mt-5">
+                      {t("Payouts.anotherActivePayout")}
+                    </Alert>
+                  )}
 
-                {!isPayoutCreated && (
-                  <div className="buttons">
-                    <Button className="mr-5" styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
-                      <RemoveIcon className="mr-3" />
-                      {t("Payouts.deletePayout")}
-                    </Button>
-                    <div className="sub-container">
-                      <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
-                        <Button
-                          disabled={!formState.isDirty || savePayout.isLoading}
-                          styleType="outlined"
-                          onClick={handleSavePayout}
-                        >
-                          {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
-                        </Button>
-                      </WithTooltip>
-                      <Button
-                        onClick={handleSubmit(handleLockPayout)}
-                        disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
-                      >
-                        {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
-                        <ArrowForwardIcon className="ml-3" />
+                  {!isPayoutCreated && (
+                    <div className="buttons">
+                      <Button className="mr-5" styleType="outlined" filledColor="secondary" onClick={handleDeletePayout}>
+                        <RemoveIcon className="mr-3" />
+                        {t("Payouts.deletePayout")}
                       </Button>
+                      <div className="sub-container">
+                        <WithTooltip visible={savePayout.isSuccess} text={t("progressSaved")} placement="left">
+                          <Button
+                            disabled={!formState.isDirty || savePayout.isLoading}
+                            styleType="outlined"
+                            onClick={handleSavePayout}
+                          >
+                            {savePayout.isLoading ? `${t("loading")}...` : t("Payouts.savePayout")}
+                          </Button>
+                        </WithTooltip>
+                        <Button
+                          onClick={handleSubmit(handleLockPayout)}
+                          disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
+                        >
+                          {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
+                          <ArrowForwardIcon className="ml-3" />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </StyledPayoutForm>
-            </FormProvider>
-          </>
-        )}
-        {lockPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
-      </StyledPayoutFormPage>
-    </PayoutFormContext.Provider>
+                  )}
+                </StyledPayoutForm>
+              </FormProvider>
+            </>
+          )}
+          {lockPayout.isLoading && <Loading fixed extraText={`${t("Payouts.creatingPayout")}...`} />}
+        </StyledPayoutFormPage>
+      </PayoutFormContext.Provider>
+    </>
   );
 };

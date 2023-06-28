@@ -49,6 +49,7 @@ export interface IBaseVault {
   activeClaim?: IVaultActiveClaim;
   // Computed values
   amountsInfo?: {
+    showCompetitionIntendedAmount: boolean;
     tokenPriceUsd: number;
     depositedAmount: {
       tokens: number;
@@ -57,6 +58,16 @@ export interface IBaseVault {
     maxRewardAmount: {
       tokens: number;
       usd: number;
+    };
+    competitionIntendedAmount?: {
+      deposited: {
+        tokens: number;
+        usd: number;
+      };
+      maxReward: {
+        tokens: number;
+        usd: number;
+      };
     };
   };
 }
@@ -111,6 +122,8 @@ interface IBaseVaultDescription {
     type?: IVaultType;
     endtime?: number;
     starttime?: number;
+    oneLiner?: string;
+    intendedCompetitionAmount?: number;
   };
   "communication-channel": {
     "pgp-pk": string | string[];
@@ -121,7 +134,12 @@ interface IBaseVaultDescription {
     chainId?: string;
   };
   scope?: {
+    description: string;
+    codeLangs: string[];
     reposInformation: IVaultRepoInformation[];
+    docsLink: string;
+    outOfScope: string;
+    protocolSetupInstructions?: IProtocolSetupInstructions;
   };
   source: {
     name: string;
@@ -144,6 +162,11 @@ export interface IVaultDescriptionV2 extends IBaseVaultDescription {
 
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
 
+export interface IProtocolSetupInstructions {
+  tooling: "foundry" | "hardhat" | "other";
+  instructions: string;
+}
+
 export interface ICommitteeMember {
   name: string;
   address: string;
@@ -155,13 +178,22 @@ export interface ICommitteeMember {
 
 export interface IVaultRepoInformation {
   url: string;
-  commitHash: string;
+  commitHash?: string;
   isMain: boolean;
 }
 
 export interface IBaseVulnerabilitySeverity {
   name: string;
+  decryptSubmissions?: boolean;
   "contracts-covered": { [key: string]: string }[];
+  contractsCoveredNew?: {
+    link: string;
+    linesOfCode: number;
+    deploymentInfo: {
+      contractAddress: string;
+      chainId: string;
+    }[];
+  }[];
   "nft-metadata": INFTMetaData;
   description: string;
 }

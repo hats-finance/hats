@@ -1,14 +1,14 @@
 import {
   CommitteeDetailsForm,
   CommitteeMembersList,
-  ContractsCoveredList,
+  ScopeDetailsForm,
+  SetupReview,
   VaultAssetsList,
   VaultDetailsForm,
   VaultFormReview,
   VaultParametersForm,
   VulnerabilitySeveritiesList,
 } from ".";
-import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
 type IEditorStepDisabledOption = "needsAccount" | "editingFormDirty" | "onlyIfVaultNotCreated" | "allEmailsVerified";
 
@@ -49,7 +49,7 @@ export const AllEditorSections: IEditorSections = {
         name: "details",
         title: { creation: "vaultDescription", editing: "vaultDescription" },
         component: VaultDetailsForm,
-        formFields: ["project-metadata", "scope"],
+        formFields: ["project-metadata"],
       },
       {
         id: "committee",
@@ -74,11 +74,11 @@ export const AllEditorSections: IEditorSections = {
         isAdvanced: true,
       },
       {
-        id: "contracts",
-        name: "contracts",
-        title: { creation: "contractsAssetsCovered", editing: "contractsAssetsCovered" },
-        component: ContractsCoveredList,
-        formFields: ["contracts-covered"],
+        id: "scope",
+        name: "scope",
+        title: { creation: "inScope", editing: "inScope" },
+        component: ScopeDetailsForm,
+        formFields: ["scope", "contracts-covered"],
       },
       {
         id: "setupReview",

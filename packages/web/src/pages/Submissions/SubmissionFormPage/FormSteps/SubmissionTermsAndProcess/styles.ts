@@ -94,7 +94,7 @@ export const StyledTermsSection = styled.div<{ type: ISectionTypes }>(
         margin-top: ${getSpacing(4)};
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: ${getSpacing(1)};
 
         .titles {
           display: flex;

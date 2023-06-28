@@ -1,6 +1,7 @@
 import { formatUnits } from "@ethersproject/units";
 import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
+import { appChains } from "settings";
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
   return masters.map((master) => ({
@@ -45,7 +46,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
   if (vaults.some((vault) => vault.amountsInfo)) return vaults;
 
   return vaults.map((vault) => {
-    const tokenPrice: number = (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
+    const isTestnet = appChains[vault.chainId].chain.testnet;
+    const tokenPrice: number = isTestnet ? 1387.65 : (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
 
     const maxRewardFactor = vault.version === "v1" ? +vault.rewardsLevels[vault.rewardsLevels.length - 1] : +vault.maxBounty;
@@ -53,7 +55,26 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     return {
       ...vault,
       amountsInfo: {
+        showCompetitionIntendedAmount:
+          vault.description?.["project-metadata"].type === "audit" &&
+          vault.description["project-metadata"].starttime &&
+          vault.description["project-metadata"].starttime > new Date().getTime() / 1000 + 48 * 3600 && // 48 hours
+          !!vault.description?.["project-metadata"].intendedCompetitionAmount &&
+          BigNumber.from(vault.honeyPotBalance).eq(0),
         tokenPriceUsd: tokenPrice,
+        competitionIntendedAmount: vault.description?.["project-metadata"].intendedCompetitionAmount
+          ? {
+              deposited: {
+                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount,
+                usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice,
+              },
+              maxReward: {
+                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount * (maxRewardFactor / 100 / 100),
+                usd:
+                  +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice * (maxRewardFactor / 100 / 100),
+              },
+            }
+          : undefined,
         depositedAmount: {
           tokens: depositedAmountTokens,
           usd: depositedAmountTokens * tokenPrice,

@@ -18,6 +18,7 @@ export const variables = css`
     --primary-lighter: #8674ff;
     --secondary: #24e8c5;
     --secondary-light: #74baae;
+    --secondary-lighter: #3f5d6a;
     --background: #0e0e18;
     --background-1: #0b0b23;
     --background-2: #151731;
@@ -26,7 +27,9 @@ export const variables = css`
 
     --white: #ffffff;
     --error-red: #ff6464;
+    --error-red-background: #4f1a1a;
     --warning-yellow: #f2c94c;
+    --warning-yellow-background: #746023;
     --success-green: #00ff0a;
 
     --grey-400: #d0d5dd;

@@ -1,5 +1,6 @@
 import { IVault } from "@hats-finance/shared";
 import { Dispatch, SetStateAction, createContext } from "react";
+import { SUBMISSION_DESCRIPTION_TEMPLATE } from "./FormSteps/SubmissionDescriptions/utils";
 import { ISubmissionData } from "./types";
 
 const packageJSON = require("../../../../package.json");
@@ -27,8 +28,9 @@ export const SUBMISSION_INIT_DATA = {
     submission: "",
     descriptions: [
       {
+        isEncrypted: true,
         title: "",
-        description: "",
+        description: SUBMISSION_DESCRIPTION_TEMPLATE,
         severity: "",
         files: [],
         sessionKey: "" as any,

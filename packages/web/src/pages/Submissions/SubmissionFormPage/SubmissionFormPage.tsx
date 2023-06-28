@@ -1,9 +1,11 @@
+import { Seo } from "components";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/vaults/useVaults";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import {
@@ -22,6 +24,7 @@ import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
 
+  const [searchParams] = useSearchParams();
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
@@ -89,6 +92,18 @@ export const SubmissionFormPage = () => {
         localStorage.getItem(LocalStorage.SubmitVulnerability) || JSON.stringify(SUBMISSION_INIT_DATA)
       );
 
+      const projectIdParams = searchParams.get("projectId");
+      if (projectIdParams) {
+        const projectFound = activeVaults.find((vault) => vault.id === projectIdParams);
+        if (projectFound && projectFound.description) {
+          cachedData.project = {
+            verified: true,
+            projectId: projectIdParams,
+            projectName: projectFound.description["project-metadata"].name,
+          };
+        }
+      }
+
       if (cachedData.submissionResult && cachedData.submissionResult?.chainId !== chain?.id) {
         setSubmissionData(SUBMISSION_INIT_DATA);
       } else if (cachedData.project?.projectId && !activeVaults?.find((vault) => vault.id === cachedData.project?.projectId)) {
@@ -101,7 +116,7 @@ export const SubmissionFormPage = () => {
     } catch (e) {
       setSubmissionData(SUBMISSION_INIT_DATA);
     }
-  }, [activeVaults, chain]);
+  }, [activeVaults, chain, searchParams]);
 
   // Save data to local storage
   useEffect(() => {
@@ -174,24 +189,27 @@ export const SubmissionFormPage = () => {
   };
 
   return (
-    <StyledSubmissionFormPage className="content-wrapper">
-      <div id="vulnerabilityFormWrapper" className="accordion-wrapper">
-        <SubmissionFormContext.Provider value={context}>
-          {steps.map((step, index) => (
-            <SubmissionFormCard
-              extraInfoTitle={index === 0 ? submissionData?.project?.projectName : ""}
-              id={index}
-              key={index}
-              title={step.title}
-              collapsed={currentStep !== index}
-              verified={submissionData?.[SubmissionStep[step.card]]?.verified}
-              disabled={isSubmitting}
-            >
-              {<step.component />}
-            </SubmissionFormCard>
-          ))}
-        </SubmissionFormContext.Provider>
-      </div>
-    </StyledSubmissionFormPage>
+    <>
+      <Seo title={t("seo.submitVulnerabilityTitle")} />
+      <StyledSubmissionFormPage className="content-wrapper">
+        <div id="vulnerabilityFormWrapper" className="accordion-wrapper">
+          <SubmissionFormContext.Provider value={context}>
+            {steps.map((step, index) => (
+              <SubmissionFormCard
+                extraInfoTitle={index === 0 ? submissionData?.project?.projectName : ""}
+                id={index}
+                key={index}
+                title={step.title}
+                collapsed={currentStep !== index}
+                verified={submissionData?.[SubmissionStep[step.card]]?.verified}
+                disabled={isSubmitting}
+              >
+                {<step.component />}
+              </SubmissionFormCard>
+            ))}
+          </SubmissionFormContext.Provider>
+        </div>
+      </StyledSubmissionFormPage>
+    </>
   );
 };

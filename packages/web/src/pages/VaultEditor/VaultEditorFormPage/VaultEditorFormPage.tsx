@@ -15,7 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
-import { Alert, Button, CopyToClipboard, Loading, Modal } from "components";
+import { Alert, Button, CopyToClipboard, Loading, Modal, Seo } from "components";
 import { CreateVaultContract } from "contracts";
 import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -35,7 +35,7 @@ import * as VaultEditorService from "../vaultEditorService";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
 import { getEditedDescriptionYupSchema } from "./formSchema";
 import { AllEditorSections, IEditorSectionsStep } from "./steps";
-import { VaultEditorFormContext } from "./store";
+import { IVaultEditorFormContext, VaultEditorFormContext } from "./store";
 import {
   Section,
   StyledVaultEditorContainer,
@@ -69,6 +69,7 @@ const VaultEditorFormPage = () => {
 
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
+  const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
   const [creatingVault, setCreatingVault] = useState(false); // Is the vault being created on-chain?
   const [loading, setLoading] = useState(false); // Is any action loading?
   const [lastModifedOn, setLastModifedOn] = useState<Date | undefined>();
@@ -106,6 +107,7 @@ const VaultEditorFormPage = () => {
     loadingSteps,
     presetIsEditingExistingVault,
   } = useVaultEditorSteps(methods, {
+    allFormDisabled,
     saveData: () => createOrSaveEditSession(),
     onFinalSubmit: () => createVaultOnChain(),
     onFinalEditSubmit: () => sendEditionToGovApproval(),
@@ -124,7 +126,9 @@ const VaultEditorFormPage = () => {
       if (isNonEditableStatus) return;
       if (allFormDisabled) return;
       if (isSomeoneCreatingTheVault) return;
+      if (!isCreation && !formState.isDirty) return;
       if (isCreation) setLoadingEditSession(true);
+      if (!isCreation) setSavingEditSession(true);
 
       let sessionIdOrSessionResponse: string | IEditedSessionResponse;
 
@@ -145,8 +149,10 @@ const VaultEditorFormPage = () => {
         refreshEditSessionData(sessionIdOrSessionResponse);
       }
 
+      setSavingEditSession(false);
       setLoadingEditSession(false);
     } catch (error) {
+      setSavingEditSession(false);
       setLoadingEditSession(false);
 
       if (!editSessionId) return;
@@ -200,7 +206,7 @@ const VaultEditorFormPage = () => {
         false
     );
 
-    if (withReset) handleReset(newEditSession.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+    if (withReset) handleReset(newEditSession.editedDescription, { keepErrors: true });
   };
 
   const createVaultOnChain = async () => {
@@ -596,137 +602,143 @@ const VaultEditorFormPage = () => {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;
   }
 
-  const vaultEditorFormContext = {
+  const vaultEditorFormContext: IVaultEditorFormContext = {
     editSessionId,
     committeeMembersFieldArray,
     saveEditSessionData: createOrSaveEditSession,
     isVaultCreated,
     isEditingExistingVault,
+    existingVault,
     allFormDisabled: allFormDisabled || isSomeoneCreatingTheVault,
+    isAdvancedMode,
   };
 
   return (
-    <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
-      <StyledVaultEditorContainer>
-        <FormProvider {...methods}>
-          <div className="sections-controller content-wrapper-md">
-            {sections.map((section, idx) => (
-              <VaultEditorSectionController
-                key={section.id}
-                onClick={() => onGoToSection(section.id)}
-                active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}
-              >
-                <p>{t(section.name)}</p>
-                {idx < sections.length - 1 && <span>&gt;</span>}
-              </VaultEditorSectionController>
-            ))}
-          </div>
+    <>
+      <Seo title={t("seo.createNewVaultTitle")} />
+      <VaultEditorFormContext.Provider value={vaultEditorFormContext}>
+        <StyledVaultEditorContainer>
+          <FormProvider {...methods}>
+            <div className="sections-controller content-wrapper-md">
+              {sections.map((section, idx) => (
+                <VaultEditorSectionController
+                  key={section.id}
+                  onClick={() => onGoToSection(section.id)}
+                  active={idx === sections.findIndex((sec) => sec.id === currentSectionInfo.id)}
+                >
+                  <p>{t(section.name)}</p>
+                  {idx < sections.length - 1 && <span>&gt;</span>}
+                </VaultEditorSectionController>
+              ))}
+            </div>
 
-          <StyledVaultEditorForm className="content-wrapper-md">
-            {/* Title */}
-            {descriptionHash && (isAdvancedMode || isEditingExistingVault) && (
-              <p className="descriptionHash" onClick={goToDescriptionHashContent}>
-                {descriptionHash}
-              </p>
-            )}
-            {lastModifedOn && (
-              <p className="lastModifiedOn">
-                <strong>{t("saved")}</strong> {moment(lastModifedOn).fromNow()}
-              </p>
-            )}
-            <div className="editor-title">
-              <div className="title">
-                <p>
-                  {t(currentSectionInfo.title)}
-                  <span>/{t(currentStepInfo.name)}</span>
+            <StyledVaultEditorForm className="content-wrapper-md">
+              {/* Title */}
+              {descriptionHash && (isAdvancedMode || isEditingExistingVault) && (
+                <p className="descriptionHash" onClick={goToDescriptionHashContent}>
+                  {descriptionHash}
                 </p>
-              </div>
-
-              <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyEditorLink")} />
-            </div>
-
-            {/* Alert (isSomeoneCreatingTheVault) */}
-            {isSomeoneCreatingTheVault && <Alert content={t("someoneIsCreatingTheVault")} type="warning" className="mb-5" />}
-
-            {/* Steps control */}
-            <VaultEditorStepper>
-              {steps
-                .filter((step) => {
-                  if (step.isInvisible === "all") return false;
-                  if (step.isInvisible === "editing") return !isEditingExistingVault;
-                  if (step.isInvisible === "creation") return isEditingExistingVault;
-                  return true;
-                })
-                .map((step, index) => (
-                  <VaultEditorStepController
-                    key={step.id}
-                    active={step.id === currentStepInfo.id}
-                    passed={!!step.isValid}
-                    onClick={() => onGoToStep(index)}
-                  >
-                    {step.isValid && <CheckIcon className="ml-2" />}
-                    {step.isValid ? "" : `${index + 1}.`}
-                    {t(step.name)}
-                  </VaultEditorStepController>
-                ))}
-            </VaultEditorStepper>
-
-            {/* Section */}
-            {steps.map((step) => (
-              <Section key={step.id} visible={step.id === currentStepInfo.id}>
-                {step.title && (
-                  <p className="section-title">{t(isEditingExistingVault ? step.title.editing : step.title.creation)}</p>
-                )}
-                <div className="section-content">
-                  <step.component />
+              )}
+              {lastModifedOn && (
+                <p className="lastModifiedOn">
+                  <strong>{t("saved")}</strong> {moment(lastModifedOn).fromNow()}
+                </p>
+              )}
+              <div className="editor-title">
+                <div className="title">
+                  <p>
+                    {t(currentSectionInfo.title)}
+                    <span>/{t(currentStepInfo.name)}</span>
+                  </p>
                 </div>
-              </Section>
-            ))}
 
-            {/* Alert section */}
-            {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
-            {editSessionSubmittedCreation && <Alert content={t("vaultBlockedBecauseIsPendingCreation")} type="warning" />}
-
-            {/* Action buttons */}
-            <div className="buttons-container">
-              <div>
-                <Button disabled={!!getNextButtonDisabled(currentStepInfo)} onClick={getNextButtonAction(currentStepInfo)}>
-                  {onGoNext.text} <NextIcon className="ml-2" />
-                </Button>
-                <span>{getNextButtonDisabled(currentStepInfo)}</span>
+                <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyEditorLink")} />
               </div>
-              <div className="backButton">
-                {onGoBack && (
-                  <Button styleType="invisible" onClick={() => onGoBack.go()}>
-                    <BackIcon className="mr-2" /> {onGoBack.text}
+
+              {/* Alert (isSomeoneCreatingTheVault) */}
+              {isSomeoneCreatingTheVault && <Alert content={t("someoneIsCreatingTheVault")} type="warning" className="mb-5" />}
+
+              {/* Steps control */}
+              <VaultEditorStepper>
+                {steps
+                  .filter((step) => {
+                    if (step.isInvisible === "all") return false;
+                    if (step.isInvisible === "editing") return !isEditingExistingVault;
+                    if (step.isInvisible === "creation") return isEditingExistingVault;
+                    return true;
+                  })
+                  .map((step, index) => (
+                    <VaultEditorStepController
+                      key={step.id}
+                      active={step.id === currentStepInfo.id}
+                      passed={!!step.isValid}
+                      onClick={() => onGoToStep(index)}
+                    >
+                      {step.isValid && <CheckIcon className="ml-2" />}
+                      {/* {step.isValid ? "" : `${index + 1}.`} */}
+                      {t(step.name)}
+                    </VaultEditorStepController>
+                  ))}
+              </VaultEditorStepper>
+
+              {/* Section */}
+              {steps.map((step) => (
+                <Section key={step.id} visible={step.id === currentStepInfo.id}>
+                  {step.title && (
+                    <p className="section-title">{t(isEditingExistingVault ? step.title.editing : step.title.creation)}</p>
+                  )}
+                  <div className="section-content">
+                    <step.component />
+                  </div>
+                </Section>
+              ))}
+
+              {/* Alert section */}
+              {isVaultCreated && <Alert content={t("vaultBlockedBecauseIsCreated")} type="warning" />}
+              {editSessionSubmittedCreation && <Alert content={t("vaultBlockedBecauseIsPendingCreation")} type="warning" />}
+
+              {/* Action buttons */}
+              <div className="buttons-container">
+                <div>
+                  <Button disabled={!!getNextButtonDisabled(currentStepInfo)} onClick={getNextButtonAction(currentStepInfo)}>
+                    {onGoNext.text} <NextIcon className="ml-2" />
                   </Button>
-                )}
-                {isVaultCreated && (
-                  <Button onClick={goToStatusPage} styleType="outlined">
-                    {t("goToStatusPage")}
-                  </Button>
-                )}
+                  <span>{getNextButtonDisabled(currentStepInfo)}</span>
+                </div>
+                <div className="backButton">
+                  {onGoBack && (
+                    <Button styleType="invisible" onClick={() => onGoBack.go()}>
+                      <BackIcon className="mr-2" /> {onGoBack.text}
+                    </Button>
+                  )}
+                  {isVaultCreated && (
+                    <Button onClick={goToStatusPage} styleType="outlined">
+                      {t("goToStatusPage")}
+                    </Button>
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Editing existing vault action button */}
-            {isEditingExistingVault && (
-              <div className="editing-existing-buttons">
-                {getEditingExistingVaultAlert()}
-                {getEditingExistingVaultButtons()}
-              </div>
-            )}
-          </StyledVaultEditorForm>
-        </FormProvider>
-      </StyledVaultEditorContainer>
+              {/* Editing existing vault action button */}
+              {isEditingExistingVault && (
+                <div className="editing-existing-buttons">
+                  {getEditingExistingVaultAlert()}
+                  {getEditingExistingVaultButtons()}
+                </div>
+              )}
+            </StyledVaultEditorForm>
+          </FormProvider>
+        </StyledVaultEditorContainer>
 
-      {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
-      {loading && <Loading fixed extraText={`${t("loading")}...`} />}
+        {creatingVault && <Loading fixed extraText={`${t("cretingVaultOnChain")}...`} />}
+        {loading && <Loading fixed extraText={`${t("loading")}...`} />}
+        {savingEditSession && <Loading fixed extraText={`${t("savingEditSession")}...`} />}
 
-      <Modal isShowing={showVerifiedEmailModal} onHide={goBackToVaultEditor} disableOnOverlayClose>
-        <VerifiedEmailModal closeModal={goBackToVaultEditor} />
-      </Modal>
-    </VaultEditorFormContext.Provider>
+        <Modal isShowing={showVerifiedEmailModal} onHide={goBackToVaultEditor} disableOnOverlayClose>
+          <VerifiedEmailModal closeModal={goBackToVaultEditor} />
+        </Modal>
+      </VaultEditorFormContext.Provider>
+    </>
   );
 };
 

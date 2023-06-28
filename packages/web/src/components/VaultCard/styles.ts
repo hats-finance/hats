@@ -2,22 +2,63 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
-  ({ isAudit }) => css`
+export const StyledVaultCard = styled.div<{
+  isAudit: boolean;
+  reducedStyles: boolean;
+  hasActiveClaim: boolean;
+  showIntendedAmount: boolean;
+}>(
+  ({ isAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--background-2);
     border: 1px solid var(--primary-light);
     padding: ${getSpacing(3)} ${getSpacing(4)};
 
+    ${hasActiveClaim &&
+    css`
+      padding: ${getSpacing(5.5)} ${getSpacing(4)} ${getSpacing(4)} ${getSpacing(4)};
+      border-color: var(--error-red);
+    `}
+
+    ${reducedStyles &&
+    css`
+      padding: 0;
+      border: none;
+      background: transparent;
+    `}
+
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(2.5)} ${getSpacing(3)};
+    }
+
+    .active-claim-banner {
+      background: var(--error-red);
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(1)};
+      justify-content: center;
+      width: max-content;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: ${getSpacing(0.5)} ${getSpacing(1.5)};
+      border-radius: 0 0 ${getSpacing(1)} ${getSpacing(1)};
+      font-size: var(--xxsmall);
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
     .vault-info {
       display: grid;
       gap: ${getSpacing(2)};
-      grid-template-columns: 3fr 2fr;
+      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "3fr 2fr"};
       align-items: center;
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -54,16 +95,30 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
 
       .stats {
         display: grid;
-        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"};
+        /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}; */
+        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
         gap: ${getSpacing(1)};
         align-items: center;
 
+        ${reducedStyles &&
+        css`
+          row-gap: ${getSpacing(3)};
+          /* grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 2fr 2fr 2fr"}; */
+          grid-template-columns: ${isAudit ? "1fr 1fr 1fr" : "1fr 1fr 1fr"};
+        `}
+
         @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-          grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr 1fr"};
+          /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr 1fr"}; */
+          grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
           border-color: var(--primary-light);
           border-width: 1px 0 1px;
           border-style: solid;
           padding: ${getSpacing(3)} 0;
+
+          ${reducedStyles &&
+          css`
+            border-bottom: none;
+          `}
         }
 
         &__stat {
@@ -75,9 +130,17 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
           @media (max-width: ${breakpointsDefinition.mediumMobile}) {
             &:nth-child(2) {
               border-color: var(--primary-light);
-              border-width: ${isAudit ? "0 0 0 1px" : "0 1px 0"};
+              /* border-width: ${isAudit ? "0 0 0 1px" : "0 1px 0"}; */
+              border-width: ${isAudit ? "0 0 0 1px" : "0 0 0 1px"};
               border-style: solid;
             }
+          }
+
+          &.intended-on-audits {
+            ${showIntendedAmount &&
+            css`
+              color: var(--warning-yellow);
+            `}
           }
 
           .value {
@@ -123,48 +186,6 @@ export const StyledVaultCard = styled.div<{ isAudit: boolean }>(
           @media (max-width: ${breakpointsDefinition.mediumMobile}) {
             width: 100%;
             text-align: center;
-          }
-        }
-
-        .token {
-          display: flex;
-          align-items: center;
-          gap: ${getSpacing(1.5)};
-          padding: ${getSpacing(0.6)} ${getSpacing(1)};
-          border-radius: 50px;
-          background: var(--background-3);
-          cursor: pointer;
-          transition: 0.2s;
-
-          &:hover {
-            opacity: 0.7;
-          }
-
-          .images {
-            position: relative;
-            width: ${getSpacing(2.8)};
-            height: ${getSpacing(2.8)};
-
-            img.logo {
-              width: ${getSpacing(2.8)};
-              height: ${getSpacing(2.8)};
-              object-fit: contain;
-              border-radius: 500px;
-            }
-
-            img.chain {
-              width: ${getSpacing(1.5)};
-              height: ${getSpacing(1.5)};
-              object-fit: contain;
-              position: absolute;
-              bottom: 0;
-              right: -6px;
-            }
-          }
-
-          span {
-            font-size: var(--xxsmall);
-            font-weight: 700;
           }
         }
       }

@@ -2,8 +2,8 @@ import { IPayoutResponse, IVault, IVulnerabilitySeverity } from "@hats-finance/s
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { FormInput, WithTooltip } from "components";
+import { VaultNftRewardCard } from "components";
 import { useTranslation } from "react-i18next";
-import { NftPreview } from "../../../../../../components/NftPreview/NftPreview";
 import { usePayoutAllocation } from "../usePayoutAllocation";
 import { StyledSinglePayoutAllocation } from "./styles";
 
@@ -46,7 +46,7 @@ export const SinglePayoutAllocation = ({
 
       <div className="mb-5">{t("Payouts.resultDescription")}</div>
       <div className="result-container">
-        <NftPreview vault={vault} severityName={selectedSeverity?.name} nftData={selectedSeverity?.["nft-metadata"]} />
+        <VaultNftRewardCard vault={vault} severity={selectedSeverity} />
         <FormInput
           value={`≈ ${totalAmount?.tokens.formatted} ~ ${totalAmount?.usd.formatted}`}
           label={t("Payouts.totalPayoutSum")}

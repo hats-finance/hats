@@ -1,18 +1,27 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
-import { Button, Pill } from "components";
-import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import WarnIcon from "@mui/icons-material/WarningAmberRounded";
+import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
+import { IPFS_PREFIX } from "constants/constants";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
 import millify from "millify";
 import moment from "moment";
+import { RoutePaths } from "navigation";
+import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
+import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import { slugify } from "utils/slug.utils";
+import { ONE_LINER_FALLBACK } from "./oneLinerFallback";
 import { StyledVaultCard } from "./styles";
 
 type VaultCardProps = {
   vaultData?: IVault;
   auditPayout?: IPayoutGraph;
+  reducedStyles?: boolean;
+  noActions?: boolean;
+  noDeployed?: boolean;
 };
 
 /**
@@ -20,15 +29,26 @@ type VaultCardProps = {
  *
  * @param vaultData - The vault data.
  * @param auditPayout - The payout data for finished audit competitions.
+ * @param reduced - Reduced styles, showing less information. (used on vault details page)
+ * @param noActions - Disable the actions buttons. (mainly for vault preview)
+ * @param noDeployed - if the vault is not deployed. (this is for showing images from the right source -> ipfs or backend)
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
  * For finished audit competitions, this component uses the payout data, and is passed as `auditPayout`.
  */
-export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
+export const VaultCard = ({
+  vaultData,
+  auditPayout,
+  reducedStyles = false,
+  noActions = false,
+  noDeployed = false,
+}: VaultCardProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
+  const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
 
   const vaultDate = useMemo(() => {
     if (!vault || !vault.description) return null;
@@ -52,7 +72,11 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
 
     return {
       date: startMonth !== endMonth ? `${startMonth} ${startDay}-${endMonth} ${endDay}` : `${startMonth} ${startDay}-${endDay}`,
-      time: moment(endtime).format("HH:mm[h]"),
+      time: moment(endtime).toDate().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZoneName: "shortOffset",
+      }),
     };
   }, [vault, auditPayout]);
 
@@ -70,43 +94,14 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
 
   if (!vault || !vault.description) return null;
 
+  const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
+  const projectWebsite = vault.description["project-metadata"].website;
   const description =
-    "Hats is a security protocol that aligns incentives, creating a scalable primitive for a safer Web3 ecosystem.";
-
-  const getVaultAssets = () => {
-    if (!vault.description) return null;
-
-    const tokenAddress = vault.stakingToken;
-    const token = vault.stakingTokenSymbol;
-    const tokenIcon = vault.description["project-metadata"].tokenIcon;
-    const tokenNetwork = vault.chainId ? appChains[vault.chainId] : null;
-
-    const goToTokenInformation = () => {
-      if (!tokenNetwork) return;
-      window.open(tokenNetwork.chain.blockExplorers?.default.url + "/token/" + tokenAddress, "_blank");
-    };
-
-    const amountToShowInTokens = auditPayout ? totalPaidOutOnAudit?.tokens : vault.amountsInfo?.depositedAmount.tokens;
-
-    return (
-      <>
-        <WithTooltip
-          text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${millify(amountToShowInTokens ?? 0)} ${token}`}
-        >
-          <div className="token" onClick={goToTokenInformation}>
-            <div className="images">
-              <img className="logo" src={ipfsTransformUri(tokenIcon)} alt="token" />
-              <img className="chain" src={require(`assets/icons/chains/${vault.chainId}.png`)} alt="network" />
-            </div>
-            <span>{token}</span>
-          </div>
-        </WithTooltip>
-      </>
-    );
-  };
+    ONE_LINER_FALLBACK[vault.id] ??
+    "Nulla facilisi. Donec nec dictum eros. Cras et velit viverra, dapibus velit fringilla, bibendum mi aptent. Class aptent taciti sociosqu ad litora.";
 
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
@@ -115,7 +110,7 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
     if (auditPayout) {
       return (
         <div className="mb-4">
-          <Pill transparent color="green" text={t("paidCompetition")} />
+          <Pill transparent dotColor="green" text={t("paidCompetition")} />
         </div>
       );
     }
@@ -123,7 +118,7 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
     if (vault.dateStatus === "upcoming") {
       return (
         <div className="mb-4">
-          <Pill transparent color="yellow" text={t("upcoming")} />
+          <Pill transparent dotColor="yellow" text={t("upcoming")} />
         </div>
       );
     }
@@ -133,43 +128,103 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
     if (endTime.diff(moment(), "hours") <= 24) {
       return (
         <div className="mb-4">
-          <Pill transparent color="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
+          <Pill transparent dotColor="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
       return (
         <div className="mb-4">
-          <Pill transparent color="blue" text={t("liveNow")} />
+          <Pill transparent dotColor="blue" text={t("liveNow")} />
         </div>
       );
     }
   };
 
+  const getActiveClaimBanner = () => {
+    const openClaimDescription = () => window.open(`${IPFS_PREFIX}/${vault.activeClaim?.claim}`, "_blank");
+
+    return (
+      <div className="active-claim-banner" onClick={openClaimDescription}>
+        <WarnIcon />
+        <p>{t("vaultPausedActiveClaimExplanation")}</p>
+      </div>
+    );
+  };
+
+  const goToDeposits = () => {
+    if (!vault) return;
+    if (noActions) return;
+
+    const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}/deposits`);
+  };
+
+  const goToSubmitVulnerability = () => {
+    if (noActions) return;
+    navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
+  };
+
+  const goToDetails = () => {
+    if (!vault) return;
+    if (noActions) return;
+
+    const mainRoute = `${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+  };
+
   return (
-    <StyledVaultCard isAudit={isAudit}>
+    <StyledVaultCard
+      isAudit={isAudit}
+      reducedStyles={reducedStyles}
+      hasActiveClaim={!!activeClaim}
+      showIntendedAmount={showIntended}
+    >
       {isAudit && getAuditStatusPill()}
+      {!!activeClaim && !reducedStyles && getActiveClaimBanner()}
 
       <div className="vault-info">
         <div className="metadata">
-          <img src={ipfsTransformUri(logo)} alt="logo" />
+          <img src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
           <div className="name-description">
             <h3 className="name">{name}</h3>
-            <p className="description">{description}</p>
+            {!reducedStyles && <p className="description">{description}</p>}
+            {reducedStyles && (
+              <a
+                className="website"
+                href={projectWebsite.includes("http") ? projectWebsite : `//${projectWebsite}`}
+                {...defaultAnchorProps}
+              >
+                {projectWebsite}
+              </a>
+            )}
           </div>
         </div>
 
         <div className="stats">
-          {!isAudit && (
+          {/* {!isAudit && (
             <div className="stats__stat">
               <h3 className="value">5%</h3>
               <div className="sub-value">APY</div>
             </div>
-          )}
+          )} */}
           <div className="stats__stat">
             {isAudit ? (
               <>
-                <h3 className="value">{vaultDate?.date}</h3>
-                <div className="sub-value">{vaultDate?.time}</div>
+                {auditPayout ? (
+                  <>
+                    <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
+                    <div className="sub-value">{t("maxRewards")}</div>
+                  </>
+                ) : (
+                  <>
+                    <h3 className="value">{vaultDate?.date}</h3>
+                    <div className="sub-value">{vaultDate?.time}</div>
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -178,13 +233,22 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
               </>
             )}
           </div>
-          <div className="stats__stat">
+          <div className="stats__stat intended-on-audits">
             {isAudit ? (
               <>
-                <h3 className="value">
-                  ~${auditPayout ? millify(totalPaidOutOnAudit?.usd ?? 0) : millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}
-                </h3>
-                <div className="sub-value">{auditPayout ? t("paidRewards") : t("maxRewards")}</div>
+                <WithTooltip text={showIntended ? t("intendedValueExplanation") : undefined}>
+                  <h3 className="value">
+                    ~$
+                    {auditPayout
+                      ? millify(totalPaidOutOnAudit?.usd ?? 0)
+                      : showIntended
+                      ? millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)
+                      : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+                  </h3>
+                </WithTooltip>
+                <div className="sub-value">
+                  {auditPayout ? t("paidRewards") : showIntended ? t("intendedRewards") : t("maxRewards")}
+                </div>
               </>
             ) : (
               <>
@@ -193,26 +257,63 @@ export const VaultCard = ({ vaultData, auditPayout }: VaultCardProps) => {
               </>
             )}
           </div>
+
+          {reducedStyles && (
+            <>
+              {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
+                <div className="stats__stat">
+                  <Button
+                    disabled={noActions}
+                    size="medium"
+                    filledColor={isAudit ? "primary" : "secondary"}
+                    onClick={goToSubmitVulnerability}
+                  >
+                    {t("submitVulnerability")}
+                  </Button>
+                </div>
+              )}
+            </>
+          )}
         </div>
       </div>
 
-      <div className="vault-actions">
-        <div className="assets">
-          <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
-          {getVaultAssets()}
+      {!reducedStyles && (
+        <div className="vault-actions">
+          <div className="assets">
+            <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
+            <VaultAssetsPillsList auditPayout={auditPayout} vaultData={vaultData} />
+          </div>
+          <div className="actions">
+            {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (
+              <Button
+                disabled={noActions}
+                size="medium"
+                filledColor={isAudit ? "primary" : "secondary"}
+                styleType="outlined"
+                onClick={goToDeposits}
+              >
+                {t("deposits")}
+              </Button>
+            )}
+            {(!isAudit || (isAudit && vault.dateStatus === "on_time" && !auditPayout)) && (
+              <Button
+                disabled={noActions}
+                size="medium"
+                filledColor={isAudit ? "primary" : "secondary"}
+                styleType="outlined"
+                onClick={goToSubmitVulnerability}
+              >
+                {t("submitVulnerability")}
+              </Button>
+            )}
+            {!auditPayout && (
+              <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
+                {isAudit ? t("competitionDetails") : t("bountyDetails")}
+              </Button>
+            )}
+          </div>
         </div>
-        <div className="actions">
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
-            {t("deposits")}
-          </Button>
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} styleType="outlined">
-            {t("submitVulnerability")}
-          </Button>
-          <Button size="medium" filledColor={isAudit ? "primary" : "secondary"}>
-            {isAudit ? t("competitionDetails") : t("bountyDetails")}
-          </Button>
-        </div>
-      </div>
+      )}
     </StyledVaultCard>
   );
 };

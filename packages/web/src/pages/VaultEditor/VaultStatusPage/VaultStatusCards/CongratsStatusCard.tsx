@@ -33,7 +33,7 @@ export const CongratsStatusCard = () => {
   return (
     <div className="status-card">
       <div className="status-card__title">
-        {t("congrats")}
+        <h3>{t("congrats")}</h3>
         {getVaultChainIcon()}
       </div>
       <p className="status-card__text">

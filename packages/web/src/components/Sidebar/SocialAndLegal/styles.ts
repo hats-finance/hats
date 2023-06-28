@@ -15,14 +15,14 @@ export const StyledSocialAndLegal = styled.div`
     gap: ${getSpacing(1)};
     padding: 0 ${getSpacing(2)};
 
-    @media (max-width: ${breakpointsDefinition.smallScreen}) {
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
       gap: ${getSpacing(0.5)};
     }
 
     a svg {
       width: ${getSpacing(3.5)};
 
-      @media (max-width: ${breakpointsDefinition.smallScreen}) {
+      @media (max-width: ${breakpointsDefinition.mediumScreen}) {
         width: ${getSpacing(2.5)};
       }
     }

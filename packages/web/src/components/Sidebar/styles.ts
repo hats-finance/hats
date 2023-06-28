@@ -12,7 +12,7 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
     border-right: 1px solid var(--primary-light);
     z-index: 2;
 
-    @media (max-width: ${breakpointsDefinition.smallScreen}) {
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
       width: ${getSpacing(21)};
       text-align: center;
     }

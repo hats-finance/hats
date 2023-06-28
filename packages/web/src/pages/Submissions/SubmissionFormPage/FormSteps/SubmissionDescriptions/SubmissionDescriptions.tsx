@@ -1,4 +1,4 @@
-import { IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { IVulnerabilitySeverity } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
@@ -10,11 +10,12 @@ import {
   FormSelectInput,
   FormSelectInputOption,
   FormSupportFilesInput,
+  WithTooltip,
 } from "components";
 import download from "downloadjs";
 import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useContext, useEffect, useState } from "react";
-import { Controller, useFieldArray } from "react-hook-form";
+import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { encryptWithKeys } from "../../encrypt";
 import { SUBMISSION_INIT_DATA, SubmissionFormContext } from "../../store";
@@ -30,17 +31,24 @@ export function SubmissionDescriptions() {
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
-  // const isPublicSubmission = true;
 
-  const { register, handleSubmit, control, reset } = useEnhancedForm<ISubmissionsDescriptionsData>({
+  const { register, handleSubmit, control, reset, setValue } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
     mode: "onChange",
   });
   const {
-    fields: submissionsDescriptions,
+    fields,
     append: appendSubmissionDescription,
     remove: removeSubmissionDescription,
   } = useFieldArray({ control, name: `descriptions` });
+
+  const watchDescriptions = useWatch({ control, name: `descriptions` });
+  const controlledDescriptions = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchDescriptions[index],
+    };
+  });
 
   // Reset form with saved data
   useEffect(() => {
@@ -52,7 +60,7 @@ export function SubmissionDescriptions() {
     if (!vault || !vault.description) return;
 
     if (vault.description) {
-      const severities = vault.description.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => ({
+      const severities = vault.description.severities.map((severity: IVulnerabilitySeverity) => ({
         label: severity.name.toLowerCase().replace("severity", "").trim(),
         value: severity.name.toLowerCase(),
       }));
@@ -60,6 +68,29 @@ export function SubmissionDescriptions() {
       setSeveritiesOptions(severities);
     }
   }, [vault, t]);
+
+  // Update isEncrypted field on descriptions
+  useEffect(() => {
+    if (!vault || !vault.description || !vault.description.severities) return;
+
+    for (const [idx, description] of controlledDescriptions.entries()) {
+      const severitySelected =
+        vault.description?.severities &&
+        (vault.description.severities as IVulnerabilitySeverity[]).find((sev) => sev.name.toLowerCase() === description.severity);
+
+      if (severitySelected) {
+        const isEncrypted = !isAuditSubmission
+          ? true
+          : severitySelected?.decryptSubmissions === undefined
+          ? false
+          : !severitySelected?.decryptSubmissions;
+
+        if (isEncrypted !== description.isEncrypted) {
+          setValue(`descriptions.${idx}.isEncrypted`, isEncrypted);
+        }
+      }
+    }
+  }, [controlledDescriptions, vault, setValue, isAuditSubmission]);
 
   const handleSaveAndDownloadDescription = async (formData: ISubmissionsDescriptionsData) => {
     if (!vault) return;
@@ -118,70 +149,87 @@ export function SubmissionDescriptions() {
 
   return (
     <StyledSubmissionDescriptionsList>
-      {submissionsDescriptions.map((submissionDescription, index) => (
-        <StyledSubmissionDescription key={submissionDescription.id}>
-          <p className="bold mb-2">
-            {t("issue")} #{index + 1}
-          </p>
-          <p className="mb-4">{t("Submissions.provideExplanation")}</p>
+      {controlledDescriptions.map((submissionDescription, index) => {
+        return (
+          <StyledSubmissionDescription key={submissionDescription.id} isEncrypted={!!submissionDescription.isEncrypted}>
+            <p className="title mb-2">
+              <span>
+                {t("issue")} #{index + 1}
+              </span>
+              <WithTooltip
+                text={
+                  submissionDescription.isEncrypted
+                    ? t("Submissions.encryptedSubmissionExplanation")
+                    : t("Submissions.decryptedSubmissionExplanation")
+                }
+              >
+                <span className="encryption-info">
+                  {submissionDescription.isEncrypted
+                    ? t("Submissions.encryptedSubmission")
+                    : t("Submissions.decryptedSubmission")}
+                </span>
+              </WithTooltip>
+            </p>
+            <p className="mb-4">{t("Submissions.provideExplanation")}</p>
 
-          <div className="row">
-            <FormInput
-              {...register(`descriptions.${index}.title`)}
-              label={`${t("Submissions.submissionTitle")}`}
-              placeholder={t("Submissions.submissionTitlePlaceholder")}
-              colorable
-            />
+            <div className="row">
+              <FormInput
+                {...register(`descriptions.${index}.title`)}
+                label={`${t("Submissions.submissionTitle")}`}
+                placeholder={t("Submissions.submissionTitlePlaceholder")}
+                colorable
+              />
+              <Controller
+                control={control}
+                name={`descriptions.${index}.severity`}
+                render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
+                  <FormSelectInput
+                    isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
+                    error={error}
+                    label={t("severity")}
+                    placeholder={t("severityPlaceholder")}
+                    colorable
+                    options={severitiesOptions ?? []}
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+
             <Controller
               control={control}
-              name={`descriptions.${index}.severity`}
+              name={`descriptions.${index}.description`}
               render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-                <FormSelectInput
+                <FormMDEditor
                   isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
                   error={error}
-                  label={t("severity")}
-                  placeholder={t("severityPlaceholder")}
                   colorable
-                  options={severitiesOptions ?? []}
                   {...field}
                 />
               )}
             />
-          </div>
 
-          <Controller
-            control={control}
-            name={`descriptions.${index}.description`}
-            render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
-              <FormMDEditor
-                isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
-                error={error}
-                colorable
-                {...field}
+            {!submissionDescription.isEncrypted && (
+              <Controller
+                control={control}
+                name={`descriptions.${index}.files`}
+                render={({ field, fieldState: { error } }) => (
+                  <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
+                )}
               />
             )}
-          />
 
-          {isAuditSubmission && (
-            <Controller
-              control={control}
-              name={`descriptions.${index}.files`}
-              render={({ field, fieldState: { error } }) => (
-                <FormSupportFilesInput label={t("Submissions.selectSupportFiles")} error={error} {...field} />
-              )}
-            />
-          )}
-
-          {submissionsDescriptions.length > 1 && (
-            <div className="buttons mt-3">
-              <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
-                <RemoveIcon className="mr-3" />
-                {t("Submissions.removeIssue")}
-              </Button>
-            </div>
-          )}
-        </StyledSubmissionDescription>
-      ))}
+            {controlledDescriptions.length > 1 && (
+              <div className="buttons mt-3">
+                <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
+                  <RemoveIcon className="mr-3" />
+                  {t("Submissions.removeIssue")}
+                </Button>
+              </div>
+            )}
+          </StyledSubmissionDescription>
+        );
+      })}
 
       <div className="buttons mt-3">
         <Button

@@ -1,9 +1,8 @@
 import { IVulnerabilitySeverity } from "@hats-finance/shared";
-import { Alert, Button, FormInput } from "components";
+import { Alert, Button, FormInput, VaultSeverityRewardCard } from "components";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { VaultRewardCard } from "./VaultRewardCard/VaultRewardCard";
 import {
   getAlertTermsContent,
   getSubmissionAwardsContent,
@@ -53,13 +52,13 @@ export function SubmissionTermsAndProcess() {
         <div className="section-content">
           <div>{getSubmissionAwardsContent(vault, t)}</div>
           <div className="rewards-list">
-            <div className="titles">
+            {/* <div className="titles">
               <div>{t("level")}</div>
               <div>{t("prize")}</div>
               <div>{t("nft")}</div>
-            </div>
+            </div> */}
             {vault.description?.severities.map((severity: IVulnerabilitySeverity, idx: number) => {
-              return <VaultRewardCard key={idx} vault={vault} severity={severity} severityIndex={idx} />;
+              return <VaultSeverityRewardCard key={idx} vault={vault} severity={severity} severityIndex={idx} />;
             })}
           </div>
         </div>

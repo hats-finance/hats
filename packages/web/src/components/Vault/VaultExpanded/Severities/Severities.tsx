@@ -9,21 +9,22 @@ interface IProps {
 }
 
 export default function Severities(props: IProps) {
-  const [expandedSeverityIndex, setExpandedSeverityIndex] = useState();
-  const severities = props.severities?.map((severity: IVulnerabilitySeverity, index: number) => {
-    return (
-      <Severity
-        key={index}
-        preview={props.preview}
-        severity={severity}
-        vault={props.vault}
-        severityIndex={index}
-        expanded={expandedSeverityIndex === index}
-        expandedSeverityIndex={expandedSeverityIndex}
-        setExpandedSeverityIndex={setExpandedSeverityIndex}
-      />
-    );
-  });
+  return null;
+  // const [expandedSeverityIndex, setExpandedSeverityIndex] = useState();
+  // const severities = props.severities?.map((severity: IVulnerabilitySeverity, index: number) => {
+  //   return (
+  //     <Severity
+  //       key={index}
+  //       preview={props.preview}
+  //       severity={severity}
+  //       vault={props.vault}
+  //       severityIndex={index}
+  //       expanded={expandedSeverityIndex === index}
+  //       expandedSeverityIndex={expandedSeverityIndex}
+  //       setExpandedSeverityIndex={setExpandedSeverityIndex}
+  //     />
+  //   );
+  // });
 
-  return <>{severities?.reverse()}</>;
+  // return <>{severities?.reverse()}</>;
 }

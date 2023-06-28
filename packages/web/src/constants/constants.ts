@@ -90,15 +90,6 @@ export enum Colors {
   background3 = "#22233e",
 }
 
-export enum PieChartColors {
-  token = "#14595B",
-  vestedToken = "#296B6D",
-  committee = "#3E7D7F",
-  vestedHats = "#548E91",
-  governance = "#69A0A3",
-  swapAndBurn = "#7EB2B5",
-}
-
 export enum SocialLinks {
   Discord = "https://discord.gg/xDphwRGyW7",
   Twitter = "https://twitter.com/HatsFinance",
@@ -109,16 +100,6 @@ export enum SocialLinks {
 
 export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
 export const DISCORD_ENTRY_CHANNEL = "https://discord.com/channels/810534320040837121/976144633899925504";
-
-const NORMAL_SEVERITIES_COLORS = ["#141F50", "#19265F", "#213173", "#122777"];
-const GAMIFICATION_SEVERITIES_COLORS = ["#2A115F", "#3B1B7E", "#4B239F"];
-
-export const VAULTS_TYPE_SEVERITIES_COLORS = {
-  gamification: GAMIFICATION_SEVERITIES_COLORS,
-  normal: NORMAL_SEVERITIES_COLORS,
-  Grants: NORMAL_SEVERITIES_COLORS,
-  "": NORMAL_SEVERITIES_COLORS,
-};
 
 export enum Transactions {
   Approve = "Approve",

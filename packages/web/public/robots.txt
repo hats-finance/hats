@@ -1,3 +1,4 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+Sitemap: https://app.hats.finance/sitemap.xml
+Host: https://app.hats.finance

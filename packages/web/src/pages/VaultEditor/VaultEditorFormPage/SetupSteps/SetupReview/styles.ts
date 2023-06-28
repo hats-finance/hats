@@ -1,5 +1,6 @@
-import { getSpacing } from "styles";
 import styled from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledSetupReview = styled.div`
   .next-step {
@@ -16,15 +17,14 @@ export const StyledSetupReview = styled.div`
       margin-left: ${getSpacing(3.5)};
     }
   }
+`;
 
-  .preview-vault {
-    margin-top: ${getSpacing(5)};
-    border: 1px solid var(--turquoise);
-    box-sizing: border-box;
+export const StyledPreviewModal = styled.div`
+  width: calc(100vw - 64px - ${getSpacing(6)});
+  height: calc(100vh - 64px - ${getSpacing(6)});
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+  @media (max-width: ${breakpointsDefinition.smallMobile}) {
+    width: calc(100vw - 64px - ${getSpacing(2)});
+    height: calc(100vh - 64px - ${getSpacing(2)});
   }
 `;

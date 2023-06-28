@@ -6,6 +6,14 @@ export const StyledVaultDetails = styled.div`
   display: flex;
   flex-direction: column;
 
+  .w-50 {
+    width: 50%;
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      width: 100%;
+    }
+  }
+
   .sub-container {
     display: flex;
     justify-content: space-between;
@@ -37,22 +45,5 @@ export const StyledVaultDetails = styled.div`
     display: flex;
     justify-content: center;
     gap: ${getSpacing(2)};
-  }
-
-  .repos-information {
-    margin-top: ${getSpacing(2)};
-
-    .repo {
-      .toggle {
-        width: 100%;
-        margin-bottom: ${getSpacing(1)};
-      }
-
-      .flex {
-        display: flex;
-        align-items: baseline;
-        gap: ${getSpacing(2)};
-      }
-    }
   }
 `;

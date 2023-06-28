@@ -13,7 +13,7 @@ export const StyledNavLink = styled(NavLink)`
   align-items: center;
   gap: ${getSpacing(1.5)};
 
-  @media (max-width: ${breakpointsDefinition.smallScreen}) {
+  @media (max-width: ${breakpointsDefinition.mediumScreen}) {
     flex-direction: column;
     border-left: none;
     border-bottom: ${getSpacing(0.4)} solid transparent;
@@ -23,7 +23,7 @@ export const StyledNavLink = styled(NavLink)`
   p.normal {
     display: block;
 
-    @media (max-width: ${breakpointsDefinition.smallScreen}) {
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
       display: none;
     }
   }
@@ -31,7 +31,7 @@ export const StyledNavLink = styled(NavLink)`
   p.collapsed {
     display: none;
 
-    @media (max-width: ${breakpointsDefinition.smallScreen}) {
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
       display: block;
     }
   }
@@ -78,5 +78,9 @@ export const StyledNavLink = styled(NavLink)`
 
   &.hidden:not(.active) {
     display: none;
+  }
+
+  &.active {
+    visibility: visible;
   }
 `;

@@ -2,6 +2,7 @@ import { v4 as uuid } from "uuid";
 import { ICommitteeMember, IVaultDescription } from "..";
 import { getVulnerabilitySeveritiesTemplate } from "../severities";
 import {
+  IBaseVulnerabilitySeverity,
   ICreateVaultOnChainCall,
   IEditedCommunicationEmail,
   IEditedContractCovered,
@@ -10,11 +11,23 @@ import {
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
-  IVulnerabilitySeveritiesTemplate,
-  IVulnerabilitySeverity,
+  IProtocolSetupInstructions,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "../types";
+
+export const DEFAULT_OUT_OF_SCOPE =
+  "Reporters will not receive a bounty for:\n\n* Any known issue, such as:\n  * Issues that are mentioned in any of the audit reports [LINK TO AUDIT REPORT].\n  * Vulnerabilities that were already made public (either by the project or by a third party)\n* Vulnerabilities that are exploited by the reporter themselves.\n* Attacks requiring access to leaked private keys or trusted addresses.\n* Issues that are not responsibly disclosed (issues should typically be reported through our platform).";
+export const DEFAULT_TOOLING_STEPS: IProtocolSetupInstructions = {
+  tooling: "hardhat",
+  instructions:
+    "### Usage\n\nInstallation:\n```\nnpm install\n```\n\nCreate `.env` files as needed. There is a file called `.env.example` that you can use as a template.\n\nRun the tests:\n```\nnpx hardhat test\n```",
+};
+
+export const CODE_LANGUAGES = {
+  solidity: ["solidity", "cairo", "go", "rust", "vyper", "simplicity"],
+  other: ["javascript", "typescript", "python", "react"],
+};
 
 export const COMMITTEE_CONTROLLED_SPLIT = 85;
 export const HATS_GOV_SPLIT = 10;
@@ -37,6 +50,7 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
     name: "",
     address: "",
     severities: severitiesIds,
+    deploymentInfo: [{ contractAddress: "", chainId: "" }],
   };
 };
 
@@ -45,6 +59,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
     id: uuid(),
     name: "",
     "contracts-covered": [],
+    contractsCoveredNew: [],
     "nft-metadata": {
       name: "",
       description: "",
@@ -53,7 +68,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
       external_url: "",
     },
     description: "",
-  };
+  } as IBaseVulnerabilitySeverity;
 
   if (version === "v1") {
     return {
@@ -68,14 +83,14 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
   }
 };
 
-const getDefaultVaultParameters = (): IEditedVaultParameters => {
+export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParameters => {
   return {
     fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
     fixedHatsGovPercetange: HATS_GOV_SPLIT,
     fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
-    committeePercentage: 5,
-    immediatePercentage: 35,
-    vestedPercentage: 60,
+    committeePercentage: isAudit ? 0 : 5,
+    immediatePercentage: isAudit ? 100 : 35,
+    vestedPercentage: isAudit ? 0 : 60,
     maxBountyPercentage: 90,
   };
 };
@@ -102,6 +117,10 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     },
     scope: {
       reposInformation: [{ isMain: true, url: "", commitHash: "" }],
+      description: "",
+      codeLangs: [] as string[],
+      docsLink: "",
+      outOfScope: "",
     },
     committee: {
       chainId: "",
@@ -121,39 +140,48 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
   } as IEditedVaultDescription;
 };
 
-function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
+export function severitiesToContractsCoveredForm(severities: IEditedVulnerabilitySeverity[]): IEditedContractCovered[] {
   let contractsForm = [] as IEditedContractCovered[];
 
   severities.forEach((severity) => {
-    const contractsCovered = severity["contracts-covered"];
+    const contractsCovered =
+      severity.contractsCoveredNew !== undefined ? severity.contractsCoveredNew : severity["contracts-covered"];
 
     if (contractsCovered && contractsCovered.length > 0) {
       contractsCovered.forEach((contractCovered) => {
-        const name = Object.keys(contractCovered)[0];
-        const address = Object.values(contractCovered)[0] as string;
-        const contract = contractsForm.find((c) => c.name === name && c.address === address);
+        const address = contractCovered.link ?? (Object.values(contractCovered)[0] as string);
+        const contract = contractsForm.find((c) => c.address === address);
+
+        const data =
+          severity.contractsCoveredNew !== undefined
+            ? {
+                name: "",
+                address,
+                linesOfCode: contractCovered.linesOfCode as number,
+                deploymentInfo: contractCovered.deploymentInfo as IEditedContractCovered["deploymentInfo"],
+              }
+            : { ...createNewCoveredContract(), name: Object.keys(contractCovered)[0], address };
 
         if (contract) {
           const contractIndex = contractsForm.indexOf(contract);
           contractsForm[contractIndex] = {
-            name,
-            address,
+            ...data,
             severities: [...contract.severities, severity.id as string],
           };
         } else {
           contractsForm.push({
-            name,
-            address,
+            ...data,
             severities: [severity.id as string],
           });
         }
       });
-    } else {
-      contractsForm.push({
-        ...createNewCoveredContract(),
-        severities: [severity.id as string],
-      });
     }
+    // else {
+    //   contractsForm.push({
+    //     ...createNewCoveredContract(),
+    //     severities: [severity.id as string],
+    //   });
+    // }
   });
 
   return contractsForm;
@@ -241,9 +269,16 @@ function editedSeveritiesToSeverities(severities: IEditedVulnerabilitySeverityV1
     if (newSeverity.id) delete newSeverity.id;
     return {
       ...newSeverity,
-      "contracts-covered": contractsCovered
+      // "contracts-covered": contractsCovered
+      //   .filter((contract) => contract.severities?.includes(severityId))
+      //   .map((contract) => ({ [contract.name]: contract.address })),
+      contractsCoveredNew: contractsCovered
         .filter((contract) => contract.severities?.includes(severityId))
-        .map((contract) => ({ [contract.name]: contract.address })),
+        .map((contract) => ({
+          link: contract.address,
+          linesOfCode: contract.linesOfCode,
+          deploymentInfo: contract.deploymentInfo,
+        })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
   }) as IVulnerabilitySeverityV1[];
 }
@@ -256,12 +291,18 @@ function editedSeveritiesToSeveritiesv2(
     const newSeverity = { ...severity };
 
     const severityId = newSeverity.id as string;
-    if (newSeverity.id) delete newSeverity.id;
     return {
       ...newSeverity,
-      "contracts-covered": contractsCovered
+      // "contracts-covered": contractsCovered
+      //   .filter((contract) => contract.severities?.includes(severityId))
+      //   .map((contract) => ({ [contract.name]: contract.address })),
+      contractsCoveredNew: contractsCovered
         .filter((contract) => contract.severities?.includes(severityId))
-        .map((contract) => ({ [contract.name]: contract.address })),
+        .map((contract) => ({
+          link: contract.address,
+          linesOfCode: contract.linesOfCode,
+          deploymentInfo: contract.deploymentInfo,
+        })) as IBaseVulnerabilitySeverity["contractsCoveredNew"],
     };
   }) as IVulnerabilitySeverityV2[];
 }
@@ -272,7 +313,6 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
   if (editedVaultDescription.version === "v1") {
     return {
       version: editedVaultDescription.version,
-
       "project-metadata": projectMetadata,
       "communication-channel": editedVaultDescription["communication-channel"],
       committee: editedVaultDescription.committee,
@@ -281,6 +321,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         editedVaultDescription["vulnerability-severities-spec"].severities,
         editedVaultDescription["contracts-covered"]
       ),
+      scope: editedVaultDescription.scope,
     };
   } else {
     return {
@@ -293,6 +334,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         editedVaultDescription["vulnerability-severities-spec"].severities,
         editedVaultDescription["contracts-covered"]
       ),
+      scope: editedVaultDescription.scope,
     };
   }
 }

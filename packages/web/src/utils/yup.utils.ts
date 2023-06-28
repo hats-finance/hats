@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { isEmailAddress } from "./emails.utils";
 import { getTokenInfo } from "./tokens.utils";
 
-function checkUrl(url: string) {
+export function checkUrl(url: string) {
   const urlRegex = new RegExp(/(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,10}\b([-a-zA-Z0-9@:%_+.~#()?&//=]*)/);
   return urlRegex.test(url);
 }
@@ -21,7 +21,7 @@ export const getTestWalletAddress = (intl) => {
     name: "is-address",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isAdd = isAddress(value ?? "");
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
 
       return isAdd || isEmpty ? true : ctx.createError({ message: intl("invalid-address") });
     },
@@ -33,7 +33,7 @@ export const getTestUrl = (intl) => {
     name: "is-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isUrl = checkUrl(value ?? "");
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
 
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
     },
@@ -45,7 +45,7 @@ export const getTestGithubRepoUrl = (intl) => {
     name: "is-github-repo-url",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isUrl = checkUrl(value ?? "");
-      const isEmpty = !value;
+      const isEmpty = value === "" || value === undefined;
 
       // Normal URL validation
       if (!isUrl && !isEmpty) return ctx.createError({ message: intl("invalid-url") });
@@ -71,7 +71,7 @@ export const getTestGitCommitHash = (intl) => {
     name: "is-commit-hash",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isCommitHash = checkCommitHash(value ?? "");
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
 
       return isCommitHash || isEmpty ? true : ctx.createError({ message: intl("invalid-commit-hash") });
     },
@@ -84,7 +84,7 @@ export const getTestAddressOrUrl = (intl) => {
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isAdd = isAddress(value ?? "");
       const isUrl = checkUrl(value ?? "");
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
 
       return isAdd || isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-address-or-url") });
     },
@@ -159,7 +159,7 @@ export const getTestEmailAddress = (intl) => {
     name: "is-email-address",
     test: (value: string | undefined, ctx: Yup.TestContext) => {
       const isValidEmail = isEmailAddress(value);
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
 
       return isValidEmail || isEmpty ? true : ctx.createError({ message: intl("invalid-email-address") });
     },
@@ -210,7 +210,7 @@ export const getTestPGPKeyFormat = (intl, type: "public" | "private") => {
   return {
     name: `pgp-${type}-key-format`,
     test: async (value: string | undefined, ctx: Yup.TestContext) => {
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
       if (isEmpty || !value) return true;
 
       try {
@@ -240,7 +240,7 @@ export const getTestPGPMessageFormat = (intl) => {
   return {
     name: `pgp-message-format`,
     test: async (value: string | undefined, ctx: Yup.TestContext) => {
-      const isEmpty = value === "";
+      const isEmpty = value === "" || value === undefined;
       if (isEmpty || !value) return true;
 
       try {

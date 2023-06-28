@@ -1,11 +1,17 @@
-import { Pill, Vault } from "components";
+import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
+import { Button, Modal, Pill } from "components";
+import useModal from "hooks/useModal";
 import { useVaults } from "hooks/vaults/useVaults";
+import { VaultDetailsPage } from "pages/Honeypots/VaultDetailsPage/VaultDetailsPage";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultStatusContext } from "../store";
+import { StyledPreviewModal } from "../styles";
 
 export const GovApprovalStatusCard = () => {
   const { t } = useTranslation();
+
+  const { isShowing: isShowingPreview, show: showPreview, hide: hidePreview } = useModal();
 
   const { vaultData, vaultAddress } = useContext(VaultStatusContext);
   const { allVaults } = useVaults();
@@ -17,8 +23,8 @@ export const GovApprovalStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("govApproval")}</span>
-          <Pill color={isApprovedByGov ? "blue" : "red"} text={isApprovedByGov ? t("live") : t("pendingApproval")} />
+          <h3>{t("govApproval")}</h3>
+          <Pill dotColor={isApprovedByGov ? "blue" : "red"} text={isApprovedByGov ? t("live") : t("pendingApproval")} />
         </div>
       </div>
 
@@ -32,13 +38,16 @@ export const GovApprovalStatusCard = () => {
       )}
 
       {vault && (
-        <div className="preview-vault">
-          <table>
-            <tbody>
-              <Vault expanded={true} vault={vault} noActions />
-            </tbody>
-          </table>
-        </div>
+        <>
+          <Button className="mt-5" onClick={showPreview}>
+            {t("showVaultPreview")} <OpenIcon className="ml-3" />
+          </Button>
+          <Modal isShowing={isShowingPreview} onHide={hidePreview}>
+            <StyledPreviewModal>
+              <VaultDetailsPage vaultToUse={vault} noActions />
+            </StyledPreviewModal>
+          </Modal>
+        </>
       )}
     </div>
   );

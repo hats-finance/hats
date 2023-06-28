@@ -34,6 +34,11 @@ export function SubmissionReview() {
         />
       </div>
 
+      {/* <MDEditor.Markdown
+        source={submissionData?.submissionsDescriptions?.submissionMessage}
+        style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
+      /> */}
+
       <FormInput readOnly type="textarea" rows={20} value={submissionData?.submissionsDescriptions?.submissionMessage} />
 
       <div className="buttons">

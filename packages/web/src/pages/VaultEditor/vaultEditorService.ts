@@ -1,18 +1,17 @@
-import { getContract, getProvider, readContracts } from "wagmi/actions";
-import { BigNumber } from "ethers";
 import {
-  HATSVaultsRegistry_abi,
   HATSVaultV2_abi,
+  HATSVaultsRegistry_abi,
   IEditedSessionResponse,
   IEditedVaultDescription,
   IVaultDescription,
   IVaultStatusData,
 } from "@hats-finance/shared";
-import { getPath, setPath } from "utils/objects.utils";
-import { isBlob } from "utils/files.utils";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
+import { isBlob } from "utils/files.utils";
+import { getPath, setPath } from "utils/objects.utils";
+import { getContract, getProvider, readContracts } from "wagmi/actions";
 
 /**
  * Gets an edit session data
@@ -260,6 +259,17 @@ export async function getCurrentValidEditSession(
  * @param chainId - The chain id of the vault
  */
 export async function getEditionEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/all/edition/${chainId}/${vaultAddress}`);
+  return response.data ?? [];
+}
+
+/**
+ * Gets all the edit sessions that were created for a vault (creation and editing)
+ *
+ * @param vaultAddress - The vault address
+ * @param chainId - The chain id of the vault
+ */
+export async function getAllEditSessions(vaultAddress: string, chainId: number): Promise<IEditedSessionResponse[]> {
   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/all/${chainId}/${vaultAddress}`);
   return response.data ?? [];
 }
@@ -272,4 +282,14 @@ export async function getEditionEditSessions(vaultAddress: string, chainId: numb
 export async function setLastCreationOnChainRequest(editSessionId: string): Promise<boolean[]> {
   const response = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/set-last-creation-onchain-request`);
   return response.data ?? [];
+}
+
+/**
+ * Generates NFTs assets
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function generateNftsAssets(editSessionId: string): Promise<boolean> {
+  const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/generate-nft-assets`);
+  return response.status === 200 ? true : false;
 }

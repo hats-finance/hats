@@ -1,6 +1,7 @@
 import { BigNumber } from "ethers";
 import {
   ICommitteeMember,
+  IProtocolSetupInstructions,
   IVaultDescription,
   IVaultRepoInformation,
   IVaultType,
@@ -12,6 +13,11 @@ export interface IEditedContractCovered {
   name: string;
   address: string;
   severities: string[]; // IVulnerabilitySeverity.name
+  linesOfCode?: number;
+  deploymentInfo?: {
+    contractAddress: string;
+    chainId: string;
+  }[];
 }
 
 export interface IEditedCommunicationEmail {
@@ -70,6 +76,8 @@ export interface IBaseEditedVaultDescription {
     endtime?: number;
     starttime?: number;
     emails: IEditedCommunicationEmail[];
+    oneLiner?: string;
+    intendedCompetitionAmount?: number;
   };
   committee: {
     chainId?: string;
@@ -80,7 +88,12 @@ export interface IBaseEditedVaultDescription {
     "pgp-pk": string | string[];
   };
   scope?: {
+    description: string;
+    codeLangs: string[];
     reposInformation: IVaultRepoInformation[];
+    docsLink: string;
+    outOfScope: string;
+    protocolSetupInstructions?: IProtocolSetupInstructions;
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];
@@ -120,6 +133,7 @@ export interface IEditedSessionResponse {
   submittedToCreation?: boolean;
   lastCreationOnChainRequest?: Date;
   vaultEditionStatus?: IVaultEditionStatus;
+  nftAssetsIpfsHash?: string;
 }
 
 export interface ICreateVaultOnChainCall {
