@@ -51,14 +51,14 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const vaultName = vault.description["project-metadata"].name;
 
   const navigateToType = () => {
-    navigate(`${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
+    navigate(`/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
   };
 
   const changeDetailsSection = (sectionTitle: string) => {
     setOpenSectionId(sectionTitle);
 
     if (vaultSlug) {
-      navigate(`${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}/${vaultSlug}/${sectionTitle}`, {
+      navigate(`/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}/${vaultSlug}/${sectionTitle}`, {
         replace: true,
       });
     }
