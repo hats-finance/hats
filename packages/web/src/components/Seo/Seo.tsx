@@ -36,7 +36,7 @@ export const Seo = ({ isMainPage, title, description, image }: SeoProps) => {
       {isMainPage && (
         <meta
           http-equiv="Content-Security-Policy"
-          content={`default-src 'self'; connect-src * self 'unsafe-inline' blob: data: gap:; style-src 'self' 'unsafe-inline'; img-src * self 'unsafe-inline' blob: data: gap:;`}
+          content={`default-src 'self'; style-src * self 'unsafe-inline'; font-src * self 'unsafe-inline'; connect-src * self 'unsafe-inline' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; media-src * self 'unsafe-inline' blob: data: gap:;`}
         />
       )}
       {isMainPage && <link rel="canonical" href="https://app.hats.finance" />}
