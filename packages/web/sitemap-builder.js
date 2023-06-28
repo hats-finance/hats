@@ -1,4 +1,5 @@
 const fs = require("fs");
+const axios = require("axios");
 
 const slugify = (str) =>
   str
@@ -38,25 +39,30 @@ const routes = [
 
 const buildSitemap = async () => {
   const subgraphPromises = subgraphs.map((subgraph) => {
-    return fetch(subgraph, {
-      method: "POST",
+    return axios({
+      url: subgraph,
+      method: "post",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query }),
+      data: { query },
     });
   });
-  const subgraphResults = (
-    await Promise.all(subgraphPromises).then((responses) => Promise.all(responses.map((res) => res.json())))
-  )
+  const subgraphResults = (await Promise.all(subgraphPromises).then((responses) => responses.map((res) => res.data)))
     .map((res) => res.data.vaults)
     .flat()
     .filter((vault) => vault.registered);
   const descriptionHashes = subgraphResults.map((vault) => vault.descriptionHash);
 
   const descriptionsPromises = descriptionHashes.map((descriptionHash) => {
-    return { hash: descriptionHash, promise: fetch(`${ipfsPrefix}/${descriptionHash}`) };
+    return {
+      hash: descriptionHash,
+      promise: axios({
+        url: `${ipfsPrefix}/${descriptionHash}`,
+        method: "get",
+      }),
+    };
   });
-  const descriptionsResults = await Promise.all(descriptionsPromises.map((desc) => desc.promise));
-  const descriptionsData = await Promise.all(descriptionsResults.map((res) => res.json()).map((p) => p.catch((e) => e)));
+  const descriptionsResults = await Promise.all(descriptionsPromises.map((desc) => desc.promise).map((p) => p.catch((e) => e)));
+  const descriptionsData = await Promise.all(descriptionsResults.map((res) => res.data));
   const descriptionsDataWithHash = descriptionsData.map((d) => ({ ...d, hash: descriptionHashes[descriptionsData.indexOf(d)] }));
   const descriptions = descriptionsDataWithHash.filter((d) => !(d instanceof Error));
   const vaultsRoutes = descriptions.map((d) => {
