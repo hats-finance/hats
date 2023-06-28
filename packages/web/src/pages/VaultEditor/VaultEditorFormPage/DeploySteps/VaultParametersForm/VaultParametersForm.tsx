@@ -1,20 +1,20 @@
-import { useContext, useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import Tooltip from "rc-tooltip";
-import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { IEditedVaultDescription, IEditedVaultParameters } from "@hats-finance/shared";
-import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import { yupResolver } from "@hookform/resolvers/yup";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";
-import { appChains } from "settings";
-import { toFixedIfNecessary } from "utils/amounts.utils";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useVaults } from "hooks/vaults/useVaults";
-import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
+import Tooltip from "rc-tooltip";
+import { useContext, useEffect } from "react";
+import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { appChains } from "settings";
+import { toFixedIfNecessary } from "utils/amounts.utils";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
-import { StyledVaultEditorForm } from "../../styles";
 import { VaultEditorFormContext } from "../../store";
-import InfoIcon from "@mui/icons-material/InfoOutlined";
+import { StyledVaultEditorForm } from "../../styles";
+import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 
 type VaultParametersFormProps = {
   statusCardFormDefaultData?: { parameters: IEditedVaultParameters };
@@ -129,7 +129,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   );
 
   return (
-    <StyledVaultEditorForm withoutMargin>
+    <StyledVaultEditorForm withoutMargin noPadding>
       <StyledVaultParametersForm>
         <p className="section-title">{t("maxBounty")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation") }} />

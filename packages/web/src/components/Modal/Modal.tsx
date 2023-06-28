@@ -1,7 +1,7 @@
+import ArrowIcon from "assets/icons/arrow.icon";
 import { useCallback, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import ArrowIcon from "assets/icons/arrow.icon";
-import { StyledModal, ModalContainer } from "./styles";
+import { ModalContainer, StyledModal } from "./styles";
 
 interface ModalProps {
   isShowing: boolean;
@@ -17,7 +17,6 @@ interface ModalProps {
   disableClose?: boolean;
   disableOnOverlayClose?: boolean;
   overflowVisible?: boolean;
-  newStyles?: boolean;
   removeAnimation?: boolean;
 }
 
@@ -35,7 +34,6 @@ export function Modal({
   removeHorizontalPadding = false,
   capitalizeTitle = false,
   overflowVisible = false,
-  newStyles = false,
   removeAnimation = false,
 }: ModalProps) {
   const [localShowModal, setLocalShowModal] = useState(isShowing);
@@ -82,7 +80,6 @@ export function Modal({
             removeHorizontalPadding={removeHorizontalPadding}
             overflowVisible={overflowVisible}
             capitalizeTitle={capitalizeTitle}
-            newStyles={newStyles}
           >
             <div className="header">
               <div className="title">

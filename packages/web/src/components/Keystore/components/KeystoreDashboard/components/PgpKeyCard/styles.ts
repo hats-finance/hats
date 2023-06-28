@@ -25,22 +25,19 @@ export const StyledPgpKeyCard = styled.div<{
       cursor: pointer;
 
       &:hover {
-        background-color: var(--purple-blue);
-        border-color: var(--turquoise);
+        background-color: var(--background-3);
       }
     `}
 
     ${viewOnly &&
     css`
       cursor: default;
-      background-color: var(--purple-blue);
-      border-color: var(--turquoise);
+      background-color: var(--background-3);
     `}
 
     ${selected &&
     css`
-      background-color: var(--purple-blue);
-      border-color: var(--turquoise);
+      background-color: var(--background-3);
     `}
     
     .info {
@@ -70,7 +67,7 @@ export const StyledPgpKeyCard = styled.div<{
       }
 
       .icon-selected {
-        color: var(--turquoise);
+        color: var(--secondary);
       }
     }
   `

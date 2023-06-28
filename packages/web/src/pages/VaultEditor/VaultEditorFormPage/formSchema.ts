@@ -9,6 +9,7 @@ import {
   getTestNumberInBetween,
   getTestTokenAddress,
   getTestUrl,
+  getTestWalletAddress,
 } from "utils/yup.utils";
 import * as Yup from "yup";
 
@@ -21,7 +22,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       tokenIcon: Yup.string().required(intl("required")),
       website: Yup.string().test(getTestUrl(intl)).required(intl("required")),
       name: Yup.string().required(intl("required")),
-      type: Yup.string().required(intl("required")),
+      type: Yup.string().required(intl("required")).typeError(intl("required")),
+      oneLiner: Yup.string()
+        .required(intl("required"))
+        .typeError(intl("required"))
+        .min(40, intl("min-characters", { min: 40 }))
+        .max(120, intl("max-characters", { max: 120 })),
       starttime: Yup.number()
         .positive(intl("required"))
         .typeError(intl("required"))
@@ -47,6 +53,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           !!ctx.from[1].value.vaultCreatedInfo?.vaultAddress ? true : (val?.length ?? 0) > 0
         )
         .required(intl("required")),
+      intendedCompetitionAmount: Yup.string().when("type", (type: string, schema: any) => {
+        if (!type || type !== "audit") return schema;
+        return schema.required(intl("required"));
+      }),
     }),
     scope: Yup.object({
       reposInformation: Yup.array().of(
@@ -56,6 +66,13 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           isMain: Yup.boolean(),
         })
       ),
+      description: Yup.string(),
+      docsLink: Yup.string().test(getTestUrl(intl)),
+      outOfScope: Yup.string(),
+      protocolSetupInstructions: Yup.object({
+        tooling: Yup.string(),
+        instructions: Yup.string(),
+      }),
     }),
     committee: Yup.object({
       chainId: Yup.string().required(intl("required")),
@@ -77,9 +94,16 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     }),
     "contracts-covered": Yup.array().of(
       Yup.object({
-        name: Yup.string().required(intl("required")),
-        address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
+        // name: Yup.string().required(intl("required")),
+        address: Yup.string().test(getTestUrl(intl)).required(intl("required")),
+        description: Yup.string().max(100, intl("max-characters", { max: 100 })),
         severities: Yup.array().min(1, intl("required")),
+        deploymentInfo: Yup.array().of(
+          Yup.object({
+            contractAddress: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+            chainId: Yup.string().required(intl("required")),
+          })
+        ),
       })
     ),
     "vulnerability-severities-spec": Yup.object({

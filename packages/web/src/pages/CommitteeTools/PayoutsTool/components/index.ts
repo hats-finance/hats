@@ -1,5 +1,4 @@
 export { PayoutCard } from "./PayoutCard/PayoutCard";
-export { NftPreview } from "../../../../components/NftPreview/NftPreview";
 export { SignerCard } from "./SignerCard/SignerCard";
 export { SinglePayoutAllocation } from "./PayoutAllocation/SinglePayoutAllocation/SinglePayoutAllocation";
 export { SplitPayoutAllocation } from "./PayoutAllocation/SplitPayoutAllocation/SplitPayoutAllocation";

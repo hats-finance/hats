@@ -1,18 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
 import { isAddressAMultisigMember } from "@hats-finance/shared";
-import Tooltip from "rc-tooltip";
+import ErrorIcon from "assets/icons/error-icon.svg";
+import { Dot, DropdownSelector, WithTooltip } from "components";
+import { Colors } from "constants/constants";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { Dot, DropdownSelector } from "components";
-import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import ErrorIcon from "assets/icons/error-icon.svg";
-import { StyledWalletButton, WalletButtonWrapper } from "./styles";
-import { connectorIcons } from "./connector.icons";
+import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
 import { chainIcons } from "./chains.icons";
+import { connectorIcons } from "./connector.icons";
+import { StyledWalletButton, WalletButtonWrapper } from "./styles";
 
 type WalletButtonProps = {
   expanded?: boolean;
@@ -76,7 +75,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     if (account) {
       return (
         <span>
-          {ens || shortenIfAddress(account)} {isGovMember && "[Gov]"}
+          {ens || shortenIfAddress(account, { startLength: 6 })} {isGovMember && "[Gov]"}
         </span>
       );
     } else {
@@ -88,25 +87,15 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     const network = supportedNetwork && chain ? chain.name : t("unsupported-network");
 
     return (
-      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network}>
+      <WithTooltip text={network}>
         {supportedNetwork && chain ? (
           <img src={chainIcons[chain.id]} alt={chain.name} />
         ) : (
           <img src={ErrorIcon} alt={t("unsupported-network")} />
         )}
-      </Tooltip>
+      </WithTooltip>
     );
   };
-
-  // const getProviderIcon = () => {
-  //   if (!connectedConnector) return null;
-
-  //   return (
-  //     <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={connectedConnector.name}>
-  //       <img src={require(`assets/icons/connectors/${connectedConnector.id}.png`)} alt={connectedConnector.name} />
-  //     </Tooltip>
-  //   );
-  // };
 
   const getConnectorsOptions = useCallback(
     () =>

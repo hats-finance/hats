@@ -2,9 +2,9 @@ import { StyledButton } from "./styles";
 
 export type ButtonProps = {
   styleType?: "filled" | "outlined" | "invisible" | "icon" | "text";
-  filledColor?: "primary" | "error";
-  size?: "normal" | "small" | "big";
-  textColor?: "white" | "primary";
+  filledColor?: "primary" | "secondary" | "error" | "grey";
+  size?: "normal" | "medium" | "small" | "big";
+  textColor?: "white" | "primary" | "secondary" | "error";
   className?: string;
   expanded?: boolean;
   disabled?: boolean;
@@ -14,6 +14,7 @@ export type ButtonProps = {
   type?: "button" | "submit" | "reset";
   onClick?: () => void;
   children: React.ReactNode;
+  noRadius?: boolean;
 };
 
 export const Button = ({
@@ -22,6 +23,7 @@ export const Button = ({
   size = "normal",
   disabled = false,
   bigHorizontalPadding = false,
+  noRadius = false,
   type = "button",
   lowercase,
   noPadding,
@@ -43,6 +45,7 @@ export const Button = ({
       disabled={disabled}
       onClick={disabled ? () => {} : onClick}
       lowercase={lowercase}
+      noRadius={noRadius}
       textColor={textColor}
       {...props}
     >

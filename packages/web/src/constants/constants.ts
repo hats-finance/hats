@@ -31,13 +31,6 @@ export const NFTContractDataProxy = {
   ["0xbf5A12c4dD49f81cF5827290Ac9d94470C0E7759".toLowerCase()]: "0x5E32BF5A465A881E217Ef816506D7ecddB53F48F",
 };
 
-export enum Pages {
-  vaults = "Vaults",
-  gov = "Gov",
-  vulnerability = "Submit Vulnerability",
-  airdrop_machine = "Airdrop Machine",
-}
-
 export const SMALL_SCREEN_BREAKPOINT = "1100px";
 
 export const DEFUALT_NOTIFICATION_DISPLAY_TIME = 10000;
@@ -86,15 +79,15 @@ export enum Colors {
   black = "#000000",
   fieldBlue = "#0C1436",
   lightTurquoise = "9BC8CA",
-}
-
-export enum PieChartColors {
-  token = "#14595B",
-  vestedToken = "#296B6D",
-  committee = "#3E7D7F",
-  vestedHats = "#548E91",
-  governance = "#69A0A3",
-  swapAndBurn = "#7EB2B5",
+  // New colors
+  primary = "#614fda",
+  primarylight = "#2d3271",
+  secondary = "#24e8c5",
+  secondaryLight = "#74baae",
+  background = "#0e0e18",
+  background1 = "#0b0b23",
+  background2 = "#151731",
+  background3 = "#22233e",
 }
 
 export enum SocialLinks {
@@ -107,16 +100,6 @@ export enum SocialLinks {
 
 export const GOV_DISCORD_LINK = "https://discord.gg/McjYd9bd";
 export const DISCORD_ENTRY_CHANNEL = "https://discord.com/channels/810534320040837121/976144633899925504";
-
-const NORMAL_SEVERITIES_COLORS = ["#141F50", "#19265F", "#213173", "#122777"];
-const GAMIFICATION_SEVERITIES_COLORS = ["#2A115F", "#3B1B7E", "#4B239F"];
-
-export const VAULTS_TYPE_SEVERITIES_COLORS = {
-  gamification: GAMIFICATION_SEVERITIES_COLORS,
-  normal: NORMAL_SEVERITIES_COLORS,
-  Grants: NORMAL_SEVERITIES_COLORS,
-  "": NORMAL_SEVERITIES_COLORS,
-};
 
 export enum Transactions {
   Approve = "Approve",

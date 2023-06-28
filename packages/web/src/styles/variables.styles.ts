@@ -2,8 +2,6 @@ import { css } from "styled-components";
 
 export const variables = css`
   :root {
-    --header-height: 75px;
-    --sidebar-width: 260px;
     --element-padding-mobile: 20px;
     --modal-element-padding: 40px;
     --modal-element-padding-mobile: 20px;
@@ -14,12 +12,40 @@ export const variables = css`
     --notifications-container-z-index: 20000;
     --nft-card-z-index: 9999;
 
-    /* colors */
+    /* NEW COLORS */
+    --primary: #614fda;
+    --primary-light: #2d3271;
+    --primary-lighter: #8674ff;
+    --secondary: #24e8c5;
+    --secondary-light: #74baae;
+    --secondary-lighter: #3f5d6a;
+    --background: #0e0e18;
+    --background-1: #0b0b23;
+    --background-2: #151731;
+    --background-3: #242541;
+    --disabled-input: #070a14;
+
     --white: #ffffff;
+    --error-red: #ff6464;
+    --error-red-background: #4f1a1a;
+    --warning-yellow: #f2c94c;
+    --warning-yellow-background: #746023;
+    --success-green: #00ff0a;
+
+    --grey-400: #d0d5dd;
+    --grey-500: #667085;
+    --grey-600: #424751;
+    --grey-700: #343841;
+    --grey-800: #282c33;
+    --grey-900: #424751;
+    /* ----------------------- */
+
+    /* colors */
     --black: #000206;
     --dark-blue: #000723;
     --moderate-blue: #000930;
     --strong-blue: #001571;
+    --turquoise: #8afcfd;
     --teal: #00a1a3;
     --blue: #000c3b;
     --blue-2: #101b4e;
@@ -30,7 +56,6 @@ export const variables = css`
     --light-blue-2: #4c80d0;
     --purple-blue: #1f2748;
     --vault-blue: #0524a7;
-    --turquoise: #8afcfd;
     --turquoise-1: #58ccb1;
     --turquoise-2: #428a8d;
     --turquoise-3: #24a19b;
@@ -53,17 +78,8 @@ export const variables = css`
     --strong-purple: #4b239f;
     --strong-purple-2: #5662f6;
 
-    --disabled-input: #070a14;
     --background-clear-blue: #161b2f;
     --background-clearer-blue: #212639;
-    --grey-400: #d0d5dd;
-    --grey-500: #667085;
-    --grey-600: #424751;
-    --grey-700: #343841;
-    --grey-800: #282c33;
-    --grey-900: #424751;
-    --error-red: #ff6464;
-    --warning-yellow: #f2c94c;
 
     /* pie chart colors */
     --token: #14595b;

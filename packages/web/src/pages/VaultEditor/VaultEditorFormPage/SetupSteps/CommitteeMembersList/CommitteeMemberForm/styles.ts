@@ -4,7 +4,7 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledCommitteeMemberForm = styled.div`
   position: relative;
-  background: var(--background-clearer-blue);
+  background: var(--background-3);
   border-radius: 4px;
   padding: ${getSpacing(2.5)};
 

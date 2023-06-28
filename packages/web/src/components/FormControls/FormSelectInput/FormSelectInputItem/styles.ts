@@ -7,13 +7,13 @@ export const StyledFormSelectInputItem = styled.label`
   align-items: center;
   justify-content: space-between;
   gap: ${getSpacing(1)};
-  padding: ${getSpacing(2)} ${getSpacing(1.5)};
+  padding: ${getSpacing(2)};
   user-select: none;
   color: var(--white);
   font-size: var(--xsmall);
 
   &:hover {
-    background-color: var(--moderate-blue);
+    background-color: var(--background-2);
   }
 
   .info {

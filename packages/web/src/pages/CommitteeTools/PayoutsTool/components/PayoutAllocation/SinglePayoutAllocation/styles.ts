@@ -63,7 +63,7 @@ export const StyledSinglePayoutAllocation = styled.div`
         }
 
         .sum {
-          border-color: var(--teal);
+          border-color: var(--secondary-light);
         }
       }
     }

@@ -1,38 +1,86 @@
-import styled from "styled-components";
 import { NavLink } from "react-router-dom";
+import styled from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledNavLink = styled(NavLink)`
-  height: 50px;
-  line-height: 50px;
-  padding-left: 15px;
-  border-left: 4px solid transparent;
-  margin: 10px 0px;
-  color: var(--dirty-turquoise);
+  padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(2)} ${getSpacing(2)};
+  border-left: ${getSpacing(0.8)} solid transparent;
+  margin: ${getSpacing(2)} 0px;
+  color: var(--white);
   font-size: var(--xsmall);
+  display: flex;
+  align-items: center;
+  gap: ${getSpacing(1.5)};
 
-  @media (max-width: ${breakpointsDefinition.mobile}) {
-    border-left: unset;
+  @media (max-width: ${breakpointsDefinition.mediumScreen}) {
+    flex-direction: column;
+    border-left: none;
+    border-bottom: ${getSpacing(0.4)} solid transparent;
+    padding: ${getSpacing(1.5)} ${getSpacing(3)};
   }
 
-  &.vulnerability {
-    color: var(--bright-green);
+  p.normal {
+    display: block;
 
-    &.active {
-      border-color: var(--bright-green);
-      font-weight: bold;
-      color: var(--bright-green);
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
+      display: none;
     }
   }
 
+  p.collapsed {
+    display: none;
+
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
+      display: block;
+    }
+  }
+
+  svg {
+    width: ${getSpacing(3.5)};
+    height: ${getSpacing(3.5)};
+    object-fit: contain;
+  }
+
   &.active {
-    border-left-color: var(--turquoise);
-    color: var(--turquoise);
-    background-color: var(--blue);
+    border-color: var(--secondary-light);
+    background-color: var(--background-2);
     font-weight: bold;
+
+    svg path {
+      fill: var(--secondary-light);
+    }
+  }
+
+  &.bounties.active {
+    border-color: var(--secondary);
+
+    svg path {
+      fill: var(--secondary);
+    }
+  }
+
+  &.audits.active {
+    border-color: var(--primary-lighter);
+
+    svg path {
+      fill: var(--primary-lighter);
+    }
+  }
+
+  &.vulnerability.active {
+    border-color: var(--warning-yellow);
+
+    svg path {
+      fill: var(--warning-yellow);
+    }
   }
 
   &.hidden:not(.active) {
     display: none;
+  }
+
+  &.active {
+    visibility: visible;
   }
 `;

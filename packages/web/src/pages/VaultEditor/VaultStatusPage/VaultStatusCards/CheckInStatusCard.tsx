@@ -1,11 +1,11 @@
-import { useContext, useEffect, useState } from "react";
 import { isAGnosisSafeTx } from "@hats-finance/shared";
-import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
+import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Button, Loading, Pill } from "components";
 import { CommitteeCheckInContract } from "contracts";
+import { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useAccount, useWaitForTransaction } from "wagmi";
 import { VaultStatusContext } from "../store";
-import SyncIcon from "@mui/icons-material/Sync";
 
 export const CheckInStatusCard = () => {
   const { t } = useTranslation();
@@ -19,29 +19,28 @@ export const CheckInStatusCard = () => {
   const isMultisigConnected = address === committeeMulsitigAddress;
 
   const checkInCall = CommitteeCheckInContract.hook(undefined, { address: vaultAddress, chainId: vaultChainId });
+  useWaitForTransaction({
+    hash: checkInCall.data?.hash as `0x${string}`,
+    onSuccess: async (data) => {
+      const isSafeTx = await isAGnosisSafeTx(data.transactionHash, vaultChainId);
+
+      if (isSafeTx) setIsBeingExecuted(true);
+      setTimeout(() => refreshVaultData(), 2000);
+    },
+  });
+
   const handleCheckIn = () => {
     if (isCommitteeCheckedIn || !isMultisigConnected) return;
     checkInCall?.send();
   };
 
-  useEffect(() => {
-    const txHash = checkInCall?.data?.hash;
-    if (!txHash) return;
-
-    isAGnosisSafeTx(txHash, vaultChainId).then((isSafeTx) => {
-      if (isSafeTx) setIsBeingExecuted(true);
-      setTimeout(() => refreshVaultData(), 2000);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkInCall]);
-
   return (
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("checkIn")}</span>
+          <h3>{t("checkIn")}</h3>
           <Pill
-            color={isCommitteeCheckedIn ? "blue" : "red"}
+            dotColor={isCommitteeCheckedIn ? "blue" : "red"}
             text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")}
           />
         </div>

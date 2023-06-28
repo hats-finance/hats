@@ -43,7 +43,6 @@ export const ModalContainer = styled.div<{
   withIcon: boolean;
   disableClose: boolean;
   overflowVisible: boolean;
-  newStyles: boolean;
 }>(
   ({
     withTitleDivider,
@@ -53,14 +52,13 @@ export const ModalContainer = styled.div<{
     disableClose,
     removeTopPadding,
     overflowVisible,
-    newStyles,
   }) => css`
     position: relative;
     max-width: calc(100vw - ${getSpacing(6)});
     max-height: calc(100vh - ${getSpacing(6)});
     overflow: ${overflowVisible ? "visible" : "auto"};
-    background: ${newStyles ? "var(--background-clearer-blue)" : "var(--field-blue)"};
-    border: ${newStyles ? "1px solid var(--turquoise)" : "none"};
+    background: var(--background-1);
+    border: 1px solid var(--primary);
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
       max-width: unset;

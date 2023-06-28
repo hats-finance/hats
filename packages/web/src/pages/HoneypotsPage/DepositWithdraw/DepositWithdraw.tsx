@@ -1,22 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
-import { useNetwork } from "wagmi";
-import { waitForTransaction } from "wagmi/actions";
-import { isAGnosisSafeTx, IVault } from "@hats-finance/shared";
-import { BigNumber } from "ethers";
-import { parseUnits } from "@ethersproject/units";
 import { TransactionReceipt } from "@ethersproject/providers";
-import { useTranslation } from "react-i18next";
-import millify from "millify";
+import { parseUnits } from "@ethersproject/units";
+import { IVault, isAGnosisSafeTx } from "@hats-finance/shared";
 import classNames from "classnames";
 import { Loading, Modal } from "components";
-import { TERMS_OF_USE, MAX_SPENDING } from "constants/constants";
-import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
-import { useVaults } from "hooks/vaults/useVaults";
-import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import useModal from "hooks/useModal";
+import { MAX_SPENDING, TERMS_OF_USE } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
-import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
-import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
 import {
   ClaimRewardContract,
   CommitteeCheckInContract,
@@ -25,7 +13,19 @@ import {
   WithdrawAndClaimContract,
   WithdrawRequestContract,
 } from "contracts";
+import { BigNumber } from "ethers";
+import useModal from "hooks/useModal";
+import { useVaults } from "hooks/vaults/useVaults";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
+import millify from "millify";
+import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNetwork } from "wagmi";
+import { waitForTransaction } from "wagmi/actions";
+import { ApproveToken, EmbassyEligibility, TokenSelect } from ".";
+import UserAssetsInfo from "./UserAssetsInfo/UserAssetsInfo";
 import "./index.scss";
+import { useVaultDepositWithdrawInfo } from "./useVaultDepositWithdrawInfo";
 
 interface IProps {
   vault: IVault;
@@ -56,8 +56,8 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const { t } = useTranslation();
   const isSupportedNetwork = useSupportedNetwork();
   const { chain } = useNetwork();
-  const { tokenPrices, withdrawSafetyPeriod } = useVaults();
-  const { id, stakingToken, stakingTokenDecimals, multipleVaults } = vault;
+  const { withdrawSafetyPeriod } = useVaults();
+  const { id, stakingTokenDecimals, multipleVaults } = vault;
 
   const { isShowing: isShowingApproveSpending, hide: hideApproveSpending, show: showApproveSpending } = useModal();
 
@@ -293,7 +293,10 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
           <div className="top">
             <span>Vault asset</span>
             <span>
-              &#8776; {!tokenPrices?.[stakingToken] ? "-" : `$${millify(tokenPrices?.[stakingToken], { precision: 3 })}`}
+              &#8776;{" "}
+              {!selectedVault.amountsInfo?.tokenPriceUsd
+                ? "-"
+                : `$${millify(selectedVault.amountsInfo.tokenPriceUsd, { precision: 3 })}`}
             </span>
           </div>
           <div className="input-wrapper">

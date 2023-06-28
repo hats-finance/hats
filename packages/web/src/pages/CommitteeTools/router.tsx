@@ -1,10 +1,9 @@
-import { RouteObject } from "react-router-dom";
 import { RoutePaths } from "navigation";
-// Pages components
+import { RouteObject } from "react-router-dom";
 import { DecryptionHomePage } from "./DecryptionTool/DecryptionHomePage";
-import { PayoutsListPage } from "./PayoutsTool/PayoutsListPage/PayoutsListPage";
 import { PayoutFormPage } from "./PayoutsTool/PayoutFormPage/PayoutFormPage";
 import { PayoutStatusPage } from "./PayoutsTool/PayoutStatusPage/PayoutStatusPage";
+import { PayoutsListPage } from "./PayoutsTool/PayoutsListPage/PayoutsListPage";
 
 export const committeeToolsRouter = (): RouteObject => ({
   path: `${RoutePaths.committee_tools}`,

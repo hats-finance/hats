@@ -10,7 +10,7 @@ export const StyledPayoutCard = styled.div<{
 }>(
   ({ status, minSignersReached, viewOnly, noVaultInfo }) => css`
     position: relative;
-    background: var(--background-clearer-blue);
+    background: var(--background-3);
     padding: ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(2)} ${getSpacing(5)};
     display: grid;
     align-items: center;
@@ -64,7 +64,7 @@ export const StyledPayoutCard = styled.div<{
         width: 26px;
         height: 26px;
         border-radius: 100px;
-        background: var(--background-clearer-blue);
+        background: var(--background-3);
 
         img {
           width: 22px;
@@ -105,8 +105,8 @@ export const StyledVersionFlag = styled.span`
   top: 0;
   left: 0;
   text-transform: uppercase;
-  background-color: var(--turquoise);
-  color: var(--strong-blue);
+  background-color: var(--secondary);
+  color: var(--background);
   padding: 10px 6px;
   border-radius: 0 0 18px 0;
   font-size: var(--xsmall);

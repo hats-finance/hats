@@ -1,12 +1,13 @@
-import { IVaultInfo } from "./types";
+import { IVault, IVaultInfo } from "./types";
 
 export interface IPayoutGraph {
   id: string;
   vault: { id: string };
   chainId: number;
   beneficiary: string;
-  approvedAt: string; // Date in seconds
-  dismissedAt: string; // Date in seconds
+  payoutDataHash?: string; // Only for v2, null for v1
+  approvedAt?: string; // Date in seconds
+  dismissedAt?: string; // Date in seconds
   bountyPercentage: string; // Number between 0 and 10000 (for V2 vaults)
   severityIndex: string; // Severity index (for V1 vaults)
   isChallenged: boolean;
@@ -16,9 +17,11 @@ export interface IPayoutGraph {
   hackerHatReward: string;
   committeeReward: string;
   // Computed
+  payoutData?: IPayoutData;
   isActive?: boolean; // Is active claim
   isApproved?: boolean; // Is approved claim
   isDismissed?: boolean; // Is dismissed claim
+  totalPaidOut?: string; // Total paid out
 }
 
 export interface IPayoutResponse {
@@ -46,6 +49,7 @@ interface IPayoutDataBase {
   percentageToPay: string; // Percentage of the whole vault: number between 0 and 100
   explanation: string;
   additionalInfo: string;
+  vault?: IVault;
 }
 
 export interface ISinglePayoutData extends IPayoutDataBase {
@@ -99,7 +103,7 @@ export const payoutStatusInfo = {
   },
   [PayoutStatus.ReadyToExecute]: {
     label: "waitingExecution",
-    color: "--turquoise",
+    color: "--secondary",
   },
   [PayoutStatus.Executed]: {
     label: "waitingApproval",
@@ -107,7 +111,7 @@ export const payoutStatusInfo = {
   },
   [PayoutStatus.Approved]: {
     label: "approved",
-    color: "--teal",
+    color: "--secondary-light",
   },
   [PayoutStatus.Rejected]: {
     label: "rejected",

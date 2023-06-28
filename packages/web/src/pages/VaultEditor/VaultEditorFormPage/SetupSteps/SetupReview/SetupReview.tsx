@@ -1,6 +1,3 @@
-import { useCallback, useContext } from "react";
-import { useTranslation } from "react-i18next";
-import { useWatch } from "react-hook-form";
 import {
   IEditedVaultDescription,
   IVault,
@@ -8,35 +5,43 @@ import {
   IVaultDescriptionV2,
   editedFormToDescription,
 } from "@hats-finance/shared";
-import { Vault } from "components";
-import { useEnhancedFormContext } from "hooks/form";
-import { VaultEditorFormContext } from "../../store";
-import { StyledSetupReview } from "./styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
+import { Button, Modal } from "components";
+import { useEnhancedFormContext } from "hooks/form";
+import useModal from "hooks/useModal";
+import { VaultDetailsPage } from "pages/Honeypots/VaultDetailsPage/VaultDetailsPage";
+import { useCallback, useContext } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { VaultEditorFormContext } from "../../store";
+import { StyledPreviewModal, StyledSetupReview } from "./styles";
 
 export function SetupReview() {
   const { t } = useTranslation();
   const { control } = useEnhancedFormContext<IEditedVaultDescription>();
 
+  const { isShowing: isShowingPreview, show: showPreview, hide: hidePreview } = useModal();
+
   const editedVaultDescriptionForm = useWatch({ control }) as IEditedVaultDescription;
-  const { isEditingExistingVault } = useContext(VaultEditorFormContext);
+  const { isEditingExistingVault, existingVault } = useContext(VaultEditorFormContext);
 
   const getVault = useCallback((): IVault => {
     const description = editedFormToDescription(editedVaultDescriptionForm);
 
     const bothVersionsVault = {
-      id: "",
-      name: "",
-      descriptionHash: "",
-      pid: "",
-      stakingToken: `${editedVaultDescriptionForm.assets[0]?.address ?? ""}`,
+      id: existingVault?.id ?? "",
+      name: existingVault?.name ?? "",
+      descriptionHash: existingVault?.descriptionHash ?? "",
+      pid: existingVault?.pid ?? "",
+      stakingToken: existingVault?.stakingToken ?? `${editedVaultDescriptionForm.assets[0]?.address ?? ""}`,
       stakingTokenDecimals: "18",
-      stakingTokenSymbol: `${editedVaultDescriptionForm.assets[0]?.symbol ?? ""}`,
-      honeyPotBalance: "0",
-      totalRewardPaid: "0",
+      stakingTokenSymbol: existingVault?.stakingTokenSymbol ?? `${editedVaultDescriptionForm.assets[0]?.symbol ?? ""}`,
+      honeyPotBalance: existingVault?.honeyPotBalance ?? "0",
+      totalRewardPaid: existingVault?.totalRewardPaid ?? "0",
       committee: "",
       allocPoints: ["0"],
-      master: {
+      master: existingVault?.master ?? {
         address: "",
         numberOfSubmittedClaims: "",
         withdrawPeriod: "",
@@ -86,18 +91,24 @@ export function SetupReview() {
       registered: true,
       withdrawRequests: [],
       totalUsersShares: "",
-      hackerVestedRewardSplit: `${editedVaultDescriptionForm.parameters.vestedPercentage * 100}`,
-      hackerRewardSplit: `${editedVaultDescriptionForm.parameters.immediatePercentage * 100}`,
-      committeeRewardSplit: `${editedVaultDescriptionForm.parameters.committeePercentage * 100}`,
+      hackerVestedRewardSplit:
+        existingVault?.hackerVestedRewardSplit ?? `${editedVaultDescriptionForm.parameters.vestedPercentage * 100}`,
+      hackerRewardSplit: existingVault?.hackerRewardSplit ?? `${editedVaultDescriptionForm.parameters.immediatePercentage * 100}`,
+      committeeRewardSplit:
+        existingVault?.committeeRewardSplit ?? `${editedVaultDescriptionForm.parameters.committeePercentage * 100}`,
       swapAndBurnSplit: "0",
-      governanceHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange * 100}`,
-      hackerHatRewardSplit: `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange * 100}`,
+      governanceHatRewardSplit:
+        existingVault?.governanceHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange * 100}`,
+      hackerHatRewardSplit:
+        existingVault?.hackerHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange * 100}`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
       depositPause: false,
       committeeCheckedIn: true,
       approvedClaims: [],
       stakers: [],
+      dateStatus: "on_time" as const,
+      chainId: editedVaultDescriptionForm.committee.chainId ? +editedVaultDescriptionForm.committee.chainId : 1,
     };
 
     if (editedVaultDescriptionForm.version === "v1") {
@@ -106,17 +117,19 @@ export function SetupReview() {
         version: editedVaultDescriptionForm.version,
         description: description as IVaultDescriptionV1,
         maxBounty: null,
+        amountsInfo: existingVault?.amountsInfo,
       };
     } else {
       return {
         ...bothVersionsVault,
         version: "v2",
         description: description as IVaultDescriptionV2,
-        maxBounty: `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
+        maxBounty: existingVault?.maxBounty ?? `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
         rewardControllers: [],
+        amountsInfo: existingVault?.amountsInfo,
       };
     }
-  }, [editedVaultDescriptionForm]);
+  }, [editedVaultDescriptionForm, existingVault]);
 
   return (
     <StyledSetupReview>
@@ -153,6 +166,19 @@ export function SetupReview() {
       )}
 
       {isEditingExistingVault && (
+        <>
+          <Button styleType="outlined" className="mt-5" onClick={showPreview}>
+            {t("showVaultPreview")} <OpenIcon className="ml-3" />
+          </Button>
+          <Modal isShowing={isShowingPreview} onHide={hidePreview}>
+            <StyledPreviewModal>
+              <VaultDetailsPage vaultToUse={getVault()} noActions />
+            </StyledPreviewModal>
+          </Modal>
+        </>
+      )}
+      {/* 
+      {isEditingExistingVault && (
         <div className="preview-vault">
           <table>
             <tbody>
@@ -160,7 +186,7 @@ export function SetupReview() {
             </tbody>
           </table>
         </div>
-      )}
+      )} */}
     </StyledSetupReview>
   );
 }

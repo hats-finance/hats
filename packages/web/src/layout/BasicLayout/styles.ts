@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { getSpacing } from 'styles';
-import { breakpointsDefinition } from 'styles/breakpoints.styles';
+import styled from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledApp = styled.div`
   height: 100vh;
@@ -26,5 +26,5 @@ export const AppContent = styled.section`
 export const ContentWrapper = styled.section`
   flex: 1;
   overflow: auto;
-  background-color: var(--dark-blue);
+  background-color: var(--background);
 `;

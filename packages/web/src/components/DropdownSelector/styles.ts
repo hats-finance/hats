@@ -29,13 +29,13 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
       top: calc(100% + ${getSpacing(1)});
       right: ${isOutsideScreen ? "unset" : 0};
       left: ${isOutsideScreen ? "0" : "unset"};
-      background-color: var(--dark-blue);
+      background-color: var(--background-1);
       width: max-content;
       border-radius: 2px;
-      border: 1px solid var(--turquoise);
+      border: 1px solid var(--primary-light);
 
       .option {
-        padding: ${getSpacing(2)};
+        padding: ${getSpacing(1.5)} ${getSpacing(2)};
         border-radius: 2px;
         cursor: pointer;
         display: flex;
@@ -43,7 +43,7 @@ export const StyledDropdownSelector = styled.div<StyledDropdownSelectorProps>(
         gap: ${getSpacing(1.5)};
 
         &:hover {
-          background-color: var(--light-blue);
+          background-color: var(--background-2);
         }
 
         &:active {

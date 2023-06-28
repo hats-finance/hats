@@ -1,7 +1,7 @@
+import CopyIcon from "@mui/icons-material/ContentCopyOutlined";
+import PasteIcon from "@mui/icons-material/ContentPasteOutlined";
+import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";
-import CopyIcon from "assets/icons/copy.icon.svg";
-import RemoveIcon from "assets/icons/delete.icon.svg";
-import PasteIcon from "assets/icons/paste.icon.svg";
 import { ChangeEvent, KeyboardEvent, forwardRef, useRef, useState } from "react";
 import { parseIsDirty } from "../utils";
 import { StyledFormInput } from "./styles";
@@ -203,9 +203,9 @@ function FormInputComponent(
 
           {!disabled && extraIcons && areAvailableExtraIcons && (
             <div className="extra-icons">
-              {pastable && <img alt="paste" src={PasteIcon} onClick={handleOnPaste} />}
-              {copyable && <img alt="copy" src={CopyIcon} onClick={handleOnCopy} />}
-              {removable && <img alt="remove" src={RemoveIcon} onClick={handleOnClear} />}
+              {pastable && <PasteIcon className="icon" onClick={handleOnPaste} />}
+              {copyable && <CopyIcon className="icon" onClick={handleOnCopy} />}
+              {removable && <RemoveIcon className="icon" onClick={handleOnClear} />}
               {type === "password" && (
                 <EyeIcon className="icon" onClick={() => setInputType((prev) => (prev === "password" ? "text" : "password"))} />
               )}

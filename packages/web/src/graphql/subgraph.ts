@@ -96,6 +96,7 @@ export const GET_VAULTS = `
       vault {
         id
       }
+      payoutDataHash: claim
       beneficiary: claimer
       approvedAt
       dismissedAt

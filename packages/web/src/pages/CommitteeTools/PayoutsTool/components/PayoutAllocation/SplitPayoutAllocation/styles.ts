@@ -42,7 +42,7 @@ export const StyledSplitPayoutBeneficiaryForm = styled.div<{ isHeader: boolean }
         transition: 0.3s;
 
         &:hover {
-          color: var(--turquoise);
+          color: var(--secondary);
         }
       }
     }

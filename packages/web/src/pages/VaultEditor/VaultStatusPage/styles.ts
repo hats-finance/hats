@@ -1,9 +1,10 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultStatusPage = styled.div`
   position: relative;
-  background: var(--background-clear-blue);
+  background: var(--background-2);
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
   margin-bottom: ${getSpacing(8)} !important;
@@ -41,9 +42,9 @@ export const StyledVaultStatusPage = styled.div`
     .status-card {
       display: flex;
       flex-direction: column;
-      background: var(--background-clearer-blue);
+      background: var(--background-3);
       border-radius: 4px;
-      padding: ${getSpacing(2)};
+      padding: ${getSpacing(2)} ${getSpacing(3)};
 
       &__title {
         margin-bottom: ${getSpacing(1.5)};
@@ -176,7 +177,7 @@ export const StyledVaultStatusPage = styled.div`
 
       .preview-vault {
         margin-top: 10px;
-        border: 1px solid var(--turquoise);
+        border: 1px solid var(--secondary);
         box-sizing: border-box;
 
         table {
@@ -195,5 +196,15 @@ export const StyledVaultStatusPage = styled.div`
     opacity: 0.8;
     width: fit-content;
     font-size: var(--xxsmall);
+  }
+`;
+
+export const StyledPreviewModal = styled.div`
+  width: calc(100vw - 64px - ${getSpacing(6)});
+  height: calc(100vh - 64px - ${getSpacing(6)});
+
+  @media (max-width: ${breakpointsDefinition.smallMobile}) {
+    width: calc(100vw - 64px - ${getSpacing(2)});
+    height: calc(100vh - 64px - ${getSpacing(2)});
   }
 `;

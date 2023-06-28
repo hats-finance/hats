@@ -1,8 +1,8 @@
-import { useProvider } from "wagmi";
-import { useTranslation } from "react-i18next";
-import { NotificationFeed, NotificationFeedProvider, NotificationBell } from "@wherever/react-notification-feed";
-import { Colors } from "constants/constants";
+import { NotificationBell, NotificationFeed, NotificationFeedProvider } from "@wherever/react-notification-feed";
 import { useKeyWhereverWidget } from "config/wherever";
+import { Colors } from "constants/constants";
+import { useTranslation } from "react-i18next";
+import { useProvider } from "wagmi";
 import { Button } from "../Button/Button";
 import { StyledWhereverWidget, StyledWhereverWidgetContainer } from "./styles";
 
@@ -22,15 +22,16 @@ const WhereverWidget = ({ type = "bell" }: WhereverWidgetProps) => {
       <NotificationFeedProvider
         provider={provider}
         theme={{
+          primaryColor: Colors.secondaryLight,
+          bellColor: Colors.white,
+          backgroundColor: Colors.background2,
           buttonTextColor: Colors.black,
-          bellColor: Colors.turquoise,
-          backgroundColor: Colors.fieldBlue,
-          primaryColor: Colors.turquoise,
           borderRadius: "none",
           uppercasePageTitles: true,
-          fontFamily: '"RobotoMono", sans-serif',
+          fontFamily: '"IBM Plex Sans", sans-serif',
         }}
-        partnerKey={whereverKey}>
+        partnerKey={whereverKey}
+      >
         <NotificationFeed>
           {type === "bell" ? (
             <StyledWhereverWidget>

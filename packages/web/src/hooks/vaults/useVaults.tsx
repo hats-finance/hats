@@ -1,32 +1,37 @@
-import { useEffect, useState, createContext, useContext, PropsWithChildren } from "react";
 import {
   IMaster,
+  IPayoutData,
+  IPayoutGraph,
   IUserNft,
   IVault,
   IVaultDescription,
   IWithdrawSafetyPeriod,
   fixObject,
-  IPayoutGraph,
 } from "@hats-finance/shared";
-import { useAccount, useNetwork } from "wagmi";
-import { appChains, IS_PROD } from "settings";
+import { axiosClient } from "config/axiosClient";
+import { blacklistedWallets } from "data/blacklistedWallets";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
-import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
-import { ipfsTransformUri } from "utils";
-import { blacklistedWallets } from "data/blacklistedWallets";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
+import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
+import { ipfsTransformUri } from "utils";
+import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
+import { populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
-  vaults?: IVault[];
+  activeVaults?: IVault[]; // Vaults filtered by dates and chains
+  allVaultsOnEnv?: IVault[]; // Vaults filtered by chains but not dates
   allVaults?: IVault[]; // Vaults without dates and chains filtering
   userNfts?: IUserNft[];
   allUserNfts?: IUserNft[]; // User nfts without chains filtering
   tokenPrices?: number[];
   masters?: IMaster[];
-  payouts?: IPayoutGraph[];
+  allPayouts?: IPayoutGraph[]; // Payouts without chains filtering
+  allPayoutsOnEnv?: IPayoutGraph[]; // Payouts filtered by chainsPayouts without chains filtering
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -41,8 +46,11 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { chain } = useNetwork();
 
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
-  const [vaults, setVaults] = useState<IVault[]>([]);
+  const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
+  const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
+  const [allPayouts, setAllPayouts] = useState<IPayoutGraph[]>([]);
+  const [allPayoutsOnEnv, setAllPayoutsOnEnv] = useState<IPayoutGraph[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
 
@@ -150,25 +158,92 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       );
 
     const allVaultsData = await getVaultsData(vaultsData);
+    const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
+      const getVaultDateStatus = (): IVault["dateStatus"] => {
+        const startTime = vault.description?.["project-metadata"].starttime;
+        const endTime = vault.description?.["project-metadata"].endtime;
 
-    const vaultsFilteredByDate = allVaultsData.filter((vault) => {
-      const startTime = vault.description?.["project-metadata"].starttime;
-      const endTime = vault.description?.["project-metadata"].endtime;
+        if (startTime && startTime > Date.now() / 1000) return "upcoming";
+        if (endTime && endTime < Date.now() / 1000) return "finished";
 
-      if (startTime && startTime > Date.now() / 1000) return false;
-      if (endTime && endTime < Date.now() / 1000) return false;
+        return "on_time";
+      };
 
-      return true;
+      return {
+        ...vault,
+        dateStatus: getVaultDateStatus(),
+      } as IVault;
     });
 
-    const vaultsFilteredByNetwork = vaultsFilteredByDate.filter((vault) => {
+    const prices = showTestnets ? [] : await getTokenPrices(allVaultsDataWithDatesInfo);
+    if (JSON.stringify(tokenPrices) !== JSON.stringify(prices)) setTokenPrices(prices);
+
+    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataWithDatesInfo, prices);
+
+    const filteredByChain = allVaultsDataWithPrices.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
+    const filteredByChainAndDate = filteredByChain.filter((vault) => vault.dateStatus === "on_time");
+
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsData)) setAllVaults(allVaultsData);
-    if (JSON.stringify(vaults) !== JSON.stringify(vaultsFilteredByNetwork)) setVaults(vaultsFilteredByNetwork);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithPrices)) setAllVaults(allVaultsDataWithPrices);
+    if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
+    if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
+  };
+
+  const setPayoutsWithDetails = async (payoutsData: IPayoutGraph[]) => {
+    const loadPayoutData = async (payout: IPayoutGraph): Promise<IPayoutData | undefined> => {
+      if (payout.payoutDataHash && payout.payoutDataHash !== "") {
+        try {
+          const dataResponse = await fetch(ipfsTransformUri(payout.payoutDataHash)!);
+          if (dataResponse.status === 200) {
+            const payoutData = (await dataResponse.json()) as IPayoutData;
+
+            // If there is no vault data, try to get it from the fallback database
+            if (!payoutData.vault) {
+              const res = await axiosClient.get(`${BASE_SERVICE_URL}/payouts/audit-fallback/${payout.id}`);
+              const vaultFound = res.data.vault as IVault | null;
+
+              return {
+                ...payoutData,
+                vault: vaultFound ?? undefined,
+              };
+            }
+
+            return payoutData;
+          }
+          return undefined;
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    const getPayoutsData = async (payoutsToFetch: IPayoutGraph[]): Promise<IPayoutGraph[]> =>
+      Promise.all(
+        payoutsToFetch.map(async (payout) => {
+          const existsPayoutData = allPayouts.find((p) => p.id === payout.id)?.payoutData;
+          const payoutData = existsPayoutData ?? ((await loadPayoutData(payout)) as IPayoutData);
+
+          return {
+            ...payout,
+            payoutData,
+          } as IPayoutGraph;
+        })
+      );
+
+    const allPayoutsData = await getPayoutsData(payoutsData);
+
+    const filteredByChain = allPayoutsData.filter((vault) => {
+      return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
+    });
+
+    if (JSON.stringify(allPayouts) !== JSON.stringify(allPayoutsData)) setAllPayouts(allPayoutsData);
+    if (JSON.stringify(allPayoutsOnEnv) !== JSON.stringify(filteredByChain)) setAllPayoutsOnEnv(filteredByChain);
   };
 
   const setUserNftsWithMetadata = async (userNftsData: IUserNft[]) => {
@@ -207,21 +282,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   };
 
   useEffect(() => {
-    let cancelled = false;
-    if (allVaults && !showTestnets) {
-      getTokenPrices(allVaults).then((prices) => {
-        if (!cancelled) setTokenPrices(prices);
-      });
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [allVaults, showTestnets]);
-
-  useEffect(() => {
     setVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
     setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
+    setPayoutsWithDetails([...multiChainData.prod.payouts, ...multiChainData.test.payouts]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
@@ -232,18 +295,21 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
-    vaults,
+    activeVaults,
     allVaults,
+    allVaultsOnEnv,
     userNfts,
     allUserNfts,
     tokenPrices,
     withdrawSafetyPeriod,
+    allPayouts,
+    allPayoutsOnEnv,
     masters: [...multiChainData.prod.masters, ...multiChainData.test.masters],
-    payouts: [...multiChainData.prod.payouts, ...multiChainData.test.payouts],
   };
 
   return <VaultsContext.Provider value={context}>{children}</VaultsContext.Provider>;
 }
+
 // const addMultiVaults = (vaults: IVault[]) =>
 //   vaults.map((vault) => {
 //     const additionalVaults = vault.description?.["additional-vaults"] ?? [];

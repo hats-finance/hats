@@ -1,8 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { CollapsableTextContent, FormInput, Modal } from "components";
-import { IStoredKey } from "../../../types";
-import { StyledBaseKeystoreContainer } from "../../../styles";
 import DetailsIcon from "@mui/icons-material/FindInPageOutlined";
+import { CollapsableTextContent, FormInput, Modal } from "components";
+import { useTranslation } from "react-i18next";
+import { StyledBaseKeystoreContainer } from "../../../styles";
+import { IStoredKey } from "../../../types";
 
 type KeyDetailsProps = {
   pgpKey: IStoredKey;
@@ -17,7 +17,6 @@ export const KeyDetails = ({ pgpKey, onClose }: KeyDetailsProps) => {
       removeAnimation
       titleIcon={<DetailsIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.keyDetails")}
-      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

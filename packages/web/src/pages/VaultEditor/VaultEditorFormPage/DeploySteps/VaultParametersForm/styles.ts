@@ -13,7 +13,7 @@ export const StyledVaultParametersForm = styled.div`
     gap: ${getSpacing(1)};
 
     .committeeControlled {
-      border: 1px solid var(--turquoise);
+      border: 1px solid var(--secondary);
       padding: ${getSpacing(1.5)};
       flex: 1;
 
@@ -53,7 +53,7 @@ export const StyledVaultParametersForm = styled.div`
       p.tiny {
         flex: 1;
         font-size: var(--tiny);
-        color: var(--turquoise);
+        color: var(--secondary);
       }
     }
 
