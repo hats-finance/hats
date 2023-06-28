@@ -11,11 +11,10 @@ import { ConfirmDialogProvider } from "hooks/useConfirm";
 import { VaultsProvider } from "hooks/vaults/useVaults";
 import "i18n.ts";
 import { useEffect } from "react";
-import { HelmetProvider } from "react-helmet-async";
 import HttpsRedirect from "react-https-redirect";
 import { useTranslation } from "react-i18next";
 import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { GlobalStyle } from "styles";
 import { WagmiConfig } from "wagmi";
 import store from "../store";
@@ -29,14 +28,14 @@ function Root() {
   }, [i18n]);
 
   return (
-    <HelmetProvider>
+    <>
       <Seo isMainPage />
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
           <Provider store={store}>
             <VaultsProvider>
               <HttpsRedirect>
-                <BrowserRouter>
+                <HashRouter>
                   <GlobalStyle />
                   <ThemeProvider theme={theme}>
                     <NotificationProvider>
@@ -49,13 +48,13 @@ function Root() {
                       </ConfirmDialogProvider>
                     </NotificationProvider>
                   </ThemeProvider>
-                </BrowserRouter>
+                </HashRouter>
               </HttpsRedirect>
             </VaultsProvider>
           </Provider>
         </WagmiConfig>
       </QueryClientProvider>
-    </HelmetProvider>
+    </>
   );
 }
 

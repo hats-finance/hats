@@ -5,9 +5,9 @@ name: Node.js CI
 
 on:
   push:
-    branches: [develop]
+    branches: [main]
   pull_request:
-    # branches: [develop] Leave this out and will run on all PR pushes
+    branches: [main]
 
 jobs:
   build:
@@ -27,3 +27,16 @@ jobs:
           cache: "yarn"
       - name: Install dependencies
         run: yarn install --ignore-engines
+      - name: Build
+        run: yarn build
+        env:
+          CI: false
+          PUBLIC_URL: ./
+      - name: Install ipfs-deploy
+        run: npm install -g ipfs-deploy
+      - name: Deploy to IPFS
+        working-directory: ./packages/web
+        run: ipd build --path-to-deploy=build -p pinata
+        env:
+          IPFS_DEPLOY_PINATA__API_KEY: ${{ secrets.PINATA_API_KEY }}
+          IPFS_DEPLOY_PINATA__SECRET_API_KEY: ${{ secrets.PINATA_SECRET_API_KEY }}
