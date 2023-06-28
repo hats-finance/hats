@@ -67,7 +67,6 @@ export const VaultDepositWithdrawModal = ({ vault, action, closeModal }: VaultDe
   const tokenAllowanceCall = TokenApproveAllowanceContract.hook(vault);
   const waitingTokenAllowanceCall = useWaitForTransaction({
     hash: tokenAllowanceCall.data?.hash as `0x${string}`,
-    confirmations: 2,
     onSuccess: () => handleDeposit(),
   });
   const handleTokenAllowance = useCallback(() => {
