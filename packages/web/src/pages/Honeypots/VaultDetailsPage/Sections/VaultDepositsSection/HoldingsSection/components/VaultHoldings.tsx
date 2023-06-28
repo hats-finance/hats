@@ -48,7 +48,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
 
   const getStatusPill = () => {
     if (isUserInQueueToWithdraw) {
-      const date = moment((withdrawStartTime ?? 0) * 1000).format("MMM Mo");
+      const date = moment((withdrawStartTime ?? 0) * 1000).format("MMM Do");
       const time = new Date((withdrawStartTime ?? 0) * 1000).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
@@ -56,7 +56,7 @@ export const VaultHoldings = ({ vault }: VaultHoldingsProps) => {
       });
       return <Pill canMultiline dotColor="yellow" text={`${t("withdrawWindowWillOpenOn", { on: `${date} ${time}` })}`} />;
     } else if (isUserInTimeToWithdraw) {
-      const date = moment((withdrawEndTime ?? 0) * 1000).format("MMM Mo");
+      const date = moment((withdrawEndTime ?? 0) * 1000).format("MMM Do");
       const time = new Date((withdrawEndTime ?? 0) * 1000).toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
