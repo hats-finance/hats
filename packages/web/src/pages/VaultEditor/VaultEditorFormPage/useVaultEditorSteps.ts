@@ -8,6 +8,7 @@ import { AllEditorSections, IEditorSectionsStep } from "./steps";
 export const useVaultEditorSteps = (
   formMethods: UseFormReturn<IEditedVaultDescription>,
   options: {
+    allFormDisabled: boolean;
     saveData?: () => Promise<void>;
     executeOnSaved?: (section: keyof typeof AllEditorSections, step: number) => void;
     onFinalSubmit?: () => void;
@@ -64,18 +65,20 @@ export const useVaultEditorSteps = (
 
     for (const section in editorSections) {
       const sectionSteps = editorSections[section]["steps"];
-      const sectionStepsWithExtraData = sectionSteps.map((step, index) => ({
-        ...step,
-        section,
-        index,
-        onlyCreation: editorSections[section].onlyInCreation ?? false,
-      }));
+      const sectionStepsWithExtraData = sectionSteps
+        .filter((step) => (isAdvancedMode ? true : !step.isAdvanced))
+        .map((step, index) => ({
+          ...step,
+          section,
+          index,
+          onlyCreation: editorSections[section].onlyInCreation ?? false,
+        }));
 
       steps.push(...sectionStepsWithExtraData);
     }
 
     return steps;
-  }, [editorSections]);
+  }, [editorSections, isAdvancedMode]);
 
   const editStepStatus = useCallback(
     async (property: "isValid" | "isChecked", value: boolean = true, step: number, section: keyof typeof editorSections) => {
@@ -96,7 +99,7 @@ export const useVaultEditorSteps = (
       let firstInvalidStep: (IEditorSectionsStep & { section: string; index: number }) | undefined;
 
       for (const step of allSteps) {
-        const isValid = await formMethods.trigger(step.formFields as any);
+        const isValid = options.allFormDisabled ? true : await formMethods.trigger(step.formFields as any);
 
         if (firstInvalidStep) {
           editStepStatus("isChecked", false, step.index, step.section);
@@ -115,7 +118,9 @@ export const useVaultEditorSteps = (
         }
       }
 
-      if (!firstInvalidStep) firstInvalidStep = allSteps[isEditingExistingVault ? 0 : allSteps.length - 1];
+      if (!firstInvalidStep) {
+        firstInvalidStep = allSteps[isEditingExistingVault || options.allFormDisabled ? 0 : allSteps.length - 1];
+      }
 
       setCurrentSection(firstInvalidStep.section);
       setCurrentStepNumber(firstInvalidStep.index);
@@ -124,11 +129,13 @@ export const useVaultEditorSteps = (
       formMethods.reset();
       setLoadingSteps(false);
     },
-    [allSteps, editStepStatus, formMethods]
+    [allSteps, editStepStatus, formMethods, options.allFormDisabled]
   );
 
   const revalidateStep = async (stepNumber: number, section: keyof typeof AllEditorSections) => {
-    const isStepValid = await formMethods.trigger(editorSections[section].steps[stepNumber].formFields as any);
+    const isStepValid = options.allFormDisabled
+      ? true
+      : await formMethods.trigger(editorSections[section].steps[stepNumber].formFields as any);
     editStepStatus("isValid", isStepValid, stepNumber, section);
   };
 
@@ -153,7 +160,9 @@ export const useVaultEditorSteps = (
   };
 
   const onGoToStep = async (stepNumber: number) => {
-    const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
+    const isStepValid = options.allFormDisabled
+      ? true
+      : await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
 
     // If the user is going back, continue
     if (currentStepNumber >= stepNumber) {
@@ -213,7 +222,7 @@ export const useVaultEditorSteps = (
 
       return {
         go: async () => {
-          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+          const isStepValid = options.allFormDisabled ? true : await formMethods.trigger(currentStepInfo?.formFields as any);
           editStepStatus("isValid", isStepValid, currentStepNumber, currentSection);
 
           if (options.saveData)
@@ -233,7 +242,7 @@ export const useVaultEditorSteps = (
     // If the user is in any other step, go back to the previous step
     return {
       go: async () => {
-        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any);
+        const isStepValid = options.allFormDisabled ? true : await formMethods.trigger(currentStepInfo?.formFields as any);
         editStepStatus("isValid", isStepValid, currentStepNumber, currentSection);
 
         setCurrentStepNumber(currentStepNumber - 1);
@@ -287,7 +296,9 @@ export const useVaultEditorSteps = (
 
       return {
         go: async () => {
-          const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
+          const isStepValid = options.allFormDisabled
+            ? true
+            : await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
           if (isStepValid) {
             if (options.saveData)
               options.saveData().then(() => {
@@ -311,7 +322,9 @@ export const useVaultEditorSteps = (
     // If the user is in any other step, go to the next step
     return {
       go: async () => {
-        const isStepValid = await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
+        const isStepValid = options.allFormDisabled
+          ? true
+          : await formMethods.trigger(currentStepInfo?.formFields as any, { shouldFocus: true });
         if (isStepValid) {
           if (options.saveData)
             options.saveData().then(() => {

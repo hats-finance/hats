@@ -1,9 +1,9 @@
-import Identicon from "react-identicons";
-import { useTranslation } from "react-i18next";
-import { useAccount, useEnsName } from "wagmi";
 import { getGnosisChainPrefixByChainId } from "@hats-finance/shared";
 import { CopyToClipboard, Pill } from "components";
+import { useTranslation } from "react-i18next";
+import Identicon from "react-identicons";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { useAccount, useEnsName } from "wagmi";
 import { StyledSignerCard } from "./styles";
 
 type SignerCardProps = {
@@ -31,7 +31,7 @@ export const SignerCard = ({ signerAddress, chainId, signed }: SignerCardProps) 
         <CopyToClipboard overlayText={t("copyAddress")} tooltipPlacement="right" valueToCopy={signerAddress} />
       </div>
 
-      <Pill color={signed ? "blue" : "yellow"} text={signed ? t("approved") : t("waitingSignature")} />
+      <Pill dotColor={signed ? "blue" : "yellow"} text={signed ? t("approved") : t("waitingSignature")} />
     </StyledSignerCard>
   );
 };

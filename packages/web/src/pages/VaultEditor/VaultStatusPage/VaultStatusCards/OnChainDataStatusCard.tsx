@@ -95,8 +95,8 @@ export const OnChainDataStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("deployOnChain")}</span>
-          <Pill color="blue" text={t("parametersEditable")} />
+          <h3>{t("deployOnChain")}</h3>
+          <Pill dotColor="blue" text={t("parametersEditable")} />
         </div>
         {editVaultParameters && (
           <div className="reload" onClick={refreshVaultData}>

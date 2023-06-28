@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
 import { useQueries } from "@tanstack/react-query";
-import { useAccount } from "wagmi";
-import { IMaster, IUserNft, IVault, IPayoutGraph } from "@hats-finance/shared";
+import { useEffect, useState } from "react";
 import { appChains } from "settings";
-import { getSubgraphData, IGraphVaultsData } from "./vaultsService";
-import { parseMasters, parseUserNfts, parseVaults, parsePayouts } from "./parser";
+import { useAccount } from "wagmi";
+import { parseMasters, parsePayouts, parseUserNfts, parseVaults } from "./parser";
+import { IGraphVaultsData, getSubgraphData } from "./vaultsService";
 
 const DATA_REFRESH_TIME = 15000;
 
@@ -34,7 +34,7 @@ export const useMultiChainVaultsV2 = () => {
   });
 
   useEffect(() => {
-    if (subgraphQueries.some((a) => a.isLoading)) return;
+    // if (subgraphQueries.some((a) => a.isLoading)) return;
 
     const vaultsData = subgraphQueries.reduce(
       (acc, query) => {

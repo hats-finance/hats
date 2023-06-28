@@ -9,7 +9,6 @@ type StyledVaultProps = {
 
 export const StyledVault = styled.tr<StyledVaultProps>(
   ({ type, selectionMode, selected }) => css`
-    scroll-margin-top: var(--header-height) * 2;
     border-bottom: 2px solid var(--dark-blue);
     position: relative;
 

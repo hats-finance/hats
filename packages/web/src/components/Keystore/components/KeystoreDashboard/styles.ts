@@ -19,8 +19,8 @@ export const StyledKeystoreActions = styled.div`
     transition: 0.2s;
 
     &:hover {
-      background-color: var(--purple-blue);
-      border-color: var(--turquoise);
+      background-color: var(--background-2);
+      border-color: var(--primary);
     }
 
     .icon {
@@ -46,7 +46,7 @@ export const StyledStoredKeys = styled.div`
   ::-webkit-scrollbar-thumb {
     background: var(--grey-400);
     border-radius: 500px;
-    border: 3px solid var(--background-clearer-blue);
+    border: 3px solid var(--background-1);
   }
 `;
 
@@ -58,6 +58,6 @@ export const StyledBackupOption = styled.div`
   transition: 0.2s;
 
   &:hover {
-    color: var(--turquoise);
+    color: var(--secondary);
   }
 `;

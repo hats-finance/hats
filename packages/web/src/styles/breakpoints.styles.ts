@@ -4,11 +4,13 @@ export type BreakpointsDefinition = {
   smallMobile: string;
   mobile: string;
   mediumMobile: string;
+  mediumScreen: string;
   smallScreen: string;
 };
 
 export const breakpointsDefinition: BreakpointsDefinition = {
-  smallScreen: "100rem", // 1600px
+  mediumScreen: "100rem", // 1600px
+  smallScreen: "81.25rem", // 1300px
   mobile: "68.75rem", // 1100px
   mediumMobile: "50rem", // 800px
   smallMobile: "37.5rem", // 600px

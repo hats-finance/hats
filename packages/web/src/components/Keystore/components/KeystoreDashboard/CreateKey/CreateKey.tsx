@@ -108,7 +108,6 @@ export const CreateKey = ({ onClose, onCreatedSuccess }: CreateKeyProps) => {
       removeAnimation
       titleIcon={<AddIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.createNewKeyPair")}
-      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

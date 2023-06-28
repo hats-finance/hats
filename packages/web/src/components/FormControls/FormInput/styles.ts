@@ -96,13 +96,12 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
       &::placeholder {
         color: var(--grey-500);
-        font-family: RobotoMono;
       }
 
       ${colorable &&
       css`
         &:focus {
-          border-color: var(--turquoise);
+          border-color: var(--primary);
         }
       `}
 
@@ -179,7 +178,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
             ${isChecked &&
             css`
-              background: var(--teal);
+              background: var(--primary);
             `}
 
             .checkbox-switch {
@@ -255,6 +254,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
       justify-content: center;
       align-items: center;
       padding: ${getSpacing(1)};
+      color: var(--secondary);
 
       ${(type === "text" || type === "password") &&
       css`
@@ -297,7 +297,7 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
 
     span.helper {
       display: block;
-      color: var(--turquoise);
+      color: var(--secondary-light);
       margin-top: ${getSpacing(0.5)};
       margin-left: ${getSpacing(1)};
       font-size: var(--xxsmall);

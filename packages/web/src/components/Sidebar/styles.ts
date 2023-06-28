@@ -1,66 +1,55 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
+import { breakpointsDefinition } from "./../../styles/breakpoints.styles";
 
-export const StyledSidebar = styled.nav`
-  width: var(--sidebar-width);
-  height: 100%;
-  padding-top: 42px;
-  display: flex;
-  flex-direction: column;
-  background-color: var(--dark-blue);
-  border-right: 1px solid var(--blue);
-  box-shadow: 0px 4px 38px -1px var(--sidebar-shadow);
-  z-index: 2;
-
-  .logo {
-    align-self: center;
-    margin-bottom: 50px;
-  }
-
-  .pools {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .arrow {
-      cursor: pointer;
-      transform: rotate(0deg);
-      transition: transform 0.1s linear;
-      margin: 15px;
-
-      &.open {
-        transform: rotate(90deg);
-        transition: transform 0.1s linear;
-      }
-    }
-
-    &.selected {
-      background-color: var(--blue);
-    }
-  }
-
-  .pools-links-wrapper {
+export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
+  ({ showFullScreen }) => css`
+    height: 100%;
+    padding-top: ${getSpacing(5)};
     display: flex;
     flex-direction: column;
-    padding-left: 25px;
+    background-color: var(--background);
+    border-right: 1px solid var(--primary-light);
+    z-index: 2;
 
-    .pool-link-wrapper {
+    @media (max-width: ${breakpointsDefinition.mediumScreen}) {
+      width: ${getSpacing(21)};
+      text-align: center;
+    }
+
+    @media (max-width: ${breakpointsDefinition.mobile}) {
+      width: 100%;
+      transform: translateX(-110%);
+      border: none;
+      position: fixed;
+      padding-top: ${getSpacing(15)};
+      transition: transform 0.2s ease-in-out;
+
+      ${showFullScreen &&
+      css`
+        transform: translateX(0%);
+        display: flex;
+      `}
+    }
+
+    .logo {
       display: flex;
-      cursor: pointer;
-      color: var(--white);
-      margin: 10px;
+      justify-content: center;
+      align-self: center;
+      margin-bottom: ${getSpacing(6)};
 
-      &:hover {
-        opacity: 0.9;
+      svg {
+        width: 75%;
       }
 
-      .selected {
-        font-weight: bold;
+      @media (max-width: ${breakpointsDefinition.mobile}) {
+        display: none;
       }
     }
-  }
 
-  .bottom-wrapper {
-    margin: auto;
-    margin-bottom: 80px;
-  }
-`;
+    .bottom-wrapper {
+      margin: auto;
+      margin-bottom: 80px;
+    }
+  `
+);

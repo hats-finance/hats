@@ -1,5 +1,5 @@
 import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
-import { CopyToClipboard, Loading } from "components";
+import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -75,31 +75,34 @@ export const VaultStatusPage = () => {
   };
 
   return (
-    <StyledVaultStatusPage className="content-wrapper-md">
-      <div className="status-title">
-        <div className="leftSide">
-          <div className="title">
-            {t("vaultCreator")}
-            <span>/{t("vaultStatus")}</span>
+    <>
+      <Seo title={t("seo.vaultStatusTitle", { vaultName: vaultData.description?.["project-metadata"].name })} />
+      <StyledVaultStatusPage className="content-wrapper">
+        <div className="status-title">
+          <div className="leftSide">
+            <div className="title">
+              {t("vaultCreator")}
+              <span>/{t("vaultStatus")}</span>
+            </div>
+            <div className="role">{t(vaultEditorRoleToIntlKey(userPermissionData.role))}</div>
           </div>
-          <div className="role">{t(vaultEditorRoleToIntlKey(userPermissionData.role))}</div>
+          <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyVaultLink")} />
         </div>
-        <CopyToClipboard valueToCopy={DOMPurify.sanitize(document.location.href)} overlayText={t("copyVaultLink")} />
-      </div>
 
-      {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}
+        {!vaultData.description && <div className="vault-error mb-4">{t("vaultWithoutDescriptionError")}</div>}
 
-      <div className="status-cards">
-        <VaultStatusContext.Provider value={vaultStatusContext}>
-          <CongratsStatusCard />
-          <EditVaultStatusCard />
-          {userPermissionData.role === "gov" && <GenerateNftsAssetsCard />}
-          <OnChainDataStatusCard />
-          <CheckInStatusCard />
-          <DepositStatusCard />
-          <GovApprovalStatusCard />
-        </VaultStatusContext.Provider>
-      </div>
-    </StyledVaultStatusPage>
+        <div className="status-cards">
+          <VaultStatusContext.Provider value={vaultStatusContext}>
+            <CongratsStatusCard />
+            <EditVaultStatusCard />
+            {userPermissionData.role === "gov" && <GenerateNftsAssetsCard />}
+            <OnChainDataStatusCard />
+            <CheckInStatusCard />
+            <DepositStatusCard />
+            <GovApprovalStatusCard />
+          </VaultStatusContext.Provider>
+        </div>
+      </StyledVaultStatusPage>
+    </>
   );
 };

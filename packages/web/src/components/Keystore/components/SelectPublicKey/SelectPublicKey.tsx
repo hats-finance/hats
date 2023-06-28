@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, CollapsableTextContent, FormInput, Modal } from "components";
-import { useEnhancedForm } from "hooks/form";
-import { getSelectPublicKeySchema } from "./formSchema";
-import { KeystoreDashboard } from "../KeystoreDashboard/KeystoreDashboard";
-import { StyledBaseKeystoreContainer } from "../../styles";
 import { useKeystore } from "components/Keystore/KeystoreProvider";
+import { useEnhancedForm } from "hooks/form";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { StyledBaseKeystoreContainer } from "../../styles";
+import { KeystoreDashboard } from "../KeystoreDashboard/KeystoreDashboard";
+import { getSelectPublicKeySchema } from "./formSchema";
 
 type SelectPublicKeyProps = {
   initKeystore: () => Promise<boolean>;
@@ -45,7 +45,7 @@ export const SelectPublicKey = ({ initKeystore, onClose, onPublicKeySelected }: 
   return (
     <>
       {!openKeystoreForSelecting && (
-        <Modal removeAnimation title={t("PGPTool.selectPgpKey")} newStyles capitalizeTitle isShowing={true} onHide={onClose}>
+        <Modal removeAnimation title={t("PGPTool.selectPgpKey")} capitalizeTitle isShowing={true} onHide={onClose}>
           <StyledBaseKeystoreContainer size="big">
             <div className="mb-5">{t("PGPTool.selectPgpKeyDescription")}</div>
 

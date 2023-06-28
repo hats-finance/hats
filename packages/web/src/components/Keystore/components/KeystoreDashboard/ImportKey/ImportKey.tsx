@@ -1,18 +1,18 @@
+import { yupResolver } from "@hookform/resolvers/yup";
+import UploadIcon from "@mui/icons-material/FileUploadOutlined";
+import { Button, FormInput, Modal } from "components";
+import { useEnhancedForm } from "hooks/form";
+import { readPrivateKey } from "openpgp";
 import { useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
-import { readPrivateKey } from "openpgp";
-import { v4 as uuid } from "uuid";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { useTranslation } from "react-i18next";
-import { useEnhancedForm } from "hooks/form";
 import { removeEmpty } from "utils/objects.utils";
-import { Button, FormInput, Modal } from "components";
-import { getImportKeySchema } from "./formSchema";
+import { v4 as uuid } from "uuid";
 import { useKeystore } from "../../../KeystoreProvider";
+import { StyledBaseKeystoreContainer } from "../../../styles";
 import { IStoredKey } from "../../../types";
 import { readPrivateKeyFromStoredKey } from "../../../utils";
-import { StyledBaseKeystoreContainer } from "../../../styles";
-import UploadIcon from "@mui/icons-material/FileUploadOutlined";
+import { getImportKeySchema } from "./formSchema";
 
 type ImportKeyProps = {
   onClose: () => void;
@@ -110,7 +110,6 @@ export const ImportKey = ({ onClose, onImportedSuccess }: ImportKeyProps) => {
       removeAnimation
       titleIcon={<UploadIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.importKey")}
-      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

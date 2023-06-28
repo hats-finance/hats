@@ -1,8 +1,8 @@
+import CheckIcon from "@mui/icons-material/Check";
+import { Button, FormInput, Modal } from "components";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, FormInput, Modal } from "components";
 import { StyledConfirmDialog } from "./styles";
-import CheckIcon from "@mui/icons-material/Check";
 
 type ConfirmDialogProps = {
   isShowing: boolean;
@@ -48,7 +48,6 @@ function ConfirmDialog({
 
   return (
     <Modal
-      newStyles
       isShowing={isShowing}
       titleIcon={titleIcon}
       title={title}

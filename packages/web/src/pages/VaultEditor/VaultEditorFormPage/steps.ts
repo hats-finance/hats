@@ -1,14 +1,14 @@
 import {
   CommitteeDetailsForm,
   CommitteeMembersList,
-  ContractsCoveredList,
+  ScopeDetailsForm,
+  SetupReview,
   VaultAssetsList,
   VaultDetailsForm,
   VaultFormReview,
   VaultParametersForm,
   VulnerabilitySeveritiesList,
 } from ".";
-import { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
 
 type IEditorStepDisabledOption = "needsAccount" | "editingFormDirty" | "onlyIfVaultNotCreated" | "allEmailsVerified";
 
@@ -25,7 +25,7 @@ export type IEditorSections = {
 export type IEditorSectionsStep = {
   id: string;
   name: string;
-  title: { creation: string; editing: string };
+  title?: { creation: string; editing: string };
   backButtonTextKey?: { creation?: string; editing?: string };
   nextButtonTextKey?: { creation?: string; editing?: string };
   isAdvanced?: boolean;
@@ -49,7 +49,7 @@ export const AllEditorSections: IEditorSections = {
         name: "details",
         title: { creation: "vaultDescription", editing: "vaultDescription" },
         component: VaultDetailsForm,
-        formFields: ["project-metadata", "scope"],
+        formFields: ["project-metadata"],
       },
       {
         id: "committee",
@@ -74,11 +74,11 @@ export const AllEditorSections: IEditorSections = {
         isAdvanced: true,
       },
       {
-        id: "contracts",
-        name: "contracts",
-        title: { creation: "contractsAssetsCovered", editing: "contractsAssetsCovered" },
-        component: ContractsCoveredList,
-        formFields: ["contracts-covered"],
+        id: "scope",
+        name: "scope",
+        title: { creation: "inScope", editing: "inScope" },
+        component: ScopeDetailsForm,
+        formFields: ["scope", "contracts-covered"],
       },
       {
         id: "setupReview",
@@ -109,7 +109,7 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "params",
         name: "parameters",
-        title: { creation: "vaultParameters", editing: "vaultParameters" },
+        title: undefined,
         component: VaultParametersForm,
         formFields: ["parameters"],
       },

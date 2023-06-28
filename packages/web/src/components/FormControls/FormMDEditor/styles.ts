@@ -6,16 +6,51 @@ export const StyledFormMDEditor = styled.div<{
   hasError: boolean;
   isDirty: boolean;
   noMargin: boolean;
+  disabled: boolean;
 }>(
-  ({ hasError, isDirty, noMargin }) => css`
+  ({ hasError, isDirty, noMargin, disabled }) => css`
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
 
+    * {
+      color: var(--white);
+    }
+
     .w-md-editor {
-      background-color: var(--background-clear-blue);
+      background-color: transparent;
       border-radius: 0;
       border: 1px solid var(--grey-500);
       box-shadow: none;
       overflow: hidden;
+      white-space: normal;
+      color: var(--white);
+
+      * {
+        font-family: "IBM Plex Sans", sans-serif !important;
+      }
+
+      ${disabled &&
+      css`
+        &::after {
+          content: "";
+          display: block;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: var(--disabled-input);
+          opacity: 0.4;
+          z-index: 1;
+          cursor: not-allowed;
+        }
+      `}
+
+      &.w-md-editor-fullscreen {
+        .w-md-editor-content,
+        .w-md-editor-toolbar {
+          background-color: var(--background);
+        }
+      }
 
       ${hasError &&
       css`
@@ -32,7 +67,7 @@ export const StyledFormMDEditor = styled.div<{
       }
 
       .w-md-editor-toolbar {
-        background-color: var(--background-clear-blue);
+        background-color: transparent;
         border-radius: 0;
         border-color: var(--grey-500);
 
@@ -43,15 +78,20 @@ export const StyledFormMDEditor = styled.div<{
       }
 
       .w-md-editor-preview {
-        background-color: var(--background-clear-blue);
+        background-color: transparent;
         border-radius: 0;
         border-left: 1px solid var(--grey-500);
         box-shadow: none;
+        color: var(--white);
 
         .wmde-markdown.wmde-markdown-color {
           background-color: transparent;
         }
       }
+    }
+
+    .wmde-markdown {
+      font-size: var(--xsmall);
     }
 
     span.error {

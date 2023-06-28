@@ -1,5 +1,5 @@
-import { getSpacing } from "styles";
 import styled from "styled-components";
+import { getSpacing } from "styles";
 
 export const StyledDecryptionWelcomePage = styled.div`
   color: var(--white);

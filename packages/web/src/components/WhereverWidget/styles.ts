@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledWhereverWidgetContainer = styled.div`
@@ -7,28 +8,21 @@ export const StyledWhereverWidgetContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 8px;
-
-  @media (max-width: ${breakpointsDefinition.mobile}) {
-    margin-left: auto;
-  }
 `;
 
 export const StyledWhereverWidget = styled.div`
+  background-color: transparent;
   color: var(--white);
-  background-color: var(--blue);
-  min-height: var(--header-button-hight);
-  border: none;
-  height: 56px;
-  width: 56px;
+  border: 1px solid var(--primary);
+  padding: ${getSpacing(0.5)};
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: 0.2s;
 
-  &:active {
-    background-color: var(--light-blue);
-    opacity: 1;
+  &:hover {
+    opacity: 0.7;
   }
 
   @media (max-width: ${breakpointsDefinition.mobile}) {

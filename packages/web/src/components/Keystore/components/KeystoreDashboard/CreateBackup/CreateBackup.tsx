@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
+import SaveIcon from "@mui/icons-material/SaveAltOutlined";
 import { Alert, Button, CollapsableTextContent, Modal } from "components";
 import { LocalStorage } from "constants/constants";
+import { useTranslation } from "react-i18next";
 import { useKeystore } from "../../../KeystoreProvider";
 import { StyledBaseKeystoreContainer } from "../../../styles";
-import SaveIcon from "@mui/icons-material/SaveAltOutlined";
 
 type CreateBackupProps = {
   onClose: () => void;
@@ -35,7 +35,6 @@ export const CreateBackup = ({ onClose }: CreateBackupProps) => {
       removeAnimation
       titleIcon={<SaveIcon className="mr-2" fontSize="large" />}
       title={t("PGPTool.pgpKeysBackup")}
-      newStyles
       capitalizeTitle
       isShowing={true}
       onHide={onClose}

@@ -166,7 +166,7 @@ Reasoning: Type your explanation here...\n\n`;
             )}
           </div>
 
-          <div className="buttons no-line">
+          <div className="buttons no-line end">
             <Button onClick={handleImportBeneficiaries} disabled={!beneficiariesToImport || beneficiariesToImport.length === 0}>
               {t("Payouts.importBeneficiaries")}
             </Button>

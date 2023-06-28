@@ -1,14 +1,14 @@
+import ViewIcon from "@mui/icons-material/VisibilityOutlined";
+import { Alert, Button, Loading, Pill, PillProps } from "components";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import moment from "moment";
-import { Alert, Button, Loading, Pill, PillProps } from "components";
-import { RoutePaths } from "navigation";
 import { IEditedSessionResponse } from "types";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
-import { VaultStatusContext } from "../store";
 import * as VaultEditorService from "../../vaultEditorService";
-import ViewIcon from "@mui/icons-material/VisibilityOutlined";
+import { VaultStatusContext } from "../store";
 
 export const EditVaultStatusCard = () => {
   const { t } = useTranslation();
@@ -70,7 +70,7 @@ export const EditVaultStatusCard = () => {
     navigate(`${RoutePaths.vault_editor}/${editSessionData._id}`);
   };
 
-  const getPillColorAndText = (editSessionData: IEditedSessionResponse): { color: PillProps["color"]; text: string } => {
+  const getPillColorAndText = (editSessionData: IEditedSessionResponse): { color: PillProps["dotColor"]; text: string } => {
     if (editSessionData.vaultEditionStatus === "pendingApproval") {
       return { color: "yellow", text: `${t("waitingApproval")}..` };
     } else if (editSessionData.vaultEditionStatus === "editing") {
@@ -134,7 +134,7 @@ export const EditVaultStatusCard = () => {
               <div className="createdAt">{moment(editSession.createdAt).format("MMM Do YY, h:mm a")}</div>
             </div>
             <div className="status">
-              <Pill transparent color={getPillColorAndText(editSession).color} text={getPillColorAndText(editSession).text} />
+              <Pill transparent dotColor={getPillColorAndText(editSession).color} text={getPillColorAndText(editSession).text} />
             </div>
             <div className="actions">{getEditSessionActions(editSession)}</div>
           </div>
@@ -147,9 +147,9 @@ export const EditVaultStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <span>{t("setup")}</span>
+          <h3>{t("setup")}</h3>
           <Pill
-            color={lastEditionIsWaitingApproval ? "yellow" : "blue"}
+            dotColor={lastEditionIsWaitingApproval ? "yellow" : "blue"}
             text={lastEditionIsWaitingApproval ? t("waitingApproval") : t("completed")}
           />
         </div>

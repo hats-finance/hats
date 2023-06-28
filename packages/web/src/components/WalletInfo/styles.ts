@@ -1,9 +1,8 @@
-import { breakpointsDefinition } from "styles/breakpoints.styles";
 import styled from "styled-components";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledWalletInfo = styled.div`
   display: flex;
-  margin-right: 15px;
   align-items: center;
   margin-left: auto;
 

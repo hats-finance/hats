@@ -1,22 +1,19 @@
-import { Link } from "react-router-dom";
+import { ReactComponent as HatsLogo } from "assets/icons/custom/hats-with-name.svg";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { RootState } from "reducers";
-import Logo from "assets/icons/logo.icon";
 import NavLinks from "./NavLinks/NavLinks";
 import SocialAndLegal from "./SocialAndLegal/SocialAndLegal";
-import Menu from "./Menu/Menu";
 import { StyledSidebar } from "./styles";
 
-export default function Sidebar() {
+export function Sidebar() {
   const showMenu = useSelector((state: RootState) => state.layoutReducer.showMenu);
 
   return (
     <>
-      <Menu show={showMenu} />
-
-      <StyledSidebar className="onlyDesktop">
+      <StyledSidebar showFullScreen={showMenu}>
         <Link to="/" className="logo">
-          <Logo width="50px" />
+          <HatsLogo />
         </Link>
         <NavLinks />
         <div className="bottom-wrapper">
