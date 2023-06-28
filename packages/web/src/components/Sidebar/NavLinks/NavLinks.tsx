@@ -19,12 +19,12 @@ export default function NavLinks() {
 
   return (
     <>
-      <StyledNavLink className="bounties" to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.bugBounties}`} onClick={handleClick}>
+      <StyledNavLink className="bounties" to={`${HoneypotsRoutePaths.bugBounties}`} onClick={handleClick}>
         <BountiesIcon />
         <p className="normal">{t("bugBounties")}</p>
         <p className="collapsed">{t("bugBounties")}</p>
       </StyledNavLink>
-      <StyledNavLink className="audits" to={`${RoutePaths.vaults}/${HoneypotsRoutePaths.audits}`} onClick={handleClick}>
+      <StyledNavLink className="audits" to={`${HoneypotsRoutePaths.audits}`} onClick={handleClick}>
         <AuditsIcon />
         <p className="normal">{t("auditCompetitions")}</p>
         <p className="collapsed">{t("competitions")}</p>

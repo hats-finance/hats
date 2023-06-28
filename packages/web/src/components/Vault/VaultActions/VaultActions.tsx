@@ -1,13 +1,12 @@
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAccount } from "wagmi";
-import { RoutePaths } from "navigation";
-import { IPoolWithdrawRequest, IVault } from "types";
-import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
-import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
-import "./VaultActions.scss";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { IPFS_PREFIX } from "constants/constants";
+import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
+import { WithdrawTimer } from "pages/HoneypotsPage/DepositWithdraw";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { IPoolWithdrawRequest, IVault } from "types";
+import { useAccount } from "wagmi";
+import "./VaultActions.scss";
 
 interface IProps {
   data?: IVault;
@@ -33,7 +32,7 @@ export default function VaultActions(props: IProps) {
       )}
       <button
         className="deposit-withdraw"
-        onClick={() => navigate(`${RoutePaths.vaults}/${vault.id}/deposit`)}
+        onClick={() => navigate(`${vault.id}/deposit`)}
         disabled={props.preview || !account || !isSupportedNetwork}
       >
         {t("Vault.deposit-withdraw")}
