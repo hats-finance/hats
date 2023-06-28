@@ -10,4 +10,4 @@ const AppRouter = ({ routes }: LayoutsProps): JSX.Element => {
   return <>{appRoutes}</>;
 };
 
-export { AppRouter };
+export default AppRouter;
