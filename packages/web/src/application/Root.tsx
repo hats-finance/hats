@@ -14,7 +14,7 @@ import { useEffect } from "react";
 import HttpsRedirect from "react-https-redirect";
 import { useTranslation } from "react-i18next";
 import { Provider } from "react-redux";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 import { GlobalStyle } from "styles";
 import { WagmiConfig } from "wagmi";
 import store from "../store";
@@ -27,6 +27,8 @@ function Root() {
     if (language && language !== i18n.language) i18n.changeLanguage(language);
   }, [i18n]);
 
+  const RouterToUse = document.location.pathname.startsWith("/ipfs/") ? HashRouter : BrowserRouter;
+
   return (
     <>
       <Seo isMainPage />
@@ -35,7 +37,7 @@ function Root() {
           <Provider store={store}>
             <VaultsProvider>
               <HttpsRedirect>
-                <HashRouter>
+                <RouterToUse>
                   <GlobalStyle />
                   <ThemeProvider theme={theme}>
                     <NotificationProvider>
@@ -48,7 +50,7 @@ function Root() {
                       </ConfirmDialogProvider>
                     </NotificationProvider>
                   </ThemeProvider>
-                </HashRouter>
+                </RouterToUse>
               </HttpsRedirect>
             </VaultsProvider>
           </Provider>
