@@ -1,4 +1,3 @@
-import { RoutePaths } from "navigation";
 import { Navigate, RouteObject } from "react-router-dom";
 import { VaultDetailsPage } from "./VaultDetailsPage/VaultDetailsPage";
 import { AuditVaultsPage } from "./VaultsPage/AuditVaultsPage";
@@ -26,12 +25,8 @@ const vaultDetailsRoutes: RouteObject[] = [
 ];
 
 export const honeypotsRouter = (): RouteObject => ({
-  path: `${RoutePaths.vaults}`,
+  path: "",
   children: [
-    {
-      path: "",
-      element: <Navigate to={HoneypotsRoutePaths.bugBounties} replace={true} />,
-    },
     {
       path: HoneypotsRoutePaths.bugBounties,
       children: [

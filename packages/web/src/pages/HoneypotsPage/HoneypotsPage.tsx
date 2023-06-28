@@ -2,7 +2,6 @@ import SearchIcon from "assets/icons/search.icon";
 import { Loading, Modal, SafePeriodBar, Vault } from "components";
 import { formatUnits } from "ethers/lib/utils";
 import { useVaults } from "hooks/vaults/useVaults";
-import { RoutePaths } from "navigation";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -32,7 +31,7 @@ const HoneypotsPage = ({ showDeposit = false }: HoneypotsPageProps) => {
     return tokenPrice ? Number(formatUnits(honeyPotBalance, stakingTokenDecimals)) * tokenPrice : 0;
   }, []);
 
-  const closeDeposit = () => navigate(`${RoutePaths.vaults}`);
+  const closeDeposit = () => navigate(``);
 
   const scrollRef = (element) => {
     if (element) element.scrollIntoView();

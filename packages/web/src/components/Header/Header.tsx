@@ -22,8 +22,8 @@ const Header = () => {
   const getPageTitle = () => {
     const path = location.pathname;
 
-    if (path === `${RoutePaths.vaults}/${HoneypotsRoutePaths.bugBounties}`) return t("bugBounties");
-    if (path === `${RoutePaths.vaults}/${HoneypotsRoutePaths.audits}`) return t("auditCompetitions");
+    if (path === `${HoneypotsRoutePaths.bugBounties}`) return t("bugBounties");
+    if (path === `${HoneypotsRoutePaths.audits}`) return t("auditCompetitions");
     if (path.includes(`${RoutePaths.vulnerability}`)) return t("submitVulnerability");
     if (path.includes(`${RoutePaths.vault_editor}`)) return t("vaultEditor");
     if (path.includes(`${RoutePaths.committee_tools}`)) return t("committeeTools");

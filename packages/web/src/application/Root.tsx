@@ -31,13 +31,13 @@ function Root() {
 
   return (
     <>
-      <Seo isMainPage />
       <QueryClientProvider client={queryClient}>
         <WagmiConfig client={wagmiClient}>
           <Provider store={store}>
             <VaultsProvider>
               <HttpsRedirect>
                 <RouterToUse>
+                  <Seo isMainPage />
                   <GlobalStyle />
                   <ThemeProvider theme={theme}>
                     <NotificationProvider>

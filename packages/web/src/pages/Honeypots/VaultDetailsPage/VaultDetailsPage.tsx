@@ -1,7 +1,6 @@
 import { IVault } from "@hats-finance/shared";
 import { Alert, Loading, Seo, VaultCard } from "components";
 import { useVaults } from "hooks/vaults/useVaults";
-import { RoutePaths } from "navigation";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";
@@ -52,19 +51,16 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const vaultName = vault.description["project-metadata"].name;
 
   const navigateToType = () => {
-    navigate(`${RoutePaths.vaults}/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
+    navigate(`${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`);
   };
 
   const changeDetailsSection = (sectionTitle: string) => {
     setOpenSectionId(sectionTitle);
 
     if (vaultSlug) {
-      navigate(
-        `${RoutePaths.vaults}/${
-          isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties
-        }/${vaultSlug}/${sectionTitle}`,
-        { replace: true }
-      );
+      navigate(`${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}/${vaultSlug}/${sectionTitle}`, {
+        replace: true,
+      });
     }
   };
 
