@@ -242,8 +242,8 @@ export const VaultCard = ({
                     {auditPayout
                       ? millify(totalPaidOutOnAudit?.usd ?? 0)
                       : showIntended
-                      ? millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)
-                      : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+                      ? millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)
+                      : millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}
                   </h3>
                 </WithTooltip>
                 <div className="sub-value">
