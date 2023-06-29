@@ -216,7 +216,7 @@ export const VaultCard = ({
               <>
                 {auditPayout ? (
                   <>
-                    <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
+                    <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.depositedAmount.usd) : "-"}</h3>
                     <div className="sub-value">{t("maxRewards")}</div>
                   </>
                 ) : (
