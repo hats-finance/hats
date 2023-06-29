@@ -155,7 +155,7 @@ export const VaultCard = ({
     if (!vault) return;
     if (noActions) return;
 
-    const mainRoute = `${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}/deposits`);
@@ -163,14 +163,14 @@ export const VaultCard = ({
 
   const goToSubmitVulnerability = () => {
     if (noActions) return;
-    navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
+    navigate(`/${RoutePaths.vulnerability}?projectId=${vault.id}`);
   };
 
   const goToDetails = () => {
     if (!vault) return;
     if (noActions) return;
 
-    const mainRoute = `${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
