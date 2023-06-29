@@ -163,7 +163,7 @@ export const VaultCard = ({
 
   const goToSubmitVulnerability = () => {
     if (noActions) return;
-    navigate(`/${RoutePaths.vulnerability}?projectId=${vault.id}`);
+    navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
   };
 
   const goToDetails = () => {
