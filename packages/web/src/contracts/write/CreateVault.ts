@@ -1,8 +1,8 @@
 import { HATSVaultsRegistry_abi } from "@hats-finance/shared";
-import { getNetwork, writeContract } from "wagmi/actions";
 import { appChains } from "settings";
 import { ICreateVaultOnChainCall } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { getNetwork, writeContract } from "wagmi/actions";
 
 export class CreateVaultContract {
   /**
@@ -28,7 +28,7 @@ export class CreateVaultContract {
     await switchNetworkAndValidate(chain!.id, vaultData.chainId);
     const createVault = await writeContract({
       mode: "recklesslyUnprepared",
-      address: registryAddress,
+      address: registryAddress as `0x${string}`,
       abi: registryAbi,
       functionName: "createVault",
       args: [

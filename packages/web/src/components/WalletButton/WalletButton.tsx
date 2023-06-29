@@ -6,7 +6,7 @@ import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
+import { IS_PROD, appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { Connector, useAccount, useConnect, useDisconnect, useEnsName, useNetwork } from "wagmi";
 import { chainIcons } from "./chains.icons";
@@ -25,7 +25,11 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   const { chain } = useNetwork();
   const supportedNetwork = useSupportedNetwork();
   const { disconnect } = useDisconnect();
+
   const [canReconnect, setCanReconnect] = useState(false);
+  const [selectedConnectorWaitingChain, setSelectedConnectorWaitingChain] = useState<
+    { connector: string; chainId?: number } | undefined
+  >();
   const [showConnectors, setShowConnectors] = useState(false);
   const [isGovMember, setIsGovMember] = useState(false);
 
@@ -38,8 +42,8 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   }, [disconnect]);
 
   const activateAccount = useCallback(
-    (connector: Connector | undefined) => {
-      connect({ connector });
+    (connector: Connector | undefined, chainId?: number) => {
+      connect({ connector, chainId });
       setCanReconnect(true);
     },
     [connect]
@@ -53,7 +57,11 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   useEffect(() => {
     if (!account && canReconnect) {
       const preferredConnectorId = localStorage.getItem("wagmi.wallet")?.replaceAll('"', "");
-      preferredConnectorId && activateAccount(connectors.find((c) => c.id === preferredConnectorId));
+      preferredConnectorId &&
+        activateAccount(
+          connectors.find((c) => c.id === preferredConnectorId),
+          selectedConnectorWaitingChain?.chainId
+        );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, canReconnect]);
@@ -108,26 +116,54 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
               onClick: () => activateAccount(connectors.find((c) => c.id === "metaMask")),
               icon: connectorIcons.metaMask,
             },
+            // {
+            //   id: "safe",
+            //   label: "Safe",
+            //   onClick: () => setSelectedConnectorWaitingChain("safe"),
+            //   icon: connectorIcons.walletConnect,
+            // },
+            {
+              id: "walletConnect",
+              label: "WalletConnect (v2)",
+              onClick: () => setSelectedConnectorWaitingChain({ connector: "walletConnect" }),
+              icon: connectorIcons.walletConnect,
+            },
             {
               id: "coinbaseWallet",
               label: "Coinbase Wallet",
               onClick: () => activateAccount(connectors.find((c) => c.id === "coinbaseWallet")),
               icon: connectorIcons.coinbaseWallet,
             },
-            {
-              id: "walletConnect",
-              label: "WalletConnect",
-              onClick: () => activateAccount(connectors.find((c) => c.id === "walletConnect")),
-              icon: connectorIcons.walletConnect,
-            },
           ],
     [connectors, account, activateAccount, deactivateAccount, t]
   );
 
+  const supportedNetworksOptions = Object.values(appChains)
+    .filter((chainInfo) => (IS_PROD ? !chainInfo.chain.testnet : true))
+    .sort((a) => (a.chain.testnet ? 1 : -1))
+    .map((chainInfo) => ({
+      id: chainInfo.chain.network,
+      label: chainInfo.chain.name,
+      onClick: () => {
+        if (!selectedConnectorWaitingChain) return;
+
+        setSelectedConnectorWaitingChain({ ...selectedConnectorWaitingChain, chainId: chainInfo.chain.id });
+        activateAccount(
+          connectors.find((c) => c.id === selectedConnectorWaitingChain?.connector),
+          chainInfo.chain.id
+        );
+      },
+      icon: chainIcons[chainInfo.chain.id],
+    }));
+
   return (
     <WalletButtonWrapper onMouseEnter={updateProfile}>
       <StyledWalletButton
-        onClick={() => setShowConnectors((prev) => !prev)}
+        onClick={() => {
+          if (showConnectors) setShowConnectors(false);
+          if (!showConnectors && !selectedConnectorWaitingChain) setShowConnectors(true);
+          if (selectedConnectorWaitingChain) setSelectedConnectorWaitingChain(undefined);
+        }}
         connected={!!account}
         existsPendingTransaction={false}
         expanded={expanded}
@@ -140,6 +176,11 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
       </StyledWalletButton>
 
       <DropdownSelector options={getConnectorsOptions()} show={showConnectors} onClose={() => setShowConnectors(false)} />
+      <DropdownSelector
+        options={supportedNetworksOptions}
+        show={!!selectedConnectorWaitingChain}
+        onClose={() => setSelectedConnectorWaitingChain(undefined)}
+      />
     </WalletButtonWrapper>
   );
 };

@@ -1,7 +1,7 @@
-import { useContractWrite, useNetwork } from "wagmi";
+import { HATSVaultV1_abi, HATSVaultsRegistry_abi } from "@hats-finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultsRegistry_abi, HATSVaultV1_abi } from "@hats-finance/shared";
+import { useContractWrite, useNetwork } from "wagmi";
 
 export class LogClaimContract {
   /**
@@ -22,7 +22,7 @@ export class LogClaimContract {
 
     const claim = useContractWrite({
       mode: "recklesslyUnprepared",
-      address: vault ? contractAddress : undefined,
+      address: vault ? (contractAddress as `0x${string}`) : undefined,
       abi: registryAbi as any,
       functionName: method,
       // chainId: vault?.chainId,

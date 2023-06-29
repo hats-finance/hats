@@ -1,8 +1,8 @@
-import { useAccount, useContractRead } from "wagmi";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import { useAccount, useContractRead } from "wagmi";
 
 export class WithdrawRequestInfoContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {
@@ -12,7 +12,7 @@ export class WithdrawRequestInfoContract {
     const args = vault?.version === "v1" ? [vault?.pid, account] : [account];
 
     return {
-      address: vault ? contractAddress : undefined,
+      address: vault ? (contractAddress as `0x${string}`) : undefined,
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

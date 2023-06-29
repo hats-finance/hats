@@ -141,13 +141,13 @@ export async function sendEditionToGovApproval(editSessionId: string): Promise<I
  */
 export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
   const vaultContractInfo = {
-    address: vaultAddress,
+    address: vaultAddress as `0x${string}`,
     abi: HATSVaultV2_abi,
     chainId,
   };
 
   const registryContractInfo = {
-    address: appChains[chainId].vaultsCreatorContract ?? "",
+    address: (appChains[chainId].vaultsCreatorContract ?? "") as `0x${string}`,
     abi: HATSVaultsRegistry_abi,
     chainId,
   };
