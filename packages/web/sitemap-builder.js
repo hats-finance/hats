@@ -31,8 +31,8 @@ const publicUrl = "https://app.hats.finance";
 const ipfsPrefix = "https://ipfs2.hats.finance/ipfs";
 
 const routes = [
-  { path: "/vaults/bug-bounties" },
-  { path: "/vaults/audit-competitions" },
+  { path: "/bug-bounties" },
+  { path: "/audit-competitions" },
   { path: "/vulnerability" },
   { path: "/vault-editor" },
 ];
@@ -74,7 +74,7 @@ const buildSitemap = async () => {
       d["Project-metadata"]?.type === "audit" ??
       d["Project-metadata"]?.type === "Audit Competition";
 
-    return { path: `/vaults/${isAudit ? "audit-competitions" : "bug-bounties"}/${vaultSlug}-${vaultId}` };
+    return { path: `/${isAudit ? "audit-competitions" : "bug-bounties"}/${vaultSlug}-${vaultId}` };
   });
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>

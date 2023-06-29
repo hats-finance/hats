@@ -1,10 +1,10 @@
+import { INFURA_API_KEY, appChains } from "settings";
 import { configureChains, createClient } from "wagmi";
-import { infuraProvider } from "wagmi/providers/infura";
-import { publicProvider } from "wagmi/providers/public";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { appChains, INFURA_API_KEY } from "settings";
+import { infuraProvider } from "wagmi/providers/infura";
+import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
   Object.values(appChains).map((chainInfo) => chainInfo.chain),
@@ -32,7 +32,10 @@ const walletConnectors = [
   // }),
   new MetaMaskConnector({ chains }),
   new CoinbaseWalletConnector({ chains, options: { appName: "Hats.finance" } }),
-  new WalletConnectConnector({ chains, options: { qrcode: true } }),
+  new WalletConnectConnector({
+    chains,
+    options: { isNewChainsStale: false, showQrModal: true, projectId: "fa6c35f5d85bac620ecc763e499a1c9f" },
+  }),
 ];
 
 const wagmiClient = createClient({
