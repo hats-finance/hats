@@ -1,11 +1,11 @@
 import { useTabFocus } from "hooks/useTabFocus";
-import { useAccount, useContractReads } from "wagmi";
 import { IVault } from "types";
-import { TokenAllowanceContract } from "../TokenAllowance";
-import { PendingRewardContract } from "../PendingReward";
-import { UserSharesPerVaultContract } from "../UserSharesPerVault";
+import { useAccount, useContractReads } from "wagmi";
 import { DepositTierContract } from "../DepositTier";
+import { PendingRewardContract } from "../PendingReward";
+import { TokenAllowanceContract } from "../TokenAllowance";
 import { TotalSharesPerVaultContract } from "../TotalSharesPerVault";
+import { UserSharesPerVaultContract } from "../UserSharesPerVault";
 
 /**
  * This is a multicall with [tokenAllowance(1.), userShares(3.), pendingReward(5.)]. Used mainly on Deposit/Withdraw page.
@@ -16,7 +16,7 @@ export class DepositWithdrawDataMulticall {
     const { address: account } = useAccount();
 
     const contractAddress = selectedVault.version === "v1" ? selectedVault.master.address : selectedVault.id;
-    const vaultToken = selectedVault.stakingToken;
+    const vaultToken = selectedVault.stakingToken as `0x${string}`;
 
     const { data: res, isError } = useContractReads({
       enabled: isTabFocused,

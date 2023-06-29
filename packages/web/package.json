@@ -76,7 +76,7 @@
     "url": "^0.11.0",
     "util": "^0.12.4",
     "uuid": "^9.0.0",
-    "wagmi": "^0.9.4",
+    "wagmi": "^0.12.18",
     "web-vitals": "^2.1.2",
     "web3modal": "^1.9.7",
     "yup": "^0.32.11"
@@ -108,6 +108,7 @@
     "@safe-global/safe-core-sdk-types": "^1.10.1",
     "@safe-global/safe-ethers-lib": "^1.9.2",
     "@tanstack/react-query": "^4.28.0",
+    "@walletconnect/modal": "^2.5.8",
     "csvtojson": "^2.0.10",
     "dompurify": "^3.0.1",
     "encrypt-storage": "^2.12.15",

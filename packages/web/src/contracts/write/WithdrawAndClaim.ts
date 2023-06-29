@@ -1,8 +1,8 @@
-import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import { useAccount, useContractRead, useContractWrite, useNetwork } from "wagmi";
 
 export class WithdrawAndClaimContract {
   /**
@@ -24,14 +24,14 @@ export class WithdrawAndClaimContract {
 
     const withdrawAndClaim = useContractWrite({
       mode: "recklesslyUnprepared",
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       abi: vaultAbi as any,
       functionName: contractFunctionName,
       // chainId: vault.chainId,
     });
 
     const { data: res, isError } = useContractRead({
-      address: vault.version === "v1" ? vault.master.address : undefined,
+      address: vault.version === "v1" ? (vault.master.address as `0x${string}`) : undefined,
       abi: HATSVaultV1_abi as any,
       functionName: "poolInfo",
       chainId: vault.chainId,

@@ -1,8 +1,8 @@
-import { useAccount, useContractRead } from "wagmi";
+import { HATSVaultV1_abi, RewardController_abi } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
-import { RewardController_abi, HATSVaultV1_abi } from "@hats-finance/shared";
+import { useAccount, useContractRead } from "wagmi";
 
 export class PendingRewardContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {
@@ -12,7 +12,7 @@ export class PendingRewardContract {
     const args = vault?.version === "v1" ? [vault?.pid, account] : [vault?.id, account];
 
     return {
-      address: contractAddress ?? "0x0000000000000000000000000000000000000000",
+      address: (contractAddress as `0x${string}`) ?? "0x0000000000000000000000000000000000000000",
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

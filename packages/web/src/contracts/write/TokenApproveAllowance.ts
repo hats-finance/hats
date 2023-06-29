@@ -1,7 +1,7 @@
-import { useContractWrite, useNetwork, erc20ABI } from "wagmi";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
+import { erc20ABI, useContractWrite, useNetwork } from "wagmi";
 
 export class TokenApproveAllowanceContract {
   /**
@@ -19,7 +19,7 @@ export class TokenApproveAllowanceContract {
 
     const approveAllowance = useContractWrite({
       mode: "recklesslyUnprepared",
-      address: vault.stakingToken,
+      address: vault.stakingToken as `0x${string}`,
       abi: erc20ABI,
       functionName: "approve",
       // chainId: vault.chainId,

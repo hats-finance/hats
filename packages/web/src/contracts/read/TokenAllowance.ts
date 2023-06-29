@@ -1,10 +1,10 @@
 import { BigNumber } from "ethers";
-import { erc20ABI, useContractRead } from "wagmi";
 import { useTabFocus } from "hooks/useTabFocus";
+import { erc20ABI, useContractRead } from "wagmi";
 
 export class TokenAllowanceContract {
   static contractInfo = (
-    tokenAddress: string | undefined,
+    tokenAddress: `0x${string}` | undefined,
     ownerAddress: string | undefined,
     spenderAddress: string | undefined,
     chainId: number | undefined
@@ -23,7 +23,7 @@ export class TokenAllowanceContract {
   };
 
   static hook = (
-    tokenAddress: string | undefined,
+    tokenAddress: `0x${string}` | undefined,
     ownerAddress: string | undefined,
     spenderAddress: string | undefined,
     chainId: number | undefined

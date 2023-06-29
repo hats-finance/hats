@@ -1,8 +1,8 @@
-import { useContractRead } from "wagmi";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import { useContractRead } from "wagmi";
 
 export class SharesToBalancePerVaultContract {
   static contractInfo = (vault?: IVault, shares?: BigNumber) => {
@@ -12,7 +12,7 @@ export class SharesToBalancePerVaultContract {
     const args = vault?.version === "v1" ? [vault?.pid] : [shares];
 
     return {
-      address: vault && shares ? contractAddress : undefined,
+      address: vault && shares ? (contractAddress as `0x${string}`) : undefined,
       abi: vaultAbi as any,
       functionName: method,
       chainId: vault?.chainId,

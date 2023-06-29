@@ -1,12 +1,12 @@
 import { HATVaultsNFT_abi, IVault } from "@hats-finance/shared";
-import { useContractRead } from "wagmi";
+import { NFTContractDataProxy } from "constants/constants";
 import { BigNumber } from "ethers";
 import { appChains } from "settings";
-import { NFTContractDataProxy } from "constants/constants";
+import { useContractRead } from "wagmi";
 
 export function useVaultRegisteredNft(vault: IVault) {
   const nftContract = {
-    address: appChains[vault.chainId!].vaultsNFTContract!,
+    address: appChains[vault.chainId!].vaultsNFTContract! as `0x${string}`,
     abi: HATVaultsNFT_abi,
     chainId: vault.chainId!,
     scopeKey: "hats",

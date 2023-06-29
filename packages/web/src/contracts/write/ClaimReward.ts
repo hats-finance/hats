@@ -1,7 +1,7 @@
-import { useAccount, useContractWrite, useNetwork } from "wagmi";
+import { HATSVaultV1_abi, RewardController_abi } from "@hats-finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultV1_abi, RewardController_abi } from "@hats-finance/shared";
+import { useAccount, useContractWrite, useNetwork } from "wagmi";
 
 export class ClaimRewardContract {
   /**
@@ -21,7 +21,7 @@ export class ClaimRewardContract {
 
     const claimReward = useContractWrite({
       mode: "recklesslyUnprepared",
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       abi: abi as any,
       functionName: "claimReward",
       // chainId: vault.chainId,

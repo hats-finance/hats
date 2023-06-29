@@ -1,7 +1,7 @@
-import { useContractWrite, useNetwork } from "wagmi";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import { useContractWrite, useNetwork } from "wagmi";
 
 export class CommitteeCheckInContract {
   /**
@@ -20,7 +20,7 @@ export class CommitteeCheckInContract {
 
     const committeeCheckIn = useContractWrite({
       mode: "recklesslyUnprepared",
-      address: contractAddress,
+      address: contractAddress as `0x${string}`,
       abi: vaultAbi as any,
       functionName: "committeeCheckIn",
       // chainId: vault.chainId,
