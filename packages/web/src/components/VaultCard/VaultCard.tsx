@@ -100,6 +100,7 @@ export const VaultCard = ({
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
   const description =
+    vault.description["project-metadata"].oneLiner ??
     ONE_LINER_FALLBACK[vault.id] ??
     "Nulla facilisi. Donec nec dictum eros. Cras et velit viverra, dapibus velit fringilla, bibendum mi aptent. Class aptent taciti sociosqu ad litora.";
 
@@ -174,6 +175,11 @@ export const VaultCard = ({
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+  };
+
+  const goTopayoutData = () => {
+    if (!auditPayout || !auditPayout.payoutDataHash) return;
+    window.open(`${IPFS_PREFIX}/${auditPayout.payoutDataHash}`, "_blank");
   };
 
   return (
@@ -309,6 +315,11 @@ export const VaultCard = ({
             {!auditPayout && (
               <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
                 {isAudit ? t("competitionDetails") : t("bountyDetails")}
+              </Button>
+            )}
+            {auditPayout && auditPayout.payoutDataHash && (
+              <Button size="medium" styleType="outlined" filledColor={isAudit ? "primary" : "secondary"} onClick={goTopayoutData}>
+                {t("seePayoutData")}
               </Button>
             )}
           </div>
