@@ -1,6 +1,6 @@
 import { Seo, VaultCard } from "components";
 import { useTranslation } from "react-i18next";
-import { useAuditCompetitionsVaults } from "./hooks";
+import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const AuditVaultsPage = () => {
@@ -11,6 +11,8 @@ export const AuditVaultsPage = () => {
     upcoming: upcomingAuditCompetitions,
     finished: finishedAuditPayouts,
   } = useAuditCompetitionsVaults();
+
+  const oldAudits = useOldAuditCompetitions();
 
   return (
     <>
@@ -38,11 +40,11 @@ export const AuditVaultsPage = () => {
           </>
         )}
 
-        {finishedAuditPayouts.length > 0 && (
+        {[...finishedAuditPayouts, ...(oldAudits ?? [])].length > 0 && (
           <>
             <h2 className="subtitle">{t("finishedCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {finishedAuditPayouts.map((auditPayout, idx) => (
+              {[...finishedAuditPayouts, ...(oldAudits ?? [])].map((auditPayout, idx) => (
                 <VaultCard key={auditPayout.id + idx} auditPayout={auditPayout} />
               ))}
             </div>
