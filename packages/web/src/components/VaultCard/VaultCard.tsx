@@ -152,6 +152,11 @@ export const VaultCard = ({
     );
   };
 
+  const goToProjectWebsite = () => {
+    if (!projectWebsite) return;
+    window.open(projectWebsite, "_blank");
+  };
+
   const goToDeposits = () => {
     if (!vault) return;
     if (noActions) return;
@@ -194,7 +199,7 @@ export const VaultCard = ({
 
       <div className="vault-info">
         <div className="metadata">
-          <img src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
+          <img onClick={goToProjectWebsite} src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
           <div className="name-description">
             <h3 className="name">{name}</h3>
             {!reducedStyles && <p className="description">{description}</p>}
