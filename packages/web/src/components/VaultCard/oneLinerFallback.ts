@@ -67,4 +67,6 @@ export const ONE_LINER_FALLBACK = {
     "Gravita is an Open Source Protocol that allows borrowing assets interest-free using liquid staking tokens as collateral.",
   "0x1e7e590f3a227ec5298995fdcd42b2d5361cfc06":
     "Raft is a DeFi protocol that lets you generate R by depositing liquid staking tokens (LSDs) as collateral.",
+  "0x5dfc5451a739b4d94551195329bd37bcf8e4bf4a":
+    "Swapr is a multi-chain automated market maker (AMM) with a comprehensive set of unique features such as ecorouter, bridge aggregator, and permissionless farming and adjustable swap fees.",
 };
