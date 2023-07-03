@@ -247,6 +247,7 @@ export interface IMaster {
   id: string;
   address: string;
   governance: string;
+  timelock: string;
   totalRewardPaid: string;
   rewardPerBlock: string;
   startBlock: string;

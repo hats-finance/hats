@@ -537,6 +537,10 @@
     "thisVaultIsAlreadyVisible": "This vault is already visible",
     "vaultDoesNotHaveWaitingApprovalEditSession": "This vault does not have any waiting approval edit session",
     "editSessionId": "Edit session ID",
+    "errorDuringSafeProposal": "An error has occurred during the creation of the safe proposal.",
+    "proposalCreatedSuccessfully": "Safe transaction proposal was created successfully.",
+    "goToSafeApp": "Go to Safe App",
+    "creatingProposal": "Creating Safe proposal",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

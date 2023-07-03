@@ -5,4 +5,4 @@ export { CheckInStatusCard } from "./CheckInStatusCard";
 export { DepositStatusCard } from "./DepositStatusCard";
 export { GovApprovalStatusCard } from "./GovApprovalStatusCard";
 export { GenerateNftsAssetsCard } from "./GenerateNftsAssetsCard";
-export { GovActionsStatusCard } from "./GovActionsStatusCard";
+export { GovActionsStatusCard } from "./GovActionsStatusCard/GovActionsStatusCard";
