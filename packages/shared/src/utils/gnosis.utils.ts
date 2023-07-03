@@ -5,7 +5,7 @@ import { isServer } from "./general.utils";
 
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
 
-const getGnosisChainNameByChainId = (chainId: number): string => {
+export const getGnosisChainNameByChainId = (chainId: number): string => {
   switch (chainId) {
     case mainnet.id:
       return "mainnet";

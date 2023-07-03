@@ -104,9 +104,9 @@
     ]
   },
   "dependencies": {
-    "@safe-global/safe-core-sdk": "^3.3.2",
-    "@safe-global/safe-core-sdk-types": "^1.10.1",
-    "@safe-global/safe-ethers-lib": "^1.9.2",
+    "@safe-global/api-kit": "^1.1.0",
+    "@safe-global/protocol-kit": "^1.0.1",
+    "@safe-global/safe-core-sdk-types": "^2.0.0",
     "@tanstack/react-query": "^4.28.0",
     "@walletconnect/modal": "^2.5.8",
     "csvtojson": "^2.0.10",

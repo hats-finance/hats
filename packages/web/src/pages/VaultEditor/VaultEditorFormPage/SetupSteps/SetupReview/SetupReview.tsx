@@ -52,6 +52,7 @@ export function SetupReview() {
         vestingHatPeriods: "",
         id: "",
         governance: "",
+        timelock: "",
         totalRewardPaid: "",
         rewardPerBlock: "",
         startBlock: "",
