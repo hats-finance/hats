@@ -76,6 +76,12 @@ export const StyledVaultCard = styled.div<{
           height: ${getSpacing(9)};
           border-radius: 50%;
           object-fit: contain;
+          cursor: pointer;
+          transition: 0.2s;
+
+          &:hover {
+            opacity: 0.8;
+          }
         }
 
         .name-description {

@@ -20,6 +20,10 @@ export const StyledNavLink = styled(NavLink)`
     padding: ${getSpacing(1.5)} ${getSpacing(3)};
   }
 
+  @media ((min-width: ${breakpointsDefinition.mobile}) and (max-height: 800px)) {
+    margin: ${getSpacing(0.5)} 0px;
+  }
+
   p.normal {
     display: block;
 

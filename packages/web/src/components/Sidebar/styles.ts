@@ -32,6 +32,10 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
       `}
     }
 
+    @media ((min-width: ${breakpointsDefinition.mobile}) and (max-height: 800px)) {
+      padding-top: ${getSpacing(2)};
+    }
+
     .logo {
       display: flex;
       justify-content: center;
@@ -42,6 +46,10 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
         width: 75%;
       }
 
+      @media ((min-width: ${breakpointsDefinition.mobile}) and (max-height: 800px)) {
+        margin-bottom: ${getSpacing(2)};
+      }
+
       @media (max-width: ${breakpointsDefinition.mobile}) {
         display: none;
       }
@@ -49,7 +57,11 @@ export const StyledSidebar = styled.nav<{ showFullScreen: boolean }>(
 
     .bottom-wrapper {
       margin: auto;
-      margin-bottom: 80px;
+      margin-bottom: ${getSpacing(6)};
+
+      @media ((min-width: ${breakpointsDefinition.mobile}) and (max-height: 800px)) {
+        margin-bottom: ${getSpacing(3)};
+      }
     }
   `
 );

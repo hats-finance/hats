@@ -435,6 +435,7 @@
     "scope": "Scope",
     "submissions": "Submissions",
     "bugBounty": "Bug bounty",
+    "seePayoutData": "See on-chain payout results",
     "rewardsDivision": "Rewards division",
     "severityRewards": "Severity rewards",
     "nftRewards": "NFT rewards",
