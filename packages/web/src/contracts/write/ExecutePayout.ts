@@ -1,8 +1,6 @@
 import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
-import Safe from "@safe-global/safe-core-sdk";
+import Safe, { EthSafeSignature, EthersAdapter } from "@safe-global/protocol-kit";
 import { TransactionResult } from "@safe-global/safe-core-sdk-types";
-import EthSignSignature from "@safe-global/safe-core-sdk/dist/src/utils/signatures/SafeSignature";
-import EthersAdapter from "@safe-global/safe-ethers-lib";
 import { Signer, ethers } from "ethers";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -60,7 +58,7 @@ export class ExecutePayoutContract {
 
           // Add the collected signatures to the safe transaction
           for (const signature of payout.signatures) {
-            safeTransaction.addSignature(new EthSignSignature(signature.signerAddress, signature.signature));
+            safeTransaction.addSignature(new EthSafeSignature(signature.signerAddress, signature.signature));
           }
 
           const txResult = await safeSdk.executeTransaction(safeTransaction);
