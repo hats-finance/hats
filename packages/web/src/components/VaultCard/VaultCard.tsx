@@ -100,6 +100,7 @@ export const VaultCard = ({
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
   const description =
+    vault.description["project-metadata"].oneLiner ??
     ONE_LINER_FALLBACK[vault.id] ??
     "Nulla facilisi. Donec nec dictum eros. Cras et velit viverra, dapibus velit fringilla, bibendum mi aptent. Class aptent taciti sociosqu ad litora.";
 
@@ -151,6 +152,11 @@ export const VaultCard = ({
     );
   };
 
+  const goToProjectWebsite = () => {
+    if (!projectWebsite) return;
+    window.open(projectWebsite, "_blank");
+  };
+
   const goToDeposits = () => {
     if (!vault) return;
     if (noActions) return;
@@ -176,6 +182,11 @@ export const VaultCard = ({
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
   };
 
+  const goTopayoutData = () => {
+    if (!auditPayout || !auditPayout.payoutDataHash) return;
+    window.open(`${IPFS_PREFIX}/${auditPayout.payoutDataHash}`, "_blank");
+  };
+
   return (
     <StyledVaultCard
       isAudit={isAudit}
@@ -188,7 +199,7 @@ export const VaultCard = ({
 
       <div className="vault-info">
         <div className="metadata">
-          <img src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
+          <img onClick={goToProjectWebsite} src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
           <div className="name-description">
             <h3 className="name">{name}</h3>
             {!reducedStyles && <p className="description">{description}</p>}
@@ -309,6 +320,11 @@ export const VaultCard = ({
             {!auditPayout && (
               <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
                 {isAudit ? t("competitionDetails") : t("bountyDetails")}
+              </Button>
+            )}
+            {auditPayout && auditPayout.payoutDataHash && (
+              <Button size="medium" styleType="outlined" filledColor={isAudit ? "primary" : "secondary"} onClick={goTopayoutData}>
+                {t("seePayoutData")}
               </Button>
             )}
           </div>

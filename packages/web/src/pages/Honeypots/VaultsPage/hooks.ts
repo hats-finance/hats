@@ -1,4 +1,9 @@
+import { IPayoutGraph } from "@hats-finance/shared";
+import { useQuery } from "@tanstack/react-query";
+import { axiosClient } from "config/axiosClient";
 import { useVaults } from "hooks/vaults/useVaults";
+import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
+import { useNetwork } from "wagmi";
 
 /**
  * Returns the live/upcoming/finished audit competitions
@@ -17,7 +22,7 @@ export const useAuditCompetitionsVaults = () => {
     (payout) => payout.isApproved && payout.payoutData?.vault?.description?.["project-metadata"].type === "audit"
   );
 
-  auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
+  auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
 
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
@@ -39,4 +44,31 @@ export const useBugBountiesVaults = () => {
   bugBounties.sort((a, b) => (b.amountsInfo?.maxRewardAmount.usd ?? 0) - (a.amountsInfo?.maxRewardAmount.usd ?? 0));
 
   return bugBounties;
+};
+
+/**
+ * Returns all the past audit competitions (old version) from the database
+ */
+export const useOldAuditCompetitions = (): IPayoutGraph[] => {
+  const { chain } = useNetwork();
+  const connectedChain = chain ? appChains[chain.id] : null;
+  // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
+  const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
+
+  const { data } = useQuery<IPayoutGraph[]>({
+    queryKey: ["old-audit-competitions"],
+    queryFn: async () => {
+      const res = await axiosClient.get(`${BASE_SERVICE_URL}/utils/old-audits`);
+      return res.data.audits;
+    },
+    refetchOnWindowFocus: false,
+  });
+
+  if (!data) return [];
+
+  return data.filter((audit) =>
+    showTestnets
+      ? appChains[audit.payoutData!.vault!.chainId].chain.testnet
+      : !appChains[audit.payoutData!.vault!.chainId].chain.testnet
+  );
 };
