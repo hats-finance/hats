@@ -270,7 +270,7 @@ export interface ISubmittedSubmission {
   chainId?: number;
   id: string;
   submissionHash: string;
-  submissionContent?: string;
+  submissionData?: string;
   submitter: string;
   createdAt: string;
   master: { id: string };
