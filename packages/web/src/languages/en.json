@@ -541,6 +541,7 @@
     "proposalCreatedSuccessfully": "Safe transaction proposal was created successfully.",
     "goToSafeApp": "Go to Safe App",
     "creatingProposal": "Creating Safe proposal",
+    "decryptionTool": "Decryption tool",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

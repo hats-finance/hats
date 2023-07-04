@@ -13,6 +13,15 @@ export const committeeToolsRouter = (): RouteObject => ({
       element: <DecryptionHomePage />,
     },
     {
+      path: "submissions",
+      children: [
+        {
+          path: "",
+          element: <>Hello submissions</>,
+        },
+      ],
+    },
+    {
       path: "payouts",
       children: [
         {
