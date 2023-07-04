@@ -4,6 +4,8 @@ import { DecryptionHomePage } from "./DecryptionTool/DecryptionHomePage";
 import { PayoutFormPage } from "./PayoutsTool/PayoutFormPage/PayoutFormPage";
 import { PayoutStatusPage } from "./PayoutsTool/PayoutStatusPage/PayoutStatusPage";
 import { PayoutsListPage } from "./PayoutsTool/PayoutsListPage/PayoutsListPage";
+import { SubmissionDetailsPage } from "./SubmissionsTool/SubmissionDetailsPage/SubmissionDetailsPage";
+import { SubmissionsListPage } from "./SubmissionsTool/SubmissionsListPage/SubmissionsListPage";
 
 export const committeeToolsRouter = (): RouteObject => ({
   path: `${RoutePaths.committee_tools}`,
@@ -17,7 +19,11 @@ export const committeeToolsRouter = (): RouteObject => ({
       children: [
         {
           path: "",
-          element: <>Hello submissions</>,
+          element: <SubmissionsListPage />,
+        },
+        {
+          path: ":cid",
+          element: <SubmissionDetailsPage />,
         },
       ],
     },
