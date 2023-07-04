@@ -9,6 +9,7 @@ import {
   IWithdrawSafetyPeriod,
   fixObject,
 } from "@hats-finance/shared";
+import axios from "axios";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
@@ -16,6 +17,7 @@ import { INFTTokenMetadata } from "hooks/nft/types";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
+import { isValidIpfsHash } from "utils/ipfs.utils";
 import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../useLiveSafetyPeriod";
@@ -24,6 +26,7 @@ import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
   vaultsReadyAllChains: boolean;
+  submissionsReadyAllChains: boolean;
   activeVaults?: IVault[]; // Vaults filtered by dates and chains
   allVaultsOnEnv?: IVault[]; // Vaults filtered by chains but not dates
   allVaults?: IVault[]; // Vaults without dates and chains filtering
@@ -49,6 +52,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { chain } = useNetwork();
 
   const [vaultsReadyAllChains, setVaultsReadyAllChains] = useState(false);
+  const [submissionsReadyAllChains, setSubmissionsReadyAllChains] = useState(false);
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
   const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
   const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
@@ -131,7 +135,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const setVaultsWithDetails = async (vaultsData: IVault[]) => {
     const loadVaultDescription = async (vault: IVault): Promise<IVaultDescription | undefined> => {
-      if (vault.descriptionHash && vault.descriptionHash !== "") {
+      if (isValidIpfsHash(vault.descriptionHash)) {
         try {
           const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!);
           if (dataResponse.status === 200) {
@@ -140,7 +144,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
           }
           return undefined;
         } catch (error) {
-          console.error(error);
+          // console.error(error);
           return undefined;
         }
       }
@@ -203,7 +207,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const setPayoutsWithDetails = async (payoutsData: IPayoutGraph[]) => {
     const loadPayoutData = async (payout: IPayoutGraph): Promise<IPayoutData | undefined> => {
-      if (payout.payoutDataHash && payout.payoutDataHash !== "") {
+      if (isValidIpfsHash(payout.payoutDataHash)) {
         try {
           const dataResponse = await fetch(ipfsTransformUri(payout.payoutDataHash)!);
           if (dataResponse.status === 200) {
@@ -224,7 +228,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
           }
           return undefined;
         } catch (error) {
-          console.error(error);
+          // console.error(error);
           return undefined;
         }
       }
@@ -262,7 +266,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
           const object = await dataResponse.json();
           return object;
         } catch (error) {
-          console.error(error);
+          // console.error(error);
           return undefined;
         }
       }
@@ -291,13 +295,13 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const setSubmissionsWithDetails = async (submissionsData: ISubmittedSubmission[]) => {
     const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<string | undefined> => {
-      if (submission.submissionHash && submission.submissionHash !== "") {
+      if (isValidIpfsHash(submission.submissionHash)) {
         try {
-          const dataResponse = await fetch(ipfsTransformUri(submission.submissionHash));
-          const object = await dataResponse.json();
+          const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash));
+          const object = dataResponse.data;
           return object;
         } catch (error) {
-          console.error(error);
+          // console.error(error);
           return undefined;
         }
       }
@@ -307,21 +311,23 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const getSubmissionData = async (submissionsToFetch: ISubmittedSubmission[]): Promise<ISubmittedSubmission[]> =>
       Promise.all(
         submissionsToFetch.map(async (submission) => {
-          const existsSubmissionData = allSubmissions.find((v) => v.id === submission.id)?.submissionContent;
-          const submissionData = existsSubmissionData ?? ((await loadSubmissionData(submission)) as string);
+          const existsSubmissionData = allSubmissions.find((v) => v.id === submission.id)?.submissionData;
+          const submissionData = existsSubmissionData ?? (await loadSubmissionData(submission));
 
           return { ...submission, submissionData } as ISubmittedSubmission;
         })
       );
 
     const allSubmissionsData = await getSubmissionData(submissionsData);
+    const filteredByValidContent = allSubmissionsData.filter((submission) => submission.submissionData);
 
-    const filteredByChain = allSubmissionsData.filter((vault) => {
+    const filteredByChain = filteredByValidContent.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
-    if (JSON.stringify(allSubmissions) !== JSON.stringify(allSubmissionsData)) setAllSubmissions(allSubmissionsData);
+    if (JSON.stringify(allSubmissions) !== JSON.stringify(filteredByValidContent)) setAllSubmissions(filteredByValidContent);
     if (JSON.stringify(allSubmissionsOnEnv) !== JSON.stringify(filteredByChain)) setAllSubmissionsOnEnv(filteredByChain);
+    if (allChainsLoaded) setSubmissionsReadyAllChains(true);
   };
 
   useEffect(() => {
@@ -329,7 +335,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
     setPayoutsWithDetails([...multiChainData.prod.payouts, ...multiChainData.test.payouts]);
     setSubmissionsWithDetails([...multiChainData.prod.submissions, ...multiChainData.test.submissions]);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
 
@@ -340,6 +345,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const context: IVaultsContext = {
     vaultsReadyAllChains,
+    submissionsReadyAllChains,
     activeVaults,
     allVaults,
     allVaultsOnEnv,
