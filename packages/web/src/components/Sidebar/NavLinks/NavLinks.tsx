@@ -25,8 +25,6 @@ export default function NavLinks() {
   const committeeToolsSubrouteRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(committeeToolsSubrouteRef, () => setshowCommitteeToolsSubroutes(false));
 
-  console.log(location);
-
   const handleClick = () => {
     dispatch(toggleMenu(false));
     setshowCommitteeToolsSubroutes(false);
