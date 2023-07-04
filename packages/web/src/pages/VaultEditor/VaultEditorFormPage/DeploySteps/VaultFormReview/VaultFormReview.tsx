@@ -51,6 +51,7 @@ export function VaultFormReview() {
         vestingHatPeriods: "",
         id: "",
         governance: "",
+        timelock: "",
         totalRewardPaid: "",
         rewardPerBlock: "",
         startBlock: "",

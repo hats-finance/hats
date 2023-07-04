@@ -34,15 +34,15 @@ export default function NavLinks() {
         <p className="normal">{t("submitVulnerability")}</p>
         <p className="collapsed">{t("submit")}</p>
       </StyledNavLink>
-      <StyledNavLink to={RoutePaths.committee_tools} className="hidden" onClick={handleClick}>
-        <CommitteeToolsIcon />
-        <p className="normal">{t("committeeTools")}</p>
-        <p className="collapsed">{t("committeeTools")}</p>
-      </StyledNavLink>
       <StyledNavLink to={RoutePaths.vault_editor} onClick={handleClick}>
         <VaultEditorIcon />
         <p className="normal">{t("addYourProject")}</p>
         <p className="collapsed">{t("addYourProject")}</p>
+      </StyledNavLink>
+      <StyledNavLink to={RoutePaths.committee_tools} className="hidden" onClick={handleClick}>
+        <CommitteeToolsIcon />
+        <p className="normal">{t("committeeTools")}</p>
+        <p className="collapsed">{t("committeeTools")}</p>
       </StyledNavLink>
     </>
   );

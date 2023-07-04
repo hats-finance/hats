@@ -47,6 +47,7 @@ export const GET_VAULTS = `
         vestingHatPeriods
         defaultHackerHatRewardSplit
         defaultGovernanceHatRewardSplit
+        timelock: governance
       }
       numberOfApprovedClaims
       rewardsLevels

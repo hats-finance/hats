@@ -14,6 +14,7 @@ import {
   DepositStatusCard,
   EditVaultStatusCard,
   GenerateNftsAssetsCard,
+  GovActionsStatusCard,
   GovApprovalStatusCard,
   OnChainDataStatusCard,
 } from "./VaultStatusCards";
@@ -100,6 +101,7 @@ export const VaultStatusPage = () => {
             <CheckInStatusCard />
             <DepositStatusCard />
             <GovApprovalStatusCard />
+            {userPermissionData.role === "gov" && <GovActionsStatusCard />}
           </VaultStatusContext.Provider>
         </div>
       </StyledVaultStatusPage>

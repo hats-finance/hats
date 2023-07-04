@@ -1,6 +1,5 @@
-import Safe from "@safe-global/safe-core-sdk";
+import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
-import EthersAdapter from "@safe-global/safe-ethers-lib";
 import { BigNumber, ethers } from "ethers";
 import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
 import { IPayoutData, IPayoutResponse, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, PayoutType } from "../types";
@@ -45,7 +44,7 @@ export const getExecutePayoutSafeTransaction = async (
   payout: IPayoutResponse
 ): Promise<{ tx: SafeTransaction; txHash: string }> => {
   const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: provider });
-  const safeSdk = await Safe.create({ ethAdapter, safeAddress: committee });
+  const safeSdk = await Safe.create({ ethAdapter: ethAdapter, safeAddress: committee });
 
   const vaultInfo = payout.vaultInfo;
   const percentageToPay = Math.round(Number(payout.payoutData.percentageToPay) * 100);

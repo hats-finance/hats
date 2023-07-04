@@ -1,6 +1,5 @@
 import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
-import Safe from "@safe-global/safe-core-sdk";
-import EthersAdapter from "@safe-global/safe-ethers-lib";
+import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { Signer, ethers } from "ethers";
 import { useState } from "react";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
