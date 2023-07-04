@@ -22,6 +22,7 @@ import { populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
+  vaultsReadyAllChains: boolean;
   activeVaults?: IVault[]; // Vaults filtered by dates and chains
   allVaultsOnEnv?: IVault[]; // Vaults filtered by chains but not dates
   allVaults?: IVault[]; // Vaults without dates and chains filtering
@@ -44,6 +45,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { address: account } = useAccount();
   const { chain } = useNetwork();
 
+  const [vaultsReadyAllChains, setVaultsReadyAllChains] = useState(false);
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
   const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
   const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
@@ -61,7 +63,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     throw new Error("Blacklisted wallet");
   }
 
-  const { multiChainData } = useMultiChainVaultsV2();
+  const { multiChainData, allChainsLoaded } = useMultiChainVaultsV2();
 
   const getTokenPrices = async (vaultsToSearch: IVault[]) => {
     const stakingTokens = vaultsToSearch.map((vault) => ({
@@ -190,6 +192,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithPrices)) setAllVaults(allVaultsDataWithPrices);
     if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
     if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
+
+    if (allChainsLoaded) setVaultsReadyAllChains(true);
   };
 
   const setPayoutsWithDetails = async (payoutsData: IPayoutGraph[]) => {
@@ -294,6 +298,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
   const context: IVaultsContext = {
+    vaultsReadyAllChains,
     activeVaults,
     allVaults,
     allVaultsOnEnv,

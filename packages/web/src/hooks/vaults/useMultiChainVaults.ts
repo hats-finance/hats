@@ -23,6 +23,7 @@ export const useMultiChainVaultsV2 = () => {
   const { address: account } = useAccount();
 
   const [multiChainData, setMultiChainData] = useState<IGraphVaultsData>(INITIAL_VAULTS_DATA);
+  const [allChainsLoaded, setAllChainsLoaded] = useState(false);
 
   const subgraphQueries = useQueries({
     queries: Object.keys(appChains).map((chainId) => ({
@@ -67,8 +68,9 @@ export const useMultiChainVaultsV2 = () => {
 
     if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) {
       setMultiChainData(vaultsData);
+      setAllChainsLoaded(!subgraphQueries.some((a) => a.isLoading));
     }
   }, [subgraphQueries, multiChainData]);
 
-  return { multiChainData };
+  return { multiChainData, allChainsLoaded };
 };
