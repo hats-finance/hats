@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, ISubmittedSubmission, IUserNft, IVault } from "@hats-finance/shared";
 import { BigNumber } from "ethers";
 import { appChains } from "settings";
 
@@ -20,6 +20,13 @@ export const parseUserNfts = (userNfts: IUserNft[], chainId: number) => {
 export const parseVaults = (vaults: IVault[], chainId: number) => {
   return vaults.map((vault) => ({
     ...vault,
+    chainId,
+  }));
+};
+
+export const parseSubmissions = (submissions: ISubmittedSubmission[], chainId: number) => {
+  return submissions.map((submission) => ({
+    ...submission,
     chainId,
   }));
 };

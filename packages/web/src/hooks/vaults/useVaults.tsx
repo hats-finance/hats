@@ -2,6 +2,7 @@ import {
   IMaster,
   IPayoutData,
   IPayoutGraph,
+  ISubmittedSubmission,
   IUserNft,
   IVault,
   IVaultDescription,
@@ -31,7 +32,9 @@ interface IVaultsContext {
   tokenPrices?: number[];
   masters?: IMaster[];
   allPayouts?: IPayoutGraph[]; // Payouts without chains filtering
-  allPayoutsOnEnv?: IPayoutGraph[]; // Payouts filtered by chainsPayouts without chains filtering
+  allPayoutsOnEnv?: IPayoutGraph[]; // Payouts filtered by chains
+  allSubmissions?: ISubmittedSubmission[]; // Submissions without chains filtering
+  allSubmissionsOnEnv?: ISubmittedSubmission[]; // Submissions filtered by chains
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
@@ -49,9 +52,11 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const [allVaults, setAllVaults] = useState<IVault[]>([]);
   const [allVaultsOnEnv, setAllVaultsOnEnv] = useState<IVault[]>([]);
   const [activeVaults, setActiveVaults] = useState<IVault[]>([]);
-  const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [allPayouts, setAllPayouts] = useState<IPayoutGraph[]>([]);
   const [allPayoutsOnEnv, setAllPayoutsOnEnv] = useState<IPayoutGraph[]>([]);
+  const [allSubmissions, setAllSubmissions] = useState<ISubmittedSubmission[]>([]);
+  const [allSubmissionsOnEnv, setAllSubmissionsOnEnv] = useState<ISubmittedSubmission[]>([]);
+  const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
 
@@ -284,10 +289,46 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     if (JSON.stringify(userNfts) !== JSON.stringify(nftsFilteredByNetwork)) setUserNfts(nftsFilteredByNetwork);
   };
 
+  const setSubmissionsWithDetails = async (submissionsData: ISubmittedSubmission[]) => {
+    const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<string | undefined> => {
+      if (submission.submissionHash && submission.submissionHash !== "") {
+        try {
+          const dataResponse = await fetch(ipfsTransformUri(submission.submissionHash));
+          const object = await dataResponse.json();
+          return object;
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    const getSubmissionData = async (submissionsToFetch: ISubmittedSubmission[]): Promise<ISubmittedSubmission[]> =>
+      Promise.all(
+        submissionsToFetch.map(async (submission) => {
+          const existsSubmissionData = allSubmissions.find((v) => v.id === submission.id)?.submissionContent;
+          const submissionData = existsSubmissionData ?? ((await loadSubmissionData(submission)) as string);
+
+          return { ...submission, submissionData } as ISubmittedSubmission;
+        })
+      );
+
+    const allSubmissionsData = await getSubmissionData(submissionsData);
+
+    const filteredByChain = allSubmissionsData.filter((vault) => {
+      return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
+    });
+
+    if (JSON.stringify(allSubmissions) !== JSON.stringify(allSubmissionsData)) setAllSubmissions(allSubmissionsData);
+    if (JSON.stringify(allSubmissionsOnEnv) !== JSON.stringify(filteredByChain)) setAllSubmissionsOnEnv(filteredByChain);
+  };
+
   useEffect(() => {
     setVaultsWithDetails([...multiChainData.prod.vaults, ...multiChainData.test.vaults]);
     setUserNftsWithMetadata([...multiChainData.prod.userNfts, ...multiChainData.test.userNfts]);
     setPayoutsWithDetails([...multiChainData.prod.payouts, ...multiChainData.test.payouts]);
+    setSubmissionsWithDetails([...multiChainData.prod.submissions, ...multiChainData.test.submissions]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multiChainData, showTestnets]);
@@ -308,6 +349,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     withdrawSafetyPeriod,
     allPayouts,
     allPayoutsOnEnv,
+    allSubmissions,
+    allSubmissionsOnEnv,
     masters: [...multiChainData.prod.masters, ...multiChainData.test.masters],
   };
 

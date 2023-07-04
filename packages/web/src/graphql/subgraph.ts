@@ -109,7 +109,16 @@ export const GET_VAULTS = `
       hackerHatReward
       committeeReward
       isChallenged
-    }  
+    }
+    submissions: loggedClaims {
+      id
+      submissionHash: claim
+      submitter: claimer
+      createdAt
+      master {
+        id
+      }
+    }
   }
 `;
 

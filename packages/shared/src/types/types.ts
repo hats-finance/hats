@@ -255,7 +255,6 @@ export interface IMaster {
   totalAllocPoints: string;
   createdAt: string;
   numberOfSubmittedClaims: string;
-  submittedClaim: Array<ISubmittedClaim>;
   withdrawPeriod: string;
   safetyPeriod: string;
   withdrawRequestEnablePeriod: string;
@@ -267,12 +266,14 @@ export interface IMaster {
   defaultGovernanceHatRewardSplit: string;
 }
 
-export interface ISubmittedClaim {
+export interface ISubmittedSubmission {
+  chainId?: number;
   id: string;
-  claim: string;
-  claimer: string;
+  submissionHash: string;
+  submissionContent?: string;
+  submitter: string;
   createdAt: string;
-  master: IMaster;
+  master: { id: string };
 }
 
 export interface IApprovedClaims {
