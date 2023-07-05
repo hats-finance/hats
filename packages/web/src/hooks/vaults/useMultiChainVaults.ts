@@ -72,7 +72,7 @@ export const useMultiChainVaultsV2 = () => {
 
     if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) {
       setMultiChainData(vaultsData);
-      setAllChainsLoaded(!subgraphQueries.some((a) => a.isLoading));
+      setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched));
     }
   }, [subgraphQueries, multiChainData]);
 
