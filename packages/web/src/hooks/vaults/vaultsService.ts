@@ -1,6 +1,7 @@
 import { IMaster, IPayoutGraph, ISubmittedSubmission, IUserNft, IVault } from "@hats-finance/shared";
 import { GET_VAULTS } from "graphql/subgraph";
 import { appChains } from "settings";
+import { fetchWithTimeout } from "utils/fetchWithTimeout.utils";
 
 export type IGraphVaultsData = {
   test: ISubgraphData;
@@ -32,7 +33,7 @@ export async function getSubgraphData(chainId?: number, account?: string): Promi
     if (!chainId) throw new Error("Chain id not provided");
 
     const subgraphUrl = appChains[chainId].subgraph;
-    const resTest = await fetch(subgraphUrl, {
+    const resTest = await fetchWithTimeout(subgraphUrl, {
       method: "POST",
       body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
       headers: { "Content-Type": "application/json" },
