@@ -271,6 +271,16 @@ export interface ISubmittedSubmission {
   id: string;
   submissionHash: string;
   submissionData?: string;
+  submissionDecrypted?: string;
+  linkedVault?: IVault;
+  submissionDataStructure?: {
+    title: string;
+    severity: string;
+    content: string;
+    beneficiary: string;
+    communicationChannel: { type: string; value: string };
+    githubUsername?: string;
+  };
   submitter: string;
   createdAt: string;
   master: { id: string };
