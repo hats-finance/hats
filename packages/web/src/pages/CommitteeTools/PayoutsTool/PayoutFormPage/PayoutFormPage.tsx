@@ -13,8 +13,8 @@ import { Alert, Button, CopyToClipboard, FormSelectInputOption, Loading, Seo, Va
 import { queryClient } from "config/reactQuery";
 import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
-import { useVaults } from "hooks/vaults/useVaults";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useEffect, useMemo, useState } from "react";

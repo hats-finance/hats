@@ -3,7 +3,7 @@ import { FormSelectInputOption } from "components";
 import { useEffect, useState } from "react";
 import { appChains } from "settings";
 import { useAccount } from "wagmi";
-import { useVaults } from "./useVaults";
+import { useVaults } from "../subgraph/vaults/useVaults";
 
 type UserVaultsVersion = "v1" | "v2" | "all";
 

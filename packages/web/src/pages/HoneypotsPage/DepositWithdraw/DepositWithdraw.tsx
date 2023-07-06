@@ -14,8 +14,8 @@ import {
   WithdrawRequestContract,
 } from "contracts";
 import { BigNumber } from "ethers";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
-import { useVaults } from "hooks/vaults/useVaults";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import millify from "millify";
 import { useCallback, useEffect, useState } from "react";

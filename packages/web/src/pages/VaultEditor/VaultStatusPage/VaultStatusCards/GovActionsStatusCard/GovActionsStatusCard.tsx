@@ -1,7 +1,7 @@
 import { IEditedSessionResponse, getGnosisChainPrefixByChainId } from "@hats-finance/shared";
 import { Alert, Button, FormInput, Loading } from "components";
 import { useEnhancedForm } from "hooks/form";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
