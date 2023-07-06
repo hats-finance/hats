@@ -542,6 +542,11 @@
     "goToSafeApp": "Go to Safe App",
     "creatingProposal": "Creating Safe proposal",
     "decryptionTool": "Decryption tool",
+    "pleaseConnectYourCommitteeWallet": "Please connect your committee wallet",
+    "youNeedToBeSignedInSiwe": "You need to be signed in with Ethereum to use this tool",
+    "loadingSubmissions": "Loading submissions",
+    "youNeedToOpenYourPGPTool": "You need to open your PGP tool",
+    "openPGPTool": "Open PGP tool",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

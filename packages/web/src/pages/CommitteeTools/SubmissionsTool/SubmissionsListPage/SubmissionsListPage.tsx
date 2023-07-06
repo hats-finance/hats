@@ -1,18 +1,28 @@
+import { Alert, Button, HatSpinner, WalletButton } from "components";
+import { useKeystore } from "components/Keystore";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useAccount } from "wagmi";
 import { useVaultSubmissionsBySiweUser } from "../submissionsService.hooks";
 import { StyledSubmissionsListPage } from "./styles";
 
 export const SubmissionsListPage = () => {
   const { t } = useTranslation();
-  const { tryAuthentication } = useSiweAuth();
+  const { address } = useAccount();
+  const { keystore, initKeystore } = useKeystore();
+  const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { data, isLoading } = useVaultSubmissionsBySiweUser();
+  const { data, isLoading, isFetching } = useVaultSubmissionsBySiweUser();
+  if (data) console.log(data);
 
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
+
+  useEffect(() => {
+    if (!keystore) setTimeout(() => initKeystore(), 200);
+  }, [keystore, initKeystore]);
 
   return (
     <StyledSubmissionsListPage className="content-wrapper-md">
@@ -23,6 +33,45 @@ export const SubmissionsListPage = () => {
           </p>
         </div>
       </div>
+
+      {!address || !isAuthenticated ? (
+        <>
+          {!address ? (
+            <>
+              <Alert className="mb-4" type="error">
+                {t("pleaseConnectYourCommitteeWallet")}
+              </Alert>
+              <WalletButton expanded />
+            </>
+          ) : (
+            <>
+              <Alert className="mb-4" type="error">
+                {t("youNeedToBeSignedInSiwe")}
+              </Alert>
+              <Button onClick={() => tryAuthentication()}>{t("signInWithEthereum")}</Button>
+            </>
+          )}
+        </>
+      ) : (
+        <>
+          {!keystore ? (
+            <>
+              <Alert className="mb-4" type="error">
+                {t("youNeedToOpenYourPGPTool")}
+              </Alert>
+              <Button onClick={() => initKeystore()}>{t("openPGPTool")}</Button>
+            </>
+          ) : (
+            <>
+              {isLoading || isFetching ? (
+                <HatSpinner text={`${t("loadingSubmissions")}...`} />
+              ) : (
+                <div className="submissions-list">Hello</div>
+              )}
+            </>
+          )}
+        </>
+      )}
     </StyledSubmissionsListPage>
   );
 };
