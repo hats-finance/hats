@@ -7,8 +7,9 @@ import { queryClient } from "config/reactQuery";
 import { theme } from "config/theme";
 import { wagmiClient } from "config/wagmi";
 import { SiweAuthProvider } from "hooks/siwe/useSiweAuth";
+import { SubmissionsProvider } from "hooks/subgraph/submissions/useSubmissions";
+import { VaultsProvider } from "hooks/subgraph/vaults/useVaults";
 import { ConfirmDialogProvider } from "hooks/useConfirm";
-import { VaultsProvider } from "hooks/vaults/useVaults";
 import "i18n.ts";
 import { useEffect } from "react";
 import HttpsRedirect from "react-https-redirect";
@@ -35,23 +36,25 @@ function Root() {
         <WagmiConfig client={wagmiClient}>
           <Provider store={store}>
             <VaultsProvider>
-              <HttpsRedirect>
-                <RouterToUse>
-                  <Seo isMainPage />
-                  <GlobalStyle />
-                  <ThemeProvider theme={theme}>
-                    <NotificationProvider>
-                      <ConfirmDialogProvider>
-                        <KeystoreProvider>
-                          <SiweAuthProvider>
-                            <App />
-                          </SiweAuthProvider>
-                        </KeystoreProvider>
-                      </ConfirmDialogProvider>
-                    </NotificationProvider>
-                  </ThemeProvider>
-                </RouterToUse>
-              </HttpsRedirect>
+              <SubmissionsProvider>
+                <HttpsRedirect>
+                  <RouterToUse>
+                    <Seo isMainPage />
+                    <GlobalStyle />
+                    <ThemeProvider theme={theme}>
+                      <NotificationProvider>
+                        <ConfirmDialogProvider>
+                          <KeystoreProvider>
+                            <SiweAuthProvider>
+                              <App />
+                            </SiweAuthProvider>
+                          </KeystoreProvider>
+                        </ConfirmDialogProvider>
+                      </NotificationProvider>
+                    </ThemeProvider>
+                  </RouterToUse>
+                </HttpsRedirect>
+              </SubmissionsProvider>
             </VaultsProvider>
           </Provider>
         </WagmiConfig>

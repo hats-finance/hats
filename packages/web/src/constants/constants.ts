@@ -7,6 +7,7 @@ export enum LocalStorage {
   SubmitVulnerability = "HATS_SUBMIT_VULNERABILITY_DATA",
   Keystore = "HATS_PGP_KEYSTORE",
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
+  Submissions = "HATS_SUBMISSIONS",
 }
 
 export enum EncryptedStorage {

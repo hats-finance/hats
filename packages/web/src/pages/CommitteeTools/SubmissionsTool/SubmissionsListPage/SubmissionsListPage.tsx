@@ -14,15 +14,15 @@ export const SubmissionsListPage = () => {
   const { keystore, initKeystore } = useKeystore();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { data: committeeSubmissions, isLoading, isFetching } = useVaultSubmissionsBySiweUser();
-  if (committeeSubmissions) console.log(committeeSubmissions);
+  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsBySiweUser();
+  // if (committeeSubmissions) console.log(committeeSubmissions);
 
   useEffect(() => {
     tryAuthentication();
   }, [tryAuthentication]);
 
   useEffect(() => {
-    if (!keystore) setTimeout(() => initKeystore(), 200);
+    if (!keystore) setTimeout(() => initKeystore(), 500);
   }, [keystore, initKeystore]);
 
   return (
@@ -64,7 +64,7 @@ export const SubmissionsListPage = () => {
             </>
           ) : (
             <>
-              {isLoading || isFetching ? (
+              {isLoading ? (
                 <HatSpinner text={`${t("loadingSubmissions")}...`} />
               ) : (
                 <div className="submissions-list">
