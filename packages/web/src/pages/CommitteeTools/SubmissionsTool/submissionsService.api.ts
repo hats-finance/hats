@@ -50,7 +50,7 @@ export const getVaultSubmissionsBySiweUser = async (
   }
 
   submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
-  console.log("submissionsForCommittee", submissionsForCommittee);
+  // console.log("submissionsForCommittee", submissionsForCommittee);
   return submissionsForCommittee;
 };
 
