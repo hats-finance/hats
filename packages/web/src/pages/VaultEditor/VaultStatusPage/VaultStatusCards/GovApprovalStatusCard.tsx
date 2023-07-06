@@ -1,7 +1,7 @@
 import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
 import { Button, Modal, Pill } from "components";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useModal from "hooks/useModal";
-import { useVaults } from "hooks/vaults/useVaults";
 import { VaultDetailsPage } from "pages/Honeypots/VaultDetailsPage/VaultDetailsPage";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
