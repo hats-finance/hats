@@ -84,7 +84,7 @@ const extractSubmissionData = (
     const extractSingleSubmission = (messageToUse: string): ISubmittedSubmission["submissionDataStructure"] => {
       return {
         beneficiary: beneficiary ?? "--",
-        severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2] ?? "--",
+        severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2],
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",
@@ -126,7 +126,7 @@ const extractSubmissionData = (
     const extractSingleSubmission = (messageToUse: string): ISubmittedSubmission["submissionDataStructure"] => {
       return {
         beneficiary: beneficiary ?? "--",
-        severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2] ?? "--",
+        severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2],
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",
@@ -170,7 +170,7 @@ const extractSubmissionData = (
 
       return {
         beneficiary: beneficiary ?? "--",
-        severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1) ?? "--",
+        severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
         title: firstLine?.slice(firstLine.indexOf(":") + 2, firstLine.lastIndexOf("(") - 1) ?? "--",
         content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",
@@ -218,7 +218,7 @@ const extractSubmissionData = (
       submissionDecrypted: decryptedMessage.trim(),
       submissionDataStructure: {
         beneficiary: beneficiary ?? "--",
-        severity: "--",
+        severity: undefined,
         title: message.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: message.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",

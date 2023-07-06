@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { useVaultSubmissionsBySiweUser } from "../submissionsService.hooks";
+import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
 
 export const SubmissionsListPage = () => {
@@ -13,8 +14,8 @@ export const SubmissionsListPage = () => {
   const { keystore, initKeystore } = useKeystore();
   const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { data, isLoading, isFetching } = useVaultSubmissionsBySiweUser();
-  if (data) console.log(data);
+  const { data: committeeSubmissions, isLoading, isFetching } = useVaultSubmissionsBySiweUser();
+  if (committeeSubmissions) console.log(committeeSubmissions);
 
   useEffect(() => {
     tryAuthentication();
@@ -66,7 +67,11 @@ export const SubmissionsListPage = () => {
               {isLoading || isFetching ? (
                 <HatSpinner text={`${t("loadingSubmissions")}...`} />
               ) : (
-                <div className="submissions-list">Hello</div>
+                <div className="submissions-list">
+                  {committeeSubmissions?.map((submission, idx) => (
+                    <SubmissionCard key={idx} submission={submission} />
+                  ))}
+                </div>
               )}
             </>
           )}

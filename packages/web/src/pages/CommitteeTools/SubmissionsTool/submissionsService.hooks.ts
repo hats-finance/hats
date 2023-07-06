@@ -1,3 +1,4 @@
+import { ISubmittedSubmission } from "@hats-finance/shared";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import { useKeystore } from "components/Keystore";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -5,11 +6,7 @@ import { useVaults } from "hooks/vaults/useVaults";
 import { useAccount } from "wagmi";
 import * as SubmissionsService from "./submissionsService.api";
 
-type IVaultSubmission = {
-  cid: string;
-};
-
-export const useVaultSubmissionsBySiweUser = (): UseQueryResult<IVaultSubmission[]> => {
+export const useVaultSubmissionsBySiweUser = (): UseQueryResult<ISubmittedSubmission[]> => {
   const { isAuthenticated, profileData } = useSiweAuth();
   const { address } = useAccount();
   const { allSubmissions, allVaults, vaultsReadyAllChains, submissionsReadyAllChains } = useVaults();
@@ -31,5 +28,5 @@ export const useVaultSubmissionsBySiweUser = (): UseQueryResult<IVaultSubmission
 
   return {
     ...queryResult,
-  } as UseQueryResult<IVaultSubmission[]>;
+  } as UseQueryResult<ISubmittedSubmission[]>;
 };

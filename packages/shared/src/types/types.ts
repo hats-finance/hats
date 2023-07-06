@@ -275,7 +275,7 @@ export interface ISubmittedSubmission {
   linkedVault?: IVault;
   submissionDataStructure?: {
     title: string;
-    severity: string;
+    severity?: string;
     content: string;
     beneficiary: string;
     communicationChannel: { type: string; value: string };

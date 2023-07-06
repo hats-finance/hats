@@ -547,6 +547,7 @@
     "loadingSubmissions": "Loading submissions",
     "youNeedToOpenYourPGPTool": "You need to open your PGP tool",
     "openPGPTool": "Open PGP tool",
+    "noSeverity": "No severity",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
