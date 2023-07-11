@@ -548,6 +548,7 @@
     "youNeedToOpenYourPGPTool": "You need to open your PGP tool",
     "openPGPTool": "Open PGP tool",
     "noSeverity": "No severity",
+    "seeSubmissionDetails": "See submission details",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

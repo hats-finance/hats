@@ -2,7 +2,7 @@ import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
 import { IStoredKey, readPrivateKeyFromStoredKey } from "components/Keystore";
 import { decrypt, readMessage } from "openpgp";
 
-export const getVaultSubmissionsBySiweUser = async (
+export const getVaultSubmissionsByKeystore = async (
   address: string | undefined,
   submissions: ISubmittedSubmission[] | undefined,
   vaults: IVault[] | undefined,
@@ -49,8 +49,8 @@ export const getVaultSubmissionsBySiweUser = async (
     }
   }
 
-  submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
-  // console.log("submissionsForCommittee", submissionsForCommittee);
+  submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  console.log("submissionsForCommittee", submissionsForCommittee);
   return submissionsForCommittee;
 };
 
@@ -68,9 +68,12 @@ const extractSubmissionData = (
     communicationChannelAll?.match(/(.*) \(/)?.[1] ??
     decryptedMessage.match(/(\*\*Telegram username:\*\* (.*)\n)/)?.[2] ??
     undefined;
-  const communicationChannelType =
+  const communicationChannelType = (
     communicationChannelAll?.match(/(\(.*\))/)?.[1] ??
-    (decryptedMessage.match(/(\*\*Telegram username:\*\* (.*)\n)/)?.[2] ? "telegram" : undefined);
+    (decryptedMessage.match(/(\*\*Telegram username:\*\* (.*)\n)/)?.[2] ? "telegram" : undefined)
+  )
+    ?.replace("(", "")
+    .replace(")", "");
 
   const submissionVault = allVaults.find(
     (vault) =>
@@ -171,7 +174,7 @@ const extractSubmissionData = (
       return {
         beneficiary: beneficiary ?? "--",
         severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
-        title: firstLine?.slice(firstLine.indexOf(":") + 2, firstLine.lastIndexOf("(") - 1) ?? "--",
+        title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
         content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {

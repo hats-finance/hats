@@ -47,7 +47,8 @@ export const StyledPill = styled.div<{
       font-size: var(--xxsmall);
       font-weight: 700;
       padding: ${getSpacing(0.8)} ${getSpacing(2)};
-      border: 1px solid var(--primary-light);
+      background: var(--background-4);
+      border: none;
     `}
 
     ${isOnClickEnabled !== undefined &&

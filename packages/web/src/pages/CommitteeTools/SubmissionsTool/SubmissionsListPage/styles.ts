@@ -39,9 +39,21 @@ export const StyledSubmissionsListPage = styled.div`
 export const StyledSubmissionCard = styled.div`
   display: flex;
   align-items: center;
-  gap: ${getSpacing(2)};
+  position: relative;
+  gap: ${getSpacing(3)};
   border: 1px solid var(--grey-700);
-  padding: ${getSpacing(2.5)} ${getSpacing(2)};
+  padding: ${getSpacing(2)} ${getSpacing(3)};
+  cursor: pointer;
+  transition: 0.2s;
+
+  &:hover {
+    border-color: var(--secondary);
+    background: var(--background-3);
+
+    .details {
+      opacity: 1;
+    }
+  }
 
   img {
     width: ${getSpacing(5)};
@@ -57,12 +69,15 @@ export const StyledSubmissionCard = styled.div`
 
     .submission-title {
       font-weight: 700;
+      padding-left: ${getSpacing(2)};
+      margin-top: ${getSpacing(0.5)};
     }
 
     .hacker-details {
       color: var(--grey-400);
       display: flex;
       align-items: center;
+      padding-left: ${getSpacing(2)};
 
       > * {
         padding: 0 ${getSpacing(1)};
@@ -76,5 +91,27 @@ export const StyledSubmissionCard = styled.div`
         }
       }
     }
+  }
+
+  .date {
+    position: absolute;
+    top: ${getSpacing(2)};
+    right: ${getSpacing(3)};
+    font-size: var(--xxsmall);
+    color: var(--grey-400);
+  }
+
+  .details {
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(1)};
+    position: absolute;
+    bottom: ${getSpacing(2)};
+    right: ${getSpacing(3)};
+    font-size: var(--xxsmall);
+    color: var(--secondary);
+    font-weight: 700;
+    transition: 0.2s;
   }
 `;

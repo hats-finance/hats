@@ -1,10 +1,9 @@
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
-import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
-import { useVaultSubmissionsBySiweUser } from "../submissionsService.hooks";
+import { useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
 
@@ -12,14 +11,9 @@ export const SubmissionsListPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
   const { keystore, initKeystore } = useKeystore();
-  const { tryAuthentication, isAuthenticated } = useSiweAuth();
 
-  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsBySiweUser();
+  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
   // if (committeeSubmissions) console.log(committeeSubmissions);
-
-  useEffect(() => {
-    tryAuthentication();
-  }, [tryAuthentication]);
 
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 500);
@@ -35,23 +29,12 @@ export const SubmissionsListPage = () => {
         </div>
       </div>
 
-      {!address || !isAuthenticated ? (
+      {!address ? (
         <>
-          {!address ? (
-            <>
-              <Alert className="mb-4" type="error">
-                {t("pleaseConnectYourCommitteeWallet")}
-              </Alert>
-              <WalletButton expanded />
-            </>
-          ) : (
-            <>
-              <Alert className="mb-4" type="error">
-                {t("youNeedToBeSignedInSiwe")}
-              </Alert>
-              <Button onClick={() => tryAuthentication()}>{t("signInWithEthereum")}</Button>
-            </>
-          )}
+          <Alert className="mb-4" type="error">
+            {t("pleaseConnectYourCommitteeWallet")}
+          </Alert>
+          <WalletButton expanded />
         </>
       ) : (
         <>

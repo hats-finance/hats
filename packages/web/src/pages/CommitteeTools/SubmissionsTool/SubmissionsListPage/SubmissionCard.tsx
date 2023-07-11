@@ -1,5 +1,7 @@
 import { ISubmittedSubmission } from "@hats-finance/shared";
+import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import { Pill, WithTooltip } from "components";
+import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
@@ -14,6 +16,8 @@ export const SubmissionCard = ({ submission }: SubmissionCardProps) => {
   const vault = submission.linkedVault;
   const submissionData = submission.submissionDataStructure;
   const commChannel = submissionData?.communicationChannel;
+
+  const createdAt = new Date(+submission.createdAt * 1000);
 
   return (
     <StyledSubmissionCard>
@@ -30,8 +34,12 @@ export const SubmissionCard = ({ submission }: SubmissionCardProps) => {
           </span>
           {submissionData?.githubUsername &&
             submissionData?.githubUsername !== "--" &&
-            submissionData?.githubUsername !== "---" && <span>{submissionData?.githubUsername}</span>}
+            submissionData?.githubUsername !== "---" && <span>Github: @{submissionData?.githubUsername}</span>}
         </div>
+      </div>
+      <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mm")}</div>
+      <div className="details">
+        {t("seeSubmissionDetails")} <ArrowIcon />
       </div>
     </StyledSubmissionCard>
   );
