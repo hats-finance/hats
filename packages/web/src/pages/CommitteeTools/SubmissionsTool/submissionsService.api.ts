@@ -1,6 +1,7 @@
 import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
 import { IStoredKey, readPrivateKeyFromStoredKey } from "components/Keystore";
 import { decrypt, readMessage } from "openpgp";
+import uuidFromString from "uuid-by-string";
 
 export const getVaultSubmissionsByKeystore = async (
   address: string | undefined,
@@ -50,8 +51,13 @@ export const getVaultSubmissionsByKeystore = async (
   }
 
   submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  console.log("submissionsForCommittee", submissionsForCommittee);
-  return submissionsForCommittee;
+  const submissionsWithSubId = submissionsForCommittee.map((submission) => ({
+    ...submission,
+    subId: uuidFromString(submission.id + submission.submissionDecrypted),
+  }));
+
+  console.log("submissionsForCommittee", submissionsWithSubId);
+  return submissionsWithSubId;
 };
 
 const extractSubmissionData = (
@@ -175,7 +181,7 @@ const extractSubmissionData = (
         beneficiary: beneficiary ?? "--",
         severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
         title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
-        content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
+        content: messageToUse.match(/(\*\*Description\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",

@@ -114,6 +114,7 @@
     "encrypt-storage": "^2.12.15",
     "react-helmet": "^6.1.0",
     "react-identicons": "^1.2.5",
-    "siwe": "^1.1.6"
+    "siwe": "^1.1.6",
+    "uuid-by-string": "^4.0.0"
   }
 }

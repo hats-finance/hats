@@ -16,7 +16,7 @@ export const SubmissionsListPage = () => {
   // if (committeeSubmissions) console.log(committeeSubmissions);
 
   useEffect(() => {
-    if (!keystore) setTimeout(() => initKeystore(), 500);
+    if (!keystore) setTimeout(() => initKeystore(), 600);
   }, [keystore, initKeystore]);
 
   return (
@@ -48,7 +48,7 @@ export const SubmissionsListPage = () => {
           ) : (
             <>
               {isLoading ? (
-                <HatSpinner text={`${t("loadingSubmissions")}...`} />
+                <HatSpinner text={`${t("loadingSubmission")}...`} />
               ) : (
                 <div className="submissions-list">
                   {committeeSubmissions?.map((submission, idx) => (

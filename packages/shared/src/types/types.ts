@@ -269,6 +269,7 @@ export interface IMaster {
 export interface ISubmittedSubmission {
   chainId?: number;
   id: string;
+  subId: string;
   submissionHash: string;
   submissionData?: string;
   submissionDecrypted?: string;

@@ -22,7 +22,7 @@ export const committeeToolsRouter = (): RouteObject => ({
           element: <SubmissionsListPage />,
         },
         {
-          path: ":cid",
+          path: ":subId",
           element: <SubmissionDetailsPage />,
         },
       ],
