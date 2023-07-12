@@ -31,6 +31,7 @@ export const useMultiChainVaultsV2 = () => {
       queryFn: () => getSubgraphData(+chainId, account),
       refetchInterval: DATA_REFRESH_TIME,
       refetchIntervalInBackground: false,
+      retry: false,
     })),
   });
 
@@ -66,10 +67,8 @@ export const useMultiChainVaultsV2 = () => {
       { test: { ...INITIAL_NETWORK_DATA }, prod: { ...INITIAL_NETWORK_DATA } }
     );
 
-    setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched));
-    if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) {
-      setMultiChainData(vaultsData);
-    }
+    setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched || a.isError));
+    if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) setMultiChainData(vaultsData);
   }, [subgraphQueries, multiChainData]);
 
   return { multiChainData, allChainsLoaded };

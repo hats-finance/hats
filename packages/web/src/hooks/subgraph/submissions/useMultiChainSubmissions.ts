@@ -31,6 +31,7 @@ export const useMultiChainSubmissions = () => {
       refetchIntervalInBackground: false,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
+      retry: false,
     })),
   });
 
@@ -57,7 +58,7 @@ export const useMultiChainSubmissions = () => {
       { test: { ...INITIAL_NETWORK_DATA }, prod: { ...INITIAL_NETWORK_DATA } }
     );
 
-    setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched));
+    setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched || a.isError));
     if (JSON.stringify(submissionsData) !== JSON.stringify(multiChainData)) {
       setMultiChainData(submissionsData);
     }
