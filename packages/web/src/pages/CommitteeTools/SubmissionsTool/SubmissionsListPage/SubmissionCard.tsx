@@ -29,7 +29,9 @@ export const SubmissionCard = ({ submission, noActions = false }: SubmissionCard
       noActions={noActions}
       onClick={noActions ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)}
     >
-      <img src={ipfsTransformUri(vault?.description?.["project-metadata"].icon)} alt="project logo" />
+      <WithTooltip text={vault?.description?.["project-metadata"].name}>
+        <img src={ipfsTransformUri(vault?.description?.["project-metadata"].icon)} alt="project logo" />
+      </WithTooltip>
       <div className="content">
         {submissionData?.severity && <Pill isSeverity text={submissionData?.severity ?? t("noSeverity")} />}
         <p className="submission-title">{submissionData?.title}</p>
