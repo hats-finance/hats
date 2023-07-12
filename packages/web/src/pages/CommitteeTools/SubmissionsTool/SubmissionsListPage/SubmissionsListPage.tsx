@@ -1,4 +1,5 @@
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
+import KeyIcon from "@mui/icons-material/KeyOutlined";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { useEffect } from "react";
@@ -11,10 +12,9 @@ import { StyledSubmissionsListPage } from "./styles";
 export const SubmissionsListPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
-  const { keystore, initKeystore } = useKeystore();
+  const { keystore, initKeystore, openKeystore } = useKeystore();
 
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
-  // if (committeeSubmissions) console.log(committeeSubmissions);
 
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
@@ -67,7 +67,10 @@ export const SubmissionsListPage = () => {
               <Alert className="mb-4" type="error">
                 {t("youNeedToOpenYourPGPTool")}
               </Alert>
-              <Button onClick={() => initKeystore()}>{t("openPGPTool")}</Button>
+              <Button onClick={() => initKeystore()}>
+                <KeyIcon className="mr-2" />
+                {t("openPGPTool")}
+              </Button>
             </>
           ) : (
             <>
@@ -81,17 +84,25 @@ export const SubmissionsListPage = () => {
                         <Alert className="mb-4" type="warning">
                           {t("submissionNotFound")}
                         </Alert>
-                        <Button onClick={() => initKeystore()}>{t("openPGPTool")}</Button>
+                        <Button onClick={() => openKeystore()}>
+                          <KeyIcon className="mr-2" />
+                          {t("openPGPTool")}
+                        </Button>
                       </>
                     ) : (
-                      committeeSubmissions?.map((submission, idx) => <SubmissionCard key={idx} submission={submission} />)
+                      <>
+                        {committeeSubmissions?.map((submission, idx) => (
+                          <SubmissionCard key={idx} submission={submission} />
+                        ))}
+
+                        <div className="buttons">
+                          <Button onClick={handleDownloadAsCsv}>
+                            <DownloadIcon className="mr-2" />
+                            {t("downloadAsCsv")}
+                          </Button>
+                        </div>
+                      </>
                     )}
-                  </div>
-                  <div className="buttons">
-                    <Button onClick={handleDownloadAsCsv}>
-                      <DownloadIcon className="mr-3" />
-                      {t("downloadAsCsv")}
-                    </Button>
                   </div>
                 </>
               )}
