@@ -112,7 +112,7 @@ export const SinglePayoutForm = () => {
               name={`severityBountyIndex`}
               render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
                 <FormSelectInput
-                  disabled={isPayoutCreated}
+                  disabled={isPayoutCreated || !selectedSeverityName}
                   isDirty={getCustomIsDirty<IPayoutData>(field.name, dirtyFields, defaultValues)}
                   error={error}
                   label={t("Payouts.percentageToPay")}
