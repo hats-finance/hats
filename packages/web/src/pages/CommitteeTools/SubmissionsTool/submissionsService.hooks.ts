@@ -18,6 +18,7 @@ export const useVaultSubmissionsByKeystore = (): UseQueryResult<ISubmittedSubmis
     enabled: !!address && !!keystore && vaultsReadyAllChains && submissionsReadyAllChains,
     refetchOnWindowFocus: false,
     retry: false,
+    refetchOnMount: false,
   });
 
   return {
