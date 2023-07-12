@@ -45,7 +45,7 @@ export const SubmissionCard = ({ submission, noActions = false }: SubmissionCard
             submissionData?.githubUsername !== "---" && <span>Github: @{submissionData?.githubUsername}</span>}
         </div>
       </div>
-      <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mm")}</div>
+      <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mma")}</div>
       <div className="details">
         {t("seeSubmissionDetails")} <ArrowIcon />
       </div>

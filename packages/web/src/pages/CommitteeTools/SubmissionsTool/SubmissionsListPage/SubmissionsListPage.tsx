@@ -51,9 +51,16 @@ export const SubmissionsListPage = () => {
                 <HatSpinner text={`${t("loadingSubmission")}...`} />
               ) : (
                 <div className="submissions-list">
-                  {committeeSubmissions?.map((submission, idx) => (
-                    <SubmissionCard key={idx} submission={submission} />
-                  ))}
+                  {!committeeSubmissions || committeeSubmissions.length === 0 ? (
+                    <>
+                      <Alert className="mb-4" type="warning">
+                        {t("submissionNotFound")}
+                      </Alert>
+                      <Button onClick={() => initKeystore()}>{t("openPGPTool")}</Button>
+                    </>
+                  ) : (
+                    committeeSubmissions?.map((submission, idx) => <SubmissionCard key={idx} submission={submission} />)
+                  )}
                 </div>
               )}
             </>
