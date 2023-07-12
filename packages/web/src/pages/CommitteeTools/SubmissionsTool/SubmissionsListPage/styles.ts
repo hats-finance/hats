@@ -34,6 +34,10 @@ export const StyledSubmissionsListPage = styled.div`
     flex-direction: column;
     gap: ${getSpacing(1.5)};
   }
+
+  .buttons {
+    margin-top: ${getSpacing(3)};
+  }
 `;
 
 export const StyledSubmissionCard = styled.div<{ noActions: boolean }>(
