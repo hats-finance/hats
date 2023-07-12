@@ -56,7 +56,6 @@ export const getVaultSubmissionsByKeystore = async (
     subId: uuidFromString(submission.id + submission.submissionDecrypted),
   }));
 
-  console.log("submissionsForCommittee", submissionsWithSubId);
   return submissionsWithSubId;
 };
 
