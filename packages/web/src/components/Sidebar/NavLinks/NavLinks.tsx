@@ -1,3 +1,4 @@
+import { isAddressAMultisigMember } from "@hats-finance/shared";
 import BugIcon from "@mui/icons-material/BugReportOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import DecryptionTool from "@mui/icons-material/VpnKeyOffOutlined";
@@ -7,20 +8,26 @@ import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg
 import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
 import { ReactComponent as SubmissionsIcon } from "assets/icons/custom/submissions.svg";
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useOnClickOutside from "hooks/useOnClickOutside";
 import { RoutePaths } from "navigation";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { useAccount, useNetwork } from "wagmi";
 import { StyledNavLink, StyledNavLinkNoRouter, StyledNavLinksList } from "./styles";
 
 export default function NavLinks() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const location = useLocation();
+  const { allVaultsOnEnv } = useVaults();
+  const { chain } = useNetwork();
+  const { address } = useAccount();
 
+  const [isCommitteeAddress, setIsCommitteeAddress] = useState(false);
   const [showCommitteeToolsSubroutes, setshowCommitteeToolsSubroutes] = useState(false);
   const committeeToolsSubrouteRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(committeeToolsSubrouteRef, () => setshowCommitteeToolsSubroutes(false));
@@ -29,6 +36,25 @@ export default function NavLinks() {
     dispatch(toggleMenu(false));
     setshowCommitteeToolsSubroutes(false);
   };
+
+  useEffect(() => {
+    const verifyIfCommitteeAddress = async () => {
+      try {
+        if (!chain || !allVaultsOnEnv || allVaultsOnEnv.length === 0) return setIsCommitteeAddress(false);
+
+        const verifyCommitteeCalls: Promise<boolean>[] = [];
+        allVaultsOnEnv.forEach((vault) => {
+          verifyCommitteeCalls.push(isAddressAMultisigMember(vault.committee, address, chain.id));
+        });
+
+        const isCommitteeAddress = await Promise.all(verifyCommitteeCalls).then((results) => results.some((result) => result));
+        return setIsCommitteeAddress(isCommitteeAddress);
+      } catch (error) {
+        setIsCommitteeAddress(false);
+      }
+    };
+    verifyIfCommitteeAddress();
+  }, [allVaultsOnEnv, chain, address]);
 
   return (
     <StyledNavLinksList>
@@ -54,7 +80,7 @@ export default function NavLinks() {
       </StyledNavLink>
       <div className="committee-tools">
         <StyledNavLinkNoRouter
-          hidden
+          hidden={!isCommitteeAddress}
           className={`${location.pathname.includes(`${RoutePaths.committee_tools}`) ? "active" : ""}`}
           onClick={() => setshowCommitteeToolsSubroutes((prev) => !prev)}
         >
