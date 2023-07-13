@@ -13,6 +13,7 @@ export const ALL_CHAINS = {
 
 export interface IChainConfiguration {
   vaultsNFTContract: string;
+  hackersNFTContract: string;
   vaultsCreatorContract: string;
   paymentSplitterFactory: string;
   rewardController?: string;
@@ -34,6 +35,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
+    hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats",
     coingeckoId: "ethereum",
@@ -47,6 +49,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0x357D2B22A235E0b0F83926ceE9b0D0fF8489e03b",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xCD22290206442B89662820F8dc48E3AD12F5571b",
+    hackersNFTContract: "0x340adA7f98ccCC70588A9B1Ccf5Ff037D65AC72e",
     chain: wagmiChains.goerli,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_goerli",
     coingeckoId: undefined,
@@ -60,6 +63,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
+    hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     chain: wagmiChains.optimism,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism",
     coingeckoId: "optimistic-ethereum",
@@ -73,6 +77,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0x8633212777Da1394bb379Df9520f098B014fB77b",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x8eb48eD456106Ef31929A832e29E61FE444b1B62",
+    hackersNFTContract: "0x81ce6022297Ab5e15ba295159aA4BDac6b84A76D",
     chain: wagmiChains.optimismGoerli,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_optimism_goerli",
     coingeckoId: undefined,
@@ -85,6 +90,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
+    hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
     chain: wagmiChains.arbitrum,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_arbitrum",
     coingeckoId: "arbitrum-one",
@@ -98,6 +104,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
+    hackersNFTContract: "0x312917812e76d78C5B1139C28d5C1D3A272d171d",
     chain: wagmiChains.polygon,
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
     coingeckoId: "polygon-pos",
