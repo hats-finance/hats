@@ -8,6 +8,7 @@ import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg
 import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
 import { ReactComponent as SubmissionsIcon } from "assets/icons/custom/submissions.svg";
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
+import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useOnClickOutside from "hooks/useOnClickOutside";
 import { RoutePaths } from "navigation";
@@ -43,11 +44,13 @@ export default function NavLinks() {
         if (!chain || !allVaultsOnEnv || allVaultsOnEnv.length === 0) return setIsCommitteeAddress(false);
 
         const verifyCommitteeCalls: Promise<boolean>[] = [];
-        allVaultsOnEnv.forEach((vault) => {
-          verifyCommitteeCalls.push(isAddressAMultisigMember(vault.committee, address, chain.id));
+        const allCommittees = new Set(allVaultsOnEnv.map((vault) => utils.getAddress(vault.committee)));
+        allCommittees.forEach((committee) => {
+          verifyCommitteeCalls.push(isAddressAMultisigMember(committee, address, chain.id));
         });
 
         const isCommitteeAddress = await Promise.all(verifyCommitteeCalls).then((results) => results.some((result) => result));
+        console.log(isCommitteeAddress);
         return setIsCommitteeAddress(isCommitteeAddress);
       } catch (error) {
         setIsCommitteeAddress(false);
