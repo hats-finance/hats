@@ -535,7 +535,7 @@
     "descriptionHashToSet": "Description hash to set",
     "generateProposalOnSafe": "Generate proposal on safe",
     "thisVaultIsAlreadyVisible": "This vault is already visible",
-    "vaultDoesNotHaveWaitingApprovalEditSession": "This vault does not have any waiting approval edit session",
+    "vaultDoesNotHaveWaitingApprovalEditSession": "This vault does not have any pending edit session",
     "editSessionId": "Edit session ID",
     "errorDuringSafeProposal": "An error has occurred during the creation of the safe proposal.",
     "proposalCreatedSuccessfully": "Safe transaction proposal was created successfully.",
