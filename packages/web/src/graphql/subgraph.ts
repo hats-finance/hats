@@ -1,6 +1,6 @@
 export const GET_VAULTS = `
   query getVaults($account: String) {
-    masters {
+    masters(first: 1000) {
       address
       governance
       numberOfSubmittedClaims
@@ -23,7 +23,7 @@ export const GET_VAULTS = `
         nftMaster
       }
     }
-    vaults {
+    vaults(first: 1000) {
       id
       version
       descriptionHash
@@ -92,7 +92,7 @@ export const GET_VAULTS = `
         claim
       }
     }
-    payouts: claims {
+    payouts: claims(first: 1000) {
       id
       vault {
         id
@@ -109,8 +109,22 @@ export const GET_VAULTS = `
       hackerHatReward
       committeeReward
       isChallenged
-    }  
+    }
   }
+`;
+
+export const GET_SUBMISSIONS = `
+  query getSubmissions($batch: Int, $skip: Int) {
+    submissions: loggedClaims(first: $batch, skip: $skip) {
+      id
+      submissionHash: claim
+      submitter: claimer
+      createdAt
+      master {
+        id
+      }
+    }
+  } 
 `;
 
 export const GET_STAKER = `

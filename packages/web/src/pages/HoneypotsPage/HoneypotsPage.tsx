@@ -1,7 +1,7 @@
 import SearchIcon from "assets/icons/search.icon";
 import { Loading, Modal, SafePeriodBar, Vault } from "components";
 import { formatUnits } from "ethers/lib/utils";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import React, { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";

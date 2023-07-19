@@ -1,7 +1,7 @@
 import { IPayoutGraph } from "@hats-finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
 import { useNetwork } from "wagmi";
 

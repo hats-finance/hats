@@ -96,7 +96,9 @@ export const PayoutsListPage = () => {
       <StyledPayoutsListPage className="content-wrapper-md">
         <div className="title-container">
           <div className="title">
-            <p>{t("payouts")}</p>
+            <p>
+              {t("committeeTools")}/<span className="bold">{t("payouts")}</span>
+            </p>
           </div>
 
           <Button onClick={handleCreatePayout}>

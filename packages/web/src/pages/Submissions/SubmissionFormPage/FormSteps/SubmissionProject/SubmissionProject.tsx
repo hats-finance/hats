@@ -1,6 +1,6 @@
 import SearchIcon from "assets/icons/search.icon";
 import { Loading, Vault } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IVault } from "types";

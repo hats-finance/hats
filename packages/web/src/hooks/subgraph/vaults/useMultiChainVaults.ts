@@ -6,7 +6,7 @@ import { useAccount } from "wagmi";
 import { parseMasters, parsePayouts, parseUserNfts, parseVaults } from "./parser";
 import { IGraphVaultsData, getSubgraphData } from "./vaultsService";
 
-const DATA_REFRESH_TIME = 15000;
+const DATA_REFRESH_TIME = 30000;
 
 const INITIAL_NETWORK_DATA = {
   vaults: [] as IVault[],
@@ -23,6 +23,7 @@ export const useMultiChainVaultsV2 = () => {
   const { address: account } = useAccount();
 
   const [multiChainData, setMultiChainData] = useState<IGraphVaultsData>(INITIAL_VAULTS_DATA);
+  const [allChainsLoaded, setAllChainsLoaded] = useState(false);
 
   const subgraphQueries = useQueries({
     queries: Object.keys(appChains).map((chainId) => ({
@@ -30,6 +31,7 @@ export const useMultiChainVaultsV2 = () => {
       queryFn: () => getSubgraphData(+chainId, account),
       refetchInterval: DATA_REFRESH_TIME,
       refetchIntervalInBackground: false,
+      retry: false,
     })),
   });
 
@@ -65,10 +67,9 @@ export const useMultiChainVaultsV2 = () => {
       { test: { ...INITIAL_NETWORK_DATA }, prod: { ...INITIAL_NETWORK_DATA } }
     );
 
-    if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) {
-      setMultiChainData(vaultsData);
-    }
+    setAllChainsLoaded(subgraphQueries.every((a) => a.isFetched || a.isError));
+    if (JSON.stringify(vaultsData) !== JSON.stringify(multiChainData)) setMultiChainData(vaultsData);
   }, [subgraphQueries, multiChainData]);
 
-  return { multiChainData };
+  return { multiChainData, allChainsLoaded };
 };
