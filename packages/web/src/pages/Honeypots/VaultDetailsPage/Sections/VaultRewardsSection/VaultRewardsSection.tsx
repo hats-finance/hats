@@ -14,6 +14,7 @@ type VaultRewardsSectionProps = {
 
 export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
   const { t } = useTranslation();
+  const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
 
   const showIntended = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
 
@@ -43,7 +44,14 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                 <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
               </WithTooltip>
             ) : (
-              <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
+              // TODO: In here should be only the max reward amount, not the deposited amount
+              // Change this once we have the new contract version
+              <h4 className="value">
+                ~$
+                {isAudit
+                  ? millify(vault.amountsInfo?.depositedAmount.usd ?? 0)
+                  : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+              </h4>
             )}
           </div>
         </div>
