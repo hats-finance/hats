@@ -119,7 +119,10 @@ export function SubmissionDescriptions() {
     const decrypted = submissionTexts.decrypted;
     const submissionMessage = submissionTexts.submissionMessage;
 
-    const { encryptedData, sessionKey } = await encryptWithKeys(keyOrKeys, toEncrypt);
+    const encryptionResult = await encryptWithKeys(keyOrKeys, toEncrypt);
+    if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
+
+    const { encryptedData, sessionKey } = encryptionResult;
     const submissionInfo = {
       decrypted,
       encrypted: encryptedData as string,
