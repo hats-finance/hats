@@ -18,16 +18,14 @@ export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataTo
       }
     }
 
-    if (encryptionKeys.length === 0) {
-      return alert("This vault doesn't have any valid key, please contact hats team");
-    }
+    if (encryptionKeys.length === 0) return undefined;
   } else {
     encryptionKeys = await readKey({ armoredKey: publicKeyOrKeys });
 
     try {
       await encryptionKeys.verifyPrimaryKey();
     } catch (error) {
-      return alert("This vault doesn't have any valid key, please contact hats team");
+      return undefined;
     }
   }
 
