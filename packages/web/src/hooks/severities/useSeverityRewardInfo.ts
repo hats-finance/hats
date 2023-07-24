@@ -17,14 +17,16 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
 
   if (!vault || !vault.description) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
 
-  const SEVERITIES_COLORS = getSeveritiesColorsArray(vault);
-
+  const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
   const showIntendedAmounts = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
+  const SEVERITIES_COLORS = getSeveritiesColorsArray(vault);
 
   if (vault.version === "v2") {
     const severity = vault.description.severities[severityIndex];
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
-    const maxBountyPercentage = Number(vault.maxBounty) / 10000; // Number between 0 and 1;
+    // const maxBountyPercentage = Number(vault.maxBounty) / 10000; // Number between 0 and 1;
+    // TODO: remove this when we have the new vault contract version
+    const maxBountyPercentage = Number(isAudit ? 10000 : vault.maxBounty) / 10000;
     const rewardPercentage = +severity.percentage * maxBountyPercentage;
 
     let rewardPrice: number = 0;
