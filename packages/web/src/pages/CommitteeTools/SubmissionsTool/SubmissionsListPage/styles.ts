@@ -33,6 +33,21 @@ export const StyledSubmissionsListPage = styled.div`
     display: flex;
     flex-direction: column;
     gap: ${getSpacing(1.5)};
+
+    .group {
+      display: flex;
+      flex-direction: column;
+      gap: ${getSpacing(1.5)};
+
+      &:not(:last-child) {
+        margin-bottom: ${getSpacing(3)};
+      }
+
+      .group-date {
+        color: var(--grey-500);
+        font-weight: 700;
+      }
+    }
   }
 
   .buttons {

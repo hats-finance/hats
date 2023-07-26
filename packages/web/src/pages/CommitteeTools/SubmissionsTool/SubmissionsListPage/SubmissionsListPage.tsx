@@ -1,13 +1,17 @@
+import { ISubmittedSubmission } from "@hats-finance/shared";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
-import { useEffect } from "react";
+import moment from "moment";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
+
+const ITEMS_PER_PAGE = 20;
 
 export const SubmissionsListPage = () => {
   const { t } = useTranslation();
@@ -15,6 +19,36 @@ export const SubmissionsListPage = () => {
   const { keystore, initKeystore, openKeystore } = useKeystore();
 
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const [page, setPage] = useState(1);
+  const committeeSubmissionsGroups = useMemo<{ date: string; submissions: ISubmittedSubmission[] }[]>(() => {
+    if (!committeeSubmissions) return [];
+    const pagedSubmissions = committeeSubmissions.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
+    const submissionsGroupsByDate = pagedSubmissions.reduce<{ [key: string]: ISubmittedSubmission[] }>((groups, submission) => {
+      const date = moment(+submission.createdAt * 1000).format("MM/DD/YYYY");
+      if (!groups[date]) groups[date] = [];
+      groups[date].push(submission);
+      return groups;
+    }, {});
+
+    const submissionsGroupsByDateArray = Object.keys(submissionsGroupsByDate).map((date) => {
+      return {
+        date,
+        submissions: submissionsGroupsByDate[date].sort(
+          (a, b) => new Date(b.createdAt ?? "").getTime() - new Date(a.createdAt ?? "").getTime()
+        ),
+      };
+    });
+
+    // Order array by date
+    submissionsGroupsByDateArray.sort((a, b) => {
+      const dateA = moment(a.date, "MM/DD/YYYY");
+      const dateB = moment(b.date, "MM/DD/YYYY");
+      return dateB.diff(dateA);
+    });
+
+    return submissionsGroupsByDateArray;
+  }, [committeeSubmissions, page]);
 
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
@@ -91,8 +125,13 @@ export const SubmissionsListPage = () => {
                       </>
                     ) : (
                       <>
-                        {committeeSubmissions?.map((submission, idx) => (
-                          <SubmissionCard key={idx} submission={submission} />
+                        {committeeSubmissionsGroups?.map((submissionsGroup, idx) => (
+                          <div className="group">
+                            <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
+                            {submissionsGroup.submissions.map((submission) => (
+                              <SubmissionCard key={idx} submission={submission} />
+                            ))}
+                          </div>
                         ))}
 
                         <div className="buttons">
