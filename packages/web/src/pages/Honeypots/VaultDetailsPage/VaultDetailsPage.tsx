@@ -1,6 +1,6 @@
 import { IVault } from "@hats-finance/shared";
 import { Alert, Loading, Seo, VaultCard } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { redirect, useNavigate, useParams } from "react-router-dom";

@@ -19,8 +19,8 @@ import { Alert, Button, CopyToClipboard, Loading, Modal, Seo } from "components"
 import { CreateVaultContract } from "contracts";
 import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
-import { useVaults } from "hooks/vaults/useVaults";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useCallback, useEffect, useState } from "react";

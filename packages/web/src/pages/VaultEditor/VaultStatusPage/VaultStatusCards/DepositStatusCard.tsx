@@ -1,6 +1,6 @@
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Pill } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { VaultDepositsSection } from "pages/Honeypots/VaultDetailsPage/Sections";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";

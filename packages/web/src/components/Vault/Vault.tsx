@@ -1,22 +1,22 @@
+import WarnIcon from "@mui/icons-material/WarningAmberRounded";
+import ArrowIcon from "assets/icons/arrow.icon";
+import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import { BigNumber } from "ethers";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
+import millify from "millify";
+import Tooltip from "rc-tooltip";
 import { ForwardedRef, forwardRef } from "react";
 import { useTranslation } from "react-i18next";
-import Tooltip from "rc-tooltip";
-import { BigNumber } from "ethers";
-import millify from "millify";
+import { appChains } from "settings";
 import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
-import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
-import ArrowIcon from "assets/icons/arrow.icon";
-import VaultExpanded from "./VaultExpanded/VaultExpanded";
-import VaultActions from "./VaultActions/VaultActions";
-import VaultTokens from "./VaultTokens/VaultTokens";
-import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
-import VaultAPY from "./VaultAPY/VaultAPY";
 import { Amount } from "utils/amounts.utils";
-import { StyledVault, StyledVersionFlag, StyledVaultExpandAction, StyledActiveClaimFlag } from "./styles";
-import { appChains } from "settings";
-import WarnIcon from "@mui/icons-material/WarningAmberRounded";
-import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import VaultAPY from "./VaultAPY/VaultAPY";
+import VaultActions from "./VaultActions/VaultActions";
+import VaultExpanded from "./VaultExpanded/VaultExpanded";
+import VaultTokens from "./VaultTokens/VaultTokens";
+import { StyledActiveClaimFlag, StyledVault, StyledVaultExpandAction, StyledVersionFlag } from "./styles";
 
 interface VaultComponentProps {
   vault: IVault;

@@ -1,7 +1,7 @@
 import { Seo } from "components";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";

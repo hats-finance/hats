@@ -1,9 +1,9 @@
-import Tooltip from "rc-tooltip";
-import millify from "millify";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
+import millify from "millify";
+import Tooltip from "rc-tooltip";
 import { IVault } from "types";
 import { formatWei } from "utils";
-import { useVaultsTotalPrices } from "hooks/vaults/useVaultsTotalPrices";
 import "./index.scss";
 
 interface IProps {

@@ -4,7 +4,7 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import Tooltip from "rc-tooltip";
 import { useContext, useEffect } from "react";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";

@@ -1,6 +1,6 @@
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { WithTooltip } from "components";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { StyledSafePeriodBar } from "./styles";

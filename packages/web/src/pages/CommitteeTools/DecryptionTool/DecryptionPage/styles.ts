@@ -1,11 +1,13 @@
+import styled from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
-import styled from "styled-components";
 
 export const StyledDecryptionPage = styled.div`
-  color: var(--white);
-  width: 100%;
-  margin-bottom: ${getSpacing(5)};
+  position: relative;
+  background: var(--background-2);
+  padding: ${getSpacing(3)};
+  border-radius: ${getSpacing(0.5)};
+  margin-bottom: ${getSpacing(6)};
 
   .title {
     font-size: var(--large);

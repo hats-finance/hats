@@ -1,5 +1,5 @@
 import { IPayoutResponse, ISinglePayoutData, PayoutStatus } from "@hats-finance/shared";
-import { useVaults } from "hooks/vaults/useVaults";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useMemo } from "react";
 
 export const usePayoutStatus = (payout?: IPayoutResponse) => {

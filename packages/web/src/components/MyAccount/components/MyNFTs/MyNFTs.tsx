@@ -1,16 +1,16 @@
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { NFTCard } from "components";
+import { ScreenSize } from "constants/constants";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { useVaults } from "hooks/vaults/useVaults";
 import { RootState } from "reducers";
-import { ScreenSize } from "constants/constants";
-import { NFTCard } from "components";
-import { StyledMyNFT } from "./styles";
+import { A11y, Navigation, Pagination, Scrollbar } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { StyledMyNFT } from "./styles";
 
 export default function MyNFTs() {
   const { t } = useTranslation();
@@ -32,7 +32,8 @@ export default function MyNFTs() {
             speed={500}
             touchRatio={1.5}
             navigation
-            effect={"flip"}>
+            effect={"flip"}
+          >
             {userNfts?.map((userNft, index) => (
               <SwiperSlide key={index} className="nfts-slide">
                 <NFTCard key={index} tokenId={userNft.nft.tokenId} tokenMetadata={userNft.metadata} chainId={userNft.chainId} />
