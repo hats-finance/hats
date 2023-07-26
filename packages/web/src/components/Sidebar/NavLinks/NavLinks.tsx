@@ -94,8 +94,8 @@ export default function NavLinks() {
         {showCommitteeToolsSubroutes && (
           <div ref={committeeToolsSubrouteRef} className="committee-tools-subroutes">
             <StyledNavLink
-              sub
-              hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
+              className="sub"
+              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}/submissions`}
               onClick={handleClick}
             >
@@ -104,8 +104,8 @@ export default function NavLinks() {
               <p className="collapsed">{t("submissions")}</p>
             </StyledNavLink>
             <StyledNavLink
-              sub
-              hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
+              className="sub"
+              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}/payouts`}
               onClick={handleClick}
             >
@@ -114,8 +114,8 @@ export default function NavLinks() {
               <p className="collapsed">{t("payouts")}</p>
             </StyledNavLink>
             <StyledNavLink
-              sub
-              hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
+              className="sub"
+              // hidden={!location.pathname.includes(`${RoutePaths.committee_tools}`)}
               to={`${RoutePaths.committee_tools}`}
               end
               onClick={handleClick}
