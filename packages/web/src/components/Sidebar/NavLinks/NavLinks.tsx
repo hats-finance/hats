@@ -50,7 +50,6 @@ export default function NavLinks() {
         });
 
         const isCommitteeAddress = await Promise.all(verifyCommitteeCalls).then((results) => results.some((result) => result));
-        console.log(isCommitteeAddress);
         return setIsCommitteeAddress(isCommitteeAddress);
       } catch (error) {
         setIsCommitteeAddress(false);
