@@ -232,6 +232,19 @@ export const SubmissionsListPage = () => {
                           </div>
                         ))}
 
+                        <div className="pages">
+                          <ArrowLeftIcon onClick={handleChangePage(-1)} />
+                          {Array.from(
+                            { length: committeeSubmissions ? Math.ceil(committeeSubmissions?.length / ITEMS_PER_PAGE) : 1 },
+                            (_, i) => i + 1
+                          ).map((pageIdx) => (
+                            <p onClick={() => setPage(pageIdx)} className={`${page === pageIdx && "current"}`}>
+                              {pageIdx}
+                            </p>
+                          ))}
+                          <ArrowRightIcon onClick={handleChangePage(1)} />
+                        </div>
+
                         <div className="buttons">
                           <Button onClick={handleDownloadAsCsv}>
                             <DownloadIcon className="mr-2" />

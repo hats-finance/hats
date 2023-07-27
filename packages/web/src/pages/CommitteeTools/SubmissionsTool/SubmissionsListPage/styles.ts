@@ -96,6 +96,27 @@ export const StyledSubmissionsListPage = styled.div`
       gap: ${getSpacing(2)};
     }
   }
+
+  .pages {
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(1.5)};
+    justify-content: center;
+
+    p {
+      cursor: pointer;
+      transition: 0.2s;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      &.current {
+        font-weight: 700;
+        color: var(--secondary);
+      }
+    }
+  }
 `;
 
 export const StyledSubmissionCard = styled.div<{ noActions: boolean; isChecked: boolean }>(
