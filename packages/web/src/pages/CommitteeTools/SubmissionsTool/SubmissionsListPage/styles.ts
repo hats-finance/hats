@@ -103,7 +103,8 @@ export const StyledSubmissionsListPage = styled.div`
     gap: ${getSpacing(1.5)};
     justify-content: center;
 
-    p {
+    p,
+    .icon {
       cursor: pointer;
       transition: 0.2s;
 
@@ -114,6 +115,7 @@ export const StyledSubmissionsListPage = styled.div`
       &.current {
         font-weight: 700;
         color: var(--secondary);
+        text-decoration: underline;
       }
     }
   }

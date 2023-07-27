@@ -26,10 +26,14 @@ export const SubmissionsListPage = () => {
   const confirm = useConfirm();
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
-
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
-  const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>([]);
+
   const [page, setPage] = useState(1);
+  const savedSelectedSubmissions = localStorage.getItem(LocalStorage.SelectedSubmissions);
+  const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>(
+    savedSelectedSubmissions ? JSON.parse(savedSelectedSubmissions) : []
+  );
+
   const committeeSubmissionsGroups = useMemo<{ date: string; submissions: ISubmittedSubmission[] }[]>(() => {
     if (!committeeSubmissions) return [];
     const pagedSubmissions = committeeSubmissions.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -60,12 +64,16 @@ export const SubmissionsListPage = () => {
     return submissionsGroupsByDateArray;
   }, [committeeSubmissions, page]);
   const allInPage = committeeSubmissionsGroups.reduce((prev, acc) => [...prev, ...acc.submissions], [] as ISubmittedSubmission[]);
-  const quantityInPage = allInPage.length;
   const allPageSelected = allInPage.every((submission) => selectedSubmissions.includes(submission.subId));
+  const quantityInPage = allInPage.length;
 
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
   }, [keystore, initKeystore]);
+
+  useEffect(() => {
+    localStorage.setItem(LocalStorage.SelectedSubmissions, JSON.stringify(selectedSubmissions));
+  }, [selectedSubmissions]);
 
   const handleDownloadAsCsv = () => {
     if (!committeeSubmissions) return;
@@ -233,7 +241,7 @@ export const SubmissionsListPage = () => {
                         ))}
 
                         <div className="pages">
-                          <ArrowLeftIcon onClick={handleChangePage(-1)} />
+                          <ArrowLeftIcon className="icon" onClick={handleChangePage(-1)} />
                           {Array.from(
                             { length: committeeSubmissions ? Math.ceil(committeeSubmissions?.length / ITEMS_PER_PAGE) : 1 },
                             (_, i) => i + 1
@@ -242,7 +250,7 @@ export const SubmissionsListPage = () => {
                               {pageIdx}
                             </p>
                           ))}
-                          <ArrowRightIcon onClick={handleChangePage(1)} />
+                          <ArrowRightIcon className="icon" onClick={handleChangePage(1)} />
                         </div>
 
                         <div className="buttons">

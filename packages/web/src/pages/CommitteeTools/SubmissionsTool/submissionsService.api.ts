@@ -51,9 +51,9 @@ export const getVaultSubmissionsByKeystore = async (
   }
 
   submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  const submissionsWithSubId = submissionsForCommittee.map((submission) => ({
+  const submissionsWithSubId = submissionsForCommittee.map((submission, idx) => ({
     ...submission,
-    subId: uuidFromString(submission.id + submission.submissionDecrypted),
+    subId: uuidFromString(submission.id + idx),
   }));
 
   return submissionsWithSubId;
