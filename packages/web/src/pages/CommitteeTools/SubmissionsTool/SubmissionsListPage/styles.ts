@@ -53,6 +53,40 @@ export const StyledSubmissionsListPage = styled.div`
   .buttons {
     margin-top: ${getSpacing(3)};
   }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: ${getSpacing(3)};
+
+    .controls,
+    .pagination {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: ${getSpacing(4)};
+
+      .selection,
+      .rescan,
+      .date-sort {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: ${getSpacing(0.5)};
+        cursor: pointer;
+        transition: 0.2s;
+
+        &:hover {
+          opacity: 0.7;
+        }
+      }
+    }
+
+    .pagination {
+      gap: ${getSpacing(2)};
+    }
+  }
 `;
 
 export const StyledSubmissionCard = styled.div<{ noActions: boolean }>(

@@ -553,6 +553,7 @@
     "submissionNotFound": "Submission not found or you can't decrypt it. Please be sure you have the correct PGP key on the PGP Tool.",
     "seeSubmissionOnChain": "See submission on chain",
     "downloadAsCsv": "Download as CSV",
+    "rescan": "Rescan",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -619,6 +620,10 @@
       "dontWantToUseOurKeystore": "Don't want to use our PGP keystore?",
       "pasteExistingPublicKey": "Paste existing PGP public key",
       "yourKeystoreIsNotBackedUp": "Your keystore is not backed up."
+    },
+    "SubmissionsTool": {
+      "rescanSubmissions": "Rescan submissions",
+      "rescanSubmissionsDescription": "Are you sure you want to rescan all the submissions, this may take some seconds"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
