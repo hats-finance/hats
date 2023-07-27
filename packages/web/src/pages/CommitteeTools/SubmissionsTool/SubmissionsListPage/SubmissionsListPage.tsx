@@ -29,7 +29,7 @@ export const SubmissionsListPage = () => {
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
 
   const [page, setPage] = useState(1);
-  const savedSelectedSubmissions = localStorage.getItem(LocalStorage.SelectedSubmissions);
+  const savedSelectedSubmissions = sessionStorage.getItem(LocalStorage.SelectedSubmissions);
   const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>(
     savedSelectedSubmissions ? JSON.parse(savedSelectedSubmissions) : []
   );
@@ -72,7 +72,7 @@ export const SubmissionsListPage = () => {
   }, [keystore, initKeystore]);
 
   useEffect(() => {
-    localStorage.setItem(LocalStorage.SelectedSubmissions, JSON.stringify(selectedSubmissions));
+    sessionStorage.setItem(LocalStorage.SelectedSubmissions, JSON.stringify(selectedSubmissions));
   }, [selectedSubmissions]);
 
   const handleDownloadAsCsv = () => {
@@ -120,6 +120,7 @@ export const SubmissionsListPage = () => {
     if (!wantToRescan) return;
 
     localStorage.removeItem(`${LocalStorage.Submissions}`);
+    sessionStorage.removeItem(`${LocalStorage.SelectedSubmissions}`);
     window.location.reload();
   };
 
