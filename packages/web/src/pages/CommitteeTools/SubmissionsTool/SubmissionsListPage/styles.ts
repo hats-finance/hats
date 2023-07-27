@@ -81,6 +81,15 @@ export const StyledSubmissionsListPage = styled.div`
           opacity: 0.7;
         }
       }
+
+      .selection {
+        display: flex;
+        align-items: center;
+
+        .icon {
+          font-size: var(--medium);
+        }
+      }
     }
 
     .pagination {
@@ -89,14 +98,11 @@ export const StyledSubmissionsListPage = styled.div`
   }
 `;
 
-export const StyledSubmissionCard = styled.div<{ noActions: boolean }>(
-  ({ noActions }) => css`
+export const StyledSubmissionCard = styled.div<{ noActions: boolean; isChecked: boolean }>(
+  ({ noActions, isChecked }) => css`
     display: flex;
-    align-items: center;
     position: relative;
-    gap: ${getSpacing(3)};
     border: 1px solid var(--grey-700);
-    padding: ${getSpacing(2)} ${getSpacing(3)};
 
     ${!noActions &&
     css`
@@ -104,73 +110,97 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean }>(
       transition: 0.2s;
 
       &:hover {
-        border-color: var(--secondary);
-        background: var(--background-3);
+        border-color: var(--grey-500);
 
-        .details {
+        ${isChecked &&
+        css`
+          border-color: var(--secondary);
+        `}
+
+        .content-container .details {
           opacity: 1;
         }
       }
     `}
 
-    img {
-      width: ${getSpacing(5)};
-      height: ${getSpacing(5)};
-      object-fit: cover;
-      border-radius: 50%;
+    ${isChecked &&
+    css`
+      border-color: var(--secondary);
+      background: var(--background-3);
+    `}
+
+    .select-check {
+      padding: ${getSpacing(2)} 0 0 ${getSpacing(2)};
+      font-size: var(--medium);
     }
 
-    .content {
+    .content-container {
+      width: 100%;
       display: flex;
-      flex-direction: column;
-      gap: ${getSpacing(0.5)};
+      align-items: center;
+      position: relative;
+      padding: ${getSpacing(2)} ${getSpacing(3)};
+      gap: ${getSpacing(3)};
 
-      .submission-title {
-        font-weight: 700;
-        padding-left: ${getSpacing(2)};
-        margin-top: ${getSpacing(0.5)};
+      img {
+        width: ${getSpacing(5)};
+        height: ${getSpacing(5)};
+        object-fit: cover;
+        border-radius: 50%;
       }
 
-      .hacker-details {
-        color: var(--grey-400);
+      .content {
         display: flex;
-        align-items: center;
-        padding-left: ${getSpacing(2)};
+        flex-direction: column;
+        gap: ${getSpacing(0.5)};
 
-        > * {
-          padding: 0 ${getSpacing(1)};
+        .submission-title {
+          font-weight: 700;
+          padding-left: ${getSpacing(2)};
+          margin-top: ${getSpacing(0.5)};
+        }
 
-          &:first-child {
-            padding-left: 0;
-          }
+        .hacker-details {
+          color: var(--grey-400);
+          display: flex;
+          align-items: center;
+          padding-left: ${getSpacing(2)};
 
-          &:not(:last-child) {
-            border-right: 1px solid var(--grey-400);
+          > * {
+            padding: 0 ${getSpacing(1)};
+
+            &:first-child {
+              padding-left: 0;
+            }
+
+            &:not(:last-child) {
+              border-right: 1px solid var(--grey-400);
+            }
           }
         }
       }
-    }
 
-    .date {
-      position: absolute;
-      top: ${getSpacing(2)};
-      right: ${getSpacing(3)};
-      font-size: var(--xxsmall);
-      color: var(--grey-400);
-    }
+      .date {
+        position: absolute;
+        top: ${getSpacing(2)};
+        right: ${getSpacing(3)};
+        font-size: var(--xxsmall);
+        color: var(--grey-400);
+      }
 
-    .details {
-      opacity: 0;
-      display: flex;
-      align-items: center;
-      gap: ${getSpacing(1)};
-      position: absolute;
-      bottom: ${getSpacing(2)};
-      right: ${getSpacing(3)};
-      font-size: var(--xxsmall);
-      color: var(--secondary);
-      font-weight: 700;
-      transition: 0.2s;
+      .details {
+        opacity: 0;
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(1)};
+        position: absolute;
+        bottom: ${getSpacing(2)};
+        right: ${getSpacing(3)};
+        font-size: var(--xxsmall);
+        color: var(--secondary);
+        font-weight: 700;
+        transition: 0.2s;
+      }
     }
   `
 );

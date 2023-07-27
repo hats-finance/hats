@@ -187,7 +187,7 @@ function FormInputComponent(
       className={className}
     >
       <div className="main-container">
-        {label && (
+        {label !== undefined && (
           <label htmlFor={props.name}>
             <span className="checkbox-inner">
               <span className="checkbox-switch" />

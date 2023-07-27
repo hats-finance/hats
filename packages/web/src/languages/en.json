@@ -623,7 +623,10 @@
     },
     "SubmissionsTool": {
       "rescanSubmissions": "Rescan submissions",
-      "rescanSubmissionsDescription": "Are you sure you want to rescan all the submissions, this may take some seconds"
+      "rescanSubmissionsDescription": "Are you sure you want to rescan all the submissions, this may take some seconds",
+      "rescan": "Rescan",
+      "selectAll": "Select all",
+      "youHaveSelectedNSubmissions": "You have selected <strong>{{num}}</strong> submissions"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",

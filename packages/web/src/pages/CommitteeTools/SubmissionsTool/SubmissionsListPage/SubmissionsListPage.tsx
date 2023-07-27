@@ -2,6 +2,8 @@ import { ISubmittedSubmission } from "@hats-finance/shared";
 import ArrowLeftIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
+import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
+import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
@@ -26,6 +28,7 @@ export const SubmissionsListPage = () => {
   const { keystore, initKeystore, openKeystore } = useKeystore();
 
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const [selectedSubmissions, setSelectedSubmissions] = useState<string[]>([]);
   const [page, setPage] = useState(1);
   const committeeSubmissionsGroups = useMemo<{ date: string; submissions: ISubmittedSubmission[] }[]>(() => {
     if (!committeeSubmissions) return [];
@@ -56,7 +59,9 @@ export const SubmissionsListPage = () => {
 
     return submissionsGroupsByDateArray;
   }, [committeeSubmissions, page]);
-  const quantityInPage = committeeSubmissionsGroups.reduce((prev, acc) => prev + acc.submissions.length, 0);
+  const allInPage = committeeSubmissionsGroups.reduce((prev, acc) => [...prev, ...acc.submissions], [] as ISubmittedSubmission[]);
+  const quantityInPage = allInPage.length;
+  const allPageSelected = allInPage.every((submission) => selectedSubmissions.includes(submission.subId));
 
   useEffect(() => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
@@ -110,6 +115,16 @@ export const SubmissionsListPage = () => {
     window.location.reload();
   };
 
+  const handleSelectAll = () => {
+    if (allPageSelected) {
+      setSelectedSubmissions((selected) =>
+        selected.filter((subId) => !allInPage.map((submission) => submission.subId).includes(subId))
+      );
+    } else {
+      setSelectedSubmissions((selected) => [...selected, ...allInPage.map((submission) => submission.subId)]);
+    }
+  };
+
   return (
     <StyledSubmissionsListPage className="content-wrapper-md">
       <div className="title-container">
@@ -147,9 +162,18 @@ export const SubmissionsListPage = () => {
                 <>
                   <div className="toolbar">
                     <div className="controls">
-                      <div className="selection">All ({quantityInPage})</div>
+                      <div className="selection" onClick={handleSelectAll}>
+                        {allPageSelected ? (
+                          <BoxSelected className="icon" fontSize="inherit" />
+                        ) : (
+                          <BoxUnselected className="icon" fontSize="inherit" />
+                        )}
+                        <p>
+                          {t("SubmissionsTool.selectAll")} ({quantityInPage})
+                        </p>
+                      </div>
                       <div className="rescan" onClick={handleRescan}>
-                        <RescanIcon /> Rescan
+                        <RescanIcon /> {t("SubmissionsTool.rescan")}
                       </div>
                       <div className="date-sort">
                         <CalendarIcon /> Sort by dates
@@ -166,6 +190,15 @@ export const SubmissionsListPage = () => {
                       </div>
                     </div>
                   </div>
+                  {selectedSubmissions.length > 0 && (
+                    <Alert type="info" className="mb-4">
+                      <div
+                        dangerouslySetInnerHTML={{
+                          __html: t("SubmissionsTool.youHaveSelectedNSubmissions", { num: selectedSubmissions.length }),
+                        }}
+                      />
+                    </Alert>
+                  )}
                   <div className="submissions-list">
                     {!committeeSubmissions || committeeSubmissions.length === 0 ? (
                       <>
@@ -183,7 +216,18 @@ export const SubmissionsListPage = () => {
                           <div className="group" key={submissionsGroup.date}>
                             <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
                             {submissionsGroup.submissions.map((submission) => (
-                              <SubmissionCard key={submission.subId} submission={submission} />
+                              <SubmissionCard
+                                onCheckChange={(sub) => {
+                                  if (selectedSubmissions.includes(sub.subId)) {
+                                    setSelectedSubmissions(selectedSubmissions.filter((subId) => subId !== sub.subId));
+                                  } else {
+                                    setSelectedSubmissions([...selectedSubmissions, sub.subId]);
+                                  }
+                                }}
+                                isChecked={selectedSubmissions.includes(submission.subId)}
+                                key={submission.subId}
+                                submission={submission}
+                              />
                             ))}
                           </div>
                         ))}
