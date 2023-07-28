@@ -66,10 +66,8 @@ export const StyledPayoutFormPage = styled.div`
 
 export const StyledPayoutForm = styled.div`
   .form-container {
-    background: var(--background-3);
-    border-radius: 4px;
-    padding: ${getSpacing(2.5)};
-    padding-top: ${getSpacing(3.5)};
+    /* background: var(--background-3); */
+    /* padding-top: ${getSpacing(3.5)}; */
 
     .subtitle {
       text-transform: uppercase;
@@ -104,6 +102,12 @@ export const StyledPayoutForm = styled.div`
     .row {
       display: flex;
       gap: ${getSpacing(2)};
+    }
+
+    .sub-container {
+      padding: ${getSpacing(2.5)};
+      padding-bottom: 0;
+      border: 1px solid var(--grey-600);
     }
   }
 

@@ -193,7 +193,7 @@ function FormInputComponent(
               <span className="checkbox-switch" />
             </span>
 
-            {label}
+            <span>{label}</span>
           </label>
         )}
 

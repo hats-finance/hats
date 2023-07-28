@@ -39,8 +39,9 @@ export const SinglePayoutForm = () => {
 
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
+    console.log(newSelected, prevSelected);
     if (!selectedSeverityData) return;
-    if (prevSelected === undefined || newSelected === undefined) return;
+    if (newSelected === undefined) return;
 
     setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
 

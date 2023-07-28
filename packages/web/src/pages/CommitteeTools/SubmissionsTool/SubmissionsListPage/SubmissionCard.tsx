@@ -14,11 +14,18 @@ import { StyledSubmissionCard } from "./styles";
 type SubmissionCardProps = {
   submission: ISubmittedSubmission;
   noActions?: boolean;
+  onPayout?: boolean;
   isChecked?: boolean;
   onCheckChange?: (submission: ISubmittedSubmission) => void;
 };
 
-export const SubmissionCard = ({ submission, onCheckChange, noActions = false, isChecked = false }: SubmissionCardProps) => {
+export const SubmissionCard = ({
+  submission,
+  onCheckChange,
+  noActions = false,
+  isChecked = false,
+  onPayout = false,
+}: SubmissionCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -29,7 +36,7 @@ export const SubmissionCard = ({ submission, onCheckChange, noActions = false, i
   const createdAt = new Date(+submission.createdAt * 1000);
 
   return (
-    <StyledSubmissionCard noActions={noActions} isChecked={isChecked}>
+    <StyledSubmissionCard noActions={noActions || onPayout} onPayout={onPayout} isChecked={isChecked}>
       {onCheckChange && (
         <div className="select-check" onClick={() => onCheckChange(submission)}>
           {isChecked ? <BoxSelected fontSize="inherit" /> : <BoxUnselected fontSize="inherit" />}
@@ -37,13 +44,19 @@ export const SubmissionCard = ({ submission, onCheckChange, noActions = false, i
       )}
       <div
         className="content-container"
-        onClick={noActions ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)}
+        onClick={
+          noActions || onPayout ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)
+        }
       >
         <WithTooltip text={vault?.description?.["project-metadata"].name}>
           <img src={ipfsTransformUri(vault?.description?.["project-metadata"].icon)} alt="project logo" />
         </WithTooltip>
         <div className="content">
-          {submissionData?.severity && <Pill isSeverity text={submissionData?.severity ?? t("noSeverity")} />}
+          {submissionData?.severity && (
+            <span className="severity">
+              <Pill isSeverity text={submissionData?.severity ?? t("noSeverity")} />
+            </span>
+          )}
           <p className="submission-title">{submissionData?.title}</p>
           <div className="hacker-details">
             <WithTooltip text={submissionData?.beneficiary}>

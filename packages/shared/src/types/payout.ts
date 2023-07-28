@@ -1,4 +1,4 @@
-import { IVault, IVaultInfo } from "./types";
+import { ISubmittedSubmission, IVault, IVaultInfo } from "./types";
 
 export interface IPayoutGraph {
   id: string;
@@ -58,6 +58,7 @@ export interface ISinglePayoutData extends IPayoutDataBase {
   severity: string; // Severity name
   severityBountyIndex: string; // Severity index (for V1 vaults)
   nftUrl: string;
+  submissionData?: { id: string; subId: string; idx: number };
 }
 
 // Only for v2 vaults
@@ -72,6 +73,7 @@ export interface ISplitPayoutBeneficiary {
   severity: string; // Severity name
   percentageOfPayout: string; // Number between 0 and 100
   nftUrl: string;
+  submissionData?: { id: string; subId: string; idx: number };
 }
 
 export interface IPayoutSignature {

@@ -149,7 +149,6 @@ function SplitPayoutAllocationShared({
   return (
     <>
       <StyledBeneficiariesTable className="mt-4 mb-5" role="table">
-        <SplitPayoutBeneficiaryForm vault={vault} payout={payout} index={-1} />
         {beneficiaries.map((beneficiary, idx) => (
           <SplitPayoutBeneficiaryForm
             key={beneficiary.id}

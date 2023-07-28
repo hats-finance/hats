@@ -1,4 +1,13 @@
-import { ISubmittedSubmission } from "@hats-finance/shared";
+import {
+  IPayoutData,
+  ISinglePayoutData,
+  ISplitPayoutData,
+  ISubmittedSubmission,
+  PayoutType,
+  createNewPayoutData,
+  createNewSplitPayoutBeneficiary,
+  getVaultInfoFromVault,
+} from "@hats-finance/shared";
 import ArrowLeftIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
@@ -8,15 +17,18 @@ import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
-import { Alert, Button, HatSpinner, WalletButton } from "components";
+import { Alert, Button, HatSpinner, Loading, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { LocalStorage } from "constants/constants";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
+import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
 import { StyledSubmissionsListPage } from "./styles";
 
@@ -25,9 +37,12 @@ const ITEMS_PER_PAGE = 20;
 export const SubmissionsListPage = () => {
   const { t } = useTranslation();
   const confirm = useConfirm();
+  const { tryAuthentication } = useSiweAuth();
+  const navigate = useNavigate();
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const createPayoutFromSubmissions = useCreatePayoutFromSubmissions();
 
   const [page, setPage] = useState(1);
   const savedSelectedSubmissions = sessionStorage.getItem(LocalStorage.SelectedSubmissions);
@@ -133,6 +148,51 @@ export const SubmissionsListPage = () => {
     } else {
       setSelectedSubmissions((selected) => [...selected, ...allInPage.map((submission) => submission.subId)]);
     }
+  };
+
+  const handleCreatePayout = async () => {
+    const vault = committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault;
+    if (!vault || !committeeSubmissions) return;
+
+    const wantToCreatePayout = await confirm({
+      title: t("SubmissionsTool.createPayout"),
+      titleIcon: <PayoutIcon className="mr-2" fontSize="large" />,
+      description: t("SubmissionsTool.createPayoutDescription"),
+      cancelText: t("no"),
+      confirmText: t("create"),
+    });
+    if (!wantToCreatePayout) return;
+
+    const authenticated = await tryAuthentication();
+    if (!authenticated) return;
+
+    const vaultInfo = getVaultInfoFromVault(vault);
+    const payoutType: PayoutType = selectedSubmissions.length === 1 ? "single" : "split";
+    let payoutData: IPayoutData;
+
+    if (payoutType === "single") {
+      const submission = committeeSubmissions.find((sub) => sub.subId === selectedSubmissions[0]);
+      payoutData = {
+        ...(createNewPayoutData("single") as ISinglePayoutData),
+        beneficiary: submission?.submissionDataStructure?.beneficiary,
+        severity: submission?.submissionDataStructure?.severity,
+        submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
+      } as ISinglePayoutData;
+    } else {
+      const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
+      payoutData = {
+        ...(createNewPayoutData("split") as ISplitPayoutData),
+        beneficiaries: submissions.map((submission) => ({
+          ...createNewSplitPayoutBeneficiary(),
+          beneficiary: submission?.submissionDataStructure?.beneficiary,
+          severity: submission?.submissionDataStructure?.severity,
+          submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
+        })),
+      } as ISplitPayoutData;
+    }
+
+    const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
+    if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
   };
 
   return (
@@ -248,7 +308,7 @@ export const SubmissionsListPage = () => {
                             { length: committeeSubmissions ? Math.ceil(committeeSubmissions?.length / ITEMS_PER_PAGE) : 1 },
                             (_, i) => i + 1
                           ).map((pageIdx) => (
-                            <p onClick={() => setPage(pageIdx)} className={`${page === pageIdx && "current"}`}>
+                            <p key={pageIdx} onClick={() => setPage(pageIdx)} className={`${page === pageIdx && "current"}`}>
                               {pageIdx}
                             </p>
                           ))}
@@ -261,7 +321,7 @@ export const SubmissionsListPage = () => {
                             CSV
                           </Button>
                           {selectedSubmissions.length >= 1 && (
-                            <Button>
+                            <Button onClick={handleCreatePayout}>
                               <PayoutIcon className="mr-2" />
                               {selectedSubmissions.length === 1 ? t("createSinglePayout") : t("createMultiPayout")}
                             </Button>
@@ -276,6 +336,8 @@ export const SubmissionsListPage = () => {
           )}
         </>
       )}
+
+      {createPayoutFromSubmissions.isLoading && <Loading fixed extraText={`${t("creatingPayout")}...`} />}
     </StyledSubmissionsListPage>
   );
 };

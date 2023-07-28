@@ -124,11 +124,16 @@ export const StyledSubmissionsListPage = styled.div`
   }
 `;
 
-export const StyledSubmissionCard = styled.div<{ noActions: boolean; isChecked: boolean }>(
-  ({ noActions, isChecked }) => css`
+export const StyledSubmissionCard = styled.div<{ noActions: boolean; onPayout: boolean; isChecked: boolean }>(
+  ({ noActions, onPayout, isChecked }) => css`
     display: flex;
     position: relative;
     border: 1px solid var(--grey-700);
+
+    ${onPayout &&
+    css`
+      border: none;
+    `}
 
     ${!noActions &&
     css`
@@ -167,6 +172,15 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; isChecked: 
       position: relative;
       padding: ${getSpacing(2)} ${getSpacing(3)};
       gap: ${getSpacing(3)};
+
+      ${onPayout &&
+      css`
+        padding: 0;
+
+        .severity {
+          display: none;
+        }
+      `}
 
       img {
         width: ${getSpacing(5)};
@@ -212,6 +226,11 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; isChecked: 
         right: ${getSpacing(3)};
         font-size: var(--xxsmall);
         color: var(--grey-400);
+
+        ${onPayout &&
+        css`
+          display: none;
+        `}
       }
 
       .details {

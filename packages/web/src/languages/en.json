@@ -556,6 +556,7 @@
     "rescan": "Rescan",
     "createSinglePayout": "Create single payout",
     "createMultiPayout": "Create multi payout",
+    "creatingPayout": "Creating payout",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -628,7 +629,9 @@
       "rescanSubmissionsDescription": "Are you sure you want to rescan all the submissions, this may take some seconds",
       "rescan": "Rescan",
       "selectAll": "Select all",
-      "youHaveSelectedNSubmissions": "You have selected <strong>{{num}}</strong> submissions"
+      "youHaveSelectedNSubmissions": "You have selected <strong>{{num}}</strong> submissions",
+      "createPayout": "Create payout",
+      "createPayoutDescription": "You will create a payout for the selected submissions. Are you sure you want to continue?"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
@@ -709,7 +712,7 @@
       "payoutDetails": "Payout details",
       "percentageToPayExplanation": "What is the % of the total of vault content you would like to payout? \nPercentage can't be higher than the vault max bounty ({{maxBounty}}).",
       "editPayoutOfEachBeneficiary": "Edit the payout of each beneficiary. \nSum of all percentages to pay should be 100%.",
-      "tokensAmount": "Tokens amount \n({{token}})",
+      "tokensAmount": "Tokens amount ({{token}})",
       "amountInUsd": "Amount in $",
       "addBeneficiary": "Add beneficiary",
       "sumPercentageOfThePayout": "Sum percentages of the payout",
@@ -727,6 +730,9 @@
       "cantCreatePayoutNoDepositors": "You can't create a payout for this vault because it has no deposits.",
       "connectedAccountNoPermissionsOnThisPayout": "The connected wallet has no permissions to view/edit this payout. Please connect the right wallet.",
       "youAreNotACommitteeMemberCantSign": "You are not a committee member, you can't sign this payout.",
+      "payoutAllocation": "Payout allocation",
+      "loadingSubmissions": "Loading submissions information",
+      "submissionDetails": "Submission details",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

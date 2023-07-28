@@ -1,6 +1,8 @@
-import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
+import { IPayoutData, ISubmittedSubmission, IVault, IVaultInfo, PayoutType } from "@hats-finance/shared";
 import { IStoredKey, readPrivateKeyFromStoredKey } from "components/Keystore";
+import { axiosClient } from "config/axiosClient";
 import { decrypt, readMessage } from "openpgp";
+import { BASE_SERVICE_URL } from "settings";
 import uuidFromString from "uuid-by-string";
 
 export const getVaultSubmissionsByKeystore = async (
@@ -252,3 +254,24 @@ const extractSubmissionData = (
 
   return submissions;
 };
+
+/**
+ * Creates a new payout from submission/s
+ * @param vaultInfo - The vault info to create the payout
+ * @param type - The payout type to create
+ *
+ * @returns The id of the created payout
+ */
+export async function createPayoutFromSubmissions(
+  vaultInfo: IVaultInfo,
+  type: PayoutType,
+  payoutData: IPayoutData
+): Promise<string> {
+  const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, {
+    vaultAddress: vaultInfo.address,
+    chainId: vaultInfo.chainId,
+    payoutData,
+    type,
+  });
+  return res.data.upsertedId;
+}
