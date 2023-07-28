@@ -51,9 +51,9 @@ export const getVaultSubmissionsByKeystore = async (
   }
 
   submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  const submissionsWithSubId = submissionsForCommittee.map((submission, idx) => ({
+  const submissionsWithSubId = submissionsForCommittee.map((submission) => ({
     ...submission,
-    subId: uuidFromString(submission.id + idx),
+    subId: uuidFromString(submission.id + submission.submissionDecrypted),
   }));
 
   return submissionsWithSubId;
@@ -104,13 +104,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(\*\*SUBMISSION #\d*\*\*(.|\n)*(\*\*SUBMISSION #\d*\*\*))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/\*\*SUBMISSION #\d*\*\*$/, "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -122,6 +125,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim(),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim()),
@@ -146,13 +150,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(-------------\n\*\*\[ISSUE #\d*\]\*\*(.|\n)*(-------------\n\*\*\[ISSUE #\d*\]\*\*))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/-------------\n\*\*\[ISSUE #\d*\]\*\*$/, "").replace("-------------", "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -164,6 +171,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim().replace("-------------", ""),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim().replace("-------------", "")),
@@ -190,13 +198,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(## \[ISSUE #\d*\]:(.|\n)*(## \[ISSUE #\d*\]:))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/## \[ISSUE #\d*\]:$/, "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -207,6 +218,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim(),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim()),

@@ -270,6 +270,7 @@ export interface ISubmittedSubmission {
   chainId?: number;
   id: string;
   subId: string;
+  submissionIdx: number;
   submissionHash: string;
   submissionData?: string;
   submissionDecrypted?: string;
