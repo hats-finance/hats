@@ -554,6 +554,8 @@
     "seeSubmissionOnChain": "See submission on chain",
     "downloadAsCsv": "Download as CSV",
     "rescan": "Rescan",
+    "createSinglePayout": "Create single payout",
+    "createMultiPayout": "Create multi payout",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

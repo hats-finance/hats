@@ -7,6 +7,7 @@ import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
+import PayoutIcon from "@mui/icons-material/TollOutlined";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { LocalStorage } from "constants/constants";
@@ -257,8 +258,14 @@ export const SubmissionsListPage = () => {
                         <div className="buttons">
                           <Button onClick={handleDownloadAsCsv}>
                             <DownloadIcon className="mr-2" />
-                            {t("downloadAsCsv")}
+                            CSV
                           </Button>
+                          {selectedSubmissions.length >= 1 && (
+                            <Button>
+                              <PayoutIcon className="mr-2" />
+                              {selectedSubmissions.length === 1 ? t("createSinglePayout") : t("createMultiPayout")}
+                            </Button>
+                          )}
                         </div>
                       </>
                     )}

@@ -50,10 +50,6 @@ export const StyledSubmissionsListPage = styled.div`
     }
   }
 
-  .buttons {
-    margin-top: ${getSpacing(3)};
-  }
-
   .toolbar {
     display: flex;
     justify-content: space-between;
@@ -118,6 +114,13 @@ export const StyledSubmissionsListPage = styled.div`
         text-decoration: underline;
       }
     }
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: ${getSpacing(3)};
   }
 `;
 
