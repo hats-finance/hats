@@ -3,6 +3,7 @@ import {
   ISinglePayoutData,
   ISplitPayoutData,
   ISubmittedSubmission,
+  IVulnerabilitySeverity,
   PayoutType,
   createNewPayoutData,
   createNewSplitPayoutBeneficiary,
@@ -153,6 +154,7 @@ export const SubmissionsListPage = () => {
   const handleCreatePayout = async () => {
     const vault = committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault;
     if (!vault || !committeeSubmissions) return;
+    if (!vault.description || !vault.description.severities) return;
 
     const wantToCreatePayout = await confirm({
       title: t("SubmissionsTool.createPayout"),
@@ -172,22 +174,34 @@ export const SubmissionsListPage = () => {
 
     if (payoutType === "single") {
       const submission = committeeSubmissions.find((sub) => sub.subId === selectedSubmissions[0]);
+      const severity =
+        (vault.description.severities as IVulnerabilitySeverity[])
+          .find((sev) => submission?.submissionDataStructure?.severity?.includes(sev.name.toLowerCase()))
+          ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
+
       payoutData = {
         ...(createNewPayoutData("single") as ISinglePayoutData),
         beneficiary: submission?.submissionDataStructure?.beneficiary,
-        severity: submission?.submissionDataStructure?.severity,
+        severity,
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
       } as ISinglePayoutData;
     } else {
       const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
       payoutData = {
         ...(createNewPayoutData("split") as ISplitPayoutData),
-        beneficiaries: submissions.map((submission) => ({
-          ...createNewSplitPayoutBeneficiary(),
-          beneficiary: submission?.submissionDataStructure?.beneficiary,
-          severity: submission?.submissionDataStructure?.severity,
-          submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
-        })),
+        beneficiaries: submissions.map((submission) => {
+          const severity =
+            (vault.description?.severities as IVulnerabilitySeverity[])
+              .find((sev) => submission?.submissionDataStructure?.severity?.includes(sev.name.toLowerCase()))
+              ?.name.toLowerCase() ?? submission?.submissionDataStructure?.severity;
+
+          return {
+            ...createNewSplitPayoutBeneficiary(),
+            beneficiary: submission?.submissionDataStructure?.beneficiary,
+            severity,
+            submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
+          };
+        }),
       } as ISplitPayoutData;
     }
 
