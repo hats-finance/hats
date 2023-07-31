@@ -6,7 +6,7 @@ import { generateColorsArrayInBetween } from "utils/colors.utils";
 const INITIAL_SEVERITY_COLOR = "#24E8C5";
 const FINAL_SEVERITY_COLOR = "#6652F7";
 
-export const getSeveritiesColorsArray = (vault: IVault): string[] => {
+export const getSeveritiesColorsArray = (vault: IVault | undefined): string[] => {
   if (!vault || !vault?.description?.severities) return [];
 
   return generateColorsArrayInBetween(INITIAL_SEVERITY_COLOR, FINAL_SEVERITY_COLOR, vault.description.severities.length ?? 4);

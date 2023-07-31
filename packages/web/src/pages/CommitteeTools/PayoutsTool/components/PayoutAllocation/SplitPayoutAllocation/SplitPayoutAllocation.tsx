@@ -8,6 +8,7 @@ import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form"
 import { useTranslation } from "react-i18next";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
+import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { usePayoutAllocation } from "../usePayoutAllocation";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
@@ -92,6 +93,8 @@ function SplitPayoutAllocationShared({
   const watchedBeneficiaries = useWatch({ control, name: `beneficiaries` });
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
 
+  const isFromSubmissions = hasSubmissionData(payout);
+
   /**
    * These calculations are for the general payout. A split payout behind the scenes is a single payout with a payment
    * splitter as the beneficiary. The allocation calculation for each individual beneficiary is done on the component
@@ -164,7 +167,7 @@ function SplitPayoutAllocationShared({
         ))}
       </StyledBeneficiariesTable>
 
-      {!readOnly && !isPayoutCreated && (
+      {!readOnly && !isPayoutCreated && !isFromSubmissions && (
         <Button styleType="invisible" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
           <AddIcon />
           {t("Payouts.addBeneficiary")}
@@ -176,13 +179,24 @@ function SplitPayoutAllocationShared({
           {t("Payouts.sumPercentagesPayoutShouldBe100", { missingPercentage: +(100 - sumPercentagesPayout).toFixed(6) })}
         </p>
       )}
-      <StyledSplitPayoutSummary className="mt-3">
+
+      <StyledSplitPayoutSummary className="mt-4">
         <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
           <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
           <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
         </div>
+        <hr />
+        {isFromSubmissions && (
+          <>
+            <div className="item">
+              <p>{t("Payouts.percentageOfTheVaultToPay")}:</p>
+              <p>{percentageToPayOfTheVault ? `${percentageToPayOfTheVault}%` : "--"}</p>
+            </div>
+            <hr />
+          </>
+        )}
         <div className="item">
-          <p>{t("Payouts.totalNumberPayouts")}:</p>
+          <p>{t("Payouts.totalNumberBeneficiaries")}:</p>
           <p>{beneficiaries.length}</p>
         </div>
         <div className="item bold">

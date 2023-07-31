@@ -75,6 +75,11 @@ export const StyledSplitPayoutSummary = styled.div`
   border: 1px solid var(--grey-600);
   padding: ${getSpacing(2.5)};
 
+  hr {
+    border: 1px solid var(--grey-600);
+    border-top: 0;
+  }
+
   .item {
     width: 100%;
     display: flex;

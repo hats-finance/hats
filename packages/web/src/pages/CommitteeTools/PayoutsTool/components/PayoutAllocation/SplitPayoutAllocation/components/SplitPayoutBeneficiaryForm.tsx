@@ -6,6 +6,7 @@ import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Mo
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
+import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
 import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
 import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
 import { useState } from "react";
@@ -38,15 +39,11 @@ export const SplitPayoutBeneficiaryForm = ({
 }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
 
-  const isFromSubmissions = !!(payout?.payoutData as ISplitPayoutData)?.beneficiaries[index].submissionData ?? false;
+  const isFromSubmissions = hasSubmissionData(payout);
   const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
   const beneficiarySubmission = committeeSubmissions?.find(
     (sub) => sub.subId === (payout?.payoutData as ISplitPayoutData)?.beneficiaries[index].submissionData?.subId
   );
-
-  console.log(payout?.payoutData);
-  console.log(committeeSubmissions);
-  console.log(beneficiarySubmission);
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
