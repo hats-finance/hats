@@ -557,6 +557,7 @@
     "createSinglePayout": "Create single payout",
     "createMultiPayout": "Create multi payout",
     "creatingPayout": "Creating payout",
+    "loadingSubmissionData": "Loading submission data",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

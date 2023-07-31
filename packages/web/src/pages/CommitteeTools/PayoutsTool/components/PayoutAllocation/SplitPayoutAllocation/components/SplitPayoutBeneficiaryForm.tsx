@@ -2,7 +2,7 @@ import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats-finance/shared"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Loading, Modal } from "components";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
@@ -39,7 +39,7 @@ export const SplitPayoutBeneficiaryForm = ({
   const { t } = useTranslation();
 
   const isFromSubmissions = !!(payout?.payoutData as ISplitPayoutData)?.beneficiaries[index].submissionData ?? false;
-  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore(!isFromSubmissions);
+  const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
   const beneficiarySubmission = committeeSubmissions?.find(
     (sub) => sub.subId === (payout?.payoutData as ISplitPayoutData)?.beneficiaries[index].submissionData?.subId
   );
@@ -110,8 +110,6 @@ export const SplitPayoutBeneficiaryForm = ({
     ];
   };
 
-  if (isLoading) return <Loading fixed extraText={`${t("Payouts.loadingSubmissions")}...`} />;
-
   return (
     <>
       <div>{index + 1}.</div>
@@ -133,6 +131,7 @@ export const SplitPayoutBeneficiaryForm = ({
                 colorable={!readOnly}
                 noMargin
               />
+              {isLoadingSubmission && <Spinner text={t("loadingSubmissionData")} />}
             </div>
           )}
 
