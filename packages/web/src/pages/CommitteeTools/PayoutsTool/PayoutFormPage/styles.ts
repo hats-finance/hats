@@ -109,6 +109,24 @@ export const StyledPayoutForm = styled.div`
       padding-bottom: 0;
       border: 1px solid var(--grey-600);
     }
+
+    .rewards-constraints {
+      .item {
+        display: flex;
+        align-items: flex-start;
+        gap: ${getSpacing(2)};
+        margin-top: ${getSpacing(2)};
+
+        .pill {
+          margin-top: ${getSpacing(2)};
+          width: 26%;
+        }
+
+        .input {
+          width: 37%;
+        }
+      }
+    }
   }
 
   .buttons {
