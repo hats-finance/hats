@@ -9,6 +9,7 @@ import { SelectButton, SelectMenuOptions, StyledFormSelectInput } from "./styles
 export interface FormSelectInputOption {
   label: string;
   value: string;
+  helperText?: string;
   icon?: string;
   onHoverText?: string;
 }

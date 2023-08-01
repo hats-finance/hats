@@ -2,6 +2,7 @@ import { IVault, getAddressSafes } from "@hats-finance/shared";
 import { FormSelectInputOption } from "components";
 import { useEffect, useState } from "react";
 import { appChains } from "settings";
+import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { useVaults } from "../subgraph/vaults/useVaults";
 
@@ -19,6 +20,7 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       label: vault.description?.["project-metadata"].name ?? vault.name,
       icon: vault.description?.["project-metadata"].icon,
       onHoverText: `${vault.version} - ${appChains[vault.chainId as number].chain.name}`,
+      helperText: shortenIfAddress(vault.id, { startLength: 10, endLength: 10 }),
     })) ?? [];
 
   useEffect(() => {

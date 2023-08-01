@@ -1,12 +1,12 @@
-import { useMemo } from "react";
-import { ipfsTransformUri } from "utils";
-import { FormSelectInputOption } from "../FormSelectInput";
-import { StyledFormSelectInputItem } from "./styles";
 import CheckboxCheckedIcon from "@mui/icons-material/CheckBox";
 import CheckboxUncheckedIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import RadioCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import RadioUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
+import { useMemo } from "react";
+import { ipfsTransformUri } from "utils";
+import { FormSelectInputOption } from "../FormSelectInput";
+import { StyledFormSelectInputItem } from "./styles";
 
 interface MenuItemProps {
   currentValue: string | string[];
@@ -53,7 +53,10 @@ const FormSelectInputItem = ({
       <WithTooltip text={option.onHoverText}>
         <div className="info">
           {option.icon && <img src={ipfsTransformUri(option.icon)} alt="logo" />}
-          <span>{option.label || "---"}</span>
+          <div className="text">
+            <span>{option.label || "---"}</span>
+            <span className="helper">{option.helperText}</span>
+          </div>
         </div>
       </WithTooltip>
       {!nonSelectable && (
