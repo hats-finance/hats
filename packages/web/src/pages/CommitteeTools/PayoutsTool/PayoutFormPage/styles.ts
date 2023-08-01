@@ -134,7 +134,6 @@ export const StyledPayoutForm = styled.div`
     display: flex;
     justify-content: space-between;
     gap: ${getSpacing(2)};
-    border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
     margin-top: ${getSpacing(5)};
 
