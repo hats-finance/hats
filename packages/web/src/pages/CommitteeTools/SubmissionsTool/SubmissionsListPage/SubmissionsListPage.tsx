@@ -246,7 +246,7 @@ export const SubmissionsListPage = () => {
                 <>
                   <div className="toolbar">
                     <div className="controls">
-                      <div className="selection" onClick={handleSelectAll}>
+                      <div style={{ display: "none" }} className="selection" onClick={handleSelectAll}>
                         {allPageSelected ? (
                           <BoxSelected className="icon" fontSize="inherit" />
                         ) : (
@@ -299,20 +299,31 @@ export const SubmissionsListPage = () => {
                         {committeeSubmissionsGroups?.map((submissionsGroup, idx) => (
                           <div className="group" key={submissionsGroup.date}>
                             <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
-                            {submissionsGroup.submissions.map((submission) => (
-                              <SubmissionCard
-                                onCheckChange={(sub) => {
+                            {submissionsGroup.submissions.map((submission) => {
+                              const getOnCheckChange = () => {
+                                const usedVault = committeeSubmissions.find(
+                                  (sub) => sub.subId === selectedSubmissions[0]
+                                )?.linkedVault;
+                                if (usedVault && usedVault.id !== submission.linkedVault?.id) return undefined;
+
+                                return (sub: ISubmittedSubmission) => {
                                   if (selectedSubmissions.includes(sub.subId)) {
                                     setSelectedSubmissions(selectedSubmissions.filter((subId) => subId !== sub.subId));
                                   } else {
                                     setSelectedSubmissions([...selectedSubmissions, sub.subId]);
                                   }
-                                }}
-                                isChecked={selectedSubmissions.includes(submission.subId)}
-                                key={submission.subId}
-                                submission={submission}
-                              />
-                            ))}
+                                };
+                              };
+
+                              return (
+                                <SubmissionCard
+                                  onCheckChange={getOnCheckChange()}
+                                  isChecked={selectedSubmissions.includes(submission.subId)}
+                                  key={submission.subId}
+                                  submission={submission}
+                                />
+                              );
+                            })}
                           </div>
                         ))}
 
