@@ -1,14 +1,15 @@
 import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
-import { FormInput, Pill } from "components";
+import { Alert, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
-import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
+import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { useContext, useEffect, useRef } from "react";
-import { useFieldArray } from "react-hook-form";
+import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
 import { PayoutFormContext } from "../../store";
 import { StyledPayoutForm } from "../../styles";
+import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
 
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
@@ -19,9 +20,17 @@ export const SplitPayoutForm = () => {
   const splitAllocationRef = useRef<any>(null);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { control, register, setValue, getValues } = methods;
+  const { control, register, setValue, getValues, formState } = methods;
+  console.log(formState.errors);
 
-  const { fields: rewardsConstraints } = useFieldArray({ name: "rewardsConstraints", control });
+  const { fields } = useFieldArray({ name: "rewardsConstraints", control });
+  const watchConstraints = useWatch({ control, name: `rewardsConstraints`, defaultValue: [] });
+  const rewardsConstraints = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchConstraints![index],
+    };
+  });
 
   useEffect(() => {
     if (!vault || !vault.description || !payout) return;
@@ -35,16 +44,31 @@ export const SplitPayoutForm = () => {
       constraints.push({
         severity: severity.name.toLowerCase(),
         capAmount: "",
+        maxReward: (severity as IVulnerabilitySeverityV2).percentage.toString(),
       });
     }
 
     setValue("rewardsConstraints", constraints);
   }, [vault, payout, setValue]);
 
-  console.log(getValues());
+  const autocalculate = () => {
+    if (!rewardsConstraints) return;
+    if (!vault || !vault.amountsInfo) return;
+
+    const beneficiaries = getValues("beneficiaries");
+
+    const calcs = autocalculateMultiPayout(beneficiaries, rewardsConstraints, vault.amountsInfo.depositedAmount.tokens);
+    if (!calcs) return;
+
+    for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout);
+    }
+    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString());
+  };
 
   return (
     <StyledPayoutForm>
+      <button onClick={autocalculate}>calc</button>
       <div className="form-container">
         <div className="sub-container">
           <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
@@ -81,37 +105,36 @@ export const SplitPayoutForm = () => {
           <br />
           <p className="subtitle mb-5">{t("Payouts.rewardsConstraints")}</p>
           <div className="rewards-constraints">
-            {rewardsConstraints.map((constraint, index) => {
-              if (!vault || !vault.description) return null;
-
-              const vaultSeverity = (vault.description.severities as IVulnerabilitySeverityV2[]).find(
-                (sev) => sev.name.toLowerCase() === constraint.severity
-              );
-
-              return (
-                <div className="item">
-                  <div className="pill">
-                    <Pill textColor={severityColors[index]} isSeverity text={constraint.severity} />
-                  </div>
-                  <FormInput
-                    className="input"
-                    value={`${vaultSeverity?.percentage}%`}
-                    label={t("VaultEditor.percentage-bounty")}
-                    disabled
-                    colorable
-                  />
-                  <FormInput
-                    {...register(`rewardsConstraints.${index}.capAmount`)}
-                    className="input"
-                    label={t("Payouts.maxRewardPerBeneficiary")}
-                    placeholder={t("Payouts.maxRewardPerBeneficiaryPlaceholder", { token: vault?.stakingTokenSymbol })}
-                    disabled={isPayoutCreated}
-                    type="number"
-                    colorable
-                  />
+            {rewardsConstraints.map((constraint, index) => (
+              <div className="item" key={index}>
+                <div className="pill">
+                  <Pill textColor={severityColors[index]} isSeverity text={constraint.severity} />
                 </div>
-              );
-            })}
+                <FormInput
+                  {...register(`rewardsConstraints.${index}.maxReward`)}
+                  className="input"
+                  label={t("VaultEditor.percentage-bounty")}
+                  placeholder={t("VaultEditor.percentage-bounty")}
+                  type="number"
+                  colorable
+                />
+                <FormInput
+                  {...register(`rewardsConstraints.${index}.capAmount`)}
+                  className="input"
+                  label={t("Payouts.maxRewardPerBeneficiary")}
+                  placeholder={t("Payouts.maxRewardPerBeneficiaryPlaceholder", { token: vault?.stakingTokenSymbol })}
+                  disabled={isPayoutCreated}
+                  type="number"
+                  colorable
+                />
+              </div>
+            ))}
+
+            {
+              formState?.errors?.rewardsConstraints && (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === 'sumShouldBe100') && (
+                <Alert className="mb-4" type="error">{t('Payouts.severityRewardsSumShouldBe100')}</Alert>
+              )
+            }
           </div>
         </div>
 

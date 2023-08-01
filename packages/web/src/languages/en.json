@@ -56,6 +56,7 @@
     "max100": "Max 100",
     "max": "Max",
     "min": "Min",
+    "sumShouldBe100%": "The sum should be 100%",
     "enterValidAmount": "Enter a valid amount",
     "invalidAmount": "Invalid amount",
     "insufficientFunds": "Insufficient funds",
@@ -737,7 +738,8 @@
       "percentageOfTheVaultToPay": "Percentage of the whole vault to payout",
       "rewardsConstraints": "Rewards constraints",
       "maxRewardPerBeneficiary": "Max reward per beneficiary",
-      "maxRewardPerBeneficiaryPlaceholder": "Max payout amount per beneficiary ({{token}})",
+      "maxRewardPerBeneficiaryPlaceholder": "Max amount per beneficiary ({{token}})",
+      "severityRewardsSumShouldBe100": "Sum of severity rewards percentages should be 100%",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

@@ -49,4 +49,19 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
         nftUrl: Yup.string().required(intl("required")),
       })
     ),
+    rewardsConstraints: Yup.array().of(
+      Yup.object({
+        severity: Yup.string().required(intl("required")),
+        maxReward: Yup.string().required(intl("required")).test("sumShouldBe100", '', (_, ctx: any) => {
+          if(vault?.description?.["project-metadata"].type !== 'audit') return true;
+
+          const sumOfPercentages: number = ctx.from[1].value.rewardsConstraints.reduce(
+            (acc: number, cur: any) => acc + Number(+cur.maxReward ?? 0),
+            0
+          );
+          return +sumOfPercentages.toFixed(6) === 100;
+        }),
+        capAmount: Yup.string(),
+      })
+    )
   });

@@ -65,7 +65,7 @@ export interface ISinglePayoutData extends IPayoutDataBase {
 export interface ISplitPayoutData extends IPayoutDataBase {
   type: "split";
   paymentSplitterBeneficiary?: string;
-  rewardsConstraints?: { severity: string; capAmount: string }[];
+  rewardsConstraints?: { severity: string; maxReward: string; capAmount: string }[];
   beneficiaries: ISplitPayoutBeneficiary[];
 }
 
