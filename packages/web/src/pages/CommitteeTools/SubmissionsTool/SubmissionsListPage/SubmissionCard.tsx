@@ -14,7 +14,7 @@ import { StyledSubmissionCard } from "./styles";
 type SubmissionCardProps = {
   submission: ISubmittedSubmission;
   noActions?: boolean;
-  onPayout?: boolean;
+  inPayout?: boolean;
   isChecked?: boolean;
   onCheckChange?: (submission: ISubmittedSubmission) => void;
 };
@@ -24,7 +24,7 @@ export const SubmissionCard = ({
   onCheckChange,
   noActions = false,
   isChecked = false,
-  onPayout = false,
+  inPayout = false,
 }: SubmissionCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ export const SubmissionCard = ({
   const createdAt = new Date(+submission.createdAt * 1000);
 
   return (
-    <StyledSubmissionCard noActions={noActions || onPayout} onPayout={onPayout} isChecked={isChecked}>
+    <StyledSubmissionCard noActions={noActions || inPayout} inPayout={inPayout} isChecked={isChecked}>
       {onCheckChange && (
         <div className="select-check" onClick={() => onCheckChange(submission)}>
           {isChecked ? <BoxSelected fontSize="inherit" /> : <BoxUnselected fontSize="inherit" />}
@@ -45,7 +45,7 @@ export const SubmissionCard = ({
       <div
         className="content-container"
         onClick={
-          noActions || onPayout ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)
+          noActions || inPayout ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)
         }
       >
         <WithTooltip text={vault?.description?.["project-metadata"].name}>

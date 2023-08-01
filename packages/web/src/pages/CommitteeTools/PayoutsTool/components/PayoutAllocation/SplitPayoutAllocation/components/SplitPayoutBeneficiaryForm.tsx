@@ -115,7 +115,7 @@ export const SplitPayoutBeneficiaryForm = ({
           {isFromSubmissions && beneficiarySubmission ? (
             <div>
               <p className="title mb-3">{t("Payouts.submissionDetails")}</p>
-              <SubmissionCard onPayout submission={beneficiarySubmission} />
+              <SubmissionCard inPayout submission={beneficiarySubmission} />
             </div>
           ) : (
             <div className="input">
