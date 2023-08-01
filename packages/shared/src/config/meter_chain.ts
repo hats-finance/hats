@@ -19,8 +19,8 @@ export const meter = {
   },
   contracts: {
     multicall3: {
-      address: "0xca11bde05977b3631167028862be2a173976ca11",
-      blockCreated: 11_907_934,
+      address: "0x99D510753552698d13D28c3B2042A37Ac6F9E38C",
+      blockCreated: 25_763_467,
     },
   },
 } as const satisfies Chain;

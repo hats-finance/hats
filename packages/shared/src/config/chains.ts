@@ -23,7 +23,7 @@ export interface IChainConfiguration {
   subgraph: string;
   coingeckoId?: string;
   uniswapSubgraph?: string;
-  infuraKey: string;
+  infuraKey?: string;
   provider: string;
 }
 
@@ -116,17 +116,16 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://frequent-billowing-smoke.matic.quiknode.pro/7c8df8ebd0e2c06e4559485d777e99c0350208c8",
   },
   [meter.id]: {
-    vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
+    vaultsCreatorContract: "0x7BC7253C207824C0237a40e67B3d750E99E94C99",
     rewardController: "0x0000000000000000000000000000000000000000",
-    vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
-    hackersNFTContract: "0x312917812e76d78C5B1139C28d5C1D3A272d171d",
+    vaultsNFTContract: "0x0494a92f44F220Fdb15Bb80050FA64950FF868ac",
+    hackersNFTContract: "0x312917812e76d78C5B1139C28d5C1D3A272d171d", // missing
     chain: meter,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_polygon",
+    subgraph: "https://graph-meter.voltswap.finance/subgraphs/name/hats",
     coingeckoId: "meter",
-    govMultisig: "0xa5c6d757ca69c92eea05b22924d9774658e10c62",
-    uniswapSubgraph: "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
-    paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
-    infuraKey: "polygon-mainnet",
+    govMultisig: "0xdf766254f162A02bd79E0bC75A1B92101001a500",
+    paymentSplitterFactory: "0xaD0C122aC1Be13f1E638DDcce8408cDC45848717",
+    // infuraKey: "polygon-mainnet",
     provider: "https://meter.blockpi.network/v1/rpc/fb714211b5240a1f337e46b063d7734294824527",
   },
   // [wagmiChains.bsc.id]: {
