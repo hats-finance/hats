@@ -1,15 +1,15 @@
 import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
-import { Alert, FormInput, Pill } from "components";
+import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
-import { hasSubmissionData } from "../../../utils/hasSubmissionData";
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
+import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
+import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { PayoutFormContext } from "../../store";
 import { StyledPayoutForm } from "../../styles";
-import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
 
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
@@ -18,10 +18,10 @@ export const SplitPayoutForm = () => {
   const severityColors = getSeveritiesColorsArray(vault);
   const isFromSubmissions = hasSubmissionData(payout);
   const splitAllocationRef = useRef<any>(null);
+  const [editSeverityRewards, setEditSeverityRewards] = useState(false);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { control, register, setValue, getValues, formState } = methods;
-  console.log(formState.errors);
+  const { control, register, setValue, getValues, formState, trigger } = methods;
 
   const { fields } = useFieldArray({ name: "rewardsConstraints", control });
   const watchConstraints = useWatch({ control, name: `rewardsConstraints`, defaultValue: [] });
@@ -31,6 +31,10 @@ export const SplitPayoutForm = () => {
       ...watchConstraints![index],
     };
   });
+
+  useEffect(() => {
+    trigger("rewardsConstraints");
+  }, [watchConstraints, trigger]);
 
   useEffect(() => {
     if (!vault || !vault.description || !payout) return;
@@ -48,7 +52,7 @@ export const SplitPayoutForm = () => {
       });
     }
 
-    setValue("rewardsConstraints", constraints);
+    setTimeout(() => setValue("rewardsConstraints", constraints), 500);
   }, [vault, payout, setValue]);
 
   const autocalculate = () => {
@@ -61,9 +65,10 @@ export const SplitPayoutForm = () => {
     if (!calcs) return;
 
     for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
-      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout);
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
     }
-    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString());
+
+    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
   };
 
   return (
@@ -103,8 +108,11 @@ export const SplitPayoutForm = () => {
 
           {/* Reward constraints */}
           <br />
-          <p className="subtitle mb-5">{t("Payouts.rewardsConstraints")}</p>
+          <p className="subtitle mb-2">{t("Payouts.rewardsConstraints")}</p>
           <div className="rewards-constraints">
+            <Button onClick={() => setEditSeverityRewards((prev) => !prev)} styleType="text" className="mb-2" noPadding>
+              {t("Payouts.editSeverityRewards")}
+            </Button>
             {rewardsConstraints.map((constraint, index) => (
               <div className="item" key={index}>
                 <div className="pill">
@@ -115,6 +123,7 @@ export const SplitPayoutForm = () => {
                   className="input"
                   label={t("VaultEditor.percentage-bounty")}
                   placeholder={t("VaultEditor.percentage-bounty")}
+                  disabled={isPayoutCreated || !editSeverityRewards}
                   type="number"
                   colorable
                 />
@@ -130,11 +139,12 @@ export const SplitPayoutForm = () => {
               </div>
             ))}
 
-            {
-              formState?.errors?.rewardsConstraints && (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === 'sumShouldBe100') && (
-                <Alert className="mb-4" type="error">{t('Payouts.severityRewardsSumShouldBe100')}</Alert>
-              )
-            }
+            {formState?.errors?.rewardsConstraints &&
+              (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === "sumShouldBe100") && (
+                <Alert className="mb-2" type="error">
+                  {t("Payouts.severityRewardsSumShouldBe100")}
+                </Alert>
+              )}
           </div>
         </div>
 

@@ -41,17 +41,16 @@ export const SplitPayoutBeneficiaryForm = ({
 
   const isFromSubmissions = hasSubmissionData(payout);
   const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
-  const beneficiarySubmission = committeeSubmissions?.find(
-    (sub) => sub.subId === (payout?.payoutData as ISplitPayoutData)?.beneficiaries[index].submissionData?.subId
-  );
+
+  const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
+  const beneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
+  const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
+  const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
+
+  const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index].submissionData?.subId);
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
-
-  const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
-
-  const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
-  const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
 
   const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
 

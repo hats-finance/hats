@@ -6,7 +6,7 @@ export const StyledBeneficiariesTable = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: ${getSpacing(1)};
+  gap: ${getSpacing(2)};
 `;
 
 export const StyledSplitPayoutBeneficiaryForm = styled.div(
@@ -84,7 +84,7 @@ export const StyledSplitPayoutSummary = styled.div`
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 
     &.error {
       color: var(--error-red);
@@ -98,7 +98,7 @@ export const StyledSplitPayoutSummary = styled.div`
       color: var(--grey-500);
     }
 
-    span {
+    span.clicklable {
       cursor: pointer;
       text-transform: uppercase;
 
