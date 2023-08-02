@@ -2,7 +2,7 @@ import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared
 import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
@@ -36,6 +36,33 @@ export const SplitPayoutForm = () => {
     trigger("rewardsConstraints");
   }, [watchConstraints, trigger]);
 
+  const watchBeneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
+  const watchedSeverities = useWatch({
+    control,
+    name: watchBeneficiaries.map((_, idx) => `beneficiaries.${idx}.severity` as any),
+  });
+
+  const triggerAutocalculate = useCallback(() => {
+    if (!watchConstraints) return;
+    if (!vault || !vault.amountsInfo) return;
+
+    const beneficiaries = getValues("beneficiaries");
+
+    const calcs = autocalculateMultiPayout(beneficiaries, watchConstraints, vault.amountsInfo.depositedAmount.tokens);
+    if (!calcs) return;
+
+    for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
+    }
+
+    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
+  }, [getValues, setValue, watchConstraints, vault]);
+
+  // If constraints or severities changed, autocalculate
+  useEffect(() => {
+    triggerAutocalculate();
+  }, [watchConstraints, watchedSeverities, triggerAutocalculate]);
+
   useEffect(() => {
     if (!vault || !vault.description || !payout) return;
 
@@ -55,25 +82,9 @@ export const SplitPayoutForm = () => {
     setTimeout(() => setValue("rewardsConstraints", constraints), 500);
   }, [vault, payout, setValue]);
 
-  const autocalculate = () => {
-    if (!rewardsConstraints) return;
-    if (!vault || !vault.amountsInfo) return;
-
-    const beneficiaries = getValues("beneficiaries");
-
-    const calcs = autocalculateMultiPayout(beneficiaries, rewardsConstraints, vault.amountsInfo.depositedAmount.tokens);
-    if (!calcs) return;
-
-    for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
-      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
-    }
-
-    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
-  };
-
   return (
     <StyledPayoutForm>
-      <button onClick={autocalculate}>calc</button>
+      <button onClick={triggerAutocalculate}>calc</button>
       <div className="form-container">
         <div className="sub-container">
           <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
