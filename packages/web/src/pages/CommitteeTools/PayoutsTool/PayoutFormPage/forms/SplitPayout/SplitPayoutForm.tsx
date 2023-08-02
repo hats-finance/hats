@@ -84,7 +84,6 @@ export const SplitPayoutForm = () => {
 
   return (
     <StyledPayoutForm>
-      <button onClick={triggerAutocalculate}>calc</button>
       <div className="form-container">
         <div className="sub-container">
           <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
