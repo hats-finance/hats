@@ -24,15 +24,15 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
       .test(getTestNumberInBetween(intl, 0, vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100, true))
       .required(intl("required"))
       .typeError(intl("required")),
-    explanation: Yup.string().required(intl("required")),
+    explanation: Yup.string(),
     beneficiaries: Yup.array().of(
       Yup.object({
         beneficiary: Yup.string()
           .test(getTestWalletAddress(intl))
-          .test("duplicatedBeneficiary", intl("duplicated"), (val, ctx: any) => {
-            const sameAddressBeneficiaries = ctx.from[1].value.beneficiaries.filter((b: any) => b.beneficiary === val);
-            return sameAddressBeneficiaries.length === 1;
-          })
+          // .test("duplicatedBeneficiary", intl("duplicated"), (val, ctx: any) => {
+          //   const sameAddressBeneficiaries = ctx.from[1].value.beneficiaries.filter((b: any) => b.beneficiary === val);
+          //   return sameAddressBeneficiaries.length === 1;
+          // })
           .required(intl("required")),
         severity: Yup.string().required(intl("required")),
         percentageOfPayout: Yup.number()
@@ -52,16 +52,18 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
     rewardsConstraints: Yup.array().of(
       Yup.object({
         severity: Yup.string().required(intl("required")),
-        maxReward: Yup.string().required(intl("required")).test("sumShouldBe100", '', (_, ctx: any) => {
-          if(vault?.description?.["project-metadata"].type !== 'audit') return true;
+        maxReward: Yup.string()
+          .required(intl("required"))
+          .test("sumShouldBe100", "", (_, ctx: any) => {
+            if (vault?.description?.["project-metadata"].type !== "audit") return true;
 
-          const sumOfPercentages: number = ctx.from[1].value.rewardsConstraints.reduce(
-            (acc: number, cur: any) => acc + Number(+cur.maxReward ?? 0),
-            0
-          );
-          return +sumOfPercentages.toFixed(6) === 100;
-        }),
+            const sumOfPercentages: number = ctx.from[1].value.rewardsConstraints.reduce(
+              (acc: number, cur: any) => acc + Number(+cur.maxReward ?? 0),
+              0
+            );
+            return +sumOfPercentages.toFixed(6) === 100;
+          }),
         capAmount: Yup.string(),
       })
-    )
+    ),
   });

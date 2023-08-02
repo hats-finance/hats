@@ -18,6 +18,7 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
 import { RoutePaths } from "navigation";
+import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -51,6 +52,11 @@ export const PayoutFormPage = () => {
   const isAnotherActivePayout = vaultActivePayouts && vaultActivePayouts?.length > 0;
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
+  const isFromSubmissions = hasSubmissionData(payout);
+  const { data: committeeSubmissions, isInitialLoading: loadingSubmissions } = useVaultSubmissionsByKeystore(
+    !isFromSubmissions && !isPayoutCreated
+  );
+
   const methods = useForm<IPayoutData>({
     resolver: payout
       ? payout.payoutData.type === "single"
@@ -59,19 +65,19 @@ export const PayoutFormPage = () => {
       : undefined,
     mode: "onChange",
   });
-  const { reset: handleReset, handleSubmit, formState } = methods;
+  const { reset: handleReset, handleSubmit, formState, getValues, setValue } = methods;
 
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   useEffect(() => {
-    if (!payout) return;
+    if (!payout || isPayoutCreated) return;
 
     // Only ask to unlock keystore if the payout has submission data
-    const isFromSubmissions = hasSubmissionData(payout);
-    if (!isFromSubmissions) return;
+    const hasSubmission = hasSubmissionData(payout);
+    if (!hasSubmission) return;
 
     if (!keystore) setTimeout(() => initKeystore(), 600);
-  }, [keystore, initKeystore, payout]);
+  }, [keystore, initKeystore, payout, isPayoutCreated]);
 
   useEffect(() => {
     tryAuthentication();
@@ -167,7 +173,45 @@ export const PayoutFormPage = () => {
   };
 
   const handleLockPayout = async () => {
+    // Put decrypted submission data in the payoutData
+    console.log(111);
+    console.log(committeeSubmissions);
+
+    if (isFromSubmissions && !keystore) await initKeystore();
+
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
+
+    // If the payout is from submissions, we need to save the decrypted submission data in the payoutData
+    if (isFromSubmissions) {
+      const form = getValues();
+
+      if (form.type === "single") {
+        const allSubmissionsDecrypted = committeeSubmissions?.some((sub) => sub.subId === form.submissionData?.subId);
+        if (!allSubmissionsDecrypted) return alert("You dont have all the payout submissions decrypted.");
+
+        const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
+        if (!submission) return alert("Submission not found");
+        // @ts-ignore
+        setValue("decryptedSubmission", {
+          ...submission,
+          submissionDataStructure: { ...submission?.submissionDataStructure, communicationChannel: undefined },
+        } as any);
+      } else {
+        const allSubmissionsDecrypted = form.beneficiaries
+          .map((ben) => committeeSubmissions?.some((sub) => sub.subId === ben.submissionData?.subId))
+          .every(Boolean);
+        if (!allSubmissionsDecrypted) return alert("You dont have all the payout submissions decrypted.");
+
+        for (const [idx, ben] of form.beneficiaries.entries()) {
+          const submission = committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId);
+          if (!submission) return alert("Submission not found");
+          setValue(`beneficiaries.${idx}.decryptedSubmission`, {
+            ...submission,
+            submissionDataStructure: { ...submission?.submissionDataStructure, communicationChannel: undefined },
+          } as any);
+        }
+      }
+    }
 
     try {
       await handleSavePayout();
@@ -268,9 +312,11 @@ export const PayoutFormPage = () => {
                         </WithTooltip>
                         <Button
                           onClick={handleSubmit(handleLockPayout)}
-                          disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout}
+                          disabled={lockPayout.isLoading || savePayout.isLoading || isAnotherActivePayout || loadingSubmissions}
                         >
-                          {savePayout.isLoading || lockPayout.isLoading ? `${t("loading")}...` : t("Payouts.createPayout")}
+                          {savePayout.isLoading || lockPayout.isLoading || loadingSubmissions
+                            ? `${t("loading")}...`
+                            : t("Payouts.createPayout")}
                           <ArrowForwardIcon className="ml-3" />
                         </Button>
                       </div>

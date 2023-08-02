@@ -62,9 +62,11 @@ export const SubmissionCard = ({
             <WithTooltip text={submissionData?.beneficiary}>
               <span>{shortenIfAddress(submissionData?.beneficiary)}</span>
             </WithTooltip>
-            <span>
-              {commChannel?.value} ({commChannel?.type})
-            </span>
+            {commChannel && (
+              <span>
+                {commChannel?.value} ({commChannel?.type})
+              </span>
+            )}
             {submissionData?.githubUsername &&
               submissionData?.githubUsername !== "--" &&
               submissionData?.githubUsername !== "---" && <span>Github: @{submissionData?.githubUsername}</span>}

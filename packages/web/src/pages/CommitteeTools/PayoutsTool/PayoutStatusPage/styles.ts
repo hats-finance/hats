@@ -52,9 +52,9 @@ export const StyledPayoutStatusPage = styled.div`
   }
 
   .payout-status-container {
-    background: var(--background-3);
-    padding: ${getSpacing(3)};
-    margin-bottom: ${getSpacing(3)};
+    /* background: var(--background-3); */
+    /* padding: ${getSpacing(3)}; */
+    margin: ${getSpacing(3)} 0;
     position: relative;
 
     &.top-separation {
@@ -64,8 +64,8 @@ export const StyledPayoutStatusPage = styled.div`
     .mulsitig-address {
       position: absolute;
       margin: 0;
-      top: 0;
-      left: ${getSpacing(2)};
+      top: ${getSpacing(1.5)};
+      right: ${getSpacing(1)};
       color: var(--grey-400);
       background: var(--grey-600);
       font-size: var(--xxsmall);

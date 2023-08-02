@@ -269,6 +269,7 @@ export interface IMaster {
 export interface ISubmittedSubmission {
   chainId?: number;
   id: string;
+  txid: string;
   subId: string;
   submissionIdx: number;
   submissionHash: string;
@@ -280,7 +281,7 @@ export interface ISubmittedSubmission {
     severity?: string;
     content: string;
     beneficiary: string;
-    communicationChannel: { type: string; value: string };
+    communicationChannel?: { type: string; value: string };
     githubUsername?: string;
   };
   submitter: string;

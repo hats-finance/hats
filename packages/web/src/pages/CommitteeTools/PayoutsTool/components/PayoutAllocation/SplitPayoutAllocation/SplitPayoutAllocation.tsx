@@ -201,12 +201,16 @@ function SplitPayoutAllocationShared({
       )}
 
       <StyledSplitPayoutSummary className="mt-4">
-        <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
-          <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
-          <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
-        </div>
-        <hr />
-        {isFromSubmissions && (
+        {!isPayoutCreated && (
+          <>
+            <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
+              <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
+              <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
+            </div>
+            <hr />
+          </>
+        )}
+        {(isFromSubmissions || isPayoutCreated) && (
           <div>
             {!isPayoutCreated && (
               <Button onClick={() => setEditPercentageToPay((prev) => !prev)} styleType="text" className="mb-2" noPadding>

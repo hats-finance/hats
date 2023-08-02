@@ -47,7 +47,7 @@ export const SplitPayoutBeneficiaryForm = ({
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
 
-  const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index].submissionData?.subId);
+  const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index]?.submissionData?.subId);
 
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
@@ -64,8 +64,8 @@ export const SplitPayoutBeneficiaryForm = ({
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
-    if (prevSelected === undefined || newSelected === undefined) return;
-    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);
+    if (newSelected === undefined) return;
+    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image as any);
   });
 
   const getMoreOptions = () => {
@@ -107,14 +107,19 @@ export const SplitPayoutBeneficiaryForm = ({
   };
 
   return (
-    <>
-      <div>{index + 1}.</div>
+    <div>
+      <div className="mb-1">{index + 1}.</div>
       <StyledSplitPayoutBeneficiaryForm>
         <div className="beneficiary">
-          {isFromSubmissions && beneficiarySubmission ? (
+          {isFromSubmissions && (beneficiaries[index]?.decryptedSubmission || beneficiarySubmission) ? (
             <div>
               <p className="title mb-3">{t("Payouts.submissionDetails")}</p>
-              <SubmissionCard inPayout submission={beneficiarySubmission} />
+              <SubmissionCard
+                inPayout
+                submission={
+                  isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!
+                }
+              />
             </div>
           ) : (
             <div className="input">
@@ -201,6 +206,6 @@ export const SplitPayoutBeneficiaryForm = ({
           />
         </StyledSplitPayoutBeneficiaryAllocationModal>
       </Modal>
-    </>
+    </div>
   );
 };

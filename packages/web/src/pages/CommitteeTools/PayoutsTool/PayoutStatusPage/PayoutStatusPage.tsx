@@ -261,13 +261,13 @@ export const PayoutStatusPage = () => {
                   />
                 )}
 
-                <FormInput
+                {/* <FormInput
                   value={`${payout?.payoutData.percentageToPay}%`}
                   label={t("Payouts.percentageToPay")}
                   placeholder={t("Payouts.percentageToPayPlaceholder")}
                   helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                   readOnly
-                />
+                /> */}
               </div>
 
               <div className="my-5">
@@ -284,7 +284,7 @@ export const PayoutStatusPage = () => {
               </div>
             </div>
 
-            <div className="payout-status-container">
+            {/* <div className="payout-status-container">
               <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
 
               <FormInput
@@ -298,7 +298,7 @@ export const PayoutStatusPage = () => {
                 rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
                 readOnly
               />
-            </div>
+            </div> */}
 
             <div className="payout-status-container top-separation">
               {vault && (

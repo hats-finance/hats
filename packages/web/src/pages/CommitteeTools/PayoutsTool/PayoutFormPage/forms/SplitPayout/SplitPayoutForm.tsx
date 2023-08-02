@@ -52,7 +52,7 @@ export const SplitPayoutForm = () => {
     if (!calcs) return;
 
     for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
-      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout as any, { shouldValidate: true });
     }
 
     setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
