@@ -46,6 +46,12 @@ export const StyledFormSelectInputItem = styled.label`
           overflow: hidden;
           color: var(--grey-500);
           margin-top: ${getSpacing(0.5)};
+
+          .vault-address {
+            display: flex;
+            align-items: center;
+            gap: ${getSpacing(0.5)};
+          }
         }
       }
     }

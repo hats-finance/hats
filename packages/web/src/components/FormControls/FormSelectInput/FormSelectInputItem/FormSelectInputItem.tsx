@@ -55,7 +55,15 @@ const FormSelectInputItem = ({
           {option.icon && <img src={ipfsTransformUri(option.icon)} alt="logo" />}
           <div className="text">
             <span>{option.label || "---"}</span>
-            <span className="helper">{option.helperText}</span>
+            <span
+              className="helper"
+              onClick={(e) => {
+                e.preventDefault();
+                if (option.onHelperClick) option.onHelperClick();
+              }}
+            >
+              {option.helper}
+            </span>
           </div>
         </div>
       </WithTooltip>
