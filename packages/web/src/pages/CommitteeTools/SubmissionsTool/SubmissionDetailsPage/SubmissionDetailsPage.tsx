@@ -7,6 +7,7 @@ import { RoutePaths } from "navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { appChains } from "settings";
 import { useAccount } from "wagmi";
 import { SubmissionCard } from "../SubmissionsListPage/SubmissionCard";
 import { useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
@@ -26,8 +27,16 @@ export const SubmissionDetailsPage = () => {
     if (!keystore) setTimeout(() => initKeystore(), 600);
   }, [keystore, initKeystore]);
 
-  const openSubmissionOnChain = () => {
+  const openSubmissionData = () => {
     window.open(`${IPFS_PREFIX}/${submission?.submissionHash}`, "_blank");
+  };
+
+  const openTxOnChain = () => {
+    const chainId = submission?.chainId;
+    if (!chainId) return;
+
+    const blockExplorer = appChains[chainId].chain.blockExplorers?.default.url;
+    window.open(`${blockExplorer}/tx/${submission.txid}`, "_blank");
   };
 
   return (
@@ -76,7 +85,10 @@ export const SubmissionDetailsPage = () => {
                       <MDEditor.Markdown className="submission-content" source={submission?.submissionDataStructure?.content} />
 
                       <div className="buttons">
-                        <Button onClick={openSubmissionOnChain}>{t("seeSubmissionOnChain")}</Button>
+                        <Button onClick={openSubmissionData}>{t("seeSubmissionData")}</Button>
+                        <Button filledColor="secondary" onClick={openTxOnChain}>
+                          {t("openTxOnChain")}
+                        </Button>
                       </div>
                     </>
                   )}
