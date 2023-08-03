@@ -23,6 +23,10 @@ export const StyledSplitPayoutBeneficiaryForm = styled.div(
       border-bottom: 1px solid var(--grey-600);
       padding-bottom: ${getSpacing(3)};
 
+      .w-100 {
+        width: 100%;
+      }
+
       .input {
         width: 70%;
         display: flex;

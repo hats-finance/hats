@@ -112,7 +112,7 @@ export const SplitPayoutBeneficiaryForm = ({
       <StyledSplitPayoutBeneficiaryForm>
         <div className="beneficiary">
           {isFromSubmissions && (beneficiaries[index]?.decryptedSubmission || beneficiarySubmission) ? (
-            <div>
+            <div className="w-100">
               <p className="title mb-3">{t("Payouts.submissionDetails")}</p>
               <SubmissionCard
                 inPayout

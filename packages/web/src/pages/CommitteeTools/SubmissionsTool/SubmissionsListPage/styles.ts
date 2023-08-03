@@ -133,11 +133,15 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: b
     ${inPayout &&
     css`
       border: none;
+      width: 100%;
     `}
 
     ${!noActions &&
     css`
-      cursor: pointer;
+      ${!inPayout &&
+      css`
+        cursor: pointer;
+      `}
       transition: 0.2s;
 
       &:hover {
@@ -234,6 +238,7 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: b
       }
 
       .details {
+        cursor: pointer;
         opacity: 0;
         display: flex;
         align-items: center;

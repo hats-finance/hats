@@ -43,19 +43,22 @@ export const SubmissionCard = ({
       sev.name.toLowerCase().includes(submissionData.severity ?? "")
     );
 
+  const openSubmissionNewTab = () => {
+    window.open(`${window.location.origin}${RoutePaths.committee_tools}/submissions/${submission.subId}`, "_blank");
+  };
+
+  const navigateSubmissionDetails = () => {
+    navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`);
+  };
+
   return (
-    <StyledSubmissionCard noActions={noActions || inPayout} inPayout={inPayout} isChecked={isChecked}>
+    <StyledSubmissionCard noActions={noActions} inPayout={inPayout} isChecked={isChecked}>
       {onCheckChange && (
         <div className="select-check" onClick={() => onCheckChange(submission)}>
           {isChecked ? <BoxSelected fontSize="inherit" /> : <BoxUnselected fontSize="inherit" />}
         </div>
       )}
-      <div
-        className="content-container"
-        onClick={
-          noActions || inPayout ? undefined : () => navigate(`${RoutePaths.committee_tools}/submissions/${submission.subId}`)
-        }
-      >
+      <div className="content-container" onClick={() => !noActions && !inPayout && navigateSubmissionDetails()}>
         <WithTooltip text={vault?.description?.["project-metadata"].name}>
           <img src={ipfsTransformUri(vault?.description?.["project-metadata"].icon)} alt="project logo" />
         </WithTooltip>
@@ -85,7 +88,7 @@ export const SubmissionCard = ({
           </div>
         </div>
         <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mma")}</div>
-        <div className="details">
+        <div className="details" onClick={() => inPayout && openSubmissionNewTab()}>
           {t("seeSubmissionDetails")} <ArrowIcon />
         </div>
       </div>
