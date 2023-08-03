@@ -561,6 +561,8 @@
     "creatingPayout": "Creating payout",
     "loadingSubmissionData": "Loading submission data",
     "editManually": "Edit manually",
+    "downloadAllSubmissionsCsv": "Download all submissions (.csv)",
+    "downloadSelectedSubmissionsCsv": "Download ({{num}}) submissions (.csv)",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

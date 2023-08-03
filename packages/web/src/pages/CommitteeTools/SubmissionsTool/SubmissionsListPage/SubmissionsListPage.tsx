@@ -96,9 +96,14 @@ export const SubmissionsListPage = () => {
     if (!committeeSubmissions) return;
     if (committeeSubmissions.length === 0) return;
 
+    const submissionsToDownload =
+      selectedSubmissions.length === 0
+        ? committeeSubmissions
+        : committeeSubmissions.filter((submission) => selectedSubmissions.includes(submission.subId));
+
     const csvString = [
       ["beneficiary", "severity", "title"],
-      ...committeeSubmissions.map((submission, idx) => [
+      ...submissionsToDownload.map((submission, idx) => [
         submission.submissionDataStructure?.beneficiary,
         submission.submissionDataStructure?.severity?.toLowerCase(),
         submission.submissionDataStructure?.title.replaceAll(",", "."),
@@ -344,7 +349,9 @@ export const SubmissionsListPage = () => {
                         <div className="buttons">
                           <Button onClick={handleDownloadAsCsv}>
                             <DownloadIcon className="mr-2" />
-                            CSV
+                            {selectedSubmissions.length === 0
+                              ? t("downloadAllSubmissionsCsv")
+                              : t("downloadSelectedSubmissionsCsv", { num: selectedSubmissions.length })}
                           </Button>
                           {selectedSubmissions.length >= 1 && (
                             <Button onClick={handleCreatePayout}>
