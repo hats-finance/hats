@@ -206,6 +206,7 @@ export const SubmissionsListPage = () => {
     }
 
     const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
+    setSelectedSubmissions([]);
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
   };
 
