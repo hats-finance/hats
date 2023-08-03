@@ -1,8 +1,9 @@
-import { ISubmittedSubmission } from "@hats-finance/shared";
+import { ISubmittedSubmission, IVulnerabilitySeverity } from "@hats-finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
 import { Pill, WithTooltip } from "components";
+import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useTranslation } from "react-i18next";
@@ -32,8 +33,15 @@ export const SubmissionCard = ({
   const vault = submission.linkedVault;
   const submissionData = submission.submissionDataStructure;
   const commChannel = submissionData?.communicationChannel;
+  const severityColors = getSeveritiesColorsArray(vault);
 
   const createdAt = new Date(+submission.createdAt * 1000);
+
+  const severityIndex =
+    submissionData?.severity &&
+    vault?.description?.severities.findIndex((sev: IVulnerabilitySeverity) =>
+      sev.name.toLowerCase().includes(submissionData.severity ?? "")
+    );
 
   return (
     <StyledSubmissionCard noActions={noActions || inPayout} inPayout={inPayout} isChecked={isChecked}>
@@ -54,7 +62,11 @@ export const SubmissionCard = ({
         <div className="content">
           {submissionData?.severity && (
             <span className="severity">
-              <Pill isSeverity text={submissionData?.severity ?? t("noSeverity")} />
+              <Pill
+                textColor={severityColors[severityIndex ?? 0]}
+                isSeverity
+                text={submissionData?.severity ?? t("noSeverity")}
+              />
             </span>
           )}
           <p className="submission-title">{submissionData?.title}</p>
