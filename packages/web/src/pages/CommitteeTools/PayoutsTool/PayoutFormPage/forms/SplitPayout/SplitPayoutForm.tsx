@@ -2,12 +2,11 @@ import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared
 import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
 import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
-import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { PayoutFormContext } from "../../store";
 import { StyledPayoutForm } from "../../styles";
 
@@ -16,8 +15,6 @@ export const SplitPayoutForm = () => {
   const { vault, isPayoutCreated, payout } = useContext(PayoutFormContext);
 
   const severityColors = getSeveritiesColorsArray(vault);
-  const isFromSubmissions = hasSubmissionData(payout);
-  const splitAllocationRef = useRef<any>(null);
   const [editSeverityRewards, setEditSeverityRewards] = useState(false);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
@@ -52,16 +49,19 @@ export const SplitPayoutForm = () => {
     if (!calcs) return;
 
     for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
-      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout as any, { shouldValidate: true });
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
     }
 
     setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
   }, [getValues, setValue, watchConstraints, vault]);
 
+  const stopAutocalculation = useWatch({ control, name: `stopAutocalculation` });
+
   // If constraints or severities changed, autocalculate
   useEffect(() => {
+    if (isPayoutCreated || stopAutocalculation) return;
     triggerAutocalculate();
-  }, [watchConstraints, watchedSeverities, triggerAutocalculate]);
+  }, [watchConstraints, watchedSeverities, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
 
   useEffect(() => {
     if (!vault || !vault.description || !payout) return;
@@ -97,7 +97,7 @@ export const SplitPayoutForm = () => {
             className="w-60"
           />
 
-          {!isFromSubmissions && (
+          {/* {!isFromSubmissions && (
             <>
               <p className="mt-3 mb-2" ref={splitAllocationRef}>
                 {t("Payouts.percentageToPayExplanation", { maxBounty: `${Number(vault?.maxBounty) / 100 ?? 100}%` })}
@@ -114,7 +114,7 @@ export const SplitPayoutForm = () => {
                 className="w-40"
               />
             </>
-          )}
+          )} */}
 
           {/* Reward constraints */}
           <br />
@@ -158,8 +158,17 @@ export const SplitPayoutForm = () => {
           </div>
         </div>
 
-        <p className="mt-5">{t("Payouts.editPayoutOfEachBeneficiary")}</p>
-
+        <p className="mt-5 mb-4">{t("Payouts.editPayoutOfEachBeneficiary")}</p>
+        {!isPayoutCreated && (
+          <FormInput
+            {...register(`stopAutocalculation`)}
+            label={t("Payouts.stopAutocalculation")}
+            type="toggle"
+            colorable
+            noMargin
+            disabled={isPayoutCreated}
+          />
+        )}
         <SplitPayoutAllocation />
       </div>
     </StyledPayoutForm>

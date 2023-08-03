@@ -50,6 +50,7 @@ function FormInputComponent(
     helper,
     readOnly,
     className,
+    onKeyDown,
     ...props
   }: FormInputProps,
   ref
@@ -126,6 +127,9 @@ function FormInputComponent(
           ref={setRef}
           rows={rows}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -139,7 +143,10 @@ function FormInputComponent(
           type="number"
           ref={setRef}
           onChange={handleOnChange}
-          onKeyDown={removeNotNumber}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+            removeNotNumber(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -153,7 +160,10 @@ function FormInputComponent(
           type="number"
           ref={setRef}
           onChange={handleOnChange}
-          onKeyDown={removeNotNumber}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+            removeNotNumber(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -167,6 +177,9 @@ function FormInputComponent(
           type="checkbox"
           ref={setRef}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -180,6 +193,9 @@ function FormInputComponent(
           type={inputType}
           ref={setRef}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />

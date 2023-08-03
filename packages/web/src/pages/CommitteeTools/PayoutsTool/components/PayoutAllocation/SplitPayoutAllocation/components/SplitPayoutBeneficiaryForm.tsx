@@ -171,6 +171,7 @@ export const SplitPayoutBeneficiaryForm = ({
               {...register(`beneficiaries.${index}.percentageOfPayout`)}
               label={t("Payouts.percentageToPayLabel")}
               placeholder={t("Payouts.percentageToPayLabel")}
+              onKeyDown={() => setValue<any>("stopAutocalculation", true)}
               disabled={isPayoutCreated && !readOnly}
               readOnly={readOnly}
               type="number"

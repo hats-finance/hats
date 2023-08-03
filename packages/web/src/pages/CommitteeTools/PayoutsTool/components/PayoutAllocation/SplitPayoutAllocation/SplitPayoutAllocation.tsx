@@ -210,7 +210,7 @@ function SplitPayoutAllocationShared({
             <hr />
           </>
         )}
-        {(isFromSubmissions || isPayoutCreated) && (
+        {
           <div>
             {!isPayoutCreated && (
               <Button onClick={() => setEditPercentageToPay((prev) => !prev)} styleType="text" className="mb-2" noPadding>
@@ -242,7 +242,7 @@ function SplitPayoutAllocationShared({
             )}
             <hr className="mt-4" />
           </div>
-        )}
+        }
         <div className="item">
           <p>{t("Payouts.totalNumberBeneficiaries")}:</p>
           <p>{beneficiaries.length}</p>
