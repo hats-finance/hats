@@ -75,6 +75,18 @@ export const StyledPayoutForm = styled.div`
       font-size: var(--small);
     }
 
+    .beneficiary {
+      display: flex;
+      padding-bottom: ${getSpacing(3)};
+
+      .input {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+      }
+    }
+
     .reasoningAlert {
       font-size: var(--xxsmall);
 
