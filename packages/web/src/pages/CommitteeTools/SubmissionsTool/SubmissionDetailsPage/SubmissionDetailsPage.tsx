@@ -1,4 +1,5 @@
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
+import LinkIcon from "@mui/icons-material/InsertLinkOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
@@ -87,6 +88,7 @@ export const SubmissionDetailsPage = () => {
                       <div className="buttons">
                         <Button onClick={openSubmissionData}>{t("seeSubmissionData")}</Button>
                         <Button filledColor="secondary" onClick={openTxOnChain}>
+                          <LinkIcon className="mr-2" />
                           {t("openTxOnChain")}
                         </Button>
                       </div>
