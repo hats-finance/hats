@@ -4,7 +4,7 @@ import { SafePeriodBarProps } from "./SafePeriodBar";
 
 export const StyledSafePeriodBar = styled.div<{ isSafetyPeriod: boolean; type: SafePeriodBarProps["type"] }>(
   ({ isSafetyPeriod, type }) => css`
-    background: ${isSafetyPeriod ? "var(--warning-yellow)" : "var(--background-2)"};
+    background: ${isSafetyPeriod ? "var(--warning-yellow)" : "var(--background-4)"};
     display: flex;
     justify-content: center;
     align-items: center;
