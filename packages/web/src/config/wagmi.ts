@@ -4,6 +4,7 @@ import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { infuraProvider } from "wagmi/providers/infura";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
@@ -46,12 +47,3 @@ const wagmiClient = createClient({
 });
 
 export { wagmiClient };
-function jsonRpcProvider(arg0: {
-  rpc: (selectedChain: any) => { http: any };
-}): import("@wagmi/core/dist/index-35b6525c").C<
-  import("@wagmi/chains").Chain,
-  import("@wagmi/core/dist/index-35b6525c").P,
-  import("@wagmi/core/dist/index-35b6525c").W
-> {
-  throw new Error("Function not implemented.");
-}
