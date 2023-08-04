@@ -10,6 +10,7 @@ export const ALL_CHAINS = {
   [wagmiChains.avalanche.id]: wagmiChains.avalanche,
   [wagmiChains.fantom.id]: wagmiChains.fantom,
   [wagmiChains.gnosis.id]: wagmiChains.gnosis,
+  [meter.id]: meter,
 };
 
 export interface IChainConfiguration {
