@@ -1,7 +1,7 @@
 import { arbitrum, avalanche, bsc, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
 import axios from "axios";
 import { utils } from "ethers";
-import { meter } from "../config/meter_chain";
+import { meter } from "../config";
 import { isServer } from "./general.utils";
 
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };

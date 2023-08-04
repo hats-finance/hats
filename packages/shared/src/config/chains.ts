@@ -1,5 +1,5 @@
 import * as wagmiChains from "@wagmi/chains";
-import { meter } from "./meter_chain";
+import { meter } from "./custom_chains";
 
 export const ALL_CHAINS = {
   [wagmiChains.mainnet.id]: wagmiChains.mainnet,

@@ -113,6 +113,42 @@ export const getVaultInfoWithCommittee = async (
   }
 };
 
+export const getVaultDescriptionHash = async (vaultId: string, chainId: number): Promise<string | undefined> => {
+  try {
+    if (!vaultId || !chainId) return undefined;
+
+    const GET_VAULT_BY_ID = `
+      query getVaults($vaultId: String) {
+        vaults(where: {id: $vaultId}) {
+          id
+          descriptionHash
+        }
+      }
+    `;
+
+    const subgraphResponse = axios.post(
+      ChainsConfig[chainId].subgraph,
+      JSON.stringify({
+        query: GET_VAULT_BY_ID,
+        variables: { vaultId },
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const subgraphData = (await subgraphResponse).data;
+    const vault = subgraphData?.data?.vaults?.[0];
+
+    if (!vault) return undefined;
+
+    return vault.descriptionHash;
+  } catch (error) {
+    return undefined;
+  }
+};
+
 export const getAddressRoleOnVault = async (
   address: string | undefined,
   vaultChainId: string | number | undefined,
