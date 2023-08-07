@@ -14,11 +14,13 @@ import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
+import ClearIcon from "@mui/icons-material/ClearOutlined";
 import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
+import SearchIcon from "@mui/icons-material/SearchOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
-import { Alert, Button, HatSpinner, Loading, WalletButton } from "components";
+import { Alert, Button, FormDateInput, HatSpinner, Loading, Modal, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { LocalStorage } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -42,7 +44,19 @@ export const SubmissionsListPage = () => {
   const navigate = useNavigate();
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
+
+  const [openDateFilter, setOpenDateFilter] = useState(false);
+  const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
+
   const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const filteredSubmissions = useMemo(() => {
+    if (!committeeSubmissions) return [];
+    if (!dateFilter.active) return committeeSubmissions;
+    return committeeSubmissions.filter((submission) => {
+      return +submission.createdAt >= dateFilter.from && +submission.createdAt <= dateFilter.to;
+    });
+  }, [committeeSubmissions, dateFilter]);
+
   const createPayoutFromSubmissions = useCreatePayoutFromSubmissions();
 
   const [page, setPage] = useState(1);
@@ -52,8 +66,8 @@ export const SubmissionsListPage = () => {
   );
 
   const committeeSubmissionsGroups = useMemo<{ date: string; submissions: ISubmittedSubmission[] }[]>(() => {
-    if (!committeeSubmissions) return [];
-    const pagedSubmissions = committeeSubmissions.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+    if (!filteredSubmissions) return [];
+    const pagedSubmissions = filteredSubmissions.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
 
     const submissionsGroupsByDate = pagedSubmissions.reduce<{ [key: string]: ISubmittedSubmission[] }>((groups, submission) => {
       const date = moment(+submission.createdAt * 1000).format("MM/DD/YYYY");
@@ -79,7 +93,7 @@ export const SubmissionsListPage = () => {
     });
 
     return submissionsGroupsByDateArray;
-  }, [committeeSubmissions, page]);
+  }, [filteredSubmissions, page]);
   const allInPage = committeeSubmissionsGroups.reduce((prev, acc) => [...prev, ...acc.submissions], [] as ISubmittedSubmission[]);
   const allPageSelected = allInPage.every((submission) => selectedSubmissions.includes(submission.subId));
   const quantityInPage = allInPage.length;
@@ -93,13 +107,13 @@ export const SubmissionsListPage = () => {
   }, [selectedSubmissions]);
 
   const handleDownloadAsCsv = () => {
-    if (!committeeSubmissions) return;
-    if (committeeSubmissions.length === 0) return;
+    if (!filteredSubmissions) return;
+    if (filteredSubmissions.length === 0) return;
 
     const submissionsToDownload =
       selectedSubmissions.length === 0
-        ? committeeSubmissions
-        : committeeSubmissions.filter((submission) => selectedSubmissions.includes(submission.subId));
+        ? filteredSubmissions
+        : filteredSubmissions.filter((submission) => selectedSubmissions.includes(submission.subId));
 
     const csvString = [
       ["beneficiary", "severity", "title"],
@@ -125,7 +139,7 @@ export const SubmissionsListPage = () => {
       if (page === 1) return;
       setPage(page - 1);
     } else {
-      if (page * ITEMS_PER_PAGE >= (committeeSubmissions?.length ?? 0)) return;
+      if (page * ITEMS_PER_PAGE >= (filteredSubmissions?.length ?? 0)) return;
       setPage(page + 1);
     }
   };
@@ -154,6 +168,13 @@ export const SubmissionsListPage = () => {
     } else {
       setSelectedSubmissions((selected) => [...selected, ...allInPage.map((submission) => submission.subId)]);
     }
+  };
+
+  const handleDateFiltering = () => {
+    setOpenDateFilter(false);
+
+    if (dateFilter.from === 0 && dateFilter.to === 0) return setDateFilter((prev) => ({ ...prev, active: false }));
+    return setDateFilter((prev) => ({ ...prev, active: true }));
   };
 
   const handleCreatePayout = async () => {
@@ -265,14 +286,14 @@ export const SubmissionsListPage = () => {
                       <div className="rescan" onClick={handleRescan}>
                         <RescanIcon /> {t("SubmissionsTool.rescan")}
                       </div>
-                      <div className="date-sort">
-                        <CalendarIcon /> Sort by dates
+                      <div className="date-sort" onClick={() => setOpenDateFilter(true)}>
+                        <CalendarIcon /> {t("SubmissionsTool.filterByDateShort")} {dateFilter.active && `(${t("active")})`}
                       </div>
                     </div>
                     <div className="pagination">
                       <p>
                         {(page - 1) * ITEMS_PER_PAGE + 1}-{(page - 1) * ITEMS_PER_PAGE + quantityInPage}
-                        <strong> of {committeeSubmissions?.length ?? 0}</strong>
+                        <strong> of {filteredSubmissions?.length ?? 0}</strong>
                       </p>
                       <div className="selection">
                         <ArrowLeftIcon onClick={handleChangePage(-1)} />
@@ -290,15 +311,29 @@ export const SubmissionsListPage = () => {
                     </Alert>
                   )}
                   <div className="submissions-list">
-                    {!committeeSubmissions || committeeSubmissions.length === 0 ? (
+                    {!filteredSubmissions || filteredSubmissions.length === 0 ? (
                       <>
-                        <Alert className="mb-4" type="warning">
-                          {t("submissionNotFound")}
-                        </Alert>
-                        <Button onClick={() => openKeystore()}>
-                          <KeyIcon className="mr-2" />
-                          {t("openPGPTool")}
-                        </Button>
+                        {dateFilter.active ? (
+                          <>
+                            <Alert className="mb-4" type="warning">
+                              {t("SubmissionsTool.noSubmissionsFoundForThisDate")}
+                            </Alert>
+                            <Button onClick={() => setDateFilter({ to: 0, from: 0, active: false })}>
+                              <ClearIcon className="mr-2" />
+                              {t("SubmissionsTool.removeDateFilter")}
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Alert className="mb-4" type="warning">
+                              {t("submissionNotFound")}
+                            </Alert>
+                            <Button onClick={() => openKeystore()}>
+                              <KeyIcon className="mr-2" />
+                              {t("openPGPTool")}
+                            </Button>
+                          </>
+                        )}
                       </>
                     ) : (
                       <>
@@ -307,7 +342,7 @@ export const SubmissionsListPage = () => {
                             <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
                             {submissionsGroup.submissions.map((submission) => {
                               const getOnCheckChange = () => {
-                                const usedVault = committeeSubmissions.find(
+                                const usedVault = filteredSubmissions.find(
                                   (sub) => sub.subId === selectedSubmissions[0]
                                 )?.linkedVault;
                                 if (usedVault && usedVault.id !== submission.linkedVault?.id) return undefined;
@@ -336,7 +371,7 @@ export const SubmissionsListPage = () => {
                         <div className="pages">
                           <ArrowLeftIcon className="icon" onClick={handleChangePage(-1)} />
                           {Array.from(
-                            { length: committeeSubmissions ? Math.ceil(committeeSubmissions?.length / ITEMS_PER_PAGE) : 1 },
+                            { length: filteredSubmissions ? Math.ceil(filteredSubmissions?.length / ITEMS_PER_PAGE) : 1 },
                             (_, i) => i + 1
                           ).map((pageIdx) => (
                             <p key={pageIdx} onClick={() => setPage(pageIdx)} className={`${page === pageIdx && "current"}`}>
@@ -370,6 +405,42 @@ export const SubmissionsListPage = () => {
         </>
       )}
 
+      <Modal
+        isShowing={openDateFilter}
+        onHide={() => setOpenDateFilter(false)}
+        titleIcon={<CalendarIcon className="mr-3" />}
+        title={t("SubmissionsTool.filterByDate")}
+      >
+        <>
+          <FormDateInput
+            name="from"
+            label={t("from")}
+            placeholder={t("selectDate")}
+            colorable
+            value={dateFilter.from}
+            onChange={(date) => setDateFilter((prev) => ({ ...prev, from: date }))}
+            helper={dateFilter.from ? moment(dateFilter.from * 1000).format("LL") : ""}
+          />
+          <FormDateInput
+            name="to"
+            label={t("to")}
+            placeholder={t("selectDate")}
+            colorable
+            value={dateFilter.to}
+            onChange={(date) => setDateFilter((prev) => ({ ...prev, to: date }))}
+            helper={dateFilter.to ? moment(dateFilter.to * 1000).format("LL") : ""}
+          />
+
+          <Button disabled={!dateFilter.from || !dateFilter.to} onClick={handleDateFiltering} expanded className="mt-3">
+            <SearchIcon className="mr-3" /> {t("SubmissionsTool.filterSubmissions")}
+          </Button>
+          {dateFilter.active && (
+            <Button styleType="text" className="mt-4" onClick={() => setDateFilter({ active: false, from: 0, to: 0 })} expanded>
+              {t("SubmissionsTool.removeDateFilter")}
+            </Button>
+          )}
+        </>
+      </Modal>
       {createPayoutFromSubmissions.isLoading && <Loading fixed extraText={`${t("creatingPayout")}...`} />}
     </StyledSubmissionsListPage>
   );

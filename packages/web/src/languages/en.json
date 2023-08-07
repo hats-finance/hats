@@ -563,6 +563,9 @@
     "editManually": "Edit manually",
     "downloadAllSubmissionsCsv": "Download all submissions (.csv)",
     "downloadSelectedSubmissionsCsv": "Download ({{num}}) submissions (.csv)",
+    "from": "From",
+    "to": "To",
+    "selectDate": "Select date",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -637,7 +640,12 @@
       "selectAll": "Select all",
       "youHaveSelectedNSubmissions": "You have selected <strong>{{num}}</strong> submissions",
       "createPayout": "Create payout",
-      "createPayoutDescription": "You will create a payout for the selected submissions. Are you sure you want to continue?"
+      "createPayoutDescription": "You will create a payout for the selected submissions. Are you sure you want to continue?",
+      "filterByDate": "Filter submissions by date",
+      "filterSubmissions": "Filter submissions",
+      "noSubmissionsFoundForThisDate": "No submissions found for that date range",
+      "removeDateFilter": "Remove date filter",
+      "filterByDateShort": "Filter by date"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
