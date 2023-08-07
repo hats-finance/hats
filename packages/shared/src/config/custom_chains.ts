@@ -19,7 +19,7 @@ export const meter = {
   },
   contracts: {
     multicall3: {
-      address: "0x99D510753552698d13D28c3B2042A37Ac6F9E38C",
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
       blockCreated: 25_763_467,
     },
   },
