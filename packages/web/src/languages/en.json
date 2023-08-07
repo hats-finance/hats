@@ -1163,6 +1163,8 @@
       "stepsToRunProjectExplanation": "Select the dev tool you are using and provide a testing and installation instructions.",
       "contractLinesOfCode": "Contract lines of code",
       "contractLinesOfCode-placeholder": "Insert lines of code here",
+      "maxAmountPerBeneficiary": "Maximum amount per beneficiary",
+      "maxAmountPerBeneficiary-placeholder": "Max. amount per beneficiary (in tokens amount)",
       "review-vault": {
         "title": "Review Vault",
         "description-1": "In order to submit the form for review by hats team.",

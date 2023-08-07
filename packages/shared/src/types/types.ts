@@ -203,6 +203,7 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
 }
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
   percentage: number; // percentage like 1000 (10%) or 8000 (80%)
+  capAmount?: number;
 }
 
 export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
