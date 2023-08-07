@@ -1,5 +1,5 @@
-import React, { ChangeEvent, forwardRef } from "react";
 import moment from "moment";
+import React, { ChangeEvent, forwardRef } from "react";
 import { StyledFormInput } from "../FormInput/styles";
 import { parseIsDirty } from "../utils";
 
@@ -10,6 +10,7 @@ type FormDateInputProps = {
   colorable?: boolean;
   disabled?: boolean;
   withTime?: boolean;
+  helper?: string;
   isDirty?: boolean | boolean[];
   error?: { message?: string; type: string };
   onChange: (data: number) => void;
@@ -20,6 +21,7 @@ export function FormDateInputComponent(
     value,
     onChange,
     name,
+    helper,
     colorable = false,
     isDirty = false,
     withTime = false,
@@ -69,6 +71,7 @@ export function FormDateInputComponent(
       </div>
 
       {error && <span className="error">{error.message}</span>}
+      {!error && helper && <span className="helper">{helper}</span>}
     </StyledFormInput>
   );
 }
