@@ -1,13 +1,17 @@
 import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import { Alert, Button, FormInput, FormSelectInputOption } from "components";
+import { Alert, Button, FormInput, FormSelectInputOption, Loading } from "components";
 import { useEnhancedFormContext } from "hooks/form";
+import useConfirm from "hooks/useConfirm";
+import { RoutePaths } from "navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
+import { useDeletePayout } from "../../../payoutsService.hooks";
 import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { usePayoutAllocation } from "../usePayoutAllocation";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
@@ -80,6 +84,8 @@ function SplitPayoutAllocationShared({
   isPayoutCreated,
 }: SplitPayoutAllocationSharedProps) {
   const { t } = useTranslation();
+  const confirm = useConfirm();
+  const navigate = useNavigate();
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
   const { control, formState, register } = methods;
@@ -96,6 +102,8 @@ function SplitPayoutAllocationShared({
       ...watchedBeneficiaries![index],
     };
   });
+
+  const deletePayout = useDeletePayout();
 
   // Sorting beneficiaries by severity
   useEffect(() => {
@@ -169,6 +177,30 @@ function SplitPayoutAllocationShared({
     return `≈ ${generalPayoutAllocation.governanceAmount?.tokens.formatted} ~ ${generalPayoutAllocation.governanceAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
+  const handleAddBeneficiary = async () => {
+    if (isFromSubmissions) {
+      if (!payout) return;
+
+      const wantsToAddBeneficiary = await confirm({
+        title: t("Payouts.addNewBeneficiary"),
+        titleIcon: <AddIcon className="mr-2" fontSize="large" />,
+        description: t("Payouts.sureToAddBeneficiaryExplanation"),
+        cancelText: t("no"),
+        confirmText: t("confirm"),
+      });
+
+      if (!wantsToAddBeneficiary) return;
+
+      const wasDeleted = await deletePayout.mutateAsync({ payoutId: payout._id });
+      if (!wasDeleted) return alert("Something went wrong, please try again later");
+
+      const selectedSubmissions = beneficiaries.map((ben) => ben.submissionData?.subId);
+      navigate(`${RoutePaths.submissions}`, { state: { selectedSubmissions } });
+    } else {
+      appendBeneficiary(createNewSplitPayoutBeneficiary());
+    }
+  };
+
   return (
     <>
       <StyledBeneficiariesTable className="mt-4 mb-5" role="table">
@@ -187,8 +219,8 @@ function SplitPayoutAllocationShared({
         ))}
       </StyledBeneficiariesTable>
 
-      {!readOnly && !isPayoutCreated && !isFromSubmissions && (
-        <Button styleType="invisible" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
+      {!readOnly && !isPayoutCreated && (
+        <Button styleType="invisible" onClick={handleAddBeneficiary}>
           <AddIcon />
           {t("Payouts.addBeneficiary")}
         </Button>
@@ -290,6 +322,8 @@ function SplitPayoutAllocationShared({
             </div>
           ))}
         </div>
+
+        {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       </StyledSplitPayoutSummary>
     </>
   );

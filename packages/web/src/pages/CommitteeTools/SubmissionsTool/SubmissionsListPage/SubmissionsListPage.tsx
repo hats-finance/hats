@@ -29,7 +29,7 @@ import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
@@ -42,6 +42,7 @@ export const SubmissionsListPage = () => {
   const confirm = useConfirm();
   const { tryAuthentication } = useSiweAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
 
@@ -105,6 +106,15 @@ export const SubmissionsListPage = () => {
   useEffect(() => {
     sessionStorage.setItem(LocalStorage.SelectedSubmissions, JSON.stringify(selectedSubmissions));
   }, [selectedSubmissions]);
+
+  // Get selected submissions from navigation state
+  useEffect(() => {
+    const navigationState = location.state as { selectedSubmissions?: string[] };
+    if (!navigationState || !navigationState.selectedSubmissions) return;
+
+    setSelectedSubmissions(navigationState.selectedSubmissions as string[]);
+    navigate(location.pathname, { replace: true });
+  }, [location, navigate]);
 
   const handleDownloadAsCsv = () => {
     if (!filteredSubmissions) return;
@@ -233,6 +243,7 @@ export const SubmissionsListPage = () => {
 
     const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
     setSelectedSubmissions([]);
+
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
   };
 
