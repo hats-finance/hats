@@ -147,6 +147,7 @@ function FormInputComponent(
             if (onKeyDown) onKeyDown(e);
             removeNotNumber(e);
           }}
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -164,6 +165,7 @@ function FormInputComponent(
             if (onKeyDown) onKeyDown(e);
             removeNotNumber(e);
           }}
+          onWheel={(e) => (e.target as HTMLElement).blur()}
           onClick={onClick}
           readOnly={readOnly}
         />
