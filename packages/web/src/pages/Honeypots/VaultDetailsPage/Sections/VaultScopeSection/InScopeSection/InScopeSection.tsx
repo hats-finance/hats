@@ -14,6 +14,7 @@ import ContractsIcon from "@mui/icons-material/ViewInAr";
 import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, CopyToClipboard, Pill, WithTooltip } from "components";
+import { disallowedElementsMarkdown } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -160,7 +161,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
           <div className="section-content">
             <MDEditor.Markdown
-              disallowedElements={["script", "iframe"]}
+              disallowedElements={disallowedElementsMarkdown}
               source={vault.description?.scope?.description}
               style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
             />

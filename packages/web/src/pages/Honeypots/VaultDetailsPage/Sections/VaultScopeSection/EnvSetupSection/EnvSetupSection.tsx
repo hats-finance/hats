@@ -1,6 +1,7 @@
 import { IVault } from "@hats-finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Pill } from "components";
+import { disallowedElementsMarkdown } from "constants/constants";
 import { useTranslation } from "react-i18next";
 
 type EnvSetupSectionProps = {
@@ -19,7 +20,7 @@ export const EnvSetupSection = ({ vault }: EnvSetupSectionProps) => {
       </div>
 
       <MDEditor.Markdown
-        disallowedElements={["script", "iframe"]}
+        disallowedElements={disallowedElementsMarkdown}
         source={vault.description?.scope?.protocolSetupInstructions.instructions}
         style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       />

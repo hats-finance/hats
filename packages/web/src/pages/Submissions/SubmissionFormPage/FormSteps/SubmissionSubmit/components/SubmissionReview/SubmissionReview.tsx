@@ -35,7 +35,7 @@ export function SubmissionReview() {
       </div>
 
       {/* <MDEditor.Markdown
-        disallowedElements={["script", "iframe"]}
+        disallowedElements={disallowedElementsMarkdown}
         source={submissionData?.submissionsDescriptions?.submissionMessage}
         style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       /> */}

@@ -1,4 +1,5 @@
 import MDEditor, { PreviewType } from "@uiw/react-md-editor";
+import { disallowedElementsMarkdown } from "constants/constants";
 import { forwardRef } from "react";
 import { parseIsDirty } from "../utils";
 import { StyledFormMDEditor } from "./styles";
@@ -36,7 +37,7 @@ export const FormMDEditorComponent = (
     >
       <MDEditor
         value={value}
-        previewOptions={{ disallowedElements: ["script", "iframe"] }}
+        previewOptions={{ disallowedElements: disallowedElementsMarkdown }}
         onChange={(value) => (disabled ? undefined : onChange(value ?? ""))}
         minHeight={200}
         height={400}

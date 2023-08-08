@@ -3,7 +3,7 @@ import LinkIcon from "@mui/icons-material/InsertLinkOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
-import { IPFS_PREFIX } from "constants/constants";
+import { IPFS_PREFIX, disallowedElementsMarkdown } from "constants/constants";
 import { RoutePaths } from "navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -84,7 +84,7 @@ export const SubmissionDetailsPage = () => {
                       <SubmissionCard submission={submission} noActions />
 
                       <MDEditor.Markdown
-                        disallowedElements={["script", "iframe"]}
+                        disallowedElements={disallowedElementsMarkdown}
                         className="submission-content"
                         source={submission?.submissionDataStructure?.content}
                       />
