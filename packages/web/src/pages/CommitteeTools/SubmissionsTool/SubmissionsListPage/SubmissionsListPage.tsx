@@ -220,7 +220,7 @@ export const SubmissionsListPage = () => {
       payoutData = {
         ...(createNewPayoutData("single") as ISinglePayoutData),
         beneficiary: submission?.submissionDataStructure?.beneficiary,
-        severity,
+        severity: severity ?? "",
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
       } as ISinglePayoutData;
     } else {
@@ -236,7 +236,7 @@ export const SubmissionsListPage = () => {
           return {
             ...createNewSplitPayoutBeneficiary(),
             beneficiary: submission?.submissionDataStructure?.beneficiary,
-            severity,
+            severity: severity ?? "",
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
           };
         }),
