@@ -270,7 +270,7 @@ export const SubmissionsListPage = () => {
         <>
           {!keystore ? (
             <>
-              <Alert className="mb-4" type="error">
+              <Alert className="mb-4" type="info">
                 {t("youNeedToOpenYourPGPTool")}
               </Alert>
               <Button onClick={() => initKeystore()}>
