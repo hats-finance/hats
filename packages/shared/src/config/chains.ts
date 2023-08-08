@@ -122,7 +122,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0xA1b532Bba529741247239492A25971Df82827Efd",
     hackersNFTContract: "0x5d3bbbB82dfb2D89B674Ebdf44F721072799e8aa",
     chain: meter,
-    subgraph: "https://graph-meter.voltswap.finance/subgraphs/name/hats",
+    subgraph: "https://graph.meter.io/subgraphs/name/hats",
     coingeckoId: "meter",
     govMultisig: "0x538B46F9966f0ef2E35a607adbEc51eDF74C25A4",
     paymentSplitterFactory: "0x0512b55C7519f5405aFD299f8AbE4E17C61F3b07",
