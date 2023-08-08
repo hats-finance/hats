@@ -31,9 +31,7 @@ export const getAuditSubmissionTexts = (
     .filter((description) => description.isEncrypted)
     .map(
       (description, idx) => `
-## [ISSUE #${idx + 1}]: ${description.title} (${
-        description.severity.includes("severity") ? description.severity : `${description.severity} severity`
-      })\n
+## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
 ##`
     )
@@ -47,9 +45,7 @@ ${description.description.trim()}
       .filter((description) => !description.isEncrypted)
       .map(
         (description, idx) => `
-## [ISSUE #${idx + 1}]: ${description.title} (${
-          description.severity.includes("severity") ? description.severity : `${description.severity} severity`
-        })\n
+## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
 ${
   description.files && description.files.length > 0
@@ -77,9 +73,7 @@ export const getBountySubmissionTexts = (
     ${descriptions
       .map(
         (description, idx) => `
-## [ISSUE #${idx + 1}]: ${description.title} (${
-          description.severity.includes("severity") ? description.severity : `${description.severity} severity`
-        })\n
+## [ISSUE #${idx + 1}]: ${description.title} (${description.severity})\n
 ${description.description.trim()}
 ##`
       )

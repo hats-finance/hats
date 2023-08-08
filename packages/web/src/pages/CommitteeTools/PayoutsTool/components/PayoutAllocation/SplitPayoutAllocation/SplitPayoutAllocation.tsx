@@ -1,13 +1,18 @@
 import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
-import { Button, FormSelectInputOption } from "components";
+import { Alert, Button, FormInput, FormSelectInputOption, Loading } from "components";
 import { useEnhancedFormContext } from "hooks/form";
-import { useContext, useMemo, useState } from "react";
+import useConfirm from "hooks/useConfirm";
+import { RoutePaths } from "navigation";
+import { useContext, useEffect, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { getSplitPayoutDataYupSchema } from "../../../PayoutFormPage/formSchema";
 import { PayoutFormContext } from "../../../PayoutFormPage/store";
+import { useDeletePayout } from "../../../payoutsService.hooks";
+import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { usePayoutAllocation } from "../usePayoutAllocation";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
@@ -79,18 +84,44 @@ function SplitPayoutAllocationShared({
   isPayoutCreated,
 }: SplitPayoutAllocationSharedProps) {
   const { t } = useTranslation();
+  const confirm = useConfirm();
+  const navigate = useNavigate();
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { control } = methods;
+  const { control, formState, register } = methods;
   const {
-    fields: beneficiaries,
+    fields,
     append: appendBeneficiary,
     remove: removeBeneficiary,
+    replace,
   } = useFieldArray({ control, name: `beneficiaries` });
+  const watchedBeneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
+  const beneficiaries = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchedBeneficiaries![index],
+    };
+  });
 
+  const deletePayout = useDeletePayout();
+
+  // Sorting beneficiaries by severity
+  useEffect(() => {
+    const sortedBeneficiariesBySeverity = [...beneficiaries].sort((a, b) => {
+      const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
+      const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
+      return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
+    });
+
+    if (JSON.stringify(sortedBeneficiariesBySeverity.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
+    replace(sortedBeneficiariesBySeverity);
+  }, [beneficiaries, severitiesOptions, replace]);
+
+  const [editPercentageToPay, setEditPercentageToPay] = useState(false);
   const [showGeneralAllocation, setShowGeneralAllocation] = useState(false);
-  const watchedBeneficiaries = useWatch({ control, name: `beneficiaries` });
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
+
+  const isFromSubmissions = hasSubmissionData(payout);
 
   /**
    * These calculations are for the general payout. A split payout behind the scenes is a single payout with a payment
@@ -101,8 +132,8 @@ function SplitPayoutAllocationShared({
 
   const severitiesSummary = useMemo(
     () =>
-      severitiesOptions?.map((severity, idx) => {
-        const severityAmount = watchedBeneficiaries.reduce((acc, beneficiary) => {
+      severitiesOptions?.map((severity) => {
+        const severityAmount = beneficiaries.reduce((acc, beneficiary) => {
           if (beneficiary.severity === severity.value) return acc + 1;
           return acc;
         }, 0);
@@ -112,18 +143,18 @@ function SplitPayoutAllocationShared({
           amount: severityAmount || "--",
         };
       }),
-    [watchedBeneficiaries, severitiesOptions]
+    [beneficiaries, severitiesOptions]
   );
 
   const sumPercentagesPayout = useMemo(
     () =>
-      +watchedBeneficiaries
+      +beneficiaries
         ?.reduce((acc, beneficiary) => {
           if (beneficiary.percentageOfPayout) return acc + Number(beneficiary.percentageOfPayout);
           return acc;
         }, 0)
         .toFixed(6),
-    [watchedBeneficiaries]
+    [beneficiaries]
   );
 
   const totalPayoutAmount = useMemo(() => {
@@ -146,10 +177,33 @@ function SplitPayoutAllocationShared({
     return `≈ ${generalPayoutAllocation.governanceAmount?.tokens.formatted} ~ ${generalPayoutAllocation.governanceAmount?.usd.formatted}`;
   }, [generalPayoutAllocation]);
 
+  const handleAddBeneficiary = async () => {
+    if (isFromSubmissions) {
+      if (!payout) return;
+
+      const wantsToAddBeneficiary = await confirm({
+        title: t("Payouts.addNewBeneficiary"),
+        titleIcon: <AddIcon className="mr-2" fontSize="large" />,
+        description: t("Payouts.sureToAddBeneficiaryExplanation"),
+        cancelText: t("no"),
+        confirmText: t("confirm"),
+      });
+
+      if (!wantsToAddBeneficiary) return;
+
+      const wasDeleted = await deletePayout.mutateAsync({ payoutId: payout._id });
+      if (!wasDeleted) return alert("Something went wrong, please try again later");
+
+      const selectedSubmissions = beneficiaries.map((ben) => ben.submissionData?.subId);
+      navigate(`${RoutePaths.submissions}`, { state: { selectedSubmissions } });
+    } else {
+      appendBeneficiary(createNewSplitPayoutBeneficiary());
+    }
+  };
+
   return (
     <>
       <StyledBeneficiariesTable className="mt-4 mb-5" role="table">
-        <SplitPayoutBeneficiaryForm vault={vault} payout={payout} index={-1} />
         {beneficiaries.map((beneficiary, idx) => (
           <SplitPayoutBeneficiaryForm
             key={beneficiary.id}
@@ -166,7 +220,7 @@ function SplitPayoutAllocationShared({
       </StyledBeneficiariesTable>
 
       {!readOnly && !isPayoutCreated && (
-        <Button styleType="invisible" onClick={() => appendBeneficiary(createNewSplitPayoutBeneficiary())}>
+        <Button styleType="invisible" onClick={handleAddBeneficiary}>
           <AddIcon />
           {t("Payouts.addBeneficiary")}
         </Button>
@@ -177,18 +231,58 @@ function SplitPayoutAllocationShared({
           {t("Payouts.sumPercentagesPayoutShouldBe100", { missingPercentage: +(100 - sumPercentagesPayout).toFixed(6) })}
         </p>
       )}
-      <StyledSplitPayoutSummary className="mt-3">
-        <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
-          <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
-          <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
-        </div>
+
+      <StyledSplitPayoutSummary className="mt-4">
+        {!isPayoutCreated && (
+          <>
+            <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
+              <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
+              <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
+            </div>
+            <hr />
+          </>
+        )}
+        {
+          <div>
+            {!isPayoutCreated && (
+              <Button onClick={() => setEditPercentageToPay((prev) => !prev)} styleType="text" className="mb-2" noPadding>
+                {t("editManually")}
+              </Button>
+            )}
+            <div className={`item ${formState?.errors?.percentageToPay?.type.includes("is-percentage-between") ? "error" : ""}`}>
+              <p>{t("Payouts.percentageOfTheVaultToPay")}:</p>
+              {editPercentageToPay ? (
+                <FormInput
+                  {...register("percentageToPay")}
+                  label={t("Payouts.percentageToPay")}
+                  placeholder={t("Payouts.percentageToPayPlaceholder")}
+                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+                  disabled={isPayoutCreated}
+                  type="number"
+                  colorable
+                  className="w-40"
+                />
+              ) : (
+                <p>{percentageToPayOfTheVault ? `${percentageToPayOfTheVault}%` : "--"}</p>
+              )}
+            </div>
+
+            {formState?.errors?.percentageToPay && formState.errors.percentageToPay.type.includes("is-percentage-between") && (
+              <Alert className="mt-3" type="error">
+                {t("Payouts.cantPayMoreThanMaxBounty", { maxBounty: vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100 })}
+              </Alert>
+            )}
+            <hr className="mt-4" />
+          </div>
+        }
         <div className="item">
-          <p>{t("Payouts.totalNumberPayouts")}:</p>
+          <p>{t("Payouts.totalNumberBeneficiaries")}:</p>
           <p>{beneficiaries.length}</p>
         </div>
         <div className="item bold">
           <p onClick={() => setShowGeneralAllocation((prev) => !prev)}>
-            {t("Payouts.totalPayoutAmount")}: <span>{showGeneralAllocation ? `[${t("seeLess")}]` : `[${t("seeMore")}]`}</span>
+            {t("Payouts.totalPayoutAmount")}:{" "}
+            <span className="clicklable">{showGeneralAllocation ? `[${t("seeLess")}]` : `[${t("seeMore")}]`}</span>
           </p>
           <p>{totalPayoutAmount ?? "--"}</p>
         </div>
@@ -228,6 +322,8 @@ function SplitPayoutAllocationShared({
             </div>
           ))}
         </div>
+
+        {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       </StyledSplitPayoutSummary>
     </>
   );

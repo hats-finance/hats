@@ -1,6 +1,7 @@
 import { arbitrum, avalanche, bsc, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
 import axios from "axios";
 import { utils } from "ethers";
+import { meter } from "../config";
 import { isServer } from "./general.utils";
 
 export type IGnosisSafeInfoResponse = { isSafeAddress: boolean; owners: string[]; threshold: number };
@@ -47,6 +48,11 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
   }
 };
 
+export const getGnosisSafeTxServiceBaseUrl = (chainId: number): string => {
+  if (chainId === meter.id) return `https://safe-gateway.meter.io/txs`;
+  return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global`;
+};
+
 export const getSafeWalletConnectLink = (address: string, chainId: number): string | undefined => {
   const safeDashboardLink = getSafeDashboardLink(address, chainId);
   if (!safeDashboardLink) return undefined;
@@ -77,7 +83,7 @@ export const getSafeHomeLink = (address: string, chainId: number): string | unde
 const getGnosisTxsApiEndpoint = (txHash: string, chainId: number): string | undefined => {
   try {
     if (!chainId) return "";
-    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/multisig-transactions/${txHash}`;
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/multisig-transactions/${txHash}`;
   } catch (error) {
     return undefined;
   }
@@ -87,7 +93,7 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
   try {
     if (!chainId) return "";
     const checksummedSafeAddress = utils.getAddress(safeAddress);
-    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/safes/${checksummedSafeAddress}`;
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/safes/${checksummedSafeAddress}`;
   } catch (error) {
     return undefined;
   }
@@ -96,7 +102,7 @@ const getGnosisSafeStatusApiEndpoint = (safeAddress: string, chainId: number): s
 const getAddressSafesApiEndpoint = (walletAddress: string, chainId: number): string | undefined => {
   try {
     if (!chainId) return "";
-    return `https://safe-transaction-${getGnosisChainNameByChainId(chainId)}.safe.global/api/v1/owners/${walletAddress}/safes`;
+    return `${getGnosisSafeTxServiceBaseUrl(chainId)}/api/v1/owners/${walletAddress}/safes`;
   } catch (error) {
     return undefined;
   }

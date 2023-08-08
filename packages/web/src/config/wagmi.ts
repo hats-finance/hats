@@ -1,25 +1,26 @@
 import { INFURA_API_KEY, appChains } from "settings";
-import { configureChains, createClient } from "wagmi";
+import { Chain, configureChains, createClient } from "wagmi";
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import { infuraProvider } from "wagmi/providers/infura";
+import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains(
   Object.values(appChains).map((chainInfo) => chainInfo.chain),
   [
     infuraProvider({ apiKey: INFURA_API_KEY }),
-    publicProvider(),
-    // jsonRpcProvider({
-    //   rpc: (selectedChain) => {
-    //     const supportedChains = Object.keys(appChains);
-    //     const isSupportedChain = supportedChains.includes(`${selectedChain.id}`);
+    jsonRpcProvider({
+      rpc: (selectedChain: Chain) => {
+        const supportedChains = Object.keys(appChains);
+        const isSupportedChain = supportedChains.includes(`${selectedChain.id}`);
 
-    //     if (isSupportedChain) return { http: appChains[selectedChain.id].endpoint };
-    //     return { http: defaultChain.endpoint };
-    //   },
-    // }),
+        if (isSupportedChain) return { http: appChains[selectedChain.id].provider };
+        return { http: "" };
+      },
+    }),
+    publicProvider(),
   ]
 );
 

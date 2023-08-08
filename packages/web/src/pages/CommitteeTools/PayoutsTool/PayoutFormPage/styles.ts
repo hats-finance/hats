@@ -66,15 +66,25 @@ export const StyledPayoutFormPage = styled.div`
 
 export const StyledPayoutForm = styled.div`
   .form-container {
-    background: var(--background-3);
-    border-radius: 4px;
-    padding: ${getSpacing(2.5)};
-    padding-top: ${getSpacing(3.5)};
+    /* background: var(--background-3); */
+    /* padding-top: ${getSpacing(3.5)}; */
 
     .subtitle {
       text-transform: uppercase;
       font-weight: 700;
       font-size: var(--small);
+    }
+
+    .beneficiary {
+      display: flex;
+      padding-bottom: ${getSpacing(3)};
+
+      .input {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+      }
     }
 
     .reasoningAlert {
@@ -105,6 +115,30 @@ export const StyledPayoutForm = styled.div`
       display: flex;
       gap: ${getSpacing(2)};
     }
+
+    .sub-container {
+      padding: ${getSpacing(2.5)};
+      padding-bottom: 0;
+      border: 1px solid var(--grey-600);
+    }
+
+    .rewards-constraints {
+      .item {
+        display: flex;
+        align-items: flex-start;
+        gap: ${getSpacing(2)};
+        margin-top: ${getSpacing(2)};
+
+        .pill {
+          margin-top: ${getSpacing(2)};
+          width: 26%;
+        }
+
+        .input {
+          width: 37%;
+        }
+      }
+    }
   }
 
   .buttons {
@@ -112,7 +146,6 @@ export const StyledPayoutForm = styled.div`
     display: flex;
     justify-content: space-between;
     gap: ${getSpacing(2)};
-    border-top: 1px solid var(--grey-600);
     padding-top: ${getSpacing(2)};
     margin-top: ${getSpacing(5)};
 

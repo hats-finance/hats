@@ -17,6 +17,7 @@ export const StyledFormSelectInputItem = styled.label`
   }
 
   .info {
+    width: calc(100% - ${getSpacing(5)});
     display: flex;
     align-items: center;
     gap: ${getSpacing(1)};
@@ -28,8 +29,31 @@ export const StyledFormSelectInputItem = styled.label`
       object-fit: contain;
     }
 
-    span {
-      padding-left: ${getSpacing(1)};
+    .text {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      span {
+        padding-left: ${getSpacing(1)};
+
+        &.helper {
+          width: 100%;
+          text-overflow: ellipsis;
+          font-size: var(--xxsmall);
+          display: block;
+          overflow: hidden;
+          color: var(--grey-500);
+          margin-top: ${getSpacing(0.5)};
+
+          .vault-address {
+            display: flex;
+            align-items: center;
+            gap: ${getSpacing(0.5)};
+          }
+        }
+      }
     }
   }
 

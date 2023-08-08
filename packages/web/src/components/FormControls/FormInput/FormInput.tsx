@@ -25,6 +25,7 @@ type FormInputProps = {
   noMargin?: boolean;
   selectAllOnClick?: boolean;
   prefixIcon?: JSX.Element;
+  maxDecimals?: number;
   error?: { message?: string; type: string };
 } & React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> &
   React.DetailedHTMLProps<React.TextareaHTMLAttributes<HTMLTextAreaElement>, HTMLTextAreaElement>;
@@ -40,6 +41,7 @@ function FormInputComponent(
     disabled = false,
     noMargin = false,
     isDirty = false,
+    maxDecimals,
     selectAllOnClick = false,
     rows = DEFAULT_ROWS,
     label,
@@ -48,6 +50,7 @@ function FormInputComponent(
     helper,
     readOnly,
     className,
+    onKeyDown,
     ...props
   }: FormInputProps,
   ref
@@ -65,10 +68,25 @@ function FormInputComponent(
     inputType === "checkbox" || inputType === "toggle" || inputType === "radio" ? (localRef.current as any)?.checked : undefined;
 
   const handleOnChange = (e: ChangeEvent<any>) => {
-    if (props.onChange) props.onChange(e);
+    if (inputType === "number") {
+      const value = e.target.value;
 
-    // Handle rerender, only with checkboxes
-    if (isCheckOrRadio) setChanged((prev) => !prev);
+      if (maxDecimals !== undefined) {
+        const numDecimals = value.split(".")[1]?.length || value.split(",")[1]?.length || 0;
+        if (numDecimals > maxDecimals) {
+          const newValue = value.slice(0, value.length - 1);
+          localRef.current!.value = newValue;
+          if (props.onChange) props.onChange({ ...e, target: { ...e.target, value: newValue } });
+          return;
+        }
+      }
+      if (props.onChange) props.onChange(e);
+    } else {
+      if (props.onChange) props.onChange(e);
+
+      // Handle rerender, only with checkboxes
+      if (isCheckOrRadio) setChanged((prev) => !prev);
+    }
   };
 
   const handleOnPaste = () => {
@@ -109,6 +127,9 @@ function FormInputComponent(
           ref={setRef}
           rows={rows}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -122,7 +143,10 @@ function FormInputComponent(
           type="number"
           ref={setRef}
           onChange={handleOnChange}
-          onKeyDown={removeNotNumber}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+            removeNotNumber(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -136,7 +160,10 @@ function FormInputComponent(
           type="number"
           ref={setRef}
           onChange={handleOnChange}
-          onKeyDown={removeNotNumber}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+            removeNotNumber(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -150,6 +177,9 @@ function FormInputComponent(
           type="checkbox"
           ref={setRef}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -163,6 +193,9 @@ function FormInputComponent(
           type={inputType}
           ref={setRef}
           onChange={handleOnChange}
+          onKeyDown={(e) => {
+            if (onKeyDown) onKeyDown(e);
+          }}
           onClick={onClick}
           readOnly={readOnly}
         />
@@ -187,13 +220,13 @@ function FormInputComponent(
       className={className}
     >
       <div className="main-container">
-        {label && (
+        {label !== undefined && (
           <label htmlFor={props.name}>
             <span className="checkbox-inner">
               <span className="checkbox-switch" />
             </span>
 
-            {label}
+            <span>{label}</span>
           </label>
         )}
 

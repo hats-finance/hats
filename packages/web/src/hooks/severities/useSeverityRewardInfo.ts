@@ -6,7 +6,7 @@ import { generateColorsArrayInBetween } from "utils/colors.utils";
 const INITIAL_SEVERITY_COLOR = "#24E8C5";
 const FINAL_SEVERITY_COLOR = "#6652F7";
 
-export const getSeveritiesColorsArray = (vault: IVault): string[] => {
+export const getSeveritiesColorsArray = (vault: IVault | undefined): string[] => {
   if (!vault || !vault?.description?.severities) return [];
 
   return generateColorsArrayInBetween(INITIAL_SEVERITY_COLOR, FINAL_SEVERITY_COLOR, vault.description.severities.length ?? 4);
@@ -23,6 +23,8 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
 
   if (vault.version === "v2") {
     const severity = vault.description.severities[severityIndex];
+    if (!severity) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
+
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     // const maxBountyPercentage = Number(vault.maxBounty) / 10000; // Number between 0 and 1;
     // TODO: remove this when we have the new vault contract version
@@ -47,6 +49,8 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     return { rewardPrice, rewardPercentage, rewardColor };
   } else {
     const severity = vault.description.severities[severityIndex];
+    if (!severity) return { rewardPrice: 0, rewardPercentage: 0, rewardColor: INITIAL_SEVERITY_COLOR };
+
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     const rewardPercentage = (Number(vault.rewardsLevels[severity.index]) / 10000) * 100;
 

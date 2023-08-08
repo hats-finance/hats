@@ -1,234 +1,175 @@
-import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats-finance/shared";
-import GenerateIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
-import DownloadIcon from "@mui/icons-material/SaveAltOutlined";
-import { Button, FormInput, FormJSONCSVFileInput } from "components";
+import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
-import useConfirm from "hooks/useConfirm";
-import { useContext, useRef, useState } from "react";
+import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
+import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
 import { PayoutFormContext } from "../../store";
 import { StyledPayoutForm } from "../../styles";
 
-type CSVBeneficiary = { beneficiary: string; severity: string; percentageToPay: number | string };
-
 export const SplitPayoutForm = () => {
   const { t } = useTranslation();
-  const confirm = useConfirm();
-  const { vault, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
+  const { vault, isPayoutCreated, payout } = useContext(PayoutFormContext);
 
-  const splitAllocationRef = useRef<any>(null);
-  const scrollToAllocation = () => splitAllocationRef?.current?.scrollIntoView();
+  const severityColors = getSeveritiesColorsArray(vault);
+  const [editSeverityRewards, setEditSeverityRewards] = useState(false);
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { register, setValue, getValues } = methods;
+  const { control, register, setValue, getValues, formState, trigger } = methods;
 
-  const [beneficiariesToImport, setBeneficiariesToImport] = useState<CSVBeneficiary[] | undefined>();
-  const [csvFileInputKey, setCsvFileInputKey] = useState(1);
+  const { fields } = useFieldArray({ name: "rewardsConstraints", control });
+  const watchConstraints = useWatch({ control, name: `rewardsConstraints`, defaultValue: [] });
+  const rewardsConstraints = fields.map((field, index) => {
+    return {
+      ...field,
+      ...watchConstraints![index],
+    };
+  });
 
-  const handleDownloadCsvTemplate = () => {
-    if (!severitiesOptions) return;
+  useEffect(() => {
+    trigger("rewardsConstraints");
+  }, [watchConstraints, trigger]);
 
-    const csvString = [
-      ["beneficiary", "severity", "percentageToPay"],
-      ...severitiesOptions.map((severity, idx) => [
-        `0x000000000000000000000000000000000000000${idx}`,
-        severity.value.toLowerCase(),
-        (100 / severitiesOptions.length).toFixed(2),
-      ]),
-    ]
-      .map((e) => e.join(","))
-      .join("\n");
+  const watchBeneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
+  const watchedSeverities = useWatch({
+    control,
+    name: watchBeneficiaries.map((_, idx) => `beneficiaries.${idx}.severity` as any),
+  });
 
-    const blob = new Blob([csvString], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.setAttribute("href", url);
-    a.setAttribute("download", "hats-beneficiaries-template.csv");
-    a.click();
-  };
+  const triggerAutocalculate = useCallback(() => {
+    if (!watchConstraints) return;
+    if (!vault || !vault.amountsInfo) return;
 
-  const handleChangeCsvFile = (csvString: string) => {
-    const beneficiariesOnFile = JSON.parse(csvString) as CSVBeneficiary[] | undefined;
-
-    const isArray = Array.isArray(beneficiariesOnFile) && beneficiariesOnFile.length > 0;
-    const validFormat = beneficiariesOnFile?.every((item) => item.beneficiary && item.severity && item.percentageToPay);
-
-    if (!isArray || !validFormat) return setBeneficiariesToImport([]);
-    setBeneficiariesToImport(
-      // Group and sum percentageToPay by beneficiary address
-      beneficiariesOnFile.reduce((acc, item) => {
-        const beneficiary = acc.find((e) => e.beneficiary === item.beneficiary);
-        if (beneficiary) {
-          beneficiary.percentageToPay = Number(beneficiary.percentageToPay) + Number(item.percentageToPay);
-        } else {
-          item.percentageToPay = Number(item.percentageToPay);
-          acc.push(item);
-        }
-        return acc;
-      }, [] as CSVBeneficiary[])
-    );
-  };
-
-  const handleImportBeneficiaries = () => {
-    if (!beneficiariesToImport || beneficiariesToImport.length === 0 || !severitiesOptions) return;
     const beneficiaries = getValues("beneficiaries");
 
-    const newBeneficiaries: ISplitPayoutBeneficiary[] = [];
+    const calcs = autocalculateMultiPayout(beneficiaries, watchConstraints, vault.amountsInfo.depositedAmount.tokens);
+    if (!calcs) return;
 
-    // Add existing and non-empty beneficiaries
-    for (const beneficiary of beneficiaries) {
-      if (beneficiary.beneficiary) newBeneficiaries.push(beneficiary);
+    for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
+      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
     }
 
-    // Append new beneficiaries
-    for (const beneficiaryToImport of beneficiariesToImport) {
-      const severityFound = severitiesOptions.find((sev) =>
-        sev.value.toLowerCase().includes(beneficiaryToImport.severity.toLowerCase())
-      );
+    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
+  }, [getValues, setValue, watchConstraints, vault]);
 
-      const vaultSeverities = vault?.description?.severities ?? [];
-      const selectedSeverityIndex = vaultSeverities.findIndex(
-        (severity) => severity.name.toLowerCase() === severityFound?.value?.toLowerCase()
-      );
-      const selectedSeverityData = selectedSeverityIndex !== -1 ? vaultSeverities[selectedSeverityIndex] : undefined;
+  const stopAutocalculation = useWatch({ control, name: `stopAutocalculation` });
 
-      newBeneficiaries.push({
-        beneficiary: beneficiaryToImport.beneficiary,
-        severity: severityFound ? severityFound.value.toLowerCase() : "",
-        percentageOfPayout: Number(beneficiaryToImport.percentageToPay).toString() ?? "",
-        nftUrl: selectedSeverityData ? selectedSeverityData["nft-metadata"].image : "",
+  // If constraints or severities changed, autocalculate
+  useEffect(() => {
+    if (isPayoutCreated || stopAutocalculation) return;
+    triggerAutocalculate();
+  }, [watchConstraints, watchedSeverities, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
+
+  useEffect(() => {
+    if (!vault || !vault.description || !payout) return;
+
+    const severities = vault.description.severities;
+    const constraints = (payout?.payoutData as ISplitPayoutData).rewardsConstraints ?? [];
+
+    for (const severity of severities) {
+      if (constraints.find((constraint) => constraint.severity === severity.name.toLowerCase())) continue;
+
+      constraints.push({
+        severity: severity.name.toLowerCase(),
+        capAmount: "",
+        maxReward: (severity as IVulnerabilitySeverityV2).percentage.toString(),
       });
     }
 
-    scrollToAllocation();
-    setValue("beneficiaries", newBeneficiaries);
-    setBeneficiariesToImport(undefined);
-    setCsvFileInputKey((prev) => prev + 1);
-  };
-
-  const handleGenerateExplanationTemplate = async () => {
-    const wantsToGenerate = await confirm({
-      title: t("Payouts.generateExplanation"),
-      titleIcon: <GenerateIcon className="mr-2" fontSize="large" />,
-      description: t("Payouts.generateExplanationDescription"),
-      cancelText: t("cancel"),
-      confirmText: t("generate"),
-    });
-    if (!wantsToGenerate) return;
-
-    const beneficiariesToUse = getValues("beneficiaries");
-
-    let explanationString = "";
-    for (const [idx, item] of beneficiariesToUse.entries()) {
-      const severityFound = severitiesOptions?.find((sev) => sev.value.toLowerCase().includes(item.severity.toLowerCase()));
-      const beneficiaryExplanation = `#${idx + 1} Beneficiary: ${item.beneficiary}
-Severity: ${severityFound?.label}
-Reasoning: Type your explanation here...\n\n`;
-
-      explanationString = explanationString.concat(beneficiaryExplanation);
-    }
-
-    setValue("explanation", explanationString);
-  };
+    setTimeout(() => setValue("rewardsConstraints", constraints), 500);
+  }, [vault, payout, setValue]);
 
   return (
     <StyledPayoutForm>
-      {!isPayoutCreated && (
-        <div className="form-container">
-          <p className="subtitle">{t("Payouts.uploadCsv")}</p>
-          <p className="mt-3">{t("Payouts.uploadCsvExplanation")}</p>
+      <div className="form-container">
+        <div className="sub-container">
+          <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
 
-          <Button className="mt-2" onClick={handleDownloadCsvTemplate} styleType="invisible" disabled={!severitiesOptions}>
-            <DownloadIcon className="mr-3" />
-            {t("Payouts.downloadTemplateFile")}
-          </Button>
+          <FormInput
+            {...register("title")}
+            label={t("Payouts.payoutName")}
+            placeholder={t("Payouts.payoutNamePlaceholder")}
+            disabled={isPayoutCreated}
+            colorable
+            className="w-60"
+          />
 
-          <div className="mt-5 mb-5">
-            <FormJSONCSVFileInput
-              key={csvFileInputKey}
-              small
-              name="split-payout-csv"
-              fileType="CSV"
-              label={t("Payouts.selectCsvFile")}
-              onChange={(e) => handleChangeCsvFile(e.target.value)}
-            />
-            {beneficiariesToImport && beneficiariesToImport.length > 0 && (
-              <p
-                className="mt-3"
-                dangerouslySetInnerHTML={{
-                  __html: t("Payouts.fileContainsNumBeneficiaries", { numBeneficiaries: beneficiariesToImport.length }),
-                }}
+          {/* {!isFromSubmissions && (
+            <>
+              <p className="mt-3 mb-2" ref={splitAllocationRef}>
+                {t("Payouts.percentageToPayExplanation", { maxBounty: `${Number(vault?.maxBounty) / 100 ?? 100}%` })}
+              </p>
+
+              <FormInput
+                {...register("percentageToPay")}
+                label={t("Payouts.percentageToPay")}
+                placeholder={t("Payouts.percentageToPayPlaceholder")}
+                helper={t("Payouts.percentageOfTheTotalVaultToPay")}
+                disabled={isPayoutCreated}
+                type="number"
+                colorable
+                className="w-40"
               />
-            )}
-            {beneficiariesToImport && beneficiariesToImport.length === 0 && (
-              <p className="mt-2 error">{t("Payouts.csvDoesNotHaveAnyBeneficiary")}</p>
-            )}
-          </div>
+            </>
+          )} */}
 
-          <div className="buttons no-line end">
-            <Button onClick={handleImportBeneficiaries} disabled={!beneficiariesToImport || beneficiariesToImport.length === 0}>
-              {t("Payouts.importBeneficiaries")}
+          {/* Reward constraints */}
+          <br />
+          <p className="subtitle mb-2">{t("Payouts.rewardsConstraints")}</p>
+          <div className="rewards-constraints">
+            <Button onClick={() => setEditSeverityRewards((prev) => !prev)} styleType="text" className="mb-2" noPadding>
+              {t("Payouts.editSeverityRewards")}
             </Button>
+            {rewardsConstraints.map((constraint, index) => (
+              <div className="item" key={index}>
+                <div className="pill">
+                  <Pill textColor={severityColors[index]} isSeverity text={constraint.severity} />
+                </div>
+                <FormInput
+                  {...register(`rewardsConstraints.${index}.maxReward`)}
+                  className="input"
+                  label={t("VaultEditor.percentage-bounty")}
+                  placeholder={t("VaultEditor.percentage-bounty")}
+                  disabled={isPayoutCreated || !editSeverityRewards}
+                  type="number"
+                  colorable
+                />
+                <FormInput
+                  {...register(`rewardsConstraints.${index}.capAmount`)}
+                  className="input"
+                  label={t("Payouts.maxRewardPerBeneficiary")}
+                  placeholder={t("Payouts.maxRewardPerBeneficiaryPlaceholder", { token: vault?.stakingTokenSymbol })}
+                  disabled={isPayoutCreated}
+                  type="number"
+                  colorable
+                />
+              </div>
+            ))}
+
+            {formState?.errors?.rewardsConstraints &&
+              (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === "sumShouldBe100") && (
+                <Alert className="mb-2" type="error">
+                  {t("Payouts.severityRewardsSumShouldBe100")}
+                </Alert>
+              )}
           </div>
         </div>
-      )}
 
-      <div className="form-container mt-5">
-        <p className="subtitle mb-5">{t("Payouts.payoutDetails")}</p>
-
-        <FormInput
-          {...register("title")}
-          label={t("Payouts.payoutName")}
-          placeholder={t("Payouts.payoutNamePlaceholder")}
-          disabled={isPayoutCreated}
-          colorable
-          className="w-60"
-        />
-
-        <p className="mt-3 mb-2" ref={splitAllocationRef}>
-          {t("Payouts.percentageToPayExplanation", { maxBounty: `${Number(vault?.maxBounty) / 100 ?? 100}%` })}
-        </p>
-
-        <FormInput
-          {...register("percentageToPay")}
-          label={t("Payouts.percentageToPay")}
-          placeholder={t("Payouts.percentageToPayPlaceholder")}
-          helper={t("Payouts.percentageOfTheTotalVaultToPay")}
-          disabled={isPayoutCreated}
-          type="number"
-          colorable
-          className="w-40"
-        />
-
-        <p className="mt-5">{t("Payouts.editPayoutOfEachBeneficiary")}</p>
-
-        <SplitPayoutAllocation />
-      </div>
-
-      <div className="form-container mt-5">
-        <p className="subtitle">{t("Payouts.reasoning")}</p>
-        <p className="mt-2">{t("Payouts.reasoningDescription")}</p>
-        <p className="mt-2 mb-5 reasoningAlert">
-          <span>{t("pleaseNote")}:</span> {t("thisInformationWillAppearOnChain")}
-        </p>
-
+        <p className="mt-5 mb-4">{t("Payouts.editPayoutOfEachBeneficiary")}</p>
         {!isPayoutCreated && (
-          <Button styleType="invisible" className="mb-3" onClick={handleGenerateExplanationTemplate}>
-            <GenerateIcon className="mr-3" />
-            {t("Payouts.generateSplitExplanationTemplate")}
-          </Button>
+          <FormInput
+            {...register(`stopAutocalculation`)}
+            label={t("Payouts.stopAutocalculation")}
+            type="toggle"
+            colorable
+            noMargin
+            disabled={isPayoutCreated}
+          />
         )}
-
-        <FormInput
-          {...register("explanation")}
-          label={t("Payouts.explanation")}
-          placeholder={t("Payouts.explanationPlaceholder")}
-          disabled={isPayoutCreated}
-          type="textarea"
-          rows={(getValues("beneficiaries")?.length ?? 1) * 4.5}
-          colorable
-        />
+        <SplitPayoutAllocation />
       </div>
     </StyledPayoutForm>
   );

@@ -181,6 +181,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
+                      maxDecimals={2}
                       min={0}
                       max={100}
                       colorable
@@ -216,6 +217,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
+                      maxDecimals={2}
                       min={0}
                       max={100}
                       colorable
@@ -251,6 +253,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
+                      maxDecimals={2}
                       min={0}
                       max={10}
                       colorable

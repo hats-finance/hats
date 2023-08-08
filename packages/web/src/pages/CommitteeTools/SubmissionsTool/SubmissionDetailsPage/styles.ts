@@ -47,5 +47,8 @@ export const StyledSubmissionDetailsPage = styled.div`
 
   .buttons {
     margin-top: ${getSpacing(3)};
+    display: flex;
+    align-items: center;
+    gap: ${getSpacing(2)};
   }
 `;

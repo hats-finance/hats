@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-const navlinkStyles = ({ sub, hidden }) => css`
+const navlinkStyles = ({ hidden }) => css`
   padding: ${getSpacing(2)} ${getSpacing(4)} ${getSpacing(2)} ${getSpacing(2)};
   border-left: ${getSpacing(0.8)} solid transparent;
   margin: ${getSpacing(2)} 0px;
@@ -18,10 +18,10 @@ const navlinkStyles = ({ sub, hidden }) => css`
     border-left: none;
     border-bottom: ${getSpacing(0.4)} solid transparent;
     padding: ${getSpacing(1.5)} ${getSpacing(3)};
-    ${!sub &&
-    css`
+
+    &:not(.sub) {
       flex-direction: column;
-    `}
+    }
   }
 
   @media ((min-width: ${breakpointsDefinition.mobile}) and (max-height: 800px)) {
@@ -84,8 +84,7 @@ const navlinkStyles = ({ sub, hidden }) => css`
     }
   }
 
-  ${sub &&
-  css`
+  &.sub {
     border-left-width: 0 !important;
     border-bottom-width: ${getSpacing(0.2)} !important;
     border-bottom-style: solid;
@@ -96,7 +95,7 @@ const navlinkStyles = ({ sub, hidden }) => css`
     &:not(.active) {
       border-bottom-style: none;
     }
-  `}
+  }
 
   ${hidden &&
   css`
@@ -105,18 +104,14 @@ const navlinkStyles = ({ sub, hidden }) => css`
     }
   `}
 
-&.active {
+  &.active {
     visibility: visible;
   }
 `;
 
-export const StyledNavLink = styled(NavLink)<{ sub?: boolean; hidden?: boolean }>(({ sub, hidden }) =>
-  navlinkStyles({ sub, hidden })
-);
+export const StyledNavLink = styled(NavLink)<{ hidden?: boolean }>(({ hidden }) => navlinkStyles({ hidden }));
 
-export const StyledNavLinkNoRouter = styled.div<{ sub?: boolean; hidden?: boolean }>(({ sub, hidden }) =>
-  navlinkStyles({ sub, hidden })
-);
+export const StyledNavLinkNoRouter = styled.div<{ hidden?: boolean }>(({ hidden }) => navlinkStyles({ hidden }));
 
 export const StyledNavLinksList = styled.div`
   .committee-tools {

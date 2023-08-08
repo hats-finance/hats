@@ -5,6 +5,11 @@ import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from 
 import { IPayoutData, IPayoutResponse, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, PayoutType } from "../types";
 import { ChainsConfig } from "./../config/chains";
 
+function truncate(num: number, fixed: number) {
+  const regex = new RegExp("^-?\\d+(?:.\\d{0," + (fixed || -1) + "})?");
+  return num.toString().match(regex)?.[0] ?? num.toString();
+}
+
 export const createNewPayoutData = (type: PayoutType): IPayoutData => {
   if (type === "single") {
     return {
@@ -104,12 +109,26 @@ export const getExecutePayoutSafeTransaction = async (
 
     const payoutData = payout.payoutData as ISplitPayoutData;
 
+    // Join same beneficiaries and sum percentages
+    const beneficiariesJointPercentage = payoutData.beneficiaries.reduce((acc, beneficiary) => {
+      const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
+      if (existingBeneficiary) {
+        existingBeneficiary.percentageOfPayout = truncate(
+          +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
+          4
+        );
+      } else {
+        acc.push(beneficiary);
+      }
+      return acc;
+    }, [] as ISplitPayoutBeneficiary[]);
+
     // Payout payment splitter creation TX
     const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
       "createHATPaymentSplitter",
       [
-        payoutData.beneficiaries.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
-        payoutData.beneficiaries.map((beneficiary) =>
+        beneficiariesJointPercentage.map((beneficiary) => beneficiary.beneficiary as `0x${string}`),
+        beneficiariesJointPercentage.map((beneficiary) =>
           BigNumber.from(Math.round(Number(beneficiary.percentageOfPayout) * 10 ** 10))
         ),
       ]

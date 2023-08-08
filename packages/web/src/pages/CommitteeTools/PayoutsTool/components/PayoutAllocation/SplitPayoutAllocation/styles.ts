@@ -9,40 +9,62 @@ export const StyledBeneficiariesTable = styled.div`
   gap: ${getSpacing(2)};
 `;
 
-export const StyledSplitPayoutBeneficiaryForm = styled.div<{ isHeader: boolean }>(
-  ({ isHeader }) => css`
+export const StyledSplitPayoutBeneficiaryForm = styled.div(
+  () => css`
     display: flex;
-    align-items: ${isHeader ? "center" : "baseline"};
+    flex-direction: column;
     gap: ${getSpacing(1.5)};
+    background: var(--background-3);
+    padding: ${getSpacing(2.5)};
+    position: relative;
 
-    ${isHeader &&
-    css`
-      font-size: var(--xxsmall);
-      color: var(--grey-500);
-      text-align: center;
-    `}
-
-    .cell {
-      position: relative;
+    .beneficiary {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      width: calc(5% / 2);
+      border-bottom: 1px solid var(--grey-600);
+      padding-bottom: ${getSpacing(3)};
 
-      &.small {
-        width: 15%;
+      .w-100 {
+        width: 100%;
       }
 
-      &.big {
-        width: 25%;
+      .input {
+        width: 70%;
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
       }
 
-      .more-icon {
+      .more-button {
+        position: absolute;
+        top: ${getSpacing(2.5)};
+        right: ${getSpacing(2.5)};
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.2s;
 
         &:hover {
-          color: var(--secondary);
+          opacity: 0.8;
+        }
+      }
+    }
+
+    .title {
+      font-weight: 700;
+    }
+
+    .form {
+      .controls {
+        padding-top: ${getSpacing(1.5)};
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: ${getSpacing(1.5)};
+
+        > :nth-child(1) {
+          width: 34%;
+        }
+
+        > :not(:nth-child(1)) {
+          width: 22%;
         }
       }
     }
@@ -54,15 +76,19 @@ export const StyledSplitPayoutSummary = styled.div`
   display: flex;
   flex-direction: column;
   gap: ${getSpacing(2)};
-  border-top: 2px solid var(--grey-600);
-  border-bottom: 2px solid var(--grey-600);
-  padding: ${getSpacing(2)} 0;
+  border: 1px solid var(--grey-600);
+  padding: ${getSpacing(2.5)};
+
+  hr {
+    border: 1px solid var(--grey-600);
+    border-top: 0;
+  }
 
   .item {
     width: 100%;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: baseline;
 
     &.error {
       color: var(--error-red);
@@ -76,7 +102,7 @@ export const StyledSplitPayoutSummary = styled.div`
       color: var(--grey-500);
     }
 
-    span {
+    span.clicklable {
       cursor: pointer;
       text-transform: uppercase;
 
