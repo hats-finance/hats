@@ -18,6 +18,7 @@ import {
   Seo,
   VaultInfoCard,
 } from "components";
+import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ExecutePayoutContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -133,6 +134,11 @@ export const PayoutStatusPage = () => {
     checkCommitteeMember();
   }, [address, chain, vault]);
 
+  const goToDescriptionHashContent = () => {
+    if (!payout?.payoutDescriptionHash) return;
+    window.open(`${IPFS_PREFIX}/${payout.payoutDescriptionHash}`, "_blank");
+  };
+
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
 
@@ -189,6 +195,12 @@ export const PayoutStatusPage = () => {
     <>
       <Seo title={t("seo.payoutsDashboardTitle")} />
       <StyledPayoutStatusPage className="content-wrapper-md">
+        {payout?.payoutDescriptionHash && (
+          <p className="descriptionHash" onClick={goToDescriptionHashContent}>
+            {payout?.payoutDescriptionHash}
+          </p>
+        )}
+
         <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
 
         <div className="title-container">

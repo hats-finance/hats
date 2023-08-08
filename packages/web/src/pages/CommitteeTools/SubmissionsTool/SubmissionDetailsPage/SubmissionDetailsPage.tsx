@@ -86,10 +86,12 @@ export const SubmissionDetailsPage = () => {
                       <MDEditor.Markdown className="submission-content" source={submission?.submissionDataStructure?.content} />
 
                       <div className="buttons">
-                        <Button onClick={openSubmissionData}>{t("seeSubmissionData")}</Button>
-                        <Button filledColor="secondary" onClick={openTxOnChain}>
+                        <Button onClick={openTxOnChain}>
                           <LinkIcon className="mr-2" />
                           {t("openTxOnChain")}
+                        </Button>
+                        <Button styleType="outlined" onClick={openSubmissionData}>
+                          {t("seeSubmissionData")}
                         </Button>
                       </div>
                     </>

@@ -9,6 +9,25 @@ export const StyledPayoutStatusPage = styled.div`
   margin-bottom: ${getSpacing(6)};
   color: var(--white);
 
+  .descriptionHash {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    left: ${getSpacing(2)};
+    color: var(--grey-400);
+    background: var(--grey-600);
+    font-size: var(--xxsmall);
+    padding: ${getSpacing(0.6)} ${getSpacing(1.4)};
+    border-radius: 5px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
   .title-container {
     display: flex;
     justify-content: space-between;
