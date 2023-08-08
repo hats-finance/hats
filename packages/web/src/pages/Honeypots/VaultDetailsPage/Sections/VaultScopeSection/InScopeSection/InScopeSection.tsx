@@ -160,6 +160,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
           <div className="section-content">
             <MDEditor.Markdown
+              disallowedElements={["script", "iframe"]}
               source={vault.description?.scope?.description}
               style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
             />

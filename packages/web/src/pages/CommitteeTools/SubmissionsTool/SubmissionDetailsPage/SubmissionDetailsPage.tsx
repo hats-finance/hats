@@ -83,7 +83,11 @@ export const SubmissionDetailsPage = () => {
                       </div>
                       <SubmissionCard submission={submission} noActions />
 
-                      <MDEditor.Markdown className="submission-content" source={submission?.submissionDataStructure?.content} />
+                      <MDEditor.Markdown
+                        disallowedElements={["script", "iframe"]}
+                        className="submission-content"
+                        source={submission?.submissionDataStructure?.content}
+                      />
 
                       <div className="buttons">
                         <Button onClick={openTxOnChain}>

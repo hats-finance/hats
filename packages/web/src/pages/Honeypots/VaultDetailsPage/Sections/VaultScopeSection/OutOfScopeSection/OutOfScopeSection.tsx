@@ -11,6 +11,7 @@ export const OutOfScopeSection = ({ vault }: OutOfScopeSectionProps) => {
   return (
     <div className="subsection-container">
       <MDEditor.Markdown
+        disallowedElements={["script", "iframe"]}
         source={vault.description.scope.outOfScope}
         style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       />

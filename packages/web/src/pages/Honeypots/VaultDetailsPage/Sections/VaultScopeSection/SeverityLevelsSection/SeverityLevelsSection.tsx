@@ -19,6 +19,7 @@ export const SeverityLevelsSection = ({ vault }: SeverityLevelsSectionProps) => 
         <div className="severity" key={idx}>
           <Pill isSeverity transparent text={severity.name} textColor={severityColors[idx]} />
           <MDEditor.Markdown
+            disallowedElements={["script", "iframe"]}
             className="mt-4 pl-2"
             source={severity.description}
             style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
