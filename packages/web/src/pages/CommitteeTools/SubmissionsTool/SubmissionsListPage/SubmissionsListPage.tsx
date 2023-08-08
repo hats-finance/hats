@@ -184,7 +184,9 @@ export const SubmissionsListPage = () => {
     setOpenDateFilter(false);
 
     if (dateFilter.from === 0 && dateFilter.to === 0) return setDateFilter((prev) => ({ ...prev, active: false }));
-    return setDateFilter((prev) => ({ ...prev, active: true }));
+
+    setPage(1);
+    setDateFilter((prev) => ({ ...prev, active: true }));
   };
 
   const handleCreatePayout = async () => {
