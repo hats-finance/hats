@@ -5,6 +5,7 @@ import {
   IEditedVaultDescription,
   IVaultDescription,
   IVaultStatusData,
+  getVaultDescriptionHash,
 } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
@@ -152,12 +153,7 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     chainId,
   };
 
-  const vaultContract = getContract({
-    ...vaultContractInfo,
-    signerOrProvider: getProvider({ chainId }),
-  });
-
-  const allDescriptionsHashesPromise = vaultContract.queryFilter(vaultContract.filters.SetVaultDescription(null));
+  const descriptionHashPromise = getVaultDescriptionHash(vaultAddress, chainId);
   const allContractCallsPromises = readContracts({
     contracts: [
       { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
@@ -173,9 +169,9 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     ],
   }) as Promise<any[]>;
 
-  const promisesData = await Promise.all([allDescriptionsHashesPromise, allContractCallsPromises]);
+  const promisesData = await Promise.all([descriptionHashPromise, allContractCallsPromises]);
 
-  const [descriptions, contractCalls] = promisesData;
+  const [descriptionHash, contractCalls] = promisesData;
   const [
     committeeMulsitigAddress,
     isCommitteeCheckedIn,
@@ -189,7 +185,8 @@ export async function getVaultInformation(vaultAddress: string, chainId: number)
     tokenDecimals,
   ] = contractCalls;
 
-  const descriptionHash = descriptions[descriptions.length - 1].args?._descriptionHash;
+  if (!descriptionHash) throw new Error("Description hash not found");
+
   let description: IVaultDescription | undefined = undefined;
 
   try {

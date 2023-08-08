@@ -113,6 +113,40 @@ export const getVaultInfoWithCommittee = async (
   }
 };
 
+export const getAllVaultsAddressesByChain = async (chainId: number): Promise<string[]> => {
+  if (!chainId) return [];
+
+  try {
+    const GET_VAULTS = `
+    query getVaults {
+      vaults(where: {version_not: "v1"}) {
+        id
+      }
+    }
+  `;
+
+    const subgraphResponse = axios.post(
+      ChainsConfig[chainId].subgraph,
+      JSON.stringify({
+        query: GET_VAULTS,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const subgraphData = (await subgraphResponse).data;
+    const vaults = subgraphData?.data?.vaults;
+
+    if (!vaults) return [];
+
+    return vaults.map((vault: { id: string }) => vault.id);
+  } catch (error) {
+    return [];
+  }
+};
+
 export const getVaultDescriptionHash = async (vaultId: string, chainId: number): Promise<string | undefined> => {
   try {
     if (!vaultId || !chainId) return undefined;
