@@ -7,7 +7,7 @@ import {
 } from "./types";
 
 export const DefaultIndexArray = [
-  0, 10, 20, 70, 150, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 6000, 8000,
+  0, 10, 20, 70, 150, 200, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 5500, 6000, 8000,
 ];
 
 export const convertVulnerabilitySeverityV1ToV2 = (
@@ -28,7 +28,7 @@ export const AUDIT_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverityV
     id: "formal-verification-audit",
     decryptSubmissions: false,
     name: "Formal Verification",
-    index: 7,
+    index: 5,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Good citizen",
@@ -58,7 +58,7 @@ export const AUDIT_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverityV
     id: "low-audit",
     decryptSubmissions: true,
     name: "Low",
-    index: 14,
+    index: 11,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Protocol protector",
@@ -73,7 +73,7 @@ export const AUDIT_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverityV
     id: "medium-audit",
     decryptSubmissions: true,
     name: "Medium",
-    index: 16,
+    index: 17,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Protocol champion",
@@ -106,7 +106,7 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
     id: "low-bounty",
     decryptSubmissions: false,
     name: "Low",
-    index: 7,
+    index: 8,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Good citizen",
@@ -122,7 +122,7 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
     id: "medium-bounty",
     decryptSubmissions: false,
     name: "Medium",
-    index: 14,
+    index: 15,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Protocol protector",
@@ -138,7 +138,7 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
     id: "high-bounty",
     decryptSubmissions: false,
     name: "High",
-    index: 16,
+    index: 17,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Protocol champion",
@@ -155,7 +155,7 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
     id: "critical-bounty",
     decryptSubmissions: false,
     name: "Critical",
-    index: 20,
+    index: 22,
     "contracts-covered": [],
     "nft-metadata": {
       name: "Protocol savior",

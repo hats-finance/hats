@@ -61,13 +61,16 @@ export const autocalculateMultiPayout = (
   }
 
   // Fill the last reward with the remaining percentage
-  const totalSumPercentages = Object.values(beneficiariesCalculated).reduce((sum, ben) => sum + +ben.percentageOfPayout, 0);
+  const totalSumPercentages = +truncate(
+    Object.values(beneficiariesCalculated).reduce((sum, ben) => sum + +ben.percentageOfPayout, 0),
+    DECIMALS_TO_USE
+  );
+
   if (beneficiariesCalculated[beneficiariesCalculated.length - 1]) {
-    beneficiariesCalculated[beneficiariesCalculated.length - 1].percentageOfPayout = truncate(
+    beneficiariesCalculated[beneficiariesCalculated.length - 1].percentageOfPayout = (
       +beneficiariesCalculated[beneficiariesCalculated.length - 1].percentageOfPayout +
-        +(100 - totalSumPercentages).toFixed(DECIMALS_TO_USE),
-      DECIMALS_TO_USE
-    );
+      +(100 - totalSumPercentages).toFixed(DECIMALS_TO_USE)
+    ).toFixed(DECIMALS_TO_USE);
   }
 
   const totalPercentageToPay = +truncate((totalRewards / totalAmountToPay) * 100, DECIMALS_TO_USE);

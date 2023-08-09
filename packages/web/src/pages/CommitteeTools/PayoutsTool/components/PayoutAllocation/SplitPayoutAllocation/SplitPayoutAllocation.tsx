@@ -88,7 +88,7 @@ function SplitPayoutAllocationShared({
   const navigate = useNavigate();
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
-  const { control, formState, register } = methods;
+  const { control, formState, register, setValue } = methods;
   const {
     fields,
     append: appendBeneficiary,
@@ -258,6 +258,7 @@ function SplitPayoutAllocationShared({
                   placeholder={t("Payouts.percentageToPayPlaceholder")}
                   helper={t("Payouts.percentageOfTheTotalVaultToPay")}
                   disabled={isPayoutCreated}
+                  onKeyDown={() => setValue<any>("stopAutocalculation", true)}
                   type="number"
                   colorable
                   className="w-40"

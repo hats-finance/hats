@@ -184,7 +184,9 @@ export const SubmissionsListPage = () => {
     setOpenDateFilter(false);
 
     if (dateFilter.from === 0 && dateFilter.to === 0) return setDateFilter((prev) => ({ ...prev, active: false }));
-    return setDateFilter((prev) => ({ ...prev, active: true }));
+
+    setPage(1);
+    setDateFilter((prev) => ({ ...prev, active: true }));
   };
 
   const handleCreatePayout = async () => {
@@ -218,7 +220,7 @@ export const SubmissionsListPage = () => {
       payoutData = {
         ...(createNewPayoutData("single") as ISinglePayoutData),
         beneficiary: submission?.submissionDataStructure?.beneficiary,
-        severity,
+        severity: severity ?? "",
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
       } as ISinglePayoutData;
     } else {
@@ -234,7 +236,7 @@ export const SubmissionsListPage = () => {
           return {
             ...createNewSplitPayoutBeneficiary(),
             beneficiary: submission?.submissionDataStructure?.beneficiary,
-            severity,
+            severity: severity ?? "",
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
           };
         }),
@@ -268,7 +270,7 @@ export const SubmissionsListPage = () => {
         <>
           {!keystore ? (
             <>
-              <Alert className="mb-4" type="error">
+              <Alert className="mb-4" type="info">
                 {t("youNeedToOpenYourPGPTool")}
               </Alert>
               <Button onClick={() => initKeystore()}>

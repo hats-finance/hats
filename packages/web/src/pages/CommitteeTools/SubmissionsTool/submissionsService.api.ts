@@ -34,7 +34,7 @@ export const getVaultSubmissionsByKeystore = async (
     // Iterate over all stored keys and try to decrypt the message
     for (const keypair of userKeys) {
       try {
-        const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, undefined);
+        const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, keypair.passphrase);
         const message = await readMessage({ armoredMessage: encryptedPart });
 
         const { data: decrypted } = await decrypt({
