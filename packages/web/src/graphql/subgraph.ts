@@ -117,6 +117,7 @@ export const GET_SUBMISSIONS = `
   query getSubmissions($batch: Int, $skip: Int) {
     submissions: loggedClaims(first: $batch, skip: $skip) {
       id
+      txid
       submissionHash: claim
       submitter: claimer
       createdAt

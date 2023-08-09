@@ -113,6 +113,76 @@ export const getVaultInfoWithCommittee = async (
   }
 };
 
+export const getAllVaultsAddressesByChain = async (chainId: number): Promise<string[]> => {
+  if (!chainId) return [];
+
+  try {
+    const GET_VAULTS = `
+    query getVaults {
+      vaults(where: {version_not: "v1"}) {
+        id
+      }
+    }
+  `;
+
+    const subgraphResponse = axios.post(
+      ChainsConfig[chainId].subgraph,
+      JSON.stringify({
+        query: GET_VAULTS,
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const subgraphData = (await subgraphResponse).data;
+    const vaults = subgraphData?.data?.vaults;
+
+    if (!vaults) return [];
+
+    return vaults.map((vault: { id: string }) => vault.id);
+  } catch (error) {
+    return [];
+  }
+};
+
+export const getVaultDescriptionHash = async (vaultId: string, chainId: number): Promise<string | undefined> => {
+  try {
+    if (!vaultId || !chainId) return undefined;
+
+    const GET_VAULT_BY_ID = `
+      query getVaults($vaultId: String) {
+        vaults(where: {id: $vaultId}) {
+          id
+          descriptionHash
+        }
+      }
+    `;
+
+    const subgraphResponse = axios.post(
+      ChainsConfig[chainId].subgraph,
+      JSON.stringify({
+        query: GET_VAULT_BY_ID,
+        variables: { vaultId },
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const subgraphData = (await subgraphResponse).data;
+    const vault = subgraphData?.data?.vaults?.[0];
+
+    if (!vault) return undefined;
+
+    return vault.descriptionHash;
+  } catch (error) {
+    return undefined;
+  }
+};
+
 export const getAddressRoleOnVault = async (
   address: string | undefined,
   vaultChainId: string | number | undefined,

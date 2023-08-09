@@ -1,6 +1,8 @@
-import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
+import { IPayoutData, ISubmittedSubmission, IVault, IVaultInfo, PayoutType } from "@hats-finance/shared";
 import { IStoredKey, readPrivateKeyFromStoredKey } from "components/Keystore";
+import { axiosClient } from "config/axiosClient";
 import { decrypt, readMessage } from "openpgp";
+import { BASE_SERVICE_URL } from "settings";
 import uuidFromString from "uuid-by-string";
 
 export const getVaultSubmissionsByKeystore = async (
@@ -32,7 +34,7 @@ export const getVaultSubmissionsByKeystore = async (
     // Iterate over all stored keys and try to decrypt the message
     for (const keypair of userKeys) {
       try {
-        const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, undefined);
+        const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, keypair.passphrase);
         const message = await readMessage({ armoredMessage: encryptedPart });
 
         const { data: decrypted } = await decrypt({
@@ -104,13 +106,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(\*\*SUBMISSION #\d*\*\*(.|\n)*(\*\*SUBMISSION #\d*\*\*))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/\*\*SUBMISSION #\d*\*\*$/, "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -122,6 +127,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim(),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim()),
@@ -146,13 +152,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(-------------\n\*\*\[ISSUE #\d*\]\*\*(.|\n)*(-------------\n\*\*\[ISSUE #\d*\]\*\*))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/-------------\n\*\*\[ISSUE #\d*\]\*\*$/, "").replace("-------------", "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -164,6 +173,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim().replace("-------------", ""),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim().replace("-------------", "")),
@@ -190,13 +200,16 @@ const extractSubmissionData = (
     };
 
     let message = JSON.parse(JSON.stringify(decryptedMessage));
+    let count = -1;
     while (true) {
+      count = count + 1;
       let nextSubmission: string | undefined =
         message.match(/(## \[ISSUE #\d*\]:(.|\n)*(## \[ISSUE #\d*\]:))/g)?.[0] ?? undefined;
       if (nextSubmission) {
         nextSubmission = nextSubmission.replace(/## \[ISSUE #\d*\]:$/, "");
         submissions.push({
           ...submission,
+          submissionIdx: count,
           linkedVault: submissionVault,
           submissionDecrypted: nextSubmission.trim(),
           submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
@@ -207,6 +220,7 @@ const extractSubmissionData = (
         if (finalSubmission) {
           submissions.push({
             ...submission,
+            submissionIdx: count,
             linkedVault: submissionVault,
             submissionDecrypted: finalSubmission.trim(),
             submissionDataStructure: extractSingleSubmission(finalSubmission.trim()),
@@ -240,3 +254,24 @@ const extractSubmissionData = (
 
   return submissions;
 };
+
+/**
+ * Creates a new payout from submission/s
+ * @param vaultInfo - The vault info to create the payout
+ * @param type - The payout type to create
+ *
+ * @returns The id of the created payout
+ */
+export async function createPayoutFromSubmissions(
+  vaultInfo: IVaultInfo,
+  type: PayoutType,
+  payoutData: IPayoutData
+): Promise<string> {
+  const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, {
+    vaultAddress: vaultInfo.address,
+    chainId: vaultInfo.chainId,
+    payoutData,
+    type,
+  });
+  return res.data.upsertedId;
+}

@@ -1,4 +1,5 @@
 import * as wagmiChains from "@wagmi/chains";
+import { meter } from "./custom_chains";
 
 export const ALL_CHAINS = {
   [wagmiChains.mainnet.id]: wagmiChains.mainnet,
@@ -9,6 +10,7 @@ export const ALL_CHAINS = {
   [wagmiChains.avalanche.id]: wagmiChains.avalanche,
   [wagmiChains.fantom.id]: wagmiChains.fantom,
   [wagmiChains.gnosis.id]: wagmiChains.gnosis,
+  [meter.id]: meter,
 };
 
 export interface IChainConfiguration {
@@ -22,7 +24,7 @@ export interface IChainConfiguration {
   subgraph: string;
   coingeckoId?: string;
   uniswapSubgraph?: string;
-  infuraKey: string;
+  infuraKey?: string;
   provider: string;
 }
 
@@ -113,6 +115,19 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     infuraKey: "polygon-mainnet",
     provider: "https://frequent-billowing-smoke.matic.quiknode.pro/7c8df8ebd0e2c06e4559485d777e99c0350208c8",
+  },
+  [meter.id]: {
+    vaultsCreatorContract: "0x7e0723Fb43869f7742cEFE1a8b1D86665Bb79ED0",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0xA1b532Bba529741247239492A25971Df82827Efd",
+    hackersNFTContract: "0x5d3bbbB82dfb2D89B674Ebdf44F721072799e8aa",
+    chain: meter,
+    subgraph: "https://graph.meter.io/subgraphs/name/hats",
+    coingeckoId: "meter",
+    govMultisig: "0x538B46F9966f0ef2E35a607adbEc51eDF74C25A4",
+    paymentSplitterFactory: "0x0512b55C7519f5405aFD299f8AbE4E17C61F3b07",
+    // infuraKey: "polygon-mainnet",
+    provider: "https://meter.blockpi.network/v1/rpc/fb714211b5240a1f337e46b063d7734294824527",
   },
   // [wagmiChains.bsc.id]: {
   //   vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",

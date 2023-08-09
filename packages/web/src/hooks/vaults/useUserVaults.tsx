@@ -1,7 +1,9 @@
 import { IVault, getAddressSafes } from "@hats-finance/shared";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { FormSelectInputOption } from "components";
 import { useEffect, useState } from "react";
 import { appChains } from "settings";
+import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { useVaults } from "../subgraph/vaults/useVaults";
 
@@ -19,6 +21,19 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       label: vault.description?.["project-metadata"].name ?? vault.name,
       icon: vault.description?.["project-metadata"].icon,
       onHoverText: `${vault.version} - ${appChains[vault.chainId as number].chain.name}`,
+      helper: (
+        <div className="vault-address">
+          {vault.version === "v1"
+            ? `${shortenIfAddress(vault.master.address, { startLength: 6, endLength: 6 })} (PID: ${vault.pid})`
+            : shortenIfAddress(vault.id, { startLength: 6, endLength: 6 })}
+          <OpenIcon fontSize="small" />
+        </div>
+      ),
+      onHelperClick: () =>
+        window.open(
+          appChains[vault.chainId as number].chain.blockExplorers?.default.url + "/address/" + vault.id ?? vault.master.address,
+          "_blank"
+        ),
     })) ?? [];
 
   useEffect(() => {

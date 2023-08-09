@@ -5,9 +5,12 @@ import {
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "@hats-finance/shared";
-import { FormInput, FormSelectInput } from "components";
+import { FormInput, FormSelectInput, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
+import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
+import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
+import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
 import { useContext } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -19,8 +22,15 @@ export const SinglePayoutForm = () => {
   const { t } = useTranslation();
   const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
+  const isFromSubmissions = hasSubmissionData(payout);
+  const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
+
   const methods = useEnhancedFormContext<ISinglePayoutData>();
   const { register, control, setValue } = methods;
+
+  const decryptedSubmission = useWatch({ control, name: "decryptedSubmission" });
+  const submissionData = useWatch({ control, name: "submissionData" });
+  const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === submissionData?.subId);
 
   const percentageToPay = useWatch({ control, name: "percentageToPay" });
 
@@ -40,7 +50,7 @@ export const SinglePayoutForm = () => {
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
-    if (prevSelected === undefined || newSelected === undefined) return;
+    if (newSelected === undefined) return;
 
     setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
 
@@ -79,14 +89,28 @@ export const SinglePayoutForm = () => {
           className="w-60"
         />
 
-        <FormInput
-          {...register("beneficiary")}
-          label={t("Payouts.beneficiary")}
-          placeholder={t("Payouts.beneficiaryPlaceholder")}
-          disabled={isPayoutCreated}
-          pastable
-          colorable
-        />
+        <div className="beneficiary">
+          {isFromSubmissions && (decryptedSubmission || beneficiarySubmission) ? (
+            <div>
+              <p className="bold mb-3">{t("Payouts.submissionDetails")}</p>
+              <SubmissionCard
+                inPayout
+                submission={isPayoutCreated ? decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!}
+              />
+            </div>
+          ) : (
+            <div className="input">
+              <FormInput
+                {...register("beneficiary")}
+                label={t("Payouts.beneficiary")}
+                placeholder={t("Payouts.beneficiaryPlaceholder")}
+                disabled={isPayoutCreated || isFromSubmissions}
+                colorable
+              />
+              {isLoadingSubmission && <Spinner text={t("loadingSubmissionData")} />}
+            </div>
+          )}
+        </div>
 
         <div className="row">
           <Controller
@@ -146,7 +170,7 @@ export const SinglePayoutForm = () => {
         />
       </div>
 
-      <div className="form-container mt-5">
+      {/* <div className="form-container mt-5">
         <p className="subtitle">{t("Payouts.reasoning")}</p>
         <p className="mt-2">{t("Payouts.reasoningDescription")}</p>
         <p className="mt-2 mb-5 reasoningAlert">
@@ -174,7 +198,7 @@ export const SinglePayoutForm = () => {
           rows={8}
           colorable
         />
-      </div>
+      </div> */}
     </StyledPayoutForm>
   );
 };

@@ -1,4 +1,4 @@
-import { IVault, IVaultInfo } from "./types";
+import { ISubmittedSubmission, IVault, IVaultInfo } from "./types";
 
 export interface IPayoutGraph {
   id: string;
@@ -50,6 +50,7 @@ interface IPayoutDataBase {
   explanation: string;
   additionalInfo: string;
   vault?: IVault;
+  stopAutocalculation?: boolean;
 }
 
 export interface ISinglePayoutData extends IPayoutDataBase {
@@ -58,12 +59,15 @@ export interface ISinglePayoutData extends IPayoutDataBase {
   severity: string; // Severity name
   severityBountyIndex: string; // Severity index (for V1 vaults)
   nftUrl: string;
+  submissionData?: { id: string; subId: string; idx: number };
+  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; //Omit: workaround to avoid circular dependency;
 }
 
 // Only for v2 vaults
 export interface ISplitPayoutData extends IPayoutDataBase {
   type: "split";
   paymentSplitterBeneficiary?: string;
+  rewardsConstraints?: { severity: string; maxReward: string; capAmount: string }[];
   beneficiaries: ISplitPayoutBeneficiary[];
 }
 
@@ -72,6 +76,8 @@ export interface ISplitPayoutBeneficiary {
   severity: string; // Severity name
   percentageOfPayout: string; // Number between 0 and 100
   nftUrl: string;
+  submissionData?: { id: string; subId: string; idx: number };
+  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; //Omit: workaround to avoid circular dependency;;
 }
 
 export interface IPayoutSignature {

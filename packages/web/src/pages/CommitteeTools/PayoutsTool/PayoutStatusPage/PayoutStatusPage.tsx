@@ -18,6 +18,7 @@ import {
   Seo,
   VaultInfoCard,
 } from "components";
+import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ExecutePayoutContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -133,6 +134,11 @@ export const PayoutStatusPage = () => {
     checkCommitteeMember();
   }, [address, chain, vault]);
 
+  const goToDescriptionHashContent = () => {
+    if (!payout?.payoutDescriptionHash) return;
+    window.open(`${IPFS_PREFIX}/${payout.payoutDescriptionHash}`, "_blank");
+  };
+
   const handleDeletePayout = async () => {
     if (!payoutId || !payout) return;
 
@@ -189,6 +195,12 @@ export const PayoutStatusPage = () => {
     <>
       <Seo title={t("seo.payoutsDashboardTitle")} />
       <StyledPayoutStatusPage className="content-wrapper-md">
+        {payout?.payoutDescriptionHash && (
+          <p className="descriptionHash" onClick={goToDescriptionHashContent}>
+            {payout?.payoutDescriptionHash}
+          </p>
+        )}
+
         <div className="mb-5">{vault && <VaultInfoCard vault={vault} />}</div>
 
         <div className="title-container">
@@ -260,14 +272,6 @@ export const PayoutStatusPage = () => {
                     readOnly
                   />
                 )}
-
-                <FormInput
-                  value={`${payout?.payoutData.percentageToPay}%`}
-                  label={t("Payouts.percentageToPay")}
-                  placeholder={t("Payouts.percentageToPayPlaceholder")}
-                  helper={t("Payouts.percentageOfTheTotalVaultToPay")}
-                  readOnly
-                />
               </div>
 
               <div className="my-5">
@@ -282,22 +286,6 @@ export const PayoutStatusPage = () => {
                   <SplitPayoutAllocation vault={vault} payout={payout} />
                 )}
               </div>
-            </div>
-
-            <div className="payout-status-container">
-              <p className="section-title mt-2">{t("Payouts.payoutReasoning")}</p>
-
-              <FormInput
-                value={
-                  payout?.payoutData.explanation +
-                  `${payout?.payoutData.additionalInfo ? `\n\n\n${payout?.payoutData.additionalInfo}` : ""}`
-                }
-                label={t("Payouts.explanation")}
-                placeholder={t("Payouts.explanationPlaceholder")}
-                type="textarea"
-                rows={payout?.payoutData.type === "single" ? 10 : (payout?.payoutData.beneficiaries?.length ?? 1) * 4.5}
-                readOnly
-              />
             </div>
 
             <div className="payout-status-container top-separation">

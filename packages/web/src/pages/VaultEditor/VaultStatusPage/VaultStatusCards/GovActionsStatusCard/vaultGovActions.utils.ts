@@ -1,4 +1,4 @@
-import { HATTimelockController_abi, IVault, getGnosisChainNameByChainId } from "@hats-finance/shared";
+import { HATTimelockController_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats-finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { MetaTransactionData } from "@safe-global/safe-core-sdk-types";
@@ -24,7 +24,7 @@ export const createVaultGovActionsProposalOnSafe = async (
     }
 
     const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: extra.signer as Signer });
-    const txServiceUrl = `https://safe-transaction-${getGnosisChainNameByChainId(vault.chainId)}.safe.global`;
+    const txServiceUrl = getGnosisSafeTxServiceBaseUrl(vault.chainId);
     const safeService = new SafeApiKit({ txServiceUrl, ethAdapter });
     const safeSdk = await Safe.create({ ethAdapter, safeAddress: govAddress });
 

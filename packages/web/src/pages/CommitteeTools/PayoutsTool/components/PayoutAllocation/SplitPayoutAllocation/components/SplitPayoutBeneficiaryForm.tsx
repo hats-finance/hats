@@ -2,10 +2,13 @@ import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats-finance/shared"
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";
-import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal } from "components";
+import { DropdownSelector, FormInput, FormSelectInput, FormSelectInputOption, Modal, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useModal from "hooks/useModal";
 import { useOnChange } from "hooks/usePrevious";
+import { hasSubmissionData } from "pages/CommitteeTools/PayoutsTool/utils/hasSubmissionData";
+import { SubmissionCard } from "pages/CommitteeTools/SubmissionsTool/SubmissionsListPage/SubmissionCard";
+import { useVaultSubmissionsByKeystore } from "pages/CommitteeTools/SubmissionsTool/submissionsService.hooks";
 import { useState } from "react";
 import { Controller, UseFieldArrayRemove, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -36,14 +39,18 @@ export const SplitPayoutBeneficiaryForm = ({
 }: SplitPayoutBeneficiaryFormProps) => {
   const { t } = useTranslation();
 
-  const [showMoreOptions, setShowMoreOptions] = useState(false);
-  const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
+  const isFromSubmissions = hasSubmissionData(payout);
+  const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
 
   const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
-  const isHeader = index === -1;
-
+  const beneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
+
+  const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index]?.submissionData?.subId);
+
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
 
   const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
 
@@ -57,8 +64,8 @@ export const SplitPayoutBeneficiaryForm = ({
   // Edit the payout percentage and NFT info based on the selected severity
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
-    if (prevSelected === undefined || newSelected === undefined) return;
-    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image);
+    if (newSelected === undefined) return;
+    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image as any);
   });
 
   const getMoreOptions = () => {
@@ -100,29 +107,47 @@ export const SplitPayoutBeneficiaryForm = ({
   };
 
   return (
-    <>
-      <StyledSplitPayoutBeneficiaryForm isHeader={isHeader} role="rowgroup">
-        <div className="cell" role="cell">
-          {isHeader ? "#" : index + 1}
-        </div>
-        <div className="cell big" role="cell">
-          {isHeader ? (
-            t("Payouts.beneficiary")
+    <div>
+      <div className="mb-1">{index + 1}.</div>
+      <StyledSplitPayoutBeneficiaryForm>
+        <div className="beneficiary">
+          {isFromSubmissions && (beneficiaries[index]?.decryptedSubmission || beneficiarySubmission) ? (
+            <div className="w-100">
+              <p className="title mb-3">{t("Payouts.submissionDetails")}</p>
+              <SubmissionCard
+                inPayout
+                submission={
+                  isPayoutCreated ? beneficiaries[index]?.decryptedSubmission ?? beneficiarySubmission! : beneficiarySubmission!
+                }
+              />
+            </div>
           ) : (
-            <FormInput
-              {...register(`beneficiaries.${index}.beneficiary`)}
-              placeholder={t("Payouts.beneficiary")}
-              disabled={isPayoutCreated && !readOnly}
-              readOnly={readOnly}
-              colorable={!readOnly}
-              noMargin
-            />
+            <div className="input">
+              <FormInput
+                {...register(`beneficiaries.${index}.beneficiary`)}
+                label={t("Payouts.beneficiary")}
+                placeholder={t("Payouts.beneficiary")}
+                disabled={(isPayoutCreated && !readOnly) || isFromSubmissions}
+                readOnly={readOnly}
+                colorable={!readOnly}
+                noMargin
+              />
+              {isLoadingSubmission && <Spinner text={t("loadingSubmissionData")} />}
+            </div>
+          )}
+
+          {getMoreOptions().length > 0 && (
+            <div className="more-button">
+              <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />
+              <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
+            </div>
           )}
         </div>
-        <div className="cell big" role="cell">
-          {isHeader ? (
-            t("severity")
-          ) : (
+
+        <div className="form">
+          <p className="title">{t("Payouts.payoutAllocation")}</p>
+
+          <div className="controls">
             <Controller
               control={control}
               name={`beneficiaries.${index}.severity`}
@@ -132,6 +157,7 @@ export const SplitPayoutBeneficiaryForm = ({
                   readOnly={readOnly}
                   isDirty={getCustomIsDirty<ISplitPayoutData>(field.name, dirtyFields, defaultValues)}
                   error={error}
+                  label={t("severity")}
                   placeholder={t("severity")}
                   colorable={!readOnly}
                   options={severitiesOptions ?? []}
@@ -140,51 +166,33 @@ export const SplitPayoutBeneficiaryForm = ({
                 />
               )}
             />
-          )}
-        </div>
-        <div className="cell small" role="cell">
-          {isHeader ? (
-            t("Payouts.percentageToPayLabel")
-          ) : (
+
             <FormInput
               {...register(`beneficiaries.${index}.percentageOfPayout`)}
+              label={t("Payouts.percentageToPayLabel")}
               placeholder={t("Payouts.percentageToPayLabel")}
+              onKeyDown={() => setValue<any>("stopAutocalculation", true)}
               disabled={isPayoutCreated && !readOnly}
               readOnly={readOnly}
               type="number"
               colorable={!readOnly}
               noMargin
             />
-          )}
-        </div>
-        <div className="cell small" role="cell">
-          {isHeader ? (
-            t("Payouts.tokensAmount", { token: vault?.stakingTokenSymbol })
-          ) : (
+
             <FormInput
               disabled
               noMargin
+              label={t("Payouts.tokensAmount", { token: vault?.stakingTokenSymbol })}
               value={payoutAllocation.totalAmount ? `≈ ${payoutAllocation.totalAmount.tokens.number}` : "--"}
             />
-          )}
-        </div>
-        <div className="cell small" role="cell">
-          {isHeader ? (
-            t("Payouts.amountInUsd")
-          ) : (
             <FormInput
               disabled
               noMargin
+              label={t("Payouts.amountInUsd")}
               value={payoutAllocation.totalAmount ? `≈ ${payoutAllocation.totalAmount.usd.formatted}` : "--"}
             />
-          )}
-        </div>
-        {getMoreOptions().length > 0 && (
-          <div className="cell" role="cell">
-            {isHeader ? "" : <MoreIcon className="more-icon" onClick={() => setShowMoreOptions(true)} />}
-            <DropdownSelector options={getMoreOptions()} show={showMoreOptions} onClose={() => setShowMoreOptions(false)} />
           </div>
-        )}
+        </div>
       </StyledSplitPayoutBeneficiaryForm>
 
       <Modal isShowing={isShowingAllocation} title={t("Payouts.payoutAllocationAndNft")} onHide={hideAllocation}>
@@ -199,6 +207,6 @@ export const SplitPayoutBeneficiaryForm = ({
           />
         </StyledSplitPayoutBeneficiaryAllocationModal>
       </Modal>
-    </>
+    </div>
   );
 };

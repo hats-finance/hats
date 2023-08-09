@@ -203,6 +203,7 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
 }
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
   percentage: number; // percentage like 1000 (10%) or 8000 (80%)
+  capAmount?: number;
 }
 
 export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
@@ -269,7 +270,9 @@ export interface IMaster {
 export interface ISubmittedSubmission {
   chainId?: number;
   id: string;
+  txid: string;
   subId: string;
+  submissionIdx: number;
   submissionHash: string;
   submissionData?: string;
   submissionDecrypted?: string;
@@ -279,7 +282,7 @@ export interface ISubmittedSubmission {
     severity?: string;
     content: string;
     beneficiary: string;
-    communicationChannel: { type: string; value: string };
+    communicationChannel?: { type: string; value: string };
     githubUsername?: string;
   };
   submitter: string;
