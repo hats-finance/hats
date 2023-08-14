@@ -82,7 +82,17 @@ const buildSitemap = async () => {
   ${[...routes, ...vaultsRoutes].reduce(
     (acc, route) => `${acc}
     <url>
-      <loc>${publicUrl}${route.path}</loc>
+      <loc>${publicUrl}${route.path}/rewards</loc>
+      <changefreq>daily</changefreq>
+      <priority>0.5</priority>
+    </url>
+    <url>
+      <loc>${publicUrl}${route.path}/deposits</loc>
+      <changefreq>daily</changefreq>
+      <priority>0.5</priority>
+    </url>
+    <url>
+      <loc>${publicUrl}${route.path}/scope</loc>
       <changefreq>daily</changefreq>
       <priority>0.5</priority>
     </url>`,
