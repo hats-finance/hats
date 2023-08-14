@@ -46,16 +46,16 @@ const buildSitemap = async () => {
       data: { query },
     });
   });
-  
+
   const subgraphResults = (await Promise.all(subgraphPromises)
-  .then((responses) => responses.map((res) => res.data))
-  .catch((error) => {
-    console.error("Error fetching subgraph data:", error);
-  }))
-  .filter((res) => res != null)
-  .map((res) => res.data.vaults)
-  .flat()
-  .filter((vault) => vault.registered);
+    .then((responses) => responses.map((res) => res.data))
+    .catch((error) => {
+      console.error("Error fetching subgraph data:", error);
+    }))
+    .filter((res) => res != null)
+    .map((res) => res.data.vaults)
+    .flat()
+    .filter((vault) => vault.registered);
   const descriptionHashes = subgraphResults.map((vault) => vault.descriptionHash);
 
   const descriptionsPromises = descriptionHashes.map((descriptionHash) => {
@@ -90,15 +90,25 @@ const buildSitemap = async () => {
         <priority>0.5</priority>
       </url>`;
   };
+
+  const vaultsRoutesXml = vaultsRoutes.reduce(
+    (acc, route) => `${acc}
+    ${appendPathAndGenerateUrl(route, 'rewards')}
+    ${appendPathAndGenerateUrl(route, 'deposits')}
+    ${appendPathAndGenerateUrl(route, 'scope')}`,
+    ""
+  );
+
+  const routesXml = routes.reduce(
+    (acc, route) => `${acc}
+    ${appendPathAndGenerateUrl(route, '')}`,
+    ""
+  );
+
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  ${[...routes, ...vaultsRoutes].reduce(
-    (acc, route) => `${acc}
-    ${appendPathAndGenerateUrl(route,'rewards')}
-    ${appendPathAndGenerateUrl(route,'deposits')}
-    ${appendPathAndGenerateUrl(route,'scope')}`,
-    ""
-  )}
+  ${routesXml}
+  ${vaultsRoutesXml}
   </urlset>
   `;
 
