@@ -1,7 +1,9 @@
 import axios from "axios";
 import { ChainsConfig } from "../config";
-import { IAddressRoleInVault, IVault, IVaultInfo } from "../types";
+import { IAddressRoleInVault, IVault, IVaultDescription, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
+import { isValidIpfsHash } from "./ipfs.utils";
+import { fixObject } from "./vaultEditor.utils";
 
 export type IVaultInfoWithCommittee = IVaultInfo & { committee: string };
 
@@ -201,6 +203,99 @@ export const getAddressRoleOnVault = async (
   if (isCommitteeMultisig) return "committee-multisig";
   if (isGovMember) return "gov";
   return "none";
+};
+
+export type IVaultOnlyDescription = {
+  id: string;
+  pid: string;
+  chainId: number;
+  registered: boolean;
+  descriptionHash: string;
+  description: IVault["description"];
+};
+
+export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<IVaultOnlyDescription[]> => {
+  try {
+    const GET_ALL_VAULTS = `
+      query getVaults {
+        vaults {
+          id
+          pid
+          registered
+          descriptionHash
+        }
+      }
+    `;
+
+    const subgraphsRequests = Object.values(ChainsConfig)
+      .filter((chain) => (onlyMainnet ? !chain.chain.testnet : true))
+      .map((chain) => {
+        return axios.post(
+          chain.subgraph,
+          JSON.stringify({
+            query: GET_ALL_VAULTS,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      });
+
+    const subgraphsResponses = await Promise.all(subgraphsRequests);
+    const subgraphsData = subgraphsResponses.map((res) => res.data);
+
+    const vaults: IVaultOnlyDescription[] = [];
+    for (let i = 0; i < subgraphsData.length; i++) {
+      const chainId = Object.values(ChainsConfig)[i].chain.id;
+
+      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+
+      for (const vault of subgraphsData[i].data.vaults) {
+        vaults.push({
+          chainId,
+          ...vault,
+        });
+      }
+    }
+
+    const loadVaultDescription = async (vault: IVaultOnlyDescription): Promise<IVaultDescription | undefined> => {
+      if (isValidIpfsHash(vault.descriptionHash)) {
+        try {
+          const dataResponse = await fetch(`https://ipfs2.hats.finance/ipfs/${vault.descriptionHash}`);
+          if (dataResponse.status === 200) {
+            const object = await dataResponse.json();
+            return fixObject(object) as any;
+          }
+          return undefined;
+        } catch (error) {
+          // console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    // Load descriptions
+    const getVaultsData = async (vaultsToFetch: IVaultOnlyDescription[]): Promise<IVaultOnlyDescription[]> =>
+      Promise.all(
+        vaultsToFetch.map(async (vault) => {
+          const description = (await loadVaultDescription(vault)) as IVaultDescription;
+
+          return {
+            ...vault,
+            description,
+          } as IVaultOnlyDescription;
+        })
+      );
+
+    const vaultsWithDescription = await getVaultsData(vaults);
+
+    return vaultsWithDescription;
+  } catch (error) {
+    return [];
+  }
 };
 
 export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
