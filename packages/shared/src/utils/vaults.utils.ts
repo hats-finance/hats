@@ -230,21 +230,19 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
     const subgraphsRequests = Object.values(ChainsConfig)
       .filter((chain) => (onlyMainnet ? !chain.chain.testnet : true))
       .map((chain) => {
-        return axios.post(
-          chain.subgraph,
-          JSON.stringify({
+        return fetch(chain.subgraph, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
             query: GET_ALL_VAULTS,
           }),
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        });
       });
 
     const subgraphsResponses = await Promise.all(subgraphsRequests);
-    const subgraphsData = subgraphsResponses.map((res) => res.data);
+    const subgraphsData = await Promise.all(subgraphsResponses.map((res) => res.json()));
 
     const vaults: IVaultOnlyDescription[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
