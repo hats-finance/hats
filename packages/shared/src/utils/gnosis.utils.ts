@@ -1,5 +1,5 @@
 import { arbitrum, avalanche, bsc, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { utils } from "ethers";
 import { meter } from "../config";
 import { isServer } from "./general.utils";
@@ -151,7 +151,11 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+    if (error instanceof AxiosError && error.response?.status === 404) {
+      !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+      return defaultData;
+    }
+
     return defaultData;
   }
 };

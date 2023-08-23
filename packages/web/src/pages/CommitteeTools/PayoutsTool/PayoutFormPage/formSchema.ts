@@ -12,9 +12,9 @@ export const getSinglePayoutDataYupSchema = (intl: TFunction, vault: IVault | un
       .test(getTestNumberInBetween(intl, 0, vault?.maxBounty ? Number(vault.maxBounty) / 100 : 100, true))
       .required(intl("required"))
       .typeError(intl("required")),
-    explanation: Yup.string().required(intl("required")),
     nftUrl: Yup.string().required(intl("required")),
-    additionalInfo: Yup.string().required(intl("required")),
+    explanation: Yup.string(),
+    additionalInfo: Yup.string(),
   });
 
 export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | undefined) =>
