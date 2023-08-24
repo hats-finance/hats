@@ -1,7 +1,7 @@
 export { CongratsStatusCard } from "./CongratsStatusCard";
 export { EditVaultStatusCard } from "./EditVaultStatusCard";
 export { OnChainDataStatusCard } from "./OnChainDataStatusCard";
-export { CheckInStatusCard } from "./CheckInStatusCard";
+export { CheckInStatusCard } from "./CheckInStatusCard/CheckInStatusCard";
 export { DepositStatusCard } from "./DepositStatusCard";
 export { GovApprovalStatusCard } from "./GovApprovalStatusCard";
 export { GenerateNftsAssetsCard } from "./GenerateNftsAssetsCard";
