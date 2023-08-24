@@ -569,7 +569,7 @@
     "from": "From",
     "to": "To",
     "selectDate": "Select date",
-    "dateIsInGMT": "Date is in GMT{{timezone}}",
+    "dateIsInGMT": "Date is in your local time (GMT{{timezone}})",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

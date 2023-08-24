@@ -368,7 +368,10 @@ export const SubmissionsListPage = () => {
                                 const usedVault = filteredSubmissions.find(
                                   (sub) => sub.subId === selectedSubmissions[0]
                                 )?.linkedVault;
+
                                 if (usedVault && usedVault.id !== submission.linkedVault?.id) return undefined;
+                                // If v1, only can select one vault (multi payout not available)
+                                if (usedVault?.version === "v1") return undefined;
 
                                 return (sub: ISubmittedSubmission) => {
                                   if (selectedSubmissions.includes(sub.subId)) {
