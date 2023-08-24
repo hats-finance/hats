@@ -8,6 +8,7 @@ import {
 import { FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
+import moment from "moment";
 import { useContext, useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -188,6 +189,7 @@ export function VaultDetailsForm() {
                 placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
                 colorable
                 disabled={allFormDisabled}
+                helper={t("dateIsInGMT", { timezone: moment().format("Z") })}
                 {...field}
               />
             )}
@@ -204,6 +206,7 @@ export function VaultDetailsForm() {
                 placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
                 colorable
                 disabled={allFormDisabled}
+                helper={t("dateIsInGMT", { timezone: moment().format("Z") })}
                 {...field}
               />
             )}
