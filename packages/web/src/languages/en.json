@@ -645,7 +645,8 @@
       "filterSubmissions": "Filter submissions",
       "noSubmissionsFoundForThisDate": "No submissions found for that date range",
       "removeDateFilter": "Remove date filter",
-      "filterByDateShort": "Filter by date"
+      "filterByDateShort": "Filter by date",
+      "notAllowedToCreatePayout": "You are not allowed to create a payout for this vault. Please verify you are connected with a committee wallet."
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
