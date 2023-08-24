@@ -25,17 +25,6 @@ export const CheckInStatusCard = () => {
 
   const isCommitteeMember = userPermissionData.role === "committee";
 
-  // const checkInCall = CommitteeCheckInContract.hook(undefined, { address: vaultAddress, chainId: vaultChainId });
-  // useWaitForTransaction({
-  //   hash: checkInCall.data?.hash as `0x${string}`,
-  //   onSuccess: async (data) => {
-  //     const isSafeTx = await isAGnosisSafeTx(data.transactionHash, vaultChainId);
-
-  //     if (isSafeTx) setIsBeingExecuted(true);
-  //     setTimeout(() => refreshVaultData(), 2000);
-  //   },
-  // });
-
   const handleCheckIn = async () => {
     if (!vault || !chain || !signer || !account) return;
 
@@ -57,7 +46,7 @@ export const CheckInStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <h3>{t("checkIn")}</h3>
+          <h3>{t("committeeCheckIn")}</h3>
           <Pill
             dotColor={isCommitteeCheckedIn ? "blue" : "red"}
             text={isCommitteeCheckedIn ? t("completed") : t("awaitingAction")}

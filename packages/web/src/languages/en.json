@@ -228,6 +228,8 @@
     "pendingApprovalExplanation": "Pending approval - Hats team is reviewing your submission.",
     "pendingApproval": "Pending approval",
     "live": "Live",
+    "committeeCheckIn": "Committee check-in",
+    "parametersOnChain": "On-chain parameters",
     "vautlLiveExplanation": "Your vault is live on Hats dApp.",
     "loadingVaultData": "Loading vault data",
     "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Safe app.",
