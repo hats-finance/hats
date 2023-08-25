@@ -12,7 +12,6 @@ export const createVaultCheckInProposalOnSafe = async (
   extra: { signer: Signer; chain: Chain; account: string }
 ): Promise<boolean> => {
   try {
-    console.log(extra);
     await switchNetworkAndValidate(extra.chain.id, vault.chainId);
 
     const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: extra.signer as Signer });
