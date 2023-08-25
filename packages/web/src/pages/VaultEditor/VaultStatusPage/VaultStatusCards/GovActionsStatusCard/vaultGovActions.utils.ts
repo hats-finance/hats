@@ -71,7 +71,7 @@ export const createVaultGovActionsProposalOnSafe = async (
       options: { nonce },
     });
     const safeTxHash = await safeSdk.getTransactionHash(safeTransaction);
-    const senderSignature = await safeSdk.signTransactionHash(safeTxHash);
+    const senderSignature = await safeSdk.signTypedData(safeTransaction);
     await safeService.proposeTransaction({
       safeAddress: govAddress,
       safeTransactionData: safeTransaction.data,

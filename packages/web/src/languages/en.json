@@ -219,7 +219,7 @@
     "checkIn": "Check-in",
     "awaitingAction": "Awaiting action",
     "committeeCheckedIn": "Committee checked-in.",
-    "checkInExpanation": "Press check-in and sign a transaction with the committee multi-sig address on Safe app",
+    "checkInExpanation": "Press check-in and sign a transaction with. This will create the TX proposal on committee multisig.",
     "depositOnVaultExplanation": "Deposit assets to the vaults. \n\n Vault deposit is needed for the vault listing on Hats live dApp.",
     "govApproval": "Governance approval",
     "yourVaultChanged": "Your vault changed",
@@ -228,10 +228,13 @@
     "pendingApprovalExplanation": "Pending approval - Hats team is reviewing your submission.",
     "pendingApproval": "Pending approval",
     "live": "Live",
+    "committeeCheckIn": "Committee check-in",
+    "parametersOnChain": "On-chain parameters",
     "vautlLiveExplanation": "Your vault is live on Hats dApp.",
     "loadingVaultData": "Loading vault data",
     "connectWithMultisigOrCheckInOnGnosis": "Connect with the committee multisig using WalletConnect or check-in directly via Safe app.",
     "connectWithCommitteeMultisig": "You must be connected with the committee multisig using WalletConnect.",
+    "connectWithCommitteeMember": "You must be a vault committe member.",
     "connectWithCommitteeMultisigOrBeAMemberForEditing": "You must be a vault committe member in order to edit the vault.",
     "approveTheTransactionOnSafeApp": "Approve the transaction on the Safe app.",
     "vaultWithoutDescriptionError": "Your vault doesn't have a description. Wait couple of minutes. If the problem continue, please contact Hats support.",
@@ -566,6 +569,7 @@
     "from": "From",
     "to": "To",
     "selectDate": "Select date",
+    "dateIsInGMT": "Date is in your local time (GMT{{timezone}})",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -645,7 +649,8 @@
       "filterSubmissions": "Filter submissions",
       "noSubmissionsFoundForThisDate": "No submissions found for that date range",
       "removeDateFilter": "Remove date filter",
-      "filterByDateShort": "Filter by date"
+      "filterByDateShort": "Filter by date",
+      "notAllowedToCreatePayout": "You are not allowed to create a payout for this vault. Please verify you are connected with a committee wallet."
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",

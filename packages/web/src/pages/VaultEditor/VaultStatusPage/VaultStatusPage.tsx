@@ -97,9 +97,9 @@ export const VaultStatusPage = () => {
             <CongratsStatusCard />
             <EditVaultStatusCard />
             {userPermissionData.role === "gov" && <GenerateNftsAssetsCard />}
-            <OnChainDataStatusCard />
             <CheckInStatusCard />
             <DepositStatusCard />
+            <OnChainDataStatusCard />
             <GovApprovalStatusCard />
             {userPermissionData.role === "gov" && <GovActionsStatusCard />}
           </VaultStatusContext.Provider>

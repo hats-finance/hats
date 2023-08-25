@@ -6,7 +6,7 @@ export const StyledSubmissionsListPage = styled.div`
   background: var(--background-2);
   padding: ${getSpacing(3)};
   border-radius: ${getSpacing(0.5)};
-  margin-bottom: ${getSpacing(6)};
+  margin-bottom: ${getSpacing(14)};
 
   .title-container {
     display: flex;
@@ -118,9 +118,16 @@ export const StyledSubmissionsListPage = styled.div`
 
   .buttons {
     display: flex;
+    gap: ${getSpacing(5)};
     justify-content: space-between;
     align-items: center;
     margin-top: ${getSpacing(3)};
+    background: var(--brackground-2);
+    backdrop-filter: blur(2px);
+    position: fixed;
+    bottom: 0;
+    padding: ${getSpacing(0)} ${getSpacing(3)} ${getSpacing(4)};
+    transform: translateX(-${getSpacing(3)});
   }
 `;
 
