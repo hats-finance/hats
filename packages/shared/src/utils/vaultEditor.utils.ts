@@ -88,8 +88,8 @@ export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParamete
     fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
     fixedHatsGovPercetange: HATS_GOV_SPLIT,
     fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
-    committeePercentage: isAudit ? 0 : 5,
-    immediatePercentage: isAudit ? 100 : 35,
+    committeePercentage: isAudit ? 0 : 0,
+    immediatePercentage: isAudit ? 100 : 40,
     vestedPercentage: isAudit ? 0 : 60,
     maxBountyPercentage: 90,
   };
