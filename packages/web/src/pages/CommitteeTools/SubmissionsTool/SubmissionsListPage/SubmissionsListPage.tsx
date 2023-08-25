@@ -20,6 +20,7 @@ import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
 import SearchIcon from "@mui/icons-material/SearchOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
+import { AxiosError } from "axios";
 import { Alert, Button, FormDateInput, HatSpinner, Loading, Modal, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { LocalStorage } from "constants/constants";
@@ -243,10 +244,19 @@ export const SubmissionsListPage = () => {
       } as ISplitPayoutData;
     }
 
-    const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
-    setSelectedSubmissions([]);
+    try {
+      const payoutId = await createPayoutFromSubmissions.mutateAsync({ vaultInfo, type: payoutType, payoutData });
+      setSelectedSubmissions([]);
 
-    if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
+      if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
+    } catch (error) {
+      console.log(error);
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 403) {
+          alert(t("SubmissionsTool.notAllowedToCreatePayout"));
+        }
+      }
+    }
   };
 
   return (
@@ -358,7 +368,10 @@ export const SubmissionsListPage = () => {
                                 const usedVault = filteredSubmissions.find(
                                   (sub) => sub.subId === selectedSubmissions[0]
                                 )?.linkedVault;
+
                                 if (usedVault && usedVault.id !== submission.linkedVault?.id) return undefined;
+                                // If v1, only can select one vault (multi payout not available)
+                                if (usedVault?.version === "v1") return undefined;
 
                                 return (sub: ISubmittedSubmission) => {
                                   if (selectedSubmissions.includes(sub.subId)) {

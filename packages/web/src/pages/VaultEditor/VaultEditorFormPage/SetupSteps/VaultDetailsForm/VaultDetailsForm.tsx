@@ -8,6 +8,7 @@ import {
 import { FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";
+import moment from "moment";
 import { useContext, useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -110,19 +111,6 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        {vaultType === "audit" && (
-          <div className="w-50">
-            <FormInput
-              {...register("project-metadata.intendedCompetitionAmount")}
-              type="number"
-              label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
-              colorable
-              disabled={allFormDisabled}
-              placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
-            />
-          </div>
-        )}
-
         <VaultEmailsForm />
 
         <div className="inputs col-sm mt-4">
@@ -152,6 +140,19 @@ export function VaultDetailsForm() {
       </div>
 
       <br />
+
+      {vaultType === "audit" && (
+        <div className="w-50">
+          <FormInput
+            {...register("project-metadata.intendedCompetitionAmount")}
+            type="number"
+            label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
+            colorable
+            disabled={allFormDisabled}
+            placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
+          />
+        </div>
+      )}
 
       <p className="mb-3 mt-5">{t("VaultEditor.vault-details.oneLinerExplanation")}</p>
       <FormInput
@@ -188,6 +189,7 @@ export function VaultDetailsForm() {
                 placeholder={t("VaultEditor.vault-details.starttime-placeholder")}
                 colorable
                 disabled={allFormDisabled}
+                helper={t("dateIsInGMT", { timezone: moment().format("Z") })}
                 {...field}
               />
             )}
@@ -204,6 +206,7 @@ export function VaultDetailsForm() {
                 placeholder={t("VaultEditor.vault-details.endtime-placeholder")}
                 colorable
                 disabled={allFormDisabled}
+                helper={t("dateIsInGMT", { timezone: moment().format("Z") })}
                 {...field}
               />
             )}

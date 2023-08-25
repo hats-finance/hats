@@ -95,7 +95,7 @@ export const OnChainDataStatusCard = () => {
     <div className="status-card">
       <div className="status-card__title">
         <div className="leftSide">
-          <h3>{t("deployOnChain")}</h3>
+          <h3>{t("parametersOnChain")}</h3>
           <Pill dotColor="blue" text={t("parametersEditable")} />
         </div>
         {editVaultParameters && (
