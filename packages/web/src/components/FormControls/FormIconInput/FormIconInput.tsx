@@ -111,18 +111,29 @@ function FormIconInputComponent(
 
       {value ? (
         <label htmlFor={id} className="icon-preview">
-          {label && <label htmlFor={id}>{label}</label>}
           <img src={ipfsTransformUri(value, { isPinned: false })} alt="thumbnail" />
         </label>
       ) : (
         <label htmlFor={id} className="icon-add">
           <img src={AddIcon} alt="add" />
-          {label && <label htmlFor={id}>{label}</label>}
-          <p>{getPlaceholder()}</p>
         </label>
       )}
 
-      {error && <span className="error">{error.message}</span>}
+      <div className="info">
+        {value ? (
+          <>
+            {label && <label htmlFor={id}>{label}</label>}
+            <p>&nbsp;</p>
+          </>
+        ) : (
+          <>
+            {label && <label htmlFor={id}>{label}</label>}
+            <p>{getPlaceholder()}</p>
+          </>
+        )}
+      </div>
+
+      {/* {error && <span className="error">{error.message}</span>} */}
     </StyledFormIconInput>
   );
 }

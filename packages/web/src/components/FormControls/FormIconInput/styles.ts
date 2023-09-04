@@ -1,5 +1,5 @@
-import { getSpacing } from "styles";
 import styled, { css } from "styled-components";
+import { getSpacing } from "styles";
 
 type StyledFormIconInputProps = {
   isDirty: boolean;
@@ -10,6 +10,11 @@ type StyledFormIconInputProps = {
 export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
   ({ isDirty, hasError, disabled }) => css`
     position: relative;
+    width: ${getSpacing(12)};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     label {
       display: block;
@@ -45,12 +50,26 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
       margin: 0;
     }
 
+    .info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: ${getSpacing(0.5)};
+
+      p {
+        text-align: center;
+        color: var(--grey-500);
+        font-size: var(--tiny);
+      }
+    }
+
     .icon-add,
     .icon-preview {
       position: relative;
       cursor: pointer;
-      width: ${getSpacing(18)};
-      height: ${getSpacing(18)};
+      width: ${getSpacing(10)};
+      height: ${getSpacing(10)};
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -76,11 +95,14 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
 
     .icon-add {
       font-size: var(--tiny);
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
       img {
         filter: grayscale(1);
-        width: ${getSpacing(3)};
-        height: ${getSpacing(3)};
+        width: ${getSpacing(3.5)};
+        height: ${getSpacing(3.5)};
         margin-bottom: ${getSpacing(0.5)};
       }
     }

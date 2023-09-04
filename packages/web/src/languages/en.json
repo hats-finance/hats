@@ -46,7 +46,7 @@
     "key-is-public-not-private": "This key is a public key, you need a private key",
     "key-is-private-not-public": "This key is a private key, you need a public key",
     "img-placeholder": "SVG/PNG/JPG \n Max(50KB)",
-    "icon-placeholder": "SVG \n Max(50KB)",
+    "icon-placeholder": "SVG Max(50KB)",
     "JSON-file-placeholder": "JSON file",
     "CSV-file-placeholder": "CSV file",
     "invalid-json-file": "Invalid JSON file",
