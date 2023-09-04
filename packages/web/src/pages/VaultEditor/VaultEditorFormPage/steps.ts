@@ -98,20 +98,21 @@ export const AllEditorSections: IEditorSections = {
     name: "vaultDeployment",
     onlyInCreation: true,
     steps: [
-      {
-        id: "assets",
-        name: "assets",
-        title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
-        component: VaultAssetsList,
-        formFields: ["assets"],
-        backButtonTextKey: { creation: "backToVaultDescription" },
-      },
+      // {
+      //   id: "assets",
+      //   name: "assets",
+      //   title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
+      //   component: VaultAssetsList,
+      //   formFields: ["assets"],
+      //   backButtonTextKey: { creation: "backToVaultDescription" },
+      // },
       {
         id: "params",
         name: "parameters",
-        title: undefined,
+        // title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
         component: VaultParametersForm,
         formFields: ["parameters"],
+        backButtonTextKey: { creation: "backToVaultDescription" },
       },
       {
         id: "preview",
