@@ -1,11 +1,11 @@
-import { useContext, useEffect } from "react";
-import { useAccount, useNetwork } from "wagmi";
 import { IEditedVaultDescription } from "@hats-finance/shared";
-import { useTranslation } from "react-i18next";
-import { Controller, useWatch } from "react-hook-form";
 import { FormInput, FormSelectInput } from "components";
+import { useEnhancedFormContext } from "hooks/form";
+import { useContext, useEffect } from "react";
+import { useWatch } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
-import { useEnhancedFormContext, getCustomIsDirty } from "hooks/form";
+import { useAccount, useNetwork } from "wagmi";
 import { VaultEditorFormContext } from "../../store";
 import { StyledCommitteeDetailsForm } from "./styles";
 
@@ -15,7 +15,7 @@ export function CommitteeDetailsForm() {
   const { chain } = useNetwork();
 
   const { register, control, trigger } = useEnhancedFormContext<IEditedVaultDescription>();
-  const committeeChainId = useWatch({ control, name: "committee.chainId" });
+  const vaultChainId = useWatch({ control, name: "committee.chainId" });
 
   const { isEditingExistingVault, allFormDisabled } = useContext(VaultEditorFormContext);
 
@@ -23,7 +23,7 @@ export function CommitteeDetailsForm() {
   const supportedNetworksOptions = Object.values(appChains)
     .filter(
       (chainInfo) =>
-        Number(committeeChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)
+        Number(vaultChainId) === chainInfo.chain.id || (showTestnets ? chainInfo.chain.testnet : !chainInfo.chain.testnet)
     )
     .map((chainConf) => ({
       label: chainConf.chain.name,
@@ -31,39 +31,28 @@ export function CommitteeDetailsForm() {
     }));
 
   useEffect(() => {
-    if (committeeChainId) trigger("committee.multisig-address");
-  }, [committeeChainId, trigger]);
+    if (vaultChainId) trigger("committee.multisig-address");
+  }, [vaultChainId, trigger]);
 
   return (
     <StyledCommitteeDetailsForm>
       <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCommitteeDetailsSafeExplanation") }} />
 
       <div className="half">
-        <Controller
-          control={control}
-          name={`committee.chainId`}
-          render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => {
-            return (
-              <FormSelectInput
-                isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
-                error={error}
-                label={t("VaultEditor.vault-details.chain")}
-                placeholder={t("VaultEditor.vault-details.chain-placeholder")}
-                colorable
-                disabled={isEditingExistingVault || allFormDisabled}
-                options={supportedNetworksOptions}
-                {...field}
-                value={field.value ?? ""}
-              />
-            );
-          }}
+        <FormSelectInput
+          name="chainId"
+          onChange={() => {}}
+          label={t("VaultEditor.vault-details.chain")}
+          placeholder={t("VaultEditor.vault-details.chain-placeholder")}
+          options={supportedNetworksOptions}
+          value={vaultChainId ?? ""}
         />
       </div>
 
       <FormInput
         {...register("committee.multisig-address")}
         label={t("VaultEditor.multisig-address")}
-        disabled={!committeeChainId || isEditingExistingVault || allFormDisabled}
+        disabled={!vaultChainId || isEditingExistingVault || allFormDisabled}
         pastable
         colorable
         placeholder={t("VaultEditor.vault-details.multisig-address-placeholder")}

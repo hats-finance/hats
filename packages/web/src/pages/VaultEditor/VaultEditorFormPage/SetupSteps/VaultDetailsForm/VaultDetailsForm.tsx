@@ -13,6 +13,7 @@ import { useContext, useEffect } from "react";
 import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
+import { VaultAssetsList } from "../shared/VaultAssetsList/VaultAssetsList";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
 import { StyledVaultDetails } from "./styles";
 
@@ -111,9 +112,7 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        <VaultEmailsForm />
-
-        <div className="inputs col-sm mt-4">
+        <div className="inputs col-sm mb-4">
           <FormInput
             {...register("project-metadata.website")}
             colorable
@@ -129,32 +128,15 @@ export function VaultDetailsForm() {
               colorable
               label={t("VaultEditor.vault-details.icon")}
             />
-            <FormIconInput
-              {...register("project-metadata.tokenIcon")}
-              disabled={allFormDisabled}
-              colorable
-              label={t("VaultEditor.vault-details.token-icon")}
-            />
           </div>
         </div>
+
+        <VaultEmailsForm />
       </div>
 
       <br />
 
-      {vaultType === "audit" && (
-        <div className="w-50">
-          <FormInput
-            {...register("project-metadata.intendedCompetitionAmount")}
-            type="number"
-            label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
-            colorable
-            disabled={allFormDisabled}
-            placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
-          />
-        </div>
-      )}
-
-      <p className="mb-3 mt-5">{t("VaultEditor.vault-details.oneLinerExplanation")}</p>
+      <p className="mb-3">{t("VaultEditor.vault-details.oneLinerExplanation")}</p>
       <FormInput
         {...register("project-metadata.oneLiner")}
         colorable
@@ -164,9 +146,31 @@ export function VaultDetailsForm() {
         helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
       />
 
+      <VaultAssetsList />
+
+      {vaultType === "audit" && (
+        <>
+          <p className="mb-3">{t("VaultEditor.vault-details.intendedAmountExplanation")}</p>
+          <div className="w-50">
+            <FormInput
+              {...register("project-metadata.intendedCompetitionAmount")}
+              type="number"
+              label={t("VaultEditor.vault-details.intendedCompetitionAmount")}
+              colorable
+              disabled={allFormDisabled}
+              placeholder={t("VaultEditor.vault-details.intendedCompetitionAmount-placeholder")}
+            />
+          </div>
+        </>
+      )}
+
       <br />
 
-      {(vaultType !== "audit" && isAdvancedMode) || vaultType === "audit" ? (
+      {((vaultType !== "audit" && isAdvancedMode) || vaultType === "audit") && (
+        <p className="section-title">{t("startAndEndDate")}</p>
+      )}
+
+      {vaultType !== "audit" && isAdvancedMode ? (
         <FormInput
           {...register("includesStartAndEndTime")}
           disabled={allFormDisabled}

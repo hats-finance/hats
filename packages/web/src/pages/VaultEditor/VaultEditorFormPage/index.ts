@@ -5,6 +5,6 @@ export { CommitteeDetailsForm } from "./SetupSteps/CommitteeDetailsForm/Committe
 export { VulnerabilitySeveritiesList } from "./SetupSteps/VulnerabilitySeveritiesList/VulnerabilitySeveritiesList";
 export { ScopeDetailsForm } from "./SetupSteps/ScopeDetailsForm/ScopeDetailsForm";
 export { SetupReview } from "./SetupSteps/SetupReview/SetupReview";
-export { VaultAssetsList } from "./DeploySteps/VaultAssetsList/VaultAssetsList";
+export { VaultAssetsList } from "./SetupSteps/shared/VaultAssetsList/VaultAssetsList";
 export { VaultParametersForm } from "./DeploySteps/VaultParametersForm/VaultParametersForm";
 export { VaultFormReview } from "./DeploySteps/VaultFormReview/VaultFormReview";
