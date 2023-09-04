@@ -19,9 +19,13 @@ export const BugBountyVaultsPage = () => {
           <div className="vaults-container mt-4">
             <h2 className="subtitle">{t("bugBounties")}</h2>
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
           </div>
         )}

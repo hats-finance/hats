@@ -29,7 +29,9 @@ export const AuditVaultsPage = () => {
             <VaultCardSkeleton className="mb-5" />
             <h2 className="subtitle mt-5">{t("finishedCompetitions")}</h2>
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
+            <br />
             <VaultCardSkeleton className="mb-5" />
           </div>
         )}
