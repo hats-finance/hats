@@ -2,7 +2,7 @@ import useWindowDimensions from "hooks/useWindowDimensions";
 import ContentLoader from "react-content-loader";
 
 export const VaultCardSkeleton = (props: any) => {
-  const { height, width } = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
     <>

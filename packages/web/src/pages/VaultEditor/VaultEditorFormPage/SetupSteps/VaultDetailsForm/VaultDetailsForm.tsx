@@ -112,7 +112,7 @@ export function VaultDetailsForm() {
           />
         </div>
 
-        <div className="inputs col-sm mb-4">
+        <div className="inputs col-sm">
           <FormInput
             {...register("project-metadata.website")}
             colorable
