@@ -3,7 +3,6 @@ import {
   CommitteeMembersList,
   ScopeDetailsForm,
   SetupReview,
-  VaultAssetsList,
   VaultDetailsForm,
   VaultFormReview,
   VaultParametersForm,
@@ -109,7 +108,6 @@ export const AllEditorSections: IEditorSections = {
       {
         id: "params",
         name: "parameters",
-        // title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
         component: VaultParametersForm,
         formFields: ["parameters"],
         backButtonTextKey: { creation: "backToVaultDescription" },
