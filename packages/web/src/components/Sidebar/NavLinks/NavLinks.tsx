@@ -6,7 +6,6 @@ import { toggleMenu } from "actions";
 import { ReactComponent as AuditsIcon } from "assets/icons/custom/audits.svg";
 import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg";
 import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
-import { ReactComponent as SubmissionsIcon } from "assets/icons/custom/submissions.svg";
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
 import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
