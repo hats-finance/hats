@@ -70,11 +70,11 @@ export default function NavLinks() {
         <p className="normal">{t("auditCompetitions")}</p>
         <p className="collapsed">{t("competitions")}</p>
       </StyledNavLink>
-      <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
+      {/* <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
         <SubmissionsIcon />
         <p className="normal">{t("submitVulnerability")}</p>
         <p className="collapsed">{t("submit")}</p>
-      </StyledNavLink>
+      </StyledNavLink> */}
       <StyledNavLink to={RoutePaths.vault_editor} onClick={handleClick}>
         <VaultEditorIcon />
         <p className="normal">{t("addYourProject")}</p>
