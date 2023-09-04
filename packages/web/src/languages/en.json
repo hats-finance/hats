@@ -572,6 +572,7 @@
     "dateIsInGMT": "Date is in your local time (GMT{{timezone}})",
     "vaultEditorAssetInformation": "Choose the reward token.\n In order to maximize participation of security researcher we recommend the reward will be in stable coin.",
     "startAndEndDate": "Start and end date",
+    "communicationChannel": "Communication Channel",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -1083,6 +1084,8 @@
         "repoInformation": "Repositories Information",
         "oneLinerExplanation": "Provide a brief introductory sentence for your protocol (max 120 char)",
         "intendedAmountExplanation": "Enter intended competition rewards amount, rewards amount will be finalized upon deposit.",
+        "communicationChannelExplanation": "Provide a communication channel for the committee to receive the vulnerability submissions.",
+        "startEndDateExplanation": "Provide the start and end date of the vault.",
         "oneLiner": "One liner (brief description)",
         "oneLiner-placeholder": "Enter a brief description about your project"
       },

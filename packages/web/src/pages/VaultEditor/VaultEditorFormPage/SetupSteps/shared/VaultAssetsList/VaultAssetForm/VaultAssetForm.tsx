@@ -69,7 +69,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   return (
     <StyledVaultAssetForm>
       <p className="section-title">{t("assetsInVault")}</p>
-      <div className="helper-text">{t("vaultEditorAssetInformation")}</div>
+      <div className="helper-text mb-3">{t("vaultEditorAssetInformation")}</div>
 
       <div className="w-25 chain">
         <Controller

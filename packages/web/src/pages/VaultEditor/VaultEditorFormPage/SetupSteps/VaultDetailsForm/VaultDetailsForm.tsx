@@ -131,26 +131,28 @@ export function VaultDetailsForm() {
           </div>
         </div>
 
-        <VaultEmailsForm />
+        <p className="mb-3 helper-text">{t("VaultEditor.vault-details.oneLinerExplanation")}</p>
+        <FormInput
+          {...register("project-metadata.oneLiner")}
+          colorable
+          disabled={allFormDisabled}
+          placeholder={t("VaultEditor.vault-details.oneLiner-placeholder")}
+          label={t("VaultEditor.vault-details.oneLiner")}
+          helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
+        />
       </div>
 
-      <br />
+      <p className="section-title mt-5">{t("communicationChannel")}</p>
+      <p className="mb-3 helper-text">{t("VaultEditor.vault-details.communicationChannelExplanation")}</p>
+      <VaultEmailsForm />
 
-      <p className="mb-3">{t("VaultEditor.vault-details.oneLinerExplanation")}</p>
-      <FormInput
-        {...register("project-metadata.oneLiner")}
-        colorable
-        disabled={allFormDisabled}
-        placeholder={t("VaultEditor.vault-details.oneLiner-placeholder")}
-        label={t("VaultEditor.vault-details.oneLiner")}
-        helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
-      />
-
-      <VaultAssetsList />
+      <div className="mt-5">
+        <VaultAssetsList />
+      </div>
 
       {vaultType === "audit" && (
         <>
-          <p className="mb-3">{t("VaultEditor.vault-details.intendedAmountExplanation")}</p>
+          <p className="mb-3 helper-text">{t("VaultEditor.vault-details.intendedAmountExplanation")}</p>
           <div className="w-50">
             <FormInput
               {...register("project-metadata.intendedCompetitionAmount")}
@@ -167,7 +169,10 @@ export function VaultDetailsForm() {
       <br />
 
       {((vaultType !== "audit" && isAdvancedMode) || vaultType === "audit") && (
-        <p className="section-title">{t("startAndEndDate")}</p>
+        <>
+          <p className="section-title">{t("startAndEndDate")}</p>
+          <div className="helper-text mb-3">{t("VaultEditor.vault-details.startEndDateExplanation")}</div>
+        </>
       )}
 
       {vaultType !== "audit" && isAdvancedMode ? (

@@ -40,6 +40,7 @@ export function CommitteeDetailsForm() {
 
       <div className="half">
         <FormSelectInput
+          disabled
           name="chainId"
           onChange={() => {}}
           label={t("VaultEditor.vault-details.chain")}
