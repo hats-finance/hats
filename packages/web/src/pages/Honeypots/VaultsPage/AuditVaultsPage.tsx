@@ -16,7 +16,6 @@ export const AuditVaultsPage = () => {
   const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];
 
   const draftAudits = useDraftAuditCompetitions();
-  console.log(draftAudits);
 
   const areVaultsToShow =
     liveAuditCompetitions.length > 0 || upcomingAuditCompetitions.length > 0 || finishedAuditPayouts.length > 0;
@@ -44,8 +43,8 @@ export const AuditVaultsPage = () => {
           <>
             <h2 className="subtitle">{t("liveCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {liveAuditCompetitions.map((auditVault) => (
-                <VaultCard key={Math.random()} vaultData={auditVault} />
+              {liveAuditCompetitions.map((auditVault, idx) => (
+                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
               ))}
             </div>
           </>
@@ -55,11 +54,11 @@ export const AuditVaultsPage = () => {
           <>
             <h2 className="subtitle">{t("upcomingCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {upcomingAuditCompetitions.map((auditVault) => (
-                <VaultCard key={Math.random()} vaultData={auditVault} />
+              {upcomingAuditCompetitions.map((auditVault, idx) => (
+                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
               ))}
-              {draftAudits.map((auditDraft) => (
-                <VaultAuditDraftCard key={Math.random()} vaultDraft={auditDraft} />
+              {draftAudits.map((auditDraft, idx) => (
+                <VaultAuditDraftCard key={auditDraft._id ?? "" + idx} vaultDraft={auditDraft} />
               ))}
             </div>
           </>
@@ -69,8 +68,8 @@ export const AuditVaultsPage = () => {
           <>
             <h2 className="subtitle">{t("finishedCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {allFinishedAuditCompetitions.map((auditPayout) => (
-                <VaultCard key={Math.random()} auditPayout={auditPayout} />
+              {allFinishedAuditCompetitions.map((auditPayout, idx) => (
+                <VaultCard key={(auditPayout.id ?? 0) + idx} auditPayout={auditPayout} />
               ))}
             </div>
           </>

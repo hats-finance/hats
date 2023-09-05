@@ -1,10 +1,14 @@
-import { IEditedSessionResponse } from "@hats-finance/shared";
-import { Pill, WithTooltip } from "components";
+import { IEditedSessionResponse, isAddressAMultisigMember } from "@hats-finance/shared";
+import { Button, Pill, WithTooltip } from "components";
 import millify from "millify";
 import moment from "moment";
-import { useMemo } from "react";
+import { RoutePaths } from "navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
+import { useAccount, useNetwork } from "wagmi";
 import { StyledVaultCard } from "./styles";
 
 type VaultAuditDraftCardProps = {
@@ -18,6 +22,25 @@ type VaultAuditDraftCardProps = {
  */
 export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const { address } = useAccount();
+  const { chain } = useNetwork();
+
+  const [isGovMember, setIsGovMember] = useState(false);
+
+  useEffect(() => {
+    const checkGovMember = async () => {
+      if (address && chain && chain.id) {
+        const chainId = Number(chain.id);
+        const govMultisig = appChains[Number(chainId)]?.govMultisig;
+
+        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
+        setIsGovMember(isGov);
+      }
+    };
+    checkGovMember();
+  }, [address, chain]);
 
   const vaultDate = useMemo(() => {
     const starttime = (vaultDraft.editedDescription["project-metadata"].starttime ?? 0) * 1000;
@@ -74,6 +97,13 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
     window.open(projectWebsite, "_blank");
   };
 
+  const goToEditSession = async () => {
+    if (!isGovMember) return;
+    if (!vaultDraft._id) return;
+
+    navigate(`${RoutePaths.vault_editor}/${vaultDraft._id}`);
+  };
+
   return (
     <StyledVaultCard isAudit={isAudit} reducedStyles={false} showIntendedAmount={true} hasActiveClaim={false}>
       {isAudit && getAuditStatusPill()}
@@ -106,6 +136,12 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
             </>
           </div>
         </div>
+
+        {isGovMember && (
+          <Button className="mt-3" size="medium" onClick={goToEditSession}>
+            {t("goToEditSession")}
+          </Button>
+        )}
       </div>
     </StyledVaultCard>
   );
