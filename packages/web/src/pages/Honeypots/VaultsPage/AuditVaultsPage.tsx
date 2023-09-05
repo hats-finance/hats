@@ -1,6 +1,6 @@
-import { Seo, VaultCard, VaultCardSkeleton } from "components";
+import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton } from "components";
 import { useTranslation } from "react-i18next";
-import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "./hooks";
+import { useAuditCompetitionsVaults, useDraftAuditCompetitions, useOldAuditCompetitions } from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const AuditVaultsPage = () => {
@@ -13,6 +13,10 @@ export const AuditVaultsPage = () => {
   } = useAuditCompetitionsVaults();
 
   const oldAudits = useOldAuditCompetitions();
+  const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];
+
+  const draftAudits = useDraftAuditCompetitions();
+  console.log(draftAudits);
 
   const areVaultsToShow =
     liveAuditCompetitions.length > 0 || upcomingAuditCompetitions.length > 0 || finishedAuditPayouts.length > 0;
@@ -40,30 +44,33 @@ export const AuditVaultsPage = () => {
           <>
             <h2 className="subtitle">{t("liveCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {liveAuditCompetitions.map((auditVault, idx) => (
-                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
+              {liveAuditCompetitions.map((auditVault) => (
+                <VaultCard key={Math.random()} vaultData={auditVault} />
               ))}
             </div>
           </>
         )}
 
-        {upcomingAuditCompetitions.length > 0 && (
+        {(upcomingAuditCompetitions.length > 0 || draftAudits.length > 0) && (
           <>
             <h2 className="subtitle">{t("upcomingCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {upcomingAuditCompetitions.map((auditVault, idx) => (
-                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
+              {upcomingAuditCompetitions.map((auditVault) => (
+                <VaultCard key={Math.random()} vaultData={auditVault} />
+              ))}
+              {draftAudits.map((auditDraft) => (
+                <VaultAuditDraftCard key={Math.random()} vaultDraft={auditDraft} />
               ))}
             </div>
           </>
         )}
 
-        {[...finishedAuditPayouts, ...(oldAudits ?? [])].length > 0 && (
+        {allFinishedAuditCompetitions.length > 0 && (
           <>
             <h2 className="subtitle">{t("finishedCompetitions")}</h2>
             <div className="vaults-container mt-4">
-              {[...finishedAuditPayouts, ...(oldAudits ?? [])].map((auditPayout, idx) => (
-                <VaultCard key={auditPayout.id + idx} auditPayout={auditPayout} />
+              {allFinishedAuditCompetitions.map((auditPayout) => (
+                <VaultCard key={Math.random()} auditPayout={auditPayout} />
               ))}
             </div>
           </>

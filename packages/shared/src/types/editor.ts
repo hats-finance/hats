@@ -134,6 +134,7 @@ export interface IEditedSessionResponse {
   lastCreationOnChainRequest?: Date;
   vaultEditionStatus?: IVaultEditionStatus;
   nftAssetsIpfsHash?: string;
+  pinned?: boolean;
 }
 
 export interface ICreateVaultOnChainCall {
