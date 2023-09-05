@@ -9,12 +9,14 @@ import {
   editedFormToCreateVaultOnChainCall,
   getGnosisSafeInfo,
   isAGnosisSafeTx,
+  isAddressAMultisigMember,
   nonEditableEditionStatus,
 } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import RocketLaunchOutlinedIcon from "@mui/icons-material/RocketLaunchOutlined";
 import { Alert, Button, CopyToClipboard, Loading, Modal, Seo } from "components";
 import { CreateVaultContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -23,13 +25,14 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
 import { RoutePaths } from "navigation";
+import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { checkIfAddressCanEditTheVault } from "../utils";
 import * as VaultEditorService from "../vaultEditorService";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
@@ -49,6 +52,7 @@ import { useVaultEditorSteps } from "./useVaultEditorSteps";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { chain } = useNetwork();
   const { allVaults } = useVaults();
 
   const { editSessionId } = useParams();
@@ -67,6 +71,7 @@ const VaultEditorFormPage = () => {
   const [onChainDescriptionHash, setOnChainDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
+  const [isGovMember, setIsGovMember] = useState(false);
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
   const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
@@ -119,6 +124,21 @@ const VaultEditorFormPage = () => {
       if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
     },
   });
+
+  const showPublishDraftOption = currentStepInfo?.id === "details" && isGovMember && !isVaultCreated;
+
+  useEffect(() => {
+    const checkGovMember = async () => {
+      if (address && chain && chain.id) {
+        const chainId = Number(chain.id);
+        const govMultisig = appChains[Number(chainId)]?.govMultisig;
+
+        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
+        setIsGovMember(isGov);
+      }
+    };
+    checkGovMember();
+  }, [address, chain]);
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     try {
@@ -315,6 +335,34 @@ const VaultEditorFormPage = () => {
         setLastModifedOn(sessionResponse.updatedAt);
         setEditingExistingVaultStatus(sessionResponse.vaultEditionStatus);
         handleReset(sessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+      }
+    }
+  };
+
+  const publishAuditDraft = async () => {
+    if (!isGovMember) return;
+    if (!editSessionId) return;
+
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
+    const wantsToPublish = await confirm({
+      title: t("publishDraft"),
+      confirmText: t("publishDraft"),
+      description: t("areYouSureYouWantToPublishAuditDraft"),
+    });
+
+    if (wantsToPublish) {
+      try {
+        setLoading(true);
+        const draftResponse = await VaultEditorService.publishAuditDraft(editSessionId);
+        setLoading(false);
+        if (draftResponse) {
+          navigate(`/${HoneypotsRoutePaths.audits}`);
+        }
+      } catch (error) {
+        console.log(error);
+        alert("Error publishing draft");
       }
     }
   };
@@ -706,6 +754,11 @@ const VaultEditorFormPage = () => {
                   <span>{getNextButtonDisabled(currentStepInfo)}</span>
                 </div>
                 <div className="backButton">
+                  {showPublishDraftOption && (
+                    <Button styleType="outlined" filledColor="secondary" onClick={publishAuditDraft}>
+                      <RocketLaunchOutlinedIcon className="mr-2" /> {t("publishDraft")}
+                    </Button>
+                  )}
                   {onGoBack && (
                     <Button styleType="invisible" onClick={() => onGoBack.go()}>
                       <BackIcon className="mr-2" /> {onGoBack.text}

@@ -108,7 +108,7 @@ export const StyledFormIconInput = styled.div<StyledFormIconInputProps>(
     }
 
     .icon-preview {
-      padding: ${getSpacing(1)};
+      padding: ${getSpacing(0.5)};
 
       label {
         position: absolute;

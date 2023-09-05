@@ -573,6 +573,8 @@
     "vaultEditorAssetInformation": "Choose the reward token.\n In order to maximize participation of security researcher we recommend the reward will be in stable coin.",
     "startAndEndDate": "Start and end date",
     "communicationChannel": "Communication Channel",
+    "publishDraft": "Publish draft",
+    "areYouSureYouWantToPublishAuditDraft": "Are you sure you want to publish this audit draft?",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
