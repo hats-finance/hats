@@ -304,3 +304,32 @@ export async function publishAuditDraft(editSessionId: string): Promise<IEditedS
     return null;
   }
 }
+
+/**
+ * Verify if an editSession has a published audit draft
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function hasEditSessionAuditDraftPublished(editSessionId: string): Promise<boolean> {
+  try {
+    const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/audit-draft`);
+    const existsDraft = !!response.data;
+    return existsDraft;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Delete the audit editSession draft
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function deleteAuditDraft(editSessionId: string): Promise<boolean> {
+  try {
+    await axiosClient.delete(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/audit-draft`);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}

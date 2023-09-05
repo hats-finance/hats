@@ -574,7 +574,9 @@
     "startAndEndDate": "Start and end date",
     "communicationChannel": "Communication Channel",
     "publishDraft": "Publish draft",
+    "deleteDraft": "Delete draft",
     "areYouSureYouWantToPublishAuditDraft": "Are you sure you want to publish this audit draft?",
+    "areYouSureYouWantToDeleteAuditDraft": "Are you sure you want to delete this audit draft?",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
