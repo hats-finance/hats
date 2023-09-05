@@ -19,7 +19,7 @@ import { StyledVaultDetails } from "./styles";
 
 export function VaultDetailsForm() {
   const { t } = useTranslation();
-  const { allFormDisabled, isAdvancedMode } = useContext(VaultEditorFormContext);
+  const { allFormDisabled, isAdvancedMode, isEditingExistingVault } = useContext(VaultEditorFormContext);
 
   const { register, control, resetField, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
@@ -142,13 +142,19 @@ export function VaultDetailsForm() {
         />
       </div>
 
-      <p className="section-title mt-5">{t("communicationChannel")}</p>
-      <p className="mb-3 helper-text">{t("VaultEditor.vault-details.communicationChannelExplanation")}</p>
-      <VaultEmailsForm />
+      {!isEditingExistingVault && (
+        <>
+          <p className="section-title mt-5">{t("communicationChannel")}</p>
+          <p className="mb-3 helper-text">{t("VaultEditor.vault-details.communicationChannelExplanation")}</p>
+          <VaultEmailsForm />
+        </>
+      )}
 
-      <div className="mt-5">
-        <VaultAssetsList />
-      </div>
+      {!isEditingExistingVault && (
+        <div className="mt-5">
+          <VaultAssetsList />
+        </div>
+      )}
 
       {vaultType === "audit" && (
         <>
