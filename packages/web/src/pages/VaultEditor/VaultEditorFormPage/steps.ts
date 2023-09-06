@@ -111,6 +111,7 @@ export const AllEditorSections: IEditorSections = {
         component: VaultParametersForm,
         formFields: ["parameters"],
         backButtonTextKey: { creation: "backToVaultDescription" },
+        isAdvanced: true,
       },
       {
         id: "preview",
