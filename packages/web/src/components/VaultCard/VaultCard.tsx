@@ -1,9 +1,11 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
+import useConfirm from "hooks/useConfirm";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -46,6 +48,7 @@ export const VaultCard = ({
 }: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
   const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
@@ -152,8 +155,18 @@ export const VaultCard = ({
     );
   };
 
-  const goToProjectWebsite = () => {
+  const goToProjectWebsite = async () => {
     if (!projectWebsite) return;
+
+    const wantToGo = await confirm({
+      title: t("goToProjectWebsite"),
+      titleIcon: <OpenIcon className="mr-2" fontSize="large" />,
+      description: t("doYouWantToGoToProjectWebsite", { website: projectWebsite }),
+      cancelText: t("no"),
+      confirmText: t("yesGo"),
+    });
+
+    if (!wantToGo) return;
     window.open(projectWebsite, "_blank");
   };
 

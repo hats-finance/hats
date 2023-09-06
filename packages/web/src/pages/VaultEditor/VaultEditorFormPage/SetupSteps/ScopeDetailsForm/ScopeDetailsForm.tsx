@@ -137,7 +137,7 @@ export const ScopeDetailsForm = () => {
       <br />
 
       {/* Contracts/assets covered */}
-      {(isAudit && isAdvancedMode) || (isAudit && watch("contracts-covered").length > 0) || !isAudit ? (
+      {(isAudit && watch("contracts-covered").length > 0) || !isAudit ? (
         <>
           <p className="section-title mt-5">{t("VaultEditor.contractsAssetsCovered")}</p>
           <ContractsCoveredList />

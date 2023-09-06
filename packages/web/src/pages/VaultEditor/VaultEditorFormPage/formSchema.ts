@@ -135,7 +135,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     }),
     assets: Yup.array().of(
       Yup.object({
-        address: Yup.string().test(getTestTokenAddress(intl)).required(intl("required")),
+        address: Yup.string()
+          .test(getTestTokenAddress(intl))
+          .test("required", intl("required"), (val, ctx: any) =>
+            // If vault is already created, we don't need to validate the assets
+            !!ctx.from[1].value.vaultCreatedInfo?.vaultAddress ? true : !!val
+          ),
       })
     ),
     parameters: Yup.object({

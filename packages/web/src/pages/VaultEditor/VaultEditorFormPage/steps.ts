@@ -3,7 +3,6 @@ import {
   CommitteeMembersList,
   ScopeDetailsForm,
   SetupReview,
-  VaultAssetsList,
   VaultDetailsForm,
   VaultFormReview,
   VaultParametersForm,
@@ -49,7 +48,7 @@ export const AllEditorSections: IEditorSections = {
         name: "details",
         title: { creation: "vaultDescription", editing: "vaultDescription" },
         component: VaultDetailsForm,
-        formFields: ["project-metadata"],
+        formFields: ["project-metadata", "assets", "committee.chainId"],
       },
       {
         id: "committee",
@@ -98,20 +97,21 @@ export const AllEditorSections: IEditorSections = {
     name: "vaultDeployment",
     onlyInCreation: true,
     steps: [
-      {
-        id: "assets",
-        name: "assets",
-        title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
-        component: VaultAssetsList,
-        formFields: ["assets"],
-        backButtonTextKey: { creation: "backToVaultDescription" },
-      },
+      // {
+      //   id: "assets",
+      //   name: "assets",
+      //   title: { creation: "createVaultOnChain", editing: "createVaultOnChain" },
+      //   component: VaultAssetsList,
+      //   formFields: ["assets"],
+      //   backButtonTextKey: { creation: "backToVaultDescription" },
+      // },
       {
         id: "params",
         name: "parameters",
-        title: undefined,
         component: VaultParametersForm,
         formFields: ["parameters"],
+        backButtonTextKey: { creation: "backToVaultDescription" },
+        isAdvanced: true,
       },
       {
         id: "preview",

@@ -6,7 +6,6 @@ import { toggleMenu } from "actions";
 import { ReactComponent as AuditsIcon } from "assets/icons/custom/audits.svg";
 import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg";
 import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
-import { ReactComponent as SubmissionsIcon } from "assets/icons/custom/submissions.svg";
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
 import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
@@ -70,11 +69,11 @@ export default function NavLinks() {
         <p className="normal">{t("auditCompetitions")}</p>
         <p className="collapsed">{t("competitions")}</p>
       </StyledNavLink>
-      <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
+      {/* <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
         <SubmissionsIcon />
         <p className="normal">{t("submitVulnerability")}</p>
         <p className="collapsed">{t("submit")}</p>
-      </StyledNavLink>
+      </StyledNavLink> */}
       <StyledNavLink to={RoutePaths.vault_editor} onClick={handleClick}>
         <VaultEditorIcon />
         <p className="normal">{t("addYourProject")}</p>

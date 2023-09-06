@@ -12322,10 +12322,10 @@ open@^8.0.9, open@^8.4.0:
     is-docker "^2.1.1"
     is-wsl "^2.2.0"
 
-openpgp@5.2.1:
-  version "5.2.1"
-  resolved "https://registry.npmjs.org/openpgp/-/openpgp-5.2.1.tgz"
-  integrity sha512-zvu63kxe70q3D6WlKC/TB2pzI59I8V/l4G+z/VYgNVOyARsoH9q4i/WqwoHPjWG5HnRjhII3WSvp3gXH2DMPVg==
+openpgp@5.10.1:
+  version "5.10.1"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-5.10.1.tgz#3b137470187b79281719ced16fb9e60b822cfd24"
+  integrity sha512-SR5Ft+ej51d0+p53ld5Ney0Yiz0y8Mh1YYLJrvpRMbTaNhvS1QcDX0Oq1rW9sjBnQXtgrpWw2Zve3rm7K5C/pw==
   dependencies:
     asn1.js "^5.0.0"
 
@@ -13341,9 +13341,9 @@ property-information@^6.0.0:
   integrity sha512-kma4U7AFCTwpqq5twzC1YVIDXSqg6qQK6JN0smOw8fgRy1OkMi0CYSzFmsy6dnqSenamAtj0CyXMUJ1Mf6oROg==
 
 protobufjs@^6.10.2:
-  version "6.11.3"
-  resolved "https://registry.npmjs.org/protobufjs/-/protobufjs-6.11.3.tgz"
-  integrity sha512-xL96WDdCZYdU7Slin569tFX712BxsxslWwAfAhCYjQKGTq7dAU91Lomy6nLLhh/dyGhk/YH4TwTSRxTzhuHyZg==
+  version "6.11.4"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.11.4.tgz#29a412c38bf70d89e537b6d02d904a6f448173aa"
+  integrity sha512-5kQWPaJHi1WoCpjTGszzQ32PG2F4+wRY6BmAT4Vfw56Q2FZ4YZzK20xUYQH4YkfehY1e6QSICrJquM6xXZNcrw==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"

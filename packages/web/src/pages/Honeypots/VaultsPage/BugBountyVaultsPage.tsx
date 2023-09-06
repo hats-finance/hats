@@ -1,6 +1,6 @@
-import { Pill, Seo, VaultCard, VaultCardSkeleton } from "components";
+import { Pill, Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton } from "components";
 import { useTranslation } from "react-i18next";
-import { useAuditCompetitionsVaults, useBugBountiesVaults } from "./hooks";
+import { useAuditCompetitionsVaults, useBugBountiesVaults, useDraftAuditCompetitions } from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const BugBountyVaultsPage = () => {
@@ -8,6 +8,8 @@ export const BugBountyVaultsPage = () => {
 
   const { live: liveAuditCompetitions, upcoming: upcomingAuditCompetitions } = useAuditCompetitionsVaults();
   const bugBounties = useBugBountiesVaults();
+
+  const draftAudits = useDraftAuditCompetitions();
 
   const areVaultsToShow = liveAuditCompetitions.length > 0 || upcomingAuditCompetitions.length > 0 || bugBounties.length > 0;
 
@@ -19,22 +21,39 @@ export const BugBountyVaultsPage = () => {
           <div className="vaults-container mt-4">
             <h2 className="subtitle">{t("bugBounties")}</h2>
             <VaultCardSkeleton className="mb-5" />
-            <VaultCardSkeleton className="mb-5" />
-            <VaultCardSkeleton className="mb-5" />
-            <VaultCardSkeleton className="mb-5" />
-            <VaultCardSkeleton className="mb-5" />
+            <VaultCardSkeleton className="mb-5 mt-5" />
+            <VaultCardSkeleton className="mb-5 mt-5" />
+            <VaultCardSkeleton className="mb-5 mt-5" />
+            <VaultCardSkeleton className="mb-5 mt-5" />
           </div>
         )}
 
-        {[...liveAuditCompetitions, ...upcomingAuditCompetitions].length > 0 && (
+        {liveAuditCompetitions.length > 0 && (
           <>
             <h2 className="subtitle">
               {t("auditCompetitions")}
               <Pill dotColor="blue" text={t("new")} transparent />
             </h2>
             <div className="vaults-container mt-4">
-              {(liveAuditCompetitions.length > 0 ? liveAuditCompetitions : upcomingAuditCompetitions).map((auditVault, idx) => (
+              {liveAuditCompetitions.map((auditVault, idx) => (
                 <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {(upcomingAuditCompetitions.length > 0 || draftAudits.length > 0) && (
+          <>
+            <h2 className="subtitle">
+              {t("upcomingCompetitions")}
+              <Pill dotColor="blue" text={t("new")} transparent />
+            </h2>
+            <div className="vaults-container mt-4">
+              {upcomingAuditCompetitions.map((auditVault, idx) => (
+                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
+              ))}
+              {draftAudits.map((auditDraft, idx) => (
+                <VaultAuditDraftCard key={auditDraft._id ?? "" + idx} vaultDraft={auditDraft} />
               ))}
             </div>
           </>

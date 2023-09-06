@@ -290,3 +290,46 @@ export async function generateNftsAssets(editSessionId: string): Promise<boolean
   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/generate-nft-assets`);
   return response.status === 200 ? true : false;
 }
+
+/**
+ * Publish the audit editSession as draft
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function publishAuditDraft(editSessionId: string): Promise<IEditedSessionResponse | null> {
+  try {
+    const res = await axiosClient.post(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/publish-audit-draft`);
+    return res.status === 200 ? res.data : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+/**
+ * Verify if an editSession has a published audit draft
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function hasEditSessionAuditDraftPublished(editSessionId: string): Promise<boolean> {
+  try {
+    const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/audit-draft`);
+    const existsDraft = !!response.data;
+    return existsDraft;
+  } catch (error) {
+    return false;
+  }
+}
+
+/**
+ * Delete the audit editSession draft
+ *
+ * @param editSessionId - The edit session id
+ */
+export async function deleteAuditDraft(editSessionId: string): Promise<boolean> {
+  try {
+    await axiosClient.delete(`${BASE_SERVICE_URL}/edit-session/${editSessionId}/audit-draft`);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
