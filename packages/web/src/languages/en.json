@@ -579,6 +579,9 @@
     "areYouSureYouWantToDeleteAuditDraft": "Are you sure you want to delete this audit draft?",
     "comingIn": "Coming in",
     "goToEditSession": "Go to edit session",
+    "goToProjectWebsite": "Go to project website",
+    "doYouWantToGoToProjectWebsite": "Do you want to go to project website? \n ({{website}})",
+    "yesGo": "Yes, go",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

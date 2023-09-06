@@ -1,5 +1,7 @@
 import { IEditedSessionResponse, isAddressAMultisigMember } from "@hats-finance/shared";
+import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Button, Pill, WithTooltip } from "components";
+import useConfirm from "hooks/useConfirm";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -23,6 +25,7 @@ type VaultAuditDraftCardProps = {
 export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const { address } = useAccount();
   const { chain } = useNetwork();
@@ -92,8 +95,18 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
     }
   };
 
-  const goToProjectWebsite = () => {
+  const goToProjectWebsite = async () => {
     if (!projectWebsite) return;
+
+    const wantToGo = await confirm({
+      title: t("goToProjectWebsite"),
+      titleIcon: <OpenIcon className="mr-2" fontSize="large" />,
+      description: t("doYouWantToGoToProjectWebsite", { website: projectWebsite }),
+      cancelText: t("no"),
+      confirmText: t("yesGo"),
+    });
+
+    if (!wantToGo) return;
     window.open(projectWebsite, "_blank");
   };
 
