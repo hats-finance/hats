@@ -16,7 +16,7 @@ type VaultEmailsFormProps = {
 
 export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps) => {
   const { t } = useTranslation();
-  const { isEditingExistingVault, allFormDisabled } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const {
     control,
@@ -31,27 +31,25 @@ export const VaultEmailsForm = ({ onlyNotVerifiedEmails }: VaultEmailsFormProps)
 
   return (
     <StyledVaultEmailsForm>
-      {!isEditingExistingVault && (
-        <div className="emails">
-          {emails.map((email, emailIndex) => {
-            if (onlyNotVerifiedEmails && email.status === "verified") return <></>;
-            return (
-              <VaultEmailForm key={email.id} index={emailIndex} email={email} emailsCount={emails.length} remove={removeEmail} />
-            );
-          })}
+      <div className="emails">
+        {emails.map((email, emailIndex) => {
+          if (onlyNotVerifiedEmails && email.status === "verified") return <></>;
+          return (
+            <VaultEmailForm key={email.id} index={emailIndex} email={email} emailsCount={emails.length} remove={removeEmail} />
+          );
+        })}
 
-          {getPath(errors, "project-metadata.emails") && (
-            <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
-          )}
+        {getPath(errors, "project-metadata.emails") && (
+          <p className="field-error">{getPath(errors, "project-metadata.emails")?.message}</p>
+        )}
 
-          {!allFormDisabled && (
-            <Button className="mt-4" styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
-              <AddIcon className="mr-2" />
-              <span>{t("newEmail")}</span>
-            </Button>
-          )}
-        </div>
-      )}
+        {!allFormDisabled && (
+          <Button className="mt-1" styleType="invisible" onClick={() => appendEmail({ address: "", status: "unverified" })}>
+            <AddIcon className="mr-2" />
+            <span>{t("newEmail")}</span>
+          </Button>
+        )}
+      </div>
     </StyledVaultEmailsForm>
   );
 };

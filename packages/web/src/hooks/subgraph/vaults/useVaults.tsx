@@ -36,6 +36,13 @@ interface IVaultsContext {
   withdrawSafetyPeriod?: IWithdrawSafetyPeriod;
 }
 
+export const getVaultDateStatus = (startTime: number | undefined, endTime: number | undefined): IVault["dateStatus"] => {
+  if (startTime && startTime > Date.now() / 1000) return "upcoming";
+  if (endTime && endTime < Date.now() / 1000) return "finished";
+
+  return "on_time";
+};
+
 export const VaultsContext = createContext<IVaultsContext>(undefined as any);
 
 export function useVaults(): IVaultsContext {
@@ -161,19 +168,12 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     const allVaultsData = await getVaultsData(vaultsData);
     const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
-      const getVaultDateStatus = (): IVault["dateStatus"] => {
-        const startTime = vault.description?.["project-metadata"].starttime;
-        const endTime = vault.description?.["project-metadata"].endtime;
-
-        if (startTime && startTime > Date.now() / 1000) return "upcoming";
-        if (endTime && endTime < Date.now() / 1000) return "finished";
-
-        return "on_time";
-      };
+      const startTime = vault.description?.["project-metadata"].starttime;
+      const endTime = vault.description?.["project-metadata"].endtime;
 
       return {
         ...vault,
-        dateStatus: getVaultDateStatus(),
+        dateStatus: getVaultDateStatus(startTime, endTime),
       } as IVault;
     });
 

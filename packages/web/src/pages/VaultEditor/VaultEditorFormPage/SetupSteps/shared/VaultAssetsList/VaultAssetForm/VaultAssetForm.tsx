@@ -1,15 +1,15 @@
+import { IEditedVaultAsset, IEditedVaultDescription } from "@hats-finance/shared";
+import { FormIconInput, FormInput, FormSelectInput } from "components";
+import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useContext, useEffect, useState } from "react";
-import { IEditedVaultDescription, IEditedVaultAsset } from "@hats-finance/shared";
-import { useAccount, useNetwork } from "wagmi";
-import { useWatch } from "react-hook-form";
+import { Controller, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FormInput, FormSelectInput } from "components";
-import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { appChains } from "settings";
-import { StyledVaultAssetForm } from "./styles";
-import { getTokenInfo } from "utils/tokens.utils";
 import { isAddress } from "utils/addresses.utils";
-import { VaultEditorFormContext } from "../../../store";
+import { getTokenInfo } from "utils/tokens.utils";
+import { useAccount, useNetwork } from "wagmi";
+import { VaultEditorFormContext } from "../../../../store";
+import { StyledVaultAssetForm } from "./styles";
 
 type VaultAssetFormProps = {
   index: number;
@@ -25,7 +25,7 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
   const [assetInfo, setAssetInfo] = useState<string | undefined>(undefined);
   const { register, control, setValue } = useEnhancedFormContext<IEditedVaultDescription>();
 
-  const { allFormDisabled } = useContext(VaultEditorFormContext);
+  const { allFormDisabled, isEditingExistingVault } = useContext(VaultEditorFormContext);
 
   const vaultChainId = useWatch({ control, name: "committee.chainId" });
   const tokenAddress = useWatch({ control, name: `assets.${index}.address` });
@@ -68,22 +68,31 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
 
   return (
     <StyledVaultAssetForm>
-      <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorCreateVaultOnChainExplanation") }} />
-
       <p className="section-title">{t("assetsInVault")}</p>
+      <div className="helper-text mb-3">{t("vaultEditorAssetInformation")}</div>
 
+      <div className="w-25 chain">
+        <Controller
+          control={control}
+          name={`committee.chainId`}
+          render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => {
+            return (
+              <FormSelectInput
+                isDirty={getCustomIsDirty<IEditedVaultDescription>(field.name, dirtyFields, defaultValues)}
+                error={error}
+                label={t("VaultEditor.vault-assets.chain")}
+                placeholder={t("VaultEditor.vault-assets.chain-placeholder")}
+                colorable
+                disabled={isEditingExistingVault || allFormDisabled}
+                options={supportedNetworksOptions}
+                {...field}
+                value={field.value ?? ""}
+              />
+            );
+          }}
+        />
+      </div>
       <div className="inputs">
-        <div>
-          <FormSelectInput
-            disabled
-            name="chainId"
-            onChange={() => {}}
-            label={t("VaultEditor.vault-assets.chain")}
-            placeholder={t("VaultEditor.vault-assets.chain-placeholder")}
-            options={supportedNetworksOptions}
-            value={vaultChainId ?? ""}
-          />
-        </div>
         <FormInput
           {...register(`assets.${index}.address`)}
           disabled={allFormDisabled}
@@ -91,6 +100,12 @@ export function VaultAssetForm({ index, append, remove, assetsCount }: VaultAsse
           placeholder={t("VaultEditor.vault-assets.address-placeholder")}
           colorable
           helper={assetInfo}
+        />
+        <FormIconInput
+          {...register("project-metadata.tokenIcon")}
+          disabled={allFormDisabled}
+          colorable
+          label={t("VaultEditor.vault-details.token-icon")}
         />
       </div>
     </StyledVaultAssetForm>

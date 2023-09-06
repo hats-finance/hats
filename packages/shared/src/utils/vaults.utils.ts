@@ -115,7 +115,7 @@ export const getVaultInfoWithCommittee = async (
   }
 };
 
-export const getAllVaultsAddressesByChain = async (chainId: number): Promise<string[]> => {
+export const getAllVaultsAddressesByChain = async (chainId: number): Promise<{ id: string; registered: boolean }[]> => {
   if (!chainId) return [];
 
   try {
@@ -123,6 +123,7 @@ export const getAllVaultsAddressesByChain = async (chainId: number): Promise<str
     query getVaults {
       vaults(where: {version_not: "v1"}) {
         id
+        registered
       }
     }
   `;
@@ -143,7 +144,7 @@ export const getAllVaultsAddressesByChain = async (chainId: number): Promise<str
 
     if (!vaults) return [];
 
-    return vaults.map((vault: { id: string }) => vault.id);
+    return vaults;
   } catch (error) {
     return [];
   }

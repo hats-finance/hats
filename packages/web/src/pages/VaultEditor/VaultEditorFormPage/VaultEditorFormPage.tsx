@@ -9,12 +9,15 @@ import {
   editedFormToCreateVaultOnChainCall,
   getGnosisSafeInfo,
   isAGnosisSafeTx,
+  isAddressAMultisigMember,
   nonEditableEditionStatus,
 } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";
 import CheckIcon from "@mui/icons-material/Check";
+import DeleteIcon from "@mui/icons-material/RemoveCircleOutlineOutlined";
+import RocketIcon from "@mui/icons-material/RocketLaunchOutlined";
 import { Alert, Button, CopyToClipboard, Loading, Modal, Seo } from "components";
 import { CreateVaultContract } from "contracts";
 import DOMPurify from "dompurify";
@@ -29,7 +32,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { checkIfAddressCanEditTheVault } from "../utils";
 import * as VaultEditorService from "../vaultEditorService";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
@@ -49,6 +52,7 @@ import { useVaultEditorSteps } from "./useVaultEditorSteps";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
+  const { chain } = useNetwork();
   const { allVaults } = useVaults();
 
   const { editSessionId } = useParams();
@@ -67,6 +71,7 @@ const VaultEditorFormPage = () => {
   const [onChainDescriptionHash, setOnChainDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
+  const [isGovMember, setIsGovMember] = useState(false);
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
   const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
@@ -81,17 +86,19 @@ const VaultEditorFormPage = () => {
     mode: "onChange",
   });
 
-  const { formState, reset: handleReset, control, setValue, getValues } = methods;
+  const { formState, reset: handleReset, control, setValue, getValues, trigger } = methods;
   const committeeMembersFieldArray = useFieldArray({ control: control, name: "committee.members" });
   const vaultVersion = useWatch({ control, name: "version" });
 
   const [isVaultCreated, setIsVaultCreated] = useState(false); // Is this edit session for a vault that is already created?
   const [editSessionSubmittedCreation, setEditSessionSubmittedCreation] = useState(false); // Has the edit session been submitted for creation on-chain?
   const [isEditingExistingVault, setIsEditingExistingVault] = useState(false); // Is this edit session for editing an existing vault?
+  const [hasAuditDraftPublished, setHasAuditDraftPublished] = useState(false); // Does the edit session has an audit draft published?
   const [editingExistingVaultStatus, setEditingExistingVaultStatus] = useState<IVaultEditionStatus | undefined>(); // Status of the edition of an existing vault
   const isNonEditableStatus = editingExistingVaultStatus ? nonEditableEditionStatus.includes(editingExistingVaultStatus) : false;
 
   const vaultCreatedInfo = useWatch({ control, name: "vaultCreatedInfo" });
+  const vaultType = useWatch({ control, name: "project-metadata.type" });
   const existingVault = allVaults?.find((vault) => vault.id === vaultCreatedInfo?.vaultAddress);
 
   const {
@@ -119,6 +126,22 @@ const VaultEditorFormPage = () => {
       if (sectionId === "setup" && stepNumber === committeeStepNumber) recalculateCommitteeMembers(sectionId, stepNumber);
     },
   });
+
+  const showPublishDraftOption =
+    vaultType === "audit" && currentStepInfo?.id === "details" && isGovMember && !isVaultCreated && !isEditingExistingVault;
+
+  useEffect(() => {
+    const checkGovMember = async () => {
+      if (address && chain && chain.id) {
+        const chainId = Number(chain.id);
+        const govMultisig = appChains[Number(chainId)]?.govMultisig;
+
+        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
+        setIsGovMember(isGov);
+      }
+    };
+    checkGovMember();
+  }, [address, chain]);
 
   const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
     try {
@@ -168,6 +191,8 @@ const VaultEditorFormPage = () => {
       setLoadingEditSession(true);
 
       const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
+      const auditDraftResponse = await VaultEditorService.hasEditSessionAuditDraftPublished(editSessionId);
+      setHasAuditDraftPublished(auditDraftResponse);
 
       if (editSessionResponse.vaultAddress) {
         if (editSessionResponse.editingExistingVault) {
@@ -315,6 +340,64 @@ const VaultEditorFormPage = () => {
         setLastModifedOn(sessionResponse.updatedAt);
         setEditingExistingVaultStatus(sessionResponse.vaultEditionStatus);
         handleReset(sessionResponse.editedDescription, { keepDefaultValues: true, keepErrors: true, keepDirty: true });
+      }
+    }
+  };
+
+  const publishAuditDraft = async () => {
+    if (!isGovMember) return;
+    if (!editSessionId) return;
+
+    const isFormValid = await trigger((currentStepInfo?.formFields ?? []) as any);
+    if (!isFormValid) return;
+
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
+    const wantsToPublish = await confirm({
+      title: t("publishDraft"),
+      confirmText: t("publishDraft"),
+      description: t("areYouSureYouWantToPublishAuditDraft"),
+    });
+
+    if (wantsToPublish) {
+      try {
+        setLoading(true);
+        await createOrSaveEditSession(false, false);
+        await VaultEditorService.publishAuditDraft(editSessionId);
+        setLoading(false);
+        setHasAuditDraftPublished(true);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        alert("Error publishing draft");
+      }
+    }
+  };
+
+  const deleteAuditDraft = async () => {
+    if (!isGovMember) return;
+    if (!editSessionId) return;
+
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
+    const wantsToDelete = await confirm({
+      title: t("deleteDraft"),
+      confirmText: t("deleteDraft"),
+      description: t("areYouSureYouWantToDeleteAuditDraft"),
+    });
+
+    if (wantsToDelete) {
+      try {
+        setLoading(true);
+        await VaultEditorService.deleteAuditDraft(editSessionId);
+        setLoading(false);
+        setHasAuditDraftPublished(false);
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        alert("Error deleting draft");
       }
     }
   };
@@ -674,7 +757,7 @@ const VaultEditorFormPage = () => {
                       passed={!!step.isValid}
                       onClick={() => onGoToStep(index)}
                     >
-                      {step.isValid && <CheckIcon className="ml-2" />}
+                      {step.isValid && <CheckIcon />}
                       {/* {step.isValid ? "" : `${index + 1}.`} */}
                       {t(step.name)}
                     </VaultEditorStepController>
@@ -706,6 +789,16 @@ const VaultEditorFormPage = () => {
                   <span>{getNextButtonDisabled(currentStepInfo)}</span>
                 </div>
                 <div className="backButton">
+                  {showPublishDraftOption && (
+                    <Button
+                      styleType={hasAuditDraftPublished ? "filled" : "outlined"}
+                      filledColor={hasAuditDraftPublished ? "error" : "secondary"}
+                      onClick={hasAuditDraftPublished ? deleteAuditDraft : publishAuditDraft}
+                    >
+                      {hasAuditDraftPublished ? <DeleteIcon className="mr-2" /> : <RocketIcon className="mr-2" />}
+                      {hasAuditDraftPublished ? t("deleteDraft") : t("publishDraft")}
+                    </Button>
+                  )}
                   {onGoBack && (
                     <Button styleType="invisible" onClick={() => onGoBack.go()}>
                       <BackIcon className="mr-2" /> {onGoBack.text}

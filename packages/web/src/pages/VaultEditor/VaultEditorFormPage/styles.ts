@@ -154,6 +154,8 @@ export const VaultEditorStepController = styled.div<{ active?: boolean; passed?:
   ({ active, passed, disabled }) => css`
     display: flex;
     align-items: center;
+    gap: ${getSpacing(1)};
+    padding: 0 ${getSpacing(2)};
     padding-bottom: ${getSpacing(4)};
     border-bottom: 1px solid transparent;
     cursor: pointer;
