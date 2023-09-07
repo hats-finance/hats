@@ -13,7 +13,7 @@ import { StyledContactInfo } from "./styles";
 export function SubmissionContactInfo() {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-  const { submissionData, setSubmissionData, vault } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, vault, allFormDisabled } = useContext(SubmissionFormContext);
 
   const isAuditCompetition = vault?.description?.["project-metadata"].type === "audit";
 
@@ -70,6 +70,7 @@ export function SubmissionContactInfo() {
 
       <FormInput
         {...register("beneficiary")}
+        disabled={allFormDisabled}
         label={`${t("beneficiaryWalletAddress")}`}
         placeholder={t("beneficiaryWalletAddressPlaceholder")}
         colorable
@@ -77,6 +78,7 @@ export function SubmissionContactInfo() {
 
       <FormRadioInput
         {...register("communicationChannelType")}
+        disabled={allFormDisabled}
         label={t("Submissions.addPreferredCommunicationChannel")}
         radioOptions={[
           { label: t("discord"), value: "discord" },
@@ -87,6 +89,7 @@ export function SubmissionContactInfo() {
 
       <FormInput
         {...register("communicationChannel")}
+        disabled={allFormDisabled}
         label={communicationChannelLabel}
         placeholder={t("enterCommunicationChannel")}
         colorable
@@ -97,6 +100,7 @@ export function SubmissionContactInfo() {
           <p className="mb-2">{t("Submissions.addGithubAccountConnectIssue")}</p>
           <FormInput
             {...register("githubUsername")}
+            disabled={allFormDisabled}
             label={`${t("githubUsername")}`}
             placeholder={t("githubUsernamePlaceholder")}
             colorable

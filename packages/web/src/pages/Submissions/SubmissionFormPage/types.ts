@@ -57,6 +57,7 @@ export interface ISubmissionData {
   submissionsDescriptions: ISubmissionsDescriptionsData;
   terms?: ISubmissionTermsData;
   submissionResult?: ISubmissionResultData;
+  ref?: "audit-wizard";
 }
 
 export enum SubmissionOpStatus {

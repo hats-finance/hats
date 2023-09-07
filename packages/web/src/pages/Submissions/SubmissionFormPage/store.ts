@@ -16,6 +16,7 @@ export interface ISubmissionFormContext {
   submitSubmission: Function;
   sendSubmissionToServer: Function;
   reset: Function;
+  allFormDisabled: boolean;
 }
 
 export const SubmissionFormContext = createContext<ISubmissionFormContext>(undefined as any);

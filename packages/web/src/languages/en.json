@@ -293,7 +293,7 @@
     "noOptions": "No options",
     "success": "Success",
     "failed": "Failed",
-    "peding": "Pending",
+    "pending": "Pending",
     "finishingVaultCreation": "Finishing vault creation",
     "weAreFinishingTheCreationOfVault": " Thanks for creating a new vault in Hats! \n\n We are finishing the creation of your vault. We need a couple more minutes. \n\n We will notify you via email you when the vault is created.",
     "executeTxOnGnosisForCreatingVault": " Thanks for creating a new vault in Hats! \n\n You just create the proposal for creating the vault in Safe app. Please approve and execute the transaction on the Safe app. \n\n We will notify you via email you when the vault is created.",
@@ -582,6 +582,14 @@
     "goToProjectWebsite": "Go to project website",
     "doYouWantToGoToProjectWebsite": "Do you want to go to project website? \n ({{website}})",
     "yesGo": "Yes, go",
+    "clearSubmission": "Clear submission",
+    "clearSubmissionExplanation": "Are you sure you want to clear this submission? \n\n This will remove all the information of the submission.",
+    "clearForm": "Clear form",
+    "existingSubmission": "Existing submission",
+    "clearExistingSubmissionAuditWizardExplanation": "Attention, you have started to create a submission, in order to submit a new one from AuditWizard you need to remove the current one. \n\nAre you sure you want to clear this submission? \n This will remove all the information of the submission.",
+    "projectNotAvailable": "Project not available",
+    "projectNotAvailableExplanation": "The project on which you are attempting to submit a vulnerability is no longer available. \n\n If you think this is an error, please contact Hats support.",
+    "understand": "Understand",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -829,6 +837,8 @@
       "encryptedSubmission": "Encrypted submission",
       "encryptedSubmissionExplanation": "The submission is encrypted and only the committee can decrypt it.",
       "decryptedSubmissionExplanation": "The submission is decrypted and public. This normally happens on Audit Competitions.",
+      "submissionSubmittedViaAuditWizard": "Submission submitted via auditwizard.io",
+      "editSubmission": "Edit submission",
       "terms": {
         "bugBounty": {
           "submissionSection": "<p>Your submission will be sent to the committee who will process your submission.</p> <p>The committee of the vault will respond within 12 hours to acknowledge the receipt of submission via the communication channel you provided.<p/>",
