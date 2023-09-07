@@ -582,6 +582,9 @@
     "goToProjectWebsite": "Go to project website",
     "doYouWantToGoToProjectWebsite": "Do you want to go to project website? \n ({{website}})",
     "yesGo": "Yes, go",
+    "ofRewards": "of rewards",
+    "maxRewardCap": "Max reward cap",
+    "maxRewardCapExplanation": "This is the maximum amount that will be paid for a single submission.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
