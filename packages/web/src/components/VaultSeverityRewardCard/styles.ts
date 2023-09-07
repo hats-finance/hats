@@ -2,13 +2,13 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: boolean }>(
-  ({ color, noNft }) => css`
+export const StyledVaultSeverityRewardCard = styled.div<{ color: string; columns: number }>(
+  ({ color, columns }) => css`
     display: grid;
-    grid-template-columns: ${noNft ? "3fr 4fr" : "1fr 1fr 1fr"};
+    grid-template-columns: ${columns === 2 ? "3fr 4fr" : columns === 3 ? "1fr 1fr 1fr" : "1fr 1fr 1fr 1fr"};
     align-items: center;
     justify-content: space-between;
-    gap: ${getSpacing(1)};
+    gap: ${getSpacing(2)};
 
     .severity-name,
     .severity-prize,
@@ -24,11 +24,16 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: 
     }
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-      grid-template-columns: ${noNft ? "1fr 1fr" : "2fr 1fr 1fr"};
+      grid-template-columns: ${columns === 2 ? "1fr 1fr" : columns === 3 ? "1fr 1fr 1fr" : "1fr 1fr 1fr 1fr"};
     }
 
     @media (max-width: ${breakpointsDefinition.smallMobile}) {
-      grid-template-columns: ${noNft ? "1fr 1fr" : "4fr 4fr 3fr"};
+      grid-template-columns: ${columns === 2 ? "1fr" : columns === 3 ? "1fr 1fr" : "1fr 1fr"};
+
+      .severity-name {
+        grid-column-start: 1;
+        grid-column-end: ${columns};
+      }
     }
 
     .severity-name {
@@ -39,10 +44,17 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: 
 
     .severity-prize {
       font-weight: 700;
+      flex-direction: column;
+      align-items: flex-end;
 
-      @media (max-width: ${breakpointsDefinition.mediumMobile}) {
-        flex-direction: column;
-        align-items: flex-end;
+      @media (max-width: ${breakpointsDefinition.smallMobile}) {
+        align-items: center;
+      }
+
+      .title-container {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(0.2)};
       }
 
       .tiny {
@@ -51,6 +63,7 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string; noNft: 
       }
 
       .price {
+        font-size: var(--small);
         color: ${color};
         font-weight: 700;
       }
