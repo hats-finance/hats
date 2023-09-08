@@ -45,7 +45,6 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
 
   const { data: savedSubmissions } = useSavedSubmissions(vault);
-  console.log(savedSubmissions);
 
   const [openSectionId, setOpenSectionId] = useState(sectionId ?? DETAILS_SECTIONS[0].title);
 
