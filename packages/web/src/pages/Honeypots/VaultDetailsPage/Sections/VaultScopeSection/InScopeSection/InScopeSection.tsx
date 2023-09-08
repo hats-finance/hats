@@ -13,7 +13,7 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
 import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
-import { Alert, Button, CopyToClipboard, Pill, WithTooltip } from "components";
+import { Alert, Button, CopyToClipboard, Loading, Pill, WithTooltip } from "components";
 import { disallowedElementsMarkdown } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useEffect, useState } from "react";
@@ -50,7 +50,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
     getRepoContractsList();
   }, [vault.description?.scope?.reposInformation]);
 
-  if (!vault.description) return null;
+  if (!vault.description) return <Loading fixed extraText={`${t("loading")}...`} />;
 
   const contractsCovered = severitiesToContractsCoveredForm(vault.description?.severities);
   const docsLink = vault.description.scope?.docsLink;
@@ -219,7 +219,9 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           </>
         )
       ) : (
-        <Alert type="info">{t("loadingContractsOnRepo")}</Alert>
+        <Alert type="info" className="mb-4">
+          {t("loadingContractsOnRepo")}
+        </Alert>
       )}
 
       {/* Contracts covered */}
