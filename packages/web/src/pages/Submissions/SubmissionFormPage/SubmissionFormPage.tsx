@@ -10,6 +10,7 @@ import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { IS_PROD } from "settings";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import {
@@ -22,36 +23,40 @@ import {
 import SubmissionFormCard from "../SubmissionFormPage/SubmissionFormCard/SubmissionFormCard";
 import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } from "./store";
 import { StyledSubmissionFormPage } from "./styles";
-import { submitVulnerabilitySubmission } from "./submissionsService.api";
-import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
+import { submitVulnerabilitySubmission, verifyAuditWizardSignature } from "./submissionsService.api";
+import {
+  IAuditWizardSubmissionData,
+  ISubmissionData,
+  SubmissionOpStatus,
+  SubmissionStep,
+  getCurrentAuditwizardSubmission,
+} from "./types";
 
-const auditWizardExample = JSON.parse(`{
-  "project": {
-      "projectId": "0x18fbe473b99b3d68f5ad35881149ea0e1b56e091"
-  },
-  "signature": "15bcdbe3bf773174702edd02067437d59d8f3f963cebd8661a83baf89cb75bc4d4e55653e7a1f0357f5532e9ea40b4eb78a4cbbe9bc51130505b64976fa1238de8920bc23312a0c5f9f3a772ce29cfd2ad39a9d18572173621fbc99cb7a31ca9538ff468e0ab743ba202667fcd24870e5d0d14eb6a8a0adfb5d23db208e427dd83ab757e4cf0d0dc8da215f18bb2587d94cfa94e40bf7f8e03dee0e02bc5a14bd3829b9d8d25884397b432aef10aa361431d8f59fc5a97e5a129e507509cdf36b1052d7d432c0701c5dfbe92ef532bf6c38a340c98a05b53a8856ff1f3afd97297815a1b82ae0cd2e71166706232a03eb9fc24c1db70ae273632fc658b28ab61",
-  "contact": {
-      "beneficiary": "0x56E889664F5961452E5f4183AA13AF568198eaD2",
-      "communicationChannel": "test@auditware.io",
-      "communicationChannelType": "email"
-  },
-  "submissionDescriptions": {
-      "descriptions": [
-          {
-              "title": "Malicious pair can re-enter 'VeryFastRouter' to drain funds",
-              "description": "VeryFastRouter::swap is the main entry point for a user to perform a batch of sell and buy orders on the new Sudoswap router, allowing partial fill conditions to be specified. Sell orders are executed first, followed by buy orders. The LSSVMPair contracts themselves are implemented in such a way that re-entrancy is not possible, but the same is not true of the VeryFastRouter. Assuming a user calls VeryFastRouter::swap, selling some NFTs and passing in some additional ETH value for subsequent buy orders, an attacker can re-enter this function under certain conditions to steal the original caller's funds. Given that this function does not check whether the user input contains valid pairs, an attacker can use this to manipulate",
-              "severity": "high severity",
-              "files": ["base64", "base64"]
-          },
-          {
-              "title": "Lack of Input Validation in Transfer Function",
-              "description": "The smart contract being audited exhibits a low severity issue related to the lack of input validation in the transfer function. The contract allows users to transfer tokens between addresses, but it fails to adequately validate the input parameters, which can lead to potential vulnerabilities.",
-              "severity": "Low",
-              "files": ["base64"]
-          }
-      ]
-  }
-}`);
+// const auditWizardExample = JSON.parse(`{
+//   "signature": "47732adf56d4ff7e4b0d0d6d8f09217044a0b8c9d22c06fd2713f7ffc27d210816dcfd35ef3e51a54a4be82027e88bfbd2dd58c36364d51002668e21fe8a4fe2b05baa673fc7152903166b5ac19b5641772327b7567f169888f7214d0a42f219652c17c5da70cf2c1a02319b139875a1aac9405ef9f2fb9058c89e00381cfabf154751853a0e406086ad0faa82b2bd8b03ec0e4b844c954eef3e9226772258bc5de5d7b2d0b4f731dc3763b9632288595ae3b2e505fb8f4e69969f82d1c6988de485dffdb2de553918c97eb7adf50a1e2680880dce59706869eec758f12c457a1d57a24032d02e7ec027584e63ffa5921cffea10bf26d32a3ab3cfea45216488",
+//   "project": {
+//       "projectId": "0x18fbe473b99b3d68f5ad35881149ea0e1b56e091"
+//   },
+//   "contact": {
+//       "beneficiary": "0x6085fBB553F125C0234b28dE7D4228F2873B3428",
+//       "communicationChannel": "test@auditware.io",
+//       "communicationChannelType": "email"
+//   },
+//   "submissionDescriptions": {
+//       "descriptions": [
+//           {
+//               "title": "Malicious pair can re-enter 'VeryFastRouter' to drain funds",
+//               "description": "VeryFastRouter::swap is the main entry point for a user to perform a batch of sell and buy orders on the new Sudoswap router, allowing partial fill conditions to be specified. Sell orders are executed first, followed by buy orders. The LSSVMPair contracts themselves are implemented in such a way that re-entrancy is not possible, but the same is not true of the VeryFastRouter. Assuming a user calls VeryFastRouter::swap, selling some NFTs and passing in some additional ETH value for subsequent buy orders, an attacker can re-enter this function under certain conditions to steal the original caller's funds. Given that this function does not check whether the user input contains valid pairs, an attacker can use this to manipulate",
+//               "severity": "Critical"
+//           },
+//           {
+//               "title": "Lack of Input Validation in Transfer Function",
+//               "description": "The smart contract being audited exhibits a low severity issue related to the lack of input validation in the transfer function. The contract allows users to transfer tokens between addresses, but it fails to adequately validate the input parameters, which can lead to potential vulnerabilities.",
+//               "severity": "Low"
+//           }
+//       ]
+//   }
+// }`);
 
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
@@ -62,7 +67,7 @@ export const SubmissionFormPage = () => {
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
   const [allFormDisabled, setAllFormDisabled] = useState(false);
-  const [receivedDataFromAuditWizard, setReceivedDataFromAuditWizard] = useState<any | undefined>();
+  const [receivedSubmissionAuditwizard, setReceivedSubmissionAuditwizard] = useState<IAuditWizardSubmissionData | undefined>();
 
   const { activeVaults, vaultsReadyAllChains } = useVaults();
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
@@ -147,6 +152,11 @@ export const SubmissionFormPage = () => {
       } else if (cachedData.version !== getAppVersion()) {
         setSubmissionData(SUBMISSION_INIT_DATA);
       } else {
+        if (cachedData.ref === "audit-wizard") {
+          setAllFormDisabled(true);
+          setReceivedSubmissionAuditwizard(cachedData.auditWizardData);
+        }
+
         setSubmissionData(cachedData);
       }
     } catch (e) {
@@ -208,8 +218,33 @@ export const SubmissionFormPage = () => {
     const submission = submissionData?.submissionsDescriptions?.submission;
     const calculatedCid = await calcCid(submission);
 
+    if (submissionData.ref === "audit-wizard") {
+      if (!receivedSubmissionAuditwizard) return;
+      // Verify if the submission was not changed and validate the signature
+      const auditwizardSubmission = getCurrentAuditwizardSubmission(receivedSubmissionAuditwizard, submissionData);
+
+      if (JSON.stringify(receivedSubmissionAuditwizard) !== JSON.stringify(auditwizardSubmission)) {
+        return confirm({
+          title: t("submissionChanged"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("submissionChangedExplanationAuditWizard"),
+          confirmText: t("gotIt"),
+        });
+      }
+
+      const res = await verifyAuditWizardSignature(auditwizardSubmission);
+      if (!res) {
+        return confirm({
+          title: t("submissionNotValid"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("submissionNotValidExplanationAuditWizard"),
+          confirmText: t("gotIt"),
+        });
+      }
+    }
+
     sendVulnerabilityOnChain(calculatedCid);
-  }, [sendVulnerabilityOnChain, submissionData]);
+  }, [sendVulnerabilityOnChain, submissionData, receivedSubmissionAuditwizard, confirm, t]);
 
   const handleClearSubmission = async () => {
     const wantsToClear = await confirm({
@@ -225,16 +260,14 @@ export const SubmissionFormPage = () => {
   };
 
   window.addEventListener("message", function (event) {
-    // Check the origin of the sender
-    // if (event.origin === 'http://localhost:3000') {
-    // Process the received data
-    if (receivedDataFromAuditWizard) return;
-    if (!event.data.signature) return;
-    console.log("Received message:", event);
-    setReceivedDataFromAuditWizard(event.data);
+    if (IS_PROD && !event.origin.includes("auditwizard.io")) return;
+
+    if (receivedSubmissionAuditwizard) return;
+    if (!event.data.signature || !event.data.project || !event.data.contact) return;
+    setReceivedSubmissionAuditwizard(event.data);
   });
 
-  const populateDataFromAuditWizard = async (auditWizardSubmission: any) => {
+  const populateDataFromAuditWizard = async (auditWizardSubmission: IAuditWizardSubmissionData) => {
     if (!vaultsReadyAllChains) return;
 
     if (submissionData?.project?.projectId) {
@@ -263,6 +296,7 @@ export const SubmissionFormPage = () => {
     setSubmissionData((prev) => ({
       ...prev!,
       ref: "audit-wizard",
+      auditWizardData: auditWizardSubmission,
       project: {
         verified: true,
         projectName: vault.description?.["project-metadata"].name!,
@@ -274,7 +308,7 @@ export const SubmissionFormPage = () => {
         verified: false,
         submission: "",
         submissionMessage: "",
-        descriptions: auditWizardSubmission.submissionDescriptions.descriptions.map((desc: any) => {
+        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => {
           const severity = (vault.description?.severities as IVulnerabilitySeverity[]).find(
             (sev) =>
               desc.severity.toLowerCase()?.includes(sev.name.toLowerCase()) ||
@@ -294,13 +328,14 @@ export const SubmissionFormPage = () => {
     setAllFormDisabled(true);
   };
 
+  // Populate data from audit wizard once vaults are ready
   useEffect(() => {
     if (!vaultsReadyAllChains) return;
-    if (!receivedDataFromAuditWizard) return;
+    if (!receivedSubmissionAuditwizard) return;
 
-    populateDataFromAuditWizard(receivedDataFromAuditWizard);
+    populateDataFromAuditWizard(receivedSubmissionAuditwizard);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [vaultsReadyAllChains, receivedDataFromAuditWizard]);
+  }, [vaultsReadyAllChains, receivedSubmissionAuditwizard]);
 
   const context: ISubmissionFormContext = {
     reset,
@@ -318,15 +353,6 @@ export const SubmissionFormPage = () => {
 
   return (
     <>
-      <Button
-        className="mb-4"
-        styleType="invisible"
-        textColor="error"
-        onClick={() => populateDataFromAuditWizard(auditWizardExample)}
-      >
-        <ClearIcon className="mr-2" />
-        {"TEST"}
-      </Button>
       <Seo title={t("seo.submitVulnerabilityTitle")} />
       <StyledSubmissionFormPage className="content-wrapper">
         <div className="top-controls">

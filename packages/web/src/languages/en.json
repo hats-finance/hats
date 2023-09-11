@@ -590,6 +590,10 @@
     "projectNotAvailable": "Project not available",
     "projectNotAvailableExplanation": "The project on which you are attempting to submit a vulnerability is no longer available. \n\n If you think this is an error, please contact Hats support.",
     "understand": "Understand",
+    "submissionChanged": "Submission changed",
+    "submissionChangedExplanationAuditWizard": "The submission you are trying to edit has changed. \n\n If you want to edit the submission, please go back to Audit Wizard.",
+    "submissionNotValid": "Submission not valid",
+    "submissionNotValidExplanationAuditWizard": "The submission you are trying to edit is not valid. \n\n Please go back to Audit Wizard and try again.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
