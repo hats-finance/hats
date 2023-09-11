@@ -152,11 +152,7 @@ export const SubmissionFormPage = () => {
       } else if (cachedData.version !== getAppVersion()) {
         setSubmissionData(SUBMISSION_INIT_DATA);
       } else {
-        if (cachedData.ref === "audit-wizard") {
-          setAllFormDisabled(true);
-          setReceivedSubmissionAuditwizard(cachedData.auditWizardData);
-        }
-
+        if (cachedData.ref === "audit-wizard") setAllFormDisabled(true);
         setSubmissionData(cachedData);
       }
     } catch (e) {
@@ -219,11 +215,11 @@ export const SubmissionFormPage = () => {
     const calculatedCid = await calcCid(submission);
 
     if (submissionData.ref === "audit-wizard") {
-      if (!receivedSubmissionAuditwizard) return;
+      if (!submissionData.auditWizardData) return;
       // Verify if the submission was not changed and validate the signature
-      const auditwizardSubmission = getCurrentAuditwizardSubmission(receivedSubmissionAuditwizard, submissionData);
+      const auditwizardSubmission = getCurrentAuditwizardSubmission(submissionData.auditWizardData, submissionData);
 
-      if (JSON.stringify(receivedSubmissionAuditwizard) !== JSON.stringify(auditwizardSubmission)) {
+      if (JSON.stringify(submissionData.auditWizardData) !== JSON.stringify(auditwizardSubmission)) {
         return confirm({
           title: t("submissionChanged"),
           titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
@@ -244,7 +240,7 @@ export const SubmissionFormPage = () => {
     }
 
     sendVulnerabilityOnChain(calculatedCid);
-  }, [sendVulnerabilityOnChain, submissionData, receivedSubmissionAuditwizard, confirm, t]);
+  }, [sendVulnerabilityOnChain, submissionData, confirm, t]);
 
   const handleClearSubmission = async () => {
     const wantsToClear = await confirm({
@@ -258,14 +254,6 @@ export const SubmissionFormPage = () => {
     if (!wantsToClear) return;
     reset();
   };
-
-  window.addEventListener("message", function (event) {
-    if (IS_PROD && !event.origin.includes("auditwizard.io")) return;
-
-    if (receivedSubmissionAuditwizard) return;
-    if (!event.data.signature || !event.data.project || !event.data.contact) return;
-    setReceivedSubmissionAuditwizard(event.data);
-  });
 
   const populateDataFromAuditWizard = async (auditWizardSubmission: IAuditWizardSubmissionData) => {
     if (!vaultsReadyAllChains) return;
@@ -327,6 +315,20 @@ export const SubmissionFormPage = () => {
     }));
     setAllFormDisabled(true);
   };
+
+  useEffect(() => {
+    const checkEvent = (event: MessageEvent) => {
+      if (IS_PROD && !event.origin.includes("auditwizard.io")) return;
+      if (!event.data.signature || !event.data.project || !event.data.contact) return;
+      setReceivedSubmissionAuditwizard(event.data);
+    };
+
+    window.addEventListener("message", checkEvent);
+
+    return () => {
+      window.removeEventListener("message", checkEvent);
+    };
+  }, []);
 
   // Populate data from audit wizard once vaults are ready
   useEffect(() => {
