@@ -62,6 +62,7 @@ export const SubmissionFormPage = () => {
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
   const [allFormDisabled, setAllFormDisabled] = useState(false);
+  const [receivedDataFromAuditWizard, setReceivedDataFromAuditWizard] = useState<any | undefined>();
 
   const { activeVaults, vaultsReadyAllChains } = useVaults();
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
@@ -227,12 +228,10 @@ export const SubmissionFormPage = () => {
     // Check the origin of the sender
     // if (event.origin === 'http://localhost:3000') {
     // Process the received data
-    console.log("Received message:", event.data);
-    populateDataFromAuditWizard(event.data);
-    // } else {
-    //   // Ignore messages from untrusted origins
-    //   console.warn('Received message from untrusted origin:', event.origin);
-    // }
+    if (receivedDataFromAuditWizard) return;
+    if (!event.data.signature) return;
+    console.log("Received message:", event);
+    setReceivedDataFromAuditWizard(event.data);
   });
 
   const populateDataFromAuditWizard = async (auditWizardSubmission: any) => {
@@ -294,6 +293,14 @@ export const SubmissionFormPage = () => {
     }));
     setAllFormDisabled(true);
   };
+
+  useEffect(() => {
+    if (!vaultsReadyAllChains) return;
+    if (!receivedDataFromAuditWizard) return;
+
+    populateDataFromAuditWizard(receivedDataFromAuditWizard);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vaultsReadyAllChains, receivedDataFromAuditWizard]);
 
   const context: ISubmissionFormContext = {
     reset,
