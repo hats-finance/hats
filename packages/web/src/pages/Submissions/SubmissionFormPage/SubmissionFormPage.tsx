@@ -223,6 +223,18 @@ export const SubmissionFormPage = () => {
     reset();
   };
 
+  window.addEventListener("message", function (event) {
+    // Check the origin of the sender
+    // if (event.origin === 'http://localhost:3000') {
+    // Process the received data
+    console.log("Received message:", event.data);
+    populateDataFromAuditWizard(event.data);
+    // } else {
+    //   // Ignore messages from untrusted origins
+    //   console.warn('Received message from untrusted origin:', event.origin);
+    // }
+  });
+
   const populateDataFromAuditWizard = async (auditWizardSubmission: any) => {
     if (!vaultsReadyAllChains) return;
 
