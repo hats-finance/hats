@@ -32,32 +32,6 @@ import {
   getCurrentAuditwizardSubmission,
 } from "./types";
 
-// const auditWizardExample = JSON.parse(`{
-//   "signature": "47732adf56d4ff7e4b0d0d6d8f09217044a0b8c9d22c06fd2713f7ffc27d210816dcfd35ef3e51a54a4be82027e88bfbd2dd58c36364d51002668e21fe8a4fe2b05baa673fc7152903166b5ac19b5641772327b7567f169888f7214d0a42f219652c17c5da70cf2c1a02319b139875a1aac9405ef9f2fb9058c89e00381cfabf154751853a0e406086ad0faa82b2bd8b03ec0e4b844c954eef3e9226772258bc5de5d7b2d0b4f731dc3763b9632288595ae3b2e505fb8f4e69969f82d1c6988de485dffdb2de553918c97eb7adf50a1e2680880dce59706869eec758f12c457a1d57a24032d02e7ec027584e63ffa5921cffea10bf26d32a3ab3cfea45216488",
-//   "project": {
-//       "projectId": "0x18fbe473b99b3d68f5ad35881149ea0e1b56e091"
-//   },
-//   "contact": {
-//       "beneficiary": "0x6085fBB553F125C0234b28dE7D4228F2873B3428",
-//       "communicationChannel": "test@auditware.io",
-//       "communicationChannelType": "email"
-//   },
-//   "submissionDescriptions": {
-//       "descriptions": [
-//           {
-//               "title": "Malicious pair can re-enter 'VeryFastRouter' to drain funds",
-//               "description": "VeryFastRouter::swap is the main entry point for a user to perform a batch of sell and buy orders on the new Sudoswap router, allowing partial fill conditions to be specified. Sell orders are executed first, followed by buy orders. The LSSVMPair contracts themselves are implemented in such a way that re-entrancy is not possible, but the same is not true of the VeryFastRouter. Assuming a user calls VeryFastRouter::swap, selling some NFTs and passing in some additional ETH value for subsequent buy orders, an attacker can re-enter this function under certain conditions to steal the original caller's funds. Given that this function does not check whether the user input contains valid pairs, an attacker can use this to manipulate",
-//               "severity": "Critical"
-//           },
-//           {
-//               "title": "Lack of Input Validation in Transfer Function",
-//               "description": "The smart contract being audited exhibits a low severity issue related to the lack of input validation in the transfer function. The contract allows users to transfer tokens between addresses, but it fails to adequately validate the input parameters, which can lead to potential vulnerabilities.",
-//               "severity": "Low"
-//           }
-//       ]
-//   }
-// }`);
-
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
   const confirm = useConfirm();
