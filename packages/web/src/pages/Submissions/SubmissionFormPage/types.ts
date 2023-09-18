@@ -32,7 +32,7 @@ export interface ISubmissionsDescriptionsData {
     description: string;
     severity: string;
     files: ISavedFile[];
-    sessionKey: SessionKey;
+    sessionKey?: SessionKey;
     isEncrypted?: boolean;
   }[];
 }
@@ -51,12 +51,14 @@ export interface ISubmissionResultData {
 }
 
 export interface ISubmissionData {
-  version: string;
+  version?: string;
   project?: ISubmissionProjectData;
   contact?: ISubmissionContactData;
   submissionsDescriptions: ISubmissionsDescriptionsData;
   terms?: ISubmissionTermsData;
   submissionResult?: ISubmissionResultData;
+  ref?: "audit-wizard";
+  auditWizardData?: IAuditWizardSubmissionData;
 }
 
 export enum SubmissionOpStatus {
@@ -79,3 +81,47 @@ export interface ISubmitSubmissionRequest {
     issueFiles: string[];
   }[];
 }
+
+export interface IAuditWizardSubmissionData {
+  signature: string;
+  contact: {
+    beneficiary: string;
+    communicationChannel: string;
+    communicationChannelType: ISubmissionContactData["communicationChannelType"];
+  };
+  project: { projectId: string };
+  submissionsDescriptions: { descriptions: { title: string; severity: string; description: string }[] };
+}
+
+/**
+ * This functions puts the current state of the form into the AuditWizard format in order to
+ * verify it with their API. The from should have exactly the same values as the received from
+ * audit wizard.
+ */
+export const getCurrentAuditwizardSubmission = (
+  awSubmission: IAuditWizardSubmissionData,
+  form: ISubmissionData
+): IAuditWizardSubmissionData => {
+  return {
+    ...awSubmission,
+    contact: {
+      ...awSubmission.contact,
+      beneficiary: form.contact?.beneficiary ?? "",
+      communicationChannel: form.contact?.communicationChannel ?? "",
+      communicationChannelType: form.contact?.communicationChannelType ?? "email",
+    },
+    project: {
+      ...awSubmission.project,
+      projectId: form.project?.projectId ?? "",
+    },
+    submissionsDescriptions: {
+      ...awSubmission.submissionsDescriptions,
+      descriptions:
+        form.submissionsDescriptions?.descriptions.map((d, idx) => ({
+          title: d.title,
+          description: d.description,
+          severity: awSubmission.submissionsDescriptions.descriptions[idx].severity,
+        })) ?? [],
+    },
+  };
+};

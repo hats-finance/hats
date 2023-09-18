@@ -9,7 +9,7 @@ import { StyledSubmissionProject } from "./styles";
 
 export function SubmissionProject() {
   const { t } = useTranslation();
-  const { submissionData, setSubmissionData } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, allFormDisabled } = useContext(SubmissionFormContext);
   const [userInput, setUserInput] = useState("");
   const { activeVaults } = useVaults();
 
@@ -36,7 +36,7 @@ export function SubmissionProject() {
           key={index}
           vault={vault}
           expanded={false}
-          onSelect={() => handleSelectedProject(vault)}
+          onSelect={!allFormDisabled ? () => handleSelectedProject(vault) : () => {}}
           selected={submissionData?.project?.projectId === vault.id}
         />
       );

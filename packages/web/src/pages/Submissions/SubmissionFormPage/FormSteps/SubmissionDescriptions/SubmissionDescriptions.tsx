@@ -27,7 +27,7 @@ import { getAuditSubmissionTexts, getBountySubmissionTexts } from "./utils";
 export function SubmissionDescriptions() {
   const { t } = useTranslation();
 
-  const { submissionData, setSubmissionData, vault } = useContext(SubmissionFormContext);
+  const { submissionData, setSubmissionData, vault, allFormDisabled } = useContext(SubmissionFormContext);
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
@@ -124,6 +124,7 @@ export function SubmissionDescriptions() {
 
     const { encryptedData, sessionKey } = encryptionResult;
     const submissionInfo = {
+      ref: submissionData.ref,
       decrypted,
       encrypted: encryptedData as string,
     };
@@ -178,6 +179,7 @@ export function SubmissionDescriptions() {
             <div className="row">
               <FormInput
                 {...register(`descriptions.${index}.title`)}
+                disabled={allFormDisabled}
                 label={`${t("Submissions.submissionTitle")}`}
                 placeholder={t("Submissions.submissionTitlePlaceholder")}
                 colorable
@@ -187,6 +189,7 @@ export function SubmissionDescriptions() {
                 name={`descriptions.${index}.severity`}
                 render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
                   <FormSelectInput
+                    disabled={allFormDisabled}
                     isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
                     error={error}
                     label={t("severity")}
@@ -204,6 +207,7 @@ export function SubmissionDescriptions() {
               name={`descriptions.${index}.description`}
               render={({ field, fieldState: { error }, formState: { dirtyFields, defaultValues } }) => (
                 <FormMDEditor
+                  disabled={allFormDisabled}
                   isDirty={getCustomIsDirty<ISubmissionsDescriptionsData>(field.name, dirtyFields, defaultValues)}
                   error={error}
                   colorable
@@ -212,7 +216,7 @@ export function SubmissionDescriptions() {
               )}
             />
 
-            {!submissionDescription.isEncrypted && (
+            {!submissionDescription.isEncrypted && !allFormDisabled && (
               <Controller
                 control={control}
                 name={`descriptions.${index}.files`}
@@ -222,7 +226,7 @@ export function SubmissionDescriptions() {
               />
             )}
 
-            {controlledDescriptions.length > 1 && (
+            {controlledDescriptions.length > 1 && !allFormDisabled && (
               <div className="buttons mt-3">
                 <Button onClick={() => removeSubmissionDescription(index)} styleType="outlined" filledColor="secondary">
                   <RemoveIcon className="mr-3" />
@@ -235,13 +239,15 @@ export function SubmissionDescriptions() {
       })}
 
       <div className="buttons mt-3">
-        <Button
-          onClick={() => appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0])}
-          styleType="invisible"
-        >
-          <AddIcon className="mr-3" />
-          {t("Submissions.addAnotherVulnerability")}
-        </Button>
+        {!allFormDisabled && (
+          <Button
+            onClick={() => appendSubmissionDescription(SUBMISSION_INIT_DATA.submissionsDescriptions.descriptions[0])}
+            styleType="invisible"
+          >
+            <AddIcon className="mr-3" />
+            {t("Submissions.addAnotherVulnerability")}
+          </Button>
+        )}
         <Button onClick={handleSubmit(handleSaveAndDownloadDescription)}>{t("Submissions.saveAndDownload")}</Button>
       </div>
     </StyledSubmissionDescriptionsList>

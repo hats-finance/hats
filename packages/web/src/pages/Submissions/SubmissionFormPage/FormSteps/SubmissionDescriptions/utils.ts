@@ -88,7 +88,7 @@ export const getGithubIssueDescription = (
   submissionData: ISubmissionData,
   description: ISubmissionsDescriptionsData["descriptions"][0]
 ) => {
-  return `
+  return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
 **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
 **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
 **Severity:** ${description.severity}
