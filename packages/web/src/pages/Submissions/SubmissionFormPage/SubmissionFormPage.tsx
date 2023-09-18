@@ -292,8 +292,10 @@ export const SubmissionFormPage = () => {
 
   useEffect(() => {
     const checkEvent = (event: MessageEvent) => {
-      if (IS_PROD && event.origin !== "https://www.auditwizard.io") return;
+      const host = new URL(event.origin).host;
+      if (IS_PROD && !host.includes("auditwizard.io")) return;
       if (!event.data.signature || !event.data.project || !event.data.contact) return;
+
       setReceivedSubmissionAuditwizard(event.data);
     };
 
