@@ -1,11 +1,16 @@
-import { Seo } from "components";
+import { IVulnerabilitySeverity } from "@hats-finance/shared";
+import ErrorIcon from "@mui/icons-material/ErrorOutlineOutlined";
+import ClearIcon from "@mui/icons-material/HighlightOffOutlined";
+import { Button, Seo } from "components";
 import { LocalStorage } from "constants/constants";
 import { LogClaimContract } from "contracts";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import useConfirm from "hooks/useConfirm";
 import { calcCid } from "pages/Submissions/SubmissionFormPage/encrypt";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { IS_PROD } from "settings";
 import { getAppVersion } from "utils";
 import { useNetwork, useWaitForTransaction } from "wagmi";
 import {
@@ -18,18 +23,27 @@ import {
 import SubmissionFormCard from "../SubmissionFormPage/SubmissionFormCard/SubmissionFormCard";
 import { ISubmissionFormContext, SUBMISSION_INIT_DATA, SubmissionFormContext } from "./store";
 import { StyledSubmissionFormPage } from "./styles";
-import { submitVulnerabilitySubmission } from "./submissionsService.api";
-import { ISubmissionData, SubmissionOpStatus, SubmissionStep } from "./types";
+import { submitVulnerabilitySubmission, verifyAuditWizardSignature } from "./submissionsService.api";
+import {
+  IAuditWizardSubmissionData,
+  ISubmissionData,
+  SubmissionOpStatus,
+  SubmissionStep,
+  getCurrentAuditwizardSubmission,
+} from "./types";
 
 export const SubmissionFormPage = () => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
 
   const [searchParams] = useSearchParams();
   const { chain } = useNetwork();
   const [currentStep, setCurrentStep] = useState<number>();
   const [submissionData, setSubmissionData] = useState<ISubmissionData>();
+  const [allFormDisabled, setAllFormDisabled] = useState(false);
+  const [receivedSubmissionAuditwizard, setReceivedSubmissionAuditwizard] = useState<IAuditWizardSubmissionData | undefined>();
 
-  const { activeVaults } = useVaults();
+  const { activeVaults, vaultsReadyAllChains } = useVaults();
   const vault = (activeVaults ?? []).find((vault) => vault.id === submissionData?.project?.projectId);
 
   const steps = useMemo(
@@ -81,6 +95,7 @@ export const SubmissionFormPage = () => {
     callReset();
     setSubmissionData(SUBMISSION_INIT_DATA);
     setCurrentStep(0);
+    setAllFormDisabled(false);
   };
 
   // Loads initial state of the vault
@@ -111,6 +126,7 @@ export const SubmissionFormPage = () => {
       } else if (cachedData.version !== getAppVersion()) {
         setSubmissionData(SUBMISSION_INIT_DATA);
       } else {
+        if (cachedData.ref === "audit-wizard") setAllFormDisabled(true);
         setSubmissionData(cachedData);
       }
     } catch (e) {
@@ -172,8 +188,132 @@ export const SubmissionFormPage = () => {
     const submission = submissionData?.submissionsDescriptions?.submission;
     const calculatedCid = await calcCid(submission);
 
+    if (submissionData.ref === "audit-wizard") {
+      if (!submissionData.auditWizardData) return;
+      // Verify if the submission was not changed and validate the signature
+      const auditwizardSubmission = getCurrentAuditwizardSubmission(submissionData.auditWizardData, submissionData);
+
+      if (JSON.stringify(submissionData.auditWizardData) !== JSON.stringify(auditwizardSubmission)) {
+        return confirm({
+          title: t("submissionChanged"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("submissionChangedExplanationAuditWizard"),
+          confirmText: t("gotIt"),
+        });
+      }
+
+      const res = await verifyAuditWizardSignature(auditwizardSubmission);
+      if (!res) {
+        return confirm({
+          title: t("submissionNotValid"),
+          titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+          description: t("submissionNotValidExplanationAuditWizard"),
+          confirmText: t("gotIt"),
+        });
+      }
+    }
+
     sendVulnerabilityOnChain(calculatedCid);
-  }, [sendVulnerabilityOnChain, submissionData]);
+  }, [sendVulnerabilityOnChain, submissionData, confirm, t]);
+
+  const handleClearSubmission = async () => {
+    const wantsToClear = await confirm({
+      title: t("clearSubmission"),
+      titleIcon: <ClearIcon className="mr-2" fontSize="large" />,
+      description: t("clearSubmissionExplanation"),
+      cancelText: t("no"),
+      confirmText: t("clearForm"),
+    });
+
+    if (!wantsToClear) return;
+    reset();
+  };
+
+  const populateDataFromAuditWizard = async (auditWizardSubmission: IAuditWizardSubmissionData) => {
+    if (!vaultsReadyAllChains) return;
+
+    if (submissionData?.project?.projectId) {
+      const wantsToClear = await confirm({
+        title: t("existingSubmission"),
+        titleIcon: <ClearIcon className="mr-2" fontSize="large" />,
+        description: t("clearExistingSubmissionAuditWizardExplanation"),
+        cancelText: t("no"),
+        confirmText: t("clearForm"),
+      });
+      if (!wantsToClear) return;
+    }
+
+    reset();
+
+    const vault = activeVaults && activeVaults.find((vault) => vault.id === auditWizardSubmission.project.projectId);
+    if (!vault || !vault.description) {
+      return confirm({
+        title: t("projectNotAvailable"),
+        titleIcon: <ErrorIcon className="mr-2" fontSize="large" />,
+        description: t("projectNotAvailableExplanation"),
+        confirmText: t("gotIt"),
+      });
+    }
+
+    setSubmissionData((prev) => ({
+      ...prev!,
+      ref: "audit-wizard",
+      auditWizardData: auditWizardSubmission,
+      project: {
+        verified: true,
+        projectName: vault.description?.["project-metadata"].name!,
+        ...auditWizardSubmission.project,
+      },
+      terms: { verified: false },
+      contact: { verified: false, ...auditWizardSubmission.contact },
+      submissionsDescriptions: {
+        verified: false,
+        submission: "",
+        submissionMessage: "",
+        descriptions: auditWizardSubmission.submissionsDescriptions.descriptions.map((desc: any) => {
+          const severity = (vault.description?.severities as IVulnerabilitySeverity[]).find(
+            (sev) =>
+              desc.severity.toLowerCase()?.includes(sev.name.toLowerCase()) ||
+              sev.name.toLowerCase()?.includes(desc.severity.toLowerCase())
+          );
+          return {
+            title: desc.title,
+            description: desc.description,
+            severity: severity?.name.toLowerCase() ?? desc.severity.toLowerCase(),
+            isEncrypted: !severity?.decryptSubmissions,
+            files: [],
+          };
+        }),
+      },
+      submissionResult: undefined,
+    }));
+    setAllFormDisabled(true);
+  };
+
+  useEffect(() => {
+    const checkEvent = (event: MessageEvent) => {
+      const host = new URL(event.origin).host;
+      if (IS_PROD && host !== "app.auditwizard.io") return;
+      if (!event.data.signature || !event.data.project || !event.data.contact) return;
+
+      setReceivedSubmissionAuditwizard(event.data);
+    };
+
+    window.addEventListener("message", checkEvent);
+
+    return () => {
+      window.removeEventListener("message", checkEvent);
+    };
+  }, []);
+
+  // Populate data from audit wizard once vaults are ready
+  useEffect(() => {
+    if (!vaultsReadyAllChains) return;
+    if (!receivedSubmissionAuditwizard) return;
+
+    populateDataFromAuditWizard(receivedSubmissionAuditwizard);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [vaultsReadyAllChains, receivedSubmissionAuditwizard]);
 
   const context: ISubmissionFormContext = {
     reset,
@@ -186,12 +326,28 @@ export const SubmissionFormPage = () => {
     sendSubmissionToServer,
     isSubmitting,
     isSigningSubmission,
+    allFormDisabled,
   };
 
   return (
     <>
       <Seo title={t("seo.submitVulnerabilityTitle")} />
       <StyledSubmissionFormPage className="content-wrapper">
+        <div className="top-controls">
+          {submissionData?.ref === "audit-wizard" && (
+            <div className="auditWizardSubmission">
+              <img src={require("assets/images/audit_wizard.png")} alt="audit wizard logo" />
+              <p>{t("Submissions.submissionSubmittedViaAuditWizard")}</p>
+            </div>
+          )}
+          {submissionData?.project?.projectId && (
+            <Button styleType="invisible" textColor="error" onClick={handleClearSubmission}>
+              <ClearIcon className="mr-2" />
+              {t("clearSubmission")}
+            </Button>
+          )}
+        </div>
+
         <div id="vulnerabilityFormWrapper" className="accordion-wrapper">
           <SubmissionFormContext.Provider value={context}>
             {steps.map((step, index) => (

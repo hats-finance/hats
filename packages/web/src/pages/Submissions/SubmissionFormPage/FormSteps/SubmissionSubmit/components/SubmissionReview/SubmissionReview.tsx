@@ -1,4 +1,6 @@
+import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, FormInput, Loading } from "components";
+import { disallowedElementsMarkdown } from "constants/constants";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -34,15 +36,27 @@ export function SubmissionReview() {
         />
       </div>
 
-      {/* <MDEditor.Markdown
+      <br />
+
+      <MDEditor.Markdown
         disallowedElements={disallowedElementsMarkdown}
         source={submissionData?.submissionsDescriptions?.submissionMessage}
         style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
-      /> */}
+      />
 
-      <FormInput readOnly type="textarea" rows={20} value={submissionData?.submissionsDescriptions?.submissionMessage} />
+      {/* <FormInput readOnly type="textarea" rows={20} value={submissionData?.submissionsDescriptions?.submissionMessage} /> */}
 
       <div className="buttons">
+        {/* {submissionData.ref === "audit-wizard" && (
+          <Button
+            filledColor="secondary"
+            disabled={isSubmitting || isSigningSubmission}
+            bigHorizontalPadding
+            onClick={() => submitSubmission()}
+          >
+            {t("Submissions.editSubmission")}
+          </Button>
+        )} */}
         <Button disabled={isSubmitting || isSigningSubmission} bigHorizontalPadding onClick={() => submitSubmission()}>
           {t("submit")}
         </Button>
