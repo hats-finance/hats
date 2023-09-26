@@ -14,25 +14,27 @@ type VaultRewardsSectionProps = {
 
 export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
   const { t } = useTranslation();
-  const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
 
+  const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
   const showIntended = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
 
   return (
-    <StyledRewardsSection showIntended={showIntended}>
+    <StyledRewardsSection showIntended={showIntended} isAudit={!!isAudit}>
       <h2>{t("rewards")}</h2>
       <div className="rewards-containers mt-4">
         <div className="amounts">
-          <div className="card amount-card">
-            <h4 className="title">{showIntended ? t("intendedDeposits") : t("totalDeposits")}</h4>
-            {showIntended ? (
-              <WithTooltip text={t("intendedValueExplanation")}>
-                <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)}</h4>
-              </WithTooltip>
-            ) : (
-              <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
-            )}
-          </div>
+          {!isAudit && (
+            <div className="card amount-card">
+              <h4 className="title">{showIntended ? t("intendedDeposits") : t("totalDeposits")}</h4>
+              {showIntended ? (
+                <WithTooltip text={t("intendedValueExplanation")}>
+                  <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)}</h4>
+                </WithTooltip>
+              ) : (
+                <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
+              )}
+            </div>
+          )}
           <div className="card">
             <h4 className="title">{t("assetsInVault")}</h4>
             <VaultAssetsPillsList vaultData={vault} />
@@ -44,25 +46,20 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                 <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
               </WithTooltip>
             ) : (
-              // TODO: In here should be only the max reward amount, not the deposited amount
-              // Change this once we have the new contract version
-              <h4 className="value">
-                ~$
-                {isAudit
-                  ? millify(vault.amountsInfo?.depositedAmount.usd ?? 0)
-                  : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
-              </h4>
+              <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
             )}
           </div>
         </div>
-        <div className="division">
-          <div className="card">
-            <h4 className="title">{t("rewardsDivision")}</h4>
-            <div className="chart-container">
-              <VaultRewardDivision vault={vault} />
+        {!isAudit && (
+          <div className="division">
+            <div className="card">
+              <h4 className="title">{t("rewardsDivision")}</h4>
+              <div className="chart-container">
+                <VaultRewardDivision vault={vault} />
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="severities-rewards">
           <div className="card">
             <h4 className="title">{t("severityRewards")}</h4>
