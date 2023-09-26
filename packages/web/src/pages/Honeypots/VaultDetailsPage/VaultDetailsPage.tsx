@@ -1,11 +1,12 @@
 import { IVault } from "@hats-finance/shared";
 import { Alert, Loading, Seo, VaultCard } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { redirect, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { HoneypotsRoutePaths } from "../router";
-import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection } from "./Sections";
+import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
+import { useSavedSubmissions } from "./hooks";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
@@ -20,6 +21,10 @@ const DETAILS_SECTIONS = [
   {
     title: "deposits",
     component: VaultDepositsSection,
+  },
+  {
+    title: "submissions",
+    component: VaultSubmissionsSection,
   },
 ];
 
@@ -37,17 +42,28 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const { vaultSlug, sectionId } = useParams();
   const vaultId = vaultSlug?.split("-").pop();
   const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
+  const isAudit = vault?.description?.["project-metadata"].type === "audit";
+
+  const { data: savedSubmissions } = useSavedSubmissions(vault);
 
   const [openSectionId, setOpenSectionId] = useState(sectionId ?? DETAILS_SECTIONS[0].title);
 
+  const DETAILS_SECTIONS_TO_SHOW = useMemo(
+    () =>
+      DETAILS_SECTIONS.filter((section) => {
+        if (section.title === "deposits" && noActions) return false;
+        if (section.title === "submissions" && (!isAudit || savedSubmissions?.length === 0)) return false;
+        return true;
+      }),
+    [noActions, isAudit, savedSubmissions]
+  );
+
   if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   if (!vault || !vault.description) {
-    redirect("/");
-    return null;
+    return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
   }
 
   const activeClaim = vault.activeClaim;
-  const isAudit = vault.description["project-metadata"].type === "audit";
   const vaultName = vault.description["project-metadata"].name;
 
   const navigateToType = () => {
@@ -70,7 +86,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   return (
     <>
       <Seo title={`${vaultName} ${isAudit ? t("auditCompetition") : t("bugBounty")}`} />
-      <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit}>
+      <StyledVaultDetailsPage className="content-wrapper" isAudit={isAudit} tabsNumber={DETAILS_SECTIONS_TO_SHOW.length}>
         {!noActions && (
           <div className="breadcrumb">
             <span className="type" onClick={navigateToType}>
@@ -91,7 +107,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
         </div>
 
         <div className="sections-tabs">
-          {DETAILS_SECTIONS.filter((section) => (noActions ? section.title !== "deposits" : true)).map((section) => (
+          {DETAILS_SECTIONS_TO_SHOW.map((section) => (
             <StyledSectionTab
               onClick={() => changeDetailsSection(section.title)}
               active={openSectionId === section.title}

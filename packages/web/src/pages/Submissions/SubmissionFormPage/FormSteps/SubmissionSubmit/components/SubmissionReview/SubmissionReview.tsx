@@ -1,6 +1,6 @@
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, FormInput, Loading } from "components";
-import { disallowedElementsMarkdown } from "constants/constants";
+import { allowedElementsMarkdown } from "constants/constants";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
@@ -39,7 +39,7 @@ export function SubmissionReview() {
       <br />
 
       <MDEditor.Markdown
-        disallowedElements={disallowedElementsMarkdown}
+        allowedElements={allowedElementsMarkdown}
         source={submissionData?.submissionsDescriptions?.submissionMessage}
         style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
       />
