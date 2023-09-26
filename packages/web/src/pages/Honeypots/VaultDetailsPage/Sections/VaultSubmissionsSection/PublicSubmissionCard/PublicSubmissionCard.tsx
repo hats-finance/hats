@@ -1,7 +1,7 @@
 import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Pill } from "components";
-import { disallowedElementsMarkdown } from "constants/constants";
+import { allowedElementsMarkdown } from "constants/constants";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import moment from "moment";
 import { IGithubIssue } from "pages/Honeypots/VaultDetailsPage/types";
@@ -38,7 +38,7 @@ function PublicSubmissionCard({ vault, submission }: PublicSubmissionCardProps) 
 
       <div className="card-content">
         <MDEditor.Markdown
-          disallowedElements={disallowedElementsMarkdown}
+          allowedElements={allowedElementsMarkdown}
           className="submission-content"
           source={submission.issueData.issueDescription
             .replace("\n**Submission hash", "\\\n**Submission hash")
