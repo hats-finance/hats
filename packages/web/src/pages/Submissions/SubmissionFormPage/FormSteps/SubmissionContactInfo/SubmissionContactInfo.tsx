@@ -44,7 +44,7 @@ export function SubmissionContactInfo() {
     setSubmissionData((prev) => {
       if (prev)
         return {
-          ...prev!,
+          ...prev,
           contact: { ...contactData, verified: true },
           submissionsDescriptions: { ...prev.submissionsDescriptions, verified: false },
           submissionResult: undefined,

@@ -595,6 +595,10 @@
     "seeSubmissionsOnGithub": "See submissions on GitHub",
     "openGithub": "Open GitHub",
     "doYouWantToSeeSubmissionsOnGithub": "Do you want to see the submissions on GitHub?",
+    "submissionChanged": "Submission changed",
+    "submissionChangedExplanationAuditWizard": "The submission you are trying to edit has changed. \n\n If you want to edit the submission, please go back to Audit Wizard.",
+    "submissionNotValid": "Submission not valid",
+    "submissionNotValidExplanationAuditWizard": "The submission you are trying to edit is not valid. \n\n Please go back to Audit Wizard and try again.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

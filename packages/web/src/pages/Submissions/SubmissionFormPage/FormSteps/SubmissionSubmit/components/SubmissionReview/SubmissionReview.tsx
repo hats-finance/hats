@@ -47,7 +47,7 @@ export function SubmissionReview() {
       {/* <FormInput readOnly type="textarea" rows={20} value={submissionData?.submissionsDescriptions?.submissionMessage} /> */}
 
       <div className="buttons">
-        {submissionData.ref === "audit-wizard" && (
+        {/* {submissionData.ref === "audit-wizard" && (
           <Button
             filledColor="secondary"
             disabled={isSubmitting || isSigningSubmission}
@@ -56,7 +56,7 @@ export function SubmissionReview() {
           >
             {t("Submissions.editSubmission")}
           </Button>
-        )}
+        )} */}
         <Button disabled={isSubmitting || isSigningSubmission} bigHorizontalPadding onClick={() => submitSubmission()}>
           {t("submit")}
         </Button>
