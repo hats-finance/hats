@@ -67,14 +67,7 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     const governanceFee = Number(governanceSplit) / 100 / 100;
     const committeeFee = (Number(vault.committeeRewardSplit) / 100 / 100) * splitFactor;
 
-    let maxRewardFactor = 1;
-    if (isAudit) {
-      // For audits the max bounty is 100% - governanceFee - committeeFee
-      maxRewardFactor = maxRewardFactor - governanceFee - committeeFee;
-    } else {
-      // maxRewardFactor = vault.version === "v1" ? 10000 : +vault.maxBounty;
-      maxRewardFactor = maxRewardFactor - governanceFee - committeeFee;
-    }
+    const maxRewardFactor = 1 - governanceFee - committeeFee;
 
     return {
       ...vault,
