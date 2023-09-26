@@ -11,7 +11,9 @@ export const StyledSubmissionReview = styled.div`
   }
 
   .buttons {
+    margin-top: ${getSpacing(2)};
     display: flex;
+    gap: ${getSpacing(4)};
     justify-content: flex-end;
   }
 `;

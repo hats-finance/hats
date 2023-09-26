@@ -20,7 +20,6 @@ export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]):
     sessionStorage.getItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`) ?? "null"
   );
 
-  console.log(dataInStorage);
   if (dataInStorage) return dataInStorage;
 
   for (const repo of repos) {

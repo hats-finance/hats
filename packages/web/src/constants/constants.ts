@@ -26,6 +26,8 @@ export const MAX_NFT_TIER = 3;
 export const stagingServiceUrl = "https://hats-backend-dev.herokuapp.com/v1";
 export const prodServiceUrl = "https://hats-backend-prod.herokuapp.com/v1";
 
+export const auditWizardVerifyService = "https://app.auditwizard.io:5000/submissions/finalizeHats";
+
 export const NFTContractDataProxy = {
   ["0xCCaadc293FaAEa229e0ca4A22B0330b65634b483".toLowerCase()]: "0x1d25bf3d0f8997282055a1a242fa2b146e7b4ec5",
   ["0x571f39d351513146248AcafA9D0509319A327C4D".toLowerCase()]: "0xe127be2bc276142039bc16251bb04e15b2b34f25",
@@ -120,4 +122,34 @@ export const HAT_TOKEN_ADDRESS_V1 = "0x436cA314A2e6FfDE52ba789b257b51DaCE778F1a"
 export const HAT_TOKEN_DECIMALS_V1 = "18";
 export const HAT_TOKEN_SYMBOL_V1 = "HAT";
 
-export const disallowedElementsMarkdown = ["script", "iframe", "img", "audio", "video", "object", "embed"];
+export const allowedElementsMarkdown = [
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "p",
+  "a",
+  "ul",
+  "ol",
+  "li",
+  "strong",
+  "em",
+  "s",
+  "code",
+  "blockquote",
+  "pre",
+  "img",
+  "hr",
+  "br",
+  "table",
+  "thead",
+  "tbody",
+  "tr",
+  "th",
+  "td",
+  "caption",
+  "div",
+  "span",
+];

@@ -27,7 +27,7 @@ export function SubmissionProcessed() {
 
   const getSubmissionOnServerStatus = () => {
     let color = Colors.yellow;
-    let text = t("pending");
+    let text = `${t("pending")}...`;
 
     switch (submissionStatus.server) {
       case SubmissionOpStatus.Success:

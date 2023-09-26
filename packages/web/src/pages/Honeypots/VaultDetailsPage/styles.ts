@@ -2,8 +2,8 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
-  ({ isAudit }) => css`
+export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean; tabsNumber: number }>(
+  ({ isAudit, tabsNumber }) => css`
     .breadcrumb {
       span.type {
         color: var(--grey-500);
@@ -26,7 +26,7 @@ export const StyledVaultDetailsPage = styled.div<{ isAudit: boolean }>(
       padding-top: ${getSpacing(6)};
       margin-top: ${getSpacing(4)};
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(${tabsNumber}, 1fr);
       gap: ${getSpacing(2)};
       overflow-x: auto;
       overflow-y: hidden;

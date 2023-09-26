@@ -1,8 +1,9 @@
 import { IVault } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
+import { auditWizardVerifyService } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";
 import { getGithubIssueDescription } from "../SubmissionFormPage/FormSteps/SubmissionDescriptions/utils";
-import { ISubmissionData, ISubmitSubmissionRequest } from "./types";
+import { IAuditWizardSubmissionData, ISubmissionData, ISubmitSubmissionRequest } from "./types";
 
 /**
  * Submits a new vulnerability submission
@@ -30,11 +31,11 @@ export async function submitVulnerabilitySubmission(
     createIssueRequests:
       vault.description?.["project-metadata"].type === "audit"
         ? submissionData.submissionsDescriptions.descriptions
-            .filter((desc) => !desc.isEncrypted)
-            .map((description) => ({
+            ?.filter((desc) => !desc.isEncrypted)
+            ?.map((description) => ({
               issueTitle: description.title,
               issueDescription: getGithubIssueDescription(submissionData, description),
-              issueFiles: description.files.map((file) => file.ipfsHash),
+              issueFiles: description.files?.map((file) => file.ipfsHash),
             }))
         : [],
   };
@@ -44,5 +45,17 @@ export async function submitVulnerabilitySubmission(
     return { success: res.status === 200, auditCompetitionRepo: res.data.auditCompetitionRepo };
   } catch (error) {
     return { success: false };
+  }
+}
+
+/**
+ * Verifies the signature sent by Audit Wizard
+ */
+export async function verifyAuditWizardSignature(auditWizardSubmission: IAuditWizardSubmissionData): Promise<boolean> {
+  try {
+    const res = await axiosClient.put(`${auditWizardVerifyService}`, auditWizardSubmission);
+    return res.status === 200;
+  } catch (error) {
+    return false;
   }
 }
