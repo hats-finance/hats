@@ -1,6 +1,5 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault, allowedElementsMarkdown } from "@hats-finance/shared";
 import MDEditor from "@uiw/react-md-editor";
-import { allowedElementsMarkdown } from "constants/constants";
 
 type OutOfScopeSectionProps = {
   vault: IVault;

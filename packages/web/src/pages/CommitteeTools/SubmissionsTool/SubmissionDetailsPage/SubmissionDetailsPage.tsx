@@ -1,9 +1,10 @@
+import { allowedElementsMarkdown } from "@hats-finance/shared";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import LinkIcon from "@mui/icons-material/InsertLinkOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, HatSpinner, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
-import { IPFS_PREFIX, allowedElementsMarkdown } from "constants/constants";
+import { IPFS_PREFIX } from "constants/constants";
 import { RoutePaths } from "navigation";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";

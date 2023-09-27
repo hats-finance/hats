@@ -3,6 +3,7 @@ import {
   IEditedContractCovered,
   IVault,
   IVaultRepoInformation,
+  allowedElementsMarkdown,
   severitiesToContractsCoveredForm,
 } from "@hats-finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -14,7 +15,6 @@ import ContractsIcon from "@mui/icons-material/ViewInAr";
 import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, CopyToClipboard, Loading, Pill, WithTooltip } from "components";
-import { allowedElementsMarkdown } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,6 @@
+import { allowedElementsMarkdown } from "@hats-finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, FormInput, Loading } from "components";
-import { allowedElementsMarkdown } from "constants/constants";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";

@@ -121,35 +121,3 @@ export enum Transactions {
 export const HAT_TOKEN_ADDRESS_V1 = "0x436cA314A2e6FfDE52ba789b257b51DaCE778F1a";
 export const HAT_TOKEN_DECIMALS_V1 = "18";
 export const HAT_TOKEN_SYMBOL_V1 = "HAT";
-
-export const allowedElementsMarkdown = [
-  "h1",
-  "h2",
-  "h3",
-  "h4",
-  "h5",
-  "h6",
-  "p",
-  "a",
-  "ul",
-  "ol",
-  "li",
-  "strong",
-  "em",
-  "s",
-  "code",
-  "blockquote",
-  "pre",
-  "img",
-  "hr",
-  "br",
-  "table",
-  "thead",
-  "tbody",
-  "tr",
-  "th",
-  "td",
-  "caption",
-  "div",
-  "span",
-];
