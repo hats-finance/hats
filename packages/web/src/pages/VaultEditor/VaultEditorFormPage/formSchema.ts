@@ -23,6 +23,17 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       website: Yup.string().test(getTestUrl(intl)).required(intl("required")),
       name: Yup.string().required(intl("required")),
       type: Yup.string().required(intl("required")).typeError(intl("required")),
+      isPrivateAudit: Yup.boolean(),
+      whitelist: Yup.array()
+        .of(
+          Yup.object({
+            address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
+          })
+        )
+        .when("isPrivateAudit", (isPrivateAudit: boolean, schema: any) => {
+          if (!isPrivateAudit) return schema;
+          return schema.required(intl("required")).min(1, intl("required"));
+        }),
       oneLiner: Yup.string()
         .required(intl("required"))
         .typeError(intl("required"))

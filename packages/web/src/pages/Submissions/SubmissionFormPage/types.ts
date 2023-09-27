@@ -26,7 +26,7 @@ export interface ISubmissionContactData {
 export interface ISubmissionsDescriptionsData {
   verified: boolean;
   submission: string; // Submission object ({encrypted: string, decrypted: string})
-  submissionMessage: string;
+  submissionMessage: string; // It's only for showing on the frontend final step
   descriptions: {
     title: string;
     description: string;

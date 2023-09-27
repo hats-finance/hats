@@ -64,15 +64,15 @@ ${
     decrypted: sanitizeMarkdown(decrypted, {
       allowedTags: allowedElementsMarkdown,
       allowedAttributes: allowedAttributesMarkdown,
-    }),
+    }) as string,
     toEncrypt: sanitizeMarkdown(toEncrypt, {
       allowedTags: allowedElementsMarkdown,
       allowedAttributes: allowedAttributesMarkdown,
-    }),
+    }) as string,
     submissionMessage: sanitizeMarkdown(submissionMessage, {
       allowedTags: allowedElementsMarkdown,
       allowedAttributes: allowedAttributesMarkdown,
-    }),
+    }) as string,
   };
 };
 
@@ -101,11 +101,11 @@ ${description.description.trim()}
     toEncrypt: sanitizeMarkdown(toEncrypt, {
       allowedTags: allowedElementsMarkdown,
       allowedAttributes: allowedAttributesMarkdown,
-    }),
+    }) as string,
     submissionMessage: sanitizeMarkdown(submissionMessage, {
       allowedTags: allowedElementsMarkdown,
       allowedAttributes: allowedAttributesMarkdown,
-    }),
+    }) as string,
   };
 };
 

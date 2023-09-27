@@ -92,6 +92,7 @@ export function VaultDetailsForm() {
             colorable
             disabled={allFormDisabled}
             placeholder={t("VaultEditor.vault-details.name-placeholder")}
+            flexExpand
           />
           <Controller
             control={control}
@@ -107,9 +108,18 @@ export function VaultDetailsForm() {
                 options={vaultTypes}
                 {...field}
                 value={field.value ?? ""}
+                flexExpand
               />
             )}
           />
+          {vaultType === "audit" && isAdvancedMode ? (
+            <FormInput
+              {...register("project-metadata.isPrivateAudit")}
+              disabled={allFormDisabled}
+              type="toggle"
+              label={t("isPrivateQuestion")}
+            />
+          ) : null}
         </div>
 
         <div className="inputs col-sm">

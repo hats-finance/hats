@@ -602,6 +602,7 @@
     "submissionChangedExplanationAuditWizard": "The submission you are trying to edit has changed. \n\n If you want to edit the submission, please go back to Audit Wizard.",
     "submissionNotValid": "Submission not valid",
     "submissionNotValidExplanationAuditWizard": "The submission you are trying to edit is not valid. \n\n Please go back to Audit Wizard and try again.",
+    "isPrivateQuestion": "Is private?",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",

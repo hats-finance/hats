@@ -1,3 +1,5 @@
+import { ISubmissionMessageObject } from "./submissions";
+
 export interface IVaultInfo {
   version: IVault["version"];
   address: string;
@@ -120,6 +122,8 @@ interface IBaseVaultDescription {
     name: string;
     tokenIcon: string;
     type?: IVaultType;
+    isPrivateAudit?: boolean;
+    whitelist?: string[];
     endtime?: number;
     starttime?: number;
     oneLiner?: string;
@@ -274,7 +278,7 @@ export interface ISubmittedSubmission {
   subId: string;
   submissionIdx: number;
   submissionHash: string;
-  submissionData?: string;
+  submissionData?: ISubmissionMessageObject;
   submissionDecrypted?: string;
   linkedVault?: IVault;
   submissionDataStructure?: {

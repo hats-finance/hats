@@ -1,3 +1,4 @@
+import { ISubmissionMessageObject } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";
@@ -54,8 +55,9 @@ export const DecryptionPage = () => {
       let decryptedPart = "";
       let encryptedPart = "";
 
+      // TODO: private audits (We need to check if the message is encrypted by HATS, if so, decrypt it with backend)
       try {
-        const messageObject = JSON.parse(dataToUse.encryptedMessage);
+        const messageObject = JSON.parse(dataToUse.encryptedMessage) as ISubmissionMessageObject;
         decryptedPart = messageObject.decrypted ?? "";
         encryptedPart = messageObject.encrypted ?? "";
       } catch (error) {

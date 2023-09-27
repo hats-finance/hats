@@ -14,6 +14,7 @@ type StyledFormInputProps = {
   colorable?: boolean;
   readOnly?: boolean;
   disabled?: boolean;
+  flexExpand?: boolean;
   type?: FormInputType;
 };
 
@@ -31,11 +32,13 @@ export const StyledFormInput = styled.div<StyledFormInputProps>(
     disabled,
     colorable,
     readOnly,
+    flexExpand,
   }) => css`
     position: relative;
     overflow: hidden;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
-    width: 100%;
+    width: ${flexExpand ? "unset" : "100%"};
+    flex: ${flexExpand ? 1 : "unset"};
 
     .main-container {
       position: relative;

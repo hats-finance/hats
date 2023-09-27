@@ -38,6 +38,22 @@ export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataTo
   return { encryptedData, sessionKey };
 }
 
+export async function encryptWithHatsKey(dataToEncrypt: string): Promise<string> {
+  try {
+    //TODO: private audits (get public key from backend)
+    const hatsPublicKey = await readKey({ armoredKey: "test" });
+    const encryptedData = await encrypt({
+      message: await createMessage({ text: dataToEncrypt }),
+      encryptionKeys: hatsPublicKey,
+    });
+
+    return encryptedData as string;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 export async function calcCid(content) {
   return await IpfsHash.of(content);
 }

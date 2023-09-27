@@ -1,4 +1,4 @@
-import { IVulnerabilitySeverity } from "@hats-finance/shared";
+import { ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";
@@ -17,7 +17,7 @@ import { getCustomIsDirty, useEnhancedForm } from "hooks/form";
 import { useContext, useEffect, useState } from "react";
 import { Controller, useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { encryptWithKeys } from "../../encrypt";
+import { encryptWithHatsKey, encryptWithKeys } from "../../encrypt";
 import { SUBMISSION_INIT_DATA, SubmissionFormContext } from "../../store";
 import { ISubmissionsDescriptionsData } from "../../types";
 import { getCreateDescriptionSchema } from "./formSchema";
@@ -31,6 +31,7 @@ export function SubmissionDescriptions() {
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
+  const isPrivateAudit = isAuditSubmission && false; //TODO: private audits
 
   const { register, handleSubmit, control, reset, setValue } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
@@ -123,9 +124,10 @@ export function SubmissionDescriptions() {
     if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
 
     const { encryptedData, sessionKey } = encryptionResult;
-    const submissionInfo = {
+    const submissionInfo: ISubmissionMessageObject = {
       ref: submissionData.ref,
-      decrypted,
+      isEncryptedByHats: isPrivateAudit,
+      decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
       encrypted: encryptedData as string,
     };
 
