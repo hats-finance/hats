@@ -44,6 +44,6 @@ export const allowedElementsMarkdown = [
 ];
 
 export const allowedAttributesMarkdown = {
-  a: ["href", "name", "target", "class"],
+  a: ["href", "name", "class"],
   img: ["src", "alt", "class"],
 };

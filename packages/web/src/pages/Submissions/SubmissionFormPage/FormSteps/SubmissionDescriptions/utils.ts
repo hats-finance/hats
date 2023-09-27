@@ -1,3 +1,5 @@
+import { allowedAttributesMarkdown, allowedElementsMarkdown } from "@hats-finance/shared";
+import sanitizeMarkdown from "sanitize-markdown";
 import { BASE_SERVICE_URL } from "settings";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
@@ -58,7 +60,20 @@ ${
 
   const submissionMessage = `\`\`\`\n> [ENCRYPTED SECTION]\n\`\`\`\n\n${toEncrypt}\n\n\n \`\`\`\n> [DECRYPTED SECTION]\n\`\`\`\n\n${decrypted}`;
 
-  return { decrypted, toEncrypt, submissionMessage };
+  return {
+    decrypted: sanitizeMarkdown(decrypted, {
+      allowedTags: allowedElementsMarkdown,
+      allowedAttributes: allowedAttributesMarkdown,
+    }),
+    toEncrypt: sanitizeMarkdown(toEncrypt, {
+      allowedTags: allowedElementsMarkdown,
+      allowedAttributes: allowedAttributesMarkdown,
+    }),
+    submissionMessage: sanitizeMarkdown(submissionMessage, {
+      allowedTags: allowedElementsMarkdown,
+      allowedAttributes: allowedAttributesMarkdown,
+    }),
+  };
 };
 
 export const getBountySubmissionTexts = (
@@ -81,7 +96,17 @@ ${description.description.trim()}
 
   const submissionMessage = `\`\`\`\n> [ENCRYPTED SECTION]\n\`\`\`\n\n${toEncrypt}`;
 
-  return { decrypted: undefined, toEncrypt, submissionMessage };
+  return {
+    decrypted: undefined,
+    toEncrypt: sanitizeMarkdown(toEncrypt, {
+      allowedTags: allowedElementsMarkdown,
+      allowedAttributes: allowedAttributesMarkdown,
+    }),
+    submissionMessage: sanitizeMarkdown(submissionMessage, {
+      allowedTags: allowedElementsMarkdown,
+      allowedAttributes: allowedAttributesMarkdown,
+    }),
+  };
 };
 
 export const getGithubIssueDescription = (
