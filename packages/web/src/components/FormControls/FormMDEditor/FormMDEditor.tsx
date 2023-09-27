@@ -1,5 +1,5 @@
+import { allowedElementsMarkdown } from "@hats-finance/shared";
 import MDEditor, { PreviewType } from "@uiw/react-md-editor";
-import { allowedElementsMarkdown } from "constants/constants";
 import { forwardRef } from "react";
 import { parseIsDirty } from "../utils";
 import { StyledFormMDEditor } from "./styles";
