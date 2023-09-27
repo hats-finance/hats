@@ -115,6 +115,7 @@
     "react-content-loader": "^6.2.1",
     "react-helmet": "^6.1.0",
     "react-identicons": "^1.2.5",
+    "sanitize-markdown": "^2.6.7",
     "siwe": "^1.1.6",
     "uuid-by-string": "^4.0.0"
   }
