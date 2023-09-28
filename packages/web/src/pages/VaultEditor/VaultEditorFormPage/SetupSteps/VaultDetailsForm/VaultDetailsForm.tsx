@@ -117,7 +117,7 @@ export function VaultDetailsForm() {
           {(vaultType === "audit" && isAdvancedMode) || isPrivateAudit ? (
             <FormInput
               {...register("project-metadata.isPrivateAudit")}
-              disabled={allFormDisabled}
+              disabled={isEditingExistingVault || allFormDisabled}
               type="toggle"
               label={t("isPrivateQuestion")}
             />

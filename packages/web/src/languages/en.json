@@ -253,7 +253,8 @@
     "existingEditSessionsHelperPendingApproval": "These are the editions request you did to your vault. You have currently one edition waiting for approval, please wait until governance approve it or if you want you can cancel the approval request.",
     "cancelApprovalRequest": "Cancel approval request",
     "vaultRepoInformationExplanation": "Please put here all the code repositories where the code/contracts are.",
-    "vaultRepoInformationExplanationAudit": "Please put here all the code repositories where the contracts are, along with the specific commit hash. \n\nThis is used for creating a fork of the repo (the one you selected as <strong>main</strong>) and creating issues for each security researcher submission. Also, we are going to show this information on the vault details page (as soon as the repo is <strong>public</strong>)",
+    "vaultRepoInformationExplanationAudit": "Please put here the code repositoriy where the contracts are, along with the specific commit hash. \n\nThis is used for creating a fork of the repo and creating issues for each security researcher submission. Also, we are going to show this information on the vault details page (as soon as the repo is <strong>public</strong>)",
+    "vaultRepoInformationExplanationPrivateAudit": "Please put here the code repositoriy where the contracts are, along with the specific commit hash. \n\nThis is used for creating a fork of the repo and creating issues for each security researcher submission.",
     "youHaveNotSelectedRepos": "You have not specified any repository information.",
     "youHaveNotSelectedAnyContracts": "You have not specified any contract information.",
     "cancel": "Cancel",
@@ -603,6 +604,7 @@
     "submissionNotValid": "Submission not valid",
     "submissionNotValidExplanationAuditWizard": "The submission you are trying to edit is not valid. \n\n Please go back to Audit Wizard and try again.",
     "isPrivateQuestion": "Is private?",
+    "scopePrivateAuditsWarning": "This is a private audit competition.\nFor this vault, all the scope information should be under the private github repository.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
