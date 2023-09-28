@@ -1,0 +1,21 @@
+import styled from "styled-components";
+import { getSpacing } from "styles";
+
+export const StyledWhitelistedAddressForm = styled.div`
+  display: flex;
+  align-items: baseline;
+
+  & > :nth-child(1) {
+    width: calc(100% - 160px);
+  }
+
+  & > :nth-child(2) {
+    width: 160px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &:not(:last-of-type) {
+    margin-bottom: ${getSpacing(2)};
+  }
+`;

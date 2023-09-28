@@ -74,7 +74,7 @@ export interface IBaseEditedVaultDescription {
     tokenIcon: string;
     type?: IVaultType;
     isPrivateAudit?: boolean;
-    whitelist?: string[];
+    whitelist: { address: string }[];
     endtime?: number;
     starttime?: number;
     emails: IEditedCommunicationEmail[];

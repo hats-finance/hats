@@ -27,7 +27,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       whitelist: Yup.array()
         .of(
           Yup.object({
-            address: Yup.string().test(getTestAddressOrUrl(intl)).required(intl("required")),
+            address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
           })
         )
         .when("isPrivateAudit", (isPrivateAudit: boolean, schema: any) => {

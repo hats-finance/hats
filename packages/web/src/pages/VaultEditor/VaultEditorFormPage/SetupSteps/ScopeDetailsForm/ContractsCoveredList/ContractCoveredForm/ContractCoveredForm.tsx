@@ -23,7 +23,7 @@ export default function ContractCoveredForm({ index, remove, contractsCount }: C
     fields: deployments,
     append: appendDeployment,
     remove: removeDeployment,
-  } = useFieldArray<IEditedVaultDescription>({ control, name: `contracts-covered.${index}.deploymentInfo` });
+  } = useFieldArray({ control, name: `contracts-covered.${index}.deploymentInfo` });
 
   const { allFormDisabled } = useContext(VaultEditorFormContext);
 

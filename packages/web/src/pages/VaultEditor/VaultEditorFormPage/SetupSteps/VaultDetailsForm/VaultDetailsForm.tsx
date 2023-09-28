@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 import { VaultEditorFormContext } from "../../store";
 import { VaultAssetsList } from "../shared/VaultAssetsList/VaultAssetsList";
 import { VaultEmailsForm } from "../shared/VaultEmailsList/VaultEmailsList";
+import { WhitelistedAddressesList } from "../shared/WhitelistedAddressesList/WhitelistedAddressesList";
 import { StyledVaultDetails } from "./styles";
 
 export function VaultDetailsForm() {
@@ -25,6 +26,7 @@ export function VaultDetailsForm() {
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
   const vaultType = useWatch({ control, name: "project-metadata.type" });
+  const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
 
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
@@ -112,7 +114,7 @@ export function VaultDetailsForm() {
               />
             )}
           />
-          {vaultType === "audit" && isAdvancedMode ? (
+          {(vaultType === "audit" && isAdvancedMode) || isPrivateAudit ? (
             <FormInput
               {...register("project-metadata.isPrivateAudit")}
               disabled={allFormDisabled}
@@ -151,6 +153,14 @@ export function VaultDetailsForm() {
           helper={watch("project-metadata.oneLiner") ? `${watch("project-metadata.oneLiner")?.length ?? 0} characters` : ""}
         />
       </div>
+
+      {isPrivateAudit && (
+        <>
+          <p className="section-title mt-5">{t("VaultEditor.vault-details.whitelistedAddreses")}</p>
+          <p className="mb-3 helper-text">{t("VaultEditor.vault-details.whitelistedAddresesExplanation")}</p>
+          <WhitelistedAddressesList />
+        </>
+      )}
 
       {!isEditingExistingVault && (
         <>
