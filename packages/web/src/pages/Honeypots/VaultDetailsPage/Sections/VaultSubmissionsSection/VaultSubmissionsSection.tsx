@@ -18,6 +18,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
 
   const { data: savedSubmissions, isLoading } = useSavedSubmissions(vault);
   const { data: repoName } = useVaultRepoName(vault);
+  const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
 
   const goToGithubIssues = async () => {
     if (!repoName) return;
@@ -38,6 +39,11 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
 
   return (
     <StyledSubmissionsSection>
+      {isPrivateAudit && (
+        <Alert className="mt-5 mb-5" type="info">
+          {t("privateAuditSubmissionsOnlyOnGithub")}
+        </Alert>
+      )}
       <h2>
         {t("submissions")}
 
@@ -48,7 +54,7 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
         )}
       </h2>
 
-      {savedSubmissions?.length === 0 && (
+      {!isPrivateAudit && savedSubmissions?.length === 0 && (
         <Alert className="mt-5 mb-5" type="info">
           {t("thereIsNoPublicSubmission")}
         </Alert>

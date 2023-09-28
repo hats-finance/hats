@@ -605,6 +605,7 @@
     "submissionNotValidExplanationAuditWizard": "The submission you are trying to edit is not valid. \n\n Please go back to Audit Wizard and try again.",
     "isPrivateQuestion": "Is private?",
     "scopePrivateAuditsWarning": "This is a private audit competition.\nFor this vault, all the scope information should be under the private github repository.",
+    "privateAuditSubmissionsOnlyOnGithub": "This is a private audit competition. \nAll the submissions should be on the private GitHub repository. You can go to the github clicking on the button below.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
