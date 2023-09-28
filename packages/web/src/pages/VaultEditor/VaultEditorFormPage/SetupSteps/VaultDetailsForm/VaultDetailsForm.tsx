@@ -92,7 +92,7 @@ export function VaultDetailsForm() {
             {...register("project-metadata.name")}
             label={t("VaultEditor.vault-details.name")}
             colorable
-            disabled={allFormDisabled}
+            disabled={isEditingExistingVault || allFormDisabled}
             placeholder={t("VaultEditor.vault-details.name-placeholder")}
             flexExpand
           />
@@ -106,7 +106,7 @@ export function VaultDetailsForm() {
                 label={t("VaultEditor.vault-details.type")}
                 placeholder={t("VaultEditor.vault-details.type-placeholder")}
                 colorable
-                disabled={allFormDisabled}
+                disabled={isEditingExistingVault || allFormDisabled}
                 options={vaultTypes}
                 {...field}
                 value={field.value ?? ""}
