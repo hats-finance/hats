@@ -31,7 +31,7 @@ export function SubmissionDescriptions() {
   const [severitiesOptions, setSeveritiesOptions] = useState<FormSelectInputOption[] | undefined>();
 
   const isAuditSubmission = vault?.description?.["project-metadata"].type === "audit";
-  const isPrivateAudit = isAuditSubmission && false; //TODO: private audits
+  const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
 
   const { register, handleSubmit, control, reset, setValue } = useEnhancedForm<ISubmissionsDescriptionsData>({
     resolver: yupResolver(getCreateDescriptionSchema(t)),
@@ -124,12 +124,22 @@ export function SubmissionDescriptions() {
     if (!encryptionResult) return alert("This vault doesn't have any valid key, please contact hats team");
 
     const { encryptedData, sessionKey } = encryptionResult;
-    const submissionInfo: ISubmissionMessageObject = {
-      ref: submissionData.ref,
-      isEncryptedByHats: isPrivateAudit,
-      decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
-      encrypted: encryptedData as string,
-    };
+
+    let submissionInfo: ISubmissionMessageObject | undefined;
+
+    try {
+      submissionInfo = {
+        ref: submissionData.ref,
+        isEncryptedByHats: isPrivateAudit,
+        decrypted: isPrivateAudit ? await encryptWithHatsKey(decrypted ?? "--Nothing decrypted--") : decrypted,
+        encrypted: encryptedData as string,
+      };
+    } catch (error) {
+      console.log(error);
+      return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
+    }
+
+    console.log(submissionInfo);
 
     download(
       JSON.stringify({ submission: submissionInfo, sessionKey }),

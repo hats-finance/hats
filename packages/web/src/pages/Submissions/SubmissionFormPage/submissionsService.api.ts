@@ -59,3 +59,15 @@ export async function verifyAuditWizardSignature(auditWizardSubmission: IAuditWi
     return false;
   }
 }
+
+/**
+ * Gets the Hats Backend public key
+ */
+export async function getHatsPublicKey(): Promise<string | undefined> {
+  try {
+    const res = await axiosClient.get(`${BASE_SERVICE_URL}/pgp/public-key`);
+    return res.data.publicKey;
+  } catch (error) {
+    return undefined;
+  }
+}
