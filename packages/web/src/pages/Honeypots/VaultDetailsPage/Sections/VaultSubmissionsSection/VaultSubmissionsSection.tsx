@@ -60,9 +60,9 @@ export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps)
         </Alert>
       )}
 
-      {isLoading && <HatSpinner text={`${t("gettingSubmissions")}...`} />}
+      {!isPrivateAudit && isLoading && <HatSpinner text={`${t("gettingSubmissions")}...`} />}
 
-      {savedSubmissions && savedSubmissions?.length > 0 && (
+      {!isPrivateAudit && savedSubmissions && savedSubmissions?.length > 0 && (
         <div className="public-submissions">
           {savedSubmissions.map((submission) => (
             <PublicSubmissionCard key={submission._id} vault={vault} submission={submission} />
