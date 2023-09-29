@@ -16,7 +16,7 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import { getBalancerTokenPrices, getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
 import { populateVaultsWithPricing } from "./parser";
@@ -121,6 +121,26 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
         tokensLeft.forEach((token) => {
           if (uniswapTokenPrices.hasOwnProperty(token.address)) {
             const price = uniswapTokenPrices[token.address]?.["usd"];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    console.log(11);
+    // Get prices from Balancer
+    try {
+      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const balancerTokenPrices = await getBalancerTokenPrices(tokensLeft);
+
+      console.log({ balancerTokenPrices, tokensLeft });
+
+      if (balancerTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (balancerTokenPrices.hasOwnProperty(token.address)) {
+            const price = balancerTokenPrices[token.address]?.["usd"];
             if (price && +price > 0) foundTokenPrices[token.address] = +price;
           }
         });

@@ -51,8 +51,6 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
     const isAudit = vault.description?.["project-metadata"].type === "audit";
 
-    console.log(vault);
-
     const governanceSplit = BigNumber.from(vault.governanceHatRewardSplit).eq(ethers.constants.MaxUint256)
       ? vault.master.defaultGovernanceHatRewardSplit
       : vault.governanceHatRewardSplit;
