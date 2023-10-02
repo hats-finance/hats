@@ -47,11 +47,13 @@ const buildSitemap = async () => {
     });
   });
 
-  const subgraphResults = (await Promise.all(subgraphPromises)
-    .then((responses) => responses.map((res) => res.data))
-    .catch((error) => {
-      console.error("Error fetching subgraph data:", error);
-    }))
+  const subgraphResults = (
+    await Promise.all(subgraphPromises)
+      .then((responses) => responses.map((res) => res.data))
+      .catch((error) => {
+        console.error("Error fetching subgraph data:", error);
+      })
+  )
     .filter((res) => res != null)
     .map((res) => res.data.vaults)
     .flat()
@@ -71,7 +73,8 @@ const buildSitemap = async () => {
   const descriptionsData = await Promise.all(descriptionsResults.map((res) => res.data));
   const descriptionsDataWithHash = descriptionsData.map((d) => ({ ...d, hash: descriptionHashes[descriptionsData.indexOf(d)] }));
   const descriptions = descriptionsDataWithHash.filter((d) => !(d instanceof Error));
-  const vaultsRoutes = descriptions.map((d) => {
+  const descriptionsNoPrivateAudits = descriptions.filter((d) => !d["project-metadata"]?.isPrivateAudit);
+  const vaultsRoutes = descriptionsNoPrivateAudits.map((d) => {
     const vaultId = subgraphResults.find((vault) => vault.descriptionHash === d.hash).id;
     const vaultSlug = slugify(d["project-metadata"]?.name ?? d["Project-metadata"]?.name ?? "");
     const isAudit =
@@ -93,15 +96,15 @@ const buildSitemap = async () => {
 
   const vaultsRoutesXml = vaultsRoutes.reduce(
     (acc, route) => `${acc}
-    ${appendPathAndGenerateUrl(route, 'rewards')}
-    ${appendPathAndGenerateUrl(route, 'deposits')}
-    ${appendPathAndGenerateUrl(route, 'scope')}`,
+    ${appendPathAndGenerateUrl(route, "rewards")}
+    ${appendPathAndGenerateUrl(route, "deposits")}
+    ${appendPathAndGenerateUrl(route, "scope")}`,
     ""
   );
 
   const routesXml = routes.reduce(
     (acc, route) => `${acc}
-    ${appendPathAndGenerateUrl(route, '')}`,
+    ${appendPathAndGenerateUrl(route, "")}`,
     ""
   );
 

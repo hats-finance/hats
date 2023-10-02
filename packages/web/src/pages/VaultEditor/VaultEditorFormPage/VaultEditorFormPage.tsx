@@ -310,6 +310,7 @@ const VaultEditorFormPage = () => {
       setCreatingVault(false);
     }
   }, [address, allFormDisabled, confirm, descriptionHash, editSessionId, getValues, navigate, refreshEditSessionData, t]);
+
   const sendEditionToGovApproval = async () => {
     if (allFormDisabled) return;
     if (!wasEditedSinceCreated) return;

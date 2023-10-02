@@ -29,6 +29,7 @@ export const ScopeReposInformation = () => {
   );
 
   const vaultType = useWatch({ control, name: "project-metadata.type" });
+  const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
 
   // Only one repo can be the main repo
   useOnChange(repos, (newRepos, prevRepos) => {
@@ -66,7 +67,13 @@ export const ScopeReposInformation = () => {
       <div
         className="helper-text"
         dangerouslySetInnerHTML={{
-          __html: t(vaultType === "audit" ? "vaultRepoInformationExplanationAudit" : "vaultRepoInformationExplanation"),
+          __html: t(
+            vaultType === "audit"
+              ? isPrivateAudit
+                ? "vaultRepoInformationExplanationPrivateAudit"
+                : "vaultRepoInformationExplanationAudit"
+              : "vaultRepoInformationExplanation"
+          ),
         }}
       />
 

@@ -25,6 +25,7 @@ interface FormSelectInputProps {
   disabled?: boolean;
   noMargin?: boolean;
   readOnly?: boolean;
+  flexExpand?: boolean;
   isDirty?: boolean | boolean[];
   value: string | string[];
   onChange?: (data: string | string[]) => void;
@@ -43,6 +44,7 @@ export function FormSelectInputComponent(
     disabled = false,
     isDirty = false,
     readOnly = false,
+    flexExpand = false,
     noMargin = false,
     emptyState,
     error,
@@ -85,7 +87,7 @@ export function FormSelectInputComponent(
   };
 
   return (
-    <StyledFormSelectInput ref={menuRef} noMargin={noMargin}>
+    <StyledFormSelectInput ref={menuRef} noMargin={noMargin} flexExpand={flexExpand}>
       {label && <label className="input-label">{label}</label>}
 
       <SelectButton
