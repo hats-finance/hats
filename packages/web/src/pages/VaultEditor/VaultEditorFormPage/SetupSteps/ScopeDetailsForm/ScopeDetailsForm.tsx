@@ -69,7 +69,7 @@ export const ScopeDetailsForm = () => {
   return (
     <StyledScopeDetailsForm>
       {/* Private audits alert */}
-      {isAdvancedMode && isPrivateAudit && (
+      {isPrivateAudit && (
         <Alert className="mt-2 mb-4" type="warning">
           {t("scopePrivateAuditsWarning")}
         </Alert>
@@ -126,7 +126,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Repos and documentation */}
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
           <ScopeReposInformation />
