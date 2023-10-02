@@ -129,7 +129,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       console.error(error);
     }
 
-    console.log(11);
     // Get prices from Balancer
     try {
       const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
