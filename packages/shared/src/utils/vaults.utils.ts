@@ -5,7 +5,7 @@ import { isAddressAMultisigMember } from "./gnosis.utils";
 import { isValidIpfsHash } from "./ipfs.utils";
 import { fixObject } from "./vaultEditor.utils";
 
-export type IVaultInfoWithCommittee = IVaultInfo & { committee: string };
+export type IVaultInfoWithCommittee = IVaultInfo & { committee: string; registered: boolean };
 
 export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommittee[]> => {
   try {
@@ -14,6 +14,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
         vaults {
           id
           pid
+          registered
           version
           committee
           master {
@@ -54,6 +55,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           pid: vault.pid,
           version: vault.version,
           committee: vault.committee,
+          registered: vault.registered,
         });
       }
     }
@@ -76,6 +78,7 @@ export const getVaultInfoWithCommittee = async (
         vaults(where: {id: $vaultId}) {
           id
           pid
+          registered
           version
           committee
           master {
@@ -109,6 +112,7 @@ export const getVaultInfoWithCommittee = async (
       pid: vault.pid,
       version: vault.version,
       committee: vault.committee,
+      registered: vault.registered,
     };
   } catch (error) {
     return undefined;

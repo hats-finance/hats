@@ -2,22 +2,37 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
-export const StyledRewardsSection = styled.div<{ showIntended: boolean }>(
-  ({ showIntended }) => css`
+export const StyledRewardsSection = styled.div<{ showIntended: boolean; isAudit: boolean }>(
+  ({ showIntended, isAudit }) => css`
     padding-bottom: ${getSpacing(10)};
 
     .rewards-containers {
       display: grid;
       grid-template-columns: auto 1fr 1fr;
-      gap: ${getSpacing(1.5)};
+      gap: ${getSpacing(3)};
       flex-grow: 1;
+
+      ${isAudit &&
+      css`
+        grid-template-columns: 1fr 3fr;
+      `}
 
       @media (max-width: ${breakpointsDefinition.mediumScreen}) {
         grid-template-columns: auto 4fr 5fr;
+
+        ${isAudit &&
+        css`
+          grid-template-columns: 1fr 2fr;
+        `}
       }
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
         grid-template-columns: 1fr 1fr;
+
+        ${isAudit &&
+        css`
+          grid-template-columns: 1fr;
+        `}
       }
 
       @media (max-width: ${breakpointsDefinition.smallMobile}) {
@@ -27,7 +42,7 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean }>(
       .amounts {
         display: grid;
         grid-template-columns: 1fr;
-        gap: ${getSpacing(1.5)};
+        gap: ${getSpacing(3)};
 
         @media (max-width: ${breakpointsDefinition.mediumMobile}) {
           grid-template-columns: 1fr;
@@ -44,10 +59,11 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean }>(
       }
 
       .severities-rewards {
-        max-height: 500px;
+        max-height: 550px;
         overflow: hidden;
 
         @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          max-height: unset;
           grid-column-start: 1;
           grid-column-end: 3;
         }

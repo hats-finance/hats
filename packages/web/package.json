@@ -37,7 +37,7 @@
     "downloadjs": "^1.4.7",
     "ethers": "5.7.2",
     "fs": "^0.0.1-security",
-    "graphql": "^16.5.0",
+    "graphql": "^16.8.1",
     "https-browserify": "^1.0.0",
     "humanize-duration": "^3.27.0",
     "i18next": "^21.8.4",
@@ -57,7 +57,7 @@
     "react-app-rewired": "^2.2.1",
     "react-confetti": "^6.1.0",
     "react-dom": "^18.1.0",
-    "react-hook-form": "^7.42.1",
+    "react-hook-form": "^7.46.2",
     "react-https-redirect": "^1.1.0",
     "react-i18next": "^11.16.9",
     "react-minimal-pie-chart": "^8.4.0",
@@ -115,6 +115,7 @@
     "react-content-loader": "^6.2.1",
     "react-helmet": "^6.1.0",
     "react-identicons": "^1.2.5",
+    "sanitize-markdown": "^2.6.7",
     "siwe": "^1.1.6",
     "uuid-by-string": "^4.0.0"
   }

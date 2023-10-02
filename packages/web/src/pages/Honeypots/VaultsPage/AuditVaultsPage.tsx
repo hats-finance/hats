@@ -1,10 +1,12 @@
 import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton } from "components";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useTranslation } from "react-i18next";
 import { useAuditCompetitionsVaults, useDraftAuditCompetitions, useOldAuditCompetitions } from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const AuditVaultsPage = () => {
   const { t } = useTranslation();
+  const { vaultsReadyAllChains } = useVaults();
 
   const {
     live: liveAuditCompetitions,
@@ -17,14 +19,11 @@ export const AuditVaultsPage = () => {
 
   const draftAudits = useDraftAuditCompetitions();
 
-  const areVaultsToShow =
-    liveAuditCompetitions.length > 0 || upcomingAuditCompetitions.length > 0 || finishedAuditPayouts.length > 0;
-
   return (
     <>
       <Seo title={t("seo.auditCompetitionsTitle")} />
       <StyledVaultsPage className="content-wrapper-md">
-        {!areVaultsToShow && (
+        {!vaultsReadyAllChains && (
           <div className="vaults-container mt-4">
             <h2 className="subtitle">{t("liveCompetitions")}</h2>
             <VaultCardSkeleton className="mb-5" />

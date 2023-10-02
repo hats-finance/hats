@@ -30,6 +30,11 @@ export function SubmissionProject() {
 
   const vaultsProjects = activeVaults?.map((vault: IVault, index: number) => {
     const projectName = vault.description?.["project-metadata"].name;
+    const isPrivateAudit = vault.description?.["project-metadata"].isPrivateAudit;
+
+    // Don't show the private audit, unless the project is already selected
+    if (isPrivateAudit && submissionData?.project?.projectId !== vault.id) return undefined;
+
     if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.liquidityPool && vault.registered) {
       return (
         <Vault

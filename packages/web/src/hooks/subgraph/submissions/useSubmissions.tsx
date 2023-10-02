@@ -1,4 +1,4 @@
-import { ISubmittedSubmission } from "@hats-finance/shared";
+import { ISubmissionMessageObject, ISubmittedSubmission } from "@hats-finance/shared";
 import axios from "axios";
 import { LocalStorage } from "constants/constants";
 import { blacklistedWallets } from "data/blacklistedWallets";
@@ -41,7 +41,7 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
   const { multiChainData, allChainsLoaded } = useMultiChainSubmissions();
 
   const setSubmissionsWithDetails = async (submissionsData: ISubmittedSubmission[]) => {
-    const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<string | undefined> => {
+    const loadSubmissionData = async (submission: ISubmittedSubmission): Promise<ISubmissionMessageObject | undefined> => {
       if (isValidIpfsHash(submission.submissionHash)) {
         try {
           const dataResponse = await axios.get(ipfsTransformUri(submission.submissionHash));

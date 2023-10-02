@@ -143,47 +143,6 @@ const VaultEditorFormPage = () => {
     checkGovMember();
   }, [address, chain]);
 
-  const createOrSaveEditSession = async (isCreation = false, withIpfsHash = false) => {
-    try {
-      // If vault is already created or is isNonEditableStatus, edition is blocked
-      if (isNonEditableStatus) return;
-      if (allFormDisabled) return;
-      if (isSomeoneCreatingTheVault) return;
-      if (!isCreation && !formState.isDirty) return;
-      if (isCreation) setLoadingEditSession(true);
-      if (!isCreation) setSavingEditSession(true);
-
-      let sessionIdOrSessionResponse: string | IEditedSessionResponse;
-
-      if (isCreation) {
-        sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(
-          undefined,
-          undefined,
-          withIpfsHash ? editSessionId : undefined
-        );
-      } else {
-        const data: IEditedVaultDescription = getValues();
-        sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(data, editSessionId, undefined);
-      }
-
-      if (typeof sessionIdOrSessionResponse === "string") {
-        navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
-      } else {
-        refreshEditSessionData(sessionIdOrSessionResponse);
-      }
-
-      setSavingEditSession(false);
-      setLoadingEditSession(false);
-    } catch (error) {
-      setSavingEditSession(false);
-      setLoadingEditSession(false);
-
-      if (!editSessionId) return;
-      const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
-      refreshEditSessionData(editSessionResponse);
-    }
-  };
-
   async function loadEditSessionData(editSessionId: string) {
     if (isVaultCreated) return; // If vault is already created, creation is blocked
 
@@ -217,24 +176,80 @@ const VaultEditorFormPage = () => {
     }
   }
 
-  const refreshEditSessionData = async (newEditSession: IEditedSessionResponse, withReset = true) => {
-    const wasSubmittedToCreation = (newEditSession.submittedToCreation ?? false) && !newEditSession.vaultAddress;
+  const refreshEditSessionData = useCallback(
+    async (newEditSession: IEditedSessionResponse, withReset = true) => {
+      const wasSubmittedToCreation = (newEditSession.submittedToCreation ?? false) && !newEditSession.vaultAddress;
 
-    setEditSessionSubmittedCreation(wasSubmittedToCreation);
-    setDescriptionHash(newEditSession.descriptionHash);
-    setLastModifedOn(newEditSession.updatedAt);
-    setEditingExistingVaultStatus(newEditSession.vaultEditionStatus);
-    setIsSomeoneCreatingTheVault(
-      (!wasSubmittedToCreation &&
-        newEditSession.lastCreationOnChainRequest &&
-        moment().diff(moment(newEditSession.lastCreationOnChainRequest), "minute") < 5) ??
-        false
-    );
+      setEditSessionSubmittedCreation(wasSubmittedToCreation);
+      setDescriptionHash(newEditSession.descriptionHash);
+      setLastModifedOn(newEditSession.updatedAt);
+      setEditingExistingVaultStatus(newEditSession.vaultEditionStatus);
+      setIsSomeoneCreatingTheVault(
+        (!wasSubmittedToCreation &&
+          newEditSession.lastCreationOnChainRequest &&
+          moment().diff(moment(newEditSession.lastCreationOnChainRequest), "minute") < 5) ??
+          false
+      );
 
-    if (withReset) handleReset(newEditSession.editedDescription, { keepErrors: true });
-  };
+      if (withReset) handleReset(newEditSession.editedDescription, { keepErrors: true });
+    },
+    [handleReset]
+  );
 
-  const createVaultOnChain = async () => {
+  const createOrSaveEditSession = useCallback(
+    async (isCreation = false, withIpfsHash = false) => {
+      try {
+        // If vault is already created or is isNonEditableStatus, edition is blocked
+        if (isNonEditableStatus) return;
+        if (allFormDisabled) return;
+        if (isSomeoneCreatingTheVault) return;
+        if (!isCreation && !formState.isDirty) return;
+        if (isCreation) setLoadingEditSession(true);
+        if (!isCreation) setSavingEditSession(true);
+
+        let sessionIdOrSessionResponse: string | IEditedSessionResponse;
+
+        if (isCreation) {
+          sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(
+            undefined,
+            undefined,
+            withIpfsHash ? editSessionId : undefined
+          );
+        } else {
+          const data: IEditedVaultDescription = getValues();
+          sessionIdOrSessionResponse = await VaultEditorService.upsertEditSession(data, editSessionId, undefined);
+        }
+
+        if (typeof sessionIdOrSessionResponse === "string") {
+          navigate(`${RoutePaths.vault_editor}/${sessionIdOrSessionResponse}`, { replace: true });
+        } else {
+          refreshEditSessionData(sessionIdOrSessionResponse);
+        }
+
+        setSavingEditSession(false);
+        setLoadingEditSession(false);
+      } catch (error) {
+        setSavingEditSession(false);
+        setLoadingEditSession(false);
+
+        if (!editSessionId) return;
+        const editSessionResponse = await VaultEditorService.getEditSessionData(editSessionId);
+        refreshEditSessionData(editSessionResponse);
+      }
+    },
+    [
+      allFormDisabled,
+      editSessionId,
+      formState.isDirty,
+      getValues,
+      isNonEditableStatus,
+      isSomeoneCreatingTheVault,
+      navigate,
+      refreshEditSessionData,
+    ]
+  );
+
+  const createVaultOnChain = useCallback(async () => {
     if (allFormDisabled) return;
 
     try {
@@ -294,7 +309,7 @@ const VaultEditorFormPage = () => {
       console.error(error);
       setCreatingVault(false);
     }
-  };
+  }, [address, allFormDisabled, confirm, descriptionHash, editSessionId, getValues, navigate, refreshEditSessionData, t]);
 
   const sendEditionToGovApproval = async () => {
     if (allFormDisabled) return;

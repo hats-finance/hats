@@ -23,6 +23,17 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       website: Yup.string().test(getTestUrl(intl)).required(intl("required")),
       name: Yup.string().required(intl("required")),
       type: Yup.string().required(intl("required")).typeError(intl("required")),
+      isPrivateAudit: Yup.boolean(),
+      whitelist: Yup.array()
+        .of(
+          Yup.object({
+            address: Yup.string().test(getTestWalletAddress(intl)).required(intl("required")),
+          })
+        )
+        .when("isPrivateAudit", (isPrivateAudit: boolean, schema: any) => {
+          if (!isPrivateAudit) return schema;
+          return schema.required(intl("required")).min(1, intl("required"));
+        }),
       oneLiner: Yup.string()
         .required(intl("required"))
         .typeError(intl("required"))
@@ -61,8 +72,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     scope: Yup.object({
       reposInformation: Yup.array().of(
         Yup.object({
-          url: Yup.string().test(getTestGithubRepoUrl(intl)).required(intl("required")),
-          commitHash: Yup.string().test(getTestGitCommitHash(intl)).required(intl("required")),
+          url: Yup.string()
+            .test(getTestGithubRepoUrl(intl))
+            .test("required", intl("required"), (val, ctx: any) => !!ctx.from[2].value["project-metadata"]?.isPrivateAudit),
+          commitHash: Yup.string()
+            .test(getTestGitCommitHash(intl))
+            .test("required", intl("required"), (val, ctx: any) => !!ctx.from[2].value["project-metadata"]?.isPrivateAudit),
           isMain: Yup.boolean(),
         })
       ),

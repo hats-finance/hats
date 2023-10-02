@@ -20,6 +20,7 @@ type FormInputProps = {
   copyable?: boolean;
   disabled?: boolean;
   removable?: boolean;
+  flexExpand?: boolean;
   colorable?: boolean;
   isDirty?: boolean;
   noMargin?: boolean;
@@ -35,6 +36,7 @@ function FormInputComponent(
     pastable = false,
     copyable = false,
     removable = false,
+    flexExpand = false,
     noErrorLabel = false,
     type = "text",
     colorable = false,
@@ -220,6 +222,7 @@ function FormInputComponent(
       colorable={colorable}
       readOnly={readOnly}
       className={className}
+      flexExpand={flexExpand}
     >
       <div className="main-container">
         {label !== undefined && (

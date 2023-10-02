@@ -27,6 +27,7 @@ export default function NavLinks() {
   const { chain } = useNetwork();
   const { address } = useAccount();
 
+  const [isInvitedToPrivateAudits, setIsInvitedToPrivateAudits] = useState(false);
   const [isCommitteeAddress, setIsCommitteeAddress] = useState(false);
   const [showCommitteeToolsSubroutes, setshowCommitteeToolsSubroutes] = useState(false);
   const committeeToolsSubrouteRef = useRef<HTMLDivElement>(null);
@@ -36,6 +37,21 @@ export default function NavLinks() {
     dispatch(toggleMenu(false));
     setshowCommitteeToolsSubroutes(false);
   };
+
+  useEffect(() => {
+    if (!allVaultsOnEnv || !address) return setIsInvitedToPrivateAudits(false);
+
+    const isInvited =
+      allVaultsOnEnv.some(
+        (vault) =>
+          vault.description?.["project-metadata"].isPrivateAudit &&
+          vault.description?.["project-metadata"].whitelist.some(
+            (whiteAddress) => whiteAddress.address.toLowerCase() === address.toLowerCase()
+          )
+      ) ?? false;
+
+    setIsInvitedToPrivateAudits(isInvited);
+  }, [allVaultsOnEnv, address]);
 
   useEffect(() => {
     const verifyIfCommitteeAddress = async () => {
@@ -68,6 +84,16 @@ export default function NavLinks() {
         <AuditsIcon />
         <p className="normal">{t("auditCompetitions")}</p>
         <p className="collapsed">{t("competitions")}</p>
+      </StyledNavLink>
+      <StyledNavLink
+        hidden={!isInvitedToPrivateAudits}
+        className="audits"
+        to={`${HoneypotsRoutePaths.privateAudits}`}
+        onClick={handleClick}
+      >
+        <AuditsIcon />
+        <p className="normal">{t("privateAuditCompetitions")}</p>
+        <p className="collapsed">{t("privateCompetitions")}</p>
       </StyledNavLink>
       {/* <StyledNavLink className="vulnerability" to={RoutePaths.vulnerability} onClick={handleClick}>
         <SubmissionsIcon />

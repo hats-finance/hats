@@ -3,6 +3,7 @@ import {
   IEditedContractCovered,
   IVault,
   IVaultRepoInformation,
+  allowedElementsMarkdown,
   severitiesToContractsCoveredForm,
 } from "@hats-finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -13,9 +14,10 @@ import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
 import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
-import { Alert, Button, CopyToClipboard, Pill, WithTooltip } from "components";
-import { disallowedElementsMarkdown } from "constants/constants";
+import { Alert, Button, CopyToClipboard, Loading, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
+import useConfirm from "hooks/useConfirm";
+import { useVaultRepoName } from "pages/Honeypots/VaultDetailsPage/hooks";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
@@ -29,6 +31,9 @@ type InScopeSectionProps = {
 
 export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
+
+  const { data: repoName } = useVaultRepoName(vault);
 
   const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">([]);
 
@@ -50,10 +55,28 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
     getRepoContractsList();
   }, [vault.description?.scope?.reposInformation]);
 
-  if (!vault.description) return null;
+  if (!vault.description) return <Loading fixed extraText={`${t("loading")}...`} />;
 
+  const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
   const contractsCovered = severitiesToContractsCoveredForm(vault.description?.severities);
   const docsLink = vault.description.scope?.docsLink;
+
+  const goToGithubIssuesPrivateAudit = async () => {
+    if (!repoName) return;
+
+    const githubLink = `https://github.com/hats-finance/${repoName}/issues`;
+
+    const wantToGo = await confirm({
+      title: t("openGithub"),
+      titleIcon: <OpenIcon className="mr-2" fontSize="large" />,
+      description: t("doYouWantToSeeSubmissionsOnGithub"),
+      cancelText: t("no"),
+      confirmText: t("yesGo"),
+    });
+
+    if (!wantToGo) return;
+    window.open(githubLink, "_blank");
+  };
 
   const goToRepo = (repo: IVaultRepoInformation) => {
     if (repo.commitHash) {
@@ -161,7 +184,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
           <div className="section-content">
             <MDEditor.Markdown
-              disallowedElements={disallowedElementsMarkdown}
+              allowedElements={allowedElementsMarkdown}
               source={vault.description?.scope?.description}
               style={{ whiteSpace: "normal", fontSize: "var(--xsmall)", background: "transparent", color: "var(--white)" }}
             />
@@ -176,32 +199,53 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
         </>
       )}
 
-      {/* Repos information */}
-      {vault.description.scope?.reposInformation && vault.description.scope?.reposInformation.length > 0 && (
+      {isPrivateAudit ? (
         <>
           <h4 className="section-subtitle">
             <TerminalIcon className="icon" />
             <span>{t("repositories")}</span>
           </h4>
-
           <div className="section-content repos">
-            {vault.description.scope?.reposInformation.map((repo, idx) => (
-              <div className="repo" key={idx}>
-                <div className="info">
-                  <p className="repo-name">{repo.url}</p>
-                  {repo.commitHash && (
-                    <p className="commit-hash">
-                      {t("commitHash")}: {repo.commitHash}
-                    </p>
-                  )}
-                </div>
-                <Button size="medium" onClick={() => goToRepo(repo)}>
-                  {repo.commitHash ? t("goToRepoAndCommit") : t("goToRepo")} <ArrowForwardIcon className="ml-3" />
-                </Button>
+            <div className="repo">
+              <div className="info">
+                <p className="repo-name">{`https://github.com/hats-finance/${repoName}`}</p>
               </div>
-            ))}
+              <Button size="medium" onClick={goToGithubIssuesPrivateAudit}>
+                {t("goToRepo")} <ArrowForwardIcon className="ml-3" />
+              </Button>
+            </div>
           </div>
-          {(contractsCovered.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
+        </>
+      ) : (
+        <>
+          {/* Repos information */}
+          {vault.description.scope?.reposInformation && vault.description.scope?.reposInformation.length > 0 && (
+            <>
+              <h4 className="section-subtitle">
+                <TerminalIcon className="icon" />
+                <span>{t("repositories")}</span>
+              </h4>
+
+              <div className="section-content repos">
+                {vault.description.scope?.reposInformation.map((repo, idx) => (
+                  <div className="repo" key={idx}>
+                    <div className="info">
+                      <p className="repo-name">{repo.url}</p>
+                      {repo.commitHash && (
+                        <p className="commit-hash">
+                          {t("commitHash")}: {repo.commitHash}
+                        </p>
+                      )}
+                    </div>
+                    <Button size="medium" onClick={() => goToRepo(repo)}>
+                      {repo.commitHash ? t("goToRepoAndCommit") : t("goToRepo")} <ArrowForwardIcon className="ml-3" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+              {(contractsCovered.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
+            </>
+          )}
         </>
       )}
 
@@ -219,7 +263,9 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           </>
         )
       ) : (
-        <Alert type="info">{t("loadingContractsOnRepo")}</Alert>
+        <Alert type="info" className="mb-4">
+          {t("loadingContractsOnRepo")}
+        </Alert>
       )}
 
       {/* Contracts covered */}

@@ -1,6 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
@@ -49,14 +49,30 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     const isTestnet = appChains[vault.chainId].chain.testnet;
     const tokenPrice: number = isTestnet ? 1387.65 : (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
+    const isAudit = vault.description?.["project-metadata"].type === "audit";
 
-    const maxRewardFactor = vault.version === "v1" ? +vault.rewardsLevels[vault.rewardsLevels.length - 1] : +vault.maxBounty;
+    const governanceSplit = BigNumber.from(vault.governanceHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? vault.master.defaultGovernanceHatRewardSplit
+      : vault.governanceHatRewardSplit;
+    const hackerHatsSplit = BigNumber.from(vault.hackerHatRewardSplit).eq(ethers.constants.MaxUint256)
+      ? vault.master.defaultHackerHatRewardSplit
+      : vault.hackerHatRewardSplit;
+
+    // In v2 vaults the split sum (immediate, vested, committee) is 100%. So we need to calculate the split factor to get the correct values.
+    // In v1 this is not a probem. So the factor is 1.
+    const splitFactor = vault.version === "v1" ? 1 : (10000 - Number(governanceSplit) - Number(hackerHatsSplit)) / 100 / 100;
+
+    const governanceFee = Number(governanceSplit) / 100 / 100;
+    const committeeFee = (Number(vault.committeeRewardSplit) / 100 / 100) * splitFactor;
+
+    const maxRewardFactor = 1 - governanceFee - committeeFee;
 
     return {
       ...vault,
       amountsInfo: {
         showCompetitionIntendedAmount:
-          vault.description?.["project-metadata"].type === "audit" &&
+          isAudit &&
+          vault.description &&
           vault.description["project-metadata"].starttime &&
           vault.description["project-metadata"].starttime > new Date().getTime() / 1000 + 48 * 3600 && // 48 hours
           !!vault.description?.["project-metadata"].intendedCompetitionAmount &&
@@ -69,9 +85,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
                 usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice,
               },
               maxReward: {
-                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount * (maxRewardFactor / 100 / 100),
-                usd:
-                  +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice * (maxRewardFactor / 100 / 100),
+                tokens: +vault.description?.["project-metadata"].intendedCompetitionAmount * maxRewardFactor,
+                usd: +vault.description?.["project-metadata"].intendedCompetitionAmount * tokenPrice * maxRewardFactor,
               },
             }
           : undefined,
@@ -80,8 +95,8 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
           usd: depositedAmountTokens * tokenPrice,
         },
         maxRewardAmount: {
-          tokens: depositedAmountTokens * (maxRewardFactor / 100 / 100),
-          usd: depositedAmountTokens * tokenPrice * (maxRewardFactor / 100 / 100),
+          tokens: depositedAmountTokens * maxRewardFactor,
+          usd: depositedAmountTokens * tokenPrice * maxRewardFactor,
         },
       },
     } as IVault;

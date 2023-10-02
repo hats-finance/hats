@@ -24,11 +24,12 @@ export const getVaultSubmissionsByKeystore = async (
     let decryptedPart = "";
     let encryptedPart = "";
 
+    //TODO: private audits V2 (verify is decryptedPart is encrypted with hats public key)
     if (typeof submission.submissionData === "object") {
-      decryptedPart = (submission.submissionData as any).decrypted ?? "";
-      encryptedPart = (submission.submissionData as any).encrypted ?? "";
+      decryptedPart = submission.submissionData.decrypted ?? "";
+      encryptedPart = submission.submissionData.encrypted ?? "";
     } else {
-      encryptedPart = submission.submissionData;
+      encryptedPart = submission.submissionData as string;
     }
 
     // Iterate over all stored keys and try to decrypt the message

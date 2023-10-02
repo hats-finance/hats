@@ -1,5 +1,5 @@
+import { allowedElementsMarkdown } from "@hats-finance/shared";
 import MDEditor, { PreviewType } from "@uiw/react-md-editor";
-import { disallowedElementsMarkdown } from "constants/constants";
 import { forwardRef } from "react";
 import { parseIsDirty } from "../utils";
 import { StyledFormMDEditor } from "./styles";
@@ -37,7 +37,7 @@ export const FormMDEditorComponent = (
     >
       <MDEditor
         value={value}
-        previewOptions={{ disallowedElements: disallowedElementsMarkdown }}
+        previewOptions={{ allowedElements: allowedElementsMarkdown }}
         onChange={(value) => (disabled ? undefined : onChange(value ?? ""))}
         minHeight={200}
         height={400}

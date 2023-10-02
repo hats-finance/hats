@@ -1,11 +1,12 @@
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 
-export const StyledFormSelectInput = styled.div<{ noMargin: boolean }>(
-  ({ noMargin }) => css`
+export const StyledFormSelectInput = styled.div<{ noMargin: boolean; flexExpand: boolean }>(
+  ({ noMargin, flexExpand }) => css`
     position: relative;
     margin-bottom: ${noMargin ? 0 : getSpacing(3)};
-    width: 100%;
+    width: ${flexExpand ? "unset" : "100%"};
+    flex: ${flexExpand ? 1 : "unset"};
 
     label.input-label {
       display: block;

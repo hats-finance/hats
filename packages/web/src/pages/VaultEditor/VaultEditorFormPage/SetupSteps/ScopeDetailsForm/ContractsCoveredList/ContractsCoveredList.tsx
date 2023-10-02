@@ -26,7 +26,7 @@ export function ContractsCoveredList() {
     control,
     formState: { errors },
   } = useEnhancedFormContext<IEditedVaultDescription>();
-  const { fields: contracts, append, remove } = useFieldArray<IEditedVaultDescription>({ control, name: "contracts-covered" });
+  const { fields: contracts, append, remove } = useFieldArray({ control, name: "contracts-covered" });
 
   const reposInfo = useWatch({ control, name: "scope.reposInformation", defaultValue: [] });
   const severitiesOptions = useWatch({ control, name: "severitiesOptions" });
@@ -52,6 +52,8 @@ export function ContractsCoveredList() {
     const contractsToCreate = await getContractsInfoFromRepos(reposInfo);
     append(
       contractsToCreate.map((contract) => ({
+        name: "",
+        severities: [],
         link: "",
         address: contract.path,
         linesOfCode: contract.lines,

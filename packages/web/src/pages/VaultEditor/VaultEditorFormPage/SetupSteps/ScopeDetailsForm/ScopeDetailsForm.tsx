@@ -1,5 +1,5 @@
 import { CODE_LANGUAGES, DEFAULT_OUT_OF_SCOPE, DEFAULT_TOOLING_STEPS, IEditedVaultDescription } from "@hats-finance/shared";
-import { Button, FormInput, FormMDEditor, FormRadioInput, Pill } from "components";
+import { Alert, Button, FormInput, FormMDEditor, FormRadioInput, Pill } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
 import { useContext, useMemo } from "react";
@@ -19,6 +19,7 @@ export const ScopeDetailsForm = () => {
   const { control, register, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
   const vaultType = useWatch({ control, name: "project-metadata.type" });
+  const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
   const isAudit = vaultType === "audit";
 
   const handleClickOnCodeLang = (codeLang: string, checked: boolean) => {
@@ -67,8 +68,15 @@ export const ScopeDetailsForm = () => {
 
   return (
     <StyledScopeDetailsForm>
+      {/* Private audits alert */}
+      {isAdvancedMode && isPrivateAudit && (
+        <Alert className="mt-2 mb-4" type="warning">
+          {t("scopePrivateAuditsWarning")}
+        </Alert>
+      )}
+
       {/* Project Outline */}
-      {isAdvancedMode && (
+      {isAdvancedMode && !isPrivateAudit && (
         <>
           <div className="helper-text">{t("vaultEditorScopeExplanation")}</div>
           <p className="mb-3 bold">{t("offerDescriptionHowTheProtocolWorks")}</p>
@@ -90,7 +98,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Project Coding languages */}
-      {isAdvancedMode && (
+      {isAdvancedMode && !isPrivateAudit && (
         <>
           <p className="mb-3 bold">{t("VaultEditor.selectCodeLanguages")}</p>
           <div className="code-langs mb-3">
@@ -118,10 +126,14 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Repos and documentation */}
-      <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
-      <ScopeReposInformation />
+      {isAdvancedMode && !isPrivateAudit && (
+        <>
+          <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
+          <ScopeReposInformation />
+        </>
+      )}
 
-      {isAdvancedMode && (
+      {isAdvancedMode && !isPrivateAudit && (
         <>
           <p className="mb-3 mt-5 bold">{t("VaultEditor.linkToProtocolDocs")}</p>
           <FormInput
@@ -146,7 +158,7 @@ export const ScopeDetailsForm = () => {
       ) : null}
 
       {/* Out of scope */}
-      {isAdvancedMode && (
+      {isAdvancedMode && !isPrivateAudit && (
         <>
           <p className="section-title mt-5">
             {t("VaultEditor.outOfScope")}
@@ -175,7 +187,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Steps to run project */}
-      {isAdvancedMode && (
+      {isAdvancedMode && !isPrivateAudit && (
         <>
           <p className="section-title mt-5">
             {t("VaultEditor.stepsToRunProject")}
