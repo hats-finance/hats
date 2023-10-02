@@ -6,6 +6,7 @@ import { toggleMenu } from "actions";
 import { ReactComponent as AuditsIcon } from "assets/icons/custom/audits.svg";
 import { ReactComponent as BountiesIcon } from "assets/icons/custom/bounties.svg";
 import { ReactComponent as CommitteeToolsIcon } from "assets/icons/custom/committee_tools.svg";
+import { ReactComponent as PrivateAuditsIcon } from "assets/icons/custom/private-audits.svg";
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
 import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
@@ -91,7 +92,7 @@ export default function NavLinks() {
         to={`${HoneypotsRoutePaths.privateAudits}`}
         onClick={handleClick}
       >
-        <AuditsIcon />
+        <PrivateAuditsIcon />
         <p className="normal">{t("privateAuditCompetitions")}</p>
         <p className="collapsed">{t("privateCompetitions")}</p>
       </StyledNavLink>
