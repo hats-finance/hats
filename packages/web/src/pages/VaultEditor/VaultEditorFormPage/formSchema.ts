@@ -72,8 +72,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     scope: Yup.object({
       reposInformation: Yup.array().of(
         Yup.object({
-          url: Yup.string().test(getTestGithubRepoUrl(intl)).required(intl("required")),
-          commitHash: Yup.string().test(getTestGitCommitHash(intl)).required(intl("required")),
+          url: Yup.string()
+            .test(getTestGithubRepoUrl(intl))
+            .test("required", intl("required"), (val, ctx: any) => !!ctx.from[2].value["project-metadata"]?.isPrivateAudit),
+          commitHash: Yup.string()
+            .test(getTestGitCommitHash(intl))
+            .test("required", intl("required"), (val, ctx: any) => !!ctx.from[2].value["project-metadata"]?.isPrivateAudit),
           isMain: Yup.boolean(),
         })
       ),

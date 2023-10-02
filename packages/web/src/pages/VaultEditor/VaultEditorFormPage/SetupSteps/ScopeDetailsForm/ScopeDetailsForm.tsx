@@ -126,8 +126,12 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Repos and documentation */}
-      <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
-      <ScopeReposInformation />
+      {isAdvancedMode && !isPrivateAudit && (
+        <>
+          <p className="section-title mt-5">{t("VaultEditor.reposAndDocumentation")}</p>
+          <ScopeReposInformation />
+        </>
+      )}
 
       {isAdvancedMode && !isPrivateAudit && (
         <>
