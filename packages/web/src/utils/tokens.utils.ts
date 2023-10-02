@@ -1,10 +1,12 @@
-import axios, { AxiosResponse } from "axios";
-import { fetchToken } from "wagmi/actions";
 import { TokenPriceResponse } from "@hats-finance/shared";
-import { appChains } from "settings";
+import axios, { AxiosResponse } from "axios";
+import { GET_PRICES_BALANCER, IBalancerGetPricesResponse } from "graphql/balancer";
 import { GET_PRICES_UNISWAP, IUniswapGetPricesResponse } from "graphql/uniswap";
+import { appChains } from "settings";
+import { fetchToken } from "wagmi/actions";
 
 const COIN_GECKO_ENDPOINT = "https://api.coingecko.com/api/v3/simple/token_price";
+const BALANCER_SUBGRAPH_ENDPOINT = "https://api-v3.balancer.fi/graphql";
 
 export const getTokenInfo = async (
   address: string,
@@ -97,6 +99,26 @@ export const getUniswapTokenPrices = async (tokens: { address: string; chainId: 
       }, {} as TokenPriceResponse);
 
       return { ...acc, ...tokensData };
+    }, {} as TokenPriceResponse);
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Error getting prices: ${err}`);
+  }
+};
+
+export const getBalancerTokenPrices = async (tokens: { address: string; chainId: number }[]): Promise<TokenPriceResponse> => {
+  try {
+    const balancerResponse: AxiosResponse<IBalancerGetPricesResponse> = await axios.post(BALANCER_SUBGRAPH_ENDPOINT, {
+      query: GET_PRICES_BALANCER,
+    });
+
+    return tokens.reduce((acc, token) => {
+      const tokenPrice = balancerResponse.data.data.tokenGetCurrentPrices.find(
+        (t) => t.address.toLowerCase() === token.address.toLowerCase()
+      );
+
+      if (tokenPrice) acc[token.address] = { usd: +tokenPrice.price };
+      return { ...acc };
     }, {} as TokenPriceResponse);
   } catch (err) {
     console.error(err);
