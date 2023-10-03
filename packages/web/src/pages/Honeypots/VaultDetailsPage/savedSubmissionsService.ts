@@ -34,7 +34,6 @@ export async function getVaultRepoName(vaultId: string | undefined): Promise<str
   try {
     const response = await axiosClient.get(`${BASE_SERVICE_URL}/github-repos/repo/${vaultId}`);
     const repoName = response.data.repoName as string | undefined;
-    console.log(response);
 
     return repoName;
   } catch (error) {
