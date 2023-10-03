@@ -134,8 +134,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
       const balancerTokenPrices = await getBalancerTokenPrices(tokensLeft);
 
-      console.log({ balancerTokenPrices, tokensLeft });
-
       if (balancerTokenPrices) {
         tokensLeft.forEach((token) => {
           if (balancerTokenPrices.hasOwnProperty(token.address)) {

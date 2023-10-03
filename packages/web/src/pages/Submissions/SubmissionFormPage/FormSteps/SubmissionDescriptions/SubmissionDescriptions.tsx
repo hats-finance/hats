@@ -139,8 +139,6 @@ export function SubmissionDescriptions() {
       return alert("There was a problem encrypting the submission with Hats key. Please contact HATS team.");
     }
 
-    console.log(submissionInfo);
-
     download(
       JSON.stringify({ submission: submissionInfo, sessionKey }),
       `${submissionData.project?.projectName}-${new Date().getTime()}.json`

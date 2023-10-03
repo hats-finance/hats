@@ -174,9 +174,6 @@ export const PayoutFormPage = () => {
 
   const handleLockPayout = async () => {
     // Put decrypted submission data in the payoutData
-    console.log(111);
-    console.log(committeeSubmissions);
-
     if (isFromSubmissions && !keystore) await initKeystore();
 
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
