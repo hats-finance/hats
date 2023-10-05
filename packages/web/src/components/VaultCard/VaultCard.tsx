@@ -110,6 +110,7 @@ export const VaultCard = ({
   const getAuditStatusPill = () => {
     if (!vault.description) return null;
     if (!vault.description["project-metadata"].endtime) return null;
+    if (!vault.description["project-metadata"].starttime) return null;
 
     if (auditPayout) {
       return (
@@ -120,6 +121,16 @@ export const VaultCard = ({
     }
 
     if (vault.dateStatus === "upcoming") {
+      const startTime = moment(vault.description["project-metadata"].starttime * 1000);
+
+      if (startTime.diff(moment(), "hours") <= 24) {
+        return (
+          <div className="mb-4">
+            <Pill transparent dotColor="yellow" text={`${t("starting")} ${startTime.fromNow()}`} />
+          </div>
+        );
+      }
+
       return (
         <div className="mb-4">
           <Pill transparent dotColor="yellow" text={t("upcoming")} />
@@ -132,7 +143,7 @@ export const VaultCard = ({
     if (endTime.diff(moment(), "hours") <= 24) {
       return (
         <div className="mb-4">
-          <Pill transparent dotColor="yellow" text={`${t("endingSoon")} ${endTime.fromNow()}`} />
+          <Pill transparent dotColor="yellow" text={`${t("ending")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
