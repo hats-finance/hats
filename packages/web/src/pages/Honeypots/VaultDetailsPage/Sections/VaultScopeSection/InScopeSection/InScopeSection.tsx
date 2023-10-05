@@ -284,7 +284,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       {/* Documentation */}
       {docsLink && (
         <>
-          <h4 className="section-subtitle">
+          <h4 className="section-subtitle mt-4">
             <DocumentIcon className="icon" />
             <span>{t("documentation")}</span>
           </h4>
