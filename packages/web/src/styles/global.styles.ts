@@ -217,4 +217,11 @@ export const GlobalStyle = createGlobalStyle`
             }
         }
     }
+
+    // Markdown styles
+    .wmde-markdown {
+        pre > code {
+            background: var(--markdown-code-backgroud);
+        }
+    }
 `;
