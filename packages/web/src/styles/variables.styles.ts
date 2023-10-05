@@ -25,7 +25,7 @@ export const variables = css`
     --background-3: #242541;
     --background-4: #3b3e6d;
     --disabled-input: #070a14;
-    --markdown-code-backgroud: #2d2d3a;
+    --markdown-code-backgroud: rgba(110, 118, 129, 0.4);
 
     --white: #ffffff;
     --error-red: #ff6464;
