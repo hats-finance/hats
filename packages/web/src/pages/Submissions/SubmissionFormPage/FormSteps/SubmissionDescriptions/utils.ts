@@ -1,5 +1,3 @@
-import { allowedAttributesMarkdown, allowedElementsMarkdown } from "@hats-finance/shared";
-import sanitizeMarkdown from "sanitize-markdown";
 import { BASE_SERVICE_URL } from "settings";
 import { ISubmissionData, ISubmissionsDescriptionsData } from "../../types";
 
@@ -61,18 +59,9 @@ ${
   const submissionMessage = `\`\`\`\n> [ENCRYPTED SECTION]\n\`\`\`\n\n${toEncrypt}\n\n\n \`\`\`\n> [DECRYPTED SECTION]\n\`\`\`\n\n${decrypted}`;
 
   return {
-    decrypted: sanitizeMarkdown(decrypted, {
-      allowedTags: allowedElementsMarkdown,
-      allowedAttributes: allowedAttributesMarkdown,
-    }) as string,
-    toEncrypt: sanitizeMarkdown(toEncrypt, {
-      allowedTags: allowedElementsMarkdown,
-      allowedAttributes: allowedAttributesMarkdown,
-    }) as string,
-    submissionMessage: sanitizeMarkdown(submissionMessage, {
-      allowedTags: allowedElementsMarkdown,
-      allowedAttributes: allowedAttributesMarkdown,
-    }) as string,
+    decrypted: decrypted as string,
+    toEncrypt: toEncrypt as string,
+    submissionMessage: submissionMessage as string,
   };
 };
 
@@ -98,14 +87,8 @@ ${description.description.trim()}
 
   return {
     decrypted: undefined,
-    toEncrypt: sanitizeMarkdown(toEncrypt, {
-      allowedTags: allowedElementsMarkdown,
-      allowedAttributes: allowedAttributesMarkdown,
-    }) as string,
-    submissionMessage: sanitizeMarkdown(submissionMessage, {
-      allowedTags: allowedElementsMarkdown,
-      allowedAttributes: allowedAttributesMarkdown,
-    }) as string,
+    toEncrypt: toEncrypt as string,
+    submissionMessage: submissionMessage as string,
   };
 };
 
