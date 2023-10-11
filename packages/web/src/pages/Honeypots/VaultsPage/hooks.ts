@@ -65,6 +65,9 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
     });
 
   auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
+  paidPayoutsFromAudits?.sort((a, b) => (b.approvedAt ? +b.approvedAt : 0) - (a.approvedAt ? +a.approvedAt : 0));
+
+  console.log(paidPayoutsFromAudits);
 
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
