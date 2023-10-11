@@ -56,7 +56,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
     ?.filter((payout) => payout.isApproved)
     .filter((payout) => payout.payoutData?.vault?.description?.["project-metadata"].type === "audit")
     .filter((payout) => {
-      const isPrivateAudit = payout.payoutData?.vault?.description?.["project-metadata"].isPrivateAudit;
+      const isPrivateAudit = !!payout.payoutData?.vault?.description?.["project-metadata"].isPrivateAudit;
       const isUserInvited = payout.payoutData?.vault?.description?.["project-metadata"].whitelist?.some(
         (whiteAddress) => whiteAddress.address.toLowerCase() === profileData?.address?.toLowerCase()
       );
