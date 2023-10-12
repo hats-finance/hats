@@ -63,23 +63,19 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 
       <br />
       <div className="mt-5">
-        <p>If you are one of the winners and you want to claim your rewards, please do the following:</p>
+        <p>{t("Leaderboard.ifYouAreAWinner")}</p>
         <ol className="ml-5 mt-2">
           <li>
             <Button styleType="text" onClick={goToPayoutContract}>
-              Go to the payout contract.
+              {t("Leaderboard.goToPayoutContract")}
             </Button>
           </li>
-          <li>Enter on contract tab.</li>
+          <li>{t("Leaderboard.enterOnContractTab")}</li>
           <li>
-            Execute the <code>release (0x48b75044)</code> function with these params:
+            {t("Leaderboard.executeReleaseFunction")}
             <ul className="ml-2">
-              <li>
-                <strong>Token (address):</strong> {vault.stakingToken}
-              </li>
-              <li>
-                <strong>Account (address):</strong> your beneficiary address
-              </li>
+              <li>{t("Leaderboard.tokenAddress", { token: vault.stakingToken })}</li>
+              <li>{t("Leaderboard.accountAddress")}</li>
             </ul>
           </li>
         </ol>
