@@ -196,6 +196,16 @@ export const VaultCard = ({
     navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
   };
 
+  const goToLeaderboard = () => {
+    if (!vault) return;
+    if (noActions) return;
+
+    const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}/leaderboard`);
+  };
+
   const goToDetails = () => {
     if (!vault) return;
     if (noActions) return;
@@ -204,11 +214,6 @@ export const VaultCard = ({
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
-  };
-
-  const goTopayoutData = () => {
-    if (!auditPayout || !auditPayout.payoutDataHash) return;
-    window.open(`${IPFS_PREFIX}/${auditPayout.payoutDataHash}`, "_blank");
   };
 
   return (
@@ -347,8 +352,13 @@ export const VaultCard = ({
               </Button>
             )}
             {auditPayout && auditPayout.payoutDataHash && (
-              <Button size="medium" styleType="outlined" filledColor={isAudit ? "primary" : "secondary"} onClick={goTopayoutData}>
-                {t("seePayoutData")}
+              <Button
+                size="medium"
+                styleType="outlined"
+                filledColor={isAudit ? "primary" : "secondary"}
+                onClick={goToLeaderboard}
+              >
+                {t("seeLeaderboard")} {vault.id}
               </Button>
             )}
           </div>

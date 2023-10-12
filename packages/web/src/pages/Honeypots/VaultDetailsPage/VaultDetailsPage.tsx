@@ -4,8 +4,10 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "../VaultsPage/hooks";
 import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
+import { VaultLeaderboardSection } from "./Sections/VaultLeaderboardSection/VaultLeaderboardSection";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
@@ -25,6 +27,10 @@ const DETAILS_SECTIONS = [
     title: "submissions",
     component: VaultSubmissionsSection,
   },
+  {
+    title: "leaderboard",
+    component: VaultLeaderboardSection,
+  },
 ];
 
 type VaultDetailsPageProps = {
@@ -43,6 +49,12 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
 
+  const { finished: finishedAuditPayouts } = useAuditCompetitionsVaults();
+  const oldAudits = useOldAuditCompetitions();
+  const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];
+
+  const auditPayout = allFinishedAuditCompetitions.find((audit) => audit.payoutData?.vault?.id === vaultId);
+
   const [openSectionId, setOpenSectionId] = useState(sectionId ?? DETAILS_SECTIONS[0].title);
 
   const DETAILS_SECTIONS_TO_SHOW = useMemo(
@@ -50,9 +62,10 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
       DETAILS_SECTIONS.filter((section) => {
         if (section.title === "deposits" && noActions) return false;
         if (section.title === "submissions" && !isAudit) return false;
+        if (section.title === "leaderboard" && !auditPayout) return false;
         return true;
       }),
-    [noActions, isAudit]
+    [noActions, isAudit, auditPayout]
   );
 
   if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
@@ -115,7 +128,9 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
           ))}
         </div>
 
-        <div className="section-container">{SectionToRender && <SectionToRender vault={vault} noDeployed={noDeployed} />}</div>
+        <div className="section-container">
+          {SectionToRender && <SectionToRender vault={vault} noDeployed={noDeployed} auditPayout={auditPayout} />}
+        </div>
       </StyledVaultDetailsPage>
     </>
   );

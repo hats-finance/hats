@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { HoldingsSection } from "./HoldingsSection/HoldingsSection";
@@ -10,6 +10,7 @@ type VaultDepositsSectionProps = {
   vault: IVault;
   greyBorders?: boolean;
   noDeployed?: boolean;
+  auditPayout?: IPayoutGraph | undefined;
 };
 
 export const VaultDepositsSection = ({ vault, greyBorders = false }: VaultDepositsSectionProps) => {
