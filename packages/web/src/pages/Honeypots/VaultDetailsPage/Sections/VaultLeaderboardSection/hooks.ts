@@ -62,10 +62,9 @@ export const useAuditPayoutLeaderboardData = (
     };
 
     fetchPayoutData();
-  }, [auditPayout]);
+  }, [auditPayout, vault]);
 
   if (!auditPayout) return [];
 
-  console.log(leaderboardData);
   return leaderboardData;
 };

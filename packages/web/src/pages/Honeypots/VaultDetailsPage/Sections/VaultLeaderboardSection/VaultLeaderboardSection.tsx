@@ -1,12 +1,13 @@
 import { IPayoutGraph, IVault, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
-import { Button, Pill, WithTooltip } from "components";
+import { Alert, Button, Loading, Pill, WithTooltip } from "components";
+import { ReleasePaymentSplitContract } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
-import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { parseSeverityName } from "utils/severityName";
+import { useAccount } from "wagmi";
 import { useAuditPayoutLeaderboardData } from "./hooks";
 import { StyledLeaderboardSection } from "./styles";
 
@@ -18,17 +19,27 @@ type VaultLeaderboardSectionProps = {
 
 export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboardSectionProps) => {
   const { t } = useTranslation();
+  const { address } = useAccount();
 
   const severityColors = getSeveritiesColorsArray(vault);
   const leaderboardData = useAuditPayoutLeaderboardData(vault, auditPayout);
+  const isWinnerAddress = leaderboardData?.find(
+    (leaderboardEntry) => leaderboardEntry.beneficiary?.toLowerCase() === address?.toLowerCase()
+  );
+
+  const releasePayment = ReleasePaymentSplitContract.hook(vault, auditPayout?.beneficiary);
 
   if (!auditPayout) return null;
 
   const severities = vault.description?.severities.map((severity) => parseSeverityName(severity.name)) ?? [];
 
-  const goToPayoutContract = () => {
-    const blockExplorerUrl = appChains[vault.chainId].chain.blockExplorers?.default.url;
-    window.open(`${blockExplorerUrl}/address/${auditPayout.beneficiary}#writeContract#F3`, "_blank");
+  // const goToPayoutContract = () => {
+  //   const blockExplorerUrl = appChains[vault.chainId].chain.blockExplorers?.default.url;
+  //   window.open(`${blockExplorerUrl}/address/${auditPayout.beneficiary}#writeContract#F3`, "_blank");
+  // };
+
+  const executeRelease = () => {
+    releasePayment.send();
   };
 
   return (
@@ -65,23 +76,25 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 
       <br />
       <div className="mt-5">
-        <p>{t("Leaderboard.ifYouAreAWinner")}</p>
-        <ol className="ml-5 mt-2">
-          <li>
-            <Button styleType="text" onClick={goToPayoutContract}>
-              {t("Leaderboard.goToPayoutContract")}
-            </Button>
-          </li>
-          <li>{t("Leaderboard.enterOnContractTab")}</li>
-          <li>
-            {t("Leaderboard.executeReleaseFunction")}
-            <ul className="ml-2">
-              <li>{t("Leaderboard.tokenAddress", { token: vault.stakingToken })}</li>
-              <li>{t("Leaderboard.accountAddress")}</li>
-            </ul>
-          </li>
-        </ol>
+        <p className="mb-4">{t("Leaderboard.ifYouAreAWinner")}</p>
+        {!isWinnerAddress && <span className="error mb-1">{t("Leaderboard.needToBeConnectedWithAWinnerAddress")}</span>}
+        <Button disabled={!isWinnerAddress} onClick={isWinnerAddress ? executeRelease : undefined}>
+          {t("Leaderboard.claimBounty")}
+        </Button>
+
+        {releasePayment.error && (
+          <Alert className="mt-4" type="error">
+            {t("Leaderboard.errorClaimingBounty")}
+          </Alert>
+        )}
+        {releasePayment.isSuccess && (
+          <Alert className="mt-4" type="success">
+            {t("Leaderboard.claimedBountySuccessfully")}
+          </Alert>
+        )}
       </div>
+
+      {releasePayment.isLoading && <Loading fixed extraText={`${t("loading")}...`} />}
     </StyledLeaderboardSection>
   );
 };

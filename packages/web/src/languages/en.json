@@ -702,12 +702,16 @@
       "notAllowedToCreatePayout": "You are not allowed to create a payout for this vault. Please verify you are connected with a committee wallet."
     },
     "Leaderboard": {
-      "ifYouAreAWinner": "If you are one of the winners and you want to claim your rewards, please do the following:",
+      "ifYouAreAWinner": "If you are one of the winners and you want to claim your rewards, please execute the claim by clicking on the button:",
       "goToPayoutContract": "Go to the payout contract",
       "enterOnContractTab": "Enter on the 'Contract' tab",
       "executeReleaseFunction": "Execute the `release (0x48b75044)` function with these params:",
       "tokenAddress": "Token (address): {{token}}",
-      "accountAddress": "Account (address):  your beneficiary address"
+      "accountAddress": "Account (address):  your beneficiary address",
+      "claimBounty": "Receive rewards",
+      "needToBeConnectedWithAWinnerAddress": "You need to be connected with a winner address",
+      "errorClaimingBounty": "You already claimed your bounty or there was an error claiming it.",
+      "claimedBountySuccessfully": "You claimed your rewards successfully."
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",

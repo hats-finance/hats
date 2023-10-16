@@ -30,5 +30,13 @@ export const StyledLeaderboardSection = styled.div<{ cols: number }>(
         }
       }
     }
+
+    span.error {
+      display: block;
+      color: var(--error-red);
+      margin-top: ${getSpacing(0.5)};
+      margin-left: ${getSpacing(1)};
+      font-size: var(--xxsmall);
+    }
   `
 );
