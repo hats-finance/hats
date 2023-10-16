@@ -113,7 +113,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
         )}
 
         <div className="mt-5">
-          <VaultCard noActions={noActions} reducedStyles vaultData={vault} noDeployed={noDeployed} />
+          <VaultCard noActions={noActions} reducedStyles vaultData={vault} noDeployed={noDeployed} hideAmounts={!!auditPayout} />
         </div>
 
         <div className="sections-tabs">

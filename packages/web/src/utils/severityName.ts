@@ -1,3 +1,3 @@
 export const parseSeverityName = (severityName: string) => {
-  return severityName.replace("severity", "").trim().toLowerCase();
+  return severityName.toLowerCase().replace("severity", "").trim();
 };

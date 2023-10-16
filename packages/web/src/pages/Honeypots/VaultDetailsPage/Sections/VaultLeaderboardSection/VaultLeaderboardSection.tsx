@@ -1,5 +1,5 @@
 import { IPayoutGraph, IVault, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
-import { Button, Pill } from "components";
+import { Button, Pill, WithTooltip } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
@@ -46,10 +46,12 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
         {leaderboardData?.map((leaderboardEntry, idx) => (
           <>
             <div className="content">{idx + 1}.</div>
-            <div className="content">
-              <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />{" "}
-              {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
-            </div>
+            <WithTooltip text={leaderboardEntry.beneficiary}>
+              <div className="content">
+                <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />{" "}
+                {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
+              </div>
+            </WithTooltip>
             <div className="content prize">${millify(leaderboardEntry.totalRewardInUSD)}</div>
             {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => (
               <div className="content">
