@@ -1,4 +1,4 @@
-import { Button, Loading, Pill } from "components";
+import { Alert, Button, Loading, Pill } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,6 +16,7 @@ export const GenerateNftsAssetsCard = () => {
   const [loadingEditSessions, setLoadingEditSessions] = useState(false);
   const [allEditSessions, setAllEditSessions] = useState<IEditedSessionResponse[]>([]);
   const [deployedEditSession, setDeployedEditSession] = useState<IEditedSessionResponse>();
+  const isLastEditSessionApproved = allEditSessions[0]?._id === deployedEditSession?._id;
 
   const nftsAreBeingGenerated = allEditSessions.some((editSession) => editSession.nftAssetsIpfsHash === "Generating assets...");
 
@@ -104,8 +105,13 @@ export const GenerateNftsAssetsCard = () => {
         </div>
       )}
 
+      {!isLastEditSessionApproved && <Alert type="warning">{t("makeSureLastEditSessionIsApproved")}</Alert>}
+
       <div className="status-card__button">
-        <Button disabled={loadingEditSessions || (nftsGeneratedInfo && !canRegenerateNfts)} onClick={handleGenerateNfts}>
+        <Button
+          disabled={loadingEditSessions || !isLastEditSessionApproved || (nftsGeneratedInfo && !canRegenerateNfts)}
+          onClick={handleGenerateNfts}
+        >
           {canRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
         </Button>
       </div>

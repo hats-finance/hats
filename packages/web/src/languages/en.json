@@ -617,6 +617,8 @@
     "pleaseSignInWithEthereumToSeePrivateComps": "Please sign in with Ethereum (SIWE) to see private competitions.",
     "youAreNotInvitedToAnyPrivateComps": "You are not invited to any private competitions.",
     "privateAuditSubmissionsScopeInGithub": "This is a private audit competition. \nAll the scope information will be on the private GitHub repository. You can go to the github clicking on the button below.",
+    "makeSureLastEditSessionIsApproved": "Please make sure the last edit session is approved",
+    "nftsBeingGeneratedPleaseWait": "NFTs are being generated. Please wait couple of minutes if you want to edit the vault.",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
