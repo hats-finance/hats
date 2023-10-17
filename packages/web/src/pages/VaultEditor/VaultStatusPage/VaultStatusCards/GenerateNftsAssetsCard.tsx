@@ -21,9 +21,9 @@ export const GenerateNftsAssetsCard = () => {
   const nftsAreBeingGenerated = allEditSessions.some((editSession) => editSession.nftAssetsIpfsHash === "Generating assets...");
 
   const nftsGeneratedWithEditSession =
-    allEditSessions.find(
-      (editSession) => editSession.nftAssetsIpfsHash && editSession.nftAssetsIpfsHash !== "Generating assets..."
-    ) ?? undefined;
+    allEditSessions
+      .filter((editSession) => editSession.nftAssetsIpfsHash && editSession.nftAssetsIpfsHash !== "Generating assets...")
+      .at(0) ?? undefined;
 
   const nftsGeneratedInfo = nftsGeneratedWithEditSession
     ? {
@@ -105,7 +105,7 @@ export const GenerateNftsAssetsCard = () => {
         </div>
       )}
 
-      {!isLastEditSessionApproved && <Alert type="warning">{t("makeSureLastEditSessionIsApproved")}</Alert>}
+      {!isLastEditSessionApproved && !nftsGeneratedInfo && <Alert type="warning">{t("makeSureLastEditSessionIsApproved")}</Alert>}
 
       <div className="status-card__button">
         <Button
