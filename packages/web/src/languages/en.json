@@ -617,7 +617,7 @@
     "pleaseSignInWithEthereumToSeePrivateComps": "Please sign in with Ethereum (SIWE) to see private competitions.",
     "youAreNotInvitedToAnyPrivateComps": "You are not invited to any private competitions.",
     "privateAuditSubmissionsScopeInGithub": "This is a private audit competition. \nAll the scope information will be on the private GitHub repository. You can go to the github clicking on the button below.",
-    "seeLeaderboard": "See leaderboard",
+    "seeCompetitionLeaderboard": "See competition leaderboard",
     "leaderboard": "Leaderboard",
     "PGPTool": {
       "title": "PGP tool",

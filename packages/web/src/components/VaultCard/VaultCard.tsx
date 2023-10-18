@@ -363,7 +363,7 @@ export const VaultCard = ({
                 filledColor={isAudit ? "primary" : "secondary"}
                 onClick={goToLeaderboard}
               >
-                {t("seeLeaderboard")} {vault.id}
+                {t("seeCompetitionLeaderboard")}
               </Button>
             )}
           </div>
