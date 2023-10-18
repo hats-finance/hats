@@ -53,7 +53,7 @@ export function ContractsCoveredList() {
     append(
       contractsToCreate.map((contract) => ({
         name: "",
-        severities: [],
+        severities: severitiesFormIds,
         link: "",
         address: contract.path,
         linesOfCode: contract.lines,
@@ -78,7 +78,7 @@ export function ContractsCoveredList() {
       confirmText: t("gotIt"),
     });
     // console.log(a);
-  }, [reposInfo, validRepos, append, t, confirm]);
+  }, [severitiesFormIds, reposInfo, validRepos, append, t, confirm]);
 
   return (
     <>
