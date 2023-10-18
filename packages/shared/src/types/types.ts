@@ -218,6 +218,7 @@ export interface INFTMetaData {
   animation_url: string;
   image: string;
   external_url: string;
+  jsonMetadataIpfsHash?: string;
 }
 
 export interface INFTTokenMetadata {

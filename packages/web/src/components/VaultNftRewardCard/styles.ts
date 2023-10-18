@@ -66,8 +66,8 @@ export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardPro
       p.details {
         overflow: hidden;
         display: -webkit-box;
-        line-clamp: 5;
-        -webkit-line-clamp: 5;
+        line-clamp: 3;
+        -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
       }
 
@@ -81,6 +81,7 @@ export const StyledVaultNftRewardCard = styled.div<{ type: VaultNftRewardCardPro
 
 export const StyledNFTDetailsModal = styled.div`
   max-width: 480px;
+  max-height: 80vh;
   color: var(--white);
 
   .big-preview {

@@ -26,6 +26,7 @@ export const EditVaultStatusCard = () => {
   const lastEditSession = editSessions.length > 0 ? editSessions[0] : undefined;
   const lastEditionIsWaitingApproval = lastEditSession?.vaultEditionStatus === "pendingApproval";
   const lastEditionIsEditing = lastEditSession?.vaultEditionStatus === "editing";
+  const nftsAreBeingGenerated = editSessions.some((editSession) => editSession.nftAssetsIpfsHash === "Generating assets...");
 
   useEffect(() => {
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);
@@ -157,13 +158,14 @@ export const EditVaultStatusCard = () => {
       {getInfoText(lastEditionIsWaitingApproval)}
       {loadingEditSessions ? <p>{t("loadingInformation")}...</p> : getEditSessions()}
       {!canUserEditTheVault && <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="warning" />}
+      {nftsAreBeingGenerated && <Alert content={t("nftsBeingGeneratedPleaseWait")} type="warning" />}
       {canUserEditTheVault && (
         <div className="status-card__buttons">
           <Button disabled={!deployedEditSession} onClick={handleViewCurrentDescription} styleType="outlined">
             <ViewIcon className="mr-2" />
             {t("viewCurrentDescription")}
           </Button>
-          <Button disabled={loadingEditSessions} onClick={handleEditVault}>
+          <Button disabled={loadingEditSessions || nftsAreBeingGenerated} onClick={handleEditVault}>
             {t("editVault")}
           </Button>
         </div>
