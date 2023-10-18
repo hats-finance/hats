@@ -202,7 +202,7 @@ export const ScopeDetailsForm = () => {
             render={({ field }) => (
               <FormRadioInput
                 disabled={allFormDisabled}
-                label={t("Payouts.choosePayoutType")}
+                label={t("Payouts.chooseToolingOption")}
                 radioOptions={toolingOptions}
                 {...field}
               />

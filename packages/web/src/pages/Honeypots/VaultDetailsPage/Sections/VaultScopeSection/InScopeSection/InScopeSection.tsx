@@ -85,7 +85,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
   const goToRepo = (repo: IVaultRepoInformation) => {
     if (repo.commitHash) {
-      window.open(`${repo.url}/commit/${repo.commitHash}`, "_blank");
+      window.open(`${repo.url}/tree/${repo.commitHash}`, "_blank");
     } else {
       window.open(repo.url, "_blank");
     }
@@ -243,7 +243,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                       )}
                     </div>
                     <Button size="medium" onClick={() => goToRepo(repo)}>
-                      {repo.commitHash ? t("goToRepoAndCommit") : t("goToRepo")} <ArrowForwardIcon className="ml-3" />
+                      {t("goToRepo")} <ArrowForwardIcon className="ml-3" />
                     </Button>
                   </div>
                 ))}

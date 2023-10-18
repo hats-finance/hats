@@ -780,6 +780,7 @@
       "thisVaultHasAnActivePayout": "This vault has an active payout on-chain. You can't execute a new payout for this vault until the active one is resolved (approved or dismissed).",
       "payoutAllocationExplanation": "This is exactly how the 'Total payout sum' amount will be distributed.",
       "choosePayoutType": "Choose payout type",
+      "chooseToolingOption": "Choose tooling option",
       "singlePayout": "Single payout",
       "splitPayout": "Split payout",
       "singlePayoutExplanation": "Single payout will allow you to create a payout for a single beneficiary",
