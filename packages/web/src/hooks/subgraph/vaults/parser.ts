@@ -25,6 +25,7 @@ export const parseVaults = (vaults: IVault[], chainId: number) => {
 };
 
 export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
+  // TODO: after TGE add functionality to include `hackerHatReward` into the sum of `totalPaidOut`
   return payouts.map((payout) => ({
     ...payout,
     chainId,
