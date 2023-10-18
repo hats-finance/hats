@@ -24,6 +24,7 @@ type VaultCardProps = {
   reducedStyles?: boolean;
   noActions?: boolean;
   noDeployed?: boolean;
+  hideAmounts?: boolean;
 };
 
 /**
@@ -34,6 +35,7 @@ type VaultCardProps = {
  * @param reduced - Reduced styles, showing less information. (used on vault details page)
  * @param noActions - Disable the actions buttons. (mainly for vault preview)
  * @param noDeployed - if the vault is not deployed. (this is for showing images from the right source -> ipfs or backend)
+ * @param hideAmounts - Hide the amounts. (used on vault details page)
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
@@ -45,6 +47,7 @@ export const VaultCard = ({
   reducedStyles = false,
   noActions = false,
   noDeployed = false,
+  hideAmounts = false,
 }: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -196,6 +199,16 @@ export const VaultCard = ({
     navigate(`${RoutePaths.vulnerability}?projectId=${vault.id}`);
   };
 
+  const goToLeaderboard = () => {
+    if (!vault) return;
+    if (noActions) return;
+
+    const mainRoute = `/${isAudit ? HoneypotsRoutePaths.audits : HoneypotsRoutePaths.bugBounties}`;
+    const vaultSlug = slugify(name);
+
+    navigate(`${mainRoute}/${vaultSlug}-${vault.id}/leaderboard`);
+  };
+
   const goToDetails = () => {
     if (!vault) return;
     if (noActions) return;
@@ -204,11 +217,6 @@ export const VaultCard = ({
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
-  };
-
-  const goTopayoutData = () => {
-    if (!auditPayout || !auditPayout.payoutDataHash) return;
-    window.open(`${IPFS_PREFIX}/${auditPayout.payoutDataHash}`, "_blank");
   };
 
   return (
@@ -268,30 +276,32 @@ export const VaultCard = ({
               </>
             )}
           </div>
-          <div className="stats__stat intended-on-audits">
-            {isAudit ? (
-              <>
-                <WithTooltip text={showIntended ? t("intendedValueExplanation") : undefined}>
-                  <h3 className="value">
-                    ~$
-                    {auditPayout
-                      ? millify(totalPaidOutOnAudit?.usd ?? 0)
-                      : showIntended
-                      ? millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)
-                      : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
-                  </h3>
-                </WithTooltip>
-                <div className="sub-value">
-                  {auditPayout ? t("paidRewards") : showIntended ? t("intendedRewards") : t("maxRewards")}
-                </div>
-              </>
-            ) : (
-              <>
-                <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
-                <div className="sub-value">{t("maxRewards")}</div>
-              </>
-            )}
-          </div>
+          {!hideAmounts && (
+            <div className="stats__stat intended-on-audits">
+              {isAudit ? (
+                <>
+                  <WithTooltip text={showIntended ? t("intendedValueExplanation") : undefined}>
+                    <h3 className="value">
+                      ~$
+                      {auditPayout
+                        ? millify(totalPaidOutOnAudit?.usd ?? 0)
+                        : showIntended
+                        ? millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)
+                        : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
+                    </h3>
+                  </WithTooltip>
+                  <div className="sub-value">
+                    {auditPayout ? t("paidRewards") : showIntended ? t("intendedRewards") : t("maxRewards")}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <h3 className="value">~${vault.amountsInfo ? millify(vault.amountsInfo.maxRewardAmount.usd) : "-"}</h3>
+                  <div className="sub-value">{t("maxRewards")}</div>
+                </>
+              )}
+            </div>
+          )}
 
           {reducedStyles && (
             <>
@@ -347,8 +357,13 @@ export const VaultCard = ({
               </Button>
             )}
             {auditPayout && auditPayout.payoutDataHash && (
-              <Button size="medium" styleType="outlined" filledColor={isAudit ? "primary" : "secondary"} onClick={goTopayoutData}>
-                {t("seePayoutData")}
+              <Button
+                size="medium"
+                styleType="outlined"
+                filledColor={isAudit ? "primary" : "secondary"}
+                onClick={goToLeaderboard}
+              >
+                {t("seeCompetitionLeaderboard")}
               </Button>
             )}
           </div>
