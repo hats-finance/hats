@@ -32,7 +32,11 @@ export const GenerateNftsAssetsCard = () => {
       }
     : undefined;
 
-  const canRegenerateNfts = nftsGeneratedInfo && !deployedEditSession?.nftAssetsIpfsHash;
+  // const canRegenerateNfts = nftsGeneratedInfo && !deployedEditSession?.nftAssetsIpfsHash;
+  // If the logos are different, ask GOV to regenerate the NFTs
+  const shouldRegenerateNfts =
+    allEditSessions.find((es) => es._id === nftsGeneratedInfo?.editSessionId)?.editedDescription["project-metadata"].icon !==
+    deployedEditSession?.editedDescription["project-metadata"].icon;
 
   useEffect(() => {
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);
@@ -49,7 +53,7 @@ export const GenerateNftsAssetsCard = () => {
   };
 
   const handleGenerateNfts = async () => {
-    if (nftsGeneratedInfo && !canRegenerateNfts) return;
+    if (nftsGeneratedInfo && !shouldRegenerateNfts) return;
     if (!deployedEditSession) return alert("No deployed edit session found");
 
     const signedIn = await tryAuthentication();
@@ -71,7 +75,7 @@ export const GenerateNftsAssetsCard = () => {
       return t("generatingNftsInfo");
     } else if (!nftsGeneratedInfo) {
       return t("noNftsGeneratedInfo");
-    } else if (canRegenerateNfts) {
+    } else if (shouldRegenerateNfts) {
       return t("nftsRegenerateInfo");
     } else {
       return t("nftsGeneratedInfo");
@@ -109,10 +113,10 @@ export const GenerateNftsAssetsCard = () => {
 
       <div className="status-card__button">
         <Button
-          disabled={loadingEditSessions || !isLastEditSessionApproved || (nftsGeneratedInfo && !canRegenerateNfts)}
+          disabled={loadingEditSessions || !isLastEditSessionApproved || (nftsGeneratedInfo && !shouldRegenerateNfts)}
           onClick={handleGenerateNfts}
         >
-          {canRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
+          {shouldRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
         </Button>
       </div>
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}
