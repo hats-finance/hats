@@ -8,6 +8,7 @@ export class ReleasePaymentSplitContract {
    * Returns a caller function to release the reward from split contract
    *
    * @param vault - The selected vault to release the payout from
+   * @param splitContractAddress - The address of the HATPaymentSplitter (where the payout prize is)
    */
   static hook = (vault: IVault, splitContractAddress: string | undefined) => {
     const { chain } = useNetwork();
