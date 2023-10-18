@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Alert, Button, HatSpinner } from "components";
 import useConfirm from "hooks/useConfirm";
@@ -10,6 +10,7 @@ import { StyledSubmissionsSection } from "./styles";
 type VaultSubmissionsSectionProps = {
   vault: IVault;
   noDeployed?: boolean;
+  auditPayout?: IPayoutGraph | undefined;
 };
 
 export const VaultSubmissionsSection = ({ vault }: VaultSubmissionsSectionProps) => {

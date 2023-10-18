@@ -56,7 +56,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
     ?.filter((payout) => payout.isApproved)
     .filter((payout) => payout.payoutData?.vault?.description?.["project-metadata"].type === "audit")
     .filter((payout) => {
-      const isPrivateAudit = payout.payoutData?.vault?.description?.["project-metadata"].isPrivateAudit;
+      const isPrivateAudit = !!payout.payoutData?.vault?.description?.["project-metadata"].isPrivateAudit;
       const isUserInvited = payout.payoutData?.vault?.description?.["project-metadata"].whitelist?.some(
         (whiteAddress) => whiteAddress.address.toLowerCase() === profileData?.address?.toLowerCase()
       );
@@ -65,6 +65,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
     });
 
   auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
+  paidPayoutsFromAudits?.sort((a, b) => (b.approvedAt ? +b.approvedAt : 0) - (a.approvedAt ? +a.approvedAt : 0));
 
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],

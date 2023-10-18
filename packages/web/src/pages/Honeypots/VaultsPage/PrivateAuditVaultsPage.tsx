@@ -2,7 +2,7 @@ import { Alert, Button, Seo, VaultCard, VaultCardSkeleton } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useTranslation } from "react-i18next";
-import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "./hooks";
+import { useAuditCompetitionsVaults } from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const PrivateAuditVaultsPage = () => {
@@ -16,8 +16,7 @@ export const PrivateAuditVaultsPage = () => {
     finished: finishePrivAuditPayouts,
   } = useAuditCompetitionsVaults({ private: true });
 
-  const oldAudits = useOldAuditCompetitions();
-  const allFinishedAuditCompetitions = [...finishePrivAuditPayouts, ...(oldAudits ?? [])];
+  const allFinishedAuditCompetitions = [...finishePrivAuditPayouts];
 
   const areVaultsToShow =
     livePrivAuditCompetitions.length > 0 || upcomingPrivAuditCompetitions.length > 0 || finishePrivAuditPayouts.length > 0;
