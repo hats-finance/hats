@@ -31,14 +31,6 @@ export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
     isActive: !payout.dismissedAt && !payout.approvedAt,
     isApproved: !!payout.approvedAt,
     isDismissed: !!payout.dismissedAt,
-    // totalPaidOut: !!payout.approvedAt
-    //   ? BigNumber.from(payout.committeeReward ?? "0")
-    //       .add(BigNumber.from(payout.hackerReward ?? "0"))
-    //       .add(BigNumber.from(payout.hackerVestedReward ?? "0"))
-    //       .add(BigNumber.from(payout.governanceHatReward ?? "0"))
-    //       .add(BigNumber.from(payout.hackerHatReward ?? "0"))
-    //       .toString()
-    //   : undefined,
     totalPaidOut: !!payout.approvedAt
       ? BigNumber.from(payout.hackerReward ?? "0")
           .add(BigNumber.from(payout.hackerVestedReward ?? "0"))

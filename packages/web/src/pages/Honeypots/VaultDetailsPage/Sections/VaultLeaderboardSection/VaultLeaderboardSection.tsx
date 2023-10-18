@@ -33,11 +33,6 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 
   const severities = vault.description?.severities.map((severity) => parseSeverityName(severity.name)) ?? [];
 
-  // const goToPayoutContract = () => {
-  //   const blockExplorerUrl = appChains[vault.chainId].chain.blockExplorers?.default.url;
-  //   window.open(`${blockExplorerUrl}/address/${auditPayout.beneficiary}#writeContract#F3`, "_blank");
-  // };
-
   const executeRelease = () => {
     releasePayment.send();
   };
