@@ -38,7 +38,12 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">([]);
 
   useEffect(() => {
+    const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
+    if (!contractsCovered || contractsCovered.length > 0) return;
+
     const getRepoContractsList = async () => {
+      if (repoContractsList.length > 0) return;
+
       setRepoContractsList("loading");
       const contractsList = await getContractsInfoFromRepos(vault.description?.scope?.reposInformation ?? []);
       setRepoContractsList(
@@ -53,13 +58,13 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       );
     };
     getRepoContractsList();
-  }, [vault.description?.scope?.reposInformation]);
+  }, [vault.description, repoContractsList]);
 
   if (!vault.description) return <Loading fixed extraText={`${t("loading")}...`} />;
 
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
   const contractsCovered = severitiesToContractsCoveredForm(vault.description?.severities);
-  const docsLink = vault.description.scope?.docsLink;
+  const docsLink = vault.description?.scope?.docsLink;
 
   const goToGithubIssuesPrivateAudit = async () => {
     if (!repoName) return;
@@ -195,7 +200,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             </div>
           </div>
           {(vault.description.scope?.reposInformation.length > 0 ||
-            (contractsCovered.length > 0 && vault.description.scope?.reposInformation)) && <div className="separator" />}
+            (contractsCovered!.length > 0 && vault.description.scope?.reposInformation)) && <div className="separator" />}
         </>
       )}
 
@@ -243,7 +248,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                   </div>
                 ))}
               </div>
-              {(contractsCovered.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
+              {(contractsCovered!.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
             </>
           )}
         </>
@@ -269,14 +274,14 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       )}
 
       {/* Contracts covered */}
-      {contractsCovered.length > 0 && (
+      {contractsCovered!.length > 0 && (
         <>
           <h4 className="section-subtitle">
             <ContractsIcon className="icon" />
             <span>{t("contractsAssetsCovered")}</span>
           </h4>
 
-          {getContractsCoveredList(contractsCovered)}
+          {getContractsCoveredList(contractsCovered!)}
           {docsLink && <div className="separator" />}
         </>
       )}
