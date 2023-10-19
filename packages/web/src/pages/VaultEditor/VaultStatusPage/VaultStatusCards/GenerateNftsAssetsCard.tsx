@@ -1,4 +1,4 @@
-import { Button, Loading, Pill } from "components";
+import { Alert, Button, Loading, Pill } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,13 +16,14 @@ export const GenerateNftsAssetsCard = () => {
   const [loadingEditSessions, setLoadingEditSessions] = useState(false);
   const [allEditSessions, setAllEditSessions] = useState<IEditedSessionResponse[]>([]);
   const [deployedEditSession, setDeployedEditSession] = useState<IEditedSessionResponse>();
+  const isLastEditSessionApproved = allEditSessions[0]?._id === deployedEditSession?._id;
 
   const nftsAreBeingGenerated = allEditSessions.some((editSession) => editSession.nftAssetsIpfsHash === "Generating assets...");
 
   const nftsGeneratedWithEditSession =
-    allEditSessions.find(
-      (editSession) => editSession.nftAssetsIpfsHash && editSession.nftAssetsIpfsHash !== "Generating assets..."
-    ) ?? undefined;
+    allEditSessions
+      .filter((editSession) => editSession.nftAssetsIpfsHash && editSession.nftAssetsIpfsHash !== "Generating assets...")
+      .at(0) ?? undefined;
 
   const nftsGeneratedInfo = nftsGeneratedWithEditSession
     ? {
@@ -31,7 +32,11 @@ export const GenerateNftsAssetsCard = () => {
       }
     : undefined;
 
-  const canRegenerateNfts = nftsGeneratedInfo && !deployedEditSession?.nftAssetsIpfsHash;
+  // const canRegenerateNfts = nftsGeneratedInfo && !deployedEditSession?.nftAssetsIpfsHash;
+  // If the logos are different, ask GOV to regenerate the NFTs
+  const shouldRegenerateNfts =
+    allEditSessions.find((es) => es._id === nftsGeneratedInfo?.editSessionId)?.editedDescription["project-metadata"].icon !==
+    deployedEditSession?.editedDescription["project-metadata"].icon;
 
   useEffect(() => {
     fetchEditSessions(vaultAddress, vaultChainId, vaultData.descriptionHash);
@@ -48,7 +53,7 @@ export const GenerateNftsAssetsCard = () => {
   };
 
   const handleGenerateNfts = async () => {
-    if (nftsGeneratedInfo && !canRegenerateNfts) return;
+    if (nftsGeneratedInfo && !shouldRegenerateNfts) return;
     if (!deployedEditSession) return alert("No deployed edit session found");
 
     const signedIn = await tryAuthentication();
@@ -70,7 +75,7 @@ export const GenerateNftsAssetsCard = () => {
       return t("generatingNftsInfo");
     } else if (!nftsGeneratedInfo) {
       return t("noNftsGeneratedInfo");
-    } else if (canRegenerateNfts) {
+    } else if (shouldRegenerateNfts) {
       return t("nftsRegenerateInfo");
     } else {
       return t("nftsGeneratedInfo");
@@ -104,9 +109,14 @@ export const GenerateNftsAssetsCard = () => {
         </div>
       )}
 
+      {!isLastEditSessionApproved && !nftsGeneratedInfo && <Alert type="warning">{t("makeSureLastEditSessionIsApproved")}</Alert>}
+
       <div className="status-card__button">
-        <Button disabled={loadingEditSessions || (nftsGeneratedInfo && !canRegenerateNfts)} onClick={handleGenerateNfts}>
-          {canRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
+        <Button
+          disabled={loadingEditSessions || !isLastEditSessionApproved || (nftsGeneratedInfo && !shouldRegenerateNfts)}
+          onClick={handleGenerateNfts}
+        >
+          {shouldRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
         </Button>
       </div>
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}

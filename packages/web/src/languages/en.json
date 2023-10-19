@@ -457,7 +457,7 @@
     "generateNfts": "Generate NFTs assets",
     "regenerateNfts": "Regenerate NFTs assets",
     "noNftsGeneratedInfo": "No NFTs generated yet. Click on 'Generate NFTs' to generate them.",
-    "nftsRegenerateInfo": "NFTs already generated on a previous edit session of the vault. \nClick on 'Regenerate NFTs' to regenerate them with the current version.",
+    "nftsRegenerateInfo": "NFTs already generated on a previous edit session of the vault and the logo has changed. \nClick on 'Regenerate NFTs' to regenerate them with the current version.",
     "nftsGeneratedInfo": "NFTs generated successfully",
     "generatingNftsInfo": "Generating NFTs. This may take a few minutes.",
     "nftsGeneratedWithEditSessionId": "NFTs generated with edit session ID",
@@ -617,6 +617,10 @@
     "pleaseSignInWithEthereumToSeePrivateComps": "Please sign in with Ethereum (SIWE) to see private competitions.",
     "youAreNotInvitedToAnyPrivateComps": "You are not invited to any private competitions.",
     "privateAuditSubmissionsScopeInGithub": "This is a private audit competition. \nAll the scope information will be on the private GitHub repository. You can go to the github clicking on the button below.",
+    "makeSureLastEditSessionIsApproved": "Please make sure the last edit session is approved",
+    "nftsBeingGeneratedPleaseWait": "NFTs are being generated. Please wait couple of minutes if you want to edit the vault.",
+    "seeCompetitionLeaderboard": "See competition leaderboard",
+    "leaderboard": "Leaderboard",
     "PGPTool": {
       "title": "PGP tool",
       "unlockPgpTool": "Unlock the PGP tool",
@@ -699,6 +703,18 @@
       "filterByDateShort": "Filter by date",
       "notAllowedToCreatePayout": "You are not allowed to create a payout for this vault. Please verify you are connected with a committee wallet."
     },
+    "Leaderboard": {
+      "ifYouAreAWinner": "If you are one of the winners and you want to claim your rewards, please execute the claim by clicking on the button:",
+      "goToPayoutContract": "Go to the payout contract",
+      "enterOnContractTab": "Enter on the 'Contract' tab",
+      "executeReleaseFunction": "Execute the `release (0x48b75044)` function with these params:",
+      "tokenAddress": "Token (address): {{token}}",
+      "accountAddress": "Account (address):  your beneficiary address",
+      "claimBounty": "Receive rewards",
+      "needToBeConnectedWithAWinnerAddress": "You need to be connected with a winner address",
+      "errorClaimingBounty": "You already claimed your bounty or there was an error claiming it.",
+      "claimedBountySuccessfully": "You claimed your rewards successfully."
+    },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
       "selectVaultToCreatePayout": "Select a vault to a create payout",
@@ -764,6 +780,7 @@
       "thisVaultHasAnActivePayout": "This vault has an active payout on-chain. You can't execute a new payout for this vault until the active one is resolved (approved or dismissed).",
       "payoutAllocationExplanation": "This is exactly how the 'Total payout sum' amount will be distributed.",
       "choosePayoutType": "Choose payout type",
+      "chooseToolingOption": "Choose tooling option",
       "singlePayout": "Single payout",
       "splitPayout": "Split payout",
       "singlePayoutExplanation": "Single payout will allow you to create a payout for a single beneficiary",

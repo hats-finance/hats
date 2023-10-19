@@ -78,8 +78,7 @@ export const ScopeDetailsForm = () => {
       {/* Project Outline */}
       {isAdvancedMode && !isPrivateAudit && (
         <>
-          <div className="helper-text">{t("vaultEditorScopeExplanation")}</div>
-          <p className="mb-3 bold">{t("offerDescriptionHowTheProtocolWorks")}</p>
+          <div className="helper-text mb-3">{t("vaultEditorScopeExplanation")}</div>
           <Controller
             control={control}
             name={`scope.description`}
@@ -202,7 +201,7 @@ export const ScopeDetailsForm = () => {
             render={({ field }) => (
               <FormRadioInput
                 disabled={allFormDisabled}
-                label={t("Payouts.choosePayoutType")}
+                label={t("Payouts.chooseToolingOption")}
                 radioOptions={toolingOptions}
                 {...field}
               />

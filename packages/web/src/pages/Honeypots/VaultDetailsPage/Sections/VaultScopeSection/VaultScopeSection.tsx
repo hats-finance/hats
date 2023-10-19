@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import { Alert } from "components";
 import { useTranslation } from "react-i18next";
 import { CommitteeInfoSection } from "./CommitteeInfoSection/CommitteeInfoSection";
@@ -11,6 +11,7 @@ import { StyledVaultScopeSection } from "./styles";
 type VaultScopeSectionProps = {
   vault: IVault;
   noDeployed?: boolean;
+  auditPayout?: IPayoutGraph | undefined;
 };
 
 export const VaultScopeSection = ({ vault, noDeployed = false }: VaultScopeSectionProps) => {
