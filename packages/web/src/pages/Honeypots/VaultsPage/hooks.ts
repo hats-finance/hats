@@ -61,7 +61,9 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
         (whiteAddress) => whiteAddress.address.toLowerCase() === profileData?.address?.toLowerCase()
       );
 
-      return opts.private ? isPrivateAudit && (isUserInvited || isGovMember) : !isPrivateAudit;
+      return opts.private
+        ? isPrivateAudit && (isUserInvited || isGovMember)
+        : !isPrivateAudit || payout.payoutData?.vault?.dateStatus === "finished";
     });
 
   auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
