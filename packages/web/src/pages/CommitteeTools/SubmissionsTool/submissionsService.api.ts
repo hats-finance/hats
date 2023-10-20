@@ -85,8 +85,9 @@ const extractSubmissionData = (
 
   const submissionVault = allVaults.find(
     (vault) =>
-      vault.id.toLowerCase() === projectId?.toLowerCase() ||
-      vault.description?.["project-metadata"].name.toLowerCase() === projectName?.toLowerCase()
+      projectId &&
+      (vault.id.toLowerCase() === projectId?.toLowerCase() ||
+        vault.description?.["project-metadata"].name.toLowerCase() === projectName?.toLowerCase())
   );
 
   const submissions: ISubmittedSubmission[] = [];
