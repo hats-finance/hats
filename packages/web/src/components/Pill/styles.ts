@@ -17,13 +17,14 @@ const getVarColor = (color: PillProps["dotColor"]) => {
 
 export const StyledPill = styled.div<{
   transparent: PillProps["transparent"];
+  capitalize: PillProps["capitalize"];
   textColor: PillProps["textColor"];
   isSeverity: PillProps["isSeverity"];
   isChecked: PillProps["isChecked"];
   canMultiline: PillProps["canMultiline"];
   isOnClickEnabled: boolean;
 }>(
-  ({ transparent, textColor, isSeverity, isChecked, isOnClickEnabled, canMultiline }) => css`
+  ({ transparent, capitalize, textColor, isSeverity, isChecked, isOnClickEnabled, canMultiline }) => css`
     color: ${transparent ? "var(--white)" : "var(--secondary)"};
     font-size: var(--xxsmall);
     text-transform: none;
@@ -91,7 +92,7 @@ export const StyledPill = styled.div<{
       line-clamp: 1;
       -webkit-line-clamp: 1;
       -webkit-box-orient: vertical;
-      text-transform: capitalize;
+      text-transform: ${capitalize ? "capitalize" : "none"};
 
       ${canMultiline &&
       css`
