@@ -54,6 +54,7 @@ export const GenerateNftsAssetsCard = () => {
 
   const handleGenerateNfts = async () => {
     if (nftsGeneratedInfo && !shouldRegenerateNfts) return;
+    if (nftsAreBeingGenerated) return alert("NFTs are being generated");
     if (!deployedEditSession) return alert("No deployed edit session found");
 
     const signedIn = await tryAuthentication();
@@ -113,10 +114,15 @@ export const GenerateNftsAssetsCard = () => {
 
       <div className="status-card__button">
         <Button
-          disabled={loadingEditSessions || !isLastEditSessionApproved || (nftsGeneratedInfo && !shouldRegenerateNfts)}
+          disabled={
+            loadingEditSessions ||
+            !isLastEditSessionApproved ||
+            (nftsGeneratedInfo && !shouldRegenerateNfts) ||
+            nftsAreBeingGenerated
+          }
           onClick={handleGenerateNfts}
         >
-          {shouldRegenerateNfts ? t("regenerateNfts") : t("generateNfts")}
+          {shouldRegenerateNfts && !!nftsGeneratedInfo ? t("regenerateNfts") : t("generateNfts")}
         </Button>
       </div>
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}
