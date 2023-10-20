@@ -24,6 +24,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       name: Yup.string().required(intl("required")),
       type: Yup.string().required(intl("required")).typeError(intl("required")),
       isPrivateAudit: Yup.boolean(),
+      isContinuousAudit: Yup.boolean(),
       whitelist: Yup.array()
         .of(
           Yup.object({
@@ -77,6 +78,13 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             .test("required", intl("required"), (val, ctx: any) =>
               !!ctx.from[2].value["project-metadata"]?.isPrivateAudit ? true : !!val
             ),
+          prevAuditedCommitHash: Yup.string()
+            .test(getTestGitCommitHash(intl))
+            .test("required", intl("required"), (val, ctx: any) => {
+              // Only required if isContinuousAudit
+              if (!!ctx.from[2].value["project-metadata"]?.isContinuousAudit) return !!val;
+              return true;
+            }),
           commitHash: Yup.string()
             .test(getTestGitCommitHash(intl))
             .test("required", intl("required"), (val, ctx: any) =>
