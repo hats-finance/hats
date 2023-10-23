@@ -30,9 +30,12 @@ export function VaultDetailsForm() {
   const isContinuousAudit = useWatch({ control, name: "project-metadata.isContinuousAudit" });
 
   useEffect(() => {
-    if (isPrivateAudit) setValue("project-metadata.isContinuousAudit", false);
-    if (isContinuousAudit) setValue("project-metadata.isPrivateAudit", false);
-  }, [isPrivateAudit, isContinuousAudit, setValue]);
+    if (isContinuousAudit) return setValue("project-metadata.isPrivateAudit", false);
+  }, [isContinuousAudit, setValue]);
+
+  useEffect(() => {
+    if (isPrivateAudit) return setValue("project-metadata.isContinuousAudit", false);
+  }, [isPrivateAudit, setValue]);
 
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
