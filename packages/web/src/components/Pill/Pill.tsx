@@ -8,6 +8,7 @@ export type PillProps = {
   text: string;
   transparent?: boolean;
   isSeverity?: boolean;
+  capitalize?: boolean;
   isChecked?: boolean;
   canMultiline?: boolean;
   onClick?: (checked: boolean) => void;
@@ -21,10 +22,12 @@ export const Pill = ({
   transparent = false,
   isSeverity = false,
   canMultiline = false,
+  capitalize = true,
   onClick,
 }: PillProps) => {
   return (
     <StyledPill
+      capitalize={capitalize}
       isChecked={isChecked}
       transparent={transparent}
       textColor={textColor}

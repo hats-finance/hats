@@ -123,6 +123,7 @@ interface IBaseVaultDescription {
     tokenIcon: string;
     type?: IVaultType;
     isPrivateAudit?: boolean;
+    isContinuousAudit?: boolean;
     whitelist: { address: string }[];
     endtime?: number;
     starttime?: number;
@@ -182,6 +183,7 @@ export interface ICommitteeMember {
 
 export interface IVaultRepoInformation {
   url: string;
+  prevAuditedCommitHash?: string;
   commitHash?: string;
   isMain: boolean;
 }

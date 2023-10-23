@@ -47,6 +47,14 @@ export const StyledVaultDetails = styled.div`
         flex-direction: column;
       }
     }
+
+    .toggles {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: ${getSpacing(1)};
+    }
   }
 
   .icons {

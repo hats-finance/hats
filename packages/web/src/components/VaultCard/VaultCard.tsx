@@ -1,4 +1,5 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
@@ -102,6 +103,7 @@ export const VaultCard = ({
 
   const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
+  const isContinuousAudit = vault.description["project-metadata"].isContinuousAudit;
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
@@ -116,29 +118,17 @@ export const VaultCard = ({
     if (!vault.description["project-metadata"].starttime) return null;
 
     if (auditPayout) {
-      return (
-        <div className="mb-4">
-          <Pill transparent dotColor="green" text={t("paidCompetition")} />
-        </div>
-      );
+      return <Pill transparent dotColor="green" text={t("paidCompetition")} />;
     }
 
     if (vault.dateStatus === "upcoming") {
       const startTime = moment(vault.description["project-metadata"].starttime * 1000);
 
       if (startTime.diff(moment(), "hours") <= 24) {
-        return (
-          <div className="mb-4">
-            <Pill transparent dotColor="yellow" text={`${t("starting")} ${startTime.fromNow()}`} />
-          </div>
-        );
+        return <Pill transparent dotColor="yellow" text={`${t("starting")} ${startTime.fromNow()}`} />;
       }
 
-      return (
-        <div className="mb-4">
-          <Pill transparent dotColor="yellow" text={t("upcoming")} />
-        </div>
-      );
+      return <Pill transparent dotColor="yellow" text={t("upcoming")} />;
     }
 
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
@@ -156,6 +146,24 @@ export const VaultCard = ({
         </div>
       );
     }
+  };
+
+  const getContinuousAuditPill = () => {
+    const repo = vault.description?.scope?.reposInformation.find((repo) => repo.isMain);
+    const prevHash = repo?.prevAuditedCommitHash?.slice(0, 18);
+    const currentHash = repo?.commitHash?.slice(0, 18);
+
+    if (!prevHash || !currentHash) return null;
+
+    return (
+      <WithTooltip text={t("continuousAuditCompetitionExplanation")}>
+        <div className="continuous-comp-hashes">
+          <Pill capitalize={false} transparent text={`${prevHash}...`} />
+          <ArrowIcon />
+          <Pill capitalize={false} transparent text={`${currentHash}...`} />
+        </div>
+      </WithTooltip>
+    );
   };
 
   const getActiveClaimBanner = () => {
@@ -222,11 +230,15 @@ export const VaultCard = ({
   return (
     <StyledVaultCard
       isAudit={isAudit}
+      isContinuousAudit={!!isContinuousAudit}
       reducedStyles={reducedStyles}
       hasActiveClaim={!!activeClaim}
       showIntendedAmount={showIntended}
     >
-      {isAudit && getAuditStatusPill()}
+      <div className="pills mb-4">
+        {isAudit && getAuditStatusPill()}
+        {isContinuousAudit && getContinuousAuditPill()}
+      </div>
       {!!activeClaim && !reducedStyles && getActiveClaimBanner()}
 
       <div className="vault-info">
@@ -353,7 +365,7 @@ export const VaultCard = ({
             )}
             {!auditPayout && (
               <Button size="medium" filledColor={isAudit ? "primary" : "secondary"} onClick={goToDetails}>
-                {isAudit ? t("competitionDetails") : t("bountyDetails")}
+                {isAudit ? (isContinuousAudit ? t("continuousCompetitionDetails") : t("competitionDetails")) : t("bountyDetails")}
               </Button>
             )}
             {auditPayout && auditPayout.payoutDataHash && (

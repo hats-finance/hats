@@ -159,17 +159,17 @@ export const EditVaultStatusCard = () => {
       {loadingEditSessions ? <p>{t("loadingInformation")}...</p> : getEditSessions()}
       {!canUserEditTheVault && <Alert content={t("connectWithCommitteeMultisigOrBeAMemberForEditing")} type="warning" />}
       {nftsAreBeingGenerated && <Alert content={t("nftsBeingGeneratedPleaseWait")} type="warning" />}
-      {canUserEditTheVault && (
-        <div className="status-card__buttons">
-          <Button disabled={!deployedEditSession} onClick={handleViewCurrentDescription} styleType="outlined">
-            <ViewIcon className="mr-2" />
-            {t("viewCurrentDescription")}
-          </Button>
+      <div className="status-card__buttons">
+        <Button disabled={!deployedEditSession} onClick={handleViewCurrentDescription} styleType="outlined">
+          <ViewIcon className="mr-2" />
+          {t("viewCurrentDescription")}
+        </Button>
+        {canUserEditTheVault && (
           <Button disabled={loadingEditSessions || nftsAreBeingGenerated} onClick={handleEditVault}>
             {t("editVault")}
           </Button>
-        </div>
-      )}
+        )}
+      </div>
       {loading && <Loading fixed extraText={`${t("loading")}...`} />}
     </div>
   );

@@ -67,6 +67,10 @@ export const SubmissionsListPage = () => {
     savedSelectedSubmissions ? JSON.parse(savedSelectedSubmissions) : []
   );
 
+  const vault = committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault;
+  const isAuditComp = vault?.description?.["project-metadata"].type === "audit";
+  const shouldCreateSinglePayout = vault && selectedSubmissions.length === 1 && !isAuditComp;
+
   const committeeSubmissionsGroups = useMemo<{ date: string; submissions: ISubmittedSubmission[] }[]>(() => {
     if (!filteredSubmissions) return [];
     const pagedSubmissions = filteredSubmissions.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
@@ -191,7 +195,6 @@ export const SubmissionsListPage = () => {
   };
 
   const handleCreatePayout = async () => {
-    const vault = committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault;
     if (!vault || !committeeSubmissions) return;
     if (!vault.description || !vault.description.severities) return;
 
@@ -208,7 +211,7 @@ export const SubmissionsListPage = () => {
     if (!authenticated) return;
 
     const vaultInfo = getVaultInfoFromVault(vault);
-    const payoutType: PayoutType = selectedSubmissions.length === 1 ? "single" : "split";
+    const payoutType: PayoutType = shouldCreateSinglePayout ? "single" : "split";
     let payoutData: IPayoutData;
 
     if (payoutType === "single") {
@@ -417,7 +420,7 @@ export const SubmissionsListPage = () => {
                           {selectedSubmissions.length >= 1 && (
                             <Button onClick={handleCreatePayout}>
                               <PayoutIcon className="mr-2" />
-                              {selectedSubmissions.length === 1 ? t("createSinglePayout") : t("createMultiPayout")}
+                              {shouldCreateSinglePayout ? t("createSinglePayout") : t("createMultiPayout")}
                             </Button>
                           )}
                         </div>

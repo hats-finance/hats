@@ -27,6 +27,15 @@ export function VaultDetailsForm() {
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
   const vaultType = useWatch({ control, name: "project-metadata.type" });
   const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
+  const isContinuousAudit = useWatch({ control, name: "project-metadata.isContinuousAudit" });
+
+  useEffect(() => {
+    if (isContinuousAudit) return setValue("project-metadata.isPrivateAudit", false);
+  }, [isContinuousAudit, setValue]);
+
+  useEffect(() => {
+    if (isPrivateAudit) return setValue("project-metadata.isContinuousAudit", false);
+  }, [isPrivateAudit, setValue]);
 
   const vaultTypes = [
     { label: t("bugBountyProgram"), value: "normal" },
@@ -114,14 +123,26 @@ export function VaultDetailsForm() {
               />
             )}
           />
-          {(vaultType === "audit" && isAdvancedMode) || isPrivateAudit ? (
-            <FormInput
-              {...register("project-metadata.isPrivateAudit")}
-              disabled={isEditingExistingVault || allFormDisabled}
-              type="toggle"
-              label={t("isPrivateQuestion")}
-            />
-          ) : null}
+          <div className="toggles">
+            {(vaultType === "audit" && isAdvancedMode) || isPrivateAudit ? (
+              <FormInput
+                {...register("project-metadata.isPrivateAudit")}
+                noMargin
+                disabled={isEditingExistingVault || allFormDisabled}
+                type="toggle"
+                label={t("isPrivateQuestion")}
+              />
+            ) : null}
+            {(vaultType === "audit" && isAdvancedMode) || isContinuousAudit ? (
+              <FormInput
+                {...register("project-metadata.isContinuousAudit")}
+                noMargin
+                disabled={isEditingExistingVault || allFormDisabled}
+                type="toggle"
+                label={t("isContinuousAuditQuestion")}
+              />
+            ) : null}
+          </div>
         </div>
 
         <div className="inputs col-sm">

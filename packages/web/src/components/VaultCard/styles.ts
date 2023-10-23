@@ -4,21 +4,22 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledVaultCard = styled.div<{
   isAudit: boolean;
+  isContinuousAudit?: boolean;
   reducedStyles: boolean;
   hasActiveClaim: boolean;
   showIntendedAmount: boolean;
 }>(
-  ({ isAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
+  ({ isAudit, isContinuousAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--background-2);
+    background: ${isContinuousAudit ? "var(--background-2-darker)" : "var(--background-2)"};
     border: 1px solid var(--primary-light);
     padding: ${getSpacing(3)} ${getSpacing(4)};
 
     ${hasActiveClaim &&
     css`
-      padding: ${getSpacing(5.5)} ${getSpacing(4)} ${getSpacing(4)} ${getSpacing(4)};
+      padding: ${getSpacing(6)} ${getSpacing(4)} ${getSpacing(4)} ${getSpacing(4)};
       border-color: var(--error-red);
     `}
 
@@ -31,6 +32,24 @@ export const StyledVaultCard = styled.div<{
 
     @media (max-width: ${breakpointsDefinition.mediumMobile}) {
       padding: ${getSpacing(2.5)} ${getSpacing(3)};
+
+      ${hasActiveClaim &&
+      css`
+        padding: ${getSpacing(5)} ${getSpacing(2.5)} ${getSpacing(3)} ${getSpacing(2.5)};
+      `}
+    }
+
+    .pills {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .continuous-comp-hashes {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: ${getSpacing(1)};
+      }
     }
 
     .active-claim-banner {

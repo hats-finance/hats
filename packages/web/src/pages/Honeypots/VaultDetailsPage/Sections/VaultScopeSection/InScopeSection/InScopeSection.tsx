@@ -8,6 +8,7 @@ import {
 } from "@hats-finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DocumentIcon from "@mui/icons-material/DescriptionOutlined";
+import DiffIcon from "@mui/icons-material/DifferenceOutlined";
 import OpenIcon from "@mui/icons-material/LaunchOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
@@ -63,6 +64,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   if (!vault.description) return <Loading fixed extraText={`${t("loading")}...`} />;
 
   const isPrivateAudit = vault?.description?.["project-metadata"].isPrivateAudit;
+  const isContinuousAudit = vault?.description?.["project-metadata"].isContinuousAudit;
   const contractsCovered = severitiesToContractsCoveredForm(vault.description?.severities);
   const docsLink = vault.description?.scope?.docsLink;
 
@@ -89,6 +91,11 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
     } else {
       window.open(repo.url, "_blank");
     }
+  };
+
+  const goToDiff = (repo: IVaultRepoInformation) => {
+    if (!repo.prevAuditedCommitHash || !repo.commitHash) return;
+    window.open(`${repo.url}/compare/${repo.prevAuditedCommitHash}...${repo.commitHash}`, "_blank");
   };
 
   const getContractsCoveredList = (contractsToUse: IEditedContractCovered[]) => {
@@ -179,6 +186,12 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
   return (
     <StyledInScopeSection className="subsection-container">
+      {isContinuousAudit && (
+        <Alert type="info" className="mb-4">
+          {t("continuousAuditWarning")}
+        </Alert>
+      )}
+
       {/* Overview */}
       {vault.description.scope?.description && (
         <>
@@ -241,10 +254,23 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                           {t("commitHash")}: {repo.commitHash}
                         </p>
                       )}
+                      {repo.prevAuditedCommitHash && (
+                        <p className="commit-hash">
+                          {t("prevAuditedCommitHash")}: {repo.prevAuditedCommitHash}
+                        </p>
+                      )}
                     </div>
-                    <Button size="medium" onClick={() => goToRepo(repo)}>
-                      {t("goToRepo")} <ArrowForwardIcon className="ml-3" />
-                    </Button>
+
+                    <div className="buttons">
+                      <Button size="medium" onClick={() => goToRepo(repo)}>
+                        {t("goToRepo")} <ArrowForwardIcon className="ml-3" />
+                      </Button>
+                      {repo.prevAuditedCommitHash && (
+                        <Button size="medium" onClick={() => goToDiff(repo)}>
+                          {t("diffWithPrevAudit")} <DiffIcon className="ml-3" />
+                        </Button>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>
