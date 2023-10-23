@@ -38,6 +38,12 @@ export const StyledInScopeSection = styled.div`
           color: var(--grey-500);
         }
       }
+
+      .buttons {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+      }
     }
   }
 `;

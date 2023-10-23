@@ -30,6 +30,7 @@ export const ScopeReposInformation = () => {
 
   const vaultType = useWatch({ control, name: "project-metadata.type" });
   const isPrivateAudit = useWatch({ control, name: "project-metadata.isPrivateAudit" });
+  const isContinuousAudit = useWatch({ control, name: "project-metadata.isContinuousAudit" });
 
   // Only one repo can be the main repo
   useOnChange(repos, (newRepos, prevRepos) => {
@@ -101,16 +102,28 @@ export const ScopeReposInformation = () => {
                 disabled={allFormDisabled}
                 placeholder={t("VaultEditor.vault-details.repoUrl-placeholder")}
               />
-              <FormInput
-                {...register(`scope.reposInformation.${index}.commitHash`)}
-                label={t("VaultEditor.vault-details.commitHash")}
-                colorable
-                helper="ie. 9770535cb9.....b63c081cbc"
-                disabled={allFormDisabled}
-                placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
-              />
+              <div className="commitHashes">
+                <FormInput
+                  {...register(`scope.reposInformation.${index}.commitHash`)}
+                  label={t("VaultEditor.vault-details.commitHash")}
+                  colorable
+                  helper="ie. af0830ef3dccdb0e4bcf0e746147f252c98fd055"
+                  disabled={allFormDisabled}
+                  placeholder={t("VaultEditor.vault-details.commitHash-placeholder")}
+                />
+                {isContinuousAudit && (
+                  <FormInput
+                    {...register(`scope.reposInformation.${index}.prevAuditedCommitHash`)}
+                    label={t("VaultEditor.vault-details.prevCommitHash")}
+                    colorable
+                    helper={t("VaultEditor.vault-details.prevCommitHash-helper")}
+                    disabled={allFormDisabled}
+                    placeholder={t("VaultEditor.vault-details.prevCommitHash-placeholder")}
+                  />
+                )}
+              </div>
               {!allFormDisabled && (
-                <Button styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
+                <Button noPadding styleType="invisible" textColor="secondary" onClick={() => removeRepo(index)}>
                   <DeleteIcon className="mr-2" />
                   <span>{t("remove")}</span>
                 </Button>

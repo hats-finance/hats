@@ -16,6 +16,10 @@ export const StyledScopeReposInformation = styled.div`
         align-items: baseline;
         gap: ${getSpacing(2)};
       }
+
+      .commitHashes {
+        width: 100%;
+      }
     }
   }
 `;
