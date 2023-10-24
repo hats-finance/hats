@@ -152,10 +152,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
               version === "v2" ? schema.required(intl("required")) : undefined
             ),
           "nft-metadata": Yup.object({
-            name: Yup.string().required(intl("required")),
-            description: Yup.string().required(intl("required")),
-            image: Yup.string().required(intl("required")),
-            animation_url: Yup.string().required(intl("required")),
+            name: Yup.string(),
+            description: Yup.string(),
+            image: Yup.string(),
+            animation_url: Yup.string(),
           }),
         })
       ),

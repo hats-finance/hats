@@ -41,6 +41,8 @@ export const VaultNftRewardCard = ({ severity, vault, type = "normal" }: VaultNf
       .then((data) => setNftAssetsData(data));
   }, [severity]);
 
+  if (!nftData?.name || !nftData?.image || !nftData?.description) return null;
+
   return (
     <>
       <StyledVaultNftRewardCard type={type} onClick={nftData ? showNFTModal : undefined}>
