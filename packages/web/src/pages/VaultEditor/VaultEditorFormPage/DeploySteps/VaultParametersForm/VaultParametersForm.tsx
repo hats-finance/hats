@@ -134,7 +134,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
         <p className="section-title">{t("maxBounty")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation") }} />
 
-        <div className="input">
+        {/* <div className="input">
           <FormInput
             {...methodsToUse.register(`parameters.maxBountyPercentage`)}
             disabled={blockMaxBounty || disabled}
@@ -143,7 +143,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
             placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder")}
             colorable
           />
-        </div>
+        </div> */}
 
         <p className="section-title">{t("bountySplit")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
