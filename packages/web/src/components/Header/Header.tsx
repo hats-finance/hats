@@ -1,7 +1,8 @@
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { Button, Pill, SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { useProfileByAddress } from "hooks/profiles/useProfileByAddress";
 import { RoutePaths } from "navigation";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useTranslation } from "react-i18next";
@@ -9,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { RootState } from "reducers";
 import { useAccount } from "wagmi";
-import WalletInfo from "../WalletInfo/WalletInfo";
 import { StyledHeader } from "./styles";
 
 const Header = () => {
@@ -18,6 +18,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { address: account } = useAccount();
+
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -40,10 +42,21 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
-          {account && (
-            <div className="wallet-info">
-              <WalletInfo />
-            </div>
+          {account && !isLoadingProfile && (
+            <>
+              {!!createdProfile ? (
+                <Button size="big" noRadius styleType="outlined">
+                  {t("Header.myProfile")}
+                </Button>
+              ) : (
+                <>
+                  <Pill capitalize text="New feature" />
+                  <Button size="big" noRadius styleType="outlined">
+                    {t("Header.createHackerProfile")}
+                  </Button>
+                </>
+              )}
+            </>
           )}
 
           <WhereverWidget />

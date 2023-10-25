@@ -951,9 +951,8 @@
       "network-not-supported": "Please connect to a supported network"
     },
     "Header": {
-      "WalletInfo": {
-        "my-account": "My Account"
-      },
+      "myProfile": "My Profile",
+      "createHackerProfile": "Create Hacker Profile",
       "MyAccount": {
         "hello": "HELLO",
         "Balance": {
