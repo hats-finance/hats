@@ -1,7 +1,7 @@
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { useAccount, useNetwork, useSignMessage } from "wagmi";
-import { SiweMessage } from "siwe";
 import { useOnChange } from "hooks/usePrevious";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { SiweMessage } from "siwe";
+import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import * as SIWEService from "./siweService";
 
 type SiweProfileData = {
@@ -27,6 +27,7 @@ export const SiweAuthProvider = ({ children }) => {
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
+  const [currentData, setCurrentData] = useState<{ message: string; signature: `0x${string}` } | undefined>();
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<{
     loggedIn: boolean;
@@ -75,7 +76,10 @@ export const SiweAuthProvider = ({ children }) => {
         chainId,
         nonce,
       });
-      const signature = await signMessageAsync({ message: message.prepareMessage() });
+
+      const preparedMessage = message.prepareMessage();
+      const signature = await signMessageAsync({ message: preparedMessage });
+      setCurrentData({ message: preparedMessage, signature });
 
       // Verify signature
       const verifyOk = await SIWEService.verifyMessage(message, signature);
@@ -117,6 +121,7 @@ export const SiweAuthProvider = ({ children }) => {
     tryAuthentication,
     isAuthenticated: profileData.loggedIn,
     updateProfile: getProfile,
+    currentData,
   };
 
   return <SiweAuthContext.Provider value={context}>{children}</SiweAuthContext.Provider>;

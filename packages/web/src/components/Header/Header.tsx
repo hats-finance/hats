@@ -1,7 +1,7 @@
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { Button, Pill, SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { Button, SafePeriodBar, WalletButton, WhereverWidget } from "components";
 import { useProfileByAddress } from "hooks/profiles/useProfileByAddress";
 import { RoutePaths } from "navigation";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
@@ -32,6 +32,14 @@ const Header = () => {
     return "";
   };
 
+  function handleGoToProfile() {
+    throw new Error("Function not implemented.");
+  }
+
+  function handleCreateNewProfile() {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <StyledHeader>
       <div className="safety-period-banner">
@@ -45,13 +53,13 @@ const Header = () => {
           {account && !isLoadingProfile && (
             <>
               {!!createdProfile ? (
-                <Button size="big" noRadius styleType="outlined">
+                <Button size="big" noRadius styleType="outlined" onClick={handleGoToProfile}>
                   {t("Header.myProfile")}
                 </Button>
               ) : (
                 <>
-                  <Pill capitalize text="New feature" />
-                  <Button size="big" noRadius styleType="outlined">
+                  {/* <Pill capitalize text="New feature" /> */}
+                  <Button size="big" noRadius styleType="outlined" onClick={handleCreateNewProfile}>
                     {t("Header.createHackerProfile")}
                   </Button>
                 </>
