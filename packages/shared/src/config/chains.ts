@@ -6,10 +6,14 @@ export const ALL_CHAINS = {
   [wagmiChains.arbitrum.id]: wagmiChains.arbitrum,
   [wagmiChains.optimism.id]: wagmiChains.optimism,
   [wagmiChains.polygon.id]: wagmiChains.polygon,
+  [wagmiChains.polygonZkEvm.id]: wagmiChains.polygonZkEvm,
   [wagmiChains.bsc.id]: wagmiChains.bsc,
   [wagmiChains.avalanche.id]: wagmiChains.avalanche,
   [wagmiChains.fantom.id]: wagmiChains.fantom,
   [wagmiChains.gnosis.id]: wagmiChains.gnosis,
+  [wagmiChains.pulsechain.id]: wagmiChains.pulsechain,
+  [wagmiChains.cronos.id]: wagmiChains.cronos,
+  [wagmiChains.zkSync.id]: wagmiChains.zkSync,
   [meter.id]: meter,
 };
 
