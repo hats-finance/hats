@@ -33,7 +33,6 @@ export const getTestUsername = (intl) => {
 
       // Check if username is available
       const isAvailable = await isUsernameAvailable(value);
-      console.log(isAvailable);
 
       if (!isAvailable) return ctx.createError({ message: intl("username-not-available") });
       return true;
