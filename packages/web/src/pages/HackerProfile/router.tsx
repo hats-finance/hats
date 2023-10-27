@@ -10,7 +10,7 @@ export const hackerProfileRouter = (): RouteObject => ({
       element: <Navigate to="/" replace={true} />,
     },
     {
-      path: "/:username",
+      path: ":username",
       element: <HackerProfilePage />,
     },
   ],
