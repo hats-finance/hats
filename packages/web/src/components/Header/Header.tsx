@@ -2,22 +2,27 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
 import { Button, SafePeriodBar, WalletButton, WhereverWidget } from "components";
-import { useProfileByAddress } from "hooks/profiles/useProfileByAddress";
+import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
+import { CreateProfileFormModal } from "pages/HackerProfile/components";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
 import { useAccount } from "wagmi";
 import { StyledHeader } from "./styles";
 
 const Header = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { address: account } = useAccount();
+
+  const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
 
@@ -33,11 +38,8 @@ const Header = () => {
   };
 
   function handleGoToProfile() {
-    throw new Error("Function not implemented.");
-  }
-
-  function handleCreateNewProfile() {
-    throw new Error("Function not implemented.");
+    if (!createdProfile) return;
+    navigate(`${RoutePaths.profile}/${createdProfile.username}`);
   }
 
   return (
@@ -59,7 +61,7 @@ const Header = () => {
               ) : (
                 <>
                   {/* <Pill capitalize text="New feature" /> */}
-                  <Button size="big" noRadius styleType="outlined" onClick={handleCreateNewProfile}>
+                  <Button size="big" noRadius styleType="outlined" onClick={() => showCreateProfile()}>
                     {t("Header.createHackerProfile")}
                   </Button>
                 </>
@@ -75,6 +77,8 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <CreateProfileFormModal isShowing={isShowingCreateProfile} onHide={hideCreateProfile} />
     </StyledHeader>
   );
 };
