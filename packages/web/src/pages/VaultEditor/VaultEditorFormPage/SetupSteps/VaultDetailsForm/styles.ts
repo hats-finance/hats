@@ -52,8 +52,8 @@ export const StyledVaultDetails = styled.div`
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-      gap: ${getSpacing(1)};
+      align-items: flex-start;
+      gap: ${getSpacing(0.5)};
     }
   }
 
