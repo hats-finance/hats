@@ -1,11 +1,18 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
+import { QueryClient } from "@tanstack/react-query";
 import HatsBoat from "assets/images/hats_boat.jpg";
-import { Button, Modal } from "components";
+import { Button, Loading, Modal } from "components";
+import { queryClient } from "config/reactQuery";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { RoutePaths } from "navigation";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAccount } from "wagmi";
+import { useUpsertProfile } from "../../hooks";
 import { getCreateProfileYupSchema } from "./formSchema";
 import { CreateProfileBio } from "./steps/CreateProfileBio";
 import { CreateProfileIntro } from "./steps/CreateProfileIntro";
@@ -39,8 +46,14 @@ const createProfileFormSteps = [
 
 export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileFormModalProps) => {
   const { t } = useTranslation();
+  const { address } = useAccount();
+  const navigate = useNavigate();
+  const { tryAuthentication, isSigningIn } = useSiweAuth();
+
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;
+
+  const upsertProfile = useUpsertProfile();
 
   const methods = useForm<IHackerProfile>({
     resolver: yupResolver(getCreateProfileYupSchema(t)),
@@ -58,27 +71,49 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   };
 
   const handleCreateProfile = async (formData: IHackerProfile) => {
-    console.log(formData);
+    if (!formState.isValid) return;
+
+    try {
+      const signedIn = await tryAuthentication();
+      if (!signedIn) return;
+
+      const result = await upsertProfile.mutateAsync({ profile: formData });
+      if (result?.upsertedCount) {
+        onHide();
+        navigate(`${RoutePaths.profile}/${formData.username}`);
+        queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
-    <Modal capitalizeTitle isShowing={isShowing} title={t("HackerProfile.createProfile")} onHide={onHide}>
-      <FormProvider {...methods}>
-        <StyledCreateProfileFormModal firstStep={currentFormStep === 0}>
-          {!isLastStep && <img className="hats-boat" src={HatsBoat} alt="Hats boat" />}
-          {createProfileFormSteps[currentFormStep].element}
-          <div className="buttons">
-            {currentFormStep !== 0 && (
-              <Button styleType="outlined" onClick={prevStep}>
-                <ArrowBackIcon />
+    <>
+      <Modal capitalizeTitle isShowing={isShowing} title={t("HackerProfile.createProfile")} onHide={onHide}>
+        <FormProvider {...methods}>
+          <StyledCreateProfileFormModal firstStep={currentFormStep === 0}>
+            {!isLastStep && <img className="hats-boat" src={HatsBoat} alt="Hats boat" />}
+            {createProfileFormSteps[currentFormStep].element}
+            <div className="buttons">
+              {currentFormStep !== 0 && (
+                <Button disabled={upsertProfile.isLoading} styleType="outlined" onClick={prevStep}>
+                  <ArrowBackIcon />
+                </Button>
+              )}
+              <Button
+                disabled={formState.isValidating || upsertProfile.isLoading}
+                onClick={isLastStep ? handleSubmit(handleCreateProfile) : nextStep}
+              >
+                {formState.isValidating || upsertProfile.isLoading
+                  ? `${t("loading")}...`
+                  : t(createProfileFormSteps[currentFormStep].nextButtonTextKey)}
               </Button>
-            )}
-            <Button disabled={formState.isValidating} onClick={isLastStep ? handleSubmit(handleCreateProfile) : nextStep}>
-              {formState.isValidating ? `${t("loading")}...` : t(createProfileFormSteps[currentFormStep].nextButtonTextKey)}
-            </Button>
-          </div>
-        </StyledCreateProfileFormModal>
-      </FormProvider>
-    </Modal>
+            </div>
+          </StyledCreateProfileFormModal>
+        </FormProvider>
+      </Modal>
+      {isSigningIn && <Loading fixed extraText={`${t("signingInWithEthereum")}...`} />}
+    </>
   );
 };

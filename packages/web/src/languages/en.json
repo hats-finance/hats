@@ -632,6 +632,7 @@
     "nftsBeingGeneratedPleaseWait": "NFTs are being generated. Please wait couple of minutes if you want to edit the vault.",
     "seeCompetitionLeaderboard": "See competition leaderboard",
     "leaderboard": "Leaderboard",
+    "signingInWithEthereum": "Signing in with Ethereum",
     "HackerProfile": {
       "createProfile": "Create your hacker profile",
       "createProfileCta": "Create profile",

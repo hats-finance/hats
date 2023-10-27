@@ -1,13 +1,30 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
+import * as FilesService from "../../utils/filesService.api";
+
+export type IUpsertedProfileResult = {
+  acknowledged: boolean;
+  matchedCount: number;
+  modifiedCount: number;
+  upsertedCount: number;
+  upsertedId: string;
+};
 
 /**
  * Creates or updates a profile by username
  */
-export async function upsertProfile(profile: IHackerProfile): Promise<IHackerProfile | undefined> {
+export async function upsertProfile(profile: IHackerProfile, username?: string): Promise<IUpsertedProfileResult | undefined> {
   try {
-    const response = await axiosClient.post(`${BASE_SERVICE_URL}/profile/${profile.username}`, profile);
+    // Pin avatar file in IPFS
+    if (profile.avatar && profile.avatar.startsWith("blob:")) {
+      const blob = await fetch(profile.avatar).then((r) => r.blob());
+      const file = new File([blob], `avatar_${profile.username}.png`, { type: "image/png" });
+      const fileUploaded = await FilesService.uploadFileToDB(file, true);
+      profile.avatar = `ipfs://${fileUploaded.ipfsHash}`;
+    }
+
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/profile/${username ?? ""}`, profile);
     return response.data.profile;
   } catch (error) {
     console.log(error);

@@ -1,6 +1,12 @@
 import { IHackerProfile } from "@hats-finance/shared";
-import { useQuery } from "@tanstack/react-query";
-import { getProfileByAddress, getProfileByUsername, isUsernameAvailable } from "./profilesService";
+import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  IUpsertedProfileResult,
+  getProfileByAddress,
+  getProfileByUsername,
+  isUsernameAvailable,
+  upsertProfile,
+} from "./profilesService";
 
 /**
  * Gets a profile by address
@@ -32,5 +38,19 @@ export const useUsernameAvailability = (username?: string) => {
     queryKey: ["hacker-profile-availability", username],
     queryFn: () => isUsernameAvailable(username),
     enabled: !!username,
+  });
+};
+
+/**
+ * Upserts a profile
+ */
+export const useUpsertProfile = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  unknown,
+  { profile: IHackerProfile; username?: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ profile, username }) => upsertProfile(profile, username),
   });
 };
