@@ -1,7 +1,6 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
-import { QueryClient } from "@tanstack/react-query";
 import HatsBoat from "assets/images/hats_boat.jpg";
 import { Button, Loading, Modal } from "components";
 import { queryClient } from "config/reactQuery";
