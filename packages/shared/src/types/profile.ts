@@ -4,8 +4,8 @@ export interface IHackerProfile {
   title?: string;
   avatar?: string;
   bio?: string;
-  twitter_url?: string;
-  github_url?: string;
+  twitter_username?: string;
+  github_username?: string;
   updatedAt: Date;
   createdAt: Date;
 }
