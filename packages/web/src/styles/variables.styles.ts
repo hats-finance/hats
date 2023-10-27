@@ -104,6 +104,7 @@ export const variables = css`
     --large: 36px;
     --medium-2: 32px;
     --medium: 24px;
+    --moderate-big: 22px;
     --moderate: 18px;
     --small: 16px;
     --xsmall: 14px;
