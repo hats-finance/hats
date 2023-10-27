@@ -6,7 +6,7 @@ import { parseIsDirty } from "../utils";
 import { StyledFormIconInput } from "./styles";
 
 const MAX_SIZE_ICON = 50000;
-const MAX_SIZE_IMAGE = 50000;
+const MAX_SIZE_IMAGE = 200000;
 
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -37,16 +37,16 @@ function FormIconInputComponent(
 
     fr.readAsArrayBuffer(e.target.files![0]);
     fr.onload = async function () {
-      const fileTypes = type === "icon" ? ["svg"] : ["jpg", "jpeg", "png", "gif", "svg"];
+      // const fileTypes = type === "icon" ? ["svg"] : ["jpg", "jpeg", "png", "gif", "svg"];
 
       if (fr.result && localRef.current) {
         const extension = e.target.files![0].name.split(".").pop()?.toLowerCase();
-        const isSuccess = extension && fileTypes.indexOf(extension) > -1;
+        // const isSuccess = extension;
 
-        if (!isSuccess) {
-          alert(t("invalid-image-type", { types: fileTypes.join(", ") }));
-          return;
-        }
+        // if (!isSuccess) {
+        //   alert(t("invalid-image-type", { types: fileTypes.join(", ") }));
+        //   return;
+        // }
 
         const isSvg = extension === "svg";
         const blob = isSvg ? new Blob([fr.result], { type: "image/svg+xml" }) : new Blob([fr.result]);
