@@ -51,17 +51,13 @@ export async function getProfileByAddress(address?: string): Promise<IHackerProf
 export async function isUsernameAvailable(username?: string): Promise<boolean> {
   try {
     if (!username) return false;
-    console.log(1);
 
     const dataInStorage = JSON.parse(sessionStorage.getItem(`profileUsernameAvailability-${username.toLowerCase()}`) ?? "null");
-    console.log(dataInStorage);
     if (dataInStorage !== null) return dataInStorage;
-    console.log(2);
 
     const response = await axiosClient.get(`${BASE_SERVICE_URL}/profile/availability/${username}`);
     const isAvailable = !response.data.isUsed;
     sessionStorage.setItem(`profileUsernameAvailability-${username.toLowerCase()}`, JSON.stringify(isAvailable));
-    console.log(3);
 
     return isAvailable;
   } catch (error) {
