@@ -633,6 +633,7 @@
     "seeCompetitionLeaderboard": "See competition leaderboard",
     "leaderboard": "Leaderboard",
     "signingInWithEthereum": "Signing in with Ethereum",
+    "goBack": "Go back",
     "HackerProfile": {
       "createProfile": "Create your hacker profile",
       "updateProfile": "Update your hacker profile",
@@ -662,7 +663,8 @@
       "avatarIntro": "Upload a profile image for your profile, this is going to be public. If you dont add one, we will use a auto-generated image.",
       "helloNameReview": "This is your profile, @{{username}}!",
       "loadingProfile": "Loading profile",
-      "usernameCantBeChanged": "Username can't be changed"
+      "usernameCantBeChanged": "Username can't be changed",
+      "profileNotFoundError": "Profile not found. Please go back to dApp."
     },
     "PGPTool": {
       "title": "PGP tool",

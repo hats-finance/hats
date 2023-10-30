@@ -1,7 +1,7 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
-import { useHackerProfile } from "pages/HackerProfile/hooks";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount, useEnsName } from "wagmi";
@@ -11,7 +11,7 @@ export const CreateProfileUsername = () => {
   const { address } = useAccount();
   const { data: ens } = useEnsName({ address });
 
-  const { data: createdProfile, isLoading: isLoadingProfile } = useHackerProfile();
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
 
   const { register } = useEnhancedFormContext<IHackerProfile>();
 

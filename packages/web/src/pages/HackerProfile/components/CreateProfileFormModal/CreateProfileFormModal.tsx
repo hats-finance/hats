@@ -11,7 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useHackerProfile, useUpsertProfile } from "../../hooks";
+import { useProfileByAddress, useUpsertProfile } from "../../hooks";
 import { getCreateProfileYupSchema } from "./formSchema";
 import { CreateProfileBio } from "./steps/CreateProfileBio";
 import { CreateProfileIntro } from "./steps/CreateProfileIntro";
@@ -53,7 +53,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const navigate = useNavigate();
   const { tryAuthentication, isSigningIn } = useSiweAuth();
 
-  const { data: createdProfile, isLoading: isLoadingProfile } = useHackerProfile();
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
 
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;

@@ -1,17 +1,20 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
-import { useHackerProfile } from "pages/HackerProfile/hooks";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { ipfsTransformUri } from "utils";
+import { useAccount } from "wagmi";
 
 export const CreateProfileReview = () => {
   const { t } = useTranslation();
+  const { address } = useAccount();
+
   const { control } = useEnhancedFormContext<IHackerProfile>();
 
-  const { data: createdProfile } = useHackerProfile();
+  const { data: createdProfile } = useProfileByAddress(address);
 
   const formData = useWatch({ control });
 
