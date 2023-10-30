@@ -635,7 +635,9 @@
     "signingInWithEthereum": "Signing in with Ethereum",
     "HackerProfile": {
       "createProfile": "Create your hacker profile",
+      "updateProfile": "Update your hacker profile",
       "createProfileCta": "Create profile",
+      "updateProfileCta": "Update profile",
       "soundGreatLetsGo": "Sounds great, let's go!",
       "introTitle": "Your wallet/s = Your hacker profile",
       "introContent": "On Hats you submit vulnerabilities, get payed and arbitrate OnChain.<br/><br/>Use your wallet to create your hacker profile.<br/><br/> <ul><li>List all your socials and add a short bio.</li> <li>View your stat.</li> <li>Have a deep dive into your audit competition track record and on-chain finding in the timeline view.</li></ul>",
@@ -659,7 +661,8 @@
       "avatar": "Avatar",
       "avatarIntro": "Upload a profile image for your profile, this is going to be public. If you dont add one, we will use a auto-generated image.",
       "helloNameReview": "This is your profile, @{{username}}!",
-      "loadingProfile": "Loading profile"
+      "loadingProfile": "Loading profile",
+      "usernameCantBeChanged": "Username can't be changed"
     },
     "PGPTool": {
       "title": "PGP tool",

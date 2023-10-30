@@ -2,7 +2,7 @@ import { IHackerProfile } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
 import HatsBoat from "assets/images/hats_boat.jpg";
-import { Button, Loading, Modal } from "components";
+import { Alert, Button, Loading, Modal } from "components";
 import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
@@ -11,7 +11,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useProfileByAddress, useUpsertProfile } from "../../hooks";
+import { useHackerProfile, useUpsertProfile } from "../../hooks";
 import { getCreateProfileYupSchema } from "./formSchema";
 import { CreateProfileBio } from "./steps/CreateProfileBio";
 import { CreateProfileIntro } from "./steps/CreateProfileIntro";
@@ -27,19 +27,23 @@ type ICreateProfileFormModalProps = {
 };
 
 const createProfileFormSteps = [
-  { element: <CreateProfileIntro />, fields: [], nextButtonTextKey: "HackerProfile.soundGreatLetsGo" },
-  { element: <CreateProfileUsername />, fields: ["username"], nextButtonTextKey: "continue" },
-  { element: <CreateProfileTitle />, fields: ["title"], nextButtonTextKey: "continue" },
-  { element: <CreateProfileBio />, fields: ["bio"], nextButtonTextKey: "continue" },
+  {
+    element: <CreateProfileIntro />,
+    fields: [],
+    nextButtonTextKey: { create: "HackerProfile.soundGreatLetsGo", update: "HackerProfile.updateProfileCta" },
+  },
+  { element: <CreateProfileUsername />, fields: ["username"], nextButtonTextKey: { create: "continue", update: "continue" } },
+  { element: <CreateProfileTitle />, fields: ["title"], nextButtonTextKey: { create: "continue", update: "continue" } },
+  { element: <CreateProfileBio />, fields: ["bio"], nextButtonTextKey: { create: "continue", update: "continue" } },
   {
     element: <CreateProfileSocials />,
     fields: ["twitter_username", "github_username", "avatar"],
-    nextButtonTextKey: "continue",
+    nextButtonTextKey: { create: "continue", update: "continue" },
   },
   {
     element: <CreateProfileReview />,
     fields: [],
-    nextButtonTextKey: "HackerProfile.createProfileCta",
+    nextButtonTextKey: { create: "HackerProfile.createProfileCta", update: "HackerProfile.updateProfileCta" },
   },
 ];
 
@@ -49,7 +53,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const navigate = useNavigate();
   const { tryAuthentication, isSigningIn } = useSiweAuth();
 
-  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
+  const { data: createdProfile, isLoading: isLoadingProfile } = useHackerProfile();
 
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;
@@ -76,18 +80,31 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
     setCurrentFormStep((prev) => (prev === 0 ? prev : prev - 1));
   };
 
-  const handleCreateProfile = async (formData: IHackerProfile) => {
+  const handleUpsertProfile = async (formData: IHackerProfile) => {
     if (!formState.isValid) return;
 
     try {
       const signedIn = await tryAuthentication();
       if (!signedIn) return;
 
-      const result = await upsertProfile.mutateAsync({ profile: formData });
-      if (result?.upsertedCount) {
+      const profileToUpsert = { ...formData };
+
+      if (createdProfile) {
+        profileToUpsert.addresses = createdProfile.addresses;
+        profileToUpsert.username = createdProfile.username;
+      }
+
+      const result = await upsertProfile.mutateAsync({
+        username: createdProfile ? createdProfile.username : undefined,
+        profile: profileToUpsert,
+      });
+
+      if (result?.upsertedCount || result?.modifiedCount) {
         onHide();
-        navigate(`${RoutePaths.profile}/${formData.username}`);
+        navigate(`${RoutePaths.profile}/${profileToUpsert.username}`);
         queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+        setCurrentFormStep(0);
+        reset();
       }
     } catch (error) {
       console.log(error);
@@ -96,11 +113,17 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
 
   return (
     <>
-      <Modal capitalizeTitle isShowing={isShowing} title={t("HackerProfile.createProfile")} onHide={onHide}>
+      <Modal
+        capitalizeTitle
+        isShowing={isShowing}
+        title={createdProfile ? t("HackerProfile.updateProfile") : t("HackerProfile.createProfile")}
+        onHide={onHide}
+      >
         <FormProvider {...methods}>
           <StyledCreateProfileFormModal firstStep={currentFormStep === 0}>
             {!isLastStep && <img className="hats-boat" src={HatsBoat} alt="Hats boat" />}
             {createProfileFormSteps[currentFormStep].element}
+            {!!upsertProfile.error && <Alert type="error" content={upsertProfile.error} />}
             <div className="buttons">
               {currentFormStep !== 0 && (
                 <Button disabled={upsertProfile.isLoading} styleType="outlined" onClick={prevStep}>
@@ -109,11 +132,11 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
               )}
               <Button
                 disabled={formState.isValidating || upsertProfile.isLoading}
-                onClick={isLastStep ? handleSubmit(handleCreateProfile) : nextStep}
+                onClick={isLastStep ? handleSubmit(handleUpsertProfile) : nextStep}
               >
                 {formState.isValidating || upsertProfile.isLoading
                   ? `${t("loading")}...`
-                  : t(createProfileFormSteps[currentFormStep].nextButtonTextKey)}
+                  : t(createProfileFormSteps[currentFormStep].nextButtonTextKey[createdProfile ? "update" : "create"])}
               </Button>
             </div>
           </StyledCreateProfileFormModal>
