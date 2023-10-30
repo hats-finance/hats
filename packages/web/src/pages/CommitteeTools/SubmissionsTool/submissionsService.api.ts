@@ -98,7 +98,7 @@ const extractSubmissionData = (
         beneficiary: beneficiary ?? "--",
         severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2],
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
-        content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
+        content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
@@ -144,7 +144,7 @@ const extractSubmissionData = (
         beneficiary: beneficiary ?? "--",
         severity: messageToUse.match(/(\*\*Severity:\*\* (.*)\n)/)?.[2],
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
-        content: messageToUse.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
+        content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
@@ -192,7 +192,7 @@ const extractSubmissionData = (
         beneficiary: beneficiary ?? "--",
         severity: firstLine?.slice(firstLine?.lastIndexOf("(") + 1, -1),
         title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
-        content: messageToUse.match(/(\*\*Description\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
+        content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
@@ -244,7 +244,7 @@ const extractSubmissionData = (
         beneficiary: beneficiary ?? "--",
         severity: undefined,
         title: message.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
-        content: message.match(/(\*\*Description:\*\*(.|\n)*$)/g)?.[0]?.trim() ?? "--",
+        content: message ?? "--",
         githubUsername: githubUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
