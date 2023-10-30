@@ -22,7 +22,7 @@ function checkUsername(username: string) {
   return usernameRegex.test(username);
 }
 
-export const getTestUsername = (intl) => {
+export const getTestHackerUsername = (intl) => {
   return {
     name: "is-valid-username",
     test: async (value: string | undefined, ctx: Yup.TestContext) => {
@@ -31,9 +31,11 @@ export const getTestUsername = (intl) => {
 
       if (!isValidUsername && !isEmpty) return ctx.createError({ message: intl("invalid-username") });
 
+      // If updating profile, username is not required
+      if (ctx.parent._id) return true;
+
       // Check if username is available
       const isAvailable = await isUsernameAvailable(value);
-
       if (!isAvailable) return ctx.createError({ message: intl("username-not-available") });
       return true;
     },
