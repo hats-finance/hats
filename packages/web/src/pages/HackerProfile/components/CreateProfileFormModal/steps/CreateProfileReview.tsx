@@ -1,13 +1,17 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
+import { useHackerProfile } from "pages/HackerProfile/hooks";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
+import { ipfsTransformUri } from "utils";
 
 export const CreateProfileReview = () => {
   const { t } = useTranslation();
   const { control } = useEnhancedFormContext<IHackerProfile>();
+
+  const { data: createdProfile } = useHackerProfile();
 
   const formData = useWatch({ control });
 
@@ -16,7 +20,11 @@ export const CreateProfileReview = () => {
       <div className="title">{t("HackerProfile.helloNameReview", { username: formData.username })}</div>
 
       {formData.avatar ? (
-        <img className="avatar-preview" src={formData.avatar} alt="avatar" />
+        <img
+          className="avatar-preview"
+          src={createdProfile ? ipfsTransformUri(formData.avatar, { isPinned: true }) : formData.avatar}
+          alt="avatar"
+        />
       ) : (
         <div className="mb-5">
           <Identicon string={formData.username} size={144} bg="#fff" />
