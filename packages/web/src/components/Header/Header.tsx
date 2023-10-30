@@ -5,7 +5,7 @@ import { Button, SafePeriodBar, WalletButton, WhereverWidget } from "components"
 import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
-import { useProfileByAddress } from "pages/HackerProfile/hooks";
+import { useHackerProfile } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,7 +24,7 @@ const Header = () => {
 
   const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
-  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
+  const { data: createdProfile, isLoading: isLoadingProfile } = useHackerProfile();
   const inProfileView = location.pathname.includes(`${RoutePaths.profile}/${createdProfile?.username}`);
 
   const getPageTitle = () => {

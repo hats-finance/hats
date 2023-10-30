@@ -1,4 +1,5 @@
 import { IHackerProfile } from "@hats-finance/shared";
+import { AxiosError } from "axios";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
 import * as FilesService from "../../utils/filesService.api";
@@ -28,7 +29,7 @@ export async function upsertProfile(profile: IHackerProfile, username?: string):
     return response.data.profile;
   } catch (error) {
     console.log(error);
-    return undefined;
+    throw ((error as AxiosError).response?.data as any)?.error;
   }
 }
 

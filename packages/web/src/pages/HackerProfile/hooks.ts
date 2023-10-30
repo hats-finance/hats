@@ -1,5 +1,6 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query";
+import { useAccount } from "wagmi";
 import {
   IUpsertedProfileResult,
   getProfileByAddress,
@@ -11,7 +12,9 @@ import {
 /**
  * Gets a profile by address
  */
-export const useProfileByAddress = (address?: string) => {
+export const useHackerProfile = () => {
+  const { address } = useAccount();
+
   return useQuery<IHackerProfile | undefined>({
     queryKey: ["hacker-profile-address", address],
     queryFn: () => getProfileByAddress(address),
@@ -46,7 +49,7 @@ export const useUsernameAvailability = (username?: string) => {
  */
 export const useUpsertProfile = (): UseMutationResult<
   IUpsertedProfileResult | undefined,
-  unknown,
+  string,
   { profile: IHackerProfile; username?: string },
   unknown
 > => {
