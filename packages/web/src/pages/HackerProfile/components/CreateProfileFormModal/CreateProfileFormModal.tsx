@@ -6,12 +6,12 @@ import { Button, Loading, Modal } from "components";
 import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { RoutePaths } from "navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useUpsertProfile } from "../../hooks";
+import { useProfileByAddress, useUpsertProfile } from "../../hooks";
 import { getCreateProfileYupSchema } from "./formSchema";
 import { CreateProfileBio } from "./steps/CreateProfileBio";
 import { CreateProfileIntro } from "./steps/CreateProfileIntro";
@@ -49,6 +49,8 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const navigate = useNavigate();
   const { tryAuthentication, isSigningIn } = useSiweAuth();
 
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
+
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;
 
@@ -58,7 +60,12 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
     resolver: yupResolver(getCreateProfileYupSchema(t)),
     mode: "onSubmit",
   });
-  const { trigger, handleSubmit, formState } = methods;
+  const { trigger, handleSubmit, formState, reset } = methods;
+
+  useEffect(() => {
+    if (!createdProfile) return;
+    reset(createdProfile);
+  }, [createdProfile, reset]);
 
   const nextStep = async () => {
     const isValid = await trigger(createProfileFormSteps[currentFormStep].fields as any);
@@ -112,6 +119,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
           </StyledCreateProfileFormModal>
         </FormProvider>
       </Modal>
+      {isLoadingProfile && <Loading fixed extraText={`${t("HackerProfile.loadingProfile")}...`} />}
       {isSigningIn && <Loading fixed extraText={`${t("signingInWithEthereum")}...`} />}
     </>
   );

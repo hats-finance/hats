@@ -658,7 +658,8 @@
       "github-placeholder": "GitHub username here",
       "avatar": "Avatar",
       "avatarIntro": "Upload a profile image for your profile, this is going to be public. If you dont add one, we will use a auto-generated image.",
-      "helloNameReview": "This is your profile, @{{username}}!"
+      "helloNameReview": "This is your profile, @{{username}}!",
+      "loadingProfile": "Loading profile"
     },
     "PGPTool": {
       "title": "PGP tool",
@@ -985,6 +986,7 @@
     "Header": {
       "myProfile": "My Profile",
       "createHackerProfile": "Create Hacker Profile",
+      "updateHackerProfile": "Update Profile Data",
       "MyAccount": {
         "hello": "HELLO",
         "Balance": {

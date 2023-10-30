@@ -25,6 +25,7 @@ const Header = () => {
   const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
+  const inProfileView = location.pathname.includes(`${RoutePaths.profile}/${createdProfile?.username}`);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -55,8 +56,13 @@ const Header = () => {
           {account && !isLoadingProfile && (
             <>
               {!!createdProfile ? (
-                <Button size="big" noRadius styleType="outlined" onClick={handleGoToProfile}>
-                  {t("Header.myProfile")}
+                <Button
+                  size="big"
+                  noRadius
+                  styleType="outlined"
+                  onClick={inProfileView ? () => showCreateProfile() : handleGoToProfile}
+                >
+                  {inProfileView ? t("Header.updateHackerProfile") : t("Header.myProfile")}
                 </Button>
               ) : (
                 <>
