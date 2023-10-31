@@ -1,17 +1,19 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
+import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import HatsBoat from "assets/images/hats_boat.jpg";
 import { Alert, Button, Loading, Modal } from "components";
 import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import useConfirm from "hooks/useConfirm";
 import { RoutePaths } from "navigation";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useAccount } from "wagmi";
-import { useProfileByAddress, useUpsertProfile } from "../../hooks";
+import { useDeleteProfile, useProfileByAddress, useUpsertProfile } from "../../hooks";
 import { getCreateProfileYupSchema } from "./formSchema";
 import { CreateProfileBio } from "./steps/CreateProfileBio";
 import { CreateProfileIntro } from "./steps/CreateProfileIntro";
@@ -51,6 +53,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const { t } = useTranslation();
   const { address } = useAccount();
   const navigate = useNavigate();
+  const confirm = useConfirm();
   const { tryAuthentication, isSigningIn } = useSiweAuth();
 
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
@@ -59,6 +62,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;
 
   const upsertProfile = useUpsertProfile();
+  const deleteProfile = useDeleteProfile();
 
   const methods = useForm<IHackerProfile>({
     resolver: yupResolver(getCreateProfileYupSchema(t)),
@@ -67,9 +71,9 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const { trigger, handleSubmit, formState, reset } = methods;
 
   useEffect(() => {
-    if (!createdProfile) return;
-    reset(createdProfile);
-  }, [createdProfile, reset]);
+    reset(createdProfile ?? {}, { keepDefaultValues: true });
+    setCurrentFormStep(0);
+  }, [createdProfile, address, reset]);
 
   const nextStep = async () => {
     const isValid = await trigger(createProfileFormSteps[currentFormStep].fields as any);
@@ -111,6 +115,37 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
     }
   };
 
+  const handleDeleteProfile = async () => {
+    if (!createdProfile) return;
+
+    const signedIn = await tryAuthentication();
+    if (!signedIn) return;
+
+    const wantsToDelete = await confirm({
+      title: t("HackerProfile.deleteProfile"),
+      titleIcon: <DeleteIcon className="mr-2" fontSize="large" />,
+      description: t("HackerProfile.deleteProfileDescription"),
+      cancelText: t("no"),
+      confirmText: t("delete"),
+      confirmTextInput: {
+        label: t("HackerProfile.username"),
+        placeholder: t("HackerProfile.username-placeholder"),
+        textToConfirm: createdProfile.username,
+      },
+    });
+
+    if (!wantsToDelete) return;
+
+    const wasDeleted = await deleteProfile.mutateAsync({ username: createdProfile.username });
+    if (wasDeleted) {
+      onHide();
+      navigate("/");
+      queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+      setCurrentFormStep(0);
+      reset();
+    }
+  };
+
   return (
     <>
       <Modal
@@ -120,11 +155,19 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
         onHide={onHide}
       >
         <FormProvider {...methods}>
-          <StyledCreateProfileFormModal firstStep={currentFormStep === 0}>
+          <StyledCreateProfileFormModal firstStep={currentFormStep === 0 && !createdProfile}>
             {!isLastStep && <img className="hats-boat" src={HatsBoat} alt="Hats boat" />}
             {createProfileFormSteps[currentFormStep].element}
-            {!!upsertProfile.error && <Alert type="error" content={upsertProfile.error} />}
+            <div className="alerts">
+              {!!upsertProfile.error && <Alert type="error" content={upsertProfile.error} />}
+              {!!deleteProfile.error && <Alert type="error" content={deleteProfile.error} />}
+            </div>
             <div className="buttons">
+              {currentFormStep === 0 && createdProfile && (
+                <Button textColor="error" styleType="invisible" onClick={handleDeleteProfile}>
+                  <DeleteIcon className="mr-2" /> {t("HackerProfile.deleteProfile")}
+                </Button>
+              )}
               {currentFormStep !== 0 && (
                 <Button disabled={upsertProfile.isLoading} styleType="outlined" onClick={prevStep}>
                   <ArrowBackIcon />

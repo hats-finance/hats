@@ -10,6 +10,11 @@ export const StyledCreateProfileFormModal = styled.div<{ firstStep: boolean }>(
     flex-direction: column;
     align-items: center;
 
+    .alerts {
+      margin-top: ${getSpacing(3)};
+      width: 100%;
+    }
+
     .hats-boat {
       margin: ${getSpacing(4)} 0;
       width: ${getSpacing(20)};
