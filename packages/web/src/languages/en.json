@@ -641,7 +641,7 @@
       "updateProfileCta": "Update profile",
       "soundGreatLetsGo": "Sounds great, let's go!",
       "introTitle": "Your wallet/s = Your hacker profile",
-      "introContent": "On Hats you submit vulnerabilities, get payed and arbitrate OnChain.<br/><br/>Use your wallet to create your hacker profile.<br/><br/> <ul><li>List all your socials and add a short bio.</li> <li>View your stat.</li> <li>Have a deep dive into your audit competition track record and on-chain finding in the timeline view.</li></ul>",
+      "introContent": "On Hats you submit vulnerabilities, get paid and arbitrate on-chain.<br/><br/>Use your wallet to create your hacker profile.<br/><br/> <ul><li>List all your socials and add a short bio.</li> <li>View your stat.</li> <li>Have a deep dive into your audit competition track record and on-chain findings in the timeline view.</li></ul>",
       "helloThere": "Hello there, {{address}}",
       "usernameIntro": "What a lovely name. JK you can do better.\n\n Add your username here.",
       "username": "Username",
