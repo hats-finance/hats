@@ -1,5 +1,7 @@
 import ArrowIcon from "@mui/icons-material/ArrowBackOutlined";
-import { Alert, Button, Loading } from "components";
+import GitHubIcon from "assets/icons/social/github.icon";
+import TwitterIcon from "assets/icons/social/twitter.icon";
+import { Alert, Button, HackerProfileImage, Loading } from "components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProfileByUsername } from "../hooks";
@@ -25,7 +27,24 @@ export const HackerProfilePage = () => {
   }
 
   return (
-    <StyledHackerProfilePage>
+    <StyledHackerProfilePage className="content-wrapper">
+      {profileFound && (
+        <>
+          <div className="profile-card">
+            <HackerProfileImage noMargin hackerProfile={profileFound} size="large" />
+            <div className="description">
+              <h2>{profileFound.username}</h2>
+              {profileFound.title && <p className="hacker-title">{profileFound.title}</p>}
+            </div>
+
+            <div className="socials">
+              {profileFound.twitter_username && <TwitterIcon />}
+              {profileFound.github_username && <GitHubIcon />}
+            </div>
+          </div>
+        </>
+      )}
+
       {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />}
     </StyledHackerProfilePage>
   );
