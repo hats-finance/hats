@@ -6,9 +6,10 @@ import { StyledHackerProfileImage } from "./styles";
 export type IHackerProfileImageProps = {
   hackerProfile?: IHackerProfile;
   size?: "small" | "medium" | "large";
+  noMargin?: boolean;
 };
 
-export const HackerProfileImage = ({ hackerProfile, size = "medium" }: IHackerProfileImageProps) => {
+export const HackerProfileImage = ({ hackerProfile, size = "medium", noMargin = false }: IHackerProfileImageProps) => {
   const getProfileAvatar = () => {
     if (!hackerProfile) return null;
 
@@ -37,5 +38,9 @@ export const HackerProfileImage = ({ hackerProfile, size = "medium" }: IHackerPr
     );
   };
 
-  return <StyledHackerProfileImage size={size}>{getProfileAvatar()}</StyledHackerProfileImage>;
+  return (
+    <StyledHackerProfileImage size={size} noMargin={noMargin}>
+      {getProfileAvatar()}
+    </StyledHackerProfileImage>
+  );
 };

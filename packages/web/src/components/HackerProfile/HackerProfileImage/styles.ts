@@ -15,19 +15,21 @@ const getSize = (size: IHackerProfileImageProps["size"]) => {
   }
 };
 
-export const StyledHackerProfileImage = styled.div<{ size: IHackerProfileImageProps["size"] }>(
-  ({ size }) => css`
+export const StyledHackerProfileImage = styled.div<{ size: IHackerProfileImageProps["size"]; noMargin: boolean }>(
+  ({ size, noMargin }) => css`
     width: ${getSpacing(getSize(size))};
     height: ${getSpacing(getSize(size))};
-    margin-bottom: ${getSpacing(4)};
+    margin-bottom: ${noMargin ? 0 : getSpacing(4)};
 
     .avatar-preview {
       width: 100%;
       height: 100%;
       object-fit: cover;
+      border-radius: 100px;
     }
 
     canvas {
+      border-radius: 100px;
       width: ${getSpacing(getSize(size))} !important;
       height: ${getSpacing(getSize(size))} !important;
     }
