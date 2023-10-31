@@ -150,17 +150,17 @@ export const VaultCard = ({
 
   const getContinuousAuditPill = () => {
     const repo = vault.description?.scope?.reposInformation.find((repo) => repo.isMain);
-    const prevHash = repo?.prevAuditedCommitHash?.slice(0, 18);
-    const currentHash = repo?.commitHash?.slice(0, 18);
+    const prevHash = repo?.prevAuditedCommitHash?.slice(0, 7);
+    const currentHash = repo?.commitHash?.slice(0, 7);
 
     if (!prevHash || !currentHash) return null;
 
     return (
       <WithTooltip text={t("continuousAuditCompetitionExplanation")}>
-        <div className="continuous-comp-hashes">
-          <Pill capitalize={false} transparent text={`${prevHash}...`} />
+        <div className="continuous-comp-hashes mb-4">
+          <Pill capitalize={false} transparent text={`${prevHash}`} />
           <ArrowIcon />
-          <Pill capitalize={false} transparent text={`${currentHash}...`} />
+          <Pill capitalize={false} transparent text={`${currentHash}`} />
         </div>
       </WithTooltip>
     );
