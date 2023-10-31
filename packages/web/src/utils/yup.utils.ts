@@ -5,6 +5,7 @@ import { isUsernameAvailable } from "pages/HackerProfile/profilesService";
 import { appChains } from "settings";
 import * as Yup from "yup";
 import { isEmailAddress } from "./emails.utils";
+import { isGithubUsernameValid } from "./github.utils";
 import { getTokenInfo } from "./tokens.utils";
 
 export function checkUrl(url: string) {
@@ -37,6 +38,22 @@ export const getTestHackerUsername = (intl) => {
       // Check if username is available
       const isAvailable = await isUsernameAvailable(value);
       if (!isAvailable) return ctx.createError({ message: intl("username-not-available") });
+      return true;
+    },
+  };
+};
+
+export const getTestValidGithubUsername = (intl) => {
+  return {
+    name: "is-valid-github",
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isEmpty = value === "" || value === undefined;
+
+      if (isEmpty) return true;
+
+      // Check if github username valid
+      const isValid = await isGithubUsernameValid(value);
+      if (!isValid) return ctx.createError({ message: intl("github-username-not-valid") });
       return true;
     },
   };
