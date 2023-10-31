@@ -20,11 +20,6 @@ export const StyledCreateProfileFormModal = styled.div<{ firstStep: boolean }>(
       width: ${getSpacing(20)};
     }
 
-    .avatar-preview {
-      margin: ${getSpacing(4)} 0;
-      width: ${getSpacing(18)};
-    }
-
     .create-profile-step {
       width: 100%;
       font-size: var(--small);
