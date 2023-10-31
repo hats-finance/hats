@@ -36,7 +36,7 @@ export const useMultiChainVaultsV2 = () => {
   });
 
   useEffect(() => {
-    // if (subgraphQueries.some((a) => a.isLoading)) return;
+    if (subgraphQueries.some((a) => a.isLoading)) return;
 
     const vaultsData = subgraphQueries.reduce(
       (acc, query) => {
