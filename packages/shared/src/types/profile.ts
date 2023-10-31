@@ -1,4 +1,5 @@
 export interface IHackerProfile {
+  _id?: string;
   username: string;
   addresses: string[];
   title?: string;
