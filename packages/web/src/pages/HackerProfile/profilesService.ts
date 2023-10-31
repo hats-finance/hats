@@ -34,6 +34,19 @@ export async function upsertProfile(profile: IHackerProfile, username?: string):
 }
 
 /**
+ * Deletes a profile by username
+ */
+export async function deleteProfile(username: string): Promise<boolean> {
+  try {
+    const response = await axiosClient.delete(`${BASE_SERVICE_URL}/profile/${username}`);
+    return response.status === 200;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
+  }
+}
+
+/**
  * Gets a profile by username
  */
 export async function getProfileByUsername(username?: string): Promise<IHackerProfile | undefined> {

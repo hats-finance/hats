@@ -2,6 +2,7 @@ import { IHackerProfile } from "@hats-finance/shared";
 import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query";
 import {
   IUpsertedProfileResult,
+  deleteProfile,
   getProfileByAddress,
   getProfileByUsername,
   isUsernameAvailable,
@@ -52,5 +53,14 @@ export const useUpsertProfile = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: ({ profile, username }) => upsertProfile(profile, username),
+  });
+};
+
+/**
+ * Deletes a profile
+ */
+export const useDeleteProfile = (): UseMutationResult<boolean, string, { username: string }, unknown> => {
+  return useMutation({
+    mutationFn: ({ username }) => deleteProfile(username),
   });
 };
