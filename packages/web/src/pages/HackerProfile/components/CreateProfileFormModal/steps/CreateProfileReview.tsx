@@ -18,21 +18,37 @@ export const CreateProfileReview = () => {
 
   const formData = useWatch({ control });
 
-  return (
-    <div className="create-profile-step">
-      <div className="title">{t("HackerProfile.helloNameReview", { username: formData.username })}</div>
-
-      {formData.avatar ? (
+  const getProfileAvatar = () => {
+    if (formData.avatar)
+      return (
         <img
           className="avatar-preview"
           src={createdProfile ? ipfsTransformUri(formData.avatar, { isPinned: true }) : formData.avatar}
           alt="avatar"
         />
-      ) : (
-        <div className="mb-5">
-          <Identicon string={formData.username} size={144} bg="#fff" />
-        </div>
-      )}
+      );
+
+    if (formData.github_username)
+      return (
+        <img
+          className="avatar-preview"
+          src={`https://github.com/${formData.github_username}.png`}
+          alt="avatar directly from github"
+        />
+      );
+
+    return (
+      <div className="mb-5">
+        <Identicon string={formData.username} size={144} bg="#fff" />
+      </div>
+    );
+  };
+
+  return (
+    <div className="create-profile-step">
+      <div className="title">{t("HackerProfile.helloNameReview", { username: formData.username })}</div>
+
+      {getProfileAvatar()}
 
       <FormInput
         value={formData.username}
