@@ -17,13 +17,14 @@ export const CommitteeInfoSection = ({ vault, noDeployed = false }: CommitteeInf
   if (!vault.description) return null;
 
   const committee = vault.description.committee;
+  const committeeAddress = vault.committee;
 
   return (
     <StyledCommitteeInfoSection className="subsection-container">
       <div className="committee-address">
         <span className="bold">{t("committeeMultisigAddress")}:</span>
-        <span>{shortenIfAddress(committee["multisig-address"], { startLength: 6, endLength: 6 })}</span>
-        <CopyToClipboard valueToCopy={committee["multisig-address"]} />
+        <span>{shortenIfAddress(committeeAddress, { startLength: 6, endLength: 6 })}</span>
+        <CopyToClipboard valueToCopy={committeeAddress} />
       </div>
 
       <div className="members">
