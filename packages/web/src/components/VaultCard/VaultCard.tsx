@@ -134,9 +134,10 @@ export const VaultCard = ({
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
     if (endTime.diff(moment(), "hours") <= 24) {
+      const isFinished = endTime.diff(moment(), "hours") < 0;
       return (
         <div className="mb-4">
-          <Pill transparent dotColor="yellow" text={`${t("ending")} ${endTime.fromNow()}`} />
+          <Pill transparent dotColor="yellow" text={`${isFinished ? t("finished") : t("ending")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
