@@ -1,3 +1,4 @@
+import { getGnosisSafeInfo } from "@hats-finance/shared";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
@@ -7,11 +8,12 @@ import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { StyledHeader } from "./styles";
 
 const Header = () => {
@@ -21,11 +23,23 @@ const Header = () => {
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { address: account } = useAccount();
+  const { chain } = useNetwork();
 
+  const [isSafeAddress, setIsSafeAddress] = useState<boolean>();
   const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
   const inProfileView = location.pathname.includes(`${RoutePaths.profile}/${createdProfile?.username}`);
+
+  useEffect(() => {
+    // Check if address is Safe multisig
+    if (!account || !chain) return;
+    const checkIsSafeAddress = async () => {
+      const { isSafeAddress } = await getGnosisSafeInfo(account, chain.id);
+      setIsSafeAddress(isSafeAddress);
+    };
+    checkIsSafeAddress();
+  }, [account, chain]);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -53,7 +67,7 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
-          {account && !isLoadingProfile && (
+          {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
             <>
               {!!createdProfile ? (
                 <Button

@@ -56,7 +56,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const confirm = useConfirm();
   const { tryAuthentication, isSigningIn } = useSiweAuth();
 
-  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
+  const { data: createdProfile, isInitialLoading: isLoadingProfile } = useProfileByAddress(address);
 
   const [currentFormStep, setCurrentFormStep] = useState<number>(0);
   const isLastStep = currentFormStep === createProfileFormSteps.length - 1;
