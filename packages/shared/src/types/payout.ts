@@ -17,6 +17,7 @@ export interface IPayoutGraph {
   hackerHatReward: string;
   committeeReward: string;
   // Computed
+  vaultData?: IVault;
   payoutData?: IPayoutData;
   isActive?: boolean; // Is active claim
   isApproved?: boolean; // Is approved claim
