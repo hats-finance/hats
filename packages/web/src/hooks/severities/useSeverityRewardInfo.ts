@@ -34,7 +34,7 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
         (showIntendedAmounts
-          ? vault.amountsInfo.competitionIntendedAmount?.deposited.tokens ?? 0
+          ? vault.amountsInfo.competitionIntendedAmount?.maxReward.tokens ?? 0
           : vault.amountsInfo.maxRewardAmount.tokens) *
         (rewardPercentage / 100) *
         vault.amountsInfo?.tokenPriceUsd;
@@ -59,7 +59,7 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     } else if (vault.amountsInfo?.tokenPriceUsd) {
       rewardPrice =
         (showIntendedAmounts
-          ? vault.amountsInfo.competitionIntendedAmount?.deposited.tokens ?? 0
+          ? vault.amountsInfo.competitionIntendedAmount?.maxReward.tokens ?? 0
           : vault.amountsInfo.maxRewardAmount.tokens) *
         (rewardPercentage / 100) *
         vault.amountsInfo?.tokenPriceUsd;

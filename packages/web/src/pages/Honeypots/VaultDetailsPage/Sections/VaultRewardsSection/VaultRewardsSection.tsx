@@ -29,7 +29,7 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
               <h4 className="title">{showIntended ? t("intendedDeposits") : t("totalDeposits")}</h4>
               {showIntended ? (
                 <WithTooltip text={t("intendedValueExplanation")}>
-                  <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)}</h4>
+                  <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
                 </WithTooltip>
               ) : (
                 <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
