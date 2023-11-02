@@ -36,7 +36,7 @@ export const useMultiChainSubmissions = () => {
   });
 
   useEffect(() => {
-    // if (subgraphQueries.some((a) => a.isLoading)) return;
+    if (subgraphQueries.some((a) => a.isLoading)) return;
 
     const submissionsData = subgraphQueries.reduce(
       (acc, query) => {
