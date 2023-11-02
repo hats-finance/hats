@@ -27,15 +27,23 @@ export const parseVaults = (vaults: IVault[], chainId: number) => {
   const hatsVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x79a618f675857b45934ca1c413fd5f409cf89735");
   if (hatsVault) hatsVault.governanceHatRewardSplit = "0";
 
-  return vaults.map((vault) => ({
+  return newVaults.map((vault) => ({
     ...vault,
     chainId,
   }));
 };
 
 export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
+  // Override the claim description hash
+  const newPayouts = [...payouts];
+  // Lodestar audit competition payout
+  const lodestarPayout = newPayouts.find(
+    (payout) => payout.id === "0x914f1db490c344e9dd0d79dd78474f8438be3bd699399affceeb2fd92a16b2dd"
+  );
+  if (lodestarPayout) lodestarPayout.payoutDataHash = "QmY13wMHUYeYrjMzUdC1d4AE3VoL6xqZajevhG7JPeZDfh";
+
   // TODO: after TGE add functionality to include `hackerHatReward` into the sum of `totalPaidOut`
-  return payouts.map((payout) => ({
+  return newPayouts.map((payout) => ({
     ...payout,
     chainId,
     isActive: !payout.dismissedAt && !payout.approvedAt,
