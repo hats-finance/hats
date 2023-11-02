@@ -29,10 +29,22 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
               <h4 className="title">{showIntended ? t("intendedDeposits") : t("totalDeposits")}</h4>
               {showIntended ? (
                 <WithTooltip text={t("intendedValueExplanation")}>
-                  <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
+                  <div className="values-container">
+                    <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
+                    <p className="value-tokens">
+                      {`(${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0)} ${
+                        vault.stakingTokenSymbol
+                      })`}
+                    </p>
+                  </div>
                 </WithTooltip>
               ) : (
-                <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
+                <div className="values-container">
+                  <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
+                  <p className="value-tokens">
+                    {`(${millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} ${vault.stakingTokenSymbol})`}
+                  </p>
+                </div>
               )}
             </div>
           )}
@@ -44,10 +56,22 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
             <h4 className="title">{showIntended ? t("intendedRewards") : t("maxRewards")}</h4>
             {showIntended ? (
               <WithTooltip text={t("intendedValueExplanation")}>
-                <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
+                <div className="values-container">
+                  <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
+                  <p className="value-tokens">
+                    {`(${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0)} ${
+                      vault.stakingTokenSymbol
+                    })`}
+                  </p>
+                </div>
               </WithTooltip>
             ) : (
-              <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
+              <div className="values-container">
+                <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
+                <p className="value-tokens">
+                  {`(${millify(vault.amountsInfo?.maxRewardAmount?.tokens ?? 0)} ${vault.stakingTokenSymbol})`}
+                </p>
+              </div>
             )}
           </div>
         </div>

@@ -15,8 +15,9 @@ interface VaultSeverityRewardCardProps {
 
 export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft = false }: VaultSeverityRewardCardProps) {
   const { t } = useTranslation();
-  const { rewardPercentage, rewardPrice, rewardCap, rewardColor } = useSeverityRewardInfo(vault, severityIndex);
+  const { rewardPercentage, rewardPrice, rewardTokens, rewardCap, rewardColor } = useSeverityRewardInfo(vault, severityIndex);
 
+  const tokenSymbol = vault.stakingTokenSymbol;
   const severityName = severity?.name.toLowerCase().replace("severity", "") ?? "";
   const showCap = vault.version === "v2" && vault.description?.severities.some((sev) => !!sev.capAmount);
 
@@ -30,7 +31,10 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
           <span>{`${rewardPercentage.toFixed(2)}%`}</span>
           <span className="tiny">&nbsp;{t("ofRewards")}&nbsp;</span>
         </div>
-        <span className="price">~{`$${formatNumber(rewardPrice)}`}</span>
+        <span className="price">
+          ~{`$${formatNumber(rewardPrice)}`}
+          <span className="tiny ml-1">({`${formatNumber(rewardTokens)} ${tokenSymbol}`})</span>
+        </span>
       </div>
       {showCap && (
         <>
@@ -41,7 +45,12 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
                   <span className="tiny">{t("maxRewardCap")}</span>
                   <InfoIcon fontSize="small" />
                 </div>
-                <span className="price">~{`$${formatNumber(rewardCap)}`}</span>
+                <span className="price">
+                  ~{`$${formatNumber(rewardCap)}`}
+                  <span className="tiny ml-1">
+                    ({`${formatNumber((severity as IVulnerabilitySeverityV2).capAmount)} ${tokenSymbol}`})
+                  </span>
+                </span>
               </div>
             </WithTooltip>
           ) : (

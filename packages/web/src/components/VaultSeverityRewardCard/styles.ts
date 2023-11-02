@@ -66,6 +66,11 @@ export const StyledVaultSeverityRewardCard = styled.div<{ color: string; columns
         font-size: var(--small);
         color: ${color};
         font-weight: 700;
+
+        span.smaller {
+          margin-left: ${getSpacing(0.5)};
+          font-size: var(--xxsmall);
+        }
       }
     }
   `
