@@ -18,6 +18,15 @@ export const parseUserNfts = (userNfts: IUserNft[], chainId: number) => {
 };
 
 export const parseVaults = (vaults: IVault[], chainId: number) => {
+  // Override the default governance fee (we already changed it on-chain, but takes time to show up)
+  const newVaults = [...vaults];
+  // Smooth by Dappnode
+  const smoothVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x64bc275b37e62eec81a00ecaecd2b9567058f990");
+  if (smoothVault) smoothVault.governanceHatRewardSplit = "2000";
+  // Hats Arbitrator Audit Competition
+  const hatsVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x79a618f675857b45934ca1c413fd5f409cf89735");
+  if (hatsVault) hatsVault.governanceHatRewardSplit = "0";
+
   return vaults.map((vault) => ({
     ...vault,
     chainId,
