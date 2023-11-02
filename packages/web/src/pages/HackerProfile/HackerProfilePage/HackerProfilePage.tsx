@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProfileByUsername } from "../hooks";
 import { StyledHackerProfilePage } from "./styles";
+import { useAddressesStats } from "./useAddressesStats";
 
 export const HackerProfilePage = () => {
   const { t } = useTranslation();
@@ -14,6 +15,7 @@ export const HackerProfilePage = () => {
   const navigate = useNavigate();
 
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
+  const data = useAddressesStats(profileFound?.addresses ?? []);
 
   // If profile is not found
   if (profileFound === null) {
