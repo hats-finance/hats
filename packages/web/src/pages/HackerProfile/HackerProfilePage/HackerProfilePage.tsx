@@ -2,6 +2,7 @@ import ArrowIcon from "@mui/icons-material/ArrowBackOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
 import { Alert, Button, HackerProfileImage, Loading } from "components";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { useProfileByUsername } from "../hooks";
@@ -38,8 +39,16 @@ export const HackerProfilePage = () => {
             </div>
 
             <div className="socials">
-              {profileFound.twitter_username && <TwitterIcon />}
-              {profileFound.github_username && <GitHubIcon />}
+              {profileFound.twitter_username && (
+                <a href={`https://twitter.com/${profileFound.twitter_username}`} {...defaultAnchorProps}>
+                  <TwitterIcon />
+                </a>
+              )}
+              {profileFound.github_username && (
+                <a href={`https://github.com/${profileFound.github_username}`} {...defaultAnchorProps}>
+                  <GitHubIcon />
+                </a>
+              )}
             </div>
           </div>
         </>
