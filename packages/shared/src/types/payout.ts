@@ -61,7 +61,7 @@ export interface ISinglePayoutData extends IPayoutDataBase {
   severityBountyIndex: string; // Severity index (for V1 vaults)
   nftUrl: string;
   submissionData?: { id: string; subId: string; idx: number };
-  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; //Omit: workaround to avoid circular dependency;
+  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; // Omit: workaround to avoid circular dependency;
 }
 
 // Only for v2 vaults
@@ -78,7 +78,7 @@ export interface ISplitPayoutBeneficiary {
   percentageOfPayout: string; // Number between 0 and 100
   nftUrl: string;
   submissionData?: { id: string; subId: string; idx: number };
-  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; //Omit: workaround to avoid circular dependency;;
+  decryptedSubmission?: Omit<ISubmittedSubmission, "linkedVault">; // Omit: workaround to avoid circular dependency;
 }
 
 export interface IPayoutSignature {
