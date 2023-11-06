@@ -14,7 +14,7 @@ export const ScopeDetailsForm = () => {
   const { t } = useTranslation();
   const confirm = useConfirm();
 
-  const { allFormDisabled, isAdvancedMode } = useContext(VaultEditorFormContext);
+  const { allFormDisabled } = useContext(VaultEditorFormContext);
 
   const { control, register, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
 
@@ -76,7 +76,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Project Outline */}
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <div className="helper-text mb-3">{t("vaultEditorScopeExplanation")}</div>
           <Controller
@@ -97,7 +97,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Project Coding languages */}
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <p className="mb-3 bold">{t("VaultEditor.selectCodeLanguages")}</p>
           <div className="code-langs mb-3">
@@ -132,7 +132,7 @@ export const ScopeDetailsForm = () => {
         </>
       )}
 
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <p className="mb-3 mt-5 bold">{t("VaultEditor.linkToProtocolDocs")}</p>
           <FormInput
@@ -157,7 +157,7 @@ export const ScopeDetailsForm = () => {
       ) : null}
 
       {/* Out of scope */}
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <p className="section-title mt-5">
             {t("VaultEditor.outOfScope")}
@@ -186,7 +186,7 @@ export const ScopeDetailsForm = () => {
       )}
 
       {/* Steps to run project */}
-      {isAdvancedMode && !isPrivateAudit && (
+      {!isPrivateAudit && (
         <>
           <p className="section-title mt-5">
             {t("VaultEditor.stepsToRunProject")}
