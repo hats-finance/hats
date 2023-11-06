@@ -64,7 +64,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   const reposInformation = useMemo(() => {
     if (!vault.description) return [];
 
-    if (vault.description["project-metadata"].type !== "audit") {
+    if (vault.description["project-metadata"].type !== "audit" || vault.description["project-metadata"].isPrivateAudit) {
       return vault.description.scope?.reposInformation ?? [];
     }
 
