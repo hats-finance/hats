@@ -13,7 +13,9 @@ export type IContractsCoveredData = {
  * Gets contracts information from a list of repos
  * @param repos - the list of IVaultRepoInformation
  */
-export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]): Promise<IContractsCoveredData[]> {
+export async function getContractsInfoFromRepos(
+  repos: IVaultRepoInformation[]
+): Promise<{ contracts: IContractsCoveredData[]; totalLines: number }> {
   const promises: Promise<AxiosResponse<any, any>>[] = [];
 
   const dataInStorage = JSON.parse(
@@ -31,7 +33,10 @@ export async function getContractsInfoFromRepos(repos: IVaultRepoInformation[]):
   const data = await Promise.all(promises.map((p) => p.catch((e) => e)));
   const validData = data.filter((d) => !(d instanceof Error));
   const dataFlat = validData.flatMap((d) => d.data.files);
+  const totalLines = validData.reduce((acc, d) => acc + d.data.totalLines, 0);
 
-  sessionStorage.setItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`, JSON.stringify(dataFlat));
-  return dataFlat as IContractsCoveredData[];
+  const repoData = { contracts: dataFlat as IContractsCoveredData[], totalLines };
+  sessionStorage.setItem(`repoContracts-${repos.map((repo) => repo.commitHash).join("-")}`, JSON.stringify(repoData));
+
+  return repoData;
 }
