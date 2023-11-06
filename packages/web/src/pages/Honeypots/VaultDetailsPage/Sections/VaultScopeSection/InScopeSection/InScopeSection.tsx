@@ -13,16 +13,14 @@ import OpenIcon from "@mui/icons-material/LaunchOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
-import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, CopyToClipboard, Loading, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import useConfirm from "hooks/useConfirm";
 import { useVaultRepoName } from "pages/Honeypots/VaultDetailsPage/hooks";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { getContractsInfoFromRepos } from "utils/contractsCovered.utils";
 import { checkUrl } from "utils/yup.utils";
 import { StyledContractsList, StyledInScopeSection } from "./styles";
 
@@ -36,34 +34,33 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
   const { data: repoName } = useVaultRepoName(vault);
 
-  const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">();
-  const [totalLOC, setTotalLOC] = useState<number>();
+  // const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">();
+  // const [totalLOC, setTotalLOC] = useState<number>();
 
-  useEffect(() => {
-    const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
-    if (!contractsCovered || contractsCovered.length > 0) return;
+  // useEffect(() => {
+  // const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
+  // if (!contractsCovered || contractsCovered.length > 0) return;
+  // const getRepoContractsList = async () => {
+  //   if (repoContractsList !== undefined) return;
 
-    const getRepoContractsList = async () => {
-      if (repoContractsList !== undefined) return;
-
-      setRepoContractsList("loading");
-      const { contracts: contractsList, totalLines } = await getContractsInfoFromRepos(
-        vault.description?.scope?.reposInformation ?? []
-      );
-      setTotalLOC(totalLines);
-      setRepoContractsList(
-        contractsList.map((contract) => ({
-          name: "",
-          link: "",
-          address: contract.path,
-          linesOfCode: contract.lines,
-          severities: [],
-          deploymentInfo: [],
-        }))
-      );
-    };
-    getRepoContractsList();
-  }, [vault.description, repoContractsList]);
+  //   setRepoContractsList("loading");
+  //   const { contracts: contractsList, totalLines } = await getContractsInfoFromRepos(
+  //     vault.description?.scope?.reposInformation ?? []
+  //   );
+  //   setTotalLOC(totalLines);
+  //   setRepoContractsList(
+  //     contractsList.map((contract) => ({
+  //       name: "",
+  //       link: "",
+  //       address: contract.path,
+  //       linesOfCode: contract.lines,
+  //       severities: [],
+  //       deploymentInfo: [],
+  //     }))
+  //   );
+  // };
+  // getRepoContractsList();
+  // }, [vault.description, repoContractsList]);
 
   const reposInformation = useMemo(() => {
     if (!vault.description) return [];
@@ -299,16 +296,16 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                   </div>
                 ))}
               </div>
-              {(contractsCovered!.length > 0 || (repoContractsList && repoContractsList.length > 0)) && (
+              {/* {(contractsCovered!.length > 0 || (repoContractsList && repoContractsList.length > 0)) && (
                 <div className="separator" />
-              )}
+              )} */}
             </>
           )}
         </>
       )}
 
       {/* Contracts on repo */}
-      {repoContractsList !== "loading" ? (
+      {/* {repoContractsList !== "loading" ? (
         repoContractsList &&
         repoContractsList.length > 0 && (
           <>
@@ -331,7 +328,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
             </Alert>
           )}
         </>
-      )}
+      )} */}
 
       {/* Contracts covered */}
       {contractsCovered!.length > 0 && (
