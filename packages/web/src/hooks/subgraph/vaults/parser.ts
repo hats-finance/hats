@@ -18,6 +18,12 @@ export const parseUserNfts = (userNfts: IUserNft[], chainId: number) => {
 };
 
 export const parseVaults = (vaults: IVault[], chainId: number) => {
+  // Override the default governance fee (we already changed it on-chain, but takes time to show up)
+  const newVaults = [...vaults];
+  // Ether.fi
+  const etherfiVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x36c3b77853dec9c4a237a692623293223d4b9bc4");
+  if (etherfiVault) etherfiVault.governanceHatRewardSplit = "1000";
+
   return vaults.map((vault) => ({
     ...vault,
     chainId,
