@@ -37,6 +37,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
   const { data: repoName } = useVaultRepoName(vault);
 
   const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">();
+  const [totalLOC, setTotalLOC] = useState<number>();
 
   useEffect(() => {
     const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
@@ -46,7 +47,10 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       if (repoContractsList !== undefined) return;
 
       setRepoContractsList("loading");
-      const contractsList = await getContractsInfoFromRepos(vault.description?.scope?.reposInformation ?? []);
+      const { contracts: contractsList, totalLines } = await getContractsInfoFromRepos(
+        vault.description?.scope?.reposInformation ?? []
+      );
+      setTotalLOC(totalLines);
       setRepoContractsList(
         contractsList.map((contract) => ({
           name: "",
@@ -310,7 +314,9 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           <>
             <h4 className="section-subtitle">
               <ContractsTwoIcon className="icon" />
-              <span>{t("contractsOnRepo")}</span>
+              <span>
+                {t("contractsOnRepo")} {totalLOC && `(~${totalLOC} SLOC)`}
+              </span>
             </h4>
 
             {getContractsCoveredList(repoContractsList)}
@@ -318,9 +324,13 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           </>
         )
       ) : (
-        <Alert type="info" className="mb-4">
-          {t("loadingContractsOnRepo")}
-        </Alert>
+        <>
+          {repoContractsList === "loading" && (
+            <Alert type="info" className="mb-4">
+              {t("loadingContractsOnRepo")}
+            </Alert>
+          )}
+        </>
       )}
 
       {/* Contracts covered */}
