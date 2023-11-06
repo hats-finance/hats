@@ -40,7 +40,7 @@ export const FormMDEditorComponent = (
         previewOptions={{ allowedElements: allowedElementsMarkdown }}
         onChange={(value) => (disabled ? undefined : onChange(value ?? ""))}
         minHeight={200}
-        height={400}
+        height={450}
         preview={initialState}
       />
       {error && <span className="error">{error.message}</span>}
