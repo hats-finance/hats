@@ -13,16 +13,14 @@ import OpenIcon from "@mui/icons-material/LaunchOutlined";
 import OverviewIcon from "@mui/icons-material/SelfImprovementOutlined";
 import TerminalIcon from "@mui/icons-material/Terminal";
 import ContractsIcon from "@mui/icons-material/ViewInAr";
-import ContractsTwoIcon from "@mui/icons-material/ViewWeekOutlined";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, CopyToClipboard, Loading, Pill, WithTooltip } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import useConfirm from "hooks/useConfirm";
 import { useVaultRepoName } from "pages/Honeypots/VaultDetailsPage/hooks";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { getContractsInfoFromRepos } from "utils/contractsCovered.utils";
 import { checkUrl } from "utils/yup.utils";
 import { StyledContractsList, StyledInScopeSection } from "./styles";
 
@@ -36,30 +34,55 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
 
   const { data: repoName } = useVaultRepoName(vault);
 
-  const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">([]);
+  // const [repoContractsList, setRepoContractsList] = useState<IEditedContractCovered[] | "loading">();
+  // const [totalLOC, setTotalLOC] = useState<number>();
 
-  useEffect(() => {
-    const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
-    if (!contractsCovered || contractsCovered.length > 0) return;
+  // useEffect(() => {
+  // const contractsCovered = vault.description && severitiesToContractsCoveredForm(vault.description?.severities);
+  // if (!contractsCovered || contractsCovered.length > 0) return;
+  // const getRepoContractsList = async () => {
+  //   if (repoContractsList !== undefined) return;
 
-    const getRepoContractsList = async () => {
-      if (repoContractsList.length > 0) return;
+  //   setRepoContractsList("loading");
+  //   const { contracts: contractsList, totalLines } = await getContractsInfoFromRepos(
+  //     vault.description?.scope?.reposInformation ?? []
+  //   );
+  //   setTotalLOC(totalLines);
+  //   setRepoContractsList(
+  //     contractsList.map((contract) => ({
+  //       name: "",
+  //       link: "",
+  //       address: contract.path,
+  //       linesOfCode: contract.lines,
+  //       severities: [],
+  //       deploymentInfo: [],
+  //     }))
+  //   );
+  // };
+  // getRepoContractsList();
+  // }, [vault.description, repoContractsList]);
 
-      setRepoContractsList("loading");
-      const contractsList = await getContractsInfoFromRepos(vault.description?.scope?.reposInformation ?? []);
-      setRepoContractsList(
-        contractsList.map((contract) => ({
-          name: "",
-          link: "",
-          address: contract.path,
-          linesOfCode: contract.lines,
-          severities: [],
-          deploymentInfo: [],
-        }))
-      );
-    };
-    getRepoContractsList();
-  }, [vault.description, repoContractsList]);
+  const reposInformation = useMemo(() => {
+    if (!vault.description) return [];
+
+    if (vault.description["project-metadata"].type !== "audit" || vault.description["project-metadata"].isPrivateAudit) {
+      return vault.description.scope?.reposInformation ?? [];
+    }
+
+    const vaultName = vault.description["project-metadata"].name.replace(/[^\w\s]| /gi, "-");
+    const forkedRepoName = `${vaultName}-${vault.id}`;
+    const forkedRepoUrl = `https://github.com/hats-finance/${forkedRepoName}`;
+
+    const reposInformation: IVaultRepoInformation[] = [
+      {
+        isMain: false,
+        url: forkedRepoUrl,
+        commitHash: vault.description.scope?.reposInformation.find((repo) => repo.isMain)?.commitHash,
+      },
+      ...(vault.description.scope?.reposInformation ?? []),
+    ];
+    return reposInformation;
+  }, [vault]);
 
   if (!vault.description) return <Loading fixed extraText={`${t("loading")}...`} />;
 
@@ -212,8 +235,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               ))}
             </div>
           </div>
-          {(vault.description.scope?.reposInformation.length > 0 ||
-            (contractsCovered!.length > 0 && vault.description.scope?.reposInformation)) && <div className="separator" />}
+          {(reposInformation.length > 0 || (contractsCovered!.length > 0 && reposInformation)) && <div className="separator" />}
         </>
       )}
 
@@ -237,7 +259,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
       ) : (
         <>
           {/* Repos information */}
-          {vault.description.scope?.reposInformation && vault.description.scope?.reposInformation.length > 0 && (
+          {reposInformation && reposInformation.length > 0 && (
             <>
               <h4 className="section-subtitle">
                 <TerminalIcon className="icon" />
@@ -245,7 +267,7 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
               </h4>
 
               <div className="section-content repos">
-                {vault.description.scope?.reposInformation.map((repo, idx) => (
+                {reposInformation.map((repo, idx) => (
                   <div className="repo" key={idx}>
                     <div className="info">
                       <p className="repo-name">{repo.url}</p>
@@ -274,19 +296,24 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
                   </div>
                 ))}
               </div>
-              {(contractsCovered!.length > 0 || repoContractsList.length > 0) && <div className="separator" />}
+              {/* {(contractsCovered!.length > 0 || (repoContractsList && repoContractsList.length > 0)) && (
+                <div className="separator" />
+              )} */}
             </>
           )}
         </>
       )}
 
       {/* Contracts on repo */}
-      {repoContractsList !== "loading" ? (
+      {/* {repoContractsList !== "loading" ? (
+        repoContractsList &&
         repoContractsList.length > 0 && (
           <>
             <h4 className="section-subtitle">
               <ContractsTwoIcon className="icon" />
-              <span>{t("contractsOnRepo")}</span>
+              <span>
+                {t("contractsOnRepo")} {totalLOC && `(~${totalLOC} SLOC)`}
+              </span>
             </h4>
 
             {getContractsCoveredList(repoContractsList)}
@@ -294,10 +321,14 @@ export const InScopeSection = ({ vault }: InScopeSectionProps) => {
           </>
         )
       ) : (
-        <Alert type="info" className="mb-4">
-          {t("loadingContractsOnRepo")}
-        </Alert>
-      )}
+        <>
+          {repoContractsList === "loading" && (
+            <Alert type="info" className="mb-4">
+              {t("loadingContractsOnRepo")}
+            </Alert>
+          )}
+        </>
+      )} */}
 
       {/* Contracts covered */}
       {contractsCovered!.length > 0 && (

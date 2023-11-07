@@ -49,7 +49,7 @@ export function ContractsCoveredList() {
     if (!wantsToGenerateContracts) return;
 
     setGeneratingContracts(true);
-    const contractsToCreate = await getContractsInfoFromRepos(reposInfo);
+    const { contracts: contractsToCreate } = await getContractsInfoFromRepos(reposInfo);
     append(
       contractsToCreate.map((contract) => ({
         name: "",
