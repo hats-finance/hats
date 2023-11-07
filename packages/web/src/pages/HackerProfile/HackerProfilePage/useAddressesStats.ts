@@ -5,14 +5,14 @@ import { useCallback, useMemo } from "react";
 import { parseSeverityName } from "utils/severityName";
 import { severitiesOrder } from "../constants";
 
-type IHackerPayoutStats = {
+export type IHackerPayoutStats = {
   severity: string;
   count: number;
   rewards: { tokens: number; usd: number };
   submissions: ISubmittedSubmission[];
 };
 
-type IHackerRewardsStats = {
+export type IHackerRewardsStats = {
   date: Date;
   vault: IVault | undefined;
   rewards: IHackerPayoutStats["rewards"];

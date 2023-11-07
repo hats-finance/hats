@@ -668,7 +668,11 @@
       "usernameCantBeChanged": "Username can't be changed",
       "profileNotFoundError": "Profile not found. Please go back to dApp.",
       "deleteProfile": "Delete profile",
-      "deleteProfileDescription": "Are you sure you want to delete your profile? This action can not be undone."
+      "deleteProfileDescription": "Are you sure you want to delete your profile? This action can not be undone.",
+      "firstSubmission": "First submission on {{date}}",
+      "about": "About",
+      "stats": "Stats",
+      "activity": "Activity"
     },
     "PGPTool": {
       "title": "PGP tool",
