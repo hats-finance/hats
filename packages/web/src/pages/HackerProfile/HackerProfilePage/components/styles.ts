@@ -13,7 +13,9 @@ export const StyledHackerActivity = styled.div`
     position: relative;
     display: flex;
     gap: ${getSpacing(2)};
-    justify-content: space-evenly;
+    justify-content: space-between;
+    width: calc(100% - ${getSpacing(6)});
+    margin: 0 auto;
 
     .line {
       position: absolute;
@@ -24,6 +26,29 @@ export const StyledHackerActivity = styled.div`
       background: var(--primary-light);
     }
 
+    .control {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: ${getSpacing(4.4)};
+      height: ${getSpacing(4.4)};
+      transform: translateY(${getSpacing(5)});
+      border-radius: 100px;
+      border: 1px solid var(--primary);
+      background: var(--background);
+      cursor: pointer;
+      align-self: flex-start;
+
+      &.disabled {
+        border-color: var(--grey-800);
+        color: var(--grey-800);
+        cursor: default;
+      }
+
+      &:hover {
+      }
+    }
+
     .item {
       position: relative;
       display: flex;
@@ -32,7 +57,8 @@ export const StyledHackerActivity = styled.div`
       gap: ${getSpacing(1)};
       width: ${getSpacing(18)};
 
-      &:hover {
+      &:hover,
+      &.selected {
         cursor: pointer;
 
         img {

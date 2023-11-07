@@ -13,6 +13,7 @@ export type IHackerPayoutStats = {
 };
 
 export type IHackerRewardsStats = {
+  id: string;
   date: Date;
   vault: IVault | undefined;
   rewards: IHackerPayoutStats["rewards"];
@@ -112,6 +113,7 @@ export const useAddressesStats = (addresses: string[] = []) => {
       const payout = payouts.find((payout) => payout.vault.id === vaultAddress)!;
 
       return {
+        id: payout.id,
         date: new Date(+payout.approvedAt! * 1000),
         vault: payout.vaultData,
         rewards: payoutStatsOnVault.reduce(
