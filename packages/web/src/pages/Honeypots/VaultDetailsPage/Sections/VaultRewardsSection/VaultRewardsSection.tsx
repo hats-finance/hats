@@ -2,6 +2,7 @@ import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import { VaultAssetsPillsList, WithTooltip } from "components";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
+import { formatNumber } from "utils";
 import { VaultNftRewards } from "./VaultNftRewards/VaultNftRewards";
 import { VaultRewardDivision } from "./VaultRewardDivision/VaultRewardDivision";
 import { VaultSeverityRewards } from "./VaultSeverityRewards/VaultSeverityRewards";
@@ -32,7 +33,7 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                   <div className="values-container">
                     <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
                     <p className="value-tokens">
-                      {`(${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0)} ${
+                      {`(${formatNumber(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0, 4)} ${
                         vault.stakingTokenSymbol
                       })`}
                     </p>
@@ -40,9 +41,10 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                 </WithTooltip>
               ) : (
                 <div className="values-container">
+                  asd
                   <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
                   <p className="value-tokens">
-                    {`(${millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} ${vault.stakingTokenSymbol})`}
+                    {`(${formatNumber(vault.amountsInfo?.depositedAmount.tokens ?? 0, 4)} ${vault.stakingTokenSymbol})`}
                   </p>
                 </div>
               )}
@@ -59,7 +61,7 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                 <div className="values-container">
                   <h4 className="value">~${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)}</h4>
                   <p className="value-tokens">
-                    {`(${millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0)} ${
+                    {`(${formatNumber(vault.amountsInfo?.competitionIntendedAmount?.maxReward.tokens ?? 0, 4)} ${
                       vault.stakingTokenSymbol
                     })`}
                   </p>
@@ -69,7 +71,7 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
               <div className="values-container">
                 <h4 className="value">~${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}</h4>
                 <p className="value-tokens">
-                  {`(${millify(vault.amountsInfo?.maxRewardAmount?.tokens ?? 0)} ${vault.stakingTokenSymbol})`}
+                  {`(${formatNumber(vault.amountsInfo?.maxRewardAmount?.tokens ?? 0, 4)} ${vault.stakingTokenSymbol})`}
                 </p>
               </div>
             )}

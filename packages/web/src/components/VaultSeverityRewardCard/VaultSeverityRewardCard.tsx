@@ -33,7 +33,7 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
         </div>
         <span className="price">
           ~{`$${formatNumber(rewardPrice)}`}
-          <span className="tiny ml-1">({`${formatNumber(rewardTokens)} ${tokenSymbol}`})</span>
+          <span className="tiny ml-1">({`${formatNumber(rewardTokens, 4)} ${tokenSymbol}`})</span>
         </span>
       </div>
       {showCap && (
@@ -48,7 +48,7 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
                 <span className="price">
                   ~{`$${formatNumber(rewardCap)}`}
                   <span className="tiny ml-1">
-                    ({`${formatNumber((severity as IVulnerabilitySeverityV2).capAmount)} ${tokenSymbol}`})
+                    ({`${formatNumber((severity as IVulnerabilitySeverityV2).capAmount, 4)} ${tokenSymbol}`})
                   </span>
                 </span>
               </div>
