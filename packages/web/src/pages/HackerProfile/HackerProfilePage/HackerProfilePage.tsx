@@ -84,7 +84,7 @@ export const HackerProfilePage = () => {
             </div>
           </div>
 
-          <HackerActivity activity={profileStats.hackerRewardStats} />
+          {profileStats.hackerRewardStats.length > 0 && <HackerActivity activity={profileStats.hackerRewardStats} />}
         </>
       )}
 
