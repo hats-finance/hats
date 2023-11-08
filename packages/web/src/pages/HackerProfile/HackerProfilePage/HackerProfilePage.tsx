@@ -20,7 +20,8 @@ export const HackerProfilePage = () => {
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
   const profileStats = useAddressesStats(profileFound?.addresses ?? []);
   const severityColors = getSeveritiesColorsArray(undefined, profileStats.findingsGlobalStats.length);
-  console.log(profileStats);
+
+  if (profileStats.isLoading) return <Loading extraText={`${t("HackerProfile.loadingStats")}...`} />;
 
   // If profile is not found
   if (profileFound === null) {
@@ -74,6 +75,9 @@ export const HackerProfilePage = () => {
             <div className="findings">
               <h3>{t("HackerProfile.stats")}</h3>
               <div className="findings-list">
+                {profileStats.findingsGlobalStats.length === 0 && (
+                  <Alert type="info" content={t("HackerProfile.youHaveNoStats")} />
+                )}
                 {profileStats.findingsGlobalStats.map((severity, idx) => (
                   <div className="stat" key={severity.severity}>
                     <p className="count">{severity.count}</p>
