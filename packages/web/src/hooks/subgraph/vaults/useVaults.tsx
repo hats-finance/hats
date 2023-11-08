@@ -19,7 +19,7 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import { getBalancerTokenPrices, getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { populateVaultsWithPricing } from "./parser";
+import { overrideDescription, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
@@ -156,7 +156,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
           const dataResponse = await fetch(ipfsTransformUri(vault.descriptionHash)!);
           if (dataResponse.status === 200) {
             const object = await dataResponse.json();
-            return fixObject(object);
+            return overrideDescription(vault.id, fixObject(object));
           }
           return undefined;
         } catch (error) {
