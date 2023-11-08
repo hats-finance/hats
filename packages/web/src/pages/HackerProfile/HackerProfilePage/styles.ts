@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledHackerProfilePage = styled.div`
+  padding-bottom: ${getSpacing(8)};
+
   .profile-card {
     display: flex;
     align-items: center;
@@ -52,9 +55,19 @@ export const StyledHackerProfilePage = styled.div`
     gap: ${getSpacing(14)};
     margin-top: ${getSpacing(4)};
 
+    @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+      flex-direction: column;
+      gap: ${getSpacing(4)};
+    }
+
     h3 {
       font-size: var(--medium);
+      font-weight: 500;
       margin-bottom: ${getSpacing(3)};
+
+      @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+        margin-bottom: ${getSpacing(1.5)};
+      }
     }
 
     .about {
@@ -70,6 +83,10 @@ export const StyledHackerProfilePage = styled.div`
         column-gap: ${getSpacing(10)};
         row-gap: ${getSpacing(6)};
 
+        @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+          column-gap: ${getSpacing(3)};
+        }
+
         .stat {
           width: fit-content;
           display: flex;
@@ -77,6 +94,10 @@ export const StyledHackerProfilePage = styled.div`
           flex-direction: column;
           align-items: center;
           justify-content: center;
+
+          @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+            gap: ${getSpacing(1)};
+          }
 
           .count {
             font-size: var(--moderate);

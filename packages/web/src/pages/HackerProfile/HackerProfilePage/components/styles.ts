@@ -4,8 +4,9 @@ import { getSpacing } from "styles";
 export const StyledHackerActivity = styled.div`
   margin-top: ${getSpacing(10)};
 
-  h3 {
+  h3.subtitle {
     font-size: var(--medium);
+    font-weight: 500;
     margin-bottom: ${getSpacing(3)};
   }
 
@@ -56,6 +57,7 @@ export const StyledHackerActivity = styled.div`
       align-items: center;
       gap: ${getSpacing(1)};
       width: ${getSpacing(18)};
+      transition: 0.2s;
 
       &:hover,
       &.selected {
@@ -64,6 +66,10 @@ export const StyledHackerActivity = styled.div`
         img {
           border: 1px solid var(--primary);
           background: var(--background);
+        }
+
+        p.name {
+          color: var(--primary);
         }
       }
 
@@ -78,13 +84,65 @@ export const StyledHackerActivity = styled.div`
         border-radius: 100px;
         padding: ${getSpacing(1)};
         border: 1px solid transparent;
-        transition: 0.2s;
       }
 
       p.name {
         font-weight: 700;
         text-align: center;
       }
+    }
+  }
+
+  .payout-details {
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: ${getSpacing(6)};
+      border-bottom: 1px solid var(--primary);
+      padding: 0 ${getSpacing(1)};
+      padding-bottom: ${getSpacing(2)};
+
+      h2 {
+        font-size: var(--medium);
+      }
+
+      .prize {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        h3 {
+          font-size: var(--moderate-big);
+        }
+      }
+    }
+
+    .review {
+      display: flex;
+      flex-wrap: wrap;
+      gap: ${getSpacing(2)};
+      margin-top: ${getSpacing(3)};
+      padding: 0 ${getSpacing(1)};
+
+      .findings {
+        display: flex;
+        gap: ${getSpacing(3)};
+
+        .finding-stats {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1)};
+        }
+      }
+    }
+
+    .submissions {
+      display: flex;
+      flex-direction: column;
+      gap: ${getSpacing(3)};
+      margin-top: ${getSpacing(3)};
+      padding: 0 ${getSpacing(1)};
     }
   }
 `;

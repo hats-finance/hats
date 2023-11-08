@@ -672,7 +672,12 @@
       "firstSubmission": "First submission on {{date}}",
       "about": "About",
       "stats": "Stats",
-      "activity": "Activity"
+      "activity": "Activity",
+      "personalPayout": "Personal payout",
+      "findings": "Findings",
+      "thereIsNoSubmissionToShow": "There are no submissions to show",
+      "youHaveNoStats": "You have no stats to show. Continue hacking to see something here.",
+      "loadingStats": "Loading stats and profile"
     },
     "PGPTool": {
       "title": "PGP tool",
