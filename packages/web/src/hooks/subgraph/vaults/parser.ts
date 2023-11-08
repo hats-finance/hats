@@ -23,6 +23,9 @@ export const parseVaults = (vaults: IVault[], chainId: number) => {
   // Ether.fi
   const etherfiVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x36c3b77853dec9c4a237a692623293223d4b9bc4");
   if (etherfiVault) etherfiVault.governanceHatRewardSplit = "1000";
+  // Possum
+  const possumVault = newVaults.find((vault) => vault.id.toLowerCase() === "0xed8965d49b8aeca763447d56e6da7f4e0506b2d3");
+  if (possumVault) possumVault.governanceHatRewardSplit = "2000";
 
   return newVaults.map((vault) => ({
     ...vault,
