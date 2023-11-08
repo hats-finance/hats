@@ -77,6 +77,29 @@ export const StyledHackerProfilePage = styled.div`
     .findings {
       flex: 3;
 
+      .total-rewards {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+        margin-bottom: ${getSpacing(3)};
+
+        h3 {
+          margin-bottom: 0;
+        }
+
+        div.totalPrizes {
+          display: flex;
+          align-items: baseline;
+          gap: ${getSpacing(1)};
+
+          p {
+            font-size: var(--medium-2);
+            color: var(--secondary);
+            font-weight: 700;
+          }
+        }
+      }
+
       .findings-list {
         display: flex;
         flex-wrap: wrap;

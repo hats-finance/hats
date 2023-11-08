@@ -677,7 +677,8 @@
       "findings": "Findings",
       "thereIsNoSubmissionToShow": "There are no submissions to show",
       "youHaveNoStats": "You have no stats to show. Continue hacking to see something here.",
-      "loadingStats": "Loading stats and profile"
+      "loadingStats": "Loading stats and profile",
+      "earnedAtHatsFinance": "Received at Hats.finance"
     },
     "PGPTool": {
       "title": "PGP tool",

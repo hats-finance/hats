@@ -7,6 +7,7 @@ import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
+import { formatNumber } from "utils";
 import { useProfileByUsername } from "../hooks";
 import { HackerActivity } from "./components/HackerActivity";
 import { StyledHackerProfilePage } from "./styles";
@@ -73,7 +74,13 @@ export const HackerProfilePage = () => {
               </div>
             )}
             <div className="findings">
-              <h3>{t("HackerProfile.stats")}</h3>
+              <div className="total-rewards">
+                <h3>{t("HackerProfile.stats")}</h3>
+                <div className="totalPrizes">
+                  <p>{profileStats.totalRewardsInUsd > 0 && `~$${formatNumber(profileStats.totalRewardsInUsd, 2)}`}</p>
+                  <span>{t("HackerProfile.earnedAtHatsFinance")}</span>
+                </div>
+              </div>
               <div className="findings-list">
                 {profileStats.findingsGlobalStats.length === 0 && (
                   <Alert type="info" content={t("HackerProfile.youHaveNoStats")} />
