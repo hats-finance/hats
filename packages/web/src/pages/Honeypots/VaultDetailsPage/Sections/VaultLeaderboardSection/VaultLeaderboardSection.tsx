@@ -55,9 +55,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
         {leaderboardData?.map((leaderboardEntry, idx) => (
           <>
             <div className="content">{idx + 1}.</div>
-            <WithTooltip text={leaderboardEntry.beneficiary}>
-              <LeaderboardBeneficiaryName leaderboardEntry={leaderboardEntry} />
-            </WithTooltip>
+            <LeaderboardBeneficiaryName leaderboardEntry={leaderboardEntry} />
             <div className="content prize">${millify(leaderboardEntry.totalRewardInUSD)}</div>
             {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => (
               <div className="content">
@@ -97,18 +95,20 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 const LeaderboardBeneficiaryName = ({ leaderboardEntry }: { leaderboardEntry: IAuditPayoutLeaderboardData }) => {
   const hackerProfile = useCachedProfile(leaderboardEntry.beneficiary);
   return (
-    <div className="content sr-data">
-      {hackerProfile ? (
-        <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
-          <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
-          <p>{hackerProfile.username}</p>
-        </NavLink>
-      ) : (
-        <div className="address">
-          <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />
-          {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
-        </div>
-      )}
-    </div>
+    <WithTooltip text={leaderboardEntry.beneficiary}>
+      <div className="content sr-data">
+        {hackerProfile ? (
+          <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
+            <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
+            <p>{hackerProfile.username}</p>
+          </NavLink>
+        ) : (
+          <div className="address">
+            <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />
+            {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
+          </div>
+        )}
+      </div>
+    </WithTooltip>
   );
 };

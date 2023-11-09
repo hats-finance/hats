@@ -98,6 +98,7 @@ export const HackerActivity = ({ activity }: IHackerActivityProps) => {
         (() => {
           const payout = activity.find((payout) => payout.id === selectedPayout);
           const vaultName = payout?.vault?.description?.["project-metadata"].name;
+          const isAudit = payout?.vault?.description?.["project-metadata"].type === "audit";
           const prizeValue = payout?.rewards.usd || payout?.rewards.tokens;
           const isUSD = !!payout?.rewards.usd;
           const findings = payout?.findings.map((a) => a.submissions).flat();
@@ -109,6 +110,7 @@ export const HackerActivity = ({ activity }: IHackerActivityProps) => {
               <div className="header">
                 <div className="name">
                   <h2>{vaultName}</h2>
+                  <p className="type">{isAudit ? t("auditCompetition") : t("bugBounty")}</p>
                   <p className="date">{moment(payout?.date).format("MMM Do YYYY")}</p>
                 </div>
                 <WithTooltip text={`${formatNumber(payout.rewards.tokens, 4)} ${payout?.vault?.stakingTokenSymbol}`}>

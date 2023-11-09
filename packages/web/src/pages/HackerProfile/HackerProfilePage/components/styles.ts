@@ -105,6 +105,14 @@ export const StyledHackerActivity = styled.div`
 
       h2 {
         font-size: var(--medium);
+        line-height: 24px;
+      }
+
+      p.type {
+        font-size: var(--xsmall);
+        font-weight: 700;
+        font-style: italic;
+        margin-bottom: ${getSpacing(0.5)};
       }
 
       .prize {
