@@ -131,7 +131,10 @@ export const HackerActivity = ({ activity }: IHackerActivityProps) => {
                     const isUSD = !!finding.rewards.usd;
 
                     return (
-                      <WithTooltip text={`${formatNumber(finding.rewards.tokens, 4)} ${payout?.vault?.stakingTokenSymbol}`}>
+                      <WithTooltip
+                        key={idx}
+                        text={`${formatNumber(finding.rewards.tokens, 4)} ${payout?.vault?.stakingTokenSymbol}`}
+                      >
                         <div className="finding-stats">
                           <Pill textColor={severityColors[idx]} isSeverity text={`${finding.count} ${finding.severity}`} />
                           <p className="prize">{`${isUSD ? "~$" : ""}${formatNumber(prizeValue, isUSD ? 2 : 4)} ${

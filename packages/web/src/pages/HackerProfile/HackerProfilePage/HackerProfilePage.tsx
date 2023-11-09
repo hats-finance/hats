@@ -27,7 +27,7 @@ export const HackerProfilePage = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const { tryAuthentication, signIn, isAuthenticated } = useSiweAuth();
+  const { tryAuthentication, signIn, profileData: siweProfile, isAuthenticated } = useSiweAuth();
 
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
@@ -42,6 +42,7 @@ export const HackerProfilePage = () => {
   // If the user is not authenticated, and is is process of linking a new address, continue with the linking process
   useEffect(() => {
     if (!ownerSiweData || !profileFound) return;
+    if (profileFound.addresses.includes(siweProfile.address?.toLowerCase() ?? "")) return;
     if (isAuthenticated) return;
     setOwnerSiweData(undefined);
 
@@ -49,13 +50,17 @@ export const HackerProfilePage = () => {
       const auth = await tryAuthentication();
       if (!auth) return;
 
-      const linkResult = await linkNewAddress.mutateAsync({ username: profileFound.username, profileOwnerSiwe: ownerSiweData });
-      if (linkResult?.modifiedCount) {
-        queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+      try {
+        const linkResult = await linkNewAddress.mutateAsync({ username: profileFound.username, profileOwnerSiwe: ownerSiweData });
+        if (linkResult?.modifiedCount) {
+          queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+        }
+      } finally {
+        setOwnerSiweData(undefined);
       }
     };
     check();
-  }, [isAuthenticated, tryAuthentication, ownerSiweData, linkNewAddress, profileFound]);
+  }, [isAuthenticated, siweProfile, tryAuthentication, ownerSiweData, linkNewAddress, profileFound]);
 
   if (profileStats.isLoading) return <Loading extraText={`${t("HackerProfile.loadingStats")}...`} />;
 
@@ -108,8 +113,7 @@ export const HackerProfilePage = () => {
     if (!ok) return;
     const siweData = _siweData!;
 
-    setOwnerSiweData(siweData);
-
+    setTimeout(() => setOwnerSiweData(siweData), 500);
     const wantsToContinue = await confirm({
       title: t("HackerProfile.linkNewAddressToProfile"),
       titleIcon: <LinkIcon className="mr-2" fontSize="large" />,
@@ -149,6 +153,10 @@ export const HackerProfilePage = () => {
                 )}
               </div>
             </div>
+
+            {(unlinkAddress.error || linkNewAddress.error) && (
+              <Alert className="mb-3" type="error" content={unlinkAddress.error ?? linkNewAddress.error ?? ""} />
+            )}
 
             {isProfileOwner && (
               <div className="actions">
