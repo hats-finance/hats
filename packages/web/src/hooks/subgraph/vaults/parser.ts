@@ -3,7 +3,9 @@ import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hat
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
-export const overrideDescription = (vaultAddress: string, description: IVaultDescription): IVaultDescription => {
+export const overrideDescription = (vaultAddress: string, description?: IVaultDescription) => {
+  if (!description) return description;
+
   // Change VMEX logo
   const vmexIds = ["0xb6861bdeb368a1bf628fc36a36cec62d04fb6a77", "0x050183b53cf62bcd6c2a932632f8156953fd146f"];
   if (vmexIds.includes(vaultAddress.toLowerCase())) {
