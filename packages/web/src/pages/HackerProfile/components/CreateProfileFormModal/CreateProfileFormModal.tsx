@@ -107,6 +107,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
         onHide();
         navigate(`${RoutePaths.profile}/${profileToUpsert.username}`);
         queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+        queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
         setCurrentFormStep(0);
         reset();
       }
@@ -141,6 +142,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
       onHide();
       navigate("/");
       queryClient.invalidateQueries({ queryKey: ["hacker-profile-address", address] });
+      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
       setCurrentFormStep(0);
       reset();
     }

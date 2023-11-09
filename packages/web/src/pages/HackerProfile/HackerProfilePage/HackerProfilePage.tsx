@@ -54,6 +54,7 @@ export const HackerProfilePage = () => {
         const linkResult = await linkNewAddress.mutateAsync({ username: profileFound.username, profileOwnerSiwe: ownerSiweData });
         if (linkResult?.modifiedCount) {
           queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+          queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
         }
       } finally {
         setOwnerSiweData(undefined);
@@ -95,6 +96,7 @@ export const HackerProfilePage = () => {
     const unlinkResult = await unlinkAddress.mutateAsync({ username: profileFound.username, addressToRemove });
     if (unlinkResult?.modifiedCount) {
       queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
     }
   };
 

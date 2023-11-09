@@ -28,6 +28,22 @@ export const StyledLeaderboardSection = styled.div<{ cols: number }>(
         &.prize {
           font-weight: 700;
         }
+
+        .address {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1)};
+
+          &.profile {
+            transition: 0.1s ease-in-out;
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+              color: var(--secondary);
+            }
+          }
+        }
       }
     }
 
