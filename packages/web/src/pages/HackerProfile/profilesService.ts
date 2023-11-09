@@ -1,6 +1,7 @@
 import { IHackerProfile } from "@hats-finance/shared";
 import { AxiosError } from "axios";
 import { axiosClient } from "config/axiosClient";
+import { ISiweData } from "hooks/siwe/useSiweAuth";
 import { BASE_SERVICE_URL } from "settings";
 import * as FilesService from "../../utils/filesService.api";
 
@@ -94,5 +95,23 @@ export async function isUsernameAvailable(username?: string): Promise<boolean> {
   } catch (error) {
     console.log(error);
     return false;
+  }
+}
+
+/**
+ * Links a new address to a profile
+ */
+export async function linkNewAddress(
+  username: string,
+  profileOwnerSiwe?: ISiweData
+): Promise<IUpsertedProfileResult | undefined> {
+  try {
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/profile/${username}/add-new-address`, {
+      profileOwnerSiwe,
+    });
+    return response.data.profile;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
   }
 }

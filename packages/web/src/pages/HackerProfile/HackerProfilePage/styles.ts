@@ -5,46 +5,100 @@ import { breakpointsDefinition } from "styles/breakpoints.styles";
 export const StyledHackerProfilePage = styled.div`
   padding-bottom: ${getSpacing(8)};
 
-  .profile-card {
-    display: flex;
-    align-items: center;
-    padding-bottom: ${getSpacing(5)};
+  .header {
+    padding-bottom: ${getSpacing(3)};
     border-bottom: 1px solid var(--primary-light);
 
-    .description {
-      flex: 1;
+    .profile-card {
       display: flex;
-      flex-direction: column;
-      gap: ${getSpacing(0.5)};
-      padding: 0 ${getSpacing(5)};
-      font-family: "IBM Plex Mono", monospace;
+      align-items: center;
+      padding-bottom: ${getSpacing(3)};
 
-      h2 {
-        font-size: var(--large-2);
+      .description {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: ${getSpacing(0.5)};
+        padding: 0 ${getSpacing(5)};
+        font-family: "IBM Plex Mono", monospace;
+
+        h2 {
+          font-size: var(--large-2);
+        }
+
+        p.hacker-title {
+          font-size: var(--moderate-big);
+        }
+
+        p.hacker-date {
+          font-size: var(--xmsall);
+        }
       }
 
-      p.hacker-title {
-        font-size: var(--moderate-big);
-      }
+      .socials {
+        display: flex;
+        flex-direction: column;
+        gap: ${getSpacing(1)};
 
-      p.hacker-date {
-        font-size: var(--xmsall);
+        svg {
+          width: ${getSpacing(5)};
+          height: ${getSpacing(5)};
+          cursor: pointer;
+          transition: opacity 0.2s ease-in-out;
+
+          &:hover {
+            opacity: 0.8;
+          }
+        }
       }
     }
 
-    .socials {
+    .actions {
       display: flex;
-      flex-direction: column;
-      gap: ${getSpacing(1)};
+      justify-content: space-between;
+      align-items: center;
+      gap: ${getSpacing(5)};
 
-      svg {
-        width: ${getSpacing(5)};
-        height: ${getSpacing(5)};
-        cursor: pointer;
-        transition: opacity 0.2s ease-in-out;
+      .buttons {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+      }
 
-        &:hover {
-          opacity: 0.8;
+      .linked-addresses {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: ${getSpacing(0.5)};
+
+        .addresses-list {
+          display: flex;
+          flex-wrap: wrap;
+          gap: ${getSpacing(1)};
+
+          .address {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: ${getSpacing(1)};
+
+            &:hover {
+              &::after {
+                cursor: pointer;
+                content: "Unlink";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: var(--error-red);
+                top: 0;
+                left: 0;
+                border-radius: 100px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
         }
       }
     }
