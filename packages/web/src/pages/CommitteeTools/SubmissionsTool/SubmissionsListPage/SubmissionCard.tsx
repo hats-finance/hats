@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
+import { parseSeverityName } from "utils/severityName";
 import { StyledSubmissionCard } from "./styles";
 
 type SubmissionCardProps = {
@@ -68,7 +69,7 @@ export const SubmissionCard = ({
               <Pill
                 textColor={severityColors[severityIndex ?? 0]}
                 isSeverity
-                text={submissionData?.severity ?? t("noSeverity")}
+                text={parseSeverityName(submissionData?.severity) ?? t("noSeverity")}
               />
             </span>
           )}
@@ -84,7 +85,10 @@ export const SubmissionCard = ({
             )}
             {submissionData?.githubUsername &&
               submissionData?.githubUsername !== "--" &&
-              submissionData?.githubUsername !== "---" && <span>Github: @{submissionData?.githubUsername}</span>}
+              submissionData?.githubUsername !== "---" && <span>Github: {submissionData?.githubUsername}</span>}
+            {submissionData?.twitterUsername &&
+              submissionData?.twitterUsername !== "--" &&
+              submissionData?.twitterUsername !== "---" && <span>Twitter (X): {submissionData?.twitterUsername}</span>}
           </div>
         </div>
         <div className="date">{moment(createdAt).format("Do MMM YYYY - hh:mma")}</div>

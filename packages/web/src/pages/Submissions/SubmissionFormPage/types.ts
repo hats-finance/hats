@@ -20,6 +20,7 @@ export interface ISubmissionContactData {
   communicationChannel: string;
   communicationChannelType: "discord" | "email" | "telegram";
   githubUsername?: string;
+  twitterUsername?: string;
   verified: boolean;
 }
 
