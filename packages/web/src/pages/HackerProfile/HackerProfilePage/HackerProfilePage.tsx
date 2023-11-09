@@ -1,8 +1,10 @@
 import LinkIcon from "@mui/icons-material/AddLinkOutlined";
 import ArrowIcon from "@mui/icons-material/ArrowBackOutlined";
+import UnlinkIcon from "@mui/icons-material/LinkOffOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
 import { Alert, Button, HackerProfileImage, Loading, Pill } from "components";
+import { queryClient } from "config/reactQuery";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import { ISiweData, useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -14,7 +16,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
-import { useLinkNewAddress, useProfileByUsername } from "../hooks";
+import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
 import { HackerActivity } from "./components/HackerActivity";
 import { StyledHackerProfilePage } from "./styles";
 import { useAddressesStats } from "./useAddressesStats";
@@ -35,6 +37,7 @@ export const HackerProfilePage = () => {
   const isProfileOwner = address && profileFound?.addresses.includes(address.toLowerCase());
 
   const linkNewAddress = useLinkNewAddress();
+  const unlinkAddress = useUnlinkAddress();
 
   // If the user is not authenticated, and is is process of linking a new address, continue with the linking process
   useEffect(() => {
@@ -47,7 +50,9 @@ export const HackerProfilePage = () => {
       if (!auth) return;
 
       const linkResult = await linkNewAddress.mutateAsync({ username: profileFound.username, profileOwnerSiwe: ownerSiweData });
-      console.log(linkResult);
+      if (linkResult?.modifiedCount) {
+        queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+      }
     };
     check();
   }, [isAuthenticated, tryAuthentication, ownerSiweData, linkNewAddress, profileFound]);
@@ -66,9 +71,26 @@ export const HackerProfilePage = () => {
     );
   }
 
-  const handleUnlinkAddress = async (address: string) => {
+  const handleUnlinkAddress = async (addressToRemove: string) => {
+    if (!profileFound) return;
+    if (profileFound.addresses.length === 1) return;
+
+    const wantsToUnlink = await confirm({
+      title: t("HackerProfile.unlinkAddress"),
+      titleIcon: <UnlinkIcon className="mr-2" fontSize="large" />,
+      description: t("HackerProfile.unlinkAddressExplanation"),
+      confirmText: t("HackerProfile.unlinkAddress"),
+    });
+
+    if (!wantsToUnlink) return;
+
     const signedIn = await tryAuthentication();
     if (!signedIn) return;
+
+    const unlinkResult = await unlinkAddress.mutateAsync({ username: profileFound.username, addressToRemove });
+    if (unlinkResult?.modifiedCount) {
+      queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+    }
   };
 
   const handleStartLinkNewAddress = async () => {
@@ -98,7 +120,7 @@ export const HackerProfilePage = () => {
   };
 
   return (
-    <StyledHackerProfilePage className="content-wrapper">
+    <StyledHackerProfilePage className="content-wrapper" unlinkDisabled={profileFound?.addresses.length === 1}>
       {profileFound && (
         <>
           <div className="header">

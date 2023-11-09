@@ -681,12 +681,14 @@
       "loadingStats": "Loading stats and profile",
       "earnedAtHatsFinance": "Received at Hats.finance",
       "linkNewAddress": "Link new address",
-      "unlinkAddress": "Unlink",
       "linkedAddresses": "Linked addresses",
       "verifyOwnership": "Verify ownership",
       "linkNewAddressToProfile": "Link new address to your profile",
       "linkNewAddressToProfileExplanation": "You can link a new address to your profile. This will allow you to show all your submissions and stats on the same profile.\n\nINSTRUCTIONS:\n 1.First we need to verify you are the owner of this profile (using siwe). \n2.After that, please go to your wallet (i.e Metamask) and change the account to the one you want to link. \n3.You will be asked to siwe again with the new wallet you want to link.",
-      "linkNewAddressToProfilePartTwoExplanation": "Now change connected account using your wallet (i.e Metamask) to the one you want to link. \n\nYou will be asked to siwe again with the new wallet you want to link."
+      "linkNewAddressToProfilePartTwoExplanation": "Now change connected account using your wallet (i.e Metamask) to the one you want to link. \n\nYou will be asked to siwe again with the new wallet you want to link.",
+      "unlinkAddress": "Unlink address",
+      "unlinkAddressExplanation": "Are you sure you want to unlink this address from your profile?",
+      "cannotUnlinkLastAddress": "You can't unlink your last address from your profile."
     },
     "PGPTool": {
       "title": "PGP tool",

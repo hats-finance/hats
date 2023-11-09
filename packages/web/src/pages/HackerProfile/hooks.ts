@@ -8,6 +8,7 @@ import {
   getProfileByUsername,
   isUsernameAvailable,
   linkNewAddress,
+  removeAddress,
   upsertProfile,
 } from "./profilesService";
 
@@ -78,5 +79,19 @@ export const useLinkNewAddress = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: ({ username, profileOwnerSiwe }) => linkNewAddress(username, profileOwnerSiwe),
+  });
+};
+
+/**
+ * Unlinks an address from a profile
+ */
+export const useUnlinkAddress = (): UseMutationResult<
+  IUpsertedProfileResult | undefined,
+  string,
+  { username: string; addressToRemove: string },
+  unknown
+> => {
+  return useMutation({
+    mutationFn: ({ username, addressToRemove }) => removeAddress(username, addressToRemove),
   });
 };

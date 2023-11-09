@@ -115,3 +115,18 @@ export async function linkNewAddress(
     throw ((error as AxiosError).response?.data as any)?.error;
   }
 }
+
+/**
+ * Removed a linked address from a profile
+ */
+export async function removeAddress(username: string, addressToRemove: string): Promise<IUpsertedProfileResult | undefined> {
+  try {
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/profile/${username}/remove-address`, {
+      address: addressToRemove,
+    });
+    return response.data.profile;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
+  }
+}
