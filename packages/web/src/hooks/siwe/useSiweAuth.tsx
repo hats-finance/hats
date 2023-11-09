@@ -4,20 +4,23 @@ import { SiweMessage } from "siwe";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import * as SIWEService from "./siweService";
 
-type SiweProfileData = {
+type ISiweProfileData = {
   loggedIn: boolean;
   address?: string | undefined;
   chainId?: number | undefined;
 };
 
+export type ISiweData = { message: string; signature: `0x${string}` };
+
 type ISiweAuthContext = {
-  signIn: () => Promise<{ ok: boolean }>;
+  signIn: () => Promise<{ ok: boolean; siweData?: ISiweData }>;
   logout: () => Promise<void>;
   tryAuthentication: () => Promise<boolean>;
-  updateProfile: () => Promise<SiweProfileData>;
-  profileData: SiweProfileData;
+  updateProfile: () => Promise<ISiweProfileData>;
+  profileData: ISiweProfileData;
   isSigningIn: boolean;
   isAuthenticated: boolean;
+  currentSiweData?: ISiweData;
 };
 
 const SiweAuthContext = createContext<ISiweAuthContext>(undefined as any);
@@ -27,7 +30,7 @@ export const SiweAuthProvider = ({ children }) => {
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
 
-  const [currentData, setCurrentData] = useState<{ message: string; signature: `0x${string}` } | undefined>();
+  const [currentSiweData, setCurrentSiweData] = useState<ISiweData | undefined>();
   const [isSigningIn, setIsSigningIn] = useState<boolean>(false);
   const [profileData, setProfileData] = useState<{
     loggedIn: boolean;
@@ -57,7 +60,7 @@ export const SiweAuthProvider = ({ children }) => {
     if (address && profileData.address && address !== profileData.address) logout();
   }, [address, profileData]);
 
-  const signIn = useCallback(async (): Promise<{ ok: boolean }> => {
+  const signIn = useCallback(async (): Promise<{ ok: boolean; siweData?: ISiweData }> => {
     if (!connector || !address || !chain) return { ok: false };
 
     try {
@@ -79,7 +82,8 @@ export const SiweAuthProvider = ({ children }) => {
 
       const preparedMessage = message.prepareMessage();
       const signature = await signMessageAsync({ message: preparedMessage });
-      setCurrentData({ message: preparedMessage, signature });
+      const siweData = { message: preparedMessage, signature };
+      setCurrentSiweData(siweData);
 
       // Verify signature
       const verifyOk = await SIWEService.verifyMessage(message, signature);
@@ -88,7 +92,7 @@ export const SiweAuthProvider = ({ children }) => {
       setIsSigningIn(false);
       getProfile();
 
-      return { ok: true };
+      return { ok: true, siweData };
     } catch (error) {
       console.log(error);
 
@@ -121,7 +125,7 @@ export const SiweAuthProvider = ({ children }) => {
     tryAuthentication,
     isAuthenticated: profileData.loggedIn,
     updateProfile: getProfile,
-    currentData,
+    currentSiweData,
   };
 
   return <SiweAuthContext.Provider value={context}>{children}</SiweAuthContext.Provider>;
