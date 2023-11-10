@@ -1,4 +1,4 @@
-import { arbitrum, avalanche, bsc, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
+import { arbitrum, avalanche, bsc, gnosis, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
 import axios, { AxiosError } from "axios";
 import { utils } from "ethers";
 import { meter } from "../config";
@@ -22,6 +22,8 @@ export const getGnosisChainNameByChainId = (chainId: number): string => {
       return "avalanche";
     case bsc.id:
       return "bsc";
+    case gnosis.id:
+      return "gnosis-chain";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
@@ -43,6 +45,10 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
       return "avax";
     case bsc.id:
       return "bnb";
+    case bsc.id:
+      return "bnb";
+    case gnosis.id:
+      return "gno";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
