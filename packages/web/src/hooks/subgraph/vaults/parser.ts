@@ -1,7 +1,32 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats-finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
+
+export const overrideDescription = (vaultAddress: string, description?: IVaultDescription) => {
+  if (!description) return description;
+
+  // Change VMEX logo
+  const vmexIds = ["0xb6861bdeb368a1bf628fc36a36cec62d04fb6a77", "0x050183b53cf62bcd6c2a932632f8156953fd146f"];
+  if (vmexIds.includes(vaultAddress.toLowerCase())) {
+    description["project-metadata"].icon = "ipfs://QmZyTzxjpZrsJmYgApi2Ku4UaaE25VjjFadvrCtMn4rdks";
+  }
+
+  return description;
+};
+
+const fixVaultsData = (vaults: IVault[]) => {
+  // Override the default governance fee (we already changed it on-chain, but takes time to show up)
+  const newVaults = [...vaults];
+  // Ether.fi
+  const etherfiVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x36c3b77853dec9c4a237a692623293223d4b9bc4");
+  if (etherfiVault) etherfiVault.governanceHatRewardSplit = "1000";
+  // Possum
+  const possumVault = newVaults.find((vault) => vault.id.toLowerCase() === "0xed8965d49b8aeca763447d56e6da7f4e0506b2d3");
+  if (possumVault) possumVault.governanceHatRewardSplit = "2000";
+
+  return newVaults;
+};
 
 export const parseMasters = (masters: IMaster[], chainId: number) => {
   return masters.map((master) => ({
@@ -18,21 +43,24 @@ export const parseUserNfts = (userNfts: IUserNft[], chainId: number) => {
 };
 
 export const parseVaults = (vaults: IVault[], chainId: number) => {
-  // Override the default governance fee (we already changed it on-chain, but takes time to show up)
-  const newVaults = [...vaults];
-  // Ether.fi
-  const etherfiVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x36c3b77853dec9c4a237a692623293223d4b9bc4");
-  if (etherfiVault) etherfiVault.governanceHatRewardSplit = "1000";
-
-  return vaults.map((vault) => ({
+  const newVaults = fixVaultsData(vaults);
+  return newVaults.map((vault) => ({
     ...vault,
     chainId,
   }));
 };
 
 export const parsePayouts = (payouts: IPayoutGraph[], chainId: number) => {
+  // Override the claim description hash
+  const newPayouts = [...payouts];
+  // Lodestar audit competition payout
+  const lodestarPayout = newPayouts.find(
+    (payout) => payout.id === "0x914f1db490c344e9dd0d79dd78474f8438be3bd699399affceeb2fd92a16b2dd"
+  );
+  if (lodestarPayout) lodestarPayout.payoutDataHash = "QmY13wMHUYeYrjMzUdC1d4AE3VoL6xqZajevhG7JPeZDfh";
+
   // TODO: after TGE add functionality to include `hackerHatReward` into the sum of `totalPaidOut`
-  return payouts.map((payout) => ({
+  return newPayouts.map((payout) => ({
     ...payout,
     chainId,
     isActive: !payout.dismissedAt && !payout.approvedAt,

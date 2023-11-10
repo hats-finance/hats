@@ -1,11 +1,10 @@
 import { IPayoutGraph, IVault } from "@hats-finance/shared";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import { ethers } from "ethers";
-import millify from "millify";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
-import { ipfsTransformUri } from "utils";
+import { formatNumber, ipfsTransformUri } from "utils";
 import { StyledVaultAssetsPillsList } from "./styles";
 
 type VaultAssetsPillsListProps = {
@@ -46,7 +45,10 @@ export const VaultAssetsPillsList = ({ vaultData, auditPayout }: VaultAssetsPill
   return (
     <StyledVaultAssetsPillsList>
       <WithTooltip
-        text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${millify(amountToShowInTokens ?? 0)} ${token}`}
+        text={`${vault.version} | ${auditPayout ? t("paid") : t("deposited")} ~${formatNumber(
+          amountToShowInTokens ?? 0,
+          4
+        )} ${token}`}
       >
         <div className="token" onClick={goToTokenInformation}>
           <div className="images">

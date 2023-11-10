@@ -78,6 +78,10 @@ export const StyledSubmissionsListPage = styled.div`
         }
       }
 
+      .severity-filter {
+        width: ${getSpacing(25)};
+      }
+
       .selection {
         display: flex;
         align-items: center;

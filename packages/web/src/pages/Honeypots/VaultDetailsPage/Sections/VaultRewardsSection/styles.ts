@@ -87,9 +87,17 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean; isAudit:
             padding: ${getSpacing(showIntended ? 4 : 5)};
           }
 
+          .values-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: ${getSpacing(0.5)};
+          }
+
           ${showIntended &&
           css`
-            h4.value {
+            h4.value,
+            p.value-tokens {
               color: var(--warning-yellow);
             }
           `}
@@ -106,6 +114,11 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean; isAudit:
 
         h4.value {
           font-size: var(--medium);
+        }
+
+        p.value-tokens {
+          font-size: var(--xxsmall);
+          /* font-weight: 700; */
         }
 
         .chart-container {

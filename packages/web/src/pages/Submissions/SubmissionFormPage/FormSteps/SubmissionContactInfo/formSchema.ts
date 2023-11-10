@@ -13,5 +13,6 @@ export const getCreateContactInfoSchema = (intl: TFunction) =>
         if (type === "email") return schema.test(getTestEmailAddress(intl));
         return schema.min(3, intl("min-characters", { min: 3 })).required(intl("required"));
       }),
+    twitterUsername: Yup.string(),
     githubUsername: Yup.string(),
   });

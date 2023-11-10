@@ -71,6 +71,7 @@ const extractSubmissionData = (
   const projectId = decryptedMessage.match(/(\*\*Project Id:\*\* (.*)\n)/)?.[2] ?? undefined;
   const beneficiary = decryptedMessage.match(/(\*\*Beneficiary:\*\* (.*)\n)/)?.[2] ?? undefined;
   const githubUsername = decryptedMessage.match(/(\*\*Github username:\*\* (.*)\n)/)?.[2] ?? undefined;
+  const twitterUsername = decryptedMessage.match(/(\*\*Twitter username:\*\* (.*)\n)/)?.[2] ?? undefined;
   const communicationChannelAll = decryptedMessage.match(/(\*\*Communication channel:\*\* (.*)\n)/)?.[2] ?? undefined;
   const communicationChannelValue =
     communicationChannelAll?.match(/(.*) \(/)?.[1] ??
@@ -100,6 +101,7 @@ const extractSubmissionData = (
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
+        twitterUsername: twitterUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
           value: communicationChannelValue ?? "--",
@@ -146,6 +148,7 @@ const extractSubmissionData = (
         title: messageToUse.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
+        twitterUsername: twitterUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
           value: communicationChannelValue ?? "--",
@@ -194,6 +197,7 @@ const extractSubmissionData = (
         title: firstLine?.slice(0, firstLine.lastIndexOf("(") - 1) ?? "--",
         content: messageToUse ?? "--",
         githubUsername: githubUsername ?? "--",
+        twitterUsername: twitterUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
           value: communicationChannelValue ?? "--",
@@ -246,6 +250,7 @@ const extractSubmissionData = (
         title: message.match(/(\*\*Title:\*\* (.*)\n)/)?.[2] ?? "--",
         content: message ?? "--",
         githubUsername: githubUsername ?? "--",
+        twitterUsername: twitterUsername ?? "--",
         communicationChannel: {
           type: communicationChannelType ?? "--",
           value: communicationChannelValue ?? "--",

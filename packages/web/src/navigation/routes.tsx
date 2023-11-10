@@ -1,5 +1,6 @@
 import { BasicLayout } from "layout";
 import { committeeToolsRouter } from "pages/CommitteeTools/router";
+import { hackerProfileRouter } from "pages/HackerProfile/router";
 import { HoneypotsRoutePaths, honeypotsRouter } from "pages/Honeypots/router";
 import { submissionsRouter } from "pages/Submissions/router";
 import { vaultEditorRouter } from "pages/VaultEditor/router";
@@ -17,6 +18,7 @@ const routes: RouteObject[] = [
       submissionsRouter(),
       committeeToolsRouter(),
       vaultEditorRouter(),
+      hackerProfileRouter(),
     ],
   },
   {

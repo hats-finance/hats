@@ -87,6 +87,10 @@ export function SubmissionContactInfo() {
         ]}
       />
 
+      <Alert type="warning" className="mb-4">
+        {t("Submissions.contactDataIsEncrypted")}
+      </Alert>
+
       <FormInput
         {...register("communicationChannel")}
         disabled={allFormDisabled}
@@ -94,6 +98,19 @@ export function SubmissionContactInfo() {
         placeholder={t("enterCommunicationChannel")}
         colorable
       />
+
+      {isAuditCompetition && (
+        <>
+          <p className="mb-2">{t("Submissions.addTwitterAccount")}</p>
+          <FormInput
+            {...register("twitterUsername")}
+            disabled={allFormDisabled}
+            label={`${t("twitterUsername")}`}
+            placeholder={t("twitterUsernamePlaceholder")}
+            colorable
+          />
+        </>
+      )}
 
       {isAuditCompetition && (
         <>
@@ -107,10 +124,6 @@ export function SubmissionContactInfo() {
           />
         </>
       )}
-
-      <Alert type="warning" className="mb-4">
-        {t("Submissions.contactDataIsEncrypted")}
-      </Alert>
 
       <div className="buttons">
         <Button onClick={handleSubmit(handleAddContactData)}>{t("Submissions.saveContactInformation")}</Button>
