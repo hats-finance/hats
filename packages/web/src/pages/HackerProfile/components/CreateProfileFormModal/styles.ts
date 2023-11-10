@@ -52,6 +52,7 @@ export const StyledCreateProfileFormModal = styled.div<{ firstStep: boolean }>(
       justify-content: ${firstStep ? "center" : "space-between"};
       align-items: center;
       margin-top: ${getSpacing(5)};
+      padding-bottom: ${getSpacing(4)};
     }
 
     .w-100 {
