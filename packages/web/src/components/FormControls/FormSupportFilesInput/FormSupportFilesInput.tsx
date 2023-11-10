@@ -2,8 +2,8 @@ import AddIcon from "@mui/icons-material/AddOutlined";
 import CloseIcon from "@mui/icons-material/CloseOutlined";
 import { forwardRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import * as FilesService from "../../../utils/filesService.api";
 import { parseIsDirty } from "../utils";
-import * as FilesService from "./filesService.api";
 import { StyledFormSupportFilesInput } from "./styles";
 import { supportedExtensions } from "./supportedExtensions";
 

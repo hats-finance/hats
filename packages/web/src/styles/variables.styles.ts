@@ -101,9 +101,11 @@ export const variables = css`
 
     /* font sizes */
     --xlarge: 48px;
+    --large-2: 42px;
     --large: 36px;
     --medium-2: 32px;
     --medium: 24px;
+    --moderate-big: 22px;
     --moderate: 18px;
     --small: 16px;
     --xsmall: 14px;

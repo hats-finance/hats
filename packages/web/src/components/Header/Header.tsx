@@ -1,23 +1,45 @@
+import { getGnosisSafeInfo } from "@hats-finance/shared";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { Button, SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
+import { CreateProfileFormModal } from "pages/HackerProfile/components";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { RootState } from "reducers";
-import { useAccount } from "wagmi";
-import WalletInfo from "../WalletInfo/WalletInfo";
+import { useAccount, useNetwork } from "wagmi";
 import { StyledHeader } from "./styles";
 
 const Header = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
   const { showMenu } = useSelector((state: RootState) => state.layoutReducer);
   const { address: account } = useAccount();
+  const { chain } = useNetwork();
+
+  const [isSafeAddress, setIsSafeAddress] = useState<boolean>();
+  const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
+
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
+  const inProfileView = location.pathname.includes(`${RoutePaths.profile}/${createdProfile?.username}`);
+
+  useEffect(() => {
+    // Check if address is Safe multisig
+    if (!account || !chain) return;
+    const checkIsSafeAddress = async () => {
+      const { isSafeAddress } = await getGnosisSafeInfo(account, chain.id);
+      setIsSafeAddress(isSafeAddress);
+    };
+    checkIsSafeAddress();
+  }, [account, chain]);
 
   const getPageTitle = () => {
     const path = location.pathname;
@@ -30,6 +52,11 @@ const Header = () => {
     return "";
   };
 
+  function handleGoToProfile() {
+    if (!createdProfile) return;
+    navigate(`${RoutePaths.profile}/${createdProfile.username}`);
+  }
+
   return (
     <StyledHeader>
       <div className="safety-period-banner">
@@ -40,10 +67,26 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
-          {account && (
-            <div className="wallet-info">
-              <WalletInfo />
-            </div>
+          {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
+            <>
+              {!!createdProfile ? (
+                <Button
+                  size="big"
+                  noRadius
+                  styleType="outlined"
+                  onClick={inProfileView ? () => showCreateProfile() : handleGoToProfile}
+                >
+                  {inProfileView ? t("Header.updateHackerProfile") : t("Header.myProfile")}
+                </Button>
+              ) : (
+                <>
+                  {/* <Pill capitalize text="New feature" /> */}
+                  <Button size="big" noRadius styleType="outlined" onClick={() => showCreateProfile()}>
+                    {t("Header.createHackerProfile")}
+                  </Button>
+                </>
+              )}
+            </>
           )}
 
           <WhereverWidget />
@@ -54,6 +97,8 @@ const Header = () => {
           </div>
         </div>
       </div>
+
+      <CreateProfileFormModal isShowing={isShowingCreateProfile} onHide={hideCreateProfile} />
     </StyledHeader>
   );
 };

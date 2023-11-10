@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { ipfsTransformUri } from "utils";
 import { parseSeverityName } from "utils/severityName";
 
-type IAuditPayoutLeaderboardData = {
+export type IAuditPayoutLeaderboardData = {
   beneficiary: string;
   totalRewardInUSD: number;
   findings: { severity: string; count: number }[];

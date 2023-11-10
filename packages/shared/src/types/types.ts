@@ -291,6 +291,7 @@ export interface ISubmittedSubmission {
     beneficiary: string;
     communicationChannel?: { type: string; value: string };
     githubUsername?: string;
+    twitterUsername?: string;
   };
   submitter: string;
   createdAt: string;

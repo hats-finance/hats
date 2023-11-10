@@ -32,4 +32,5 @@ export { VaultAuditDraftCard } from "./VaultCard/VaultAuditDraftCard";
 export { VaultNftRewardCard } from "./VaultNftRewardCard/VaultNftRewardCard";
 export { Spinner } from "./Spinner/Spinner";
 export { Seo } from "./Seo/Seo";
+export * from "./HackerProfile";
 export * from "./FormControls";

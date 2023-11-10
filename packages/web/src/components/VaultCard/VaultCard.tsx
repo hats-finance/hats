@@ -134,9 +134,10 @@ export const VaultCard = ({
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
     if (endTime.diff(moment(), "hours") <= 24) {
+      const isFinished = endTime.diff(moment(), "hours") < 0;
       return (
         <div className="mb-4">
-          <Pill transparent dotColor="yellow" text={`${t("ending")} ${endTime.fromNow()}`} />
+          <Pill transparent dotColor="yellow" text={`${isFinished ? t("finished") : t("ending")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
@@ -150,17 +151,17 @@ export const VaultCard = ({
 
   const getContinuousAuditPill = () => {
     const repo = vault.description?.scope?.reposInformation.find((repo) => repo.isMain);
-    const prevHash = repo?.prevAuditedCommitHash?.slice(0, 18);
-    const currentHash = repo?.commitHash?.slice(0, 18);
+    const prevHash = repo?.prevAuditedCommitHash?.slice(0, 7);
+    const currentHash = repo?.commitHash?.slice(0, 7);
 
     if (!prevHash || !currentHash) return null;
 
     return (
       <WithTooltip text={t("continuousAuditCompetitionExplanation")}>
-        <div className="continuous-comp-hashes">
-          <Pill capitalize={false} transparent text={`${prevHash}...`} />
+        <div className="continuous-comp-hashes mb-4">
+          <Pill capitalize={false} transparent text={`${prevHash}`} />
           <ArrowIcon />
-          <Pill capitalize={false} transparent text={`${currentHash}...`} />
+          <Pill capitalize={false} transparent text={`${currentHash}`} />
         </div>
       </WithTooltip>
     );
@@ -298,7 +299,7 @@ export const VaultCard = ({
                       {auditPayout
                         ? millify(totalPaidOutOnAudit?.usd ?? 0)
                         : showIntended
-                        ? millify(vault.amountsInfo?.competitionIntendedAmount?.deposited.usd ?? 0)
+                        ? millify(vault.amountsInfo?.competitionIntendedAmount?.maxReward.usd ?? 0)
                         : millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0)}
                     </h3>
                   </WithTooltip>

@@ -1,9 +1,11 @@
 import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
 import { isAddress } from "ethers/lib/utils";
 import { readKey, readMessage } from "openpgp";
+import { isUsernameAvailable } from "pages/HackerProfile/profilesService";
 import { appChains } from "settings";
 import * as Yup from "yup";
 import { isEmailAddress } from "./emails.utils";
+import { isGithubUsernameValid } from "./github.utils";
 import { getTokenInfo } from "./tokens.utils";
 
 export function checkUrl(url: string) {
@@ -15,6 +17,47 @@ function checkCommitHash(commitHash: string) {
   const commitHashRegex = new RegExp(/\b([a-f0-9]{40})\b/);
   return commitHashRegex.test(commitHash);
 }
+
+function checkUsername(username: string) {
+  const usernameRegex = new RegExp(/^(?=.{3,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/);
+  return usernameRegex.test(username);
+}
+
+export const getTestHackerUsername = (intl) => {
+  return {
+    name: "is-valid-username",
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isValidUsername = checkUsername(value ?? "");
+      const isEmpty = value === "" || value === undefined;
+
+      if (!isValidUsername && !isEmpty) return ctx.createError({ message: intl("invalid-username") });
+
+      // If updating profile, username is not required
+      if (ctx.parent._id) return true;
+
+      // Check if username is available
+      const isAvailable = await isUsernameAvailable(value);
+      if (!isAvailable) return ctx.createError({ message: intl("username-not-available") });
+      return true;
+    },
+  };
+};
+
+export const getTestValidGithubUsername = (intl) => {
+  return {
+    name: "is-valid-github",
+    test: async (value: string | undefined, ctx: Yup.TestContext) => {
+      const isEmpty = value === "" || value === undefined;
+
+      if (isEmpty) return true;
+
+      // Check if github username valid
+      const isValid = await isGithubUsernameValid(value);
+      if (!isValid) return ctx.createError({ message: intl("github-username-not-valid") });
+      return true;
+    },
+  };
+};
 
 export const getTestWalletAddress = (intl) => {
   return {
@@ -36,6 +79,18 @@ export const getTestUrl = (intl) => {
       const isEmpty = value === "" || value === undefined;
 
       return isUrl || isEmpty ? true : ctx.createError({ message: intl("invalid-url") });
+    },
+  };
+};
+
+export const getTestNotUrl = (intl) => {
+  return {
+    name: "is-not-url",
+    test: (value: string | undefined, ctx: Yup.TestContext) => {
+      const isUrl = checkUrl(value ?? "");
+      const isEmpty = value === "" || value === undefined;
+
+      return !isUrl || isEmpty ? true : ctx.createError({ message: intl("should-not-be-url") });
     },
   };
 };

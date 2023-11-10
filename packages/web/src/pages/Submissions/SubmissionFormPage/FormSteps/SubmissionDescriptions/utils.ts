@@ -39,7 +39,8 @@ ${description.description.trim()}
 
   const decrypted = `**Project Name:** ${submissionData.project?.projectName}\n
 **Project Id:** ${submissionData.project?.projectId}\n
-**Github username:** ${submissionData.contact?.githubUsername || "---"}
+**Github username:** ${submissionData.contact?.githubUsername || "---"}\n
+**Twitter username:** ${submissionData.contact?.twitterUsername || "---"}
     
     ${descriptions
       .filter((description) => !description.isEncrypted)
@@ -98,6 +99,7 @@ export const getGithubIssueDescription = (
 ) => {
   return `${submissionData.ref === "audit-wizard" ? "***Submitted via auditwizard.io***\n" : ""}
 **Github username:** ${submissionData.contact?.githubUsername ? `@${submissionData.contact?.githubUsername}` : "--"}
+**Twitter username:** ${submissionData.contact?.twitterUsername ? `${submissionData.contact?.twitterUsername}` : "--"}
 **Submission hash (on-chain):** ${submissionData.submissionResult?.transactionHash}
 **Severity:** ${description.severity}
 

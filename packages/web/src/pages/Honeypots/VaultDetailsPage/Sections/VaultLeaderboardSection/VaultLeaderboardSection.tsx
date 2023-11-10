@@ -1,14 +1,17 @@
 import { IPayoutGraph, IVault, IVulnerabilitySeverityV1, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
-import { Alert, Button, Loading, Pill, WithTooltip } from "components";
+import { Alert, Button, HackerProfileImage, Loading, Pill, WithTooltip } from "components";
 import { ReleasePaymentSplitContract } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import millify from "millify";
+import { RoutePaths } from "navigation";
+import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
+import { NavLink } from "react-router-dom";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { parseSeverityName } from "utils/severityName";
 import { useAccount } from "wagmi";
-import { useAuditPayoutLeaderboardData } from "./hooks";
+import { IAuditPayoutLeaderboardData, useAuditPayoutLeaderboardData } from "./hooks";
 import { StyledLeaderboardSection } from "./styles";
 
 type VaultLeaderboardSectionProps = {
@@ -52,12 +55,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
         {leaderboardData?.map((leaderboardEntry, idx) => (
           <>
             <div className="content">{idx + 1}.</div>
-            <WithTooltip text={leaderboardEntry.beneficiary}>
-              <div className="content">
-                <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />{" "}
-                {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
-              </div>
-            </WithTooltip>
+            <LeaderboardBeneficiaryName leaderboardEntry={leaderboardEntry} />
             <div className="content prize">${millify(leaderboardEntry.totalRewardInUSD)}</div>
             {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => (
               <div className="content">
@@ -91,5 +89,26 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 
       {releasePayment.isLoading && <Loading fixed extraText={`${t("loading")}...`} />}
     </StyledLeaderboardSection>
+  );
+};
+
+const LeaderboardBeneficiaryName = ({ leaderboardEntry }: { leaderboardEntry: IAuditPayoutLeaderboardData }) => {
+  const hackerProfile = useCachedProfile(leaderboardEntry.beneficiary);
+  return (
+    <WithTooltip text={leaderboardEntry.beneficiary}>
+      <div className="content sr-data">
+        {hackerProfile ? (
+          <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
+            <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
+            <p>{hackerProfile.username}</p>
+          </NavLink>
+        ) : (
+          <div className="address">
+            <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />
+            {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
+          </div>
+        )}
+      </div>
+    </WithTooltip>
   );
 };

@@ -23,6 +23,8 @@ export const DEFAULT_TOOLING_STEPS: IProtocolSetupInstructions = {
   instructions:
     "### Usage\n\nInstallation:\n```\nnpm install\n```\n\nCreate `.env` files as needed. There is a file called `.env.example` that you can use as a template.\n\nRun the tests:\n```\nnpx hardhat test\n```",
 };
+export const DEFAULT_IN_SCOPE =
+  "## Project overview\n\nWrite here a brief project overview. What's the goal and vision of the project, main feature, and functionality?\n\n## Audit competition scope\n\nPut here a list of all the folders/files that are inside the scope of this audit competition.\n\n```\n|-- project/\n     |-- README.md\n     |-- file001.txt   \n     |-- folder1\n          |-- file011.txt\n          |-- file012.txt\n               |-- subfolder1\n                    |-- file111.txt\n                    |-- file112.txt\n     |-- folder2\n           |-- file021.txt\n           |-- file022.txt\n```";
 
 export const CODE_LANGUAGES = {
   solidity: ["solidity", "cairo", "go", "rust", "vyper", "simplicity"],
@@ -117,7 +119,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     },
     scope: {
       reposInformation: [{ isMain: true, url: "", commitHash: "" }],
-      description: "",
+      description: DEFAULT_IN_SCOPE,
       codeLangs: [] as string[],
       docsLink: "",
       outOfScope: "",

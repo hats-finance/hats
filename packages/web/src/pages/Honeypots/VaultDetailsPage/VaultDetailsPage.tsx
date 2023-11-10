@@ -8,6 +8,7 @@ import { useAuditCompetitionsVaults, useOldAuditCompetitions } from "../VaultsPa
 import { HoneypotsRoutePaths } from "../router";
 import { VaultDepositsSection, VaultRewardsSection, VaultScopeSection, VaultSubmissionsSection } from "./Sections";
 import { VaultLeaderboardSection } from "./Sections/VaultLeaderboardSection/VaultLeaderboardSection";
+import { useSavedSubmissions } from "./hooks";
 import { StyledSectionTab, StyledVaultDetailsPage } from "./styles";
 
 const DETAILS_SECTIONS = [
@@ -49,6 +50,7 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const vault = vaultToUse ?? allVaults?.find((vault) => vault.id === vaultId);
   const isAudit = vault?.description?.["project-metadata"].type === "audit";
 
+  const { data: savedSubmissions } = useSavedSubmissions(vault);
   const { finished: finishedAuditPayouts } = useAuditCompetitionsVaults();
   const oldAudits = useOldAuditCompetitions();
   const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];
@@ -60,12 +62,13 @@ export const VaultDetailsPage = ({ vaultToUse, noActions = false, noDeployed = f
   const DETAILS_SECTIONS_TO_SHOW = useMemo(
     () =>
       DETAILS_SECTIONS.filter((section) => {
-        if (section.title === "deposits" && noActions) return false;
-        if (section.title === "submissions" && !isAudit) return false;
+        if (section.title === "rewards" && auditPayout) return false;
+        if (section.title === "deposits" && (noActions || auditPayout)) return false;
+        if (section.title === "submissions" && (!isAudit || !savedSubmissions?.length)) return false;
         if (section.title === "leaderboard" && !auditPayout) return false;
         return true;
       }),
-    [noActions, isAudit, auditPayout]
+    [noActions, isAudit, auditPayout, savedSubmissions]
   );
 
   if (allVaults?.length === 0) return <Loading extraText={`${t("loadingVaultDetails")}...`} />;
