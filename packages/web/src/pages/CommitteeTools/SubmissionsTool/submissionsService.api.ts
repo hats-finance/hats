@@ -205,35 +205,17 @@ const extractSubmissionData = (
       };
     };
 
-    let message = JSON.parse(JSON.stringify(decryptedMessage));
-    let count = -1;
-    while (true) {
-      count = count + 1;
-      let nextSubmission: string | undefined =
-        message.match(/(## \[ISSUE #\d*\]:(.|\n)*(## \[ISSUE #\d*\]:))/g)?.[0] ?? undefined;
-      if (nextSubmission) {
-        nextSubmission = nextSubmission.replace(/## \[ISSUE #\d*\]:$/, "");
-        submissions.push({
-          ...submission,
-          submissionIdx: count,
-          linkedVault: submissionVault,
-          submissionDecrypted: nextSubmission.trim(),
-          submissionDataStructure: extractSingleSubmission(nextSubmission.trim()),
-        });
-        message = message.replace(nextSubmission, "");
-      } else {
-        const finalSubmission: string | undefined = message.match(/(## \[ISSUE #\d*\]:(.|\n)*(([^/]+)$))/g)?.[0] ?? undefined;
-        if (finalSubmission) {
-          submissions.push({
-            ...submission,
-            submissionIdx: count,
-            linkedVault: submissionVault,
-            submissionDecrypted: finalSubmission.trim(),
-            submissionDataStructure: extractSingleSubmission(finalSubmission.trim()),
-          });
-        }
-        break;
-      }
+    const message = JSON.parse(JSON.stringify(decryptedMessage)) as string;
+    const submissionsTexts = message.match(/## \[ISSUE #\d+\]:[^#]*(?:(?!## \[ISSUE #\d+\]:)[\s\S])*/g) ?? [];
+
+    for (const [idx, submissionText] of submissionsTexts.entries()) {
+      submissions.push({
+        ...submission,
+        submissionIdx: idx,
+        linkedVault: submissionVault,
+        submissionDecrypted: submissionText.trim(),
+        submissionDataStructure: extractSingleSubmission(submissionText.trim()),
+      });
     }
   } else {
     let message = JSON.parse(JSON.stringify(decryptedMessage));
