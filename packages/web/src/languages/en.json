@@ -11,7 +11,8 @@
       "decryptionToolTitle": "Submissions decryption tool",
       "payoutsDashboardTitle": "Payouts dashboard",
       "createPayoutTitle": "Create a new payout",
-      "hackerProfileTitle": "Web3 Security Profile - {{username}}"
+      "hackerProfileTitle": "Web3 Security Profile - {{username}}",
+      "leaderboardTitle": "Leaderboard"
     },
     "version": "Version",
     "required": "Required",
@@ -786,7 +787,9 @@
       "claimBounty": "Receive rewards",
       "needToBeConnectedWithAWinnerAddress": "You need to be connected with a winner address",
       "errorClaimingBounty": "You already claimed your bounty or there was an error claiming it.",
-      "claimedBountySuccessfully": "You claimed your rewards successfully."
+      "claimedBountySuccessfully": "You claimed your rewards successfully.",
+      "allTime": "All time",
+      "timeline": "Timeline"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
