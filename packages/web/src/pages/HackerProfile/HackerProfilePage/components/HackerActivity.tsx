@@ -12,7 +12,7 @@ import { formatNumber, ipfsTransformUri } from "utils";
 import { IHackerRewardsStats } from "../useAddressesStats";
 import { StyledHackerActivity } from "./styles";
 
-const PAYOUTS_PER_PAGE = 3;
+const PAYOUTS_PER_PAGE = 5;
 
 type IHackerActivityProps = {
   activity: IHackerRewardsStats[];
