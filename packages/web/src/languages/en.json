@@ -10,7 +10,8 @@
       "vaultStatusTitle": "{{vaultName}} vault dashboard",
       "decryptionToolTitle": "Submissions decryption tool",
       "payoutsDashboardTitle": "Payouts dashboard",
-      "createPayoutTitle": "Create a new payout"
+      "createPayoutTitle": "Create a new payout",
+      "hackerProfileTitle": "Web3 Security Profile - {{username}}"
     },
     "version": "Version",
     "required": "Required",
