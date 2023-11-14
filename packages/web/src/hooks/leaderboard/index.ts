@@ -1,2 +1,2 @@
-export { usePayoutsByAddresses } from "./usePayoutsByAddresses";
-export { useFindingsByAddresses } from "./useFindingsByAddresses";
+export { usePayoutsFromAddresses } from "./usePayoutsFromAddresses";
+export { useFindingsFromAddresses } from "./useFindingsFromAddresses";

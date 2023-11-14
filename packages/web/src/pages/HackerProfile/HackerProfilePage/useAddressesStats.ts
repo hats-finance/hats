@@ -1,6 +1,6 @@
 import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
 import { ethers } from "ethers";
-import { useFindingsByAddresses, usePayoutsByAddresses } from "hooks/leaderboard";
+import { useFindingsFromAddresses, usePayoutsFromAddresses } from "hooks/leaderboard";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useCallback, useMemo } from "react";
 import { parseSeverityName } from "utils/severityName";
@@ -24,8 +24,8 @@ export type IHackerRewardsStats = {
 
 export const useAddressesStats = (addresses: string[] = []) => {
   const { vaultsReadyAllChains } = useVaults();
-  const payouts = usePayoutsByAddresses(addresses);
-  const findings = useFindingsByAddresses(addresses);
+  const payouts = usePayoutsFromAddresses(addresses);
+  const findings = useFindingsFromAddresses(addresses);
   const addressesToUse = useMemo(() => addresses.map((a) => a.toLowerCase()), [addresses]);
 
   /**
