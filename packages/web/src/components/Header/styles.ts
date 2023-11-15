@@ -54,6 +54,12 @@ export const StyledHeader = styled.header`
           display: none;
         }
       }
+
+      .profile-button {
+        @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          display: none;
+        }
+      }
     }
   }
 `;
