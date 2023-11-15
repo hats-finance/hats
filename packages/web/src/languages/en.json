@@ -641,6 +641,8 @@
     "signingInWithEthereum": "Signing in with Ethereum",
     "goBack": "Go back",
     "done": "Done",
+    "findings": "Findings",
+    "streak": "Streak",
     "HackerProfile": {
       "createProfile": "Create your hacker profile",
       "updateProfile": "Update your hacker profile",
@@ -789,7 +791,9 @@
       "errorClaimingBounty": "You already claimed your bounty or there was an error claiming it.",
       "claimedBountySuccessfully": "You claimed your rewards successfully.",
       "allTime": "All time",
-      "timeline": "Timeline"
+      "timeline": "Timeline",
+      "loadingLeaderboard": "Loading leaderboard",
+      "highestSeverity": "Highest severity"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",

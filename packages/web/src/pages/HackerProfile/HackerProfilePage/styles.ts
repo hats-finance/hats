@@ -15,6 +15,11 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
         align-items: center;
         padding-bottom: ${getSpacing(3)};
 
+        @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
         .description {
           flex: 1;
           display: flex;
@@ -23,32 +28,37 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
           padding: 0 ${getSpacing(5)};
           font-family: "IBM Plex Mono", monospace;
 
+          @media (max-width: ${breakpointsDefinition.smallMobile}) {
+            padding: 0;
+            margin-top: ${getSpacing(1)};
+          }
+
           h2 {
             font-size: var(--large-2);
           }
 
           p.hacker-title {
-            font-size: var(--moderate-big);
+            font-size: var(--moderate);
           }
 
           p.hacker-date {
             font-size: var(--xmsall);
           }
-        }
 
-        .socials {
-          display: flex;
-          flex-direction: column;
-          gap: ${getSpacing(1)};
+          .socials {
+            display: flex;
+            gap: ${getSpacing(1)};
+            margin-top: ${getSpacing(1)};
 
-          svg {
-            width: ${getSpacing(5)};
-            height: ${getSpacing(5)};
-            cursor: pointer;
-            transition: opacity 0.2s ease-in-out;
+            svg {
+              width: ${getSpacing(4)};
+              height: ${getSpacing(4)};
+              cursor: pointer;
+              transition: opacity 0.2s ease-in-out;
 
-            &:hover {
-              opacity: 0.8;
+              &:hover {
+                opacity: 0.8;
+              }
             }
           }
         }
@@ -59,6 +69,10 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
         justify-content: space-between;
         align-items: center;
         gap: ${getSpacing(5)};
+
+        @media (max-width: ${breakpointsDefinition.smallMobile}) {
+          display: none;
+        }
 
         .buttons {
           display: flex;
@@ -141,6 +155,12 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
           gap: ${getSpacing(2)};
           margin-bottom: ${getSpacing(3)};
 
+          @media (max-width: ${breakpointsDefinition.smallMobile}) {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: ${getSpacing(1)};
+          }
+
           h3 {
             margin-bottom: 0;
           }
@@ -151,7 +171,7 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
             gap: ${getSpacing(1)};
 
             p {
-              font-size: var(--medium-2);
+              font-size: var(--medium);
               color: var(--secondary);
               font-weight: 700;
             }
@@ -162,7 +182,7 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
           display: flex;
           flex-wrap: wrap;
           column-gap: ${getSpacing(10)};
-          row-gap: ${getSpacing(6)};
+          row-gap: ${getSpacing(3)};
 
           @media (max-width: ${breakpointsDefinition.mediumMobile}) {
             column-gap: ${getSpacing(3)};

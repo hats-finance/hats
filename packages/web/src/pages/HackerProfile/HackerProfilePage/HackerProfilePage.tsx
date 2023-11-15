@@ -3,7 +3,7 @@ import ArrowIcon from "@mui/icons-material/ArrowBackOutlined";
 import UnlinkIcon from "@mui/icons-material/LinkOffOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
-import { Alert, Button, HackerProfileImage, Loading, Pill, Seo } from "components";
+import { Alert, Button, HackerProfileImage, HackerStreak, Loading, Pill, Seo } from "components";
 import { queryClient } from "config/reactQuery";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
@@ -17,9 +17,10 @@ import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
+import { useAddressesStats } from "../useAddressesStats";
+import { useAddressesStreak } from "../useAddressesStreak";
 import { HackerActivity } from "./components/HackerActivity";
 import { StyledHackerProfilePage } from "./styles";
-import { useAddressesStats } from "./useAddressesStats";
 
 export const HackerProfilePage = () => {
   const { t } = useTranslation();
@@ -35,6 +36,7 @@ export const HackerProfilePage = () => {
   const profileStats = useAddressesStats(profileFound?.addresses ?? []);
   const severityColors = getSeveritiesColorsArray(undefined, profileStats.findingsGlobalStats.length);
   const isProfileOwner = address && profileFound?.addresses.includes(address.toLowerCase());
+  const streakStats = useAddressesStreak(profileFound?.addresses ?? []);
 
   const linkNewAddress = useLinkNewAddress();
   const unlinkAddress = useUnlinkAddress();
@@ -144,21 +146,27 @@ export const HackerProfilePage = () => {
                       })}
                     </p>
                   )}
-                </div>
 
-                <div className="socials">
-                  {profileFound.twitter_username && (
-                    <a href={`https://twitter.com/${profileFound.twitter_username}`} {...defaultAnchorProps}>
-                      <TwitterIcon />
-                    </a>
-                  )}
-                  {profileFound.github_username && (
-                    <a href={`https://github.com/${profileFound.github_username}`} {...defaultAnchorProps}>
-                      <GitHubIcon />
-                    </a>
-                  )}
+                  <div className="socials">
+                    {profileFound.twitter_username && (
+                      <a href={`https://twitter.com/${profileFound.twitter_username}`} {...defaultAnchorProps}>
+                        <TwitterIcon />
+                      </a>
+                    )}
+                    {profileFound.github_username && (
+                      <a href={`https://github.com/${profileFound.github_username}`} {...defaultAnchorProps}>
+                        <GitHubIcon />
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
+
+              {streakStats.streakCount !== 0 && (
+                <div className="mb-5">
+                  <HackerStreak streak={streakStats.streakCount} maxStreak={streakStats.maxStreak} />
+                </div>
+              )}
 
               {(unlinkAddress.error || linkNewAddress.error) && (
                 <Alert className="mb-3" type="error" content={unlinkAddress.error ?? linkNewAddress.error ?? ""} />
