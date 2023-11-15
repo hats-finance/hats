@@ -45,7 +45,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
       <div className="leaderboard">
         <div className="header">#</div>
         <div className="header">S.R</div>
-        <div className="header">Rewards</div>
+        <div className="header">{t("rewards")}</div>
         {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2, idx: number) => (
           <div className="header">
             <Pill textColor={severityColors[idx ?? 0]} isSeverity text={parseSeverityName(severity.name)} />
@@ -53,17 +53,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
         ))}
 
         {leaderboardData?.map((leaderboardEntry, idx) => (
-          <>
-            <div className="content">{idx + 1}.</div>
-            <LeaderboardBeneficiaryName leaderboardEntry={leaderboardEntry} />
-            <div className="content prize">${millify(leaderboardEntry.totalRewardInUSD)}</div>
-            {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => (
-              <div className="content">
-                {leaderboardEntry.findings.find((finding) => finding.severity === parseSeverityName(severity.name))?.count ??
-                  "--"}
-              </div>
-            ))}
-          </>
+          <LeaderboardEntry key={leaderboardEntry.beneficiary} leaderboardEntry={leaderboardEntry} vault={vault} idx={idx} />
         ))}
       </div>
 
@@ -92,23 +82,38 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
   );
 };
 
-const LeaderboardBeneficiaryName = ({ leaderboardEntry }: { leaderboardEntry: IAuditPayoutLeaderboardData }) => {
+type ILeaderboardEntryProps = {
+  leaderboardEntry: IAuditPayoutLeaderboardData;
+  idx: number;
+  vault: IVault;
+};
+
+const LeaderboardEntry = ({ leaderboardEntry, idx, vault }: ILeaderboardEntryProps) => {
   const hackerProfile = useCachedProfile(leaderboardEntry.beneficiary);
   return (
-    <WithTooltip text={leaderboardEntry.beneficiary}>
-      <div className="content sr-data">
-        {hackerProfile ? (
-          <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
-            <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
-            <p>{hackerProfile.username}</p>
-          </NavLink>
-        ) : (
-          <div className="address">
-            <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />
-            {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
-          </div>
-        )}
-      </div>
-    </WithTooltip>
+    <>
+      <div className="content">{idx + 1}.</div>
+      <WithTooltip text={leaderboardEntry.beneficiary}>
+        <div className="content sr-data">
+          {hackerProfile ? (
+            <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
+              <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
+              <p>{hackerProfile.username}</p>
+            </NavLink>
+          ) : (
+            <div className="address">
+              <Identicon string={leaderboardEntry.beneficiary} size={24} bg="#fff" />
+              {shortenIfAddress(leaderboardEntry.beneficiary, { startLength: 6 })}
+            </div>
+          )}
+        </div>
+      </WithTooltip>
+      <div className="content prize">${millify(leaderboardEntry.totalRewardInUSD)}</div>
+      {vault.description?.severities.map((severity: IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2) => (
+        <div className="content" key={severity.name}>
+          {leaderboardEntry.findings.find((finding) => finding.severity === parseSeverityName(severity.name))?.count ?? "--"}
+        </div>
+      ))}
+    </>
   );
 };
