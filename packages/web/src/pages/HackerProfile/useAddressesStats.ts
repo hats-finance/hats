@@ -5,7 +5,7 @@ import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useCallback, useMemo } from "react";
 import { getOldTokenPrice } from "utils/getOldTokenPrice";
 import { parseSeverityName } from "utils/severityName";
-import { severitiesOrder } from "../constants";
+import { severitiesOrder } from "./constants";
 
 export type IHackerPayoutStats = {
   severity: string;
