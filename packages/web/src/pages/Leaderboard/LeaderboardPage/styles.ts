@@ -34,5 +34,6 @@ export const StyledLeaderboardPage = styled.div`
   .leaderboard-container {
     width: 100%;
     margin-top: ${getSpacing(5)};
+    margin-bottom: ${getSpacing(8)};
   }
 `;
