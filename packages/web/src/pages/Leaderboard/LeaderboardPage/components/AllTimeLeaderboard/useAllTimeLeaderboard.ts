@@ -1,15 +1,31 @@
 import { ethers } from "ethers";
 import { usePayoutsGroupedByAddress } from "hooks/leaderboard";
 import { IPayoutsTimeframe } from "hooks/leaderboard/usePayoutsGroupedByAddress";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { severitiesOrder } from "pages/HackerProfile/constants";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { getOldTokenPrice } from "utils/getOldTokenPrice";
 import { parseSeverityName } from "utils/severityName";
 
-export const useAllTimeLeaderboard = (timeframe: IPayoutsTimeframe = "all") => {
+export type IAllTimeLeaderboard = {
+  address: string;
+  payouts: any[];
+  totalAmount: { tokens: number; usd: number };
+  totalSubmissions: number;
+  highestSeverity: string;
+}[];
+
+export const useAllTimeLeaderboard = (
+  timeframe: IPayoutsTimeframe = "all"
+): { leaderboard: IAllTimeLeaderboard; isLoading: boolean } => {
   const payoutsGroupedByAddress = usePayoutsGroupedByAddress(timeframe);
+  const { vaultsReadyAllChains } = useVaults();
+
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const payoutsWithStats = useMemo(() => {
+    if (!vaultsReadyAllChains) return [];
+
     // Iterate over each entry on payoutsGroupedByAddress and calculate stats (total amount, total submissions and highest severity)
     const payoutsGroupedByAddressWithStats = Object.entries(payoutsGroupedByAddress).map(([address, payouts]) => {
       return payouts.reduce(
@@ -67,10 +83,9 @@ export const useAllTimeLeaderboard = (timeframe: IPayoutsTimeframe = "all") => {
       );
     });
 
+    setIsLoading(false);
     return payoutsGroupedByAddressWithStats.sort((a, b) => (a.totalAmount.usd > b.totalAmount.usd ? -1 : 1));
-  }, [payoutsGroupedByAddress]);
+  }, [payoutsGroupedByAddress, vaultsReadyAllChains]);
 
-  console.log(payoutsWithStats);
-
-  return payoutsWithStats;
+  return { leaderboard: payoutsWithStats, isLoading };
 };
