@@ -117,5 +117,5 @@ export const useAddressesStreak = (addresses: string[] = []) => {
     return maxStreak;
   }, [validPayouts, getAddressesStreakCount]);
 
-  return { streakCount: getAddressesStreakCount(addressesToUse), maxStreak };
+  return { streakCount: getAddressesStreakCount(addressesToUse), maxStreak, getAddressesStreakCount };
 };
