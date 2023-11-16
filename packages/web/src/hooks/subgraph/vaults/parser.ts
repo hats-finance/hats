@@ -12,6 +12,12 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
     description["project-metadata"].icon = "ipfs://QmZyTzxjpZrsJmYgApi2Ku4UaaE25VjjFadvrCtMn4rdks";
   }
 
+  // Change VMEX 2 audit competiton name
+  const vmex2Id = "0xb6861bdeb368a1bf628fc36a36cec62d04fb6a77";
+  if (vmex2Id === vaultAddress.toLowerCase()) {
+    description["project-metadata"].name = "VMEX 2 Audit Competition";
+  }
+
   return description;
 };
 
