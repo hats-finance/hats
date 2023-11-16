@@ -5,6 +5,7 @@ export const StyledAllTimeLeaderboard = styled.div`
   .leaderboard-table {
     display: grid;
     grid-template-columns: repeat(5, auto);
+    overflow-x: auto;
 
     .header,
     .content {

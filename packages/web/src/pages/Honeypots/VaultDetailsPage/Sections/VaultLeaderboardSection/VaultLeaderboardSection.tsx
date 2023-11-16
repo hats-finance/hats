@@ -42,7 +42,7 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
 
   return (
     <StyledLeaderboardSection cols={severities.length + 3}>
-      <div className="leaderboard">
+      <div className="leaderboard-table">
         <div className="header">#</div>
         <div className="header">S.R</div>
         <div className="header">{t("rewards")}</div>

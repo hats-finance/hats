@@ -17,7 +17,7 @@ export const LeaderboardPage = () => {
   return (
     <>
       <Seo title={t("seo.leaderboardTitle")} />
-      <StyledLeaderboardPage className="content-wrapper-md">
+      <StyledLeaderboardPage className="content-wrapper">
         <h2 className="subtitle">{t("leaderboard")}</h2>
 
         <div className="sections-handler">

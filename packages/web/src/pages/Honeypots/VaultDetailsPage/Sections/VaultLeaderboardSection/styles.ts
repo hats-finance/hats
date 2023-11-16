@@ -5,9 +5,10 @@ export const StyledLeaderboardSection = styled.div<{ cols: number }>(
   ({ cols }) => css`
     padding-bottom: ${getSpacing(10)};
 
-    .leaderboard {
+    .leaderboard-table {
       display: grid;
       grid-template-columns: repeat(${cols}, auto);
+      overflow-x: auto;
 
       .header,
       .content {
