@@ -151,15 +151,9 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
 
         .total-rewards {
           display: flex;
-          align-items: center;
-          gap: ${getSpacing(2)};
+          flex-direction: column;
+          gap: ${getSpacing(1)};
           margin-bottom: ${getSpacing(3)};
-
-          @media (max-width: ${breakpointsDefinition.smallMobile}) {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: ${getSpacing(1)};
-          }
 
           h3 {
             margin-bottom: 0;
