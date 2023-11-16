@@ -3,12 +3,14 @@ import { usePayoutsGroupedByAddress } from "hooks/leaderboard";
 import { IPayoutsTimeframe } from "hooks/leaderboard/usePayoutsGroupedByAddress";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { severitiesOrder } from "pages/HackerProfile/constants";
+import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useMemo, useState } from "react";
 import { getOldTokenPrice } from "utils/getOldTokenPrice";
 import { parseSeverityName } from "utils/severityName";
 
 export type IAllTimeLeaderboard = {
   address: string;
+  streak: number | undefined;
   payouts: any[];
   totalAmount: { tokens: number; usd: number };
   totalSubmissions: number;
@@ -19,6 +21,7 @@ export const useAllTimeLeaderboard = (
   timeframe: IPayoutsTimeframe = "all"
 ): { leaderboard: IAllTimeLeaderboard; isLoading: boolean } => {
   const payoutsGroupedByAddress = usePayoutsGroupedByAddress(timeframe);
+  const { getAddressesStreakCount } = useAddressesStreak();
   const { vaultsReadyAllChains } = useVaults();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,6 +45,7 @@ export const useAllTimeLeaderboard = (
           if (payout.payoutData?.type === "single") {
             const findingSeverityName = parseSeverityName(payout.payoutData.severity);
 
+            if (acc.streak === undefined) acc.streak = getAddressesStreakCount([address]);
             acc.totalAmount.tokens += totalRewardInTokens;
             acc.totalAmount.usd += totalRewardInTokens * tokenPrice;
             acc.totalSubmissions += 1;
@@ -61,6 +65,7 @@ export const useAllTimeLeaderboard = (
 
               const findingSeverityName = parseSeverityName(ben.severity);
 
+              if (acc.streak === undefined) acc.streak = getAddressesStreakCount([address]);
               acc.totalAmount.tokens += findingRewardInTokens;
               acc.totalAmount.usd += findingRewardInTokens * tokenPrice;
               acc.totalSubmissions += 1;
@@ -79,13 +84,17 @@ export const useAllTimeLeaderboard = (
           totalAmount: { tokens: 0, usd: 0 },
           totalSubmissions: 0,
           highestSeverity: "",
-        }
+          streak: undefined,
+        } as IAllTimeLeaderboard[0]
       );
     });
 
     setIsLoading(false);
-    return payoutsGroupedByAddressWithStats.sort((a, b) => (a.totalAmount.usd > b.totalAmount.usd ? -1 : 1));
-  }, [payoutsGroupedByAddress, vaultsReadyAllChains]);
+
+    return payoutsGroupedByAddressWithStats.sort(
+      (a, b) => (b.streak ?? 0) - (a.streak ?? 0) || b.totalAmount.usd - a.totalAmount.usd
+    );
+  }, [payoutsGroupedByAddress, vaultsReadyAllChains, getAddressesStreakCount]);
 
   return { leaderboard: payoutsWithStats, isLoading };
 };
