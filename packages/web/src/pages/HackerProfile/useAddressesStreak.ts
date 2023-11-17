@@ -2,7 +2,7 @@ import { IPayoutGraph } from "@hats-finance/shared";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useCallback, useMemo } from "react";
 
-export const useAddressesStreak = (addresses: string[] = []) => {
+export const useAddressesStreak = (addresses: string[] = [], onlyAudits = true) => {
   const { allPayoutsOnEnv, allVaults } = useVaults();
   const addressesToUse = useMemo(() => addresses.map((a) => a.toLowerCase()), [addresses]);
 
@@ -21,7 +21,10 @@ export const useAddressesStreak = (addresses: string[] = []) => {
     const payoutsByMonth = validPayouts.reduce((acc, curr) => {
       if (!curr.payoutData) return acc;
 
+      // Streak only for audits
       const isAudit = curr.vaultData?.description?.["project-metadata"].type === "audit";
+      if (onlyAudits && !isAudit) return acc;
+
       const dateToUse = isAudit
         ? curr.vaultData?.description?.["project-metadata"].starttime
         : curr.approvedAt
@@ -40,7 +43,7 @@ export const useAddressesStreak = (addresses: string[] = []) => {
     }, {} as { [key: string]: any[] });
 
     return payoutsByMonth;
-  }, [validPayouts]);
+  }, [validPayouts, onlyAudits]);
 
   // A streak is defined as consecutive months where the hacker has at least one payout.
   // This function uses `addresses` as the addresses of the hacker we want to get the streak.
