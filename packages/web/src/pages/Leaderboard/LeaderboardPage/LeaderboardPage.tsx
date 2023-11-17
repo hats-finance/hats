@@ -28,7 +28,7 @@ export const LeaderboardPage = () => {
             {t("Leaderboard.allTime")}
           </h3>
           <h3
-            className={`section ${selectedLeaderboard === "timeline" ? "selected" : ""}`}
+            className={`section section--timeline ${selectedLeaderboard === "timeline" ? "selected" : ""}`}
             onClick={() => setSelectedLeaderboard("timeline")}
           >
             {t("Leaderboard.auditsTimeline")}

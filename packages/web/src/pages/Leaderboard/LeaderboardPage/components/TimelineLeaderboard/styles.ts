@@ -1,9 +1,14 @@
 import styled from "styled-components";
 import { getSpacing } from "styles";
+import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledTimelineLeaderboard = styled.div`
   display: flex;
   gap: ${getSpacing(2)};
+
+  @media (max-width: ${breakpointsDefinition.mediumMobile}) {
+    display: none;
+  }
 
   .timeline {
     position: relative;

@@ -140,6 +140,7 @@
     "setMaxBountyHelper": "Set the maximum % of the vault allocated for bounties",
     "bugBountyProgram": "Bug Bounty Program",
     "auditCompetition": "Audit Competition",
+    "privateAuditCompetition": "Private Audit Competition",
     "grant": "Grant",
     "level": "Level",
     "prize": "Prize",
@@ -642,7 +643,7 @@
     "goBack": "Go back",
     "done": "Done",
     "findings": "Findings",
-    "streak": "Streak",
+    "streak": "Competitions streak",
     "HackerProfile": {
       "createProfile": "Create your hacker profile",
       "updateProfile": "Update your hacker profile",
