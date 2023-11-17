@@ -761,7 +761,12 @@
       "useKeystoreForSelectCreate": "Use the keystore to select/create/import/upload keys and backup.",
       "dontWantToUseOurKeystore": "Don't want to use our PGP keystore?",
       "pasteExistingPublicKey": "Paste existing PGP public key",
-      "yourKeystoreIsNotBackedUp": "Your keystore is not backed up."
+      "yourKeystoreIsNotBackedUp": "Your keystore is not backed up.",
+      "dontHaveAccessToKeystore": "Don't have access to your keystore?",
+      "dontHaveAccessToKeystoreExplanation": "If you don't have access to your keystore, you can delete it and create a new one or upload a backup.",
+      "deleteKeystore": "Delete keystore",
+      "deleteKeystoreDescription": "Are you sure you want to delete your keystore? \n\n If you don't have a backup of the keys in the keystore you will lose them.",
+      "confirmDeleteKeystore": "Confirm delete keystore"
     },
     "SubmissionsTool": {
       "rescanSubmissions": "Rescan submissions",
@@ -793,7 +798,8 @@
       "allTime": "All time",
       "timeline": "Timeline",
       "loadingLeaderboard": "Loading leaderboard",
-      "highestSeverity": "Highest severity"
+      "highestSeverity": "Highest severity",
+      "auditsTimeline": "Competitions timeline"
     },
     "Payouts": {
       "welcomeTitle": "Create easy payouts with the payout tool",
