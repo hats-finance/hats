@@ -62,8 +62,8 @@ export const useAddressesStreak = (addresses: string[] = []) => {
       let streakCount = 0;
       for (let i = monthsYear.length - 1; i >= 0; i--) {
         const monthYear = monthsYear[i];
-        const payouts = payoutsGroupedByMonthYear[monthYear];
-        const isAddressInMonth = payouts.find((payout) => {
+        const payoutsInMonth = payoutsGroupedByMonthYear[monthYear];
+        const isAddressInMonth = payoutsInMonth.find((payout) => {
           if (!payout.payoutData) return false;
 
           if (payout.payoutData.type === "single") {
@@ -78,6 +78,11 @@ export const useAddressesStreak = (addresses: string[] = []) => {
         if (isAddressInMonth) {
           streakCount += 1;
         } else {
+          // If in this month were only private vaults, continue the loop
+          if (payoutsInMonth.every((payout) => payout.vaultData?.description?.["project-metadata"].isPrivateAudit)) continue;
+          // If in this month were only bug bounty payotus, continue the loop
+          if (payoutsInMonth.every((payout) => payout.vaultData?.description?.["project-metadata"].type !== "audit")) continue;
+
           // Current month and year
           const todayMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
 

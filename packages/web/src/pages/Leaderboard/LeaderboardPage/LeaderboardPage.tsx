@@ -31,7 +31,7 @@ export const LeaderboardPage = () => {
             className={`section ${selectedLeaderboard === "timeline" ? "selected" : ""}`}
             onClick={() => setSelectedLeaderboard("timeline")}
           >
-            {t("Leaderboard.timeline")}
+            {t("Leaderboard.auditsTimeline")}
           </h3>
         </div>
 

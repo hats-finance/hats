@@ -18,9 +18,10 @@ type VaultLeaderboardSectionProps = {
   vault: IVault;
   noDeployed?: boolean;
   auditPayout?: IPayoutGraph | undefined;
+  hideClaimRewardsAction?: boolean;
 };
 
-export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboardSectionProps) => {
+export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAction = false }: VaultLeaderboardSectionProps) => {
   const { t } = useTranslation();
   const { address } = useAccount();
 
@@ -57,27 +58,31 @@ export const VaultLeaderboardSection = ({ vault, auditPayout }: VaultLeaderboard
         ))}
       </div>
 
-      <br />
-      <div className="mt-5">
-        <p className="mb-4">{t("Leaderboard.ifYouAreAWinner")}</p>
-        {!isWinnerAddress && <span className="error mb-1">{t("Leaderboard.needToBeConnectedWithAWinnerAddress")}</span>}
-        <Button disabled={!isWinnerAddress} onClick={isWinnerAddress ? executeRelease : undefined}>
-          {t("Leaderboard.claimBounty")}
-        </Button>
+      {!hideClaimRewardsAction && (
+        <>
+          <br />
+          <div className="mt-5">
+            <p className="mb-4">{t("Leaderboard.ifYouAreAWinner")}</p>
+            {!isWinnerAddress && <span className="error mb-1">{t("Leaderboard.needToBeConnectedWithAWinnerAddress")}</span>}
+            <Button disabled={!isWinnerAddress} onClick={isWinnerAddress ? executeRelease : undefined}>
+              {t("Leaderboard.claimBounty")}
+            </Button>
 
-        {releasePayment.error && (
-          <Alert className="mt-4" type="error">
-            {t("Leaderboard.errorClaimingBounty")}
-          </Alert>
-        )}
-        {releasePayment.isSuccess && (
-          <Alert className="mt-4" type="success">
-            {t("Leaderboard.claimedBountySuccessfully")}
-          </Alert>
-        )}
-      </div>
+            {releasePayment.error && (
+              <Alert className="mt-4" type="error">
+                {t("Leaderboard.errorClaimingBounty")}
+              </Alert>
+            )}
+            {releasePayment.isSuccess && (
+              <Alert className="mt-4" type="success">
+                {t("Leaderboard.claimedBountySuccessfully")}
+              </Alert>
+            )}
+          </div>
 
-      {releasePayment.isLoading && <Loading fixed extraText={`${t("loading")}...`} />}
+          {releasePayment.isLoading && <Loading fixed extraText={`${t("loading")}...`} />}
+        </>
+      )}
     </StyledLeaderboardSection>
   );
 };

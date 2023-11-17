@@ -45,9 +45,6 @@ export const StyledHackerActivity = styled.div`
         color: var(--grey-800);
         cursor: default;
       }
-
-      &:hover {
-      }
     }
 
     .item {
