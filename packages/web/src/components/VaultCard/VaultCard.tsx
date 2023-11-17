@@ -266,7 +266,7 @@ export const VaultCard = ({
                 {projectWebsite}
               </a>
             )}
-            {isPrivateAudit && <p className="private-audit-indicator">{t("privateAuditCompetition")}</p>}
+            {reducedStyles && isPrivateAudit && <p className="private-audit-indicator">{t("privateAuditCompetition")}</p>}
           </div>
         </div>
 
