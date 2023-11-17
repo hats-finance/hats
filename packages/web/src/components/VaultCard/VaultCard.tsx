@@ -110,6 +110,7 @@ export const VaultCard = ({
   const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
   const isContinuousAudit = vault.description["project-metadata"].isContinuousAudit;
+  const isPrivateAudit = vault.description["project-metadata"].isPrivateAudit;
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
@@ -265,16 +266,11 @@ export const VaultCard = ({
                 {projectWebsite}
               </a>
             )}
+            {isPrivateAudit && <p className="private-audit-indicator">{t("privateAuditCompetition")}</p>}
           </div>
         </div>
 
         <div className="stats">
-          {/* {!isAudit && (
-            <div className="stats__stat">
-              <h3 className="value">5%</h3>
-              <div className="sub-value">APY</div>
-            </div>
-          )} */}
           <div className="stats__stat">
             {isAudit ? (
               <>
