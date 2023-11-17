@@ -1,10 +1,11 @@
 import { IEditedSessionResponse, IPayoutGraph } from "@hats-finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
+import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
 import { useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
@@ -20,6 +21,8 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
   const { tryAuthentication, profileData } = useSiweAuth();
   const { allVaultsOnEnv, allPayoutsOnEnv } = useVaults();
   const isGovMember = useIsGovMember();
+
+  const { data: excludedFinishedCompetitions, isLoading: isLoadingExclusions } = useExcludedFinishedCompetitions();
 
   useEffect(() => {
     if (opts.private) tryAuthentication();
@@ -52,6 +55,25 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
         : !isPrivateAudit || payout.payoutData?.vault?.dateStatus === "finished";
     });
 
+  const preparingPayoutAudits = useMemo(() => {
+    if (isLoadingExclusions) return [];
+
+    return (
+      allVaultsOnEnv
+        ?.filter((vault) => vault.registered)
+        ?.filter((vault) => vault.description?.["project-metadata"].type === "audit")
+        ?.filter((vault) => !excludedFinishedCompetitions?.includes(vault.id))
+        ?.filter((vault) => {
+          const isFinished = vault.dateStatus === "finished";
+          const noApprovedPayout =
+            allPayoutsOnEnv?.filter((payout) => payout.isApproved).find((payout) => payout.payoutData?.vault?.id === vault.id) ===
+            undefined;
+
+          return isFinished && noApprovedPayout;
+        }) ?? []
+    );
+  }, [isLoadingExclusions, excludedFinishedCompetitions, allVaultsOnEnv, allPayoutsOnEnv]);
+
   auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
   paidPayoutsFromAudits?.sort(
     (a, b) =>
@@ -62,10 +84,16 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
         ? +a.payoutData?.vault?.description?.["project-metadata"].starttime
         : 0)
   );
+  preparingPayoutAudits?.sort(
+    (a, b) =>
+      (b.description?.["project-metadata"].starttime ? +b.description?.["project-metadata"].starttime : 0) -
+      (a.description?.["project-metadata"].starttime ? +a.description?.["project-metadata"].starttime : 0)
+  );
 
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
     upcoming: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "upcoming") ?? [],
+    preparingPayout: preparingPayoutAudits,
     finished: paidPayoutsFromAudits ?? [],
   };
 };
