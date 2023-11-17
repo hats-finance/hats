@@ -1,11 +1,12 @@
-import { IEditedSessionResponse, IPayoutGraph, isAddressAMultisigMember } from "@hats-finance/shared";
+import { IEditedSessionResponse, IPayoutGraph } from "@hats-finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
-import { useEffect, useState } from "react";
+import { useIsGovMember } from "hooks/useIsGovMember";
+import { useEffect } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
-import { useAccount, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
 /**
@@ -16,28 +17,13 @@ import * as auditDraftsService from "./auditDraftsService";
  * - Only invited users or governance can access to private audits.
  */
 export const useAuditCompetitionsVaults = (opts: { private: boolean } = { private: false }) => {
-  const { address } = useAccount();
-  const { chain } = useNetwork();
   const { tryAuthentication, profileData } = useSiweAuth();
   const { allVaultsOnEnv, allPayoutsOnEnv } = useVaults();
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
 
   useEffect(() => {
     if (opts.private) tryAuthentication();
   }, [tryAuthentication, opts.private]);
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
 
   const auditCompetitionsVaults =
     allVaultsOnEnv

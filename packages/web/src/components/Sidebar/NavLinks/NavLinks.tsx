@@ -10,6 +10,7 @@ import { ReactComponent as PrivateAuditsIcon } from "assets/icons/custom/private
 import { ReactComponent as VaultEditorIcon } from "assets/icons/custom/vault_editor.svg";
 import { utils } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import useOnClickOutside from "hooks/useOnClickOutside";
 import { RoutePaths } from "navigation";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
@@ -17,7 +18,6 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { appChains } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { StyledNavLink, StyledNavLinkNoRouter, StyledNavLinksList } from "./styles";
 
@@ -29,7 +29,7 @@ export default function NavLinks() {
   const { chain } = useNetwork();
   const { address } = useAccount();
 
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
   const [isInvitedToPrivateAudits, setIsInvitedToPrivateAudits] = useState(false);
   const [isCommitteeAddress, setIsCommitteeAddress] = useState(false);
   const [showCommitteeToolsSubroutes, setshowCommitteeToolsSubroutes] = useState(false);
@@ -40,19 +40,6 @@ export default function NavLinks() {
     dispatch(toggleMenu(false));
     setshowCommitteeToolsSubroutes(false);
   };
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
 
   useEffect(() => {
     if (!allVaultsOnEnv || !address) return setIsInvitedToPrivateAudits(false);
