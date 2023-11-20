@@ -1,11 +1,13 @@
-import { IEditedSessionResponse, IPayoutGraph, isAddressAMultisigMember } from "@hats-finance/shared";
+import { IEditedSessionResponse, IPayoutGraph } from "@hats-finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
+import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
-import { useEffect, useState } from "react";
+import { useIsGovMember } from "hooks/useIsGovMember";
+import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
-import { useAccount, useNetwork } from "wagmi";
+import { useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
 /**
@@ -16,28 +18,15 @@ import * as auditDraftsService from "./auditDraftsService";
  * - Only invited users or governance can access to private audits.
  */
 export const useAuditCompetitionsVaults = (opts: { private: boolean } = { private: false }) => {
-  const { address } = useAccount();
-  const { chain } = useNetwork();
   const { tryAuthentication, profileData } = useSiweAuth();
   const { allVaultsOnEnv, allPayoutsOnEnv } = useVaults();
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
+
+  const { data: excludedFinishedCompetitions, isLoading: isLoadingExclusions } = useExcludedFinishedCompetitions();
 
   useEffect(() => {
     if (opts.private) tryAuthentication();
   }, [tryAuthentication, opts.private]);
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
 
   const auditCompetitionsVaults =
     allVaultsOnEnv
@@ -66,12 +55,45 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
         : !isPrivateAudit || payout.payoutData?.vault?.dateStatus === "finished";
     });
 
+  const preparingPayoutAudits = useMemo(() => {
+    if (isLoadingExclusions) return [];
+
+    return (
+      allVaultsOnEnv
+        ?.filter((vault) => vault.registered)
+        ?.filter((vault) => vault.description?.["project-metadata"].type === "audit")
+        ?.filter((vault) => !excludedFinishedCompetitions?.includes(vault.id))
+        ?.filter((vault) => {
+          const isFinished = vault.dateStatus === "finished";
+          const noApprovedPayout =
+            allPayoutsOnEnv?.filter((payout) => payout.isApproved).find((payout) => payout.payoutData?.vault?.id === vault.id) ===
+            undefined;
+
+          return isFinished && noApprovedPayout;
+        }) ?? []
+    );
+  }, [isLoadingExclusions, excludedFinishedCompetitions, allVaultsOnEnv, allPayoutsOnEnv]);
+
   auditCompetitionsVaults.sort((a, b) => (b.amountsInfo?.depositedAmount.usd ?? 0) - (a.amountsInfo?.depositedAmount.usd ?? 0));
-  paidPayoutsFromAudits?.sort((a, b) => (b.approvedAt ? +b.approvedAt : 0) - (a.approvedAt ? +a.approvedAt : 0));
+  paidPayoutsFromAudits?.sort(
+    (a, b) =>
+      (b.payoutData?.vault?.description?.["project-metadata"].starttime
+        ? +b.payoutData?.vault?.description?.["project-metadata"].starttime
+        : 0) -
+      (a.payoutData?.vault?.description?.["project-metadata"].starttime
+        ? +a.payoutData?.vault?.description?.["project-metadata"].starttime
+        : 0)
+  );
+  preparingPayoutAudits?.sort(
+    (a, b) =>
+      (b.description?.["project-metadata"].starttime ? +b.description?.["project-metadata"].starttime : 0) -
+      (a.description?.["project-metadata"].starttime ? +a.description?.["project-metadata"].starttime : 0)
+  );
 
   return {
     live: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "on_time") ?? [],
     upcoming: auditCompetitionsVaults?.filter((vault) => vault.dateStatus === "upcoming") ?? [],
+    preparingPayout: preparingPayoutAudits,
     finished: paidPayoutsFromAudits ?? [],
   };
 };

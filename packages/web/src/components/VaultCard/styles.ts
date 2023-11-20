@@ -116,6 +116,12 @@ export const StyledVaultCard = styled.div<{
             -webkit-box-orient: vertical;
           }
         }
+
+        .private-audit-indicator {
+          font-weight: 700;
+          font-style: italic;
+          color: var(--secondary);
+        }
       }
 
       .stats {

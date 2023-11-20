@@ -1,8 +1,8 @@
-import { isAddressAMultisigMember } from "@hats-finance/shared";
 import ErrorIcon from "assets/icons/error-icon.svg";
 import { Dot, DropdownSelector, WithTooltip } from "components";
 import { Colors } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -31,7 +31,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     { connector: string; chainId?: number } | undefined
   >();
   const [showConnectors, setShowConnectors] = useState(false);
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
 
   const { isAuthenticated, updateProfile } = useSiweAuth();
 
@@ -65,19 +65,6 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [account, canReconnect]);
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (account && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, account, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [account, chain]);
 
   const getButtonTitle = () => {
     if (account) {
