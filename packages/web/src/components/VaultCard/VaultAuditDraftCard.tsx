@@ -1,16 +1,15 @@
-import { IEditedSessionResponse, isAddressAMultisigMember } from "@hats-finance/shared";
+import { IEditedSessionResponse } from "@hats-finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Button, Pill, WithTooltip } from "components";
 import useConfirm from "hooks/useConfirm";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
-import { useAccount, useNetwork } from "wagmi";
 import { StyledVaultCard } from "./styles";
 
 type VaultAuditDraftCardProps = {
@@ -27,23 +26,7 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
   const navigate = useNavigate();
   const confirm = useConfirm();
 
-  const { address } = useAccount();
-  const { chain } = useNetwork();
-
-  const [isGovMember, setIsGovMember] = useState(false);
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
+  const isGovMember = useIsGovMember();
 
   const vaultDate = useMemo(() => {
     const starttime = (vaultDraft.editedDescription["project-metadata"].starttime ?? 0) * 1000;

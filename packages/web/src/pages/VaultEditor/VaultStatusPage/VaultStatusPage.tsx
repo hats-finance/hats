@@ -1,12 +1,12 @@
-import { IAddressRoleInVault, IVaultStatusData, isAddressAMultisigMember } from "@hats-finance/shared";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
 import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import { appChains } from "settings";
 import { isAddress } from "utils/addresses.utils";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import { checkIfAddressCanEditTheVault, vaultEditorRoleToIntlKey } from "../utils";
 import * as VaultStatusService from "../vaultEditorService";
 import {
@@ -28,13 +28,12 @@ import { StyledVaultStatusPage } from "./styles";
 export const VaultStatusPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
-  const { chain } = useNetwork();
   const navigate = useNavigate();
   const { vaultAddress, vaultChainId } = useParams();
 
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
   const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: IAddressRoleInVault }>();
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
 
   useEffect(() => {
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
@@ -43,19 +42,6 @@ export const VaultStatusPage = () => {
       navigate(-1);
     }
   }, [vaultAddress, vaultChainId, navigate]);
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
 
   useEffect(() => {
     const getPermissionData = async () => {

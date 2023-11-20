@@ -1,4 +1,5 @@
-import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton } from "components";
+import InfoIcon from "@mui/icons-material/InfoOutlined";
+import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton, WithTooltip } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useTranslation } from "react-i18next";
 import { useAuditCompetitionsVaults, useDraftAuditCompetitions, useOldAuditCompetitions } from "./hooks";
@@ -12,6 +13,7 @@ export const AuditVaultsPage = () => {
     live: liveAuditCompetitions,
     upcoming: upcomingAuditCompetitions,
     finished: finishedAuditPayouts,
+    preparingPayout: preparingPayoutAuditCompetitions,
   } = useAuditCompetitionsVaults();
 
   const oldAudits = useOldAuditCompetitions();
@@ -56,6 +58,22 @@ export const AuditVaultsPage = () => {
               ))}
               {draftAudits.map((auditDraft, idx) => (
                 <VaultAuditDraftCard key={auditDraft._id ?? "" + idx} vaultDraft={auditDraft} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {preparingPayoutAuditCompetitions.length > 0 && (
+          <>
+            <h2 className="subtitle">
+              {t("preparingPayoutCompetitions")}{" "}
+              <WithTooltip text={t("preparingPayoutCompetitionsExplanation")}>
+                <InfoIcon className="icon" fontSize="inherit" />
+              </WithTooltip>
+            </h2>
+            <div className="vaults-container mt-4">
+              {preparingPayoutAuditCompetitions.map((auditVault, idx) => (
+                <VaultCard key={auditVault.id + idx} vaultData={auditVault} />
               ))}
             </div>
           </>

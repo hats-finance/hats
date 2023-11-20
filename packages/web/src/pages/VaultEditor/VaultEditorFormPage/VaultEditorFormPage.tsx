@@ -9,7 +9,6 @@ import {
   editedFormToCreateVaultOnChainCall,
   getGnosisSafeInfo,
   isAGnosisSafeTx,
-  isAddressAMultisigMember,
   nonEditableEditionStatus,
 } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -24,6 +23,7 @@ import DOMPurify from "dompurify";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
+import { useIsGovMember } from "hooks/useIsGovMember";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -32,7 +32,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount } from "wagmi";
 import { checkIfAddressCanEditTheVault } from "../utils";
 import * as VaultEditorService from "../vaultEditorService";
 import { VerifiedEmailModal } from "./VerifiedEmailModal";
@@ -52,7 +52,6 @@ import { useVaultEditorSteps } from "./useVaultEditorSteps";
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
-  const { chain } = useNetwork();
   const { allVaults } = useVaults();
 
   const { editSessionId } = useParams();
@@ -71,7 +70,7 @@ const VaultEditorFormPage = () => {
   const [onChainDescriptionHash, setOnChainDescriptionHash] = useState<string | undefined>(undefined);
   const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
-  const [isGovMember, setIsGovMember] = useState(false);
+  const isGovMember = useIsGovMember();
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
   const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
@@ -129,19 +128,6 @@ const VaultEditorFormPage = () => {
 
   const showPublishDraftOption =
     vaultType === "audit" && currentStepInfo?.id === "details" && isGovMember && !isVaultCreated && !isEditingExistingVault;
-
-  useEffect(() => {
-    const checkGovMember = async () => {
-      if (address && chain && chain.id) {
-        const chainId = Number(chain.id);
-        const govMultisig = appChains[Number(chainId)]?.govMultisig;
-
-        const isGov = await isAddressAMultisigMember(govMultisig, address, chainId);
-        setIsGovMember(isGov);
-      }
-    };
-    checkGovMember();
-  }, [address, chain]);
 
   async function loadEditSessionData(editSessionId: string) {
     if (isVaultCreated) return; // If vault is already created, creation is blocked

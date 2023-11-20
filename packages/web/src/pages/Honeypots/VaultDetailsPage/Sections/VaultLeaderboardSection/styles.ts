@@ -5,18 +5,19 @@ export const StyledLeaderboardSection = styled.div<{ cols: number }>(
   ({ cols }) => css`
     padding-bottom: ${getSpacing(10)};
 
-    .leaderboard {
+    .leaderboard-table {
       display: grid;
       grid-template-columns: repeat(${cols}, auto);
-      /* row-gap: ${getSpacing(4)}; */
+      overflow-x: auto;
 
       .header,
       .content {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding: ${getSpacing(3)} 0;
+        padding: ${getSpacing(3)} ${getSpacing(1)};
         font-family: "IBM Plex Mono", monospace;
+        text-align: center;
       }
 
       .content {

@@ -4,7 +4,7 @@ import { useMemo } from "react";
 /**
  * Returns all the findings (submissions) executed on the dApp
  */
-export const useFindingsByAddresses = (addresses: string[] = []) => {
+export const useFindingsFromAddresses = (addresses: string[] = []) => {
   const { allSubmissionsOnEnv } = useSubmissions();
   const addressesToUse = useMemo(() => addresses.map((a) => a.toLowerCase()), [addresses]);
 

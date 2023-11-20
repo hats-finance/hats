@@ -41,7 +41,6 @@ export const VaultRewardsSection = ({ vault }: VaultRewardsSectionProps) => {
                 </WithTooltip>
               ) : (
                 <div className="values-container">
-                  asd
                   <h4 className="value">~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</h4>
                   <p className="value-tokens">
                     {`(${formatNumber(vault.amountsInfo?.depositedAmount.tokens ?? 0, 4)} ${vault.stakingTokenSymbol})`}

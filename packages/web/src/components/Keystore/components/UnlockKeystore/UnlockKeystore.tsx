@@ -1,6 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, FormInput, Modal } from "components";
+import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { Button, CollapsableTextContent, FormInput, Modal } from "components";
+import { LocalStorage } from "constants/constants";
 import { useEnhancedForm } from "hooks/form";
+import useConfirm from "hooks/useConfirm";
 import { useEffect, useState } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -18,6 +21,7 @@ type IUnlockKeystoreForm = {
 
 export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystoreProps) => {
   const { t } = useTranslation();
+  const confirm = useConfirm();
   const [error, setError] = useState<string | undefined>();
 
   const {
@@ -46,6 +50,25 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
     }
   };
 
+  const handleDeleteKeystore = async () => {
+    const wantToDelete = await confirm({
+      title: t("PGPTool.deleteKeystore"),
+      titleIcon: <DeleteIcon className="mr-2" fontSize="large" />,
+      description: t("PGPTool.deleteKeystoreDescription"),
+      cancelText: t("no"),
+      confirmText: t("delete"),
+      confirmTextInput: {
+        label: t("PGPTool.confirmDeleteKeystore"),
+        placeholder: t("PGPTool.confirmDeleteKeystore"),
+        textToConfirm: "yes",
+      },
+    });
+
+    if (!wantToDelete) return;
+    localStorage.removeItem(LocalStorage.Keystore);
+    window.location.reload();
+  };
+
   return (
     <Modal removeAnimation title={t("PGPTool.title")} capitalizeTitle isShowing={true} onHide={onClose}>
       <StyledBaseKeystoreContainer>
@@ -65,6 +88,17 @@ export const UnlockKeystore = ({ onClose, onKeystoreUnlocked }: UnlockKeystorePr
           <Button className="mt-5" disabled={!isValid} type="submit" expanded>
             {t("PGPTool.unlockKeystore")}
           </Button>
+
+          <div className="mt-5">
+            <CollapsableTextContent noContentPadding title={t("PGPTool.dontHaveAccessToKeystore")}>
+              <>
+                <p className="mb-3">{t("PGPTool.dontHaveAccessToKeystoreExplanation")}</p>
+                <Button onClick={handleDeleteKeystore} className="mt-2" styleType="invisible" noPadding>
+                  {t("PGPTool.deleteKeystore")}
+                </Button>
+              </>
+            </CollapsableTextContent>
+          </div>
         </form>
       </StyledBaseKeystoreContainer>
     </Modal>

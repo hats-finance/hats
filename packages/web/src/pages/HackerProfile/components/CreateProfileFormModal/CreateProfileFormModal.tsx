@@ -66,7 +66,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
 
   const methods = useForm<IHackerProfile>({
     resolver: yupResolver(getCreateProfileYupSchema(t)),
-    mode: "onSubmit",
+    mode: "onBlur",
   });
   const { trigger, handleSubmit, formState, reset } = methods;
 

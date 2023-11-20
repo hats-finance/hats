@@ -67,27 +67,29 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
-          {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
-            <>
-              {!!createdProfile ? (
-                <Button
-                  size="big"
-                  noRadius
-                  styleType="outlined"
-                  onClick={inProfileView ? () => showCreateProfile() : handleGoToProfile}
-                >
-                  {inProfileView ? t("Header.updateHackerProfile") : t("Header.myProfile")}
-                </Button>
-              ) : (
-                <>
-                  {/* <Pill capitalize text="New feature" /> */}
-                  <Button size="big" noRadius styleType="outlined" onClick={() => showCreateProfile()}>
-                    {t("Header.createHackerProfile")}
+          <div className="profile-button">
+            {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
+              <>
+                {!!createdProfile ? (
+                  <Button
+                    size="big"
+                    noRadius
+                    styleType="outlined"
+                    onClick={inProfileView ? () => showCreateProfile() : handleGoToProfile}
+                  >
+                    {inProfileView ? t("Header.updateHackerProfile") : t("Header.myProfile")}
                   </Button>
-                </>
-              )}
-            </>
-          )}
+                ) : (
+                  <>
+                    {/* <Pill capitalize text="New feature" /> */}
+                    <Button size="big" noRadius styleType="outlined" onClick={() => showCreateProfile()}>
+                      {t("Header.createHackerProfile")}
+                    </Button>
+                  </>
+                )}
+              </>
+            )}
+          </div>
 
           <WhereverWidget />
           <WalletButton />

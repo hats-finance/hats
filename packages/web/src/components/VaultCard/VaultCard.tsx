@@ -26,6 +26,8 @@ type VaultCardProps = {
   noActions?: boolean;
   noDeployed?: boolean;
   hideAmounts?: boolean;
+  hideStatusPill?: boolean;
+  hideLogo?: boolean;
 };
 
 /**
@@ -37,6 +39,8 @@ type VaultCardProps = {
  * @param noActions - Disable the actions buttons. (mainly for vault preview)
  * @param noDeployed - if the vault is not deployed. (this is for showing images from the right source -> ipfs or backend)
  * @param hideAmounts - Hide the amounts. (used on vault details page)
+ * @param hideStatusPill - Hide the status pill.
+ * @param hideLogo - Hide the logo.
  *
  * @remarks
  * For bug bounties and live/upcoming audit competitions, the vault data is passed as `vaultData`.
@@ -49,6 +53,8 @@ export const VaultCard = ({
   noActions = false,
   noDeployed = false,
   hideAmounts = false,
+  hideStatusPill = false,
+  hideLogo = false,
 }: VaultCardProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -104,6 +110,7 @@ export const VaultCard = ({
   const activeClaim = vault.activeClaim;
   const isAudit = vault.description["project-metadata"].type === "audit";
   const isContinuousAudit = vault.description["project-metadata"].isContinuousAudit;
+  const isPrivateAudit = vault.description["project-metadata"].isPrivateAudit;
   const logo = vault.description["project-metadata"].icon;
   const name = vault.description["project-metadata"].name;
   const projectWebsite = vault.description["project-metadata"].website;
@@ -236,15 +243,17 @@ export const VaultCard = ({
       hasActiveClaim={!!activeClaim}
       showIntendedAmount={showIntended}
     >
-      <div className="pills mb-4">
-        {isAudit && getAuditStatusPill()}
-        {isContinuousAudit && getContinuousAuditPill()}
-      </div>
+      {!hideStatusPill && (
+        <div className="pills mb-4">
+          {isAudit && getAuditStatusPill()}
+          {isContinuousAudit && getContinuousAuditPill()}
+        </div>
+      )}
       {!!activeClaim && !reducedStyles && getActiveClaimBanner()}
 
       <div className="vault-info">
         <div className="metadata">
-          <img onClick={goToProjectWebsite} src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />
+          {!hideLogo && <img onClick={goToProjectWebsite} src={ipfsTransformUri(logo, { isPinned: !noDeployed })} alt="logo" />}
           <div className="name-description">
             <h3 className="name">{name}</h3>
             {!reducedStyles && <p className="description">{description}</p>}
@@ -257,16 +266,11 @@ export const VaultCard = ({
                 {projectWebsite}
               </a>
             )}
+            {reducedStyles && isPrivateAudit && <p className="private-audit-indicator">{t("privateAuditCompetition")}</p>}
           </div>
         </div>
 
         <div className="stats">
-          {/* {!isAudit && (
-            <div className="stats__stat">
-              <h3 className="value">5%</h3>
-              <div className="sub-value">APY</div>
-            </div>
-          )} */}
           <div className="stats__stat">
             {isAudit ? (
               <>

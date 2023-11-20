@@ -12,6 +12,24 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
     description["project-metadata"].icon = "ipfs://QmZyTzxjpZrsJmYgApi2Ku4UaaE25VjjFadvrCtMn4rdks";
   }
 
+  // Change VMEX 2 audit competiton name
+  const vmex2Id = "0xb6861bdeb368a1bf628fc36a36cec62d04fb6a77";
+  if (vmex2Id === vaultAddress.toLowerCase()) {
+    description["project-metadata"].name = "VMEX #2";
+  }
+
+  // Change IDLE private audit competiton name
+  const idleId = "0x12005ec362c177c101b316d40a26cebda42d5c3b";
+  if (idleId === vaultAddress.toLowerCase()) {
+    description["project-metadata"].name = "Idle Finance";
+  }
+
+  // Change Convergence audit competiton name
+  const convergenceId = "0x0e410e7af8e70fc5bffcdbfbdf1673ee7b3d0777";
+  if (convergenceId === vaultAddress.toLowerCase()) {
+    description["project-metadata"].name = "Convergence Finance";
+  }
+
   return description;
 };
 

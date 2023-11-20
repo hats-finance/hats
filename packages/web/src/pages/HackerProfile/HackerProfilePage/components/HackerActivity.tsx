@@ -9,10 +9,10 @@ import { IGithubIssue } from "pages/Honeypots/VaultDetailsPage/types";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { formatNumber, ipfsTransformUri } from "utils";
-import { IHackerRewardsStats } from "../useAddressesStats";
+import { IHackerRewardsStats } from "../../useAddressesStats";
 import { StyledHackerActivity } from "./styles";
 
-const PAYOUTS_PER_PAGE = 3;
+const PAYOUTS_PER_PAGE = 5;
 
 type IHackerActivityProps = {
   activity: IHackerRewardsStats[];
@@ -24,7 +24,8 @@ export const HackerActivity = ({ activity }: IHackerActivityProps) => {
   const [payoutsPerPage, setPayoutsPerPage] = useState<number>(PAYOUTS_PER_PAGE);
 
   useEffect(() => {
-    if (width < 800) setPayoutsPerPage(3);
+    if (width < 500) setPayoutsPerPage(2);
+    else if (width < 800) setPayoutsPerPage(3);
     else setPayoutsPerPage(PAYOUTS_PER_PAGE);
   }, [width]);
 

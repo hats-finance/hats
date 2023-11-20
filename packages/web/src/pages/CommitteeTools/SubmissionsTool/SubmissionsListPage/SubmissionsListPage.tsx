@@ -405,11 +405,12 @@ export const SubmissionsListPage = () => {
                             <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
                             {submissionsGroup.submissions.map((submission) => {
                               const getOnCheckChange = () => {
-                                const usedVault = filteredSubmissions.find(
+                                const usedVault = (committeeSubmissions ?? []).find(
                                   (sub) => sub.subId === selectedSubmissions[0]
                                 )?.linkedVault;
 
-                                if (usedVault && usedVault.id !== submission.linkedVault?.id) return undefined;
+                                if (usedVault && usedVault.id.toLowerCase() !== submission.linkedVault?.id.toLowerCase())
+                                  return undefined;
                                 // If v1, only can select one vault (multi payout not available)
                                 if (usedVault?.version === "v1") return undefined;
 

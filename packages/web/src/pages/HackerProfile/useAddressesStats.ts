@@ -1,10 +1,11 @@
 import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
 import { ethers } from "ethers";
-import { useFindingsByAddresses, usePayoutsByAddresses } from "hooks/leaderboard";
+import { useFindingsFromAddresses, usePayoutsFromAddresses } from "hooks/leaderboard";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useCallback, useMemo } from "react";
+import { getOldTokenPrice } from "utils/getOldTokenPrice";
 import { parseSeverityName } from "utils/severityName";
-import { severitiesOrder } from "../constants";
+import { severitiesOrder } from "./constants";
 
 export type IHackerPayoutStats = {
   severity: string;
@@ -24,8 +25,8 @@ export type IHackerRewardsStats = {
 
 export const useAddressesStats = (addresses: string[] = []) => {
   const { vaultsReadyAllChains } = useVaults();
-  const payouts = usePayoutsByAddresses(addresses);
-  const findings = useFindingsByAddresses(addresses);
+  const payouts = usePayoutsFromAddresses(addresses);
+  const findings = useFindingsFromAddresses(addresses);
   const addressesToUse = useMemo(() => addresses.map((a) => a.toLowerCase()), [addresses]);
 
   /**
@@ -48,7 +49,7 @@ export const useAddressesStats = (addresses: string[] = []) => {
         const isAudit = vault.description?.["project-metadata"].type === "audit";
         const totalRewardInTokens = +ethers.utils.formatUnits(curr.totalPaidOut ?? "0", vault.stakingTokenDecimals);
         // If audit comp and no token price, assume the token price is 1 because is stable coin. If not, dont calculate the usd value
-        const tokenPrice = curr.payoutData?.vault?.amountsInfo?.tokenPriceUsd ?? (isAudit ? 1 : 0);
+        const tokenPrice = curr.payoutData?.vault?.amountsInfo?.tokenPriceUsd ?? getOldTokenPrice(curr.id) ?? (isAudit ? 1 : 0);
 
         if (curr.payoutData?.type === "single") {
           const findingSeverityName = parseSeverityName(curr.payoutData.severity);

@@ -5,7 +5,7 @@ import { useMemo } from "react";
 /**
  * Returns all the valid (with valid data and description) payouts
  */
-export const usePayoutsByAddresses = (addresses: string[] = []) => {
+export const usePayoutsFromAddresses = (addresses: string[] = []) => {
   const { allPayoutsOnEnv, allVaults } = useVaults();
   const addressesToUse = useMemo(() => addresses.map((a) => a.toLowerCase()), [addresses]);
 

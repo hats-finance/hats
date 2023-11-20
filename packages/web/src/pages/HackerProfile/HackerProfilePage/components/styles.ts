@@ -15,7 +15,7 @@ export const StyledHackerActivity = styled.div`
     display: flex;
     gap: ${getSpacing(2)};
     justify-content: space-between;
-    width: calc(100% - ${getSpacing(6)});
+    width: 100%;
     margin: 0 auto;
 
     .line {
@@ -44,9 +44,6 @@ export const StyledHackerActivity = styled.div`
         border-color: var(--grey-800);
         color: var(--grey-800);
         cursor: default;
-      }
-
-      &:hover {
       }
     }
 
