@@ -1,5 +1,6 @@
 import { IPayoutGraph } from "@hats-finance/shared";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import moment from "moment";
 import { useCallback, useMemo } from "react";
 
 export const useAddressesStreak = (addresses: string[] = [], onlyAudits = true) => {
@@ -86,13 +87,14 @@ export const useAddressesStreak = (addresses: string[] = [], onlyAudits = true) 
           // If in this month were only bug bounty payotus, continue the loop
           if (payoutsInMonth.every((payout) => payout.vaultData?.description?.["project-metadata"].type !== "audit")) continue;
 
-          // Current month and year
-          const todayMonthYear = `${new Date().getMonth() + 1}-${new Date().getFullYear()}`;
+          const todaysDate = moment();
+          const auditDate = new Date();
+          auditDate.setMonth(+monthYear.split("-")[0] - 1);
+          auditDate.setFullYear(+monthYear.split("-")[1]);
 
-          // If we are taking a look at today's month, we can't cancel the streak because we don't
-          // know if the hacker will have a payout later this month. So, continue the loop
-          if (monthYear === todayMonthYear) continue;
-          else break;
+          // If the last payout was more than 2 months ago, break the loop
+          const diff = moment(todaysDate).diff(auditDate, "months");
+          if (diff >= 2) break;
         }
       }
 
