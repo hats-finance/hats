@@ -769,7 +769,7 @@
       "dontHaveAccessToKeystoreExplanation": "If you don't have access to your keystore, you can delete it and create a new one or upload a backup.",
       "deleteKeystore": "Delete keystore",
       "deleteKeystoreDescription": "Are you sure you want to delete your keystore? \n\n If you don't have a backup of the keys in the keystore you will lose them.",
-      "confirmDeleteKeystore": "Confirm delete keystore"
+      "confirmDeleteKeystore": "Confirm Keystore Deletion."
     },
     "SubmissionsTool": {
       "rescanSubmissions": "Rescan submissions",
