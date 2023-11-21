@@ -197,6 +197,7 @@ export const SubmissionsListPage = () => {
     if (!wantToRescan) return;
 
     localStorage.removeItem(`${LocalStorage.Submissions}`);
+    sessionStorage.removeItem(`${LocalStorage.SubmissionsDecrypted}`);
     sessionStorage.removeItem(`${LocalStorage.SelectedSubmissions}`);
     window.location.reload();
   };
