@@ -195,13 +195,6 @@ export const HackerProfilePage = () => {
 
               {isProfileOwner && (
                 <div className="actions">
-                  {/* <div className="buttons">
-                    <Button onClick={handleStartLinkNewAddress}>
-                      <LinkIcon className="mr-2" />
-                      {t("HackerProfile.linkNewAddress")}
-                    </Button>
-                  </div> */}
-
                   <div className="linked-addresses">
                     <h3>{t("HackerProfile.linkedAddresses")}:</h3>
                     <div className="addresses-list">
