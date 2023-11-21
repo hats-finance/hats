@@ -6,7 +6,7 @@ import { parseIsDirty } from "../utils";
 import { StyledFormIconInput } from "./styles";
 
 const MAX_SIZE_ICON = 50000;
-const MAX_SIZE_IMAGE = 50000;
+const MAX_SIZE_IMAGE = 100000;
 
 interface FormIconInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
