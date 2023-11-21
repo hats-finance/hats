@@ -52,7 +52,7 @@ export const SubmissionsListPage = () => {
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
   const [severityFilter, setSeverityFilter] = useState<string>();
 
-  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
   const filteredSubmissions = useMemo(() => {
     if (!committeeSubmissions) return [];
 
@@ -320,7 +320,7 @@ export const SubmissionsListPage = () => {
           ) : (
             <>
               {isLoading ? (
-                <HatSpinner text={`${t("loadingSubmission")}...`} />
+                <HatSpinner text={`${t("loadingSubmission")} (${loadingProgress.toFixed(1)}%)...`} />
               ) : (
                 <>
                   <div className="toolbar">
