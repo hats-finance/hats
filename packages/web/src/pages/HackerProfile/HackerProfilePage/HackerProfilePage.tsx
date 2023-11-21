@@ -1,14 +1,17 @@
 import LinkIcon from "@mui/icons-material/AddLinkOutlined";
 import ArrowIcon from "@mui/icons-material/ArrowBackOutlined";
 import UnlinkIcon from "@mui/icons-material/LinkOffOutlined";
+import EditIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
-import { Alert, Button, HackerProfileImage, HackerStreak, Loading, Pill, Seo } from "components";
+import { Alert, Button, DropdownSelector, HackerProfileImage, HackerStreak, Loading, Pill, Seo } from "components";
 import { queryClient } from "config/reactQuery";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import { ISiweData, useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
+import useModal from "hooks/useModal";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -16,6 +19,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
+import { CreateProfileFormModal } from "../components";
 import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
 import { useAddressesStats } from "../useAddressesStats";
 import { useAddressesStreak } from "../useAddressesStreak";
@@ -30,6 +34,8 @@ export const HackerProfilePage = () => {
   const confirm = useConfirm();
   const { tryAuthentication, signIn, profileData: siweProfile, isAuthenticated } = useSiweAuth();
 
+  const [showSettings, setShowSettings] = useState(false);
+  const { isShowing: isShowingUpdateProfile, show: showUpdateProfile, hide: hideUpdateProfile } = useModal();
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
@@ -127,6 +133,13 @@ export const HackerProfilePage = () => {
     if (!wantsToContinue) return setOwnerSiweData(undefined);
   };
 
+  const getSettingsOptions = () => {
+    return [
+      { label: t("HackerProfile.updateProfileCta"), onClick: showUpdateProfile, icon: <EditIcon /> },
+      { label: t("HackerProfile.linkNewAddress"), onClick: handleStartLinkNewAddress, icon: <LinkIcon /> },
+    ];
+  };
+
   return (
     <>
       <Seo title={t("seo.hackerProfileTitle", { username: profileFound?.username })} />
@@ -134,6 +147,14 @@ export const HackerProfilePage = () => {
         {profileFound && (
           <>
             <div className="header">
+              <div className="settings">
+                <div className="icon" onClick={() => setShowSettings((prev) => !prev)}>
+                  <SettingsIcon fontSize="large" />
+                </div>
+
+                <DropdownSelector options={getSettingsOptions()} show={showSettings} onClose={() => setShowSettings(false)} />
+              </div>
+
               <div className="profile-card">
                 <HackerProfileImage noMargin hackerProfile={profileFound} size="large" />
                 <div className="description">
@@ -174,12 +195,12 @@ export const HackerProfilePage = () => {
 
               {isProfileOwner && (
                 <div className="actions">
-                  <div className="buttons">
+                  {/* <div className="buttons">
                     <Button onClick={handleStartLinkNewAddress}>
                       <LinkIcon className="mr-2" />
                       {t("HackerProfile.linkNewAddress")}
                     </Button>
-                  </div>
+                  </div> */}
 
                   <div className="linked-addresses">
                     <h3>{t("HackerProfile.linkedAddresses")}:</h3>
@@ -232,6 +253,8 @@ export const HackerProfilePage = () => {
 
         {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />}
       </StyledHackerProfilePage>
+
+      <CreateProfileFormModal isShowing={isShowingUpdateProfile} onHide={hideUpdateProfile} />
     </>
   );
 };

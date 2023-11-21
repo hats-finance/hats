@@ -7,6 +7,7 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
     padding-bottom: ${getSpacing(8)};
 
     .header {
+      position: relative;
       padding-bottom: ${getSpacing(3)};
       border-bottom: 1px solid var(--primary-light);
 
@@ -117,6 +118,21 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
                 }
               `}
             }
+          }
+        }
+      }
+
+      .settings {
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        .icon {
+          cursor: pointer;
+          transition: opacity 0.2s ease-in-out;
+
+          &:hover {
+            opacity: 0.8;
           }
         }
       }
