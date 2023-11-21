@@ -704,7 +704,8 @@
       "linkNewAddressToProfilePartTwoExplanation": "Now change connected account using your wallet (i.e Metamask) to the one you want to link. \n\nYou will be asked to siwe again with the new wallet you want to link.",
       "unlinkAddress": "Unlink address",
       "unlinkAddressExplanation": "Are you sure you want to unlink this address from your profile?",
-      "cannotUnlinkLastAddress": "You can't unlink your last address from your profile."
+      "cannotUnlinkLastAddress": "You can't unlink your last address from your profile.",
+      "allTime": "All time"
     },
     "PGPTool": {
       "title": "PGP tool",

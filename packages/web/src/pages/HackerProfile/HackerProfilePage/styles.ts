@@ -165,6 +165,12 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
       .findings {
         flex: 3;
 
+        .main-stats {
+          display: flex;
+          gap: ${getSpacing(5)};
+          flex-wrap: wrap;
+        }
+
         .total-rewards {
           display: flex;
           flex-direction: column;

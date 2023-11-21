@@ -13,6 +13,7 @@ import { ISiweData, useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import useModal from "hooks/useModal";
 import moment from "moment";
+import { useAllTimeLeaderboard } from "pages/Leaderboard/LeaderboardPage/components/AllTimeLeaderboard/useAllTimeLeaderboard";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -43,6 +44,10 @@ export const HackerProfilePage = () => {
   const severityColors = getSeveritiesColorsArray(undefined, profileStats.findingsGlobalStats.length);
   const isProfileOwner = address && profileFound?.addresses.includes(address.toLowerCase());
   const streakStats = useAddressesStreak(profileFound?.addresses ?? []);
+  const { leaderboard } = useAllTimeLeaderboard();
+  const positionInLeaderboard = leaderboard?.findIndex((leaderboardEntry) =>
+    profileFound?.addresses.includes(leaderboardEntry.address.toLowerCase())
+  );
 
   const linkNewAddress = useLinkNewAddress();
   const unlinkAddress = useUnlinkAddress();
@@ -219,12 +224,20 @@ export const HackerProfilePage = () => {
               <div className="findings">
                 <div className="total-rewards">
                   <h3>{t("HackerProfile.stats")}</h3>
-                  {profileStats.totalRewardsInUsd > 0 && (
-                    <div className="totalPrizes">
-                      <p>{`~$${formatNumber(profileStats.totalRewardsInUsd, 2)}`}</p>
-                      <span>{t("HackerProfile.earnedAtHatsFinance")}</span>
-                    </div>
-                  )}
+                  <div className="main-stats">
+                    {positionInLeaderboard !== -1 && (
+                      <div className="totalPrizes">
+                        <p>{`#${positionInLeaderboard + 1}`}</p>
+                        <span>{t("HackerProfile.allTime")}</span>
+                      </div>
+                    )}
+                    {profileStats.totalRewardsInUsd > 0 && (
+                      <div className="totalPrizes">
+                        <p>{`~$${formatNumber(profileStats.totalRewardsInUsd, 2)}`}</p>
+                        <span>{t("HackerProfile.earnedAtHatsFinance")}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="findings-list">
                   {profileStats.findingsGlobalStats.length === 0 && (
