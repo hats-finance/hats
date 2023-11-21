@@ -98,7 +98,7 @@ export const useAddressesStreak = (addresses: string[] = [], onlyAudits = true) 
         }
       }
 
-      return streakCount;
+      return streakCount > 1 ? streakCount : 0;
     },
     [payoutsGroupedByMonthYear]
   );
