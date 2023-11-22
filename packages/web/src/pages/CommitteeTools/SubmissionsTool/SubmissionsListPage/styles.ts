@@ -9,6 +9,7 @@ export const StyledSubmissionsListPage = styled.div`
   margin-bottom: ${getSpacing(14)};
 
   .title-container {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,6 +25,26 @@ export const StyledSubmissionsListPage = styled.div`
 
         span {
           font-weight: 700;
+        }
+      }
+    }
+
+    .sync-indicator {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      font-size: var(--xsmall);
+      color: var(--secondary);
+
+      .icon-rotator {
+        animation: rotate 2s linear infinite;
+
+        @keyframes rotate {
+          100% {
+            transform: rotate(-360deg);
+          }
         }
       }
     }
