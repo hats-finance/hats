@@ -298,7 +298,7 @@ export const SubmissionsListPage = () => {
           <p>
             {t("committeeTools")}/<span className="bold">{t("submissions")}</span>
           </p>
-          {loadingProgress < 100 && loadingProgress > 0 && (
+          {loadingProgress < 100 && loadingProgress > 0 && isLoading && (
             <div className="sync-indicator">
               <SyncIcon className="icon-rotator" />
               <p>

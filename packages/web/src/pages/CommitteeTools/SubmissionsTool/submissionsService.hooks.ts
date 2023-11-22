@@ -32,27 +32,21 @@ export const useVaultSubmissionsByKeystore = (
     if (allSubmissions.length === 0) return;
     if (userKeys.length === 0) return;
 
-    let submissionToStart = 0;
-
     if (localStorage.getItem(LocalStorage.SubmissionsDecrypted)) {
       const submissionsFromLocalStorage = JSON.parse(
         localStorage.getItem(LocalStorage.SubmissionsDecrypted) ?? "[]"
       ) as ISubmittedSubmission[];
       setSubmissionsFromKeystore(submissionsFromLocalStorage);
       setIsLoading(false);
-
-      const lastDecryptedSubmission = submissionsFromLocalStorage[submissionsFromLocalStorage.length - 1];
-      submissionToStart = allSubmissions.findIndex((a) => a.id === lastDecryptedSubmission.id);
     }
 
     setLoadingProgress(0);
     const checkSubmissions = async () => {
       const submissionsForCommittee: ISubmittedSubmission[] = [];
 
-      const submissionsToIterate = allSubmissions.slice(submissionToStart);
-      for (const [idx, submission] of submissionsToIterate.entries()) {
-        if (submissionsToIterate.length === idx + 1) setLoadingProgress(100);
-        else setLoadingProgress((idx / submissionsToIterate.length) * 100);
+      for (const [idx, submission] of allSubmissions.entries()) {
+        if (allSubmissions.length === idx + 1) setLoadingProgress(100);
+        else setLoadingProgress((idx / allSubmissions.length) * 100);
 
         if (!submission.submissionData) continue;
 
