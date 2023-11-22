@@ -12,7 +12,7 @@ export const CreateProfileSocials = () => {
 
   return (
     <div className="create-profile-step">
-      <div className="title">{t("HackerProfile.helloNameFinal", { username })}</div>
+      <div className="title">{t("HackerProfile.addYourSocialsName", { username })}</div>
 
       <p className="mb-5">{t("HackerProfile.socialsIntro")}</p>
       <FormInput
@@ -30,6 +30,7 @@ export const CreateProfileSocials = () => {
 
       <p className="mb-5">{t("HackerProfile.avatarIntro")}</p>
       <FormIconInput {...register("avatar")} type="image" colorable label={t("HackerProfile.avatar")} />
+      <p className="mt-5">{t("HackerProfile.avatarGithubProdileImageExplanation")}</p>
     </div>
   );
 };

@@ -13,7 +13,7 @@ export const CreateProfileBio = () => {
 
   return (
     <div className="create-profile-step">
-      <div className="title">{t("HackerProfile.helloName", { username })}</div>
+      <div className="title">{t("HackerProfile.introduceYourself", { username })}</div>
 
       <p className="mb-5">{t("HackerProfile.bioIntro")}</p>
 

@@ -2,7 +2,7 @@ import { IHackerProfile } from "@hats-finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackOutlined";
 import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import HatsBoat from "assets/images/hats_boat.jpg";
+import HatsBoat from "assets/images/profile-creation.jpg";
 import { Alert, Button, Loading, Modal } from "components";
 import { queryClient } from "config/reactQuery";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -21,6 +21,7 @@ import { CreateProfileReview } from "./steps/CreateProfileReview";
 import { CreateProfileSocials } from "./steps/CreateProfileSocials";
 import { CreateProfileTitle } from "./steps/CreateProfileTitle";
 import { CreateProfileUsername } from "./steps/CreateProfileUsername";
+import { CreateProfileWelcome } from "./steps/CreateProfileWelcome";
 import { StyledCreateProfileFormModal } from "./styles";
 
 type ICreateProfileFormModalProps = {
@@ -30,9 +31,14 @@ type ICreateProfileFormModalProps = {
 
 const createProfileFormSteps = [
   {
+    element: <CreateProfileWelcome />,
+    fields: [],
+    nextButtonTextKey: { create: "HackerProfile.letsDiveIn", update: "HackerProfile.letsDiveIn" },
+  },
+  {
     element: <CreateProfileIntro />,
     fields: [],
-    nextButtonTextKey: { create: "HackerProfile.soundGreatLetsGo", update: "HackerProfile.updateProfileCta" },
+    nextButtonTextKey: { create: "HackerProfile.createProfileCta", update: "HackerProfile.updateProfileCta" },
   },
   { element: <CreateProfileUsername />, fields: ["username"], nextButtonTextKey: { create: "continue", update: "continue" } },
   { element: <CreateProfileTitle />, fields: ["title"], nextButtonTextKey: { create: "continue", update: "continue" } },
@@ -72,7 +78,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
 
   useEffect(() => {
     reset(createdProfile ?? {}, { keepDefaultValues: true });
-    setCurrentFormStep(0);
+    setCurrentFormStep(createdProfile ? 2 : 0);
   }, [createdProfile, address, reset]);
 
   const nextStep = async () => {
@@ -150,12 +156,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
 
   return (
     <>
-      <Modal
-        capitalizeTitle
-        isShowing={isShowing}
-        title={createdProfile ? t("HackerProfile.updateProfile") : t("HackerProfile.createProfile")}
-        onHide={onHide}
-      >
+      <Modal capitalizeTitle isShowing={isShowing} onHide={onHide}>
         <FormProvider {...methods}>
           <StyledCreateProfileFormModal firstStep={currentFormStep === 0 && !createdProfile}>
             {!isLastStep && <img className="hats-boat" src={HatsBoat} alt="Hats boat" />}

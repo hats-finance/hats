@@ -8,6 +8,7 @@ export enum LocalStorage {
   Keystore = "HATS_PGP_KEYSTORE",
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
   Submissions = "HATS_SUBMISSIONS",
+  SubmissionsDecrypted = "HATS_SUBMISSIONS_DECRYPTED",
   SelectedSubmissions = "HATS_USER_SELECTED_SUBMISSIONS",
 }
 

@@ -19,6 +19,7 @@ import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
 import SearchIcon from "@mui/icons-material/SearchOutlined";
+import SyncIcon from "@mui/icons-material/SyncOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import { AxiosError } from "axios";
 import { Alert, Button, FormDateInput, FormSelectInput, HatSpinner, Loading, Modal, WalletButton } from "components";
@@ -52,7 +53,8 @@ export const SubmissionsListPage = () => {
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
   const [severityFilter, setSeverityFilter] = useState<string>();
 
-  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
+
   const filteredSubmissions = useMemo(() => {
     if (!committeeSubmissions) return [];
 
@@ -197,6 +199,7 @@ export const SubmissionsListPage = () => {
     if (!wantToRescan) return;
 
     localStorage.removeItem(`${LocalStorage.Submissions}`);
+    localStorage.removeItem(`${LocalStorage.SubmissionsDecrypted}`);
     sessionStorage.removeItem(`${LocalStorage.SelectedSubmissions}`);
     window.location.reload();
   };
@@ -295,6 +298,14 @@ export const SubmissionsListPage = () => {
           <p>
             {t("committeeTools")}/<span className="bold">{t("submissions")}</span>
           </p>
+          {loadingProgress < 100 && loadingProgress > 0 && isLoading && (
+            <div className="sync-indicator">
+              <SyncIcon className="icon-rotator" />
+              <p>
+                {t("syncing")} {loadingProgress.toFixed(0)}%
+              </p>
+            </div>
+          )}
         </div>
       </div>
 

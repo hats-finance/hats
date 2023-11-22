@@ -53,7 +53,7 @@ export const PayoutFormPage = () => {
   const isPayoutCreated = payout?.status !== PayoutStatus.Creating;
 
   const isFromSubmissions = hasSubmissionData(payout);
-  const { data: committeeSubmissions, isInitialLoading: loadingSubmissions } = useVaultSubmissionsByKeystore(
+  const { data: committeeSubmissions, isLoading: loadingSubmissions } = useVaultSubmissionsByKeystore(
     !isFromSubmissions && !isPayoutCreated
   );
 
