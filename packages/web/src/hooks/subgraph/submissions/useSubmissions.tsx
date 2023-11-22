@@ -1,5 +1,6 @@
 import { ISubmissionMessageObject, ISubmittedSubmission } from "@hats-finance/shared";
 import axios from "axios";
+import { LocalStorage } from "constants/constants";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { IS_PROD, appChains } from "settings";
@@ -17,6 +18,9 @@ interface ISubmissionsContext {
 export const SubmissionsContext = createContext<ISubmissionsContext>(undefined as any);
 
 export function useSubmissions(): ISubmissionsContext {
+  // Delete Old Submissions from Local Storage
+  localStorage.removeItem(LocalStorage.Submissions);
+
   return useContext(SubmissionsContext);
 }
 
@@ -36,7 +40,6 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
     throw new Error("Blacklisted wallet");
   }
 
-  // const savedSubmissions = JSON.parse(localStorage.getItem(`${LocalStorage.Submissions}`) ?? "[]") as ISubmittedSubmission[];
   const { multiChainData, allChainsLoaded } = useMultiChainSubmissions();
 
   const setSubmissionsWithDetails = async (submissionsData: ISubmittedSubmission[]) => {
@@ -64,11 +67,7 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
         })
       );
 
-    // const savedSubmissions = JSON.parse(localStorage.getItem(`${LocalStorage.Submissions}`) ?? "[]") as ISubmittedSubmission[];
-    const savedSubmissions = [];
-    const allSubmissionsData = [...(await getSubmissionData(submissionsData)), ...savedSubmissions];
-    // localStorage.setItem(`${LocalStorage.Submissions}`, JSON.stringify(allSubmissionsData));
-
+    const allSubmissionsData = await getSubmissionData(submissionsData);
     const filteredByValidContent = allSubmissionsData.filter((submission) => submission.submissionData);
 
     const filteredByChain = filteredByValidContent.filter((vault) => {
