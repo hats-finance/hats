@@ -156,8 +156,13 @@ export const StyledSubmissionsListPage = styled.div`
   }
 `;
 
-export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: boolean; isChecked: boolean }>(
-  ({ noActions, inPayout, isChecked }) => css`
+export const StyledSubmissionCard = styled.div<{
+  noActions: boolean;
+  inPayout: boolean;
+  isChecked: boolean;
+  noSeverity: boolean;
+}>(
+  ({ noActions, inPayout, isChecked, noSeverity }) => css`
     display: flex;
     position: relative;
     border: 1px solid var(--grey-700);
@@ -233,7 +238,7 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: b
         .submission-title {
           font-weight: 700;
           padding-left: ${getSpacing(2)};
-          margin-top: ${getSpacing(0.5)};
+          margin-top: ${getSpacing(noSeverity ? 2 : 0.5)};
         }
 
         .hacker-details {

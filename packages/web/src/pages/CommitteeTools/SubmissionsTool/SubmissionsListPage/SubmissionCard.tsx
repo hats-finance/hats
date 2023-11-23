@@ -53,7 +53,7 @@ export const SubmissionCard = ({
   };
 
   return (
-    <StyledSubmissionCard noActions={noActions} inPayout={inPayout} isChecked={isChecked}>
+    <StyledSubmissionCard noActions={noActions} inPayout={inPayout} isChecked={isChecked} noSeverity={!submissionData?.severity}>
       {onCheckChange && (
         <div className="select-check" onClick={() => onCheckChange(submission)}>
           {isChecked ? <BoxSelected fontSize="inherit" /> : <BoxUnselected fontSize="inherit" />}

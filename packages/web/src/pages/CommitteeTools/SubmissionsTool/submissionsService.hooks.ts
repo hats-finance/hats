@@ -1,11 +1,12 @@
 import { IPayoutData, ISubmittedSubmission, IVaultInfo, PayoutType } from "@hats-finance/shared";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { readPrivateKeyFromStoredKey, useKeystore } from "components/Keystore";
-import { LocalStorage } from "constants/constants";
+import { IndexedDBs } from "config/DBConfig";
 import { useSubmissions } from "hooks/subgraph/submissions/useSubmissions";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { decrypt, readMessage } from "openpgp";
 import { useEffect, useState } from "react";
+import { useIndexedDB } from "react-indexed-db-hook";
 import uuidFromString from "uuid-by-string";
 import { useAccount } from "wagmi";
 import * as SubmissionsService from "./submissionsService.api";
@@ -17,6 +18,9 @@ export const useVaultSubmissionsByKeystore = (
   const { address } = useAccount();
   const { allVaults, vaultsReadyAllChains } = useVaults();
   const { allSubmissions, submissionsReadyAllChains } = useSubmissions();
+  const { update: addToDecryptedSubmissionsDB, getAll: getAllDecryptedSubmissionsDB } = useIndexedDB(
+    IndexedDBs.DecryptedSubmissions
+  );
   const { keystore } = useKeystore();
   const userKeys = keystore?.storedKeys;
 
@@ -32,16 +36,19 @@ export const useVaultSubmissionsByKeystore = (
     if (allSubmissions.length === 0) return;
     if (userKeys.length === 0) return;
 
-    if (localStorage.getItem(LocalStorage.SubmissionsDecrypted)) {
-      const submissionsFromLocalStorage = JSON.parse(
-        localStorage.getItem(LocalStorage.SubmissionsDecrypted) ?? "[]"
-      ) as ISubmittedSubmission[];
-      setSubmissionsFromKeystore(submissionsFromLocalStorage);
-      setIsLoading(false);
-    }
-
-    setLoadingProgress(0);
     const checkSubmissions = async () => {
+      try {
+        const submissionsFromDB = (await getAllDecryptedSubmissionsDB()) as ISubmittedSubmission[];
+        submissionsFromDB.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+        if (submissionsFromDB && submissionsFromDB.length > 0) {
+          setSubmissionsFromKeystore(submissionsFromDB as ISubmittedSubmission[]);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+
+      setLoadingProgress(0);
       const submissionsForCommittee: ISubmittedSubmission[] = [];
 
       for (const [idx, submission] of allSubmissions.entries()) {
@@ -90,11 +97,25 @@ export const useVaultSubmissionsByKeystore = (
 
       setIsLoading(false);
 
-      localStorage.setItem(LocalStorage.SubmissionsDecrypted, JSON.stringify(submissionsWithSubId));
+      try {
+        for (const sub of submissionsWithSubId) await addToDecryptedSubmissionsDB(sub);
+      } catch (error) {
+        console.log(error);
+      }
       setSubmissionsFromKeystore(submissionsWithSubId);
     };
     checkSubmissions();
-  }, [address, allSubmissions, allVaults, submissionsReadyAllChains, userKeys, vaultsReadyAllChains, submissionsFromKeystore]);
+  }, [
+    address,
+    allSubmissions,
+    allVaults,
+    submissionsReadyAllChains,
+    userKeys,
+    vaultsReadyAllChains,
+    submissionsFromKeystore,
+    addToDecryptedSubmissionsDB,
+    getAllDecryptedSubmissionsDB,
+  ]);
 
   if (disabled) return { isLoading: false, data: [], loadingProgress: 0 };
   return { isLoading, data: submissionsFromKeystore, loadingProgress };
