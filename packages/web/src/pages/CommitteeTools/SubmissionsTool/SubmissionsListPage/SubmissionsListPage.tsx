@@ -318,12 +318,12 @@ export const SubmissionsListPage = () => {
         </>
       ) : (
         <>
-          {!keystore ? (
+          {!keystore || keystore.storedKeys.length === 0 ? (
             <>
               <Alert className="mb-4" type="info">
                 {t("youNeedToOpenYourPGPTool")}
               </Alert>
-              <Button onClick={() => initKeystore()}>
+              <Button onClick={keystore ? openKeystore : initKeystore}>
                 <KeyIcon className="mr-2" />
                 {t("openPGPTool")}
               </Button>
