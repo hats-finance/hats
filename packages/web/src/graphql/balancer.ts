@@ -1,6 +1,6 @@
 export const GET_PRICES_BALANCER = `
   query getPrices {
-    tokenGetCurrentPrices {
+    tokenGetCurrentPrices(chains:[MAINNET, ARBITRUM, OPTIMISM, POLYGON]) {
       price
       address
     }

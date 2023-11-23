@@ -1,5 +1,6 @@
 import { TokenPriceResponse } from "@hats-finance/shared";
 import axios, { AxiosResponse } from "axios";
+import { LocalStorage } from "constants/constants";
 import { GET_PRICES_BALANCER, IBalancerGetPricesResponse } from "graphql/balancer";
 import { GET_PRICES_UNISWAP, IUniswapGetPricesResponse } from "graphql/uniswap";
 import { appChains } from "settings";
@@ -40,6 +41,9 @@ export const getTokenInfo = async (
 
 export const getCoingeckoTokensPrices = async (tokens: { address: string; chainId: number }[]): Promise<TokenPriceResponse> => {
   try {
+    const dataOnStorage = JSON.parse(sessionStorage.getItem(LocalStorage.CoingeckoPrices) ?? "null");
+    if (dataOnStorage && Object.keys(dataOnStorage).length > 0) return dataOnStorage;
+
     // Separate tokens by chain
     const tokensByChain = tokens.reduce((acc, token) => {
       if (!acc[token.chainId]) acc[token.chainId] = [];
@@ -52,16 +56,22 @@ export const getCoingeckoTokensPrices = async (tokens: { address: string; chainI
 
     for (const chain in tokensByChain) {
       const networkCoingeckoId = appChains[chain].coingeckoId;
-      const tokens = Array.from(new Set(tokensByChain[chain])).join(",");
+      const tokens = Array.from(new Set(tokensByChain[chain]));
 
-      if (networkCoingeckoId) {
-        const url = `${COIN_GECKO_ENDPOINT}/${networkCoingeckoId}?contract_addresses=${tokens}&vs_currencies=usd`;
-        allRequests.push(axios.get(url));
+      // Chunk requests by max 10 tokens each
+      for (let i = 0; i < tokens.length; i += 10) {
+        const chunkOfTokens = tokens.slice(i, i + 10).join(",");
+        if (networkCoingeckoId) {
+          const url = `${COIN_GECKO_ENDPOINT}/${networkCoingeckoId}?contract_addresses=${chunkOfTokens}&vs_currencies=usd`;
+          allRequests.push(axios.get(url));
+        }
       }
     }
 
     const data = await Promise.all(allRequests);
-    return data.reduce((acc, response) => ({ ...acc, ...response.data }), {} as TokenPriceResponse);
+    const dataToReturn = data.reduce((acc, response) => ({ ...acc, ...response.data }), {} as TokenPriceResponse);
+    sessionStorage.setItem(LocalStorage.CoingeckoPrices, JSON.stringify(dataToReturn));
+    return dataToReturn;
   } catch (err) {
     console.error(err);
     throw new Error(`Error getting prices: ${err}`);
