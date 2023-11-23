@@ -2,7 +2,7 @@ import { getGnosisSafeInfo } from "@hats-finance/shared";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";
-import { Button, SafePeriodBar, WalletButton, WhereverWidget } from "components";
+import { Button, HackerProfileImage, SafePeriodBar, WalletButton, WhereverWidget } from "components";
 import useModal from "hooks/useModal";
 import { RoutePaths } from "navigation";
 import { CreateProfileFormModal } from "pages/HackerProfile/components";
@@ -29,7 +29,6 @@ const Header = () => {
   const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(account);
-  const inProfileView = location.pathname.includes(`${RoutePaths.profile}/${createdProfile?.username}`);
 
   useEffect(() => {
     // Check if address is Safe multisig
@@ -71,13 +70,11 @@ const Header = () => {
             {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
               <>
                 {!!createdProfile ? (
-                  <Button
-                    size="big"
-                    noRadius
-                    styleType="outlined"
-                    onClick={inProfileView ? () => showCreateProfile() : handleGoToProfile}
-                  >
-                    {inProfileView ? t("Header.updateHackerProfile") : t("Header.myProfile")}
+                  <Button size="big" noRadius styleType="outlined" noPadding onClick={handleGoToProfile}>
+                    <div className="inner-profile-button">
+                      <HackerProfileImage hackerProfile={createdProfile} size="xsmall" noMargin />
+                      <span>{createdProfile.username}</span>
+                    </div>
                   </Button>
                 ) : (
                   <>

@@ -9,6 +9,7 @@ export const StyledSubmissionsListPage = styled.div`
   margin-bottom: ${getSpacing(14)};
 
   .title-container {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -24,6 +25,26 @@ export const StyledSubmissionsListPage = styled.div`
 
         span {
           font-weight: 700;
+        }
+      }
+    }
+
+    .sync-indicator {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      font-size: var(--xsmall);
+      color: var(--secondary);
+
+      .icon-rotator {
+        animation: rotate 2s linear infinite;
+
+        @keyframes rotate {
+          100% {
+            transform: rotate(-360deg);
+          }
         }
       }
     }
@@ -135,8 +156,13 @@ export const StyledSubmissionsListPage = styled.div`
   }
 `;
 
-export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: boolean; isChecked: boolean }>(
-  ({ noActions, inPayout, isChecked }) => css`
+export const StyledSubmissionCard = styled.div<{
+  noActions: boolean;
+  inPayout: boolean;
+  isChecked: boolean;
+  noSeverity: boolean;
+}>(
+  ({ noActions, inPayout, isChecked, noSeverity }) => css`
     display: flex;
     position: relative;
     border: 1px solid var(--grey-700);
@@ -212,7 +238,7 @@ export const StyledSubmissionCard = styled.div<{ noActions: boolean; inPayout: b
         .submission-title {
           font-weight: 700;
           padding-left: ${getSpacing(2)};
-          margin-top: ${getSpacing(0.5)};
+          margin-top: ${getSpacing(noSeverity ? 2 : 0.5)};
         }
 
         .hacker-details {

@@ -19,10 +19,12 @@ import DownloadIcon from "@mui/icons-material/FileDownloadOutlined";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import RescanIcon from "@mui/icons-material/ReplayOutlined";
 import SearchIcon from "@mui/icons-material/SearchOutlined";
+import SyncIcon from "@mui/icons-material/SyncOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import { AxiosError } from "axios";
 import { Alert, Button, FormDateInput, FormSelectInput, HatSpinner, Loading, Modal, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
+import { IndexedDBs } from "config/DBConfig";
 import { LocalStorage } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
@@ -30,6 +32,7 @@ import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useIndexedDB } from "react-indexed-db-hook";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parseSeverityName } from "utils/severityName";
 import { useAccount } from "wagmi";
@@ -47,12 +50,14 @@ export const SubmissionsListPage = () => {
   const location = useLocation();
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
+  const { clear: deleteDecryptedSubmissionsDB } = useIndexedDB(IndexedDBs.DecryptedSubmissions);
 
   const [openDateFilter, setOpenDateFilter] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
   const [severityFilter, setSeverityFilter] = useState<string>();
 
-  const { data: committeeSubmissions, isLoading } = useVaultSubmissionsByKeystore();
+  const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
+
   const filteredSubmissions = useMemo(() => {
     if (!committeeSubmissions) return [];
 
@@ -196,7 +201,7 @@ export const SubmissionsListPage = () => {
 
     if (!wantToRescan) return;
 
-    localStorage.removeItem(`${LocalStorage.Submissions}`);
+    await deleteDecryptedSubmissionsDB();
     sessionStorage.removeItem(`${LocalStorage.SelectedSubmissions}`);
     window.location.reload();
   };
@@ -295,6 +300,14 @@ export const SubmissionsListPage = () => {
           <p>
             {t("committeeTools")}/<span className="bold">{t("submissions")}</span>
           </p>
+          {loadingProgress < 100 && loadingProgress > 0 && isLoading && (
+            <div className="sync-indicator">
+              <SyncIcon className="icon-rotator" />
+              <p>
+                {t("syncing")} {loadingProgress.toFixed(0)}%
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
@@ -307,12 +320,12 @@ export const SubmissionsListPage = () => {
         </>
       ) : (
         <>
-          {!keystore ? (
+          {!keystore || keystore.storedKeys.length === 0 ? (
             <>
               <Alert className="mb-4" type="info">
                 {t("youNeedToOpenYourPGPTool")}
               </Alert>
-              <Button onClick={() => initKeystore()}>
+              <Button onClick={keystore ? openKeystore : initKeystore}>
                 <KeyIcon className="mr-2" />
                 {t("openPGPTool")}
               </Button>

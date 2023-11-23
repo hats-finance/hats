@@ -23,7 +23,7 @@ export const SinglePayoutForm = () => {
   const { vault, payout, isPayoutCreated, severitiesOptions } = useContext(PayoutFormContext);
 
   const isFromSubmissions = hasSubmissionData(payout);
-  const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
+  const { data: committeeSubmissions, isLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
 
   const methods = useEnhancedFormContext<ISinglePayoutData>();
   const { register, control, setValue } = methods;

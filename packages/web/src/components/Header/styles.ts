@@ -59,6 +59,17 @@ export const StyledHeader = styled.header`
         @media (max-width: ${breakpointsDefinition.smallMobile}) {
           display: none;
         }
+
+        .inner-profile-button {
+          display: flex;
+          align-items: center;
+          gap: ${getSpacing(1.5)};
+          padding: ${getSpacing(1.2)} ${getSpacing(3)};
+
+          span {
+            font-size: var(--small);
+          }
+        }
       }
     }
   }

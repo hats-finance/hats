@@ -9,6 +9,7 @@ export enum LocalStorage {
   ShowedWhereverCTA = "HATS_SHOWED_WHEREVER_CTA",
   Submissions = "HATS_SUBMISSIONS",
   SelectedSubmissions = "HATS_USER_SELECTED_SUBMISSIONS",
+  CoingeckoPrices = "HATS_COINGECKO_PRICES",
 }
 
 export enum EncryptedStorage {

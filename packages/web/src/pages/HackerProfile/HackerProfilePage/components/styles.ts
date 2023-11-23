@@ -23,8 +23,8 @@ export const StyledHackerActivity = styled.div`
       top: ${getSpacing(7)};
       left: 0;
       width: 100%;
-      height: 1px;
-      background: var(--primary-light);
+      height: 2px;
+      background: var(--primary);
     }
 
     .control {
@@ -61,7 +61,7 @@ export const StyledHackerActivity = styled.div`
         cursor: pointer;
 
         img {
-          border: 1px solid var(--primary);
+          border: 2px solid var(--primary);
           background: var(--background);
         }
 

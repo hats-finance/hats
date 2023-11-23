@@ -40,7 +40,7 @@ export const SplitPayoutBeneficiaryForm = ({
   const { t } = useTranslation();
 
   const isFromSubmissions = hasSubmissionData(payout);
-  const { data: committeeSubmissions, isInitialLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
+  const { data: committeeSubmissions, isLoading: isLoadingSubmission } = useVaultSubmissionsByKeystore(!isFromSubmissions);
 
   const { register, control, setValue } = useEnhancedFormContext<ISplitPayoutData>();
   const beneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });

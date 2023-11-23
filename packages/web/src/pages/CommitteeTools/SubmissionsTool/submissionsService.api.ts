@@ -1,68 +1,8 @@
 import { IPayoutData, ISubmittedSubmission, IVault, IVaultInfo, PayoutType } from "@hats-finance/shared";
-import { IStoredKey, readPrivateKeyFromStoredKey } from "components/Keystore";
 import { axiosClient } from "config/axiosClient";
-import { decrypt, readMessage } from "openpgp";
 import { BASE_SERVICE_URL } from "settings";
-import uuidFromString from "uuid-by-string";
 
-export const getVaultSubmissionsByKeystore = async (
-  address: string | undefined,
-  submissions: ISubmittedSubmission[] | undefined,
-  vaults: IVault[] | undefined,
-  userKeys: IStoredKey[] | undefined
-) => {
-  if (!address || !vaults || !submissions || !userKeys) return [];
-  if (vaults.length === 0) return [];
-  if (submissions.length === 0) return [];
-  if (userKeys.length === 0) return [];
-
-  const submissionsForCommittee: ISubmittedSubmission[] = [];
-
-  for (const submission of submissions) {
-    if (!submission.submissionData) continue;
-
-    let decryptedPart = "";
-    let encryptedPart = "";
-
-    //TODO: private audits V2 (verify is decryptedPart is encrypted with hats public key)
-    if (typeof submission.submissionData === "object") {
-      decryptedPart = submission.submissionData.decrypted ?? "";
-      encryptedPart = submission.submissionData.encrypted ?? "";
-    } else {
-      encryptedPart = submission.submissionData as string;
-    }
-
-    // Iterate over all stored keys and try to decrypt the message
-    for (const keypair of userKeys) {
-      try {
-        const privateKey = await readPrivateKeyFromStoredKey(keypair.privateKey, keypair.passphrase);
-        const message = await readMessage({ armoredMessage: encryptedPart });
-
-        const { data: decrypted } = await decrypt({
-          message,
-          decryptionKeys: privateKey,
-        });
-
-        const decryptedMessage = (decrypted as string) + (decryptedPart ? `\n\n${decryptedPart}` : "");
-        submissionsForCommittee.push(...extractSubmissionData(submission, decryptedMessage, vaults));
-        break;
-      } catch (error) {
-        // console.log(error);
-        continue;
-      }
-    }
-  }
-
-  submissionsForCommittee.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
-  const submissionsWithSubId = submissionsForCommittee.map((submission) => ({
-    ...submission,
-    subId: uuidFromString(submission.id + submission.submissionDecrypted),
-  }));
-
-  return submissionsWithSubId;
-};
-
-const extractSubmissionData = (
+export const extractSubmissionData = (
   submission: ISubmittedSubmission,
   decryptedMessage: string,
   allVaults: IVault[]
