@@ -1,4 +1,5 @@
 import AddIcon from "assets/icons/add.icon.svg";
+import DOMPurify from "dompurify";
 import React, { forwardRef, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ipfsTransformUri } from "utils";
@@ -49,9 +50,21 @@ function FormIconInputComponent(
         // }
 
         const isSvg = extension === "svg";
-        const blob = isSvg ? new Blob([fr.result], { type: "image/svg+xml" }) : new Blob([fr.result]);
-        const url = URL.createObjectURL(blob);
+        let blob: Blob;
 
+        if (isSvg) {
+          const enc = new TextEncoder();
+          const dec = new TextDecoder("utf-8");
+          const arr = new Uint8Array(fr.result as ArrayBuffer);
+          const svgString = dec.decode(arr);
+          const sanitizedSvg = DOMPurify.sanitize(svgString);
+          const sanitizedSvgArray = enc.encode(sanitizedSvg);
+          blob = new Blob([sanitizedSvgArray], { type: "image/svg+xml" });
+        } else {
+          blob = new Blob([fr.result]);
+        }
+
+        const url = URL.createObjectURL(blob);
         const validSize = verifyBlobSize(blob.size);
         if (!validSize) return;
 

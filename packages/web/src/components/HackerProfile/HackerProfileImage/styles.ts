@@ -26,7 +26,7 @@ export const StyledHackerProfileImage = styled.div<{ size: IHackerProfileImagePr
     .avatar-preview {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 100px;
     }
 
