@@ -701,12 +701,14 @@
       "linkedAddresses": "Linked addresses",
       "verifyOwnership": "Verify ownership",
       "linkNewAddressToProfile": "Link new address to your profile",
-      "linkNewAddressToProfileExplanation": "Link another address to your White Hat Profile. This will allow you to show all your submissions and stats on the same profile.\n\nINSTRUCTIONS:\n\n Step 1: Verify your ownership of the current profile by Signing In With Ethereum \n\nStep 2: Open your wallet (e.g., MetaMask) and switch to the account you wish to link. \n\nStep 3: Sign In With Ethereum again to verify ownership of the new wallet you are linking.",
+      "linkNewAddressToProfileExplanation": "Link another address to your White Hat Profile. This will allow you to show all your submissions and stats on the same profile.\n\n<strong>INSTRUCTIONS:</strong>\n\n<strong>Step 1:</strong> Verify your ownership of the current profile by Signing In With Ethereum \n\n<strong>Step 2:</strong> Open your wallet (e.g., MetaMask) and switch to the account you wish to link. \n\n<strong>Step 3:</strong> Sign In With Ethereum again to verify ownership of the new wallet you are linking.",
       "linkNewAddressToProfilePartTwoExplanation": "Now change connected account using your wallet (i.e Metamask) to the one you want to link. \n\nYou will be asked to siwe again with the new wallet you want to link.",
       "unlinkAddress": "Unlink address",
       "unlinkAddressExplanation": "Are you sure you want to unlink this address from your profile?",
       "cannotUnlinkLastAddress": "You can't unlink your last address from your profile.",
-      "allTime": "All time"
+      "allTime": "All time",
+      "streakExplanationTitle": "<p><strong>Introducing</strong> <i>Streak</i></p>",
+      "streakExplanationDescription": "<p>Build Your Streak with Consistent Engagement</p><br/><p><strong>Start Your Streak:</strong> Initiate a streak by submitting valid findings.</p><br/><p><strong>Reflect Your Dedication:</strong> Your streak is a testament to your consistent engagement in the community.</p><br/><p><strong>Maintain Your Momentum:</strong> Keep your streak alive by submitting at least one valid finding each month.</p>"
     },
     "PGPTool": {
       "title": "PGP tool",
