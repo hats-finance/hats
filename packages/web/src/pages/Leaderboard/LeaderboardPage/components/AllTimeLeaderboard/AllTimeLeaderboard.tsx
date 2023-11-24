@@ -1,13 +1,17 @@
+import { IVault } from "@hats-finance/shared";
 import { HackerProfileImage, HackerStreak, HatSpinner, Pill, WithTooltip } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
+import useModal from "hooks/useModal";
 import millify from "millify";
 import { RoutePaths } from "navigation";
 import { severitiesOrder } from "pages/HackerProfile/constants";
+import { useAddressesStats } from "pages/HackerProfile/useAddressesStats";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
+import { formatNumber, ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { parseSeverityName } from "utils/severityName";
 import { StyledAllTimeLeaderboard } from "./styles";
@@ -25,7 +29,7 @@ export const AllTimeLeaderboard = () => {
     <StyledAllTimeLeaderboard>
       <div className="leaderboard-table">
         <div className="header">#</div>
-        <div className="header">Security Researcher</div>
+        <div className="header">{t("whiteHat")}</div>
         <div className="header">{t("rewards")}</div>
         <div className="header">{t("findings")}</div>
         <div className="header">{t("Leaderboard.highestSeverity")}</div>
@@ -51,7 +55,9 @@ type ILeaderboardEntryProps = {
 
 const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboardEntryProps) => {
   const hackerProfile = useCachedProfile(leaderboardEntry.address);
+  const profileStats = useAddressesStats([leaderboardEntry.address]);
   const { streakCount, maxStreak } = useAddressesStreak([leaderboardEntry.address]);
+  const { isShowing: isShowingBreakdown, show: showBreakdown, hide: hideBreakdown } = useModal();
 
   const highestSeverity = parseSeverityName(leaderboardEntry.highestSeverity);
 
@@ -74,7 +80,50 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboar
         </div>
       </WithTooltip>
       <div className="content prize">${millify(leaderboardEntry.totalAmount.usd)}</div>
-      <div className="content">{leaderboardEntry.totalSubmissions}</div>
+      <div className="content" onMouseEnter={showBreakdown} onMouseLeave={hideBreakdown}>
+        {leaderboardEntry.totalSubmissions}
+        <div className={`findings-breakdown ${isShowingBreakdown ? "show" : ""}`}>
+          {profileStats?.findingsGlobalStats?.map((breakdown, idx) => {
+            const prizeValue = breakdown?.rewards.usd || breakdown?.rewards.tokens;
+            const isUSD = !!breakdown?.rewards.usd;
+
+            return (
+              <>
+                <div className="breakdown-severity" key={idx}>
+                  <Pill
+                    text={breakdown.severity}
+                    textColor={severityColors[severitiesOrder.findIndex((s) => s === breakdown.severity)]}
+                    isSeverity
+                  />
+                  <div className="logos">
+                    {/* Unique vault logos */}
+                    {breakdown.submissions
+                      .reduce((acc, curr) => {
+                        const vault = curr.linkedVault;
+                        if (!vault) return acc;
+                        if (!acc.find((a) => a.id === vault?.id)) acc.push(vault);
+                        return acc;
+                      }, [] as IVault[])
+                      .map((vault) => {
+                        const vaultLogo = vault?.description?.["project-metadata"].icon;
+                        const vaultName = vault?.description?.["project-metadata"].name;
+
+                        return !vaultLogo ? null : (
+                          <WithTooltip text={vaultName}>
+                            <img src={ipfsTransformUri(vaultLogo)} alt={vaultName} />
+                          </WithTooltip>
+                        );
+                      })}
+                  </div>
+                </div>
+                <div className="breakdown-prize">
+                  {`${isUSD ? "~$" : ""}${formatNumber(prizeValue, isUSD ? 2 : 4)} ${!isUSD ? breakdown.stakingTokenSymbol : ""}`}
+                </div>
+              </>
+            );
+          })}
+        </div>
+      </div>
       <div className="content">
         <Pill
           textColor={severityColors[severitiesOrder.findIndex((s) => s === highestSeverity)]}
