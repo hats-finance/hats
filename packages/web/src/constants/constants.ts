@@ -10,6 +10,7 @@ export enum LocalStorage {
   Submissions = "HATS_SUBMISSIONS",
   SelectedSubmissions = "HATS_USER_SELECTED_SUBMISSIONS",
   CoingeckoPrices = "HATS_COINGECKO_PRICES",
+  CompetitionStreak = "HATS_HAS_SEEN_COMPETITION_STREAK",
 }
 
 export enum EncryptedStorage {

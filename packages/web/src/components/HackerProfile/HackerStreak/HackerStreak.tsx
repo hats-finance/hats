@@ -1,5 +1,7 @@
 import { Button, Modal } from "components";
+import { LocalStorage } from "constants/constants";
 import useModal from "hooks/useModal";
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StyledExplanationModal, StyledHackerStreak } from "./styles";
 
@@ -11,6 +13,14 @@ export type IHackerStreakProps = {
 export const HackerStreak = ({ streak, maxStreak }: IHackerStreakProps) => {
   const { t } = useTranslation();
   const { isShowing: isShowingExplanationModal, show: showExplanationModal, hide: hideExplanationModal } = useModal();
+
+  useEffect(() => {
+    const hasSeenExplanation = localStorage.getItem(LocalStorage.CompetitionStreak);
+    if (!hasSeenExplanation) {
+      showExplanationModal();
+      localStorage.setItem(LocalStorage.CompetitionStreak, "true");
+    }
+  }, [showExplanationModal]);
 
   return (
     <>
