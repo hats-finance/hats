@@ -8,6 +8,7 @@ import { severitiesOrder } from "pages/HackerProfile/constants";
 import { useAddressesStats } from "pages/HackerProfile/useAddressesStats";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
@@ -88,8 +89,8 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboar
             const isUSD = !!breakdown?.rewards.usd;
 
             return (
-              <>
-                <div className="breakdown-severity" key={idx}>
+              <Fragment key={idx}>
+                <div className="breakdown-severity">
                   <Pill
                     text={breakdown.severity}
                     textColor={severityColors[severitiesOrder.findIndex((s) => s === breakdown.severity)]}
@@ -104,12 +105,12 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboar
                         if (!acc.find((a) => a.id === vault?.id)) acc.push(vault);
                         return acc;
                       }, [] as IVault[])
-                      .map((vault) => {
+                      .map((vault, idx) => {
                         const vaultLogo = vault?.description?.["project-metadata"].icon;
                         const vaultName = vault?.description?.["project-metadata"].name;
 
                         return !vaultLogo ? null : (
-                          <WithTooltip text={vaultName}>
+                          <WithTooltip text={vaultName} key={idx}>
                             <img src={ipfsTransformUri(vaultLogo)} alt={vaultName} />
                           </WithTooltip>
                         );
@@ -119,7 +120,7 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severityColors }: ILeaderboar
                 <div className="breakdown-prize">
                   {`${isUSD ? "~$" : ""}${formatNumber(prizeValue, isUSD ? 2 : 4)} ${!isUSD ? breakdown.stakingTokenSymbol : ""}`}
                 </div>
-              </>
+              </Fragment>
             );
           })}
         </div>
