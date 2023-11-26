@@ -6,10 +6,11 @@ export const StyledHackerStreak = styled.div<IHackerStreakProps>(
   ({ streak, maxStreak }) => css`
     width: 100%;
     position: relative;
+    cursor: pointer;
 
     .track {
       width: 100%;
-      height: ${getSpacing(2.5)};
+      height: ${getSpacing(2.2)};
       border: 1px solid var(--primary-light);
       border-radius: 100px;
     }
@@ -19,7 +20,7 @@ export const StyledHackerStreak = styled.div<IHackerStreakProps>(
       top: 0;
       left: 0;
       width: ${(streak / maxStreak) * 100}%;
-      height: ${getSpacing(2.5)};
+      height: ${getSpacing(2.2)};
       border-radius: 100px;
       background: linear-gradient(90.02deg, #24285f 0.02%, #87dbdb 94.08%);
       display: flex;
@@ -50,3 +51,28 @@ export const StyledHackerStreak = styled.div<IHackerStreakProps>(
     }
   `
 );
+
+export const StyledExplanationModal = styled.div`
+  max-width: 400px;
+  max-height: 80vh;
+
+  .title {
+    margin-top: ${getSpacing(3)};
+    text-align: center;
+    font-size: var(--medium);
+  }
+
+  .description {
+  }
+
+  .streak-example {
+    width: 75%;
+    margin: ${getSpacing(3)} auto;
+  }
+
+  .buttons {
+    display: flex;
+    justify-content: center;
+    margin: ${getSpacing(6)} 0 ${getSpacing(3)};
+  }
+`;

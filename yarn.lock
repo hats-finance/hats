@@ -13808,6 +13808,11 @@ react-identicons@^1.2.5:
   resolved "https://registry.npmjs.org/react-identicons/-/react-identicons-1.2.5.tgz"
   integrity sha512-x7prkDoc2pD7wSl2C1pGxS+XAoSdq1ABWJWTBUimVTDVJArKOLd0B4wRUJpDm4r+9y7pgf8ylyPGsmlWSV5n2g==
 
+react-image-file-resizer@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/react-image-file-resizer/-/react-image-file-resizer-0.4.8.tgz#85f4ae4469fd2867d961568af660ef403d7a79af"
+  integrity sha512-Ue7CfKnSlsfJ//SKzxNMz8avDgDSpWQDOnTKOp/GNRFJv4dO9L5YGHNEnj40peWkXXAK2OK0eRIoXhOYpUzUTQ==
+
 react-indexed-db-hook@^1.0.14:
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/react-indexed-db-hook/-/react-indexed-db-hook-1.0.14.tgz#a29cd732d592735b6a68dfc94316b7a4a091e6be"

@@ -1,6 +1,8 @@
 import AddIcon from "assets/icons/add.icon.svg";
+import DOMPurify from "dompurify";
 import React, { forwardRef, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Resizer from "react-image-file-resizer";
 import { ipfsTransformUri } from "utils";
 import { parseIsDirty } from "../utils";
 import { StyledFormIconInput } from "./styles";
@@ -30,6 +32,11 @@ function FormIconInputComponent(
   const value = localRef.current?.value;
   const id = `icon-input-${name}`;
 
+  const resizeFile = (blob: Blob, imageType: "PNG" | "JPG") =>
+    new Promise((resolve) => {
+      Resizer.imageFileResizer(blob, 300, 300, imageType, 80, 0, (uri) => resolve(uri), "blob");
+    });
+
   const handleOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (disabled) return;
 
@@ -49,9 +56,22 @@ function FormIconInputComponent(
         // }
 
         const isSvg = extension === "svg";
-        const blob = isSvg ? new Blob([fr.result], { type: "image/svg+xml" }) : new Blob([fr.result]);
-        const url = URL.createObjectURL(blob);
+        let blob: Blob;
 
+        if (isSvg) {
+          const enc = new TextEncoder();
+          const dec = new TextDecoder("utf-8");
+          const arr = new Uint8Array(fr.result as ArrayBuffer);
+          const svgString = dec.decode(arr);
+          const sanitizedSvg = DOMPurify.sanitize(svgString);
+          const sanitizedSvgArray = enc.encode(sanitizedSvg);
+          blob = new Blob([sanitizedSvgArray], { type: "image/svg+xml" });
+        } else {
+          blob = new Blob([fr.result]);
+          blob = (await resizeFile(blob, type === "image" ? "JPG" : extension === "png" ? "PNG" : "JPG")) as Blob;
+        }
+
+        const url = URL.createObjectURL(blob);
         const validSize = verifyBlobSize(blob.size);
         if (!validSize) return;
 
