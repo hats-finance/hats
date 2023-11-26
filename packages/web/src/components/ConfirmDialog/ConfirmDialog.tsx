@@ -58,7 +58,7 @@ function ConfirmDialog({
     >
       <StyledConfirmDialog>
         <div className="description-container">
-          <div>{description}</div>
+          {description && <div dangerouslySetInnerHTML={{ __html: description }} />}
           {bodyComponent && <div className="mt-4">{bodyComponent}</div>}
           {confirmTextInput && (
             <div className="mt-4">

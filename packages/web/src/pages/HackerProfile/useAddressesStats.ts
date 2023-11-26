@@ -12,6 +12,7 @@ export type IHackerPayoutStats = {
   count: number;
   rewards: { tokens: number; usd: number };
   submissions: ISubmittedSubmission[];
+  stakingTokenSymbol: string;
 };
 
 export type IHackerRewardsStats = {
@@ -66,6 +67,7 @@ export const useAddressesStats = (addresses: string[] = []) => {
               count: 1,
               rewards: { tokens: totalRewardInTokens, usd: totalRewardInTokens * tokenPrice },
               submissions: curr.payoutData.decryptedSubmission ? [curr.payoutData.decryptedSubmission] : [],
+              stakingTokenSymbol: vault?.stakingTokenSymbol ?? "",
             });
           }
         } else if (curr.payoutData?.type === "split") {
@@ -91,6 +93,7 @@ export const useAddressesStats = (addresses: string[] = []) => {
                 count: 1,
                 rewards: { tokens: findingRewardInTokens, usd: findingRewardInTokens * tokenPrice },
                 submissions: ben.decryptedSubmission ? [ben.decryptedSubmission] : [],
+                stakingTokenSymbol: vault?.stakingTokenSymbol ?? "",
               });
             }
           }
