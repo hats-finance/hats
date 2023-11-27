@@ -1,3 +1,4 @@
+import WalletIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
 import ErrorIcon from "assets/icons/error-icon.svg";
 import { Dot, DropdownSelector, WithTooltip } from "components";
 import { Colors } from "constants/constants";
@@ -92,11 +93,19 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     );
   };
 
+  console.log(connectors);
+
   const getConnectorsOptions = useCallback(
     () =>
       account
         ? [{ label: t("disconnect"), onClick: deactivateAccount, icon: connectorIcons.disconnect }]
         : [
+            {
+              id: "injected",
+              label: connectors.find((c) => c.id === "injected")?.name || "Injected",
+              onClick: () => activateAccount(connectors.find((c) => c.id === "injected")),
+              icon: <WalletIcon />,
+            },
             {
               id: "metaMask",
               label: "Metamask",
