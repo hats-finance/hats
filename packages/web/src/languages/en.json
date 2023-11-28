@@ -927,6 +927,7 @@
       "stopAutocalculation": "Stop autocalculation",
       "addNewBeneficiary": "Add new beneficiary",
       "sureToAddBeneficiaryExplanation": "Are you sure you want to add a new beneficiary? \n\nThis will delete the current payout and send you to submissions selection.",
+      "selectMoreSubmissions": "Select more submissions",
       "payoutStatusDescriptions": {
         "pending": "Your payout multisig transaction was created please share this page between other committee member to sign it. Once all signatures are collected you will be able to execute the payout transaction.",
         "readyToExecute": "The needed signatures were collected, you can now execute the payout transaction. Please be aware that the payout can only be executed during safety period.",

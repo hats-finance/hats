@@ -183,29 +183,23 @@ export const PayoutFormPage = () => {
       const form = getValues();
 
       if (form.type === "single") {
-        const allSubmissionsDecrypted = committeeSubmissions?.some((sub) => sub.subId === form.submissionData?.subId);
-        if (!allSubmissionsDecrypted) return alert("You dont have all the payout submissions decrypted.");
-
         const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
-        if (!submission) return alert("Submission not found");
-        // @ts-ignore
-        setValue("decryptedSubmission", {
-          ...submission,
-          submissionDataStructure: { ...submission?.submissionDataStructure, communicationChannel: undefined },
-        } as any);
+        if (submission) {
+          // @ts-ignore
+          setValue("decryptedSubmission", {
+            ...submission,
+            submissionDataStructure: { ...submission.submissionDataStructure, communicationChannel: undefined },
+          } as any);
+        }
       } else {
-        const allSubmissionsDecrypted = form.beneficiaries
-          .map((ben) => committeeSubmissions?.some((sub) => sub.subId === ben.submissionData?.subId))
-          .every(Boolean);
-        if (!allSubmissionsDecrypted) return alert("You dont have all the payout submissions decrypted.");
-
         for (const [idx, ben] of form.beneficiaries.entries()) {
           const submission = committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId);
-          if (!submission) return alert("Submission not found");
-          setValue(`beneficiaries.${idx}.decryptedSubmission`, {
-            ...submission,
-            submissionDataStructure: { ...submission?.submissionDataStructure, communicationChannel: undefined },
-          } as any);
+          if (submission) {
+            setValue(`beneficiaries.${idx}.decryptedSubmission`, {
+              ...submission,
+              submissionDataStructure: { ...submission.submissionDataStructure, communicationChannel: undefined },
+            } as any);
+          }
         }
       }
     }

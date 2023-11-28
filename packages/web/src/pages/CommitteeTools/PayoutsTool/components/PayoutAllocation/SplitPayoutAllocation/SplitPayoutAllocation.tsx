@@ -107,14 +107,15 @@ function SplitPayoutAllocationShared({
 
   // Sorting beneficiaries by severity
   useEffect(() => {
-    const sortedBeneficiariesBySeverity = [...beneficiaries].sort((a, b) => {
+    const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
+    copiedArray.sort((a, b) => {
       const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
       const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
       return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
     });
 
-    if (JSON.stringify(sortedBeneficiariesBySeverity.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
-    replace(sortedBeneficiariesBySeverity);
+    if (JSON.stringify(copiedArray.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
+    replace(copiedArray);
   }, [beneficiaries, severitiesOptions, replace]);
 
   const [editPercentageToPay, setEditPercentageToPay] = useState(false);
@@ -178,27 +179,28 @@ function SplitPayoutAllocationShared({
   }, [generalPayoutAllocation]);
 
   const handleAddBeneficiary = async () => {
-    if (isFromSubmissions) {
-      if (!payout) return;
+    appendBeneficiary(createNewSplitPayoutBeneficiary());
+  };
 
-      const wantsToAddBeneficiary = await confirm({
-        title: t("Payouts.addNewBeneficiary"),
-        titleIcon: <AddIcon className="mr-2" fontSize="large" />,
-        description: t("Payouts.sureToAddBeneficiaryExplanation"),
-        cancelText: t("no"),
-        confirmText: t("confirm"),
-      });
+  const handleSelectMoreSubmissions = async () => {
+    if (!isFromSubmissions) return;
+    if (!payout) return;
 
-      if (!wantsToAddBeneficiary) return;
+    const wantsToAddBeneficiary = await confirm({
+      title: t("Payouts.addNewBeneficiary"),
+      titleIcon: <AddIcon className="mr-2" fontSize="large" />,
+      description: t("Payouts.sureToAddBeneficiaryExplanation"),
+      cancelText: t("no"),
+      confirmText: t("confirm"),
+    });
 
-      const wasDeleted = await deletePayout.mutateAsync({ payoutId: payout._id });
-      if (!wasDeleted) return alert("Something went wrong, please try again later");
+    if (!wantsToAddBeneficiary) return;
 
-      const selectedSubmissions = beneficiaries.map((ben) => ben.submissionData?.subId);
-      navigate(`${RoutePaths.submissions}`, { state: { selectedSubmissions } });
-    } else {
-      appendBeneficiary(createNewSplitPayoutBeneficiary());
-    }
+    const wasDeleted = await deletePayout.mutateAsync({ payoutId: payout._id });
+    if (!wasDeleted) return alert("Something went wrong, please try again later");
+
+    const selectedSubmissions = beneficiaries.map((ben) => ben.submissionData?.subId);
+    navigate(`${RoutePaths.submissions}`, { state: { selectedSubmissions } });
   };
 
   return (
@@ -219,12 +221,20 @@ function SplitPayoutAllocationShared({
         ))}
       </StyledBeneficiariesTable>
 
-      {!readOnly && !isPayoutCreated && (
-        <Button styleType="invisible" onClick={handleAddBeneficiary}>
-          <AddIcon />
-          {t("Payouts.addBeneficiary")}
-        </Button>
-      )}
+      <div className="buttons-actions">
+        {!readOnly && !isPayoutCreated && isFromSubmissions && (
+          <Button styleType="invisible" onClick={handleSelectMoreSubmissions}>
+            <AddIcon />
+            {t("Payouts.selectMoreSubmissions")}
+          </Button>
+        )}
+        {!readOnly && !isPayoutCreated && (
+          <Button styleType="invisible" onClick={handleAddBeneficiary}>
+            <AddIcon />
+            {t("Payouts.addBeneficiary")}
+          </Button>
+        )}
+      </div>
 
       {sumPercentagesPayout !== 100 && (
         <p className="error mt-4">
