@@ -1,5 +1,5 @@
 import { IVault } from "@hats-finance/shared";
-import { HackerProfileImage, HackerStreak, HatSpinner, Pill, WithTooltip } from "components";
+import { FormSelectInput, HackerProfileImage, HackerStreak, HatSpinner, Pill, WithTooltip } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import useModal from "hooks/useModal";
 import millify from "millify";
@@ -8,7 +8,7 @@ import { severitiesOrder } from "pages/HackerProfile/constants";
 import { useAddressesStats } from "pages/HackerProfile/useAddressesStats";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
@@ -16,11 +16,12 @@ import { formatNumber, ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { parseSeverityName } from "utils/severityName";
 import { StyledAllTimeLeaderboard } from "./styles";
-import { IAllTimeLeaderboard, useAllTimeLeaderboard } from "./useAllTimeLeaderboard";
+import { IAllTimeLeaderboard, IAllTimeLeaderboardSortKey, useAllTimeLeaderboard } from "./useAllTimeLeaderboard";
 
 export const AllTimeLeaderboard = () => {
   const { t } = useTranslation();
-  const { leaderboard, isLoading } = useAllTimeLeaderboard();
+  const [sortBy, setSortBy] = useState<IAllTimeLeaderboardSortKey>("streak");
+  const { leaderboard, isLoading } = useAllTimeLeaderboard("all", sortBy);
   const sevLevels = [...new Set(leaderboard?.map((leaderboardEntry) => leaderboardEntry.highestSeverity))];
   const severityColors = getSeveritiesColorsArray(undefined, sevLevels.length);
 
@@ -28,6 +29,19 @@ export const AllTimeLeaderboard = () => {
 
   return (
     <StyledAllTimeLeaderboard>
+      <div className="sort-by">
+        <FormSelectInput
+          label={t("sortBy")}
+          options={[
+            { label: t("streak"), value: "streak" },
+            { label: t("rewards"), value: "totalAmount" },
+            { label: t("findings"), value: "totalFindings" },
+          ]}
+          value={sortBy}
+          onChange={(e) => setSortBy(e as IAllTimeLeaderboardSortKey)}
+        />
+      </div>
+
       <div className="leaderboard-table">
         <div className="header">#</div>
         <div className="header">{t("whiteHat")}</div>
