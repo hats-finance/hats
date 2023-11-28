@@ -107,7 +107,6 @@ function SplitPayoutAllocationShared({
 
   // Sorting beneficiaries by severity
   useEffect(() => {
-    console.log(111111111);
     const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
     copiedArray.sort((a, b) => {
       const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
