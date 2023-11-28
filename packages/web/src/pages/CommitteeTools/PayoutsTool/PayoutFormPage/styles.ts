@@ -139,6 +139,12 @@ export const StyledPayoutForm = styled.div`
         }
       }
     }
+
+    .buttons-actions {
+      display: flex;
+      gap: ${getSpacing(1.5)};
+      margin-top: ${getSpacing(2)};
+    }
   }
 
   .buttons {
