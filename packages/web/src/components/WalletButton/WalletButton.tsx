@@ -93,8 +93,6 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     );
   };
 
-  console.log(connectors);
-
   const getConnectorsOptions = useCallback(
     () =>
       account
