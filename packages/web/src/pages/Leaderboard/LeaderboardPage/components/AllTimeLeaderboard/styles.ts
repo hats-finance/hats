@@ -3,6 +3,14 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledAllTimeLeaderboard = styled.div`
+  .sort-by {
+    width: 35%;
+
+    @media (max-width: ${breakpointsDefinition.smallMobile}) {
+      width: 80%;
+    }
+  }
+
   .leaderboard-table {
     display: grid;
     grid-template-columns: repeat(5, auto);

@@ -8,6 +8,8 @@ import { useMemo, useState } from "react";
 import { getOldTokenPrice } from "utils/getOldTokenPrice";
 import { parseSeverityName } from "utils/severityName";
 
+export type IAllTimeLeaderboardSortKey = "streak" | "totalAmount" | "totalFindings";
+
 export type IAllTimeLeaderboard = {
   address: string;
   streak: number | undefined;
@@ -18,7 +20,8 @@ export type IAllTimeLeaderboard = {
 }[];
 
 export const useAllTimeLeaderboard = (
-  timeframe: IPayoutsTimeframe = "all"
+  timeframe: IPayoutsTimeframe = "all",
+  sortKey: IAllTimeLeaderboardSortKey = "streak"
 ): { leaderboard: IAllTimeLeaderboard; isLoading: boolean } => {
   const payoutsGroupedByAddress = usePayoutsGroupedByAddress(timeframe);
   const { getAddressesStreakCount } = useAddressesStreak();
@@ -91,10 +94,20 @@ export const useAllTimeLeaderboard = (
 
     setIsLoading(false);
 
-    return payoutsGroupedByAddressWithStats.sort(
-      (a, b) => (b.streak ?? 0) - (a.streak ?? 0) || b.totalAmount.usd - a.totalAmount.usd
-    );
-  }, [payoutsGroupedByAddress, vaultsReadyAllChains, getAddressesStreakCount]);
+    if (sortKey === "totalAmount") {
+      return payoutsGroupedByAddressWithStats.sort(
+        (a, b) => b.totalAmount.usd - a.totalAmount.usd || (b.streak ?? 0) - (a.streak ?? 0)
+      );
+    } else if (sortKey === "totalFindings") {
+      return payoutsGroupedByAddressWithStats.sort(
+        (a, b) => b.totalSubmissions - a.totalSubmissions || b.totalAmount.usd - a.totalAmount.usd
+      );
+    } else {
+      return payoutsGroupedByAddressWithStats.sort(
+        (a, b) => (b.streak ?? 0) - (a.streak ?? 0) || b.totalAmount.usd - a.totalAmount.usd
+      );
+    }
+  }, [payoutsGroupedByAddress, vaultsReadyAllChains, getAddressesStreakCount, sortKey]);
 
   return { leaderboard: payoutsWithStats, isLoading };
 };
