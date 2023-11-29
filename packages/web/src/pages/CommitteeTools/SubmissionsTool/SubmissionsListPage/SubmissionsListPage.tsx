@@ -22,7 +22,7 @@ import SearchIcon from "@mui/icons-material/SearchOutlined";
 import SyncIcon from "@mui/icons-material/SyncOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import { AxiosError } from "axios";
-import { Alert, Button, FormDateInput, FormSelectInput, HatSpinner, Loading, Modal, WalletButton } from "components";
+import { Alert, Button, FormDateInput, FormInput, FormSelectInput, HatSpinner, Loading, Modal, WalletButton } from "components";
 import { useKeystore } from "components/Keystore";
 import { IndexedDBs } from "config/DBConfig";
 import { LocalStorage } from "constants/constants";
@@ -55,6 +55,7 @@ export const SubmissionsListPage = () => {
   const [openDateFilter, setOpenDateFilter] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
   const [severityFilter, setSeverityFilter] = useState<string>();
+  const [titleFilter, setTitleFilter] = useState<string>("");
 
   const { data: committeeSubmissions, isLoading, loadingProgress } = useVaultSubmissionsByKeystore();
 
@@ -73,8 +74,15 @@ export const SubmissionsListPage = () => {
         return parseSeverityName(submission.submissionDataStructure.severity) === severityFilter;
       });
     }
+    if (titleFilter) {
+      filteredSubmissions = filteredSubmissions.filter((submission) => {
+        if (!submission.submissionDataStructure?.title) return false;
+        console.log(titleFilter);
+        return submission.submissionDataStructure.title.toLowerCase().includes(titleFilter.toLowerCase());
+      });
+    }
     return filteredSubmissions;
-  }, [committeeSubmissions, dateFilter, severityFilter]);
+  }, [committeeSubmissions, dateFilter, severityFilter, titleFilter]);
 
   const allSeveritiesOptions = useMemo(() => {
     if (!committeeSubmissions) return [];
@@ -338,32 +346,46 @@ export const SubmissionsListPage = () => {
                 <>
                   <div className="toolbar">
                     <div className="controls">
-                      <div style={{ display: "none" }} className="selection" onClick={handleSelectAll}>
-                        {allPageSelected ? (
-                          <BoxSelected className="icon" fontSize="inherit" />
-                        ) : (
-                          <BoxUnselected className="icon" fontSize="inherit" />
-                        )}
-                        <p>
-                          {t("SubmissionsTool.selectAll")} ({quantityInPage})
-                        </p>
+                      <div className="controls-row">
+                        <div style={{ display: "none" }} className="selection" onClick={handleSelectAll}>
+                          {allPageSelected ? (
+                            <BoxSelected className="icon" fontSize="inherit" />
+                          ) : (
+                            <BoxUnselected className="icon" fontSize="inherit" />
+                          )}
+                          <p>
+                            {t("SubmissionsTool.selectAll")} ({quantityInPage})
+                          </p>
+                        </div>
+                        <div className="rescan" onClick={handleRescan}>
+                          <RescanIcon /> {t("SubmissionsTool.rescan")}
+                        </div>
+                        <div className="date-sort" onClick={() => setOpenDateFilter(true)}>
+                          <CalendarIcon /> {t("SubmissionsTool.filterByDateShort")} {dateFilter.active && `(${t("active")})`}
+                        </div>
+                        <div className="severity-filter">
+                          <FormSelectInput
+                            value={severityFilter ?? ""}
+                            label={t("SubmissionsTool.filterBySeverity")}
+                            placeholder={t("severity")}
+                            colorable
+                            options={allSeveritiesOptions}
+                            noMargin
+                            onChange={(severity) => setSeverityFilter(severity as string)}
+                          />
+                        </div>
                       </div>
-                      <div className="rescan" onClick={handleRescan}>
-                        <RescanIcon /> {t("SubmissionsTool.rescan")}
-                      </div>
-                      <div className="date-sort" onClick={() => setOpenDateFilter(true)}>
-                        <CalendarIcon /> {t("SubmissionsTool.filterByDateShort")} {dateFilter.active && `(${t("active")})`}
-                      </div>
-                      <div className="severity-filter">
-                        <FormSelectInput
-                          value={severityFilter ?? ""}
-                          label={t("SubmissionsTool.filterBySeverity")}
-                          placeholder={t("severity")}
-                          colorable
-                          options={allSeveritiesOptions}
-                          noMargin
-                          onChange={(severity) => setSeverityFilter(severity as string)}
-                        />
+                      <div className="controls-row">
+                        <div className="title-filter">
+                          <FormInput
+                            value={titleFilter ?? ""}
+                            label={t("SubmissionsTool.filterByTitle")}
+                            placeholder={t("SubmissionsTool.title")}
+                            colorable
+                            noMargin
+                            onChange={(e) => setTitleFilter(e.target.value as string)}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className="pagination">
