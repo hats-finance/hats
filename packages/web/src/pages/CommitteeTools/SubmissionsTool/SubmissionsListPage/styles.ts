@@ -74,7 +74,7 @@ export const StyledSubmissionsListPage = styled.div`
   .toolbar {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: ${getSpacing(3)};
 
     .controls,
@@ -99,16 +99,34 @@ export const StyledSubmissionsListPage = styled.div`
         }
       }
 
-      .severity-filter {
-        width: ${getSpacing(25)};
-      }
-
       .selection {
         display: flex;
         align-items: center;
 
         .icon {
           font-size: var(--medium);
+        }
+      }
+    }
+
+    .controls {
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: ${getSpacing(1)};
+      gap: ${getSpacing(2)};
+
+      .controls-row {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+
+        .severity-filter {
+          width: ${getSpacing(25)};
+        }
+
+        .title-filter {
+          width: 100%;
         }
       }
     }
