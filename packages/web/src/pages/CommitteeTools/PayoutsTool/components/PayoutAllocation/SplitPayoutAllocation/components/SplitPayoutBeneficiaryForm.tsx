@@ -65,7 +65,7 @@ export const SplitPayoutBeneficiaryForm = ({
   useOnChange(selectedSeverityName, (newSelected, prevSelected) => {
     if (!selectedSeverityData) return;
     if (newSelected === undefined) return;
-    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image as any);
+    setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image as any, { shouldValidate: true });
   });
 
   const getMoreOptions = () => {
@@ -127,7 +127,11 @@ export const SplitPayoutBeneficiaryForm = ({
                 {...register(`beneficiaries.${index}.beneficiary`)}
                 label={t("Payouts.beneficiary")}
                 placeholder={t("Payouts.beneficiary")}
-                disabled={(isPayoutCreated && !readOnly) || isFromSubmissions}
+                disabled={
+                  (isPayoutCreated && !readOnly) ||
+                  (isFromSubmissions &&
+                    (isLoadingSubmission || !!beneficiaries[index]?.decryptedSubmission || !!beneficiarySubmission))
+                }
                 readOnly={readOnly}
                 colorable={!readOnly}
                 noMargin

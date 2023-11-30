@@ -174,7 +174,7 @@ export const PayoutFormPage = () => {
 
   const handleLockPayout = async () => {
     // Put decrypted submission data in the payoutData
-    if (isFromSubmissions && !keystore) await initKeystore();
+    if (isFromSubmissions && !keystore) return await initKeystore();
 
     if (isPayoutCreated || !address || !isAuthenticated || !payoutId || isAnotherActivePayout) return;
 
@@ -185,7 +185,6 @@ export const PayoutFormPage = () => {
       if (form.type === "single") {
         const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
         if (submission) {
-          // @ts-ignore
           setValue("decryptedSubmission", {
             ...submission,
             submissionDataStructure: { ...submission.submissionDataStructure, communicationChannel: undefined },
