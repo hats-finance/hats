@@ -42,14 +42,18 @@ export class ExecutePayoutContract {
 
           await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
+          console.log("Getting Safe SDK");
           const ethAdapter = new EthersAdapter({ ethers, signerOrProvider: signer as Signer });
           const safeSdk = await Safe.create({ ethAdapter, safeAddress: vault.committee });
+          console.log("Safe SDK done");
 
+          console.log("Getting safe TX");
           const { tx: safeTransaction, txHash: safeTransactionHash } = await getExecutePayoutSafeTransaction(
             provider,
             vault.committee,
             payout
           );
+          console.log("Safe TX done", { safeTransaction, safeTransactionHash });
 
           // Check the safe transaction hash returned by the API
           if (safeTransactionHash !== payout.txToSign) {
@@ -61,7 +65,9 @@ export class ExecutePayoutContract {
             safeTransaction.addSignature(new EthSafeSignature(signature.signerAddress, signature.signature));
           }
 
+          console.log("Executing safe transaction");
           const txResult = await safeSdk.executeTransaction(safeTransaction);
+          console.log("Safe transaction executed", txResult);
           setData(txResult);
           setIsLoading(false);
 
