@@ -52,18 +52,19 @@ const SplitPayoutAllocationOnStatus = ({ payout, vault }: SplitPayoutAllocationP
     mode: "onChange",
   });
 
+  // Get unique severities from beneficiaries
+  const severitiesOptions = useMemo(() => {
+    const severities = new Set<string>();
+    (payout?.payoutData as ISplitPayoutData).beneficiaries.forEach((ben) => severities.add(ben.severity.toLowerCase()));
+    return [...severities].map((severity) => ({
+      label: severity.toLowerCase().replace("severity", "").trim(),
+      value: severity.toLowerCase(),
+    }));
+  }, [payout?.payoutData]);
+
   return (
     <FormProvider {...methodsOnlyBeneficiaries}>
-      <SplitPayoutAllocationShared
-        payout={payout}
-        vault={vault}
-        readOnly
-        isPayoutCreated
-        severitiesOptions={(payout?.payoutData as ISplitPayoutData).beneficiaries.map((ben) => ({
-          label: ben.severity.toLowerCase().replace("severity", "").trim(),
-          value: ben.severity.toLowerCase(),
-        }))}
-      />
+      <SplitPayoutAllocationShared payout={payout} vault={vault} readOnly isPayoutCreated severitiesOptions={severitiesOptions} />
     </FormProvider>
   );
 };
