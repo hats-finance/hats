@@ -110,7 +110,8 @@ export const getExecutePayoutSafeTransaction = async (
     const payoutData = payout.payoutData as ISplitPayoutData;
 
     // Join same beneficiaries and sum percentages
-    const beneficiariesJointPercentage = payoutData.beneficiaries.reduce((acc, beneficiary) => {
+    const beneficiariesToIterate = JSON.parse(JSON.stringify(payoutData.beneficiaries)) as ISplitPayoutBeneficiary[];
+    const beneficiariesJointPercentage = beneficiariesToIterate.reduce((acc, beneficiary) => {
       const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
       if (existingBeneficiary) {
         existingBeneficiary.percentageOfPayout = truncate(
