@@ -148,8 +148,6 @@ function SplitPayoutAllocationShared({
     [beneficiaries, severitiesOptions]
   );
 
-  console.log({ severitiesOptions, severitiesSummary, beneficiaries });
-
   const sumPercentagesPayout = useMemo(
     () =>
       +beneficiaries
