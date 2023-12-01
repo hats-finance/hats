@@ -26,15 +26,19 @@ export const useVaultSubmissionsByKeystore = (
 
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
-  const [submissionsFromKeystore, setSubmissionsFromKeystore] = useState<ISubmittedSubmission[]>([]);
+  const [submissionsFromKeystore, setSubmissionsFromKeystore] = useState<ISubmittedSubmission[]>();
 
   useEffect(() => {
-    if (submissionsFromKeystore.length > 0) return;
+    if (disabled) return;
+    if (submissionsFromKeystore !== undefined) return;
     if (!vaultsReadyAllChains || !submissionsReadyAllChains) return;
-    if (!address || !allVaults || !allSubmissions || !userKeys) return;
+    if (!address || !allVaults || !allSubmissions) return;
     if (allVaults.length === 0) return;
     if (allSubmissions.length === 0) return;
-    if (userKeys.length === 0) return;
+    if (!userKeys || userKeys.length === 0) {
+      setIsLoading(false);
+      return;
+    }
 
     const checkSubmissions = async () => {
       try {
@@ -43,6 +47,7 @@ export const useVaultSubmissionsByKeystore = (
         if (submissionsFromDB && submissionsFromDB.length > 0) {
           setSubmissionsFromKeystore(submissionsFromDB as ISubmittedSubmission[]);
           setIsLoading(false);
+          return;
         }
       } catch (error) {
         console.log(error);
@@ -107,18 +112,19 @@ export const useVaultSubmissionsByKeystore = (
     checkSubmissions();
   }, [
     address,
-    allSubmissions,
-    allVaults,
-    submissionsReadyAllChains,
+    disabled,
     userKeys,
+    allVaults,
+    allSubmissions,
     vaultsReadyAllChains,
     submissionsFromKeystore,
-    addToDecryptedSubmissionsDB,
+    submissionsReadyAllChains,
     getAllDecryptedSubmissionsDB,
+    addToDecryptedSubmissionsDB,
   ]);
 
   if (disabled) return { isLoading: false, data: [], loadingProgress: 0 };
-  return { isLoading, data: submissionsFromKeystore, loadingProgress };
+  return { isLoading, data: submissionsFromKeystore ?? [], loadingProgress };
 };
 
 // MUTATIONS
