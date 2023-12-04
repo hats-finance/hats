@@ -6,8 +6,9 @@ import { parseSeverityName } from "utils/severityName";
 
 export type IAuditPayoutLeaderboardData = {
   beneficiary: string;
-  totalRewardInUSD: number;
-  findings: { severity: string; count: number }[];
+  totalRewards: { usd: number; tokens: number };
+  rewardToken: string;
+  findings: { severity: string; count: number; totalRewards: { usd: number; tokens: number } }[];
   totalFindings: number;
 };
 
@@ -33,30 +34,41 @@ export const useAuditPayoutLeaderboardData = (
       const auditLeaderboard: IAuditPayoutLeaderboardData[] = payoutData.beneficiaries.reduce((acc, curr) => {
         const existingBeneficiary = acc.find((beneficiary) => beneficiary.beneficiary === curr.beneficiary);
 
-        const findingReward = (Number(curr.percentageOfPayout) / totalPercentage) * totalRewardInUSD;
+        const findingRewardUsd = (Number(curr.percentageOfPayout) / totalPercentage) * totalRewardInUSD;
+        const findingRewardTokens = (Number(curr.percentageOfPayout) / totalPercentage) * totalRewardInToken;
         const findingSeverityName = parseSeverityName(curr.severity);
 
         if (existingBeneficiary) {
           existingBeneficiary.totalFindings += 1;
-          existingBeneficiary.totalRewardInUSD += findingReward;
+          existingBeneficiary.totalRewards.usd += findingRewardUsd;
+          existingBeneficiary.totalRewards.tokens += findingRewardTokens;
           const existingFinding = existingBeneficiary.findings.find((finding) => finding.severity === findingSeverityName);
           if (existingFinding) {
             existingFinding.count += 1;
+            existingFinding.totalRewards.usd += findingRewardUsd;
+            existingFinding.totalRewards.tokens += findingRewardTokens;
           } else {
-            existingBeneficiary.findings.push({ severity: findingSeverityName, count: 1 });
+            existingBeneficiary.findings.push({
+              severity: findingSeverityName,
+              count: 1,
+              totalRewards: { usd: findingRewardUsd, tokens: findingRewardTokens },
+            });
           }
         } else {
           acc.push({
             beneficiary: curr.beneficiary,
-            totalRewardInUSD: findingReward,
-            findings: [{ severity: findingSeverityName, count: 1 }],
+            rewardToken: auditPayout.payoutData?.vault?.stakingTokenSymbol ?? "",
+            totalRewards: { usd: findingRewardUsd, tokens: findingRewardTokens },
+            findings: [
+              { severity: findingSeverityName, count: 1, totalRewards: { usd: findingRewardUsd, tokens: findingRewardTokens } },
+            ],
             totalFindings: 1,
           });
         }
         return acc;
       }, [] as IAuditPayoutLeaderboardData[]);
 
-      auditLeaderboard.sort((a, b) => b.totalRewardInUSD - a.totalRewardInUSD);
+      auditLeaderboard.sort((a, b) => b.totalRewards.usd - a.totalRewards.usd);
 
       setLeaderboardData(auditLeaderboard);
     };
