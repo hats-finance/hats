@@ -53,6 +53,7 @@ export interface IBaseVault {
   amountsInfo?: {
     showCompetitionIntendedAmount: boolean;
     tokenPriceUsd: number;
+    maxRewardFactor: number;
     depositedAmount: {
       tokens: number;
       usd: number;

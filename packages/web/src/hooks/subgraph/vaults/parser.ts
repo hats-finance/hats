@@ -120,6 +120,7 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     return {
       ...vault,
       amountsInfo: {
+        maxRewardFactor,
         showCompetitionIntendedAmount:
           isAudit &&
           vault.description &&
