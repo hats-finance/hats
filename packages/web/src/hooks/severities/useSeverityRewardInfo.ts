@@ -15,10 +15,9 @@ export const getSeveritiesColorsArray = (vault: IVault | undefined, levels = 4):
 
 export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: number) {
   const DEFAULT_VALUE = {
-    rewardPrice: 0,
-    rewardTokens: 0,
+    rewards: { usd: 0, tokens: 0 },
+    rewardsCap: { usd: 0, tokens: 0 },
     rewardPercentage: 0,
-    rewardCap: 0,
     rewardColor: INITIAL_SEVERITY_COLOR,
   };
   const { totalPrices } = useVaultsTotalPrices(vault ? vault.multipleVaults ?? [vault] : []);
@@ -35,25 +34,25 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     const rewardPercentage = +severity.percentage;
 
-    let rewardTokens: number = 0;
-    let rewardPrice: number = 0;
-    let rewardCap: number = 0;
+    const rewards = { usd: 0, tokens: 0 };
+    const rewardsCap = { usd: 0, tokens: 0 };
     if (vault.multipleVaults && sumTotalPrices) {
-      rewardPrice = sumTotalPrices * (rewardPercentage / 100);
+      rewards.usd = sumTotalPrices * (rewardPercentage / 100);
     } else if (vault.amountsInfo?.tokenPriceUsd) {
-      rewardTokens =
+      rewards.tokens =
         (showIntendedAmounts
           ? vault.amountsInfo.competitionIntendedAmount?.maxReward.tokens ?? 0
           : vault.amountsInfo.maxRewardAmount.tokens) *
         (rewardPercentage / 100);
-      rewardPrice = rewardTokens * vault.amountsInfo?.tokenPriceUsd;
-      rewardCap = (severity.capAmount ?? 0) * vault.amountsInfo?.tokenPriceUsd;
+      rewards.usd = rewards.tokens * vault.amountsInfo?.tokenPriceUsd;
+      rewardsCap.tokens = (severity.capAmount ?? 0) * vault.amountsInfo?.maxRewardFactor;
+      rewardsCap.usd = rewardsCap.tokens * vault.amountsInfo?.tokenPriceUsd;
     }
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.percentage).sort((a, b) => a - b);
     const rewardColor: string = SEVERITIES_COLORS[orderedSeverities.indexOf(severity.percentage) ?? 0];
 
-    return { rewardPrice, rewardTokens, rewardPercentage, rewardCap, rewardColor };
+    return { rewards, rewardPercentage, rewardsCap, rewardColor };
   } else {
     const severity = vault.description.severities[severityIndex];
     if (!severity) return DEFAULT_VALUE;
@@ -61,23 +60,22 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
     const sumTotalPrices = Object.values(totalPrices).reduce((a, b = 0) => a + b, 0);
     const rewardPercentage = (Number(vault.rewardsLevels[severity.index]) / 10000) * 100;
 
-    let rewardTokens: number = 0;
-    let rewardPrice: number = 0;
-    let rewardCap: number = 0;
+    const rewards = { usd: 0, tokens: 0 };
+    const rewardsCap = { usd: 0, tokens: 0 };
     if (vault.multipleVaults && sumTotalPrices) {
-      rewardPrice = sumTotalPrices * (rewardPercentage / 100);
+      rewards.usd = sumTotalPrices * (rewardPercentage / 100);
     } else if (vault.amountsInfo?.tokenPriceUsd) {
-      rewardTokens =
+      rewards.tokens =
         (showIntendedAmounts
           ? vault.amountsInfo.competitionIntendedAmount?.maxReward.tokens ?? 0
           : vault.amountsInfo.maxRewardAmount.tokens) *
         (rewardPercentage / 100);
-      rewardPrice = rewardTokens * vault.amountsInfo?.tokenPriceUsd;
+      rewards.usd = rewards.tokens * vault.amountsInfo?.tokenPriceUsd;
     }
 
     const orderedSeverities = vault.description.severities.map((severity) => severity.index).sort((a, b) => a - b);
     const rewardColor: string = SEVERITIES_COLORS[orderedSeverities.indexOf(severity.index) ?? 0];
 
-    return { rewardPrice, rewardTokens, rewardPercentage, rewardCap, rewardColor };
+    return { rewards, rewardPercentage, rewardsCap, rewardColor };
   }
 }
