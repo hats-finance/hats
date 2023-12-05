@@ -13,11 +13,15 @@ export const StyledLeaderboardSection = styled.div<{ cols: number }>(
       .header,
       .content {
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
         padding: ${getSpacing(3)} ${getSpacing(1)};
         font-family: "IBM Plex Mono", monospace;
         text-align: center;
+
+        &.align-left {
+          justify-content: flex-start;
+        }
       }
 
       .content {

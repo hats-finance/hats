@@ -63,7 +63,7 @@ export const VaultCard = ({
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
   const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
 
-  const vaultDate = useMemo(() => {
+  const getVaultDate = (full = false) => {
     if (!vault || !vault.description) return null;
 
     const starttime = (vault.description["project-metadata"].starttime ?? 0) * 1000;
@@ -71,6 +71,8 @@ export const VaultCard = ({
 
     if (!starttime || !endtime) return null;
 
+    const startYear = moment(starttime).format("YYYY");
+    const endYear = moment(endtime).format("YYYY");
     const startMonth = moment(starttime).format("MMM");
     const endMonth = moment(endtime).format("MMM");
     const startDay = moment(starttime).format("DD");
@@ -84,14 +86,16 @@ export const VaultCard = ({
     }
 
     return {
-      date: startMonth !== endMonth ? `${startMonth} ${startDay}-${endMonth} ${endDay}` : `${startMonth} ${startDay}-${endDay}`,
+      date: full
+        ? `${startMonth} ${startDay} ${startYear} - ${endMonth} ${endDay}  ${endYear}`
+        : `${startMonth} ${startDay} - ${endMonth} ${endDay}`,
       time: moment(endtime).toDate().toLocaleTimeString([], {
         hour: "2-digit",
         minute: "2-digit",
         timeZoneName: "shortOffset",
       }),
     };
-  }, [vault, auditPayout]);
+  };
 
   const totalPaidOutOnAudit = useMemo(() => {
     if (!vault) return undefined;
@@ -281,8 +285,10 @@ export const VaultCard = ({
                   </>
                 ) : (
                   <>
-                    <h3 className="value">{vaultDate?.date}</h3>
-                    <div className="sub-value">{vaultDate?.time}</div>
+                    <WithTooltip text={getVaultDate(true)?.date}>
+                      <h3 className="value">{getVaultDate()?.date}</h3>
+                    </WithTooltip>
+                    <div className="sub-value">{getVaultDate()?.time}</div>
                   </>
                 )}
               </>
