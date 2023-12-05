@@ -52,8 +52,8 @@ export const VaultLeaderboardSection = ({ vault, auditPayout, hideClaimRewardsAc
   return (
     <StyledLeaderboardSection cols={severitiesToShow.length + 3}>
       <div className="leaderboard-table">
-        <div className="header">#</div>
-        <div className="header">{t("whiteHat")}</div>
+        <div className="header align-left">#</div>
+        <div className="header align-left">{t("whiteHat")}</div>
         <div className="header">{t("rewards")}</div>
         {severitiesToShow.map((name: string, idx: number) => (
           <div className="header" key={idx}>
@@ -112,9 +112,9 @@ const LeaderboardEntry = ({ leaderboardEntry, idx, severitiesToShow }: ILeaderbo
   const hackerProfile = useCachedProfile(leaderboardEntry.beneficiary);
   return (
     <>
-      <div className="content">{idx + 1}.</div>
+      <div className="content align-left">{idx + 1}.</div>
       <WithTooltip text={leaderboardEntry.beneficiary}>
-        <div className="content sr-data">
+        <div className="content align-left">
           {hackerProfile ? (
             <NavLink to={`${RoutePaths.profile}/${hackerProfile.username}`} className="address profile">
               <HackerProfileImage noMargin hackerProfile={hackerProfile} size="xsmall" />
