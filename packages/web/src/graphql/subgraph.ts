@@ -86,6 +86,10 @@ export const GET_VAULTS = `
         rewardTokenSymbol
         rewardTokenDecimals
         totalRewardPaid
+        startBlock
+        epochLength
+        epochRewardPerBlock
+        totalAllocPoint
       }
       activeClaim {
         id

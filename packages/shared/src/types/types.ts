@@ -250,6 +250,10 @@ export interface IRewardController {
   rewardTokenSymbol: string;
   rewardTokenDecimals: string;
   totalRewardPaid: string;
+  startBlock: string;
+  epochLength: string;
+  epochRewardPerBlock: string[];
+  totalAllocPoint: string;
 }
 
 export interface IMaster {
