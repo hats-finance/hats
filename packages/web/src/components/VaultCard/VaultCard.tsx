@@ -7,6 +7,7 @@ import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
 import useConfirm from "hooks/useConfirm";
+import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -62,6 +63,7 @@ export const VaultCard = ({
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
   const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
+  const vaultApy = useVaultApy(vault);
 
   const getVaultDate = (full = false) => {
     if (!vault || !vault.description) return null;

@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription, IVaultV2 } from "@hats-finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
@@ -119,6 +119,10 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
 
     return {
       ...vault,
+      rewardControllers: (vault as IVaultV2).rewardControllers?.map((controller) => ({
+        ...controller,
+        tokenPriceUsd: isTestnet ? 12.65 : (controller && tokenPrices && tokenPrices[controller.rewardToken]) ?? 0,
+      })),
       amountsInfo: {
         maxRewardFactor,
         showCompetitionIntendedAmount:

@@ -5,6 +5,7 @@ import {
   IUserNft,
   IVault,
   IVaultDescription,
+  IVaultV2,
   IWithdrawSafetyPeriod,
   fixObject,
 } from "@hats-finance/shared";
@@ -74,10 +75,22 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { multiChainData, allChainsLoaded } = useMultiChainVaultsV2();
 
   const getTokenPrices = async (vaultsToSearch: IVault[]) => {
-    const stakingTokens = vaultsToSearch.map((vault) => ({
+    const vaultTokens = vaultsToSearch.map((vault) => ({
       address: vault.stakingToken.toLowerCase(),
       chainId: vault.chainId as number,
     }));
+
+    const rewardControllersTokens = vaultsToSearch
+      .filter((vault) => vault.version === "v2" && vault.rewardControllers?.length > 0)
+      .map((vault) => {
+        return (vault as IVaultV2).rewardControllers.map((controller) => ({
+          address: controller?.rewardToken.toLowerCase() ?? "",
+          chainId: vault.chainId as number,
+        }));
+      })
+      .flat();
+
+    const tokenToSearch = [...vaultTokens, ...rewardControllersTokens];
 
     const foundTokenPrices = [] as number[];
 
@@ -97,7 +110,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // Get prices from CoinGecko
     try {
-      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
       const coingeckoTokenPrices = await getCoingeckoTokensPrices(tokensLeft);
 
       if (coingeckoTokenPrices) {
@@ -114,7 +127,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // Get prices from Uniswap
     try {
-      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
       const uniswapTokenPrices = await getUniswapTokenPrices(tokensLeft);
 
       if (uniswapTokenPrices) {
@@ -131,7 +144,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // Get prices from Balancer
     try {
-      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
       const balancerTokenPrices = await getBalancerTokenPrices(tokensLeft);
 
       if (balancerTokenPrices) {

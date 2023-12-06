@@ -254,6 +254,7 @@ export interface IRewardController {
   epochLength: string;
   epochRewardPerBlock: string[];
   totalAllocPoint: string;
+  tokenPriceUsd: number;
 }
 
 export interface IMaster {
