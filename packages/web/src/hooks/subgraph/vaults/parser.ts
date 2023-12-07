@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats-finance/shared";
+import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats-finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
@@ -31,6 +31,34 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
   }
 
   return description;
+};
+
+export const overridePayoutVault = (payoutData: IPayoutData) => {
+  let overridePart = {} as Partial<IVault>;
+
+  // Fix DAI price in HOPR payout
+  const hoprId = "0x5833e804432bf15a35b9d37df815b419ad369003";
+  if (hoprId === payoutData.vault?.id.toLowerCase() && payoutData.vault?.amountsInfo) {
+    const tokenPriceUsd = 1;
+    const amountsInfoData = payoutData.vault.amountsInfo;
+    overridePart = {
+      amountsInfo: {
+        ...amountsInfoData,
+        tokenPriceUsd,
+        depositedAmount: { ...amountsInfoData?.depositedAmount, usd: amountsInfoData?.depositedAmount.tokens * tokenPriceUsd },
+        maxRewardAmount: { ...amountsInfoData?.maxRewardAmount, usd: amountsInfoData?.maxRewardAmount.tokens * tokenPriceUsd },
+      },
+    };
+  } else {
+    overridePart = {};
+  }
+
+  return {
+    ...payoutData.vault,
+    ...overridePart,
+    activeClaim: undefined, // Removing this because any snapshot of a payout should have an active claim
+    description: payoutData.vault ? overrideDescription(payoutData.vault?.id, payoutData.vault?.description) : undefined,
+  };
 };
 
 const fixVaultsData = (vaults: IVault[]) => {
