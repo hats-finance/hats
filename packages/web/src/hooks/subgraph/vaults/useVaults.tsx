@@ -19,7 +19,7 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import { getBalancerTokenPrices, getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { overrideDescription, populateVaultsWithPricing } from "./parser";
+import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 interface IVaultsContext {
@@ -223,12 +223,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
             const payoutData = (await dataResponse.json()) as IPayoutData;
             return {
               ...payoutData,
-              vault: {
-                ...payoutData.vault,
-                description: payoutData.vault
-                  ? overrideDescription(payoutData.vault?.id, payoutData.vault?.description)
-                  : undefined,
-              },
+              vault: overridePayoutVault(payoutData),
             } as IPayoutData;
           }
           return undefined;
