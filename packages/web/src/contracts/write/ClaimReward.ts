@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, RewardController_abi } from "@hats-finance/shared";
+import { HATSVaultV1_abi, RewardController_abi } from "@hats.finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";

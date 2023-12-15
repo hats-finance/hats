@@ -1,6 +1,6 @@
 import { TransactionReceipt } from "@ethersproject/providers";
 import { parseUnits } from "@ethersproject/units";
-import { IVault, isAGnosisSafeTx } from "@hats-finance/shared";
+import { IVault, isAGnosisSafeTx } from "@hats.finance/shared";
 import classNames from "classnames";
 import { Loading, Modal } from "components";
 import { MAX_SPENDING, TERMS_OF_USE } from "constants/constants";

@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import OpenLinkIcon from "@mui/icons-material/OpenInNewOutlined";
 import { CopyToClipboard } from "components/CopyToClipboard/CopyToClipboard";
 import { useTranslation } from "react-i18next";

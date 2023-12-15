@@ -1,4 +1,4 @@
-import { IPayoutResponse, ISinglePayoutData, PayoutStatus } from "@hats-finance/shared";
+import { IPayoutResponse, ISinglePayoutData, PayoutStatus } from "@hats.finance/shared";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useMemo } from "react";
 

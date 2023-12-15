@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Button, Modal } from "components";
 import useModal from "hooks/useModal";
 import millify from "millify";

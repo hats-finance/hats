@@ -1,4 +1,4 @@
-import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
+import { IPayoutResponse, getExecutePayoutSafeTransaction } from "@hats.finance/shared";
 import Safe, { EthSafeSignature, EthersAdapter } from "@safe-global/protocol-kit";
 import { TransactionResult } from "@safe-global/safe-core-sdk-types";
 import { Signer, ethers } from "ethers";

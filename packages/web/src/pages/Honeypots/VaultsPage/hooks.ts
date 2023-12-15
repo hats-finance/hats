@@ -1,4 +1,4 @@
-import { IEditedSessionResponse, IPayoutGraph } from "@hats-finance/shared";
+import { IEditedSessionResponse, IPayoutGraph } from "@hats.finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
 import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";

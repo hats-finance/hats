@@ -4,7 +4,7 @@ import {
   createNewCoveredContract,
   getDefaultVaultParameters,
   getVulnerabilitySeveritiesTemplate,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { FormDateInput, FormIconInput, FormInput, FormSelectInput } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";

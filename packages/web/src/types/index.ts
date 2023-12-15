@@ -1,1 +1,1 @@
-export * from "@hats-finance/shared";
+export * from "@hats.finance/shared";

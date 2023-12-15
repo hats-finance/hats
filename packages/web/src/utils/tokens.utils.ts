@@ -1,4 +1,4 @@
-import { TokenPriceResponse } from "@hats-finance/shared";
+import { TokenPriceResponse } from "@hats.finance/shared";
 import axios, { AxiosResponse } from "axios";
 import { LocalStorage } from "constants/constants";
 import { GET_PRICES_BALANCER, IBalancerGetPricesResponse } from "graphql/balancer";

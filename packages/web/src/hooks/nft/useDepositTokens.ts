@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { prepareWriteContract, writeContract } from "wagmi/actions";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats.finance/shared";
 import { appChains } from "settings";
 import { NFTContractDataProxy } from "constants/constants";
 import { IVault } from "types";

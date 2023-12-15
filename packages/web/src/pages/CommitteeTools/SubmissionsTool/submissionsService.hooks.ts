@@ -1,4 +1,4 @@
-import { IPayoutData, ISubmittedSubmission, IVaultInfo, PayoutType } from "@hats-finance/shared";
+import { IPayoutData, ISubmittedSubmission, IVaultInfo, PayoutType } from "@hats.finance/shared";
 import { UseMutationResult, useMutation } from "@tanstack/react-query";
 import { readPrivateKeyFromStoredKey, useKeystore } from "components/Keystore";
 import { IndexedDBs } from "config/DBConfig";

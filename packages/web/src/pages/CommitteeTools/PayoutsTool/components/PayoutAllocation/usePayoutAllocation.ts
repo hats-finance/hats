@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IPayoutResponse, IVault } from "@hats-finance/shared";
+import { IPayoutResponse, IVault } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import millify from "millify";

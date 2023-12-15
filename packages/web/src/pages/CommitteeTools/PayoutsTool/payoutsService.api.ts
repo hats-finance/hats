@@ -1,4 +1,4 @@
-import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
 

@@ -1,4 +1,4 @@
-import { IVault, IVulnerabilitySeverity, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { IVault, IVulnerabilitySeverity, IVulnerabilitySeverityV2 } from "@hats.finance/shared";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Pill, VaultNftRewardCard, WithTooltip } from "components";
 import { useSeverityRewardInfo } from "hooks/severities/useSeverityRewardInfo";

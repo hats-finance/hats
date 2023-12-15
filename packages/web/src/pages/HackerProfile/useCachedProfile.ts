@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";

@@ -1,4 +1,4 @@
-import { createNewCoveredContract } from "@hats-finance/shared";
+import { createNewCoveredContract } from "@hats.finance/shared";
 import AddIcon from "@mui/icons-material/Add";
 import CheckIcon from "@mui/icons-material/CheckOutlined";
 import GenerateIcon from "@mui/icons-material/DynamicFeedOutlined";

@@ -1,4 +1,4 @@
-import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats-finance/shared";
+import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import MoreIcon from "@mui/icons-material/MoreVertOutlined";

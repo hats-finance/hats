@@ -1,4 +1,4 @@
-import { IPayoutResponse, IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
+import { IPayoutResponse, IVault, IVulnerabilitySeverity } from "@hats.finance/shared";
 import ArrowDownIcon from "@mui/icons-material/ArrowDownwardOutlined";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { FormInput, WithTooltip } from "components";

@@ -82,6 +82,7 @@ export const getExecutePayoutSafeTransaction = async (
         to: contractAddress,
         data: encodedExecPayoutData,
         value: "0",
+        safeTxGas: "0"
       },
     });
     const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);

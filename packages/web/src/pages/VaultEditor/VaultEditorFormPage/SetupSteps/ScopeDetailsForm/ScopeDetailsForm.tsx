@@ -1,4 +1,4 @@
-import { CODE_LANGUAGES, DEFAULT_OUT_OF_SCOPE, DEFAULT_TOOLING_STEPS, IEditedVaultDescription } from "@hats-finance/shared";
+import { CODE_LANGUAGES, DEFAULT_OUT_OF_SCOPE, DEFAULT_TOOLING_STEPS, IEditedVaultDescription } from "@hats.finance/shared";
 import { Alert, Button, FormInput, FormMDEditor, FormRadioInput, Pill } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";

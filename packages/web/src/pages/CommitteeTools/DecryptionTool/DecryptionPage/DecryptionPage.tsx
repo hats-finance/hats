@@ -1,4 +1,4 @@
-import { ISubmissionMessageObject } from "@hats-finance/shared";
+import { ISubmissionMessageObject } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import KeyIcon from "@mui/icons-material/KeyOutlined";
 import EyeIcon from "@mui/icons-material/VisibilityOutlined";

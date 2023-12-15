@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import AwardIcon from "assets/icons/submission-terms/award.png";
 import BugIcon from "assets/icons/submission-terms/bug.png";
 import QuestionIcon from "assets/icons/submission-terms/question.png";

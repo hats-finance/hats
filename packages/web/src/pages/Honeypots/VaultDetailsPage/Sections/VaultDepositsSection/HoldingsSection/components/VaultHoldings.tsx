@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Button, Loading, Modal, Pill } from "components";
 import { WithdrawRequestContract } from "contracts";
 import useModal from "hooks/useModal";

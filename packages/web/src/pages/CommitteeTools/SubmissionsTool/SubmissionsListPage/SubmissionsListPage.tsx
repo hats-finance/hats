@@ -8,7 +8,7 @@ import {
   createNewPayoutData,
   createNewSplitPayoutBeneficiary,
   getVaultInfoFromVault,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import ArrowLeftIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";

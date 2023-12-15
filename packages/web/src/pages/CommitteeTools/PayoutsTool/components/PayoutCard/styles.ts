@@ -1,4 +1,4 @@
-import { PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
+import { PayoutStatus, payoutStatusInfo } from "@hats.finance/shared";
 import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 

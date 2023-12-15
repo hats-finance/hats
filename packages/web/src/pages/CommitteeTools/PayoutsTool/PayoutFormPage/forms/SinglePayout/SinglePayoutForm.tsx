@@ -4,7 +4,7 @@ import {
   ISinglePayoutData,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { FormInput, FormSelectInput, Spinner } from "components";
 import { getCustomIsDirty, useEnhancedFormContext } from "hooks/form";
 import { useOnChange } from "hooks/usePrevious";

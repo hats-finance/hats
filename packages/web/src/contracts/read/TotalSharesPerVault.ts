@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats-finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";

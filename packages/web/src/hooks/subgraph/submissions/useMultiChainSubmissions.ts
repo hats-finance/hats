@@ -1,4 +1,4 @@
-import { ISubmittedSubmission } from "@hats-finance/shared";
+import { ISubmittedSubmission } from "@hats.finance/shared";
 import { useQueries } from "@tanstack/react-query";
 import { LocalStorage } from "constants/constants";
 import { useEffect, useState } from "react";
