@@ -6,7 +6,7 @@ import {
   IVaultDescription,
   IVaultStatusData,
   getVaultDescriptionHash,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL, appChains } from "settings";
 import { ipfsTransformUri } from "utils";

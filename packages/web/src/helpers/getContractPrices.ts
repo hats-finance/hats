@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { GoodDollar_abi, InsureDao_abi } from "@hats-finance/shared";
+import { GoodDollar_abi, InsureDao_abi } from "@hats.finance/shared";
 import axios from "axios";
 import { BigNumber } from "ethers";
 import { readContract } from "wagmi/actions";

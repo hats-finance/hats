@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import { AxiosError } from "axios";
 import { axiosClient } from "config/axiosClient";
 import { ISiweData } from "hooks/siwe/useSiweAuth";

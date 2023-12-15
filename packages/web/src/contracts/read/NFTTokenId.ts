@@ -1,4 +1,4 @@
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats.finance/shared";
 import { appChains } from "settings";
 import { NFTContractDataProxy } from "constants/constants";
 import { INFTToken } from "hooks/nft/types";

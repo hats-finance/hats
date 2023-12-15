@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import { Alert, Button, HackerProfileImage, Loading, Pill, WithTooltip } from "components";
 import { ReleasePaymentSplitContract } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";

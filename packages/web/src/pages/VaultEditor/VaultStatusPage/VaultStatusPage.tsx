@@ -1,4 +1,4 @@
-import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats.finance/shared";
 import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
 import { useIsGovMember } from "hooks/useIsGovMember";

@@ -1,5 +1,5 @@
 import { parseUnits } from "@ethersproject/units";
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, Loading, Modal } from "components";
 import { DepositContract, TokenApproveAllowanceContract, WithdrawAndClaimContract } from "contracts";

@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats-finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { MetaTransactionData } from "@safe-global/safe-core-sdk-types";

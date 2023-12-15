@@ -4,7 +4,7 @@ import {
   IVulnerabilitySeverityV2,
   PayoutStatus,
   getVaultInfoFromVault,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";

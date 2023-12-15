@@ -1,4 +1,4 @@
-import { IPayoutResponse } from "@hats-finance/shared";
+import { IPayoutResponse } from "@hats.finance/shared";
 
 export const hasSubmissionData = (payout: IPayoutResponse | undefined) => {
   return (

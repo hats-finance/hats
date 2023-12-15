@@ -1,4 +1,4 @@
-import { ISubmittedSubmission } from "@hats-finance/shared";
+import { ISubmittedSubmission } from "@hats.finance/shared";
 import { GET_SUBMISSIONS } from "graphql/subgraph";
 import { appChains } from "settings";
 import { fetchWithTimeout } from "utils/fetchWithTimeout.utils";

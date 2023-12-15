@@ -1,4 +1,4 @@
-import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats.finance/shared";
 import { GET_VAULTS } from "graphql/subgraph";
 import { appChains } from "settings";
 import { fetchWithTimeout } from "utils/fetchWithTimeout.utils";

@@ -1,4 +1,4 @@
-import { ISplitPayoutData } from "@hats-finance/shared";
+import { ISplitPayoutData } from "@hats.finance/shared";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useMemo } from "react";
 

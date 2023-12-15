@@ -1,4 +1,4 @@
-import { IEditedVaultParameters, isAGnosisSafeTx } from "@hats-finance/shared";
+import { IEditedVaultParameters, isAGnosisSafeTx } from "@hats.finance/shared";
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, FormInput, Loading, Pill } from "components";
 import { VaultBountySplitEditionContract } from "contracts";

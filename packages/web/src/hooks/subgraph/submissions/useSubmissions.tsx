@@ -1,4 +1,4 @@
-import { ISubmissionMessageObject, ISubmittedSubmission } from "@hats-finance/shared";
+import { ISubmissionMessageObject, ISubmittedSubmission } from "@hats.finance/shared";
 import axios from "axios";
 import { LocalStorage } from "constants/constants";
 import { blacklistedWallets } from "data/blacklistedWallets";

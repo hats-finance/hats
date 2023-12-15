@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Alert, Loading, Seo, VaultCard } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useMemo, useState } from "react";

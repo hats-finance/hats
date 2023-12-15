@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { FormSelectInput, HackerProfileImage, HackerStreak, HatSpinner, Pill, WithTooltip } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import useModal from "hooks/useModal";

@@ -1,4 +1,4 @@
-import { IAddressRoleInVault, getAddressRoleOnVault } from "@hats-finance/shared";
+import { IAddressRoleInVault, getAddressRoleOnVault } from "@hats.finance/shared";
 
 // Only committee members or gov multisig members can edit the vault
 export async function checkIfAddressCanEditTheVault(

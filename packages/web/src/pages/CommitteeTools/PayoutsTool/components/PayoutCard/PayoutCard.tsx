@@ -1,4 +1,4 @@
-import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats-finance/shared";
+import { IPayoutResponse, IVault, PayoutStatus, payoutStatusInfo } from "@hats.finance/shared";
 import { WithTooltip } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import moment from "moment";

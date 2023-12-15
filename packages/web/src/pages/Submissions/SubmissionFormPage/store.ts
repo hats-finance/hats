@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Dispatch, SetStateAction, createContext } from "react";
 import { SUBMISSION_DESCRIPTION_TEMPLATE } from "./FormSteps/SubmissionDescriptions/utils";
 import { ISubmissionData } from "./types";

@@ -1,4 +1,4 @@
-import { PayoutType, getVaultInfoFromVault } from "@hats-finance/shared";
+import { PayoutType, getVaultInfoFromVault } from "@hats.finance/shared";
 import { Alert, Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { BigNumber } from "ethers";
 import { useUserVaults } from "hooks/vaults/useUserVaults";

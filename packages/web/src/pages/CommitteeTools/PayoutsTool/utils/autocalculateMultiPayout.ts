@@ -1,4 +1,4 @@
-import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats-finance/shared";
+import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats.finance/shared";
 
 const DECIMALS_TO_USE = 4;
 

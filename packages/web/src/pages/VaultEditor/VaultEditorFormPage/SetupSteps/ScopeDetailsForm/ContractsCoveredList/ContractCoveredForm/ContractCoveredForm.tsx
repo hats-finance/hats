@@ -1,4 +1,4 @@
-import { ALL_CHAINS, IEditedVaultDescription } from "@hats-finance/shared";
+import { ALL_CHAINS, IEditedVaultDescription } from "@hats.finance/shared";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Button, FormInput, FormSelectInput, FormSelectInputOption } from "components";

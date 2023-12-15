@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { createNewCommitteeMember, IEditedVaultDescription } from "@hats-finance/shared";
+import { createNewCommitteeMember, IEditedVaultDescription } from "@hats.finance/shared";
 import { useTranslation } from "react-i18next";
 import { Alert, Button } from "components";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";

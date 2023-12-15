@@ -1,4 +1,4 @@
-import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats-finance/shared";
+import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats.finance/shared";
 import { useQueries } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { appChains } from "settings";

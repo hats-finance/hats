@@ -1,4 +1,4 @@
-import { getGnosisSafeInfo, IGnosisSafeInfoResponse, IVault } from "@hats-finance/shared";
+import { getGnosisSafeInfo, IGnosisSafeInfoResponse, IVault } from "@hats.finance/shared";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 
 export const useVaultSafeInfo = (vault: IVault | undefined): UseQueryResult<IGnosisSafeInfoResponse> => {

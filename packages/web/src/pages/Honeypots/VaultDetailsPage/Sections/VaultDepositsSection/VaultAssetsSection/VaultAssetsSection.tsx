@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Alert, Button } from "components";
 import { useTranslation } from "react-i18next";
 import { VaultAsset } from "./components/VaultAsset";

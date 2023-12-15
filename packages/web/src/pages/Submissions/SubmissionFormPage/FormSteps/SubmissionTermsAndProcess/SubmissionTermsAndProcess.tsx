@@ -1,4 +1,4 @@
-import { IVulnerabilitySeverity } from "@hats-finance/shared";
+import { IVulnerabilitySeverity } from "@hats.finance/shared";
 import { Alert, Button, FormInput, VaultSeverityRewardCard } from "components";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";
 import { useContext, useEffect, useState } from "react";

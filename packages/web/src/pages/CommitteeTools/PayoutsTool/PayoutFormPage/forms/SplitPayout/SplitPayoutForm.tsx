@@ -1,4 +1,4 @@
-import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats-finance/shared";
+import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats.finance/shared";
 import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";

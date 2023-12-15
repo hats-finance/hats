@@ -1,4 +1,4 @@
-import { IEditedSessionResponse, getGnosisChainPrefixByChainId } from "@hats-finance/shared";
+import { IEditedSessionResponse, getGnosisChainPrefixByChainId } from "@hats.finance/shared";
 import { Alert, Button, FormInput, Loading } from "components";
 import { useEnhancedForm } from "hooks/form";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";

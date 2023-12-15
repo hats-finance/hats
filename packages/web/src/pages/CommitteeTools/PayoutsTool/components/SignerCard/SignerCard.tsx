@@ -1,4 +1,4 @@
-import { getGnosisChainPrefixByChainId } from "@hats-finance/shared";
+import { getGnosisChainPrefixByChainId } from "@hats.finance/shared";
 import { CopyToClipboard, Pill } from "components";
 import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
