@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import { VaultAssetsPillsList, WithTooltip } from "components";
 import millify from "millify";
 import { useTranslation } from "react-i18next";

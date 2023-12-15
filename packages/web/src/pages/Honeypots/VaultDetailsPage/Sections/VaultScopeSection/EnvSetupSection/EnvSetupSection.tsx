@@ -1,4 +1,4 @@
-import { IVault, allowedElementsMarkdown } from "@hats-finance/shared";
+import { IVault, allowedElementsMarkdown } from "@hats.finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Pill } from "components";
 import { useTranslation } from "react-i18next";

@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { UseQueryResult, useQuery } from "@tanstack/react-query";
 import * as savedSubmissionsService from "./savedSubmissionsService";
 import { IGithubIssue } from "./types";

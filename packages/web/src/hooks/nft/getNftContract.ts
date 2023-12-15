@@ -1,4 +1,4 @@
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats.finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
 import { appChains } from "settings";
 

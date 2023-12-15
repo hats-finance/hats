@@ -1,4 +1,4 @@
-import { getSafeWalletConnectLink } from "@hats-finance/shared";
+import { getSafeWalletConnectLink } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Button, WithTooltip } from "components";
 import { useContext } from "react";

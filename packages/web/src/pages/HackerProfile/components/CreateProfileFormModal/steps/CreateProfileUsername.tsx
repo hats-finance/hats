@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import { FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { useProfileByAddress } from "pages/HackerProfile/hooks";

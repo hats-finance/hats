@@ -7,7 +7,7 @@ import {
   IVaultDescription,
   IWithdrawSafetyPeriod,
   fixObject,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { blacklistedWallets } from "data/blacklistedWallets";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";

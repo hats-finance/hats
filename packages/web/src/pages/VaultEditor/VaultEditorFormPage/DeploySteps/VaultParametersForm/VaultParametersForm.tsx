@@ -1,4 +1,4 @@
-import { IEditedVaultDescription, IEditedVaultParameters } from "@hats-finance/shared";
+import { IEditedVaultDescription, IEditedVaultParameters } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";

@@ -1,4 +1,4 @@
-import { ChainsConfig, IChainConfiguration } from "@hats-finance/shared";
+import { ChainsConfig, IChainConfiguration } from "@hats.finance/shared";
 import { mainnet } from "wagmi/chains";
 import { prodServiceUrl, stagingServiceUrl } from "./constants/constants";
 

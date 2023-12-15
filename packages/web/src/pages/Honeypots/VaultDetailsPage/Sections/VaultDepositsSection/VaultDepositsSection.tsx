@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { useTranslation } from "react-i18next";
 import { useAccount } from "wagmi";
 import { HoldingsSection } from "./HoldingsSection/HoldingsSection";

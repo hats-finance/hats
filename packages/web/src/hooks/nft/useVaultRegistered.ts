@@ -1,4 +1,4 @@
-import { HATVaultsNFT_abi, IVault } from "@hats-finance/shared";
+import { HATVaultsNFT_abi, IVault } from "@hats.finance/shared";
 import { NFTContractDataProxy } from "constants/constants";
 import { BigNumber } from "ethers";
 import { appChains } from "settings";

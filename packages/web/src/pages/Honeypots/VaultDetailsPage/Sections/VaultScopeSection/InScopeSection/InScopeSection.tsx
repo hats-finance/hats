@@ -5,7 +5,7 @@ import {
   IVaultRepoInformation,
   allowedElementsMarkdown,
   severitiesToContractsCoveredForm,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import DocumentIcon from "@mui/icons-material/DescriptionOutlined";
 import DiffIcon from "@mui/icons-material/DifferenceOutlined";

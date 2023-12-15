@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { UserSharesPerVaultContract } from "contracts";
 import { BigNumber } from "ethers";
 import { useAccount, useContractReads } from "wagmi";

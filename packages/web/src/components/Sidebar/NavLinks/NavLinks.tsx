@@ -1,4 +1,4 @@
-import { isAddressAMultisigMember } from "@hats-finance/shared";
+import { isAddressAMultisigMember } from "@hats.finance/shared";
 import BugIcon from "@mui/icons-material/BugReportOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import DecryptionTool from "@mui/icons-material/VpnKeyOffOutlined";

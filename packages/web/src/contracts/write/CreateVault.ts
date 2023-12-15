@@ -1,4 +1,4 @@
-import { HATSVaultsRegistry_abi } from "@hats-finance/shared";
+import { HATSVaultsRegistry_abi } from "@hats.finance/shared";
 import { appChains } from "settings";
 import { ICreateVaultOnChainCall } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";

@@ -1,4 +1,4 @@
-import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats-finance/shared";
+import { IPayoutData, IPayoutResponse, IVaultInfo, PayoutType } from "@hats.finance/shared";
 import { UseMutationResult, UseQueryResult, useMutation, useQuery } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";

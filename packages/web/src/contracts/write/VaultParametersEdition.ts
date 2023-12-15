@@ -1,4 +1,4 @@
-import { HATSVaultV2_abi, IEditedVaultParameters } from "@hats-finance/shared";
+import { HATSVaultV2_abi, IEditedVaultParameters } from "@hats.finance/shared";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useContractWrite, useNetwork } from "wagmi";
 

@@ -1,4 +1,4 @@
-import { IVulnerabilitySeverity } from "@hats-finance/shared";
+import { IVulnerabilitySeverity } from "@hats.finance/shared";
 import ErrorIcon from "@mui/icons-material/ErrorOutlineOutlined";
 import ClearIcon from "@mui/icons-material/HighlightOffOutlined";
 import { Button, Seo } from "components";

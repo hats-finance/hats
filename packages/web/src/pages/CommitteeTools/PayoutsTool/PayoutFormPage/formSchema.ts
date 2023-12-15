@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { TFunction } from "react-i18next";
 import { getTestNumberInBetween, getTestWalletAddress } from "utils/yup.utils";
 import * as Yup from "yup";

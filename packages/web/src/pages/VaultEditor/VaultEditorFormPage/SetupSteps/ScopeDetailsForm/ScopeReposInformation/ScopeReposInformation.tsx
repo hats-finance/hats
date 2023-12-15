@@ -1,4 +1,4 @@
-import { IEditedVaultDescription } from "@hats-finance/shared";
+import { IEditedVaultDescription } from "@hats.finance/shared";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { Alert, Button, FormInput } from "components";

@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats-finance/shared";
+import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 

@@ -1,4 +1,4 @@
-import { ICommitteeMember, getGnosisSafeInfo } from "@hats-finance/shared";
+import { ICommitteeMember, getGnosisSafeInfo } from "@hats.finance/shared";
 import { isAddress } from "ethers/lib/utils";
 import { readKey, readMessage } from "openpgp";
 import { isUsernameAvailable } from "pages/HackerProfile/profilesService";

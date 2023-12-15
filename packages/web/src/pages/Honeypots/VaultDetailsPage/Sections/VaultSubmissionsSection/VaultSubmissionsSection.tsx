@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Alert, Button, HatSpinner } from "components";
 import useConfirm from "hooks/useConfirm";

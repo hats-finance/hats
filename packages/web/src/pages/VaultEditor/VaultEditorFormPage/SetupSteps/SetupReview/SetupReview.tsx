@@ -4,7 +4,7 @@ import {
   IVaultDescriptionV1,
   IVaultDescriptionV2,
   editedFormToDescription,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
 import { Button, Modal } from "components";

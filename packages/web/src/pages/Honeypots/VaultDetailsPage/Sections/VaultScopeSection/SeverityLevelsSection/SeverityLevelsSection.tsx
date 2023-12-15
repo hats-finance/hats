@@ -1,4 +1,4 @@
-import { IVault, IVulnerabilitySeverity, allowedElementsMarkdown } from "@hats-finance/shared";
+import { IVault, IVulnerabilitySeverity, allowedElementsMarkdown } from "@hats.finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Pill } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";

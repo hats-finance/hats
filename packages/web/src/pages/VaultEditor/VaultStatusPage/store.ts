@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { IAddressRoleInVault, IVaultStatusData } from "@hats-finance/shared";
+import { IAddressRoleInVault, IVaultStatusData } from "@hats.finance/shared";
 
 interface IVaultStatusContext {
   vaultAddress: string;

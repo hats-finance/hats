@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import profilePlaceholder from "assets/images/profile-placeholder.jpg";
 import { CopyToClipboard } from "components";
 import { useTranslation } from "react-i18next";

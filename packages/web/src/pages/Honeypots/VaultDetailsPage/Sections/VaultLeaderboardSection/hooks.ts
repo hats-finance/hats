@@ -1,4 +1,4 @@
-import { IPayoutGraph, ISplitPayoutData, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { ipfsTransformUri } from "utils";

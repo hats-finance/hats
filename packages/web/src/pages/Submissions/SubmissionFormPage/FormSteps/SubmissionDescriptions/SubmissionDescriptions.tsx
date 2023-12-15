@@ -1,4 +1,4 @@
-import { ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats-finance/shared";
+import { ISubmissionMessageObject, IVulnerabilitySeverity } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlined";

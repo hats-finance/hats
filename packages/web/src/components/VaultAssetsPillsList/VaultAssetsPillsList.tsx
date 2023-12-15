@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import { ethers } from "ethers";
 import { useMemo } from "react";

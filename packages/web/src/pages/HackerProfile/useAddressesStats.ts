@@ -1,4 +1,4 @@
-import { ISubmittedSubmission, IVault } from "@hats-finance/shared";
+import { ISubmittedSubmission, IVault } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { useFindingsFromAddresses, usePayoutsFromAddresses } from "hooks/leaderboard";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";

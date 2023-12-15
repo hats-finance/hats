@@ -1,4 +1,4 @@
-import { IPayoutResponse, PayoutStatus } from "@hats-finance/shared";
+import { IPayoutResponse, PayoutStatus } from "@hats.finance/shared";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { Alert, Button, HatSpinner, Modal, Seo } from "components";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";

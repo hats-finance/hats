@@ -1,4 +1,4 @@
-import { IPayoutGraph } from "@hats-finance/shared";
+import { IPayoutGraph } from "@hats.finance/shared";
 import ArrowDown from "@mui/icons-material/KeyboardArrowDownOutlined";
 import ArrowUp from "@mui/icons-material/KeyboardArrowUpOutlined";
 import { VaultCard } from "components";

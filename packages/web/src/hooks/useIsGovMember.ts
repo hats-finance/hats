@@ -1,4 +1,4 @@
-import { isAddressAMultisigMember } from "@hats-finance/shared";
+import { isAddressAMultisigMember } from "@hats.finance/shared";
 import { useEffect, useState } from "react";
 import { appChains } from "settings";
 import { useAccount, useNetwork } from "wagmi";

@@ -4,7 +4,7 @@ import {
   getSafeHomeLink,
   getVaultInfoWithCommittee,
   isAddressAMultisigMember,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import RemoveIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import {
