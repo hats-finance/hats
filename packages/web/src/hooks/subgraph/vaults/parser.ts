@@ -30,11 +30,6 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
     description["project-metadata"].name = "Convergence Finance";
   }
 
-  // Change broken USDC icon
-  if (description["project-metadata"].tokenIcon.includes('QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz')) {
-    description["project-metadata"].tokenIcon = "ipfs://QmV7Dfh5rgDVG2J4nr79wZrS4vU7y2QJFxXuKu8hUcKdHa";
-  }
-
   return description;
 };
 
