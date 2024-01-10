@@ -37,7 +37,7 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
   const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
 
   if (account && OFAC_Sanctioned_Digital_Currency_Addresses.indexOf(account) !== -1) {
-    throw new Error("Blacklisted wallet");
+    throw new Error("This wallet address is on the OFAC Sanctioned Digital Currency Addresses list and cannot be used.");
   }
 
   const { multiChainData, allChainsLoaded } = useMultiChainSubmissions();
