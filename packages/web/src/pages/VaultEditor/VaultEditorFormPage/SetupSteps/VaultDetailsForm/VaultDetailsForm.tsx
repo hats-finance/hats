@@ -22,7 +22,8 @@ export function VaultDetailsForm() {
   const { t } = useTranslation();
   const { allFormDisabled, isAdvancedMode, isEditingExistingVault } = useContext(VaultEditorFormContext);
 
-  const { register, control, resetField, setValue, getValues, watch } = useEnhancedFormContext<IEditedVaultDescription>();
+  const { register, control, resetField, setValue, getValues, watch, trigger } =
+    useEnhancedFormContext<IEditedVaultDescription>();
 
   const showDateInputs = useWatch({ control, name: "includesStartAndEndTime" });
   const vaultType = useWatch({ control, name: "project-metadata.type" });
@@ -92,9 +93,11 @@ export function VaultDetailsForm() {
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
     setValue("parameters", defaultOnChainParams);
 
-    // Change the `usingPointingSystem` value
+    // Change the `usingPointingSystem` and `percentageCapPerPoint` value
+    if (isAudit) setValue("percentageCapPerPoint", 2);
     if (isAudit) setValue("usingPointingSystem", true);
     else setValue("usingPointingSystem", false);
+    trigger("vulnerability-severities-spec");
   });
 
   return (

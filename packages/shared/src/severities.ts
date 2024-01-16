@@ -10,6 +10,14 @@ export const DefaultIndexArray = [
   0, 10, 20, 70, 150, 200, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 5500, 6000, 8000,
 ];
 
+export const IndexToPoints = {
+  5: 1, // FVV audit
+  7: 1, // Gas audit
+  11: 1, // Low audit
+  17: 12, // Med audit
+  20: 25, // High audit
+};
+
 export const convertVulnerabilitySeverityV1ToV2 = (
   severity: IEditedVulnerabilitySeverityV1,
   indexArray?: number[]
@@ -20,6 +28,7 @@ export const convertVulnerabilitySeverityV1ToV2 = (
   return {
     ...newSeverity,
     percentage: indexArray && indexArray[severity.index] ? indexArray[severity.index] / 100 : NaN,
+    points: (IndexToPoints as any)[severity.index as number] ?? 0,
   };
 };
 

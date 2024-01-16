@@ -20,42 +20,51 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
   const tokenSymbol = vault.stakingTokenSymbol;
   const severityName = severity?.name.toLowerCase().replace("severity", "") ?? "";
   const showCap = vault.version === "v2" && vault.description?.severities.some((sev) => !!sev.capAmount);
+  const usingPointingSystem = vault.version === "v1" ? false : vault.description?.usingPointingSystem;
 
   return (
     <StyledVaultSeverityRewardCard columns={2 + (noNft ? 0 : 1) + (showCap ? 1 : 0)} color={rewardColor}>
       <div className="severity-name">
         <Pill isSeverity transparent textColor={rewardColor} text={severityName} />
       </div>
-      <div className="severity-prize">
-        <div>
-          <span>{`${rewardPercentage.toFixed(2)}%`}</span>
-          <span className="tiny">&nbsp;{t("ofRewards")}&nbsp;</span>
-        </div>
-        <span className="price">
-          ~{`$${formatNumber(rewards.usd)}`}
-          <span className="tiny ml-1">({`${formatNumber(rewards.tokens, 4)} ${tokenSymbol}`})</span>
-        </span>
-      </div>
-      {showCap && (
+
+      {usingPointingSystem ? (
+        <></>
+      ) : (
         <>
-          {(severity as IVulnerabilitySeverityV2).capAmount ? (
-            <WithTooltip text={t("maxRewardCapExplanation")}>
-              <div className="severity-prize">
-                <div className="title-container">
-                  <span className="tiny">{t("maxRewardCap")}</span>
-                  <InfoIcon fontSize="small" />
-                </div>
-                <span className="price">
-                  ~{`$${formatNumber(rewardsCap.usd)}`}
-                  <span className="tiny ml-1">({`${formatNumber(rewardsCap.tokens, 4)} ${tokenSymbol}`})</span>
-                </span>
-              </div>
-            </WithTooltip>
-          ) : (
-            <div />
+          <div className="severity-prize">
+            <div>
+              <span>{`${rewardPercentage.toFixed(2)}%`}</span>
+              <span className="tiny">&nbsp;{t("ofRewards")}&nbsp;</span>
+            </div>
+            <span className="price">
+              ~{`$${formatNumber(rewards.usd)}`}
+              <span className="tiny ml-1">({`${formatNumber(rewards.tokens, 4)} ${tokenSymbol}`})</span>
+            </span>
+          </div>
+          {showCap && (
+            <>
+              {(severity as IVulnerabilitySeverityV2).capAmount ? (
+                <WithTooltip text={t("maxRewardCapExplanation")}>
+                  <div className="severity-prize">
+                    <div className="title-container">
+                      <span className="tiny">{t("maxRewardCap")}</span>
+                      <InfoIcon fontSize="small" />
+                    </div>
+                    <span className="price">
+                      ~{`$${formatNumber(rewardsCap.usd)}`}
+                      <span className="tiny ml-1">({`${formatNumber(rewardsCap.tokens, 4)} ${tokenSymbol}`})</span>
+                    </span>
+                  </div>
+                </WithTooltip>
+              ) : (
+                <div />
+              )}
+            </>
           )}
         </>
       )}
+
       {!noNft && (
         <div className="severity-nft">
           <VaultNftRewardCard vault={vault} severity={severity} type="tiny" />

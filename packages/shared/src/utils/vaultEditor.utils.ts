@@ -337,6 +337,8 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
         editedVaultDescription["contracts-covered"]
       ),
       scope: editedVaultDescription.scope,
+      usingPointingSystem: editedVaultDescription.usingPointingSystem,
+      percentageCapPerPoint: editedVaultDescription.percentageCapPerPoint,
     };
   }
 }
