@@ -21,7 +21,8 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
       <div className="row">
         <VaultTokenIcon vault={vault} />
         <div>
-          {millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} {vault.stakingTokenSymbol}
+          {vault.amountsInfo?.depositedAmount.tokens ?? 0}
+          {vault.stakingTokenSymbol}
         </div>
         <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
         <div className="action-button">
