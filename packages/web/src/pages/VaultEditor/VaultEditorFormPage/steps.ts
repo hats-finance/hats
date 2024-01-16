@@ -69,7 +69,7 @@ export const AllEditorSections: IEditorSections = {
         name: "severities",
         title: { creation: "severities", editing: "severities" },
         component: VulnerabilitySeveritiesList,
-        formFields: ["vulnerability-severities-spec"],
+        formFields: ["vulnerability-severities-spec", "percentageCapPerPoint"],
         isAdvanced: true,
       },
       {

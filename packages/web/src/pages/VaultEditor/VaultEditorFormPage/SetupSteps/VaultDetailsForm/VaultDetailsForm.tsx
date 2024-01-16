@@ -91,6 +91,10 @@ export function VaultDetailsForm() {
     else setValue("contracts-covered", [{ ...createNewCoveredContract(severitiesIds) }]);
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
     setValue("parameters", defaultOnChainParams);
+
+    // Change the `usingPointingSystem` value
+    if (isAudit) setValue("usingPointingSystem", true);
+    else setValue("usingPointingSystem", false);
   });
 
   return (

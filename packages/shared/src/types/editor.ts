@@ -117,6 +117,8 @@ export interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
 export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
   version: "v2";
   "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
+  usingPointingSystem?: boolean;
+  percentageCapPerPoint?: number; // Max percentage of the vault allocated to 1 point
 }
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;

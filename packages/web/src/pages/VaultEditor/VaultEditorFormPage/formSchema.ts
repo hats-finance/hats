@@ -17,6 +17,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
   Yup.object().shape({
     version: Yup.string(),
     includesStartAndEndTime: Yup.boolean(),
+    usingPointingSystem: Yup.boolean(),
     "project-metadata": Yup.object({
       icon: Yup.string().required(intl("required")),
       tokenIcon: Yup.string().required(intl("required")),
@@ -144,13 +145,22 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             .when("version", (version: "v1" | "v2", schema: any) =>
               version === "v1" ? schema.required(intl("required")) : undefined
             ),
-          percentage: Yup.number()
-            .min(0, intl("min0"))
-            .max(100, intl("max100"))
-            .typeError(intl("enterValidNumber"))
-            .when("version", (version: "v1" | "v2", schema: any) =>
-              version === "v2" ? schema.required(intl("required")) : undefined
-            ),
+          percentage: Yup.string().test(
+            "required",
+            intl("valueShouldBeBetween", { first: "0%", second: "100%" }),
+            function (percentage, ctx: Yup.TestContext) {
+              const { version, usingPointingSystem } = (this as any).from[2].value;
+              if (version === "v1" || usingPointingSystem) return true;
+              if (!percentage || +percentage < 0 || +percentage > 100) return false;
+              return true;
+            }
+          ),
+          points: Yup.string().test("required", intl("enterAnIntegerAndMoreThanOne"), function (points, ctx: Yup.TestContext) {
+            const { version, usingPointingSystem } = (this as any).from[2].value;
+            if (version === "v1" || !usingPointingSystem) return true;
+            if (!points || +points <= 0 || !Number.isInteger(+points)) return false;
+            return true;
+          }),
           "nft-metadata": Yup.object({
             name: Yup.string(),
             description: Yup.string(),
@@ -204,6 +214,15 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           return immediatePercentage + vestedPercentage + committeePercentage === 100;
         }),
     }),
+    percentageCapPerPoint: Yup.number().when("usingPointingSystem", (usingPointingSystem: boolean | undefined, schema: any) =>
+      usingPointingSystem
+        ? schema
+            .min(0.1, intl("minVal", { val: "0.1%" }))
+            .max(100, intl("max100"))
+            .typeError(intl("enterValidNumber"))
+            .required(intl("required"))
+        : undefined
+    ),
     // "communication-channel": Yup.object({
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
     // }).required(intl("required")),
