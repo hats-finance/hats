@@ -213,7 +213,7 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
   percentage: number; // percentage like 1000 (10%) or 8000 (80%)
   capAmount?: number;
-  points?: number; // Only when pointing system is used
+  points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
 }
 
 export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;

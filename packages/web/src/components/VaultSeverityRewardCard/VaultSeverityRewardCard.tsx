@@ -2,6 +2,7 @@ import { IVault, IVulnerabilitySeverity, IVulnerabilitySeverityV2 } from "@hats.
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Pill, VaultNftRewardCard, WithTooltip } from "components";
 import { useSeverityRewardInfo } from "hooks/severities/useSeverityRewardInfo";
+import millify from "millify";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "utils";
 import { StyledVaultSeverityRewardCard } from "./styles";
@@ -21,6 +22,17 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
   const severityName = severity?.name.toLowerCase().replace("severity", "") ?? "";
   const showCap = vault.version === "v2" && vault.description?.severities.some((sev) => !!sev.capAmount);
   const usingPointingSystem = vault.version === "v1" ? false : vault.description?.usingPointingSystem;
+  const pricePerPoint =
+    usingPointingSystem && vault.version === "v2"
+      ? {
+          usd: vault.description?.percentageCapPerPoint
+            ? (vault.description.percentageCapPerPoint / 100) * (vault.amountsInfo?.maxRewardAmount.usd ?? 0)
+            : vault.amountsInfo?.maxRewardAmount.usd ?? 0,
+          tokens: vault.description?.percentageCapPerPoint
+            ? (vault.description.percentageCapPerPoint / 100) * (vault.amountsInfo?.maxRewardAmount.tokens ?? 0)
+            : vault.amountsInfo?.maxRewardAmount.tokens ?? 0,
+        }
+      : undefined;
 
   return (
     <StyledVaultSeverityRewardCard columns={2 + (noNft ? 0 : 1) + (showCap ? 1 : 0)} color={rewardColor}>
@@ -28,8 +40,66 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
         <Pill isSeverity transparent textColor={rewardColor} text={severityName} />
       </div>
 
-      {usingPointingSystem ? (
-        <></>
+      {usingPointingSystem && vault.version === "v2" ? (
+        <>
+          <div className="severity-prize">
+            {(severity as IVulnerabilitySeverityV2).points?.type === "fixed" ? (
+              <>
+                <div>
+                  <span>{`${(severity as IVulnerabilitySeverityV2).points?.value.first} points`}</span>
+                  <span className="tiny">&nbsp;{t("perFinding")}&nbsp;</span>
+                </div>
+
+                {pricePerPoint && (
+                  <span className="price">
+                    {t("upTo")}&nbsp;
+                    {vault.description?.percentageCapPerPoint
+                      ? `$${formatNumber(((severity as IVulnerabilitySeverityV2).points?.value.first ?? 0) * pricePerPoint.usd)}`
+                      : `$${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0, { precision: 2 })}`}
+                    <span className="tiny ml-1">
+                      (
+                      {vault.description?.percentageCapPerPoint
+                        ? `${formatNumber(
+                            ((severity as IVulnerabilitySeverityV2).points?.value.first ?? 0) * pricePerPoint.tokens,
+                            4
+                          )} ${tokenSymbol}`
+                        : `${millify(vault.amountsInfo?.maxRewardAmount.tokens ?? 0, { precision: 4 })} ${tokenSymbol}`}
+                      )
+                    </span>
+                  </span>
+                )}
+              </>
+            ) : (
+              <>
+                <div>
+                  <span className="tiny">&nbsp;{t("from").toLowerCase()}&nbsp;</span>
+                  <span>{`${(severity as IVulnerabilitySeverityV2).points?.value.first} points`}</span>
+                  <span className="tiny">&nbsp;{t("to").toLowerCase()}&nbsp;</span>
+                  <span>{`${(severity as IVulnerabilitySeverityV2).points?.value.second} points`}</span>
+                </div>
+
+                {pricePerPoint && (
+                  <span className="price">
+                    {t("upTo")}&nbsp;
+                    {vault.description?.percentageCapPerPoint
+                      ? `$${formatNumber(((severity as IVulnerabilitySeverityV2).points?.value.second ?? 0) * pricePerPoint.usd)}`
+                      : `$${millify(vault.amountsInfo?.maxRewardAmount.usd ?? 0, { precision: 2 })}`}
+                    <span className="tiny ml-1">
+                      (
+                      {vault.description?.percentageCapPerPoint
+                        ? `${formatNumber(
+                            ((severity as IVulnerabilitySeverityV2).points?.value.second ?? 0) * pricePerPoint.tokens,
+                            4
+                          )} ${tokenSymbol}`
+                        : `${millify(vault.amountsInfo?.maxRewardAmount.tokens ?? 0, { precision: 4 })} ${tokenSymbol}`}
+                      )
+                    </span>
+                  </span>
+                )}
+              </>
+            )}
+          </div>
+        </>
       ) : (
         <>
           <div className="severity-prize">

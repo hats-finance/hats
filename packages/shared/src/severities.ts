@@ -11,11 +11,38 @@ export const DefaultIndexArray = [
 ];
 
 export const IndexToPoints = {
-  5: 1, // FVV audit
-  7: 1, // Gas audit
-  11: 1, // Low audit
-  17: 12, // Med audit
-  20: 25, // High audit
+  5: {
+    type: "range",
+    value: {
+      first: 0.1,
+      second: 5,
+    },
+  }, // FVV audit
+  7: {
+    type: "range",
+    value: {
+      first: 1,
+      second: 2,
+    },
+  }, // Gas audit
+  11: {
+    type: "fixed",
+    value: {
+      first: 1,
+    },
+  }, // Low audit
+  17: {
+    type: "fixed",
+    value: {
+      first: 12,
+    },
+  }, // Med audit
+  20: {
+    type: "fixed",
+    value: {
+      first: 25,
+    },
+  }, // High audit
 };
 
 export const convertVulnerabilitySeverityV1ToV2 = (

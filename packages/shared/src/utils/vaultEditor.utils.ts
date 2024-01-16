@@ -81,6 +81,12 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
     return {
       ...editedVulnerabilitySeverityBase,
       percentage: 0,
+      points: {
+        type: "fixed",
+        value: {
+          first: 0,
+        },
+      },
     } as IEditedVulnerabilitySeverityV2;
   }
 };
