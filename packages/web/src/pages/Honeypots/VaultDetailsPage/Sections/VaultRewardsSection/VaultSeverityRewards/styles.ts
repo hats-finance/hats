@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { getSpacing } from "styles";
 
 export const StyledVaultSeverityRewards = styled.div`
-  margin-top: ${getSpacing(4)};
+  margin-top: ${getSpacing(0)};
   display: flex;
   flex-direction: column;
   gap: ${getSpacing(3)};
