@@ -10,52 +10,78 @@ export const DefaultIndexArray = [
   0, 10, 20, 70, 150, 200, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 5500, 6000, 8000,
 ];
 
-export const IndexToPoints = {
+export const IndexToPointsInfo = {
   5: {
-    type: "range",
-    value: {
-      first: 0.1,
-      second: 5,
+    severityAllocation: 25,
+    capPerPoint: undefined,
+    points: {
+      type: "range",
+      value: {
+        first: 0,
+        second: 1,
+      },
     },
   }, // FVV audit
   7: {
-    type: "range",
-    value: {
-      first: 1,
-      second: 2,
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "range",
+      value: {
+        first: 1,
+        second: 2,
+      },
     },
   }, // Gas audit
   11: {
-    type: "fixed",
-    value: {
-      first: 1,
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 1,
+      },
     },
   }, // Low audit
   17: {
-    type: "fixed",
-    value: {
-      first: 12,
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 12,
+      },
     },
   }, // Med audit
   20: {
-    type: "fixed",
-    value: {
-      first: 25,
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 25,
+      },
     },
   }, // High audit
 };
 
 export const convertVulnerabilitySeverityV1ToV2 = (
   severity: IEditedVulnerabilitySeverityV1,
-  indexArray?: number[]
+  indexArray?: number[],
+  isAudit: boolean = false
 ): IEditedVulnerabilitySeverityV2 => {
   const newSeverity = { ...severity } as any;
   delete newSeverity.index;
 
   return {
     ...newSeverity,
-    percentage: indexArray && indexArray[severity.index] ? indexArray[severity.index] / 100 : NaN,
-    points: (IndexToPoints as any)[severity.index as number] ?? 0,
+    percentage: isAudit
+      ? (IndexToPointsInfo as any)[severity.index as number]?.severityAllocation ?? undefined
+      : indexArray && indexArray[severity.index]
+      ? indexArray[severity.index] / 100
+      : NaN,
+    points: (IndexToPointsInfo as any)[severity.index as number]?.points ?? { type: "fixed", value: { first: 0 } },
+    percentageCapPerPoint: (IndexToPointsInfo as any)[severity.index as number]?.capPerPoint ?? undefined,
   };
 };
 
@@ -245,7 +271,9 @@ export const getVulnerabilitySeveritiesTemplate = (
 
     const baseTemplateV2: IVulnerabilitySeveritiesTemplateV2 = {
       ...(baseTemplate as IVulnerabilitySeveritiesTemplateV2),
-      severities: templateToUse.severities.map((severity) => convertVulnerabilitySeverityV1ToV2(severity, indexArray)),
+      severities: templateToUse.severities.map((severity) =>
+        convertVulnerabilitySeverityV1ToV2(severity, indexArray, useAuditTemplate)
+      ),
     };
 
     return baseTemplateV2;

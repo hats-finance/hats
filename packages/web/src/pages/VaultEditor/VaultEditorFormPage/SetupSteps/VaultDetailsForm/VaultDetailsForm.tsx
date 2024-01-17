@@ -93,8 +93,7 @@ export function VaultDetailsForm() {
     setValue("severitiesOptions", severitiesOptionsForContractsCovered);
     setValue("parameters", defaultOnChainParams);
 
-    // Change the `usingPointingSystem` and `percentageCapPerPoint` value
-    if (isAudit) setValue("percentageCapPerPoint", 2);
+    // Change the `usingPointingSystem` value
     if (isAudit) setValue("usingPointingSystem", true);
     else setValue("usingPointingSystem", false);
     trigger("vulnerability-severities-spec");

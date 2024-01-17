@@ -140,6 +140,12 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
         Yup.object({
           name: Yup.string().required(intl("required")),
           description: Yup.string().required(intl("required")),
+          "nft-metadata": Yup.object({
+            name: Yup.string(),
+            description: Yup.string(),
+            image: Yup.string(),
+            animation_url: Yup.string(),
+          }),
           index: Yup.number()
             .typeError(intl("enterValidNumber"))
             .when("version", (version: "v1" | "v2", schema: any) =>
@@ -147,26 +153,26 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
             ),
           percentage: Yup.string().test(
             "required",
-            intl("valueShouldBeBetween", { first: "0%", second: "100%" }),
+            intl("valueShouldBeBetween", { first: "0.1%", second: "100%" }),
             function (percentage, ctx: Yup.TestContext) {
-              const { version, usingPointingSystem } = (this as any).from[2].value;
-              if (version === "v1" || usingPointingSystem) return true;
-              if (!percentage || +percentage < 0 || +percentage > 100) return false;
+              const { version } = (this as any).from[2].value;
+              if (version === "v1") return true;
+              if (!percentage || +percentage < 0.1 || +percentage > 100) return false;
               return true;
             }
           ),
           points: Yup.object({
             type: Yup.string(),
             value: Yup.object({
-              first: Yup.string().test("required", intl("minVal", { val: 0.1 }), function (points, ctx: Yup.TestContext) {
+              first: Yup.string().test("required", intl("minVal", { val: 0 }), function (points, ctx: Yup.TestContext) {
                 const { version, usingPointingSystem } = (this as any).from[4].value;
                 if (version === "v1" || !usingPointingSystem) return true;
-                if (!points || +points < 0.1) return false;
+                if (!points || +points < 0) return false;
                 return true;
               }),
               second: Yup.string().test(
                 "required",
-                `${intl("minVal", { val: 0.1 })} and more than first range`,
+                `${intl("minVal", { val: 0 })} and more than first range`,
                 function (points, ctx: Yup.TestContext) {
                   console.log(this as any);
                   const { first } = (this as any).from[0].value;
@@ -174,18 +180,32 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
                   const { version, usingPointingSystem } = (this as any).from[4].value;
                   if (type !== "range") return true;
                   if (version === "v1" || !usingPointingSystem) return true;
-                  if (!points || +points < 0.1 || +first >= +points) return false;
+                  if (!points || +points < 0 || +first >= +points) return false;
                   return true;
                 }
               ),
             }),
           }),
-          "nft-metadata": Yup.object({
-            name: Yup.string(),
-            description: Yup.string(),
-            image: Yup.string(),
-            animation_url: Yup.string(),
-          }),
+          percentageCapPerPoint: Yup.string()
+            .test(
+              "required",
+              intl("valueShouldBeBetween", { first: "0.1%", second: "100%" }),
+              function (percentageCapPerPoint, ctx: Yup.TestContext) {
+                const { version, usingPointingSystem } = (this as any).from[2].value;
+                if (version === "v1" || !usingPointingSystem) return true;
+                if (percentageCapPerPoint === "" || percentageCapPerPoint === undefined || percentageCapPerPoint === null)
+                  return true;
+                console.log(percentageCapPerPoint);
+                if (+percentageCapPerPoint < 0.1 || +percentageCapPerPoint > 100) return false;
+                return true;
+              }
+            )
+            .test("required", intl("lessThanSeverityAllocation"), function (percentageCapPerPoint, ctx: Yup.TestContext) {
+              const { percentage } = (this as any).from[0].value;
+              if (!percentageCapPerPoint) return true;
+              if (+percentageCapPerPoint > +percentage) return false;
+              return true;
+            }),
         })
       ),
     }),
@@ -233,21 +253,21 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           return immediatePercentage + vestedPercentage + committeePercentage === 100;
         }),
     }),
-    percentageCapPerPoint: Yup.string()
-      .test("max-100", intl("max100"), function (percentageCapPerPoint) {
-        const { usingPointingSystem } = this.parent;
-        if (!usingPointingSystem) return true;
-        if (!percentageCapPerPoint) return true;
-        if (+percentageCapPerPoint > 100) return false;
-        return true;
-      })
-      .test("min-0.1", intl("minVal", { val: "0.1%" }), function (percentageCapPerPoint) {
-        const { usingPointingSystem } = this.parent;
-        if (!usingPointingSystem) return true;
-        if (!percentageCapPerPoint) return true;
-        if (+percentageCapPerPoint < 0.1) return false;
-        return true;
-      }),
+    // percentageCapPerPoint: Yup.string()
+    //   .test("max-100", intl("max100"), function (percentageCapPerPoint) {
+    //     const { usingPointingSystem } = this.parent;
+    //     if (!usingPointingSystem) return true;
+    //     if (!percentageCapPerPoint) return true;
+    //     if (+percentageCapPerPoint > 100) return false;
+    //     return true;
+    //   })
+    //   .test("min-0.1", intl("minVal", { val: "0.1%" }), function (percentageCapPerPoint) {
+    //     const { usingPointingSystem } = this.parent;
+    //     if (!usingPointingSystem) return true;
+    //     if (!percentageCapPerPoint) return true;
+    //     if (+percentageCapPerPoint < 0.1) return false;
+    //     return true;
+    //   }),
     // "communication-channel": Yup.object({
     //   "pgp-pk": Yup.array().min(1, intl("required")).required(intl("required")),
     // }).required(intl("required")),

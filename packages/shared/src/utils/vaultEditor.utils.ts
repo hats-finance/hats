@@ -344,7 +344,6 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
       ),
       scope: editedVaultDescription.scope,
       usingPointingSystem: editedVaultDescription.usingPointingSystem,
-      percentageCapPerPoint: editedVaultDescription.percentageCapPerPoint,
     };
   }
 }
