@@ -35,6 +35,9 @@ export async function encryptWithKeys(publicKeyOrKeys: string | string[], dataTo
     message: await createMessage({ text: dataToEncrypt }),
     encryptionKeys,
     sessionKey,
+    config: {
+      rejectPublicKeyAlgorithms: new Set(),
+    },
   });
   return { encryptedData, sessionKey };
 }
@@ -48,6 +51,9 @@ export async function encryptWithHatsKey(dataToEncrypt: string): Promise<string>
     const encryptedData = await encrypt({
       message: await createMessage({ text: dataToEncrypt }),
       encryptionKeys: hatsPublicKey,
+      config: {
+        rejectPublicKeyAlgorithms: new Set(),
+      },
     });
 
     return encryptedData as string;
