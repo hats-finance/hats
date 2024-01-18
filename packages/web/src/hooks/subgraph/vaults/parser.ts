@@ -83,6 +83,11 @@ const fixVaultsData = (vaults: IVault[]) => {
   if (morphoVault && morphoVault.descriptionHash === "QmeLFD6czyZq7GBsqy6Ukdep5oGzr2RfxDvDhdwJ8TyCHU")
     morphoVault.descriptionHash = "QmTMTK6NpVgqjr664VTS44opgU1FpvkL2gcvyVYvGu85Fk";
 
+  // Override description hash for AlephZero vault
+  const alephVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x0d88a9ece90994ecb3ba704730819d71c139f60f");
+  if (alephVault && alephVault.descriptionHash === "QmY3vnuj9i1ephwYSjHzJ9bUx7t18hhQ1mWrUiXwEA32c3")
+    alephVault.descriptionHash = "Qmb8gadmtnvPHW7Xu3dnBNxLPYyS3371TATQBj1eFJr9tj";
+
   return newVaults;
 };
 
