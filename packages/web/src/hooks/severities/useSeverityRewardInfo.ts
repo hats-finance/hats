@@ -45,7 +45,8 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
           : vault.amountsInfo.maxRewardAmount.tokens) *
         (rewardPercentage / 100);
       rewards.usd = rewards.tokens * vault.amountsInfo?.tokenPriceUsd;
-      rewardsCap.tokens = (severity.capAmount ?? 0) * vault.amountsInfo?.maxRewardFactor;
+      rewardsCap.tokens = severity.capAmount ?? 0; // Cap without maxRewardFactor
+      // rewardsCap.tokens = (severity.capAmount ?? 0) * vault.amountsInfo?.maxRewardFactor;
       rewardsCap.usd = rewardsCap.tokens * vault.amountsInfo?.tokenPriceUsd;
     }
 
