@@ -1,9 +1,8 @@
 import { TokenPriceResponse } from "@hats.finance/shared";
 import axios, { AxiosResponse } from "axios";
-import { LocalStorage } from "constants/constants";
 import { GET_PRICES_BALANCER, IBalancerGetPricesResponse } from "graphql/balancer";
 import { GET_PRICES_UNISWAP, IUniswapGetPricesResponse } from "graphql/uniswap";
-import { appChains } from "settings";
+import { BASE_SERVICE_URL, appChains } from "settings";
 import { fetchToken } from "wagmi/actions";
 
 const COIN_GECKO_ENDPOINT = "https://api.coingecko.com/api/v3/simple/token_price";
@@ -41,9 +40,6 @@ export const getTokenInfo = async (
 
 export const getCoingeckoTokensPrices = async (tokens: { address: string; chainId: number }[]): Promise<TokenPriceResponse> => {
   try {
-    const dataOnStorage = JSON.parse(sessionStorage.getItem(LocalStorage.CoingeckoPrices) ?? "null");
-    if (dataOnStorage && Object.keys(dataOnStorage).length > 0) return dataOnStorage;
-
     // Separate tokens by chain
     const tokensByChain = tokens.reduce((acc, token) => {
       if (!acc[token.chainId]) acc[token.chainId] = [];
@@ -70,7 +66,6 @@ export const getCoingeckoTokensPrices = async (tokens: { address: string; chainI
 
     const data = await Promise.all(allRequests);
     const dataToReturn = data.reduce((acc, response) => ({ ...acc, ...response.data }), {} as TokenPriceResponse);
-    sessionStorage.setItem(LocalStorage.CoingeckoPrices, JSON.stringify(dataToReturn));
     return dataToReturn;
   } catch (err) {
     console.error(err);
@@ -130,6 +125,21 @@ export const getBalancerTokenPrices = async (tokens: { address: string; chainId:
       if (tokenPrice) acc[token.address] = { usd: +tokenPrice.price };
       return { ...acc };
     }, {} as TokenPriceResponse);
+  } catch (err) {
+    console.error(err);
+    throw new Error(`Error getting prices: ${err}`);
+  }
+};
+
+export const getBackendTokenPrices = async (
+  tokens: { address: string; chainId: number }[]
+): Promise<TokenPriceResponse | undefined> => {
+  try {
+    const res = await axios.post<TokenPriceResponse>(`${BASE_SERVICE_URL}/utils/get-tokens-prices`, {
+      tokens,
+    });
+
+    return res.data.data;
   } catch (err) {
     console.error(err);
     throw new Error(`Error getting prices: ${err}`);
