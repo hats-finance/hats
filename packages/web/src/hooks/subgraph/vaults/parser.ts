@@ -85,8 +85,6 @@ const fixVaultsData = (vaults: IVault[]) => {
 
   // Override description hash for AlephZero vault
   const alephVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x0d88a9ece90994ecb3ba704730819d71c139f60f");
-  if (alephVault && alephVault.descriptionHash === "Qmb8gadmtnvPHW7Xu3dnBNxLPYyS3371TATQBj1eFJr9tj")
-    alephVault.descriptionHash = "QmZyRZnutM4o5e62h3SjM2YX59nz9Bet4a34adqTyxBnkK";
 
   return newVaults;
 };
