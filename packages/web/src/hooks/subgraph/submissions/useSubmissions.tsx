@@ -1,7 +1,7 @@
 import { ISubmissionMessageObject, ISubmittedSubmission } from "@hats.finance/shared";
 import axios from "axios";
 import { LocalStorage } from "constants/constants";
-import { blacklistedWallets } from "data/blacklistedWallets";
+import { OFAC_Sanctioned_Digital_Currency_Addresses } from "data/OFACSanctionedAddresses";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
@@ -36,8 +36,8 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
   const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
 
-  if (account && blacklistedWallets.indexOf(account) !== -1) {
-    throw new Error("Blacklisted wallet");
+  if (account && OFAC_Sanctioned_Digital_Currency_Addresses.indexOf(account) !== -1) {
+    throw new Error("This wallet address is on the OFAC Sanctioned Digital Currency Addresses list and cannot be used.");
   }
 
   const { multiChainData, allChainsLoaded } = useMultiChainSubmissions();
