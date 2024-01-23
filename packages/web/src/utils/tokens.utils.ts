@@ -131,13 +131,9 @@ export const getBalancerTokenPrices = async (tokens: { address: string; chainId:
   }
 };
 
-export const getBackendTokenPrices = async (
-  tokens: { address: string; chainId: number }[]
-): Promise<TokenPriceResponse | undefined> => {
+export const getBackendTokenPrices = async (): Promise<TokenPriceResponse | undefined> => {
   try {
-    const res = await axios.post<TokenPriceResponse>(`${BASE_SERVICE_URL}/utils/get-tokens-prices`, {
-      tokens,
-    });
+    const res = await axios.get<TokenPriceResponse>(`${BASE_SERVICE_URL}/utils/get-tokens-prices`);
 
     return res.data.data;
   } catch (err) {

@@ -88,24 +88,10 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     const foundTokenPrices = [] as number[];
 
-    // Get prices from contracts
-    try {
-      for (const token in tokenPriceFunctions) {
-        const getPriceFunction = tokenPriceFunctions[token];
-
-        if (getPriceFunction) {
-          const price = await getPriceFunction();
-          if (price && +price > 0) foundTokenPrices[token] = +price;
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
     // Get prices from the backend
     try {
       const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
-      const backendTokenPrices = await getBackendTokenPrices(tokensLeft);
+      const backendTokenPrices = await getBackendTokenPrices();
 
       if (backendTokenPrices) {
         tokensLeft.forEach((token) => {
@@ -116,6 +102,20 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
         });
 
         return foundTokenPrices;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Get prices from contracts
+    try {
+      for (const token in tokenPriceFunctions) {
+        const getPriceFunction = tokenPriceFunctions[token];
+
+        if (getPriceFunction) {
+          const price = await getPriceFunction();
+          if (price && +price > 0) foundTokenPrices[token] = +price;
+        }
       }
     } catch (error) {
       console.error(error);
