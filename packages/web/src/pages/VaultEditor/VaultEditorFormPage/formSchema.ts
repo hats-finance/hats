@@ -174,7 +174,6 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
                 "required",
                 `${intl("minVal", { val: 0 })} and more than first range`,
                 function (points, ctx: Yup.TestContext) {
-                  console.log(this as any);
                   const { first } = (this as any).from[0].value;
                   const { type } = (this as any).from[1].value;
                   const { version, usingPointingSystem } = (this as any).from[4].value;
@@ -195,7 +194,6 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
                 if (version === "v1" || !usingPointingSystem) return true;
                 if (percentageCapPerPoint === "" || percentageCapPerPoint === undefined || percentageCapPerPoint === null)
                   return true;
-                console.log(percentageCapPerPoint);
                 if (+percentageCapPerPoint < 0.1 || +percentageCapPerPoint > 100) return false;
                 return true;
               }
