@@ -6,14 +6,21 @@ import {
   IVulnerabilitySeveritiesTemplateV2,
 } from "./types";
 
+export enum SeverityTemplate {
+  base = "base",
+  gas = "gas",
+  fv = "fv",
+  fvgas = "fvgas",
+}
+
 export const DefaultIndexArray = [
   0, 10, 20, 70, 150, 200, 250, 300, 400, 500, 600, 1000, 1200, 1400, 1800, 2000, 2500, 3000, 4000, 5000, 5500, 6000, 8000,
 ];
 
-export const IndexToPointsInfo = {
+export const IndexToPointsInfo_withfvgas = {
   5: {
     severityAllocation: 25,
-    capPerPoint: undefined,
+    capPerPoint: "",
     points: {
       type: "range",
       value: {
@@ -32,7 +39,7 @@ export const IndexToPointsInfo = {
         second: 2,
       },
     },
-  }, // Gas audit
+  }, // G
   11: {
     severityAllocation: 75,
     capPerPoint: 1,
@@ -65,23 +72,152 @@ export const IndexToPointsInfo = {
   }, // High audit
 };
 
+export const IndexToPointsInfo_withfv = {
+  5: {
+    severityAllocation: 25,
+    capPerPoint: "",
+    points: {
+      type: "range",
+      value: {
+        first: 0,
+        second: 1,
+      },
+    },
+  }, // FVV audit
+  11: {
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 1,
+      },
+    },
+  }, // Low audit
+  17: {
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 12,
+      },
+    },
+  }, // Med audit
+  20: {
+    severityAllocation: 75,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 25,
+      },
+    },
+  }, // High audit
+};
+
+export const IndexToPointsInfo_withgas = {
+  7: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "range",
+      value: {
+        first: 1,
+        second: 2,
+      },
+    },
+  }, // Gas audit
+  11: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 1,
+      },
+    },
+  }, // Low audit
+  17: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 12,
+      },
+    },
+  }, // Med audit
+  20: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 25,
+      },
+    },
+  }, // High audit
+};
+
+export const IndexToPointsInfo_base = {
+  11: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 1,
+      },
+    },
+  }, // Low audit
+  17: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 12,
+      },
+    },
+  }, // Med audit
+  20: {
+    severityAllocation: 100,
+    capPerPoint: 1,
+    points: {
+      type: "fixed",
+      value: {
+        first: 25,
+      },
+    },
+  }, // High audit
+};
+
 export const convertVulnerabilitySeverityV1ToV2 = (
   severity: IEditedVulnerabilitySeverityV1,
   indexArray?: number[],
-  isAudit: boolean = false
+  isAudit: boolean = false,
+  template: SeverityTemplate = SeverityTemplate.base
 ): IEditedVulnerabilitySeverityV2 => {
   const newSeverity = { ...severity } as any;
   delete newSeverity.index;
 
+  const IndexToPointsInfo = {
+    base: IndexToPointsInfo_base,
+    gas: IndexToPointsInfo_withgas,
+    fv: IndexToPointsInfo_withfv,
+    fvgas: IndexToPointsInfo_withfvgas,
+  };
+
   return {
     ...newSeverity,
     percentage: isAudit
-      ? (IndexToPointsInfo as any)[severity.index as number]?.severityAllocation ?? undefined
+      ? (IndexToPointsInfo[template] as any)[severity.index as number]?.severityAllocation ?? undefined
       : indexArray && indexArray[severity.index]
       ? indexArray[severity.index] / 100
       : NaN,
-    points: (IndexToPointsInfo as any)[severity.index as number]?.points ?? { type: "fixed", value: { first: 0 } },
-    percentageCapPerPoint: (IndexToPointsInfo as any)[severity.index as number]?.capPerPoint ?? undefined,
+    points: (IndexToPointsInfo[template] as any)[severity.index as number]?.points ?? { type: "fixed", value: { first: 0 } },
+    percentageCapPerPoint: (IndexToPointsInfo[template] as any)[severity.index as number]?.capPerPoint ?? undefined,
   };
 };
 
@@ -234,20 +370,38 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
 
 export const getVulnerabilitySeveritiesTemplate = (
   version: "v1" | "v2",
-  useAuditTemplate = false
+  useAuditTemplate = false,
+  template: SeverityTemplate = SeverityTemplate.base
 ): IVulnerabilitySeveritiesTemplate => {
   const indexArray = DefaultIndexArray;
 
-  const auditTemplateV1: IVulnerabilitySeveritiesTemplateV1 = {
-    name: "Default Template",
-    indexArray,
-    severities: [
+  const auditSeverities = {
+    base: [AUDIT_SEVERITIES_V1["low"], AUDIT_SEVERITIES_V1["medium"], AUDIT_SEVERITIES_V1["high"]],
+    gas: [
+      AUDIT_SEVERITIES_V1["gasSaving"],
+      AUDIT_SEVERITIES_V1["low"],
+      AUDIT_SEVERITIES_V1["medium"],
+      AUDIT_SEVERITIES_V1["high"],
+    ],
+    fv: [
+      AUDIT_SEVERITIES_V1["formalVerification"],
+      AUDIT_SEVERITIES_V1["low"],
+      AUDIT_SEVERITIES_V1["medium"],
+      AUDIT_SEVERITIES_V1["high"],
+    ],
+    fvgas: [
       AUDIT_SEVERITIES_V1["formalVerification"],
       AUDIT_SEVERITIES_V1["gasSaving"],
       AUDIT_SEVERITIES_V1["low"],
       AUDIT_SEVERITIES_V1["medium"],
       AUDIT_SEVERITIES_V1["high"],
     ],
+  };
+
+  const auditTemplateV1: IVulnerabilitySeveritiesTemplateV1 = {
+    name: template,
+    indexArray,
+    severities: auditSeverities[template],
   };
 
   const baseTemplateV1: IVulnerabilitySeveritiesTemplateV1 = {
@@ -272,7 +426,7 @@ export const getVulnerabilitySeveritiesTemplate = (
     const baseTemplateV2: IVulnerabilitySeveritiesTemplateV2 = {
       ...(baseTemplate as IVulnerabilitySeveritiesTemplateV2),
       severities: templateToUse.severities.map((severity) =>
-        convertVulnerabilitySeverityV1ToV2(severity, indexArray, useAuditTemplate)
+        convertVulnerabilitySeverityV1ToV2(severity, indexArray, useAuditTemplate, template)
       ),
     };
 
