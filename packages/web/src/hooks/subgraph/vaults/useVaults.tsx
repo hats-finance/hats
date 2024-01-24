@@ -16,7 +16,12 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { getBalancerTokenPrices, getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import {
+  getBackendTokenPrices,
+  getBalancerTokenPrices,
+  getCoingeckoTokensPrices,
+  getUniswapTokenPrices,
+} from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
 import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
@@ -74,12 +79,33 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const { multiChainData, allChainsLoaded } = useMultiChainVaultsV2();
 
   const getTokenPrices = async (vaultsToSearch: IVault[]) => {
+    if (!vaultsToSearch || vaultsToSearch.length === 0) return [];
+
     const stakingTokens = vaultsToSearch.map((vault) => ({
       address: vault.stakingToken.toLowerCase(),
       chainId: vault.chainId as number,
     }));
 
     const foundTokenPrices = [] as number[];
+
+    // Get prices from the backend
+    try {
+      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const backendTokenPrices = await getBackendTokenPrices();
+
+      if (backendTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (backendTokenPrices.hasOwnProperty(token.address)) {
+            const price = backendTokenPrices[token.address];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+
+        return foundTokenPrices;
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     // Get prices from contracts
     try {
@@ -146,6 +172,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       console.error(error);
     }
 
+    console.log(foundTokenPrices);
     return foundTokenPrices;
   };
 
