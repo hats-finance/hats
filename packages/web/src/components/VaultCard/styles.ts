@@ -77,7 +77,7 @@ export const StyledVaultCard = styled.div<{
     .vault-info {
       display: grid;
       gap: ${getSpacing(2)};
-      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "3fr 2fr"};
+      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "5fr 5fr"};
       align-items: center;
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {

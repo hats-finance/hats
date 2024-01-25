@@ -5,6 +5,7 @@ export interface IVaultInfo {
   address: string;
   chainId: number;
   master: string;
+  stakingToken: string;
   pid: string;
 }
 
