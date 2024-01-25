@@ -6,7 +6,11 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { SplitPayoutAllocation } from "../../../components";
-import { autocalculateMultiPayout } from "../../../utils/autocalculateMultiPayout";
+import {
+  IPayoutAutoCalcs,
+  autocalculateMultiPayout,
+  autocalculateMultiPayoutPointingSystem,
+} from "../../../utils/autocalculateMultiPayout";
 import { PayoutFormContext } from "../../store";
 import { StyledPayoutForm } from "../../styles";
 
@@ -21,6 +25,8 @@ export const SplitPayoutForm = () => {
   const { control, register, setValue, getValues, formState, trigger } = methods;
 
   const { fields } = useFieldArray({ name: "rewardsConstraints", control });
+  const usingPointingSystem = useWatch({ control, name: `usingPointingSystem`, defaultValue: false });
+  const percentageCapPerPoint = useWatch({ control, name: `percentageCapPerPoint` });
   const watchConstraints = useWatch({ control, name: `rewardsConstraints`, defaultValue: [] });
   const rewardsConstraints = fields.map((field, index) => {
     return {
@@ -38,6 +44,10 @@ export const SplitPayoutForm = () => {
     control,
     name: watchBeneficiaries.map((_, idx) => `beneficiaries.${idx}.severity` as any),
   });
+  const watchedPoints = useWatch({
+    control,
+    name: watchBeneficiaries.map((_, idx) => `beneficiaries.${idx}.percentageOfPayout` as any),
+  });
 
   const triggerAutocalculate = useCallback(() => {
     if (!watchConstraints) return;
@@ -45,15 +55,27 @@ export const SplitPayoutForm = () => {
 
     const beneficiaries = getValues("beneficiaries");
 
-    const calcs = autocalculateMultiPayout(beneficiaries, watchConstraints, vault.amountsInfo.depositedAmount.tokens);
+    let calcs: IPayoutAutoCalcs | undefined;
+    if (usingPointingSystem) {
+      calcs = autocalculateMultiPayoutPointingSystem(
+        beneficiaries,
+        watchConstraints,
+        vault.amountsInfo.depositedAmount.tokens,
+        percentageCapPerPoint ? +percentageCapPerPoint : 1
+      );
+    } else {
+      calcs = autocalculateMultiPayout(beneficiaries, watchConstraints, vault.amountsInfo.depositedAmount.tokens);
+    }
+
     if (!calcs) return;
 
     for (const [index, beneficiary] of calcs.beneficiariesCalculated.entries()) {
-      setValue(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
+      setValue<any>(`beneficiaries.${index}.percentageOfPayout`, beneficiary.percentageOfPayout, { shouldValidate: true });
     }
 
-    setValue(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
-  }, [getValues, setValue, watchConstraints, vault]);
+    setValue<any>(`percentageToPay`, calcs.totalPercentageToPay.toString(), { shouldValidate: true });
+    if (calcs.paymentPerPoint) setValue<any>(`paymentPerPoint`, calcs.paymentPerPoint.toString(), { shouldValidate: true });
+  }, [usingPointingSystem, percentageCapPerPoint, getValues, setValue, watchConstraints, vault]);
 
   const stopAutocalculation = useWatch({ control, name: `stopAutocalculation` });
 
@@ -63,6 +85,13 @@ export const SplitPayoutForm = () => {
     triggerAutocalculate();
   }, [watchConstraints, watchedSeverities, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
 
+  // If points changes, autocalculate
+  useEffect(() => {
+    if (isPayoutCreated || stopAutocalculation || !usingPointingSystem) return;
+    triggerAutocalculate();
+  }, [usingPointingSystem, watchedPoints, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
+
+  // Populate constraints
   useEffect(() => {
     if (!vault || !vault.description || !payout) return;
 
@@ -76,11 +105,18 @@ export const SplitPayoutForm = () => {
         severity: severity.name.toLowerCase(),
         capAmount: "",
         maxReward: (severity as IVulnerabilitySeverityV2).percentage.toString(),
+        points: (severity as IVulnerabilitySeverityV2).points,
       });
     }
 
-    setTimeout(() => setValue("rewardsConstraints", constraints), 500);
-  }, [vault, payout, setValue]);
+    if (usingPointingSystem && vault.version === "v2") {
+      const sevToUse = (severities as IVulnerabilitySeverityV2[]).find((sev) => !!sev.percentageCapPerPoint);
+      const maxCapPerPointToUse = sevToUse?.percentageCapPerPoint ?? 1;
+      setValue<any>("percentageCapPerPoint", `${maxCapPerPointToUse}`);
+    }
+
+    setTimeout(() => setValue<any>("rewardsConstraints", constraints), 500);
+  }, [usingPointingSystem, vault, payout, setValue]);
 
   return (
     <StyledPayoutForm>
@@ -116,46 +152,62 @@ export const SplitPayoutForm = () => {
             </>
           )} */}
 
-          {/* Reward constraints */}
-          <br />
-          <p className="subtitle mb-2">{t("Payouts.rewardsConstraints")}</p>
-          <div className="rewards-constraints">
-            <Button onClick={() => setEditSeverityRewards((prev) => !prev)} styleType="text" className="mb-2" noPadding>
-              {t("Payouts.editSeverityRewards")}
-            </Button>
-            {rewardsConstraints.map((constraint, index) => (
-              <div className="item" key={index}>
-                <div className="pill">
-                  <Pill textColor={severityColors[index]} isSeverity text={constraint.severity} />
-                </div>
-                <FormInput
-                  {...register(`rewardsConstraints.${index}.maxReward`)}
-                  className="input"
-                  label={t("VaultEditor.percentage-bounty")}
-                  placeholder={t("VaultEditor.percentage-bounty")}
-                  disabled={isPayoutCreated || !editSeverityRewards}
-                  type="number"
-                  colorable
-                />
-                <FormInput
-                  {...register(`rewardsConstraints.${index}.capAmount`)}
-                  className="input"
-                  label={t("Payouts.maxRewardPerBeneficiary")}
-                  placeholder={t("Payouts.maxRewardPerBeneficiaryPlaceholder", { token: vault?.stakingTokenSymbol })}
-                  disabled={isPayoutCreated}
-                  type="number"
-                  colorable
-                />
-              </div>
-            ))}
+          {usingPointingSystem && (
+            <FormInput
+              {...register(`percentageCapPerPoint`)}
+              className="input"
+              label={t("Payouts.maxPercentagePerPoint")}
+              placeholder={t("Payouts.maxPercentagePerPointPlaceholder", { token: vault?.stakingTokenSymbol })}
+              disabled={isPayoutCreated}
+              type="number"
+              colorable
+            />
+          )}
 
-            {formState?.errors?.rewardsConstraints &&
-              (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === "sumShouldBe100") && (
-                <Alert className="mb-2" type="error">
-                  {t("Payouts.severityRewardsSumShouldBe100")}
-                </Alert>
-              )}
-          </div>
+          {/* Reward constraints */}
+          {!usingPointingSystem && (
+            <>
+              <br />
+              <p className="subtitle mb-2">{t("Payouts.rewardsConstraints")}</p>
+              <div className="rewards-constraints">
+                <Button onClick={() => setEditSeverityRewards((prev) => !prev)} styleType="text" className="mb-2" noPadding>
+                  {t("Payouts.editSeverityRewards")}
+                </Button>
+                {rewardsConstraints.map((constraint, index) => (
+                  <div className="item" key={index}>
+                    <div className="pill">
+                      <Pill textColor={severityColors[index]} isSeverity text={constraint.severity} />
+                    </div>
+                    <FormInput
+                      {...register(`rewardsConstraints.${index}.maxReward`)}
+                      className="input"
+                      label={t("VaultEditor.percentage-bounty")}
+                      placeholder={t("VaultEditor.percentage-bounty")}
+                      disabled={isPayoutCreated || !editSeverityRewards}
+                      type="number"
+                      colorable
+                    />
+                    <FormInput
+                      {...register(`rewardsConstraints.${index}.capAmount`)}
+                      className="input"
+                      label={t("Payouts.maxRewardPerBeneficiary")}
+                      placeholder={t("Payouts.maxRewardPerBeneficiaryPlaceholder", { token: vault?.stakingTokenSymbol })}
+                      disabled={isPayoutCreated}
+                      type="number"
+                      colorable
+                    />
+                  </div>
+                ))}
+
+                {formState?.errors?.rewardsConstraints &&
+                  (formState.errors.rewardsConstraints as any[]).some((error) => error?.maxReward?.type === "sumShouldBe100") && (
+                    <Alert className="mb-2" type="error">
+                      {t("Payouts.severityRewardsSumShouldBe100")}
+                    </Alert>
+                  )}
+              </div>
+            </>
+          )}
         </div>
 
         <p className="mt-5 mb-4">{t("Payouts.editPayoutOfEachBeneficiary")}</p>

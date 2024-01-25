@@ -31,6 +31,7 @@ export const SubmissionCard = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
+  console.log(submission);
   const vault = submission.linkedVault;
   const submissionData = submission.submissionDataStructure;
   const commChannel = submissionData?.communicationChannel;
