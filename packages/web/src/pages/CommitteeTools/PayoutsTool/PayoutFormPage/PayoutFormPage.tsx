@@ -185,7 +185,7 @@ export const PayoutFormPage = () => {
       if (form.type === "single") {
         const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
         if (submission) {
-          setValue("decryptedSubmission", {
+          setValue<any>("decryptedSubmission", {
             ...submission,
             submissionDataStructure: { ...submission.submissionDataStructure, communicationChannel: undefined },
           } as any);

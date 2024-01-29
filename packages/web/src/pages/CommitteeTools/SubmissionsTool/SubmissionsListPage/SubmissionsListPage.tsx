@@ -3,6 +3,7 @@ import {
   ISinglePayoutData,
   ISplitPayoutData,
   ISubmittedSubmission,
+  IVaultDescriptionV2,
   IVulnerabilitySeverity,
   PayoutType,
   createNewPayoutData,
@@ -283,6 +284,7 @@ export const SubmissionsListPage = () => {
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
           };
         }),
+        usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
       } as ISplitPayoutData;
     }
 
