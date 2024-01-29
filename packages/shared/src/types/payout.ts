@@ -1,4 +1,4 @@
-import { ISubmittedSubmission, IVault, IVaultInfo } from "./types";
+import { ISubmittedSubmission, IVault, IVaultInfo, IVulnerabilitySeverityV2 } from "./types";
 
 export interface IPayoutGraph {
   id: string;
@@ -68,8 +68,16 @@ export interface ISinglePayoutData extends IPayoutDataBase {
 export interface ISplitPayoutData extends IPayoutDataBase {
   type: "split";
   paymentSplitterBeneficiary?: string;
-  rewardsConstraints?: { severity: string; maxReward: string; capAmount: string }[];
+  rewardsConstraints?: {
+    severity: string;
+    maxReward: string;
+    capAmount: string;
+    points: IVulnerabilitySeverityV2["points"];
+  }[];
   beneficiaries: ISplitPayoutBeneficiary[];
+  usingPointingSystem?: boolean;
+  paymentPerPoint?: string;
+  percentageCapPerPoint?: string;
 }
 
 export interface ISplitPayoutBeneficiary {

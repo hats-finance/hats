@@ -9,6 +9,8 @@ import { isValidIpfsHash } from "utils/ipfs.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useMultiChainSubmissions } from "./useMultiChainSubmissions";
 
+const MAX_CALLS_AT_ONCE = 500;
+
 interface ISubmissionsContext {
   submissionsReadyAllChains: boolean;
   allSubmissions?: ISubmittedSubmission[]; // Submissions without chains filtering
@@ -57,15 +59,24 @@ export function SubmissionsProvider({ children }: PropsWithChildren<{}>) {
       return undefined;
     };
 
-    const getSubmissionData = async (submissionsToFetch: ISubmittedSubmission[]): Promise<ISubmittedSubmission[]> =>
-      Promise.all(
-        submissionsToFetch.map(async (submission) => {
-          const existsSubmissionData = allSubmissions.find((v) => v.id === submission.id)?.submissionData;
-          const submissionData = existsSubmissionData ?? (await loadSubmissionData(submission));
+    const getSubmissionData = async (submissionsToFetch: ISubmittedSubmission[]): Promise<ISubmittedSubmission[]> => {
+      const submissions = [] as ISubmittedSubmission[];
 
-          return { ...submission, submissionData } as ISubmittedSubmission;
-        })
-      );
+      for (let i = 0; i < submissionsToFetch.length; i += MAX_CALLS_AT_ONCE) {
+        const submissionsChunk = submissionsToFetch.slice(i, i + MAX_CALLS_AT_ONCE);
+        const submissionsData = await Promise.all(
+          submissionsChunk.map(async (submission) => {
+            const existsSubmissionData = allSubmissions.find((v) => v.id === submission.id)?.submissionData;
+            const submissionData = existsSubmissionData ?? (await loadSubmissionData(submission));
+
+            return { ...submission, submissionData } as ISubmittedSubmission;
+          })
+        );
+        submissions.push(...submissionsData);
+      }
+
+      return submissions;
+    };
 
     const allSubmissionsData = await getSubmissionData(submissionsData);
     const filteredByValidContent = allSubmissionsData.filter((submission) => submission.submissionData);

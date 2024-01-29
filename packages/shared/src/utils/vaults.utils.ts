@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { ChainsConfig } from "../config";
 import { IAddressRoleInVault, IVault, IVaultDescription, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
@@ -39,8 +39,9 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
       );
     });
 
-    const subgraphsResponses = await Promise.all(subgraphsRequests);
-    const subgraphsData = subgraphsResponses.map((res) => res.data);
+    const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
+    const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
+    const subgraphsData = fulfilledResponses.map((res) => (res as PromiseFulfilledResult<AxiosResponse<any>>).value.data);
 
     const vaults: IVaultInfoWithCommittee[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {

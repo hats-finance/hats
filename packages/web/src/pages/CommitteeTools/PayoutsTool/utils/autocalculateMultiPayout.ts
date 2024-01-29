@@ -1,9 +1,16 @@
 import { ISplitPayoutBeneficiary, ISplitPayoutData } from "@hats.finance/shared";
+import millify from "millify";
 
 const DECIMALS_TO_USE = 4;
 
 // type IMultipayoutCalculation = ISplitPayoutBeneficiary[];
 type IBeneficiaryWithCalcs = ISplitPayoutBeneficiary & { amount: number; calculatedReward: number };
+export type IPayoutAutoCalcs = {
+  beneficiariesCalculated: IBeneficiaryWithCalcs[];
+  totalRewards: number;
+  totalPercentageToPay: number;
+  paymentPerPoint?: number;
+};
 
 function truncate(num: number, fixed: number) {
   const regex = new RegExp("^-?\\d+(?:.\\d{0," + (fixed || -1) + "})?");
@@ -14,7 +21,7 @@ export const autocalculateMultiPayout = (
   beneficiaries: ISplitPayoutBeneficiary[],
   constraints: ISplitPayoutData["rewardsConstraints"],
   totalAmountToPay: number
-) => {
+): IPayoutAutoCalcs | undefined => {
   if (!constraints) return undefined;
   if (!beneficiaries || beneficiaries.length === 0) return undefined;
 
@@ -76,4 +83,45 @@ export const autocalculateMultiPayout = (
   const totalPercentageToPay = +truncate((totalRewards / totalAmountToPay) * 100, DECIMALS_TO_USE);
 
   return { beneficiariesCalculated, totalRewards, totalPercentageToPay };
+};
+
+export const autocalculateMultiPayoutPointingSystem = (
+  beneficiaries: ISplitPayoutBeneficiary[],
+  constraints: ISplitPayoutData["rewardsConstraints"],
+  totalAmountToPay: number,
+  maxCapPerPoint: number
+): IPayoutAutoCalcs | undefined => {
+  if (!constraints || !constraints.length) return undefined;
+  if (!beneficiaries || beneficiaries.length === 0) return undefined;
+
+  const beneficiariesCalculated = [] as IBeneficiaryWithCalcs[];
+
+  const needPoints = beneficiaries.every((ben) => ben.percentageOfPayout === "" || ben.percentageOfPayout === undefined);
+  for (let beneficiary of beneficiaries) {
+    const sevInfo = constraints.find((constraint) => constraint.severity.toLowerCase() === beneficiary.severity.toLowerCase());
+    const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "1";
+
+    const beneficiaryCalculated: IBeneficiaryWithCalcs = {
+      ...beneficiary,
+      percentageOfPayout: needPoints ? defaultPoints : beneficiary.percentageOfPayout,
+      amount: 0,
+      calculatedReward: 0,
+    };
+    beneficiariesCalculated.push(beneficiaryCalculated);
+  }
+
+  const totalPointsToPay = beneficiariesCalculated.reduce((prev, curr) => prev + +curr.percentageOfPayout, 0);
+
+  const pricePerPointUsingCap = (totalAmountToPay * maxCapPerPoint) / 100;
+  const pricePerPointUsingTotalAllocation = totalPointsToPay !== 0 ? totalAmountToPay / totalPointsToPay : 0;
+  const pricePerPointToUse = Math.min(pricePerPointUsingCap, pricePerPointUsingTotalAllocation);
+
+  const totalPercentageToPay = ((totalPointsToPay * pricePerPointToUse) / totalAmountToPay) * 100;
+
+  return {
+    beneficiariesCalculated,
+    totalRewards: 0,
+    totalPercentageToPay: +millify(totalPercentageToPay, { precision: 2 }),
+    paymentPerPoint: pricePerPointToUse,
+  };
 };

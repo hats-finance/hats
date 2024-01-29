@@ -46,6 +46,7 @@ export const SplitPayoutBeneficiaryForm = ({
   const beneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
+  const usingPointingSystem = useWatch({ control, name: `usingPointingSystem` });
 
   const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index]?.submissionData?.subId);
 
@@ -173,9 +174,9 @@ export const SplitPayoutBeneficiaryForm = ({
 
             <FormInput
               {...register(`beneficiaries.${index}.percentageOfPayout`)}
-              label={t("Payouts.percentageToPayLabel")}
-              placeholder={t("Payouts.percentageToPayLabel")}
-              onKeyDown={() => setValue<any>("stopAutocalculation", true)}
+              label={usingPointingSystem ? t("Payouts.points") : t("Payouts.percentageToPayLabel")}
+              placeholder={usingPointingSystem ? t("Payouts.points") : t("Payouts.percentageToPayLabel")}
+              onKeyDown={!usingPointingSystem ? () => setValue<any>("stopAutocalculation", true) : undefined}
               disabled={isPayoutCreated && !readOnly}
               readOnly={readOnly}
               type="number"
