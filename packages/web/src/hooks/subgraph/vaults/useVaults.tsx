@@ -27,6 +27,8 @@ import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
 import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
+const MAX_CALLS_AT_ONCE = 200;
+
 interface IVaultsContext {
   vaultsReadyAllChains: boolean;
   activeVaults?: IVault[]; // Vaults filtered by dates and chains
@@ -194,21 +196,30 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       return undefined;
     };
 
-    const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> =>
-      Promise.all(
-        vaultsToFetch.map(async (vault) => {
-          const existsDescription = allVaults.find((v) => v.id === vault.id)?.description;
-          const description = existsDescription ?? ((await loadVaultDescription(vault)) as IVaultDescription);
+    const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> => {
+      const vaults = [] as IVault[];
 
-          return {
-            ...vault,
-            stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken)
-              ? PROTECTED_TOKENS[vault.stakingToken]
-              : vault.stakingToken,
-            description,
-          } as IVault;
-        })
-      );
+      for (let i = 0; i < vaultsToFetch.length; i += MAX_CALLS_AT_ONCE) {
+        const vaultsChunk = vaultsToFetch.slice(i, i + MAX_CALLS_AT_ONCE);
+        const vaultsData = await Promise.all(
+          vaultsChunk.map(async (vault) => {
+            const existsDescription = allVaults.find((v) => v.id === vault.id)?.description;
+            const description = existsDescription ?? ((await loadVaultDescription(vault)) as IVaultDescription);
+
+            return {
+              ...vault,
+              stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken)
+                ? PROTECTED_TOKENS[vault.stakingToken]
+                : vault.stakingToken,
+              description,
+            } as IVault;
+          })
+        );
+        vaults.push(...vaultsData);
+      }
+
+      return vaults;
+    };
 
     const allVaultsData = await getVaultsData(vaultsData);
     const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
@@ -331,6 +342,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     (showTestnets ? multiChainData?.test.masters?.[0] : multiChainData?.prod.masters?.[0]) ?? {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
+
+  console.log({ activeVaults });
 
   const context: IVaultsContext = {
     vaultsReadyAllChains,
