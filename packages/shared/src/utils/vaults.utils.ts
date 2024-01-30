@@ -251,8 +251,11 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
         });
       });
 
-    const subgraphsResponses = await Promise.all(subgraphsRequests);
-    const subgraphsData = await Promise.all(subgraphsResponses.map((res) => res.json()));
+    const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
+    const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
+    const subgraphsData = await Promise.all(
+      fulfilledResponses.map((res) => (res as PromiseFulfilledResult<Response>).value.json())
+    );
 
     const vaults: IVaultOnlyDescription[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
