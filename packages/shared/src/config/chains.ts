@@ -146,15 +146,18 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     // infuraKey: "polygon-mainnet",
     provider: "https://frosty-convincing-choice.xdai.quiknode.pro/db844278bdba30f1567a37c679660797fbbea869",
   },
-  // [wagmiChains.bsc.id]: {
-  //   vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
-  //   rewardController: "0x0000000000000000000000000000000000000000",
-  //   vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
-  //   chain: wagmiChains.bsc,
-  //   subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
-  //   coingeckoId: "binance-smart-chain",
-  //   govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
-  // },
+  [wagmiChains.bsc.id]: {
+    vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
+    hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
+    chain: wagmiChains.bsc,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    coingeckoId: "binance-smart-chain",
+    govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
+    paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
+    provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
+  },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {
   //     vaultsNFTContract: "",
