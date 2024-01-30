@@ -25,31 +25,36 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
       }
     `;
 
-    const subgraphsRequests = Object.values(ChainsConfig).map((chain) => {
-      return axios.post(
-        chain.subgraph,
-        JSON.stringify({
-          query: GET_ALL_VAULTS,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const subgraphsRequests = Object.values(ChainsConfig).map(async (chain) => {
+      return {
+        chainId: chain.chain.id,
+        request: await axios.post(
+          chain.subgraph,
+          JSON.stringify({
+            query: GET_ALL_VAULTS,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        ),
+      };
     });
 
     const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
     const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
-    const subgraphsData = fulfilledResponses.map((res) => (res as PromiseFulfilledResult<AxiosResponse<any>>).value.data);
+    const subgraphsData = fulfilledResponses.map(
+      (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
+    );
 
     const vaults: IVaultInfoWithCommittee[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
-      const chainId = Object.values(ChainsConfig)[i].chain.id;
+      const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
 
-      for (const vault of subgraphsData[i].data.vaults) {
+      for (const vault of subgraphsData[i].request.data.data.vaults) {
         vaults.push({
           chainId,
           address: vault.id,
@@ -237,10 +242,10 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
       }
     `;
 
-    const subgraphsRequests = Object.values(ChainsConfig)
-      .filter((chain) => (onlyMainnet ? !chain.chain.testnet : true))
-      .map((chain) => {
-        return axios.post(
+    const subgraphsRequests = Object.values(ChainsConfig).map(async (chain) => {
+      return {
+        chainId: chain.chain.id,
+        request: await axios.post(
           chain.subgraph,
           JSON.stringify({
             query: GET_ALL_VAULTS,
@@ -250,20 +255,23 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
               "Content-Type": "application/json",
             },
           }
-        );
-      });
+        ),
+      };
+    });
 
     const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
     const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
-    const subgraphsData = fulfilledResponses.map((res) => (res as PromiseFulfilledResult<AxiosResponse<any>>).value.data);
+    const subgraphsData = fulfilledResponses.map(
+      (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
+    );
 
     const vaults: IVaultOnlyDescription[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = Object.values(ChainsConfig)[i].chain.id;
 
-      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
 
-      for (const vault of subgraphsData[i].data.vaults) {
+      for (const vault of subgraphsData[i].request.data.data.vaults) {
         vaults.push({
           chainId,
           ...vault,
