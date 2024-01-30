@@ -237,19 +237,21 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
       }
     `;
 
-    const subgraphsRequests = Object.values(ChainsConfig).map((chain) => {
-      return axios.post(
-        chain.subgraph,
-        JSON.stringify({
-          query: GET_ALL_VAULTS,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    });
+    const subgraphsRequests = Object.values(ChainsConfig)
+      .filter((chain) => (onlyMainnet ? !chain.chain.testnet : true))
+      .map((chain) => {
+        return axios.post(
+          chain.subgraph,
+          JSON.stringify({
+            query: GET_ALL_VAULTS,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      });
 
     const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
     const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
