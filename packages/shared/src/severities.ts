@@ -35,8 +35,8 @@ export const IndexToPointsInfo_withfvgas = {
     points: {
       type: "range",
       value: {
-        first: 1,
-        second: 2,
+        first: 2,
+        second: 4,
       },
     },
   }, // G
@@ -123,8 +123,8 @@ export const IndexToPointsInfo_withgas = {
     points: {
       type: "range",
       value: {
-        first: 1,
-        second: 2,
+        first: 2,
+        second: 4,
       },
     },
   }, // Gas audit
