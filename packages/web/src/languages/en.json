@@ -671,6 +671,8 @@
     "gasTemplate": "Base + Gas Savings",
     "fvTemplate": "Base + Formal Verification",
     "gasFvTemplate": "Base + Gas Savings + Formal Verification",
+    "encrypted": "Encrypted",
+    "decrypted": "Decrypted",
     "HackerProfile": {
       "letsDiveIn": "Let's dive in!",
       "createProfile": "Create your white hat profile",

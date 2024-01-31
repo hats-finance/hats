@@ -80,11 +80,15 @@ export function SubmissionDescriptions() {
         (vault.description.severities as IVulnerabilitySeverity[]).find((sev) => sev.name.toLowerCase() === description.severity);
 
       if (severitySelected) {
-        const isEncrypted = !isAuditSubmission
-          ? true
-          : severitySelected?.decryptSubmissions === undefined
-          ? false
-          : !severitySelected?.decryptSubmissions;
+        let isEncrypted = true;
+        if (isAuditSubmission) {
+          const val = severitySelected.decryptSubmissions;
+          if (Array.isArray(val)) {
+            isEncrypted = val.length === 0 || !val.every((v) => v === "on");
+          } else {
+            isEncrypted = !val;
+          }
+        }
 
         if (isEncrypted !== description.isEncrypted) {
           setValue(`descriptions.${idx}.isEncrypted`, isEncrypted);

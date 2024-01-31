@@ -157,11 +157,7 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    if (error instanceof AxiosError && error.response?.status === 404) {
-      !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
-      return defaultData;
-    }
-
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
     return defaultData;
   }
 };
