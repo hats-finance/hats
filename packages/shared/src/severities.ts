@@ -214,8 +214,8 @@ export const convertVulnerabilitySeverityV1ToV2 = (
     percentage: isAudit
       ? (IndexToPointsInfo[template] as any)[severity.index as number]?.severityAllocation ?? undefined
       : indexArray && indexArray[severity.index]
-      ? indexArray[severity.index] / 100
-      : NaN,
+        ? indexArray[severity.index] / 100
+        : NaN,
     points: (IndexToPointsInfo[template] as any)[severity.index as number]?.points ?? { type: "fixed", value: { first: 0 } },
     percentageCapPerPoint: (IndexToPointsInfo[template] as any)[severity.index as number]?.capPerPoint ?? undefined,
   };
@@ -250,7 +250,7 @@ export const AUDIT_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverityV
       image: "ipfs://QmQWgcpU5qR8SxKRtL5DX8CjpP46XpZwXvHutpEtnLFWEa/template_image.jpg",
       external_url: "",
     },
-    description: `This competition will reward participants with ideas to maximize gas savings. The first place gets ⅔ (66.6%) of the prize pool, and the second place gets ⅓ (33.3%).\n\nSubmissions get classified on the basis of the average gas savings as reported by the gas reporter. The submission with the lowest average gas usage will win.\n    \nThe guidelines are as follows:\n* Changes should be limited to solidity files only. Tests should only be changed if they fail because of the changes in gas usage (e.g. tests that hardcode gas usage values).\n* Optimizations should use Solidity (no inline assembly).\n* All tests in the repository should pass.\n* The score of the submission is the total average amount of gas used for each function (i.e., the sum of all numbers in the “avg” column), as reported by the hardhat-gas-reporter when running the tests in the repository.\n* Submitters are kindly asked to include this number in their report, and can adapt this script for doing so: https://github.com/hats-finance/hats-contracts/blob/develop/gas-avg-check.py\n* Submissions should at least have a 5% improvement with respect to the original score.`,
+    description: `This competition will reward participants with ideas to maximize gas savings. The first place gets 4 points, and the second place gets 2 points.\n\nSubmissions get classified on the basis of the average gas savings as reported by the gas reporter. The submission with the lowest average gas usage will win.\n    \nThe guidelines are as follows:\n* Changes should be limited to solidity files only. Tests should only be changed if they fail because of the changes in gas usage (e.g. tests that hardcode gas usage values).\n* Optimizations should use Solidity (no inline assembly).\n* All tests in the repository should pass.\n* The score of the submission is the total average amount of gas used for each function (i.e., the sum of all numbers in the “avg” column), as reported by the hardhat-gas-reporter when running the tests in the repository.\n* Submitters are kindly asked to include this number in their report, and can adapt this script for doing so: https://github.com/hats-finance/hats-contracts/blob/develop/gas-avg-check.py\n* Submissions should include a link to google drive dir that contains a clone of the original repo with all the gas improvement made in the code and commented with short explanation.\n* Submissions should at least have a 5% improvement with respect to the original score.`,
   },
   low: {
     id: "low-audit",
