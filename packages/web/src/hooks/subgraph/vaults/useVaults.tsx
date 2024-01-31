@@ -343,8 +343,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
-  console.log({ activeVaults });
-
   const context: IVaultsContext = {
     vaultsReadyAllChains,
     activeVaults,
