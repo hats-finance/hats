@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutGraph, IUserNft, IVault, IVaultDescription, IVaultV2 } from "@hats-finance/shared";
+import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription, IVaultV2 } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
@@ -30,7 +30,41 @@ export const overrideDescription = (vaultAddress: string, description?: IVaultDe
     description["project-metadata"].name = "Convergence Finance";
   }
 
+  // Change Morpho token icon to USDC
+  const morphoId = "0x24a8c183cf365cbc7b7f1d597e51246713fde4f9";
+  if (morphoId === vaultAddress.toLowerCase()) {
+    description["project-metadata"].tokenIcon = "ipfs://QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz";
+  }
+
   return description;
+};
+
+export const overridePayoutVault = (payoutData: IPayoutData) => {
+  let overridePart = {} as Partial<IVault>;
+
+  // Fix DAI price in HOPR payout
+  const hoprId = "0x5833e804432bf15a35b9d37df815b419ad369003";
+  if (hoprId === payoutData.vault?.id.toLowerCase() && payoutData.vault?.amountsInfo) {
+    const tokenPriceUsd = 1;
+    const amountsInfoData = payoutData.vault.amountsInfo;
+    overridePart = {
+      amountsInfo: {
+        ...amountsInfoData,
+        tokenPriceUsd,
+        depositedAmount: { ...amountsInfoData?.depositedAmount, usd: amountsInfoData?.depositedAmount.tokens * tokenPriceUsd },
+        maxRewardAmount: { ...amountsInfoData?.maxRewardAmount, usd: amountsInfoData?.maxRewardAmount.tokens * tokenPriceUsd },
+      },
+    };
+  } else {
+    overridePart = {};
+  }
+
+  return {
+    ...payoutData.vault,
+    ...overridePart,
+    activeClaim: undefined, // Removing this because any snapshot of a payout should have an active claim
+    description: payoutData.vault ? overrideDescription(payoutData.vault?.id, payoutData.vault?.description) : undefined,
+  };
 };
 
 const fixVaultsData = (vaults: IVault[]) => {
@@ -42,6 +76,12 @@ const fixVaultsData = (vaults: IVault[]) => {
   // Possum
   const possumVault = newVaults.find((vault) => vault.id.toLowerCase() === "0xed8965d49b8aeca763447d56e6da7f4e0506b2d3");
   if (possumVault) possumVault.governanceHatRewardSplit = "2000";
+
+  // Override information for Morpho vault
+  const morphoVault = newVaults.find((vault) => vault.id.toLowerCase() === "0x24a8c183cf365cbc7b7f1d597e51246713fde4f9");
+  if (morphoVault) morphoVault.registered = true;
+  if (morphoVault && morphoVault.descriptionHash === "QmeLFD6czyZq7GBsqy6Ukdep5oGzr2RfxDvDhdwJ8TyCHU")
+    morphoVault.descriptionHash = "QmTMTK6NpVgqjr664VTS44opgU1FpvkL2gcvyVYvGu85Fk";
 
   return newVaults;
 };

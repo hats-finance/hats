@@ -1,4 +1,4 @@
-import { ISubmittedSubmission, IVulnerabilitySeverity } from "@hats-finance/shared";
+import { ISubmittedSubmission, IVulnerabilitySeverity } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";

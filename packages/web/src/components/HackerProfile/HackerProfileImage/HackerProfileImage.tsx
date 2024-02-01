@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import Identicon from "react-identicons";
 import { ipfsTransformUri } from "utils";
 import { StyledHackerProfileImage } from "./styles";

@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { TFunction } from "react-i18next";
 import { getTestNumberInBetween, getTestWalletAddress } from "utils/yup.utils";
 import * as Yup from "yup";
@@ -36,10 +36,23 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
           .required(intl("required")),
         severity: Yup.string().required(intl("required")),
         percentageOfPayout: Yup.number()
-          .test(getTestNumberInBetween(intl, 0, 100, true, { smallError: true }))
+          .moreThan(0, intl("moreThan", { val: "0" }))
+          .test(
+            `is-percentage-between-0-and-100`,
+            intl("valueShouldBeBetweenSmall", { first: `0%`, second: `100%` }),
+            (value: number | undefined, ctx: any) => {
+              const { usingPointingSystem } = ctx.from[1].value;
+              if (usingPointingSystem || !value) return true;
+              if (value < 0 || value > 100) return false;
+              return true;
+            }
+          )
           .required(intl("required"))
           .typeError(intl("required")),
         sumPercentagesOfPayouts: Yup.number().test("sumShouldBe100", "", (_, ctx: any) => {
+          const { usingPointingSystem } = ctx.from[1].value;
+          if (usingPointingSystem) return true;
+
           const sumOfPercentages: number = ctx.from[1].value.beneficiaries.reduce(
             (acc, cur) => acc + Number(cur.percentageOfPayout ?? 0),
             0
@@ -57,6 +70,9 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
           .test("sumShouldBe100", "", (_, ctx: any) => {
             if (vault?.description?.["project-metadata"].type !== "audit") return true;
 
+            const { usingPointingSystem } = ctx.from[1].value;
+            if (usingPointingSystem) return true;
+
             const sumOfPercentages: number = ctx.from[1].value.rewardsConstraints.reduce(
               (acc: number, cur: any) => acc + Number(+cur.maxReward ?? 0),
               0
@@ -65,5 +81,15 @@ export const getSplitPayoutDataYupSchema = (intl: TFunction, vault: IVault | und
           }),
         capAmount: Yup.string(),
       })
+    ),
+    percentageCapPerPoint: Yup.string().test(
+      `is-percentage-between-0-and-100`,
+      intl("valueShouldBeBetweenSmall", { first: `0%`, second: `100%` }),
+      (value: string | undefined, ctx: any) => {
+        const { usingPointingSystem } = ctx.from[0].value;
+        if (!usingPointingSystem || !value) return true;
+        if (+value < 0 || +value > 100) return false;
+        return true;
+      }
     ),
   });

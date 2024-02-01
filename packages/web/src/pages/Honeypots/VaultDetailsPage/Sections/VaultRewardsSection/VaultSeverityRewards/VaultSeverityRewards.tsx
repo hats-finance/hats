@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { VaultSeverityRewardCard } from "components";
 import { StyledVaultSeverityRewards } from "./styles";
 

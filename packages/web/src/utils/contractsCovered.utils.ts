@@ -1,4 +1,4 @@
-import { IVaultRepoInformation } from "@hats-finance/shared";
+import { IVaultRepoInformation } from "@hats.finance/shared";
 import { AxiosResponse } from "axios";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";

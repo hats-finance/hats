@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { formatUnits } from "ethers/lib/utils";
 
 export function useVaultsTotalPrices(vaults: IVault[]) {

@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import { FormIconInput, FormInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { useWatch } from "react-hook-form";

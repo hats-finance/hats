@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { ChainsConfig } from "../config";
 import { IAddressRoleInVault, IVault, IVaultDescription, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
@@ -17,6 +17,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           registered
           version
           committee
+          stakingToken
           master {
             id
           }
@@ -24,30 +25,36 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
       }
     `;
 
-    const subgraphsRequests = Object.values(ChainsConfig).map((chain) => {
-      return axios.post(
-        chain.subgraph,
-        JSON.stringify({
-          query: GET_ALL_VAULTS,
-        }),
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+    const subgraphsRequests = Object.values(ChainsConfig).map(async (chain) => {
+      return {
+        chainId: chain.chain.id,
+        request: await axios.post(
+          chain.subgraph,
+          JSON.stringify({
+            query: GET_ALL_VAULTS,
+          }),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        ),
+      };
     });
 
-    const subgraphsResponses = await Promise.all(subgraphsRequests);
-    const subgraphsData = subgraphsResponses.map((res) => res.data);
+    const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
+    const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
+    const subgraphsData = fulfilledResponses.map(
+      (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
+    );
 
     const vaults: IVaultInfoWithCommittee[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
-      const chainId = Object.values(ChainsConfig)[i].chain.id;
+      const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
 
-      for (const vault of subgraphsData[i].data.vaults) {
+      for (const vault of subgraphsData[i].request.data.data.vaults) {
         vaults.push({
           chainId,
           address: vault.id,
@@ -56,6 +63,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           version: vault.version,
           committee: vault.committee,
           registered: vault.registered,
+          stakingToken: vault.stakingToken,
         });
       }
     }
@@ -81,6 +89,7 @@ export const getVaultInfoWithCommittee = async (
           registered
           version
           committee
+          stakingToken
           master {
             id
           }
@@ -113,6 +122,7 @@ export const getVaultInfoWithCommittee = async (
       version: vault.version,
       committee: vault.committee,
       registered: vault.registered,
+      stakingToken: vault.stakingToken,
     };
   } catch (error) {
     return undefined;
@@ -232,30 +242,36 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
       }
     `;
 
-    const subgraphsRequests = Object.values(ChainsConfig)
-      .filter((chain) => (onlyMainnet ? !chain.chain.testnet : true))
-      .map((chain) => {
-        return fetch(chain.subgraph, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+    const subgraphsRequests = Object.values(ChainsConfig).map(async (chain) => {
+      return {
+        chainId: chain.chain.id,
+        request: await axios.post(
+          chain.subgraph,
+          JSON.stringify({
             query: GET_ALL_VAULTS,
           }),
-        });
-      });
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        ),
+      };
+    });
 
-    const subgraphsResponses = await Promise.all(subgraphsRequests);
-    const subgraphsData = await Promise.all(subgraphsResponses.map((res) => res.json()));
+    const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
+    const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
+    const subgraphsData = fulfilledResponses.map(
+      (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
+    );
 
     const vaults: IVaultOnlyDescription[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = Object.values(ChainsConfig)[i].chain.id;
 
-      if (!subgraphsData[i].data || !subgraphsData[i].data.vaults) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
 
-      for (const vault of subgraphsData[i].data.vaults) {
+      for (const vault of subgraphsData[i].request.data.data.vaults) {
         vaults.push({
           chainId,
           ...vault,
@@ -308,5 +324,6 @@ export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
     chainId: vault.chainId as number,
     master: vault.master.address,
     pid: vault.pid,
+    stakingToken: vault.stakingToken,
   };
 };

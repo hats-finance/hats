@@ -10,7 +10,7 @@ import {
   getGnosisSafeInfo,
   isAGnosisSafeTx,
   nonEditableEditionStatus,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBack";
 import NextIcon from "@mui/icons-material/ArrowForward";

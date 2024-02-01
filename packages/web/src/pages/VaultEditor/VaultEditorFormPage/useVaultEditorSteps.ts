@@ -1,4 +1,4 @@
-import { IEditedVaultDescription } from "@hats-finance/shared";
+import { IEditedVaultDescription } from "@hats.finance/shared";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";

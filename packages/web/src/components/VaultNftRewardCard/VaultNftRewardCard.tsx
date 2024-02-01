@@ -1,4 +1,4 @@
-import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
+import { IVault, IVulnerabilitySeverity } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/FitScreenOutlined";
 import { Button, Media, Modal, Pill } from "components";
 import { useSeverityRewardInfo } from "hooks/severities/useSeverityRewardInfo";

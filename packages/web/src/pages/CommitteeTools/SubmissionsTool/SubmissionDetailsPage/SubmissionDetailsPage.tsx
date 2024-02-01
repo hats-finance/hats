@@ -1,4 +1,4 @@
-import { allowedElementsMarkdown } from "@hats-finance/shared";
+import { allowedElementsMarkdown } from "@hats.finance/shared";
 import ArrowBackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import LinkIcon from "@mui/icons-material/InsertLinkOutlined";
 import MDEditor from "@uiw/react-md-editor";

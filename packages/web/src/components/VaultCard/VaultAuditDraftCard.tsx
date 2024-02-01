@@ -1,4 +1,4 @@
-import { IEditedSessionResponse } from "@hats-finance/shared";
+import { IEditedSessionResponse } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { Button, Pill, WithTooltip } from "components";
 import useConfirm from "hooks/useConfirm";

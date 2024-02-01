@@ -1,4 +1,4 @@
-import { IPayoutGraph } from "@hats-finance/shared";
+import { IPayoutGraph } from "@hats.finance/shared";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import moment from "moment";
 import { useCallback, useMemo } from "react";

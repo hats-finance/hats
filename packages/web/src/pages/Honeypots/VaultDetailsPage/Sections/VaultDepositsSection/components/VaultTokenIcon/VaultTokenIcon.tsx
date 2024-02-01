@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { WithTooltip } from "components";
 import millify from "millify";
 import { appChains } from "settings";

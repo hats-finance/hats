@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { TFunction } from "i18next";
 import * as Yup from "yup";
 

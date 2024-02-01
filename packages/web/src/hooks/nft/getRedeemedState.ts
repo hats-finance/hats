@@ -1,5 +1,5 @@
 import { readContract } from "wagmi/actions";
-import { HATVaultsNFT_abi } from "@hats-finance/shared";
+import { HATVaultsNFT_abi } from "@hats.finance/shared";
 import { Contract } from "ethers";
 import { INFTTokenInfo, INFTTokenInfoRedeemed } from "./types";
 

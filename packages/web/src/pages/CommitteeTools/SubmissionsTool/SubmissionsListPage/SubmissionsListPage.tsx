@@ -3,12 +3,13 @@ import {
   ISinglePayoutData,
   ISplitPayoutData,
   ISubmittedSubmission,
+  IVaultDescriptionV2,
   IVulnerabilitySeverity,
   PayoutType,
   createNewPayoutData,
   createNewSplitPayoutBeneficiary,
   getVaultInfoFromVault,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import ArrowLeftIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
 import CalendarIcon from "@mui/icons-material/CalendarTodayOutlined";
@@ -283,6 +284,7 @@ export const SubmissionsListPage = () => {
             submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
           };
         }),
+        usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
       } as ISplitPayoutData;
     }
 

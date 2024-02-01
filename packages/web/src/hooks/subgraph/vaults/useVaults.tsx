@@ -8,8 +8,8 @@ import {
   IVaultV2,
   IWithdrawSafetyPeriod,
   fixObject,
-} from "@hats-finance/shared";
-import { blacklistedWallets } from "data/blacklistedWallets";
+} from "@hats.finance/shared";
+import { OFAC_Sanctioned_Digital_Currency_Addresses } from "data/OFACSanctionedAddresses";
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { INFTTokenMetadata } from "hooks/nft/types";
@@ -17,11 +17,18 @@ import { PropsWithChildren, createContext, useContext, useEffect, useState } fro
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { isValidIpfsHash } from "utils/ipfs.utils";
-import { getBalancerTokenPrices, getCoingeckoTokensPrices, getUniswapTokenPrices } from "utils/tokens.utils";
+import {
+  getBackendTokenPrices,
+  getBalancerTokenPrices,
+  getCoingeckoTokensPrices,
+  getUniswapTokenPrices,
+} from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { overrideDescription, populateVaultsWithPricing } from "./parser";
+import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
+
+const MAX_CALLS_AT_ONCE = 200;
 
 interface IVaultsContext {
   vaultsReadyAllChains: boolean;
@@ -68,14 +75,16 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
   const showTestnets = !IS_PROD && connectedChain?.chain.testnet;
 
-  if (account && blacklistedWallets.indexOf(account) !== -1) {
-    throw new Error("Blacklisted wallet");
+  if (account && OFAC_Sanctioned_Digital_Currency_Addresses.indexOf(account) !== -1) {
+    throw new Error("This wallet address is on the OFAC Sanctioned Digital Currency Addresses list and cannot be used.");
   }
 
   const { multiChainData, allChainsLoaded } = useMultiChainVaultsV2();
 
   const getTokenPrices = async (vaultsToSearch: IVault[]) => {
-    const vaultTokens = vaultsToSearch.map((vault) => ({
+    if (!vaultsToSearch || vaultsToSearch.length === 0) return [];
+
+    const stakingTokens = vaultsToSearch.map((vault) => ({
       address: vault.stakingToken.toLowerCase(),
       chainId: vault.chainId as number,
     }));
@@ -90,9 +99,28 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       })
       .flat();
 
-    const tokenToSearch = [...vaultTokens, ...rewardControllersTokens];
+    const tokenToSearch = [...stakingTokens, ...rewardControllersTokens];
 
     const foundTokenPrices = [] as number[];
+
+    // Get prices from the backend
+    try {
+      const tokensLeft = stakingTokens.filter((token) => !(token.address in foundTokenPrices));
+      const backendTokenPrices = await getBackendTokenPrices();
+
+      if (backendTokenPrices) {
+        tokensLeft.forEach((token) => {
+          if (backendTokenPrices.hasOwnProperty(token.address)) {
+            const price = backendTokenPrices[token.address];
+            if (price && +price > 0) foundTokenPrices[token.address] = +price;
+          }
+        });
+
+        return foundTokenPrices;
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
     // Get prices from contracts
     try {
@@ -159,6 +187,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       console.error(error);
     }
 
+    console.log(foundTokenPrices);
     return foundTokenPrices;
   };
 
@@ -180,21 +209,30 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       return undefined;
     };
 
-    const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> =>
-      Promise.all(
-        vaultsToFetch.map(async (vault) => {
-          const existsDescription = allVaults.find((v) => v.id === vault.id)?.description;
-          const description = existsDescription ?? ((await loadVaultDescription(vault)) as IVaultDescription);
+    const getVaultsData = async (vaultsToFetch: IVault[]): Promise<IVault[]> => {
+      const vaults = [] as IVault[];
 
-          return {
-            ...vault,
-            stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken)
-              ? PROTECTED_TOKENS[vault.stakingToken]
-              : vault.stakingToken,
-            description,
-          } as IVault;
-        })
-      );
+      for (let i = 0; i < vaultsToFetch.length; i += MAX_CALLS_AT_ONCE) {
+        const vaultsChunk = vaultsToFetch.slice(i, i + MAX_CALLS_AT_ONCE);
+        const vaultsData = await Promise.all(
+          vaultsChunk.map(async (vault) => {
+            const existsDescription = allVaults.find((v) => v.id === vault.id)?.description;
+            const description = existsDescription ?? ((await loadVaultDescription(vault)) as IVaultDescription);
+
+            return {
+              ...vault,
+              stakingToken: PROTECTED_TOKENS.hasOwnProperty(vault.stakingToken)
+                ? PROTECTED_TOKENS[vault.stakingToken]
+                : vault.stakingToken,
+              description,
+            } as IVault;
+          })
+        );
+        vaults.push(...vaultsData);
+      }
+
+      return vaults;
+    };
 
     const allVaultsData = await getVaultsData(vaultsData);
     const allVaultsDataWithDatesInfo = allVaultsData.map((vault) => {
@@ -236,12 +274,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
             const payoutData = (await dataResponse.json()) as IPayoutData;
             return {
               ...payoutData,
-              vault: {
-                ...payoutData.vault,
-                description: payoutData.vault
-                  ? overrideDescription(payoutData.vault?.id, payoutData.vault?.description)
-                  : undefined,
-              },
+              vault: overridePayoutVault(payoutData),
             } as IPayoutData;
           }
           return undefined;

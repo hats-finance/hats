@@ -1,4 +1,4 @@
-import { allowedElementsMarkdown } from "@hats-finance/shared";
+import { allowedElementsMarkdown } from "@hats.finance/shared";
 import MDEditor from "@uiw/react-md-editor";
 import { Alert, Button, FormInput, Loading } from "components";
 import { SubmissionFormContext } from "pages/Submissions/SubmissionFormPage/store";

@@ -1,4 +1,4 @@
-import { IVault, IVulnerabilitySeverity } from "@hats-finance/shared";
+import { IVault, IVulnerabilitySeverity } from "@hats.finance/shared";
 import { VaultNftRewardCard } from "components";
 import { StyledVaultNftRewards } from "./styles";
 

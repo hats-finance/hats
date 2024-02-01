@@ -4,7 +4,7 @@ import {
   IVulnerabilitySeverityV2,
   PayoutStatus,
   getVaultInfoFromVault,
-} from "@hats-finance/shared";
+} from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import BackIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForwardOutlined";
@@ -185,7 +185,7 @@ export const PayoutFormPage = () => {
       if (form.type === "single") {
         const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
         if (submission) {
-          setValue("decryptedSubmission", {
+          setValue<any>("decryptedSubmission", {
             ...submission,
             submissionDataStructure: { ...submission.submissionDataStructure, communicationChannel: undefined },
           } as any);

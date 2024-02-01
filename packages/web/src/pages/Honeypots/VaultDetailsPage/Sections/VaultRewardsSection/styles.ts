@@ -59,7 +59,7 @@ export const StyledRewardsSection = styled.div<{ showIntended: boolean; isAudit:
       }
 
       .severities-rewards {
-        max-height: 550px;
+        max-height: 660px;
         overflow: hidden;
 
         @media (max-width: ${breakpointsDefinition.smallMobile}) {

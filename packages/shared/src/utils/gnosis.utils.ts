@@ -1,5 +1,5 @@
-import { arbitrum, avalanche, bsc, gnosis, goerli, mainnet, optimism, polygon } from "@wagmi/chains";
-import axios, { AxiosError } from "axios";
+import { arbitrum, avalanche, bsc, gnosis, goerli, mainnet, optimism, polygon, sepolia } from "@wagmi/chains";
+import axios from "axios";
 import { utils } from "ethers";
 import { meter } from "../config";
 import { isServer } from "./general.utils";
@@ -24,6 +24,8 @@ export const getGnosisChainNameByChainId = (chainId: number): string => {
       return "bsc";
     case gnosis.id:
       return "gnosis-chain";
+    case sepolia.id:
+      return "sepolia";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
@@ -49,6 +51,8 @@ export const getGnosisChainPrefixByChainId = (chainId: number): string => {
       return "bnb";
     case gnosis.id:
       return "gno";
+    case sepolia.id:
+      return "sep";
     default:
       throw new Error(`Gnosis doesn't support chainId:${chainId} yet`);
   }
@@ -157,11 +161,7 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    if (error instanceof AxiosError && error.response?.status === 404) {
-      !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
-      return defaultData;
-    }
-
+    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
     return defaultData;
   }
 };

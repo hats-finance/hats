@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { Button, Modal } from "components";
 import useModal from "hooks/useModal";
 import millify from "millify";
@@ -21,7 +21,8 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
       <div className="row">
         <VaultTokenIcon vault={vault} />
         <div>
-          {millify(vault.amountsInfo?.depositedAmount.tokens ?? 0)} {vault.stakingTokenSymbol}
+          {vault.amountsInfo?.depositedAmount.tokens ?? 0}
+          {vault.stakingTokenSymbol}
         </div>
         <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
         <div className="action-button">

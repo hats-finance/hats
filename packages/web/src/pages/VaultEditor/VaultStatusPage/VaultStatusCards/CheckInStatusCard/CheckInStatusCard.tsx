@@ -1,4 +1,4 @@
-import { getGnosisChainPrefixByChainId } from "@hats-finance/shared";
+import { getGnosisChainPrefixByChainId } from "@hats.finance/shared";
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, Button, Loading, Pill } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";

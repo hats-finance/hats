@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { auditWizardVerifyService } from "constants/constants";
 import { BASE_SERVICE_URL } from "settings";

@@ -1,4 +1,4 @@
-import { IVault, getAddressSafes } from "@hats-finance/shared";
+import { IVault, getAddressSafes } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { FormSelectInputOption } from "components";
 import { useEffect, useState } from "react";

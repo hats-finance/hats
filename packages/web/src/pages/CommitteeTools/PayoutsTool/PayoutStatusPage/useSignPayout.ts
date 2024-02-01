@@ -1,4 +1,4 @@
-import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction } from "@hats-finance/shared";
+import { IPayoutResponse, IVault, getExecutePayoutSafeTransaction } from "@hats.finance/shared";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { Signer, ethers } from "ethers";
 import { useState } from "react";

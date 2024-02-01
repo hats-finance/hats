@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats-finance/shared";
+import { IPayoutGraph, IVault } from "@hats.finance/shared";
 import { Alert } from "components";
 import { useTranslation } from "react-i18next";
 import { CommitteeInfoSection } from "./CommitteeInfoSection/CommitteeInfoSection";

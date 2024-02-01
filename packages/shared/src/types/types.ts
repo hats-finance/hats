@@ -5,6 +5,7 @@ export interface IVaultInfo {
   address: string;
   chainId: number;
   master: string;
+  stakingToken: string;
   pid: string;
 }
 
@@ -164,6 +165,7 @@ export interface IVaultDescriptionV1 extends IBaseVaultDescription {
 export interface IVaultDescriptionV2 extends IBaseVaultDescription {
   version: "v2";
   severities: Array<IVulnerabilitySeverityV2>;
+  usingPointingSystem?: boolean;
 }
 
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
@@ -209,8 +211,10 @@ export interface IVulnerabilitySeverityV1 extends IBaseVulnerabilitySeverity {
   index: number;
 }
 export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
-  percentage: number; // percentage like 1000 (10%) or 8000 (80%)
+  percentage: number; // percentage of the whole vault allocated to this severity
   capAmount?: number;
+  percentageCapPerPoint?: number; // Max percentage of the whole vault allocated to each point of this severity
+  points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
 }
 
 export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;

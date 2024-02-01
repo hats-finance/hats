@@ -1,4 +1,4 @@
-import { editedFormToDescription } from "@hats-finance/shared";
+import { editedFormToDescription } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/ViewComfyOutlined";
 import { Button, Modal } from "components";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";

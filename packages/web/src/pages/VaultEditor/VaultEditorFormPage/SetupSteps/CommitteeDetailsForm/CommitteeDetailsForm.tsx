@@ -1,4 +1,4 @@
-import { IEditedVaultDescription } from "@hats-finance/shared";
+import { IEditedVaultDescription } from "@hats.finance/shared";
 import { FormInput, FormSelectInput } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { useContext, useEffect } from "react";

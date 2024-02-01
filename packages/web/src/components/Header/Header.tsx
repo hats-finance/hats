@@ -1,4 +1,4 @@
-import { getGnosisSafeInfo } from "@hats-finance/shared";
+import { getGnosisSafeInfo } from "@hats.finance/shared";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { toggleMenu } from "actions/index";

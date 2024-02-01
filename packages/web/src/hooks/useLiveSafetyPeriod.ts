@@ -1,4 +1,4 @@
-import { IWithdrawSafetyPeriod } from "@hats-finance/shared";
+import { IWithdrawSafetyPeriod } from "@hats.finance/shared";
 import { useCallback, useEffect, useState } from "react";
 
 /**

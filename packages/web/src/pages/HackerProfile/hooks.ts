@@ -1,4 +1,4 @@
-import { IHackerProfile } from "@hats-finance/shared";
+import { IHackerProfile } from "@hats.finance/shared";
 import { UseMutationResult, useMutation, useQuery } from "@tanstack/react-query";
 import { ISiweData } from "hooks/siwe/useSiweAuth";
 import {

@@ -1,4 +1,4 @@
-import { IEditedSessionResponse } from "@hats-finance/shared";
+import { IEditedSessionResponse } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
 import { getVaultDateStatus } from "hooks/subgraph/vaults/useVaults";
 import { BASE_SERVICE_URL } from "settings";

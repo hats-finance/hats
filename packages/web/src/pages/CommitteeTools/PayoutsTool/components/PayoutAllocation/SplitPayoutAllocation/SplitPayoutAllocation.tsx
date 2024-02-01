@@ -1,9 +1,10 @@
-import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats-finance/shared";
+import { IPayoutResponse, ISplitPayoutData, IVault, createNewSplitPayoutBeneficiary } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { Alert, Button, FormInput, FormSelectInputOption, Loading } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
+import millify from "millify";
 import { RoutePaths } from "navigation";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
@@ -122,6 +123,8 @@ function SplitPayoutAllocationShared({
   const [editPercentageToPay, setEditPercentageToPay] = useState(false);
   const [showGeneralAllocation, setShowGeneralAllocation] = useState(false);
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
+  const usingPointingSystem = useWatch({ control, name: `usingPointingSystem` });
+  const paymentPerPoint = useWatch({ control, name: `paymentPerPoint` });
 
   const isFromSubmissions = hasSubmissionData(payout);
 
@@ -237,7 +240,7 @@ function SplitPayoutAllocationShared({
         )}
       </div>
 
-      {sumPercentagesPayout !== 100 && (
+      {!usingPointingSystem && sumPercentagesPayout !== 100 && (
         <p className="error mt-4">
           {t("Payouts.sumPercentagesPayoutShouldBe100", { missingPercentage: +(100 - sumPercentagesPayout).toFixed(6) })}
         </p>
@@ -246,10 +249,34 @@ function SplitPayoutAllocationShared({
       <StyledSplitPayoutSummary className="mt-4">
         {!isPayoutCreated && (
           <>
-            <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
-              <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
-              <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
-            </div>
+            {usingPointingSystem ? (
+              <>
+                <div className={`item`}>
+                  <p>{t("Payouts.totalPointsAllocated")}:</p>
+                  <p>{sumPercentagesPayout ? `${sumPercentagesPayout} points` : "--"}</p>
+                </div>
+                <div className={`item`}>
+                  <p>{t("Payouts.paymentPerPoint")}:</p>
+                  <p>
+                    {paymentPerPoint ? (
+                      <>
+                        <span className="mr-2">{`${vault?.stakingTokenSymbol} ${millify(+paymentPerPoint, {
+                          precision: 8,
+                        })}`}</span>
+                        <span>(~${millify(+paymentPerPoint * (vault?.amountsInfo?.tokenPriceUsd ?? 0), { precision: 2 })})</span>
+                      </>
+                    ) : (
+                      "--"
+                    )}
+                  </p>
+                </div>
+              </>
+            ) : (
+              <div className={`item ${sumPercentagesPayout && sumPercentagesPayout !== 100 ? "error" : ""}`}>
+                <p>{t("Payouts.sumPercentageOfThePayout")}:</p>
+                <p>{sumPercentagesPayout ? `${sumPercentagesPayout}%` : "--"}</p>
+              </div>
+            )}
             <hr />
           </>
         )}

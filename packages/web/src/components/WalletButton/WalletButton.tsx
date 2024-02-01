@@ -21,11 +21,11 @@ type WalletButtonProps = {
 const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   const { t } = useTranslation();
   const { address: account } = useAccount();
-  const { connect, connectors } = useConnect();
+  const { connect, connectors, isLoading: isConnecting } = useConnect();
+  const { disconnect, isLoading: isDisconnecting } = useDisconnect();
   const { data: ens } = useEnsName({ address: account });
   const { chain } = useNetwork();
   const supportedNetwork = useSupportedNetwork();
-  const { disconnect } = useDisconnect();
 
   const [canReconnect, setCanReconnect] = useState(false);
   const [selectedConnectorWaitingChain, setSelectedConnectorWaitingChain] = useState<
@@ -68,6 +68,12 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   }, [account, canReconnect]);
 
   const getButtonTitle = () => {
+    if (isConnecting) {
+      return `${t("connecting")}...`;
+    } else if (isDisconnecting) {
+      return `${t("disconnecting")}...`;
+    }
+
     if (account) {
       return (
         <span>

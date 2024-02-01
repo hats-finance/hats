@@ -117,6 +117,7 @@ export interface IEditedVaultDescriptionV1 extends IBaseEditedVaultDescription {
 export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
   version: "v2";
   "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
+  usingPointingSystem?: boolean;
 }
 
 export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;

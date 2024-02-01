@@ -1,4 +1,4 @@
-import { IVault } from "@hats-finance/shared";
+import { IVault } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import humanizeDuration from "humanize-duration";
 import { useMemo, useState } from "react";
