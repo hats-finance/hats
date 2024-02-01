@@ -22,7 +22,6 @@ export const SubmissionsContext = createContext<ISubmissionsContext>(undefined a
 export function useSubmissions(): ISubmissionsContext {
   // Delete Old Submissions from Local Storage
   localStorage.removeItem(LocalStorage.Submissions);
-
   return useContext(SubmissionsContext);
 }
 
