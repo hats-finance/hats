@@ -1,6 +1,6 @@
 import { Provider } from "@ethersproject/providers";
 import { formatUnits } from "@ethersproject/units";
-import { IRewardController, IVault } from "@hats-finance/shared";
+import { IRewardController, IVault } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useBlockNumber, useProvider } from "wagmi";
