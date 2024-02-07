@@ -12,6 +12,10 @@ export const utilityClasses = css`
     gap: ${getSpacing(1)};
   }
 
+  .uppercase {
+    text-transform: uppercase;
+  }
+
   .hidden {
     visibility: hidden;
   }

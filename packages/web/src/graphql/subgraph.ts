@@ -36,6 +36,10 @@ export const GET_VAULTS = `
       totalRewardPaid
       committee
       allocPoints
+      stakers {
+        address
+        totalRewardPaid
+      }
       master {
         address
         numberOfSubmittedClaims

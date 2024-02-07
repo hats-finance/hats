@@ -5,7 +5,7 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useBlockNumber, useProvider } from "wagmi";
 
-type IVaultApy = {
+export type IVaultApy = {
   rewardController: IRewardController;
   apy: number;
 };

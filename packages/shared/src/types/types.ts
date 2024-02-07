@@ -242,7 +242,7 @@ export interface IStaker {
   createdAt: string;
   address: string;
   vault: IVault;
-  rewardPaid: string;
+  totalRewardPaid: string;
   shares: string;
   depositAmount: string;
   master: IMaster;

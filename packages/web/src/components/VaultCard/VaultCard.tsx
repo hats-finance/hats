@@ -16,9 +16,10 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
+import { numberWithThousandSeparator } from "utils/amounts.utils";
 import { slugify } from "utils/slug.utils";
 import { ONE_LINER_FALLBACK } from "./oneLinerFallback";
-import { StyledVaultCard } from "./styles";
+import { ApyPill, StyledVaultCard } from "./styles";
 
 type VaultCardProps = {
   vaultData?: IVault;
@@ -147,15 +148,16 @@ export const VaultCard = ({
     const endTime = moment(vault.description["project-metadata"].endtime * 1000);
 
     if (endTime.diff(moment(), "hours") <= 24) {
-      const isFinished = endTime.diff(moment(), "hours") < 0;
+      const isFinished = endTime.diff(moment(), "seconds") < 0;
+      console.log(isFinished);
       return (
-        <div className="mb-4">
+        <div>
           <Pill transparent dotColor="yellow" text={`${isFinished ? t("finished") : t("ending")} ${endTime.fromNow()}`} />
         </div>
       );
     } else {
       return (
-        <div className="mb-4">
+        <div>
           <Pill transparent dotColor="blue" text={t("liveNow")} />
         </div>
       );
@@ -171,12 +173,23 @@ export const VaultCard = ({
 
     return (
       <WithTooltip text={t("continuousAuditCompetitionExplanation")}>
-        <div className="continuous-comp-hashes mb-4">
+        <div className="continuous-comp-hashes">
           <Pill capitalize={false} transparent text={`${prevHash}`} />
           <ArrowIcon />
           <Pill capitalize={false} transparent text={`${currentHash}`} />
         </div>
       </WithTooltip>
+    );
+  };
+
+  const getAPYPill = () => {
+    return (
+      <ApyPill>
+        <div className="content">
+          {t("apy")} <span>{`${numberWithThousandSeparator(vaultApy[0].apy)}%`}</span>
+        </div>
+        <div className="bg" />
+      </ApyPill>
     );
   };
 
@@ -250,9 +263,10 @@ export const VaultCard = ({
       showIntendedAmount={showIntended}
     >
       {!hideStatusPill && (
-        <div className="pills mb-4">
+        <div className="pills mb-5">
           {isAudit && getAuditStatusPill()}
           {isContinuousAudit && getContinuousAuditPill()}
+          {!reducedStyles && vaultApy && vaultApy.length > 0 && getAPYPill()}
         </div>
       )}
       {!!activeClaim && !reducedStyles && getActiveClaimBanner()}

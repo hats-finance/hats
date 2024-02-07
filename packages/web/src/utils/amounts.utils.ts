@@ -1,5 +1,5 @@
-import { BigNumber } from "ethers";
 import { formatUnits } from "@ethersproject/units";
+import { BigNumber } from "ethers";
 
 export class Amount {
   amount: BigNumber | undefined;
@@ -48,4 +48,8 @@ export class Amount {
 
 export function toFixedIfNecessary(value: string | number, dp: number) {
   return +parseFloat(`${value}`).toFixed(dp);
+}
+
+export function numberWithThousandSeparator(x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }

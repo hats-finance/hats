@@ -244,3 +244,56 @@ export const StyledVaultCard = styled.div<{
     }
   `
 );
+
+export const ApyPill = styled.div`
+  position: relative;
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: ${getSpacing(1)};
+  font-size: var(--xsmall);
+  padding: ${getSpacing(0.05)} ${getSpacing(0.1)};
+  border-radius: ${getSpacing(10)};
+
+  .content {
+    color: var(--white);
+    position: relative;
+    z-index: 1;
+    background-color: var(--background);
+    padding: ${getSpacing(0.8)} ${getSpacing(2.4)};
+    border-radius: ${getSpacing(10)};
+
+    span {
+      font-weight: 700;
+    }
+  }
+
+  .bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    background: linear-gradient(90deg, #4c43a5 0%, #70ffe5 50%, #9181ff 100%);
+    background-size: 600% 600%;
+    border-radius: 50px;
+    animation: AnimateBorder 4s ease infinite;
+    -webkit-animation: AnimateBorder 4s ease infinite;
+    -moz-animation: AnimateBorder 4s ease infinite;
+    z-index: 0;
+    transform: translate(-2px, -2px);
+    transition: filter 1s ease-in;
+  }
+
+  @keyframes AnimateBorder {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+`;
