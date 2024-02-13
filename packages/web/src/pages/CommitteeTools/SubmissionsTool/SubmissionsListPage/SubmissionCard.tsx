@@ -31,12 +31,12 @@ export const SubmissionCard = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const vault = submission.linkedVault;
-  const submissionData = submission.submissionDataStructure;
+  const vault = submission?.linkedVault;
+  const submissionData = submission?.submissionDataStructure;
   const commChannel = submissionData?.communicationChannel;
   const severityColors = getSeveritiesColorsArray(vault);
 
-  const createdAt = new Date(+submission.createdAt * 1000);
+  const createdAt = new Date(+submission?.createdAt * 1000);
 
   const severityIndex =
     submissionData?.severity &&
