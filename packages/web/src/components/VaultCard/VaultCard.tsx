@@ -3,14 +3,20 @@ import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill, VaultAssetsPillsList, WithTooltip } from "components";
+import { queryClient } from "config/reactQuery";
 import { IPFS_PREFIX } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { ethers } from "ethers";
+import { useAuditFrameGame } from "hooks/auditFrameGame";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
+import useModal from "hooks/useModal";
 import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
+import { CreateProfileFormModal } from "pages/HackerProfile/components";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,6 +24,9 @@ import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
 import { numberWithThousandSeparator } from "utils/amounts.utils";
 import { slugify } from "utils/slug.utils";
+import { useAccount } from "wagmi";
+import { OptedInList } from "./OptedInList";
+import { closeRegTimeBeforeCompetition } from "./consts";
 import { ONE_LINER_FALLBACK } from "./oneLinerFallback";
 import { ApyPill, StyledVaultCard } from "./styles";
 
@@ -61,10 +70,25 @@ export const VaultCard = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const { address } = useAccount();
+  const { tryAuthentication } = useSiweAuth();
+
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
+  const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const vault = vaultData ?? auditPayout?.payoutData?.vault;
   const showIntended = (vaultData && vaultData.amountsInfo?.showCompetitionIntendedAmount) ?? false;
   const vaultApy = useVaultApy(vault);
+  const { isUserOptedIn, optIn, optOut } = useAuditFrameGame(vault?.id);
+
+  const isOptInOpen = useMemo(() => {
+    const startTime = vault?.description?.["project-metadata"].starttime;
+
+    if (!startTime || startTime - closeRegTimeBeforeCompetition < new Date().getTime() / 1000) {
+      return false;
+    }
+    return true;
+  }, [vault]);
 
   const getVaultDate = (full = false) => {
     if (!vault || !vault.description) return null;
@@ -149,7 +173,6 @@ export const VaultCard = ({
 
     if (endTime.diff(moment(), "hours") <= 24) {
       const isFinished = endTime.diff(moment(), "seconds") < 0;
-      console.log(isFinished);
       return (
         <div>
           <Pill transparent dotColor="yellow" text={`${isFinished ? t("finished") : t("ending")} ${endTime.fromNow()}`} />
@@ -252,6 +275,42 @@ export const VaultCard = ({
     const vaultSlug = slugify(name);
 
     navigate(`${mainRoute}/${vaultSlug}-${vault.id}`);
+  };
+
+  const optInOrOut = async () => {
+    if (!vault || isLoadingProfile) return;
+
+    const isAuth = await tryAuthentication();
+    if (!isAuth) return;
+
+    if (!createdProfile) {
+      const wantToCreateProfile = await confirm({
+        title: t("AuditFrameGame.createWhiteHatProfile"),
+        description: t("AuditFrameGame.createProfileExplanation"),
+        cancelText: t("no"),
+        confirmText: t("createProfile"),
+      });
+      if (!wantToCreateProfile) return;
+
+      return showCreateProfile();
+    }
+
+    if (isUserOptedIn) {
+      const wantToOptOut = await confirm({
+        title: t("AuditFrameGame.optOutFromAuditCompetition"),
+        titleIcon: <WarnIcon className="mr-2" fontSize="large" />,
+        description: t("AuditFrameGame.optOutFromAuditCompetitionConfirmation"),
+        cancelText: t("no"),
+        confirmText: t("AuditFrameGame.yesOptOut"),
+      });
+
+      if (!wantToOptOut) return;
+      await optOut.mutateAsync({ editSessionIdOrAddress: vault.id });
+      queryClient.invalidateQueries({ queryKey: ["opted-in-list", vault.id] });
+    } else {
+      await optIn.mutateAsync({ editSessionIdOrAddress: vault.id });
+      queryClient.invalidateQueries({ queryKey: ["opted-in-list", vault.id] });
+    }
   };
 
   return (
@@ -366,9 +425,11 @@ export const VaultCard = ({
           <div className="assets">
             <span className="subtitle">{auditPayout ? t("paidAssets") : t("assetsInVault")}</span>
             <VaultAssetsPillsList auditPayout={auditPayout} vaultData={vaultData} />
+
+            <OptedInList editSessionIdOrAddress={vault.id} />
           </div>
           <div className="actions">
-            {(!isAudit || (isAudit && vault.dateStatus !== "finished" && !auditPayout)) && (
+            {!isAudit && (
               <Button
                 disabled={noActions}
                 size="medium"
@@ -395,6 +456,22 @@ export const VaultCard = ({
                 {isAudit ? (isContinuousAudit ? t("continuousCompetitionDetails") : t("competitionDetails")) : t("bountyDetails")}
               </Button>
             )}
+            {isOptInOpen && !isLoadingProfile && isAudit && vault.dateStatus === "upcoming" && !auditPayout && (
+              <Button
+                size="medium"
+                styleType={isUserOptedIn ? "outlined" : "filled"}
+                disabled={optIn.isLoading || optOut.isLoading}
+                onClick={optInOrOut}
+              >
+                {optIn.isLoading || optOut.isLoading
+                  ? isUserOptedIn
+                    ? t("AuditFrameGame.optingOut")
+                    : t("AuditFrameGame.optingIn")
+                  : isUserOptedIn
+                  ? t("AuditFrameGame.optOutFromAuditCompetition")
+                  : t("AuditFrameGame.optInToAuditCompetition")}
+              </Button>
+            )}
             {auditPayout && auditPayout.payoutDataHash && (
               <Button
                 size="medium"
@@ -408,6 +485,8 @@ export const VaultCard = ({
           </div>
         </div>
       )}
+
+      <CreateProfileFormModal isShowing={isShowingCreateProfile} onHide={hideCreateProfile} />
     </StyledVaultCard>
   );
 };

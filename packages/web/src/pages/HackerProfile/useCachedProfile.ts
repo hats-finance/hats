@@ -19,11 +19,15 @@ const useAllProfiles = () => {
   });
 };
 
-export const useCachedProfile = (address?: string): IHackerProfile | undefined => {
+export const useCachedProfile = (addressOrUsername?: string): IHackerProfile | undefined => {
   const { data: profiles } = useAllProfiles();
 
-  if (!address) return undefined;
-  const profileFound = profiles?.find((profile) => profile.addresses.includes(address.toLowerCase()));
+  if (!addressOrUsername) return undefined;
+  const profileFound = profiles?.find(
+    (profile) =>
+      profile.addresses.includes(addressOrUsername.toLowerCase()) ||
+      profile.username.toLowerCase() === addressOrUsername.toLowerCase()
+  );
 
   return profileFound;
 };
