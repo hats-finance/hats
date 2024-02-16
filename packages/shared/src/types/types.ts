@@ -242,7 +242,7 @@ export interface IStaker {
   createdAt: string;
   address: string;
   vault: IVault;
-  rewardPaid: string;
+  totalRewardPaid: string;
   shares: string;
   depositAmount: string;
   master: IMaster;
@@ -254,6 +254,11 @@ export interface IRewardController {
   rewardTokenSymbol: string;
   rewardTokenDecimals: string;
   totalRewardPaid: string;
+  startBlock: string;
+  epochLength: string;
+  epochRewardPerBlock: string[];
+  totalAllocPoint: string;
+  tokenPriceUsd: number;
 }
 
 export interface IMaster {

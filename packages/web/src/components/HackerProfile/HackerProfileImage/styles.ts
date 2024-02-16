@@ -4,6 +4,8 @@ import { IHackerProfileImageProps } from "./HackerProfileImage";
 
 const getSize = (size: IHackerProfileImageProps["size"]) => {
   switch (size) {
+    case "xxsmall":
+      return 3;
     case "xsmall":
       return 4;
     case "small":

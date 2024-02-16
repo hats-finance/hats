@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription } from "@hats.finance/shared";
+import { IMaster, IPayoutData, IPayoutGraph, IUserNft, IVault, IVaultDescription, IVaultV2 } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { appChains } from "settings";
 
@@ -137,7 +137,7 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
 
   return vaults.map((vault) => {
     const isTestnet = appChains[vault.chainId].chain.testnet;
-    const tokenPrice: number = isTestnet ? 1387.65 : (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
+    const tokenPrice: number = isTestnet ? 1 : (tokenPrices && tokenPrices[vault.stakingToken]) ?? 0;
     const depositedAmountTokens = Number(formatUnits(vault.honeyPotBalance, vault.stakingTokenDecimals));
     const isAudit = vault.description?.["project-metadata"].type === "audit";
 
@@ -159,6 +159,10 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
 
     return {
       ...vault,
+      rewardControllers: (vault as IVaultV2).rewardControllers?.map((controller) => ({
+        ...controller,
+        tokenPriceUsd: isTestnet ? 10 : (controller && tokenPrices && tokenPrices[controller.rewardToken]) ?? 0,
+      })),
       amountsInfo: {
         maxRewardFactor,
         showCompetitionIntendedAmount:

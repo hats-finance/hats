@@ -36,6 +36,10 @@ export const GET_VAULTS = `
       totalRewardPaid
       committee
       allocPoints
+      stakers {
+        address
+        totalRewardPaid
+      }
       master {
         address
         numberOfSubmittedClaims
@@ -86,6 +90,10 @@ export const GET_VAULTS = `
         rewardTokenSymbol
         rewardTokenDecimals
         totalRewardPaid
+        startBlock
+        epochLength
+        epochRewardPerBlock
+        totalAllocPoint
       }
       activeClaim {
         id

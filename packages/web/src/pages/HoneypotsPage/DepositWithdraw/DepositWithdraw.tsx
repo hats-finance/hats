@@ -6,7 +6,6 @@ import { Loading, Modal } from "components";
 import { MAX_SPENDING, TERMS_OF_USE } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import {
-  ClaimRewardContract,
   CommitteeCheckInContract,
   DepositContract,
   TokenApproveAllowanceContract,
@@ -73,7 +72,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
   const {
     tokenAllowance,
     tokenBalance,
-    pendingReward,
     availableBalanceToWithdraw,
     isUserInQueueToWithdraw,
     isUserInTimeToWithdraw,
@@ -135,9 +133,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     withdrawRequestCall.send();
   }, [withdrawRequestCall]);
 
-  const claimRewardCall = ClaimRewardContract.hook(selectedVault);
-  const handleClaimReward = claimRewardCall.send;
-
   const checkInCall = CommitteeCheckInContract.hook(selectedVault);
   const handleCheckIn = checkInCall.send;
 
@@ -146,7 +141,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     [Action.deposit]: depositCall,
     [Action.withdrawRequest]: withdrawRequestCall,
     [Action.withdrawAndClaim]: withdrawAndClaimCall,
-    [Action.claimReward]: claimRewardCall,
     [Action.checkIn]: checkInCall,
   };
 
@@ -164,7 +158,6 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
     depositCall.status,
     withdrawRequestCall.status,
     withdrawAndClaimCall.status,
-    claimRewardCall.status,
     checkInCall.status,
   ].join("|");
 
@@ -376,7 +369,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               className="action-btn fill"
               onClick={handleTryDeposit}
             >
-              {`DEPOSIT ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted}`}`}
+              {`DEPOSIT`}
             </button>
           )}
           {isWithdrawing && (isUserInTimeToWithdraw || isUserInQueueToWithdraw) && (
@@ -392,7 +385,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               className="action-btn fill"
               onClick={handleWithdrawAndClaim}
             >
-              {`WITHDRAW ${!pendingReward || pendingReward.bigNumber.eq(0) ? "" : `AND CLAIM ${pendingReward.formatted()}`}`}
+              {`WITHDRAW`}
             </button>
           )}
           {isWithdrawing && !isUserInQueueToWithdraw && !isUserInTimeToWithdraw && !isUserInQueueToWithdraw && (
@@ -414,7 +407,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
               CHECK IN
             </button>
           )}
-          {pendingReward && !pendingReward.bigNumber.eq(0) && (
+          {/* {pendingReward && !pendingReward.bigNumber.eq(0) && (
             <button
               onClick={handleClaimReward}
               disabled={!pendingReward || pendingReward.bigNumber.eq(0)}
@@ -422,7 +415,7 @@ export function DepositWithdraw({ vault, closeModal }: IProps) {
             >
               {`CLAIM ${pendingReward?.formatted()}`}
             </button>
-          )}
+          )} */}
         </div>
 
         {inProgressTransaction && <Loading fixed extraText={getLoaderInformation()} zIndex={10000} />}

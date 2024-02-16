@@ -1,7 +1,10 @@
 import { IVault } from "@hats.finance/shared";
+import { ReactComponent as HatsTokenIcon } from "assets/icons/hat-token.svg";
 import { Button, Modal } from "components";
 import useModal from "hooks/useModal";
+import { useVaultApy } from "hooks/vaults/useVaultApy";
 import millify from "millify";
+import { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { VaultDepositWithdrawModal, VaultTokenIcon } from "../../components";
 
@@ -12,6 +15,8 @@ type VaultAssetProps = {
 export const VaultAsset = ({ vault }: VaultAssetProps) => {
   const { t } = useTranslation();
   const { isShowing: isShowingDepositModal, show: showDepositModal, hide: hideDepositModal } = useModal();
+
+  const vaultApy = useVaultApy(vault);
 
   const isAudit = vault.description && vault.description["project-metadata"].type === "audit";
   const depositsDisabled = !vault.committeeCheckedIn || vault.depositPause;
@@ -25,6 +30,15 @@ export const VaultAsset = ({ vault }: VaultAssetProps) => {
           {vault.stakingTokenSymbol}
         </div>
         <div>~${millify(vault.amountsInfo?.depositedAmount.usd ?? 0)}</div>
+        {vaultApy.map((apyData, index) => (
+          <Fragment key={index}>
+            <div className="token-reward-info">
+              <div className="logo">{apyData.rewardController.rewardTokenSymbol === "HAT" && <HatsTokenIcon />}</div>
+              <div>{apyData.rewardController.rewardTokenSymbol}</div>
+            </div>
+            <div>{millify(apyData.apy)}%</div>
+          </Fragment>
+        ))}
         <div className="action-button">
           <Button
             disabled={depositsDisabled}

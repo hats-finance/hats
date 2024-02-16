@@ -75,7 +75,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
     uniswapSubgraph: undefined,
-    paymentSplitterFactory: "0x0aA1464dB005857Db8FC3E0470d306FB9E54b908",
+    paymentSplitterFactory: "0x09959581544511916A80185FFe3De3Df11D623D7",
     infuraKey: "sepolia",
     provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   },

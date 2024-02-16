@@ -2,7 +2,6 @@ import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
 import { useAccount, useContractReads } from "wagmi";
 import { DepositTierContract } from "../DepositTier";
-import { PendingRewardContract } from "../PendingReward";
 import { TokenAllowanceContract } from "../TokenAllowance";
 import { TotalSharesPerVaultContract } from "../TotalSharesPerVault";
 import { UserSharesPerVaultContract } from "../UserSharesPerVault";
@@ -26,7 +25,6 @@ export class DepositWithdrawDataMulticall {
         TokenAllowanceContract.contractInfo(vaultToken, account, contractAddress, selectedVault.chainId),
         UserSharesPerVaultContract.contractInfo(selectedVault, account),
         TotalSharesPerVaultContract.contractInfo(selectedVault),
-        PendingRewardContract.contractInfo(selectedVault, account),
         DepositTierContract.contractInfo(selectedVault, account),
       ],
     });
@@ -37,8 +35,7 @@ export class DepositWithdrawDataMulticall {
           tokenAllowance: TokenAllowanceContract.mapResponseToData({ data: data?.[0] }),
           userSharesAvailable: UserSharesPerVaultContract.mapResponseToData({ data: data?.[1] }, selectedVault),
           totalSharesAvailable: TotalSharesPerVaultContract.mapResponseToData({ data: data?.[2] }, selectedVault),
-          pendingReward: PendingRewardContract.mapResponseToData({ data: data?.[3] }),
-          tierFromShares: DepositTierContract.mapResponseToData({ data: data?.[4] }),
+          tierFromShares: DepositTierContract.mapResponseToData({ data: data?.[3] }),
         }
       : {};
   };
