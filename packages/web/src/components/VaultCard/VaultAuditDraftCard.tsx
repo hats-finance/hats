@@ -16,10 +16,10 @@ import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IS_PROD } from "settings";
 import { ipfsTransformUri } from "utils";
 import { useAccount } from "wagmi";
 import { OptedInList } from "./OptedInList";
+import { closeRegTimeBeforeCompetition } from "./consts";
 import { StyledVaultCard } from "./styles";
 
 type VaultAuditDraftCardProps = {
@@ -45,7 +45,6 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
   const isGovMember = useIsGovMember();
 
   const isOptInOpen = useMemo(() => {
-    const closeRegTimeBeforeCompetition = !IS_PROD ? 60 * 30 : 60 * 60 * 24;
     const startTime = vaultDraft.editedDescription["project-metadata"].starttime;
 
     if (!startTime || startTime - closeRegTimeBeforeCompetition < new Date().getTime() / 1000) {

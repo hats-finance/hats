@@ -21,12 +21,12 @@ import { HoneypotsRoutePaths } from "pages/Honeypots/router";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { IS_PROD } from "settings";
 import { ipfsTransformUri } from "utils";
 import { numberWithThousandSeparator } from "utils/amounts.utils";
 import { slugify } from "utils/slug.utils";
 import { useAccount } from "wagmi";
 import { OptedInList } from "./OptedInList";
+import { closeRegTimeBeforeCompetition } from "./consts";
 import { ONE_LINER_FALLBACK } from "./oneLinerFallback";
 import { ApyPill, StyledVaultCard } from "./styles";
 
@@ -82,7 +82,6 @@ export const VaultCard = ({
   const { isUserOptedIn, optIn, optOut } = useAuditFrameGame(vault?.id);
 
   const isOptInOpen = useMemo(() => {
-    const closeRegTimeBeforeCompetition = !IS_PROD ? 60 * 30 : 60 * 60 * 24;
     const startTime = vault?.description?.["project-metadata"].starttime;
 
     if (!startTime || startTime - closeRegTimeBeforeCompetition < new Date().getTime() / 1000) {
