@@ -18,8 +18,8 @@ export class LogClaimContract {
    */
   static hook = (vault?: IVault) => {
     const DEFAULT_NETWORK_TO_USE = IS_PROD ? wagmiChains.arbitrum.id as number : wagmiChains.sepolia.id as number;
-    let useChaniId = DEFAULT_NETWORK_TO_USE;
-    vault!.chainId != wagmiChains.mainnet.id ? useChaniId = vault!.chainId:null;
+    let useChaninId = DEFAULT_NETWORK_TO_USE;
+    vault!.chainId != wagmiChains.mainnet.id ? useChaninId = vault!.chainId:null;
     const { chain } = useNetwork();
     const contractAddress = vault?.master.address ?? "";
     const registryAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultsRegistry_abi;
@@ -37,7 +37,7 @@ export class LogClaimContract {
       ...claim,
       send: async (data: string) => {
         if (!vault) return;
-        await switchNetworkAndValidate(chain!.id, useChaniId);
+        await switchNetworkAndValidate(chain!.id, useChaninId);
 
         return claim.write!({ recklesslySetUnpreparedArgs: [data] });
       },
