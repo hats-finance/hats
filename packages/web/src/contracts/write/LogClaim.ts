@@ -19,7 +19,7 @@ export class LogClaimContract {
   static hook = (vault?: IVault) => {
     const DEFAULT_NETWORK_TO_USE = IS_PROD ? wagmiChains.arbitrum.id as number : wagmiChains.sepolia.id as number;
     let useChaninId = DEFAULT_NETWORK_TO_USE;
-    vault!.chainId !== wagmiChains.mainnet.id ? useChaninId = vault!.chainId:null;
+    useChaninId = vault!.chainId !== wagmiChains.mainnet.id ? vault!.chainId:useChaninId;
     const { chain } = useNetwork();
     const contractAddress = vault?.master.address ?? "";
     const registryAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultsRegistry_abi;
