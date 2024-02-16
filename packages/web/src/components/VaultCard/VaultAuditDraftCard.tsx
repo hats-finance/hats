@@ -1,15 +1,25 @@
 import { IEditedSessionResponse } from "@hats.finance/shared";
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
+import WarnIcon from "@mui/icons-material/WarningAmberRounded";
 import { Button, Pill, WithTooltip } from "components";
+import { queryClient } from "config/reactQuery";
+import { useAuditFrameGame } from "hooks/auditFrameGame";
+import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import useModal from "hooks/useModal";
 import millify from "millify";
 import moment from "moment";
 import { RoutePaths } from "navigation";
+import { CreateProfileFormModal } from "pages/HackerProfile/components";
+import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { IS_PROD } from "settings";
 import { ipfsTransformUri } from "utils";
+import { useAccount } from "wagmi";
+import { OptedInList } from "./OptedInList";
 import { StyledVaultCard } from "./styles";
 
 type VaultAuditDraftCardProps = {
@@ -25,8 +35,24 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
   const { t } = useTranslation();
   const navigate = useNavigate();
   const confirm = useConfirm();
+  const { address } = useAccount();
+  const { tryAuthentication } = useSiweAuth();
+  const { isUserOptedIn, optIn, optOut } = useAuditFrameGame(vaultDraft._id);
+
+  const { data: createdProfile, isLoading: isLoadingProfile } = useProfileByAddress(address);
+  const { isShowing: isShowingCreateProfile, show: showCreateProfile, hide: hideCreateProfile } = useModal();
 
   const isGovMember = useIsGovMember();
+
+  const isOptInOpen = useMemo(() => {
+    const closeRegTimeBeforeCompetition = !IS_PROD ? 60 * 30 : 60 * 60 * 24;
+    const startTime = vaultDraft.editedDescription["project-metadata"].starttime;
+
+    if (!startTime || startTime - closeRegTimeBeforeCompetition < new Date().getTime() / 1000) {
+      return false;
+    }
+    return true;
+  }, [vaultDraft]);
 
   const vaultDate = useMemo(() => {
     const starttime = (vaultDraft.editedDescription["project-metadata"].starttime ?? 0) * 1000;
@@ -100,6 +126,42 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
     navigate(`${RoutePaths.vault_editor}/${vaultDraft._id}`);
   };
 
+  const optInOrOut = async () => {
+    if (!vaultDraft || !vaultDraft._id || isLoadingProfile) return;
+
+    const isAuth = await tryAuthentication();
+    if (!isAuth) return;
+
+    if (!createdProfile) {
+      const wantToCreateProfile = await confirm({
+        title: t("AuditFrameGame.createWhiteHatProfile"),
+        description: t("AuditFrameGame.createProfileExplanation"),
+        cancelText: t("no"),
+        confirmText: t("createProfile"),
+      });
+      if (!wantToCreateProfile) return;
+
+      return showCreateProfile();
+    }
+
+    if (isUserOptedIn) {
+      const wantToOptOut = await confirm({
+        title: t("AuditFrameGame.optOutFromAuditCompetition"),
+        titleIcon: <WarnIcon className="mr-2" fontSize="large" />,
+        description: t("AuditFrameGame.optOutFromAuditCompetitionConfirmation"),
+        cancelText: t("no"),
+        confirmText: t("AuditFrameGame.yesOptOut"),
+      });
+
+      if (!wantToOptOut) return;
+      await optOut.mutateAsync({ editSessionIdOrAddress: vaultDraft._id });
+      queryClient.invalidateQueries({ queryKey: ["opted-in-list", vaultDraft._id] });
+    } else {
+      await optIn.mutateAsync({ editSessionIdOrAddress: vaultDraft._id });
+      queryClient.invalidateQueries({ queryKey: ["opted-in-list", vaultDraft._id] });
+    }
+  };
+
   return (
     <StyledVaultCard isAudit={isAudit} reducedStyles={false} showIntendedAmount={true} hasActiveClaim={false}>
       {isAudit && getAuditStatusPill()}
@@ -134,11 +196,37 @@ export const VaultAuditDraftCard = ({ vaultDraft }: VaultAuditDraftCardProps) =>
         </div>
 
         {isGovMember && (
-          <Button className="mt-3" size="medium" onClick={goToEditSession}>
-            {t("goToEditSession")}
-          </Button>
+          <div className="draft-actions">
+            <Button className="mt-3" size="medium" onClick={goToEditSession}>
+              {t("goToEditSession")}
+            </Button>
+          </div>
+        )}
+        {!isLoadingProfile && (
+          <div className="draft-actions">
+            <OptedInList editSessionIdOrAddress={vaultDraft._id} />
+            {isOptInOpen && (
+              <Button
+                className="mt-3"
+                size="medium"
+                styleType={isUserOptedIn ? "outlined" : "filled"}
+                disabled={optIn.isLoading || optOut.isLoading}
+                onClick={optInOrOut}
+              >
+                {optIn.isLoading || optOut.isLoading
+                  ? isUserOptedIn
+                    ? t("AuditFrameGame.optingOut")
+                    : t("AuditFrameGame.optingIn")
+                  : isUserOptedIn
+                  ? t("AuditFrameGame.optOutFromAuditCompetition")
+                  : t("AuditFrameGame.optInToAuditCompetition")}
+              </Button>
+            )}
+          </div>
         )}
       </div>
+
+      <CreateProfileFormModal isShowing={isShowingCreateProfile} onHide={hideCreateProfile} />
     </StyledVaultCard>
   );
 };

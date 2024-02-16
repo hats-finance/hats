@@ -189,7 +189,6 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
         </FormProvider>
       </Modal>
       {isLoadingProfile && <Loading fixed extraText={`${t("HackerProfile.loadingProfile")}...`} />}
-      {isSigningIn && <Loading fixed extraText={`${t("signingInWithEthereum")}...`} />}
     </>
   );
 };

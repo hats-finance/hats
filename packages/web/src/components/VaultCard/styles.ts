@@ -242,6 +242,15 @@ export const StyledVaultCard = styled.div<{
         }
       }
     }
+
+    .draft-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: ${getSpacing(1)};
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
   `
 );
 
@@ -294,6 +303,42 @@ export const ApyPill = styled.div`
     }
     100% {
       background-position: 0% 50%;
+    }
+  }
+`;
+
+export const StyledOptedInList = styled.div`
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .list {
+    display: flex;
+  }
+
+  .item {
+    width: ${getSpacing(1.5)};
+
+    &:not(.more):hover {
+      transition: 0.2s;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    .subtitle {
+      color: var(--grey-400);
+      font-size: var(--xxsmall);
+    }
+
+    &.more {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      border-radius: 100px;
+      background: var(--background);
+      width: ${getSpacing(3)};
+      height: ${getSpacing(3)};
+      font-weight: 700;
     }
   }
 `;
