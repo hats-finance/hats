@@ -60,7 +60,7 @@ export const CreateProfileFormModal = ({ isShowing, onHide }: ICreateProfileForm
   const { address } = useAccount();
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const { tryAuthentication, isSigningIn } = useSiweAuth();
+  const { tryAuthentication } = useSiweAuth();
 
   const { data: createdProfile, isInitialLoading: isLoadingProfile } = useProfileByAddress(address);
 
