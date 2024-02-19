@@ -12,7 +12,6 @@ import { appChains } from "settings";
 import { IVault } from "types";
 import { ipfsTransformUri } from "utils";
 import { Amount } from "utils/amounts.utils";
-import VaultAPY from "./VaultAPY/VaultAPY";
 import VaultActions from "./VaultActions/VaultActions";
 import VaultExpanded from "./VaultExpanded/VaultExpanded";
 import VaultTokens from "./VaultTokens/VaultTokens";
@@ -126,11 +125,6 @@ const VaultComponent = (
         </td>
 
         <td className="rewards-cell-wrapper onlyDesktop">{vaultBalanceAndValue}</td>
-        {!onSelect && !preview && (
-          <td className="onlyDesktop">
-            <VaultAPY vault={vault} />
-          </td>
-        )}
         {!onSelect && (
           <td className="onlyDesktop">
             {!noActions && <VaultActions data={vault} withdrawRequests={withdrawRequests} preview={preview} />}

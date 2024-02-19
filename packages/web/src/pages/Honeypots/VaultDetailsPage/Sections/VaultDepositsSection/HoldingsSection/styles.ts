@@ -3,7 +3,8 @@ import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
 export const StyledHoldingsSection = styled.div`
-  .holdings {
+  .holdings,
+  .rewards {
     .header,
     .row {
       display: grid;
@@ -11,6 +12,7 @@ export const StyledHoldingsSection = styled.div`
       align-items: center;
       gap: ${getSpacing(1)};
       padding: ${getSpacing(0)} ${getSpacing(2)};
+      margin-bottom: ${getSpacing(2)};
 
       .action-button {
         display: flex;
@@ -43,6 +45,27 @@ export const StyledHoldingsSection = styled.div`
 
     .header {
       font-weight: 700;
+    }
+  }
+
+  .rewards {
+    .header {
+      grid-template-columns: 1fr 1fr 1fr 250px;
+    }
+
+    .row {
+      grid-template-columns: 1fr 1fr 1fr 250px;
+    }
+
+    .token-reward-info {
+      display: flex;
+      align-items: center;
+      gap: ${getSpacing(1)};
+
+      svg {
+        width: ${getSpacing(4)};
+        height: ${getSpacing(4)};
+      }
     }
   }
 

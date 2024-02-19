@@ -1,5 +1,7 @@
+import { Loading } from "components";
 import { useOnChange } from "hooks/usePrevious";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { SiweMessage } from "siwe";
 import { useAccount, useNetwork, useSignMessage } from "wagmi";
 import * as SIWEService from "./siweService";
@@ -26,6 +28,7 @@ type ISiweAuthContext = {
 const SiweAuthContext = createContext<ISiweAuthContext>(undefined as any);
 
 export const SiweAuthProvider = ({ children }) => {
+  const { t } = useTranslation();
   const { address, connector } = useAccount();
   const { chain } = useNetwork();
   const { signMessageAsync } = useSignMessage();
@@ -128,7 +131,12 @@ export const SiweAuthProvider = ({ children }) => {
     currentSiweData,
   };
 
-  return <SiweAuthContext.Provider value={context}>{children}</SiweAuthContext.Provider>;
+  return (
+    <SiweAuthContext.Provider value={context}>
+      {children}
+      {isSigningIn && <Loading fixed extraText={`${t("signingInWithEthereum")}...`} />}
+    </SiweAuthContext.Provider>
+  );
 };
 
 export const useSiweAuth = () => {

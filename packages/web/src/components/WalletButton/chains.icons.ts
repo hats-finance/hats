@@ -9,6 +9,7 @@ import chain_420 from "assets/icons/chains/420.png";
 import chain_42161 from "assets/icons/chains/42161.png";
 import chain_80001 from "assets/icons/chains/80001.png";
 import chain_421613 from "assets/icons/chains/421613.png";
+import chain_11155111 from "assets/icons/chains/11155111.png";
 
 export const chainIcons = {
   1: chain_1,
@@ -22,4 +23,5 @@ export const chainIcons = {
   56: chain_56,
   82: chain_82,
   100: chain_100,
+  11155111: chain_11155111,
 };

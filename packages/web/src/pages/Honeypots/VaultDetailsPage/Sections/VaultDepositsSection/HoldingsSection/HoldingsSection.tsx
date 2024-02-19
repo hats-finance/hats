@@ -2,6 +2,7 @@ import { IVault } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowRightAltOutlined";
 import { Button } from "components";
 import { useTranslation } from "react-i18next";
+import { VaultAPYRewards } from "./components/VaultAPYRewards";
 import { VaultHoldings } from "./components/VaultHoldings";
 import { StyledHoldingsSection } from "./styles";
 
@@ -60,6 +61,20 @@ export const HoldingsSection = ({ vault }: HoldingsSectionProps) => {
         <div className="separator small" />
 
         <VaultHoldings vault={vault} />
+      </div>
+
+      <h2 className="my-5">{t("yourRewards")}</h2>
+      <div className="subsection-container rewards">
+        <div className="header">
+          <div>{t("token")}</div>
+          <div>{t("rewards")}</div>
+          <div>{t("claimedRewards")}</div>
+          <div className="last" />
+        </div>
+
+        <div className="separator small" />
+
+        <VaultAPYRewards vault={vault} />
       </div>
     </StyledHoldingsSection>
   );

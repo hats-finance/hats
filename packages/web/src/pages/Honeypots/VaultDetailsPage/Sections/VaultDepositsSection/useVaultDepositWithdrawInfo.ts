@@ -1,4 +1,4 @@
-import { HAT_TOKEN_DECIMALS_V1, HAT_TOKEN_SYMBOL_V1, MINIMUM_DEPOSIT } from "constants/constants";
+import { MINIMUM_DEPOSIT } from "constants/constants";
 import { DepositWithdrawDataMulticall, SharesToBalanceMulticall, WithdrawRequestInfoContract } from "contracts";
 import { BigNumber } from "ethers";
 import { useDepositTokens } from "hooks/nft/useDepositTokens";
@@ -33,20 +33,20 @@ import { useAccount } from "wagmi";
 export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const { address: account } = useAccount();
 
-  const rewardController = selectedVault.version === "v2" ? selectedVault.rewardControllers[0] : undefined;
+  // const rewardController = selectedVault.version === "v2" ? selectedVault.rewardControllers[0] : undefined;
   // Token user wants to deposit/withdraw
   const vaultToken = selectedVault.stakingToken;
   const vaultTokenDecimals = selectedVault.stakingTokenDecimals;
   const vaultTokenSymbol = selectedVault.stakingTokenSymbol;
   // Reward token
-  const rewardTokenDecimals = selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : rewardController?.rewardTokenDecimals;
-  const rewardTokenSymbol = selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : rewardController?.rewardTokenSymbol;
+  // const rewardTokenDecimals = selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : rewardController?.rewardTokenDecimals;
+  // const rewardTokenSymbol = selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : rewardController?.rewardTokenSymbol;
 
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;
   const minimumDeposit = BigNumber.from(MINIMUM_DEPOSIT);
 
-  const { pendingReward, tokenAllowance, userSharesAvailable, totalSharesAvailable, tierFromShares } =
+  const { tokenAllowance, userSharesAvailable, totalSharesAvailable, tierFromShares } =
     DepositWithdrawDataMulticall.hook(selectedVault); // Step (1.)
   const tokenBalanceAmount = useTokenBalanceAmount({ token: vaultToken, address: account, chainId: selectedVault.chainId }); // Step (2.)
   const { userBalanceAvailable, totalBalanceAvailable } = SharesToBalanceMulticall.hook(
@@ -65,9 +65,9 @@ export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
     depositPaused: selectedVault.depositPause,
     tokenAllowance,
     tokenBalance: tokenBalanceAmount,
-    pendingReward: rewardController
-      ? new Amount(pendingReward, rewardTokenDecimals as string, rewardTokenSymbol)
-      : new Amount(BigNumber.from(0), "18", ""),
+    // pendingReward: rewardController
+    //   ? new Amount(pendingReward, rewardTokenDecimals as string, rewardTokenSymbol)
+    //   : new Amount(BigNumber.from(0), "18", ""),
     availableSharesToWithdraw: new Amount(userSharesAvailable, vaultTokenDecimals, "SHARES"),
     availableBalanceToWithdraw: new Amount(userBalanceAvailable, vaultTokenDecimals, vaultTokenSymbol),
     minimumDeposit: new Amount(minimumDeposit, vaultTokenDecimals, vaultTokenSymbol),
