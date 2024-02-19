@@ -70,7 +70,9 @@ const VaultParametersFormOnVaultEditor = () => {
   useEffect(() => {
     const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
     if (registryAddress && masters) {
-      const master = masters.find((master) => master.address.toLowerCase() === registryAddress.toLowerCase());
+      const master = masters.find(
+        (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
+      );
 
       if (master) {
         const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
