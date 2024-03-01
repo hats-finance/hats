@@ -24,6 +24,7 @@ export interface IChainConfiguration {
   paymentSplitterFactory: string;
   rewardController?: string;
   govMultisig?: string;
+  whitelistedReviewers?: string[];
   chain: wagmiChains.Chain;
   subgraph: string;
   coingeckoId?: string;
@@ -74,6 +75,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_sepolia",
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
+    whitelistedReviewers:["0xC2d10F4dE6e9cF298D7e79Db5126184f5f883A69","0xC417BC2B834564a5EBB8182a4202883015Bf4D73"],
     uniswapSubgraph: undefined,
     paymentSplitterFactory: "0x09959581544511916A80185FFe3De3Df11D623D7",
     infuraKey: "sepolia",
