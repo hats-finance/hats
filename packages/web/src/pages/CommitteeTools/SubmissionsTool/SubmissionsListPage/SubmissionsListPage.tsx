@@ -9,6 +9,7 @@ import {
   createNewPayoutData,
   createNewSplitPayoutBeneficiary,
   getVaultInfoFromVault,
+  parseSeverityName,
 } from "@hats.finance/shared";
 import ArrowLeftIcon from "@mui/icons-material/ArrowBackIosNewOutlined";
 import ArrowRightIcon from "@mui/icons-material/ArrowForwardIosOutlined";
@@ -35,7 +36,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useIndexedDB } from "react-indexed-db-hook";
 import { useLocation, useNavigate } from "react-router-dom";
-import { parseSeverityName } from "utils/severityName";
 import { useAccount } from "wagmi";
 import { useCreatePayoutFromSubmissions, useVaultSubmissionsByKeystore } from "../submissionsService.hooks";
 import { SubmissionCard } from "./SubmissionCard";
