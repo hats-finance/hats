@@ -2,7 +2,8 @@ import { HackerProfileImage } from "components/HackerProfile";
 import { WithTooltip } from "components/WithTooltip/WithTooltip";
 import { useAuditFrameGame } from "hooks/auditFrameGame";
 import { RoutePaths } from "navigation";
-import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
+import { useAllProfiles, useCachedProfile } from "pages/HackerProfile/useCachedProfile";
+import { useAllTimeLeaderboard } from "pages/Leaderboard/LeaderboardPage/components/AllTimeLeaderboard/useAllTimeLeaderboard";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { StyledOptedInList } from "./styles";
@@ -19,6 +20,24 @@ export const OptedInList = ({ editSessionIdOrAddress }: IOptedInListProps) => {
   const {
     optedInList: { data },
   } = useAuditFrameGame(editSessionIdOrAddress);
+  const { data: profiles } = useAllProfiles();
+  const { leaderboard } = useAllTimeLeaderboard();
+  const leaderboardWithUsernames = leaderboard?.map((entry) => {
+    const profile = profiles?.find((profile) => profile.addresses.includes(entry.address.toLowerCase()));
+    return {
+      ...entry,
+      username: profile?.username,
+    };
+  });
+
+  (data as string[])?.sort((a, b) => {
+    const aIndex = leaderboardWithUsernames?.findIndex((entry) => entry.username?.toLowerCase() === a.toLowerCase());
+    const bIndex = leaderboardWithUsernames?.findIndex((entry) => entry.username?.toLowerCase() === b.toLowerCase());
+    return (aIndex === -1 ? 10000000 : aIndex) - (bIndex === -1 ? 10000000 : bIndex);
+  });
+
+  console.log(leaderboardWithUsernames);
+  console.log(profiles);
 
   if (!editSessionIdOrAddress) return <></>;
 
