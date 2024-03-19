@@ -1,12 +1,10 @@
+import { getOldTokenPrice, parseSeverityName, severitiesOrder } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { usePayoutsGroupedByAddress } from "hooks/leaderboard";
 import { IPayoutsTimeframe } from "hooks/leaderboard/usePayoutsGroupedByAddress";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
-import { severitiesOrder } from "pages/HackerProfile/constants";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useMemo, useState } from "react";
-import { getOldTokenPrice } from "utils/getOldTokenPrice";
-import { parseSeverityName } from "utils/severityName";
 
 export type IAllTimeLeaderboardSortKey = "streak" | "totalAmount" | "totalFindings";
 

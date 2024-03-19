@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosClient } from "config/axiosClient";
 import { BASE_SERVICE_URL } from "settings";
 
-const useAllProfiles = () => {
+export const useAllProfiles = () => {
   return useQuery<IHackerProfile[] | undefined>({
     queryKey: ["all-profiles"],
     staleTime: 1000 * 60 * 5, // 5 minutes
