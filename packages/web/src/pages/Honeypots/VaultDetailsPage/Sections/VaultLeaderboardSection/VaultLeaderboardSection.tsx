@@ -1,4 +1,4 @@
-import { IPayoutGraph, IVault } from "@hats.finance/shared";
+import { IPayoutGraph, IVault, parseSeverityName } from "@hats.finance/shared";
 import { Alert, Button, HackerProfileImage, Loading, Pill, WithTooltip } from "components";
 import { ReleasePaymentSplitContract } from "contracts";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
@@ -9,7 +9,6 @@ import { useTranslation } from "react-i18next";
 import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { parseSeverityName } from "utils/severityName";
 import { useAccount } from "wagmi";
 import { IAuditPayoutLeaderboardData, useAuditPayoutLeaderboardData } from "./hooks";
 import { StyledLeaderboardSection } from "./styles";

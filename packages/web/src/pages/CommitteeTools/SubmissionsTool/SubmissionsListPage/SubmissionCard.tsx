@@ -1,4 +1,4 @@
-import { ISubmittedSubmission, IVulnerabilitySeverity } from "@hats.finance/shared";
+import { ISubmittedSubmission, IVulnerabilitySeverity, parseSeverityName } from "@hats.finance/shared";
 import ArrowIcon from "@mui/icons-material/ArrowForwardOutlined";
 import BoxUnselected from "@mui/icons-material/CheckBoxOutlineBlankOutlined";
 import BoxSelected from "@mui/icons-material/CheckBoxOutlined";
@@ -10,7 +10,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { parseSeverityName } from "utils/severityName";
 import { StyledSubmissionCard } from "./styles";
 
 type SubmissionCardProps = {

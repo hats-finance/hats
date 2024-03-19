@@ -1,9 +1,19 @@
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
+import axios, { AxiosResponse } from "axios";
 import { BigNumber, ethers } from "ethers";
 import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
-import { IPayoutData, IPayoutResponse, ISinglePayoutData, ISplitPayoutBeneficiary, ISplitPayoutData, PayoutType } from "../types";
+import {
+  IPayoutData,
+  IPayoutGraph,
+  IPayoutResponse,
+  ISinglePayoutData,
+  ISplitPayoutBeneficiary,
+  ISplitPayoutData,
+  PayoutType,
+} from "../types";
 import { ChainsConfig } from "./../config/chains";
+import { isValidIpfsHash } from "./ipfs.utils";
 
 function truncate(num: number, fixed: number) {
   const regex = new RegExp("^-?\\d+(?:.\\d{0," + (fixed || -1) + "})?");
@@ -82,7 +92,7 @@ export const getExecutePayoutSafeTransaction = async (
         to: contractAddress,
         data: encodedExecPayoutData,
         value: "0",
-        safeTxGas: "0"
+        safeTxGas: "0",
       },
     });
     const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
@@ -160,5 +170,124 @@ export const getExecutePayoutSafeTransaction = async (
     const safeTransactionHash = await safeSdk.getTransactionHash(safeTransaction);
 
     return { tx: safeTransaction, txHash: safeTransactionHash };
+  }
+};
+
+export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" = "mainnet"): Promise<IPayoutGraph[]> => {
+  try {
+    const GET_ALL_PAYOUTS = `
+      query getPayouts {
+        payouts: claims(first: 1000) {
+          id
+          vault {
+            id
+          }
+          payoutDataHash: claim
+          beneficiary: claimer
+          approvedAt
+          dismissedAt
+          bountyPercentage
+          severityIndex: severity
+          hackerReward
+          hackerVestedReward
+          governanceHatReward
+          hackerHatReward
+          committeeReward
+          isChallenged
+        }
+      }
+    `;
+
+    const subgraphsRequests = Object.values(ChainsConfig)
+      .filter((chain) => (env === "testnet" ? chain.chain.testnet : env === "mainnet" ? !chain.chain.testnet : true))
+      .map(async (chain) => {
+        return {
+          chainId: chain.chain.id,
+          request: await axios.post(
+            chain.subgraph,
+            JSON.stringify({
+              query: GET_ALL_PAYOUTS,
+            }),
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          ),
+        };
+      });
+
+    const subgraphsResponses = await Promise.allSettled(subgraphsRequests);
+    const fulfilledResponses = subgraphsResponses.filter((response) => response.status === "fulfilled");
+    const subgraphsData = fulfilledResponses.map(
+      (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
+    );
+
+    const payouts: IPayoutGraph[] = [];
+    for (let i = 0; i < subgraphsData.length; i++) {
+      const chainId = subgraphsData[i].chainId;
+
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.payouts) continue;
+
+      for (const payout of subgraphsData[i].request.data.data.payouts) {
+        payouts.push({
+          chainId,
+          ...payout,
+        });
+      }
+    }
+
+    const loadPayoutDescription = async (payout: IPayoutGraph): Promise<IPayoutData | undefined> => {
+      if (isValidIpfsHash(payout.payoutDataHash)) {
+        try {
+          const dataResponse = await fetch(`https://ipfs2.hats.finance/ipfs/${payout.payoutDataHash}`);
+          if (dataResponse.status === 200) {
+            const object = await dataResponse.json();
+            return object as any;
+          }
+          return undefined;
+        } catch (error) {
+          console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    // Load descriptions
+    const getPayoutsData = async (payoutsToFetch: IPayoutGraph[]): Promise<IPayoutGraph[]> =>
+      Promise.all(
+        payoutsToFetch.map(async (payout) => {
+          const payoutData = (await loadPayoutDescription(payout)) as IPayoutData | undefined;
+
+          if (payoutData?.type === "single") {
+            if (payoutData?.decryptedSubmission) delete payoutData.decryptedSubmission;
+          } else {
+            for (const beneficiary of payoutData?.beneficiaries ?? []) {
+              if (beneficiary?.decryptedSubmission) delete beneficiary.decryptedSubmission;
+            }
+          }
+
+          return {
+            ...payout,
+            payoutData,
+            isActive: !payout.dismissedAt && !payout.approvedAt,
+            isApproved: !!payout.approvedAt,
+            isDismissed: !!payout.dismissedAt,
+            totalPaidOut: !!payout.approvedAt
+              ? BigNumber.from(payout.hackerReward ?? "0")
+                  .add(BigNumber.from(payout.hackerVestedReward ?? "0"))
+                  .toString()
+              : undefined,
+          } as IPayoutGraph;
+        })
+      );
+
+    const payoutsWithDescription = await getPayoutsData(payouts);
+
+    return payoutsWithDescription;
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 };

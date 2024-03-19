@@ -240,6 +240,8 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
           id
           pid
           registered
+          stakingToken
+          stakingTokenDecimals
           descriptionHash
         }
       }
@@ -270,7 +272,7 @@ export const getAllVaultsWithDescription = async (onlyMainnet = true): Promise<I
 
     const vaults: IVaultOnlyDescription[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
-      const chainId = Object.values(ChainsConfig)[i].chain.id;
+      const chainId = subgraphsData[i].chainId;
 
       if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
 
