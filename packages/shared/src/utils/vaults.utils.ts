@@ -213,8 +213,9 @@ export const getAddressRoleOnVault = async (
   const isCommitteeMultisig = committeeMultisig === address;
   const isCommitteeMultisigMember = await isAddressAMultisigMember(committeeMultisig, address, vaultChainId);
   const isGovMember = await isAddressAMultisigMember(govMultisig, address, vaultChainId);
-  const whitelistedReviewers = ChainsConfig[Number(vaultChainId)].whitelistedReviewers;
-  const isWhiteListedEditor = whitelistedReviewers && Object.keys(whitelistedReviewers).some(key => key.toLowerCase() === address.toLowerCase());
+  const whitelistedReviewers = ChainsConfig[Number(vaultChainId)].whitelistedReviewers ?? [];
+  const whitelistedReviewersLowerCase = whitelistedReviewers.map((reviewer) => reviewer.toLowerCase());
+  const isWhiteListedEditor = whitelistedReviewersLowerCase.includes(address.toLowerCase());
 
   if (isCommitteeMultisigMember) return "committee";
   if (isCommitteeMultisig) return "committee-multisig";
