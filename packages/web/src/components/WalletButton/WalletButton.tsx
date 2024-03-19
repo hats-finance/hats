@@ -4,6 +4,7 @@ import { Dot, DropdownSelector, WithTooltip } from "components";
 import { Colors } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import { useSupportedNetwork } from "hooks/wagmi/useSupportedNetwork";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -33,6 +34,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   >();
   const [showConnectors, setShowConnectors] = useState(false);
   const isGovMember = useIsGovMember();
+  const isReviewer = useIsReviewer();
 
   const { isAuthenticated, updateProfile } = useSiweAuth();
 
@@ -68,6 +70,12 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
   }, [account, canReconnect]);
 
   const getButtonTitle = () => {
+    const getTitle = () => {
+      if (isReviewer) return "[Rev]";
+      if (isGovMember) return "[Gov]";
+      return "";
+    };
+
     if (isConnecting) {
       return `${t("connecting")}...`;
     } else if (isDisconnecting) {
@@ -77,7 +85,7 @@ const WalletButton = ({ expanded = false }: WalletButtonProps) => {
     if (account) {
       return (
         <span>
-          {ens || shortenIfAddress(account, { startLength: 6 })} {isGovMember && "[Gov]"}
+          {ens || shortenIfAddress(account, { startLength: 6 })} {getTitle()}
         </span>
       );
     } else {

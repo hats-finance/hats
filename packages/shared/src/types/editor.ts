@@ -161,7 +161,7 @@ export interface ICreateVaultOnChainCall {
   descriptionHash: string;
 }
 
-export type IAddressRoleInVault = "gov" | "committee" | "committee-multisig" | "none";
+export type IAddressRoleInVault = "gov" | "committee" | "committee-multisig" | "reviewer" | "none";
 
 export interface IVaultStatusData {
   descriptionHash: string;

@@ -36,9 +36,6 @@ export const OptedInList = ({ editSessionIdOrAddress }: IOptedInListProps) => {
     return (aIndex === -1 ? 10000000 : aIndex) - (bIndex === -1 ? 10000000 : bIndex);
   });
 
-  console.log(leaderboardWithUsernames);
-  console.log(profiles);
-
   if (!editSessionIdOrAddress) return <></>;
 
   return (
