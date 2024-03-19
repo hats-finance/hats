@@ -2,6 +2,7 @@ import { IAddressRoleInVault, IVaultStatusData } from "@hats.finance/shared";
 import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
@@ -34,6 +35,7 @@ export const VaultStatusPage = () => {
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
   const [userPermissionData, setUserPermissionData] = useState<{ canEditVault: boolean; role: IAddressRoleInVault }>();
   const isGovMember = useIsGovMember();
+  const isReviewer = useIsReviewer();
 
   useEffect(() => {
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
@@ -98,7 +100,7 @@ export const VaultStatusPage = () => {
           <VaultStatusContext.Provider value={vaultStatusContext}>
             <CongratsStatusCard />
             <EditVaultStatusCard />
-            {isGovMember && <GenerateNftsAssetsCard />}
+            {(isGovMember || isReviewer) && <GenerateNftsAssetsCard />}
             <CheckInStatusCard />
             <DepositStatusCard />
             <OnChainDataStatusCard />

@@ -59,7 +59,12 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       const isSafeMember = userSafes.some((safeAddress) => safeAddress.toLowerCase() === vault.committee.toLowerCase());
       const isGovInVaultChain = userSafes.includes(appChains[vault.chainId as number].govMultisig ?? "none");
 
-      if ((isGovInVaultChain || isSafeMember) && (version !== "all" ? vault.version === version : true)) foundVaults.push(vault);
+      const whitelistedReviewers = appChains[Number(vault.chainId as number)]?.whitelistedReviewers ?? [];
+      const whitelistedReviewersLowerCase = whitelistedReviewers.map((reviewer) => reviewer.toLowerCase());
+      const isReviewerInVaultChain = whitelistedReviewersLowerCase.includes(address.toLowerCase());
+
+      if ((isGovInVaultChain || isReviewerInVaultChain || isSafeMember) && (version !== "all" ? vault.version === version : true))
+        foundVaults.push(vault);
     }
 
     setUserVaults(foundVaults);
