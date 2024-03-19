@@ -1,10 +1,9 @@
-import { IVault } from "@hats.finance/shared";
+import { IVault, parseSeverityName, severitiesOrder } from "@hats.finance/shared";
 import { FormSelectInput, HackerProfileImage, HackerStreak, HatSpinner, Pill, WithTooltip } from "components";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import useModal from "hooks/useModal";
 import millify from "millify";
 import { RoutePaths } from "navigation";
-import { severitiesOrder } from "pages/HackerProfile/constants";
 import { useAddressesStats } from "pages/HackerProfile/useAddressesStats";
 import { useAddressesStreak } from "pages/HackerProfile/useAddressesStreak";
 import { useCachedProfile } from "pages/HackerProfile/useCachedProfile";
@@ -14,7 +13,6 @@ import Identicon from "react-identicons";
 import { NavLink } from "react-router-dom";
 import { formatNumber, ipfsTransformUri } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
-import { parseSeverityName } from "utils/severityName";
 import { StyledAllTimeLeaderboard } from "./styles";
 import { IAllTimeLeaderboard, IAllTimeLeaderboardSortKey, useAllTimeLeaderboard } from "./useAllTimeLeaderboard";
 

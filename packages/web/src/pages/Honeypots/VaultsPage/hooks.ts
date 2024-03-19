@@ -5,6 +5,7 @@ import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExclude
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
 import { useNetwork } from "wagmi";
@@ -21,6 +22,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
   const { tryAuthentication, profileData } = useSiweAuth();
   const { allVaultsOnEnv, allPayoutsOnEnv } = useVaults();
   const isGovMember = useIsGovMember();
+  const isReviewer = useIsReviewer();
 
   const { data: excludedFinishedCompetitions, isLoading: isLoadingExclusions } = useExcludedFinishedCompetitions();
 
@@ -38,7 +40,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
           (whiteAddress) => whiteAddress.address.toLowerCase() === profileData?.address?.toLowerCase()
         );
 
-        return opts.private ? isPrivateAudit && (isUserInvited || isGovMember) : !isPrivateAudit;
+        return opts.private ? isPrivateAudit && (isUserInvited || isGovMember || isReviewer) : !isPrivateAudit;
       }) ?? [];
 
   const paidPayoutsFromAudits = allPayoutsOnEnv
@@ -51,7 +53,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
       );
 
       return opts.private
-        ? isPrivateAudit && (isUserInvited || isGovMember)
+        ? isPrivateAudit && (isUserInvited || isGovMember || isReviewer)
         : !isPrivateAudit || payout.payoutData?.vault?.dateStatus === "finished";
     });
 

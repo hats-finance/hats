@@ -1,11 +1,8 @@
-import { ISubmittedSubmission, IVault } from "@hats.finance/shared";
+import { ISubmittedSubmission, IVault, getOldTokenPrice, parseSeverityName, severitiesOrder } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { useFindingsFromAddresses, usePayoutsFromAddresses } from "hooks/leaderboard";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useCallback, useMemo } from "react";
-import { getOldTokenPrice } from "utils/getOldTokenPrice";
-import { parseSeverityName } from "utils/severityName";
-import { severitiesOrder } from "./constants";
 
 export type IHackerPayoutStats = {
   severity: string;

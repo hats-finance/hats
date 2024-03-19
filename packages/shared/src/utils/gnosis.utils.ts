@@ -174,7 +174,7 @@ export const isAddressAMultisigMember = async (
   if (!multisigAddress || !chainId || !address) return false;
 
   const members = (await getGnosisSafeInfo(multisigAddress, Number(chainId))).owners;
-  const isMember = members.includes(address);
+  const isMember = members.map((add) => add.toLowerCase()).includes(address.toLowerCase());
 
   return isMember;
 };

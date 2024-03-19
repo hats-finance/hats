@@ -1,8 +1,7 @@
-import { IPayoutGraph, ISplitPayoutData, IVault } from "@hats.finance/shared";
+import { IPayoutGraph, ISplitPayoutData, IVault, parseSeverityName } from "@hats.finance/shared";
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { ipfsTransformUri } from "utils";
-import { parseSeverityName } from "utils/severityName";
 
 export type IAuditPayoutLeaderboardData = {
   beneficiary: string;

@@ -24,6 +24,7 @@ import { useSiweAuth } from "hooks/siwe/useSiweAuth";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import moment from "moment";
 import { RoutePaths } from "navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -71,6 +72,7 @@ const VaultEditorFormPage = () => {
   const wasEditedSinceCreated = descriptionHash !== onChainDescriptionHash;
 
   const isGovMember = useIsGovMember();
+  const isReviewer = useIsReviewer();
   const [userHasPermissions, setUserHasPermissions] = useState(true); // Is user part of the committee?
   const [loadingEditSession, setLoadingEditSession] = useState(false); // Is the edit session loading?
   const [savingEditSession, setSavingEditSession] = useState(false); // Is the edit session being saved?
@@ -127,7 +129,11 @@ const VaultEditorFormPage = () => {
   });
 
   const showPublishDraftOption =
-    vaultType === "audit" && currentStepInfo?.id === "details" && isGovMember && !isVaultCreated && !isEditingExistingVault;
+    vaultType === "audit" &&
+    currentStepInfo?.id === "details" &&
+    (isGovMember || isReviewer) &&
+    !isVaultCreated &&
+    !isEditingExistingVault;
 
   async function loadEditSessionData(editSessionId: string) {
     if (isVaultCreated) return; // If vault is already created, creation is blocked
@@ -346,7 +352,7 @@ const VaultEditorFormPage = () => {
   };
 
   const publishAuditDraft = async () => {
-    if (!isGovMember) return;
+    if (!isGovMember && !isReviewer) return;
     if (!editSessionId) return;
 
     const isFormValid = await trigger((currentStepInfo?.formFields ?? []) as any);
@@ -377,7 +383,7 @@ const VaultEditorFormPage = () => {
   };
 
   const deleteAuditDraft = async () => {
-    if (!isGovMember) return;
+    if (!isGovMember && !isReviewer) return;
     if (!editSessionId) return;
 
     const signedIn = await tryAuthentication();
