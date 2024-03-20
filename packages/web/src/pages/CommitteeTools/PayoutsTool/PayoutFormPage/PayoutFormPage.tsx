@@ -1,5 +1,6 @@
 import {
   IPayoutData,
+  ISubmittedSubmission,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
   PayoutStatus,
@@ -150,7 +151,7 @@ export const PayoutFormPage = () => {
 
   const handleSavePayout = async () => {
     if (isPayoutCreated) return;
-    if (!payoutId || !payout || !isAuthenticated || !formState.isDirty || !vault) return;
+    if (!payoutId || !payout || !isAuthenticated || !vault) return;
 
     try {
       const payoutData = methods.getValues();
@@ -183,7 +184,10 @@ export const PayoutFormPage = () => {
       const form = getValues();
 
       if (form.type === "single") {
-        const submission = committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId);
+        const submission: ISubmittedSubmission | undefined = JSON.parse(
+          JSON.stringify(committeeSubmissions?.find((sub) => sub.subId === form.submissionData?.subId))
+        );
+
         if (submission) {
           setValue<any>("decryptedSubmission", {
             ...submission,
@@ -192,7 +196,10 @@ export const PayoutFormPage = () => {
         }
       } else {
         for (const [idx, ben] of form.beneficiaries.entries()) {
-          const submission = committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId);
+          const submission: ISubmittedSubmission | undefined = JSON.parse(
+            JSON.stringify(committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId))
+          );
+
           if (submission) {
             setValue(`beneficiaries.${idx}.decryptedSubmission`, {
               ...submission,
