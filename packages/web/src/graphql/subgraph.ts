@@ -84,6 +84,7 @@ export const GET_VAULTS = `
       vestingPeriods
       depositPause
       committeeCheckedIn
+      claimsManager
       rewardControllers {
         id
         rewardToken

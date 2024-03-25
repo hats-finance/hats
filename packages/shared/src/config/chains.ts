@@ -69,7 +69,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   },
   [wagmiChains.sepolia.id]: {
-    vaultsCreatorContract: "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A",
+    // vaultsCreatorContract: "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", v2
+    vaultsCreatorContract: "0x5d7A4fA7942681c570DdEAA6e2D203E15516AA93", // v3
     rewardController: "0x89e477E69E591EF24a7Af27d358CF6889B0924ab",
     vaultsNFTContract: "0x96E93876eB2314901ee9967488C650D77A50c705",
     hackersNFTContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
