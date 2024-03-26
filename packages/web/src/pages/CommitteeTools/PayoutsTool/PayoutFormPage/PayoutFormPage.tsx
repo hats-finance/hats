@@ -197,7 +197,7 @@ export const PayoutFormPage = () => {
       } else {
         for (const [idx, ben] of form.beneficiaries.entries()) {
           const submission: ISubmittedSubmission | undefined = JSON.parse(
-            JSON.stringify(committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId))
+            JSON.stringify(committeeSubmissions?.find((sub) => sub.subId === ben.submissionData?.subId)) ?? "null"
           );
 
           if (submission) {
