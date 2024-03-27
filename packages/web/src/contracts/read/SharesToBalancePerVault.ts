@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
@@ -7,7 +7,7 @@ import { useContractRead } from "wagmi";
 export class SharesToBalancePerVaultContract {
   static contractInfo = (vault?: IVault, shares?: BigNumber) => {
     const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
-    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi;
     const method = vault?.version === "v1" ? "poolInfo" : "previewRedeem";
     const args = vault?.version === "v1" ? [vault?.pid] : [shares];
 
@@ -35,7 +35,9 @@ export class SharesToBalancePerVaultContract {
             balanceAvailable = shares?.mul(totalBalance).div(totalShares);
           }
         }
-      } else {
+      } else if (vault.version === "v2") {
+        balanceAvailable = data;
+      } else if (vault.version === "v3") {
         balanceAvailable = data;
       }
     }

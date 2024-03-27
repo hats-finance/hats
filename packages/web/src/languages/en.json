@@ -686,6 +686,8 @@
     "optOutToAuditCompetition": "Opt out to audit competition",
     "createProfile": "Create profile",
     "optedIn": "Opted in",
+    "editable": "Editable",
+    "editFeesAndRewards": "Edit fees and rewards",
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
       "optOutFromAuditCompetition": "Opt out from audit competition",

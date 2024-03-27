@@ -90,7 +90,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     }));
 
     const rewardControllersTokens = vaultsToSearch
-      .filter((vault) => vault.version === "v2" && vault.rewardControllers?.length > 0)
+      .filter((vault) => (vault.version === "v2" || vault.version === "v3") && vault.rewardControllers?.length > 0)
       .map((vault) => {
         return (vault as IVaultV2).rewardControllers.map((controller) => ({
           address: controller?.rewardToken.toLowerCase() ?? "",

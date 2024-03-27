@@ -1,4 +1,4 @@
-import { ISplitPayoutData, IVulnerabilitySeverityV2 } from "@hats.finance/shared";
+import { ISplitPayoutData, IVulnerabilitySeverityV2, IVulnerabilitySeverityV3 } from "@hats.finance/shared";
 import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
@@ -111,6 +111,10 @@ export const SplitPayoutForm = () => {
 
     if (usingPointingSystem && vault.version === "v2") {
       const sevToUse = (severities as IVulnerabilitySeverityV2[]).find((sev) => !!sev.percentageCapPerPoint);
+      const maxCapPerPointToUse = sevToUse?.percentageCapPerPoint ?? 1;
+      setValue<any>("percentageCapPerPoint", `${maxCapPerPointToUse}`);
+    } else if (usingPointingSystem && vault.version === "v3") {
+      const sevToUse = (severities as IVulnerabilitySeverityV3[]).find((sev) => !!sev.percentageCapPerPoint);
       const maxCapPerPointToUse = sevToUse?.percentageCapPerPoint ?? 1;
       setValue<any>("percentageCapPerPoint", `${maxCapPerPointToUse}`);
     }

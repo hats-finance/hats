@@ -2,7 +2,7 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import axios, { AxiosResponse } from "axios";
 import { BigNumber, ethers } from "ethers";
-import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
+import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3ClaimsManager_abi } from "../abis";
 import {
   IPayoutData,
   IPayoutGraph,
@@ -66,7 +66,12 @@ export const getExecutePayoutSafeTransaction = async (
 
   if (payout.payoutData.type === "single") {
     // Single payout: only one TX calling the vault contract
-    const contractAddress = vaultInfo.version === "v1" ? vaultInfo.master : vaultInfo.address;
+    const contractAddress =
+      vaultInfo.version === "v1"
+        ? vaultInfo.master
+        : vaultInfo.version === "v2"
+        ? vaultInfo.address
+        : vaultInfo.claimsManager ?? "";
 
     const payoutData = payout.payoutData as ISinglePayoutData;
 
@@ -78,8 +83,15 @@ export const getExecutePayoutSafeTransaction = async (
         payoutData.beneficiary as `0x${string}`,
         Number(payoutData.severityBountyIndex),
       ]);
-    } else {
+    } else if (vaultInfo.version === "v2") {
       const contractInterface = new ethers.utils.Interface(HATSVaultV2_abi);
+      encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
+        payoutData.beneficiary as `0x${string}`,
+        percentageToPay,
+        payout.payoutDescriptionHash,
+      ]);
+    } else {
+      const contractInterface = new ethers.utils.Interface(HATSVaultV3ClaimsManager_abi);
       encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
         payoutData.beneficiary as `0x${string}`,
         percentageToPay,
@@ -99,7 +111,7 @@ export const getExecutePayoutSafeTransaction = async (
 
     return { tx: safeTransaction, txHash: safeTransactionHash };
   } else {
-    // Only works with v2 vaults
+    // Only works with v2 and v3 vaults
     // Split payout: two TXs with a batch on safe. One to create the payment splitter, and the other to execute the payout.
     // First TX: create payment splitter (this will be the beneficiary of the vault)
     // Second TX: execute payout
@@ -109,8 +121,8 @@ export const getExecutePayoutSafeTransaction = async (
     if (!paymentSplitterFactoryAddress) throw new Error("Payment splitter factory address not found");
 
     const vaultContract = {
-      address: vaultInfo.address,
-      interface: new ethers.utils.Interface(HATSVaultV2_abi),
+      address: vaultInfo.version === "v2" ? vaultInfo.address : vaultInfo.claimsManager ?? "",
+      interface: new ethers.utils.Interface(vaultInfo.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi),
     };
 
     const paymentSplitterFactoryContract = {

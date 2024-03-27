@@ -148,7 +148,7 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
           }),
           index: Yup.number()
             .typeError(intl("enterValidNumber"))
-            .when("version", (version: "v1" | "v2", schema: any) =>
+            .when("version", (version: "v1" | "v2" | "v3", schema: any) =>
               version === "v1" ? schema.required(intl("required")) : undefined
             ),
           percentage: Yup.string().test(
@@ -218,9 +218,9 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
       })
     ),
     parameters: Yup.object({
-      fixedCommitteeControlledPercetange: Yup.number(),
-      fixedHatsGovPercetange: Yup.number(),
-      fixedHatsRewardPercetange: Yup.number(),
+      fixedCommitteeControlledPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
+      fixedHatsGovPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
+      fixedHatsRewardPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
       maxBountyPercentage: Yup.number()
         .test(getTestNumberInBetween(intl, 10, 90, true))
         .required(intl("required"))

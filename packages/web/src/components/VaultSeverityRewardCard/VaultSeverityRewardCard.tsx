@@ -20,9 +20,10 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
 
   const tokenSymbol = vault.stakingTokenSymbol;
   const severityName = severity?.name.toLowerCase().replace("severity", "") ?? "";
-  const showCap = vault.version === "v2" && vault.description?.severities.some((sev) => !!sev.capAmount);
+  const showCap = ["v2", "v3"].includes(vault.version) && vault.description?.severities.some((sev) => !!sev.capAmount);
   const usingPointingSystem = vault.version === "v1" ? false : vault.description?.usingPointingSystem;
-  const pointsInfo = usingPointingSystem && vault.version === "v2" ? (severity as IVulnerabilitySeverityV2).points : undefined;
+  const pointsInfo =
+    usingPointingSystem && ["v2", "v3"].includes(vault.version) ? (severity as IVulnerabilitySeverityV2).points : undefined;
 
   const getPointingReward = () => {
     if (!usingPointingSystem || vault.version === "v1") return;
@@ -99,7 +100,7 @@ export function VaultSeverityRewardCard({ vault, severity, severityIndex, noNft 
         <Pill isSeverity transparent textColor={rewardColor} text={severityName} />
       </div>
 
-      {usingPointingSystem && vault.version === "v2" ? (
+      {usingPointingSystem && ["v2", "v3"].includes(vault.version) ? (
         getPointingReward()
       ) : (
         <>

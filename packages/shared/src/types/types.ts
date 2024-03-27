@@ -7,6 +7,7 @@ export interface IVaultInfo {
   master: string;
   stakingToken: string;
   pid: string;
+  claimsManager: string | null;
 }
 
 export type IVaultType = "normal" | "audit" | "grants" | "gamification";
@@ -233,7 +234,14 @@ export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
   points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
 }
 
-export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
+export interface IVulnerabilitySeverityV3 extends IBaseVulnerabilitySeverity {
+  percentage: number; // percentage of the whole vault allocated to this severity
+  capAmount?: number;
+  percentageCapPerPoint?: number; // Max percentage of the whole vault allocated to each point of this severity
+  points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
+}
+
+export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2 | IVulnerabilitySeverityV3;
 
 export interface INFTMetaData {
   name: string;

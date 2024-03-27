@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3_abi } from "@hats.finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useContractWrite, useNetwork } from "wagmi";
@@ -16,7 +16,7 @@ export class WithdrawRequestContract {
     const { chain } = useNetwork();
 
     const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-    const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi;
 
     const withdrawRequest = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -31,7 +31,10 @@ export class WithdrawRequestContract {
       send: async () => {
         await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
-        if (vault?.version === "v2") {
+        if (vault?.version === "v3") {
+          // [params]: none
+          return withdrawRequest.write!();
+        } else if (vault?.version === "v2") {
           // [params]: none
           return withdrawRequest.write!();
         } else {

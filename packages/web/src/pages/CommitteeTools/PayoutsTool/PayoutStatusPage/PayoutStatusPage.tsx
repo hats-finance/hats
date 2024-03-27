@@ -75,6 +75,7 @@ export const PayoutStatusPage = () => {
 
       let payoutClaimId = "";
 
+      // TODO: V3
       if (vault?.version === "v2") {
         const vaultIface = new ethers.utils.Interface(HATSVaultV2_abi);
         data.logs.forEach((log) => {

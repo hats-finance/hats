@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "..";
+import { ChainsConfig, ICommitteeMember, IVaultDescription } from "..";
 import { getVulnerabilitySeveritiesTemplate } from "../severities";
 import {
   IBaseVulnerabilitySeverity,
@@ -11,6 +11,7 @@ import {
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
+  IEditedVulnerabilitySeverityV3,
   IProtocolSetupInstructions,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
@@ -56,7 +57,7 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
   };
 };
 
-export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVulnerabilitySeverity => {
+export const createNewVulnerabilitySeverity = (version: "v1" | "v2" | "v3"): IEditedVulnerabilitySeverity => {
   const editedVulnerabilitySeverityBase = {
     id: uuid(),
     name: "",
@@ -77,7 +78,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
       ...editedVulnerabilitySeverityBase,
       index: 0,
     } as IEditedVulnerabilitySeverityV1;
-  } else {
+  } else if (version === "v2") {
     return {
       ...editedVulnerabilitySeverityBase,
       percentage: 0,
@@ -88,14 +89,25 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
         },
       },
     } as IEditedVulnerabilitySeverityV2;
+  } else {
+    return {
+      ...editedVulnerabilitySeverityBase,
+      percentage: 0,
+      points: {
+        type: "fixed",
+        value: {
+          first: 0,
+        },
+      },
+    } as IEditedVulnerabilitySeverityV3;
   }
 };
 
 export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParameters => {
   return {
-    fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
-    fixedHatsGovPercetange: HATS_GOV_SPLIT,
-    fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
+    fixedCommitteeControlledPercetange: undefined,
+    fixedHatsGovPercetange: undefined,
+    fixedHatsRewardPercetange: undefined,
     committeePercentage: isAudit ? 0 : 0,
     immediatePercentage: isAudit ? 100 : 40,
     vestedPercentage: isAudit ? 0 : 60,
@@ -103,7 +115,7 @@ export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParamete
   };
 };
 
-export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
+export const createNewVaultDescription = (version: "v1" | "v2" | "v3"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
   const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
   const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
@@ -375,8 +387,7 @@ export function fixObject(description: any): IVaultDescription {
 
 export function editedFormToCreateVaultOnChainCall(
   editedVaultDescription: IEditedVaultDescription,
-  descriptionHash: string,
-  rewardController: string | undefined
+  descriptionHash: string
 ): ICreateVaultOnChainCall {
   const convertStringToSlug = (str: string) =>
     str
@@ -395,7 +406,6 @@ export function editedFormToCreateVaultOnChainCall(
     symbol: convertStringToSlug(editedVaultDescription["project-metadata"].name),
     committee: editedVaultDescription.committee["multisig-address"],
     owner: editedVaultDescription.committee["multisig-address"],
-    rewardController: rewardController ?? "0x0000000000000000000000000000000000000000",
     maxBounty: formatPercentage(maxBountyPercentage),
     bountySplit: {
       committee: formatPercentage(committeePercentage),
@@ -406,5 +416,12 @@ export function editedFormToCreateVaultOnChainCall(
     vestingPeriods: 30,
     isPaused: false,
     descriptionHash,
+    bountyGovernanceHAT: editedVaultDescription.parameters.fixedHatsGovPercetange ?? 2000,
+    bountyHackerHATVested: editedVaultDescription.parameters.fixedHatsRewardPercetange ?? 0,
+    arbitratorCanChangeBeneficiary: true,
+    arbitratorCanChangeBounty: true,
+    arbitratorCanSubmitClaims: true,
+    isTokenLockRevocable: false,
+    arbitrator: ChainsConfig[+(editedVaultDescription.committee.chainId ?? "1")].arbitratorContract,
   } as ICreateVaultOnChainCall;
 }

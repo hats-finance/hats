@@ -1,5 +1,5 @@
 import { IMaster, IPayoutGraph, IUserNft, IVault } from "@hats.finance/shared";
-import { GET_VAULTS } from "graphql/subgraph";
+import { GET_VAULTS, GET_VAULTS_NOCLAIMMANAGER } from "graphql/subgraph";
 import { appChains } from "settings";
 import { fetchWithTimeout } from "utils/fetchWithTimeout.utils";
 
@@ -34,7 +34,7 @@ export async function getSubgraphData(chainId?: number, account?: string): Promi
     const subgraphUrl = appChains[chainId].subgraph;
     const resTest = await fetchWithTimeout(subgraphUrl, {
       method: "POST",
-      body: JSON.stringify({ query: GET_VAULTS, variables: { account } }),
+      body: JSON.stringify({ query: chainId === 11155111 ? GET_VAULTS : GET_VAULTS_NOCLAIMMANAGER, variables: { account } }),
       headers: { "Content-Type": "application/json" },
       timeout: 4000,
     });

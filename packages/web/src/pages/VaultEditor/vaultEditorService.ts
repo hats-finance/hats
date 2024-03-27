@@ -1,14 +1,18 @@
 import {
   HATSVaultV2_abi,
-  HATSVaultsRegistry_abi,
+  HATSVaultV3ClaimsManager_abi,
+  HATSVaultV3_abi,
+  HATSVaultsRegistryV2_abi,
+  HATSVaultsRegistryV3_abi,
   IEditedSessionResponse,
   IEditedVaultDescription,
+  IVault,
   IVaultDescription,
   IVaultStatusData,
   getVaultDescriptionHash,
 } from "@hats.finance/shared";
 import { axiosClient } from "config/axiosClient";
-import { BASE_SERVICE_URL, appChains } from "settings";
+import { BASE_SERVICE_URL } from "settings";
 import { ipfsTransformUri } from "utils";
 import { isBlob } from "utils/files.utils";
 import { getPath, setPath } from "utils/objects.utils";
@@ -140,33 +144,57 @@ export async function sendEditionToGovApproval(editSessionId: string): Promise<I
  * @param vaultAddress - The vault address
  * @param chainId - The chain id of the vault
  */
-export async function getVaultInformation(vaultAddress: string, chainId: number): Promise<IVaultStatusData> {
+export async function getVaultInformation(vault: IVault | undefined): Promise<IVaultStatusData | undefined> {
+  if (!vault) return undefined;
+  if (vault.version === "v1") return undefined;
+  if (vault.version === "v3" && !vault?.claimsManager) return undefined;
+
   const vaultContractInfo = {
-    address: vaultAddress as `0x${string}`,
-    abi: HATSVaultV2_abi,
-    chainId,
+    address: vault.id as `0x${string}`,
+    abi: vault.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi,
+    chainId: vault.chainId,
   };
 
   const registryContractInfo = {
-    address: (appChains[chainId].vaultsCreatorContract ?? "") as `0x${string}`,
-    abi: HATSVaultsRegistry_abi,
-    chainId,
+    address: vault.master.id as `0x${string}`,
+    abi: vault.version === "v2" ? HATSVaultsRegistryV2_abi : HATSVaultsRegistryV3_abi,
+    chainId: vault.chainId,
   };
 
-  const descriptionHashPromise = getVaultDescriptionHash(vaultAddress, chainId);
+  const claimsManagerContractInfo = {
+    address: vault.claimsManager as `0x${string}`,
+    abi: HATSVaultV3ClaimsManager_abi,
+    chainId: vault.chainId,
+  };
+
+  const descriptionHashPromise = getVaultDescriptionHash(vault.id, vault.chainId);
   const allContractCallsPromises = readContracts({
-    contracts: [
-      { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
-      { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
-      { ...registryContractInfo, functionName: "isVaultVisible", args: [vaultAddress as `0x${string}`] }, // Is registered
-      { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
-      { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
-      { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
-      { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
-      { ...vaultContractInfo, functionName: "maxBounty" }, // maxBounty
-      { ...vaultContractInfo, functionName: "asset" }, // asset
-      { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
-    ],
+    contracts:
+      vault.version === "v2"
+        ? ([
+            { ...vaultContractInfo, functionName: "committee" }, // Committee multisig address
+            { ...vaultContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
+            { ...registryContractInfo, functionName: "isVaultVisible", args: [vault.id as `0x${string}`] }, // Is registered
+            { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
+            { ...vaultContractInfo, functionName: "bountySplit" }, // bountySplit
+            { ...vaultContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
+            { ...vaultContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
+            { ...vaultContractInfo, functionName: "maxBounty" }, // maxBounty
+            { ...vaultContractInfo, functionName: "asset" }, // asset
+            { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
+          ] as any)
+        : ([
+            { ...claimsManagerContractInfo, functionName: "committee" }, // Committee multisig address
+            { ...claimsManagerContractInfo, functionName: "committeeCheckedIn" }, // Is committee checked in
+            { ...registryContractInfo, functionName: "isVaultVisible", args: [vault.id as `0x${string}`] }, // Is registered
+            { ...vaultContractInfo, functionName: "totalAssets" }, // Deposited amount
+            { ...claimsManagerContractInfo, functionName: "bountySplit" }, // bountySplit
+            { ...claimsManagerContractInfo, functionName: "getBountyHackerHATVested" }, // hatsRewardSplit
+            { ...claimsManagerContractInfo, functionName: "getBountyGovernanceHAT" }, // hatsGovernanceSplit
+            { ...claimsManagerContractInfo, functionName: "maxBounty" }, // maxBounty
+            { ...vaultContractInfo, functionName: "asset" }, // asset
+            { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
+          ] as any),
   }) as Promise<any[]>;
 
   const promisesData = await Promise.all([descriptionHashPromise, allContractCallsPromises]);

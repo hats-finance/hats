@@ -16,7 +16,13 @@ export const usePayoutStatus = (payout?: IPayoutResponse) => {
 
     if (payout.status === PayoutStatus.Executed) {
       // Check the status on subgraph
-      if (vault?.version === "v2") {
+      // TODO: V3 check if this works
+      if (vault?.version === "v3") {
+        const payoutOnSubgraph = allPayouts?.find((p) => p.id === payout.payoutClaimId);
+        if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
+          return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;
+        }
+      } else if (vault?.version === "v2") {
         const payoutOnSubgraph = allPayouts?.find((p) => p.id === payout.payoutClaimId);
         if (payoutOnSubgraph?.isApproved || payoutOnSubgraph?.isDismissed) {
           return payoutOnSubgraph.isApproved ? PayoutStatus.Approved : PayoutStatus.Rejected;

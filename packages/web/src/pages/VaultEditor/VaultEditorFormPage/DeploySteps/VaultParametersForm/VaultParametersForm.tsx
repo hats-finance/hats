@@ -5,8 +5,10 @@ import { Button, FormInput } from "components";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import Tooltip from "rc-tooltip";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { appChains } from "settings";
@@ -68,6 +70,11 @@ const VaultParametersFormOnVaultEditor = () => {
 
   // Set default values for the fixed splits. Getting it from subgraph
   useEffect(() => {
+    const params = methodsToUse.getValues("parameters");
+    // If we have alredy set a value, we don't want to override it
+    const hasValue = params.fixedHatsGovPercetange !== undefined && params.fixedHatsGovPercetange !== null;
+    if (hasValue) return;
+
     const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
     if (registryAddress && masters) {
       const master = masters.find(
@@ -78,6 +85,7 @@ const VaultParametersFormOnVaultEditor = () => {
         const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
         const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
         const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
+        console.log("OVERRIDE", hatsRewardSplit, hatsGovernanceSplit, committeeControlledSplit);
 
         if (!isNaN(committeeControlledSplit))
           methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
@@ -93,6 +101,12 @@ const VaultParametersFormOnVaultEditor = () => {
 function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { blockMaxBounty?: boolean; disabled?: boolean }) {
   const { t } = useTranslation();
   const methodsToUse = useEnhancedFormContext<FormType>();
+
+  const [isEditingFixed, setIsEditingFixed] = useState(false);
+
+  const isGov = useIsGovMember();
+  const isReviewer = useIsReviewer();
+  const canEditFixed = isGov || isReviewer;
 
   const vestedPercentage =
     useWatch({ control: methodsToUse.control as Control<FormType>, name: "parameters.vestedPercentage" }) ?? 0;
@@ -113,6 +127,14 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
     control: methodsToUse.control as Control<FormType>,
     name: "parameters.fixedHatsRewardPercetange",
   })?.toString();
+
+  useEffect(() => {
+    if (hatsGovernanceSplit && hatsRewardSplit)
+      methodsToUse.setValue(
+        "parameters.fixedCommitteeControlledPercetange",
+        100 - +hatsGovernanceSplit.toString() - +hatsRewardSplit.toString()
+      );
+  }, [hatsGovernanceSplit, hatsRewardSplit, methodsToUse]);
 
   const vestedPercentagePreview = +vestedPercentage.toString() * (+(committeeControlledSplit as string) / 100);
   const committeePercentagePreview = +committeePercentage.toString() * (+(committeeControlledSplit as string) / 100);
@@ -150,6 +172,11 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
         <p className="section-title">{t("bountySplit")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
 
+        {canEditFixed && !disabled && (
+          <Button onClick={() => setIsEditingFixed((prev) => !prev)} styleType="text" className="mb-4" noPadding>
+            {t("editFeesAndRewards")}
+          </Button>
+        )}
         <div className="bountySplitContainer">
           <div className="committeeControlled">
             {renderWithTooltip(
@@ -286,16 +313,57 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
           </div>
           <div className="nonControlled">
             {renderWithTooltip(
-              t("nonEditable"),
+              canEditFixed ? t("editable") : t("nonEditable"),
               <div className="splitFixedValue">
-                <p>{hatsGovernanceSplit}%</p>
+                {canEditFixed && isEditingFixed ? (
+                  <>
+                    <FormInput
+                      {...methodsToUse.register("parameters.fixedHatsGovPercetange")}
+                      disabled={disabled}
+                      onKeyUp={revalidateSplit}
+                      onBlur={revalidateSplit}
+                      type="number"
+                      maxDecimals={0}
+                      min={0}
+                      max={100}
+                      colorable
+                      noErrorLabel
+                      noMargin
+                      placeholder="-- (%)"
+                    />
+                    <div className="mb-1" />
+                  </>
+                ) : (
+                  <p>{hatsGovernanceSplit}%</p>
+                )}
+
                 <label>{t("hatsGov")}</label>
               </div>
             )}
             {renderWithTooltip(
-              t("nonEditable"),
+              canEditFixed ? t("editable") : t("nonEditable"),
               <div className="splitFixedValue">
-                <p>{hatsRewardSplit}%</p>
+                {canEditFixed && isEditingFixed ? (
+                  <>
+                    <FormInput
+                      {...methodsToUse.register("parameters.fixedHatsRewardPercetange")}
+                      disabled={disabled}
+                      onKeyUp={revalidateSplit}
+                      onBlur={revalidateSplit}
+                      type="number"
+                      maxDecimals={0}
+                      min={0}
+                      max={100}
+                      colorable
+                      noErrorLabel
+                      noMargin
+                      placeholder="-- (%)"
+                    />
+                    <div className="mb-1" />
+                  </>
+                ) : (
+                  <p>{hatsRewardSplit}%</p>
+                )}
                 <label>{t("hatsReward")}</label>
               </div>
             )}

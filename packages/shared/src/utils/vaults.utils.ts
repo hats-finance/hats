@@ -18,6 +18,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           version
           committee
           stakingToken
+          claimsManager
           master {
             id
           }
@@ -64,6 +65,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           committee: vault.committee,
           registered: vault.registered,
           stakingToken: vault.stakingToken,
+          claimsManager: vault.claimsManager,
         });
       }
     }
@@ -90,6 +92,7 @@ export const getVaultInfoWithCommittee = async (
           version
           committee
           stakingToken
+          claimsManager
           master {
             id
           }
@@ -123,6 +126,7 @@ export const getVaultInfoWithCommittee = async (
       committee: vault.committee,
       registered: vault.registered,
       stakingToken: vault.stakingToken,
+      claimsManager: vault.claimsManager,
     };
   } catch (error) {
     return undefined;
@@ -331,5 +335,6 @@ export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
     master: vault.master.address,
     pid: vault.pid,
     stakingToken: vault.stakingToken,
+    claimsManager: vault.claimsManager,
   };
 };

@@ -33,14 +33,10 @@ import { useAccount } from "wagmi";
 export const useVaultDepositWithdrawInfo = (selectedVault: IVault) => {
   const { address: account } = useAccount();
 
-  // const rewardController = selectedVault.version === "v2" ? selectedVault.rewardControllers[0] : undefined;
   // Token user wants to deposit/withdraw
   const vaultToken = selectedVault.stakingToken;
   const vaultTokenDecimals = selectedVault.stakingTokenDecimals;
   const vaultTokenSymbol = selectedVault.stakingTokenSymbol;
-  // Reward token
-  // const rewardTokenDecimals = selectedVault.version === "v1" ? HAT_TOKEN_DECIMALS_V1 : rewardController?.rewardTokenDecimals;
-  // const rewardTokenSymbol = selectedVault.version === "v1" ? HAT_TOKEN_SYMBOL_V1 : rewardController?.rewardTokenSymbol;
 
   const isUserCommittee = selectedVault.committee.toLowerCase() === account?.toLowerCase();
   const committeeCheckedIn = selectedVault.committeeCheckedIn;

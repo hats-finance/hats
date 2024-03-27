@@ -7,6 +7,7 @@ import {
   IVaultType,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
+  IVulnerabilitySeverityV3,
 } from "./types";
 
 export interface IEditedContractCovered {
@@ -31,9 +32,9 @@ export interface IEditedVaultAsset {
 }
 
 export interface IEditedVaultParameters {
-  fixedCommitteeControlledPercetange: number;
-  fixedHatsGovPercetange: number;
-  fixedHatsRewardPercetange: number;
+  fixedCommitteeControlledPercetange?: number;
+  fixedHatsGovPercetange?: number;
+  fixedHatsRewardPercetange?: number;
   // Editable
   maxBountyPercentage: number;
   immediatePercentage: number;
@@ -43,8 +44,12 @@ export interface IEditedVaultParameters {
 
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
 export type IEditedVulnerabilitySeverityV2 = IVulnerabilitySeverityV2 & { id?: string };
+export type IEditedVulnerabilitySeverityV3 = IVulnerabilitySeverityV3 & { id?: string };
 
-export type IEditedVulnerabilitySeverity = IEditedVulnerabilitySeverityV1 | IEditedVulnerabilitySeverityV2;
+export type IEditedVulnerabilitySeverity =
+  | IEditedVulnerabilitySeverityV1
+  | IEditedVulnerabilitySeverityV2
+  | IEditedVulnerabilitySeverityV3;
 
 export interface IBaseVulnerabilitySeveritiesTemplate {
   name: string;
@@ -59,10 +64,17 @@ export interface IVulnerabilitySeveritiesTemplateV2 extends IBaseVulnerabilitySe
   severities: IEditedVulnerabilitySeverityV2[];
 }
 
-export type IVulnerabilitySeveritiesTemplate = IVulnerabilitySeveritiesTemplateV1 | IVulnerabilitySeveritiesTemplateV2;
+export interface IVulnerabilitySeveritiesTemplateV3 extends IBaseVulnerabilitySeveritiesTemplate {
+  severities: IEditedVulnerabilitySeverityV2[];
+}
+
+export type IVulnerabilitySeveritiesTemplate =
+  | IVulnerabilitySeveritiesTemplateV1
+  | IVulnerabilitySeveritiesTemplateV2
+  | IVulnerabilitySeveritiesTemplateV3;
 
 export interface IBaseEditedVaultDescription {
-  version: "v1" | "v2";
+  version: "v1" | "v2" | "v3";
   vaultCreatedInfo?: {
     vaultAddress: string;
     chainId: number;
@@ -119,8 +131,13 @@ export interface IEditedVaultDescriptionV2 extends IBaseEditedVaultDescription {
   "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
   usingPointingSystem?: boolean;
 }
+export interface IEditedVaultDescriptionV3 extends IBaseEditedVaultDescription {
+  version: "v3";
+  "vulnerability-severities-spec": IVulnerabilitySeveritiesTemplateV2;
+  usingPointingSystem?: boolean;
+}
 
-export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2;
+export type IEditedVaultDescription = IEditedVaultDescriptionV1 | IEditedVaultDescriptionV2 | IEditedVaultDescriptionV3;
 
 export type IVaultEditionStatus = "editing" | "pendingApproval" | "approved" | "rejected";
 export const nonEditableEditionStatus: IVaultEditionStatus[] = ["pendingApproval", "approved", "rejected"];
@@ -145,7 +162,6 @@ export interface ICreateVaultOnChainCall {
   chainId: number;
   name: string;
   symbol: string;
-  rewardController: string;
   vestingDuration: number;
   vestingPeriods: number;
   maxBounty: number;
@@ -159,6 +175,13 @@ export interface ICreateVaultOnChainCall {
   committee: string;
   isPaused: boolean;
   descriptionHash: string;
+  bountyGovernanceHAT: number; // New in v3
+  bountyHackerHATVested: number; // New in v3
+  arbitrator: string; // New in v3
+  arbitratorCanChangeBounty: boolean; // New in v3
+  arbitratorCanChangeBeneficiary: boolean; // New in v3
+  arbitratorCanSubmitClaims: boolean; // New in v3
+  isTokenLockRevocable: boolean; // New in v3
 }
 
 export type IAddressRoleInVault = "gov" | "committee" | "committee-multisig" | "reviewer" | "none";
