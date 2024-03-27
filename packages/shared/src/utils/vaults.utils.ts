@@ -53,7 +53,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.vaults) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.vaults) continue;
 
       for (const vault of subgraphsData[i].request.data.data.vaults) {
         vaults.push({
