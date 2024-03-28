@@ -13,6 +13,7 @@ import {
   IEditedVulnerabilitySeverityV2,
   IEditedVulnerabilitySeverityV3,
   IProtocolSetupInstructions,
+  IVault,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "../types";
@@ -103,7 +104,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2" | "v3"): IEd
   }
 };
 
-export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParameters => {
+export const getDefaultVaultParameters = (isAudit = false, version: IVault["version"]): IEditedVaultParameters => {
   return {
     fixedCommitteeControlledPercetange: undefined,
     fixedHatsGovPercetange: undefined,
@@ -111,7 +112,7 @@ export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParamete
     committeePercentage: isAudit ? 0 : 0,
     immediatePercentage: isAudit ? 100 : 40,
     vestedPercentage: isAudit ? 0 : 60,
-    maxBountyPercentage: 90,
+    maxBountyPercentage: version === "v3" ? 100 : 90,
   };
 };
 
@@ -150,7 +151,7 @@ export const createNewVaultDescription = (version: "v1" | "v2" | "v3"): IEditedV
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
     assets: [{ address: "", symbol: "" }],
-    parameters: getDefaultVaultParameters(),
+    parameters: getDefaultVaultParameters(false, version),
     source: {
       name: "",
       url: "",
@@ -270,7 +271,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
     };
   }
 
-  // V2 vaults
+  // V2 and V3 vaults
   return {
     ...baseEditedDescription,
     version: "v2",
