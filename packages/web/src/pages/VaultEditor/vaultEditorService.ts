@@ -24,21 +24,22 @@ import { getContract, getProvider, readContracts } from "wagmi/actions";
  */
 export async function getEditSessionData(editSessionId: string): Promise<IEditedSessionResponse> {
   const response = await axiosClient.get(`${BASE_SERVICE_URL}/edit-session/${editSessionId}`);
-  const isExistingVault = response.data.vaultAddress !== undefined;
+  const editSession = response.data as IEditedSessionResponse;
+  const isExistingVault = editSession.vaultAddress !== undefined;
 
   // Get maxBountyPercentage from the vault if it's an existing vault
   if (isExistingVault) {
     const vaultContract = getContract({
-      address: response.data.vaultAddress,
-      abi: HATSVaultV2_abi,
-      signerOrProvider: getProvider({ chainId: response.data.chainId }),
+      address: editSession.editedDescription.version === "v2" ? editSession.vaultAddress ?? "" : editSession.claimsManager ?? "",
+      abi: (editSession.editedDescription.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi) as any,
+      signerOrProvider: getProvider({ chainId: editSession.chainId }),
     });
 
     const maxBountyPercentage = await vaultContract.maxBounty();
-    (response.data as IEditedSessionResponse).editedDescription.parameters.maxBountyPercentage = maxBountyPercentage / 100;
+    (editSession as IEditedSessionResponse).editedDescription.parameters.maxBountyPercentage = maxBountyPercentage / 100;
   }
 
-  return response.data;
+  return editSession;
 }
 
 /**
@@ -156,7 +157,7 @@ export async function getVaultInformation(vault: IVault | undefined): Promise<IV
   };
 
   const registryContractInfo = {
-    address: vault.master.id as `0x${string}`,
+    address: vault.master.address as `0x${string}`,
     abi: vault.version === "v2" ? HATSVaultsRegistryV2_abi : HATSVaultsRegistryV3_abi,
     chainId: vault.chainId,
   };

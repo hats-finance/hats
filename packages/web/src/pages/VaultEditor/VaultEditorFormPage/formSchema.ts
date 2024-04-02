@@ -219,10 +219,10 @@ export const getEditedDescriptionYupSchema = (intl: TFunction) =>
     ),
     parameters: Yup.object({
       fixedCommitteeControlledPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
-      fixedHatsGovPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
+      fixedHatsGovPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 20, true)),
       fixedHatsRewardPercetange: Yup.number().test(getTestNumberInBetween(intl, 0, 100, true)),
       maxBountyPercentage: Yup.number()
-        .test(getTestNumberInBetween(intl, 10, 90, true))
+        .test(getTestNumberInBetween(intl, 10, 100, true))
         .required(intl("required"))
         .typeError(intl("required")),
       // The sum of the following 3 parameters should be 100

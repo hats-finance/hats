@@ -17,7 +17,6 @@ export class CreateVaultContract {
     const { chain } = getNetwork();
     if (!chain) return null;
 
-    // TODO: V3 create vault
     const registryAddress = appChains[vaultData.chainId].vaultsCreatorContract;
     const registryAbi = HATSVaultsRegistryV3_abi;
 

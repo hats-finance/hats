@@ -49,11 +49,11 @@ export const usePayoutsBySiweUser = (): UseQueryResult<IPayoutResponse[]> => {
 export const useCreateDraftPayout = (): UseMutationResult<
   string,
   unknown,
-  { vaultInfo: IVaultInfo; type: PayoutType },
+  { vaultInfo: IVaultInfo; type: PayoutType; payoutData: IPayoutData },
   unknown
 > => {
   return useMutation({
-    mutationFn: ({ vaultInfo, type }) => PayoutsService.createDraftPayout(vaultInfo, type),
+    mutationFn: ({ vaultInfo, type, payoutData }) => PayoutsService.createDraftPayout(vaultInfo, type, payoutData),
   });
 };
 

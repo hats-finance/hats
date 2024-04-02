@@ -52,6 +52,7 @@ interface IPayoutDataBase {
   additionalInfo: string;
   vault?: IVault;
   stopAutocalculation?: boolean;
+  depositors?: { address: string; shares: number; ownership: number }[];
 }
 
 export interface ISinglePayoutData extends IPayoutDataBase {

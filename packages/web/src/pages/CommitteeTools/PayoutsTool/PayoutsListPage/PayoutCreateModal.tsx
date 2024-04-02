@@ -1,4 +1,4 @@
-import { PayoutType, getVaultInfoFromVault } from "@hats.finance/shared";
+import { PayoutType, createNewPayoutData, getVaultDepositors, getVaultInfoFromVault } from "@hats.finance/shared";
 import { Alert, Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { BigNumber } from "ethers";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
@@ -31,7 +31,14 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const handleCreatePayout = async () => {
     if (!selectedVault || !payoutType || !isVaultDepositedAndCheckedIn) return;
 
-    const payoutId = await createDraftPayout.mutateAsync({ vaultInfo: getVaultInfoFromVault(selectedVault), type: payoutType });
+    let payoutData = createNewPayoutData(payoutType);
+    payoutData.depositors = getVaultDepositors(selectedVault);
+
+    const payoutId = await createDraftPayout.mutateAsync({
+      vaultInfo: getVaultInfoFromVault(selectedVault),
+      type: payoutType,
+      payoutData,
+    });
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
 
     closeModal();

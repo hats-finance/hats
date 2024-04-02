@@ -108,6 +108,8 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   const isReviewer = useIsReviewer();
   const canEditFixed = isGov || isReviewer;
 
+  const version = useWatch({ control: methodsToUse.control as Control<FormType>, name: "version" });
+
   const vestedPercentage =
     useWatch({ control: methodsToUse.control as Control<FormType>, name: "parameters.vestedPercentage" }) ?? 0;
   const committeePercentage =
@@ -156,18 +158,23 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
     <StyledVaultEditorForm withoutMargin noPadding>
       <StyledVaultParametersForm>
         <p className="section-title">{t("maxBounty")}</p>
-        <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation") }} />
+        <div
+          className="helper-text"
+          dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" ? "100" : "90" }) }}
+        />
 
-        {/* <div className="input">
+        <div className="input">
           <FormInput
-            {...methodsToUse.register(`parameters.maxBountyPercentage`)}
-            disabled={blockMaxBounty || disabled}
+            {...methodsToUse.register(`parameters.maxBountyPercentage`, { valueAsNumber: true })}
+            disabled={(blockMaxBounty || disabled || !canEditFixed) && version === "v3"}
             type="whole-number"
-            label={t("VaultEditor.vault-parameters.maxBountyPercentage")}
-            placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder")}
+            label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" ? "100" : "90" })}
+            placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder", {
+              max: version === "v3" ? "100" : "90",
+            })}
             colorable
           />
-        </div> */}
+        </div>
 
         <p className="section-title">{t("bountySplit")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
@@ -327,7 +334,6 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                       min={0}
                       max={100}
                       colorable
-                      noErrorLabel
                       noMargin
                       placeholder="-- (%)"
                     />
@@ -355,7 +361,6 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                       min={0}
                       max={100}
                       colorable
-                      noErrorLabel
                       noMargin
                       placeholder="-- (%)"
                     />

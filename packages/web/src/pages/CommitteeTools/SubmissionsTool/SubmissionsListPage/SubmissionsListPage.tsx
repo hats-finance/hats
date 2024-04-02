@@ -8,6 +8,7 @@ import {
   PayoutType,
   createNewPayoutData,
   createNewSplitPayoutBeneficiary,
+  getVaultDepositors,
   getVaultInfoFromVault,
   parseSeverityName,
 } from "@hats.finance/shared";
@@ -29,6 +30,7 @@ import { useKeystore } from "components/Keystore";
 import { IndexedDBs } from "config/DBConfig";
 import { LocalStorage } from "constants/constants";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import moment from "moment";
 import { RoutePaths } from "navigation";
@@ -52,6 +54,7 @@ export const SubmissionsListPage = () => {
   const { address } = useAccount();
   const { keystore, initKeystore, openKeystore } = useKeystore();
   const { clear: deleteDecryptedSubmissionsDB } = useIndexedDB(IndexedDBs.DecryptedSubmissions);
+  const { allVaults, vaultsReadyAllChains } = useVaults();
 
   const [openDateFilter, setOpenDateFilter] = useState(false);
   const [dateFilter, setDateFilter] = useState({ from: 0, to: 0, active: false });
@@ -107,7 +110,10 @@ export const SubmissionsListPage = () => {
     savedSelectedSubmissions ? JSON.parse(savedSelectedSubmissions) : []
   );
 
-  const vault = committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault;
+  const vault = allVaults?.find(
+    (vault) =>
+      vault.id.toLowerCase() === committeeSubmissions?.find((sub) => sub.subId === selectedSubmissions[0])?.linkedVault?.id
+  );
   const isAuditComp = vault?.description?.["project-metadata"].type === "audit";
   const shouldCreateSinglePayout = vault && selectedSubmissions.length === 1 && !isAuditComp;
 
@@ -235,8 +241,11 @@ export const SubmissionsListPage = () => {
   };
 
   const handleCreatePayout = async () => {
+    if (!vaultsReadyAllChains) return;
     if (!vault || !committeeSubmissions) return;
     if (!vault.description || !vault.description.severities) return;
+
+    console.log(vault);
 
     const wantToCreatePayout = await confirm({
       title: t("SubmissionsTool.createPayout"),
@@ -266,6 +275,7 @@ export const SubmissionsListPage = () => {
         beneficiary: submission?.submissionDataStructure?.beneficiary,
         severity: severity ?? "",
         submissionData: { id: submission?.id, subId: submission?.subId, idx: submission?.submissionIdx },
+        depositors: getVaultDepositors(vault),
       } as ISinglePayoutData;
     } else {
       const submissions = committeeSubmissions.filter((sub) => selectedSubmissions.includes(sub.subId));
@@ -285,6 +295,7 @@ export const SubmissionsListPage = () => {
           };
         }),
         usingPointingSystem: (vault.description as IVaultDescriptionV2).usingPointingSystem,
+        depositors: getVaultDepositors(vault),
       } as ISplitPayoutData;
     }
 
@@ -546,6 +557,7 @@ export const SubmissionsListPage = () => {
         </>
       </Modal>
       {createPayoutFromSubmissions.isLoading && <Loading fixed extraText={`${t("creatingPayout")}...`} />}
+      {!vaultsReadyAllChains && <Loading fixed extraText={`${t("loadingVaults")}...`} />}
     </StyledSubmissionsListPage>
   );
 };

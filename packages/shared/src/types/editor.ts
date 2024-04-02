@@ -78,6 +78,7 @@ export interface IBaseEditedVaultDescription {
   vaultCreatedInfo?: {
     vaultAddress: string;
     chainId: number;
+    claimsManager: string;
   };
   "project-metadata": {
     icon: string;
@@ -148,6 +149,7 @@ export interface IEditedSessionResponse {
   descriptionHash: string;
   chainId?: number;
   vaultAddress?: string;
+  claimsManager?: string;
   createdAt?: Date;
   updatedAt?: Date;
   editingExistingVault?: boolean;

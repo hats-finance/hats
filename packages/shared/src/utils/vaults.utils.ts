@@ -1,4 +1,6 @@
 import axios, { AxiosResponse } from "axios";
+import { BigNumber } from "ethers";
+import { formatUnits } from "ethers/lib/utils.js";
 import { ChainsConfig } from "../config";
 import { IAddressRoleInVault, IVault, IVaultDescription, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
@@ -59,7 +61,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
         vaults.push({
           chainId,
           address: vault.id,
-          master: vault.master.id,
+          master: vault.master.address,
           pid: vault.pid,
           version: vault.version,
           committee: vault.committee,
@@ -120,7 +122,7 @@ export const getVaultInfoWithCommittee = async (
     return {
       chainId,
       address: vault.id,
-      master: vault.master.id,
+      master: vault.master.address,
       pid: vault.pid,
       version: vault.version,
       committee: vault.committee,
@@ -133,7 +135,9 @@ export const getVaultInfoWithCommittee = async (
   }
 };
 
-export const getAllVaultsAddressesByChain = async (chainId: number): Promise<{ id: string; registered: boolean }[]> => {
+export const getAllVaultsAddressesByChain = async (
+  chainId: number
+): Promise<{ id: string; registered: boolean; version: IVault["version"]; claimsManager: IVault["claimsManager"] }[]> => {
   if (!chainId) return [];
 
   try {
@@ -142,6 +146,8 @@ export const getAllVaultsAddressesByChain = async (chainId: number): Promise<{ i
       vaults(where: {version_not: "v1"}) {
         id
         registered
+        claimsManager
+        version
       }
     }
   `;
@@ -337,4 +343,25 @@ export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
     stakingToken: vault.stakingToken,
     claimsManager: vault.claimsManager,
   };
+};
+
+/*
+ * Get the depositors of a vault
+ * @param vault - The vault to get the depositors from
+ *
+ * @returns An array of depositors with their shares and ownership (percentage of the vault shares they own)
+ *
+ */
+export const getVaultDepositors = (vault: IVault): { address: string; shares: number; ownership: number }[] => {
+  if (!vault || !vault.stakers) return [];
+
+  return vault.stakers.map((staker) => ({
+    address: staker.address,
+    shares: Number(formatUnits(BigNumber.from(staker.shares), +vault.stakingTokenDecimals)),
+    ownership: +(
+      (+formatUnits(BigNumber.from(staker.shares), +vault.stakingTokenDecimals) /
+        +formatUnits(BigNumber.from(vault.totalUsersShares), +vault.stakingTokenDecimals)) *
+      100
+    ).toFixed(2),
+  }));
 };
