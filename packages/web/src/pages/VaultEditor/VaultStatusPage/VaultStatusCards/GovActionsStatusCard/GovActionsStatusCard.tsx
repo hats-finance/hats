@@ -154,6 +154,35 @@ export const GovActionsStatusCard = () => {
         </Alert>
       )}
 
+      {/* Vault data */}
+      <div className="mt-5 ml-5">
+        <ul>
+          <li>
+            <strong>{t("committeeMultisig")}</strong>: {vaultData.committeeMulsitigAddress}
+          </li>
+          <li>
+            <strong>{t("maxBounty")}</strong>: {vaultData.parameters.maxBounty / 100}%
+          </li>
+          <li>
+            <strong>{t("hatsGovFee")}</strong>: {vaultData.parameters.hatsGovernanceSplit / 100}%
+          </li>
+          <li>
+            <strong>{t("bountySplit")}</strong>:
+            <ul className="ml-3">
+              <li>
+                <strong>{t("immediate")}</strong>: {vaultData.parameters.bountySplitImmediate / 100}%
+              </li>
+              <li>
+                <strong>{t("vested")}</strong>: {vaultData.parameters.bountySplitVested / 100}%
+              </li>
+              <li>
+                <strong>{t("committee")}</strong>: {vaultData.parameters.bountySplitCommittee / 100}%
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
       {isLoading && <Loading extraText={t("creatingProposal")} fixed />}
     </div>
   );
