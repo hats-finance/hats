@@ -39,9 +39,10 @@ export const useUserVaults = (versions: UserVaultsVersion[] = ["all"]) => {
   useEffect(() => {
     if (!address) return;
     if (!allVaults || allVaults.length === 0) return;
+    if (userVaults && userVaults.length > 0) return;
 
     getUserVaults(address, allVaults, versions);
-  }, [address, allVaults, versions]);
+  }, [address, allVaults, versions, userVaults]);
 
   /**
    * Retrieves the user's vaults based on their address and vault version.
