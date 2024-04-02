@@ -53,7 +53,13 @@ export const SplitPayoutBeneficiaryForm = ({
   const [showMoreOptions, setShowMoreOptions] = useState(false);
   const { isShowing: isShowingAllocation, show: showAllocation, hide: hideAllocation } = useModal();
 
-  const payoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault, percentageOfPayout);
+  const payoutAllocation = usePayoutAllocation(
+    vault,
+    payout,
+    percentageToPayOfTheVault,
+    percentageOfPayout,
+    beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0).toString()
+  );
 
   const vaultSeverities = vault?.description?.severities ?? [];
   const selectedSeverityName = useWatch({ control, name: `beneficiaries.${index}.severity`, defaultValue: undefined });

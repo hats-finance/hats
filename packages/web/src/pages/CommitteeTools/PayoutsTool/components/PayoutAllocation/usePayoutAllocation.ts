@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IPayoutResponse, IVault } from "@hats.finance/shared";
+import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import millify from "millify";
@@ -46,13 +46,22 @@ export const usePayoutAllocation = (
   vault: IVault | undefined,
   payout: IPayoutResponse | undefined,
   percentageToPayOfTheVault: string | undefined,
-  percentageOfPayout?: string | undefined
+  percentageOfPayout?: string | undefined,
+  totalPercentagesAmongBeneficiaries?: string | undefined
 ): PayoutAllocation => {
   const { allPayouts } = useVaults();
 
+  const usingPointingSystem = payout?.payoutData.type === "split" && (payout?.payoutData as ISplitPayoutData).usingPointingSystem;
+  const totalPoints = +(usingPointingSystem ? totalPercentagesAmongBeneficiaries ?? 1 : 1);
   // We need to multiply the results by the percentage of the payout that we want to pay for this specific beneficiary. This is
   // only used when we want to split the payout between multiple beneficiaries
-  const beneficiaryFactor = percentageOfPayout ? Number(percentageOfPayout) / 100 : 1;
+  const beneficiaryFactor = usingPointingSystem
+    ? percentageOfPayout
+      ? Number(percentageOfPayout) / totalPoints
+      : 1
+    : percentageOfPayout
+    ? Number(percentageOfPayout) / 100
+    : 1;
 
   if (!payout || !vault || !percentageToPayOfTheVault) return DEFAULT_RETURN;
 

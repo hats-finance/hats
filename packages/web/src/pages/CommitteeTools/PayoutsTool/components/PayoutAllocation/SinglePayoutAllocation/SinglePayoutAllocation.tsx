@@ -30,6 +30,7 @@ export const SinglePayoutAllocation = ({
     vault,
     payout,
     percentageToPay,
+    percentageOfPayout,
     percentageOfPayout
   );
 
