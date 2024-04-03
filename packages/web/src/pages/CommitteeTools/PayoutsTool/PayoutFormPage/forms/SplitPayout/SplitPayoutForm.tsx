@@ -2,6 +2,7 @@ import { ISplitPayoutData, IVulnerabilitySeverityV2, IVulnerabilitySeverityV3 } 
 import { Alert, Button, FormInput, Pill } from "components";
 import { useEnhancedFormContext } from "hooks/form";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
+import { useOnChange } from "hooks/usePrevious";
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useFieldArray, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -86,10 +87,11 @@ export const SplitPayoutForm = () => {
   }, [watchConstraints, watchedSeverities, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
 
   // If points changes, autocalculate
-  useEffect(() => {
+  useOnChange(watchedPoints, (val, prev) => {
+    if (JSON.stringify(val) === JSON.stringify(prev)) return;
     if (isPayoutCreated || stopAutocalculation || !usingPointingSystem) return;
     triggerAutocalculate();
-  }, [usingPointingSystem, watchedPoints, triggerAutocalculate, isPayoutCreated, stopAutocalculation]);
+  });
 
   // Populate constraints
   useEffect(() => {

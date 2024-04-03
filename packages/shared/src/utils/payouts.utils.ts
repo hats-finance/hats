@@ -2,6 +2,7 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import axios, { AxiosResponse } from "axios";
 import { BigNumber, ethers } from "ethers";
+import { getAddress } from "ethers/lib/utils.js";
 import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3ClaimsManager_abi } from "../abis";
 import {
   IPayoutData,
@@ -134,18 +135,44 @@ export const getExecutePayoutSafeTransaction = async (
 
     // Join same beneficiaries and sum percentages
     const beneficiariesToIterate = JSON.parse(JSON.stringify(payoutData.beneficiaries)) as ISplitPayoutBeneficiary[];
-    const beneficiariesJointPercentage = beneficiariesToIterate.reduce((acc, beneficiary) => {
-      const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
-      if (existingBeneficiary) {
-        existingBeneficiary.percentageOfPayout = truncate(
-          +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
-          4
+
+    // If vault is v3, we will pay 100% of the vault. So we need to add the remaining funds to the depositors
+    if (vaultInfo.version === "v3") {
+      const rewardsPercentage = percentageToPay * 1;
+      const depositorsPercentage = 10000 - rewardsPercentage;
+
+      const rewardsPoints = beneficiariesToIterate.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
+      const depositorsPoints = (depositorsPercentage * rewardsPoints) / rewardsPercentage;
+
+      if (payout.payoutData.depositors && depositorsPercentage > 0) {
+        beneficiariesToIterate.push(
+          ...payout.payoutData.depositors.map(
+            (depositor) =>
+              ({
+                beneficiary: depositor.address,
+                severity: "depositor",
+                nftUrl: "",
+                percentageOfPayout: truncate(depositorsPoints * (depositor.ownership / 100), 4),
+              } as ISplitPayoutBeneficiary)
+          )
         );
-      } else {
-        acc.push(beneficiary);
       }
-      return acc;
-    }, [] as ISplitPayoutBeneficiary[]);
+    }
+
+    const beneficiariesJointPercentage = beneficiariesToIterate
+      .reduce((acc, beneficiary) => {
+        const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
+        if (existingBeneficiary) {
+          existingBeneficiary.percentageOfPayout = truncate(
+            +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
+            4
+          );
+        } else {
+          acc.push(beneficiary);
+        }
+        return acc;
+      }, [] as ISplitPayoutBeneficiary[])
+      .map((ben) => ({ ...ben, beneficiary: getAddress(ben.beneficiary) }));
 
     // Payout payment splitter creation TX
     const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
@@ -159,9 +186,10 @@ export const getExecutePayoutSafeTransaction = async (
     );
 
     // Payout execution TX
+    // If v3, the percentage to pay is always 100%. We will pay to the beneficiaries and the remaining is going to depositors.
     const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
       payoutData.paymentSplitterBeneficiary as `0x${string}`,
-      percentageToPay,
+      vaultInfo.version === "v3" ? 10000 : percentageToPay,
       payout.payoutDescriptionHash,
     ]);
 

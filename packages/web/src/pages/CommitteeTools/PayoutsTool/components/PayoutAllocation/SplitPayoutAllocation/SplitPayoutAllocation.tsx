@@ -133,7 +133,13 @@ function SplitPayoutAllocationShared({
    * splitter as the beneficiary. The allocation calculation for each individual beneficiary is done on the component
    * `SplitPayoutBeneficiaryForm.tsx`
    */
-  const generalPayoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault);
+  const generalPayoutAllocation = usePayoutAllocation(
+    vault,
+    payout,
+    percentageToPayOfTheVault,
+    undefined,
+    beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0).toString()
+  );
 
   const severitiesSummary = useMemo(
     () =>

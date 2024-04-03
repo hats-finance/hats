@@ -58,7 +58,9 @@ export const SplitPayoutBeneficiaryForm = ({
     payout,
     percentageToPayOfTheVault,
     percentageOfPayout,
-    beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0).toString()
+    ((!payout || payout?.status) === "creating" ? beneficiaries : (payout!.payoutData as ISplitPayoutData).beneficiaries ?? [])
+      .reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0)
+      .toString()
   );
 
   const vaultSeverities = vault?.description?.severities ?? [];
