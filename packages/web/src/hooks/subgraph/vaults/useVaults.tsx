@@ -352,7 +352,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   }, [multiChainData, showTestnets, allChainsLoaded]);
 
   const { safetyPeriod, withdrawPeriod } =
-    (showTestnets ? multiChainData?.test.masters?.[0] : multiChainData?.prod.masters?.[0]) ?? {};
+    (showTestnets
+      ? multiChainData?.test.masters?.find((mas) => mas.chainId === 11155111) ?? {}
+      : multiChainData?.prod.masters?.[0]) ?? {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 
