@@ -1,4 +1,4 @@
-import { IEditedVaultDescription, IEditedVaultParameters } from "@hats.finance/shared";
+import { IEditedVaultDescription, IVaultParameters } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";
@@ -19,11 +19,11 @@ import { StyledVaultEditorForm } from "../../styles";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 
 type VaultParametersFormProps = {
-  statusCardFormDefaultData?: { parameters: IEditedVaultParameters };
-  onSubmit?: (data: { parameters: IEditedVaultParameters }) => void;
+  statusCardFormDefaultData?: { parameters: IVaultParameters };
+  onSubmit?: (data: { parameters: IVaultParameters }) => void;
 };
 
-type FormType = { parameters: IEditedVaultParameters } | IEditedVaultDescription;
+type FormType = { parameters: IVaultParameters } | IEditedVaultDescription;
 
 export const VaultParametersForm = (props: VaultParametersFormProps) => {
   return props.statusCardFormDefaultData ? <VaultParametersFormStatusCard {...props} /> : <VaultParametersFormOnVaultEditor />;
@@ -32,7 +32,7 @@ export const VaultParametersForm = (props: VaultParametersFormProps) => {
 const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: VaultParametersFormProps) => {
   const { t } = useTranslation();
 
-  const methodsOnlyParameters = useForm<{ parameters: IEditedVaultParameters }>({
+  const methodsOnlyParameters = useForm<{ parameters: IVaultParameters }>({
     defaultValues: statusCardFormDefaultData,
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
@@ -80,6 +80,8 @@ const VaultParametersFormOnVaultEditor = () => {
       const master = masters.find(
         (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
       );
+
+      console.log(masters);
 
       if (master) {
         const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;

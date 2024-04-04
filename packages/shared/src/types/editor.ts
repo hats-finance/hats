@@ -3,6 +3,7 @@ import {
   ICommitteeMember,
   IProtocolSetupInstructions,
   IVaultDescription,
+  IVaultParameters,
   IVaultRepoInformation,
   IVaultType,
   IVulnerabilitySeverityV1,
@@ -29,17 +30,6 @@ export interface IEditedCommunicationEmail {
 export interface IEditedVaultAsset {
   address: string;
   symbol: string;
-}
-
-export interface IEditedVaultParameters {
-  fixedCommitteeControlledPercetange?: number;
-  fixedHatsGovPercetange?: number;
-  fixedHatsRewardPercetange?: number;
-  // Editable
-  maxBountyPercentage: number;
-  immediatePercentage: number;
-  vestedPercentage: number;
-  committeePercentage: number;
 }
 
 export type IEditedVulnerabilitySeverityV1 = IVulnerabilitySeverityV1 & { id?: string };
@@ -113,7 +103,7 @@ export interface IBaseEditedVaultDescription {
   };
   "contracts-covered": IEditedContractCovered[];
   assets: IEditedVaultAsset[];
-  parameters: IEditedVaultParameters;
+  parameters: IVaultParameters;
   source: {
     name: string;
     url: string;

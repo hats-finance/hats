@@ -1,4 +1,4 @@
-import { IEditedVaultParameters, isAGnosisSafeTx } from "@hats.finance/shared";
+import { IVaultParameters, isAGnosisSafeTx } from "@hats.finance/shared";
 import SyncIcon from "@mui/icons-material/Sync";
 import { Alert, FormInput, Loading, Pill } from "components";
 import { VaultBountySplitEditionContract } from "contracts";
@@ -17,14 +17,14 @@ export const OnChainDataStatusCard = () => {
 
   const { vaultData, vaultAddress, vaultChainId, refreshVaultData } = useContext(VaultStatusContext);
   const [editVaultParameters, setEditVaultParameters] = useState(false);
-  const [defaultVaultParametersData, setDefaultVaultParametersData] = useState<{ parameters: IEditedVaultParameters }>();
+  const [defaultVaultParametersData, setDefaultVaultParametersData] = useState<{ parameters: IVaultParameters }>();
 
   const confirm = useConfirm();
 
   const isMultisigConnected = address === vaultData.committeeMulsitigAddress;
 
   const editBountySplitCall = VaultBountySplitEditionContract.hook({ address: vaultAddress, chainId: vaultChainId });
-  const handleEditBountySplit = (params: IEditedVaultParameters) => {
+  const handleEditBountySplit = (params: IVaultParameters) => {
     if (!isMultisigConnected) return;
     editBountySplitCall.send(params);
   };
@@ -54,7 +54,7 @@ export const OnChainDataStatusCard = () => {
     });
   }, [vaultData.parameters, isBeingExecuted]);
 
-  const onChangeOnChainData = async (data: { parameters: IEditedVaultParameters }) => {
+  const onChangeOnChainData = async (data: { parameters: IVaultParameters }) => {
     if (!isMultisigConnected) return;
 
     let editMaxBounty,

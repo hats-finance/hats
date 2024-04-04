@@ -25,7 +25,7 @@ import {
 } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
+import { fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 const MAX_CALLS_AT_ONCE = 200;
@@ -70,6 +70,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
+  console.log(allVaults);
 
   const connectedChain = chain ? appChains[chain.id] : null;
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)
@@ -249,8 +250,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     if (JSON.stringify(tokenPrices) !== JSON.stringify(prices)) setTokenPrices(prices);
 
     const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataWithDatesInfo, prices);
+    const allVaultsDataFixedFees = fixVaultFees(allVaultsDataWithPrices);
 
-    const filteredByChain = allVaultsDataWithPrices.filter((vault) => {
+    const filteredByChain = allVaultsDataFixedFees.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
@@ -258,7 +260,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithPrices)) setAllVaults(allVaultsDataWithPrices);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataFixedFees)) setAllVaults(allVaultsDataFixedFees);
     if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
     if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
 
@@ -353,7 +355,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
   const { safetyPeriod, withdrawPeriod } =
     (showTestnets
-      ? multiChainData?.test.masters?.find((mas) => mas.chainId === 11155111) ?? {}
+      ? multiChainData?.test.masters?.find((master) => master.chainId === 11155111) ?? {}
       : multiChainData?.prod.masters?.[0]) ?? {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);

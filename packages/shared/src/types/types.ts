@@ -183,6 +183,7 @@ export interface IVaultDescriptionV3 extends IBaseVaultDescription {
   version: "v3";
   severities: Array<IVulnerabilitySeverityV2>;
   usingPointingSystem?: boolean;
+  parameters: IVaultParameters;
 }
 
 export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2 | IVaultDescriptionV3;
@@ -206,6 +207,17 @@ export interface IVaultRepoInformation {
   prevAuditedCommitHash?: string;
   commitHash?: string;
   isMain: boolean;
+}
+
+export interface IVaultParameters {
+  fixedCommitteeControlledPercetange?: number;
+  fixedHatsGovPercetange?: number;
+  fixedHatsRewardPercetange?: number;
+  // Editable
+  maxBountyPercentage: number;
+  immediatePercentage: number;
+  vestedPercentage: number;
+  committeePercentage: number;
 }
 
 export interface IBaseVulnerabilitySeverity {

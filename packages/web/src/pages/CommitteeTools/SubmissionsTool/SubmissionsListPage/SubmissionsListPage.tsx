@@ -453,14 +453,22 @@ export const SubmissionsListPage = () => {
                             <p className="group-date">{moment(submissionsGroup.date, "MM/DD/YYYY").format("MMM DD, YYYY")}</p>
                             {submissionsGroup.submissions.map((submission) => {
                               const getOnCheckChange = () => {
+                                const alreadyChecked = selectedSubmissions.includes(submission.subId);
                                 const usedVault = (committeeSubmissions ?? []).find(
                                   (sub) => sub.subId === selectedSubmissions[0]
                                 )?.linkedVault;
+                                const isAuditComp = usedVault?.description?.["project-metadata"].type === "audit";
 
+                                // If not the same vault, can't select
                                 if (usedVault && usedVault.id.toLowerCase() !== submission.linkedVault?.id.toLowerCase())
                                   return undefined;
-                                // If v1, only can select one vault (multi payout not available)
-                                if (usedVault?.version === "v1") return undefined;
+
+                                // If v1 or bug-bounty, only can select one vault (multi payout not available)
+                                if (usedVault && !alreadyChecked && (!isAuditComp || usedVault.version === "v1"))
+                                  return undefined;
+
+                                // If v1 or bug-bounty, only can select one vault (multi payout not available)
+                                // if (alreadyChecked && (usedVault?.version === "v1" || !isAuditComp)) return undefined;
 
                                 return (sub: ISubmittedSubmission) => {
                                   if (selectedSubmissions.includes(sub.subId)) {
