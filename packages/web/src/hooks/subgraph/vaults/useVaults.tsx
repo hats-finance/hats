@@ -249,10 +249,10 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const prices = showTestnets ? [] : await getTokenPrices(allVaultsDataWithDatesInfo);
     if (JSON.stringify(tokenPrices) !== JSON.stringify(prices)) setTokenPrices(prices);
 
-    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataWithDatesInfo, prices);
-    const allVaultsDataFixedFees = fixVaultFees(allVaultsDataWithPrices);
+    const allVaultsDataFixedFees = fixVaultFees(allVaultsDataWithDatesInfo);
+    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataFixedFees, prices);
 
-    const filteredByChain = allVaultsDataFixedFees.filter((vault) => {
+    const filteredByChain = allVaultsDataWithPrices.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
     });
 
@@ -260,7 +260,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
 
     // TODO: remove this in order to support multiple vaults again
     //const vaultsWithMultiVaults = addMultiVaults(vaultsWithDescription);
-    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataFixedFees)) setAllVaults(allVaultsDataFixedFees);
+    if (JSON.stringify(allVaults) !== JSON.stringify(allVaultsDataWithPrices)) setAllVaults(allVaultsDataWithPrices);
     if (JSON.stringify(allVaultsOnEnv) !== JSON.stringify(filteredByChain)) setAllVaultsOnEnv(filteredByChain);
     if (JSON.stringify(activeVaults) !== JSON.stringify(filteredByChainAndDate)) setActiveVaults(filteredByChainAndDate);
 
