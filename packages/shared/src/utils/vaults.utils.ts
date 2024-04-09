@@ -2,14 +2,15 @@ import axios, { AxiosResponse } from "axios";
 import { BigNumber } from "ethers";
 import { formatUnits } from "ethers/lib/utils.js";
 import { ChainsConfig } from "../config";
-import { IAddressRoleInVault, IVault, IVaultDescription, IVaultInfo } from "../types";
+import { IAddressRoleInVault, IVault, IVaultDescription, IVaultDescriptionV3, IVaultInfo } from "../types";
 import { isAddressAMultisigMember } from "./gnosis.utils";
 import { isValidIpfsHash } from "./ipfs.utils";
 import { fixObject } from "./vaultEditor.utils";
 
 export type IVaultInfoWithCommittee = IVaultInfo & { committee: string; registered: boolean };
+type IVaultInfoWithCommitteeNoHatsGovFee = Omit<IVaultInfoWithCommittee, "hatsGovFee">;
 
-export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommittee[]> => {
+export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCommitteeNoHatsGovFee[]> => {
   try {
     const GET_ALL_VAULTS = `
       query getVaults {
@@ -22,7 +23,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
           stakingToken
           claimsManager
           master {
-            id
+            address
           }
         }
       }
@@ -51,7 +52,7 @@ export const getAllVaultsInfoWithCommittee = async (): Promise<IVaultInfoWithCom
       (res) => (res as PromiseFulfilledResult<{ chainId: number; request: AxiosResponse<any> }>).value
     );
 
-    const vaults: IVaultInfoWithCommittee[] = [];
+    const vaults: IVaultInfoWithCommitteeNoHatsGovFee[] = [];
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
@@ -95,8 +96,10 @@ export const getVaultInfoWithCommittee = async (
           committee
           stakingToken
           claimsManager
+          governanceHatRewardSplit
+          descriptionHash
           master {
-            id
+            address
           }
         }
       }
@@ -119,6 +122,27 @@ export const getVaultInfoWithCommittee = async (
 
     if (!vault) return undefined;
 
+    const loadVaultDescription = async (
+      vault: IVaultInfoWithCommitteeNoHatsGovFee & { descriptionHash: string }
+    ): Promise<IVaultDescription | undefined> => {
+      if (isValidIpfsHash(vault.descriptionHash)) {
+        try {
+          const dataResponse = await fetch(`https://ipfs2.hats.finance/ipfs/${vault.descriptionHash}`);
+          if (dataResponse.status === 200) {
+            const object = await dataResponse.json();
+            return fixObject(object) as any;
+          }
+          return undefined;
+        } catch (error) {
+          // console.error(error);
+          return undefined;
+        }
+      }
+      return undefined;
+    };
+
+    const description = await loadVaultDescription(vault);
+
     return {
       chainId,
       address: vault.id,
@@ -129,6 +153,10 @@ export const getVaultInfoWithCommittee = async (
       registered: vault.registered,
       stakingToken: vault.stakingToken,
       claimsManager: vault.claimsManager,
+      hatsGovFee:
+        Number(vault.governanceHatRewardSplit) === 0 && vault.version === "v3" && description
+          ? (description as IVaultDescriptionV3).parameters.fixedHatsGovPercetange
+          : vault.governanceHatRewardSplit,
     };
   } catch (error) {
     return undefined;
@@ -342,6 +370,7 @@ export const getVaultInfoFromVault = (vault: IVault): IVaultInfo => {
     pid: vault.pid,
     stakingToken: vault.stakingToken,
     claimsManager: vault.claimsManager,
+    hatsGovFee: vault.governanceHatRewardSplit,
   };
 };
 

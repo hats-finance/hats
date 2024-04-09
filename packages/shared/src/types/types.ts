@@ -8,6 +8,7 @@ export interface IVaultInfo {
   stakingToken: string;
   pid: string;
   claimsManager: string | null;
+  hatsGovFee: string | null;
 }
 
 export type IVaultType = "normal" | "audit" | "grants" | "gamification";

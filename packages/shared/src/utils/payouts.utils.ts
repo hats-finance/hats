@@ -116,7 +116,7 @@ export const getExecutePayoutSafeTransaction = async (
     // Split payout: two TXs with a batch on safe. One to create the payment splitter, and the other to execute the payout.
     // First TX: create payment splitter (this will be the beneficiary of the vault)
     // Second TX: execute payout
-    if (vaultInfo.version === "v1") throw new Error("Split payouts are only supported for v2 vaults");
+    if (vaultInfo.version === "v1") throw new Error("Split payouts are only supported for v2/v3 vaults");
 
     const paymentSplitterFactoryAddress = ChainsConfig[Number(vaultInfo.chainId)].paymentSplitterFactory;
     if (!paymentSplitterFactoryAddress) throw new Error("Payment splitter factory address not found");
@@ -136,14 +136,21 @@ export const getExecutePayoutSafeTransaction = async (
     // Join same beneficiaries and sum percentages
     const beneficiariesToIterate = JSON.parse(JSON.stringify(payoutData.beneficiaries)) as ISplitPayoutBeneficiary[];
 
-    // If vault is v3, we will pay 100% of the vault. So we need to add the remaining funds to the depositors
+    // If vault is v3, we will pay 100% of the vault. So we need to add the remaining funds to the depositors and governance
     if (vaultInfo.version === "v3") {
-      const rewardsPercentage = percentageToPay * 1;
-      const depositorsPercentage = 10000 - rewardsPercentage;
+      if (!vaultInfo.hatsGovFee) throw new Error(`Hats governance fee not found on vaultInfo for payout id: ${payout._id}`);
+      const hatsGovFee = +vaultInfo.hatsGovFee / 100 / 100;
 
-      const rewardsPoints = beneficiariesToIterate.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
-      const depositorsPoints = (depositorsPercentage * rewardsPoints) / rewardsPercentage;
+      const totalToPay = percentageToPay * 1;
+      const governancePercentage = totalToPay * hatsGovFee;
+      const hackersPercentage = totalToPay * (1 - hatsGovFee);
+      const depositorsPercentage = 10000 - totalToPay;
 
+      const hackersPoints = beneficiariesToIterate.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
+      const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
+      const depositorsPoints = (depositorsPercentage * hackersPoints) / hackersPercentage;
+
+      // Add depositors as beneficiaries
       if (payout.payoutData.depositors && depositorsPercentage > 0) {
         beneficiariesToIterate.push(
           ...payout.payoutData.depositors.map(
@@ -156,6 +163,18 @@ export const getExecutePayoutSafeTransaction = async (
               } as ISplitPayoutBeneficiary)
           )
         );
+      }
+
+      // Add governance as beneficiary
+      // We are doing this because in v3 the govFees on-chain is 0%. We need to calculate it manually
+      if (governancePercentage > 0) {
+        const govWallet = vaultInfo.master ?? ChainsConfig[Number(vaultInfo.chainId)].govMultisig;
+        beneficiariesToIterate.push({
+          beneficiary: govWallet,
+          severity: "governance",
+          nftUrl: "",
+          percentageOfPayout: truncate(governancePoints, 4),
+        } as ISplitPayoutBeneficiary);
       }
     }
 
@@ -186,7 +205,7 @@ export const getExecutePayoutSafeTransaction = async (
     );
 
     // Payout execution TX
-    // If v3, the percentage to pay is always 100%. We will pay to the beneficiaries and the remaining is going to depositors.
+    // If v3, the percentage to pay is always 100%. We will pay to the beneficiaries and the remaining is going to depositors/governance.
     const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
       payoutData.paymentSplitterBeneficiary as `0x${string}`,
       vaultInfo.version === "v3" ? 10000 : percentageToPay,

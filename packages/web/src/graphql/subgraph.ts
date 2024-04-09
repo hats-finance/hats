@@ -257,6 +257,7 @@ export const GET_SUBMISSIONS = `
       createdAt
       master {
         id
+        address
       }
     }
   } 
