@@ -70,7 +70,6 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   const [allUserNfts, setAllUserNfts] = useState<IUserNft[]>([]);
   const [userNfts, setUserNfts] = useState<IUserNft[]>([]);
   const [tokenPrices, setTokenPrices] = useState<number[]>();
-  console.log(allVaults);
 
   const connectedChain = chain ? appChains[chain.id] : null;
   // If we're in production, show mainnet. If not, show the connected network (if any, otherwise show testnets)

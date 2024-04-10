@@ -155,7 +155,7 @@ export const getVaultInfoWithCommittee = async (
       claimsManager: vault.claimsManager,
       hatsGovFee:
         Number(vault.governanceHatRewardSplit) === 0 && vault.version === "v3" && description
-          ? (description as IVaultDescriptionV3).parameters.fixedHatsGovPercetange
+          ? ((description as IVaultDescriptionV3).parameters.fixedHatsGovPercetange ?? 0) * 100
           : vault.governanceHatRewardSplit,
     };
   } catch (error) {

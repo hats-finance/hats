@@ -209,8 +209,7 @@ export const fixVaultFees = (vaults: IVault[]): IVault[] => {
     const newGovFee = `${(vault.description?.parameters.fixedHatsGovPercetange ?? 0) * 100}`;
     return {
       ...vault,
-      governanceHatRewardSplit: `${(vault.description?.parameters.fixedHatsGovPercetange ?? 0) * 100}`,
-      hackerRewardSplit: `${+vault.hackerRewardSplit - +newGovFee}`,
+      governanceHatRewardSplit: newGovFee,
     };
   });
 };
