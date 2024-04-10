@@ -196,4 +196,9 @@ export interface IVaultStatusData {
     hatsGovernanceSplit: number;
     hatsRewardSplit: number;
   };
+  arbitrator?: string | undefined;
+  arbitratorCanChangeBounty?: boolean | undefined;
+  arbitratorCanChangeBeneficiary?: boolean | undefined;
+  arbitratorCanSubmitClaims?: boolean | undefined;
+  isTokenLockRevocable?: boolean | undefined;
 }

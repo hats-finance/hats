@@ -7,6 +7,11 @@ import { appChains } from "settings";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { StyledAdditionalBeneficiariesInfo } from "../styles";
 
+function truncate(num: number, fixed: number) {
+  const regex = new RegExp("^-?\\d+(?:.\\d{0," + (fixed || -1) + "})?");
+  return num.toString().match(regex)?.[0] ?? num.toString();
+}
+
 type AdditionalBeneficiariesInfoProps = {
   payout?: IPayoutResponse;
   vault?: IVault;
@@ -41,7 +46,7 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
         <p className="title">
           Security Researchers{" "}
           <strong>
-            {hackersPercentage.toFixed(2)}% ({hackersPoints.toFixed(6)} points)
+            {hackersPercentage.toFixed(2)}% ({(+truncate(hackersPoints, 4) * 10 ** 10).toFixed(0)} points)
           </strong>
         </p>
         <p>
@@ -58,7 +63,7 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
         <p className="title">
           Governance fees{" "}
           <strong>
-            {governancePercentage.toFixed(2)}% ({governancePoints.toFixed(6)} points)
+            {governancePercentage.toFixed(2)}% ({(+truncate(governancePoints, 4) * 10 ** 10).toFixed(0)} points)
           </strong>
         </p>
         <p>
@@ -81,7 +86,7 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
           <p className="title">
             Depositors Information{" "}
             <strong>
-              {depositorsPercentage.toFixed(2)}% ({depositorsPoints.toFixed(6)} points)
+              {depositorsPercentage.toFixed(2)}% ({(+truncate(depositorsPoints, 4) * 10 ** 10).toFixed(0)} points)
             </strong>
           </p>
           <div className="depositors-list">

@@ -689,6 +689,11 @@
     "editable": "Editable",
     "editFeesAndRewards": "Edit fees and rewards",
     "committeeMultisig": "Committee multisig",
+    "arbitrator": "Arbitrator",
+    "arbitratorCanChangeBounty": "Arbitrator can change bounty?",
+    "arbitratorCanChangeBeneficiary": "Arbitrator can change beneficiary?",
+    "arbitratorCanSubmitClaims": "Arbitrator can submit claims?",
+    "isTokenLockRevocable": "Is token lock revocable?",
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
       "optOutFromAuditCompetition": "Opt out from audit competition",

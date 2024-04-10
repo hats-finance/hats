@@ -195,6 +195,11 @@ export async function getVaultInformation(vault: IVault | undefined): Promise<IV
             { ...claimsManagerContractInfo, functionName: "maxBounty" }, // maxBounty
             { ...vaultContractInfo, functionName: "asset" }, // asset
             { ...vaultContractInfo, functionName: "decimals" }, // tokenDecimals
+            { ...claimsManagerContractInfo, functionName: "getArbitrator" }, // arbitrator
+            { ...claimsManagerContractInfo, functionName: "arbitratorCanChangeBounty" }, // arbitratorCanChangeBounty
+            { ...claimsManagerContractInfo, functionName: "arbitratorCanChangeBeneficiary" }, // arbitratorCanChangeBeneficiary
+            { ...claimsManagerContractInfo, functionName: "arbitratorCanSubmitClaims" }, // arbitratorCanSubmitClaims
+            { ...claimsManagerContractInfo, functionName: "isTokenLockRevocable" }, // isTokenLockRevocable
           ] as any),
   }) as Promise<any[]>;
 
@@ -212,7 +217,14 @@ export async function getVaultInformation(vault: IVault | undefined): Promise<IV
     maxBounty,
     assetToken,
     tokenDecimals,
+    arbitrator,
+    arbitratorCanChangeBounty,
+    arbitratorCanChangeBeneficiary,
+    arbitratorCanSubmitClaims,
+    isTokenLockRevocable,
   ] = contractCalls;
+
+  console.log(contractCalls);
 
   if (!descriptionHash) throw new Error("Description hash not found");
 
@@ -245,6 +257,11 @@ export async function getVaultInformation(vault: IVault | undefined): Promise<IV
       hatsGovernanceSplit,
       hatsRewardSplit,
     },
+    arbitrator,
+    arbitratorCanChangeBounty,
+    arbitratorCanChangeBeneficiary,
+    arbitratorCanSubmitClaims,
+    isTokenLockRevocable,
   };
 
   return vaultData;

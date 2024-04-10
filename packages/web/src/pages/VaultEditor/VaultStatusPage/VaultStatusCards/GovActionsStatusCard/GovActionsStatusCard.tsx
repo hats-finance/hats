@@ -164,7 +164,9 @@ export const GovActionsStatusCard = () => {
             <strong>{t("maxBounty")}</strong>: {vaultData.parameters.maxBounty / 100}%
           </li>
           <li>
-            <strong>{t("hatsGovFee")}</strong>: {vaultData.parameters.hatsGovernanceSplit / 100}%
+            <strong>{t("hatsGovFee")}</strong>: {vaultData.parameters.hatsGovernanceSplit / 100}% on-chain (
+            {vaultData.description?.version === "v3" ? `${vaultData.description.parameters.fixedHatsGovPercetange}%` : ""} on
+            vault editor)
           </li>
           <li>
             <strong>{t("bountySplit")}</strong>:
@@ -180,6 +182,32 @@ export const GovActionsStatusCard = () => {
               </li>
             </ul>
           </li>
+          {vaultData.arbitrator && (
+            <li>
+              <strong>{t("arbitrator")}</strong>: {vaultData.arbitrator}
+            </li>
+          )}
+          {vaultData.arbitratorCanChangeBounty !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanChangeBounty")}</strong>: {vaultData.arbitratorCanChangeBounty ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.arbitratorCanChangeBeneficiary !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanChangeBeneficiary")}</strong>:{" "}
+              {vaultData.arbitratorCanChangeBeneficiary ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.arbitratorCanSubmitClaims !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanSubmitClaims")}</strong>: {vaultData.arbitratorCanSubmitClaims ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.isTokenLockRevocable !== undefined && (
+            <li>
+              <strong>{t("isTokenLockRevocable")}</strong>: {vaultData.isTokenLockRevocable ? t("yes") : t("no")}
+            </li>
+          )}
         </ul>
       </div>
 

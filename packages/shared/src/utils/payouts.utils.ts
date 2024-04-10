@@ -168,7 +168,9 @@ export const getExecutePayoutSafeTransaction = async (
       // Add governance as beneficiary
       // We are doing this because in v3 the govFees on-chain is 0%. We need to calculate it manually
       if (governancePercentage > 0) {
-        const govWallet = vaultInfo.master ?? ChainsConfig[Number(vaultInfo.chainId)].govMultisig;
+        const govWallet = ChainsConfig[Number(vaultInfo.chainId)].govMultisig;
+        if (!govWallet) throw new Error(`Gov wallet not found on ChainsConfig for payout id: ${payout._id}`);
+
         beneficiariesToIterate.push({
           beneficiary: govWallet,
           severity: "governance",
