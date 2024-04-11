@@ -41,7 +41,7 @@ export interface IChainConfiguration {
 export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [wagmiChains.mainnet.id]: {
     vaultsCreatorContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
@@ -57,7 +57,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.goerli.id]: {
     vaultsCreatorContract: "0x357D2B22A235E0b0F83926ceE9b0D0fF8489e03b",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xCD22290206442B89662820F8dc48E3AD12F5571b",
     hackersNFTContract: "0x340adA7f98ccCC70588A9B1Ccf5Ff037D65AC72e",
@@ -74,7 +74,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [wagmiChains.sepolia.id]: {
     // vaultsCreatorContract: "0x8C75dB6367e6eE1980d1999598bd38cbfD690A2A", v2
     vaultsCreatorContract: "0x5d7A4fA7942681c570DdEAA6e2D203E15516AA93", // v3
-    arbitratorContract: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x89e477E69E591EF24a7Af27d358CF6889B0924ab",
     vaultsNFTContract: "0x96E93876eB2314901ee9967488C650D77A50c705",
     hackersNFTContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
@@ -90,7 +90,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
     hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
@@ -106,7 +106,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.optimismGoerli.id]: {
     vaultsCreatorContract: "0x8633212777Da1394bb379Df9520f098B014fB77b",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x8eb48eD456106Ef31929A832e29E61FE444b1B62",
     hackersNFTContract: "0x81ce6022297Ab5e15ba295159aA4BDac6b84A76D",
@@ -120,7 +120,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.arbitrum.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
     hackersNFTContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
@@ -136,7 +136,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.polygon.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
     hackersNFTContract: "0x312917812e76d78C5B1139C28d5C1D3A272d171d",
@@ -152,7 +152,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [meter.id]: {
     vaultsCreatorContract: "0x7e0723Fb43869f7742cEFE1a8b1D86665Bb79ED0",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xA1b532Bba529741247239492A25971Df82827Efd",
     hackersNFTContract: "0x5d3bbbB82dfb2D89B674Ebdf44F721072799e8aa",
@@ -167,7 +167,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.gnosis.id]: {
     vaultsCreatorContract: "0x304A70840D8D43B288A6e4e4e718081BBcF160be",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x07368F6a959Ef3096230a258dd0af692699c3a4c",
     hackersNFTContract: "0xe198CBb727758b9Ad38a12E1ad475a843e5e730F",
@@ -182,7 +182,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
   [wagmiChains.bsc.id]: {
     vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
-    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
     hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
