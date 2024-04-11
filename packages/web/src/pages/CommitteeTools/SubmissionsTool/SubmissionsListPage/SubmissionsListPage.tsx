@@ -245,7 +245,10 @@ export const SubmissionsListPage = () => {
     if (!vault || !committeeSubmissions) return;
     if (!vault.description || !vault.description.severities) return;
 
-    console.log(vault);
+    if (vault.destroyed) {
+      alert("This vault is destroyed and can't be used to create a payout.");
+      return;
+    }
 
     const wantToCreatePayout = await confirm({
       title: t("SubmissionsTool.createPayout"),

@@ -31,6 +31,11 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const handleCreatePayout = async () => {
     if (!selectedVault || !payoutType || !isVaultDepositedAndCheckedIn) return;
 
+    if (selectedVault.destroyed) {
+      alert("This vault is destroyed and can't be used to create a payout.");
+      return;
+    }
+
     let payoutData = createNewPayoutData(payoutType);
     payoutData.depositors = getVaultDepositors(selectedVault);
 
