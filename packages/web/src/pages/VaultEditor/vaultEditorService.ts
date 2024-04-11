@@ -224,8 +224,6 @@ export async function getVaultInformation(vault: IVault | undefined): Promise<IV
     isTokenLockRevocable,
   ] = contractCalls;
 
-  console.log(contractCalls);
-
   if (!descriptionHash) throw new Error("Description hash not found");
 
   let description: IVaultDescription | undefined = undefined;
