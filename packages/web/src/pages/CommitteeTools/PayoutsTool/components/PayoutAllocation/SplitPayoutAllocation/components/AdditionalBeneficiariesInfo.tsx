@@ -38,7 +38,7 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
 
   if (isNaN(depositorsPercentage) && depositorsPercentage > 0) return null;
   const needToPayDepositors = !isNaN(depositorsPercentage) && depositorsPercentage > 0;
-  const govWallet = vault.master.address ?? appChains[Number(vault.chainId)].govMultisig;
+  const govWallet = appChains[Number(vault.chainId)].govMultisig;
 
   return (
     <StyledAdditionalBeneficiariesInfo>
