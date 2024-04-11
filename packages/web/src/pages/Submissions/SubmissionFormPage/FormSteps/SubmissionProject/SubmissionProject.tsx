@@ -35,7 +35,12 @@ export function SubmissionProject() {
     // Don't show the private audit, unless the project is already selected
     if (isPrivateAudit && submissionData?.project?.projectId !== vault.id) return undefined;
 
-    if (projectName?.toLowerCase().includes(userInput.toLowerCase()) && !vault.liquidityPool && vault.registered) {
+    if (
+      projectName?.toLowerCase().includes(userInput.toLowerCase()) &&
+      !vault.liquidityPool &&
+      vault.registered &&
+      !vault.destroyed
+    ) {
       return (
         <Vault
           key={index}

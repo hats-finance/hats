@@ -53,6 +53,7 @@ export interface IBaseVault {
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
   claimsManager: string | null;
+  destroyed?: boolean;
   // Computed values
   amountsInfo?: {
     showCompetitionIntendedAmount: boolean;

@@ -86,6 +86,7 @@ export const GET_VAULTS = `
       depositPause
       committeeCheckedIn
       claimsManager
+      destroyed
       rewardControllers {
         id
         rewardToken
@@ -210,6 +211,7 @@ export const GET_VAULTS_NOCLAIMMANAGER = `
       vestingPeriods
       depositPause
       committeeCheckedIn
+      destroyed
       rewardControllers {
         id
         rewardToken
