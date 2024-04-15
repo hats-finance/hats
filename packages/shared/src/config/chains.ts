@@ -22,6 +22,7 @@ export interface IChainConfiguration {
   hackersNFTContract: string;
   vaultsCreatorContract: string;
   arbitratorContract: string;
+  airdropContract?: string;
   paymentSplitterFactory: string;
   rewardController?: string;
   govMultisig?: string;
@@ -87,6 +88,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     paymentSplitterFactory: "0x09959581544511916A80185FFe3De3Df11D623D7",
     infuraKey: "sepolia",
     provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
+    airdropContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
   },
   [wagmiChains.optimism.id]: {
     vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
