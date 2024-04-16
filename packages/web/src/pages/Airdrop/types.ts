@@ -9,3 +9,5 @@ export type AirdropMerkeltree = {
     };
   };
 };
+
+export type AirdropElegibility = AirdropMerkeltree["address"]["token_eligibility"] & { total: string };

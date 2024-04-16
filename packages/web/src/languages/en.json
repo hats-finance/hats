@@ -530,6 +530,7 @@
     "why7daysPeriods": "Why do we have a 7 days waiting period?",
     "why7daysPeriodsExplanation": "The reason behind the 7-day waiting period is to implement additional protective measures that help prevent Front-running payouts. We prioritize the security of our users and hence have implemented this precautionary measure.",
     "checkYourConnectedWallet": "Check your connected wallet",
+    "redeemingYourAirdrop": "Redeeming your airdrop",
     "withdrawToken": "Withdraw {{token}}",
     "depositToken": "Deposit {{token}}",
     "approvingTokenSpending": "Approving {{token}} spending",

@@ -204,3 +204,14 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   //     subgraph: "http://localhost:8000/subgraphs/name/hats-nft"
   // }
 };
+
+export const AirdropChainConfig = {
+  test: {
+    chain: wagmiChains.sepolia,
+    address: "0x6C6443eA0664eD8ebC3F1a98075a0B7d0b07aFF0",
+  },
+  prod: {
+    chain: wagmiChains.arbitrum,
+    address: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+  },
+};
