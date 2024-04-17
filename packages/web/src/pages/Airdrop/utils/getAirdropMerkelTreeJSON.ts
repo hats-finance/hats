@@ -1,12 +1,11 @@
-import { AirdropChainConfig, HATAirdrop_abi } from "@hats.finance/shared";
+import { HATAirdrop_abi } from "@hats.finance/shared";
 import { ipfsTransformUri } from "utils";
 import { getContract, getProvider } from "wagmi/actions";
 import { AirdropMerkeltree } from "../types";
 
-export const getAirdropMerkleTreeJSON = async (env: "test" | "prod"): Promise<AirdropMerkeltree> => {
-  const aidropChainConfig = AirdropChainConfig[env];
-  const airdropContractAddress = aidropChainConfig.address;
-  const chainId = aidropChainConfig.chain.id;
+export const getAirdropMerkleTreeJSON = async (airdropData: { address: string; chainId: number }): Promise<AirdropMerkeltree> => {
+  const airdropContractAddress = airdropData.address;
+  const chainId = airdropData.chainId;
 
   const provider = getProvider({ chainId });
   if (!airdropContractAddress) {

@@ -3,7 +3,7 @@ import { BigNumber } from "ethers";
 import { IS_PROD } from "settings";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
-import { AirdropElegibility } from "../types";
+import { AirdropElegibility } from "../utils/getAirdropElegibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
 import { getAirdropMerkleTreeJSON } from "../utils/getAirdropMerkelTreeJSON";
 
@@ -38,7 +38,10 @@ export class RedeemAirdropContract {
           if (!account || !connectedChain) return;
           await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
-          const merkelTreeData = await getAirdropMerkleTreeJSON(env);
+          const merkelTreeData = await getAirdropMerkleTreeJSON({
+            address: aidropChainConfig.address,
+            chainId: aidropChainConfig.chain.id,
+          });
           const merkelTree = await getAirdropMerkelTree(merkelTreeData);
 
           const proof = merkelTree.getHexProof(hashToken(account, BigNumber.from(airdropElegibility.total))) as `0x${string}`[];

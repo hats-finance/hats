@@ -1,5 +1,5 @@
 export { GoodDollar_abi } from "./GoodDollar_abi";
-export { HatsToken_abi } from "./HatsToken_abi";
+export { HATToken_abi } from "./HATToken_abi";
 export { InsureDao_abi } from "./InsureDao_abi";
 export { HATSVaultV1_abi } from "./HATSVaultV1_abi";
 export { HATSVaultV2_abi } from "./HATSVaultV2_abi";
@@ -13,4 +13,5 @@ export { RewardController_abi } from "./RewardController_abi";
 export { HATTimelockController_abi } from "./HATTimelockController_abi";
 export { HATPaymentSplitter_abi } from "./HATPaymentSplitter_abi";
 export { HATAirdrop_abi } from "./HATAirdrop_abi";
+export { HATTokenLock_abi } from "./HATTokenLock_abi";
 export { erc20_abi } from "./erc20_abi";
