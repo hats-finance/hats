@@ -205,13 +205,18 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   // }
 };
 
-export const AirdropChainConfig = {
-  test: {
-    chain: wagmiChains.sepolia,
-    address: "0x127a2858b513ae6ecc1cec6867a067fd69c1f9c1",
-  },
-  prod: {
-    chain: wagmiChains.arbitrum,
-    address: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  },
+export type AirdropConfig = { chain: wagmiChains.Chain; address: string };
+export const AirdropChainConfig: { test: AirdropConfig[]; prod: AirdropConfig[] } = {
+  test: [
+    {
+      chain: wagmiChains.sepolia,
+      address: "0x127a2858b513ae6ecc1cec6867a067fd69c1f9c1",
+    },
+  ],
+  prod: [
+    {
+      chain: wagmiChains.arbitrum,
+      address: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+    },
+  ],
 };

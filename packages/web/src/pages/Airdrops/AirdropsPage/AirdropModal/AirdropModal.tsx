@@ -1,18 +1,22 @@
 import { formatUnits } from "@ethersproject/units";
-import { AirdropChainConfig } from "@hats.finance/shared";
+import { AirdropConfig } from "@hats.finance/shared";
 import { Loading, Seo } from "components";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { IS_PROD } from "settings";
 import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
-import { DelegateAirdropContract } from "../contracts/DelegateAirdropContract";
-import { RedeemAirdropContract } from "../contracts/RedeemAirdropContract";
-import { AirdropElegibility, getAirdropElegibility } from "../utils/getAirdropElegibility";
-import { AirdropRedeemData, getAirdropRedeemedData } from "../utils/getAirdropRedeemedData";
-import { StyledAidropPage } from "./styles";
+import { DelegateAirdropContract } from "../../contracts/DelegateAirdropContract";
+import { RedeemAirdropContract } from "../../contracts/RedeemAirdropContract";
+import { AirdropElegibility, getAirdropElegibility } from "../../utils/getAirdropElegibility";
+import { AirdropRedeemData, getAirdropRedeemedData } from "../../utils/getAirdropRedeemedData";
+import { StyledAirdropModal } from "./styles";
 
-export const AirdropPage = () => {
+type AirdropModalProps = {
+  aidropData: AirdropConfig;
+  closeModal: () => void;
+};
+
+export const AirdropModal = ({ aidropData, closeModal }: AirdropModalProps) => {
   const { t } = useTranslation();
   const { chain: connectedChain } = useNetwork();
   const { address } = useAccount();
@@ -24,8 +28,6 @@ export const AirdropPage = () => {
 
   const updateAirdropElegibility = async () => {
     if (!address) return;
-    const isTestnet = !IS_PROD && connectedChain?.testnet;
-    const aidropData = AirdropChainConfig[isTestnet ? "test" : "prod"];
     const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
 
     const elegibility = await getAirdropElegibility(address, aidropInfo);
@@ -35,8 +37,6 @@ export const AirdropPage = () => {
 
   const updateAirdropRedeemedData = async () => {
     if (!address) return;
-    const isTestnet = !IS_PROD && connectedChain?.testnet;
-    const aidropData = AirdropChainConfig[isTestnet ? "test" : "prod"];
     const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
 
     const redeemed = await getAirdropRedeemedData(address, aidropInfo);
@@ -44,21 +44,20 @@ export const AirdropPage = () => {
     return redeemed;
   };
 
-  const redeemAirdropCall = RedeemAirdropContract.hook(airdropElegibility);
+  const redeemAirdropCall = RedeemAirdropContract.hook(aidropData, airdropElegibility);
   const waitingRedeemAirdropCall = useWaitForTransaction({
     hash: redeemAirdropCall.data?.hash as `0x${string}`,
     onSuccess: async () => {
       updateAirdropElegibility();
       const newRedeemData = await updateAirdropRedeemedData();
-      await DelegateAirdropContract.send(newRedeemData, delegatee);
+      await DelegateAirdropContract.send(aidropData, newRedeemData, delegatee);
     },
   });
 
   useEffect(() => setAirdropElegibility(undefined), [address, connectedChain]);
 
   return (
-    <>
-      <Seo title={t("seo.leaderboardTitle")} />
+    <StyledAirdropModal>
       {/* <button
         onClick={() => {
           const contractInterface = new ethers.utils.Interface(HATAirdrop_abi);
@@ -78,9 +77,7 @@ export const AirdropPage = () => {
       >
         Get Init Data
       </button> */}
-      <StyledAidropPage className="content-wrapper">
-        <h2 className="subtitle">{t("airdrop")}</h2>
-      </StyledAidropPage>
+      <h2>{t("airdrop")}</h2>
 
       <br />
       <br />
@@ -143,6 +140,6 @@ export const AirdropPage = () => {
 
       {redeemAirdropCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingRedeemAirdropCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
-    </>
+    </StyledAirdropModal>
   );
 };

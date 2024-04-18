@@ -1,14 +1,14 @@
 import { RoutePaths } from "navigation";
 import { RouteObject } from "react-router-dom";
 // Pages components
-import { AirdropPage } from "./AirdropPage/AirdropPage";
+import { AirdropsPage } from "./AirdropsPage/AirdropsPage";
 
-export const airdropRouter = (): RouteObject => ({
+export const airdropsRouter = (): RouteObject => ({
   path: `${RoutePaths.airdrop}`,
   children: [
     {
       path: "",
-      element: <AirdropPage />,
+      element: <AirdropsPage />,
     },
   ],
 });

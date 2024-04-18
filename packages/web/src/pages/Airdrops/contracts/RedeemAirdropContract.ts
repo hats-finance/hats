@@ -1,6 +1,5 @@
-import { AirdropChainConfig, HATAirdrop_abi } from "@hats.finance/shared";
+import { AirdropConfig, HATAirdrop_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
-import { IS_PROD } from "settings";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
 import { AirdropElegibility } from "../utils/getAirdropElegibility";
@@ -13,15 +12,12 @@ export class RedeemAirdropContract {
    *
    * @param vault - The selected vault to deposit staking token
    */
-  static hook = (airdropElegibility: AirdropElegibility | false | undefined) => {
+  static hook = (airdrop: AirdropConfig, airdropElegibility: AirdropElegibility | false | undefined) => {
     const { address: account } = useAccount();
     const { chain: connectedChain } = useNetwork();
 
-    const isTestnet = !IS_PROD && connectedChain?.testnet;
-    const env = isTestnet ? "test" : "prod";
-    const aidropChainConfig = AirdropChainConfig[env];
-    const airdropContractAddress = aidropChainConfig.address;
-    const airdropChainId = aidropChainConfig.chain.id;
+    const airdropContractAddress = airdrop.address;
+    const airdropChainId = airdrop.chain.id;
 
     const redeemAirdrop = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -39,8 +35,8 @@ export class RedeemAirdropContract {
           await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
           const merkelTreeData = await getAirdropMerkleTreeJSON({
-            address: aidropChainConfig.address,
-            chainId: aidropChainConfig.chain.id,
+            address: airdrop.address,
+            chainId: airdrop.chain.id,
           });
           const merkelTree = await getAirdropMerkelTree(merkelTreeData);
 
