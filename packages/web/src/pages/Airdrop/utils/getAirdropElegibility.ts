@@ -47,13 +47,6 @@ export const getAirdropElegibility = async (
     const lockEndDate = new Date(+lockEndTimeSeconds * 1000);
     const isLocked = lockEndDate.getTime() > Date.now();
 
-    console.log({
-      ...addressInfo.token_eligibility,
-      total: totalAllocatedToAddress,
-      isLocked,
-      lockEndDate,
-    });
-
     return {
       ...addressInfo.token_eligibility,
       total: totalAllocatedToAddress,

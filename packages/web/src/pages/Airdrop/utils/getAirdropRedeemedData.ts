@@ -1,4 +1,4 @@
-import { HATAirdrop_abi, HATToken_abi } from "@hats.finance/shared";
+import { HATAirdrop_abi } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { getContract, getProvider } from "wagmi/actions";
 
@@ -9,10 +9,10 @@ export type AirdropRedeemData = {
   tokenLock?: {
     address: `0x${string}`;
   };
-  delegator?: {
-    delegatee: string;
-    votes: BigNumber;
-  };
+  // delegator?: {
+  //   delegatee: string;
+  //   votes: BigNumber;
+  // };
 };
 
 type TokensRedeemedEventArgs = {
@@ -55,16 +55,16 @@ export const getAirdropRedeemedData = async (
   const usingTokenLock = addressEventArgs._tokenLock !== ethers.constants.AddressZero;
 
   const tokenAddress = await airdropContract.token();
-  const tokenContract = getContract({
-    abi: HATToken_abi,
-    address: tokenAddress,
-    signerOrProvider: provider,
-  });
+  // const tokenContract = getContract({
+  //   abi: HATToken_abi,
+  //   address: tokenAddress,
+  //   signerOrProvider: provider,
+  // });
 
   /* Get delegator information */
-  const votesChangedEvents = await tokenContract.queryFilter("DelegateVotesChanged", 0);
-  const delegatedEvents = await tokenContract.queryFilter("DelegateChanged", 0);
-  let delegatedEvent: ethers.Event | undefined;
+  // const votesChangedEvents = await tokenContract.queryFilter("DelegateVotesChanged", 0);
+  // const delegatedEvents = await tokenContract.queryFilter("DelegateChanged", 0);
+  // let delegatedEvent: ethers.Event | undefined;
 
   // if (usingTokenLock) {
   //   delegatedEvent = delegatedEvents.find(
@@ -73,21 +73,21 @@ export const getAirdropRedeemedData = async (
   //       event.args?.fromDelegate.toLowerCase() === address.toLowerCase()
   //   );
   // } else {
-  delegatedEvent = delegatedEvents.find(
-    (event) =>
-      event.args?.delegator === ethers.constants.AddressZero && event.args?.fromDelegate.toLowerCase() === address.toLowerCase()
-  );
+  // delegatedEvent = delegatedEvents.find(
+  //   (event) =>
+  //     event.args?.delegator === ethers.constants.AddressZero && event.args?.fromDelegate.toLowerCase() === address.toLowerCase()
+  // );
   // }
 
-  const delegatee = delegatedEvent?.args?.toDelegate;
-  const delegateeVotes = votesChangedEvents.filter((e) => e.args?.delegate.toLowerCase() === delegatee?.toLowerCase()).pop()
-    ?.args?.newBalance;
+  // const delegatee = delegatedEvent?.args?.toDelegate;
+  // const delegateeVotes = votesChangedEvents.filter((e) => e.args?.delegate.toLowerCase() === delegatee?.toLowerCase()).pop()
+  //   ?.args?.newBalance;
 
   return {
     account: addressEventArgs._account,
     amount: addressEventArgs._amount,
     token: tokenAddress,
     tokenLock: usingTokenLock ? { address: addressEventArgs._tokenLock } : undefined,
-    delegator: delegatee ? { delegatee, votes: delegateeVotes } : undefined,
+    // delegator: delegatee ? { delegatee, votes: delegateeVotes } : undefined,
   };
 };

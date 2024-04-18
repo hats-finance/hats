@@ -208,7 +208,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
 export const AirdropChainConfig = {
   test: {
     chain: wagmiChains.sepolia,
-    address: "0x11F94b1e41e882D3371bcC53aEFA4431C64beff7",
+    address: "0x127a2858b513ae6ecc1cec6867a067fd69c1f9c1",
   },
   prod: {
     chain: wagmiChains.arbitrum,

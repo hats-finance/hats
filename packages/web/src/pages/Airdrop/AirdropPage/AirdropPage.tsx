@@ -20,17 +20,38 @@ export const AirdropPage = () => {
   const [redeemData, setRedeemData] = useState<AirdropRedeemData>();
   const [isLoading, setIsLoading] = useState(false);
 
-  const delegatee = "0xCC5BD779A1EACeEFA704315A1F504446B6D25a1F";
+  const delegatee = "0xbd0c1BE472245dB26E39ed30C964e9e3132DE555";
+
+  const updateAirdropElegibility = async () => {
+    if (!address) return;
+    const isTestnet = !IS_PROD && connectedChain?.testnet;
+    const aidropData = AirdropChainConfig[isTestnet ? "test" : "prod"];
+    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
+
+    const elegibility = await getAirdropElegibility(address, aidropInfo);
+    setAirdropElegibility(elegibility);
+    return elegibility;
+  };
+
+  const updateAirdropRedeemedData = async () => {
+    if (!address) return;
+    const isTestnet = !IS_PROD && connectedChain?.testnet;
+    const aidropData = AirdropChainConfig[isTestnet ? "test" : "prod"];
+    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
+
+    const redeemed = await getAirdropRedeemedData(address, aidropInfo);
+    setRedeemData(redeemed);
+    return redeemed;
+  };
 
   const redeemAirdropCall = RedeemAirdropContract.hook(airdropElegibility);
-  const delegateAirdropCall = DelegateAirdropContract.hook(redeemData);
   const waitingRedeemAirdropCall = useWaitForTransaction({
     hash: redeemAirdropCall.data?.hash as `0x${string}`,
-    onSuccess: () => delegateAirdropCall.send(delegatee),
-  });
-  const waitingDelegateAirdropCall = useWaitForTransaction({
-    hash: delegateAirdropCall.data?.hash as `0x${string}`,
-    onSuccess: () => console.log("Ready delegate"),
+    onSuccess: async () => {
+      updateAirdropElegibility();
+      const newRedeemData = await updateAirdropRedeemedData();
+      await DelegateAirdropContract.send(newRedeemData, delegatee);
+    },
   });
 
   useEffect(() => setAirdropElegibility(undefined), [address, connectedChain]);
@@ -38,6 +59,25 @@ export const AirdropPage = () => {
   return (
     <>
       <Seo title={t("seo.leaderboardTitle")} />
+      {/* <button
+        onClick={() => {
+          const contractInterface = new ethers.utils.Interface(HATAirdrop_abi);
+          console.log(
+            contractInterface.encodeFunctionData("initialize", [
+              "QmXBAjEK29uCKaYaC13SK49z8fUbuQm3dxP1GPah1j1KQL",
+              "0xa173d3942100e26f4fd830b3d05d5e480fceea8f9f9e26509683e4c44aaeac7f",
+              1713195154,
+              1714080754,
+              1715808754,
+              30,
+              "0xbdb34BB8665510d331FacAAaA0eeAe994a5B6612",
+              "0x0153A75550E32CDf9a4458301bb89b600e745EAf",
+            ])
+          );
+        }}
+      >
+        Get Init Data
+      </button> */}
       <StyledAidropPage className="content-wrapper">
         <h2 className="subtitle">{t("airdrop")}</h2>
       </StyledAidropPage>
@@ -49,16 +89,8 @@ export const AirdropPage = () => {
         onClick={async () => {
           if (!address) return;
           setIsLoading(true);
-
-          const isTestnet = !IS_PROD && connectedChain?.testnet;
-          const aidropData = AirdropChainConfig[isTestnet ? "test" : "prod"];
-          const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
-
-          const elegibility = await getAirdropElegibility(address, aidropInfo);
-          setAirdropElegibility(elegibility);
-          const redeemed = await getAirdropRedeemedData(address, aidropInfo);
-          setRedeemData(redeemed);
-
+          await updateAirdropElegibility();
+          await updateAirdropRedeemedData();
           setIsLoading(false);
         }}
       >
@@ -104,13 +136,6 @@ export const AirdropPage = () => {
                   <p>Address: {redeemData.tokenLock?.address}</p>
                 </>
               )}
-              {redeemData && redeemData.delegator && (
-                <>
-                  <h3>Delegator information:</h3>
-                  <p>Delegatee: {redeemData.delegator.delegatee}</p>
-                  <p>Votes: {formatUnits(redeemData.delegator.votes, 18)}</p>
-                </>
-              )}
             </div>
           )}
         </>
@@ -118,7 +143,6 @@ export const AirdropPage = () => {
 
       {redeemAirdropCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingRedeemAirdropCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
-      {waitingDelegateAirdropCall.isLoading && <Loading fixed extraText={`${t("delegatingYourAirdrop")}...`} />}
     </>
   );
 };
