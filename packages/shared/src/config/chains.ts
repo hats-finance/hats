@@ -212,6 +212,18 @@ export const AirdropChainConfig: { test: AirdropConfig[]; prod: AirdropConfig[] 
       chain: wagmiChains.sepolia,
       address: "0x127a2858b513ae6ecc1cec6867a067fd69c1f9c1",
     },
+    {
+      chain: wagmiChains.sepolia,
+      address: "0xb9b8b348f88169040ee3f4c5ea11c4b48c83d12c",
+    },
+    {
+      chain: wagmiChains.sepolia,
+      address: "0x736Bc40D40CFD8F553978541067e835d831EEbf9",
+    },
+    {
+      chain: wagmiChains.sepolia,
+      address: "0xA272499Cb7beab2a9E4B5696453f075C76f4E110",
+    },
   ],
   prod: [
     {

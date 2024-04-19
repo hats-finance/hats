@@ -49,6 +49,8 @@ export const getAirdropRedeemedData = async (
   const redeemedEvents = await airdropContract.queryFilter("TokensRedeemed", 0);
   const addressEvent = redeemedEvents.find((event) => event.args?._account.toLowerCase() === address.toLowerCase());
   const addressEventArgs = addressEvent?.args as TokensRedeemedEventArgs | undefined;
+
+  // If the address has not redeemed the airdrop, return undefined.
   if (!addressEvent || !addressEventArgs) return undefined;
 
   // If the tokenLock is the zero address, it means that the user redeemed the airdrop without locking the tokens.
