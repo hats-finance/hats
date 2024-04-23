@@ -1,7 +1,5 @@
-import { formatUnits } from "@ethersproject/units";
 import { AirdropConfig } from "@hats.finance/shared";
 import { HatSpinner, Loading } from "components";
-import { BigNumber } from "ethers";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
@@ -9,6 +7,7 @@ import { DelegateAirdropContract } from "../../../contracts/DelegateAirdropContr
 import { RedeemAirdropContract } from "../../../contracts/RedeemAirdropContract";
 import { AirdropElegibility, getAirdropElegibility } from "../../../utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "../../../utils/getAirdropRedeemedData";
+import { AirdropRedeemCompleted } from "./steps/AirdropRedeemCompleted";
 import { AirdropRedeemDelegatee } from "./steps/AirdropRedeemDelegatee";
 import { AirdropRedeemQuestionnaire } from "./steps/AirdropRedeemQuestionnaire";
 import { AirdropRedeemReview } from "./steps/AirdropRedeemReview";
@@ -27,6 +26,7 @@ const redeemSteps = [
   { element: <AirdropRedeemQuestionnaire /> },
   { element: <AirdropRedeemDelegatee /> },
   { element: <AirdropRedeemReview /> },
+  { element: <AirdropRedeemCompleted /> },
 ];
 
 export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: AirdropRedeemModalProps) => {
@@ -36,7 +36,9 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
   const [airdropElegibility, setAirdropElegibility] = useState<AirdropElegibility | false>();
   const [redeemData, setRedeemData] = useState<AirdropRedeemData>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isDelegating, setIsDelegating] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [selectedDelegatee, setSelectedDelegatee] = useState<string>();
 
   const nextStep = async () => {
     setCurrentStep((prev) => (prev === redeemSteps.length - 1 ? prev : prev + 1));
@@ -45,8 +47,6 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
   const prevStep = async () => {
     setCurrentStep((prev) => (prev === 0 ? prev : prev - 1));
   };
-
-  const delegatee = "0xbd0c1BE472245dB26E39ed30C964e9e3132DE555";
 
   const updateAirdropElegibility = useCallback(async () => {
     if (!addressToCheck) return;
@@ -70,9 +70,18 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
   const waitingRedeemAirdropCall = useWaitForTransaction({
     hash: redeemAirdropCall.data?.hash as `0x${string}`,
     onSuccess: async () => {
-      updateAirdropElegibility();
-      const newRedeemData = await updateAirdropRedeemedData();
-      await DelegateAirdropContract.send(aidropData, newRedeemData, delegatee);
+      if (!selectedDelegatee) return;
+      try {
+        setIsDelegating(true);
+        updateAirdropElegibility();
+        const newRedeemData = await updateAirdropRedeemedData();
+        const txResult = await DelegateAirdropContract.send(aidropData, newRedeemData, selectedDelegatee);
+        await txResult?.wait();
+        setIsDelegating(false);
+      } catch (error) {
+        console.log(error);
+        setIsDelegating(false);
+      }
     },
   });
 
@@ -87,7 +96,16 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
     init();
   }, [updateAirdropElegibility, updateAirdropRedeemedData]);
 
+  useEffect(() => {
+    if (!isLoading && redeemData) setCurrentStep(redeemSteps.length - 1);
+  }, [isLoading, redeemData]);
+
+  const handleClaimAirdrop = async () => {
+    return redeemAirdropCall.send();
+  };
+
   const airdropRedeemModalContext = {
+    aidropData,
     addressToCheck,
     airdropElegibility,
     nextStep,
@@ -95,11 +113,14 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
     redeemData,
     updateAirdropElegibility,
     updateAirdropRedeemedData,
+    selectedDelegatee,
+    setSelectedDelegatee,
+    isDelegating,
+    handleClaimAirdrop,
   } satisfies IAirdropRedeemModalContext;
 
   // If the user is not eligible or already redeemed, we don't show the modal
   if (!isLoading && airdropElegibility === false) return null;
-  if (!isLoading && redeemData) return null;
 
   return (
     <StyledAirdropRedeemModal>
@@ -155,6 +176,7 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
 
       {redeemAirdropCall.isLoading && <Loading fixed extraText={`${t("checkYourConnectedWallet")}...`} />}
       {waitingRedeemAirdropCall.isLoading && <Loading fixed extraText={`${t("redeemingYourAirdrop")}...`} />}
+      {isDelegating && <Loading fixed extraText={`${t("Airdrop.delegatingTokens")}...`} />}
     </StyledAirdropRedeemModal>
   );
 };

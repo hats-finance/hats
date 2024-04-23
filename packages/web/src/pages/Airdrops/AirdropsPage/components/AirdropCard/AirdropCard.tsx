@@ -41,9 +41,9 @@ export const AirdropCard = ({ airdrop, addressToCheck, onOpenClaimModal }: Airdr
         <>
           {elegibilityData ? <p>Elegible</p> : <p>Not elegible</p>}
           {redeemedData && <p>Redeemed</p>}
-          {!redeemedData && elegibilityData && (
-            <Button size="small" onClick={onOpenClaimModal}>
-              Claim airdrop
+          {elegibilityData && (
+            <Button size="small" styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
+              {redeemedData ? "Claimed" : "Claim airdrop"}
             </Button>
           )}
         </>

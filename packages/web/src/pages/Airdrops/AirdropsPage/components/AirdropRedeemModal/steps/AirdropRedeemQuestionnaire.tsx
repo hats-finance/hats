@@ -38,44 +38,63 @@ export const AirdropRedeemQuestionnaire = () => {
   const { nextStep } = useContext(AirdropRedeemModalContext);
 
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number>(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<number>(-1);
   const [showingResult, setShowingResult] = useState<boolean>(false);
 
-  const getButtonText = () => {
+  const getButtonState = () => {
     const isLastQuestion = currentQuestion === questions.length - 1;
 
-    if (showingResult && isLastQuestion) return t("Airdrop.continueToChooseDelagatee");
-    if (showingResult) return t("Airdrop.next");
-    return t("Airdrop.submit");
-  };
-
-  const getButtonAction = () => {
-    const isLastQuestion = currentQuestion === questions.length - 1;
-
-    if (showingResult && isLastQuestion) return nextStep();
-    if (showingResult) return setCurrentQuestion((prev) => prev + 1);
-    return setShowingResult(true);
+    if (showingResult && isLastQuestion)
+      return { text: t("Airdrop.continueToChooseDelagatee"), disabled: false, action: nextStep };
+    if (showingResult)
+      return {
+        text: t("Airdrop.next"),
+        disabled: false,
+        action: () => {
+          setCurrentQuestion((prev) => prev + 1);
+          setSelectedAnswer(-1);
+          setShowingResult(false);
+        },
+      };
+    return { text: t("Airdrop.submit"), disabled: selectedAnswer === -1, action: () => setShowingResult(true) };
   };
 
   return (
     <div className="content-modal">
       <h2>{t("Airdrop.questionNumber", { number: currentQuestion + 1 })}</h2>
       <p>{questions[currentQuestion].description}</p>
-      <p>{t("Airdrop.choose")}:</p>
+      <p className="">{t("Airdrop.choose")}:</p>
 
       <div className="quiz-answers">
         {questions[currentQuestion].answers.map((answer, index) => (
-          <div className="answer" key={answer.letter} onClick={() => setSelectedAnswer(index)}>
-            <p>
-              {answer.letter}. {answer.description}
-            </p>
+          <div
+            className={`answer ${index === selectedAnswer ? "selected" : ""} ${showingResult && answer.correct ? "correct" : ""}`}
+            key={answer.letter}
+            onClick={showingResult ? undefined : () => setSelectedAnswer(index)}
+          >
+            {showingResult ? (
+              <>
+                {answer.correct ? (
+                  <span className="correctIcon">✓</span>
+                ) : (
+                  <>{selectedAnswer === index ? <span className="incorrectIcon">✗</span> : <>{answer.letter}.</>}</>
+                )}
+              </>
+            ) : (
+              <div>{answer.letter}.</div>
+            )}
+            <p>{answer.description}</p>
           </div>
         ))}
       </div>
 
-      <div className="buttons">
-        <Button onClick={getButtonAction} bigHorizontalPadding>
-          {getButtonText()}
+      <div className="buttons center">
+        <Button
+          disabled={getButtonState().disabled}
+          onClick={getButtonState().disabled ? undefined : getButtonState().action}
+          bigHorizontalPadding
+        >
+          {getButtonState().text}
         </Button>
       </div>
     </div>

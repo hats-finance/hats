@@ -133,7 +133,7 @@ export const AirdropsPage = () => {
       )}
 
       {airdropToClaim && addressToCheck && (
-        <Modal isShowing={!!airdropToClaim} onHide={() => setAidropToClaim(undefined)}>
+        <Modal isShowing={!!airdropToClaim} onHide={() => setAidropToClaim(undefined)} disableOnOverlayClose>
           <AirdropRedeemModal
             addressToCheck={addressToCheck}
             aidropData={airdropToClaim}

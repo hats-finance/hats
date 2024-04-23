@@ -12,7 +12,7 @@ export const AirdropRedeemStart = () => {
       <img className="banner" src={require("assets/images/hats_claim.png")} alt="hats claim" />
       <div dangerouslySetInnerHTML={{ __html: t("Airdrop.startTextContent") }} />
 
-      <div className="buttons">
+      <div className="buttons center">
         <Button onClick={nextStep} bigHorizontalPadding>
           {t("Airdrop.startQuiz")}
         </Button>
