@@ -729,7 +729,10 @@
       "whatsNextContent": "<ol><li>Explore the many ways you can utilize your HAT Token within our ecosystem. <a href=''>Read $HAT utility guide</a></li>  <li>Stay updated and join the conversation, follow Hats on “X”.</li></ol>",
       "followHatsOnX": "Follow Hats on X",
       "readHATUtilityGuide": "Read $HAT utility guide",
-      "delegatingTokens": "Delegating tokens"
+      "delegatingTokens": "Delegating tokens",
+      "delegateTokens": "Delegate tokens",
+      "delegateTokensExplanation": "Delegate your tokens to a delegatee. The delegatee will have the power to vote on your behalf in Hats governance.",
+      "delegatee": "Delegatee"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

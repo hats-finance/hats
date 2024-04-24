@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { IS_PROD } from "settings";
 import { useAccount, useNetwork } from "wagmi";
 import { AirdropCard } from "./components/AirdropCard/AirdropCard";
+import { AirdropDelegateModal } from "./components/AirdropDelegateModal/AirdropDelegateModal";
 import { AirdropRedeemModal } from "./components/AirdropRedeemModal/AirdropRedeemModal";
 import { StyledAirdropsPage } from "./styles";
 
@@ -15,7 +16,8 @@ export const AirdropsPage = () => {
   const { chain: connectedChain } = useNetwork();
 
   const [addressToCheck, setAddressToCheck] = useState<string | undefined>(account);
-  const [airdropToClaim, setAidropToClaim] = useState<AirdropConfig>();
+  const [airdropToClaim, setAirdropToClaim] = useState<AirdropConfig>();
+  const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropConfig>();
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;
@@ -126,18 +128,29 @@ export const AirdropsPage = () => {
               addressToCheck={addressToCheck}
               airdrop={airdrop}
               key={airdrop.address}
-              onOpenClaimModal={() => setAidropToClaim(airdrop)}
+              onOpenClaimModal={() => setAirdropToClaim(airdrop)}
+              onOpenDelegateModal={() => setAirdropToDelegate(airdrop)}
             />
           ))}
         </div>
       )}
 
       {airdropToClaim && addressToCheck && (
-        <Modal isShowing={!!airdropToClaim} onHide={() => setAidropToClaim(undefined)} disableOnOverlayClose>
+        <Modal isShowing={!!airdropToClaim} onHide={() => setAirdropToClaim(undefined)} disableOnOverlayClose>
           <AirdropRedeemModal
             addressToCheck={addressToCheck}
             aidropData={airdropToClaim}
-            closeModal={() => setAidropToClaim(undefined)}
+            closeModal={() => setAirdropToClaim(undefined)}
+          />
+        </Modal>
+      )}
+
+      {airdropToDelegate && addressToCheck && (
+        <Modal isShowing={!!airdropToDelegate} onHide={() => setAirdropToDelegate(undefined)} disableOnOverlayClose>
+          <AirdropDelegateModal
+            addressToCheck={addressToCheck}
+            aidropData={airdropToDelegate}
+            closeModal={() => setAirdropToDelegate(undefined)}
           />
         </Modal>
       )}
