@@ -40,7 +40,8 @@ export interface IChainConfiguration {
  */
 export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   [wagmiChains.mainnet.id]: {
-    vaultsCreatorContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3",
+    // vaultsCreatorContract: "0xC570c434ba30a2fa5C07E590833246E18aa6B0a3", v2
+    vaultsCreatorContract: "0x67aCdEb1a2b6cC7C77F9550a034aAd1f1e5A6C3C",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
@@ -89,7 +90,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://eth-goerli.g.alchemy.com/v2/HMtXCk0FyIfbiNAVm4Xcgr8Eqlc5_DKd",
   },
   [wagmiChains.optimism.id]: {
-    vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
+    // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2
+    vaultsCreatorContract: "0x58958226fb12DDfC407a7766d51baB2a88d08BF1",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
@@ -119,7 +121,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   //   provider: "https://ultra-convincing-bridge.optimism-goerli.quiknode.pro/89adbb9cfd7355f03b21eb6f8ebd959bea78c68b",
   // },
   [wagmiChains.arbitrum.id]: {
-    vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
+    // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2
+    vaultsCreatorContract: "0x145b550aC44c3d052e9200937DFaB0B163C538dE",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
@@ -135,7 +138,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     provider: "https://few-maximum-voice.arbitrum-mainnet.quiknode.pro/5abae8858e1e7248437717c16d14ff7193d6aae6",
   },
   [wagmiChains.polygon.id]: {
-    vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48",
+    // vaultsCreatorContract: "0xa80d0a371f4d37AFCc55188233BB4Ad463aF9E48", v2
+    vaultsCreatorContract: "0x0aa1464db005857db8fc3e0470d306fb9e54b908",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x878Cab06E6f4a85D90E5f236d326a41Ef6f44F9f",
@@ -166,7 +170,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   //   provider: "https://meter.blockpi.network/v1/rpc/fb714211b5240a1f337e46b063d7734294824527",
   // },
   [wagmiChains.gnosis.id]: {
-    vaultsCreatorContract: "0x304A70840D8D43B288A6e4e4e718081BBcF160be",
+    // vaultsCreatorContract: "0x304A70840D8D43B288A6e4e4e718081BBcF160be", v2
+    vaultsCreatorContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
     arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
     rewardController: "0x0000000000000000000000000000000000000000",
     vaultsNFTContract: "0x07368F6a959Ef3096230a258dd0af692699c3a4c",
@@ -180,20 +185,21 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     // infuraKey: "polygon-mainnet",
     provider: "https://frosty-convincing-choice.xdai.quiknode.pro/db844278bdba30f1567a37c679660797fbbea869",
   },
-  // [wagmiChains.bsc.id]: {
-  //   vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4",
-  //   arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-  //   rewardController: "0x0000000000000000000000000000000000000000",
-  //   vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
-  //   hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
-  //   chain: wagmiChains.bsc,
-  //   subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
-  //   coingeckoId: "binance-smart-chain",
-  //   govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
-  //   whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
-  //   paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
-  //   provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
-  // },
+  [wagmiChains.bsc.id]: {
+    // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
+    vaultsCreatorContract: "0x58958226fb12DDfC407a7766d51baB2a88d08BF1",
+    arbitratorContract: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0xcBe0b90bfe99f827B8BCB5C5Ac4b17107caEA814",
+    hackersNFTContract: "0x028A7C6873dFA8357c9dcF9C9d76EF2abb66256E",
+    chain: wagmiChains.bsc,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    coingeckoId: "binance-smart-chain",
+    govMultisig: "0xbFBC2Ab80bD0A12258db952739238e403Be01ece",
+    whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
+    paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
+    provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
+  },
   // ============ HARDHAT ============
   // [ChainId.Hardhat]: {
   //     vaultsNFTContract: "",
