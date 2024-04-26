@@ -1,6 +1,7 @@
 import { PayoutType, createNewPayoutData, getVaultDepositors, getVaultInfoFromVault } from "@hats.finance/shared";
 import { Alert, Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { BigNumber } from "ethers";
+import useConfirm from "hooks/useConfirm";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { RoutePaths } from "navigation";
 import { useMemo, useState } from "react";
@@ -16,6 +17,7 @@ interface PayoutCreateModalProps {
 export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const createDraftPayout = useCreateDraftPayout();
 
@@ -32,7 +34,11 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
     if (!selectedVault || !payoutType || !isVaultDepositedAndCheckedIn) return;
 
     if (selectedVault.destroyed) {
-      alert("This vault is destroyed and can't be used to create a payout.");
+      await confirm({
+        title: t("alert"),
+        description: t("vaultDestroyedCantCreatePayout"),
+        confirmText: t("ok"),
+      });
       return;
     }
 
