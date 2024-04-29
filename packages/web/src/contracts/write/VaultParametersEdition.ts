@@ -1,4 +1,4 @@
-import { HATSVaultV2_abi, IEditedVaultParameters } from "@hats.finance/shared";
+import { HATSVaultV2_abi, IVaultParameters } from "@hats.finance/shared";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useContractWrite, useNetwork } from "wagmi";
 
@@ -27,7 +27,7 @@ export class VaultBountySplitEditionContract {
 
     return {
       ...editBountySplit,
-      send: async (params: IEditedVaultParameters) => {
+      send: async (params: IVaultParameters) => {
         await switchNetworkAndValidate(chain!.id, vaultData.chainId);
 
         return editBountySplit.write!({

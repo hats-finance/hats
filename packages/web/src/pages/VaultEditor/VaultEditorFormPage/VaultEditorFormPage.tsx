@@ -3,11 +3,12 @@ import {
   IEditedVaultDescription,
   IEditedVulnerabilitySeverityV1,
   IVaultEditionStatus,
-  convertVulnerabilitySeverityV1ToV2,
+  convertVulnerabilitySeverityV1ToV2V3,
   createNewCommitteeMember,
   createNewVaultDescription,
   editedFormToCreateVaultOnChainCall,
   getGnosisSafeInfo,
+  getVaultDescriptionHash,
   isAGnosisSafeTx,
   nonEditableEditionStatus,
 } from "@hats.finance/shared";
@@ -31,7 +32,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { BASE_SERVICE_URL, appChains } from "settings";
+import { BASE_SERVICE_URL } from "settings";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { useAccount } from "wagmi";
 import { checkIfAddressCanEditTheVault } from "../utils";
@@ -158,6 +159,7 @@ const VaultEditorFormPage = () => {
         ...editSessionResponse.editedDescription,
         vaultCreatedInfo: {
           vaultAddress: editSessionResponse.vaultAddress,
+          claimsManager: editSessionResponse.claimsManager,
           chainId: editSessionResponse.chainId,
         },
       });
@@ -252,8 +254,7 @@ const VaultEditorFormPage = () => {
       if (!address) return;
       setCreatingVault(true);
 
-      const rewardController = appChains[+data.committee.chainId].rewardController;
-      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
+      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
 
       const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);
       if (gnosisInfo.isSafeAddress) {
@@ -414,8 +415,8 @@ const VaultEditorFormPage = () => {
     const createdVaultInfo = getValues("vaultCreatedInfo");
 
     if (createdVaultInfo) {
-      const vaultInfo = await VaultEditorService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
-      setOnChainDescriptionHash(vaultInfo.descriptionHash);
+      const descriptionHash = await getVaultDescriptionHash(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
+      setOnChainDescriptionHash(descriptionHash);
     }
   }, [getValues]);
 
@@ -504,7 +505,7 @@ const VaultEditorFormPage = () => {
       const indexArray = getValues("vulnerability-severities-spec.indexArray");
       const currentSeverities = getValues("vulnerability-severities-spec.severities") as IEditedVulnerabilitySeverityV1[];
 
-      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2(s, indexArray));
+      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2V3(s, indexArray));
       setValue("vulnerability-severities-spec.severities", newSeverities, { shouldDirty: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

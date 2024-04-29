@@ -1,6 +1,7 @@
-import { PayoutType, getVaultInfoFromVault } from "@hats.finance/shared";
+import { PayoutType, createNewPayoutData, getVaultDepositors, getVaultInfoFromVault } from "@hats.finance/shared";
 import { Alert, Button, FormRadioInput, FormSelectInput, Loading } from "components";
 import { BigNumber } from "ethers";
+import useConfirm from "hooks/useConfirm";
 import { useUserVaults } from "hooks/vaults/useUserVaults";
 import { RoutePaths } from "navigation";
 import { useMemo, useState } from "react";
@@ -16,10 +17,11 @@ interface PayoutCreateModalProps {
 export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const confirm = useConfirm();
 
   const createDraftPayout = useCreateDraftPayout();
 
-  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("all");
+  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults(["all"]);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState<string>();
   const [payoutType, setPayoutType] = useState<PayoutType>();
   const selectedVault = userVaults?.find((vault) => vault.id === selectedVaultAddress);
@@ -31,7 +33,23 @@ export const PayoutCreateModal = ({ closeModal }: PayoutCreateModalProps) => {
   const handleCreatePayout = async () => {
     if (!selectedVault || !payoutType || !isVaultDepositedAndCheckedIn) return;
 
-    const payoutId = await createDraftPayout.mutateAsync({ vaultInfo: getVaultInfoFromVault(selectedVault), type: payoutType });
+    if (selectedVault.destroyed) {
+      await confirm({
+        title: t("alert"),
+        description: t("vaultDestroyedCantCreatePayout"),
+        confirmText: t("ok"),
+      });
+      return;
+    }
+
+    let payoutData = createNewPayoutData(payoutType);
+    payoutData.depositors = getVaultDepositors(selectedVault);
+
+    const payoutId = await createDraftPayout.mutateAsync({
+      vaultInfo: getVaultInfoFromVault(selectedVault),
+      type: payoutType,
+      payoutData,
+    });
     if (payoutId) navigate(`${RoutePaths.payouts}/${payoutId}`);
 
     closeModal();

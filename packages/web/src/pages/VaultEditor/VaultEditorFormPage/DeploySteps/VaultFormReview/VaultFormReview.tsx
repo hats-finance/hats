@@ -7,7 +7,7 @@ import { VaultDetailsPage } from "pages/Honeypots/VaultDetailsPage/VaultDetailsP
 import { useCallback, useContext } from "react";
 import { useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { IVault, IVaultDescriptionV1, IVaultDescriptionV2 } from "types";
+import { IVault, IVaultDescriptionV1, IVaultDescriptionV2, IVaultDescriptionV3 } from "types";
 import { IEditedVaultDescription } from "types";
 import { VaultEmailsForm } from "../../SetupSteps/shared/VaultEmailsList/VaultEmailsList";
 import { VaultEditorFormContext } from "../../store";
@@ -98,9 +98,9 @@ export function VaultFormReview() {
         existingVault?.committeeRewardSplit ?? `${editedVaultDescriptionForm.parameters.committeePercentage * 100}`,
       swapAndBurnSplit: "0",
       governanceHatRewardSplit:
-        existingVault?.governanceHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange * 100}`,
+        existingVault?.governanceHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange ?? 0 * 100}`,
       hackerHatRewardSplit:
-        existingVault?.hackerHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange * 100}`,
+        existingVault?.hackerHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange ?? 0 * 100}`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
       depositPause: false,
@@ -118,8 +118,9 @@ export function VaultFormReview() {
         description: description as IVaultDescriptionV1,
         maxBounty: null,
         amountsInfo: existingVault?.amountsInfo,
+        claimsManager: null,
       };
-    } else {
+    } else if (editedVaultDescriptionForm.version === "v2") {
       return {
         ...bothVersionsVault,
         version: "v2",
@@ -127,6 +128,17 @@ export function VaultFormReview() {
         maxBounty: existingVault?.maxBounty ?? `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
         rewardControllers: [],
         amountsInfo: existingVault?.amountsInfo,
+        claimsManager: null,
+      };
+    } else {
+      return {
+        ...bothVersionsVault,
+        version: "v3",
+        description: description as IVaultDescriptionV3,
+        maxBounty: existingVault?.maxBounty ?? `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
+        rewardControllers: [],
+        amountsInfo: existingVault?.amountsInfo,
+        claimsManager: existingVault?.claimsManager ?? "",
       };
     }
   }, [editedVaultDescriptionForm, existingVault]);

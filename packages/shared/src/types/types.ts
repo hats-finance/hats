@@ -7,6 +7,8 @@ export interface IVaultInfo {
   master: string;
   stakingToken: string;
   pid: string;
+  claimsManager: string | null;
+  hatsGovFee: string | null;
 }
 
 export type IVaultType = "normal" | "audit" | "grants" | "gamification";
@@ -25,7 +27,7 @@ export interface IBaseVault {
   committee: string;
   allocPoints?: string[];
   master: IMaster;
-  version: "v1" | "v2";
+  version: "v1" | "v2" | "v3";
   arbitrator?: string;
   numberOfApprovedClaims: string;
   approvedClaims: Array<IApprovedClaims>;
@@ -50,6 +52,8 @@ export interface IBaseVault {
   dateStatus: "on_time" | "upcoming" | "finished";
   userWithdrawRequest?: IWithdrawRequest[];
   activeClaim?: IVaultActiveClaim;
+  claimsManager: string | null;
+  destroyed?: boolean;
   // Computed values
   amountsInfo?: {
     showCompetitionIntendedAmount: boolean;
@@ -82,15 +86,24 @@ export interface IVaultV1 extends IBaseVault {
   allocPoints: string[];
   maxBounty: null;
   description?: IVaultDescriptionV1;
+  claimsManager: null;
 }
 export interface IVaultV2 extends IBaseVault {
   version: "v2";
   description?: IVaultDescriptionV2;
   maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
   rewardControllers: (IRewardController | undefined)[];
+  claimsManager: null;
+}
+export interface IVaultV3 extends IBaseVault {
+  version: "v3";
+  description?: IVaultDescriptionV3;
+  maxBounty: string; // percentage like 1000 (10%) or 8000 (80%)
+  rewardControllers: (IRewardController | undefined)[];
+  claimsManager: string;
 }
 
-export type IVault = IVaultV1 | IVaultV2;
+export type IVault = IVaultV1 | IVaultV2 | IVaultV3;
 
 export interface IWithdrawRequest {
   beneficiary: string;
@@ -117,7 +130,7 @@ export interface IUserNft {
 }
 
 interface IBaseVaultDescription {
-  version: "v1" | "v2" | undefined;
+  version: "v1" | "v2" | "v3" | undefined;
   "project-metadata": {
     icon: string;
     website: string;
@@ -168,7 +181,14 @@ export interface IVaultDescriptionV2 extends IBaseVaultDescription {
   usingPointingSystem?: boolean;
 }
 
-export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2;
+export interface IVaultDescriptionV3 extends IBaseVaultDescription {
+  version: "v3";
+  severities: Array<IVulnerabilitySeverityV2>;
+  usingPointingSystem?: boolean;
+  parameters: IVaultParameters;
+}
+
+export type IVaultDescription = IVaultDescriptionV1 | IVaultDescriptionV2 | IVaultDescriptionV3;
 
 export interface IProtocolSetupInstructions {
   tooling: "foundry" | "hardhat" | "other";
@@ -189,6 +209,17 @@ export interface IVaultRepoInformation {
   prevAuditedCommitHash?: string;
   commitHash?: string;
   isMain: boolean;
+}
+
+export interface IVaultParameters {
+  fixedCommitteeControlledPercetange?: number;
+  fixedHatsGovPercetange?: number;
+  fixedHatsRewardPercetange?: number;
+  // Editable
+  maxBountyPercentage: number;
+  immediatePercentage: number;
+  vestedPercentage: number;
+  committeePercentage: number;
 }
 
 export interface IBaseVulnerabilitySeverity {
@@ -217,7 +248,14 @@ export interface IVulnerabilitySeverityV2 extends IBaseVulnerabilitySeverity {
   points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
 }
 
-export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2;
+export interface IVulnerabilitySeverityV3 extends IBaseVulnerabilitySeverity {
+  percentage: number; // percentage of the whole vault allocated to this severity
+  capAmount?: number;
+  percentageCapPerPoint?: number; // Max percentage of the whole vault allocated to each point of this severity
+  points?: { type: "fixed" | "range"; value: { first: number; second?: number } }; // Only when pointing system is used
+}
+
+export type IVulnerabilitySeverity = IVulnerabilitySeverityV1 | IVulnerabilitySeverityV2 | IVulnerabilitySeverityV3;
 
 export interface INFTMetaData {
   name: string;

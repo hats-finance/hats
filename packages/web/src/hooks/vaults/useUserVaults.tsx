@@ -7,9 +7,9 @@ import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { useVaults } from "../subgraph/vaults/useVaults";
 
-type UserVaultsVersion = "v1" | "v2" | "all";
+type UserVaultsVersion = "v1" | "v2" | "v3" | "all";
 
-export const useUserVaults = (version: UserVaultsVersion = "all") => {
+export const useUserVaults = (versions: UserVaultsVersion[] = ["all"]) => {
   const { allVaults } = useVaults();
   const { address } = useAccount();
 
@@ -39,18 +39,19 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
   useEffect(() => {
     if (!address) return;
     if (!allVaults || allVaults.length === 0) return;
+    if (userVaults && userVaults.length > 0) return;
 
-    getUserVaults(address, allVaults, version);
-  }, [address, allVaults, version]);
+    getUserVaults(address, allVaults, versions);
+  }, [address, allVaults, versions, userVaults]);
 
   /**
    * Retrieves the user's vaults based on their address and vault version.
    *
    * @param address - The user's wallet address.
    * @param allVaults - An array of all available vaults.
-   * @param version - The version of the vaults to retrieve ("v1", "v2", or "all").
+   * @param version - The version of the vaults to retrieve ("v1", "v2", "v3", or "all").
    */
-  const getUserVaults = async (address: string, allVaults: IVault[], version: UserVaultsVersion) => {
+  const getUserVaults = async (address: string, allVaults: IVault[], versions: UserVaultsVersion[]) => {
     const foundVaults = [] as IVault[];
     for (const vault of allVaults) {
       if (!vault.description) continue;
@@ -63,8 +64,12 @@ export const useUserVaults = (version: UserVaultsVersion = "all") => {
       const whitelistedReviewersLowerCase = whitelistedReviewers.map((reviewer) => reviewer.toLowerCase());
       const isReviewerInVaultChain = whitelistedReviewersLowerCase.includes(address.toLowerCase());
 
-      if ((isGovInVaultChain || isReviewerInVaultChain || isSafeMember) && (version !== "all" ? vault.version === version : true))
+      if (
+        (isGovInVaultChain || isReviewerInVaultChain || isSafeMember) &&
+        (!versions.includes("all") ? versions.includes(vault.version) : true)
+      ) {
         foundVaults.push(vault);
+      }
     }
 
     setUserVaults(foundVaults);

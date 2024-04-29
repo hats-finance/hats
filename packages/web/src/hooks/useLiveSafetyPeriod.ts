@@ -20,7 +20,10 @@ import { useCallback, useEffect, useState } from "react";
  *   withdrawPeriod: number - Duration of the withdraw period in milliseconds
  * }
  */
-export function useLiveSafetyPeriod(safetyPeriod: string, withdrawPeriod: string): IWithdrawSafetyPeriod | undefined {
+export function useLiveSafetyPeriod(
+  safetyPeriod: string | undefined,
+  withdrawPeriod: string | undefined
+): IWithdrawSafetyPeriod | undefined {
   const [withdrawSafetyPeriod, setWithdrawSafetyPeriod] = useState<IWithdrawSafetyPeriod | undefined>();
 
   const updateWithdrawSafetyPeriodState = useCallback(() => {

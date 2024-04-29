@@ -1,4 +1,10 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi, IVault, getGnosisSafeTxServiceBaseUrl } from "@hats.finance/shared";
+import {
+  HATSVaultV1_abi,
+  HATSVaultV2_abi,
+  HATSVaultV3ClaimsManager_abi,
+  IVault,
+  getGnosisSafeTxServiceBaseUrl,
+} from "@hats.finance/shared";
 import SafeApiKit from "@safe-global/api-kit";
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { MetaTransactionData } from "@safe-global/safe-core-sdk-types";
@@ -20,13 +26,15 @@ export const createVaultCheckInProposalOnSafe = async (
     const committeeMultisig = utils.getAddress(vault.committee);
     const safeSdk = await Safe.create({ ethAdapter, safeAddress: committeeMultisig });
 
-    const vaultAbi = vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV1_abi;
-    const vaultInterface = new ethers.utils.Interface(vaultAbi);
+    const vaultAbi =
+      vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi;
+    const contractAddress =
+      vault.version === "v1" ? vault.master.address : vault.version === "v2" ? vault.id : vault.claimsManager;
 
+    const vaultInterface = new ethers.utils.Interface(vaultAbi);
     const safeTransactionData = [] as MetaTransactionData[];
 
-    const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
-    const params = vault?.version === "v2" ? [] : [vault?.pid];
+    const params = vault.version === "v1" ? [vault?.pid] : [];
     const txData = vaultInterface.encodeFunctionData("committeeCheckIn", params);
     safeTransactionData.push({
       to: utils.getAddress(contractAddress),

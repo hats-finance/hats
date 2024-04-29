@@ -25,7 +25,7 @@ import {
 } from "utils/tokens.utils";
 import { useAccount, useNetwork } from "wagmi";
 import { useLiveSafetyPeriod } from "../../useLiveSafetyPeriod";
-import { overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
+import { fixVaultFees, overrideDescription, overridePayoutVault, populateVaultsWithPricing } from "./parser";
 import { useMultiChainVaultsV2 } from "./useMultiChainVaults";
 
 const MAX_CALLS_AT_ONCE = 200;
@@ -90,7 +90,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     }));
 
     const rewardControllersTokens = vaultsToSearch
-      .filter((vault) => vault.version === "v2" && vault.rewardControllers?.length > 0)
+      .filter((vault) => (vault.version === "v2" || vault.version === "v3") && vault.rewardControllers?.length > 0)
       .map((vault) => {
         return (vault as IVaultV2).rewardControllers.map((controller) => ({
           address: controller?.rewardToken.toLowerCase() ?? "",
@@ -248,7 +248,8 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     const prices = showTestnets ? [] : await getTokenPrices(allVaultsDataWithDatesInfo);
     if (JSON.stringify(tokenPrices) !== JSON.stringify(prices)) setTokenPrices(prices);
 
-    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataWithDatesInfo, prices);
+    const allVaultsDataFixedFees = fixVaultFees(allVaultsDataWithDatesInfo);
+    const allVaultsDataWithPrices = populateVaultsWithPricing(allVaultsDataFixedFees, prices);
 
     const filteredByChain = allVaultsDataWithPrices.filter((vault) => {
       return showTestnets ? appChains[vault.chainId as number].chain.testnet : !appChains[vault.chainId as number].chain.testnet;
@@ -352,7 +353,9 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
   }, [multiChainData, showTestnets, allChainsLoaded]);
 
   const { safetyPeriod, withdrawPeriod } =
-    (showTestnets ? multiChainData?.test.masters?.[0] : multiChainData?.prod.masters?.[0]) ?? {};
+    (showTestnets
+      ? multiChainData?.test.masters?.find((master) => master.chainId === 11155111) ?? {}
+      : multiChainData?.prod.masters?.[0]) ?? {};
 
   const withdrawSafetyPeriod = useLiveSafetyPeriod(safetyPeriod, withdrawPeriod);
 

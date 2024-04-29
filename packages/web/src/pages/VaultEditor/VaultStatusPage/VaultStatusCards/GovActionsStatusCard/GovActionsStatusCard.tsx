@@ -154,6 +154,63 @@ export const GovActionsStatusCard = () => {
         </Alert>
       )}
 
+      {/* Vault data */}
+      <div className="mt-5 ml-5">
+        <ul>
+          <li>
+            <strong>{t("committeeMultisig")}</strong>: {vaultData.committeeMulsitigAddress}
+          </li>
+          <li>
+            <strong>{t("maxBounty")}</strong>: {vaultData.parameters.maxBounty / 100}%
+          </li>
+          <li>
+            <strong>{t("hatsGovFee")}</strong>: {vaultData.parameters.hatsGovernanceSplit / 100}% on-chain (
+            {vaultData.description?.version === "v3" ? `${vaultData.description.parameters.fixedHatsGovPercetange}%` : ""} on
+            vault editor)
+          </li>
+          <li>
+            <strong>{t("bountySplit")}</strong>:
+            <ul className="ml-3">
+              <li>
+                <strong>{t("immediate")}</strong>: {vaultData.parameters.bountySplitImmediate / 100}%
+              </li>
+              <li>
+                <strong>{t("vested")}</strong>: {vaultData.parameters.bountySplitVested / 100}%
+              </li>
+              <li>
+                <strong>{t("committee")}</strong>: {vaultData.parameters.bountySplitCommittee / 100}%
+              </li>
+            </ul>
+          </li>
+          {vaultData.arbitrator && (
+            <li>
+              <strong>{t("arbitrator")}</strong>: {vaultData.arbitrator}
+            </li>
+          )}
+          {vaultData.arbitratorCanChangeBounty !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanChangeBounty")}</strong>: {vaultData.arbitratorCanChangeBounty ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.arbitratorCanChangeBeneficiary !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanChangeBeneficiary")}</strong>:{" "}
+              {vaultData.arbitratorCanChangeBeneficiary ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.arbitratorCanSubmitClaims !== undefined && (
+            <li>
+              <strong>{t("arbitratorCanSubmitClaims")}</strong>: {vaultData.arbitratorCanSubmitClaims ? t("yes") : t("no")}
+            </li>
+          )}
+          {vaultData.isTokenLockRevocable !== undefined && (
+            <li>
+              <strong>{t("isTokenLockRevocable")}</strong>: {vaultData.isTokenLockRevocable ? t("yes") : t("no")}
+            </li>
+          )}
+        </ul>
+      </div>
+
       {isLoading && <Loading extraText={t("creatingProposal")} fixed />}
     </div>
   );

@@ -1,5 +1,5 @@
 import { v4 as uuid } from "uuid";
-import { ICommitteeMember, IVaultDescription } from "..";
+import { ChainsConfig, ICommitteeMember, IVaultDescription } from "..";
 import { getVulnerabilitySeveritiesTemplate } from "../severities";
 import {
   IBaseVulnerabilitySeverity,
@@ -7,11 +7,13 @@ import {
   IEditedCommunicationEmail,
   IEditedContractCovered,
   IEditedVaultDescription,
-  IEditedVaultParameters,
   IEditedVulnerabilitySeverity,
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
+  IEditedVulnerabilitySeverityV3,
   IProtocolSetupInstructions,
+  IVault,
+  IVaultParameters,
   IVulnerabilitySeverityV1,
   IVulnerabilitySeverityV2,
 } from "../types";
@@ -56,7 +58,7 @@ export const createNewCoveredContract = (sevIds?: string[]): IEditedContractCove
   };
 };
 
-export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVulnerabilitySeverity => {
+export const createNewVulnerabilitySeverity = (version: "v1" | "v2" | "v3"): IEditedVulnerabilitySeverity => {
   const editedVulnerabilitySeverityBase = {
     id: uuid(),
     name: "",
@@ -77,7 +79,7 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
       ...editedVulnerabilitySeverityBase,
       index: 0,
     } as IEditedVulnerabilitySeverityV1;
-  } else {
+  } else if (version === "v2") {
     return {
       ...editedVulnerabilitySeverityBase,
       percentage: 0,
@@ -88,22 +90,33 @@ export const createNewVulnerabilitySeverity = (version: "v1" | "v2"): IEditedVul
         },
       },
     } as IEditedVulnerabilitySeverityV2;
+  } else {
+    return {
+      ...editedVulnerabilitySeverityBase,
+      percentage: 0,
+      points: {
+        type: "fixed",
+        value: {
+          first: 0,
+        },
+      },
+    } as IEditedVulnerabilitySeverityV3;
   }
 };
 
-export const getDefaultVaultParameters = (isAudit = false): IEditedVaultParameters => {
+export const getDefaultVaultParameters = (isAudit = false, version: IVault["version"]): IVaultParameters => {
   return {
-    fixedCommitteeControlledPercetange: COMMITTEE_CONTROLLED_SPLIT,
-    fixedHatsGovPercetange: HATS_GOV_SPLIT,
-    fixedHatsRewardPercetange: HATS_REWARD_SPLIT,
+    fixedCommitteeControlledPercetange: undefined,
+    fixedHatsGovPercetange: undefined,
+    fixedHatsRewardPercetange: undefined,
     committeePercentage: isAudit ? 0 : 0,
     immediatePercentage: isAudit ? 100 : 40,
     vestedPercentage: isAudit ? 0 : 60,
-    maxBountyPercentage: 90,
+    maxBountyPercentage: version === "v3" ? 100 : 90,
   };
 };
 
-export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDescription => {
+export const createNewVaultDescription = (version: "v1" | "v2" | "v3"): IEditedVaultDescription => {
   const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(version);
   const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
   const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(
@@ -138,7 +151,7 @@ export const createNewVaultDescription = (version: "v1" | "v2"): IEditedVaultDes
     "contracts-covered": [{ ...createNewCoveredContract(severitiesIds) }],
     "vulnerability-severities-spec": vulnerabilitySeveritiesTemplate,
     assets: [{ address: "", symbol: "" }],
-    parameters: getDefaultVaultParameters(),
+    parameters: getDefaultVaultParameters(false, version),
     source: {
       name: "",
       url: "",
@@ -258,7 +271,7 @@ export function descriptionToEditedForm(vaultDescription: IVaultDescription, wit
     };
   }
 
-  // V2 vaults
+  // V2 and V3 vaults
   return {
     ...baseEditedDescription,
     version: "v2",
@@ -331,6 +344,20 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
       ),
       scope: editedVaultDescription.scope,
     };
+  } else if (editedVaultDescription.version === "v2") {
+    return {
+      version: editedVaultDescription.version,
+      "project-metadata": projectMetadata,
+      "communication-channel": editedVaultDescription["communication-channel"],
+      committee: editedVaultDescription.committee,
+      source: editedVaultDescription.source,
+      severities: editedSeveritiesToSeveritiesv2(
+        editedVaultDescription["vulnerability-severities-spec"].severities,
+        editedVaultDescription["contracts-covered"]
+      ),
+      scope: editedVaultDescription.scope,
+      usingPointingSystem: editedVaultDescription.usingPointingSystem,
+    };
   } else {
     return {
       version: editedVaultDescription.version,
@@ -344,6 +371,7 @@ export function editedFormToDescription(editedVaultDescription: IEditedVaultDesc
       ),
       scope: editedVaultDescription.scope,
       usingPointingSystem: editedVaultDescription.usingPointingSystem,
+      parameters: editedVaultDescription.parameters,
     };
   }
 }
@@ -375,8 +403,7 @@ export function fixObject(description: any): IVaultDescription {
 
 export function editedFormToCreateVaultOnChainCall(
   editedVaultDescription: IEditedVaultDescription,
-  descriptionHash: string,
-  rewardController: string | undefined
+  descriptionHash: string
 ): ICreateVaultOnChainCall {
   const convertStringToSlug = (str: string) =>
     str
@@ -388,6 +415,19 @@ export function editedFormToCreateVaultOnChainCall(
 
   const { maxBountyPercentage, immediatePercentage, vestedPercentage, committeePercentage } = editedVaultDescription.parameters;
 
+  const getHatsFee = () => {
+    const defaultHatsFee = 20;
+    const isAuditCompetition = editedVaultDescription["project-metadata"].type === "audit";
+
+    if (editedVaultDescription.version === "v3" && isAuditCompetition) {
+      // In v3 audit competitions the fee on-chain is zero.
+      // The fee is managed in the payout and governance will be one of the beneficiaries of the payment.
+      return 0;
+    }
+
+    return editedVaultDescription.parameters.fixedHatsGovPercetange ?? defaultHatsFee;
+  };
+
   return {
     chainId: +(editedVaultDescription.committee.chainId ?? "1"),
     asset: editedVaultDescription.assets[0].address,
@@ -395,7 +435,6 @@ export function editedFormToCreateVaultOnChainCall(
     symbol: convertStringToSlug(editedVaultDescription["project-metadata"].name),
     committee: editedVaultDescription.committee["multisig-address"],
     owner: editedVaultDescription.committee["multisig-address"],
-    rewardController: rewardController ?? "0x0000000000000000000000000000000000000000",
     maxBounty: formatPercentage(maxBountyPercentage),
     bountySplit: {
       committee: formatPercentage(committeePercentage),
@@ -406,5 +445,12 @@ export function editedFormToCreateVaultOnChainCall(
     vestingPeriods: 30,
     isPaused: false,
     descriptionHash,
+    bountyGovernanceHAT: formatPercentage(getHatsFee()),
+    bountyHackerHATVested: formatPercentage(editedVaultDescription.parameters.fixedHatsRewardPercetange ?? 0),
+    arbitratorCanChangeBeneficiary: true,
+    arbitratorCanChangeBounty: true,
+    arbitratorCanSubmitClaims: true,
+    isTokenLockRevocable: false,
+    arbitrator: ChainsConfig[+(editedVaultDescription.committee.chainId ?? "1")].arbitratorContract,
   } as ICreateVaultOnChainCall;
 }

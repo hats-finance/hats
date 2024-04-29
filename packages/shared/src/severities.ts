@@ -1,9 +1,11 @@
 import {
   IEditedVulnerabilitySeverityV1,
   IEditedVulnerabilitySeverityV2,
+  IEditedVulnerabilitySeverityV3,
   IVulnerabilitySeveritiesTemplate,
   IVulnerabilitySeveritiesTemplateV1,
   IVulnerabilitySeveritiesTemplateV2,
+  IVulnerabilitySeveritiesTemplateV3,
 } from "./types";
 
 export enum SeverityTemplate {
@@ -193,12 +195,12 @@ export const IndexToPointsInfo_base = {
   }, // High audit
 };
 
-export const convertVulnerabilitySeverityV1ToV2 = (
+export const convertVulnerabilitySeverityV1ToV2V3 = (
   severity: IEditedVulnerabilitySeverityV1,
   indexArray?: number[],
   isAudit: boolean = false,
   template: SeverityTemplate = SeverityTemplate.base
-): IEditedVulnerabilitySeverityV2 => {
+): IEditedVulnerabilitySeverityV2 | IEditedVulnerabilitySeverityV3 => {
   const newSeverity = { ...severity } as any;
   delete newSeverity.index;
 
@@ -369,7 +371,7 @@ export const BOUNTY_SEVERITIES_V1: { [key: string]: IEditedVulnerabilitySeverity
 };
 
 export const getVulnerabilitySeveritiesTemplate = (
-  version: "v1" | "v2",
+  version: "v1" | "v2" | "v3",
   useAuditTemplate = false,
   template: SeverityTemplate = SeverityTemplate.base
 ): IVulnerabilitySeveritiesTemplate => {
@@ -419,17 +421,29 @@ export const getVulnerabilitySeveritiesTemplate = (
 
   if (version === "v1") {
     return templateToUse;
-  } else {
+  } else if (version === "v2") {
     const baseTemplate = { ...templateToUse } as any;
     delete baseTemplate.indexArray;
 
     const baseTemplateV2: IVulnerabilitySeveritiesTemplateV2 = {
       ...(baseTemplate as IVulnerabilitySeveritiesTemplateV2),
       severities: templateToUse.severities.map((severity) =>
-        convertVulnerabilitySeverityV1ToV2(severity, indexArray, useAuditTemplate, template)
+        convertVulnerabilitySeverityV1ToV2V3(severity, indexArray, useAuditTemplate, template)
       ),
     };
 
     return baseTemplateV2;
+  } else {
+    const baseTemplate = { ...templateToUse } as any;
+    delete baseTemplate.indexArray;
+
+    const baseTemplateV3: IVulnerabilitySeveritiesTemplateV3 = {
+      ...(baseTemplate as IVulnerabilitySeveritiesTemplateV3),
+      severities: templateToUse.severities.map((severity) =>
+        convertVulnerabilitySeverityV1ToV2V3(severity, indexArray, useAuditTemplate, template)
+      ),
+    };
+
+    return baseTemplateV3;
   }
 };

@@ -15,7 +15,7 @@ export const VaultEditorHomePage = () => {
   const { address } = useAccount();
 
   const isVaultCreated = !!searchParams.get("vaultReady");
-  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults("v2");
+  const { userVaults, isLoading: isLoadingUserVaults, selectInputOptions: vaultsOptions } = useUserVaults(["v2", "v3"]);
   const [selectedVaultAddress, setSelectedVaultAddress] = useState("");
 
   const createNewVault = () => {

@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
@@ -18,7 +18,7 @@ export class DepositContract {
     const { chain } = useNetwork();
 
     const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
-    const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi;
 
     const deposit = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -38,7 +38,10 @@ export class DepositContract {
         try {
           await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
-          if (vault?.version === "v2") {
+          if (vault?.version === "v3") {
+            // [params]: asset, receiver
+            return deposit.write!({ recklesslySetUnpreparedArgs: [amountInTokens, account] });
+          } else if (vault?.version === "v2") {
             // [params]: asset, receiver
             return deposit.write!({ recklesslySetUnpreparedArgs: [amountInTokens, account] });
           } else {

@@ -15,6 +15,7 @@ import { PayoutFormContext } from "../../../PayoutFormPage/store";
 import { useDeletePayout } from "../../../payoutsService.hooks";
 import { hasSubmissionData } from "../../../utils/hasSubmissionData";
 import { usePayoutAllocation } from "../usePayoutAllocation";
+import { AdditionalBeneficiariesInfo } from "./components/AdditionalBeneficiariesInfo";
 import { SplitPayoutBeneficiaryForm } from "./components/SplitPayoutBeneficiaryForm";
 import { StyledBeneficiariesTable, StyledSplitPayoutSummary } from "./styles";
 
@@ -133,7 +134,15 @@ function SplitPayoutAllocationShared({
    * splitter as the beneficiary. The allocation calculation for each individual beneficiary is done on the component
    * `SplitPayoutBeneficiaryForm.tsx`
    */
-  const generalPayoutAllocation = usePayoutAllocation(vault, payout, percentageToPayOfTheVault);
+  const generalPayoutAllocation = usePayoutAllocation(
+    vault,
+    payout,
+    percentageToPayOfTheVault,
+    undefined,
+    beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0).toString()
+  );
+
+  // console.log(generalPayoutAllocation);
 
   const severitiesSummary = useMemo(
     () =>
@@ -364,6 +373,10 @@ function SplitPayoutAllocationShared({
 
         {deletePayout.isLoading && <Loading fixed extraText={`${t("Payouts.deletingPayout")}...`} />}
       </StyledSplitPayoutSummary>
+
+      {vault?.version === "v3" && payout?.payoutData?.depositors && payout.payoutData.depositors.length > 0 && (
+        <AdditionalBeneficiariesInfo payout={payout} vault={vault} />
+      )}
     </>
   );
 }

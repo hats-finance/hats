@@ -132,3 +132,25 @@ export const StyledSplitPayoutBeneficiaryAllocationModal = styled.div`
   max-width: 100%;
   color: var(--white);
 `;
+
+export const StyledAdditionalBeneficiariesInfo = styled.div`
+  margin-top: ${getSpacing(2)};
+
+  .section {
+    margin-bottom: ${getSpacing(2)};
+
+    p.title {
+      margin-bottom: ${getSpacing(0.4)};
+    }
+
+    .depositors-list {
+      display: flex;
+      flex-direction: column;
+
+      .depositor {
+        display: flex;
+        gap: ${getSpacing(1.5)};
+      }
+    }
+  }
+`;

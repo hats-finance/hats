@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
@@ -20,7 +20,7 @@ export class WithdrawAndClaimContract {
 
     const contractAddress = vault.version === "v1" ? vault.master.address : vault.id;
     const contractFunctionName = vault.version === "v1" ? "withdraw" : "withdrawAndClaim";
-    const vaultAbi = vault.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi;
 
     const withdrawAndClaim = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -49,7 +49,10 @@ export class WithdrawAndClaimContract {
       send: async (amountInTokens: BigNumber) => {
         await switchNetworkAndValidate(chain!.id, vault.chainId as number);
 
-        if (vault?.version === "v2") {
+        if (vault?.version === "v3") {
+          // [params]: assets (amount in tokens), receiver, owner
+          return withdrawAndClaim.write!({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] });
+        } else if (vault?.version === "v2") {
           // [params]: assets (amount in tokens), receiver, owner
           return withdrawAndClaim.write!({ recklesslySetUnpreparedArgs: [amountInTokens, account, account] });
         } else {

@@ -1,4 +1,4 @@
-import { HATSVaultsRegistry_abi } from "@hats.finance/shared";
+import { HATSVaultsRegistryV3_abi } from "@hats.finance/shared";
 import { appChains } from "settings";
 import { ICreateVaultOnChainCall } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
@@ -18,7 +18,7 @@ export class CreateVaultContract {
     if (!chain) return null;
 
     const registryAddress = appChains[vaultData.chainId].vaultsCreatorContract;
-    const registryAbi = HATSVaultsRegistry_abi;
+    const registryAbi = HATSVaultsRegistryV3_abi;
 
     if (!registryAddress) {
       alert(`No registry address found for this chain ${vaultData.chainId}. Please contact the devs.`);
@@ -35,20 +35,30 @@ export class CreateVaultContract {
         {
           name: vaultData.name,
           symbol: vaultData.symbol,
+          rewardControllers: [],
           asset: vaultData.asset as `0x${string}`,
-          committee: vaultData.committee as `0x${string}`,
           owner: vaultData.owner as `0x${string}`,
           isPaused: vaultData.isPaused,
-          rewardControllers: [],
-          vestingPeriods: vaultData.vestingPeriods,
-          vestingDuration: vaultData.vestingDuration,
           descriptionHash: vaultData.descriptionHash,
+        },
+        {
+          vestingDuration: vaultData.vestingDuration,
+          vestingPeriods: vaultData.vestingPeriods,
           maxBounty: vaultData.maxBounty,
           bountySplit: {
             hackerVested: vaultData.bountySplit.hackerVested,
             hacker: vaultData.bountySplit.hacker,
             committee: vaultData.bountySplit.committee,
           },
+          owner: vaultData.owner as `0x${string}`,
+          committee: vaultData.committee as `0x${string}`,
+          bountyGovernanceHAT: vaultData.bountyGovernanceHAT, // New in v3
+          bountyHackerHATVested: vaultData.bountyHackerHATVested, // New in v3
+          arbitrator: vaultData.arbitrator as `0x${string}`, // New in v3
+          arbitratorCanChangeBounty: vaultData.arbitratorCanChangeBounty, // New in v3
+          arbitratorCanChangeBeneficiary: vaultData.arbitratorCanChangeBeneficiary, // New in v3
+          arbitratorCanSubmitClaims: vaultData.arbitratorCanSubmitClaims, // New in v3
+          isTokenLockRevocable: vaultData.isTokenLockRevocable, // New in v3
         },
       ],
     });

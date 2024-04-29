@@ -10,7 +10,7 @@ export const StyledVaultAssetsSection = styled.div<{ rewardsCount: number }>(
     .header,
     .row {
       display: grid;
-      grid-template-columns: 2fr 2fr 2fr repeat(${rewardsCount * 2}, 2fr) 100px;
+      grid-template-columns: 2fr 2fr 2fr ${rewardsCount > 0 ? `repeat(${rewardsCount * 2}, 2fr)` : ""} 100px;
       align-items: center;
       gap: ${getSpacing(1)};
       padding: ${getSpacing(0)} ${getSpacing(2)};

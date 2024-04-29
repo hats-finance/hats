@@ -197,3 +197,19 @@ export const populateVaultsWithPricing = (vaults: IVault[], tokenPrices: number[
     } as IVault;
   });
 };
+
+// This function is used to set the correct governance fee for v3 vaults
+// On v3 vaults, on-chain hats fee is 0%. The real fee is set on the description.
+// Here we set the correct fee on the vault object.
+export const fixVaultFees = (vaults: IVault[]): IVault[] => {
+  return vaults.map((vault) => {
+    if (vault.version !== "v3" || !vault.description?.parameters) return vault;
+    if (Number(vault.governanceHatRewardSplit) !== 0) return vault;
+
+    const newGovFee = `${(vault.description?.parameters.fixedHatsGovPercetange ?? 0) * 100}`;
+    return {
+      ...vault,
+      governanceHatRewardSplit: newGovFee,
+    };
+  });
+};
