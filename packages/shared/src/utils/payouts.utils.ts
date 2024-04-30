@@ -288,7 +288,9 @@ export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" =
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.payouts) continue;
+      if (!subgraphsData[i].request.data) continue;
+      if (!subgraphsData[i].request.data?.data) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.payouts) continue;
 
       for (const payout of subgraphsData[i].request.data.data.payouts) {
         payouts.push({
