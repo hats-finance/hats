@@ -246,7 +246,11 @@ export const SubmissionsListPage = () => {
     if (!vault.description || !vault.description.severities) return;
 
     if (vault.destroyed) {
-      alert("This vault is destroyed and can't be used to create a payout.");
+      await confirm({
+        title: t("alert"),
+        description: t("vaultDestroyedCantCreatePayout"),
+        confirmText: t("ok"),
+      });
       return;
     }
 

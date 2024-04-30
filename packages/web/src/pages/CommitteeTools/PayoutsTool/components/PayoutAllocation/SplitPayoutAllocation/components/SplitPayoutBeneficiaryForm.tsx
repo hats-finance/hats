@@ -47,6 +47,8 @@ export const SplitPayoutBeneficiaryForm = ({
   const percentageToPayOfTheVault = useWatch({ control, name: `percentageToPay` });
   const percentageOfPayout = useWatch({ control, name: `beneficiaries.${index}.percentageOfPayout` });
   const usingPointingSystem = useWatch({ control, name: `usingPointingSystem` });
+  const stopAutocalculation = useWatch({ control, name: `stopAutocalculation` });
+  const constraints = useWatch({ control, name: `rewardsConstraints`, defaultValue: [] });
 
   const beneficiarySubmission = committeeSubmissions?.find((sub) => sub.subId === beneficiaries[index]?.submissionData?.subId);
 
@@ -75,6 +77,22 @@ export const SplitPayoutBeneficiaryForm = ({
     if (!selectedSeverityData) return;
     if (newSelected === undefined) return;
     setValue(`beneficiaries.${index}.nftUrl`, selectedSeverityData["nft-metadata"].image as any, { shouldValidate: true });
+  });
+
+  // Change points when severity changes (points sysmtem only)
+  const severity = useWatch({ control, name: `beneficiaries.${index}.severity` });
+  useOnChange(severity, (newSelected, prevSelected) => {
+    if (!usingPointingSystem) return;
+    if (newSelected === undefined) return;
+    if (newSelected === prevSelected) return;
+    if (!constraints) return;
+    if (stopAutocalculation) return;
+
+    const sevInfo = constraints.find(
+      (constraint) => constraint.severity.toLowerCase() === beneficiaries[index].severity.toLowerCase()
+    );
+    const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "1";
+    setValue<any>(`beneficiaries.${index}.percentageOfPayout` as any, defaultPoints, { shouldValidate: true });
   });
 
   const getMoreOptions = () => {
@@ -184,7 +202,8 @@ export const SplitPayoutBeneficiaryForm = ({
               {...register(`beneficiaries.${index}.percentageOfPayout`)}
               label={usingPointingSystem ? t("Payouts.points") : t("Payouts.percentageToPayLabel")}
               placeholder={usingPointingSystem ? t("Payouts.points") : t("Payouts.percentageToPayLabel")}
-              onKeyDown={!usingPointingSystem ? () => setValue<any>("stopAutocalculation", true) : undefined}
+              // onKeyDown={!usingPointingSystem ? () => setValue<any>("stopAutocalculation", true) : undefined}
+              onKeyDown={() => setValue<any>("stopAutocalculation", true)}
               disabled={isPayoutCreated && !readOnly}
               readOnly={readOnly}
               type="number"
