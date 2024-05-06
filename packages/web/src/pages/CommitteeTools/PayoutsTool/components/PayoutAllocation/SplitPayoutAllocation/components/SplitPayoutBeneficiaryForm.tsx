@@ -91,7 +91,7 @@ export const SplitPayoutBeneficiaryForm = ({
     const sevInfo = constraints.find(
       (constraint) => constraint.severity.toLowerCase() === beneficiaries[index].severity.toLowerCase()
     );
-    const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "1";
+    const defaultPoints = sevInfo?.points ? `${sevInfo.points.value.first}` : "";
     setValue<any>(`beneficiaries.${index}.percentageOfPayout` as any, defaultPoints, { shouldValidate: true });
   });
 

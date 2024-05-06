@@ -182,7 +182,7 @@ export const getExecutePayoutSafeTransaction = async (
 
     const beneficiariesJointPercentage = beneficiariesToIterate
       .reduce((acc, beneficiary) => {
-        const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
+        const existingBeneficiary = acc.find((b) => b.beneficiary.toLowerCase() === beneficiary.beneficiary.toLowerCase());
         if (existingBeneficiary) {
           existingBeneficiary.percentageOfPayout = truncate(
             +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
