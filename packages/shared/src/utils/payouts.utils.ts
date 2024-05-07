@@ -182,7 +182,7 @@ export const getExecutePayoutSafeTransaction = async (
 
     const beneficiariesJointPercentage = beneficiariesToIterate
       .reduce((acc, beneficiary) => {
-        const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
+        const existingBeneficiary = acc.find((b) => b.beneficiary.toLowerCase() === beneficiary.beneficiary.toLowerCase());
         if (existingBeneficiary) {
           existingBeneficiary.percentageOfPayout = truncate(
             +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
@@ -288,7 +288,9 @@ export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" =
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.payouts) continue;
+      if (!subgraphsData[i].request.data) continue;
+      if (!subgraphsData[i].request.data?.data) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.payouts) continue;
 
       for (const payout of subgraphsData[i].request.data.data.payouts) {
         payouts.push({
