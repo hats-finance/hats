@@ -5,23 +5,34 @@ import EditIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
 import TwitterIcon from "assets/icons/social/twitter.icon";
-import { Alert, Button, DropdownSelector, HackerProfileImage, HackerStreak, Loading, Pill, Seo } from "components";
+import XIcon from "assets/icons/social/x.icon";
+import { Alert, Button, DropdownSelector, HackerProfileImage, HackerStreak, Loading, Modal, Pill, Seo } from "components";
 import { queryClient } from "config/reactQuery";
+import { LocalStorage } from "constants/constants";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import { getSeveritiesColorsArray } from "hooks/severities/useSeverityRewardInfo";
 import { ISiweData, useSiweAuth } from "hooks/siwe/useSiweAuth";
 import useConfirm from "hooks/useConfirm";
 import useModal from "hooks/useModal";
 import moment from "moment";
+import { RoutePaths } from "navigation";
 import { useAllTimeLeaderboard } from "pages/Leaderboard/LeaderboardPage/components/AllTimeLeaderboard/useAllTimeLeaderboard";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { BASE_SERVICE_URL } from "settings";
 import { formatNumber } from "utils";
 import { shortenIfAddress } from "utils/addresses.utils";
 import { useAccount } from "wagmi";
 import { CreateProfileFormModal } from "../components";
-import { useLinkNewAddress, useProfileByUsername, useUnlinkAddress } from "../hooks";
+import {
+  useLinkNewAddress,
+  useLinkOAuth,
+  useProfileByAddress,
+  useProfileByUsername,
+  useUnlinkAddress,
+  useUnlinkOAuth,
+} from "../hooks";
 import { useAddressesStats } from "../useAddressesStats";
 import { useAddressesStreak } from "../useAddressesStreak";
 import { HackerActivity } from "./components/HackerActivity";
@@ -29,16 +40,19 @@ import { StyledHackerProfilePage } from "./styles";
 
 export const HackerProfilePage = () => {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
   const { address } = useAccount();
   const { username } = useParams();
   const navigate = useNavigate();
   const confirm = useConfirm();
-  const { tryAuthentication, signIn, profileData: siweProfile, isAuthenticated } = useSiweAuth();
+  const { tryAuthentication, signIn, profileData: siweProfile, isAuthenticated, isSigningIn } = useSiweAuth();
 
   const [showSettings, setShowSettings] = useState(false);
+  const [oAuthLinking, setOAuthLinking] = useState<"twitter">();
   const { isShowing: isShowingUpdateProfile, show: showUpdateProfile, hide: hideUpdateProfile } = useModal();
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
+  const { data: createdProfile } = useProfileByAddress(address);
   const { data: profileFound, isLoading: isLoadingProfile } = useProfileByUsername(username);
   const profileStats = useAddressesStats(profileFound?.addresses ?? []);
   const severityColors = getSeveritiesColorsArray(undefined, profileStats.findingsGlobalStats.length);
@@ -49,6 +63,8 @@ export const HackerProfilePage = () => {
     profileFound?.addresses.includes(leaderboardEntry.address.toLowerCase())
   );
 
+  const linkOAuth = useLinkOAuth();
+  const unlinkOAuth = useUnlinkOAuth();
   const linkNewAddress = useLinkNewAddress();
   const unlinkAddress = useUnlinkAddress();
 
@@ -75,6 +91,29 @@ export const HackerProfilePage = () => {
     };
     check();
   }, [isAuthenticated, siweProfile, tryAuthentication, ownerSiweData, linkNewAddress, profileFound]);
+
+  // Verify if we need to link oauth
+  useEffect(() => {
+    const oauth = searchParams.get("oauth") as typeof oAuthLinking;
+    if (!oauth || !createdProfile) return;
+    if (linkOAuth.isLoading || linkOAuth.isSuccess) return;
+    if (isSigningIn || oAuthLinking) return;
+
+    // If the user is not the owner of the profile, redirect to the home page
+    if (createdProfile.username.toLowerCase() !== username?.toLowerCase()) {
+      return navigate(`/`);
+    }
+
+    // Check if account has already a connected oauth account
+    if (createdProfile.oauth?.[oauth]) {
+      return navigate(`${RoutePaths.profile}/${createdProfile.username}`);
+    }
+
+    const oauthData = JSON.parse(localStorage.getItem(`${LocalStorage.oauthData}_${oauth}`) ?? "null");
+    if (!oauthData) return;
+
+    setOAuthLinking(oauth ?? undefined);
+  }, [searchParams, createdProfile, navigate, username, linkOAuth, isSigningIn, oAuthLinking]);
 
   if (profileStats.isLoading) return <Loading extraText={`${t("HackerProfile.loadingStats")}...`} />;
 
@@ -145,6 +184,62 @@ export const HackerProfilePage = () => {
     ];
   };
 
+  const handleLinkOAuth = async () => {
+    if (!oAuthLinking || !profileFound) return;
+
+    const auth = await tryAuthentication();
+    if (!auth) return;
+
+    const oauthParams = JSON.parse(localStorage.getItem(`${LocalStorage.oauthData}_${oAuthLinking}`) ?? "null");
+    if (!oauthParams) return;
+
+    try {
+      await linkOAuth.mutateAsync({
+        username: profileFound.username,
+        oauth: oAuthLinking,
+        oauthParams,
+      });
+
+      queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", profileFound.username] });
+      queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+      setOAuthLinking(undefined);
+
+      return navigate(`${RoutePaths.profile}/${profileFound.username}`);
+    } catch (error) {
+      console.error("ERROR linking oauth", error);
+      return navigate(`${RoutePaths.profile}/${profileFound.username}`);
+    }
+  };
+
+  const handleStartOAuthLink = (oauth: typeof oAuthLinking) => {
+    const url = `${BASE_SERVICE_URL}/oauth/${oauth}/login`;
+    // Open the oauth login page in the current window
+    window.open(url, "_self");
+  };
+
+  const handleUnlinkOAuth = async (oauth: typeof oAuthLinking) => {
+    if (!createdProfile || !oauth) return;
+
+    const wantsToUnlink = await confirm({
+      title: t("HackerProfile.unlinkOAuth", { oauth }),
+      titleIcon: <UnlinkIcon className="mr-2" fontSize="large" />,
+      description: t("HackerProfile.unlinkOAuthExplanation"),
+      confirmText: t("HackerProfile.unlinkOAuth", { oauth }),
+    });
+    if (!wantsToUnlink) return;
+
+    const auth = await tryAuthentication();
+    if (!auth) return;
+
+    await unlinkOAuth.mutateAsync({
+      username: createdProfile.username,
+      oauth,
+    });
+
+    queryClient.invalidateQueries({ queryKey: ["hacker-profile-username", createdProfile.username] });
+    queryClient.invalidateQueries({ queryKey: ["all-profiles"] });
+  };
+
   return (
     <>
       <Seo title={t("seo.hackerProfileTitle", { username: profileFound?.username })} />
@@ -176,7 +271,7 @@ export const HackerProfilePage = () => {
                   <div className="socials">
                     {profileFound.twitter_username && (
                       <a href={`https://twitter.com/${profileFound.twitter_username}`} {...defaultAnchorProps}>
-                        <TwitterIcon />
+                        <XIcon />
                       </a>
                     )}
                     {profileFound.github_username && (
@@ -191,6 +286,33 @@ export const HackerProfilePage = () => {
               {streakStats.streakCount !== 0 && (
                 <div className="mb-5">
                   <HackerStreak streak={streakStats.streakCount} maxStreak={streakStats.maxStreak} />
+                </div>
+              )}
+
+              {/* OAUTH connected */}
+              {isProfileOwner && (
+                <div className="oauth-connectors">
+                  <div
+                    className={`connector ${profileFound.oauth?.twitter ? "linked" : ""}`}
+                    onClick={
+                      profileFound.oauth?.twitter ? () => handleUnlinkOAuth("twitter") : () => handleStartOAuthLink("twitter")
+                    }
+                  >
+                    <XIcon />
+                    {profileFound.oauth?.twitter ? (
+                      <p>@{profileFound.oauth?.twitter?.username}</p>
+                    ) : (
+                      <p>{t("HackerProfile.connectOauthAccount", { oauth: "X" })}</p>
+                    )}
+                  </div>
+                  <div className={`connector ${profileFound.oauth?.twitter ? "linked" : ""}`}>
+                    <GitHubIcon />
+                    {profileFound.oauth?.twitter ? (
+                      <p>@{profileFound.oauth?.twitter?.username}</p>
+                    ) : (
+                      <p>{t("HackerProfile.connectOauthAccount", { oauth: "Github" })}</p>
+                    )}
+                  </div>
                 </div>
               )}
 
@@ -261,6 +383,29 @@ export const HackerProfilePage = () => {
       </StyledHackerProfilePage>
 
       <CreateProfileFormModal isShowing={isShowingUpdateProfile} onHide={hideUpdateProfile} />
+      <Modal
+        capitalizeTitle
+        isShowing={!!oAuthLinking && !isLoadingProfile}
+        disableClose
+        title={t("HackerProfile.linkYourAccount", { oauth: oAuthLinking })}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 20, minWidth: 350 }}>
+          <Button
+            expanded
+            onClick={() => {
+              localStorage.removeItem(`${LocalStorage.oauthData}_${oAuthLinking}`);
+              navigate(`${RoutePaths.profile}/${profileFound?.username}`);
+              setOAuthLinking(undefined);
+            }}
+            styleType="outlined"
+          >
+            {t("cancel")}
+          </Button>
+          <Button expanded onClick={handleLinkOAuth}>
+            {t("HackerProfile.connectOauthAccount", { oauth: oAuthLinking })}
+          </Button>
+        </div>
+      </Modal>
     </>
   );
 };

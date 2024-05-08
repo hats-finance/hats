@@ -130,3 +130,36 @@ export async function removeAddress(username: string, addressToRemove: string): 
     throw ((error as AxiosError).response?.data as any)?.error;
   }
 }
+
+/**
+ * Link an OAuth account to a profile
+ */
+export async function linkOAuthToProfile(
+  username: string,
+  oauth: string,
+  oauthParams: any
+): Promise<IUpsertedProfileResult | undefined> {
+  try {
+    const response = await axiosClient.post(`${BASE_SERVICE_URL}/oauth/${oauth}/link-profile/${username}`, oauthParams);
+    return response.data.res;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
+  }
+}
+
+/**
+ * Removes the OAuth account from a profile
+ */
+export async function unlinkOAuthFromProfile(
+  username: string,
+  oauth: string,
+): Promise<IUpsertedProfileResult | undefined> {
+  try {
+    const response = await axiosClient.delete(`${BASE_SERVICE_URL}/oauth/${oauth}/link-profile/${username}`);
+    return response.data.res;
+  } catch (error) {
+    console.log(error);
+    throw ((error as AxiosError).response?.data as any)?.error;
+  }
+}

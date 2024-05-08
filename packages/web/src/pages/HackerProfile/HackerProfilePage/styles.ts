@@ -122,6 +122,60 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
         }
       }
 
+      .oauth-connectors {
+        display: flex;
+        align-items: center;
+        gap: ${getSpacing(2)};
+        margin-bottom: ${getSpacing(3)};
+
+        .connector {
+          position: relative;
+          background: var(--background-4);
+          display: flex;
+          gap: ${getSpacing(1)};
+          align-items: center;
+          padding: ${getSpacing(0.8)} ${getSpacing(1.4)};
+          border-radius: ${getSpacing(1)};
+          cursor: pointer;
+          transition: 0.2s;
+
+          &:hover {
+            background: var(--background-3);
+          }
+
+          &.linked {
+            transition: 0;
+            &:hover {
+              &::after {
+                cursor: pointer;
+                content: "Unlink";
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: var(--error-red);
+                top: 0;
+                left: 0;
+                border-radius: ${getSpacing(1)};
+                display: flex;
+                align-items: center;
+                justify-content: center;
+              }
+            }
+          }
+
+          svg {
+            width: ${getSpacing(3)};
+            height: ${getSpacing(3)};
+            cursor: pointer;
+            transition: opacity 0.2s ease-in-out;
+
+            &:hover {
+              opacity: 0.8;
+            }
+          }
+        }
+      }
+
       .settings {
         position: absolute;
         top: 0;
@@ -224,6 +278,12 @@ export const StyledHackerProfilePage = styled.div<{ unlinkDisabled: boolean }>(
           }
         }
       }
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: space-between;
+      gap: ${getSpacing(4)};
     }
   `
 );
