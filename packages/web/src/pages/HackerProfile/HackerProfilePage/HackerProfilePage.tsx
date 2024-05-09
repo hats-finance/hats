@@ -4,7 +4,6 @@ import UnlinkIcon from "@mui/icons-material/LinkOffOutlined";
 import EditIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import SettingsIcon from "@mui/icons-material/SettingsOutlined";
 import GitHubIcon from "assets/icons/social/github.icon";
-import TwitterIcon from "assets/icons/social/twitter.icon";
 import XIcon from "assets/icons/social/x.icon";
 import { Alert, Button, DropdownSelector, HackerProfileImage, HackerStreak, Loading, Modal, Pill, Seo } from "components";
 import { queryClient } from "config/reactQuery";
@@ -48,7 +47,7 @@ export const HackerProfilePage = () => {
   const { tryAuthentication, signIn, profileData: siweProfile, isAuthenticated, isSigningIn } = useSiweAuth();
 
   const [showSettings, setShowSettings] = useState(false);
-  const [oAuthLinking, setOAuthLinking] = useState<"twitter">();
+  const [oAuthLinking, setOAuthLinking] = useState<"twitter" | "github">();
   const { isShowing: isShowingUpdateProfile, show: showUpdateProfile, hide: hideUpdateProfile } = useModal();
   const [ownerSiweData, setOwnerSiweData] = useState<ISiweData>();
 
@@ -305,10 +304,15 @@ export const HackerProfilePage = () => {
                       <p>{t("HackerProfile.connectOauthAccount", { oauth: "X" })}</p>
                     )}
                   </div>
-                  <div className={`connector ${profileFound.oauth?.twitter ? "linked" : ""}`}>
+                  <div
+                    className={`connector ${profileFound.oauth?.github ? "linked" : ""}`}
+                    onClick={
+                      profileFound.oauth?.github ? () => handleUnlinkOAuth("github") : () => handleStartOAuthLink("github")
+                    }
+                  >
                     <GitHubIcon />
-                    {profileFound.oauth?.twitter ? (
-                      <p>@{profileFound.oauth?.twitter?.username}</p>
+                    {profileFound.oauth?.github ? (
+                      <p>@{profileFound.oauth?.github?.username}</p>
                     ) : (
                       <p>{t("HackerProfile.connectOauthAccount", { oauth: "Github" })}</p>
                     )}
@@ -392,6 +396,7 @@ export const HackerProfilePage = () => {
         <div style={{ display: "flex", justifyContent: "space-between", gap: 20, minWidth: 350 }}>
           <Button
             expanded
+            disabled={linkOAuth.isLoading}
             onClick={() => {
               localStorage.removeItem(`${LocalStorage.oauthData}_${oAuthLinking}`);
               navigate(`${RoutePaths.profile}/${profileFound?.username}`);
@@ -401,8 +406,8 @@ export const HackerProfilePage = () => {
           >
             {t("cancel")}
           </Button>
-          <Button expanded onClick={handleLinkOAuth}>
-            {t("HackerProfile.connectOauthAccount", { oauth: oAuthLinking })}
+          <Button expanded onClick={handleLinkOAuth} disabled={linkOAuth.isLoading}>
+            {linkOAuth.isLoading ? `${t("loading")}...` : t("HackerProfile.connectOauthAccount", { oauth: oAuthLinking })}
           </Button>
         </div>
       </Modal>
