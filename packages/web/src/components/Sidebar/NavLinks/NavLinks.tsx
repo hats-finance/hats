@@ -1,4 +1,4 @@
-import { getAddressSafes } from "@hats.finance/shared";
+import { ChainsConfig, getAddressSafes } from "@hats.finance/shared";
 import BugIcon from "@mui/icons-material/BugReportOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import DecryptionTool from "@mui/icons-material/VpnKeyOffOutlined";
@@ -65,7 +65,18 @@ export default function NavLinks() {
         if (!chain || !allVaultsOnEnv || allVaultsOnEnv.length === 0 || !address) return setIsCommitteeAddress(false);
 
         const allCommittees = new Set(allVaultsOnEnv.map((vault) => utils.getAddress(vault.committee)));
-        const addressSafes = (await getAddressSafes(address, chain.id)) as `0x${string}`[];
+        const allChainsOnEnv = Object.values(ChainsConfig).filter((c) => chain.testnet === c.chain.testnet);
+
+        const addressSafes = (await Promise.allSettled(
+          allChainsOnEnv.map((chain) => getAddressSafes(address, chain.chain.id))
+        ).then((res) => {
+          const addressSafes = res
+            .filter((res) => res.status === "fulfilled")
+            .map((res) => (res as PromiseFulfilledResult<string[]>).value)
+            .flat();
+
+          return addressSafes;
+        })) as `0x${string}`[];
 
         for (const addressSafe of addressSafes) {
           if (Array.from(allCommittees).includes(addressSafe)) {
