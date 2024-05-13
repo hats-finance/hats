@@ -1,4 +1,4 @@
-import { isAddressAMultisigMember } from "@hats.finance/shared";
+import { getAddressSafes } from "@hats.finance/shared";
 import BugIcon from "@mui/icons-material/BugReportOutlined";
 import PayoutIcon from "@mui/icons-material/TollOutlined";
 import DecryptionTool from "@mui/icons-material/VpnKeyOffOutlined";
@@ -62,16 +62,18 @@ export default function NavLinks() {
   useEffect(() => {
     const verifyIfCommitteeAddress = async () => {
       try {
-        if (!chain || !allVaultsOnEnv || allVaultsOnEnv.length === 0) return setIsCommitteeAddress(false);
+        if (!chain || !allVaultsOnEnv || allVaultsOnEnv.length === 0 || !address) return setIsCommitteeAddress(false);
 
-        const verifyCommitteeCalls: Promise<boolean>[] = [];
         const allCommittees = new Set(allVaultsOnEnv.map((vault) => utils.getAddress(vault.committee)));
-        allCommittees.forEach((committee) => {
-          verifyCommitteeCalls.push(isAddressAMultisigMember(committee, address, chain.id));
-        });
+        const addressSafes = (await getAddressSafes(address, chain.id)) as `0x${string}`[];
 
-        const isCommitteeAddress = await Promise.all(verifyCommitteeCalls).then((results) => results.some((result) => result));
-        return setIsCommitteeAddress(isCommitteeAddress);
+        for (const addressSafe of addressSafes) {
+          if (Array.from(allCommittees).includes(addressSafe)) {
+            return setIsCommitteeAddress(true);
+          }
+        }
+
+        return setIsCommitteeAddress(false);
       } catch (error) {
         setIsCommitteeAddress(false);
       }
