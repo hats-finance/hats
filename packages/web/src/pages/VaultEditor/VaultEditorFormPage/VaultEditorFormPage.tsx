@@ -3,11 +3,12 @@ import {
   IEditedVaultDescription,
   IEditedVulnerabilitySeverityV1,
   IVaultEditionStatus,
-  convertVulnerabilitySeverityV1ToV2,
+  convertVulnerabilitySeverityV1ToV2V3,
   createNewCommitteeMember,
   createNewVaultDescription,
   editedFormToCreateVaultOnChainCall,
   getGnosisSafeInfo,
+  getVaultDescriptionHash,
   isAGnosisSafeTx,
   nonEditableEditionStatus,
 } from "@hats.finance/shared";
@@ -52,6 +53,7 @@ import { useVaultEditorSteps } from "./useVaultEditorSteps";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
+  const { masters } = useVaults();
   const { address } = useAccount();
   const { allVaults } = useVaults();
 
@@ -158,6 +160,7 @@ const VaultEditorFormPage = () => {
         ...editSessionResponse.editedDescription,
         vaultCreatedInfo: {
           vaultAddress: editSessionResponse.vaultAddress,
+          claimsManager: editSessionResponse.claimsManager,
           chainId: editSessionResponse.chainId,
         },
       });
@@ -252,8 +255,7 @@ const VaultEditorFormPage = () => {
       if (!address) return;
       setCreatingVault(true);
 
-      const rewardController = appChains[+data.committee.chainId].rewardController;
-      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash, rewardController);
+      const vaultOnChainCall = editedFormToCreateVaultOnChainCall(data, descriptionHash);
 
       const gnosisInfo = await getGnosisSafeInfo(address, +data.committee.chainId);
       if (gnosisInfo.isSafeAddress) {
@@ -414,8 +416,8 @@ const VaultEditorFormPage = () => {
     const createdVaultInfo = getValues("vaultCreatedInfo");
 
     if (createdVaultInfo) {
-      const vaultInfo = await VaultEditorService.getVaultInformation(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
-      setOnChainDescriptionHash(vaultInfo.descriptionHash);
+      const descriptionHash = await getVaultDescriptionHash(createdVaultInfo.vaultAddress, createdVaultInfo.chainId);
+      setOnChainDescriptionHash(descriptionHash);
     }
   }, [getValues]);
 
@@ -504,7 +506,7 @@ const VaultEditorFormPage = () => {
       const indexArray = getValues("vulnerability-severities-spec.indexArray");
       const currentSeverities = getValues("vulnerability-severities-spec.severities") as IEditedVulnerabilitySeverityV1[];
 
-      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2(s, indexArray));
+      const newSeverities = currentSeverities.map((s) => convertVulnerabilitySeverityV1ToV2V3(s, indexArray));
       setValue("vulnerability-severities-spec.severities", newSeverities, { shouldDirty: true });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -687,6 +689,36 @@ const VaultEditorFormPage = () => {
       );
     }
   };
+
+  const chainId = useWatch({ control, name: "committee.chainId" });
+  // Set default values for the fixed splits. Getting it from subgraph
+  useEffect(() => {
+    const params = getValues("parameters");
+    if (!params) return;
+    // If we have alredy set a value, we don't want to override it
+    const hasValue = params.fixedHatsGovPercetange !== undefined && params.fixedHatsGovPercetange !== null;
+    if (hasValue) return;
+
+    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
+    if (registryAddress && masters) {
+      const master = masters.find(
+        (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
+      );
+
+      if (master) {
+        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
+        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
+        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
+        console.log("OVERRIDE", hatsRewardSplit, hatsGovernanceSplit, committeeControlledSplit);
+
+        if (!isNaN(committeeControlledSplit))
+          setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit, { shouldDirty: true });
+        if (!isNaN(hatsGovernanceSplit))
+          setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit, { shouldDirty: true });
+        if (!isNaN(hatsRewardSplit)) setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit, { shouldDirty: true });
+      }
+    }
+  }, [chainId, masters, setValue, getValues]);
 
   if (loadingEditSession || loadingSteps || !currentStepInfo || !currentSectionInfo) {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;

@@ -39,6 +39,7 @@ export const GET_VAULTS = `
       stakers {
         address
         totalRewardPaid
+        shares
       }
       master {
         address
@@ -84,6 +85,8 @@ export const GET_VAULTS = `
       vestingPeriods
       depositPause
       committeeCheckedIn
+      claimsManager
+      destroyed
       rewardControllers {
         id
         rewardToken
@@ -131,6 +134,7 @@ export const GET_SUBMISSIONS = `
       createdAt
       master {
         id
+        address
       }
     }
   } 
@@ -140,6 +144,7 @@ export const GET_STAKER = `
   query getStaker($address: Bytes!) {
     stakers(where: { address: $address }) {
       pid
+      shares
       master {
         address
       }

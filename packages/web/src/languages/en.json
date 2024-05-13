@@ -133,7 +133,7 @@
     "vaultEditorFinishedSetupExplanation": "You have finished filling out all the info needed for setting up the vault. \n\n The info you have added will appear as the vault description on Hats dapp (email not included).",
     "vaultEditorFinishedEditionExplanation": "You have finished editing the vault. Now you can send this form to governance for approval.",
     "vaultEditorCreateVaultOnChainExplanation": "Fill the info in order to create a vault. Once done you will be requested to execute a transaction that will create a vault on-chain.",
-    "vaultEditorMaxBountyExplanation": "The 'Maximum bounty' will set the maximum percentage of the payable vault bounty. The maximum vault bounty allowed is 90%. <i>(100% of the vault can't be payed within one bounty)</i> \n\n <strong>Example:</strong> If a vault has <strong>100K</strong> deposited and the maximum bounty is set to <strong>90%</strong> in the case of a critical severity the maximum pay-out will be <strong>90K</strong>. \n\n <strong>Set the maximum bounty (maximum 90%)</strong>",
+    "vaultEditorMaxBountyExplanation": "<strong>Set the maximum bounty (maximum {{max}}%)</strong>",
     "vaultEditorBountySplitExplanation": "The bounty split will set the way a bounty will split when a pay-out occurs. \n\n The control of the bounty split is divided between the committee of the vault (90% editable parameters) and Hats governance (10% non editable parameters). \n\n <strong>Set the committee controlled split parameters, the total should be 100%.</strong> \n\n Please note, when viewed on the dapp the percentage will appear as percentage of the whole vault.",
     "vaultEditorVaultPreviewExplanation": "Preview your vault as it will appear on Hats dApp.",
     "vaultEditorFinalStepExplanation": "Create the vault by completing the on-chain transaction. \n Once the transaction is executed, the vault is created on-chain \n\n The vault description may be edited at any time, changes will require Hat governance approval.",
@@ -686,6 +686,16 @@
     "optOutToAuditCompetition": "Opt out to audit competition",
     "createProfile": "Create profile",
     "optedIn": "Opted in",
+    "editable": "Editable",
+    "editFeesAndRewards": "Edit fees and rewards",
+    "committeeMultisig": "Committee multisig",
+    "arbitrator": "Arbitrator",
+    "arbitratorCanChangeBounty": "Arbitrator can change bounty?",
+    "arbitratorCanChangeBeneficiary": "Arbitrator can change beneficiary?",
+    "arbitratorCanSubmitClaims": "Arbitrator can submit claims?",
+    "isTokenLockRevocable": "Is token lock revocable?",
+    "vaultDestroyedCantCreatePayout": "This vault is destroyed and can't be used to create a payout.",
+    "alert": "Alert",
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
       "optOutFromAuditCompetition": "Opt out from audit competition",
@@ -1427,8 +1437,8 @@
         "chain-placeholder": "Select asset/token chain"
       },
       "vault-parameters": {
-        "maxBountyPercentage": "Maximum bounty (10%-90%)",
-        "maxBountyPercentage-placeholder": "Maximum bounty (10%-90%)"
+        "maxBountyPercentage": "Maximum bounty (10%-{{max}}%)",
+        "maxBountyPercentage-placeholder": "Maximum bounty (10%-{{max}}%)"
       }
     },
     "Vault": {

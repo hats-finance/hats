@@ -72,7 +72,7 @@ const VaultComponent = (
   );
 
   const getVersionFlag = () => {
-    return vault.version === "v2" && !vault.activeClaim && <StyledVersionFlag>{vault.version}</StyledVersionFlag>;
+    return ["v2", "v3"].includes(vault.version) && !vault.activeClaim && <StyledVersionFlag>{vault.version}</StyledVersionFlag>;
   };
 
   const getActiveClaimFlag = () => {

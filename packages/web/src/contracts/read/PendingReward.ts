@@ -1,9 +1,10 @@
-import { HATSVaultV1_abi, IVaultV2, RewardController_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, IVaultV2, IVaultV3, RewardController_abi } from "@hats.finance/shared";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
 import { Amount } from "utils/amounts.utils";
 import { useAccount, useContractReads } from "wagmi";
 
+// V2 and V3 works the same here
 export class PendingRewardContract {
   static contractInfo = (vault?: IVault, account?: string | undefined, rewardControllerIndex = 0) => {
     const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.rewardControllers[rewardControllerIndex]?.id;
@@ -26,7 +27,7 @@ export class PendingRewardContract {
     const data = res.data as any[];
     if (res.isError || !data) return undefined;
     return data.map((d, index) => {
-      const rewardController = (vault as IVaultV2).rewardControllers[index];
+      const rewardController = (vault as IVaultV2 | IVaultV3).rewardControllers[index];
       return (
         new Amount(d, rewardController?.rewardTokenDecimals ?? "18", rewardController?.rewardTokenSymbol) ??
         new Amount(undefined, "18")

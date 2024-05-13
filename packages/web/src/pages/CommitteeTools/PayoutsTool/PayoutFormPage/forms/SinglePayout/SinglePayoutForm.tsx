@@ -54,7 +54,11 @@ export const SinglePayoutForm = () => {
 
     setValue("nftUrl", selectedSeverityData["nft-metadata"].image);
 
-    if (vault?.version === "v2") {
+    if (vault?.version === "v3") {
+      const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
+      const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
+      setValue("percentageToPay", percentage.toString());
+    } else if (vault?.version === "v2") {
       const maxBounty = vault.maxBounty ? +vault.maxBounty / 100 : 100;
       const percentage = (selectedSeverityData as IVulnerabilitySeverityV2).percentage * (maxBounty / 100);
       setValue("percentageToPay", percentage.toString());
@@ -149,7 +153,7 @@ export const SinglePayoutForm = () => {
             />
           )}
 
-          {vault && vault.version === "v2" && (
+          {vault && ["v2", "v3"].includes(vault.version) && (
             <FormInput
               {...register("percentageToPay")}
               label={t("Payouts.percentageToPay")}

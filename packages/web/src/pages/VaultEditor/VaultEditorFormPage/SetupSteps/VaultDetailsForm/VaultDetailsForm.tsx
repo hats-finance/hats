@@ -77,7 +77,7 @@ export function VaultDetailsForm() {
 
     const data = getValues();
     const vulnerabilitySeveritiesTemplate = getVulnerabilitySeveritiesTemplate(data.version, isAudit);
-    const defaultOnChainParams = getDefaultVaultParameters(isAudit);
+    const defaultOnChainParams = getDefaultVaultParameters(isAudit, data.version);
 
     const severitiesIds = vulnerabilitySeveritiesTemplate.severities.map((s) => s.id as string);
     const severitiesOptionsForContractsCovered = vulnerabilitySeveritiesTemplate.severities.map(

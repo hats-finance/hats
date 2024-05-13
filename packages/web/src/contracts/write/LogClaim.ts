@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultsRegistry_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultsRegistryV2_abi, HATSVaultsRegistryV3_abi } from "@hats.finance/shared";
 import { IVault } from "types";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useContractWrite, useNetwork } from "wagmi";
@@ -16,8 +16,9 @@ export class LogClaimContract {
   static hook = (vault?: IVault) => {
     const { chain } = useNetwork();
 
-    const contractAddress = vault?.master.address ?? "";
-    const registryAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultsRegistry_abi;
+    const contractAddress = vault?.master.address;
+    const registryAbi =
+      vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultsRegistryV2_abi : HATSVaultsRegistryV3_abi;
     const method = vault?.version === "v1" ? "claim" : "logClaim";
 
     const claim = useContractWrite({

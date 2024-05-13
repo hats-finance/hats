@@ -1,4 +1,4 @@
-import { HATSVaultV1_abi, HATSVaultV2_abi } from "@hats.finance/shared";
+import { HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { useTabFocus } from "hooks/useTabFocus";
 import { IVault } from "types";
@@ -7,7 +7,7 @@ import { useAccount, useContractRead } from "wagmi";
 export class UserSharesPerVaultContract {
   static contractInfo = (vault?: IVault, account?: string | undefined) => {
     const contractAddress = vault?.version === "v1" ? vault?.master.address : vault?.id;
-    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : HATSVaultV2_abi;
+    const vaultAbi = vault?.version === "v1" ? HATSVaultV1_abi : vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3_abi;
     const method = vault?.version === "v1" ? "userInfo" : "balanceOf";
     const args = vault?.version === "v1" ? [vault?.pid, account] : [account];
 
@@ -29,6 +29,8 @@ export class UserSharesPerVaultContract {
       if (vault?.version === "v1") {
         userSharesAmount = data.amount ?? BigNumber.from(0);
       } else if (vault?.version === "v2") {
+        userSharesAmount = data ?? BigNumber.from(0);
+      } else if (vault?.version === "v3") {
         userSharesAmount = data ?? BigNumber.from(0);
       }
     }

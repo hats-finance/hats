@@ -1,9 +1,10 @@
 import { IAddressRoleInVault, IVaultStatusData } from "@hats.finance/shared";
 import { CopyToClipboard, Loading, Seo } from "components";
 import DOMPurify from "dompurify";
+import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 import { isAddress } from "utils/addresses.utils";
@@ -30,6 +31,7 @@ export const VaultStatusPage = () => {
   const { t } = useTranslation();
   const { address } = useAccount();
   const navigate = useNavigate();
+  const { allVaults, vaultsReadyAllChains } = useVaults();
   const { vaultAddress, vaultChainId } = useParams();
 
   const [vaultData, setVaultData] = useState<IVaultStatusData | undefined>();
@@ -37,13 +39,26 @@ export const VaultStatusPage = () => {
   const isGovMember = useIsGovMember();
   const isReviewer = useIsReviewer();
 
+  const loadVaultData = useCallback(
+    async (address: string, chainId: number) => {
+      const vault = allVaults?.find((v) => v.id.toLowerCase() === address.toLowerCase());
+      if (!vault) return setVaultData(undefined);
+
+      const vaultInfo = await VaultStatusService.getVaultInformation(vault);
+      setVaultData(vaultInfo);
+    },
+    [allVaults]
+  );
+
   useEffect(() => {
+    if (!vaultsReadyAllChains) return;
+
     if (vaultAddress && vaultChainId && isAddress(vaultAddress)) {
       loadVaultData(vaultAddress, +vaultChainId);
     } else {
       navigate(-1);
     }
-  }, [vaultAddress, vaultChainId, navigate]);
+  }, [vaultAddress, vaultChainId, navigate, vaultsReadyAllChains, loadVaultData]);
 
   useEffect(() => {
     const getPermissionData = async () => {
@@ -55,15 +70,13 @@ export const VaultStatusPage = () => {
     getPermissionData();
   }, [address, vaultChainId, vaultData]);
 
-  const loadVaultData = async (address: string, chainId: number) => {
-    const vaultInfo = await VaultStatusService.getVaultInformation(address, chainId);
-    setVaultData(vaultInfo);
-  };
-
   const refreshVaultData = async () => {
     if (!vaultAddress || !vaultChainId) return;
 
-    const vaultInfo = await VaultStatusService.getVaultInformation(vaultAddress, +vaultChainId);
+    const vault = allVaults?.find((v) => v.id.toLowerCase() === vaultAddress.toLowerCase());
+    if (!vault) return setVaultData(undefined);
+
+    const vaultInfo = await VaultStatusService.getVaultInformation(vault);
     setVaultData(vaultInfo);
   };
 

@@ -48,13 +48,15 @@ export async function getInProgressPayoutsByVault(vaultInfo?: IVaultInfo): Promi
  * Creates a new payout
  * @param vaultInfo - The vault info to create the payout
  * @param type - The payout type to create
+ * @param payoutData - The payout data to create
  *
  * @returns The id of the created payout
  */
-export async function createDraftPayout(vaultInfo: IVaultInfo, type: PayoutType): Promise<string> {
+export async function createDraftPayout(vaultInfo: IVaultInfo, type: PayoutType, payoutData: IPayoutData): Promise<string> {
   const res = await axiosClient.post(`${BASE_SERVICE_URL}/payouts`, {
     vaultAddress: vaultInfo.address,
     chainId: vaultInfo.chainId,
+    payoutData,
     type,
   });
   return res.data.upsertedId;

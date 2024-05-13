@@ -1,5 +1,6 @@
 import {
   HATSVaultV2_abi,
+  HATSVaultV3ClaimsManager_abi,
   PayoutStatus,
   getSafeHomeLink,
   getVaultInfoWithCommittee,
@@ -75,8 +76,9 @@ export const PayoutStatusPage = () => {
 
       let payoutClaimId = "";
 
-      if (vault?.version === "v2") {
-        const vaultIface = new ethers.utils.Interface(HATSVaultV2_abi);
+      if (vault?.version === "v2" || vault?.version === "v3") {
+        const abi = vault?.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi;
+        const vaultIface = new ethers.utils.Interface(abi);
         data.logs.forEach((log) => {
           try {
             const parsedLog = vaultIface.parseLog(log);

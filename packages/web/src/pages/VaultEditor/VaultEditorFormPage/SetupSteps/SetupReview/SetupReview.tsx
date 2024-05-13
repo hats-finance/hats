@@ -3,6 +3,7 @@ import {
   IVault,
   IVaultDescriptionV1,
   IVaultDescriptionV2,
+  IVaultDescriptionV3,
   editedFormToDescription,
 } from "@hats.finance/shared";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -99,9 +100,9 @@ export function SetupReview() {
         existingVault?.committeeRewardSplit ?? `${editedVaultDescriptionForm.parameters.committeePercentage * 100}`,
       swapAndBurnSplit: "0",
       governanceHatRewardSplit:
-        existingVault?.governanceHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange * 100}`,
+        existingVault?.governanceHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsGovPercetange ?? 0 * 100}`,
       hackerHatRewardSplit:
-        existingVault?.hackerHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange * 100}`,
+        existingVault?.hackerHatRewardSplit ?? `${editedVaultDescriptionForm.parameters.fixedHatsRewardPercetange ?? 0 * 100}`,
       vestingDuration: "2592000",
       vestingPeriods: "30",
       depositPause: false,
@@ -119,8 +120,9 @@ export function SetupReview() {
         description: description as IVaultDescriptionV1,
         maxBounty: null,
         amountsInfo: existingVault?.amountsInfo,
+        claimsManager: null,
       };
-    } else {
+    } else if (editedVaultDescriptionForm.version === "v2") {
       return {
         ...bothVersionsVault,
         version: "v2",
@@ -128,6 +130,17 @@ export function SetupReview() {
         maxBounty: existingVault?.maxBounty ?? `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
         rewardControllers: [],
         amountsInfo: existingVault?.amountsInfo,
+        claimsManager: null,
+      };
+    } else {
+      return {
+        ...bothVersionsVault,
+        version: "v3",
+        description: description as IVaultDescriptionV3,
+        maxBounty: existingVault?.maxBounty ?? `${editedVaultDescriptionForm.parameters.maxBountyPercentage * 100}`,
+        rewardControllers: [],
+        amountsInfo: existingVault?.amountsInfo,
+        claimsManager: existingVault?.claimsManager ?? "",
       };
     }
   }, [editedVaultDescriptionForm, existingVault]);

@@ -116,7 +116,7 @@ export const autocalculateMultiPayoutPointingSystem = (
   const pricePerPointUsingTotalAllocation = totalPointsToPay !== 0 ? totalAmountToPay / totalPointsToPay : 0;
   const pricePerPointToUse = Math.min(pricePerPointUsingCap, pricePerPointUsingTotalAllocation);
 
-  const totalPercentageToPay = ((totalPointsToPay * pricePerPointToUse) / totalAmountToPay) * 100;
+  const totalPercentageToPay = totalAmountToPay === 0 ? 0 : ((totalPointsToPay * pricePerPointToUse) / totalAmountToPay) * 100;
 
   return {
     beneficiariesCalculated,

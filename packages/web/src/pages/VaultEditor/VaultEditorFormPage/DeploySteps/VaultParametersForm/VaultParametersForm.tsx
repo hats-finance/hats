@@ -1,15 +1,15 @@
-import { IEditedVaultDescription, IEditedVaultParameters } from "@hats.finance/shared";
+import { IEditedVaultDescription, IVaultParameters } from "@hats.finance/shared";
 import { yupResolver } from "@hookform/resolvers/yup";
 import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
-import { useVaults } from "hooks/subgraph/vaults/useVaults";
+import { useIsGovMember } from "hooks/useIsGovMember";
+import { useIsReviewer } from "hooks/useIsReviewer";
 import Tooltip from "rc-tooltip";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { VaultEditorFormContext } from "../../store";
@@ -17,11 +17,11 @@ import { StyledVaultEditorForm } from "../../styles";
 import { StyledTotalSplittedPercentage, StyledVaultParametersForm } from "./styles";
 
 type VaultParametersFormProps = {
-  statusCardFormDefaultData?: { parameters: IEditedVaultParameters };
-  onSubmit?: (data: { parameters: IEditedVaultParameters }) => void;
+  statusCardFormDefaultData?: { parameters: IVaultParameters };
+  onSubmit?: (data: { parameters: IVaultParameters }) => void;
 };
 
-type FormType = { parameters: IEditedVaultParameters } | IEditedVaultDescription;
+type FormType = { parameters: IVaultParameters } | IEditedVaultDescription;
 
 export const VaultParametersForm = (props: VaultParametersFormProps) => {
   return props.statusCardFormDefaultData ? <VaultParametersFormStatusCard {...props} /> : <VaultParametersFormOnVaultEditor />;
@@ -30,7 +30,7 @@ export const VaultParametersForm = (props: VaultParametersFormProps) => {
 const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: VaultParametersFormProps) => {
   const { t } = useTranslation();
 
-  const methodsOnlyParameters = useForm<{ parameters: IEditedVaultParameters }>({
+  const methodsOnlyParameters = useForm<{ parameters: IVaultParameters }>({
     defaultValues: statusCardFormDefaultData,
     resolver: yupResolver(getEditedDescriptionYupSchema(t)),
     mode: "onChange",
@@ -61,31 +61,6 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 
 const VaultParametersFormOnVaultEditor = () => {
   const { allFormDisabled } = useContext(VaultEditorFormContext);
-  const { masters } = useVaults();
-  const methodsToUse = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const chainId = useWatch({ control: methodsToUse.control, name: "committee.chainId" });
-
-  // Set default values for the fixed splits. Getting it from subgraph
-  useEffect(() => {
-    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
-    if (registryAddress && masters) {
-      const master = masters.find(
-        (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
-      );
-
-      if (master) {
-        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
-        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
-        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
-
-        if (!isNaN(committeeControlledSplit))
-          methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
-        if (!isNaN(hatsGovernanceSplit)) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
-        if (!isNaN(hatsRewardSplit)) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
-      }
-    }
-  }, [chainId, masters, methodsToUse]);
 
   return <VaultParametersFormShared disabled={allFormDisabled} />;
 };
@@ -93,6 +68,14 @@ const VaultParametersFormOnVaultEditor = () => {
 function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { blockMaxBounty?: boolean; disabled?: boolean }) {
   const { t } = useTranslation();
   const methodsToUse = useEnhancedFormContext<FormType>();
+
+  const [isEditingFixed, setIsEditingFixed] = useState(false);
+
+  const isGov = useIsGovMember();
+  const isReviewer = useIsReviewer();
+  const canEditFixed = isGov || isReviewer;
+
+  const version = useWatch({ control: methodsToUse.control as Control<FormType>, name: "version" });
 
   const vestedPercentage =
     useWatch({ control: methodsToUse.control as Control<FormType>, name: "parameters.vestedPercentage" }) ?? 0;
@@ -114,6 +97,14 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
     name: "parameters.fixedHatsRewardPercetange",
   })?.toString();
 
+  useEffect(() => {
+    if (hatsGovernanceSplit && hatsRewardSplit)
+      methodsToUse.setValue(
+        "parameters.fixedCommitteeControlledPercetange",
+        100 - +hatsGovernanceSplit.toString() - +hatsRewardSplit.toString()
+      );
+  }, [hatsGovernanceSplit, hatsRewardSplit, methodsToUse]);
+
   const vestedPercentagePreview = +vestedPercentage.toString() * (+(committeeControlledSplit as string) / 100);
   const committeePercentagePreview = +committeePercentage.toString() * (+(committeeControlledSplit as string) / 100);
   const immediatePercentagePreview = +immediatePercentage.toString() * (+(committeeControlledSplit as string) / 100);
@@ -133,23 +124,37 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   return (
     <StyledVaultEditorForm withoutMargin noPadding>
       <StyledVaultParametersForm>
-        <p className="section-title">{t("maxBounty")}</p>
-        <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation") }} />
+        {canEditFixed && (
+          <>
+            <p className="section-title">{t("maxBounty")}</p>
+            <div
+              className="helper-text"
+              dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" ? "100" : "90" }) }}
+            />
 
-        {/* <div className="input">
-          <FormInput
-            {...methodsToUse.register(`parameters.maxBountyPercentage`)}
-            disabled={blockMaxBounty || disabled}
-            type="whole-number"
-            label={t("VaultEditor.vault-parameters.maxBountyPercentage")}
-            placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder")}
-            colorable
-          />
-        </div> */}
+            <div className="input">
+              <FormInput
+                {...methodsToUse.register(`parameters.maxBountyPercentage`, { valueAsNumber: true })}
+                disabled={(blockMaxBounty || disabled || !canEditFixed) && version === "v3"}
+                type="whole-number"
+                label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" ? "100" : "90" })}
+                placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder", {
+                  max: version === "v3" ? "100" : "90",
+                })}
+                colorable
+              />
+            </div>
+          </>
+        )}
 
         <p className="section-title">{t("bountySplit")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
 
+        {canEditFixed && !disabled && (
+          <Button onClick={() => setIsEditingFixed((prev) => !prev)} styleType="text" className="mb-4" noPadding>
+            {t("editFeesAndRewards")}
+          </Button>
+        )}
         <div className="bountySplitContainer">
           <div className="committeeControlled">
             {renderWithTooltip(
@@ -179,7 +184,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.immediatePercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
@@ -215,7 +220,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.vestedPercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
@@ -251,7 +256,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.committeePercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
@@ -286,16 +291,55 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
           </div>
           <div className="nonControlled">
             {renderWithTooltip(
-              t("nonEditable"),
+              canEditFixed ? t("editable") : t("nonEditable"),
               <div className="splitFixedValue">
-                <p>{hatsGovernanceSplit}%</p>
+                {canEditFixed && isEditingFixed ? (
+                  <>
+                    <FormInput
+                      {...methodsToUse.register("parameters.fixedHatsGovPercetange")}
+                      disabled={disabled}
+                      onKeyUp={revalidateSplit}
+                      onBlur={revalidateSplit}
+                      type="number"
+                      maxDecimals={0}
+                      min={0}
+                      max={100}
+                      colorable
+                      noMargin
+                      placeholder="-- (%)"
+                    />
+                    <div className="mb-1" />
+                  </>
+                ) : (
+                  <p>{hatsGovernanceSplit}%</p>
+                )}
+
                 <label>{t("hatsGov")}</label>
               </div>
             )}
             {renderWithTooltip(
-              t("nonEditable"),
+              canEditFixed ? t("editable") : t("nonEditable"),
               <div className="splitFixedValue">
-                <p>{hatsRewardSplit}%</p>
+                {canEditFixed && isEditingFixed ? (
+                  <>
+                    <FormInput
+                      {...methodsToUse.register("parameters.fixedHatsRewardPercetange")}
+                      disabled={disabled}
+                      onKeyUp={revalidateSplit}
+                      onBlur={revalidateSplit}
+                      type="number"
+                      maxDecimals={0}
+                      min={0}
+                      max={100}
+                      colorable
+                      noMargin
+                      placeholder="-- (%)"
+                    />
+                    <div className="mb-1" />
+                  </>
+                ) : (
+                  <p>{hatsRewardSplit}%</p>
+                )}
                 <label>{t("hatsReward")}</label>
               </div>
             )}

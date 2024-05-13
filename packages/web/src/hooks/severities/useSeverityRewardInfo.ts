@@ -27,7 +27,7 @@ export function useSeverityRewardInfo(vault: IVault | undefined, severityIndex: 
   const showIntendedAmounts = vault.amountsInfo?.showCompetitionIntendedAmount ?? false;
   const SEVERITIES_COLORS = getSeveritiesColorsArray(vault);
 
-  if (vault.version === "v2") {
+  if (vault.version === "v2" || vault.version === "v3") {
     const severity = vault.description.severities[severityIndex];
     if (!severity) return DEFAULT_VALUE;
 

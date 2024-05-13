@@ -32,7 +32,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
 
   const auditCompetitionsVaults =
     allVaultsOnEnv
-      ?.filter((vault) => vault.registered)
+      ?.filter((vault) => vault.registered && !vault.destroyed)
       .filter((vault) => vault.description?.["project-metadata"].type === "audit")
       .filter((vault) => {
         const isPrivateAudit = vault.description?.["project-metadata"].isPrivateAudit;
@@ -62,7 +62,7 @@ export const useAuditCompetitionsVaults = (opts: { private: boolean } = { privat
 
     return (
       allVaultsOnEnv
-        ?.filter((vault) => vault.registered)
+        ?.filter((vault) => vault.registered && !vault.destroyed)
         ?.filter((vault) => vault.description?.["project-metadata"].type === "audit")
         ?.filter((vault) => !excludedFinishedCompetitions?.includes(vault.id))
         ?.filter((vault) => {
@@ -105,7 +105,7 @@ export const useBugBountiesVaults = () => {
 
   const bugBounties =
     activeVaults
-      ?.filter((vault) => vault.registered)
+      ?.filter((vault) => vault.registered && !vault.destroyed)
       .filter(
         (vault) => !vault.description?.["project-metadata"].type || vault.description?.["project-metadata"].type === "normal"
       ) ?? [];

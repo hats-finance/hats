@@ -2,7 +2,8 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { SafeTransaction } from "@safe-global/safe-core-sdk-types";
 import axios, { AxiosResponse } from "axios";
 import { BigNumber, ethers } from "ethers";
-import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi } from "../abis";
+import { getAddress } from "ethers/lib/utils.js";
+import { HATPaymentSplitterFactory_abi, HATSVaultV1_abi, HATSVaultV2_abi, HATSVaultV3ClaimsManager_abi } from "../abis";
 import {
   IPayoutData,
   IPayoutGraph,
@@ -66,7 +67,12 @@ export const getExecutePayoutSafeTransaction = async (
 
   if (payout.payoutData.type === "single") {
     // Single payout: only one TX calling the vault contract
-    const contractAddress = vaultInfo.version === "v1" ? vaultInfo.master : vaultInfo.address;
+    const contractAddress =
+      vaultInfo.version === "v1"
+        ? vaultInfo.master
+        : vaultInfo.version === "v2"
+        ? vaultInfo.address
+        : vaultInfo.claimsManager ?? "";
 
     const payoutData = payout.payoutData as ISinglePayoutData;
 
@@ -78,8 +84,15 @@ export const getExecutePayoutSafeTransaction = async (
         payoutData.beneficiary as `0x${string}`,
         Number(payoutData.severityBountyIndex),
       ]);
-    } else {
+    } else if (vaultInfo.version === "v2") {
       const contractInterface = new ethers.utils.Interface(HATSVaultV2_abi);
+      encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
+        payoutData.beneficiary as `0x${string}`,
+        percentageToPay,
+        payout.payoutDescriptionHash,
+      ]);
+    } else {
+      const contractInterface = new ethers.utils.Interface(HATSVaultV3ClaimsManager_abi);
       encodedExecPayoutData = contractInterface.encodeFunctionData("submitClaim", [
         payoutData.beneficiary as `0x${string}`,
         percentageToPay,
@@ -99,18 +112,18 @@ export const getExecutePayoutSafeTransaction = async (
 
     return { tx: safeTransaction, txHash: safeTransactionHash };
   } else {
-    // Only works with v2 vaults
+    // Only works with v2 and v3 vaults
     // Split payout: two TXs with a batch on safe. One to create the payment splitter, and the other to execute the payout.
     // First TX: create payment splitter (this will be the beneficiary of the vault)
     // Second TX: execute payout
-    if (vaultInfo.version === "v1") throw new Error("Split payouts are only supported for v2 vaults");
+    if (vaultInfo.version === "v1") throw new Error("Split payouts are only supported for v2/v3 vaults");
 
     const paymentSplitterFactoryAddress = ChainsConfig[Number(vaultInfo.chainId)].paymentSplitterFactory;
     if (!paymentSplitterFactoryAddress) throw new Error("Payment splitter factory address not found");
 
     const vaultContract = {
-      address: vaultInfo.address,
-      interface: new ethers.utils.Interface(HATSVaultV2_abi),
+      address: vaultInfo.version === "v2" ? vaultInfo.address : vaultInfo.claimsManager ?? "",
+      interface: new ethers.utils.Interface(vaultInfo.version === "v2" ? HATSVaultV2_abi : HATSVaultV3ClaimsManager_abi),
     };
 
     const paymentSplitterFactoryContract = {
@@ -122,18 +135,65 @@ export const getExecutePayoutSafeTransaction = async (
 
     // Join same beneficiaries and sum percentages
     const beneficiariesToIterate = JSON.parse(JSON.stringify(payoutData.beneficiaries)) as ISplitPayoutBeneficiary[];
-    const beneficiariesJointPercentage = beneficiariesToIterate.reduce((acc, beneficiary) => {
-      const existingBeneficiary = acc.find((b) => b.beneficiary === beneficiary.beneficiary);
-      if (existingBeneficiary) {
-        existingBeneficiary.percentageOfPayout = truncate(
-          +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
-          4
+
+    // If vault is v3, we will pay 100% of the vault. So we need to add the remaining funds to the depositors and governance
+    if (vaultInfo.version === "v3") {
+      if (!vaultInfo.hatsGovFee) throw new Error(`Hats governance fee not found on vaultInfo for payout id: ${payout._id}`);
+      const hatsGovFee = +vaultInfo.hatsGovFee / 100 / 100;
+
+      const totalToPay = percentageToPay * 1;
+      const governancePercentage = totalToPay * hatsGovFee;
+      const hackersPercentage = totalToPay * (1 - hatsGovFee);
+      const depositorsPercentage = 10000 - totalToPay;
+
+      const hackersPoints = beneficiariesToIterate.reduce((acc, beneficiary) => acc + +beneficiary.percentageOfPayout, 0);
+      const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
+      const depositorsPoints = (depositorsPercentage * hackersPoints) / hackersPercentage;
+
+      // Add depositors as beneficiaries
+      if (payout.payoutData.depositors && depositorsPercentage > 0) {
+        beneficiariesToIterate.push(
+          ...payout.payoutData.depositors.map(
+            (depositor) =>
+              ({
+                beneficiary: depositor.address,
+                severity: "depositor",
+                nftUrl: "",
+                percentageOfPayout: truncate(depositorsPoints * (depositor.ownership / 100), 4),
+              } as ISplitPayoutBeneficiary)
+          )
         );
-      } else {
-        acc.push(beneficiary);
       }
-      return acc;
-    }, [] as ISplitPayoutBeneficiary[]);
+
+      // Add governance as beneficiary
+      // We are doing this because in v3 the govFees on-chain is 0%. We need to calculate it manually
+      if (governancePercentage > 0) {
+        const govWallet = ChainsConfig[Number(vaultInfo.chainId)].govMultisig;
+        if (!govWallet) throw new Error(`Gov wallet not found on ChainsConfig for payout id: ${payout._id}`);
+
+        beneficiariesToIterate.push({
+          beneficiary: govWallet,
+          severity: "governance",
+          nftUrl: "",
+          percentageOfPayout: truncate(governancePoints, 4),
+        } as ISplitPayoutBeneficiary);
+      }
+    }
+
+    const beneficiariesJointPercentage = beneficiariesToIterate
+      .reduce((acc, beneficiary) => {
+        const existingBeneficiary = acc.find((b) => b.beneficiary.toLowerCase() === beneficiary.beneficiary.toLowerCase());
+        if (existingBeneficiary) {
+          existingBeneficiary.percentageOfPayout = truncate(
+            +truncate(+existingBeneficiary.percentageOfPayout, 4) + +truncate(+beneficiary.percentageOfPayout, 4),
+            4
+          );
+        } else {
+          acc.push(beneficiary);
+        }
+        return acc;
+      }, [] as ISplitPayoutBeneficiary[])
+      .map((ben) => ({ ...ben, beneficiary: getAddress(ben.beneficiary) }));
 
     // Payout payment splitter creation TX
     const encodedPaymentSplitterCreation = paymentSplitterFactoryContract.interface.encodeFunctionData(
@@ -147,9 +207,10 @@ export const getExecutePayoutSafeTransaction = async (
     );
 
     // Payout execution TX
+    // If v3, the percentage to pay is always 100%. We will pay to the beneficiaries and the remaining is going to depositors/governance.
     const encodedExecutePayout = vaultContract.interface.encodeFunctionData("submitClaim", [
       payoutData.paymentSplitterBeneficiary as `0x${string}`,
-      percentageToPay,
+      vaultInfo.version === "v3" ? 10000 : percentageToPay,
       payout.payoutDescriptionHash,
     ]);
 
@@ -227,7 +288,9 @@ export const getAllPayoutsWithData = async (env: "all" | "testnet" | "mainnet" =
     for (let i = 0; i < subgraphsData.length; i++) {
       const chainId = subgraphsData[i].chainId;
 
-      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data.data.payouts) continue;
+      if (!subgraphsData[i].request.data) continue;
+      if (!subgraphsData[i].request.data?.data) continue;
+      if (!subgraphsData[i].request.data || !subgraphsData[i].request.data?.data?.payouts) continue;
 
       for (const payout of subgraphsData[i].request.data.data.payouts) {
         payouts.push({
