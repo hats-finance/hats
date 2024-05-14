@@ -10,6 +10,8 @@ export type AirdropElegibility = AirdropMerkeltree["address"]["token_eligibility
   info: {
     isLocked: boolean;
     lockEndDate: Date;
+    isLive: boolean;
+    deadlineDate: Date;
     tokenAddress: `0x${string}`;
   };
 };
@@ -41,11 +43,17 @@ export const getAirdropElegibility = async (
       signerOrProvider: provider,
     });
 
-    const [lockEndTime, tokenAddress] = await Promise.all([airdropContract.lockEndTime(), airdropContract.token()]);
+    const [lockEndTime, tokenAddress, deadline] = await Promise.all([
+      airdropContract.lockEndTime(),
+      airdropContract.token(),
+      airdropContract.deadline(),
+    ]);
 
     const lockEndTimeSeconds = lockEndTime.toString();
     const lockEndDate = new Date(+lockEndTimeSeconds * 1000);
+    const deadlineDate = new Date(+deadline.toString() * 1000);
     const isLocked = lockEndDate.getTime() > Date.now();
+    const isLive = deadlineDate.getTime() > Date.now();
 
     return {
       ...addressInfo.token_eligibility,
@@ -54,6 +62,8 @@ export const getAirdropElegibility = async (
         isLocked,
         lockEndDate,
         tokenAddress,
+        deadlineDate,
+        isLive,
       },
     };
   } catch (error) {
