@@ -56,6 +56,10 @@ const Header = () => {
     navigate(`${RoutePaths.profile}/${createdProfile.username}`);
   }
 
+  function handleGoToAirdrop() {
+    navigate(`${RoutePaths.airdrop}`);
+  }
+
   return (
     <StyledHeader>
       <div className="safety-period-banner">
@@ -66,6 +70,12 @@ const Header = () => {
         <h1 className="page-title">{getPageTitle()}</h1>
 
         <div className="buttons">
+          <div className="airdrop-button">
+            <Button size="big" noRadius styleType="outlined" onClick={handleGoToAirdrop}>
+              {t("airdrop")}
+            </Button>
+          </div>
+
           <div className="profile-button">
             {isSafeAddress !== undefined && !isSafeAddress && account && !isLoadingProfile && (
               <>
