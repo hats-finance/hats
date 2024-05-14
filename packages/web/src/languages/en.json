@@ -753,7 +753,9 @@
       "loadingAirdrops": "Loading airdrops",
       "linearRelease": "Linear release",
       "live": "Live",
-      "past": "Past"
+      "past": "Past",
+      "lostAirdrop": "Lost airdrop :(",
+      "lostAirdropContent": "You lost the airdrop. You were eligible for this airdrop."
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

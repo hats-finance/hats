@@ -17,8 +17,8 @@ export const AirdropCheckElegibility = () => {
   const { address: account } = useAccount();
   const { chain: connectedChain } = useNetwork();
 
-  const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
-  const [addressToCheck, setAddressToCheck] = useState<string | undefined>();
+  // const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
+  const [addressToCheck, setAddressToCheck] = useState<string>("");
   const [airdropToClaim, setAirdropToClaim] = useState<AirdropConfig>();
   const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropConfig>();
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
@@ -64,7 +64,7 @@ export const AirdropCheckElegibility = () => {
 
       {checkElegibility && addressToCheck && (
         <div className="mt-5">
-          <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
+          {/* <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2> */}
           {airdrops.map((airdrop, idx) => (
             <AirdropCard
               addressToCheck={addressToCheck}
@@ -73,13 +73,13 @@ export const AirdropCheckElegibility = () => {
               key={airdrop.address}
               onOpenClaimModal={() => setAirdropToClaim(airdrop)}
               onOpenDelegateModal={() => setAirdropToDelegate(airdrop)}
-              showFilter="live"
+              showFilter="all"
             />
           ))}
         </div>
       )}
 
-      {checkElegibility && addressToCheck && (
+      {/* {checkElegibility && addressToCheck && (
         <div className="mt-5">
           <h2 className="underline selectable" onClick={() => setShowPastAidrops((prev) => !prev)}>
             <ArrowIcon className="arrow" /> {t("Airdrop.pastAirdrops")}
@@ -97,7 +97,7 @@ export const AirdropCheckElegibility = () => {
               />
             ))}
         </div>
-      )}
+      )} */}
 
       {airdropToClaim && addressToCheck && (
         <Modal isShowing={!!airdropToClaim} onHide={() => setAirdropToClaim(undefined)} disableOnOverlayClose>

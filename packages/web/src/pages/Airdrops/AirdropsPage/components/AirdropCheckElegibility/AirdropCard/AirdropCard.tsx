@@ -3,6 +3,7 @@ import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { NextArrowIcon } from "assets/icons/next-arrow";
 import { Button, HatSpinner, Pill } from "components";
 import { BigNumber } from "ethers";
+import moment from "moment";
 import { AirdropElegibility, getAirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { useCallback, useEffect, useState } from "react";
@@ -29,7 +30,7 @@ export const AirdropCard = ({
   showFilter = "live",
 }: AirdropCardProps) => {
   const { t } = useTranslation();
-  const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | false>();
+  const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -57,11 +58,15 @@ export const AirdropCard = ({
   if (showFilter === "live" && elegibilityData && !elegibilityData?.info?.isLive) return null;
   if (showFilter === "past" && elegibilityData && elegibilityData?.info?.isLive) return null;
 
+  const isLive = elegibilityData && elegibilityData?.info?.isLive;
+
   const getStatusInfo = () => {
     if (!elegibilityData) return { pills: undefined };
 
-    if (elegibilityData.info.isLive) {
+    if (isLive) {
       return {
+        text: elegibilityData?.eligible ? (redeemedData ? t("Airdrop.redeemed") : t("Airdrop.congrats")) : t("Airdrop.sorry"),
+        description: elegibilityData?.eligible ? t("Airdrop.congratsContent") : t("Airdrop.sorryContent"),
         pills: (
           <>
             {elegibilityData && elegibilityData.info.isLocked && <Pill text={t("Airdrop.linearRelease")} />}
@@ -71,7 +76,19 @@ export const AirdropCard = ({
       };
     } else {
       return {
-        pills: <Pill dotColor="red" textColor="var(--error-red)" text={t("Airdrop.past")} />,
+        text: elegibilityData?.eligible ? (redeemedData ? t("Airdrop.redeemed") : t("Airdrop.lostAirdrop")) : t("Airdrop.sorry"),
+        description: elegibilityData?.eligible
+          ? redeemedData
+            ? t("Airdrop.congratsContent")
+            : t("Airdrop.lostAirdropContent")
+          : t("Airdrop.sorryContent"),
+        pills: (
+          <Pill
+            dotColor="red"
+            textColor="var(--error-red)"
+            text={`${t("Airdrop.past")} - ${moment(elegibilityData.info.deadlineDate).fromNow()}`}
+          />
+        ),
       };
     }
   };
@@ -88,12 +105,12 @@ export const AirdropCard = ({
             <p>{`${t("Airdrop.loadingAirdropData")}...`}</p>
           ) : (
             <>
-              <h2 className="mt-3">{elegibilityData ? t("Airdrop.congrats") : t("Airdrop.sorry")}</h2>
-              <p>{elegibilityData ? t("Airdrop.congratsContent") : t("Airdrop.sorryContent")}</p>
+              <h2 className="mt-3">{getStatusInfo().text}</h2>
+              <p>{getStatusInfo().description}</p>
             </>
           )}
         </div>
-        {!isLoading && elegibilityData && (
+        {!isLoading && elegibilityData?.eligible && (
           <div className="amount">
             <img src={HatsTokenIcon} alt="$HAT token" width={40} height={40} className="mt-1" />
             <p>{new Amount(BigNumber.from(elegibilityData.total), 18, "$HAT").formatted()}</p>
@@ -101,13 +118,13 @@ export const AirdropCard = ({
         )}
       </div>
 
-      {!isLoading && elegibilityData && (
+      {!isLoading && elegibilityData?.eligible && (
         <StyledElegibilityBreakdown>
           <div className="title">{t("Airdrop.elegibilityCriteriaBreakdown")}</div>
           <div className="elegibility-breakdown">
             <div className="breakdown">
               {Object.keys(elegibilityData)
-                .filter((k) => !["info", "total"].includes(k))
+                .filter((k) => !["info", "total", "eligible"].includes(k))
                 .map((k) => {
                   const eligible = BigNumber.from(elegibilityData[k]).gt(0);
                   return (
@@ -131,7 +148,7 @@ export const AirdropCard = ({
 
       {!isLoading && (
         <div className="buttons">
-          {elegibilityData && (
+          {isLive && elegibilityData?.eligible && (
             <Button styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
               {redeemedData ? (
                 t("Airdrop.redeemed")
@@ -143,11 +160,11 @@ export const AirdropCard = ({
             </Button>
           )}
 
-          {redeemedData && (
-            <Button size="small" onClick={onOpenDelegateModal}>
+          {/* {redeemedData && (
+            <Button onClick={onOpenDelegateModal}>
               {redeemedData?.delegator ? t("Airdrop.redelegate") : t("Airdrop.delegate")}
             </Button>
-          )}
+          )} */}
         </div>
       )}
 

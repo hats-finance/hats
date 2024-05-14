@@ -6,6 +6,7 @@ import { AirdropMerkeltree } from "../types";
 import { getAirdropMerkleTreeJSON } from "./getAirdropMerkelTreeJSON";
 
 export type AirdropElegibility = AirdropMerkeltree["address"]["token_eligibility"] & {
+  eligible: boolean;
   total: string;
   info: {
     isLocked: boolean;
@@ -19,15 +20,16 @@ export type AirdropElegibility = AirdropMerkeltree["address"]["token_eligibility
 export const getAirdropElegibility = async (
   address: string,
   airdropData: { address: string; chainId: number }
-): Promise<AirdropElegibility | false> => {
+): Promise<AirdropElegibility | undefined> => {
   try {
     const merkelTreeJson = await getAirdropMerkleTreeJSON(airdropData);
     const addressInfo = merkelTreeJson[getAddress(address)];
-    if (!addressInfo) return false;
 
-    const totalAllocatedToAddress = Object.keys(addressInfo.token_eligibility)
-      .reduce((acc, key) => acc.add(BigNumber.from(addressInfo.token_eligibility[key] ?? 0)), BigNumber.from(0))
-      .toString();
+    const totalAllocatedToAddress = addressInfo
+      ? Object.keys(addressInfo.token_eligibility)
+          .reduce((acc, key) => acc.add(BigNumber.from(addressInfo.token_eligibility[key] ?? 0)), BigNumber.from(0))
+          .toString()
+      : "0";
 
     const airdropContractAddress = airdropData.address;
     const chainId = airdropData.chainId;
@@ -56,7 +58,8 @@ export const getAirdropElegibility = async (
     const isLive = deadlineDate.getTime() > Date.now();
 
     return {
-      ...addressInfo.token_eligibility,
+      ...addressInfo?.token_eligibility,
+      eligible: !!addressInfo,
       total: totalAllocatedToAddress,
       info: {
         isLocked,
@@ -68,6 +71,6 @@ export const getAirdropElegibility = async (
     };
   } catch (error) {
     console.log("Error on getAirdropElegibility: ", error);
-    return false;
+    return undefined;
   }
 };

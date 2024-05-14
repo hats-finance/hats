@@ -14,7 +14,7 @@ export const AirdropRedeemReview = () => {
   const { prevStep, addressToCheck, airdropElegibility, isDelegating, handleClaimAirdrop } =
     useContext(AirdropRedeemModalContext);
 
-  if (airdropElegibility === false || !airdropElegibility) return null;
+  if (airdropElegibility === false || !airdropElegibility || !airdropElegibility.eligible) return null;
 
   return (
     <div className="content-modal">
@@ -62,7 +62,7 @@ export const AirdropRedeemReview = () => {
             <div className="elegibility-breakdown">
               <div className="breakdown">
                 {Object.keys(airdropElegibility)
-                  .filter((k) => !["info", "total"].includes(k))
+                  .filter((k) => !["info", "total", "eligible"].includes(k))
                   .map((k) => {
                     const eligible = BigNumber.from(airdropElegibility[k]).gt(0);
                     return (
