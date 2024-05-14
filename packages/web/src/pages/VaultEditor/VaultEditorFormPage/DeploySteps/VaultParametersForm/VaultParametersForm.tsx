@@ -4,14 +4,12 @@ import InfoIcon from "@mui/icons-material/InfoOutlined";
 import { Button, FormInput } from "components";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
 import { useEnhancedFormContext } from "hooks/form/useEnhancedFormContext";
-import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import Tooltip from "rc-tooltip";
 import { useContext, useEffect, useState } from "react";
 import { Control, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
 import { toFixedIfNecessary } from "utils/amounts.utils";
 import { getEditedDescriptionYupSchema } from "../../formSchema";
 import { VaultEditorFormContext } from "../../store";
@@ -63,39 +61,6 @@ const VaultParametersFormStatusCard = ({ statusCardFormDefaultData, onSubmit }: 
 
 const VaultParametersFormOnVaultEditor = () => {
   const { allFormDisabled } = useContext(VaultEditorFormContext);
-  const { masters } = useVaults();
-  const methodsToUse = useEnhancedFormContext<IEditedVaultDescription>();
-
-  const chainId = useWatch({ control: methodsToUse.control, name: "committee.chainId" });
-
-  // Set default values for the fixed splits. Getting it from subgraph
-  useEffect(() => {
-    const params = methodsToUse.getValues("parameters");
-    // If we have alredy set a value, we don't want to override it
-    const hasValue = params.fixedHatsGovPercetange !== undefined && params.fixedHatsGovPercetange !== null;
-    if (hasValue) return;
-
-    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
-    if (registryAddress && masters) {
-      const master = masters.find(
-        (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
-      );
-
-      console.log(masters);
-
-      if (master) {
-        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
-        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
-        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
-        console.log("OVERRIDE", hatsRewardSplit, hatsGovernanceSplit, committeeControlledSplit);
-
-        if (!isNaN(committeeControlledSplit))
-          methodsToUse.setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit);
-        if (!isNaN(hatsGovernanceSplit)) methodsToUse.setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit);
-        if (!isNaN(hatsRewardSplit)) methodsToUse.setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit);
-      }
-    }
-  }, [chainId, masters, methodsToUse]);
 
   return <VaultParametersFormShared disabled={allFormDisabled} />;
 };
@@ -159,24 +124,28 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
   return (
     <StyledVaultEditorForm withoutMargin noPadding>
       <StyledVaultParametersForm>
-        <p className="section-title">{t("maxBounty")}</p>
-        <div
-          className="helper-text"
-          dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" ? "100" : "90" }) }}
-        />
+        {canEditFixed && (
+          <>
+            <p className="section-title">{t("maxBounty")}</p>
+            <div
+              className="helper-text"
+              dangerouslySetInnerHTML={{ __html: t("vaultEditorMaxBountyExplanation", { max: version === "v3" ? "100" : "90" }) }}
+            />
 
-        <div className="input">
-          <FormInput
-            {...methodsToUse.register(`parameters.maxBountyPercentage`, { valueAsNumber: true })}
-            disabled={(blockMaxBounty || disabled || !canEditFixed) && version === "v3"}
-            type="whole-number"
-            label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" ? "100" : "90" })}
-            placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder", {
-              max: version === "v3" ? "100" : "90",
-            })}
-            colorable
-          />
-        </div>
+            <div className="input">
+              <FormInput
+                {...methodsToUse.register(`parameters.maxBountyPercentage`, { valueAsNumber: true })}
+                disabled={(blockMaxBounty || disabled || !canEditFixed) && version === "v3"}
+                type="whole-number"
+                label={t("VaultEditor.vault-parameters.maxBountyPercentage", { max: version === "v3" ? "100" : "90" })}
+                placeholder={t("VaultEditor.vault-parameters.maxBountyPercentage-placeholder", {
+                  max: version === "v3" ? "100" : "90",
+                })}
+                colorable
+              />
+            </div>
+          </>
+        )}
 
         <p className="section-title">{t("bountySplit")}</p>
         <div className="helper-text" dangerouslySetInnerHTML={{ __html: t("vaultEditorBountySplitExplanation") }} />
@@ -215,7 +184,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.immediatePercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
@@ -251,7 +220,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.vestedPercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"
@@ -287,7 +256,7 @@ function VaultParametersFormShared({ blockMaxBounty, disabled = false }: { block
                   <div className="formInput">
                     <FormInput
                       {...methodsToUse.register("parameters.committeePercentage")}
-                      disabled={disabled}
+                      disabled={disabled || !canEditFixed}
                       onKeyUp={revalidateSplit}
                       onBlur={revalidateSplit}
                       type="number"

@@ -36,7 +36,6 @@ export const AdditionalBeneficiariesInfo = ({ vault, payout }: AdditionalBenefic
   const governancePoints = (governancePercentage * hackersPoints) / hackersPercentage;
   const depositorsPoints = (depositorsPercentage * hackersPoints) / hackersPercentage;
 
-  if (isNaN(depositorsPercentage) && depositorsPercentage > 0) return null;
   const needToPayDepositors = !isNaN(depositorsPercentage) && depositorsPercentage > 0;
   const govWallet = appChains[Number(vault.chainId)].govMultisig;
 

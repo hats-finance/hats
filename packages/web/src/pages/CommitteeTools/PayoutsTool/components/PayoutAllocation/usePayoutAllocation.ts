@@ -55,13 +55,7 @@ export const usePayoutAllocation = (
   const totalPoints = +(usingPointingSystem ? totalPercentagesAmongBeneficiaries ?? 1 : 1);
   // We need to multiply the results by the percentage of the payout that we want to pay for this specific beneficiary. This is
   // only used when we want to split the payout between multiple beneficiaries
-  const beneficiaryFactor = usingPointingSystem
-    ? percentageOfPayout
-      ? Number(percentageOfPayout) / totalPoints
-      : 1
-    : percentageOfPayout
-    ? Number(percentageOfPayout) / 100
-    : 1;
+  const beneficiaryFactor = percentageOfPayout ? Number(percentageOfPayout) / (usingPointingSystem ? totalPoints : 100) : 1;
 
   if (!payout || !vault || !percentageToPayOfTheVault) return DEFAULT_RETURN;
 

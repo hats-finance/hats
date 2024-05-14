@@ -32,7 +32,7 @@ import { useCallback, useEffect, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { BASE_SERVICE_URL } from "settings";
+import { BASE_SERVICE_URL, appChains } from "settings";
 import { isValidIpfsHash } from "utils/ipfs.utils";
 import { useAccount } from "wagmi";
 import { checkIfAddressCanEditTheVault } from "../utils";
@@ -53,6 +53,7 @@ import { useVaultEditorSteps } from "./useVaultEditorSteps";
 
 const VaultEditorFormPage = () => {
   const { t } = useTranslation();
+  const { masters } = useVaults();
   const { address } = useAccount();
   const { allVaults } = useVaults();
 
@@ -688,6 +689,36 @@ const VaultEditorFormPage = () => {
       );
     }
   };
+
+  const chainId = useWatch({ control, name: "committee.chainId" });
+  // Set default values for the fixed splits. Getting it from subgraph
+  useEffect(() => {
+    const params = getValues("parameters");
+    if (!params) return;
+    // If we have alredy set a value, we don't want to override it
+    const hasValue = params.fixedHatsGovPercetange !== undefined && params.fixedHatsGovPercetange !== null;
+    if (hasValue) return;
+
+    const registryAddress = appChains[Number(chainId)]?.vaultsCreatorContract;
+    if (registryAddress && masters) {
+      const master = masters.find(
+        (master) => master.address.toLowerCase() === registryAddress.toLowerCase() && master.chainId === Number(chainId)
+      );
+
+      if (master) {
+        const hatsRewardSplit = Number(master.defaultHackerHatRewardSplit) / 100;
+        const hatsGovernanceSplit = Number(master.defaultGovernanceHatRewardSplit) / 100;
+        const committeeControlledSplit = 100 - hatsRewardSplit - hatsGovernanceSplit;
+        console.log("OVERRIDE", hatsRewardSplit, hatsGovernanceSplit, committeeControlledSplit);
+
+        if (!isNaN(committeeControlledSplit))
+          setValue("parameters.fixedCommitteeControlledPercetange", committeeControlledSplit, { shouldDirty: true });
+        if (!isNaN(hatsGovernanceSplit))
+          setValue("parameters.fixedHatsGovPercetange", hatsGovernanceSplit, { shouldDirty: true });
+        if (!isNaN(hatsRewardSplit)) setValue("parameters.fixedHatsRewardPercetange", hatsRewardSplit, { shouldDirty: true });
+      }
+    }
+  }, [chainId, masters, setValue, getValues]);
 
   if (loadingEditSession || loadingSteps || !currentStepInfo || !currentSectionInfo) {
     return <Loading fixed extraText={`${t("loadingVaultEditor")}...`} />;

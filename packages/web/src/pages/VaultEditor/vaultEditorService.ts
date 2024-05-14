@@ -35,8 +35,12 @@ export async function getEditSessionData(editSessionId: string): Promise<IEdited
       signerOrProvider: getProvider({ chainId: editSession.chainId }),
     });
 
-    const maxBountyPercentage = await vaultContract.maxBounty();
-    (editSession as IEditedSessionResponse).editedDescription.parameters.maxBountyPercentage = maxBountyPercentage / 100;
+    try {
+      const maxBountyPercentage = await vaultContract.maxBounty();
+      (editSession as IEditedSessionResponse).editedDescription.parameters.maxBountyPercentage = maxBountyPercentage / 100;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return editSession;

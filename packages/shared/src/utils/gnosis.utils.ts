@@ -161,7 +161,7 @@ export const getGnosisSafeInfo = async (
       threshold: 0,
     };
 
-    !isServer() && sessionStorage.setItem(`safeInfo-${chainId}-${address}`, JSON.stringify(defaultData));
+    !isServer() && sessionStorage.removeItem(`safeInfo-${chainId}-${address}`);
     return defaultData;
   }
 };
