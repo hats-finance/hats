@@ -51,7 +51,12 @@ export const AirdropCard = ({
   }, [addressToCheck, airdrop, updateElegibility]);
 
   if (isLoading) {
-    if (idx === 0) return <HatSpinner text={`${t("Airdrop.loadingAirdrops")}...`} />;
+    if (idx === 0)
+      return (
+        <div className="mb-4">
+          <HatSpinner text={`${t("Airdrop.loadingAirdrops")}...`} />
+        </div>
+      );
     return null;
   }
 
@@ -148,17 +153,17 @@ export const AirdropCard = ({
 
       {!isLoading && (
         <div className="buttons">
-          {isLive && elegibilityData?.eligible && (
-            <Button styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
-              {redeemedData ? (
-                t("Airdrop.redeemed")
-              ) : (
-                <>
-                  {t("Airdrop.startClaim")} <NextArrowIcon className="ml-1 " />
-                </>
-              )}
-            </Button>
-          )}
+          {/* {isLive && elegibilityData?.eligible && ( */}
+          <Button styleType={redeemedData ? "outlined" : "filled"} onClick={onOpenClaimModal}>
+            {redeemedData ? (
+              t("Airdrop.redeemed")
+            ) : (
+              <>
+                {t("Airdrop.startClaim")} <NextArrowIcon className="ml-1 " />
+              </>
+            )}
+          </Button>
+          {/* )} */}
 
           {/* {redeemedData && (
             <Button onClick={onOpenDelegateModal}>

@@ -42,6 +42,8 @@ export async function getDelegatees(): Promise<IDelegateeInfo[]> {
         twitterProfile: "hatsfinance",
         description: `
           <ul>
+            <li>Hats' lead developer</li>
+            <li>Ex-Prysmatic Labs</li>
             <li>Web3 Dev since 2014</li>
             <li>2nd Web3 Start-up</li>
           </ul>

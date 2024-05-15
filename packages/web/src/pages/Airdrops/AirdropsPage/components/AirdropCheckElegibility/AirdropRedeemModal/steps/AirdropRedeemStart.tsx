@@ -9,7 +9,7 @@ export const AirdropRedeemStart = () => {
 
   return (
     <div className="content-modal">
-      <img className="banner" src={require("assets/images/hats_claim.png")} alt="hats claim" />
+      <img className="banner" src={require("assets/images/hats_vault.png")} alt="hats claim" />
       <div dangerouslySetInnerHTML={{ __html: t("Airdrop.startTextContent") }} />
 
       <div className="buttons center">

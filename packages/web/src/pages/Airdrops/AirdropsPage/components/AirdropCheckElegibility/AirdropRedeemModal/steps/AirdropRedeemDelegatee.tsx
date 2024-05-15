@@ -1,4 +1,6 @@
 import { HATToken_abi } from "@hats.finance/shared";
+import { BackArrowIcon } from "assets/icons/back-arrow";
+import { NextArrowIcon } from "assets/icons/next-arrow";
 import TwitterIcon from "assets/icons/social/twitter.icon";
 import { Button } from "components";
 import { defaultAnchorProps } from "constants/defaultAnchorProps";
@@ -28,7 +30,7 @@ export const AirdropRedeemDelegatee = () => {
 
   return (
     <div className="content-modal">
-      <img className="banner" src={require("assets/images/hats_claim.png")} alt="hats claim" />
+      <img className="banner" src={require("assets/images/hats_delegatee.png")} alt="hats claim" />
       <h2>{t("Airdrop.chooseDelegatee")}</h2>
 
       <div className="delegatees-list">
@@ -44,14 +46,14 @@ export const AirdropRedeemDelegatee = () => {
               disabled={page === 0}
               onClick={() => setPage((prev) => (prev === 0 ? prev : prev - 1))}
             >
-              ⬅️
+              <BackArrowIcon />
             </Button>
             <Button
               size="medium"
               disabled={page === totalPages - 1}
               onClick={() => setPage((prev) => (prev === totalPages - 1 ? prev : prev + 1))}
             >
-              ➡️
+              <NextArrowIcon />
             </Button>
           </div>
         )}

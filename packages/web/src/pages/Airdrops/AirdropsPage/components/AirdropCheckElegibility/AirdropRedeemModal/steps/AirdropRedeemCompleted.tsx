@@ -13,7 +13,7 @@ export const AirdropRedeemCompleted = () => {
 
   return (
     <div className="content-modal">
-      <img className="banner" src={require("assets/images/hats_claim.png")} alt="hats claim" />
+      <img className="banner" src={require("assets/images/hats_vault_open.png")} alt="hats claim" />
       <h2>{t("Airdrop.claimSuccessful")}</h2>
 
       <div className="mt-5">

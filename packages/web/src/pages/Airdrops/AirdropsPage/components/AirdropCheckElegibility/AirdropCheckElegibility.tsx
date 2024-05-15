@@ -1,5 +1,4 @@
 import { AirdropChainConfig, AirdropConfig } from "@hats.finance/shared";
-import ArrowIcon from "@mui/icons-material/KeyboardArrowDownOutlined";
 import { NextArrowIcon } from "assets/icons/next-arrow";
 import { Button, FormInput, Modal } from "components";
 import { isAddress } from "ethers/lib/utils.js";

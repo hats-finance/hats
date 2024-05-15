@@ -1,3 +1,4 @@
+import { BackArrowIcon } from "assets/icons/back-arrow";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { Button, CollapsableTextContent, FormInput } from "components";
 import { BigNumber } from "ethers";
@@ -18,7 +19,7 @@ export const AirdropRedeemReview = () => {
 
   return (
     <div className="content-modal">
-      <img className="banner" src={require("assets/images/hats_claim.png")} alt="hats claim" />
+      <img className="banner" src={require("assets/images/hats_vault.png")} alt="hats claim" />
       <h2>{t("Airdrop.lastStepClaimYourTokens")}</h2>
 
       <div className="mt-5">
@@ -89,7 +90,7 @@ export const AirdropRedeemReview = () => {
 
       <div className="buttons">
         <Button styleType="outlined" size="medium" onClick={prevStep} disabled={isDelegating}>
-          ⬅️
+          <BackArrowIcon />
         </Button>
         <Button size="medium" bigHorizontalPadding onClick={handleClaimAirdrop} disabled={isDelegating}>
           {isDelegating ? `${t("Airdrop.claimingAirdrop")}...` : t("Airdrop.claimAirdrop")}
