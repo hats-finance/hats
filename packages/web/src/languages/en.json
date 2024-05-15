@@ -755,7 +755,16 @@
       "live": "Live",
       "past": "Past",
       "lostAirdrop": "Lost airdrop :(",
-      "lostAirdropContent": "You lost the airdrop. You were eligible for this airdrop."
+      "lostAirdropContent": "You lost the airdrop. You were eligible for this airdrop.",
+      "hatsVision": "Hats vision",
+      "hatsVisionContent": "Hat Finance envisions a secure Web3 world fuelled by collaborative development and synergistic security solutions. Hats Finance aims to achieve this by building a decentralized and incentive-driven security infrastructure by leveraging on solutions like real-time competitions, gamification, and open-source protocol development.",
+      "hatsTokenUtility": "$HAT utility",
+      "hatsUtility-1": "For security researchers",
+      "hatsUtilityContent-1": "Security Researchers are able to stake $HAT to boost their visibility and status as a Lead Auditor to unlock attractive opportunities. \n\nStaking $HAT also allows Security Researchers to bypass any bug submission fees.",
+      "hatsUtility-2": "Audit Buyers",
+      "hatsUtilityContent-2": "Audit buyers are required to stake $HAT to launch audit competitions and bug bounties on Hats Finance, and audit buyers can stake more $HAT to increase the visibility of their audit opportunities. \n\n Audit buyers can also enjoy lower fees with more $HAT staked on the platform.",
+      "hatsUtility-3": "Community",
+      "hatsUtilityContent-3": "Users who stake $HAT can participate in DAO governance and shape the future of Hats Finance. \n\n Users who stake $HAT can also gain access to personal wallet recovery solutions."
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

@@ -27,7 +27,7 @@ export const AirdropCheckElegibility = () => {
   const airdrops = AirdropChainConfig[env];
 
   return (
-    <StyledAirdropCheckElegibility>
+    <StyledAirdropCheckElegibility id="check-elegibility">
       <h3 className="mb-4">{checkElegibility ? t("Airdrop.checkingElegibility") : t("Airdrop.checkElegibility")}</h3>
 
       <FormInput
