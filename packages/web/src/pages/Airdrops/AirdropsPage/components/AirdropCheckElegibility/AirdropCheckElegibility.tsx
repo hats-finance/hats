@@ -70,6 +70,7 @@ export const AirdropCheckElegibility = () => {
               idx={idx}
               airdrop={airdrop}
               key={airdrop.address}
+              refreshState={!!airdropToClaim}
               onOpenClaimModal={() => setAirdropToClaim(airdrop)}
               onOpenDelegateModal={() => setAirdropToDelegate(airdrop)}
               showFilter="all"

@@ -15,6 +15,7 @@ import { StyledAidropCard, StyledElegibilityBreakdown } from "./styles";
 type AirdropCardProps = {
   airdrop: AirdropConfig;
   addressToCheck: string;
+  refreshState: boolean;
   idx: number;
   onOpenClaimModal: () => void;
   onOpenDelegateModal: () => void;
@@ -28,14 +29,15 @@ export const AirdropCard = ({
   onOpenDelegateModal,
   idx,
   showFilter = "live",
+  refreshState,
 }: AirdropCardProps) => {
   const { t } = useTranslation();
   const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>();
 
   const updateElegibility = useCallback(async () => {
-    setIsLoading(true);
+    setIsLoading((prev) => prev === undefined);
     const airdropData = { address: airdrop.address, chainId: airdrop.chain.id };
     const [elegibility, redeemded] = await Promise.all([
       getAirdropElegibility(addressToCheck, airdropData),
@@ -48,7 +50,7 @@ export const AirdropCard = ({
 
   useEffect(() => {
     updateElegibility();
-  }, [addressToCheck, airdrop, updateElegibility]);
+  }, [addressToCheck, airdrop, updateElegibility, refreshState]);
 
   if (isLoading) {
     if (idx === 0)
@@ -165,11 +167,7 @@ export const AirdropCard = ({
             </Button>
           )}
 
-          {/* {redeemedData && (
-            <Button onClick={onOpenDelegateModal}>
-              {redeemedData?.delegator ? t("Airdrop.redelegate") : t("Airdrop.delegate")}
-            </Button>
-          )} */}
+          {redeemedData && !redeemedData?.delegator && <Button onClick={onOpenDelegateModal}>t("Airdrop.delegate")</Button>}
         </div>
       )}
 
