@@ -73,4 +73,21 @@ export const StyledHatsTokenInfo = styled.div`
       }
     }
   }
+
+  .hats-allocation,
+  .hats-distribution {
+    margin-top: ${getSpacing(12)};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      font-size: var(--small);
+    }
+
+    img {
+      width: 70%;
+      margin-top: ${getSpacing(4)};
+    }
+  }
 `;

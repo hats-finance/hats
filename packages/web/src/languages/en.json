@@ -764,7 +764,9 @@
       "hatsUtility-2": "Audit Buyers",
       "hatsUtilityContent-2": "Audit buyers are required to stake $HAT to launch audit competitions and bug bounties on Hats Finance, and audit buyers can stake more $HAT to increase the visibility of their audit opportunities. \n\n Audit buyers can also enjoy lower fees with more $HAT staked on the platform.",
       "hatsUtility-3": "Community",
-      "hatsUtilityContent-3": "Users who stake $HAT can participate in DAO governance and shape the future of Hats Finance. \n\n Users who stake $HAT can also gain access to personal wallet recovery solutions."
+      "hatsUtilityContent-3": "Users who stake $HAT can participate in DAO governance and shape the future of Hats Finance. \n\n Users who stake $HAT can also gain access to personal wallet recovery solutions.",
+      "hatsAllocation": "$HAT allocation",
+      "hatsDistribution": "$HAT distribution"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

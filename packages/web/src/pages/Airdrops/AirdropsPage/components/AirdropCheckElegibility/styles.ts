@@ -6,7 +6,7 @@ export const StyledAirdropCheckElegibility = styled.div`
   padding: ${getSpacing(4)};
   display: flex;
   flex-direction: column;
-  margin-bottom: ${getSpacing(8)};
+  margin: ${getSpacing(8)} 0;
 
   h2.underline {
     border-bottom: 1px solid var(--primary-light);
