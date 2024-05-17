@@ -1,3 +1,8 @@
+import { AirdropFactoryConfig, HATAirdropFactory_abi } from "@hats.finance/shared";
+import { getContract, getProvider } from "wagmi/actions";
+import { AirdropData } from "./types";
+import { getGeneralAirdropData } from "./utils/getGeneralAirdropData";
+
 export type IDelegateeInfo = {
   icon?: string;
   address: string;
@@ -83,6 +88,40 @@ export async function getDelegatees(): Promise<IDelegateeInfo[]> {
         `,
       },
     ];
+  } catch (error) {
+    console.log(error);
+    return [];
+  }
+}
+
+export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): Promise<AirdropData[]> {
+  try {
+    type AirdropCreatedEventArgs = {
+      _hatAirdrop: string;
+    };
+
+    const provider = getProvider({ chainId: factory.chain.id });
+    const airdropFactoryContract = getContract({
+      abi: HATAirdropFactory_abi,
+      address: factory.address,
+      signerOrProvider: provider,
+    });
+
+    const airdropCreatedEvents = await airdropFactoryContract.queryFilter("HATAirdropCreated", 0);
+    const airdropsAddresses = airdropCreatedEvents
+      .map((event) => (event?.args as AirdropCreatedEventArgs | undefined)?._hatAirdrop)
+      .filter((address) => address !== undefined) as string[];
+
+    const airdropsData = (
+      await Promise.all(
+        airdropsAddresses.map(async (address) => {
+          const airdropData = await getGeneralAirdropData(address, factory.chain.id);
+          return airdropData;
+        })
+      )
+    ).filter((data) => data !== undefined) as AirdropData[];
+
+    return airdropsData;
   } catch (error) {
     console.log(error);
     return [];
