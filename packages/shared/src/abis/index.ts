@@ -13,5 +13,6 @@ export { RewardController_abi } from "./RewardController_abi";
 export { HATTimelockController_abi } from "./HATTimelockController_abi";
 export { HATPaymentSplitter_abi } from "./HATPaymentSplitter_abi";
 export { HATAirdrop_abi } from "./HATAirdrop_abi";
+export { HATAirdropFactory_abi } from "./HATAirdropFactory_abi";
 export { HATTokenLock_abi } from "./HATTokenLock_abi";
 export { erc20_abi } from "./erc20_abi";
