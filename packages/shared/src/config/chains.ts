@@ -157,42 +157,15 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
   },
 };
 
-export type AirdropConfig = { chain: wagmiChains.Chain; address: string };
-export const AirdropChainConfig: { test: AirdropConfig[]; prod: AirdropConfig[] } = {
-  test: [
-    {
-      chain: wagmiChains.sepolia,
-      address: "0x5E67Da0B92De0C73992Af587F100C0251f1B0767",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0x5649813B16a6D05557e7B2fe1163E8C2434f214d",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0x1485012099e51d8445743deb4bc9db7e4629f700",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0x127a2858b513ae6ecc1cec6867a067fd69c1f9c1",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0xb9b8b348f88169040ee3f4c5ea11c4b48c83d12c",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0x736Bc40D40CFD8F553978541067e835d831EEbf9",
-    },
-    {
-      chain: wagmiChains.sepolia,
-      address: "0xA272499Cb7beab2a9E4B5696453f075C76f4E110",
-    },
-  ],
-  prod: [
-    {
-      chain: wagmiChains.arbitrum,
-      address: "0xFFfFfFffFFfffFFfFFfFFFFFffFFFffffFfFFFfF",
-    },
-  ],
+export type AirdropFactoryConfig = { chain: wagmiChains.Chain; address: string };
+export const AirdropFactoriesChainConfig: {
+  test: { airdrop: AirdropFactoryConfig[] };
+  prod: { airdrop: AirdropFactoryConfig[] };
+} = {
+  test: {
+    airdrop: [{ address: "0x50E10f3A32a9d3B4B04144400a74300D9D9885Fa", chain: wagmiChains.sepolia }],
+  },
+  prod: {
+    airdrop: [],
+  },
 };
