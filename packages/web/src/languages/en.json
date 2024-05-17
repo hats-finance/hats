@@ -766,7 +766,8 @@
       "hatsUtility-3": "Community",
       "hatsUtilityContent-3": "Users who stake $HAT can participate in DAO governance and shape the future of Hats Finance. \n\n Users who stake $HAT can also gain access to personal wallet recovery solutions.",
       "hatsAllocation": "$HAT allocation",
-      "hatsDistribution": "$HAT distribution"
+      "hatsDistribution": "$HAT distribution",
+      "wrongAddressConnectedError": "Wrong address connected. Please connect the address that is elegible to this airdrop. ({{wallet}})"
     },
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",

@@ -1,7 +1,10 @@
-import { AirdropChainConfig, AirdropConfig } from "@hats.finance/shared";
+import { AirdropFactoriesChainConfig } from "@hats.finance/shared";
+import ArrowIcon from "assets/icons/arrow.icon";
 import { NextArrowIcon } from "assets/icons/next-arrow";
-import { Button, FormInput, Modal } from "components";
+import { Button, FormInput, HatSpinner, Modal } from "components";
 import { isAddress } from "ethers/lib/utils.js";
+import { useAirdropsByFactories } from "pages/Airdrops/hooks";
+import { AirdropData } from "pages/Airdrops/types";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { IS_PROD } from "settings";
@@ -16,15 +19,27 @@ export const AirdropCheckElegibility = () => {
   const { address: account } = useAccount();
   const { chain: connectedChain } = useNetwork();
 
-  // const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
+  const [showPastAidrops, setShowPastAidrops] = useState<boolean>(false);
   const [addressToCheck, setAddressToCheck] = useState<string>("");
-  const [airdropToClaim, setAirdropToClaim] = useState<AirdropConfig>();
-  const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropConfig>();
+  const [airdropToClaim, setAirdropToClaim] = useState<AirdropData>();
+  const [airdropToDelegate, setAirdropToDelegate] = useState<AirdropData>();
   const [checkElegibility, setCheckElegibility] = useState<boolean>();
 
   const isTestnet = !IS_PROD && connectedChain?.testnet;
   const env = isTestnet ? "test" : "prod";
-  const airdrops = AirdropChainConfig[env];
+  const { data: airdropsData, isLoading } = useAirdropsByFactories(AirdropFactoriesChainConfig[env].airdrop);
+
+  if (isLoading) {
+    return (
+      <StyledAirdropCheckElegibility id="check-elegibility">
+        <h3 className="mb-4">{t("Airdrop.checkingElegibility")}</h3>
+        <HatSpinner text={`${t("Airdrop.loadingAirdrops")}...`} />
+      </StyledAirdropCheckElegibility>
+    );
+  }
+
+  const liveAirdrops = airdropsData?.filter((airdrop) => airdrop.isLive) ?? [];
+  const pastAirdrops = airdropsData?.filter((airdrop) => !airdrop.isLive) ?? [];
 
   return (
     <StyledAirdropCheckElegibility id="check-elegibility">
@@ -63,47 +78,42 @@ export const AirdropCheckElegibility = () => {
 
       {checkElegibility && addressToCheck && (
         <div className="mt-5">
-          {/* <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2> */}
-          {airdrops.map((airdrop, idx) => (
+          <h2 className="underline">{t("Airdrop.liveAirdrops")}</h2>
+          {liveAirdrops.map((airdropData, idx) => (
             <AirdropCard
+              key={airdropData.address}
               addressToCheck={addressToCheck}
-              idx={idx}
-              airdrop={airdrop}
-              key={airdrop.address}
-              refreshState={!!airdropToClaim}
-              onOpenClaimModal={() => setAirdropToClaim(airdrop)}
-              onOpenDelegateModal={() => setAirdropToDelegate(airdrop)}
-              showFilter="all"
+              airdropData={airdropData}
+              onOpenClaimModal={() => setAirdropToClaim(airdropData)}
+              onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
             />
           ))}
         </div>
       )}
 
-      {/* {checkElegibility && addressToCheck && (
+      {checkElegibility && addressToCheck && pastAirdrops.length > 0 && (
         <div className="mt-5">
           <h2 className="underline selectable" onClick={() => setShowPastAidrops((prev) => !prev)}>
             <ArrowIcon className="arrow" /> {t("Airdrop.pastAirdrops")}
           </h2>
           {showPastAidrops &&
-            airdrops.map((airdrop, idx) => (
+            pastAirdrops.map((airdropData, idx) => (
               <AirdropCard
+                key={airdropData.address}
                 addressToCheck={addressToCheck}
-                idx={idx}
-                airdrop={airdrop}
-                key={airdrop.address}
-                onOpenClaimModal={() => setAirdropToClaim(airdrop)}
-                onOpenDelegateModal={() => setAirdropToDelegate(airdrop)}
-                showFilter="past"
+                airdropData={airdropData}
+                onOpenClaimModal={() => setAirdropToClaim(airdropData)}
+                onOpenDelegateModal={() => setAirdropToDelegate(airdropData)}
               />
             ))}
         </div>
-      )} */}
+      )}
 
       {airdropToClaim && addressToCheck && (
         <Modal isShowing={!!airdropToClaim} onHide={() => setAirdropToClaim(undefined)} disableOnOverlayClose>
           <AirdropRedeemModal
             addressToCheck={addressToCheck}
-            aidropData={airdropToClaim}
+            airdropData={airdropToClaim}
             closeModal={() => setAirdropToClaim(undefined)}
           />
         </Modal>
@@ -113,7 +123,7 @@ export const AirdropCheckElegibility = () => {
         <Modal isShowing={!!airdropToDelegate} onHide={() => setAirdropToDelegate(undefined)} disableOnOverlayClose>
           <AirdropDelegateModal
             addressToCheck={addressToCheck}
-            aidropData={airdropToDelegate}
+            airdropData={airdropToDelegate}
             closeModal={() => setAirdropToDelegate(undefined)}
           />
         </Modal>

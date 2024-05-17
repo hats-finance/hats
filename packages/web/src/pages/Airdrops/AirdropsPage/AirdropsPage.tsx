@@ -15,68 +15,68 @@ export const AirdropsPage = () => {
   const createAirdropHelper = async () => {
     const a = JSON.parse(`{
       "0xC2d10F4dE6e9cF298D7e79Db5126184f5f883A69": {
-        "token_eligibility": {
-          "committee_member": "0",
-          "depositor": "100000000000000000000",
-          "crow": "0",
-          "coder": "0",
-          "early_contributor": "300000000000000000000"
-        }
+      "token_eligibility": {
+      "committee_member": "0",
+      "depositor": "100000000000000000000",
+      "crow": "0",
+      "coder": "0",
+      "early_contributor": "300000000000000000000"
+      }
       },
       "0x0B7602011EC2B862Bc157fF08d27b1018aEb18d5": {
-        "token_eligibility": {
-          "committee_member": "0",
-          "depositor": "100000000000000000000",
-          "crow": "0",
-          "coder": "0",
-          "early_contributor": "0"
-        }
+      "token_eligibility": {
+      "committee_member": "0",
+      "depositor": "100000000000000000000",
+      "crow": "0",
+      "coder": "0",
+      "early_contributor": "0"
+      }
       },
       "0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6": {
-        "token_eligibility": {
-          "committee_member": "100000000000000000000",
-          "depositor": "200000000000000000000",
-          "crow": "0",
-          "coder": "80000000000000000000",
-          "early_contributor": "0"
-        }
+      "token_eligibility": {
+      "committee_member": "100000000000000000000",
+      "depositor": "200000000000000000000",
+      "crow": "0",
+      "coder": "80000000000000000000",
+      "early_contributor": "0"
+      }
       },
       "0xaFd8C4f6f5f0d64f0e8bcE4C22DAa7b575506400": {
-        "token_eligibility": {
-          "committee_member": "100000000000000000000",
-          "depositor": "200000000000000000000",
-          "crow": "0",
-          "coder": "80000000000000000000",
-          "early_contributor": "0"
-        }
+      "token_eligibility": {
+      "committee_member": "100000000000000000000",
+      "depositor": "200000000000000000000",
+      "crow": "0",
+      "coder": "80000000000000000000",
+      "early_contributor": "0"
+      }
       },
       "0xCC5BD779A1EACeEFA704315A1F504446B6D25a1F": {
-        "token_eligibility": {
-          "committee_member": "100000000000000000000",
-          "depositor": "200000000000000000000",
-          "crow": "0",
-          "coder": "70000000000000000000",
-          "early_contributor": "0"
-        }
+      "token_eligibility": {
+      "committee_member": "100000000000000000000",
+      "depositor": "200000000000000000000",
+      "crow": "0",
+      "coder": "40000000000000000000",
+      "early_contributor": "0"
+      }
       },
       "0x1885B7c7a3AE1F35BA71C0392C13153A95c4914f": {
-        "token_eligibility": {
-          "committee_member": "0",
-          "depositor": "500000000000000000000",
-          "crow": "0",
-          "coder": "0",
-          "early_contributor": "0"
-        }
+      "token_eligibility": {
+      "committee_member": "0",
+      "depositor": "500000000000000000000",
+      "crow": "0",
+      "coder": "0",
+      "early_contributor": "0"
       }
-    }`);
+      }
+      }`);
     const merkeltree = await getAirdropMerkelTree(a);
     const contractInterface = new ethers.utils.Interface(HATAirdrop_abi);
     const initData = contractInterface.encodeFunctionData("initialize", [
-      "QmbGAmAaoCEs7zEzvhz7z8j7go1WcnvWbojwijd7F76BjX",
+      "Qma4nLkoXfNc69W1VCeiN1SFxm6VBAgbhbGz1qwekcrhEF",
       merkeltree.getHexRoot(),
+      1711772105,
       1715772105,
-      1721042505,
-      1721042505,
+      1715772105,
       60,
       "0xbdb34BB8665510d331FacAAaA0eeAe994a5B6612",
       "0x0153A75550E32CDf9a4458301bb89b600e745EAf",

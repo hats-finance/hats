@@ -15,7 +15,7 @@ export const StyledAidropCard = styled.div`
     justify-content: space-between;
 
     .info {
-      p.name {
+      .name {
         display: flex;
         align-items: center;
         gap: ${getSpacing(1.5)};

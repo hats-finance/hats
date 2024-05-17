@@ -1,10 +1,10 @@
-import { AirdropConfig } from "@hats.finance/shared";
+import { AirdropData } from "pages/Airdrops/types";
 import { AirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { createContext } from "react";
 
 export interface IAirdropDelegateModalContext {
-  aidropData: AirdropConfig;
+  airdropData: AirdropData;
   addressToCheck: string;
   airdropElegibility: AirdropElegibility | false | undefined;
   redeemData: AirdropRedeemData | undefined;

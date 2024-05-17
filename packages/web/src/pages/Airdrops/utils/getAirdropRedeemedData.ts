@@ -30,10 +30,10 @@ type TokensRedeemedEventArgs = {
  */
 export const getAirdropRedeemedData = async (
   address: string,
-  airdropData: { address: string; chainId: number }
+  airdropInfo: { address: string; chainId: number }
 ): Promise<AirdropRedeemData | undefined> => {
-  const airdropContractAddress = airdropData.address;
-  const chainId = airdropData.chainId;
+  const airdropContractAddress = airdropInfo.address;
+  const chainId = airdropInfo.chainId;
 
   const provider = getProvider({ chainId });
   if (!airdropContractAddress) {

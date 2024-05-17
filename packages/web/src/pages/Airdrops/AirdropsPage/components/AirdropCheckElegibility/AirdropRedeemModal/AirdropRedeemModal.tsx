@@ -1,5 +1,5 @@
-import { AirdropConfig } from "@hats.finance/shared";
 import { HatSpinner, Loading } from "components";
+import { AirdropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
@@ -16,7 +16,7 @@ import { AirdropRedeemModalContext, IAirdropRedeemModalContext } from "./store";
 import { StyledAirdropRedeemModal } from "./styles";
 
 type AirdropRedeemModalProps = {
-  aidropData: AirdropConfig;
+  airdropData: AirdropData;
   addressToCheck: string;
   closeModal: () => void;
 };
@@ -29,7 +29,7 @@ const redeemSteps = [
   { element: <AirdropRedeemCompleted /> },
 ];
 
-export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: AirdropRedeemModalProps) => {
+export const AirdropRedeemModal = ({ airdropData: aidropData, addressToCheck, closeModal }: AirdropRedeemModalProps) => {
   const { t } = useTranslation();
   const { chain: connectedChain } = useNetwork();
 
@@ -50,18 +50,14 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
 
   const updateAirdropElegibility = useCallback(async () => {
     if (!addressToCheck) return;
-    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
-
-    const elegibility = await getAirdropElegibility(addressToCheck, aidropInfo);
+    const elegibility = await getAirdropElegibility(addressToCheck, aidropData.descriptionData);
     setAirdropElegibility(elegibility);
     return elegibility;
   }, [addressToCheck, aidropData]);
 
   const updateAirdropRedeemedData = useCallback(async () => {
     if (!addressToCheck) return;
-    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
-
-    const redeemed = await getAirdropRedeemedData(addressToCheck, aidropInfo);
+    const redeemed = await getAirdropRedeemedData(addressToCheck, aidropData);
     setRedeemData(redeemed);
     return redeemed;
   }, [addressToCheck, aidropData]);
@@ -106,7 +102,7 @@ export const AirdropRedeemModal = ({ aidropData, addressToCheck, closeModal }: A
   };
 
   const airdropRedeemModalContext = {
-    aidropData,
+    airdropData: aidropData,
     addressToCheck,
     airdropElegibility,
     nextStep,

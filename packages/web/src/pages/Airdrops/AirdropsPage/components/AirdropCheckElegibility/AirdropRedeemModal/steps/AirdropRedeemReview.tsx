@@ -1,21 +1,25 @@
 import { BackArrowIcon } from "assets/icons/back-arrow";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
-import { Button, CollapsableTextContent, FormInput } from "components";
+import { Alert, Button, CollapsableTextContent, FormInput } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { shortenIfAddress } from "utils/addresses.utils";
+import { shortenAddress, shortenIfAddress } from "utils/addresses.utils";
 import { Amount } from "utils/amounts.utils";
+import { useAccount } from "wagmi";
 import { AirdropRedeemModalContext } from "../store";
 
 export const AirdropRedeemReview = () => {
   const { t } = useTranslation();
+  const { address } = useAccount();
 
-  const { prevStep, addressToCheck, airdropElegibility, isDelegating, handleClaimAirdrop } =
+  const { prevStep, addressToCheck, airdropElegibility, airdropData, isDelegating, handleClaimAirdrop } =
     useContext(AirdropRedeemModalContext);
 
   if (airdropElegibility === false || !airdropElegibility || !airdropElegibility.eligible) return null;
+
+  const isReceiverConnected = addressToCheck.toLowerCase() === address?.toLowerCase();
 
   return (
     <div className="content-modal">
@@ -24,9 +28,9 @@ export const AirdropRedeemReview = () => {
 
       <div className="mt-5">
         <strong>
-          {airdropElegibility.info.isLocked
+          {airdropData.isLocked
             ? t("Airdrop.youAreEligibleToAirdropLocked", {
-                date: moment(airdropElegibility.info.lockEndDate).format("MMMM Do YYYY"),
+                date: moment(airdropData.lockEndDate).format("MMMM Do YYYY"),
               })
             : t("Airdrop.youAreEligibleToAirdrop")}
         </strong>
@@ -40,7 +44,7 @@ export const AirdropRedeemReview = () => {
           value={new Amount(BigNumber.from(airdropElegibility.total), 18, "$HAT").formatted()}
         />
 
-        {airdropElegibility.info.isLocked && (
+        {airdropData.isLocked && (
           <div className="locked-info">
             <div className="locked-amount">
               <p>{t("Airdrop.linearlyReleased")}:</p>
@@ -52,7 +56,7 @@ export const AirdropRedeemReview = () => {
             </div>
             <p className="explanation">
               {t("Airdrop.linearlyReleasedExplanation", {
-                daysLocked: moment(airdropElegibility.info.lockEndDate).fromNow(true),
+                daysLocked: moment(airdropData.lockEndDate).fromNow(true),
               })}
             </p>
           </div>
@@ -88,11 +92,16 @@ export const AirdropRedeemReview = () => {
         </div>
       </div>
 
+      {!isReceiverConnected && (
+        <Alert type="error" className="mt-5">
+          {t("Airdrop.wrongAddressConnectedError", { wallet: shortenAddress(addressToCheck, { startLength: 6 }) })}
+        </Alert>
+      )}
       <div className="buttons">
         <Button styleType="outlined" size="medium" onClick={prevStep} disabled={isDelegating}>
           <BackArrowIcon />
         </Button>
-        <Button size="medium" bigHorizontalPadding onClick={handleClaimAirdrop} disabled={isDelegating}>
+        <Button size="medium" bigHorizontalPadding onClick={handleClaimAirdrop} disabled={isDelegating || !isReceiverConnected}>
           {isDelegating ? `${t("Airdrop.claimingAirdrop")}...` : t("Airdrop.claimAirdrop")}
         </Button>
       </div>

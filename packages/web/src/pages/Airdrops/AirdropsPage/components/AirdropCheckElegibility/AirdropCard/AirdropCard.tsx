@@ -1,9 +1,9 @@
-import { AirdropConfig } from "@hats.finance/shared";
 import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { NextArrowIcon } from "assets/icons/next-arrow";
-import { Button, HatSpinner, Pill } from "components";
+import { Button, Pill } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
+import { AirdropData } from "pages/Airdrops/types";
 import { AirdropElegibility, getAirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { useCallback, useEffect, useState } from "react";
@@ -13,24 +13,13 @@ import { Amount } from "utils/amounts.utils";
 import { StyledAidropCard, StyledElegibilityBreakdown } from "./styles";
 
 type AirdropCardProps = {
-  airdrop: AirdropConfig;
+  airdropData: AirdropData;
   addressToCheck: string;
-  refreshState: boolean;
-  idx: number;
   onOpenClaimModal: () => void;
   onOpenDelegateModal: () => void;
-  showFilter: "live" | "past" | "all";
 };
 
-export const AirdropCard = ({
-  airdrop,
-  addressToCheck,
-  onOpenClaimModal,
-  onOpenDelegateModal,
-  idx,
-  showFilter = "live",
-  refreshState,
-}: AirdropCardProps) => {
+export const AirdropCard = ({ airdropData, addressToCheck, onOpenClaimModal, onOpenDelegateModal }: AirdropCardProps) => {
   const { t } = useTranslation();
   const [elegibilityData, setElegibilityData] = useState<AirdropElegibility | undefined>();
   const [redeemedData, setRedeemedData] = useState<AirdropRedeemData>();
@@ -38,45 +27,29 @@ export const AirdropCard = ({
 
   const updateElegibility = useCallback(async () => {
     setIsLoading((prev) => prev === undefined);
-    const airdropData = { address: airdrop.address, chainId: airdrop.chain.id };
     const [elegibility, redeemded] = await Promise.all([
-      getAirdropElegibility(addressToCheck, airdropData),
+      getAirdropElegibility(addressToCheck, airdropData.descriptionData),
       getAirdropRedeemedData(addressToCheck, airdropData),
     ]);
     setElegibilityData(elegibility);
     setRedeemedData(redeemded);
     setIsLoading(false);
-  }, [addressToCheck, airdrop]);
+  }, [addressToCheck, airdropData]);
 
   useEffect(() => {
     updateElegibility();
-  }, [addressToCheck, airdrop, updateElegibility, refreshState]);
+  }, [addressToCheck, airdropData, updateElegibility]);
 
-  if (isLoading) {
-    if (idx === 0)
-      return (
-        <div className="mb-4">
-          <HatSpinner text={`${t("Airdrop.loadingAirdrops")}...`} />
-        </div>
-      );
-    return null;
-  }
-
-  if (showFilter === "live" && elegibilityData && !elegibilityData?.info?.isLive) return null;
-  if (showFilter === "past" && elegibilityData && elegibilityData?.info?.isLive) return null;
-
-  const isLive = elegibilityData && elegibilityData?.info?.isLive;
+  const isLive = airdropData && airdropData?.isLive;
 
   const getStatusInfo = () => {
-    if (!elegibilityData) return { pills: undefined };
-
     if (isLive) {
       return {
         text: elegibilityData?.eligible ? (redeemedData ? t("Airdrop.redeemed") : t("Airdrop.congrats")) : t("Airdrop.sorry"),
         description: elegibilityData?.eligible ? t("Airdrop.congratsContent") : t("Airdrop.sorryContent"),
         pills: (
           <>
-            {elegibilityData && elegibilityData.info.isLocked && <Pill text={t("Airdrop.linearRelease")} />}
+            {airdropData && airdropData.isLocked && <Pill text={t("Airdrop.linearRelease")} />}
             <Pill text={t("Airdrop.live")} />
           </>
         ),
@@ -93,7 +66,7 @@ export const AirdropCard = ({
           <Pill
             dotColor="red"
             textColor="var(--error-red)"
-            text={`${t("Airdrop.past")} - ${moment(elegibilityData.info.deadlineDate).fromNow()}`}
+            text={`${t("Airdrop.past")} - ${moment(airdropData.deadlineDate).fromNow()}`}
           />
         ),
       };
@@ -104,9 +77,10 @@ export const AirdropCard = ({
     <StyledAidropCard>
       <div className="preview">
         <div className="info">
-          <p className="name">
-            Airdrop #{idx + 1} {shortenIfAddress(airdrop.address)} {getStatusInfo().pills}
-          </p>
+          <div className="name">
+            {airdropData.descriptionData.name} {shortenIfAddress(airdropData.address)} {getStatusInfo().pills}
+          </div>
+          <p className="blurb">{airdropData.descriptionData.description}</p>
 
           {isLoading ? (
             <p>{`${t("Airdrop.loadingAirdropData")}...`}</p>

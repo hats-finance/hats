@@ -1,5 +1,5 @@
-import { AirdropConfig } from "@hats.finance/shared";
 import { HatSpinner, Loading } from "components";
+import { AirdropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork } from "wagmi";
@@ -12,14 +12,14 @@ import { AirdropDelegateModalContext, IAirdropDelegateModalContext } from "./sto
 import { StyledAirdropRedeemModal } from "./styles";
 
 type AirdropDelegateModalProps = {
-  aidropData: AirdropConfig;
+  airdropData: AirdropData;
   addressToCheck: string;
   closeModal: () => void;
 };
 
 const redeemSteps = [{ element: <AirdropDelegateDelegatee /> }, { element: <AirdropDelegateReview /> }];
 
-export const AirdropDelegateModal = ({ aidropData, addressToCheck, closeModal }: AirdropDelegateModalProps) => {
+export const AirdropDelegateModal = ({ airdropData, addressToCheck, closeModal }: AirdropDelegateModalProps) => {
   const { t } = useTranslation();
   const { chain: connectedChain } = useNetwork();
 
@@ -40,21 +40,17 @@ export const AirdropDelegateModal = ({ aidropData, addressToCheck, closeModal }:
 
   const updateAirdropElegibility = useCallback(async () => {
     if (!addressToCheck) return;
-    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
-
-    const elegibility = await getAirdropElegibility(addressToCheck, aidropInfo);
+    const elegibility = await getAirdropElegibility(addressToCheck, airdropData.descriptionData);
     setAirdropElegibility(elegibility);
     return elegibility;
-  }, [addressToCheck, aidropData]);
+  }, [addressToCheck, airdropData]);
 
   const updateAirdropRedeemedData = useCallback(async () => {
     if (!addressToCheck) return;
-    const aidropInfo = { address: aidropData.address, chainId: aidropData.chain.id };
-
-    const redeemed = await getAirdropRedeemedData(addressToCheck, aidropInfo);
+    const redeemed = await getAirdropRedeemedData(addressToCheck, airdropData);
     setRedeemData(redeemed);
     return redeemed;
-  }, [addressToCheck, aidropData]);
+  }, [addressToCheck, airdropData]);
 
   useEffect(() => setAirdropElegibility(undefined), [addressToCheck, connectedChain]);
   useEffect(() => {
@@ -73,7 +69,7 @@ export const AirdropDelegateModal = ({ aidropData, addressToCheck, closeModal }:
       setIsDelegating(true);
       updateAirdropElegibility();
       const newRedeemData = await updateAirdropRedeemedData();
-      const txResult = await DelegateAirdropContract.send(aidropData, newRedeemData, selectedDelegatee);
+      const txResult = await DelegateAirdropContract.send(airdropData, newRedeemData, selectedDelegatee);
       await txResult?.wait();
       closeModal();
       setIsDelegating(false);
@@ -84,7 +80,7 @@ export const AirdropDelegateModal = ({ aidropData, addressToCheck, closeModal }:
   };
 
   const airdropRedeemModalContext = {
-    aidropData,
+    airdropData,
     addressToCheck,
     airdropElegibility,
     nextStep,

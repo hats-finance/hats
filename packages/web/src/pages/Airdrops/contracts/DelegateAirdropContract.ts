@@ -1,6 +1,7 @@
-import { AirdropConfig, HATTokenLock_abi, HATToken_abi } from "@hats.finance/shared";
+import { HATTokenLock_abi, HATToken_abi } from "@hats.finance/shared";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { getAccount, getNetwork, prepareWriteContract, writeContract } from "wagmi/actions";
+import { AirdropData } from "../types";
 import { AirdropRedeemData } from "../utils/getAirdropRedeemedData";
 
 export class DelegateAirdropContract {
@@ -9,14 +10,14 @@ export class DelegateAirdropContract {
    *
    * @param vault - The selected vault to deposit staking token
    */
-  static send = async (airdrop: AirdropConfig, redeemData: AirdropRedeemData | undefined, delegatee: string) => {
+  static send = async (airdrop: AirdropData, redeemData: AirdropRedeemData | undefined, delegatee: string) => {
     if (!redeemData) return;
 
     const { address: account } = getAccount();
     const { chain: connectedChain } = getNetwork();
     if (!account || !connectedChain) return;
 
-    const airdropChainId = airdrop.chain.id;
+    const airdropChainId = airdrop.chainId;
     await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
     const config = await prepareWriteContract({

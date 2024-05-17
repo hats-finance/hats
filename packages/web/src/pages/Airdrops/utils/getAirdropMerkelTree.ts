@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from "ethers";
 import { keccak256 } from "ethers/lib/utils.js";
 import MerkleTree from "merkletreejs";
-import { AirdropMerkeltree } from "../types";
+import { AirdropDescriptionData } from "../types";
 
 export const hashToken = (address: string, amount: BigNumber) => {
   return Buffer.from(ethers.utils.solidityKeccak256(["address", "uint256"], [address, amount]).slice(2), "hex");
@@ -9,7 +9,7 @@ export const hashToken = (address: string, amount: BigNumber) => {
 
 // Transforms the airdrop merkel tree JSON into a MerkleTree object
 // From AirdropMerkeltree to { [address: string]: string (totalAmount) }
-export const getAirdropMerkelTree = async (merkelTreeJSON: AirdropMerkeltree) => {
+export const getAirdropMerkelTree = async (merkelTreeJSON: AirdropDescriptionData["merkeltree"]) => {
   return new MerkleTree(
     Object.entries(merkelTreeJSON).map(([address, data]) => {
       const amount = Object.keys(data.token_eligibility).reduce(

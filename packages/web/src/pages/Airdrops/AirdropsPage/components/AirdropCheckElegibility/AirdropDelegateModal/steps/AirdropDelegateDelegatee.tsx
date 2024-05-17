@@ -64,14 +64,14 @@ export const AirdropDelegateDelegatee = () => {
 };
 
 const DelegateeCard = ({ delegatee }: { delegatee: IDelegateeInfo }) => {
-  const { selectedDelegatee, setSelectedDelegatee, aidropData, airdropElegibility } = useContext(AirdropDelegateModalContext);
+  const { selectedDelegatee, setSelectedDelegatee, airdropData } = useContext(AirdropDelegateModalContext);
 
   const { data: delegateeVotes, isLoading } = useContractRead({
-    address: !!airdropElegibility ? airdropElegibility.info.tokenAddress : undefined,
+    address: airdropData ? (airdropData.token as `0x${string}`) : undefined,
     abi: HATToken_abi,
     functionName: "getVotes",
     args: [delegatee.address as `0x${string}`],
-    chainId: aidropData.chain.id,
+    chainId: airdropData.chainId,
   });
 
   const getDelegateeIcon = () => {

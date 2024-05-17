@@ -1,9 +1,12 @@
 import { HATAirdrop_abi } from "@hats.finance/shared";
 import { ipfsTransformUri } from "utils";
 import { getContract, getProvider } from "wagmi/actions";
-import { AirdropMerkeltree } from "../types";
+import { AirdropDescriptionData } from "../types";
 
-export const getAirdropMerkleTreeJSON = async (airdropData: { address: string; chainId: number }): Promise<AirdropMerkeltree> => {
+export const getAirdropDescriptionJSON = async (airdropData: {
+  address: string;
+  chainId: number;
+}): Promise<AirdropDescriptionData> => {
   const airdropContractAddress = airdropData.address;
   const chainId = airdropData.chainId;
 
@@ -26,7 +29,7 @@ export const getAirdropMerkleTreeJSON = async (airdropData: { address: string; c
   if (!args) throw new Error("MerkleTreeSet event not found");
 
   const merkelTreeRes = await fetch(ipfsTransformUri(args?._merkleTreeIPFSRef));
-  const merkelTreeJson = (await merkelTreeRes.json()) as AirdropMerkeltree;
+  const merkelTreeJson = (await merkelTreeRes.json()) as AirdropDescriptionData;
 
   return merkelTreeJson;
 };

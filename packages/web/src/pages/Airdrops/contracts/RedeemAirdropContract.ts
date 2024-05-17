@@ -1,10 +1,10 @@
-import { AirdropConfig, HATAirdrop_abi } from "@hats.finance/shared";
+import { HATAirdrop_abi } from "@hats.finance/shared";
 import { BigNumber } from "ethers";
 import { switchNetworkAndValidate } from "utils/switchNetwork.utils";
 import { useAccount, useContractWrite, useNetwork } from "wagmi";
+import { AirdropData } from "../types";
 import { AirdropElegibility } from "../utils/getAirdropElegibility";
 import { getAirdropMerkelTree, hashToken } from "../utils/getAirdropMerkelTree";
-import { getAirdropMerkleTreeJSON } from "../utils/getAirdropMerkelTreeJSON";
 
 export class RedeemAirdropContract {
   /**
@@ -12,12 +12,12 @@ export class RedeemAirdropContract {
    *
    * @param vault - The selected vault to deposit staking token
    */
-  static hook = (airdrop: AirdropConfig, airdropElegibility: AirdropElegibility | false | undefined) => {
+  static hook = (airdrop: AirdropData, airdropElegibility: AirdropElegibility | false | undefined) => {
     const { address: account } = useAccount();
     const { chain: connectedChain } = useNetwork();
 
     const airdropContractAddress = airdrop.address;
-    const airdropChainId = airdrop.chain.id;
+    const airdropChainId = airdrop.chainId;
 
     const redeemAirdrop = useContractWrite({
       mode: "recklesslyUnprepared",
@@ -34,12 +34,7 @@ export class RedeemAirdropContract {
           if (!account || !connectedChain) return;
           await switchNetworkAndValidate(connectedChain.id, airdropChainId);
 
-          const merkelTreeData = await getAirdropMerkleTreeJSON({
-            address: airdrop.address,
-            chainId: airdrop.chain.id,
-          });
-          const merkelTree = await getAirdropMerkelTree(merkelTreeData);
-
+          const merkelTree = await getAirdropMerkelTree(airdrop.descriptionData.merkeltree);
           const proof = merkelTree.getHexProof(hashToken(account, BigNumber.from(airdropElegibility.total))) as `0x${string}`[];
 
           return redeemAirdrop.write({

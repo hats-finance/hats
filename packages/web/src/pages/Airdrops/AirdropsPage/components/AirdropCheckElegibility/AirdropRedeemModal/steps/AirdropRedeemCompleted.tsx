@@ -1,15 +1,17 @@
 import { Button } from "components";
+import { SocialLinks } from "constants/constants";
+import { defaultAnchorProps } from "constants/defaultAnchorProps";
 import moment from "moment";
 import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { AirdropRedeemModalContext } from "../store";
 
+const UTILITY_GUIDE_URL = "#";
+
 export const AirdropRedeemCompleted = () => {
   const { t } = useTranslation();
 
-  const { airdropElegibility } = useContext(AirdropRedeemModalContext);
-
-  if (airdropElegibility === false || !airdropElegibility) return null;
+  const { airdropData } = useContext(AirdropRedeemModalContext);
 
   return (
     <div className="content-modal">
@@ -20,7 +22,7 @@ export const AirdropRedeemCompleted = () => {
         <strong>{t("Airdrop.claimSuccessfulExplanation")}</strong>
         <p>
           {t("Airdrop.linearlyReleasedExplanation", {
-            daysLocked: moment(airdropElegibility.info.lockEndDate).fromNow(true),
+            daysLocked: moment(airdropData.lockEndDate).fromNow(true),
           })}
         </p>
 
@@ -29,8 +31,16 @@ export const AirdropRedeemCompleted = () => {
       </div>
 
       <div className="buttons">
-        <Button styleType="outlined">{t("Airdrop.followHatsOnX")}</Button>
-        <Button>{t("Airdrop.readHATUtilityGuide")}</Button>
+        <Button styleType="outlined">
+          <a href={SocialLinks.Twitter} {...defaultAnchorProps}>
+            {t("Airdrop.followHatsOnX")}
+          </a>
+        </Button>
+        <Button>
+          <a href={UTILITY_GUIDE_URL} {...defaultAnchorProps}>
+            {t("Airdrop.readHATUtilityGuide")}
+          </a>
+        </Button>
       </div>
     </div>
   );
