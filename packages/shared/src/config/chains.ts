@@ -47,7 +47,7 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
-    subgraph: "https://api.studio.thegraph.com/proxy/75590/hats/version/latest",
+    subgraph: "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
