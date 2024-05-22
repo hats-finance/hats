@@ -1,5 +1,5 @@
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
-import { Pill, VaultAssetsPillsList, WithTooltip } from "components";
+import { VaultAssetsPillsList, WithTooltip } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import { useTokenBalanceAmount } from "hooks/wagmi";
@@ -46,14 +46,6 @@ export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProto
   });
   const tokenPrice: number = isTestnet ? 1 : (tokenPrices && tokenPrices[fundingProtocolVault.token.address]) ?? 0;
 
-  const getAuditStatusPill = () => {
-    return (
-      <div className="mb-4">
-        <Pill transparent dotColor="blue" text={t("openNow")} />
-      </div>
-    );
-  };
-
   const goToProjectWebsite = async () => {
     if (!fundingProtocolVault.website) return;
 
@@ -71,8 +63,6 @@ export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProto
 
   return (
     <StyledVaultCard fundingProtocolVault isAudit={false} reducedStyles={false} showIntendedAmount={false} hasActiveClaim={false}>
-      {getAuditStatusPill()}
-
       <div className="vault-info">
         <div className="metadata">
           <img onClick={goToProjectWebsite} src={ipfsTransformUri(fundingProtocolVault.logo)} alt="logo" />
@@ -100,8 +90,9 @@ export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProto
 
       <div className="vault-actions">
         <div className="assets">
-          <span className="subtitle">{t("assetsInVault")}</span>
+          <span className="subtitle">{t("assets")}</span>
           <VaultAssetsPillsList
+            ecosystemFunding
             vaultData={
               {
                 version: "v3",
