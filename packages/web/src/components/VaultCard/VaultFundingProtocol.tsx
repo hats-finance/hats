@@ -73,7 +73,6 @@ export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProto
         </div>
 
         <div className="stats">
-          <div />
           <div className="stats__stat intended-on-audits">
             <>
               <WithTooltip text={t("availableFundingExplanation")}>

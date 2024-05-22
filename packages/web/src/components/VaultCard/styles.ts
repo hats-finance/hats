@@ -91,7 +91,7 @@ export const StyledVaultCard = styled.div<{
     .vault-info {
       display: grid;
       gap: ${getSpacing(2)};
-      grid-template-columns: ${reducedStyles ? "2fr 3fr" : "5fr 5fr"};
+      grid-template-columns: ${fundingProtocolVault ? "7fr 2fr" : reducedStyles ? "2fr 3fr" : "5fr 5fr"};
       align-items: center;
 
       @media (max-width: ${breakpointsDefinition.mediumMobile}) {
@@ -125,8 +125,8 @@ export const StyledVaultCard = styled.div<{
           .description {
             overflow: hidden;
             display: -webkit-box;
-            line-clamp: 3;
-            -webkit-line-clamp: 3;
+            line-clamp: ${fundingProtocolVault ? 8 : 3};
+            -webkit-line-clamp: ${fundingProtocolVault ? 8 : 3};
             -webkit-box-orient: vertical;
           }
         }
@@ -141,7 +141,7 @@ export const StyledVaultCard = styled.div<{
       .stats {
         display: grid;
         /* grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 3fr 3fr"}; */
-        grid-template-columns: ${isAudit ? "1fr 1fr" : "1fr 1fr"};
+        grid-template-columns: ${fundingProtocolVault ? "1fr" : isAudit ? "1fr 1fr" : "1fr 1fr"};
         gap: ${getSpacing(1)};
         align-items: center;
 

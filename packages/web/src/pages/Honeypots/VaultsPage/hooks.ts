@@ -175,15 +175,15 @@ export const getFundingProtocolVaults = (): FundingProtocolVault[] => {
       name: "Oasis",
       logo: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
       description:
-        "The Oasis Network is a Layer 1 decentralized blockchain network designed to be uniquely scalable, privacy-first and versatile.",
+        "The Oasis Network is a Layer 1 decentralized blockchain network, renowned for its scalability, privacy-first approach, and versatility. To enhance security and reliability across projects, the Oasis Network has introduced Ecosystem Audit Grants. These grants aim to minimize misuse, ensure project integrity, and cultivate a developer community well-versed in the Confidential EVM.",
       chain: wagmiChains.sepolia.id,
       address: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
       website: "https://oasisprotocol.org/",
       token: {
-        address: "0xbdb34bb8665510d331facaaaa0eeae994a5b6612",
+        address: "0xbdb34bb8665510d331facaaaa0eeae994a5b6611",
         icon: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
         decimals: "18",
-        symbol: "HAT",
+        symbol: "ROSE",
       },
     },
   ];
