@@ -696,6 +696,10 @@
     "isTokenLockRevocable": "Is token lock revocable?",
     "vaultDestroyedCantCreatePayout": "This vault is destroyed and can't be used to create a payout.",
     "alert": "Alert",
+    "protocolsFunding": "Protocols funding",
+    "openNow": "Open now",
+    "availableFunding": "Available funding",
+    "availableFundingExplanation": "This is the available funding for the protocols to open an audit competition in Hats.",
     "AuditFrameGame": {
       "optInToAuditCompetition": "Opt in to audit competition",
       "optOutFromAuditCompetition": "Opt out from audit competition",

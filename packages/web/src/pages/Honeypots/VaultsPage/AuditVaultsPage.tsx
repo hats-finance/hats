@@ -1,8 +1,13 @@
 import InfoIcon from "@mui/icons-material/InfoOutlined";
-import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton, WithTooltip } from "components";
+import { Seo, VaultAuditDraftCard, VaultCard, VaultCardSkeleton, VaultFundingProtocol, WithTooltip } from "components";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import { useTranslation } from "react-i18next";
-import { useAuditCompetitionsVaults, useDraftAuditCompetitions, useOldAuditCompetitions } from "./hooks";
+import {
+  getFundingProtocolVaults,
+  useAuditCompetitionsVaults,
+  useDraftAuditCompetitions,
+  useOldAuditCompetitions,
+} from "./hooks";
 import { StyledVaultsPage } from "./styles";
 
 export const AuditVaultsPage = () => {
@@ -20,6 +25,7 @@ export const AuditVaultsPage = () => {
   const allFinishedAuditCompetitions = [...finishedAuditPayouts, ...(oldAudits ?? [])];
 
   const draftAudits = useDraftAuditCompetitions();
+  const fundingProtocolVaults = getFundingProtocolVaults();
 
   return (
     <>
@@ -58,6 +64,17 @@ export const AuditVaultsPage = () => {
               ))}
               {draftAudits.map((auditDraft, idx) => (
                 <VaultAuditDraftCard key={auditDraft._id ?? "" + idx} vaultDraft={auditDraft} />
+              ))}
+            </div>
+          </>
+        )}
+
+        {fundingProtocolVaults.length > 0 && (
+          <>
+            <h2 className="subtitle">{t("protocolsFunding")}</h2>
+            <div className="vaults-container mt-4">
+              {fundingProtocolVaults.map((fundingProtocolVault, idx) => (
+                <VaultFundingProtocol key={fundingProtocolVault.name + idx} fundingProtocolVault={fundingProtocolVault} />
               ))}
             </div>
           </>

@@ -2,18 +2,32 @@ import styled, { css } from "styled-components";
 import { getSpacing } from "styles";
 import { breakpointsDefinition } from "styles/breakpoints.styles";
 
+const getBackground = (fundingProtocolVault: boolean, isContinuousAudit: boolean) => {
+  if (fundingProtocolVault) return "var(--background)";
+  if (isContinuousAudit) return "var(--background-2-darker)";
+  return "var(--background-2)";
+};
+
 export const StyledVaultCard = styled.div<{
   isAudit: boolean;
   isContinuousAudit?: boolean;
   reducedStyles: boolean;
   hasActiveClaim: boolean;
   showIntendedAmount: boolean;
+  fundingProtocolVault?: boolean;
 }>(
-  ({ isAudit, isContinuousAudit, reducedStyles, hasActiveClaim, showIntendedAmount }) => css`
+  ({
+    isAudit,
+    isContinuousAudit = false,
+    reducedStyles,
+    hasActiveClaim,
+    showIntendedAmount,
+    fundingProtocolVault = false,
+  }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
-    background: ${isContinuousAudit ? "var(--background-2-darker)" : "var(--background-2)"};
+    background: ${getBackground(fundingProtocolVault, isContinuousAudit)};
     border: 1px solid var(--primary-light);
     padding: ${getSpacing(3)} ${getSpacing(4)};
 

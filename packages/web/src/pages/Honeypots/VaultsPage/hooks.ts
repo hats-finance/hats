@@ -1,5 +1,7 @@
 import { IEditedSessionResponse, IPayoutGraph } from "@hats.finance/shared";
 import { useQuery } from "@tanstack/react-query";
+import * as wagmiChains from "@wagmi/chains";
+import { FundingProtocolVault } from "components/VaultCard/VaultFundingProtocol";
 import { axiosClient } from "config/axiosClient";
 import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";
 import { useSiweAuth } from "hooks/siwe/useSiweAuth";
@@ -162,4 +164,27 @@ export const useDraftAuditCompetitions = (): (IEditedSessionResponse & { dateSta
   return data.filter((audit) =>
     showTestnets ? appChains[audit.chainId].chain.testnet : !appChains[audit.chainId].chain.testnet
   );
+};
+
+/**
+ * Returns all the funding protocol vaults
+ */
+export const getFundingProtocolVaults = (): FundingProtocolVault[] => {
+  return [
+    {
+      name: "Oasis",
+      logo: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
+      description:
+        "The Oasis Network is a Layer 1 decentralized blockchain network designed to be uniquely scalable, privacy-first and versatile.",
+      chain: wagmiChains.sepolia.id,
+      address: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
+      website: "https://oasisprotocol.org/",
+      token: {
+        address: "0xbdb34bb8665510d331facaaaa0eeae994a5b6612",
+        icon: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
+        decimals: "18",
+        symbol: "HAT",
+      },
+    },
+  ];
 };

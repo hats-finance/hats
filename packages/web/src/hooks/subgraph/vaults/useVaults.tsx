@@ -13,6 +13,7 @@ import { OFAC_Sanctioned_Digital_Currency_Addresses } from "data/OFACSanctionedA
 import { PROTECTED_TOKENS } from "data/vaults";
 import { tokenPriceFunctions } from "helpers/getContractPrices";
 import { INFTTokenMetadata } from "hooks/nft/types";
+import { getFundingProtocolVaults } from "pages/Honeypots/VaultsPage/hooks";
 import { PropsWithChildren, createContext, useContext, useEffect, useState } from "react";
 import { IS_PROD, appChains } from "settings";
 import { ipfsTransformUri } from "utils";
@@ -99,7 +100,12 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       })
       .flat();
 
-    const tokenToSearch = [...stakingTokens, ...rewardControllersTokens];
+    const fundingProtocolsTokens = getFundingProtocolVaults().map((vault) => ({
+      address: vault.token.address,
+      chainId: vault.chain,
+    }));
+
+    const tokenToSearch = [...stakingTokens, ...rewardControllersTokens, ...fundingProtocolsTokens];
 
     const foundTokenPrices = [] as number[];
 
