@@ -1,5 +1,5 @@
 import * as wagmiChains from "@wagmi/chains";
-import { meter } from "./custom_chains";
+import { meter, oasis } from "./custom_chains";
 
 export const ALL_CHAINS = {
   [wagmiChains.mainnet.id]: wagmiChains.mainnet,
@@ -15,6 +15,7 @@ export const ALL_CHAINS = {
   [wagmiChains.cronos.id]: wagmiChains.cronos,
   [wagmiChains.zkSync.id]: wagmiChains.zkSync,
   [meter.id]: meter,
+  [oasis.id]: oasis,
 };
 
 export interface IChainConfiguration {
@@ -47,7 +48,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
-    subgraph: "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -154,5 +156,20 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
     paymentSplitterFactory: "0xadd155731473A9501881234A865FF79668F1B6cF",
     provider: "https://damp-dawn-scion.bsc.quiknode.pro/fa80c7f866eee193fef38c879e941fcb02e98dfb",
+  },
+  [oasis.id]: {
+    // vaultsCreatorContract: "0xD978eb90eB1b11213e320f4e6e910eB98D8DF1E4", v2
+    vaultsCreatorContract: "0x0000000000000000000000000000000000000000",
+    arbitratorContract: "0x0000000000000000000000000000000000000000",
+    rewardController: "0x0000000000000000000000000000000000000000",
+    vaultsNFTContract: "0x0000000000000000000000000000000000000000",
+    hackersNFTContract: "0x0000000000000000000000000000000000000000",
+    chain: oasis,
+    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_bsc",
+    coingeckoId: "oasis-sapphire",
+    govMultisig: "0x0000000000000000000000000000000000000000",
+    whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
+    paymentSplitterFactory: "0x0000000000000000000000000000000000000000",
+    provider: "",
   },
 };

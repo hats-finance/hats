@@ -24,3 +24,28 @@ export const meter = {
     },
   },
 } as const satisfies Chain;
+
+export const oasis = {
+  id: 23294,
+  name: "Oasis Saphire",
+  network: "oasis",
+  nativeCurrency: {
+    decimals: 18,
+    name: "ROSE",
+    symbol: "ROSE",
+  },
+  rpcUrls: {
+    public: { http: ["https://sapphire.oasis.io"] },
+    default: { http: ["https://sapphire.oasis.io"] },
+  },
+  blockExplorers: {
+    etherscan: { name: "Oasis Explorer", url: "https://explorer.oasis.io/mainnet/sapphire" },
+    default: { name: "Oasis Explorer", url: "https://explorer.oasis.io/mainnet/sapphire" },
+  },
+  contracts: {
+    multicall3: {
+      address: "0xcA11bde05977b3631167028862bE2a173976CA11",
+      blockCreated: 7345317,
+    },
+  },
+} as const satisfies Chain;

@@ -1,6 +1,5 @@
-import { IEditedSessionResponse, IPayoutGraph } from "@hats.finance/shared";
+import { IEditedSessionResponse, IPayoutGraph, oasis } from "@hats.finance/shared";
 import { useQuery } from "@tanstack/react-query";
-import * as wagmiChains from "@wagmi/chains";
 import { FundingProtocolVault } from "components/VaultCard/VaultFundingProtocol";
 import { axiosClient } from "config/axiosClient";
 import { useExcludedFinishedCompetitions } from "hooks/globalSettings/useExcludedFinishedCompetitions";
@@ -176,11 +175,11 @@ export const getFundingProtocolVaults = (): FundingProtocolVault[] => {
       logo: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
       description:
         "The Oasis Network is a Layer 1 decentralized blockchain network, renowned for its scalability, privacy-first approach, and versatility. To enhance security and reliability across projects, the Oasis Network has introduced Ecosystem Audit Grants. These grants aim to minimize misuse, ensure project integrity, and cultivate a developer community well-versed in the Confidential EVM.",
-      chain: wagmiChains.sepolia.id,
-      address: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
+      chain: oasis.id,
+      address: "0x6f980cF50c8592fd93219f3291dD727218B21442",
       website: "https://oasisprotocol.org/",
       token: {
-        address: "0xbdb34bb8665510d331facaaaa0eeae994a5b6611",
+        address: undefined,
         icon: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
         decimals: "18",
         symbol: "ROSE",

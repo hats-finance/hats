@@ -101,7 +101,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
       .flat();
 
     const fundingProtocolsTokens = getFundingProtocolVaults().map((vault) => ({
-      address: vault.token.address,
+      address: vault.token.address ?? "",
       chainId: vault.chain,
     }));
 
@@ -145,6 +145,7 @@ export function VaultsProvider({ children }: PropsWithChildren<{}>) {
     // Get prices from CoinGecko
     try {
       const tokensLeft = tokenToSearch.filter((token) => !(token.address in foundTokenPrices));
+      console.log(tokensLeft);
       const coingeckoTokenPrices = await getCoingeckoTokensPrices(tokensLeft);
 
       if (coingeckoTokenPrices) {

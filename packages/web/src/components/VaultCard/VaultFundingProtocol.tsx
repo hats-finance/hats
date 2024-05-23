@@ -1,11 +1,9 @@
 import OpenIcon from "@mui/icons-material/OpenInNewOutlined";
 import { VaultAssetsPillsList, WithTooltip } from "components";
-import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import useConfirm from "hooks/useConfirm";
 import { useTokenBalanceAmount } from "hooks/wagmi";
 import millify from "millify";
 import { useTranslation } from "react-i18next";
-import { appChains } from "settings";
 import { ipfsTransformUri } from "utils";
 import { StyledVaultCard } from "./styles";
 
@@ -17,7 +15,7 @@ export type FundingProtocolVault = {
   address: string;
   website: string;
   token: {
-    address: string;
+    address: string | undefined; // undefined if native token
     icon: string;
     decimals: string;
     symbol: string;
@@ -35,16 +33,16 @@ type VaultFundingProtocolCardProps = {
  */
 export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProtocolCardProps) => {
   const { t } = useTranslation();
-  const { tokenPrices } = useVaults();
+  // const { tokenPrices } = useVaults();
   const confirm = useConfirm();
-  const isTestnet = appChains[fundingProtocolVault.chain].chain.testnet;
+  // const isTestnet = appChains[fundingProtocolVault.chain].chain.testnet;
 
   const tokenBalance = useTokenBalanceAmount({
     address: fundingProtocolVault.address as `0x${string}`,
     token: fundingProtocolVault.token.address,
     chainId: fundingProtocolVault.chain,
   });
-  const tokenPrice: number = isTestnet ? 1 : (tokenPrices && tokenPrices[fundingProtocolVault.token.address]) ?? 0;
+  // const tokenPrice: number = isTestnet ? 1 : (tokenPrices && fundingProtocolVault.token.address && tokenPrices[fundingProtocolVault.token.address]) ?? 0;
 
   const goToProjectWebsite = async () => {
     if (!fundingProtocolVault.website) return;
@@ -77,8 +75,7 @@ export const VaultFundingProtocol = ({ fundingProtocolVault }: VaultFundingProto
             <>
               <WithTooltip text={t("availableFundingExplanation")}>
                 <h3 className="value">
-                  ~$
-                  {millify(tokenBalance.number * tokenPrice)}
+                  ~{millify(tokenBalance.number)} {fundingProtocolVault.token.symbol}
                 </h3>
               </WithTooltip>
               <div className="sub-value">{t("availableFunding")}</div>
