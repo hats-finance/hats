@@ -1,6 +1,6 @@
 import en from "./en.json";
 import jp from "./jp.json";
-import jp from "./zh.json";
+import zh from "./zh.json";
 
 
 const languages = { en, jp, zh};
