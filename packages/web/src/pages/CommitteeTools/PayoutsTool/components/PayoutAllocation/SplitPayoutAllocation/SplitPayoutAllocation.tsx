@@ -110,15 +110,17 @@ function SplitPayoutAllocationShared({
 
   // Sorting beneficiaries by severity
   useEffect(() => {
-    const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
-    copiedArray.sort((a, b) => {
-      const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
-      const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
-      return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
-    });
+    setTimeout(() => {
+      const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
+      copiedArray.sort((a, b) => {
+        const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
+        const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
+        return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
+      });
 
-    if (JSON.stringify(copiedArray.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
-    replace(copiedArray);
+      if (JSON.stringify(copiedArray.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
+      replace(copiedArray);
+    }, 50);
   }, [beneficiaries, severitiesOptions, replace]);
 
   const [editPercentageToPay, setEditPercentageToPay] = useState(false);
