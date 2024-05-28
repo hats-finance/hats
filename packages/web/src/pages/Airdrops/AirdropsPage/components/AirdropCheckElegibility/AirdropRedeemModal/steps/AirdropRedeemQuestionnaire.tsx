@@ -14,7 +14,7 @@ const questions = [
         description: "Projects gain complete control, reducing fees and embracing a pay-for-results model.",
         correct: true,
       },
-      { letter: "D", description: "Projects gain complete control, reducing fees and embracing a pay-for-results model." },
+      { letter: "D", description: "Projects face delays due to the need for pre-scheduling audits." },
     ],
   },
   {
