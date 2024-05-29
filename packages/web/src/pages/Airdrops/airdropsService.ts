@@ -1,6 +1,6 @@
 import { AirdropFactoryConfig, HATAirdropFactory_abi } from "@hats.finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
-import { AirdropData } from "./types";
+import { DropData } from "./types";
 import { getGeneralAirdropData } from "./utils/getGeneralAirdropData";
 
 export type IDelegateeInfo = {
@@ -94,7 +94,7 @@ export async function getDelegatees(): Promise<IDelegateeInfo[]> {
   }
 }
 
-export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): Promise<AirdropData[]> {
+export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): Promise<DropData[]> {
   try {
     type AirdropCreatedEventArgs = {
       _hatAirdrop: string;
@@ -119,7 +119,7 @@ export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): P
           return airdropData;
         })
       )
-    ).filter((data) => data !== undefined) as AirdropData[];
+    ).filter((data) => data !== undefined) as DropData[];
 
     return airdropsData;
   } catch (error) {

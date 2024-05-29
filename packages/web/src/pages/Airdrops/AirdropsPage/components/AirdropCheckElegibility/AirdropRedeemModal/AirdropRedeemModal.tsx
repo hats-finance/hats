@@ -1,5 +1,5 @@
 import { HatSpinner, Loading } from "components";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNetwork, useWaitForTransaction } from "wagmi";
@@ -16,7 +16,7 @@ import { AirdropRedeemModalContext, IAirdropRedeemModalContext } from "./store";
 import { StyledAirdropRedeemModal } from "./styles";
 
 type AirdropRedeemModalProps = {
-  airdropData: AirdropData;
+  airdropData: DropData;
   addressToCheck: string;
   closeModal: () => void;
 };

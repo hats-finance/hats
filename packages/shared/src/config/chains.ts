@@ -47,7 +47,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x1569fd54478b25e3accf3bac3f231108d95f50c4",
     hackersNFTContract: "0x10C483158B8aF7e91CE7068bA45eb5446789851D",
     chain: wagmiChains.mainnet,
-    subgraph: "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/2cbCwzhBbKkdpXtuNYkG5ch5dJDNAnTmeRhePDpkR4JV",
     coingeckoId: "ethereum",
     govMultisig: "0xBA5Ddb6Af728F01E91D77D12073548D823f6D1ef",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
@@ -159,13 +160,15 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
 
 export type AirdropFactoryConfig = { chain: wagmiChains.Chain; address: string };
 export const AirdropFactoriesChainConfig: {
-  test: { airdrop: AirdropFactoryConfig[] };
-  prod: { airdrop: AirdropFactoryConfig[] };
+  test: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
+  prod: { airdrop: AirdropFactoryConfig[]; pointdrop: AirdropFactoryConfig[] };
 } = {
   test: {
     airdrop: [{ address: "0x50E10f3A32a9d3B4B04144400a74300D9D9885Fa", chain: wagmiChains.sepolia }],
+    pointdrop: [{ address: "0xCE94b023259E6a49EB37339aCaA3F8e711b88e04", chain: wagmiChains.sepolia }],
   },
   prod: {
     airdrop: [],
+    pointdrop: [],
   },
 };

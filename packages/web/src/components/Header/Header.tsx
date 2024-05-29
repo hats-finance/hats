@@ -56,6 +56,11 @@ const Header = () => {
     navigate(`${RoutePaths.profile}/${createdProfile.username}`);
   }
 
+  function handleGoToMyWallet() {
+    if (!account || !createdProfile) return;
+    navigate(`${RoutePaths.myWallet}`);
+  }
+
   function handleGoToAirdrop() {
     navigate(`${RoutePaths.airdrop}`);
   }
@@ -82,7 +87,7 @@ const Header = () => {
                 {!!createdProfile ? (
                   <Button size="big" noRadius styleType="outlined" noPadding onClick={handleGoToProfile}>
                     <div className="inner-profile-button">
-                      <HackerProfileImage hackerProfile={createdProfile} size="xsmall" noMargin />
+                      <HackerProfileImage hackerProfile={createdProfile} size="xxsmall" noMargin />
                       <span>{createdProfile.username}</span>
                     </div>
                   </Button>
@@ -97,6 +102,12 @@ const Header = () => {
               </>
             )}
           </div>
+
+          {account && createdProfile && (
+            <Button size="big" noRadius styleType="outlined" onClick={handleGoToMyWallet}>
+              {t("Header.myWallet")}
+            </Button>
+          )}
 
           <WhereverWidget />
           <WalletButton />

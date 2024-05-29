@@ -1,15 +1,15 @@
 import { BigNumber } from "ethers";
 import { getAddress } from "ethers/lib/utils.js";
-import { AirdropDescriptionData } from "../types";
+import { DropDescriptionData } from "../types";
 
-export type AirdropElegibility = AirdropDescriptionData["merkeltree"]["address"]["token_eligibility"] & {
+export type AirdropElegibility = DropDescriptionData["merkeltree"]["address"]["token_eligibility"] & {
   eligible: boolean;
   total: string;
 };
 
 export const getAirdropElegibility = async (
   address: string,
-  airdropDescriptionData: AirdropDescriptionData
+  airdropDescriptionData: DropDescriptionData
 ): Promise<AirdropElegibility | undefined> => {
   try {
     const addressInfo = airdropDescriptionData.merkeltree[getAddress(address)];

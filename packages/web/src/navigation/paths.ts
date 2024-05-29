@@ -10,6 +10,7 @@ enum RoutePaths {
   submissions = "/committee-tools/submissions",
   airdrop_machine = "/airdrop_machine",
   airdrop = "/airdrop",
+  myWallet = "/my-wallet",
 }
 
 export { RoutePaths };
