@@ -7,7 +7,7 @@ import HatsTokenIcon from "assets/icons/hats-logo-circle.svg";
 import { CopyToClipboard, Pill, WithTooltip } from "components";
 import { BigNumber } from "ethers";
 import moment from "moment";
-import { AirdropData } from "pages/Airdrops/types";
+import { DropData } from "pages/Airdrops/types";
 import { AirdropElegibility, getAirdropElegibility } from "pages/Airdrops/utils/getAirdropElegibility";
 import { AirdropRedeemData, getAirdropRedeemedData } from "pages/Airdrops/utils/getAirdropRedeemedData";
 import { useCallback, useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import { LinearReleaseAirdropControls } from "./LinearReleaseAirdropControls/Lin
 import { StyledAidropCard, StyledElegibilityBreakdown } from "./styles";
 
 type AirdropCardProps = {
-  airdropData: AirdropData;
+  airdropData: DropData;
   addressToCheck: string;
   onOpenClaimModal: () => void;
   onOpenDelegateModal: () => void;

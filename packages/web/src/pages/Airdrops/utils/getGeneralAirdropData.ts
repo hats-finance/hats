@@ -1,13 +1,9 @@
 import { HATAirdrop_abi } from "@hats.finance/shared";
 import { getContract, getProvider } from "wagmi/actions";
-import { AirdropData } from "../types";
+import { DropData } from "../types";
 import { getAirdropDescriptionJSON } from "./getAirdropDescriptionJSON";
 
-export const getGeneralAirdropData = async (
-  address: string,
-  chainId: number,
-  factory: string
-): Promise<AirdropData | undefined> => {
+export const getGeneralAirdropData = async (address: string, chainId: number, factory: string): Promise<DropData | undefined> => {
   try {
     const airdropDescription = await getAirdropDescriptionJSON({ address, chainId });
 
