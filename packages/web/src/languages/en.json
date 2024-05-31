@@ -708,7 +708,13 @@
     "percentageToDeposit": "Percentage to deposit:",
     "network": "Network",
     "MyWallet": {
-      "overview": "Overview"
+      "overview": "Overview",
+      "pointValue": "Point value",
+      "totalEarnedPoints": "Total earned points",
+      "HATCurrentHoldings": "HAT current holdings",
+      "claimableTokens": "Claimable tokens",
+      "claimTokens": "Claim tokens",
+      "earningsBreakdown": "Earnings breakdown"
     },
     "Airdrop": {
       "checkElegibility": "Check eligibility",

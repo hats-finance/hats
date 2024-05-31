@@ -4,6 +4,7 @@ import { useProfileByAddress } from "pages/HackerProfile/hooks";
 import { useTranslation } from "react-i18next";
 import { Navigate } from "react-router-dom";
 import { useAccount } from "wagmi";
+import { EarningsBreakdown } from "./Sections/EarningsBreakdown/EarningsBreakdown";
 import { PointsOverview } from "./Sections/PointsOverview/PointsOverview";
 import { StyledMyWalletPage } from "./styles";
 
@@ -22,6 +23,7 @@ export const MyWalletPage = () => {
           <h2>Hello, @{createdProfile?.username}</h2>
 
           <PointsOverview />
+          <EarningsBreakdown />
         </StyledMyWalletPage>
       )}
       {isLoadingProfile && <Loading extraText={`${t("HackerProfile.loadingProfile")}...`} />}
