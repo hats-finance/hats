@@ -699,6 +699,9 @@
     "vaultDestroyedCantCreatePayout": "This vault is destroyed and can't be used to create a payout.",
     "alert": "Alert",
     "airdrop": "Airdrop",
+    "MyWallet": {
+      "overview": "Overview"
+    },
     "Airdrop": {
       "checkElegibility": "Check elegibility",
       "addressToCheck": "Address to check",
