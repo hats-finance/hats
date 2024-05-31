@@ -1,5 +1,6 @@
 import { formatUnits } from "@ethersproject/units";
 import { BigNumber } from "ethers";
+import { millify } from "millify";
 
 export class Amount {
   amount: BigNumber | undefined;
@@ -24,13 +25,13 @@ export class Amount {
     return this.amount ? Number(formatUnits(this.amount, this.decimals)) : 0;
   }
 
-  formattedWithoutSymbol(decimals = 5) {
-    return `${this.amount ? this.truncateNDecimals(decimals) : "-"}`;
+  formattedWithoutSymbol(decimals = 5, useMillify = false) {
+    return `${this.amount ? (useMillify ? millify(+this.truncateNDecimals(decimals)) : this.truncateNDecimals(decimals)) : "-"}`;
   }
 
-  formatted(decimals = 5) {
+  formatted(decimals = 5, useMillify = false) {
     const symbol = this.symbol ? ` ${this.symbol}` : "";
-    return `${this.formattedWithoutSymbol(decimals)}${symbol}`;
+    return `${this.formattedWithoutSymbol(decimals, useMillify)}${symbol}`;
   }
 
   get string() {
