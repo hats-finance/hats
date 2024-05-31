@@ -54,6 +54,7 @@ export const RC_TOOLTIP_OVERLAY_INNER_STYLE = {
   color: "var(--white)",
   background: "var(--purple-blue)",
   border: "1px solid var(--field-blue)",
+  whiteSpace: "break-spaces",
 };
 
 export const DEFAULT_ERROR_MESSAGE = "OOPS! SOMETHING WENT WRONG";
