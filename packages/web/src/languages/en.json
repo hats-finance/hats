@@ -707,6 +707,9 @@
     "depositAndEarnAPYDescription": "Deposit to {{name}} and earn APY.",
     "percentageToDeposit": "Percentage to deposit:",
     "network": "Network",
+    "MyWallet": {
+      "overview": "Overview"
+    },
     "Airdrop": {
       "checkElegibility": "Check eligibility",
       "addressToCheck": "Address to check",
