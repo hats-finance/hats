@@ -1,11 +1,11 @@
-import { useNetwork } from "wagmi";
-import Select from "react-select";
-import Tooltip from "rc-tooltip";
-import { ipfsTransformUri } from "utils";
 import { Colors, RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import Tooltip from "rc-tooltip";
+import Select from "react-select";
 import { IVault } from "types";
-import { StyledVaultChainIcon } from "./styles";
+import { ipfsTransformUri } from "utils";
+import { useNetwork } from "wagmi";
 import "./index.scss";
+import { StyledVaultChainIcon } from "./styles";
 
 interface IProps {
   vault: IVault;
@@ -23,7 +23,7 @@ const VaultChainIcon = ({ vault }: { vault: IVault }) => {
 
   return (
     <StyledVaultChainIcon>
-      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE} overlay={network?.name}>
+      <Tooltip overlayClassName="tooltip" overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any} overlay={network?.name}>
         <div className="chain-logo">
           <img src={require(`assets/icons/chains/${vault.chainId}.png`)} alt={network?.name} />
         </div>

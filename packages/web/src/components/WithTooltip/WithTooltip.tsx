@@ -1,6 +1,6 @@
-import { ReactElement } from "react";
-import Tooltip from "rc-tooltip";
 import { RC_TOOLTIP_OVERLAY_INNER_STYLE } from "constants/constants";
+import Tooltip from "rc-tooltip";
+import { ReactElement } from "react";
 
 export type WithTooltipProps = {
   children: ReactElement;
@@ -20,7 +20,7 @@ export const WithTooltip = ({ children, text, placement, visible }: WithTooltipP
         visible={visible}
         overlayClassName="tooltip"
         placement={placement}
-        overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+        overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any}
         overlay={text}
         showArrow={false}
       >
@@ -33,7 +33,7 @@ export const WithTooltip = ({ children, text, placement, visible }: WithTooltipP
     <Tooltip
       overlayClassName="tooltip"
       placement={placement}
-      overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE}
+      overlayInnerStyle={RC_TOOLTIP_OVERLAY_INNER_STYLE as any}
       overlay={text}
       showArrow={false}
     >
