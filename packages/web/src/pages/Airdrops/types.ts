@@ -36,6 +36,7 @@ export interface PointdropDescriptionData extends DropDescriptionDataBase {
 export type DropDescriptionData = AirdropDescriptionData | PointdropDescriptionData;
 
 export type DropData = {
+  startTimeDate: Date;
   address: string;
   chainId: number;
   factory: string;
