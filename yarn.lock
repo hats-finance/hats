@@ -2475,6 +2475,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@openpgp/web-stream-tools@^0.0.14":
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/@openpgp/web-stream-tools/-/web-stream-tools-0.0.14.tgz#513214cd2a20903558448980085155752be445e4"
+  integrity sha512-6btCNVf6YSsmlyIS7yw+IbzXeXCEcJxeSpxvSxkDuZj9B/ekt4fXkZj4oOaIxG4SKTftIK1svnlVroJ1cCMT4g==
+
 "@pedrouid/environment@^1.0.1":
   version "1.0.1"
   resolved "https://registry.npmjs.org/@pedrouid/environment/-/environment-1.0.1.tgz"
