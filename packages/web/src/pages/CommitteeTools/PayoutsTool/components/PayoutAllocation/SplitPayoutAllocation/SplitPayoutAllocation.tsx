@@ -6,7 +6,7 @@ import { useEnhancedFormContext } from "hooks/form";
 import useConfirm from "hooks/useConfirm";
 import millify from "millify";
 import { RoutePaths } from "navigation";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { FormProvider, useFieldArray, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -92,12 +92,7 @@ function SplitPayoutAllocationShared({
 
   const methods = useEnhancedFormContext<ISplitPayoutData>();
   const { control, formState, register, setValue } = methods;
-  const {
-    fields,
-    append: appendBeneficiary,
-    remove: removeBeneficiary,
-    replace,
-  } = useFieldArray({ control, name: `beneficiaries` });
+  const { fields, append: appendBeneficiary, remove: removeBeneficiary } = useFieldArray({ control, name: `beneficiaries` });
   const watchedBeneficiaries = useWatch({ control, name: `beneficiaries`, defaultValue: [] });
   const beneficiaries = fields.map((field, index) => {
     return {
@@ -109,19 +104,19 @@ function SplitPayoutAllocationShared({
   const deletePayout = useDeletePayout();
 
   // Sorting beneficiaries by severity
-  useEffect(() => {
-    setTimeout(() => {
-      const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
-      copiedArray.sort((a, b) => {
-        const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
-        const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
-        return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
-      });
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     const copiedArray = JSON.parse(JSON.stringify(beneficiaries)) as typeof beneficiaries;
+  //     copiedArray.sort((a, b) => {
+  //       const sevIdxA = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === a.severity.toLowerCase()) ?? -1;
+  //       const sevIdxB = severitiesOptions?.findIndex((sev) => sev.value.toLowerCase() === b.severity.toLowerCase()) ?? -1;
+  //       return sevIdxA === sevIdxB ? 0 : sevIdxA > sevIdxB ? -1 : 1;
+  //     });
 
-      if (JSON.stringify(copiedArray.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
-      replace(copiedArray);
-    }, 50);
-  }, [beneficiaries, severitiesOptions, replace]);
+  //     if (JSON.stringify(copiedArray.map((b) => b.id)) === JSON.stringify(beneficiaries.map((b) => b.id))) return;
+  //     replace(copiedArray);
+  //   }, 50);
+  // }, [beneficiaries, severitiesOptions, replace]);
 
   const [editPercentageToPay, setEditPercentageToPay] = useState(false);
   const [showGeneralAllocation, setShowGeneralAllocation] = useState(false);
@@ -143,8 +138,6 @@ function SplitPayoutAllocationShared({
     undefined,
     beneficiaries.reduce((acc, curr) => acc + Number(curr.percentageOfPayout), 0).toString()
   );
-
-  // console.log(generalPayoutAllocation);
 
   const severitiesSummary = useMemo(
     () =>
