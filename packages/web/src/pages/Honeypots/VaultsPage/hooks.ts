@@ -9,7 +9,7 @@ import { useIsGovMember } from "hooks/useIsGovMember";
 import { useIsReviewer } from "hooks/useIsReviewer";
 import { useEffect, useMemo } from "react";
 import { BASE_SERVICE_URL, IS_PROD, appChains } from "settings";
-import { useNetwork } from "wagmi";
+import { mainnet, useNetwork } from "wagmi";
 import * as auditDraftsService from "./auditDraftsService";
 
 /**
@@ -183,6 +183,21 @@ export const getFundingProtocolVaults = (): FundingProtocolVault[] => {
         icon: "ipfs://QmWN4J8pdSjTYfuMxSzAA7hDNghXmP7VMy5waGHRVMVKPn",
         decimals: "18",
         symbol: "ROSE",
+      },
+    },
+    {
+      name: "Tezos & Etherlink",
+      logo: "ipfs://Qmcz1hVyhpia7pFWGx7e9mvzKKgXQ1X1uq5iTtWB9TRZ2v",
+      description:
+        "Tezos is a self-upgradable and energy-efficient Proof of Stake blockchain, aligned with Etherlink, which is built upon the secure foundation of Tezos layer 1 and delivers a fast, fair, and (nearly) free experience. Together, Tezos and Etherlink have established an Ecosystem Audit Grants pool to enhance the security of projects and products on their network, representing a security-focused narrative approach.",
+      chain: mainnet.id,
+      address: "0x6f980cF50c8592fd93219f3291dD727218B21442",
+      website: "https://tezos.com/",
+      token: {
+        address: undefined,
+        icon: "ipfs://QmTBHBZchoxncW1LXCvptTbvRzuZDN8yzze3xXrRsh2WZz",
+        decimals: "18",
+        symbol: "USDC",
       },
     },
   ];
