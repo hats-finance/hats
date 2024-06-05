@@ -1,5 +1,5 @@
 import { formatUnits } from "@ethersproject/units";
-import { IPayoutResponse, ISplitPayoutData, IVault } from "@hats.finance/shared";
+import { IPayoutResponse, ISinglePayoutData, ISplitPayoutData, IVault } from "@hats.finance/shared";
 import { BigNumber, ethers } from "ethers";
 import { useVaults } from "hooks/subgraph/vaults/useVaults";
 import millify from "millify";
@@ -64,7 +64,17 @@ export const usePayoutAllocation = (
   const tokenPrice = vault.amountsInfo?.tokenPriceUsd ?? 0;
 
   // Check if this payout is already created on chain
-  const payoutOnChainData = allPayouts?.find((p) => p.id === payout.payoutClaimId);
+  const payoutOnChainData = allPayouts?.find((p) => {
+    // In v1 we dont have the payoutClaimId
+    if (payout.vaultInfo.version === "v1") {
+      const sameBeneficiary = p.beneficiary.toLowerCase() === (payout.payoutData as ISinglePayoutData).beneficiary.toLowerCase();
+      const sameSevIndex = p.severityIndex === (payout.payoutData as ISinglePayoutData).severityBountyIndex;
+
+      return sameBeneficiary && sameSevIndex;
+    } else {
+      return p.id === payout.payoutClaimId;
+    }
+  });
 
   let immediateSplit = 0;
   let vestedSplit = 0;
