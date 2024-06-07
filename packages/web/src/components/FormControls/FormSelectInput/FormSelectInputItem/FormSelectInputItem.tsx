@@ -13,6 +13,7 @@ interface MenuItemProps {
   option: FormSelectInputOption;
   multiple: boolean;
   nonSelectable?: boolean;
+  noSelectedMark?: boolean;
   handleSelectedItem: (val: string) => void;
   handleUnselectedItem: (val: string) => void;
 }
@@ -24,6 +25,7 @@ const FormSelectInputItem = ({
   handleUnselectedItem,
   multiple,
   nonSelectable = false,
+  noSelectedMark = false,
 }: MenuItemProps) => {
   const isChecked = useMemo(
     () => (multiple ? (currentValue as string[])?.indexOf(option.value) > -1 : (currentValue as string) === option.value),
@@ -49,7 +51,7 @@ const FormSelectInputItem = ({
   };
 
   return (
-    <StyledFormSelectInputItem htmlFor={`option-${option.value}`}>
+    <StyledFormSelectInputItem htmlFor={`option-${option.value}`} noSelectedMark={noSelectedMark}>
       <WithTooltip text={option.onHoverText}>
         <div className="info">
           {option.icon && <img src={ipfsTransformUri(option.icon)} alt="logo" />}
@@ -69,7 +71,7 @@ const FormSelectInputItem = ({
       </WithTooltip>
       {!nonSelectable && (
         <>
-          {getIcon()}
+          {!noSelectedMark && getIcon()}
           <input
             id={`option-${option.value}`}
             checked={isChecked}
