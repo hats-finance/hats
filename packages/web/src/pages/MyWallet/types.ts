@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { DropData } from "pages/Airdrops/types";
+
 export type UserPointsData = {
   username: string | undefined;
   farcasterId: number | undefined;
@@ -36,4 +39,9 @@ export type PointsLogMetadata = {
   mainPrize?: number;
   optedInBonus?: number;
   streakMultiplierBonus?: number;
+};
+
+export type DropDataConvertible = DropData & {
+  points: number;
+  tokens: BigNumber;
 };

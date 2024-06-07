@@ -37,6 +37,7 @@ export type DropDescriptionData = AirdropDescriptionData | PointdropDescriptionD
 
 export type DropData = {
   startTimeDate: Date;
+  factory: string;
   address: string;
   chainId: number;
   factory: string;
