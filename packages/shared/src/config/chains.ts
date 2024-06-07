@@ -65,7 +65,8 @@ export const ChainsConfig: { [index: number]: IChainConfiguration } = {
     vaultsNFTContract: "0x96E93876eB2314901ee9967488C650D77A50c705",
     hackersNFTContract: "0x2Ff0509D0e9a78Bf58815D768f4487f0645824F0",
     chain: wagmiChains.sepolia,
-    subgraph: "https://api.thegraph.com/subgraphs/name/hats-finance/hats_sepolia",
+    subgraph:
+      "https://gateway-arbitrum.network.thegraph.com/api/0ed4473ee53352068095380ea517339c/subgraphs/id/6q8vE8znoVRd2AqdGcgaF7j99Gtrrki4HwYDVMK8qaCf",
     coingeckoId: undefined,
     govMultisig: "0xFA6579F3Bb1793eFaB541de06763b872E11bfCBe",
     whitelistedReviewers: ["0x5b7B59862447Cf3dE479C8166cc2784cbf8e53D6"],
