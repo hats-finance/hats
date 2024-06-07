@@ -723,7 +723,14 @@
       "claimableTokensBreakdown": "Claimable tokens breakdown",
       "tokensClaimed": "Tokens claimed",
       "tokensClaimedDescription": "You have successfully claimed {{tokens}} tokens from {{points}} points.",
-      "tokensHat": "Tokens (HAT)"
+      "tokensHat": "Tokens (HAT)",
+      "multipliers": "Multipliers",
+      "streak": "Streak",
+      "yourStreak": "Your streak",
+      "streakMultiplierCalculation": "Streak multiplier calculation",
+      "leader": "Leader",
+      "externalLeaderboardPosition": "External leaderboard position",
+      "yourPosition": "Your position"
     },
     "Airdrop": {
       "checkElegibility": "Check eligibility",

@@ -10,7 +10,7 @@ export const PointsOverview = () => {
 
   return (
     <StyledPointsOverview>
-      <h3>{t("MyWallet.overview")}</h3>
+      <h2>{t("MyWallet.overview")}</h2>
 
       <div className="cards">
         <TotalPointsCard />
