@@ -1,4 +1,9 @@
 export const HATAirdropFactory_abi = [
+  {
+    inputs: [{ internalType: "contract IHATToken", name: "_HAT", type: "address" }],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   { inputs: [], name: "ContractIsNotHATAirdrop", type: "error" },
   { inputs: [], name: "HATAirdropInitializationFailed", type: "error" },
   { inputs: [], name: "RedeemDataArraysLengthMismatch", type: "error" },
@@ -30,6 +35,13 @@ export const HATAirdropFactory_abi = [
     ],
     name: "TokensWithdrawn",
     type: "event",
+  },
+  {
+    inputs: [],
+    name: "HAT",
+    outputs: [{ internalType: "contract IHATToken", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
   },
   {
     inputs: [
@@ -65,6 +77,23 @@ export const HATAirdropFactory_abi = [
     name: "predictHATAirdropAddress",
     outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "contract IHATAirdrop[]", name: "_airdrops", type: "address[]" },
+      { internalType: "uint256[]", name: "_amounts", type: "uint256[]" },
+      { internalType: "bytes32[][]", name: "_proofs", type: "bytes32[][]" },
+      { internalType: "address", name: "_delegatee", type: "address" },
+      { internalType: "uint256", name: "_nonce", type: "uint256" },
+      { internalType: "uint256", name: "_expiry", type: "uint256" },
+      { internalType: "uint8", name: "_v", type: "uint8" },
+      { internalType: "bytes32", name: "_r", type: "bytes32" },
+      { internalType: "bytes32", name: "_s", type: "bytes32" },
+    ],
+    name: "redeemAndDelegateMultipleAirdrops",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
