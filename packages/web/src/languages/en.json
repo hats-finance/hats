@@ -699,6 +699,9 @@
     "vaultDestroyedCantCreatePayout": "This vault is destroyed and can't be used to create a payout.",
     "alert": "Alert",
     "airdrop": "Airdrop",
+    "redeemingYourTokens": "Redeeming your tokens",
+    "date": "Date",
+    "points": "Points",
     "MyWallet": {
       "overview": "Overview",
       "pointValue": "Point value",
@@ -706,7 +709,13 @@
       "HATCurrentHoldings": "HAT current holdings",
       "claimableTokens": "Claimable tokens",
       "claimTokens": "Claim tokens",
-      "earningsBreakdown": "Earnings breakdown"
+      "earningsBreakdown": "Earnings breakdown",
+      "claimedTokensHistory": "Claimed tokens history",
+      "noTokensToClaim": "No tokens to claim",
+      "claimableTokensBreakdown": "Claimable tokens breakdown",
+      "tokensClaimed": "Tokens claimed",
+      "tokensClaimedDescription": "You have successfully claimed {{tokens}} tokens from {{points}} points.",
+      "tokensHat": "Tokens (HAT)"
     },
     "Airdrop": {
       "checkElegibility": "Check elegibility",

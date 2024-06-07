@@ -10,9 +10,7 @@ export const TotalPointsCard = () => {
 
   const { address: account } = useAccount();
   const { data: profile } = useProfileByAddress(account);
-
   const { data: pointsData } = usePointsDataByUser(profile?.username);
-  console.log(pointsData);
 
   return (
     <div className="overview-card">

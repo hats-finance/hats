@@ -115,7 +115,7 @@ export async function getAirdropsDataByFactory(factory: AirdropFactoryConfig): P
     const airdropsData = (
       await Promise.all(
         airdropsAddresses.map(async (address) => {
-          const airdropData = await getGeneralAirdropData(address, factory.chain.id);
+          const airdropData = await getGeneralAirdropData(address, factory);
           return airdropData;
         })
       )

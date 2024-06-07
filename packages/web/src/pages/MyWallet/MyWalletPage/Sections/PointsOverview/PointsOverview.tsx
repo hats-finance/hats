@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { ConvertibleTokensCard } from "./cards/ConvertibleTokensCard";
+import { ConvertibleTokensCard } from "./cards/ConvertibleTokensCard/ConvertibleTokensCard";
 import { HATHoldingsCard } from "./cards/HATHoldingsCard";
-import { PointValueCard } from "./cards/PointValueCard";
+import { PointValueCard } from "./cards/PointValueCard/PointValueCard";
 import { TotalPointsCard } from "./cards/TotalPointsCard";
 import { StyledPointsOverview } from "./styles";
 
